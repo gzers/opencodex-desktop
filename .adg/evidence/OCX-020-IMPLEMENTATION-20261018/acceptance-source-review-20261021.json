@@ -3759,5 +3759,103 @@
       "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
       "sameAs0110AtPriorReview": false
     }
+  ],
+  "technicalGates": [
+    {
+      "id": "G-01",
+      "evidence": [
+        "checks-template-comparison-budget-20261020.json",
+        "checks-wire-capability-20261020.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    },
+    {
+      "id": "G-02",
+      "evidence": [
+        "checks-model-ordering-20261020.json",
+        "checks-macos-manual-sort-20261020.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-codex-model-menu-20261021.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    },
+    {
+      "id": "G-03",
+      "evidence": [
+        "checks-model-ordering-20261020.json",
+        "checks-discovery-contract-20261020.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    },
+    {
+      "id": "G-04",
+      "evidence": [
+        "checks-wire-capability-20261020.json",
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    },
+    {
+      "id": "G-05",
+      "evidence": [
+        "checks-version-candidate-20261020.json",
+        "checks-windows-file-macos-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    },
+    {
+      "id": "G-06",
+      "evidence": [
+        "checks-history-runtime-20261019.json",
+        "checks-history-direction-20261019.json",
+        "checks-scoped-save-20261020.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    },
+    {
+      "id": "G-07",
+      "evidence": [
+        "checks-config-webdav-20261019.json",
+        "checks-family-fragment-20261020.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    },
+    {
+      "id": "G-08",
+      "evidence": [
+        "checks-native-consumers-20261019.json",
+        "checks-codex-model-menu-20261021.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    },
+    {
+      "id": "G-09",
+      "evidence": [
+        "checks-discovery-contract-20261020.json",
+        "checks-new-channel-20261020.json",
+        "checks-connection-edit-20261020.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    },
+    {
+      "id": "G-10",
+      "evidence": [
+        "checks-naming-20261020.json",
+        "checks-wire-capability-20261020.json",
+        "checks-history-direction-20261019.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    },
+    {
+      "id": "G-11",
+      "evidence": [
+        "checks-agent-native-multiturn-20261020.json",
+        "checks-final-native-consumers-20261021.json",
+        "checks-public-research-real-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "reviewed for the confirmed current compatibility scope; no unsupported adapter/client/vender inferred"
+    }
   ]
 }

@@ -32,3 +32,24 @@ PR8于2026-10-21T02:33:41Z合并为53816867d；main随后f1bbe7d996389097dcf6237
 ## 当前发布门
 
 main完整CI、双平台Release、实际NSIS/MSI安装及卸载保留、Mac容器/压缩包身份、更新包旧公钥验签、公开/stable与匿名清单/资产验证都需取得各自真实结果。Release仍默认draft/prerelease，出包或上传成功不等于公开。当前未公开0.2.0，不提前宣告稳定投递。后续结果只在实际完成后追加。
+
+
+### 双平台草稿制品与独立验签
+
+Release39534419661在f1bbe7d9完成双平台出包。Release ID419091323，仍draft/prerelease。三种实际updater资产全部下载、大小/API摘要核对并以tag内原公钥minisign密码学验签通过；原公钥解码SHA30190687…与v0.1.7相同，未轮换信任。
+
+| 资产 | 字节数 | SHA256 |
+| --- | ---: | --- |
+| Mac app.tar.gz | 6454019 | a7178fa6f66d0f930fba5e74dec1286154b80362ab50cca76fc918173d8ad50f |
+| Windows MSI | 6701056 | dd8641ca3d6fdff7c5400b58da949e37e72580f2efa138c331b478be2e924ea9 |
+| Windows NSIS | 4774724 | 19ff816d2c191312584865eca968995d9a32642879c7af2f4de5d1fa7efe4b8f |
+
+Mac DMG6347202字节/SHA0e602441…容器校验通过；压缩包版本0.2.0/production标识/内嵌main均正确。严格OS codesign仍exit1，按既有未正式签名/未公证测试分发边界保留，不混同updater已验签。
+
+Windows Release真实MSI/NSIS均成功安装，实际EXE包标记/源码/0.2.0首屏匹配，默认卸载保留数据，隔离清理helper拒绝未确认、确认后只清受管根且外部HOME不变。Built EXE918c9f80…与每安装器预期标记后的installed字节核对通过；不以标记合法差异误报相同哈希，不宣称人工DPI/OTA或日常升级。发布工作流本身只出私有草稿，releaseAccepted字段仍false，原回执保持。
+
+Mac发布tar逐字节相同Mach-O4321c151…制作仅Info.plist改隔离身份的副本，显式独立root；PID92731首屏及关于页读得v0.2.0，启动日志commit f1bbe7d9，Command-Q后进程不存在。未替换日常安装/改日常配置。证据统一.adg/evidence/REL-020-20261021/。
+
+### main CI首次失败与限定复跑
+
+main39533974950首次Linux/前端/发布工具与准入通过，Windows原始冷版本探测3项通过；大套件733 passed/4 failed/4 ignored。失败4项为旧about::remote::windows_tests元数据子进程fixture，2秒查询内无parent-started等任何标记，5秒observer也未见父子PID，控制进程仍活。该组源码与v0.1.10未变，特性b19完整CI曾通过；不据此忽略当前失败，也不称业务保存回归。保留原始日志并仅复跑该失败Windows job一次，deadline/断言/默认线程数及产品代码全不变。第二次结果尚待，当前不公开/晋升stable。

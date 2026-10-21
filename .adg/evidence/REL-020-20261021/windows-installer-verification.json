@@ -1,0 +1,69 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "f1bbe7d996389097dcf6237a6bc65b7995d68190",
+  "builtExecutableSha256": "918c9f8004b74170bc36b830248f67af2a34966e196f777ac86a6cf999d95a7c",
+  "version": "0.2.0",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.2.0_x64_en-US.msi",
+      "bytes": 6701056,
+      "sha256": "dd8641ca3d6fdff7c5400b58da949e37e72580f2efa138c331b478be2e924ea9",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-9e11bea69cbf46a7841cc83b4046b039",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "fa75bfa963c724d38436f05158307ce2064f96638fbf052a3eb0175ebe2b1f93",
+      "expectedInstalledExecutableSha256": "fa75bfa963c724d38436f05158307ce2064f96638fbf052a3eb0175ebe2b1f93",
+      "bundleMarker": "MSI",
+      "bundleMarkerOffset": 12867485,
+      "productVersion": "0.2.0",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "startupPointerRemoved": true,
+        "anchorAndActiveRootRemoved": true,
+        "externalHomeUnchanged": true,
+        "applicationRetained": true,
+        "applicationRootBindingTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    },
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.2.0_x64-setup.exe",
+      "bytes": 4774724,
+      "sha256": "19ff816d2c191312584865eca968995d9a32642879c7af2f4de5d1fa7efe4b8f",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-b1fb4ef2c96440ff9ec79f57765811e5",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "329592df0091ae4eb19ae206cb65dc445ac589f86b9e05436b86dd17fec1bd9c",
+      "expectedInstalledExecutableSha256": "329592df0091ae4eb19ae206cb65dc445ac589f86b9e05436b86dd17fec1bd9c",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 12867485,
+      "productVersion": "0.2.0",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "startupPointerRemoved": true,
+        "anchorAndActiveRootRemoved": true,
+        "externalHomeUnchanged": true,
+        "applicationRetained": true,
+        "applicationRootBindingTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    }
+  ]
+}
