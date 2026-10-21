@@ -11,8 +11,17 @@ function offset(){if(!root.value)return 12;const style=getComputedStyle(root.val
 function fitNavigation(){
  if(!main||!root.value)return
  const navigation=root.value.querySelector<HTMLElement>('.detail-navigation');if(!navigation)return
- const available=(main.getBoundingClientRect().bottom-navigation.getBoundingClientRect().top)/(scale()||1)-12
- root.value.style.setProperty('--detail-navigation-height',Math.max(80,available)+'px')
+ const zoom=scale()||1,viewport=main.getBoundingClientRect(),position=navigation.getBoundingClientRect()
+ const available=(viewport.bottom-position.top)/zoom-12
+ const collapse=navigation.querySelector<HTMLElement>('.detail-collapse'),primary=navigation.querySelector<HTMLElement>('.detail-navigation-primary')
+ // At high UI zoom the non-sticky page introduction can consume the initial
+ // viewport. Reveal the workspace only as far as its sticky boundary permits;
+ // never keep scrolling a form once that boundary has been reached.
+ const minimum=(collapse?.offsetHeight??0)+(primary?.offsetHeight??0)+56
+ const stickyTop=Number.parseFloat(getComputedStyle(navigation).top)||0
+ const lift=Math.min(minimum-available,(position.top-viewport.top)/zoom-stickyTop,main.scrollHeight-main.clientHeight-main.scrollTop)
+ if(lift>1){main.scrollTop+=lift;schedule();return}
+ root.value.style.setProperty('--detail-navigation-height',Math.max(0,available)+'px')
 }
 function updateActive(){
  frame=0;fitNavigation();if(reflow||!main||!root.value?.getClientRects().length)return

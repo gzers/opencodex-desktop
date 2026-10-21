@@ -51,8 +51,10 @@ const search = toRef(models.view,'templateSearch')
 const draft = computed(() => models.draft)
 const editingTemplate=computed(()=>models.snapshot?.library.templates.find(t=>t.id===draft.value?.templateId))
 const editingRevisionLabel=computed(()=>{const revision=editingTemplate.value?.revisions.find(r=>r.id===draft.value?.baseRevision);return revision?versionLabel(revision):'新建未保存'})
-const agentView=computed(()=>models.view.agentViews[models.draftSession]??=createAgentViewContext())
-const templateNavigation=computed(()=>models.view.navigation['template:'+models.draftSession]??={collapsed:false,activeId:'model-basic'})
+// Read back through the reactive store: returning the assignment expression
+// would cache the raw object during the first session and bypass nested updates.
+const agentView=computed(()=>{const key=models.draftSession;models.view.agentViews[key]??=createAgentViewContext();return models.view.agentViews[key]!})
+const templateNavigation=computed(()=>{const key='template:'+models.draftSession;models.view.navigation[key]??={collapsed:false,activeId:'model-basic'};return models.view.navigation[key]!})
 const templateSections=[{id:'model-basic',label:'基本信息'},{id:'model-matching',label:'匹配规则'},{id:'model-rules',label:'通用配置'},{id:'model-variants',label:'版本或后缀'},{id:'model-source',label:'来源与版本'}]
 const templates = computed(() => models.snapshot?.library.templates.filter(t => t.label.toLowerCase().includes(search.value.toLowerCase())) ?? [])
 const usage=ref<{templateId:string;revisionId:string}>()

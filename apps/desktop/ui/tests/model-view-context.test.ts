@@ -13,6 +13,16 @@ const snapshot=():ModelSnapshot=>({library:{schemaVersion:1,templates:[{id:'fami
 beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelApi.load).mockResolvedValue(snapshot())})
 const button=(wrapper:ReturnType<typeof mount>,label:string)=>wrapper.findAll('button').find(b=>b.text()===label)!
 describe('model view context',()=>{
+ it('reacts to navigation changes on the first edit session, without requiring a route remount',async()=>{
+  const store=useModelsStore();store.view.tab='templates'
+  const wrapper=mount(ModelsRoute,{global:{stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,BatchAgentDialog:true,ExternalTaskDialog:true,ModelRuleFields:true,UiDialog:true,UiSelectField:true}}});await flushPromises()
+  await button(wrapper,'编辑').trigger('click');await flushPromises()
+  await wrapper.get('[aria-label="收起模版导航"]').trigger('click');await flushPromises()
+  expect(wrapper.get('.detail-workspace').classes()).toContain('detail-collapsed')
+  expect(wrapper.find('[aria-label="展开模版导航"]').exists()).toBe(true)
+  await wrapper.get('[aria-label="展开模版导航"]').trigger('click');await flushPromises()
+  expect(wrapper.get('.detail-workspace').classes()).not.toContain('detail-collapsed');wrapper.unmount()
+ })
  it('cancels a new copy only after current confirmation, retaining the source and refusing a stale discard',async()=>{
   const pinia=createPinia();setActivePinia(pinia);const store=useModelsStore(),modal=useModalStore();store.view.tab='templates';const wrapper=mount(ModelsRoute,{global:{plugins:[pinia],stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,BatchAgentDialog:true,ExternalTaskDialog:true,TemplateComparisonDialog:true,ModelRuleFields:true,UiDialog:true,UiSelectField:true}}});await flushPromises()
   await button(wrapper,'编辑').trigger('click');await wrapper.get('textarea').setValue('原缓冲保持');await wrapper.get('[aria-label="复制模版"]').trigger('click');expect(store.draft!.templateId).toBeNull();await wrapper.get('[aria-label="取消新建"]').trigger('click');modal.resolve('cancel');expect(store.draft).not.toBeNull()

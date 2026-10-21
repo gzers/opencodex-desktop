@@ -7,8 +7,11 @@ export async function verifyUiAlignment({call,evaluate,wait,click,output,templat
  const receipts=[]
  async function shot(name){const image=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'ui021-'+name+'.png'),Buffer.from(image.data,'base64'))}
  async function measureDetail(label){
-  const result=await evaluate(`(()=>{const nav=document.querySelector('.detail-navigation'),save=nav?.querySelector('.detail-navigation-primary button'),r=save?.getBoundingClientRect(),main=document.querySelector('main.main')?.getBoundingClientRect();return {label:${JSON.stringify(label)},save:r?{top:r.top,bottom:r.bottom,height:r.height}:null,viewport:innerHeight,mainBottom:main?.bottom??innerHeight,topActions:document.querySelector('.sticky-page-tabs')?.textContent,icons:[...nav?.querySelectorAll('.btn-content svg')??[]].map(e=>{const a=e.getBoundingClientRect(),b=e.parentElement.getBoundingClientRect();return Math.abs(a.top+a.height/2-b.top-b.height/2)})}})()`);
+  const expression=(`(()=>{const nav=document.querySelector('.detail-navigation'),save=nav?.querySelector('.detail-navigation-primary button'),r=save?.getBoundingClientRect(),main=document.querySelector('main.main')?.getBoundingClientRect();return {label:${JSON.stringify(label)},save:r?{top:r.top,bottom:r.bottom,height:r.height}:null,viewport:innerHeight,mainBottom:main?.bottom??innerHeight,topActions:document.querySelector('.sticky-page-tabs')?.textContent,icons:[...nav?.querySelectorAll('.btn-content svg')??[]].map(e=>{const a=e.getBoundingClientRect(),b=e.parentElement.getBoundingClientRect();return Math.abs(a.top+a.height/2-b.top-b.height/2)})}})()`);
+  await wait('(r=>r.save&&r.save.height>0&&r.save.top>=0&&r.save.bottom<=Math.min(r.viewport,r.mainBottom)+2)('+expression+')','visible primary save '+label)
+  const result=await evaluate(expression)
   assert(result.save&&result.save.height>0&&result.save.top>=0&&result.save.bottom<=Math.min(result.viewport,result.mainBottom)+2,'primary save must be visible in native viewport: '+JSON.stringify(result))
+  if(label.startsWith('channel'))assert(!result.topActions?.includes('保存'),'detail save duplicated in top tabs');
   assert(result.icons.every(delta=>delta<=1.1),'icon/content center drift');receipts.push(result)
  }
  await measureDetail('channel-expanded');await shot('channel-detail')
@@ -36,6 +39,12 @@ export async function verifyUiAlignment({call,evaluate,wait,click,output,templat
   }
  }
  await click('高','[role=radiogroup][aria-label=界面特效]');await click('浅色','.theme-seg')
+ for(const scale of [50,150,200,100]){
+  await evaluate("(()=>{const input=document.querySelector('[aria-label=界面缩放数值]');input.value="+scale+";input.dispatchEvent(new Event('change',{bubbles:true}))})()")
+  await wait("document.documentElement.style.getPropertyValue('--ui-zoom')==="+JSON.stringify(String(scale/100)),'production UI scale '+scale)
+  await click('模型','.side');await wait("!!document.querySelector('#model-basic')",'preserved template workspace at scale '+scale);await measureDetail('template-zoom-'+scale);await shot('template-zoom-'+scale)
+  await click('设置','.side');await wait("!!document.querySelector('[aria-label=界面缩放数值]')",'return to actual scale control')
+ }
  await click('Agent 配置','.settings-tabs');await wait("!![...document.querySelectorAll('.settings-panel button')].find(e=>e.textContent.trim()==='Agent 配置')",'persistent Agent configuration');await shot('agent-settings')
  await click('概览','.side');await wait("document.querySelectorAll('.info-row').length>=6",'shared overview information rows')
  const information=await evaluate("[...document.querySelectorAll('.info-row')].map(e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect(),label=e.querySelector('.info-row-label').getBoundingClientRect();return {font:s.fontSize,line:s.lineHeight,padding:s.padding,labelInset:label.left-r.left}})")

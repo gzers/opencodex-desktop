@@ -19,6 +19,12 @@ describe('0.2.1 public patterns',()=>{
   expect(w.findAll('button').every(b=>b.attributes('disabled')!==undefined)).toBe(true)
   await w.findAll('button')[0]!.trigger('keydown',{key:'End'});expect(w.emitted('update:modelValue')).toBeUndefined()
  })
+ it('keeps an enabled Tab entry when the selected option becomes disabled or unknown',async()=>{
+  const w=mount(UiSegmented,{props:{label:'画质',modelValue:'low',options}})
+  expect(w.findAll('button').map(b=>b.attributes('tabindex'))).toEqual(['0','-1','-1'])
+  await w.setProps({modelValue:'missing'});expect(w.get('button').attributes('tabindex')).toBe('0')
+  await w.setProps({disabled:true});expect(w.findAll('button').every(b=>b.attributes('tabindex')==='-1')).toBe(true)
+ })
  it('information rows share content classes, interactive rows use the actual UiButton',async()=>{
   const plain=mount(InformationRow,{props:{label:'连接状态',value:'未连接'}})
   const action=mount(InformationRow,{props:{interactive:true,label:'桌面管理器',value:'0.2.1'}})
