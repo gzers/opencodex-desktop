@@ -25,6 +25,29 @@ async function customExportScope(wrapper:ReturnType<typeof render>){
 
 beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
 describe('model transfer review', () => {
+  it('shows scope inline without preparing or writing on mount, and blocks writes until the saved remote scope is known',async()=>{
+    let resolve!:(value:Awaited<ReturnType<typeof modelTransferApi.loadRemoteScope>>)=>void
+    vi.mocked(modelTransferApi.loadRemoteScope).mockReturnValue(new Promise(done=>{resolve=done}))
+    const wrapper=render(true);await flushPromises()
+    expect(wrapper.find('section[aria-label="同步范围"]').exists()).toBe(true)
+    expect(wrapper.find('.sync-scope-credentials').exists()).toBe(true)
+    const save=()=>wrapper.findAll('button').find(b=>b.text()==='保存本机范围')!
+    expect(save().attributes('disabled')).toBeDefined()
+    expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(modelTransferApi.saveRemoteScope).not.toHaveBeenCalled()
+    resolve({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:false,includeKeys:false});await flushPromises()
+    expect(save().attributes('disabled')).toBeUndefined();expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled()
+    wrapper.unmount()
+  })
+  it('does not overwrite an unreadable saved WebDAV scope with initial defaults; an explicit reload can recover',async()=>{
+    vi.mocked(modelTransferApi.loadRemoteScope).mockRejectedValue({message:'范围读取失败'})
+    const wrapper=render(true);await flushPromises()
+    const save=()=>wrapper.findAll('button').find(b=>b.text()==='保存本机范围')!
+    expect(save().attributes('disabled')).toBeDefined();expect(wrapper.text()).toContain('范围读取失败')
+    expect(modelTransferApi.saveRemoteScope).not.toHaveBeenCalled()
+    vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:false,includeKeys:false})
+    await wrapper.findAll('button').find(b=>b.text()==='重新读取范围目录')!.trigger('click');await flushPromises()
+    expect(save().attributes('disabled')).toBeUndefined();expect(modelTransferApi.saveRemoteScope).not.toHaveBeenCalled();wrapper.unmount()
+  })
   it('selects exact families instead of a model subset, carries shared fields only when checked, and serializes the same WebDAV scope',async()=>{
     const store=useModelsStore();const c:ChannelPolicy={id:'family-channel',label:'族范围渠道',templateRefs:[],modelRefs:{},connection:{providerId:'p',protocol:'openai-chat',nodes:[],activeNodeId:'',credentialRef:null,enabled:false,allowPrivateNetwork:false},selection:{mode:'all'},modelOrder:['raw-a','raw-b'],discovered:[],defaults:emptyRules(),overrides:{},familyOverrides:{}}
     store.snapshot!.policy.channels=[c];store.snapshot!.policy.templateRefs=[{templateId:'family',revisionId:'revision-1'}]

@@ -7,7 +7,7 @@ const exists=(file:string)=>fs.existsSync(file.startsWith('../')?path.resolve(sr
 describe('component specification source map',()=>{
  it('has unique stable ids and real source/consumer paths, without claiming all platform matrices passed',()=>{
   expect(componentRegistry.length).toBe(43);expect(new Set(componentRegistry.map(c=>c.id)).size).toBe(componentRegistry.length)
-  for(const item of componentRegistry){expect(item.verification).toBe('pending_full_matrix');for(const file of [...item.implementations,...item.consumers])expect(exists(file),item.id+': '+file).toBe(true)}
+  for(const item of componentRegistry){expect(['scoped_automated','baseline_native_reused','prototype_only']).toContain(item.verification);expect(item.verificationEvidence.boundary).toBeTruthy();for(const check of item.verificationEvidence.checks)expect(fs.existsSync(path.resolve(src,'..',check)),item.id+': '+check).toBe(true);for(const file of [...item.implementations,...item.consumers])expect(exists(file),item.id+': '+file).toBe(true)}
   expect(componentRegistry.find(c=>c.id==='overlay.annotation')).toMatchObject({kind:'prototype_only',implementations:[],consumers:[]})
  })
  it('keeps gallery and registry out of app startup and links only real gallery anchors',()=>{
