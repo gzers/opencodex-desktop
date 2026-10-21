@@ -1,0 +1,493 @@
+{
+  "source": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+  "baseline": "f1bbe7d996389097dcf6237a6bc65b7995d68190",
+  "checks": {
+    "frontend": {
+      "result": "passed",
+      "files": 145,
+      "tests": 723,
+      "evidence": "frontend-723.log.gz"
+    },
+    "sourceAndConsumers": {
+      "result": "passed",
+      "registered": 43,
+      "evidence": "component-inventory.json"
+    },
+    "navigationNegative": {
+      "result": "confirmed_failure_then_fixed",
+      "evidence": [
+        "navigation-first-session-negative.log.gz",
+        "navigation-fixed.log.gz"
+      ]
+    },
+    "gallery": {
+      "result": "scoped_passed",
+      "viewport": [
+        1180,
+        760
+      ],
+      "matrixCases": 66,
+      "zoomViewport": [
+        900,
+        600
+      ],
+      "zoomCases": 12,
+      "limitation": "Gallery is production component rendering, not native or business workflow acceptance",
+      "correction": "Initial form samples exposed stacked checkbox labels; public inline-check recipe and same-source samples were corrected, and all six form combinations recaptured. Other section appearance sources unchanged; initial sampling is not misreported as an untouched final matrix."
+    },
+    "nativeMac": {
+      "result": "scoped_passed",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc",
+      "logicalWindow": [
+        1180,
+        760
+      ],
+      "scales": [
+        50,
+        100,
+        150,
+        200
+      ],
+      "limitation": "Final source has primary-save, range initialization, ready/retained scope, on-demand connection, grouped rules and quality/Agent checks. 50/150/200% template evidence comes from e993 with identical DetailWorkspace/ModelsRoute/Segmented source in final candidate. Native resize attempt did not resize: no 960x640 claim.",
+      "finalCandidateSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "finalCandidateImages": [
+        "images/native-804-agent-settings.jpg",
+        "images/native-804-channel-detail.jpg",
+        "images/native-804-channels.jpg",
+        "images/native-804-connection-dialog.jpg",
+        "images/native-804-default-summary.jpg",
+        "images/native-804-file-initializing.jpg",
+        "images/native-804-file-ready.jpg",
+        "images/native-804-model-rows.jpg",
+        "images/native-804-quality-mid.jpg",
+        "images/native-804-quality.jpg",
+        "images/native-804-rule-groups.jpg",
+        "images/native-804-template-collapsed.jpg",
+        "images/native-804-template-detail.jpg",
+        "images/native-804-templates.jpg",
+        "images/native-804-webdav-ready.jpg",
+        "images/native-804-webdav-scope-saved.jpg"
+      ]
+    },
+    "windowsCurrent": {
+      "result": "passed",
+      "pushRun": 39597935036,
+      "prRun": 39597940185,
+      "source": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "backendRegular": {
+        "passed": 842,
+        "failed": 0,
+        "ignored": 10
+      },
+      "nativeCredentialProtection": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      "nativeEvidence": "windows/ui021-alignment.json",
+      "binaryIdentity": "windows/native-identity.json",
+      "actualWorkflows": [
+        "ci-804-summary.json",
+        "ci-804-pr-summary.json"
+      ],
+      "limitations": [
+        "ready overview cards not available in isolated no-runtime environment; true settled environment gate checked instead",
+        "CDP RGBA captures WebView content, not native Mica compositor; unmodified platform paint/lifecycle uses fixed baseline evidence"
+      ]
+    },
+    "release": {
+      "result": "prepared_private_artifact_gate",
+      "authority": "REL-OPENCODEX-DESKTOP-12",
+      "notYetPublished": true
+    },
+    "nativeScopeSave": {
+      "result": "passed",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "path": "<owned sandbox>/manager-state/config-sync-scope.json",
+      "sha256": "5b5741271310c3e213d96d962988964d3fa361b69f701d5e9e7d5b0579a73abb",
+      "scope": {
+        "templateIds": [],
+        "channelIds": [],
+        "includeGlobal": false,
+        "preferences": true,
+        "extensions": true,
+        "includeKeys": false,
+        "skillNames": [],
+        "mcpNames": [],
+        "extensionCredentials": false,
+        "accountIds": [],
+        "accountIdentities": [],
+        "allTemplates": false,
+        "allChannels": false,
+        "allSkills": false,
+        "allMcps": false
+      },
+      "observedStatus": "本设备范围已保存，尚未上传；采用结果另行核对。",
+      "endpointConfigured": false,
+      "uploadInvoked": false
+    },
+    "review:source-and-safety": {
+      "result": "passed",
+      "source": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "reviewer": "same execution line, not independent reviewer",
+      "scope": "38 changed files reviewed against baseline; new public components are view/intent-only, no storage/IPC ownership; model sidebars preserve original save emit/transaction; ModelTransfer keeps frozen plans and package-defined receive selection; deferred unsupported account/token migration remains excluded",
+      "observations": [
+        "Reactive store readback replaces raw assignment return on first template session; failing regression retained.",
+        "Finite zoom reveal stops at sticky boundary; no continuous form pushing.",
+        "Scope initialization disables catalogue/credential inputs; first failed catalogue recovery retains explicit selection.",
+        "No Rust business-service changes, new dependencies, signing key changes, or daily installation/configuration writes.",
+        "Static consumer guard is bounded UiButton-property analysis; not a claim of complete arbitrary-CSS verification."
+      ]
+    },
+    "backendMac": {
+      "result": "passed",
+      "passed": 1127,
+      "failed": 0,
+      "ignored": 11,
+      "evidence": "ci-804.log.gz"
+    }
+  },
+  "nativeBaselineReuse": {
+    "source": "f1bbe7d996389097dcf6237a6bc65b7995d68190",
+    "owner": "REL-OPENCODEX-DESKTOP-11",
+    "scope": "unchanged tray/assets/caption/lifecycle, storage and signing trust; no implication that current UI defects were already fixed"
+  },
+  "windowsFirstFailure": {
+    "source": "18a2a0f571c5459ecc4041e5270aa936eb875587",
+    "run": 39590440360,
+    "cause": "test incorrectly required ready overview cards in no-HOME/no-runtime environment; real settled gate must be preserved",
+    "productGateBypassed": false,
+    "transparency": "CDP screenshot does not composite native Mica: observed transparent RGBA sidebar pixel (0,0,0,0); not evidence of a black production rail"
+  },
+  "images": [
+    {
+      "capture": "native-overview-accepted.png",
+      "originalSha256": "fd8c4ed878b04b8f5d57d5948aba8c6ea5c9c61f409e084243c2daf9181ec7ae",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-overview-accepted.jpg",
+      "note": "derived JPEG at original dimensions, no content edits; raw capture remains in ignored work directory",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc"
+    },
+    {
+      "capture": "native-first-session-collapsed-accepted.png",
+      "originalSha256": "fcfa7f49eee4cc2e9b9d3da5c57287fade44c7f4bd68851871a05a63957a4e82",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-first-session-collapsed-accepted.jpg",
+      "note": "derived JPEG at original dimensions, no content edits; raw capture remains in ignored work directory",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc"
+    },
+    {
+      "capture": "native-template-accepted.png",
+      "originalSha256": "829381dae4ab3c849950f49fa5a7d69b8d10ed58fc0437b94227209b05a05390",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-template-accepted.jpg",
+      "note": "derived JPEG at original dimensions, no content edits; raw capture remains in ignored work directory",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc"
+    },
+    {
+      "capture": "native-template-200-accepted.png",
+      "originalSha256": "34fc292467613d58a1faa03f76846a1ee4bd8d657c3b9404d92c3f3a38de0cb9",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-template-200-accepted.jpg",
+      "note": "derived JPEG at original dimensions, no content edits; raw capture remains in ignored work directory",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc"
+    },
+    {
+      "capture": "native-template-200-collapsed-accepted.png",
+      "originalSha256": "b60a97c95144a75f37b61ff26cc30a82248e83430049f49b9764fa4fd99df865",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-template-200-collapsed-accepted.jpg",
+      "note": "derived JPEG at original dimensions, no content edits; raw capture remains in ignored work directory",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc"
+    },
+    {
+      "capture": "native-template-50-accepted.png",
+      "originalSha256": "b0916f6a415adf6828fc75bbd8e0305a1248c726d4b18536c643e0f81bb63adf",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-template-50-accepted.jpg",
+      "note": "derived JPEG at original dimensions, no content edits; raw capture remains in ignored work directory",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc"
+    },
+    {
+      "capture": "native-template-150-accepted.png",
+      "originalSha256": "b6d80627667b8957d63d8bcdec95b33c6462126be91ea540d5d70416e13f52ad",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-template-150-accepted.jpg",
+      "note": "derived JPEG at original dimensions, no content edits; raw capture remains in ignored work directory",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc"
+    },
+    {
+      "capture": "gallery-picker-900-open.png",
+      "originalSha256": "e8d136d1a0a7d55b214f1f600ba47f20c27b00a311cba0ec993434ddcf28c06b",
+      "dimensionsPhysical": [
+        900,
+        600
+      ],
+      "reviewImage": "images/gallery-picker-900-open.jpg",
+      "note": "derived JPEG at original dimensions, no content edits; raw capture remains in ignored work directory"
+    },
+    {
+      "capture": "gallery-亮色-高-forms-corrected.png",
+      "originalSha256": "f878495be10f5eaa67f1e25a0c896dfa1941a24cba4973b4007531e326af08cb",
+      "dimensionsPhysical": [
+        1180,
+        760
+      ],
+      "reviewImage": "images/gallery-亮色-高-forms-corrected.jpg",
+      "note": "derived JPEG at original dimensions, no content edits; raw capture remains in ignored work directory"
+    },
+    {
+      "capture": "native-804-agent-settings.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "3dfebd054611ac42ec0316333df4c252b359f95b1cdf4d4ef1792bdfef8cad70",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-agent-settings.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-channel-detail.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "f93f061b2a7a69769b8525936e60ebe74e5829453713e7e3836e38f8638b5a52",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-channel-detail.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-channels.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "5d5e5af647d7d7001577a8bfd075ed4f7dc86d3334a037e8701e7dacd6a4a6ef",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-channels.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-connection-dialog.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "cecca892b14d6e1d4cbd12d4ab2c576e6a163885c2e4176aa95ec5fb0f992359",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-connection-dialog.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-default-summary.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "3293d2217e6abb13582fcc0e1223eb2e28a070c6ed57a6fc490dd4c139b5c632",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-default-summary.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-file-initializing.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "dbde26a8c0002745df438190b869f8562bbc030d39d683260dc5ef9cb62f3e2c",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-file-initializing.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-file-ready.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "5c4c6ddbce694e61dbca8e9aba1344fd28abf5b1b14b085bb9728551d021d601",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-file-ready.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-model-rows.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "8e70ba3c85463b26171f4e67258eba24b8cd2e375533ad4d8a1c17b30d070b1f",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-model-rows.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-quality-mid.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "066d64782bb73c4cd6bc19feab1a40cae2090b394b7f1b149f37c1321491ff3e",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-quality-mid.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-quality.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "43dc70f0bda396156b7ae48b25cf613b641b96004112c3d302dd1abc7324e48d",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-quality.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-rule-groups.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "1683032b8a8cfa4a01132e50dd9fb6ab2d8b539d547297dcb94c5dfbf07f7c39",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-rule-groups.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-template-collapsed.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "b81575fc1efe640d3540057c258a82559c1fb7657f68bd8aaea4f155cd969474",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-template-collapsed.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-template-detail.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "88d053ffd38a9a200f50a6ec7c37e9dd3a0426b08b838edc48e90a386aa567bb",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-template-detail.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-templates.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "aa2046daa123f972cdf2ebbbecbdbb2e588adf2c474182e65ca4bfff6218ad93",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-templates.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-webdav-ready.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "af4cd003cf6e88973421b3fc81fbf9f80bbfead62fa51a22a9cac2acf87625ba",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-webdav-ready.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "native-804-webdav-scope-saved.png",
+      "capturedSource": "804ef0f646a978d9498404c2b2dc937b3c5c4baf",
+      "originalSha256": "0cd9aea2f913f0dd6b08f606695060006414c3ad729e581f60ba9180a10aa3ca",
+      "dimensionsPhysical": [
+        2360,
+        1520
+      ],
+      "reviewImage": "images/native-804-webdav-scope-saved.jpg",
+      "note": "derived JPEG, original dimensions/no content edits"
+    },
+    {
+      "capture": "gallery-亮色-中-forms-corrected.png",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc",
+      "originalSha256": "f878495be10f5eaa67f1e25a0c896dfa1941a24cba4973b4007531e326af08cb",
+      "dimensionsPhysical": [
+        1180,
+        760
+      ],
+      "reviewImage": "images/gallery-亮色-中-forms-corrected.jpg"
+    },
+    {
+      "capture": "gallery-亮色-低-forms-corrected.png",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc",
+      "originalSha256": "e9ede365688c7cbba8fd21355677f76a05c7d0159abdacd3c5140bef39473be2",
+      "dimensionsPhysical": [
+        1180,
+        760
+      ],
+      "reviewImage": "images/gallery-亮色-低-forms-corrected.jpg"
+    },
+    {
+      "capture": "gallery-暗色-中-forms-corrected.png",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc",
+      "originalSha256": "b5fe9cd563855807f5f5b05c5e5cf78f4b98783b090729d939645812153cee6b",
+      "dimensionsPhysical": [
+        1180,
+        760
+      ],
+      "reviewImage": "images/gallery-暗色-中-forms-corrected.jpg"
+    },
+    {
+      "capture": "gallery-暗色-低-forms-corrected.png",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc",
+      "originalSha256": "acd58fb454fb5164d0ad63e484ad5c154517033959a5342308975854ff2730bd",
+      "dimensionsPhysical": [
+        1180,
+        760
+      ],
+      "reviewImage": "images/gallery-暗色-低-forms-corrected.jpg"
+    },
+    {
+      "capture": "gallery-暗色-高-forms-corrected.png",
+      "capturedSource": "e993ac35fee29257f20e22f7e7050d9e35c618cc",
+      "originalSha256": "b5fe9cd563855807f5f5b05c5e5cf78f4b98783b090729d939645812153cee6b",
+      "dimensionsPhysical": [
+        1180,
+        760
+      ],
+      "reviewImage": "images/gallery-暗色-高-forms-corrected.jpg"
+    }
+  ],
+  "integratedSource": {
+    "main": "fbd6e1d17a9029c89807100dab6f3f7089559c44",
+    "mergedAt": "2026-10-21T12:50:06Z",
+    "pullRequest": "https://github.com/gzers/opencodex-desktop/pull/9",
+    "appTestWorkflowAndChangelogTreeEqualToCandidate": true
+  }
+}
