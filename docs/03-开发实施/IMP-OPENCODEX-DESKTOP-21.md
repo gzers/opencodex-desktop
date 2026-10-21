@@ -903,3 +903,12 @@ PR8最后head b19b01e2，PR检出4831c60a的CI39455864253已完整success：前�
 再次核对发现核心《统一事件与通知》仍将0.1.10注册表当当前来源，只追加了transfer身份规则，未完整维护0.2.0的6事件/2策略。现保留基线并标明当前b19注册源/摘要，补model_config任务、实际broker/feedback/observe发出点、model_policy原计划动作、严格解除/安全载荷和任务保留边界。当前总量40任务/87事件/29策略/93发出点，非新增应用代码或并行注册表。checks-notification-doc-alignment-20261021绑定真实定义/调用点/测试源；当前CI已覆盖，不为纯文档投影重跑应用测试或冒称原生全矩阵。Mac仍锁屏，第二个连续目标轮次已复核；本轮在该等待期间完成这一真实主线缺口修正，未提前合并发布。
 
 同一范围复核纠正《数据与状态》§6/6.6仍称生产未实施的过时当前状态，并将只检查权限表达对齐真实scene=check_only/allowNew=false、空proposals与非空report；早期allowCreate/allowRevision不是正式字段，不能把概念写作接口。已核tasks.rs::validate及check_only_service_rejects_any_version_write_and_only_records_a_report，原真实回执/当前CI证据复用，未修改服务或扩大任务权限。
+
+
+### 2026-10-21解锁后最后原生消费者
+
+用户回复已解锁后继续当前b19精确sandbox（Mach-O882dd6cd…）。正式文件导出树真实读得管理器2/模版17/原渠道2：取消管理器组再只选桌面偏好得到父级半选；搜索外19项保持，来源说明可见。fixture-one子集只留gpt，预览列出明确1项及原渠道配置8公开字段/服务地址；生成文件成功，统一任务卡完成。WebDAV另选fixture-two，仅保存设备scope，真实JSON读回该UUID、preferences/extensions=true、其他模板/全局/密钥false，界面明确尚未上传，未配置/访问外网WebDAV。
+
+正式批量检查勾选GPT/Claude两项→共同执行设置/公共型号选择器选fixture-one/gpt→保存返回原2项目标。首次502真实原因为前夜fixture HTTP runner已经退出，官方进程还在，socket拒绝且旧exec handle不存在；当时库未落盘、建议未保存。恢复自有同65022端口HTTP fixture后重试同范围，实际收2份建议；只选GPT说明，另存1版。持久库GPT2版/Claude1版，GPT新说明准确、contextWindow仍inherit、默认仍基线，policy文件不存在。固定回环POST1，不称付费模型质量；失败任务与后续任务各自保持。
+
+原生编辑GPT说明为“原生复制取消检查 · 保留当前说明”→侧栏复制得到GPT副本/新建未保存且再次复制禁用→取消新建统一确认放弃→列表再进原GPT，说明仍在且复制重新可用。没有持久副本或空对象，前述GPT2/Claude1不变。checks-final-native-consumers-20261021.json和6张原始图/AX保留实际证据。此前锁屏等待门已消除，本轮不重跑已通过当前710项与无变化后端。当前进入主线整合和真实tag制品/安装/验签阶段，公开结果仍待后续事实。
