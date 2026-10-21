@@ -2,8 +2,8 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 function make(){
  const style=()=>{const values=new Map();return {setProperty:(k,v)=>values.set(k,v),getPropertyValue:k=>values.get(k)||'',values};};
- const main={style:style(),clientTop:1,padding:{paddingTop:'20px',paddingLeft:'22px',paddingRight:'30px'}},bars=[],frames=[],listeners={},mutation=[],observed=new Set();
- function bar(id,height=40,active=true,inner=false){const route={id,style:style(),active,classList:{contains:value=>value==='active'&&route.active}},tab={route,style:style(),height,isConnected:true,dataset:inner?{tabsScroll:'inner'}:{},closest:q=>q==='.main'?main:q==='.route-section'?route:null,getBoundingClientRect:()=>({height:tab.height})};bars.push(tab);return tab;}
+ const main={style:style(),clientTop:1,top:0,scrollTop:0,padding:{paddingTop:'20px',paddingLeft:'22px',paddingRight:'30px'},getBoundingClientRect:()=>({top:main.top})},bars=[],frames=[],listeners={},mutation=[],observed=new Set();
+ function bar(id,height=40,active=true,inner=false){const route={id,style:style(),active,classList:{contains:value=>value==='active'&&route.active}},tab={route,style:style(),height,top:0,isConnected:true,dataset:inner?{tabsScroll:'inner'}:{},closest:q=>q==='.main'?main:q==='.route-section'?route:null,getBoundingClientRect:()=>({height:tab.height,top:tab.top})};bars.push(tab);return tab;}
  const window={getComputedStyle:s=>s.padding,requestAnimationFrame:fn=>frames.push(fn),addEventListener:(name,fn)=>listeners[name]=fn};
  const context={window,document:{body:{},querySelectorAll:()=>bars.filter(b=>b.isConnected)},ResizeObserver:class{constructor(fn){this.fn=fn;}observe(node){observed.add(node);}unobserve(node){observed.delete(node);}},MutationObserver:class{constructor(fn){mutation.push(fn);}observe(){}},Set,Map,Promise,parseFloat};
  const api=()=>window.prototypeStickyTabs;
@@ -25,3 +25,16 @@ test('同步保留内部滚动，不改主容器；对话导航消费同一Tab�
  const h=make(),sync=h.bar('route-sync',48,true,true),conversation=h.bar('route-conversations',48);h.main.style.setProperty('overflow','hidden');h.load();assert.equal(sync.style.getPropertyValue('--page-tabs-top'),'0px');assert.equal(conversation.route.style.getPropertyValue('--page-tabs-top'),'-20px');assert.equal(conversation.route.style.getPropertyValue('--page-tabs-height'),'48px');assert.equal(h.main.style.getPropertyValue('overflow'),'hidden');assert.equal(h.main.style.values.size,1);
  sync.height=80;conversation.height=80;h.api().refresh();assert.equal(sync.route.style.getPropertyValue('--page-tabs-height'),'80px');assert.equal(conversation.route.style.getPropertyValue('--page-tabs-height'),'80px');
 });
+test('未到顶不铺底色，到达吸附线才标记吸顶，回滚后取消',()=>{
+ const h=make(),settings=h.bar('route-settings',40),models=h.bar('route-models',40,true,true);
+ h.main.top=100;settings.top=400;models.top=400;h.load();
+ assert.equal(settings.dataset.stuck,'false','远离吸附线时保持透明');
+ models.top=200;h.api().refresh();assert.equal(models.dataset.stuck,'false','内部滚动容器接近未到顶仍透明');
+ settings.top=82;h.api().refresh();assert.equal(settings.dataset.stuck,'false','接近但未到顶仍透明');
+ settings.top=80;h.api().refresh();assert.equal(settings.dataset.stuck,'true','到达吸附线标记吸顶');
+ settings.top=79;h.api().refresh();assert.equal(settings.dataset.stuck,'true','越过后保持吸顶');
+ settings.top=200;h.api().refresh();assert.equal(settings.dataset.stuck,'false','回滚离开吸附线后取消');
+ models.top=100;h.api().refresh();assert.equal(models.dataset.stuck,'true','内部滚动容器吸附线为容器顶边');
+ assert.equal(h.api().stuck().length,2);
+});
+
