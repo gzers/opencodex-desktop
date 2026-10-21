@@ -6,6 +6,8 @@
 
 ## 实施计划入口
 
+- [0.2.1公共UI收敛与原型还原修复](IMP-OPENCODEX-DESKTOP-22.md)：**planned，文档计划已编制，软件修复未开始**；承接发布后15项UI问题，先公共配方/消费者约束，再页面还原和有界回归；新分支/工作树待实施授权后建立，非发布授权。
+
 - [0.2.0模型配置与范围同步发布](REL-OPENCODEX-DESKTOP-11.md)：**已公开并晋升stable**；main/tag f1bbe7d9，完整CI、双平台安装/版本回读、原公钥验签及匿名清单/资产核对通过。
 
 - [0.2.0 模型配置与公共界面实施](IMP-OPENCODEX-DESKTOP-21.md)：completed；feature/0.2.0-model-config独立工作树完成并整合main，WP-06全部纳入；新增/受影响验证及0.1.10有效证据复用，发布事实沿REL-11。
