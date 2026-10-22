@@ -1,6 +1,8 @@
 import {mount,flushPromises} from '@vue/test-utils'
 import {createPinia,setActivePinia} from 'pinia'
 import {beforeEach,describe,it,expect,vi} from 'vitest'
+import {readFileSync} from 'node:fs'
+import {resolve} from 'node:path'
 import SyncRoute from '@/routes/SyncRoute.vue'
 import AppSidebar from '@/components/AppSidebar.vue'
 import {useRouteStore} from '@/stores/routes'
@@ -21,4 +23,11 @@ describe('one top-level configuration sync entry',()=>{
  it('places the shared sync menu between extensions and diagnostics',()=>{
   const wrapper=mount(AppSidebar);const buttons=wrapper.findAll('nav button').map(b=>b.attributes('aria-label'));expect(buttons.indexOf('同步')).toBe(buttons.indexOf('拓展')+1);expect(buttons.indexOf('诊断')).toBe(buttons.indexOf('同步')+1);wrapper.unmount()
  })
+  it('keeps the range workspace and its credential column in the page body',()=>{
+    // 原型里同步范围与凭据栏是常驻两栏；收进弹窗会让用户看不到自己选了什么。
+    const source=readFileSync(resolve(__dirname,'../src/features/sync/ModelTransfer.vue'),'utf8')
+    expect(source).toContain('data-testid="sync-scope-workspace"')
+    expect(source).toContain('data-testid="sync-scope-credentials"')
+    expect(source).toMatch(/\.sync-scope-workspace\{display:grid;grid-template-columns:minmax\(0,1fr\)/)
+  })
 })
