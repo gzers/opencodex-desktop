@@ -88,6 +88,10 @@ pub async fn config_sync_save_scope(
     .await
     .map_err(|_| invalid("sync_scope", "设备范围保存中断，请核对原范围"))?
 }
+fn config_sync_store(root: &std::path::Path) -> crate::modules::sync::config::SyncConfigStore {
+    crate::modules::sync::config::SyncConfigStore::new(root)
+}
+
 #[tauri::command]
 pub async fn config_sync_prepare(
     scope: config_remote::Scope,
@@ -114,6 +118,9 @@ pub async fn config_sync_prepare(
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         let password = passphrase.map(zeroize::Zeroizing::new);
+        // 口令写入失败不该阻断上传本身：本次仍按用户输入封包，下次再提示输入。
+        let _remembered = config_sync_store(&root)
+            .remember_sync_passphrase(password.as_deref().map(|p| p.as_str()));
         remote_operation(&root, |transport, config, binding, unchanged| {
             let mut scope = scope;
             scope.local_home = Some(local_home);
@@ -165,7 +172,13 @@ pub async fn config_sync_download(
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
-        let password = passphrase.map(zeroize::Zeroizing::new);
+        // 优先用调用方给的口令；没给就读本机记下的，读不到才由界面提示输入。
+        let stored = if passphrase.is_none() {
+            config_sync_store(&root).sync_passphrase().ok().flatten()
+        } else {
+            None
+        };
+        let password = passphrase.or(stored).map(zeroize::Zeroizing::new);
         crate::modules::model_config::feedback::receive_transfer(&root, || {
             remote_operation(&root, |transport, config, _, unchanged| {
                 tauri::async_runtime::block_on(config_remote::download_context(

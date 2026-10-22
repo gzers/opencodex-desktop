@@ -2,6 +2,7 @@
 
 pub mod atomic_write;
 pub mod codex_shim_source;
+pub mod credentials;
 pub mod discovery_paths;
 pub mod hash;
 pub mod keychain;

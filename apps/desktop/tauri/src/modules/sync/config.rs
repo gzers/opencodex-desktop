@@ -91,13 +91,13 @@ trait EndpointCredentials {
 struct SystemCredentials;
 impl EndpointCredentials for SystemCredentials {
     fn store(&self, ref_id: &str, password: &str) -> Result<(), AppError> {
-        keychain::store_webdav_password(ref_id, password)
+        crate::infrastructure::credentials::store_webdav_password(ref_id, password)
     }
     fn load(&self, purpose: &str, ref_id: &str) -> Result<Option<String>, AppError> {
-        keychain::load_optional_keychain_password(purpose, ref_id)
+        crate::infrastructure::credentials::load_optional_keychain_password(purpose, ref_id)
     }
     fn remove(&self, purpose: &str, ref_id: &str) -> Result<(), AppError> {
-        keychain::remove_keychain_password(purpose, ref_id)
+        crate::infrastructure::credentials::remove_keychain_password(purpose, ref_id)
     }
 }
 
@@ -190,14 +190,22 @@ impl SyncConfigStore {
         config.endpoints = vec![endpoint.clone()];
         validate_config(&config)?;
         let bytes = serde_json::to_vec_pretty(&config).map_err(|_| AppError::NotConfigured)?;
+        // 留空表示沿用已存口令；两者都没有才拒绝，避免“只改远端目录也要重输密码”。
+        let password = if input.password.is_empty() {
+            credentials
+                .load(WEBDAV_CREDENTIAL_PURPOSE, &ref_id)?
+                .ok_or(AppError::NotConfigured)?
+        } else {
+            input.password.clone()
+        };
         let result = (|| {
-            credentials.store(&ref_id, &input.password)?;
+            credentials.store(&ref_id, &password)?;
             crate::infrastructure::atomic_write::atomic_write(&self.path(), &bytes, 0o600)?;
             if self.load()? != config
                 || credentials
                     .load(WEBDAV_CREDENTIAL_PURPOSE, &ref_id)?
                     .as_deref()
-                    != Some(input.password.as_str())
+                    != Some(password.as_str())
             {
                 return Err(AppError::NotConfigured);
             }
@@ -257,6 +265,37 @@ impl SyncConfigStore {
         result
     }
 
+    /// 同步保护口令：上传时填过就记在本机，下载时先读它，读不到才让用户输入。
+    /// 与 WebDAV 连接口令分属两个账户位，互不覆盖。
+    pub fn sync_passphrase(&self) -> Result<Option<String>, AppError> {
+        let Some(endpoint) = self.load()?.active().cloned() else {
+            return Ok(None);
+        };
+        Ok(
+            crate::infrastructure::credentials::load_optional_keychain_password(
+                keychain::ENCRYPTION_PASSWORD_PURPOSE,
+                &endpoint.credential_ref.ref_id,
+            )?,
+        )
+    }
+
+    /// 空口令表示「用户选择不加密」：删除已存口令，避免下次误用旧值。
+    pub fn remember_sync_passphrase(&self, passphrase: Option<&str>) -> Result<(), AppError> {
+        let Some(endpoint) = self.load()?.active().cloned() else {
+            return Ok(());
+        };
+        let ref_id = &endpoint.credential_ref.ref_id;
+        match passphrase.filter(|value| !value.is_empty()) {
+            Some(value) => {
+                crate::infrastructure::credentials::store_encryption_password(ref_id, value)
+            }
+            None => crate::infrastructure::credentials::remove(
+                keychain::ENCRYPTION_PASSWORD_PURPOSE,
+                ref_id,
+            ),
+        }
+    }
+
     /// 用外部提供的整份配置替换本机端点配置（配置迁移导入路径）。
     ///
     /// 只写管理器自有配置文件；口令始终在钥匙串，调用方负责新建本机凭据引用。
@@ -306,10 +345,11 @@ pub fn validate_input(input: &SyncEndpointInput) -> Result<(), AppError> {
     if !input.base_url.starts_with("https://") {
         return Err(AppError::NotConfigured);
     }
+    // 口令是否必填取决于“有没有已存口令”：只改远端目录时允许留空并沿用原口令，
+    // 由 save_endpoint_with_credentials 解析；这里只校验地址与账号。
     if input.remote_path.trim().is_empty()
         || input.remote_path.contains("..")
         || input.username.trim().is_empty()
-        || input.password.is_empty()
     {
         return Err(AppError::NotConfigured);
     }
@@ -340,14 +380,18 @@ mod tests {
     }
 
     #[test]
-    fn input_requires_https_and_passwords() {
+    fn input_requires_https_and_account_but_allows_blank_password_on_retry() {
         assert!(validate_input(&input()).is_ok());
         let mut invalid = input();
         invalid.base_url = "http://dav.example.test".to_string();
         assert!(validate_input(&invalid).is_err());
-        let mut missing = input();
-        missing.password = String::new();
-        assert!(validate_input(&missing).is_err());
+        let mut blank = input();
+        blank.password = String::new();
+        // 留空表示沿用已存口令（只改远端目录时不必重输）；是否真有口令由保存流程判定。
+        assert!(validate_input(&blank).is_ok());
+        let mut missing_account = input();
+        missing_account.username = String::new();
+        assert!(validate_input(&missing_account).is_err());
     }
 
     /// 调用点护栏：保存端点只写 WebDAV 服务端认证口令，不再写同步加密口令。
@@ -363,14 +407,14 @@ mod tests {
         let ref_id = endpoint.credential_ref.ref_id.clone();
 
         assert_eq!(
-            keychain::load_webdav_password(&ref_id).expect("load webdav"),
+            crate::infrastructure::credentials::load_webdav_password(&ref_id).expect("load webdav"),
             "password"
         );
         // 新流程不再写入同步加密口令位。
-        assert!(keychain::load_encryption_password(&ref_id).is_err());
+        assert!(crate::infrastructure::credentials::load_encryption_password(&ref_id).is_err());
 
-        let _ = keychain::delete_webdav_password(&ref_id);
-        let _ = keychain::delete_encryption_password(&ref_id);
+        let _ = crate::infrastructure::credentials::delete_webdav_password(&ref_id);
+        let _ = crate::infrastructure::credentials::delete_encryption_password(&ref_id);
     }
 
     #[test]

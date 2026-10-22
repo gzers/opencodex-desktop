@@ -9,7 +9,7 @@ use std::path::Path;
 
 use serde_json::Value;
 
-use crate::infrastructure::keychain;
+use crate::infrastructure::credentials;
 use crate::infrastructure::webdav_client::{
     WebDavClient, WebDavConfig, WebDavError, WebDavOperation, WebDavTransport,
 };
@@ -152,7 +152,7 @@ fn payload_is_json(payload: &[u8]) -> bool {
 
 /// 受控 WebDAV 端点配置：地址 + 账号 + 已从 Keychain 取出的口令。
 pub fn webdav_config(endpoint: &SyncEndpointConfig) -> Result<WebDavConfig, SyncRunFailure> {
-    let password = keychain::load_webdav_password(&endpoint.credential_ref.ref_id)
+    let password = credentials::load_webdav_password(&endpoint.credential_ref.ref_id)
         .map_err(|_| SyncRunFailure::NotConfigured)?;
     Ok(WebDavConfig {
         base_url: endpoint.url.clone(),
@@ -322,7 +322,7 @@ async fn run_prepared_sync<T: WebDavTransport>(
         // 旧版（v1）远端仍需要原加密口令：只有这条兼容路径才读取钥匙串里的旧口令。
         let legacy_passphrase = match remote {
             ManifestPackage::Legacy(_) => {
-                keychain::load_encryption_password(&endpoint.credential_ref.ref_id)
+                credentials::load_encryption_password(&endpoint.credential_ref.ref_id)
                     .ok()
                     .map(|value| value.into_bytes())
             }

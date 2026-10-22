@@ -44,7 +44,7 @@ onBeforeUnmount(()=>{syncEndpointInput.value.password=''})
           <div class="field"><label for="sync-baseUrl">服务地址</label><input id="sync-baseUrl" v-model="syncEndpointInput.baseUrl" class="input" placeholder="https://dav.example.com/opencodex/" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
           <div class="field"><label for="sync-remotePath">远端目录</label><input id="sync-remotePath" v-model="syncEndpointInput.remotePath" class="input" placeholder="/desktop-sync/current" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
           <div class="field"><label for="sync-username">账号</label><input id="sync-username" v-model="syncEndpointInput.username" class="input" placeholder="账号" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
-          <div class="field"><label for="sync-password">应用密码</label><input id="sync-password" v-model="syncEndpointInput.password" class="input" type="password" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="输入应用密码"></div>
+          <div class="field"><label for="sync-password">应用密码</label><input id="sync-password" v-model="syncEndpointInput.password" class="input" type="password" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" :placeholder="app.syncConfig?.endpoint?'留空沿用已保存的密码':'输入应用密码'"></div><p v-if="app.syncConfig?.endpoint" class="sync-password-note">只改地址或目录时留空即可，不会覆盖已保存的密码。</p>
           <!-- 只读展示：引擎只实现「每次询问」，四档静默策略从未落码，不能让用户以为可改（§26.1）。
                仍按技术型输入保留关自动大写三属性，避免日后误改成可编辑时被 WKWebView 首字母大写。 -->
           <div class="field"><label>冲突策略</label><input class="input" readonly aria-readonly="true" aria-label="冲突策略" value="每次询问" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
@@ -55,3 +55,7 @@ onBeforeUnmount(()=>{syncEndpointInput.value.password=''})
         <div class="controls"><UiButton class="btn" :disabled="app.syncSaving || app.syncTesting" @click="saveSyncEndpoint()">{{ app.syncSaving ? '保存中…' : '保存端点' }}</UiButton><UiButton class="btn ghost" :disabled="app.syncTesting || app.syncSaving" @click="app.testSyncConnection()">{{ app.syncTesting ? '测试中…' : '测试连接' }}</UiButton></div>
       </article>
 </template>
+<style scoped>
+/* 口令留空的含义就地说明，避免用户以为漏填。 */
+.sync-password-note{margin:-4px 0 0;color:var(--muted);font-size:var(--text-caption);grid-column:1/-1}
+</style>
