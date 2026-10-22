@@ -160,7 +160,7 @@ function prepareDelete() {
     <ChannelsView v-if="models.snapshot" v-show="tab==='channels'" :active="tab==='channels'" actions-target="#model-tabs-actions" />
     <template v-if="models.snapshot&&tab==='templates'&&(!draft||!models.view.templateEditor)">
       <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索模版" aria-label="搜索模版" /><div class="model-inline"><UiButton v-if="draft" @click="models.view.templateEditor=true">继续编辑</UiButton><UiButton @click="batchOpen=true">{{ selectedTemplates.length?'检查勾选更新':'检查全部更新' }}</UiButton><UiButton @click="externalOpen = true">外部任务</UiButton><UiButton variant="primary" @click="edit()">新建模版</UiButton></div></div>
-      <div class="model-table-scroll"><table class="model-table ui-table template-table"><colgroup><col class="ui-selection-col"/><col/><col class="template-version-col"/><col class="template-actions-col"/></colgroup><thead><tr><th class="ui-selection-cell"><span class="sr-only">选择</span></th><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
+      <div class="model-table-scroll"><table class="model-table ui-table ui-table-fixed template-table"><colgroup><col class="ui-selection-col"/><col class="template-name-col"/><col class="template-version-col"/><col class="template-actions-col"/></colgroup><thead><tr><th class="ui-selection-cell"><span class="sr-only">选择</span></th><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
         <td class="ui-selection-cell"><input v-model="selectedTemplates" type="checkbox" :value="t.id" :aria-label="'勾选'+t.label" /></td><td><div class="template-title"><strong>{{ t.label }}</strong><span class="tag">{{ t.source === 'builtin' ? '内置' : '自建' }}</span></div><small>{{ t.source === 'builtin' && current(t) === t.revisions[0] ? '内置基线' : current(t).changes.map(c => c.field).slice(0, 3).join('、') || '内容变更依据缺失' }}</small></td>
         <td><UiSelectField :model-value="current(t).id" :options="choices(t)" :label="`${t.label}保存版本`" size="sm" :disabled="versionLocked(t)" @update:model-value="chooseVersion(t,$event)" /></td>
         <td><div class="ui-row-actions"><UiButton size="sm" :data-model-focus="'template:'+t.id" @click="edit(t, current(t).id)">编辑</UiButton><UiButton size="sm" @click="edit(t, current(t).id, true)">复制</UiButton><UiButton size="sm" @click="manage(t)">版本管理</UiButton><UiButton size="sm" @click="usage={templateId:t.id,revisionId:current(t).id}">匹配与使用</UiButton></div></td>
@@ -226,7 +226,7 @@ function prepareDelete() {
 .model-table{width:100%;border-collapse:collapse}
 .model-table th{color:var(--muted);font-weight:500;text-align:left}
 .model-table th,.model-table td{padding:14px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
-.template-title{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}.template-table{min-width:740px}.template-version-col{width:270px}.template-actions-col{width:300px}
+.template-title{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}/* 模版表选择列独立成列；名称列吃剩余宽度，版本与操作固定。 */.template-table{min-width:760px}.template-name-col{width:auto}.template-version-col{width:260px}.template-actions-col{width:270px}
 .model-table .tag{margin-left:0}
 .model-table small,.model-version small{display:block;margin-top:5px;color:var(--muted)}
 .model-inline{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2)}
