@@ -140,6 +140,7 @@
  }
  const eligible=()=>filtered().filter(m=>!m.reason).map(m=>m.key);
  function channelHTML(){
+  if(scenario==='loading')return '<button type="button" class="mpk-channel" aria-current="true" aria-disabled="true"><span>全部</span><small>—</small></button><div class="mpk-channels-list">'+[62,74,56,84,68,60].map(width=>'<button type="button" class="mpk-channel mpk-skeleton-channel" aria-hidden="true" tabindex="-1"><span class="mpk-skeleton mpk-skeleton-line" style="width:'+width+'%"></span></button>').join('')+'</div>';
   const count=id=>catalog.filter(m=>(id==='all'||m.channel===id)&&matches(m)).length;
   const row=(id,name)=>'<button type="button" class="mpk-channel" data-mpk="channel" data-id="'+esc(id)+'" aria-label="查看'+esc(name)+'模型" aria-current="'+(channel===id)+'"><span>'+esc(name)+'</span><small>'+count(id)+'</small></button>';
   const found=channels.filter(c=>(c.name+' '+c.id).toLocaleLowerCase().includes(channelQuery.trim().toLocaleLowerCase()));
@@ -154,8 +155,15 @@
   const input=mode==='multiple'?'<td><input type="checkbox" data-mpk-pick="'+esc(m.key)+'" aria-label="选择 '+esc(m.channelName+' / '+m.rawId)+'" '+(picked?'checked':'')+(!canSelect&&!picked?' disabled':'')+'></td>':'';
   return '<tr class="mpk-row '+(picked?'is-picked ':'')+(!canSelect?'is-disabled':'')+'" data-mpk="'+(mode==='single'?'pick':'toggle')+'" data-key="'+esc(m.key)+'" aria-selected="'+picked+'" '+(!canSelect?'aria-disabled="true"':'')+'>'+input+'<td><button type="button" class="mpk-model-name" data-mpk="'+(mode==='single'?'pick':'toggle')+'" data-key="'+esc(m.key)+'"'+effortAttrs(m,'row')+' aria-label="选择 '+esc(m.channelName+' / '+m.rawId)+'" '+(!canSelect&&!picked?'disabled':'')+'>'+esc(m.name)+(mode==='single'&&picked?'<span class="mpk-current-check"><span aria-hidden="true">✓</span> 已选</span>':'')+'</button><small>'+esc(m.rawId)+(m.alias?'<br>别名：'+esc(m.alias):'')+'</small></td><td>'+esc(m.channelName)+'</td><td>'+ (m.context?m.context.toLocaleString('en-US'):'未知')+'</td><td>'+(reasoningEnabled?'<button type="button" class="mpk-effort-trigger" data-mpk="effort" data-key="'+esc(m.key)+'"'+effortAttrs(m,'row')+' aria-label="选择推理档位 '+esc(m.channelName+' / '+m.rawId)+'" '+(m.reason?'disabled':'')+'>'+'<span class="mpk-effort-label">'+effortName(m.key)+'</span> <span aria-hidden="true">⌄</span></button>':esc(levels[m.effort]||'未知'))+(m.efforts.length?'<small>'+supportedEfforts(m).map(x=>esc(levels[x]||x)).join(' / ')+'</small>':'<small>档位未知</small>')+'</td><td>'+(m.reason?'<span class="mpk-status-warning">'+esc(m.reason)+'</span>':'可选')+'</td>'+(recommendedEnabled?'<td>'+ (recommendation?'推荐':'—')+'</td>':'')+'</tr>';
  }
+ /** 目录读取中的骨架：列宽与真实表一致，加载完成不跳版；行内容对辅助技术隐藏。 */
+ function skeletonHTML(){
+  const cols=columns();
+  const skelRow='<tr class="mpk-skeleton-row" aria-hidden="true">'+(mode==='multiple'?'<td><span class="mpk-skeleton mpk-skeleton-box"></span></td>':'')+'<td><span class="mpk-skeleton mpk-skeleton-line" style="width:72%"></span><span class="mpk-skeleton mpk-skeleton-line is-faint" style="width:46%"></span></td><td><span class="mpk-skeleton mpk-skeleton-line" style="width:58%"></span></td><td><span class="mpk-skeleton mpk-skeleton-line" style="width:44%"></span></td><td><span class="mpk-skeleton mpk-skeleton-line" style="width:52%"></span></td><td><span class="mpk-skeleton mpk-skeleton-line" style="width:38%"></span></td>'+(recommendedEnabled?'<td><span class="mpk-skeleton mpk-skeleton-line" style="width:32%"></span></td>':'')+'</tr>';
+  return '<div class="mpk-skeleton-status" role="status"><span class="mpk-skeleton-spin" aria-hidden="true"></span><span>正在读取模型目录</span><small>已有选择保持</small>'+button('显示加载完成示例','load-finished')+'</div>'
+   +'<table class="mpk-table is-loading" aria-label="渠道模型列表 · 正在读取" aria-busy="true"><colgroup>'+(mode==='multiple'?'<col class="mpk-col-pick">':'')+cols.map(c=>'<col class="mpk-col-'+c.key+'">').join('')+'</colgroup><thead>'+tableHead()+'</thead><tbody>'+Array.from({length:8},()=>skelRow).join('')+'</tbody></table>';
+ }
  function listHTML(){
-  if(scenario==='loading')return '<div class="mpk-empty" role="status">正在读取模型目录…<br>已有选择保持。'+button('显示加载完成示例','load-finished')+'</div>';
+  if(scenario==='loading')return skeletonHTML();
   if(scenario==='failed')return '<div class="mpk-empty" role="status">目录读取失败<br>已有选择保持。'+button('重试读取示例','load-finished')+'</div>';
   const rows=filtered();if(!rows.length)return '<div class="mpk-empty" role="status">'+(catalog.length?'没有匹配的模型<br>清空模型搜索或切换全部渠道。':'目录暂无模型，原选择保持。')+'<div>'+button('清空模型搜索','clear-search')+(channel==='all'?'':button('查看全部','all'))+'</div></div>';
   return '<table class="mpk-table" aria-label="渠道模型列表"><colgroup>'+(mode==='multiple'?'<col class="mpk-col-pick">':'')+columns().map(c=>'<col class="mpk-col-'+c.key+'">').join('')+'</colgroup><thead>'+tableHead()+'</thead><tbody>'+rows.map(rowHTML).join('')+'</tbody></table>';
@@ -164,7 +172,7 @@
   const ordered=mode==='multiple'&&orderEnabled;
   const rows=!pending.length?'<span class="mpk-picked-empty">尚未选择模型</span>':pending.map((id,i)=>{
    const m=catalog.find(m=>m.key===id),canAdjust=(reasoningEnabled||fastEnabled)&&m&&!m.reason;
-   const label='<span class="mpk-chip-check" aria-hidden="true">✓</span><span class="mpk-chip-model">'+(ordered?'<span class="mpk-chip-number">'+(i+1)+'.</span> ':'')+esc(locationFor(id))+'</span>'+(reasoningEnabled?'<span class="mpk-chip-effort '+(effortChoices.get(id)?'is-custom':'')+'">'+esc(effortName(id))+'</span>':'')+(fastEnabled&&effectiveFast(m)?'<span class="mpk-chip-fast">Fast</span>':'')+(!m?'<span class="mpk-chip-warning">目录缺失</span>':invalidEffort(id)?'<span class="mpk-chip-warning">档位不支持</span>':'');
+   const label='<span class="mpk-chip-check" aria-hidden="true">✓</span><span class="mpk-chip-model">'+(ordered?'<span class="mpk-chip-number">'+(i+1)+'.</span> ':'')+esc(locationFor(id))+'</span>'+(reasoningEnabled?'<span class="mpk-chip-effort '+(effortChoices.get(id)?'is-custom':'')+'">'+esc(effortName(id))+'</span>':'')+(fastEnabled&&effectiveFast(m)?'<span class="mpk-chip-fast">Fast</span>':'')+(scenario==='loading'?'':!m?'<span class="mpk-chip-warning">目录缺失</span>':invalidEffort(id)?'<span class="mpk-chip-warning">档位不支持</span>':'');
    const main=canAdjust?'<button type="button" class="mpk-chip-label" data-mpk="effort" data-key="'+esc(id)+'"'+effortAttrs(m,'picked')+' aria-label="调整推理档位 '+esc(locationFor(id))+'">'+label+'</button>':'<span class="mpk-chip-label">'+label+'</span>';
    const controls=(ordered?button('↑','move','data-key="'+esc(id)+'" data-direction="-1" aria-label="上移 '+esc(locationFor(id))+'" '+(i===0?'disabled':''))+button('↓','move','data-key="'+esc(id)+'" data-direction="1" aria-label="下移 '+esc(locationFor(id))+'" '+(i===pending.length-1?'disabled':'')):'')+(mode==='multiple'?button('×','remove','data-key="'+esc(id)+'" aria-label="移除 '+esc(locationFor(id))+'"'):'');
    return '<div class="mpk-picked-row" data-key="'+esc(id)+'">'+main+(controls?'<span class="mpk-chip-actions">'+controls+'</span>':'')+'</div>';
@@ -210,7 +218,7 @@
   if(!keepEffort)closeEffort();if(!active()||!$('#mpkModels'))return;const list=$('#mpkModels'),nav=$('.mpk-channels-list');browseScroll=resetScroll?0:list.scrollTop;if(nav)channelScroll=nav.scrollTop;
   $('#mpkChannelRows').innerHTML=channelHTML();$('.mpk-channels-list').scrollTop=channelScroll;
   $('#mpkModels').innerHTML=listHTML();$('#mpkModels').scrollTop=browseScroll;
-  $('#mpkModels').setAttribute('aria-label','模型表格：'+(channel==='all'?'全部渠道':channels.find(c=>c.id===channel)?.name||'当前渠道'));$('#mpkResultCount').textContent=filtered().length+' 个结果';
+  $('#mpkModels').setAttribute('aria-label','模型表格：'+(channel==='all'?'全部渠道':channels.find(c=>c.id===channel)?.name||'当前渠道'));$('#mpkResultCount').textContent=scenario==='loading'?'读取中':filtered().length+' 个结果';$('#mpkModels').setAttribute('aria-busy',String(scenario==='loading'));
   $('#mpkPicked').innerHTML=selectedHTML();$('#mpkClearSearch').hidden=!query;$('#mpkClearChannels').hidden=!channelQuery;
   refreshActions();
   if(anchorInfo&&!effortPopover.hidden){effortAnchor=$$('[data-effort-key]').find(el=>el.dataset.effortKey===anchorInfo.key&&el.dataset.effortSource===anchorInfo.source&&el.classList.contains('mpk-model-name')===anchorInfo.name);effortAnchor?.setAttribute('aria-expanded','true');positionEffort();}

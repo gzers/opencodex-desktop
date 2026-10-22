@@ -159,3 +159,34 @@ button.mpk-chip-label{cursor:pointer}
 .mpk-effort-fast:disabled{opacity:.45;cursor:default}
 .mpk-fast-title{font-size:14px;line-height:22px;text-align:center;font-weight:550;color:var(--text)}
 .mpk-chip-fast{font-size:10px;font-weight:550;color:var(--mpk-effort-accent);white-space:nowrap}
+
+/* 目录读取中：骨架与状态条。列宽沿用真实表，加载完成不跳版。
+   低画质档位关闭扫光只留静态底；prefers-reduced-motion 同样降级。 */
+.mpk-skeleton-status{display:flex;align-items:center;gap:8px;padding:9px 8px 11px;font-size:12px;color:var(--text);min-width:0}
+.mpk-skeleton-status small{color:var(--muted);font-size:11px;overflow-wrap:anywhere}
+.mpk-skeleton-spin{width:12px;height:12px;flex:none;border:2px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:mpk-spin .8s linear infinite}
+@keyframes mpk-spin{to{transform:rotate(360deg)}}
+.mpk-skeleton{display:block;height:9px;border-radius:5px;background:color-mix(in srgb,var(--text) 11%,transparent);position:relative;overflow:hidden}
+.mpk-skeleton.is-faint{height:7px;margin-top:6px;background:color-mix(in srgb,var(--text) 7%,transparent)}
+.mpk-skeleton-box{width:14px;height:14px;border-radius:4px}
+.mpk-skeleton-line{max-width:100%}
+.mpk-skeleton::after{content:'';position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--text) 12%,transparent),transparent);animation:mpk-shimmer 1.4s ease-in-out infinite}
+@keyframes mpk-shimmer{to{transform:translateX(100%)}}
+.mpk-table.is-loading td{padding:12px 7px}
+.mpk-skeleton-row{pointer-events:none}
+.mpk-skeleton-channel{pointer-events:none;cursor:default}
+.mpk-skeleton-channel:hover{background:none}
+html[data-effects=mid] .mpk-skeleton::after,html[data-effects=low] .mpk-skeleton::after{animation:none;display:none}
+html[data-effects=low] .mpk-skeleton-spin{animation:none;border-top-color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.mpk-skeleton::after{animation:none;display:none}.mpk-skeleton-spin{animation:none}}
+
+/* 选中反馈：行背景、强调条与「已选」徽标。只作用于颜色与一次性入场，
+   低画质与 prefers-reduced-motion 下不播动画，直接给终态。 */
+.mpk-table tbody tr{transition:background-color .14s ease}
+.mpk-table tbody tr.is-picked[data-mpk=pick] td:first-child{transition:box-shadow .14s ease,padding-left .14s ease}
+.mpk-current-check{animation:mpk-chip-in .14s ease-out both}
+@keyframes mpk-chip-in{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.mpk-effort-label{transition:color .1s ease,opacity .1s ease}
+html[data-effects=mid] .mpk-current-check,html[data-effects=low] .mpk-current-check{animation:none}
+html[data-effects=mid] .mpk-effort-label,html[data-effects=low] .mpk-effort-label{transition:none}
+@media (prefers-reduced-motion:reduce){.mpk-current-check{animation:none}.mpk-table tbody tr,.mpk-table tbody tr.is-picked[data-mpk=pick] td:first-child,.mpk-effort-label{transition:none}}

@@ -120,3 +120,17 @@ test('按档位排序时编辑不移动锚点行，浮层收起后才复排且�
  const table=h.node('mpkModels'),tbody=h.node('tbody'),a=h.node('row-a'),b=h.node('row-b');a.dataset.key=key(ref());b.dataset.key=key(other);table.queryResults['.mpk-row']=[b,a];table.queryResults.tbody=tbody;const writes=table.htmlWrites;
  h.click('effort',key(ref()));h.effort('step',0);assert.equal(tbody.children.length,0);assert.equal(h.node('mpkEffortPopover').hidden,false);assert.equal(table.htmlWrites,writes);h.outside();assert.deepEqual(tbody.children.map(n=>n.dataset.key),[key(ref()),key(other)]);assert.equal(table.htmlWrites,writes);
 });
+
+test('读取中渲染骨架与状态条，已选项不判缺失且不可确认',()=>{
+ const h=harness();
+ h.api.choose({scenario:'loading',models:[ref()],getCatalog:()=>[],onSelect(){}});
+ const models=h.node('mpkModels'),picked=h.node('mpkPicked');
+ assert.match(models.innerHTML,/mpk-skeleton-status/);
+ assert.match(models.innerHTML,/aria-busy="true"/);
+ assert.equal((models.innerHTML.match(/mpk-skeleton-row/g)||[]).length,8);
+ assert.equal(models.getAttribute('aria-busy'),'true');
+ assert.equal(h.node('mpkResultCount').textContent,'读取中');
+ assert.doesNotMatch(picked.innerHTML,/目录缺失/);
+ assert.match(h.node('mpkChannelRows').innerHTML,/mpk-skeleton-channel/);
+ assert.equal(h.node('modalConfirm').disabled,true);
+});
