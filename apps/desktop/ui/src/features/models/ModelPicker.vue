@@ -20,6 +20,12 @@ const identity=(row:ModelChoice)=>row.nativeModelId?{nativeModelId:row.nativeMod
 const rowChoice=(row:ModelProjection):ModelChoice=>row.nativeModelId?{nativeModelId:row.nativeModelId}:{channelId:row.channelId,modelId:row.modelId}
 const pickId=(pick:ModelChoice)=>pick.nativeModelId??pick.modelId
 const channelLabel=(id?:string)=>!id?'官方 / 原生':props.channels.find(c=>c.id===id)?.label??id
+/**
+ * 模型列展示的标识。官方展示名可能恰好等于裸 id（或与上游 namespaced 相同），
+ * 那样同一渠道里就会出现“有的带前缀、有的不带”。标识统一带渠道：
+ * 原生保留原生 id，渠道型号用“渠道标签/原始 id”。
+ */
+const modelIdentity=(row:ModelProjection)=>row.nativeModelId?row.label:row.channelId?channelLabel(row.channelId)+'/'+row.modelId:row.label
 const available=(row:ModelProjection)=>!props.loading&&!props.error&&row.enabled&&row.discovered&&!row.unavailableReason
 const chosen=(row:ModelProjection)=>picks.value.some(p=>key(p)===key(row))
 watch(()=>props.open,value=>{if(value){picks.value=props.current?.map(p=>({...p}))??[];search.value='';channelSearch.value='';channel.value='';focused.value='';sorting.value=null;descending.value=false}},{immediate:true})
@@ -28,7 +34,7 @@ const channelRows=computed(()=>{const usable=new Set(props.rows.filter(row=>row.
 function effort(row:ModelProjection){if(row.rules.noReasoning?.mode==='custom'&&row.rules.noReasoning.value)return undefined;return (props.reasoning?picks.value.find(p=>key(p)===key(row))?.reasoningEffort:undefined)??(row.rules.defaultEffort.mode==='custom'?row.rules.defaultEffort.value:undefined)}
 function sortValue(row:ModelProjection,column:SortColumn):string|number|undefined{
  if(column==='recommendation'){const index=props.recommendations?.findIndex(p=>key(p)===key(row));return index!==undefined&&index>=0?index:undefined}
- if(column==='model')return row.label
+ if(column==='model')return modelIdentity(row)
  if(column==='channel')return channelLabel(row.channelId)
  if(column==='context')return row.rules.contextWindow.mode==='custom'?row.rules.contextWindow.value:undefined
  if(column==='state')return available(row)?0:1
@@ -37,7 +43,7 @@ function sortValue(row:ModelProjection,column:SortColumn):string|number|undefine
 // 可浏览列表只列真正可选的型号：隐藏、停用渠道、待首次确认都由可用性判定挡在外面。
 // 已保存但如今失效的选择仍留在“已选模型”里，并在那里写明原因。
 const rows=computed(()=>{
- const values=props.rows.filter(row=>available(row)&&(!channel.value||row.channelId===channel.value)&&(row.label+' '+row.modelId+' '+(row.aliases??[]).join(' ')+' '+channelLabel(row.channelId)).toLowerCase().includes(search.value.toLowerCase()))
+ const values=props.rows.filter(row=>available(row)&&(!channel.value||row.channelId===channel.value)&&(row.label+' '+modelIdentity(row)+' '+row.modelId+' '+(row.aliases??[]).join(' ')+' '+channelLabel(row.channelId)).toLowerCase().includes(search.value.toLowerCase()))
  const column=sorting.value;if(!column)return values
  return values.map((row,index)=>({row,index})).sort((a,b)=>{
   const left=sortValue(a.row,column);const right=sortValue(b.row,column)
@@ -89,7 +95,7 @@ function option(row:ModelProjection,field:'reasoningEffort'|'fast',value?:string
    <div class="model-picker-browser"><h3>模型 <small>{{ rows.length }} 个结果</small></h3><input class="input" v-model="search" type="search" aria-label="搜索模型" placeholder="搜索型号或原始ID" @input="focused=''" @keydown.down.prevent="focusRow(0)" />
     <div class="model-picker-list" @scroll="focused=''"><table ref="table" class="model-picker-table" role="grid" :aria-label="(channel?channelLabel(channel):'全部渠道')+'模型'"><thead><tr><th v-if="multiple"><input type="checkbox" :checked="allSelected" :indeterminate="someSelected" :disabled="!selectable.length" :aria-label="'全选当前结果 '+selectable.length+' 项'" @change="selectResults" /></th><th v-for="head in heads" :key="head[0]" :aria-sort="sortState(head[0])"><button type="button" @click="sort(head[0])">{{ head[1] }} {{ sorting===head[0]?descending?'↓':'↑':'↕' }}</button></th><th v-if="reasoning">设置</th></tr></thead><tbody>
      <tr v-for="(row,index) in rows" :key="key(row)" class="model-picker-row" :class="{'is-selected':chosen(row),'is-unavailable':!available(row)}" tabindex="0" :aria-selected="chosen(row)" :aria-disabled="!available(row)" @click="chooseRow(row)" @keydown="rowKey($event,row,index)">
-      <td v-if="multiple"><input type="checkbox" :aria-label="'选择 '+channelLabel(row.channelId)+' / '+row.label" :checked="chosen(row)" :disabled="!available(row)" @click.stop @change="toggle(row)" /></td><td><strong>{{ row.label }}</strong><span v-if="chosen(row)" class="model-picker-chosen">✓ 已选</span><small>{{ row.modelId }}</small><small v-if="row.aliases?.length">别名：{{ row.aliases.join('、') }}</small></td><td>{{ channelLabel(row.channelId) }}</td><td>{{ row.rules.contextWindow.mode==='custom'?row.rules.contextWindow.value.toLocaleString():'未知' }}</td><td>{{ effort(row)??'未知' }}</td><td>{{ row.unavailableReason??(!row.enabled?'渠道停用':!row.discovered?'未发现':'可选') }}</td>
+      <td v-if="multiple"><input type="checkbox" :aria-label="'选择 '+modelIdentity(row)" :checked="chosen(row)" :disabled="!available(row)" @click.stop @change="toggle(row)" /></td><td><strong>{{ modelIdentity(row) }}</strong><span v-if="chosen(row)" class="model-picker-chosen">✓ 已选</span><small v-if="row.label&&row.label!==modelIdentity(row)">{{ row.label }}</small><small v-if="row.aliases?.length">别名：{{ row.aliases.join('、') }}</small></td><td>{{ channelLabel(row.channelId) }}</td><td>{{ row.rules.contextWindow.mode==='custom'?row.rules.contextWindow.value.toLocaleString():'未知' }}</td><td>{{ effort(row)??'未知' }}</td><td>{{ row.unavailableReason??(!row.enabled?'渠道停用':!row.discovered?'未发现':'可选') }}</td>
       <td v-if="recommendations?.length">{{ recommendations.findIndex(p=>key(p)===key(row))>=0?'推荐 '+(recommendations.findIndex(p=>key(p)===key(row))+1):'—' }}</td><td v-if="reasoning" @click.stop><ModelChoiceOptions :row="row" :choice="picks.find(p=>key(p)===key(row))" :open="focused==='row:'+key(row)" :another-open="!!focused" :disabled="!available(row)" label="推理 / Fast" @open="focused='row:'+key(row)" @close="closeOptions('row:'+key(row))" @select="!chosen(row)&&toggle(row)" @revert="revertOptions" @option="(field,value)=>option(row,field,value)" /></td>
      </tr>
     </tbody></table><p v-if="!rows.length&&!loading&&!error">没有可选模型</p></div>
