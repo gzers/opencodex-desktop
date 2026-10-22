@@ -206,9 +206,18 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
                 channel_id: channel.into(),
                 provider_id: provider.into(),
                 model_id: id.into(),
+                // 选择器要能区分同名型号：优先沿用官方展示名，没有展示名时回落到
+                // 带渠道前缀的 namespaced（如 GZGG-NewApi/gxlq-local-deepseek-flash）。
+                // 早先直接回落到裸 id，同一渠道里有的行带前缀、有的不带，看起来像缺数据。
                 label: raw["modelDisplayNames"][id]
                     .as_str()
-                    .or_else(|| row["displayName"].as_str())
+                    .filter(|value| !value.is_empty())
+                    .or_else(|| {
+                        row["displayName"]
+                            .as_str()
+                            .filter(|value| !value.is_empty())
+                    })
+                    .or(namespaced)
                     .unwrap_or(id)
                     .into(),
                 enabled: reason.is_none(),
@@ -397,6 +406,13 @@ mod tests {
                 .unwrap()
                 .picker_visible
         );
+        // 没有展示名时必须回落带渠道前缀的 namespaced，不能出现“有的带前缀、有的不带”。
+        let chosen = first
+            .rows
+            .iter()
+            .find(|r| r.model.model_id == "chosen")
+            .unwrap();
+        assert_eq!(chosen.model.label, "custom/chosen");
         let native = first
             .rows
             .iter()

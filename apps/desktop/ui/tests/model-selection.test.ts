@@ -22,7 +22,7 @@ describe('public model selection', () => {
   })
   it('shows and sorts recommendations only when caller supplies exact identities, without changing picked priority',async()=>{
     const wrapper=mount(ModelPicker,{props:{open:true,rows:[row('a'),row('b')],channels:[],multiple:true,ordered:true,recommendations:[{channelId:'channel',modelId:'b'}],current:[{channelId:'channel',modelId:'a'},{channelId:'channel',modelId:'b'}]},global:{stubs:{UiDialog:dialog,UiSelectMenu:menu}}})
-    await wrapper.findAll('th button').find(b=>b.text().includes('推荐'))!.trigger('click');expect(wrapper.findAll('.model-picker-row strong').map(r=>r.text())).toEqual(['b','a'])
+    await wrapper.findAll('th button').find(b=>b.text().includes('推荐'))!.trigger('click');expect(wrapper.findAll('.model-picker-row strong').map(r=>r.text())).toEqual(['channel/b','channel/a'])
     await wrapper.findAll('button').find(b=>b.text()==='确定选择')!.trigger('click');expect(wrapper.emitted('confirm')?.[0]).toEqual([[{channelId:'channel',modelId:'a'},{channelId:'channel',modelId:'b'}]])
     await wrapper.setProps({recommendations:[]});expect(wrapper.findAll('th button').some(b=>b.text().includes('推荐'))).toBe(false);wrapper.unmount()
   })
@@ -65,9 +65,9 @@ describe('public model selection', () => {
     const wrapper=mount(ModelPicker,{props:{open:true,rows:[unknown,large,small],channels:[]},global:{stubs:{UiDialog:dialog,UiSelectMenu:menu}}})
     const names=()=>wrapper.findAll('.model-picker-row strong').map(item=>item.text())
     const button=()=>wrapper.findAll('th button').find(b=>b.text().startsWith('上下文'))!
-    await button().trigger('click');expect(names()).toEqual(['small','large','unknown'])
-    await button().trigger('click');expect(names()).toEqual(['large','small','unknown'])
-    await button().trigger('click');expect(names()).toEqual(['unknown','large','small']);wrapper.unmount()
+    await button().trigger('click');expect(names()).toEqual(['channel/small','channel/large','channel/unknown'])
+    await button().trigger('click');expect(names()).toEqual(['channel/large','channel/small','channel/unknown'])
+    await button().trigger('click');expect(names()).toEqual(['channel/unknown','channel/large','channel/small']);wrapper.unmount()
   })
   it('keeps missing and incompatible selected references visible and prevents confirmation',async()=>{
     const item=row('present')
@@ -103,7 +103,7 @@ describe('official snapshot adoption', () => {
       global: { stubs: { UiDialog: dialog, UiSelectMenu: menu } },
     })
     // 可浏览列表只列可选型号；隐藏型号与停用渠道的行都不出现。
-    expect(wrapper.findAll('.model-picker-row').map(r => r.get('strong').text())).toEqual(['visible'])
+    expect(wrapper.findAll('.model-picker-row').map(r => r.get('strong').text())).toEqual(['可见渠道/visible'])
     expect(wrapper.find('nav').text()).toContain('可见渠道')
     expect(wrapper.find('nav').text()).not.toContain('全隐藏渠道')
     expect(wrapper.text()).toContain('型号已隐藏，请重新选择')
