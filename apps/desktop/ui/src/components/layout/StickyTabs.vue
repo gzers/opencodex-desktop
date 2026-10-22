@@ -28,10 +28,21 @@ function measure() {
   parent.style.setProperty('--page-tabs-height', (bar.value.offsetHeight || 0) + 'px')
   syncStuck()
 }
-// 滚过自然位置即视为吸顶；半个像素只吸收亚像素舍入，避免来回闪。
+/**
+ * 吸顶判定优先用视口坐标：Tab 的 sticky 负偏移会被浏览器夹在滚动口边缘，
+ * 因此「贴住」的那一刻它的上沿就等于滚动容器上边框内侧。
+ * 早先只比 offsetTop 链与 scrollTop，一旦 offsetParent 跳过 .main（.main 是 static），
+ * 累加值就不再是相对滚动位置的偏移，判定永远不成立，玻璃材质也就永远不出现。
+ * jsdom 不做布局、所有矩形为 0，此时退回 offsetTop 链，保持既有测试语义。
+ */
 function syncStuck() {
   if (!bar.value || !main) return
-  const next = main.scrollTop + (main.clientTop || 0) >= naturalOffset() - 0.5
+  const barRect = bar.value.getBoundingClientRect?.()
+  const mainRect = main.getBoundingClientRect?.()
+  const measurable = !!barRect && !!mainRect && (barRect.height > 0 || mainRect.height > 0)
+  const next = measurable
+    ? barRect!.top <= mainRect!.top + (main.clientTop || 0) + 0.5
+    : main.scrollTop + (main.clientTop || 0) >= naturalOffset() - 0.5
   // 初次挂载必须写一次，否则 data-stuck 缺失、样式退回“未吸顶”。
   if (stuckWritten && next === stuck) return
   stuck = next
