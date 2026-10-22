@@ -5,6 +5,18 @@ let observer: ResizeObserver | undefined
 let parent: HTMLElement | null = null
 let main: HTMLElement | null = null
 let stuck = false
+let stuckWritten = false
+// Tab 在滚动内容里的自然位置（不含滚动量）。用 offsetTop 链累加得到，
+// 与当前滚动量和 sticky 偏移无关；先前用视口坐标反推，吸顶后会把自己算成新基准。
+function naturalOffset(): number {
+  let node: HTMLElement | null = bar.value
+  let total = 0
+  while (node && node !== main) {
+    total += node.offsetTop
+    node = node.offsetParent as HTMLElement | null
+  }
+  return total
+}
 function measure() {
   if (!bar.value || !parent) return
   // Layout units stay independent of CSS zoom. Compensate the scrollport padding
@@ -16,14 +28,14 @@ function measure() {
   parent.style.setProperty('--page-tabs-height', (bar.value.offsetHeight || 0) + 'px')
   syncStuck()
 }
-// 吸附线 = 滚动容器顶边 + sticky top；吸顶后 Tab 正停在该线，判定稳定不抖动。
+// 滚过自然位置即视为吸顶；半个像素只吸收亚像素舍入，避免来回闪。
 function syncStuck() {
   if (!bar.value || !main) return
-  const offset = Number.parseFloat(getComputedStyle(bar.value).top)
-  const pinTop = main.getBoundingClientRect().top + (Number.isNaN(offset) ? 0 : offset)
-  const next = bar.value.getBoundingClientRect().top <= pinTop + 1
-  if (next === stuck) return
+  const next = main.scrollTop + (main.clientTop || 0) >= naturalOffset() - 0.5
+  // 初次挂载必须写一次，否则 data-stuck 缺失、样式退回“未吸顶”。
+  if (stuckWritten && next === stuck) return
   stuck = next
+  stuckWritten = true
   bar.value.dataset.stuck = next ? 'true' : 'false'
 }
 function onScroll() { syncStuck() }
