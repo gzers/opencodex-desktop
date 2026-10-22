@@ -69,13 +69,13 @@ impl Credentials for SystemCredentials {
         discovery::forget(reference)
     }
     fn read_webdav(&self, reference: &str) -> ModelResult<Zeroizing<String>> {
-        crate::infrastructure::keychain::load_webdav_password(reference)
+        crate::infrastructure::credentials::load_webdav_password(reference)
             .map(Zeroizing::new)
             .map_err(Into::into)
     }
     fn install_webdav(&self, reference: &str, value: &str) -> ModelResult<()> {
-        use crate::infrastructure::keychain;
-        if let Some(current) = keychain::load_optional_keychain_password(
+        use crate::infrastructure::{credentials, keychain};
+        if let Some(current) = credentials::load_optional_keychain_password(
             keychain::WEBDAV_CREDENTIAL_PURPOSE,
             reference,
         )? {
@@ -87,8 +87,8 @@ impl Credentials for SystemCredentials {
                 "导入WebDAV密码引用存在其他内容",
             ));
         }
-        keychain::store_webdav_password(reference, value)?;
-        if keychain::load_webdav_password(reference)? != value {
+        credentials::store_webdav_password(reference, value)?;
+        if credentials::load_webdav_password(reference)? != value {
             return Err(invalid("credential_readback", "WebDAV密码写后读回不同"));
         }
         Ok(())

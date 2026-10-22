@@ -1,10 +1,9 @@
-//! 受控凭据引用（跨平台）。
+//! 凭据身份与账户位（跨平台）。
 //!
-//! 只存储随机 `ref_id` 对应的密钥值；配置、日志与 DTO 只保留引用。
-//! 后端由 `keyring` 提供：macOS 走系统钥匙串（`apple-native`），
-//! Windows 走凭据管理器（`windows-native`）。服务名与账户位在两平台一致，
-//! 因此既有 macOS 钥匙串条目无需迁移即可继续读取。
-
+//! 本模块只负责**身份**：service 名、purpose、`account_key` 形状与 `ref_id` 生成。
+//! 值的读写已迁到 `infrastructure::credentials`（本机文件后端，见 WP-37）：
+//! 发布包是 ad-hoc 签名，系统钥匙串的 ACL 认不出每次构建，会反复弹授权窗口。
+//! 剩余的渠道 Key / 扩展密钥 / 授权保护仍走系统钥匙串，各自用途不同，不能混改。
 use uuid::Uuid;
 
 use crate::errors::AppError;
@@ -51,121 +50,9 @@ pub fn new_ref_id() -> String {
     format!("cred_{}", Uuid::new_v4())
 }
 
-/// 平台无关的凭据条目句柄；具体后端由编译目标决定。
-fn credential_entry(account: &str) -> Result<keyring::Entry, AppError> {
-    keyring::Entry::new(keychain_service_name(), account).map_err(|_| AppError::NotConfigured)
-}
-
-/// 按 purpose 写入独立账户位；不同 purpose 落在不同 keychain 账户。
-fn store_keychain_password(purpose: &str, ref_id: &str, password: &str) -> Result<(), AppError> {
-    if password.is_empty() {
-        return Err(AppError::NotConfigured);
-    }
-    let account = account_key(purpose, ref_id)?;
-    credential_entry(&account)?
-        .set_password(password)
-        .map_err(|_| AppError::NotConfigured)
-}
-
-pub fn store_webdav_password(ref_id: &str, password: &str) -> Result<(), AppError> {
-    store_keychain_password(WEBDAV_CREDENTIAL_PURPOSE, ref_id, password)
-}
-
-/// WebDAV 口令与同步加密口令是**两个不同的秘密**，必须分开存。
-/// 二者此前都写在 `ocx.dav.<ref_id>` 上，后写覆盖先写：WebDAV 认证拿到的是
-/// 加密口令，而 `load_encryption_password` 读的 `ocx.sync.<ref_id>` 从未被写入。
-pub fn store_encryption_password(ref_id: &str, password: &str) -> Result<(), AppError> {
-    store_keychain_password(ENCRYPTION_PASSWORD_PURPOSE, ref_id, password)
-}
-
-pub fn load_webdav_password(ref_id: &str) -> Result<String, AppError> {
-    load_keychain_password(WEBDAV_CREDENTIAL_PURPOSE, ref_id)
-}
-
-pub fn load_encryption_password(ref_id: &str) -> Result<String, AppError> {
-    load_keychain_password(ENCRYPTION_PASSWORD_PURPOSE, ref_id)
-}
-
-pub fn load_keychain_password(purpose: &str, ref_id: &str) -> Result<String, AppError> {
-    load_optional_keychain_password(purpose, ref_id)?.ok_or(AppError::NotConfigured)
-}
-
-/// Only the platform's explicit NoEntry means absent. Locked, ambiguous or
-/// unreadable credentials must never serve as evidence of successful deletion.
-pub fn load_optional_keychain_password(
-    purpose: &str,
-    ref_id: &str,
-) -> Result<Option<String>, AppError> {
-    let account = account_key(purpose, ref_id)?;
-    optional_password_result(credential_entry(&account)?.get_password())
-}
-
-fn optional_password_result(result: keyring::Result<String>) -> Result<Option<String>, AppError> {
-    match result {
-        Ok(password) => Ok(Some(password)),
-        Err(keyring::Error::NoEntry) => Ok(None),
-        Err(_) => Err(AppError::NotConfigured),
-    }
-}
-
-/// Idempotent removal still requires a subsequent absence readback by its owner.
-pub fn remove_keychain_password(purpose: &str, ref_id: &str) -> Result<(), AppError> {
-    let account = account_key(purpose, ref_id)?;
-    removal_result(credential_entry(&account)?.delete_credential())
-}
-
-fn removal_result(result: keyring::Result<()>) -> Result<(), AppError> {
-    match result {
-        Ok(()) | Err(keyring::Error::NoEntry) => Ok(()),
-        Err(_) => Err(AppError::NotConfigured),
-    }
-}
-
-pub fn delete_webdav_password(ref_id: &str) -> Result<(), AppError> {
-    let account = account_key(WEBDAV_CREDENTIAL_PURPOSE, ref_id)?;
-    credential_entry(&account)?
-        .delete_credential()
-        .map_err(|_| AppError::NotConfigured)
-}
-
-pub fn delete_encryption_password(ref_id: &str) -> Result<(), AppError> {
-    let account = account_key(ENCRYPTION_PASSWORD_PURPOSE, ref_id)?;
-    credential_entry(&account)?
-        .delete_credential()
-        .map_err(|_| AppError::NotConfigured)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn only_explicit_absence_is_benign_for_load_and_removal() {
-        assert_eq!(
-            optional_password_result(Err(keyring::Error::NoEntry)).unwrap(),
-            None
-        );
-        assert_eq!(
-            optional_password_result(Ok("secret".into())).unwrap(),
-            Some("secret".into())
-        );
-        assert!(removal_result(Err(keyring::Error::NoEntry)).is_ok());
-        assert!(removal_result(Ok(())).is_ok());
-        let faults = || {
-            vec![
-                keyring::Error::NoStorageAccess(Box::new(std::io::Error::other("locked"))),
-                keyring::Error::PlatformFailure(Box::new(std::io::Error::other("unavailable"))),
-                keyring::Error::Ambiguous(Vec::new()),
-                keyring::Error::BadEncoding(vec![255]),
-            ]
-        };
-        for error in faults() {
-            assert!(optional_password_result(Err(error)).is_err());
-        }
-        for error in faults() {
-            assert!(removal_result(Err(error)).is_err());
-        }
-    }
 
     #[test]
     fn account_key_matches_frozen_shape() {
@@ -194,27 +81,7 @@ mod tests {
         assert_ne!(
             account_key(WEBDAV_CREDENTIAL_PURPOSE, &ref_id).unwrap(),
             account_key(ENCRYPTION_PASSWORD_PURPOSE, &ref_id).unwrap(),
-            "两个口令必须落在不同 keychain 账户位，否则后写会覆盖先写"
+            "两个口令必须落在不同账户位，否则后写会覆盖先写"
         );
-    }
-
-    /// 真机往返护栏：同一个 `ref_id` 下，WebDAV 口令与加密口令必须各存各的。
-    /// 这正是历史缺陷所在（两者都写 `ocx.dav.<ref_id>`，后者覆盖前者，
-    /// 而 `ocx.sync.<ref_id>` 从未被写入）。
-    ///
-    /// 会访问系统钥匙串，故默认忽略；改动凭据存储后手动执行：
-    /// `cargo test --offline -- --ignored --nocapture keychain_round_trip`
-    #[test]
-    #[ignore]
-    fn keychain_round_trip_keeps_both_secrets_separate() {
-        let ref_id = new_ref_id();
-        store_webdav_password(&ref_id, "dav-secret").expect("store webdav");
-        store_encryption_password(&ref_id, "enc-secret").expect("store encryption");
-
-        assert_eq!(load_webdav_password(&ref_id).unwrap(), "dav-secret");
-        assert_eq!(load_encryption_password(&ref_id).unwrap(), "enc-secret");
-
-        delete_webdav_password(&ref_id).expect("delete webdav");
-        delete_encryption_password(&ref_id).expect("delete encryption");
     }
 }

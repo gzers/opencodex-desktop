@@ -28,10 +28,21 @@ function measure() {
   parent.style.setProperty('--page-tabs-height', (bar.value.offsetHeight || 0) + 'px')
   syncStuck()
 }
-// 滚过自然位置即视为吸顶；半个像素只吸收亚像素舍入，避免来回闪。
+/**
+ * 吸顶判定优先用视口坐标：Tab 的 sticky 负偏移会被浏览器夹在滚动口边缘，
+ * 因此「贴住」的那一刻它的上沿就等于滚动容器上边框内侧。
+ * 早先只比 offsetTop 链与 scrollTop，一旦 offsetParent 跳过 .main（.main 是 static），
+ * 累加值就不再是相对滚动位置的偏移，判定永远不成立，玻璃材质也就永远不出现。
+ * jsdom 不做布局、所有矩形为 0，此时退回 offsetTop 链，保持既有测试语义。
+ */
 function syncStuck() {
   if (!bar.value || !main) return
-  const next = main.scrollTop + (main.clientTop || 0) >= naturalOffset() - 0.5
+  const barRect = bar.value.getBoundingClientRect?.()
+  const mainRect = main.getBoundingClientRect?.()
+  const measurable = !!barRect && !!mainRect && (barRect.height > 0 || mainRect.height > 0)
+  const next = measurable
+    ? barRect!.top <= mainRect!.top + (main.clientTop || 0) + 0.5
+    : main.scrollTop + (main.clientTop || 0) >= naturalOffset() - 0.5
   // 初次挂载必须写一次，否则 data-stuck 缺失、样式退回“未吸顶”。
   if (stuckWritten && next === stuck) return
   stuck = next
@@ -54,7 +65,8 @@ onBeforeUnmount(() => {
 </script>
 <template><div ref="bar" class="sticky-page-tabs"><slot /></div></template>
 <style scoped>
-.sticky-page-tabs { position: sticky; top: calc(-1 * var(--page-tabs-inset-top,0px)); margin-inline-start: calc(-1 * var(--page-tabs-inset-left,0px)); margin-inline-end: calc(-1 * var(--page-tabs-inset-right,0px)); padding-inline-start: var(--page-tabs-inset-left,0px); padding-inline-end: var(--page-tabs-inset-right,0px); z-index: var(--z-sticky); background: transparent; border-bottom: 1px solid transparent; transition: background-color var(--motion-normal,.18s) ease, border-bottom-color var(--motion-normal,.18s) ease; }
+/* 吸顶材质用 --motion-sticky（90ms）：跟手才有“贴上去就出现”的感觉；常规 180ms 会明显落后于滚动。 */
+.sticky-page-tabs { position: sticky; top: calc(-1 * var(--page-tabs-inset-top,0px)); margin-inline-start: calc(-1 * var(--page-tabs-inset-left,0px)); margin-inline-end: calc(-1 * var(--page-tabs-inset-right,0px)); padding-inline-start: var(--page-tabs-inset-left,0px); padding-inline-end: var(--page-tabs-inset-right,0px); z-index: var(--z-sticky); background: transparent; border-bottom: 1px solid transparent; transition: background-color var(--motion-sticky,.09s) ease-out, border-bottom-color var(--motion-sticky,.09s) ease-out; }
 /* 未到顶不铺底色，避免静止状态出现一条色带；吸顶后玻璃材质淡入。 */
 .sticky-page-tabs[data-stuck="true"] { background: var(--surface-sticky-bg, var(--surface-panel-bg)); backdrop-filter: var(--surface-sticky-blur); -webkit-backdrop-filter: var(--surface-sticky-blur); border-bottom-color: var(--border); }
 .sticky-page-tabs :deep([role=tablist]) { margin-top: 0; margin-bottom: 0; border-bottom-color: transparent; }

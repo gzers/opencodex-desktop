@@ -107,6 +107,8 @@
 
   --motion-fast: .12s;
   --motion-normal: .18s;
+  /* 吸顶材质跟手切换：比常规过渡更快，滚动时“贴上去就出现”，不滞后。 */
+  --motion-sticky: .09s;
   --z-sticky: 20;
   --z-overlay: 30;
   --z-popover: 40;
@@ -203,5 +205,5 @@ html[data-theme="dark"] {
 
 /* 用户中/低档不持续装饰动画；系统媒体设置不覆盖画质。 */
 html:not([data-effects="high"]) {
-  --motion-fast: 0s; --motion-normal: 0s;
+  --motion-fast: 0s; --motion-normal: 0s; --motion-sticky: 0s;
 }

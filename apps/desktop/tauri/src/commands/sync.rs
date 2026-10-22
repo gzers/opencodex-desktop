@@ -6,10 +6,10 @@ use serde::{Deserialize, Serialize};
 use tauri::{Manager, State};
 
 use crate::errors::{AppError, AppResult};
-use crate::infrastructure::keychain;
 use crate::infrastructure::webdav_client::{
     WebDavClient, WebDavConfig, WebDavError, WebDavOperation, WebDavTransport,
 };
+use crate::infrastructure::{credentials, keychain};
 use crate::modules::sync::config::{
     SyncConfig, SyncConfigStore, SyncEndpointConfig, SyncEndpointInput,
 };
@@ -237,7 +237,7 @@ fn publish_endpoint_result(
 }
 
 pub(crate) fn webdav_config(config: &SyncEndpointConfig) -> AppResult<WebDavConfig> {
-    let password = keychain::load_webdav_password(&config.credential_ref.ref_id)?;
+    let password = credentials::load_webdav_password(&config.credential_ref.ref_id)?;
     Ok(WebDavConfig {
         base_url: config.url.clone(),
         remote_path: config.remote_path.clone(),
@@ -278,7 +278,7 @@ pub async fn list_imported_sync_connections(
         let mut items = vec![];
         for candidate in candidates {
             let has_password = match candidate.credential_ref.as_deref() {
-                Some(reference) => keychain::load_optional_keychain_password(
+                Some(reference) => credentials::load_optional_keychain_password(
                     keychain::WEBDAV_CREDENTIAL_PURPOSE,
                     reference,
                 )?
@@ -325,7 +325,7 @@ pub async fn activate_imported_sync_connection(
             .iter()
             .find(|candidate| candidate.id == candidate_id)
             .ok_or(AppError::NotConfigured)?;
-        let password = zeroize::Zeroizing::new(keychain::load_webdav_password(
+        let password = zeroize::Zeroizing::new(credentials::load_webdav_password(
             candidate
                 .credential_ref
                 .as_deref()

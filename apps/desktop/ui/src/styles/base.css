@@ -558,6 +558,8 @@ html[data-native-material="solid"][data-theme="dark"] body { background: #20242c
 
 .settings-panel { display: none; }
 .settings-panel.active { display: grid; gap: 16px; }
+/* 面板级标题放在卡片之外（Agent 配置页）：卡片内是自己的标题行，避免两层标题抢重心。 */
+.settings-panel-title { margin: 0; font-size: var(--text-subtitle); }
 .setting-list { display: grid; gap: 8px; margin-top: 14px; }
 .section-actions { display: flex; justify-content: flex-end; gap: 8px; }
 .setting-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--panel); }

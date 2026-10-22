@@ -122,6 +122,8 @@ pub fn run() {
                 anchor, sandbox_boundary, runtime_config, locks,
             } = resolution;
             let data_root = runtime_config.active_data_root.clone();
+            // 同步凭据改存本机文件（WP-37）：先接线数据根，之后所有读写都在其中。
+            crate::infrastructure::credentials::configure(&data_root);
             app.manage(crate::state::SharedDataRootAnchor(anchor));
             app.manage(crate::state::SharedSandboxBoundary(sandbox_boundary));
             app.manage(crate::state::InstanceState { locks: std::sync::Mutex::new(locks) });
