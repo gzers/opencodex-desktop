@@ -271,11 +271,9 @@ impl SyncConfigStore {
         let Some(endpoint) = self.load()?.active().cloned() else {
             return Ok(None);
         };
-        Ok(
-            crate::infrastructure::credentials::load_optional_keychain_password(
-                keychain::ENCRYPTION_PASSWORD_PURPOSE,
-                &endpoint.credential_ref.ref_id,
-            )?,
+        crate::infrastructure::credentials::load_optional_keychain_password(
+            keychain::ENCRYPTION_PASSWORD_PURPOSE,
+            &endpoint.credential_ref.ref_id,
         )
     }
 

@@ -5,12 +5,12 @@
 //! 就会连读多次口令，用户看到的就是「总是要输密码」。
 //!
 //! 现在把 WebDAV 口令与同步保护口令写进数据根下：
-//! - macOS：\`manager-state/credentials/<account>.json\`，文件 0600、目录 0700；
-//! - Windows：同一路径，值先用 DPAPI（当前用户作用域）加密再落盘。
+//! macOS 写 `manager-state/credentials/<account>.json` 文件 0600、目录 0700。
+//! Windows 用同一路径，值先用 DPAPI（当前用户作用域）加密再落盘。
 //! 两端都不需要证书、不弹系统密码。代价写在 0.2.6 的 WP-37 里：macOS 侧是明文落盘
 //! （受 0600 与 FileVault 保护），这是「不要证书、不弹密码」的必然交换。
 //!
-//! 边界：配置、日志与 DTO 只保留 \`cred_\` 引用；真实值只出现在本模块与调用方内存。
+//! 边界：配置、日志与 DTO 只保留 `cred_` 引用；真实值只出现在本模块与调用方内存。
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -40,14 +40,14 @@ fn root() -> Result<&'static Path, AppError> {
 }
 
 /// 进程内缓存：打开一次同步页会连读多次口令，没有缓存就每次都落盘。
-/// 键是 \`account_key\`，写入与删除时同步失效，避免读到旧值。
+/// 键是 `account_key`，写入与删除时同步失效，避免读到旧值。
 fn cache() -> &'static Mutex<BTreeMap<String, Zeroizing<String>>> {
     static CACHE: OnceLock<Mutex<BTreeMap<String, Zeroizing<String>>>> = OnceLock::new();
     CACHE.get_or_init(|| Mutex::new(BTreeMap::new()))
 }
 
 fn path_for(root: &Path, account: &str) -> PathBuf {
-    // 账户位只含 ASCII 安全字符（\`ocx.dav.cred_<uuid>\`），这里再做一次白名单，防止路径穿越。
+    // 账户位只含 ASCII 安全字符（`ocx.dav.cred_<uuid>`），这里再做一次白名单，防止路径穿越。
     let safe: String = account
         .chars()
         .map(|c| {
@@ -61,7 +61,7 @@ fn path_for(root: &Path, account: &str) -> PathBuf {
     root.join(CREDENTIALS_DIR).join(format!("{safe}.json"))
 }
 
-/// 落盘结构。\`account\` 参与校验：把 A 的凭据文件改名成 B 不能被当成 B 的口令。
+/// 落盘结构。`account` 参与校验：把 A 的凭据文件改名成 B 不能被当成 B 的口令。
 #[derive(serde::Serialize, serde::Deserialize)]
 struct Stored {
     account: String,
