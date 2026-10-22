@@ -280,6 +280,19 @@
 .mp-edit-rules>summary{margin-bottom:18px}
 .mp-settings-card{padding:20px 0;border-bottom:1px solid var(--border-soft);display:grid;gap:12px}
 .mp-settings-card h3{font-size:var(--text-label);font-weight:650;margin:0}
+/* Agent 配置：已配置时把事实、适用范围与边界铺开，利用本页剩余空间。 */
+.mp-agent-card{gap:16px}
+.mp-agent-configured{display:grid;gap:16px;min-width:0}
+.mp-agent-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:0}
+.mp-agent-fact{display:grid;gap:4px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail)}
+.mp-agent-fact dt{color:var(--muted);font-size:var(--text-caption)}
+.mp-agent-fact dd{margin:0;font-size:var(--text-control);font-weight:600;overflow-wrap:anywhere}
+.mp-agent-usage h4{margin:0 0 6px;font-size:var(--text-label);color:var(--muted);font-weight:600}
+.mp-agent-usage ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:var(--text-label);color:var(--muted);line-height:1.6}
+.mp-agent-note{padding:12px 14px;border-radius:var(--radius-sm);background:var(--rail);font-size:var(--text-label);line-height:1.6}
+.mp-agent-note strong{display:block;margin-bottom:4px}
+.mp-agent-note p{margin:0;color:var(--muted)}
+.mp-agent-empty{margin:0;color:var(--muted);font-size:var(--text-label)}
 .mp-settings-card p{margin:0}
 .mp-settings-title,.mp-generation-executor{display:flex;justify-content:space-between;gap:12px;align-items:center}
 .mp-settings-title>div,.mp-generation-executor>div{display:grid;gap:6px;min-width:0}

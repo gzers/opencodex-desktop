@@ -83,7 +83,7 @@
     if (!button.closest('#protoStdCards')) return;
     const group = button.closest('.pctl-chips, .pctl-grid, .pctl-tiles');
     if (!group) return;
-    const flag = ['panelSrc','panelZoom','panelHub','extTarget','extState','extSync','mcpTarget','mcpState','mcpFlag','notifHist','notifHistCat','notifHistAct','settingsScale','settingsPanel','backupKeep','backupDigest','settingsSkillsSync','settingsMcpConflict','settingsPaths','logCleanup','notifCleanup','cliFlag','cliTarget','upgradeCodex','upgradeManager','upgradeChannel','aboutView','aboutAct']
+    const flag = ['panelSrc','panelZoom','panelHub','extTarget','extState','extSync','mcpTarget','mcpState','mcpFlag','notifHist','notifHistCat','notifHistAct','settingsScale','settingsPanel','settingsAgent','backupKeep','backupDigest','settingsSkillsSync','settingsMcpConflict','settingsPaths','logCleanup','notifCleanup','cliFlag','cliTarget','upgradeCodex','upgradeManager','upgradeChannel','aboutView','aboutAct']
       .some(key => key in button.dataset);
     if (!flag) return;
     const switches = group.querySelectorAll('button[role="switch"]');
@@ -100,6 +100,7 @@
     }
     group.querySelectorAll('button').forEach(item => item.classList.toggle('active', item === button));
     if (button.dataset.panelSrc && window.windowPanelMock) window.windowPanelMock(button.dataset.panelSrc);
+    if (button.dataset.settingsAgent) { window.modelPrototype?.applyAgentDemo(button.dataset.settingsAgent); return; }
     window.toast?.('原型模拟：' + (button.textContent || '').trim() + '；只切 mock 投影。');
   });
   window.prototypePanel = {context:currentContext, refresh};

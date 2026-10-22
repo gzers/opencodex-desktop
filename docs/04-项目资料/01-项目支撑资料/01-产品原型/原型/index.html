@@ -3484,6 +3484,16 @@ ocx update</code></pre>
       <p class="pctl-hint">与「设置 → 通用」同一开关：缩放驱动 <code>--panel-zoom</code>，面板打开方式只切 meta 投影，不写真实偏好。</p>
     </div>
 
+    <div class="proto-card" data-proto-contexts="settings:models">
+      <div class="proto-note-title">Agent 配置（mock 投影）</div>
+      <div class="pctl-sub">执行模型状态</div>
+      <div class="pctl-chips" id="settingsAgentStates" role="group" aria-label="Agent 执行模型状态">
+        <button type="button" data-settings-agent="empty" class="active">尚未配置</button>
+        <button type="button" data-settings-agent="configured">已配置模型</button>
+      </div>
+      <p class="pctl-hint">切到“已配置模型”后，设置 → Agent 配置 显示渠道 / 型号 / 推理档位 / 快速模式四项事实，并在下方列出该设置的适用范围与保存边界。仅切换本页内存投影，不写配置、不调用真实执行。</p>
+    </div>
+
     <div class="proto-card" data-proto-contexts="settings:backup">
       <div class="proto-note-title">数据与备份（mock 投影）</div>
       <div class="pctl-sub">备份保留策略</div>

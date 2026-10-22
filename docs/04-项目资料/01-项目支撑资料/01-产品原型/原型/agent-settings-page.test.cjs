@@ -4,9 +4,9 @@ const make=require('./model-prototype-test-harness.cjs');
 function picker(h){let options;h.context.window.modelPickerPrototype={choose(input){options=input;h.context.closeModal();return true;}};return {select(fast,modelId='gpt-5.4'){options.onSelect({kind:'models',models:[{kind:'channel',channelId:'newapi',modelId,fast}]});}};}
 test('设置页只承载 Agent 配置，文件与行为说明在隐藏注释，按钮前后一致',()=>{
  const h=make();const page=()=>h.nodes.get('mpSettingsContent').innerHTML;
- assert.match(page(),/<h2>Agent 配置<\/h2>/);assert.match(page(),/模型模版助手 · 本机共用/);assert.match(page(),/data-mp="agent-settings">Agent 配置/);assert.doesNotMatch(page(),/data-fast-mode|data-fast-rows|<details|调整 Agent/);
+ assert.match(page(),/<h2>Agent 配置<\/h2>/);assert.match(page(),/模型模版助手 · 本机共用/);assert.match(page(),/data-mp="agent-settings">(Agent 配置|更换执行模型)/);assert.doesNotMatch(page(),/data-fast-mode|data-fast-rows|<details|调整 Agent/);
  const display=page().replace(/<div class="annotation-source" hidden>[\s\S]*?<\/div>/g,'');assert.doesNotMatch(display,/model-policy\.json|preferences\.json|实现尚未|持久化|同步过滤/);
- h.configureAgent();assert.match(page(),/data-mp="agent-settings">Agent 配置/);assert.match(page(),/快速已关闭/);
+ h.configureAgent();assert.match(page(),/data-mp="agent-settings">(Agent 配置|更换执行模型)/);assert.match(page(),/快速已关闭/);
  const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');assert.match(html,/data-settings-section="models" data-anchor="models">Agent 配置/);assert.match(html,/id="settings-models"/);
 });
 test('弹窗交互说明不再占正文，传给共用原型注释，模型选择和保存仍可达',()=>{

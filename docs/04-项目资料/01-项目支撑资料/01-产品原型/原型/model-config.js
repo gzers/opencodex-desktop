@@ -889,6 +889,18 @@
  function agentProvider(){return saved.providers.find(p=>p.id===agent.providerId&&p.id!=='native');}
  function agentModel(){return agentProvider()?.models.find(m=>m.id===agent.modelId);}
  function agentBlocked(p){return !p?.enabled||['no-credit','auth-failed','connection-failed','unavailable'].includes(p.availability?.kind);}
+/** 工具板演示：切换“尚未配置 / 已配置模型”的内存投影，不写真实配置。 */
+ function applyAgentDemo(mode){
+  if(mode==='configured'){
+   const p=saved.providers.find(p=>p.id!=='native'&&p.enabled&&p.models.some(m=>m.selected!==false));
+   const m=p?.models.find(m=>m.selected!==false);
+   agent=p&&m?{providerId:p.id,modelId:m.id,effort:'inherit',fast:false}:{providerId:'',modelId:'',effort:'inherit',fast:false};
+  } else {
+   agent={providerId:'',modelId:'',effort:'inherit',fast:false};
+  }
+  renderSettings();
+  window.toast?.('原型模拟：Agent 执行模型已切换为'+(mode==='configured'?'已配置模型':'尚未配置')+'；不写真实配置。');
+ }
  function agentInfo(selection=agent){
   const p=saved.providers.find(p=>p.id===selection.providerId&&p.id!=='native'),m=p?.models.find(m=>m.id===selection.modelId);
   let reason=!selection.providerId?'尚未选择执行模型':!p?'执行渠道已删除或不存在':!p.enabled?'执行渠道已停用':agentBlocked(p)?availabilityText(p)||'执行渠道不可用':!m?'模型已从目录移除':'';
@@ -942,7 +954,26 @@
  function renderSettings(){
   const node=$('#mpSettingsContent');if(!node)return;
   const notes='本机模型模版助手的自动填充、持续纠偏、单个 / 所选 / 全部更新共用执行设置，与 Codex 的命名、搜索、子 Agent 配置独立。型号、推理和快速模式统一在公共选择器内设置，确认返回缓冲后再保存；修改不影响已启动任务。原型只保存内存状态，真实执行 / 持久化 / 同步过滤待实现。正式执行偏好拟放 manager-state/preferences.json 的 modelTemplateAgent 分区，本机引用不进入默认同步或普通导出；模版规则、渠道策略及本机绑定分别属于 model-family-templates.json、model-policy.json、model-policy-bindings.json。不再提供高级模型配置及单独的全局 Fast 总开关；模型规则中的 Fast 支持能力保留。已有全局策略与独立 Fast 目录兼容字段先保留，真实客户端是否需要兼容项待核实；选择器的 Fast 偏好不修改这些运行字段，也不要求额外发布同型号条目。';
-  node.innerHTML='<h2>Agent 配置</h2>'+mpAnn('02','Agent 配置与实现边界',notes)+'<div class="mp-settings-card"><div class="mp-settings-title"><div><h3>模型模版助手 · 本机共用</h3><p id="mpAgentSummary" class="mp-muted" role="status">'+esc(agentSummary())+'</p></div><button class="btn" data-mp="agent-settings">Agent 配置</button></div><p class="mp-muted">用于模版自动填充和模型资料更新。</p></div>';
+  const info=agentInfo(),ready=!info.reason;
+  const fact=(label,value)=>'<div class="mp-agent-fact"><dt>'+esc(label)+'</dt><dd>'+esc(value)+'</dd></div>';
+  const facts=ready?[
+   fact('执行渠道',info.p.name),
+   fact('型号',info.m.id),
+   fact('推理档位',labels[info.values.default]||'未知'),
+   fact('快速模式',info.values.fast==='supported'?'可用':'不可用')
+  ].join(''):'';
+  const body=ready
+   ? '<div class="mp-agent-configured"><dl class="mp-agent-facts">'+facts+'</dl>'
+     +'<div class="mp-agent-usage"><h4>适用范围</h4><ul>'
+     +'<li>模版自动填充、单个更新、所选更新与批量检查共用此设置。</li>'
+     +'<li>不改变 Codex 的命名、搜索与子 Agent 配置。</li>'
+     +'<li>修改只影响之后启动的任务；已启动任务继续使用启动时的设置。</li>'
+     +'</ul></div>'
+     +'<div class="mp-agent-note"><strong>与运行配置的边界</strong><p>保存的是本机执行偏好，写入 manager-state/preferences.json 的 modelTemplateAgent 分区；不进入默认同步或普通导出。</p></div></div>'
+   : '<p class="mp-agent-empty">尚未选择执行模型。自动填充与模版检查需要先配置一个可用的执行模型。</p>';
+  node.innerHTML='<h2>Agent 配置</h2>'+mpAnn('02','Agent 配置与实现边界',notes)
+   +'<div class="mp-settings-card mp-agent-card"><div class="mp-settings-title"><div><h3>模型模版助手 · 本机共用</h3><p id="mpAgentSummary" class="mp-muted" role="status">'+esc(agentSummary())+'</p></div><button class="btn'+(ready?'':' primary')+'" data-mp="agent-settings">'+(ready?'更换执行模型':'Agent 配置')+'</button></div>'
+   +body+'</div>';
  }
  function diff(a,b){const changes=[];if(a.fastMode!==b.fastMode)changes.push('全局 Fast：'+a.fastMode+' → '+b.fastMode);if(a.fastRows!==b.fastRows)changes.push('独立 Fast 项：'+a.fastRows+' → '+b.fastRows);if(JSON.stringify(a.globalRefs)!==JSON.stringify(b.globalRefs))changes.push('全局族来源发生变更');if(a.providers.map(p=>p.id).join()!==b.providers.map(p=>p.id).join())changes.push('渠道顺序发生变更');a.providers.filter(p=>!b.providers.some(x=>x.id===p.id)).forEach(p=>changes.push(p.name+' 移除'));b.providers.forEach(p=>{const old=a.providers.find(x=>x.id===p.id);if(!old){changes.push(p.name+' 新增');return;}if(old.enabled!==p.enabled)changes.push(p.name+'：'+(old.enabled?'启用':'停用')+' → '+(p.enabled?'启用':'停用')+'（保留白名单、顺序和设置）');const before=clone(old),after=clone(p);delete before.enabled;delete after.enabled;if(JSON.stringify(before)!==JSON.stringify(after)){const add=selected(p).filter(m=>!selected(old).some(x=>x.key===m.key)).length,remove=selected(old).filter(m=>!selected(p).some(x=>x.key===m.key)).length;changes.push(p.name+'：白名单 +'+add+' / −'+remove+'；模式 '+old.mode+' → '+p.mode+'；字段 / 顺序将逐项核对');}});return changes;}
  const diffHTML=items=>'<div class="mp-diff">'+(items.length?items:['没有策略差异']).map(x=>'<div class="mp-diff-row">'+esc(x)+'</div>').join('')+'</div>';
@@ -1772,7 +1803,7 @@
  window.addEventListener?.('resize',syncDetailSection,{passive:true});
  if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(syncDetailSection);observer.observe(host);const scroller=host.closest('.main');if(scroller)observer.observe(scroller);}
  let drag=null;document.addEventListener('dragstart',e=>{if(e.target.closest('input,button,select,.select')){e.preventDefault();return;}const el=e.target.closest('[draggable="true"]');if(!el||!el.closest('#route-models'))return;drag=el.dataset.provider?{type:'provider',id:el.dataset.provider}:{type:'model',id:el.dataset.model};e.dataTransfer.setData('text/plain',drag.id);});document.addEventListener('dragover',e=>{if(drag&&e.target.closest('[draggable="true"]'))e.preventDefault();});document.addEventListener('drop',e=>{const el=e.target.closest('[draggable="true"]');if(!el||!drag)return;e.preventDefault();const target=drag.type==='provider'?el.dataset.provider:el.dataset.model;if(target){const list=drag.type==='provider'?draft.providers:provider().models,key=drag.type==='provider'?'id':'key';change(()=>{const from=list.findIndex(x=>x[key]===drag.id),to=list.findIndex(x=>x[key]===target);if(from>=0&&to>=0)list.splice(to,0,list.splice(from,1)[0]);});}drag=null;});document.addEventListener('dragend',()=>drag=null);
- window.modelPrototype={openExternalTask,receiveExternalSubmission,externalTaskPack,externalSample,externalCombinedText,updateExternalPreview,state:()=>clone({draft,saved,pending,client,operation,templates,scope:[...scope],buffers,proposal,incoming,records,scenario,agent,modelSelection:[...modelSelection],modelExpanded:[...modelExpanded],modelEdits,channelDetail,templateDetail,templateScratch,templateSelection:[...templateSelection],templateListVersions,templateHistoryView,externalTask,externalTasks:[...externalTasks.values()],externalBatch,editorSection,editorNavCollapsed,channelSection,channelNavCollapsed,channelConnections,assistantOpen,assistantMaximized,assistantInputs,conversation,assistantTask,updateScope,updateRun,updateBatches,confirmedConfigurations,restoration,nodePickerChannel:nodePicker?.pid||null,nodeSpeedResults,nodeSpeedRuns,nodeSpeedScene}),templateHeadingState:()=>clone(templateHeadingState()),agentChoices,agentInfo:selection=>clone(agentInfo(selection)),versionText,refText,versionProtectionReasons,checkTemplateUpdates,reviewTemplateUpdates,openTemplateUpdate,templateRecovery,confirmTemplateUse,scene,setNodeSpeedScene,commitModelPatches,modelTargets:()=>modelTargets().map(m=>m.key),readQuick,stagedModelEdits,quickConfig,stagedChannelConnections,projection:()=>projection(),routePlan,resolveRoute:(pid,key,policy=draft)=>{const p=policy.providers.find(p=>p.id===pid);return resolveRoute(p,p.models.find(m=>m.key===key),policy);},resolve:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return resolve(p,p.models.find(m=>m.key===key));},templateMatches:(tid,modelId,pid='newapi',n)=>{const p=draft.providers.find(p=>p.id===pid);return templateMatches(templates.find(t=>t.id===tid),{id:modelId},p,n?version(tid,n):null);},templateResolution:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return templateResolution(p,p.models.find(m=>m.key===key));},render};
+ window.modelPrototype={applyAgentDemo,openExternalTask,receiveExternalSubmission,externalTaskPack,externalSample,externalCombinedText,updateExternalPreview,state:()=>clone({draft,saved,pending,client,operation,templates,scope:[...scope],buffers,proposal,incoming,records,scenario,agent,modelSelection:[...modelSelection],modelExpanded:[...modelExpanded],modelEdits,channelDetail,templateDetail,templateScratch,templateSelection:[...templateSelection],templateListVersions,templateHistoryView,externalTask,externalTasks:[...externalTasks.values()],externalBatch,editorSection,editorNavCollapsed,channelSection,channelNavCollapsed,channelConnections,assistantOpen,assistantMaximized,assistantInputs,conversation,assistantTask,updateScope,updateRun,updateBatches,confirmedConfigurations,restoration,nodePickerChannel:nodePicker?.pid||null,nodeSpeedResults,nodeSpeedRuns,nodeSpeedScene}),templateHeadingState:()=>clone(templateHeadingState()),agentChoices,agentInfo:selection=>clone(agentInfo(selection)),versionText,refText,versionProtectionReasons,checkTemplateUpdates,reviewTemplateUpdates,openTemplateUpdate,templateRecovery,confirmTemplateUse,scene,setNodeSpeedScene,commitModelPatches,modelTargets:()=>modelTargets().map(m=>m.key),readQuick,stagedModelEdits,quickConfig,stagedChannelConnections,projection:()=>projection(),routePlan,resolveRoute:(pid,key,policy=draft)=>{const p=policy.providers.find(p=>p.id===pid);return resolveRoute(p,p.models.find(m=>m.key===key),policy);},resolve:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return resolve(p,p.models.find(m=>m.key===key));},templateMatches:(tid,modelId,pid='newapi',n)=>{const p=draft.providers.find(p=>p.id===pid);return templateMatches(templates.find(t=>t.id===tid),{id:modelId},p,n?version(tid,n):null);},templateResolution:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return templateResolution(p,p.models.find(m=>m.key===key));},render};
  if(typeof MutationObserver!=='undefined'){new MutationObserver(()=>{const route=document.documentElement.dataset.route;if(route&&route!=='models'){closeNodePicker();$('#mpAssistantHost').hidden=true;}else {$('#mpAssistantHost').hidden=false;syncDetailSection();renderAssistant();}}).observe(document.documentElement,{attributes:true,attributeFilter:['data-route','data-effects','data-theme']});}
  render();
 })();
