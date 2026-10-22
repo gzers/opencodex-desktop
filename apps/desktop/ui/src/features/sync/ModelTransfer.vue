@@ -58,6 +58,9 @@ onBeforeUnmount(()=>{exportPassword.value='';importPassword.value='';unlockedPas
 const hasScope = computed(() => accountIds.value.length>0 || templateIds.value.length > 0 || channelIds.value.length > 0 || includeGlobal.value||managerPreferences.value||managerExtensions.value||!props.remote&&managerWebdav.value&&activeWebdav.value||hasAssets.value||props.remote&&(allTemplates.value||allChannels.value))
 const familyScopesValid=computed(()=>Object.values(channelFamilies.value).every(scope=>scope.templateIds.length>0));
 const requiresPassword=computed(()=>exportKeys.value||hasAssets.value&&extensionCredentials.value||!props.remote&&managerWebdav.value&&activeWebdav.value&&webdavPasswords.value)
+// 口令本身是可选步骤；一旦选了受保护内容，它才变成必需。界面必须把这个条件说清楚，
+// 否则用户看到“可选”却无法导出，会以为按钮坏了。
+const passwordLabel=computed(()=>requiresPassword.value?(props.remote?'配置同步保护口令（含凭据，必需）':'文件保护口令（含凭据，必需）'):(props.remote?'配置同步保护口令（可选，与连接密码独立）':'文件保护口令（可选）'))
 const preview = computed(() => incoming.value?.package ?? upload.value?.package ?? filePlan.value?.package)
 const scopeKey=(category:string,id:string)=>JSON.stringify([category,id])
 const scopeObjects=computed<ScopeObject[]>(()=>[
@@ -229,7 +232,8 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
     <p v-if="error && !preview" class="model-error" role="alert">{{ error }}</p>
     <div class="controls"><UiButton variant="primary" :disabled="busy||!models.snapshot||catalogueLoading||(remote&&!remoteScopeLoaded)||!hasScope||!familyScopesValid||(!remote&&((exportSource==='draft'&&!channelIds.length)||(requiresPassword&&!exportPassword)||(hasAssets&&!assetsReviewed)))" @click="remote?saveRemoteScope():prepare()">{{ remote ? '保存本机范围' : '导出配置' }}</UiButton><UiButton v-if="remote" :disabled="busy||!models.snapshot||catalogueLoading||(remote&&!remoteScopeLoaded)||!hasScope||!familyScopesValid||(requiresPassword&&!exportPassword)||(hasAssets&&!assetsReviewed)" @click="prepare">预览上传</UiButton><UiButton :loading="busy" @click="receive">{{ remote ? '下载并比较' : '导入配置' }}</UiButton><UiButton v-if="!remote" variant="ghost" :disabled="busy" @click="restoreIncoming">恢复上次接收</UiButton><UiButton v-else variant="ghost" :disabled="busy" @click="restoreUpload">查看原上传计划</UiButton><UiButton variant="ghost" :disabled="busy||catalogueLoading" @click="begin">重新读取范围目录</UiButton></div><p v-if="remote&&scopeSaved" role="status">本设备范围已保存，尚未上传；采用结果另行核对。</p>
     <div v-if="exportedPath" class="model-transfer-path"><span>导出文件</span><code>{{ exportedPath }}</code><UiButton size="sm" variant="ghost" @click="app.openManagedPathByKey('exports')">打开导出目录</UiButton></div>
-    <section class="sync-scope-workspace" aria-label="同步范围"><div class="sync-scope-objects">
+    <!-- 范围是页面主体的一部分，不再收进弹窗：原型里它是列表旁的常驻两栏工作区。 -->
+    <section class="sync-scope-workspace" aria-label="同步范围" data-testid="sync-scope-workspace"><div class="sync-scope-objects">
       <div class="sync-scope-controls">      <UiSelectField v-if="!remote" :model-value="exportSource" label="导出来源" :disabled="busy||catalogueLoading" :options="[{value:'saved',label:'已提交配置'},{value:'draft',label:'渠道工作区草稿 · 未提交候选'}]" @update:model-value="setExportSource" />
       <p v-if="exportSource==='draft'">未提交草稿候选：仅含明确选择的渠道草稿和精确模版依赖，不携带凭据。</p>
       <UiSelectField :model-value="scopePreset" label="配置范围预设" :options="[{value:'all',label:'全部配置'},{value:'share',label:'分享配置 · 不含凭据'},{value:'move',label:'换设备 · 含可转移凭据'},{value:'custom',label:'自定义范围'}]" :disabled="busy||catalogueLoading" @update:model-value="applyScopePreset" />
@@ -242,12 +246,12 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
        <ChannelModelScope v-if="object.category==='channels'&&scopeKeys.includes(object.id)" :label="object.label" :models="sourceModels(JSON.parse(object.id)[1])" :families="sourceFamilies(JSON.parse(object.id)[1])" :family-scope="channelFamilies[JSON.parse(object.id)[1]]" @update:family-scope="setFamilyScope(JSON.parse(object.id)[1],$event)" :selected="channelModels[JSON.parse(object.id)[1]]" :disabled="busy||catalogueLoading" @update:selected="setModelScope(JSON.parse(object.id)[1],$event)" />
        <details v-if="object.id===scopeKey('manager','webdav')&&managerWebdav"><summary>同步选项</summary><label><input v-model="webdavPasswords" type="checkbox" :disabled="busy||catalogueLoading" />包含连接密码</label></details>
       </template></ObjectScopeTree>
-      </div><aside class="sync-scope-credentials" aria-label="其他凭据与同步选项"><h3>其他凭据与同步选项</h3>
+      </div><aside class="sync-scope-credentials" aria-label="其他凭据与同步选项" data-testid="sync-scope-credentials"><h3>其他凭据与同步选项</h3>
       <details v-if="remote"><summary>后续新增对象</summary><label><input v-model="allTemplates" type="checkbox" :disabled="busy||catalogueLoading" />全部模版（含后续新增）</label><label><input v-model="allChannels" type="checkbox" :disabled="busy||catalogueLoading" />全部已保存渠道（含后续新增）</label><label><input v-model="allSkills" type="checkbox" :disabled="busy||catalogueLoading" />全部Skill（含后续新增）</label><label><input v-model="allMcps" type="checkbox" :disabled="busy||catalogueLoading" />全部MCP（含后续新增）</label></details>
       <UiButton v-if="exportSource!=='draft'" size="sm" :disabled="busy||catalogueLoading" @click="loadAssets">读取扩展目录</UiButton><p v-if="selectedCredentialKinds.length" class="model-muted" role="status">受保护部分：{{ selectedCredentialKinds.join('、') }}；须独立口令加密。</p>
       <div v-if="hasAssets"><label><input v-model="extensionCredentials" type="checkbox" :disabled="busy||catalogueLoading" />携带所选扩展凭据（独立口令保护）</label><label><input v-model="assetsReviewed" type="checkbox" :disabled="busy||catalogueLoading" />已检查所选Skill自定义文本、资源及MCP自定义字段</label></div>
       <label><input v-model="includeGlobal" type="checkbox" :disabled="busy||catalogueLoading" />全局采用及渠道组顺序</label>
-      <label>{{ remote?'配置同步保护口令（可选，与连接密码独立）':'文件保护口令（可选）' }}<input v-model="exportPassword" aria-label="导出保护口令" class="input" type="password" autocomplete="new-password" :disabled="busy||catalogueLoading" placeholder="留空使用完整性校验" /></label>
+      <label>{{ passwordLabel }}<input v-model="exportPassword" aria-label="导出保护口令" class="input" type="password" autocomplete="new-password" :disabled="busy||catalogueLoading" :placeholder="requiresPassword?'含凭据时须填写口令':'留空使用完整性校验'" /></label>
       <p v-if="exportKeys">仅携带Key认证渠道的完整认证配置；OAuth与转发渠道的登录材料由账户适配处理。</p>
       <label v-if="exportSource!=='draft'"><input v-model="exportKeys" type="checkbox" :disabled="busy||catalogueLoading||!keyChannelIds.length" />携带所选渠道的Key池与认证配置（须设置独立口令）</label>
       </aside></section>

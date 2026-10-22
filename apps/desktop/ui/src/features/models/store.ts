@@ -2,6 +2,7 @@ import type {AgentViewContext} from './agentView'
 import { computed, onScopeDispose, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import {pendingModelRows,type ModelRowsState} from './modelRows'
+import {canonicalPolicy} from './policyEquality'
 import { emptyContent, errorText, modelApi, type ModelSnapshot, type ModelPolicy, type Template, type TemplateDraft } from './api'
 
 // Route changes retain drafts; a refresh never discards an editor buffer.
@@ -64,7 +65,8 @@ export const useModelsStore = defineStore('model-config', () => {
   }
   watch(channelDraft, () => queueDraft(), { deep: true })
   onScopeDispose(() => { if (stageTimer) clearTimeout(stageTimer) })
-  const channelDirty = computed(() => channelDraft.value !== null && JSON.stringify(channelDraft.value) !== channelClean.value)
+  // 读取现有渠道会带上本机读取回执等记账字段；按等价草稿比较，避免“只读取未编辑”误报。
+  const channelDirty = computed(() => channelDraft.value !== null && canonicalPolicy(channelDraft.value) !== channelClean.value)
   const dirty = computed(() => draft.value !== null && JSON.stringify(draft.value) !== clean.value)
   async function load() {
     if (busy.value) return
@@ -73,7 +75,7 @@ export const useModelsStore = defineStore('model-config', () => {
       snapshot.value = await modelApi.load()
       if (!channelDraft.value) {
         channelDraft.value = JSON.parse(JSON.stringify(snapshot.value.workspace?.policy ?? snapshot.value.policy))
-        channelClean.value = JSON.stringify(snapshot.value.policy)
+        channelClean.value = canonicalPolicy(snapshot.value.policy)
         channelBaseline.value = snapshot.value.workspace?.basePolicy ?? snapshot.value.policyDigest
         workspaceBaseline.value = snapshot.value.workspaceDigest
       }
@@ -127,17 +129,23 @@ export const useModelsStore = defineStore('model-config', () => {
     modelRows.value={}
     if (!snapshot.value) return
     channelDraft.value = JSON.parse(JSON.stringify(snapshot.value.policy))
-    channelClean.value = JSON.stringify(channelDraft.value); channelBaseline.value = snapshot.value.policyDigest
+    channelClean.value = canonicalPolicy(channelDraft.value); channelBaseline.value = snapshot.value.policyDigest
     workspaceBaseline.value = snapshot.value.workspaceDigest
     queueDraft(true)
   }
   function acceptTransfer(saved: ModelSnapshot) {
     snapshot.value = saved
     channelDraft.value = JSON.parse(JSON.stringify(saved.workspace?.policy ?? saved.policy))
-    channelClean.value = JSON.stringify(saved.policy)
+    channelClean.value = canonicalPolicy(saved.policy)
     channelBaseline.value = saved.workspace?.basePolicy ?? saved.policyDigest
     workspaceBaseline.value = saved.workspaceDigest
     // The template editor keeps its original buffer and optimistic baseline.
   }
-  return { modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
+
+  // 模型选择器的启用渠道口径与执行目录一致：渠道未停用即可见（含官方/原生）。
+  // 这里只做同步读取，真正的“可用型号”判定仍在选择器里按每一行解释。
+  const enabledChannels = computed(() => snapshot.value?.policy.channels.filter(c => c.connection.enabled) ?? [])
+
+  return { modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels, enabledChannels }
 })
+

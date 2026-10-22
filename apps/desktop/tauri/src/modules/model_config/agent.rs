@@ -1062,7 +1062,7 @@ mod tests {
             );
         let server = tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
         let script = root.path().join("ocx");
-        let source = format!("#!/bin/sh\ncase \"$1 $2\" in\n'--version ') echo '2.84.0';;\n'provider snapshot') echo '{{\"defaultProvider\":\"test\",\"providers\":{{\"test\":{{\"adapter\":\"openai-chat\",\"baseUrl\":\"https://example.test/v1\",\"authMode\":\"key\"}}}}}}';;\n'models live') echo '[{{\"provider\":\"test\",\"id\":\"model-a\",\"namespaced\":\"test/model-a\",\"reasoningEfforts\":[\"none\"],\"disabled\":true}}]';;\n'models order') echo '{{}}';;\n'inspect catalog') echo '{{}}';;\n'status --json') echo '{{\"port\":{port},\"pid\":42}}';;\n*) exit 3;;\nesac\n");
+        let source = format!("#!/bin/sh\ncase \"$1 $2\" in\n'--version ') echo '2.84.0';;\n'provider snapshot') echo '{{\"defaultProvider\":\"test\",\"providers\":{{\"test\":{{\"adapter\":\"openai-chat\",\"baseUrl\":\"https://example.test/v1\",\"authMode\":\"key\"}}}}}}';;\n'models live') echo '[{{\"provider\":\"test\",\"id\":\"model-a\",\"namespaced\":\"test/model-a\",\"reasoningEfforts\":[\"none\"]}}]';;\n'models order') echo '{{\"pickerOrder\":[\"test/model-a\"]}}';;\n'inspect catalog') echo '{{}}';;\n'status --json') echo '{{\"port\":{port},\"pid\":42}}';;\n*) exit 3;;\nesac\n");
         std::fs::write(&script, source).unwrap();
         std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o700)).unwrap();
         save_settings(

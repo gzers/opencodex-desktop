@@ -40,4 +40,25 @@ describe('model page public primitives', () => {
     const parent = bar.parentElement!; wrapper.unmount()
     expect(parent.style.getPropertyValue('--page-tabs-height')).toBe(''); expect(disconnect).toHaveBeenCalled()
   })
+  it('marks stuck after the natural offset is scrolled past and clears it on the way back', async () => {
+    const scroller = document.createElement('div')
+    scroller.className = 'main'
+    Object.defineProperty(scroller, 'clientTop', { configurable: true, value: 0 })
+    let scrollTop = 0
+    Object.defineProperty(scroller, 'scrollTop', { configurable: true, get: () => scrollTop })
+    document.body.appendChild(scroller)
+    const wrapper = mount(StickyTabs, { attachTo: scroller, slots: { default: '<div role=tablist>Tab</div>' } })
+    const bar = wrapper.get('.sticky-page-tabs').element as HTMLElement
+    // jsdom 不做布局；挂载后给出自然偏移，再由滚动事件驱动判定。
+    Object.defineProperty(bar, 'offsetTop', { configurable: true, value: 40 })
+    scrollTop = 120
+    scroller.dispatchEvent(new Event('scroll'))
+    expect(bar.dataset.stuck).toBe('true')
+    scrollTop = 0
+    scroller.dispatchEvent(new Event('scroll'))
+    expect(bar.dataset.stuck).toBe('false')
+    wrapper.unmount()
+    scroller.remove()
+  })
+
 })

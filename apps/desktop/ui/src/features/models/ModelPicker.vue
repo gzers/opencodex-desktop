@@ -23,7 +23,8 @@ const channelLabel=(id?:string)=>!id?'官方 / 原生':props.channels.find(c=>c.
 const available=(row:ModelProjection)=>!props.loading&&!props.error&&row.enabled&&row.discovered&&!row.unavailableReason
 const chosen=(row:ModelProjection)=>picks.value.some(p=>key(p)===key(row))
 watch(()=>props.open,value=>{if(value){picks.value=props.current?.map(p=>({...p}))??[];search.value='';channelSearch.value='';channel.value='';focused.value='';sorting.value=null;descending.value=false}},{immediate:true})
-const channelRows=computed(()=>props.channels.filter(c=>(c.label+' '+c.id).toLowerCase().includes(channelSearch.value.toLowerCase())))
+// 渠道列表只保留仍有可选型号的渠道；隐藏或停用渠道不再出现在选择器里。
+const channelRows=computed(()=>{const usable=new Set(props.rows.filter(row=>row.pickerVisible!==false&&row.enabled&&row.discovered&&!row.unavailableReason).map(row=>row.channelId));return props.channels.filter(c=>usable.has(c.id)&&(c.label+' '+c.id).toLowerCase().includes(channelSearch.value.toLowerCase()))})
 function effort(row:ModelProjection){if(row.rules.noReasoning?.mode==='custom'&&row.rules.noReasoning.value)return undefined;return (props.reasoning?picks.value.find(p=>key(p)===key(row))?.reasoningEffort:undefined)??(row.rules.defaultEffort.mode==='custom'?row.rules.defaultEffort.value:undefined)}
 function sortValue(row:ModelProjection,column:SortColumn):string|number|undefined{
  if(column==='recommendation'){const index=props.recommendations?.findIndex(p=>key(p)===key(row));return index!==undefined&&index>=0?index:undefined}
@@ -33,8 +34,10 @@ function sortValue(row:ModelProjection,column:SortColumn):string|number|undefine
  if(column==='state')return available(row)?0:1
  const rank=['none','minimal','low','medium','high','xhigh','max','ultra'].indexOf(effort(row)??'');return rank<0?undefined:rank
 }
+// 可浏览列表只列真正可选的型号：隐藏、停用渠道、待首次确认都由可用性判定挡在外面。
+// 已保存但如今失效的选择仍留在“已选模型”里，并在那里写明原因。
 const rows=computed(()=>{
- const values=props.rows.filter(row=>(!channel.value||row.channelId===channel.value)&&(row.label+' '+row.modelId+' '+(row.aliases??[]).join(' ')+' '+channelLabel(row.channelId)).toLowerCase().includes(search.value.toLowerCase()))
+ const values=props.rows.filter(row=>available(row)&&(!channel.value||row.channelId===channel.value)&&(row.label+' '+row.modelId+' '+(row.aliases??[]).join(' ')+' '+channelLabel(row.channelId)).toLowerCase().includes(search.value.toLowerCase()))
  const column=sorting.value;if(!column)return values
  return values.map((row,index)=>({row,index})).sort((a,b)=>{
   const left=sortValue(a.row,column);const right=sortValue(b.row,column)
@@ -82,7 +85,7 @@ function option(row:ModelProjection,field:'reasoningEffort'|'fast',value?:string
  <UiDialog :open="open" :title="title??'选择渠道模型'" wide @close="emit('close')">
   <p v-if="loading" role="status">正在读取模型目录…</p><div v-if="error" role="alert"><p>{{ error }}</p><UiButton :disabled="loading" @click="emit('retry')">重新读取目录</UiButton></div>
   <div class="model-picker">
-   <nav aria-label="渠道"><h3>渠道</h3><input class="input" v-model="channelSearch" type="search" aria-label="搜索渠道" placeholder="搜索渠道" /><div class="model-picker-channels"><UiButton :variant="!channel?'primary':'ghost'" @click="channel='';focused=''">全部渠道</UiButton><UiButton v-for="c in channelRows" :key="c.id" :variant="channel===c.id?'primary':'ghost'" @click="channel=c.id;focused=''">{{ c.label }}</UiButton></div></nav>
+   <nav aria-label="渠道"><h3>渠道</h3><input class="input" v-model="channelSearch" type="search" aria-label="搜索渠道" placeholder="搜索渠道" /><div class="model-picker-channels"><UiButton :variant="!channel?'primary':'default'" :surface="channel?'plain':'control'" @click="channel='';focused=''">全部渠道</UiButton><UiButton v-for="c in channelRows" :key="c.id" :variant="channel===c.id?'primary':'default'" :surface="channel===c.id?'control':'plain'" @click="channel=c.id;focused=''">{{ c.label }}</UiButton></div></nav>
    <div class="model-picker-browser"><h3>模型 <small>{{ rows.length }} 个结果</small></h3><input class="input" v-model="search" type="search" aria-label="搜索模型" placeholder="搜索型号或原始ID" @input="focused=''" @keydown.down.prevent="focusRow(0)" />
     <div class="model-picker-list" @scroll="focused=''"><table ref="table" class="model-picker-table" role="grid" :aria-label="(channel?channelLabel(channel):'全部渠道')+'模型'"><thead><tr><th v-if="multiple"><input type="checkbox" :checked="allSelected" :indeterminate="someSelected" :disabled="!selectable.length" :aria-label="'全选当前结果 '+selectable.length+' 项'" @change="selectResults" /></th><th v-for="head in heads" :key="head[0]" :aria-sort="sortState(head[0])"><button type="button" @click="sort(head[0])">{{ head[1] }} {{ sorting===head[0]?descending?'↓':'↑':'↕' }}</button></th><th v-if="reasoning">设置</th></tr></thead><tbody>
      <tr v-for="(row,index) in rows" :key="key(row)" class="model-picker-row" :class="{'is-selected':chosen(row),'is-unavailable':!available(row)}" tabindex="0" :aria-selected="chosen(row)" :aria-disabled="!available(row)" @click="chooseRow(row)" @keydown="rowKey($event,row,index)">

@@ -55,7 +55,7 @@ export interface ChannelPolicy {
   defaults: ModelRules; overrides: Record<string, ModelRules>; familyOverrides: Record<string, ModelRules>
 }
 export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[];defaultChannelId?:string|null;recoveryId?:string|null;pendingRemovals?:{readId:string;channelId:string;providerId:string;credentialRef:string|null}[] }
-export interface ModelProjection {connectionDigest?:string|null;nativeModelId?:string|null;unavailableReason?:string|null;aliases?:string[]; channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
+export interface ModelProjection {connectionDigest?:string|null;nativeModelId?:string|null;unavailableReason?:string|null;/** 官方选择器是否可见；false 表示隐藏型号，不在可选列表出现。 */pickerVisible?:boolean;aliases?:string[]; channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
 export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
 export interface TemplateUsage {templateId:string;revisionId:string;libraryDigest:string;policyDigest:string;workspaceDigest:string;references:{state:string;location:string}[];models:{state:string;channelId:string;channelLabel:string;modelId:string;matched:boolean;reason:string;adopted:boolean;resolutionError:string|null}[];historicalDependency:boolean}
 export interface SaveScope {channelIds:string[];includeShared:boolean}

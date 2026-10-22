@@ -4,6 +4,19 @@ const bar = ref<HTMLElement | null>(null)
 let observer: ResizeObserver | undefined
 let parent: HTMLElement | null = null
 let main: HTMLElement | null = null
+let stuck = false
+let stuckWritten = false
+// Tab 在滚动内容里的自然位置（不含滚动量）。用 offsetTop 链累加得到，
+// 与当前滚动量和 sticky 偏移无关；先前用视口坐标反推，吸顶后会把自己算成新基准。
+function naturalOffset(): number {
+  let node: HTMLElement | null = bar.value
+  let total = 0
+  while (node && node !== main) {
+    total += node.offsetTop
+    node = node.offsetParent as HTMLElement | null
+  }
+  return total
+}
 function measure() {
   if (!bar.value || !parent) return
   // Layout units stay independent of CSS zoom. Compensate the scrollport padding
@@ -12,20 +25,39 @@ function measure() {
   parent.style.setProperty('--page-tabs-inset-top', style?.paddingTop ?? '0px')
   parent.style.setProperty('--page-tabs-inset-left', style?.paddingLeft ?? '0px')
   parent.style.setProperty('--page-tabs-inset-right', style?.paddingRight ?? '0px')
-  parent.style.setProperty('--page-tabs-height', `${bar.value.offsetHeight}px`)
+  parent.style.setProperty('--page-tabs-height', (bar.value.offsetHeight || 0) + 'px')
+  syncStuck()
 }
+// 滚过自然位置即视为吸顶；半个像素只吸收亚像素舍入，避免来回闪。
+function syncStuck() {
+  if (!bar.value || !main) return
+  const next = main.scrollTop + (main.clientTop || 0) >= naturalOffset() - 0.5
+  // 初次挂载必须写一次，否则 data-stuck 缺失、样式退回“未吸顶”。
+  if (stuckWritten && next === stuck) return
+  stuck = next
+  stuckWritten = true
+  bar.value.dataset.stuck = next ? 'true' : 'false'
+}
+function onScroll() { syncStuck() }
 onMounted(() => {
   parent = bar.value?.parentElement ?? null
   main = bar.value?.closest<HTMLElement>('.main') ?? null
   if (typeof ResizeObserver !== 'undefined' && bar.value) { observer = new ResizeObserver(measure); observer.observe(bar.value); if(main)observer.observe(main) }
+  main?.addEventListener('scroll', onScroll, { passive: true })
   measure()
 })
-onBeforeUnmount(() => { observer?.disconnect(); for(const key of ['height','inset-top','inset-left','inset-right'])parent?.style.removeProperty('--page-tabs-'+key) })
+onBeforeUnmount(() => {
+  observer?.disconnect()
+  main?.removeEventListener('scroll', onScroll)
+  for(const key of ['height','inset-top','inset-left','inset-right'])parent?.style.removeProperty('--page-tabs-'+key)
+})
 </script>
 <template><div ref="bar" class="sticky-page-tabs"><slot /></div></template>
 <style scoped>
-.sticky-page-tabs { position: sticky; top: calc(-1 * var(--page-tabs-inset-top,0px)); margin-inline-start: calc(-1 * var(--page-tabs-inset-left,0px)); margin-inline-end: calc(-1 * var(--page-tabs-inset-right,0px)); padding-inline-start: var(--page-tabs-inset-left,0px); padding-inline-end: var(--page-tabs-inset-right,0px); z-index: var(--z-sticky); background: var(--surface-sticky-bg, var(--surface-panel-bg)); backdrop-filter: var(--surface-sticky-blur); -webkit-backdrop-filter: var(--surface-sticky-blur); }
-.sticky-page-tabs { border-bottom: 1px solid var(--border); }
+.sticky-page-tabs { position: sticky; top: calc(-1 * var(--page-tabs-inset-top,0px)); margin-inline-start: calc(-1 * var(--page-tabs-inset-left,0px)); margin-inline-end: calc(-1 * var(--page-tabs-inset-right,0px)); padding-inline-start: var(--page-tabs-inset-left,0px); padding-inline-end: var(--page-tabs-inset-right,0px); z-index: var(--z-sticky); background: transparent; border-bottom: 1px solid transparent; transition: background-color var(--motion-normal,.18s) ease, border-bottom-color var(--motion-normal,.18s) ease; }
+/* 未到顶不铺底色，避免静止状态出现一条色带；吸顶后玻璃材质淡入。 */
+.sticky-page-tabs[data-stuck="true"] { background: var(--surface-sticky-bg, var(--surface-panel-bg)); backdrop-filter: var(--surface-sticky-blur); -webkit-backdrop-filter: var(--surface-sticky-blur); border-bottom-color: var(--border); }
 .sticky-page-tabs :deep([role=tablist]) { margin-top: 0; margin-bottom: 0; border-bottom-color: transparent; }
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) { .sticky-page-tabs { background: var(--panel); } }
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) { .sticky-page-tabs[data-stuck="true"] { background: var(--panel); } }
 </style>
+

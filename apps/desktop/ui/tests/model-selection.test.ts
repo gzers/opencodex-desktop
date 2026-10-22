@@ -53,12 +53,12 @@ describe('public model selection', () => {
     await wrapper.findAll('button').find(b => b.text() === '取消')!.trigger('click')
     expect(wrapper.emitted('confirm')).toBeUndefined(); expect(wrapper.emitted('close')).toHaveLength(1)
   })
-  it('does not infer support or select an unavailable row', async () => {
-    const item = row('unknown'); item.rules = emptyRules(); item.enabled = false
+  it('does not list or select a row the caller reports unavailable', async () => {
+    const item = row('unknown'); item.rules = emptyRules(); item.enabled = false; item.unavailableReason = '渠道停用'
     const wrapper = mount(ModelPicker, { props: { open: true, rows: [item], channels: [] }, global: { stubs: { UiDialog: dialog, UiSelectMenu: menu } } })
-    await wrapper.get('.model-picker-row').trigger('click')
+    // 不可用型号不进可浏览列表。
+    expect(wrapper.find('.model-picker-row').exists()).toBe(false)
     expect(wrapper.findAll('button').find(b=>b.text()==='确定选择')!.attributes('disabled')).toBeDefined()
-    expect(wrapper.text()).toContain('渠道停用')
   })
   it('cycles numeric sorting through both directions and original order with unknown values last',async()=>{
     const unknown=row('unknown');const small=row('small');small.rules.contextWindow={mode:'custom',value:1000};const large=row('large');large.rules.contextWindow={mode:'custom',value:9000}
@@ -89,6 +89,27 @@ describe('public model selection', () => {
   })
 })
 describe('official snapshot adoption', () => {
+  it('lists only picker-visible models and hides channels left without any', async () => {
+    const visible = row('visible')
+    const hidden = { ...row('hidden'), pickerVisible: false, unavailableReason: '型号已隐藏，请重新选择', enabled: false }
+    const wrapper = mount(ModelPicker, {
+      props: {
+        open: true,
+        rows: [visible, hidden, { ...row('other'), channelId: 'hidden-channel', enabled: false, unavailableReason: '渠道停用' }],
+        channels: [{ id: 'channel', label: '可见渠道' }, { id: 'hidden-channel', label: '全隐藏渠道' }],
+        // 已保存但如今失效的选择：仍在“已选模型”里，并写明原因。
+        current: [{ channelId: 'channel', modelId: 'hidden' }],
+      },
+      global: { stubs: { UiDialog: dialog, UiSelectMenu: menu } },
+    })
+    // 可浏览列表只列可选型号；隐藏型号与停用渠道的行都不出现。
+    expect(wrapper.findAll('.model-picker-row').map(r => r.get('strong').text())).toEqual(['visible'])
+    expect(wrapper.find('nav').text()).toContain('可见渠道')
+    expect(wrapper.find('nav').text()).not.toContain('全隐藏渠道')
+    expect(wrapper.text()).toContain('型号已隐藏，请重新选择')
+    wrapper.unmount()
+  })
+
   it('refreshes discovery without replacing existing identity, scope, node or order', () => {
     const first = mergeUpstream({ version: '2.84.0', providers: { providers: { test: { adapter: 'openai-chat', baseUrl: 'https://example.test/v1' } } }, models: [{ provider: 'test', id: 'one' }], order: {} }, [])
     first[0]!.label = '我的渠道'; first[0]!.selection = { mode: 'none' }; first[0]!.modelOrder = ['old','one']
