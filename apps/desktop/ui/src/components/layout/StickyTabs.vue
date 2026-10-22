@@ -65,7 +65,8 @@ onBeforeUnmount(() => {
 </script>
 <template><div ref="bar" class="sticky-page-tabs"><slot /></div></template>
 <style scoped>
-.sticky-page-tabs { position: sticky; top: calc(-1 * var(--page-tabs-inset-top,0px)); margin-inline-start: calc(-1 * var(--page-tabs-inset-left,0px)); margin-inline-end: calc(-1 * var(--page-tabs-inset-right,0px)); padding-inline-start: var(--page-tabs-inset-left,0px); padding-inline-end: var(--page-tabs-inset-right,0px); z-index: var(--z-sticky); background: transparent; border-bottom: 1px solid transparent; transition: background-color var(--motion-normal,.18s) ease, border-bottom-color var(--motion-normal,.18s) ease; }
+/* 吸顶材质用 --motion-sticky（90ms）：跟手才有“贴上去就出现”的感觉；常规 180ms 会明显落后于滚动。 */
+.sticky-page-tabs { position: sticky; top: calc(-1 * var(--page-tabs-inset-top,0px)); margin-inline-start: calc(-1 * var(--page-tabs-inset-left,0px)); margin-inline-end: calc(-1 * var(--page-tabs-inset-right,0px)); padding-inline-start: var(--page-tabs-inset-left,0px); padding-inline-end: var(--page-tabs-inset-right,0px); z-index: var(--z-sticky); background: transparent; border-bottom: 1px solid transparent; transition: background-color var(--motion-sticky,.09s) ease-out, border-bottom-color var(--motion-sticky,.09s) ease-out; }
 /* 未到顶不铺底色，避免静止状态出现一条色带；吸顶后玻璃材质淡入。 */
 .sticky-page-tabs[data-stuck="true"] { background: var(--surface-sticky-bg, var(--surface-panel-bg)); backdrop-filter: var(--surface-sticky-blur); -webkit-backdrop-filter: var(--surface-sticky-blur); border-bottom-color: var(--border); }
 .sticky-page-tabs :deep([role=tablist]) { margin-top: 0; margin-bottom: 0; border-bottom-color: transparent; }
