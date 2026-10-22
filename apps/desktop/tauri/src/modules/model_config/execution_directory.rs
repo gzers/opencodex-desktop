@@ -35,6 +35,9 @@ pub struct Row {
     pub unavailable_reason: Option<String>,
     pub aliases: Vec<String>,
     pub connection_digest: Option<String>,
+    /// 是否出现在主选择器的可见集合里。隐藏型号、停用渠道、待首次确认的型号
+    /// 仍保留在目录中用于解释已保存设置，但不进入可选列表。
+    pub picker_visible: bool,
 }
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -119,6 +122,14 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
     let providers = snapshot.providers["providers"]
         .as_object()
         .ok_or_else(|| invalid("execution_directory", "官方渠道目录无效"))?;
+    // 官方选择器可见集合：pickerOrder 即上游实际提供给用户选择的型号。
+    // 为兼容缺少该字段的旧快照，只有字段存在时才把它当作筛选依据。
+    let picker_order = snapshot.order["pickerOrder"].as_array().map(|values| {
+        values
+            .iter()
+            .filter_map(|value| value.as_str().map(str::to_owned))
+            .collect::<BTreeSet<String>>()
+    });
     let models = snapshot
         .models
         .as_array()
@@ -164,14 +175,23 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
             return Err(invalid("execution_identity", "实际目录存在重复型号身份"));
         }
         let raw = &snapshot.providers["providers"][provider];
+        let channel_disabled = raw["disabled"] == true;
+        let namespaced = row["namespaced"].as_str().filter(|value| !value.is_empty());
+        let hidden = row["disabled"] == true
+            || row["initialSelectionPending"] == true
+            || picker_order
+                .as_ref()
+                .is_some_and(|visible| !visible.contains(namespaced.unwrap_or(id)));
         let reason = if native {
             Some("原生目录尚无管理器执行绑定".into())
         } else if provider.to_ascii_lowercase().contains("a6api") {
             Some("此渠道不用于制模执行".into())
-        } else if raw["disabled"] == true {
+        } else if channel_disabled {
             Some("渠道停用".into())
         } else if row["initialSelectionPending"] == true {
             Some("型号尚待首次选择确认".into())
+        } else if hidden {
+            Some("型号已隐藏，请重新选择".into())
         } else {
             None
         };
@@ -199,6 +219,7 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
                 source: BTreeMap::from([("capabilities".into(), "当前已保存官方目录".into())]),
             },
             native_model_id: native.then(|| id.to_owned()),
+            picker_visible: reason.is_none(),
             unavailable_reason: reason,
             aliases,
         });
@@ -328,8 +349,9 @@ mod tests {
         UpstreamSnapshot {
             version: "2.84.0".into(),
             providers: json!({"defaultProvider":"custom","providers":{"custom":{"adapter":"openai-chat","baseUrl":"https://fixture.example.test/v1","authMode":"key","selectedModels":["chosen"],"modelDisplayNames":{"hidden":"完整隐藏型号"},"modelAliases":{"hidden":"short"}},"off":{"disabled":true},"a6api":{"adapter":"openai-chat"}}}),
-            models: json!([{"provider":"custom","id":"chosen","namespaced":"custom/chosen"},{"provider":"custom","id":"hidden","namespaced":"custom/hidden","disabled":true,"reasoningEfforts":["none","high"],"defaultReasoningEffort":"high","fastRowAvailable":false},{"provider":"openai","native":true,"id":"native-model","namespaced":"native-model"},{"provider":"off","id":"unavailable","namespaced":"off/unavailable"},{"provider":"a6api","id":"a","namespaced":"a6api/a"}]),
-            order: json!({"pickerOrder":[]}),
+            models: json!([{"provider":"custom","id":"chosen","namespaced":"custom/chosen","reasoningEfforts":["none","high"],"defaultReasoningEffort":"high","fastRowAvailable":false},{"provider":"custom","id":"hidden","namespaced":"custom/hidden","disabled":true,"reasoningEfforts":["none","high"],"defaultReasoningEffort":"high","fastRowAvailable":false},{"provider":"openai","native":true,"id":"native-model","namespaced":"native-model"},{"provider":"off","id":"unavailable","namespaced":"off/unavailable"},{"provider":"a6api","id":"a","namespaced":"a6api/a"}]),
+            // 隐藏型号（disabled: true）不在官方选择器可见集合里，执行目录须与之一致。
+            order: json!({"pickerOrder":["custom/chosen","native-model","off/unavailable","a6api/a"]}),
             catalog: json!({"models":[]}),
         }
     }
@@ -358,9 +380,23 @@ mod tests {
             .iter()
             .find(|r| r.model.model_id == "hidden")
             .unwrap();
-        assert!(hidden.model.enabled);
+        // 隐藏型号不再可选，但仍以真实名称和别名解释“已隐藏，请重新选择”。
+        assert!(!hidden.model.enabled);
+        assert!(!hidden.picker_visible);
         assert_eq!(hidden.model.label, "完整隐藏型号");
         assert_eq!(hidden.aliases, vec!["short"]);
+        assert_eq!(
+            hidden.unavailable_reason.as_deref(),
+            Some("型号已隐藏，请重新选择")
+        );
+        assert!(
+            first
+                .rows
+                .iter()
+                .find(|r| r.model.model_id == "chosen")
+                .unwrap()
+                .picker_visible
+        );
         let native = first
             .rows
             .iter()
@@ -404,7 +440,7 @@ mod tests {
             &snapshot,
             AgentSettings {
                 provider_id: "custom".into(),
-                model_id: "hidden".into(),
+                model_id: "chosen".into(),
                 reasoning_effort: Some("none".into()),
                 fast: Some(false),
                 channel_id: None,

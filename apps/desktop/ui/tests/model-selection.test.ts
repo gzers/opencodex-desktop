@@ -89,6 +89,26 @@ describe('public model selection', () => {
   })
 })
 describe('official snapshot adoption', () => {
+  it('lists only picker-visible models and hides channels left without any', async () => {
+    const visible = row('visible')
+    const hidden = { ...row('hidden'), pickerVisible: false, unavailableReason: '型号已隐藏，请重新选择', enabled: false }
+    const wrapper = mount(ModelPicker, {
+      props: {
+        open: true,
+        rows: [visible, hidden, { ...row('other'), channelId: 'hidden-channel', enabled: false, unavailableReason: '渠道停用' }],
+        channels: [{ id: 'channel', label: '可见渠道' }, { id: 'hidden-channel', label: '全隐藏渠道' }],
+      },
+      global: { stubs: { UiDialog: dialog, UiSelectMenu: menu } },
+    })
+    // 隐藏型号不进可浏览列表；整条渠道没有可浏览型号时，渠道也不再出现在左栏。
+    expect(wrapper.findAll('.model-picker-row').map(r => r.get('strong').text())).toEqual(['visible', 'other'])
+    expect(wrapper.find('nav').text()).toContain('可见渠道')
+    expect(wrapper.find('nav').text()).not.toContain('全隐藏渠道')
+    // 停用仍以状态列解释，用户能看到原因而不是静默消失。
+    expect(wrapper.text()).toContain('渠道停用')
+    wrapper.unmount()
+  })
+
   it('refreshes discovery without replacing existing identity, scope, node or order', () => {
     const first = mergeUpstream({ version: '2.84.0', providers: { providers: { test: { adapter: 'openai-chat', baseUrl: 'https://example.test/v1' } } }, models: [{ provider: 'test', id: 'one' }], order: {} }, [])
     first[0]!.label = '我的渠道'; first[0]!.selection = { mode: 'none' }; first[0]!.modelOrder = ['old','one']

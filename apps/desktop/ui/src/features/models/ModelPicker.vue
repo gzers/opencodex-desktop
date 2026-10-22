@@ -23,7 +23,8 @@ const channelLabel=(id?:string)=>!id?'官方 / 原生':props.channels.find(c=>c.
 const available=(row:ModelProjection)=>!props.loading&&!props.error&&row.enabled&&row.discovered&&!row.unavailableReason
 const chosen=(row:ModelProjection)=>picks.value.some(p=>key(p)===key(row))
 watch(()=>props.open,value=>{if(value){picks.value=props.current?.map(p=>({...p}))??[];search.value='';channelSearch.value='';channel.value='';focused.value='';sorting.value=null;descending.value=false}},{immediate:true})
-const channelRows=computed(()=>props.channels.filter(c=>(c.label+' '+c.id).toLowerCase().includes(channelSearch.value.toLowerCase())))
+// 渠道列表只保留仍有可选型号的渠道；隐藏或停用渠道不再出现在选择器里。
+const channelRows=computed(()=>{const usable=new Set(props.rows.filter(row=>row.pickerVisible!==false&&row.enabled&&row.discovered&&!row.unavailableReason).map(row=>row.channelId));return props.channels.filter(c=>usable.has(c.id)&&(c.label+' '+c.id).toLowerCase().includes(channelSearch.value.toLowerCase()))})
 function effort(row:ModelProjection){if(row.rules.noReasoning?.mode==='custom'&&row.rules.noReasoning.value)return undefined;return (props.reasoning?picks.value.find(p=>key(p)===key(row))?.reasoningEffort:undefined)??(row.rules.defaultEffort.mode==='custom'?row.rules.defaultEffort.value:undefined)}
 function sortValue(row:ModelProjection,column:SortColumn):string|number|undefined{
  if(column==='recommendation'){const index=props.recommendations?.findIndex(p=>key(p)===key(row));return index!==undefined&&index>=0?index:undefined}
@@ -33,8 +34,9 @@ function sortValue(row:ModelProjection,column:SortColumn):string|number|undefine
  if(column==='state')return available(row)?0:1
  const rank=['none','minimal','low','medium','high','xhigh','max','ultra'].indexOf(effort(row)??'');return rank<0?undefined:rank
 }
+/** 隐藏型号不进可浏览列表；停用等原因仍保留在列表里，用状态列解释为什么不可选。 */
 const rows=computed(()=>{
- const values=props.rows.filter(row=>(!channel.value||row.channelId===channel.value)&&(row.label+' '+row.modelId+' '+(row.aliases??[]).join(' ')+' '+channelLabel(row.channelId)).toLowerCase().includes(search.value.toLowerCase()))
+ const values=props.rows.filter(row=>row.pickerVisible!==false&&(!channel.value||row.channelId===channel.value)&&(row.label+' '+row.modelId+' '+(row.aliases??[]).join(' ')+' '+channelLabel(row.channelId)).toLowerCase().includes(search.value.toLowerCase()))
  const column=sorting.value;if(!column)return values
  return values.map((row,index)=>({row,index})).sort((a,b)=>{
   const left=sortValue(a.row,column);const right=sortValue(b.row,column)
