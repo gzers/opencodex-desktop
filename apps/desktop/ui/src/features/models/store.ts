@@ -139,5 +139,21 @@ export const useModelsStore = defineStore('model-config', () => {
     workspaceBaseline.value = saved.workspaceDigest
     // The template editor keeps its original buffer and optimistic baseline.
   }
-  return { modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
+
+  // WP-25, WP-18, WP-22: 可见渠道与模型（用于模型选择器性能优化）
+  // 可见渠道：过滤隐藏和停用的渠道
+  const visibleChannels = computed(() => 
+    snapshot.value?.policy?.channels.filter(c => c.enabled && !c.hidden) ?? []
+  )
+
+  // 可见模型：过滤隐藏、停用的模型，且渠道也必须可见
+  const visibleModels = computed(() => {
+    const channelIds = new Set(visibleChannels.value.map(c => c.id))
+    return snapshot.value?.policy?.models.filter(m => 
+      !m.hidden && m.enabled && channelIds.has(m.channelId)
+    ) ?? []
+  })
+
+  return { modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels, visibleChannels, visibleModels }
 })
+
