@@ -960,11 +960,8 @@ fn export_snapshot(snapshot: &Snapshot, scope: ExportScope) -> ModelResult<Model
             .map(|c| adopted_portable(c, &snapshot.policy.template_refs))
             .collect();
         Some(PortablePolicy {
-            default_channel_id: if scope.include_global {
-                snapshot.policy.default_channel_id.clone()
-            } else {
-                None
-            },
+            // 退役字段：导出不再携带，避免跨设备传播。
+            default_channel_id: None,
             template_refs: if scope.include_global {
                 Some(snapshot.policy.template_refs.clone())
             } else {
@@ -1332,9 +1329,8 @@ fn merge(
             .as_ref()
             .map(|w| w.policy.clone())
             .unwrap_or_else(|| local.policy.clone());
-        if let Some(default) = &incoming.default_channel_id {
-            policy.default_channel_id = Some(default.clone());
-        }
+        // “默认渠道”已退役：包里即使带该字段也不写入本机草稿，
+        // 官方 defaultProvider 由用户自己掌控。
         if let Some(global) = &incoming.template_refs {
             if local
                 .workspace
@@ -1519,16 +1515,8 @@ fn merge(
                 .sort_by_key(|c| rank.get(&c.id).copied().unwrap_or(usize::MAX));
         }
         notices.push("渠道策略仅进入本机草稿；运行保存、预算和重启核对仍须明确执行".into());
-        if policy
-            .default_channel_id
-            .as_ref()
-            .is_some_and(|id| !policy.channels.iter().any(|c| &c.id == id))
-        {
-            return Err(invalid(
-                "default_provider",
-                "所选默认渠道未包含且本机没有对应绑定，请选择该渠道或跳过全局字段",
-            ));
-        }
+        // 旧包可能带 defaultChannelId；不再据此拒绝接收。
+        policy.default_channel_id = None;
         Some(policy)
     } else {
         None
@@ -1684,9 +1672,6 @@ pub(super) fn merge_packages(
             }
             if incoming.channel_order.is_some() {
                 existing.channel_order = incoming.channel_order;
-            }
-            if incoming.default_channel_id.is_some() {
-                existing.default_channel_id = incoming.default_channel_id;
             }
             for channel in incoming.channels {
                 if let Some(index) = existing.channels.iter().position(|c| c.id == channel.id) {
@@ -1880,16 +1865,6 @@ fn mapped_package(
             }
         }
     }
-    if let Some(id) = result
-        .payload
-        .policy
-        .as_mut()
-        .and_then(|p| p.default_channel_id.as_mut())
-    {
-        if let Some(binding) = bindings.get(id) {
-            *id = binding.target_id.clone();
-        }
-    }
     result.format_version = package_version(&result.payload);
     result.digest = sha256(&serde_json::to_vec(&result.payload)?);
     validate_package(&result)?;
@@ -2001,7 +1976,6 @@ pub fn select_received_context(
         if policy.channels.is_empty()
             && policy.template_refs.is_none()
             && policy.channel_order.is_none()
-            && policy.default_channel_id.is_none()
         {
             package.payload.policy = None;
         }
@@ -2509,11 +2483,7 @@ mod tests {
         );
         let policy = package.payload.policy.as_ref().unwrap();
         let fragment = &policy.channels[0];
-        assert!(
-            policy.template_refs.is_none()
-                && policy.channel_order.is_none()
-                && policy.default_channel_id.is_none()
-        );
+        assert!(policy.template_refs.is_none() && policy.channel_order.is_none());
         assert!(fragment.connection.is_none());
         assert_eq!(fragment.defaults, ModelRules::default());
         assert_eq!(fragment.template_refs, vec![a.clone()]);
