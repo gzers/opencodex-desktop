@@ -63,6 +63,11 @@ html[data-route=sync] .main>.topbar{flex:none}
 .sx-dialog .sx-field>span{color:var(--muted);font-size:12px}
 .sx-dialog .sx-check{margin:10px 0}
 .sx-dialog .sx-info{padding:12px 14px;background:var(--rail);border-radius:6px;margin:12px 0;line-height:1.65}
+/* 保存位置：默认导出目录或自定义目录；两者都不选时回落默认。 */
+.sx-dialog .sx-destination{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.sx-dialog .sx-destination .sx-check{margin:0}
+.sx-dialog .sx-dir-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin:8px 0}
+.sx-dialog .sx-dir-row .btn{white-space:nowrap}
 .sx-dialog .sx-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
 .sx-dialog .sx-steps{color:var(--muted);font-size:12px;margin:0 0 16px;line-height:1.6}
 .sx-dialog .sx-steps strong{color:var(--text)}

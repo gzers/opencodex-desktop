@@ -156,10 +156,11 @@
   if(!closure().ids.size)return;
   const cl=closure(),secrets=secretIds(),count=secretCount();
   const manifest={demo:true,kind:'configuration-sync',objects:[...cl.ids],dependencies:[...cl.deps].map(([id,versions])=>({id,revisions:[...versions]})),credentials:secrets,accounts:[...cl.ids].map(find).filter(x=>x?.group==='accounts').map(x=>({id:x.id,accountPlatform:x.accountPlatform,owner:x.owner,provider:x.provider,sourceAccountId:x.sourceAccountId,subject:x.subject||null,tenant:x.tenant||null,label:x.name,email:x.email||null})),source:'committed',encryptionRequired:count>0,modules:[...cl.ids].filter(id=>find(id)?.group==='dialog-policies').map(id=>({id,schemaVersion:1,content:find(id).payload}))};
-  const body='<div class="sx-info"><strong>'+cl.ids.size+' 项配置 · '+(count?'含 '+count+' 项凭据':'不含任何凭据')+'</strong><br>渠道 Key '+secrets.keys.length+' 项 / 账户登录态 '+secrets.accounts.length+' 项 / 扩展凭据 '+secrets.extensions.length+' 项 / WebDAV 密码 '+secrets.endpointPasswords.length+' 项</div>'+check('id="sxEncrypt"',count?'含凭据，必须加密':'为配置包设置加密口令',count,!!count)+'<div id="sxPassFields" '+(!count?'hidden':'')+'><div class="sx-grid"><label class="sx-field"><span>加密口令（至少 8 位）</span><input id="sxPass" class="input" type="password" autocomplete="new-password"></label><label class="sx-field"><span>再次输入</span><input id="sxPassAgain" class="input" type="password" autocomplete="new-password"></label></div></div><details><summary>查看内容清单</summary><pre>'+esc(JSON.stringify(manifest,null,2))+'</pre></details>';
+  const destination='<div class="sx-field"><span>保存位置</span><div class="sx-destination" role="group" aria-label="保存位置"><label class="sx-check"><input type="radio" name="sxDestination" value="default" checked><span>默认导出目录</span></label><label class="sx-check"><input type="radio" name="sxDestination" value="custom"><span>自定义目录</span></label></div><div id="sxCustomDir" hidden><div class="sx-dir-row"><input id="sxDirPath" class="input" type="text" readonly placeholder="尚未选择目录"><button type="button" class="btn ghost" data-sx="choose-dir">选择目录…</button></div><p class="sx-muted">未选择目录时按默认导出目录保存。</p></div></div>';
+  const body=destination+'<div class="sx-info"><strong>'+cl.ids.size+' 项配置 · '+(count?'含 '+count+' 项凭据':'不含任何凭据')+'</strong><br>渠道 Key '+secrets.keys.length+' 项 / 账户登录态 '+secrets.accounts.length+' 项 / 扩展凭据 '+secrets.extensions.length+' 项 / WebDAV 密码 '+secrets.endpointPasswords.length+' 项</div>'+check('id="sxEncrypt"',count?'含凭据，必须加密':'为配置包设置加密口令',count,!!count)+'<div id="sxPassFields" '+(!count?'hidden':'')+'><div class="sx-grid"><label class="sx-field"><span>加密口令（至少 8 位）</span><input id="sxPass" class="input" type="password" autocomplete="new-password"></label><label class="sx-field"><span>再次输入</span><input id="sxPassAgain" class="input" type="password" autocomplete="new-password"></label></div></div><details><summary>查看内容清单</summary><pre>'+esc(JSON.stringify(manifest,null,2))+'</pre></details>';
   showDialog('export','确认导出',body,'生成配置包',()=>{
    const encrypted=$('#sxEncrypt').checked,p=$('#sxPass').value;if(encrypted&&(p.length<8||p!==$('#sxPassAgain').value)){setText('#sxError','请输入至少 8 位的加密口令，并保持两次一致。');return;}
-   lastExport={...manifest,encrypted,simulated:true};result={tab:'file',title:'导出流程演示完成',detail:cl.ids.size+' 项配置；'+(encrypted?'加密容器步骤已演示，未生成真实加密文件。':'不携带凭据，未生成真实文件。')};closeModal();render();
+   const custom=$('[name=sxDestination]:checked')?.value==='custom';const dir=custom?($('#sxDirPath')?.value.trim()||''):'';if(custom&&!dir){setText('#sxError','请选择自定义目录，或改回默认导出目录。');return;}lastExport={...manifest,encrypted,destination:dir||'default',simulated:true};result={tab:'file',title:'导出流程演示完成',detail:cl.ids.size+' 项配置；保存到 '+(dir||'默认导出目录')+'；'+(encrypted?'加密容器步骤已演示，未生成真实加密文件。':'不携带凭据，未生成真实文件。')};closeModal();render();
   },{annotationText:['选择范围 → 确认内容 → 生成配置包','未选择的凭据不进入包，也不会由模版依赖重新带入。']});
  }
  // 导入与 WebDAV 共用对象树、选择和凭据规则；详情层只读且不重建父弹窗。
@@ -397,6 +398,7 @@
   else if(a==='export')exportPreview();
   else if(a==='import')importStart();
   else if(a==='choose-import-file')chooseImportFile();
+  else if(a==='choose-dir'){const input=$('#sxDirPath');if(!input)return;input.value='/Users/用户名/Documents/opencodex-shared';setText('#sxError','');}
   else if(a==='connection')connectionDialog();
   else if(a==='test-connection'&&validateConnection())setText('#sxConnectionTest','演示：连接和目录权限检查通过。未发起网络请求。');
   else if(a==='save-scope'){savedScope=signature(scopes.webdav);result={tab:'webdav',title:'本机范围已保存（演示）',detail:'上传与接收使用这份范围。已选账户按当前选项同步登录状态；后续新增敏感类别不会自动加入，未选远端对象保留；关闭凭据不会清除历史快照。'};render();}
@@ -414,6 +416,7 @@
   else if(el.matches('[data-sx-secret]')){const key=el.dataset.sxSecret,prop={keys:'key',extensions:'extensionSecret'}[key];s[key].clear();if(el.checked)for(const x of catalog.filter(x=>closure().ids.has(x.id)&&x[prop]))s[key].add(x.id);s.preset='custom';redraw=true;}
   else if(el.matches('[data-sx-secret-object]')){el.checked?s[el.dataset.kind].add(el.dataset.sxSecretObject):s[el.dataset.kind].delete(el.dataset.sxSecretObject);redraw=true;}
   else if(el.id==='sxEncrypt')$('#sxPassFields').hidden=!el.checked;
+  else if(el.name==='sxDestination'){const box=$('#sxCustomDir');if(box)box.hidden=el.value!=='custom';if(el.value!=='custom'){const input=$('#sxDirPath');if(input)input.value='';}setText('#sxError','');}
   else if(el.matches('[data-sx-backup]')){const p=dialogKind==='diff'?diffPlan:importPlan;if(p?.mode)p.backup=el.checked;}
   else if(el.matches('[data-sx-import-pick],[data-sx-diff-pick],[data-sx-compare-all],[data-sx-compare-group],[data-sx-compare-rule],[data-sx-compare-credential],[data-sx-import-account-info],[data-sx-diff-account-info],[data-sx-import-endpoint-config]')){
    const p=dialogKind==='diff'?diffPlan:importPlan;
