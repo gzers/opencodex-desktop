@@ -22,3 +22,10 @@ describe('渠道列表与原型一致的入口口径', () => {
     expect(source).not.toContain('<ModelPicker :open="pickerOpen"')
   })
 })
+
+describe('查看草稿入口已移除 (WP-28)', () => {
+  it('顶部操作行只剩预览选择器 / 状态 / 还原修改 / 保存', () => {
+    expect(source).not.toContain('查看草稿')
+    expect(source).not.toContain('PolicyDraftDialog')
+  })
+})
