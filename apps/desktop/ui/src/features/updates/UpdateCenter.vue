@@ -213,7 +213,7 @@ defineExpose({ check })
             <div class="update-object-actions">
               <label v-if="!pendingRestart" class="update-backup"><input v-model="session.backup" type="checkbox" :disabled="managerBusy">更新前备份配置（推荐）</label>
               <UiButton v-if="pendingRestart" variant="primary" :loading="restarting" @click="restart">重启并应用更新</UiButton>
-              <UiButton v-else variant="primary" :disabled="busy || !managerAvailable" :loading="managerBusy" data-testid="install-manager-update" @click="installManager">{{ managerBusy ? '更新中' : session.managerError || progress?.stage === 'failed' ? '重试安装' : '安装管理器更新' }}</UiButton>
+              <UiButton v-else variant="primary" :disabled="busy || !managerAvailable" :loading="managerBusy || session.checking" data-testid="install-manager-update" @click="installManager">{{ managerBusy ? '更新中' : session.checking ? '检查中' : session.managerError || progress?.stage === 'failed' ? '重试安装' : '安装管理器更新' }}</UiButton>
             </div>
           </UiCard>
           <UiCard v-if="!selected || selected === 'official'" class="update-object" data-testid="official-update-card">
@@ -235,7 +235,7 @@ defineExpose({ check })
               <p v-if="!officialBusy && runtime.installOutcome?.protectionReconciliationPending" class="update-hint" role="status">安装已完成；保护备份完整性核对未完成，备份仍保留。请查看诊断日志。</p>
             </div>
             <p v-if="session.officialError || app.officialUpdateError" class="update-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
-            <div class="update-object-actions"><small v-if="app.upgradeLastBackup">最近备份 {{ app.upgradeLastBackup.backupId }}</small><UiButton variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy || !officialAvailable" :loading="officialBusy" data-testid="install-official-update" @click="installOfficial">{{ officialBusy ? '更新中' : session.officialError || app.officialUpdateError ? '重试面板更新' : '备份并更新面板' }}</UiButton></div>
+            <div class="update-object-actions"><small v-if="app.upgradeLastBackup">最近备份 {{ app.upgradeLastBackup.backupId }}</small><UiButton variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy || !officialAvailable" :loading="officialBusy || session.checking" data-testid="install-official-update" @click="installOfficial">{{ officialBusy ? '更新中' : session.checking ? '检查中' : session.officialError || app.officialUpdateError ? '重试面板更新' : '备份并更新面板' }}</UiButton></div>
           </UiCard>
         </div>
         <footer class="update-center-foot"><p>{{ managerBusy || officialBusy ? '隐藏窗口后更新继续，可重新打开查看进度。' : '更新准备完成后由你选择重启时机。' }}</p><div><UiButton variant="ghost" @click="close">{{ managerBusy || officialBusy ? '隐藏' : '稍后' }}</UiButton><UiButton :disabled="busy" :loading="session.checking" @click="check">{{ session.checking ? '检查中' : '重新检查更新' }}</UiButton></div></footer>
