@@ -58,6 +58,9 @@ onBeforeUnmount(()=>{exportPassword.value='';importPassword.value='';unlockedPas
 const hasScope = computed(() => accountIds.value.length>0 || templateIds.value.length > 0 || channelIds.value.length > 0 || includeGlobal.value||managerPreferences.value||managerExtensions.value||!props.remote&&managerWebdav.value&&activeWebdav.value||hasAssets.value||props.remote&&(allTemplates.value||allChannels.value))
 const familyScopesValid=computed(()=>Object.values(channelFamilies.value).every(scope=>scope.templateIds.length>0));
 const requiresPassword=computed(()=>exportKeys.value||hasAssets.value&&extensionCredentials.value||!props.remote&&managerWebdav.value&&activeWebdav.value&&webdavPasswords.value)
+// 口令本身是可选步骤；一旦选了受保护内容，它才变成必需。界面必须把这个条件说清楚，
+// 否则用户看到“可选”却无法导出，会以为按钮坏了。
+const passwordLabel=computed(()=>requiresPassword.value?(props.remote?'配置同步保护口令（含凭据，必需）':'文件保护口令（含凭据，必需）'):(props.remote?'配置同步保护口令（可选，与连接密码独立）':'文件保护口令（可选）'))
 const preview = computed(() => incoming.value?.package ?? upload.value?.package ?? filePlan.value?.package)
 const scopeKey=(category:string,id:string)=>JSON.stringify([category,id])
 const scopeObjects=computed<ScopeObject[]>(()=>[
@@ -247,7 +250,7 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
       <UiButton v-if="exportSource!=='draft'" size="sm" :disabled="busy||catalogueLoading" @click="loadAssets">读取扩展目录</UiButton><p v-if="selectedCredentialKinds.length" class="model-muted" role="status">受保护部分：{{ selectedCredentialKinds.join('、') }}；须独立口令加密。</p>
       <div v-if="hasAssets"><label><input v-model="extensionCredentials" type="checkbox" :disabled="busy||catalogueLoading" />携带所选扩展凭据（独立口令保护）</label><label><input v-model="assetsReviewed" type="checkbox" :disabled="busy||catalogueLoading" />已检查所选Skill自定义文本、资源及MCP自定义字段</label></div>
       <label><input v-model="includeGlobal" type="checkbox" :disabled="busy||catalogueLoading" />全局采用及渠道组顺序</label>
-      <label>{{ remote?'配置同步保护口令（可选，与连接密码独立）':'文件保护口令（可选）' }}<input v-model="exportPassword" aria-label="导出保护口令" class="input" type="password" autocomplete="new-password" :disabled="busy||catalogueLoading" placeholder="留空使用完整性校验" /></label>
+      <label>{{ passwordLabel }}<input v-model="exportPassword" aria-label="导出保护口令" class="input" type="password" autocomplete="new-password" :disabled="busy||catalogueLoading" :placeholder="requiresPassword?'含凭据时须填写口令':'留空使用完整性校验'" /></label>
       <p v-if="exportKeys">仅携带Key认证渠道的完整认证配置；OAuth与转发渠道的登录材料由账户适配处理。</p>
       <label v-if="exportSource!=='draft'"><input v-model="exportKeys" type="checkbox" :disabled="busy||catalogueLoading||!keyChannelIds.length" />携带所选渠道的Key池与认证配置（须设置独立口令）</label>
       </aside></section>
