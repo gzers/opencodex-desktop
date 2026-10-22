@@ -134,3 +134,17 @@ test('读取中渲染骨架与状态条，已选项不判缺失且不可确认',
  assert.match(h.node('mpkChannelRows').innerHTML,/mpk-skeleton-channel/);
  assert.equal(h.node('modalConfirm').disabled,true);
 });
+
+
+test('读取中再次打开保留已选模型，芯片显示渠道与型号且不报缺失',()=>{
+ const h=harness();const retained={kind:'channel',channelId:'newapi',modelId:'gpt-5.4'};
+ h.api.choose({scenario:'loading',models:[retained],getCatalog:()=>[row({reason:'正在读取'})],onSelect(){}});
+ const picked=h.node('mpkPicked').innerHTML;
+ assert.match(picked,/newapi \/ gpt-5\.4/);
+ assert.match(picked,/已选模型/);
+ assert.doesNotMatch(picked,/目录缺失/);
+ assert.doesNotMatch(picked,/档位不支持/);
+ assert.deepEqual(h.api.state().pending,[key({channelId:'newapi',modelId:'gpt-5.4'})]);
+ assert.equal(h.node('modalConfirm').disabled,true);
+});
+

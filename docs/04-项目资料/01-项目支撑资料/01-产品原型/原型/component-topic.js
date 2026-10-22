@@ -92,7 +92,11 @@
   if(state.pickerScenario==='empty')return [];
   return Array.from({length:state.pickerScenario==='long'?108:24},(_,i)=>({ref:{kind:'channel',channelId:i%2?'aimami':'newapi',modelId:i<2?'gpt-5.4':i<4?'claude-sonnet-4.6':'model-'+i},channelName:i%2?(state.long?'AIMAMI · 很长的渠道名称用于检查列表边界':'Aimami'):'NewApi',name:(state.long?'很长的模型定义名称 · ':'')+(i<2?'GPT 5.4':i<4?'Claude Sonnet 4.6':'Model '+i),context:i%3?128000:null,effort:i%3?'high':null,efforts:i%3?['low','medium','high']:[],fastCapability:i%3?'supported':'unknown',fastDefault:false,modalities:['text'],reason:state.pickerScenario==='failed'?'目录暂不可用':state.pickerScenario==='loading'?'正在读取':i===12?'渠道已停用':''}));
  }
- function pickerOptions(){return {title:'选择模型',scenario:state.pickerScenario,mode:state.pickerMode,reasoning:true,fast:true,ordered:state.pickerMode==='multiple',models:state.pickerScenario==='missing'?[{kind:'channel',channelId:'removed',modelId:'unavailable'}]:(state.pickerResult?.models||[]),getCatalog:pickerCatalog,onScenarioReady:()=>{state.pickerScenario='normal';$('#ctPickerScene').value='normal';},onSelect:result=>{state.pickerResult=result;$('#ctPickerResult').textContent=result.models.map(m=>m.channelId+' / '+m.modelId+(m.reasoningEffort?' · '+m.reasoningEffort:'')+(m.fast?' · Fast':'')).join('；')||'已清空选择。';},onCancel:()=>{}};}
+ // 读取中 / 读取失败两个场景需要演示“已有选择保持”，因此没有已确认结果时给一条既有选择。
+ const pickerRetained=[{kind:'channel',channelId:'newapi',modelId:'gpt-5.4'}];
+ function pickerOptions(){
+  const retained=state.pickerResult?.models?.length?state.pickerResult.models:(['loading','failed'].includes(state.pickerScenario)?pickerRetained:[]);
+  return {title:'选择模型',scenario:state.pickerScenario,mode:state.pickerMode,reasoning:true,fast:true,ordered:state.pickerMode==='multiple',models:state.pickerScenario==='missing'?[{kind:'channel',channelId:'removed',modelId:'unavailable'}]:retained,getCatalog:pickerCatalog,onScenarioReady:()=>{state.pickerScenario='normal';$('#ctPickerScene').value='normal';},onSelect:result=>{state.pickerResult=result;$('#ctPickerResult').textContent=result.models.map(m=>m.channelId+' / '+m.modelId+(m.reasoningEffort?' · '+m.reasoningEffort:'')+(m.fast?' · Fast':'')).join('；')||'已清空选择。';},onCancel:()=>{}};}
  function mountPicker(){
   $('#ctPickerMode').textContent=state.pickerMode==='multiple'?'多选':'单选';
   // 页内形态复用同一renderer；同一时刻只挂载一个选择器实例。
