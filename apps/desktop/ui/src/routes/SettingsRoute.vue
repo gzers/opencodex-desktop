@@ -1043,7 +1043,8 @@ function restoreGeneralDefaults() {
       <div class="section-actions"><UiButton class="btn ghost" @click="restoreGeneralDefaults">还原通用默认</UiButton></div>
     </section>
 
-    <section v-else-if="section === 'agent'" class="settings-panel active"><UiCard><UiCardHeader><h2>模型模版助手</h2><p>自动填充、持续纠偏和批量检查共用本机执行配置；保存不触发任务。</p></UiCardHeader><AgentExecutionField /></UiCard></section>
+    <!-- 页面标题在卡片外，卡片内是自己的标题行（模型模版助手 · 本机共用 + 摘要 + 按钮），与原型层级一致。 -->
+    <section v-else-if="section === 'agent'" class="settings-panel active"><h2 class="settings-panel-title">Agent 配置</h2><UiCard><AgentExecutionField /></UiCard></section>
     <section v-else-if="section === 'installation'" class="settings-panel active">
       <article class="card"><div class="card-head"><div><h2>运行环境与安装发现</h2><p>只发现 / 展示 / 校验现有环境与安装。</p></div><UiButton class="btn ghost" :disabled="app.environmentLoading" @click="refreshEnvironment()">重新发现</UiButton></div>
         <div v-if="environment.blocked" class="empty" data-testid="install-blocked">已按前置条件暂停 OpenCodex 发现；请先处理概览中的环境门禁。</div>

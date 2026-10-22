@@ -8,6 +8,7 @@ import {useModelsStore} from './store'
 const settings=defineModel<AgentSettings|null>({default:null})
 defineProps<{disabled?:boolean;compact?:boolean}>()
 const error=ref('');const busy=ref(false);const open=ref(false);const configuring=ref(false)
+const loading=ref(false)
 const candidate=ref<AgentSettings|null>(null);const directory=ref<ExecutionDirectory|null>(null)
 const directoryLoaded=ref(false)
 const models=useModelsStore()
@@ -24,6 +25,7 @@ const localDirectory=computed<ExecutionDirectory>(()=>{
   rows:channels.flatMap(c=>c.discovered.map((model):ModelProjection=>({channelId:c.id,providerId:c.connection.providerId,modelId:model.id,label:model.label,enabled:true,selected:true,discovered:true,templateRef:null,rules:model.rules,source:{}}))),
  }
 })
+const allRows=computed(()=>directory.value?.rows??localDirectory.value.rows)
 const channels=computed(()=>directory.value?.channels??localDirectory.value.channels)
 let disposed=false
 onBeforeUnmount(()=>{disposed=true})
@@ -34,23 +36,56 @@ let directoryRequest:Promise<void>|null=null
 function refreshDirectory(){
  if(directoryLoaded.value)return Promise.resolve()
  if(directoryRequest)return directoryRequest
+ loading.value=true
  directoryRequest=modelApi.executionDirectory().then(actual=>{
   if(!disposed){directory.value=actual;directoryLoaded.value=true}
- }).catch(cause=>{if(!disposed&&!localDirectory.value.rows.length)error.value=errorText(cause)}).finally(()=>{directoryRequest=null})
+ }).catch(cause=>{if(!disposed&&!localDirectory.value.rows.length)error.value=errorText(cause)}).finally(()=>{directoryRequest=null;if(!disposed)loading.value=false})
  return directoryRequest
 }
 function browse(){if(busy.value)return;error.value='';open.value=true;void refreshDirectory()}
-function choose(picks:ModelChoice[]){const pick=picks[0];if(!pick||pick.nativeModelId)return;const row=directory.value?.rows.find(r=>r.channelId===pick.channelId&&r.modelId===pick.modelId);if(!row||row.unavailableReason||!row.enabled)return;candidate.value={channelId:pick.channelId,connectionDigest:row.connectionDigest,providerId:row.providerId,modelId:pick.modelId!,reasoningEffort:pick.reasoningEffort??null,fast:pick.fast??null};open.value=false}
+function choose(picks:ModelChoice[]){const pick=picks[0];if(!pick||pick.nativeModelId)return;const row=allRows.value.find(r=>r.channelId===pick.channelId&&r.modelId===pick.modelId);if(!row||row.unavailableReason||!row.enabled)return;candidate.value={channelId:pick.channelId,connectionDigest:row.connectionDigest,providerId:row.providerId,modelId:pick.modelId!,reasoningEffort:pick.reasoningEffort??null,fast:pick.fast??null};open.value=false}
 async function save(){if(!candidate.value||busy.value)return;busy.value=true;error.value='';try{const value=await modelApi.saveAgentSettings({...candidate.value});if(!disposed){settings.value=value;configuring.value=false}}catch(cause){if(!disposed)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}}
-function summary(value:AgentSettings){return (value.reasoningEffort??'默认推理')+' · '+(value.fast===null?'默认快速模式':value.fast?'快速模式已开启':'快速模式已关闭')}
+/** 档位中文名；与原型 levels 表一致，未知值原样显示。 */
+const EFFORTS:Record<string,string>={none:'无',minimal:'最低',low:'低',medium:'中',high:'高',xhigh:'极高',max:'最高'}
+const committedRow=computed(()=>{const value=settings.value;if(!value)return null;return allRows.value.find(r=>r.modelId===value.modelId&&(!value.channelId||r.channelId===value.channelId))??null})
+const channelName=computed(()=>{const value=settings.value;if(!value)return '';return channels.value.find(c=>c.id===value.channelId||c.providerId===value.providerId)?.label??value.providerId})
+/** 继承时取模型默认档位，并标记「（模型默认）」。 */
+const effort=computed(()=>{const value=settings.value;if(!value)return{text:'',inherited:false};const inherited=value.reasoningEffort===null;const actual=inherited?(committedRow.value?.rules.defaultEffort.mode==='custom'?committedRow.value.rules.defaultEffort.value:null):value.reasoningEffort;return{text:actual?EFFORTS[actual]??actual:'未知',inherited}})
+/** 快速模式的能力与选择是两回事：摘要说选择，事实卡说能力。 */
+const fastCapability=computed<'supported'|'unsupported'|'unknown'>(()=>{const rules=committedRow.value?.rules.fast;if(!rules)return 'unknown';if(rules.mode!=='custom')return 'unknown';return rules.value?'supported':'unsupported'})
+const fastCapabilityText=computed(()=>fastCapability.value==='supported'?'可用':fastCapability.value==='unsupported'?'不可用':'未知')
+const fastSummary=computed(()=>{const value=settings.value;if(!value)return '';if(fastCapability.value==='supported')return value.fast?'快速已开启':'快速已关闭';if(fastCapability.value==='unsupported')return value.fast?'已选快速 · 当前模型不支持':'不支持快速模式';return value.fast?'已选快速 · 能力待核对':'快速能力待核对'})
+const summary=computed(()=>{if(!settings.value)return '尚未选择执行模型 · 请配置执行模型';return channelName.value+' / '+settings.value.modelId+' · '+effort.value.text+(effort.value.inherited?'（模型默认）':'')+' · '+fastSummary.value})
 </script>
 <template>
- <div class="model-execution-field" :class="{'model-execution-compact':compact}"><UiButton :disabled="disabled" :loading="busy" @click="configure" :title="settings?settings.providerId+' / '+settings.modelId:undefined">Agent 配置</UiButton><small v-if="settings&&!compact">{{ settings.providerId }} / {{ settings.modelId }} · {{ summary(settings) }}</small><p v-if="error&&!configuring" role="alert" class="model-error">{{ error }}</p>
-  <UiDialog :open="configuring" title="Agent 配置" :busy="busy" @close="configuring=false"><p>模型模版助手 · 本机共用</p><UiButton :loading="busy" @click="browse">{{ candidate?candidate.providerId+' / '+candidate.modelId:'选择执行模型' }}</UiButton><p v-if="candidate">{{ summary(candidate) }}</p><p>此设置用于下一次自动填充、持续纠偏和批量模版检查。</p><p v-if="error" role="alert" class="model-error">{{ error }}</p><template #actions><UiButton @click="configuring=false">取消</UiButton><UiButton variant="primary" :disabled="!candidate" :loading="busy" @click="save">保存共用设置</UiButton></template></UiDialog>
-  <ModelPicker :open="open" :error="open?error:undefined" @retry="browse" :rows="directory?.rows??localDirectory.rows" :channels="channels" :current="current" reasoning title="执行模型" @close="open=false" @confirm="choose" />
+ <div class="model-execution" :class="{'is-compact':compact}">
+  <template v-if="compact"><UiButton :disabled="disabled" :loading="busy" @click="configure" :title="summary">Agent 配置</UiButton><small v-if="settings">{{ summary }}</small></template>
+  <template v-else>
+   <div class="model-execution-head"><div><h3>模型模版助手 · 本机共用</h3><p class="model-execution-summary" role="status">{{ summary }}</p></div><UiButton :variant="settings?'default':'primary'" :disabled="disabled" :loading="busy" @click="configure">{{ settings?'更换执行模型':'Agent 配置' }}</UiButton></div>
+   <p v-if="!settings" class="model-execution-empty">尚未选择执行模型。自动填充与模版检查需要先配置一个可用的执行模型。</p>
+   <div v-else class="model-execution-body">
+    <dl class="model-execution-facts"><div><dt>执行渠道</dt><dd>{{ channelName }}</dd></div><div><dt>型号</dt><dd>{{ settings.modelId }}</dd></div><div><dt>推理档位</dt><dd>{{ effort.text }}</dd></div><div><dt>快速模式</dt><dd>{{ fastCapabilityText }}</dd></div></dl>
+    <div class="model-execution-usage"><h4>适用范围</h4><ul><li>模版自动填充、单个更新、所选更新与批量检查共用此设置。</li><li>不改变 Codex 的命名、搜索与子 Agent 配置。</li><li>修改只影响之后启动的任务；已启动任务继续使用启动时的设置。</li></ul></div>
+    <div class="model-execution-note"><strong>与运行配置的边界</strong><p>保存的是本机执行偏好，写入 manager-state/preferences.json 的 modelTemplateAgent 分区；不进入默认同步或普通导出。</p></div>
+   </div>
+   <p v-if="error&&!configuring" role="alert" class="model-error">{{ error }}</p>
+  </template>
+  <UiDialog :open="configuring" title="Agent 配置" :busy="busy" @close="configuring=false"><p>模型模版助手 · 本机共用</p><UiButton :loading="busy" @click="browse">{{ candidate?candidate.providerId+' / '+candidate.modelId:'选择执行模型' }}</UiButton><p v-if="candidate">{{ summary }}</p><p>此设置用于下一次自动填充、持续纠偏和批量模版检查。</p><p v-if="error" role="alert" class="model-error">{{ error }}</p><template #actions><UiButton @click="configuring=false">取消</UiButton><UiButton variant="primary" :disabled="!candidate" :loading="busy" @click="save">保存共用设置</UiButton></template></UiDialog>
+  <ModelPicker :open="open" :loading="loading" :error="open?error:undefined" @retry="browse" :rows="allRows" :channels="channels" :current="current" reasoning title="执行模型" @close="open=false" @confirm="choose" />
  </div>
 </template>
 <style scoped>
-.model-execution-compact{width:max-content;max-width:100%}.model-execution-field{display:grid;gap:6px;min-width:0}.model-execution-field small{color:var(--muted);overflow-wrap:anywhere}.model-error{color:var(--red);overflow-wrap:anywhere}
+.model-execution{display:grid;gap:16px;min-width:0}.model-execution.is-compact{gap:6px;width:max-content;max-width:100%}.model-execution.is-compact small{color:var(--muted);overflow-wrap:anywhere}
+.model-execution-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.model-execution-head>div{display:grid;gap:6px;min-width:0}.model-execution-head h3{margin:0;font-size:var(--text-label);font-weight:var(--weight-semibold)}.model-execution-summary{margin:0;color:var(--muted);font-size:var(--text-caption);overflow-wrap:anywhere}
+.model-execution-empty{margin:0;color:var(--muted);font-size:var(--text-caption)}
+.model-execution-body{display:grid;gap:16px;min-width:0}
+.model-execution-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:0}
+.model-execution-facts>div{display:grid;gap:4px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail)}
+.model-execution-facts dt{color:var(--muted);font-size:var(--text-caption)}.model-execution-facts dd{margin:0;font-size:var(--text-control);font-weight:var(--weight-semibold);overflow-wrap:anywhere}
+.model-execution-usage h4{margin:0 0 6px;font-size:var(--text-caption);color:var(--muted);font-weight:var(--weight-semibold)}
+.model-execution-usage ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:var(--text-caption);color:var(--muted);line-height:1.6}
+.model-execution-note{padding:12px 14px;border-radius:var(--radius-sm);background:var(--rail);font-size:var(--text-caption);line-height:1.6}
+.model-execution-note strong{display:block;margin-bottom:4px}.model-execution-note p{margin:0;color:var(--muted)}
+.model-error{color:var(--red);overflow-wrap:anywhere}
 </style>
 
