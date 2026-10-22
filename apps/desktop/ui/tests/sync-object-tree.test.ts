@@ -9,13 +9,17 @@ describe('shallow controlled object scope',()=>{
   await wrapper.get('button[aria-label="展开 模版"]').trigger('click');expect(wrapper.emitted('update:selectedIds')).toBeUndefined();expect(wrapper.find('input[aria-label="选择 GPT模版"]').exists()).toBe(true)
   await wrapper.get('input[aria-label="选择 模版"]').setValue(true);expect(wrapper.emitted('update:selectedIds')?.[0]).toEqual([['one','two']]);wrapper.unmount()
  })
- it('does not select disabled objects through category or header and keeps their prior choices',async()=>{
+ it('category selection never includes disabled objects and keeps their prior choices',async()=>{
   const wrapper=mount(ObjectScopeTree,{props:{objects:[...objects,{id:'locked',category:'templates',categoryLabel:'模版',label:'锁定',disabled:true}],selectedIds:['locked'],label:'同步对象'}})
-  await wrapper.get('.scope-tree-toolbar input[type=checkbox]').setValue(true);expect(wrapper.emitted('update:selectedIds')?.[0]).toEqual([['locked','one','two','three']]);wrapper.unmount()
+  await wrapper.get('button[aria-label="展开 模版"]').trigger('click')
+  await wrapper.get('input[aria-label="选择 模版"]').setValue(true)
+  expect(wrapper.emitted('update:selectedIds')?.[0]).toEqual([['locked','one','two']]);wrapper.unmount()
  })
- it('search keeps hidden selections and selects only the current matching objects',async()=>{
-  const wrapper=mount(ObjectScopeTree,{props:{objects,selectedIds:['one'],label:'同步对象'}})
-  await wrapper.get('input[type=search]').setValue('Skill');expect(wrapper.text()).toContain('筛选外仍有 1 个已选对象')
-  await wrapper.get('.scope-tree-toolbar input[type=checkbox]').setValue(true);expect(wrapper.emitted('update:selectedIds')?.[0]).toEqual([['one','three']]);wrapper.unmount()
+ it('search is owned by the page: query narrows the visible groups and keeps hidden selections counted',async()=>{
+  const wrapper=mount(ObjectScopeTree,{props:{objects,selectedIds:['one'],label:'同步对象',query:'Skill'}})
+  expect(wrapper.text()).toContain('筛选外仍有 1 个已选对象')
+  expect(wrapper.find('input[aria-label="选择 GPT模版"]').exists()).toBe(false)
+  expect(wrapper.find('input[aria-label="选择 目标Skill"]').exists()).toBe(true)
+  wrapper.unmount()
  })
 })
