@@ -212,7 +212,11 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
                 label: raw["modelDisplayNames"][id]
                     .as_str()
                     .filter(|value| !value.is_empty())
-                    .or_else(|| row["displayName"].as_str().filter(|value| !value.is_empty()))
+                    .or_else(|| {
+                        row["displayName"]
+                            .as_str()
+                            .filter(|value| !value.is_empty())
+                    })
                     .or(namespaced)
                     .unwrap_or(id)
                     .into(),
