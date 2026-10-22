@@ -289,17 +289,28 @@ const officialProjectState = computed(() => {
   return app.officialProject?.truncated ? '已截断' : '外部项目'
 })
 const appVersion = computed(() => app.aboutApp ? `v${app.aboutApp.version}` : 'v0.1.0')
+/** 运行时标签由状态快照提供；拿不到就如实说未读取。 */
+const runtimeLabel = computed(() => app.statusSnapshot?.facts.runtime_label ?? '')
 const installRows = computed(() => {
   const report = app.environment
   if (!report) return []
   const text = (check: typeof report.node, fallback: string) => (check.found ? `${check.path ?? fallback}${check.version ? ` · ${check.version}` : ''}` : fallback)
+  // OpenCodex 不一定来自 npm 全局安装：托管安装、用户指定路径、自动发现同样可用。
+  // 这一栏此前只看 npm 全局结果，导致已经能正常运行的托管安装被显示成“未发现”。
+  const source = app.runtimeSource
+  const fromSource = !!source && source.kind !== 'unresolved'
+  const sourceLabel = fromSource ? sourceKindLabel(source!.kind) : ''
+  const ocxPath = (fromSource ? source!.path : report.ocx.path) ?? null
+  const ocxVersion = (fromSource ? source!.version : report.ocx.version) ?? null
+  const available = report.ocx.found || fromSource
   return [
     ['Node.js', text(report.node, '未发现'), report.node.found],
     ['npm', text(report.npm, '未发现'), report.npm.found],
-    ['可执行文件', text(report.ocx, '未发现'), report.ocx.found],
-    ['安装形态', report.ocx.found ? 'npm 全局 · @bitkyc08/opencodex' : '未发现 npm 全局安装', report.ocx.found],
-    ['版本', report.ocx.found ? (report.ocx.version ?? '—') : '—', report.ocx.found],
-    ['Codex 运行时', report.ocx.found ? 'ChatGPT Codex 运行时 0.154.0-alpha.6.2' : '—', report.ocx.found],
+    ['可执行文件', ocxPath ? `${ocxPath}${ocxVersion ? ` · ${ocxVersion}` : ''}` : '未发现', available],
+    ['安装形态', available ? (report.ocx.found ? 'npm 全局 · @bitkyc08/opencodex' : `运行来源 · ${sourceLabel}`) : '未发现 npm 全局安装', available],
+    ['版本', ocxVersion ?? '—', available],
+    // 真实标签来自运行时观测；拿不到时写“未读取”，不能写死一个版本号冒充事实。
+    ['Codex 运行时', available ? (runtimeLabel.value || '未读取') : '—', available],
   ] as const
 })
 
