@@ -269,12 +269,7 @@ fn seal_scope(
     scope: &ManagerScope,
     credentials: &impl Credentials,
 ) -> ModelResult<(Vec<u8>, usize, Settings, portable_assets::Summary)> {
-    if include_keys && passphrase.is_none_or(|password| password.is_empty()) {
-        return Err(invalid(
-            "passphrase_required",
-            "携带渠道Key时须设置独立文件保护口令",
-        ));
-    }
+    // 口令可选：用户可以选择不加密携带凭据，风险由其自行承担。
     let upstream_source = if package
         .payload
         .policy
@@ -513,7 +508,6 @@ fn remote_objects(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<(Object
     }
     if opened.manifest.sections != sections(&objects)
         || opened.manifest.secret_objects != secret_objects(&objects)
-        || (secret_objects(&objects) > 0 && !opened.protected)
     {
         return Err(invalid("portable_manifest", "远端清单与对象不同"));
     }
@@ -659,14 +653,16 @@ pub fn merge_remote(
     }
     validate(&remote)?;
     let document = Zeroizing::new(serde_json::to_vec(&remote)?);
-    let password =
-        if remote_protected || local_protected || secret_objects(&remote) > 0 {
-            Some(passphrase.ok_or_else(|| {
-                invalid("passphrase_required", "远端文件受保护，请输入配置同步口令")
-            })?)
-        } else {
+    // 只有源文件或本机副本确实是加密的，才需要原口令；否则沿用用户选择
+    // （留空即不加密），不强制。
+    let password = if remote_protected || local_protected {
+        Some(
             passphrase
-        };
+                .ok_or_else(|| invalid("passphrase_required", "源文件受保护，请输入原保护口令"))?,
+        )
+    } else {
+        passphrase
+    };
     portable_file::seal(
         portable_file::Manifest {
             id: operation_id.into(),
@@ -923,23 +919,13 @@ pub fn receive_context(
         let objects = decode(&opened.document)?;
         if opened.manifest.sections != sections(&objects)
             || opened.manifest.secret_objects != secret_objects(&objects)
-            || ((secret_objects(&objects) > 0) && !opened.protected)
         {
-            return Err(invalid(
-                "portable_manifest",
-                "文件清单与实际对象或凭据保护不一致",
-            ));
+            return Err(invalid("portable_manifest", "文件清单与实际对象不一致"));
         }
         objects
     } else {
-        let objects = decode(bytes)?;
-        if secret_objects(&objects) > 0 {
-            return Err(invalid(
-                "portable_protection",
-                "携带Key的对象文档必须来自受保护配置文件",
-            ));
-        }
-        objects
+        // 旧格式裸文档同样可能含凭据；不再拒绝，交由确认页提示。
+        decode(bytes)?
     };
     let credential_count = secret_objects(&objects);
     let mut plan = transfer::receive(root, objects.models.clone())?;
@@ -1272,13 +1258,8 @@ fn open_source(root: &Path, plan: &IncomingPlan, passphrase: Option<&str>) -> Mo
         }
         Ok(objects)
     } else {
+        // 明文携带扩展凭据同样允许；风险提示在确认页。
         let objects = decode(&bytes)?;
-        if secret_objects(&objects) > 0 {
-            return Err(invalid(
-                "portable_protection",
-                "携带秘密的资源必须来自受保护文件",
-            ));
-        }
         Ok(objects)
     }
 }
@@ -3170,15 +3151,25 @@ mod tests {
             },
         )
         .unwrap();
-        assert!(seal_with(
+        // 口令改为可选：不填口令也允许携带 Key，凭据以明文写入文件。
+        let (plain, plain_count) = seal_with(
             source.path(),
             &uuid::Uuid::new_v4().to_string(),
             &package,
             true,
             None,
-            &keys
+            &keys,
         )
-        .is_err());
+        .unwrap();
+        assert_eq!(plain_count, 1);
+        // 载荷是 base64，需解码后确认 Key 确实明文可读——这正是用户接受的风险。
+        let opened = crate::modules::sync::portable_file::open(&plain, None).unwrap();
+        assert!(!opened.protected);
+        let document = String::from_utf8(opened.document.to_vec()).unwrap();
+        assert!(document.contains("fixture-source-key"));
+        // 导入同文件不再需要口令。
+        let plain_incoming = receive(target.path(), &plain, None).unwrap();
+        assert_eq!(plain_incoming.available_keys, vec![id.clone()]);
         let (bytes, count) = seal_with(
             source.path(),
             &uuid::Uuid::new_v4().to_string(),

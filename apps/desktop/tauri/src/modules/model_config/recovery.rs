@@ -441,14 +441,7 @@ pub(super) fn prepare(
             }
             intended.channels.retain(|c| c.id != committed.id);
         }
-        if workspace.policy.default_channel_id != local.policy.default_channel_id {
-            if intended.default_channel_id != local.policy.default_channel_id
-                && intended.default_channel_id != workspace.policy.default_channel_id
-            {
-                return Err(invalid("draft_conflict", "默认渠道与恢复重叠"));
-            }
-            intended.default_channel_id = workspace.policy.default_channel_id.clone();
-        }
+        // defaultChannelId 已退役：旧草稿的残留值不参与恢复冲突判定。
         if workspace.policy.template_refs != local.policy.template_refs {
             if intended.template_refs != local.policy.template_refs
                 && intended.template_refs != workspace.policy.template_refs

@@ -88,14 +88,32 @@ mod tests {
         assert!(paths.node.is_absolute());
         assert!(paths.npm.is_absolute());
         assert!(paths.ocx.is_absolute());
-        #[cfg(unix)]
-        {
-            let local_bin = crate::infrastructure::platform::home_dir()
-                .unwrap()
-                .join(".local/bin");
-            assert_eq!(paths.node.parent(), Some(local_bin.as_path()));
-            assert_eq!(paths.npm.parent(), Some(local_bin.as_path()));
-            assert_eq!(paths.ocx.parent(), Some(local_bin.as_path()));
+        // 工具可能来自任意候选目录（~/.local/bin、Volta、pnpm、nvm、Homebrew…），
+        // 不再假定都在 ~/.local/bin。这里只验证两点：父目录属于候选集合；
+        // 若该工具在候选里存在，选中的就是第一个存在的那个。
+        let home = crate::infrastructure::platform::home_dir().unwrap();
+        let candidates = crate::infrastructure::discovery_paths::candidate_dirs(&home);
+        for (tool, selected) in [
+            ("node", &paths.node),
+            ("npm", &paths.npm),
+            ("ocx", &paths.ocx),
+        ] {
+            let parent = selected.parent().expect("parent directory");
+            assert!(
+                candidates.iter().any(|dir| dir == parent),
+                "{tool} 应来自候选目录：{}",
+                selected.display()
+            );
+            // Windows 上可执行文件名带扩展名（node.exe / npm.cmd），必须用同一套
+            // 名称规则查找，否则会把“未找到”误判成“选错了”。
+            let names = crate::infrastructure::discovery_paths::tool_names_for_test(tool);
+            let first_existing = candidates
+                .iter()
+                .flat_map(|dir| names.iter().map(move |name| dir.join(name)))
+                .find(|path| path.is_file());
+            if let Some(found) = first_existing {
+                assert_eq!(&found, selected, "{tool} 应命中第一个存在的候选");
+            }
         }
     }
 }

@@ -310,28 +310,24 @@ pub fn projection(
     }
     Ok(snapshot)
 }
+/// 仅当用户显式指定了默认渠道时才改写官方 defaultProvider。
+///
+/// “默认渠道”不是本产品的要求：原型里没有这个入口，官方 defaultProvider 在
+/// 未被用户改动时应保持原值。早先这里把草稿里的残留值当成强制项校验，
+/// 一旦指向已停用 / 未选型号的渠道，保存就会被永久拦下。
 pub fn default_provider(policy: &Policy, providers: &mut Value) -> ModelResult<()> {
     if let Some(id) = &policy.default_channel_id {
-        let channel = policy
-            .channels
-            .iter()
-            .find(|c| &c.id == id)
-            .ok_or_else(|| invalid("default_provider", "默认渠道不在当前策略内"))?;
-        if !channel.connection.enabled || matches!(channel.selection, ModelSelection::None) {
-            return Err(invalid(
-                "default_provider",
-                "默认渠道须启用且至少选择一个模型",
-            ));
+        // 引用的渠道已不存在：忽略，并保留官方当前默认，不再阻断保存。
+        if let Some(channel) = policy.channels.iter().find(|c| &c.id == id) {
+            // 指向停用或未选型号的渠道时不做写入，交由调用方决定是否提示；
+            // 这里不回写官方值，因此不会把用户的官方默认改坏。
+            if channel.connection.enabled && !matches!(channel.selection, ModelSelection::None) {
+                providers["defaultProvider"] = serde_json::json!(channel.connection.provider_id);
+            }
         }
-        providers["defaultProvider"] = serde_json::json!(channel.connection.provider_id);
     }
-    let default = providers["defaultProvider"].as_str().unwrap_or("");
-    if providers["providers"].get(default).is_none() {
-        return Err(invalid(
-            "default_provider",
-            "删除当前默认渠道前，请在同一草稿中选择替代默认渠道",
-        ));
-    }
+    // 官方 defaultProvider 指向已被移除 / 不存在的渠道时，交回官方自行回落；
+    // 不在这里要求用户先挑替代默认渠道——本产品不提供那个概念。
     Ok(())
 }
 #[cfg(test)]
@@ -427,7 +423,7 @@ mod tests {
         )
     }
     #[test]
-    fn removal_is_bounded_by_committed_product_ids_and_requires_a_replacement_default() {
+    fn removal_is_bounded_by_committed_product_ids_without_requiring_a_replacement_default() {
         let (snapshot, committed, intended) = setup();
         let removed = removals(&snapshot, &committed, &intended, &[]).unwrap();
         assert_eq!(removed, BTreeSet::from(["remove".into()]));
@@ -443,15 +439,25 @@ mod tests {
             projected.catalog["models"],
             json!([{"slug":"native"},{"slug":"keep/m"}])
         );
+        // 未显式指定默认渠道时不改写官方 defaultProvider，也不再阻断保存：
+        // “默认渠道”不是本产品的必填项。
         let mut intended = intended;
         intended.default_channel_id = None;
         let mut projected = projection(&snapshot, &removed).unwrap();
-        assert_eq!(
-            default_provider(&intended, &mut projected.providers)
-                .unwrap_err()
-                .code,
-            "default_provider"
-        );
+        default_provider(&intended, &mut projected.providers).unwrap();
+        assert_eq!(projected.providers["defaultProvider"], "remove");
+    }
+
+    #[test]
+    fn stale_default_channel_does_not_block_saving() {
+        // 旧草稿可能残留指向已停用 / 未选型号渠道的 defaultChannelId；
+        // 这类残留只忽略，不能把保存永久卡住。
+        let (snapshot, committed, mut intended) = setup();
+        intended.default_channel_id = Some("removed-or-missing".into());
+        let removed = removals(&snapshot, &committed, &intended, &[]).unwrap();
+        let mut projected = projection(&snapshot, &removed).unwrap();
+        default_provider(&intended, &mut projected.providers).unwrap();
+        assert_eq!(projected.providers["defaultProvider"], "remove");
     }
     #[test]
     fn native_auth_and_unattributed_catalog_are_refused_before_any_mutation() {
