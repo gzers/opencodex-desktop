@@ -39,3 +39,14 @@ test('未到顶不铺底色，到达吸附线才标记吸顶，回滚后取消',
  models.top=pin;h.api().refresh();assert.equal(models.dataset.stuck,'true','内部滚动容器吸附线为容器顶边');
  assert.equal(h.api().stuck().length,2);
 });
+
+test('吸顶材质过渡用跟手时长，不再沿用常规 180ms',()=>{
+ const fs=require('node:fs'),path=require('node:path');
+ const css=fs.readFileSync(path.join(__dirname,'sticky-tabs.css'),'utf8');
+ assert.match(css,/transition:background-color var\(--motion-sticky,\s*\.09s\)/,'吸顶过渡必须消费 --motion-sticky');
+ assert.doesNotMatch(css,/background-color var\(--motion-normal/,'不得回退到常规 180ms');
+ const tokens=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ assert.match(tokens,/--motion-sticky:\s*\.09s/,'令牌需在总原型定义');
+ const tabs=fs.readFileSync(path.join(__dirname,'model-config.css'),'utf8');
+ assert.match(tabs,/\.mp-tabs-bar\{transition:background-color var\(--motion-sticky,\s*\.09s\)/,'模型页 Tab 条同口径');
+});
