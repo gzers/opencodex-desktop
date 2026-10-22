@@ -22,9 +22,11 @@
  /* 吸顶判定：Tab上沿到达其吸附位置时才算到顶，据此淡入玻璃材质。 */
  function syncStuck(bar,measured){
   const scroller=bar.closest('.main');if(!scroller)return;
-  /* 吸附线实测为滚动容器可视顶边（含上边框）；吸顶后Tab正停在该线，判定不抖动。 */
-  const pin=(scroller.getBoundingClientRect?.().top??0)+(scroller.clientTop||0);
-  const stuck=bar.getBoundingClientRect().top<=pin+1;
+  /* 吸附线 = 滚动容器可视顶边（含上边框）+ 该Tab的sticky top偏移；与measure写入的--page-tabs-top同源。 */
+  const offset=parseFloat(bar.style.getPropertyValue('--page-tabs-top'))||0;
+  const pin=(scroller.getBoundingClientRect?.().top??0)+(scroller.clientTop||0)+offset;
+  /* 半个像素容差只吸收亚像素舍入，不做提前吸顶；到线这一刻才切换材质。 */
+  const stuck=bar.getBoundingClientRect().top<=pin+.5;
   bar.dataset.stuck=stuck?'true':'false';
  }
  const scrollBound=new WeakSet();
