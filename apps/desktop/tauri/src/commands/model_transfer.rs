@@ -199,9 +199,12 @@ pub struct ExportedModels {
     pub templates: usize,
     pub channels: usize,
 }
+/// target_dir 为空时写受管 exports/；指定目录时按用户选择落盘。
+/// 非受管目录的写入同样做读回校验，确认落盘内容与计划一致。
 #[tauri::command]
 pub async fn model_transfer_export(
     plan_id: String,
+    target_dir: Option<String>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<ExportedModels> {
     let root = data_root.0.clone();
@@ -210,13 +213,36 @@ pub async fn model_transfer_export(
         let _admission = admission;
         crate::modules::model_config::feedback::transfer(&root, &plan_id, false, || {
             let package = transfer::file_package(&root, &plan_id)?;
-            let directory = root.join("exports");
-            crate::modules::backup::safety::check_path(&root, &directory, true)?;
+            let managed = root.join("exports");
+            let directory = match target_dir
+                .as_deref()
+                .map(str::trim)
+                .filter(|v| !v.is_empty())
+            {
+                Some(custom) => {
+                    let path = std::path::PathBuf::from(custom);
+                    if !path.is_absolute() {
+                        return Err(invalid("export_target", "导出目录须为绝对路径"));
+                    }
+                    if !path.is_dir() {
+                        return Err(invalid("export_target", "导出目录不存在或不可写"));
+                    }
+                    path
+                }
+                None => {
+                    crate::modules::backup::safety::check_path(&root, &managed, true)?;
+                    managed
+                }
+            };
             let path = directory.join(format!(
                 "opencodex-config-{}.ocxdconf",
                 uuid::Uuid::new_v4()
             ));
-            crate::modules::backup::safety::check_path(&root, &path, true)?;
+            if directory == root.join("exports") {
+                crate::modules::backup::safety::check_path(&root, &path, true)?;
+            } else if path.exists() {
+                return Err(invalid("export_target", "目标文件已存在，请换一个目录"));
+            }
             let bytes = transfer::file_bytes(&root, &plan_id)?;
             crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)?;
             if crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)? != bytes {

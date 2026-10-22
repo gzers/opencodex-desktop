@@ -43,7 +43,8 @@ export interface ExportedModels { path: string; digest: string; templates: numbe
 export const modelTransferApi = {
   prepareDraft:(scope:TransferScope,draft:DraftCandidate,passphrase?:string)=>invoke<FilePlan>('model_transfer_prepare_draft',{scope,draft,passphrase:passphrase??null}),
   prepare: (scope: TransferScope,passphrase?:string,includeKeys=false,managerScope?:ManagerScope) => invoke<FilePlan>('model_transfer_prepare', { scope,passphrase:passphrase??null,includeKeys,managerScope:managerScope??null }),
-  export: (planId: string) => invoke<ExportedModels>('model_transfer_export', { planId }),
+  // targetDir 为空时写受管导出目录；用户另存时传绝对路径。
+  export: (planId: string, targetDir?: string) => invoke<ExportedModels>('model_transfer_export', { planId, targetDir: targetDir ?? null }),
   receive: (path: string,passphrase?:string) => invoke<IncomingPlan>('model_transfer_receive', { path,passphrase:passphrase??null }),
   accept: (incomingId: string,options?:{adoptKeys:boolean;adoptWebdavPasswords?:boolean;adoptExtensionCredentials?:boolean;passphrase?:string}) => invoke<ModelSnapshot>('model_transfer_accept', { incomingId,adoptKeys:options?.adoptKeys??false,passphrase:options?.passphrase??null,adoptWebdavPasswords:options?.adoptWebdavPasswords??false,adoptExtensionCredentials:options?.adoptExtensionCredentials??false }),
   select:(incomingId:string,scope:ReceiveScope,passphrase?:string)=>invoke<IncomingPlan>('model_transfer_select',{incomingId,scope,passphrase:passphrase??null}),
