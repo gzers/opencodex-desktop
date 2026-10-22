@@ -104,6 +104,7 @@ pub fn candidate_dirs(home: &Path) -> Vec<PathBuf> {
 
 /// 非 Windows 常见安装位置：先用户级包管理器，再 Homebrew / 系统前缀。
 /// 顺序即优先级；`select_tool` 取第一个存在的可执行文件。
+#[cfg(not(windows))]
 fn unix_home_candidates(home: &Path) -> Vec<PathBuf> {
     vec![
         home.join(".local/bin"),
@@ -160,6 +161,7 @@ fn npm_prefix_from_npmrc(home: &Path) -> Option<PathBuf> {
 }
 
 /// `~/.nvm/versions/node/<version>/bin`，只扫描一层且设上限。
+#[cfg(not(windows))]
 fn nvm_version_dirs(home: &Path) -> Vec<PathBuf> {
     const MAX_VERSIONS: usize = 16;
     let root = home.join(".nvm/versions/node");
