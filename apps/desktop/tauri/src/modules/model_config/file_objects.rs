@@ -925,8 +925,7 @@ pub fn receive_context(
         objects
     } else {
         // 旧格式裸文档同样可能含凭据；不再拒绝，交由确认页提示。
-        let objects = decode(bytes)?;
-        objects
+        decode(bytes)?
     };
     let credential_count = secret_objects(&objects);
     let mut plan = transfer::receive(root, objects.models.clone())?;
