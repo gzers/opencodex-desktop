@@ -990,10 +990,6 @@
  function changeValueHTML(value){const text=String(value),n=text.split('\n').length;return n>4?'<details class="mp-change-values"><summary>'+n+' 项 · 展开查看</summary><div>'+esc(text)+'</div></details>':esc(text);}
  function changeRowsHTML(rows,before,after){return window.PrototypeTreeTable.rows(rows,r=>({className:'mp-change-row',depth:1,label:r.label,cells:['<span><small>'+esc(before)+'</small>'+changeValueHTML(r.before)+'</span>','<span><small>'+esc(after)+'</small>'+changeValueHTML(r.after)+'</span>']}));}
  function policyDiffHTML(a,b,locate=false,allOpen=false){const groups=policyChanges(a,b);return '<div class="mp-changes">'+groups.map((g,i)=>window.PrototypeTreeTable.details({label:g.name,open:allOpen||i===0,nameHtml:esc(g.name)+'<span class="mp-badge">'+g.rows.length+' 项变化</span>',body:(locate&&b.providers.some(p=>p.id===g.id)?'<div class="mp-change-actions">'+button(g.id==='native'?'查看':'管理','edit-provider','data-id="'+esc(g.id)+'"')+'</div>':'')+'<div class="mp-change-head"><span>配置项</span><span>已保存</span><span>当前草稿</span></div>'+changeRowsHTML(g.rows,'已保存','当前草稿')})).join('')+'</div>';}
- function draftDialog(){const groups=policyChanges(saved,draft),over=count()>100;
-  modal('查看草稿',dirty()?'<p>当前页面展示的就是未保存草稿。相对最近成功保存，'+groups.length+' 个分组发生变化；不受搜索或勾选范围限制。</p><p>模型激活数：已保存 '+projection(saved).length+'/100 → 当前草稿 '+count()+'/100。</p>'+policyDiffHTML(saved,draft,true)+(over?'<p class="mp-alert">超出兼容预算，请返回编辑收窄；完整草稿保留。</p>':''):'<div class="mp-empty">暂无未保存改动</div>'+(pending?'<p>最近保存仍待重启 Codex；查看草稿不会改变重启状态。</p>':''),
-   '继续编辑',null,{cancelLabel:'关闭',...(dirty()&&!busy()&&!over?{extraLabel:'去保存',onExtra:()=>{closeModal();saveDialog();}}:{})});
- }
  function setSelection(models,value){const p=provider();if(p.mode==='all'){p.models.forEach(m=>m.selected=true);p.mode='whitelist';}models.forEach(m=>m.selected=value);if(!p.models.some(m=>m.selected))p.mode='none';else if(p.mode==='none')p.mode='whitelist';}
  function selectModels(models,value){const p=provider(),remaining=selected(p).filter(m=>!models.includes(m)).length;if(!value&&remaining===0)modal('隐藏本渠道全部模型？','<p>将使用明确的“全部隐藏”模式，保留已发现清单和顺序；不会以空 selectedModels 冒充隐藏。</p>','加入草稿',()=>change(()=>setSelection(models,value)));else change(()=>setSelection(models,value));}
  function move(list,id,direction,key='id'){const i=list.findIndex(x=>x[key]===id),j=i+direction;if(i<0||j<0||j>=list.length)return;[list[i],list[j]]=[list[j],list[i]];}
@@ -1661,7 +1657,6 @@
   else if(a==='batch')batch();
   else if(a==='model-config'){const p=draft.providers.find(p=>p.models.some(m=>m.key===id)),m=p.models.find(m=>m.key===id);if(p.id==='native'){modal('模型详情 · 只读',fieldEditor({},resolve(p,m),true)+'<p>原生目录由官方管理，此处仅查看声明。</p>','关闭');return;}editModel(p,m);}
   else if(a==='adopt'||a==='adopt-version')adopt(a==='adopt-version');
-  else if(a==='view-draft')draftDialog();
   else if(a==='save')saveDialog();
   else if(a==='stop')stopSave();
   else if(a==='verify')verify();
