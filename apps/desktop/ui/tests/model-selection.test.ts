@@ -53,12 +53,12 @@ describe('public model selection', () => {
     await wrapper.findAll('button').find(b => b.text() === '取消')!.trigger('click')
     expect(wrapper.emitted('confirm')).toBeUndefined(); expect(wrapper.emitted('close')).toHaveLength(1)
   })
-  it('does not infer support or select an unavailable row', async () => {
-    const item = row('unknown'); item.rules = emptyRules(); item.enabled = false
+  it('does not list or select a row the caller reports unavailable', async () => {
+    const item = row('unknown'); item.rules = emptyRules(); item.enabled = false; item.unavailableReason = '渠道停用'
     const wrapper = mount(ModelPicker, { props: { open: true, rows: [item], channels: [] }, global: { stubs: { UiDialog: dialog, UiSelectMenu: menu } } })
-    await wrapper.get('.model-picker-row').trigger('click')
+    // 不可用型号不进可浏览列表。
+    expect(wrapper.find('.model-picker-row').exists()).toBe(false)
     expect(wrapper.findAll('button').find(b=>b.text()==='确定选择')!.attributes('disabled')).toBeDefined()
-    expect(wrapper.text()).toContain('渠道停用')
   })
   it('cycles numeric sorting through both directions and original order with unknown values last',async()=>{
     const unknown=row('unknown');const small=row('small');small.rules.contextWindow={mode:'custom',value:1000};const large=row('large');large.rules.contextWindow={mode:'custom',value:9000}
@@ -97,15 +97,16 @@ describe('official snapshot adoption', () => {
         open: true,
         rows: [visible, hidden, { ...row('other'), channelId: 'hidden-channel', enabled: false, unavailableReason: '渠道停用' }],
         channels: [{ id: 'channel', label: '可见渠道' }, { id: 'hidden-channel', label: '全隐藏渠道' }],
+        // 已保存但如今失效的选择：仍在“已选模型”里，并写明原因。
+        current: [{ channelId: 'channel', modelId: 'hidden' }],
       },
       global: { stubs: { UiDialog: dialog, UiSelectMenu: menu } },
     })
-    // 隐藏型号不进可浏览列表；整条渠道没有可浏览型号时，渠道也不再出现在左栏。
-    expect(wrapper.findAll('.model-picker-row').map(r => r.get('strong').text())).toEqual(['visible', 'other'])
+    // 可浏览列表只列可选型号；隐藏型号与停用渠道的行都不出现。
+    expect(wrapper.findAll('.model-picker-row').map(r => r.get('strong').text())).toEqual(['visible'])
     expect(wrapper.find('nav').text()).toContain('可见渠道')
     expect(wrapper.find('nav').text()).not.toContain('全隐藏渠道')
-    // 停用仍以状态列解释，用户能看到原因而不是静默消失。
-    expect(wrapper.text()).toContain('渠道停用')
+    expect(wrapper.text()).toContain('型号已隐藏，请重新选择')
     wrapper.unmount()
   })
 

@@ -34,9 +34,10 @@ function sortValue(row:ModelProjection,column:SortColumn):string|number|undefine
  if(column==='state')return available(row)?0:1
  const rank=['none','minimal','low','medium','high','xhigh','max','ultra'].indexOf(effort(row)??'');return rank<0?undefined:rank
 }
-/** 隐藏型号不进可浏览列表；停用等原因仍保留在列表里，用状态列解释为什么不可选。 */
+// 可浏览列表只列真正可选的型号：隐藏、停用渠道、待首次确认都由可用性判定挡在外面。
+// 已保存但如今失效的选择仍留在“已选模型”里，并在那里写明原因。
 const rows=computed(()=>{
- const values=props.rows.filter(row=>row.pickerVisible!==false&&(!channel.value||row.channelId===channel.value)&&(row.label+' '+row.modelId+' '+(row.aliases??[]).join(' ')+' '+channelLabel(row.channelId)).toLowerCase().includes(search.value.toLowerCase()))
+ const values=props.rows.filter(row=>available(row)&&(!channel.value||row.channelId===channel.value)&&(row.label+' '+row.modelId+' '+(row.aliases??[]).join(' ')+' '+channelLabel(row.channelId)).toLowerCase().includes(search.value.toLowerCase()))
  const column=sorting.value;if(!column)return values
  return values.map((row,index)=>({row,index})).sort((a,b)=>{
   const left=sortValue(a.row,column);const right=sortValue(b.row,column)
