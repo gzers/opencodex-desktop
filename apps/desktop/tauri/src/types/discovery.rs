@@ -104,9 +104,12 @@ mod tests {
                 "{tool} 应来自候选目录：{}",
                 selected.display()
             );
+            // Windows 上可执行文件名带扩展名（node.exe / npm.cmd），必须用同一套
+            // 名称规则查找，否则会把“未找到”误判成“选错了”。
+            let names = crate::infrastructure::discovery_paths::tool_names_for_test(tool);
             let first_existing = candidates
                 .iter()
-                .map(|dir| dir.join(tool))
+                .flat_map(|dir| names.iter().map(move |name| dir.join(name)))
                 .find(|path| path.is_file());
             if let Some(found) = first_existing {
                 assert_eq!(&found, selected, "{tool} 应命中第一个存在的候选");

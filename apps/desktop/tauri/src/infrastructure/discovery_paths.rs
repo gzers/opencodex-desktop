@@ -28,6 +28,12 @@ fn tool_names(tool: &str) -> Vec<String> {
     }
 }
 
+/// 测试用：暴露平台可执行文件名规则，避免测试里写死无扩展名的名字。
+#[cfg(test)]
+pub fn tool_names_for_test(tool: &str) -> Vec<String> {
+    tool_names(tool)
+}
+
 fn select_tool(directories: &[PathBuf], names: Vec<String>) -> PathBuf {
     directories
         .iter()
