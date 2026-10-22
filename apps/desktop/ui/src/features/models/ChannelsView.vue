@@ -3,7 +3,6 @@ import {escapeHtml} from '@/lib/html'
 import { computed, onBeforeUnmount, onMounted, ref, watch, toRef } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
-import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ChannelEditor from './ChannelEditor.vue'
 import ChannelBatchDialog from './ChannelBatchDialog.vue'
 import ChannelNodeSelect from './ChannelNodeSelect.vue'
@@ -11,7 +10,7 @@ import PolicyDraftDialog from './PolicyDraftDialog.vue'
 import UiSwitch from '@/components/ui/UiSwitch.vue'
 import NewChannelDialog from './NewChannelDialog.vue'
 import ClientLoadStatus from './ClientLoadStatus.vue'
-import ModelPicker from './ModelPicker.vue'
+import SelectorPreviewDialog from './SelectorPreviewDialog.vue'
 import { mergeUpstream } from './upstream'
 import {copyChannel,protectedChannel} from './channelActions'
 import {reorderSlots} from './ordering'
@@ -24,7 +23,7 @@ const models = useModelsStore(); const modal = useModalStore()
 const search = toRef(models.view,'channelSearch'); const editorId = toRef(models.view,'channelEditor'); const preview = ref<DraftProjection | null>(null); const error = ref(''); const previewBusy = ref(false)
 const editor = computed(() => models.channelDraft?.channels.find(c => c.id === editorId.value))
 watch(editorId,id=>{if(id){models.view.channelFilters[id]??={search:'',selectedOnly:false,family:'all'};models.modelRows[id]??=createModelRowsState();models.view.navigation['channel:'+id]??={collapsed:false,activeId:'channel-config'}}},{immediate:true,flush:'sync'})
-const pickerOpen = ref(false)
+const previewOpen = ref(false); const previewSource = ref<'draft' | 'saved'>('draft')
 const draftOpen=ref(false)
 const savePlan=ref<SavePlan|null>(null);const saveOpen=ref(false);const saving=ref(false)
 const saveScopeOpen=ref(false),saveScopeIds=ref<string[]>([]),saveShared=ref(false),saveScopeError=ref('');const saveScopeTargets=ref<{id:string;label:string;kind:string}[]>([]);const saveSharedAvailable=ref(false)
@@ -113,8 +112,6 @@ async function readUpstream() {
     const channels = mergeUpstream(snapshot, models.channelDraft?.channels ?? [])
     if (!models.channelDraft) models.restoreChannels()
     if (models.channelDraft) models.channelDraft.channels = channels
-    const sourceDefault=typeof snapshot.providers==='object'&&snapshot.providers!==null&&'defaultProvider' in snapshot.providers?String(snapshot.providers.defaultProvider):''
-    if(models.channelDraft&&!models.channelDraft.defaultChannelId){const defaultChannel=channels.find(c=>c.connection.providerId===sourceDefault);if(defaultChannel)models.channelDraft.defaultChannelId=defaultChannel.id}
     upstreamVersion.value = snapshot.version
   } catch (cause) { error.value = errorText(cause) } finally { upstreamBusy.value = false }
 }
@@ -163,10 +160,13 @@ function reorderChannel(id:string,target:string){
 function move(id:string,direction:number){const values=models.channelDraft?.channels??[];const index=values.findIndex(c=>c.id===id);const target=values[index+direction];if(target)reorderChannel(id,target.id)}
 function dragChannel(event:DragEvent,id:string){if(!reorderAllowed.value){event.preventDefault();return}draggedChannel.value=id;event.dataTransfer?.setData('text/plain',id);if(event.dataTransfer)event.dataTransfer.effectAllowed='move'}
 function dropChannel(target:string){if(draggedChannel.value)reorderChannel(draggedChannel.value,target);draggedChannel.value=''}
-async function showPreview() {
-  if (!models.channelDraft) return
+/** 预览是只读投影：草稿看计划结果，已保存配置看当前生效结果；两者都不改草稿。 */
+async function showPreview(source: 'draft' | 'saved' = previewSource.value) {
+  const policy = source === 'saved' ? models.snapshot?.policy : models.channelDraft
+  if (!policy) return
+  previewSource.value = source
   previewBusy.value = true; error.value = ''
-  try { preview.value = await modelApi.project(JSON.parse(JSON.stringify(models.channelDraft))); pickerOpen.value = true }
+  try { preview.value = await modelApi.project(JSON.parse(JSON.stringify(policy))); previewOpen.value = true }
   catch (cause) { error.value = errorText(cause) } finally { previewBusy.value = false }
 }
 </script>
@@ -180,7 +180,6 @@ async function showPreview() {
     <ClientLoadStatus @change="clientState=$event" :refresh-key="(models.snapshot?.policyDigest??'')+':'+(savePlan?.phase??'')" />
     <div v-if="savePlan && !['prepared','compensated'].includes(savePlan.phase)" class="model-inline"><span class="tag">{{ savePlan.phase === 'committed' ? '最近保存已写入' : '上次保存尚未完成核对' }}</span><UiButton size="sm" @click="saveOpen=true">查看原保存结果</UiButton></div>
     <p v-if="error || models.channelError" class="model-error" role="alert">{{ error || models.channelError }}</p><UiButton v-if="error&&models.channelDirty&&!models.channelDraft?.recoveryId" size="sm" variant="ghost" :disabled="models.busy||saving" @click="adjustSaveScope">调整本次保存范围</UiButton><p v-if="models.staging" class="model-muted" role="status">正在暂存渠道草稿…</p>
-    <label v-if="models.channelDraft&&!editor" class="model-inline">默认渠道<UiSelectField :model-value="models.channelDraft.defaultChannelId??''" label="默认渠道" :disabled="models.busy||saving" :options="[{value:'',label:'保持官方当前默认'},...models.channelDraft.channels.filter(c=>c.connection.enabled).map(c=>({value:c.id,label:c.label||'未命名渠道'}))]" @update:model-value="models.channelDraft!.defaultChannelId=$event||null" /></label>
     <div v-if="selected.length&&!editor" class="model-inline"><span>已选 {{ selected.length }} 个渠道<span v-if="selected.some(c=>!channels.some(row=>row.id===c.id))">（含搜索外 {{ selected.filter(c=>!channels.some(row=>row.id===c.id)).length }} 个）</span></span><UiButton size="sm" :disabled="models.busy||saving" @click="enableSelected(true)">启用</UiButton><UiButton size="sm" :disabled="models.busy||saving" @click="enableSelected(false)">停用</UiButton><UiButton size="sm" variant="danger" :disabled="models.busy||saving" @click="deleteChannels(selected)">删除所选渠道</UiButton><UiButton size="sm" :disabled="models.busy||saving||!!models.pendingRows.length" @click="batchChannels={mode:'family',ids:selected.map(c=>c.id)}">按族批量配置</UiButton><UiButton size="sm" :disabled="models.busy||saving||!!models.pendingRows.length" @click="batchChannels={mode:'adopt',ids:selected.map(c=>c.id)}">套用模版</UiButton><UiButton size="sm" variant="ghost" @click="selectedIds=[]">清除选择</UiButton></div>
     <PolicyDraftDialog v-if="draftOpen&&models.snapshot&&models.channelDraft" :saved="models.snapshot.policy" :draft="models.channelDraft" :pending="models.pendingRows.length" :busy="models.busy||saving" :can-save="models.channelDirty&&!models.staging&&!saving" @close="draftOpen=false" @manage="editorId=$event;draftOpen=false" @save="draftOpen=false;prepareSave()" />
     <ChannelEditor v-if="editor" :key="editor.id" :navigation="models.view.navigation['channel:'+editor.id]" :channels="models.channelDraft?.channels" @switch="editorId=$event" @preview="showPreview" @save="prepareSave" @draft="draftOpen=true" @restore="restore" :dirty="models.channelDirty||!!models.pendingRows.length" :save-status="policyStatus.label" :save-disabled="!models.channelDirty||models.staging||saving||!!models.pendingRows.length" :active-count="detailProjection?.knownActiveModels" :view-state="models.view.channelFilters[editor.id]" :row-state="models.modelRows[editor.id]" :policy="models.channelDraft??undefined" :existing="models.snapshot?.policy.channels.some(c=>c.id===editorId)" :channel="editor" :global-refs="models.channelDraft?.templateRefs??[]" :projection="detailProjection?.rows.filter(row=>row.channelId===editorId)??[]" :projection-busy="detailProjectionBusy" :projection-error="detailProjectionError" :templates="models.snapshot?.library.templates ?? []" :busy="models.busy||protectedChannel(editor)" @close="editorId = ''" />
@@ -190,12 +189,12 @@ async function showPreview() {
     <UiDialog :open="saveScopeOpen" title="调整本次保存范围" :busy="models.busy" @close="saveScopeOpen=false">
       <p>未勾选渠道留待稍后，仍保留在草稿。本次会完整核对共享影响和全局目录预算。</p><p v-if="saveScopeError" class="model-error" role="alert">{{ saveScopeError }}</p>
       <label v-for="channel in saveScopeTargets" :key="channel.id" class="model-inline"><input v-model="saveScopeIds" type="checkbox" :value="channel.id" :disabled="models.busy" />{{ channel.label }} · {{ channel.kind }}<span v-if="!saveScopeIds.includes(channel.id)"> · 留待稍后</span></label>
-      <label v-if="saveSharedAvailable" class="model-inline"><input v-model="saveShared" type="checkbox" :disabled="models.busy" />包含全局模版采用、默认渠道与渠道顺序（影响全部渠道）</label>
+      <label v-if="saveSharedAvailable" class="model-inline"><input v-model="saveShared" type="checkbox" :disabled="models.busy" />包含全局模版采用与渠道顺序（影响全部渠道）</label>
       <template #actions><UiButton @click="saveScopeOpen=false">取消</UiButton><UiButton variant="primary" :loading="models.busy" :disabled="!saveScopeIds.length&&!saveShared" @click="prepareSelectedScope">比较本次范围</UiButton></template>
     </UiDialog>
     <UiDialog :open="saveOpen" title="确认保存渠道配置" :busy="saving" @close="saveOpen = false"><template v-if="savePlan"><p v-if="savePlan.historySource">本次保存来自成功历史恢复，按原始官方字段、目录顺序和受保护授权执行。</p><div v-if="savePlan.removedProviders?.length"><h3>将移除的运行渠道</h3><p>{{ savePlan.removedProviders.join('、') }}</p></div><p>完整目录条目：{{ savePlan.currentCatalogCount }} → {{ savePlan.catalogCount }} / 100（当前兼容预算）</p><p>范围：{{ savePlan.changedChannels.join('、') }}</p><div v-if="savePlan.deferredChannels?.length"><h3>留待稍后</h3><p>{{ savePlan.deferredChannels.join('、') }}；本次不提交，草稿保留。</p></div><div v-if="savePlan.protocolGroups?.length"><h3>协议分组</h3><p v-for="group in savePlan.protocolGroups" :key="group" class="mono">{{ group }}</p></div><div v-if="savePlan.routeChanges?.length"><h3>模型运行标识或快捷入口变更</h3><p>以下分组或别名变更会影响旧选择入口，已有会话需按对应提示重新选择型号。</p><p v-for="change in savePlan.routeChanges" :key="change" class="mono">{{ change }}</p></div><details v-if="savePlan.runtimeChanges?.length"><summary>核对原始官方字段差异（{{ savePlan.runtimeChanges.length }} 项）</summary><article v-for="change in savePlan.runtimeChanges" :key="change.field"><strong>{{ change.field }}</strong><pre>当前：{{ JSON.stringify(change.before,null,2) }}</pre><pre>恢复后：{{ JSON.stringify(change.after,null,2) }}</pre></article></details><p v-if="savePlan.phase === 'prepared'">确认后备份并调用官方接口写入，完成后仍需核对客户端加载状态。</p><p v-else>执行阶段：{{ ({applying:'执行中',providers_written:'渠道已写入',visibility_written:'可见性已写入',order_written:'顺序已写入',runtime_verified:'运行读回已核对',committed:'保存完成，待客户端核对'}[savePlan.phase] ?? '待核对') }}</p><p v-if="compensationConfirm">将核对本次最后读回的运行态，只撤回本次写入；若发现后来修改会拒绝补偿。确认继续？</p><p v-if="savePlan.error || error" class="model-error" role="alert">{{ error || savePlanErrorText(savePlan.error) }}</p></template><template #actions><UiButton v-if="savePlan?.phase==='prepared'&&!savePlan.historySource" :disabled="models.busy||saving" @click="adjustSaveScope">调整范围</UiButton><UiButton :disabled="saving" @click="saveOpen = false">{{ savePlan?.phase === 'prepared' ? '取消' : '关闭' }}</UiButton><UiButton v-if="savePlan && !['prepared','committed','compensated'].includes(savePlan.phase)" :disabled="saving" @click="querySave">核对原计划</UiButton><UiButton v-if="savePlan && !['prepared','committed','compensated'].includes(savePlan.phase)" variant="danger" :loading="saving" @click="compensate">{{ compensationConfirm ? '确认撤回本次写入' : '撤回本次未完成写入' }}</UiButton><UiButton v-if="savePlan?.phase === 'prepared'" variant="primary" :loading="saving" @click="applySave">确认保存</UiButton></template></UiDialog>
     <UiDialog :open="!!copySource" title="复制渠道" :busy="models.busy" @close="copySource=null"><label>副本名称<input v-model="copyName" class="input" maxlength="256" /></label><label v-if="copySource?.connection.credentialRef"><input v-model="reuseCopyKey" type="checkbox" />副本复用此本机渠道Key</label><p>副本采用独立渠道和节点身份，保持停用。模版匹配范围需在预览中核对。</p><template #actions><UiButton @click="copySource=null">取消</UiButton><UiButton variant="primary" :disabled="!copyName.trim()" @click="confirmCopy">建立副本草稿</UiButton></template></UiDialog>
-    <ModelPicker :open="pickerOpen" :rows="preview?.rows ?? []" :channels="models.channelDraft?.channels ?? []" reasoning @close="pickerOpen = false" @confirm="pickerOpen = false" />
+    <SelectorPreviewDialog :open="previewOpen" :source="previewSource" :projection="preview" :channels="(models.channelDraft?.channels ?? []).map(c=>({id:c.id,label:c.label||c.id,enabled:c.connection.enabled}))" :busy="previewBusy" :error="error || undefined" @update:source="showPreview($event)" @close="previewOpen = false" />
   </div>
 </template>
 
