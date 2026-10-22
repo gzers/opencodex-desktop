@@ -1272,15 +1272,8 @@ pub(super) fn compile_materials(
         compile_shared_rules(provider, channel, &projection)?;
     }
     super::channel_actions::default_provider(policy, &mut next)?;
-    if next["providers"]
-        .get(next["defaultProvider"].as_str().unwrap_or(""))
-        .is_some_and(|p| p["disabled"] == true)
-    {
-        return Err(invalid(
-            "default_provider",
-            "不能在未选择替代默认渠道时停用当前默认渠道",
-        ));
-    }
+    // 官方 defaultProvider 若恰好指向被停用的渠道，官方自身会回落；
+    // 本产品不要求用户先挑一个“默认渠道”，因此这里不再中断保存。
     if expected.len() > 100 {
         return Err(invalid(
             "catalog_budget",
@@ -1377,7 +1370,8 @@ fn select_save_scope(
     }
     if scope.include_shared {
         result.template_refs = draft.template_refs.clone();
-        result.default_channel_id = draft.default_channel_id.clone();
+        // “默认渠道”已退役：不再把草稿里的残留值写回策略，
+        // 官方 defaultProvider 保持用户自己的设置。
         let positions: BTreeMap<_, _> = draft
             .channels
             .iter()
@@ -1422,11 +1416,10 @@ fn deferred_names(saved: &Policy, draft: &Policy, scope: &SaveScope) -> Vec<Stri
     }
     if !scope.include_shared
         && (saved.template_refs != draft.template_refs
-            || saved.default_channel_id != draft.default_channel_id
             || saved.channels.iter().map(|c| &c.id).collect::<Vec<_>>()
                 != draft.channels.iter().map(|c| &c.id).collect::<Vec<_>>())
     {
-        names.push("全局模版采用、默认渠道或渠道顺序".into());
+        names.push("全局模版采用或渠道顺序".into());
     }
     names
 }
@@ -3462,6 +3455,7 @@ mod tests {
         .unwrap();
         assert_eq!(selected.channels[0].label, "本次修改");
         assert_eq!(selected.channels[1], other);
+        // 默认渠道已退役：草稿里的残留值既不进入本次范围，也不被写回。
         assert_eq!(selected.default_channel_id, saved.default_channel_id);
         assert_eq!(remaining, Some(draft.clone()));
         let (shared, _) = select_save_scope(
@@ -3473,7 +3467,8 @@ mod tests {
             },
         )
         .unwrap();
-        assert_eq!(shared.default_channel_id, draft.default_channel_id);
+        // 共享范围只带全局模版采用与渠道顺序，不再复制默认渠道。
+        assert_eq!(shared.default_channel_id, saved.default_channel_id);
         assert_eq!(shared.channels[0].id, other.id);
         assert_eq!(
             select_save_scope(

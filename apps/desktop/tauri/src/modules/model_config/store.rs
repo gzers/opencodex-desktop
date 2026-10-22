@@ -172,13 +172,9 @@ fn validate_policy(library: &Library, policy: &Policy) -> ModelResult<()> {
         }
     }
     let mut channel_ids = BTreeSet::new();
-    if policy
-        .default_channel_id
-        .as_ref()
-        .is_some_and(|id| !policy.channels.iter().any(|c| &c.id == id))
-    {
-        return Err(invalid("default_provider", "默认渠道身份不在本机策略内"));
-    }
+    // defaultChannelId 是旧版遗留字段：本产品不再提供“默认渠道”入口，官方
+    // defaultProvider 由用户自己掌控。这里只忽略指向已不存在渠道的残留值，
+    // 不再据此拒绝保存（旧草稿因此不会永久卡住）。
     for channel in &policy.channels {
         if channel.id.is_empty() || !channel_ids.insert(&channel.id) {
             return Err(invalid("channel", "渠道身份为空或重复"));

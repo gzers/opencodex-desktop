@@ -33,7 +33,8 @@ const changedTargets=computed(()=>{
  const ids=[...new Set([...saved,...draft].map(c=>c.id))]
  return ids.flatMap(id=>{const before=saved.find(c=>c.id===id),after=draft.find(c=>c.id===id);return JSON.stringify(before)===JSON.stringify(after)?[]:[{id,label:after?.label??before?.label??id,kind:!before?'新增':!after?'删除':'修改'}]}).concat((models.channelDraft?.pendingRemovals??[]).filter(r=>!ids.includes(r.channelId)).map(r=>({id:r.channelId,label:r.providerId,kind:'删除'})))
 })
-const sharedChanged=computed(()=>{const saved=models.snapshot?.policy,draft=models.channelDraft;if(!saved||!draft)return false;return JSON.stringify([saved.templateRefs,saved.defaultChannelId,saved.channels.map(c=>c.id)])!==JSON.stringify([draft.templateRefs,draft.defaultChannelId,draft.channels.map(c=>c.id)])})
+// 共享项只含全局模版采用与渠道顺序；“默认渠道”不是本产品的概念，不参与差异与保存范围。
+const sharedChanged=computed(()=>{const saved=models.snapshot?.policy,draft=models.channelDraft;if(!saved||!draft)return false;return JSON.stringify([saved.templateRefs,saved.channels.map(c=>c.id)])!==JSON.stringify([draft.templateRefs,draft.channels.map(c=>c.id)])})
 async function adjustSaveScope(){
  if(!models.channelDraft||!models.snapshot||models.busy||saving.value)return
  if(models.pendingRows.length){error.value='请先处理未确认型号编辑，再调整提交范围';return}
@@ -136,7 +137,8 @@ function deleteChannels(values:ChannelPolicy[]){
   for(const channel of models.channelDraft.channels.filter(c=>ids.includes(c.id))){if(channel.connection.sourceReadId&&!models.snapshot?.policy.channels.some(c=>c.id===channel.id)){
     const pending=models.channelDraft.pendingRemovals??[];models.channelDraft.pendingRemovals=[...pending.filter(r=>r.channelId!==channel.id),{readId:channel.connection.sourceReadId,channelId:channel.id,providerId:channel.connection.providerId,credentialRef:channel.connection.credentialRef}]
   }}
-  models.channelDraft.channels=models.channelDraft.channels.filter(c=>!ids.includes(c.id));if(ids.includes(models.channelDraft.defaultChannelId??''))models.channelDraft.defaultChannelId=null
+  models.channelDraft.channels=models.channelDraft.channels.filter(c=>!ids.includes(c.id));// 旧草稿可能残留 defaultChannelId；删除渠道时一并清掉，避免带失效引用进入保存
+  models.channelDraft.defaultChannelId=null
   for(const id of ids)delete models.modelRows[id];selectedIds.value=selectedIds.value.filter(id=>!ids.includes(id));if(ids.includes(editorId.value))editorId.value=''
  }})
 }
