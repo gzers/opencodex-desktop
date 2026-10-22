@@ -28,13 +28,14 @@ test('同步保留内部滚动，不改主容器；对话导航消费同一Tab�
 test('未到顶不铺底色，到达吸附线才标记吸顶，回滚后取消',()=>{
  const h=make(),settings=h.bar('route-settings',40),models=h.bar('route-models',40,true,true);
  h.main.top=100;settings.top=400;models.top=400;h.load();
+ // 吸附线 = 滚动容器可视顶边（含上边框）；负 sticky top 被浏览器夹在滚动口边缘，不再二次相加。
+ const pin=h.main.top+h.main.clientTop;
  assert.equal(settings.dataset.stuck,'false','远离吸附线时保持透明');
  models.top=200;h.api().refresh();assert.equal(models.dataset.stuck,'false','内部滚动容器接近未到顶仍透明');
- settings.top=82;h.api().refresh();assert.equal(settings.dataset.stuck,'false','接近但未到顶仍透明');
- settings.top=80;h.api().refresh();assert.equal(settings.dataset.stuck,'true','到达吸附线标记吸顶');
- settings.top=79;h.api().refresh();assert.equal(settings.dataset.stuck,'true','越过后保持吸顶');
+ settings.top=pin+1;h.api().refresh();assert.equal(settings.dataset.stuck,'false','接近但未到顶仍透明');
+ settings.top=pin;h.api().refresh();assert.equal(settings.dataset.stuck,'true','到达吸附线标记吸顶');
+ settings.top=pin-1;h.api().refresh();assert.equal(settings.dataset.stuck,'true','越过后保持吸顶');
  settings.top=200;h.api().refresh();assert.equal(settings.dataset.stuck,'false','回滚离开吸附线后取消');
- models.top=100;h.api().refresh();assert.equal(models.dataset.stuck,'true','内部滚动容器吸附线为容器顶边');
+ models.top=pin;h.api().refresh();assert.equal(models.dataset.stuck,'true','内部滚动容器吸附线为容器顶边');
  assert.equal(h.api().stuck().length,2);
 });
-
