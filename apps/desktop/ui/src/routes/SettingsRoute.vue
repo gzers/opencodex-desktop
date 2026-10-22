@@ -291,6 +291,20 @@ const officialProjectState = computed(() => {
 const appVersion = computed(() => app.aboutApp ? `v${app.aboutApp.version}` : 'v0.1.0')
 /** 运行时标签由状态快照提供；拿不到就如实说未读取。 */
 const runtimeLabel = computed(() => app.statusSnapshot?.facts.runtime_label ?? '')
+/**
+ * 安装形态按“实际发现位置”描述，不预设 npm 全局默认前缀。
+ * 非默认前缀（自定 prefix、Volta、fnm、pnpm、Homebrew、托管安装）都要如实标注。
+ */
+function installFormLabel(report: NonNullable<typeof app.environment>, source: typeof app.runtimeSource): string {
+  if (!report.ocx.found) return `运行来源 · ${source ? sourceKindLabel(source.kind) : '未解析'}`
+  const path = (report.ocx.path ?? '').replace(/\\/g, '/')
+  if (path.includes('/node_modules/@bitkyc08/opencodex/')) return 'npm 全局 · @bitkyc08/opencodex'
+  if (path.includes('/Volta/')) return 'Volta'
+  if (path.includes('/fnm') || path.includes('fnm_multishells')) return 'fnm'
+  if (path.includes('/pnpm') || path.includes('pnpm-global')) return 'pnpm'
+  if (path.includes('/opt/homebrew/') || path.includes('/usr/local/bin')) return 'Homebrew / 系统前缀'
+  return '独立可执行文件 · 非默认前缀'
+}
 const installRows = computed(() => {
   const report = app.environment
   if (!report) return []
@@ -299,7 +313,6 @@ const installRows = computed(() => {
   // 这一栏此前只看 npm 全局结果，导致已经能正常运行的托管安装被显示成“未发现”。
   const source = app.runtimeSource
   const fromSource = !!source && source.kind !== 'unresolved'
-  const sourceLabel = fromSource ? sourceKindLabel(source!.kind) : ''
   const ocxPath = (fromSource ? source!.path : report.ocx.path) ?? null
   const ocxVersion = (fromSource ? source!.version : report.ocx.version) ?? null
   const available = report.ocx.found || fromSource
@@ -307,7 +320,7 @@ const installRows = computed(() => {
     ['Node.js', text(report.node, '未发现'), report.node.found],
     ['npm', text(report.npm, '未发现'), report.npm.found],
     ['可执行文件', ocxPath ? `${ocxPath}${ocxVersion ? ` · ${ocxVersion}` : ''}` : '未发现', available],
-    ['安装形态', available ? (report.ocx.found ? 'npm 全局 · @bitkyc08/opencodex' : `运行来源 · ${sourceLabel}`) : '未发现 npm 全局安装', available],
+    ['安装形态', available ? installFormLabel(report, source) : '未发现 OpenCodex 安装', available],
     ['版本', ocxVersion ?? '—', available],
     // 真实标签来自运行时观测；拿不到时写“未读取”，不能写死一个版本号冒充事实。
     ['Codex 运行时', available ? (runtimeLabel.value || '未读取') : '—', available],
