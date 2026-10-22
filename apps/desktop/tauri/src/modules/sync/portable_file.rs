@@ -100,17 +100,13 @@ pub fn seal(
     manifest.document_digest = sha256(document);
     validate(&manifest)?;
     let payload = match passphrase {
-        None if manifest.secret_objects > 0 => {
-            return Err(invalid(
-                "passphrase_required",
-                "携带凭据时请设置独立的文件保护口令",
-            ))
-        }
-        None => Content::Plain {
+        // 口令完全可选：未填写或留空都按“不加密”处理，由用户自行承担
+        // 凭据以明文落盘的风险。明文载荷下 secretObjects > 0 即表示含明文凭据。
+        None | Some("") => Content::Plain {
             document_b64: STANDARD.encode(document),
         },
         Some(password) => {
-            if password.is_empty() || password.len() > 8192 {
+            if password.len() > 8192 {
                 return Err(invalid(
                     "portable_passphrase",
                     "文件保护口令不能为空或超过上限",
@@ -168,12 +164,8 @@ pub fn open(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<Opened> {
     validate(&envelope.manifest)?;
     let (protected, document) = match envelope.payload {
         Content::Plain { document_b64 } => {
-            if envelope.manifest.secret_objects > 0 {
-                return Err(invalid(
-                    "portable_protection",
-                    "携带凭据的配置文件必须受保护",
-                ));
-            }
+            // 明文也可能携带凭据（用户明确选择不加密）；调用方据 manifest 与
+            // opened.protected 提示风险，不再在这里拒绝。
             (
                 false,
                 STANDARD
@@ -266,18 +258,25 @@ mod tests {
         }
     }
     #[test]
-    fn plaintext_checks_damage_and_never_accepts_a_declared_secret_payload() {
+    fn plaintext_checks_damage_and_allows_secrets_without_a_passphrase() {
         let bytes = seal(manifest(0), b"fixture-config", None).unwrap();
         assert_eq!(
             open(&bytes, None).unwrap().document.as_slice(),
             b"fixture-config"
         );
-        assert_eq!(
-            seal(manifest(1), b"fixture-key", None).unwrap_err().code,
-            "passphrase_required"
-        );
+        // 口令可选：不加密也可以携带凭据，读回时不要求口令。
+        let with_secret = seal(manifest(1), b"fixture-key", None).unwrap();
+        let opened = open(&with_secret, None).unwrap();
+        assert!(!opened.protected);
+        assert_eq!(opened.manifest.secret_objects, 1);
+        assert_eq!(opened.document.as_slice(), b"fixture-key");
+        // 空字符串与未填写等价。
+        let empty = seal(manifest(1), b"fixture-key", Some("")).unwrap();
+        assert!(!open(&empty, None).unwrap().protected);
+        // 明文模式没有口令，manifest 本身不可认证；能依靠的是文档摘要。
+        // 所以这里验证“载荷被改”仍会被摘要拦下，而不是用 manifest 字段做判定。
         let mut value: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
-        value["manifest"]["secretObjects"] = serde_json::json!(1);
+        value["payload"]["document_b64"] = serde_json::json!(STANDARD.encode(b"tampered"));
         assert!(open(&serde_json::to_vec(&value).unwrap(), None).is_err());
     }
     #[test]
