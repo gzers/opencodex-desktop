@@ -144,6 +144,7 @@ test('读取中再次打开保留已选模型，芯片显示渠道与型号且�
  assert.match(picked,/已选模型/);
  assert.doesNotMatch(picked,/目录缺失/);
  assert.doesNotMatch(picked,/档位不支持/);
+ assert.match(picked,/正在核对/);
  assert.deepEqual(h.api.state().pending,[key({channelId:'newapi',modelId:'gpt-5.4'})]);
  assert.equal(h.node('modalConfirm').disabled,true);
 });

@@ -190,3 +190,6 @@ html[data-effects=low] .mpk-skeleton-spin{animation:none;border-top-color:var(--
 html[data-effects=mid] .mpk-current-check,html[data-effects=low] .mpk-current-check{animation:none}
 html[data-effects=mid] .mpk-effort-label,html[data-effects=low] .mpk-effort-label{transition:none}
 @media (prefers-reduced-motion:reduce){.mpk-current-check{animation:none}.mpk-table tbody tr,.mpk-table tbody tr.is-picked[data-mpk=pick] td:first-child,.mpk-effort-label{transition:none}}
+
+/* 加载期已选芯片的弱提示：与“目录缺失 / 档位不支持”区分，只用中性色。 */
+.mpk-chip-pending{font-size:10px;line-height:18px;color:var(--muted);white-space:nowrap;padding:0 4px;border-radius:4px;background:color-mix(in srgb,var(--text) 8%,transparent)}

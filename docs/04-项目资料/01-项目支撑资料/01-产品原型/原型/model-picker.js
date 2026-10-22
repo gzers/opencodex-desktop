@@ -10,6 +10,7 @@
  const refLabel=ref=>(ref.channelId||'官方 / 原生')+' / '+(ref.modelId||ref.nativeModelId);
  const levels={none:'无',minimal:'最低',low:'低',medium:'中',high:'高',xhigh:'极高',max:'最高'};
  const levelOrder=['none','minimal','low','medium','high','xhigh','max'];
+ const MIN_LOADING_MS=200;let loadingSince=0;
  let presentation='dialog',mode='single',scenario='normal',orderEnabled=true,recommendedEnabled=true,reasoningEnabled=true,fastEnabled=true,isOpen=false;
  let catalog=[],channels=[],pending=[],channel='all',query='',channelQuery='',sort={key:null,direction:0},opener=null;
  let unresolved=new Map(),browseScroll=0,channelScroll=0,previousRoute='conversations',effortChoices=new Map(),fastChoices=new Map();
@@ -172,7 +173,7 @@
   const ordered=mode==='multiple'&&orderEnabled;
   const rows=!pending.length?'<span class="mpk-picked-empty">尚未选择模型</span>':pending.map((id,i)=>{
    const m=catalog.find(m=>m.key===id),canAdjust=(reasoningEnabled||fastEnabled)&&m&&!m.reason;
-   const label='<span class="mpk-chip-check" aria-hidden="true">✓</span><span class="mpk-chip-model">'+(ordered?'<span class="mpk-chip-number">'+(i+1)+'.</span> ':'')+esc(locationFor(id))+'</span>'+(reasoningEnabled?'<span class="mpk-chip-effort '+(effortChoices.get(id)?'is-custom':'')+'">'+esc(effortName(id))+'</span>':'')+(fastEnabled&&effectiveFast(m)?'<span class="mpk-chip-fast">Fast</span>':'')+(scenario==='loading'?'':!m?'<span class="mpk-chip-warning">目录缺失</span>':invalidEffort(id)?'<span class="mpk-chip-warning">档位不支持</span>':'');
+   const label='<span class="mpk-chip-check" aria-hidden="true">✓</span><span class="mpk-chip-model">'+(ordered?'<span class="mpk-chip-number">'+(i+1)+'.</span> ':'')+esc(locationFor(id))+'</span>'+(scenario==='loading'?'<span class="mpk-chip-pending">正在核对</span>':'')+(reasoningEnabled?'<span class="mpk-chip-effort '+(effortChoices.get(id)?'is-custom':'')+'">'+esc(effortName(id))+'</span>':'')+(fastEnabled&&effectiveFast(m)?'<span class="mpk-chip-fast">Fast</span>':'')+(scenario==='loading'?'':!m?'<span class="mpk-chip-warning">目录缺失</span>':invalidEffort(id)?'<span class="mpk-chip-warning">档位不支持</span>':'');
    const main=canAdjust?'<button type="button" class="mpk-chip-label" data-mpk="effort" data-key="'+esc(id)+'"'+effortAttrs(m,'picked')+' aria-label="调整推理档位 '+esc(locationFor(id))+'">'+label+'</button>':'<span class="mpk-chip-label">'+label+'</span>';
    const controls=(ordered?button('↑','move','data-key="'+esc(id)+'" data-direction="-1" aria-label="上移 '+esc(locationFor(id))+'" '+(i===0?'disabled':''))+button('↓','move','data-key="'+esc(id)+'" data-direction="1" aria-label="下移 '+esc(locationFor(id))+'" '+(i===pending.length-1?'disabled':'')):'')+(mode==='multiple'?button('×','remove','data-key="'+esc(id)+'" aria-label="移除 '+esc(locationFor(id))+'"'):'');
    return '<div class="mpk-picked-row" data-key="'+esc(id)+'">'+main+(controls?'<span class="mpk-chip-actions">'+controls+'</span>':'')+'</div>';
@@ -247,7 +248,7 @@
   if(businessSession?.container===container)return true;
   if(isOpen)return false;unmount();closeEffort();page.replaceChildren();
   const previous={presentation,mode,scenario,orderEnabled,recommendedEnabled,reasoningEnabled,fastEnabled,pending:pending.slice(),effortChoices:new Map(effortChoices),fastChoices:new Map(fastChoices),channel,query,channelQuery,sort:clone(sort)};
-  businessSession={options,previous,container,route:document.documentElement.dataset.route};mode=options.mode==='multiple'?'multiple':'single';scenario=options.scenario||'normal';presentation='inline';reasoningEnabled=options.reasoning===true;fastEnabled=options.fast===true;orderEnabled=options.ordered===true;recommendedEnabled=false;
+  businessSession={options,previous,container,route:document.documentElement.dataset.route};mode=options.mode==='multiple'?'multiple':'single';markScenario(options.scenario||'normal');presentation='inline';reasoningEnabled=options.reasoning===true;fastEnabled=options.fast===true;orderEnabled=options.ordered===true;recommendedEnabled=false;
   loadCatalog();resetSelection();channel='all';query=channelQuery='';sort={key:null,direction:0};browseScroll=channelScroll=0;
   container.innerHTML='<div class="mpk-inline"><div class="mpk-inline-main">'+shellHTML()+'</div><div class="mpk-inline-actions" id="mpkInlineActions"></div></div>';renderLists();return true;
  }
@@ -257,7 +258,7 @@
   if($('#modalMask').style.display==='flex')closeModal();closeEffort();
   const previous={presentation,mode,scenario,orderEnabled,recommendedEnabled,reasoningEnabled,fastEnabled,pending:pending.slice(),effortChoices:new Map(effortChoices),fastChoices:new Map(fastChoices),channel,query,channelQuery,sort:clone(sort)};
   businessSession={options,previous,route:document.documentElement.dataset.route,accepted:false};
-  mode=options.mode==='multiple'?'multiple':'single';scenario=options.scenario||'normal';presentation='dialog';reasoningEnabled=options.reasoning===true;fastEnabled=options.fast===true;orderEnabled=options.ordered===true;recommendedEnabled=false;
+  mode=options.mode==='multiple'?'multiple':'single';markScenario(options.scenario||'normal');presentation='dialog';reasoningEnabled=options.reasoning===true;fastEnabled=options.fast===true;orderEnabled=options.ordered===true;recommendedEnabled=false;
   loadCatalog();resetSelection();channel='all';query=channelQuery='';sort={key:null,direction:0};browseScroll=channelScroll=0;opener=document.activeElement;isOpen=true;
   openModal(options.title||'选择模型',shellHTML(),'确定选择',()=>accept(),{hideNote:true,hideConfirm:false,confirmKeepsOpen:true,headActions:'<div class="mpk-help">'+annotation()+'</div>'});
   modal.classList.add('mpk-dialog');document.documentElement.dataset.prototypeDialog='model-picker';
@@ -274,7 +275,8 @@
   window.__modalOnClose=()=>{closeEffort();isOpen=false;body.replaceChildren();$('#mpkFooter')?.remove();modal.classList.remove('mpk-dialog');delete document.documentElement.dataset.prototypeDialog;renderPage();window.prototypePanel?.refresh();if(opener?.isConnected)opener.focus({preventScroll:true});else $('[data-mpk="open-dialog"]')?.focus({preventScroll:true});};renderLists();requestAnimationFrame(()=>$('#mpkSearch')?.focus({preventScroll:true}));
  }
  function updateMode(value){mode=value==='multiple'?'multiple':'single';$$('[data-mpk-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mpkMode===mode)));document.documentElement.dataset.prototypePickerMode=mode;if(isOpen||active()&&presentation==='dialog')open();else renderPage();publishResult();}
- function updateScenario(value){scenario=value;if(isOpen||active()&&presentation==='dialog')open();else renderPage();}
+ function markScenario(value){scenario=value;if(value==='loading')loadingSince=Date.now();}
+ function updateScenario(value){markScenario(value);if(isOpen||active()&&presentation==='dialog')open();else renderPage();}
  function updatePresentation(value){presentation=value==='inline'?'inline':'dialog';$$('[data-mpk-presentation]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mpkPresentation===presentation)));if(isOpen)closeModal();if(active()){if(presentation==='dialog')open();else renderPage();}}
  function toggle(id,checked){const m=catalog.find(m=>m.key===id);if(checked&&m?.reason)return;if(!checked){effortChoices.delete(id);fastChoices.delete(id);}pending=checked?(pending.includes(id)?pending:[...pending,id]):pending.filter(k=>k!==id);renderLists();}
  document.addEventListener('click',event=>{
@@ -290,7 +292,12 @@
   else if(a==='move'){const i=pending.indexOf(key),to=i+Number(t.dataset.direction);if(i>=0&&to>=0&&to<pending.length){[pending[i],pending[to]]=[pending[to],pending[i]];renderLists();}}
   else if(a==='sort'){const field=t.dataset.sort;sort=sort.key!==field?{key:field,direction:1}:sort.direction===1?{key:field,direction:-1}:{key:null,direction:0};renderLists(true);$('[data-mpk="sort"][data-sort="'+field+'"]')?.focus({preventScroll:true});}
   else if(a==='reset-sort'){sort={key:null,direction:0};const p=$('.mpk-scope-line');p.querySelector('[data-mpk="reset-sort"]')?.remove();renderLists(true);}
-  else if(a==='load-finished'){scenario='normal';if(businessSession)businessSession.options.onScenarioReady?.();else $('#mpkDemoScenario').value='normal';loadCatalog();renderLists(true);}
+  else if(a==='load-finished'){
+   const finish=()=>{markScenario('normal');if(businessSession)businessSession.options.onScenarioReady?.();else $('#mpkDemoScenario').value='normal';loadCatalog();renderLists(true);};
+   // 目录回得太快时骨架一闪更晃眼：加载态至少展示 MIN_LOADING_MS 再切到结果。
+   const remaining=scenario==='loading'?MIN_LOADING_MS-(Date.now()-loadingSince):0;
+   if(remaining>0)setTimeout(()=>{if(scenario==='loading')finish();},remaining);else finish();
+  }
  });
  document.addEventListener('input',e=>{if(!active())return;if(e.target.id==='mpkSearch'){query=e.target.value;renderLists(true);}if(e.target.id==='mpkChannelSearch'){channelQuery=e.target.value;renderLists();}});
  document.addEventListener('change',e=>{const el=e.target;if(el.id==='mpkDemoFast'){fastEnabled=el.checked;closeEffort();if(isOpen)open();else renderPage();return;}if(el.id==='mpkDemoReasoning'){reasoningEnabled=el.checked;closeEffort();if(isOpen)open();else renderPage();return;}if(el.id==='mpkDemoScenario'){updateScenario(el.value);return;}if(el.id==='mpkDemoRecommendations'){recommendedEnabled=el.checked;sort={key:null,direction:0};if(isOpen)open();else renderPage();return;}if(el.id==='mpkDemoOrder'){orderEnabled=el.checked;if(active())renderLists();return;}if(!active())return;if(el.dataset.mpkPick){const id=el.dataset.mpkPick;toggle(id,el.checked);$$('[data-mpk-pick]').find(i=>i.dataset.mpkPick===id)?.focus({preventScroll:true});}else if(el.id==='mpkSelectResults'){const ids=eligible();if(!el.checked)ids.forEach(id=>{effortChoices.delete(id);fastChoices.delete(id);});pending=el.checked?[...pending,...ids.filter(id=>!pending.includes(id))]:pending.filter(id=>!ids.includes(id));renderLists();$('#mpkSelectResults')?.focus({preventScroll:true});}});
