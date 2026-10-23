@@ -144,7 +144,13 @@
 .mp-order summary::before,.mp-details summary::before{content:'›';color:var(--muted)}
 .mp-order[open] summary::before,.mp-details[open] summary::before{transform:rotate(90deg)}
 .mp-selector-preview{min-width:0}
-.mp-preview-budget-summary{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;padding:12px 0;margin-bottom:12px;border-bottom:1px solid var(--border)}
+/* 预览摘要固定在弹窗顶部；只有渠道列表滚动，摘要与底部说明始终可见。 */
+.mp-preview-budget-summary{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;padding:10px 0;margin:0 0 12px;border-bottom:1px solid var(--border);background:var(--panel)}
+#modal.mp-preview-modal #modalBody{display:flex;flex-direction:column;overflow:hidden;min-height:0}
+#modal.mp-preview-modal .mp-dialog,#modal.mp-preview-modal .mp-selector-preview{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+#modal.mp-preview-modal .mp-preview-budget-summary{flex:none;position:relative;z-index:2}
+#modal.mp-preview-modal .mp-preview-order{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;padding-right:4px;margin:0 0 12px}
+#modal.mp-preview-modal .mp-selector-preview>p.mp-muted{flex:none;margin-top:0}
 .mp-preview-budget-summary>strong{font-size:var(--text-label);font-variant-numeric:tabular-nums}
 .mp-preview-budget-summary>span{font-size:var(--text-caption);color:var(--muted)}
 .mp-preview-budget-summary.over-budget>strong,.mp-preview-budget-summary.over-budget>.mp-alert{color:var(--red)}
@@ -156,6 +162,7 @@
 .mp-preview-group-title:hover{border-color:var(--border);background:var(--hover)}
 .mp-preview-group-eye{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:5px;color:var(--muted)}
 .mp-preview-group-eye svg{width:15px;height:15px;stroke-width:1.8}
+.mp-preview-group-title>svg{width:15px;height:15px;flex:none}
 .mp-preview-group-title:not(.is-off) .mp-preview-group-eye{color:var(--accent)}
 .mp-preview-group-title strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
 .mp-preview-group-title small,.mp-preview-group h3 small{color:var(--muted);font-size:var(--text-caption);font-weight:400;white-space:nowrap}
@@ -164,6 +171,7 @@
 .mp-preview-group-title.is-off{color:var(--muted);border-style:dashed}
 .mp-preview-group-title.is-off .mp-preview-group-eye{color:var(--muted)}
 .mp-preview-group-title.is-locked{cursor:default;background:transparent;border-color:var(--border-soft);margin-bottom:7px}
+.mp-preview-group-title.is-locked .mp-preview-group-eye{color:var(--muted)}
 .mp-preview-group-title.is-locked:hover{border-color:var(--border-soft);background:transparent}
 .mp-preview-group.is-off{padding:0;border:0;border-radius:0;background:transparent;opacity:.62}
 .mp-preview-group.is-off .mp-preview-group-title{margin-bottom:0}
