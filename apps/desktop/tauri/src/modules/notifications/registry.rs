@@ -545,6 +545,17 @@ pub fn deliver(
                 ));
             }
             item.event_identity = Some(delivery.identity.clone());
+            // UI 规范 §38.5：保存被拦下的通知，用户删除后不因再次确认自动复活。
+            // 只对该事件生效；其它通知（如运行失败）仍需在条件复现时重新提醒。
+            if event.id == "model-policy-save-blocked"
+                && store.notifications.iter().any(|existing| {
+                    existing.deleted
+                        && existing.dedupe_key == item.dedupe_key
+                        && existing.event_identity == item.event_identity
+                })
+            {
+                return Ok(outcome);
+            }
             if let Some(existing) = store
                 .notifications
                 .iter_mut()
