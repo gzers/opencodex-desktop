@@ -40,7 +40,7 @@ export const useNotificationsStore = defineStore('notifications', {
       try {
         const { listen } = await import('@tauri-apps/api/event')
         const unlisten = await listen('notifications-changed', () => {
-          void this.load()
+          void this.announce()
         })
         this.stopEventStream = () => {
           void unlisten()
@@ -50,6 +50,21 @@ export const useNotificationsStore = defineStore('notifications', {
       } catch {
         return null
       }
+    },
+    /**
+     * 新通知到达时同时给出 toast 与中心记录（UI 规范 §38.5：delivery = toast + center）。
+     * 只在出现“此前没见过且未读”的条目时提示，同一条不重复；读取失败不提示，
+     * 以免把查询错误伪装成业务通知。
+     */
+    async announce() {
+      const before = new Set(this.list.map(item => item.id))
+      await this.load()
+      if (this.error) return
+      const fresh = this.list.find(item => !item.read && !item.resolved && !before.has(item.id))
+      if (!fresh) return
+      // 懒加载避免 store 之间的循环依赖（反馈域不依赖通知域）。
+      const { useFeedbackStore } = await import('@/app/feedback/store')
+      useFeedbackStore().showToast(fresh.title + '：' + fresh.detail)
     },
     async load() {
       if (this.loading) {

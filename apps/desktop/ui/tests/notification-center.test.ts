@@ -39,6 +39,33 @@ function mountApp() {
   return mount(App, { global: { plugins: [createPinia()] } })
 }
 
+describe('新通知同时给 toast 与中心（UI 规范 §38.5）', () => {
+  it('只在出现此前未读的新条目时提示一次，同一条不重复', async () => {
+    setActivePinia(createPinia())
+    const notifications = useNotificationsStore()
+    const { useFeedbackStore } = await import('@/app/feedback/store')
+    const feedback = useFeedbackStore()
+
+    // 第一次：列表里出现一条未读的新通知 → 提示。
+    notifications.list = []
+    invoke.mockResolvedValueOnce({ items: [item({ id: 'blocked-1', title: '模型配置未保存', detail: '没有未保存的修改；草稿保留。', read: false })], aggregate: { total: 1, unread: 1, unresolved: 1, dangerUnread: 0 } })
+    await notifications.announce()
+    expect(feedback.toast).toContain('模型配置未保存')
+
+    // 第二次：同一条仍在列表 → 不再重复提示。
+    feedback.toast = ''
+    invoke.mockResolvedValueOnce({ items: [item({ id: 'blocked-1', title: '模型配置未保存', detail: '没有未保存的修改；草稿保留。', read: false })], aggregate: { total: 1, unread: 1, unresolved: 1, dangerUnread: 0 } })
+    await notifications.announce()
+    expect(feedback.toast).toBe('')
+
+    // 读取失败时不把查询错误伪装成通知。
+    feedback.toast = ''
+    invoke.mockRejectedValueOnce(new Error('backend down'))
+    await notifications.announce()
+    expect(feedback.toast).toBe('')
+  })
+})
+
 describe('notification center', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
