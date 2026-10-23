@@ -159,10 +159,10 @@
 .mp-preview-budget-summary.over-budget>strong,.mp-preview-budget-summary.over-budget>.mp-alert{color:var(--red)}
 .mp-preview-order{margin:14px 0;min-width:0}
 /* 渠道是一张浅色卡片：外框 + 轻背景区分组，标题行不另铺纯白底。 */
-.mp-preview-group{margin:12px 0;padding:7px 9px 9px;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--raised) 78%,transparent)}
+.mp-preview-group{margin:12px 0;padding:7px 9px 9px;border:1px solid var(--border);border-radius:var(--radius);background:color-mix(in srgb,var(--raised) 78%,transparent)}
 .mp-preview-group h3,.mp-preview-group-title{font-size:var(--text-label);margin:0 0 7px;font-weight:600}
 /* 渠道标题是一整行可点击操作条：眼睛图标表示显示状态，右侧写明停用 / 恢复。 */
-.mp-preview-group-title{position:relative;display:flex;align-items:center;gap:8px;width:100%;max-width:100%;box-sizing:border-box;min-height:34px;padding:5px 6px;border:1px solid transparent;background:transparent;color:var(--text);font:inherit;font-size:var(--text-label);text-align:left;cursor:pointer;border-radius:var(--radius-sm)}
+.mp-preview-group-title{display:flex;align-items:center;gap:8px;width:100%;max-width:100%;box-sizing:border-box;min-height:34px;padding:5px 6px;border:1px solid transparent;background:transparent;color:var(--text);font:inherit;font-size:var(--text-label);text-align:left;cursor:pointer;border-radius:var(--radius-sm)}
 .mp-preview-group-title:hover{border-color:var(--border-soft);background:var(--hover)}
 .mp-preview-group-eye{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:5px;color:var(--muted)}
 .mp-preview-group-eye svg{width:15px;height:15px;stroke-width:1.8}
@@ -174,17 +174,17 @@
 .mp-preview-group-title:hover .mp-preview-group-action{color:var(--text)}
 /* 变更直接标在渠道与型号上：渠道卡描边 + “改”标记，悬浮才展开具体启停。 */
 .mp-preview-group-title.is-changed{border-color:color-mix(in srgb,var(--amber) 45%,var(--border))}
-.mp-preview-delta-tag{flex:none;padding:0 5px;border-radius:5px;background:var(--amber-soft);color:var(--amber);font-size:10px;line-height:16px;font-weight:600}
-/* 悬浮时才出现的变更说明：贴右侧展开，不改变标题行宽度，也不盖住左侧型号。 */
-.mp-preview-delta-note{display:none;position:absolute;right:8px;top:calc(100% + 4px);z-index:4;max-width:70%;padding:4px 8px;border:1px solid color-mix(in srgb,var(--amber) 32%,var(--border));border-radius:6px;background:var(--panel);box-shadow:0 6px 18px #0000001f;color:var(--amber);font-size:var(--text-caption);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.mp-preview-delta-tag{flex:none;padding:0 5px;border-radius:var(--radius-2xs);background:var(--amber-soft);color:var(--amber);font-size:var(--text-micro);line-height:16px;font-weight:600}
+/* 悬浮时才出现的变更说明：留在标题行里右对齐，不浮出卡片，也就不会被滚动容器裁切。 */
+.mp-preview-delta-note{display:none;flex:0 1 auto;min-width:0;margin-left:8px;color:var(--amber);font-size:var(--text-caption);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mp-preview-group-title:hover .mp-preview-delta-note,.mp-preview-group-title:focus-visible .mp-preview-delta-note{display:block}
 .mp-preview-item.is-added{border-color:color-mix(in srgb,var(--green) 55%,var(--border));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--green) 22%,transparent)}
-.mp-preview-item.is-added::after{content:"新";flex:none;color:var(--green);font-size:10px;line-height:1;font-weight:600}
+.mp-preview-item.is-added::after{content:"新";flex:none;color:var(--green);font-size:var(--text-micro);line-height:1;font-weight:600}
 .mp-preview-item.is-removed{border-style:dashed;border-color:color-mix(in srgb,var(--red) 42%,var(--border-soft));color:var(--muted)}
-.mp-preview-item.is-removed::after{content:"停";flex:none;color:var(--red);font-size:10px;line-height:1;font-weight:600}
+.mp-preview-item.is-removed::after{content:"停";flex:none;color:var(--red);font-size:var(--text-micro);line-height:1;font-weight:600}
 
 /* 启停已标在标签上，这里只折叠其余字段变化，避免再出现大段清单。 */
-.mp-preview-other{flex:none;margin:10px 0 0;padding:8px 10px;border:1px solid var(--border-soft);border-radius:8px;background:color-mix(in srgb,var(--raised) 70%,transparent);font-size:var(--text-caption)}
+.mp-preview-other{flex:none;margin:10px 0 0;padding:8px 10px;border:1px solid var(--border-soft);border-radius:var(--radius-sm);background:color-mix(in srgb,var(--raised) 70%,transparent);font-size:var(--text-caption)}
 .mp-preview-other>summary{cursor:pointer;color:var(--muted)}
 .mp-preview-other dl{display:grid;gap:4px;margin:8px 0 0}
 .mp-preview-other dl>div{display:grid;grid-template-columns:minmax(90px,1fr) 2fr;gap:8px;align-items:baseline;min-width:0}
