@@ -21,7 +21,8 @@
     "audit:export": "node qa/export-visual.mjs",
     "audit:template": "node qa/template-visual.mjs",
     "audit:update": "node qa/update-visual.mjs",
-    "audit:geometry": "node qa/geometry-visual.mjs"
+    "audit:geometry": "node qa/geometry-visual.mjs",
+    "gate:release": "node qa/gate-release.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "2.12.1",
