@@ -99,6 +99,17 @@ function restoreTemplate(){
 }
 function current(t: Template) { return t.revisions.find(r=>r.id===models.selected[t.id])??t.revisions.find(r=>r.id===t.defaultRevision)??t.revisions.at(-1)! }
 function versionLocked(t:Template){return models.busy||t.revisions.some(r=>models.protectsRevision(t.id,r.id))}
+/** 编辑器内切换已保存版本：有未保存修改时禁止，切换后重建编辑基准。 */
+function switchEditingVersion(id:string){
+  const t = editingTemplate.value
+  if (!t || id === '__manage__') return
+  if (models.dirty) return
+  const revision = t.revisions.find(r => r.id === id)
+  if (!revision) return
+  models.edit(t, revision.id)
+  models.view.templatePosition = models.draftSession
+  models.view.templateEditor = true
+}
 function chooseVersion(t:Template,id:string){if(versionLocked(t))return;if(id==='__manage__'){manage(t);return}if(t.revisions.some(r=>r.id===id))models.selected[t.id]=id}
 function choices(t: Template) {
   const ids = new Set([...t.revisions.slice(-5).map(r => r.id), current(t).id, t.defaultRevision])
@@ -167,7 +178,7 @@ function prepareDelete() {
       </tr></tbody></table></div><p v-if="!templates.length" class="model-empty">没有匹配的模版</p>
     </template>
     <template v-if="models.snapshot&&tab==='templates'&&draft&&models.view.templateEditor">
-      <DetailWorkspace v-model:collapsed="templateNavigation.collapsed" v-model:active-id="templateNavigation.activeId" label="模版导航" :sections="templateSections"><template #header><UiButton variant="ghost" @click="models.view.templateEditor=false">返回</UiButton><div class="model-identity"><div class="model-inline"><span class="tag">{{ editingTemplate?.source==='builtin'?'内置':'自建' }}</span><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /></div><small class="model-muted">编辑基于 {{ editingRevisionLabel }}</small></div><UiButton v-if="editingTemplate" size="sm" @click="manage(editingTemplate)">版本管理</UiButton><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span></template>
+      <DetailWorkspace v-model:collapsed="templateNavigation.collapsed" v-model:active-id="templateNavigation.activeId" label="模版导航" :sections="templateSections"><template #header><UiButton variant="ghost" @click="models.view.templateEditor=false">返回</UiButton><div class="model-identity"><div class="model-inline"><span class="tag">{{ editingTemplate?.source==='builtin'?'内置':'自建' }}</span><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /></div><small class="model-muted">编辑基于 {{ editingRevisionLabel }}</small></div><UiSelectField v-if="editingTemplate&&editingTemplate.revisions.length>1" :model-value="draft.baseRevision??''" :options="choices(editingTemplate)" label="模版版本" size="sm" :disabled="versionLocked(editingTemplate)||models.dirty" @update:model-value="switchEditingVersion($event)" /><UiButton v-if="editingTemplate" size="sm" :disabled="!compareTemplate||models.busy" @click="compareOpen=true">与版本比较</UiButton><UiButton v-if="editingTemplate" size="sm" @click="manage(editingTemplate)">版本管理</UiButton><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span></template>
       <template #actions="{collapsed}">
        <UiButton class="model-editor-action" size="sm" aria-label="Agent自动填充" title="Agent自动填充" :disabled="models.busy" @click="openAgent" :aria-expanded="agentOpen" aria-controls="model-agent-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></svg><span v-if="!collapsed">Agent自动填充</span></UiButton>
        <UiButton class="model-editor-action" size="sm" aria-label="外部任务" title="外部任务" :disabled="models.busy" @click="externalOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M21 3 10 14M10 5H4v15h15v-6"/></svg><span v-if="!collapsed">外部任务</span></UiButton>
