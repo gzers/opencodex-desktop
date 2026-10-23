@@ -13,7 +13,9 @@
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest",
     "audit:browser": "node qa/audit.browser.mjs",
-    "inventory:components": "node qa/component-inventory.mjs"
+    "inventory:components": "node qa/component-inventory.mjs",
+    "audit:models": "node qa/model-visual.mjs",
+    "audit:preview": "node qa/preview-visual.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "2.12.1",

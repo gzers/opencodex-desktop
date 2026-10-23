@@ -1,5 +1,5 @@
 import {mount} from '@vue/test-utils'
-import {describe,expect,it} from 'vitest'
+import {describe,expect,it,vi} from 'vitest'
 import SelectorPreviewDialog from '@/features/models/SelectorPreviewDialog.vue'
 import {emptyRules,type DraftProjection,type ModelPolicy} from '@/features/models/api'
 
@@ -81,6 +81,38 @@ describe('保存 · 选择器预览（UI 规范 §38）',()=>{
     expect(wrapper.text()).toContain('另有 11 项字段变化')
     expect(wrapper.findAll('.preview-other dd')).toHaveLength(8)
     wrapper.unmount()
+  })
+
+  it('触屏长按 500ms 只显示说明，抬手不触发启停（§38.3.1）', async()=>{
+    vi.useFakeTimers()
+    const wrapper=render()
+    const title=wrapper.findAll('.preview-group-title')[0]!
+    await title.trigger('pointerdown',{pointerType:'touch'})
+    expect(wrapper.emitted('toggle-channel')).toBeUndefined()
+    vi.advanceTimersByTime(500)
+    await wrapper.vm.$nextTick()
+    expect(title.classes()).toContain('show-note')
+    await title.trigger('pointerup')
+    await title.trigger('click')
+    expect(wrapper.emitted('toggle-channel')).toBeUndefined()
+    await title.trigger('click')
+    expect(wrapper.emitted('toggle-channel')?.[0]).toEqual(['a'])
+    wrapper.unmount()
+    vi.useRealTimers()
+  })
+
+  it('长按未满 500ms 或移出后取消，正常点击仍可启停', async()=>{
+    vi.useFakeTimers()
+    const wrapper=render()
+    const title=wrapper.findAll('.preview-group-title')[0]!
+    await title.trigger('pointerdown',{pointerType:'touch'})
+    vi.advanceTimersByTime(200)
+    await title.trigger('pointerleave')
+    await title.trigger('pointerup')
+    await title.trigger('click')
+    expect(wrapper.emitted('toggle-channel')).toHaveLength(1)
+    wrapper.unmount()
+    vi.useRealTimers()
   })
 
   it('确认按钮始终可点：被拦下的原因走通知，不靠灰按钮堵住',async()=>{

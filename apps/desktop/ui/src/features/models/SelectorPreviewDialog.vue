@@ -72,7 +72,33 @@ const others = computed(() => (props.otherChanges ?? []).slice(0, 8))
 const otherTotal = computed(() => props.otherChanges?.length ?? 0)
 const note = ref('')
 
+/**
+ * 触屏与无 hover 环境用长按查看说明（§38.3.1）：
+ * 500ms 计时命中后只展示说明，随后抬手产生的 click 必须被吞掉，避免“看说明顺手改了配置”。
+ * 鼠标仍走 hover / focus-visible，不参与长按。
+ */
+const pressNote = ref('')
+let pressTimer: ReturnType<typeof setTimeout> | undefined
+let swallowClick = false
+function clearPress() { if (pressTimer) { clearTimeout(pressTimer); pressTimer = undefined } }
+function pressStart(channel: PreviewChannel, event: PointerEvent) {
+  if (props.busy || props.saving || channel.protected || event.pointerType === 'mouse') return
+  clearPress()
+  const changed = pressChannelDelta(channel)
+  if (!changed.total) return
+  pressTimer = setTimeout(() => {
+    pressTimer = undefined
+    // 同一次手势只用于查看：命中后抬手不再启停。
+    swallowClick = true
+    pressNote.value = pressNote.value === channel.id ? '' : channel.id
+  }, 500)
+}
+function pressChannelDelta(channel: PreviewChannel) { return channelDelta(channel) }
+function pressEnd() { clearPress() }
+function pressLeave() { clearPress(); }
 function toggleChannel(channel: PreviewChannel) {
+  if (swallowClick) { swallowClick = false; return }
+  pressNote.value = ''
   if (props.busy || props.saving || channel.protected) return
   note.value = channel.enabled ? '已停用 ' + channel.label + '；修改保留在当前草稿' : '已恢复 ' + channel.label + '；修改保留在当前草稿'
   emit('toggle-channel', channel.id)
@@ -101,7 +127,7 @@ function confirm() { if (!props.saving) emit('confirm') }
       <span class="preview-eye" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span>
       <strong>{{ group.channel.label }}</strong><small>官方管理 · 只读</small>
      </h3>
-     <button v-else type="button" class="preview-group-title" :class="{off:!group.channel.enabled,changed:group.delta.total>0}" :aria-pressed="!group.channel.enabled" :disabled="busy||saving" @click="toggleChannel(group.channel)">
+     <button v-else type="button" class="preview-group-title" :class="{off:!group.channel.enabled,changed:group.delta.total>0,'show-note':pressNote===group.channel.id}" :aria-pressed="!group.channel.enabled" :disabled="busy||saving" @pointerdown="pressStart(group.channel,$event)" @pointerup="pressEnd" @pointercancel="pressEnd" @pointerleave="pressLeave" @click="toggleChannel(group.channel)">
       <span class="preview-eye" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span>
       <strong>{{ group.channel.label }}</strong>
       <span v-if="group.delta.total>0" class="preview-delta-tag" aria-hidden="true">改</span>
@@ -112,7 +138,7 @@ function confirm() { if (!props.saving) emit('confirm') }
      </button>
      <div v-if="group.channel.enabled" class="preview-items">
       <button v-for="item in group.items" :key="item.row.modelId" type="button" class="preview-item" :class="[item.row.selected?'is-on':'is-off',item.change]" :aria-pressed="item.row.selected" :title="(item.row.selected?'点击停用':'点击启用')+' '+item.row.modelId+(item.row.rules.fast.mode==='custom'&&item.row.rules.fast.value?' · 支持 Fast':'')+(item.change==='is-added'?' · 本次新启用':item.change==='is-removed'?' · 本次停用':'')" :disabled="busy||saving" @click="toggleModel(group.channel.id,item.row.modelId,item.row.selected)">
-       <em v-if="!group.channel.protected">{{ String(item.order).padStart(2,'0') }}</em><span>{{ item.row.modelId }}</span>
+       <em v-if="!group.channel.protected">{{ String(item.order).padStart(2,'0') }}</em><span>{{ item.row.label || item.row.modelId }}</span>
        <em v-if="item.row.rules.fast.mode==='custom'&&item.row.rules.fast.value" class="preview-fast">Fast</em>
       </button>
       <p v-if="!group.items.length" class="preview-muted">该渠道暂无型号。</p>
@@ -157,7 +183,8 @@ function confirm() { if (!props.saving) emit('confirm') }
 .preview-group-title:hover .preview-group-action{color:var(--text)}
 .preview-delta-tag{flex:none;padding:0 5px;border-radius:var(--radius-2xs);background:var(--amber-soft);color:var(--amber);font-size:var(--text-micro);line-height:16px;font-weight:600}
 .preview-delta-note{display:none;flex:0 1 auto;min-width:0;margin-left:var(--space-2);color:var(--amber);font-size:var(--text-caption);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.preview-group-title:hover .preview-delta-note,.preview-group-title:focus-visible .preview-delta-note{display:block}
+.preview-group-title:hover .preview-delta-note,.preview-group-title:focus-visible .preview-delta-note,.preview-group-title.show-note .preview-delta-note{display:block}
+.preview-group-title{touch-action:manipulation;-webkit-touch-callout:none}
 .preview-items{display:flex;flex-wrap:wrap;gap:var(--space-1-5)}
 .preview-item{display:inline-flex;align-items:center;gap:var(--space-1-5);max-width:100%;padding:var(--space-1) var(--space-2);border:1px solid transparent;border-radius:var(--radius-2xs);background:var(--rail);color:var(--text);font:inherit;font-size:var(--text-caption);cursor:pointer}
 .preview-item:hover:not(:disabled){border-color:var(--border);background:var(--hover)}
