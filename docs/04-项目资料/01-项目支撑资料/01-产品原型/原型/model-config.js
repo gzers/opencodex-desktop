@@ -65,7 +65,7 @@
  let draft=clone(initial),saved=clone(initial),pending=false,client='目录已核对 · 客户端待验证';
  let channelDetail=false,templateDetail=false,templateSearch='',correctionDraft='',generationTarget='',generationSources='provided';
  let agent={providerId:'',modelId:'',effort:'inherit',fast:false};
- let tab='channels',current='newapi',search='',family='',onlySelected=false,channelSearch='',scope=new Set(),previewSaved=false;
+ let tab='channels',current='newapi',search='',family='',onlySelected=false,channelSearch='',scope=new Set();
  let templateScratch=null,templateSelection=new Set(),templateListVersions={},templateHistoryView=null,externalTask=null,externalBatch=null,externalPrompt='';
  const externalTasks=new Map();
  const externalSubmissionContract='prototype-template-submission/1';
@@ -492,16 +492,40 @@
  }
  function syncSaveNotification(){window.modelSaveNotificationBridge?.(operation?{id:operation.id,status:operation.status,step:operation.step,pending}:null);}
  function preview(){
-  const policy=previewSaved?saved:draft,rows=projection(policy),base=rows.filter(r=>r.type==='base').length,fast=rows.filter(r=>r.type==='fast').length,hidden=rows.filter(r=>r.type==='hidden').length,over=rows.length>100;let order=0;
-  const groups=[...policy.providers,{id:'system',name:'系统占用'}].map(p=>{
-   const entries=rows.filter(r=>r.p===p.id);if(!entries.length)return '';
-   return '<section class="mp-preview-group"><h3>'+esc(p.name)+'</h3><div class="mp-preview-items">'+entries.map(r=>'<div class="mp-preview-item '+(r.type==='fast'?'fast':r.type==='hidden'?'hidden-item':'')+'" title="'+esc(r.id)+'"><em>'+String(++order).padStart(2,'0')+'</em><span>'+esc(r.id)+'</span></div>').join('')+'</div></section>';
-  }).join('');
+  const policy=draft,rows=projection(policy),base=rows.filter(r=>r.type==='base').length,fast=rows.filter(r=>r.type==='fast').length,hidden=rows.filter(r=>r.type==='hidden').length,over=rows.length>100;
+  let groups=policy.providers.map(p=>{
+   const locked=p.id==='native',off=!p.enabled;
+   const title=locked?'<h3>'+esc(p.name)+'<small>官方管理 · 只读</small></h3>':off?'<button type="button" class="mp-preview-group-title is-off" data-mp="preview-channel-toggle" data-id="'+esc(p.id)+'" aria-pressed="true" title="点击恢复该渠道"><span>'+esc(p.name)+'</span><small>已停用 · 点击恢复</small></button>':'<button type="button" class="mp-preview-group-title" data-mp="preview-channel-toggle" data-id="'+esc(p.id)+'" aria-pressed="false" title="点击停用该渠道"><span>'+esc(p.name)+'</span><small>启用 '+selected(p).length+' / '+p.models.length+'</small></button>';
+   if(off)return '<section class="mp-preview-group is-off">'+title+'<p class="mp-muted">该渠道的模型已全部隐藏；点击渠道名称可恢复之前的启用范围和顺序。</p></section>';
+   const items=p.models.map(m=>{const on=modelActive(p,m),supported=resolve(p,m).values.fast==='supported';return '<button type="button" class="mp-preview-item '+(on?'is-on':'is-off')+(supported?' has-fast':'')+'" data-mp="preview-model-toggle" data-id="'+esc(m.key)+'" aria-pressed="'+on+'" title="'+(on?'点击停用':'点击启用')+' '+esc(m.id)+(supported?' · 支持 Fast':'')+'" '+(locked?'disabled':'')+'><span>'+esc(m.id)+'</span>'+(supported?'<em class="mp-preview-fast">Fast</em>':'')+'</button>';}).join('');
+   return '<section class="mp-preview-group">'+title+'<div class="mp-preview-items">'+(items||'<p class="mp-muted">该渠道暂无模型。</p>')+'</div></section>';
+  });const system=rows.filter(r=>r.type==='hidden');if(system.length)groups.push('<section class="mp-preview-group"><h3>系统占用<small>只读</small></h3><div class="mp-preview-items">'+system.map(r=>'<div class="mp-preview-item hidden-item" title="'+esc(r.id)+'"><span>'+esc(r.id)+'</span></div>').join('')+'</div></section>');groups=groups.join('');
   const budgets=policy.providers.map(p=>{const entries=rows.filter(r=>r.p===p.id),normal=entries.filter(r=>r.type==='base').length,special=entries.filter(r=>r.type==='fast').length;return '<div><strong>'+esc(p.name)+'</strong><span>基础 '+normal+' · Fast '+special+'</span>'+(!p.enabled?'<small>停用 · 保留已选 '+selected(p).length+' 个模型</small>':'')+'</div>';}).join('');
-  return '<div class="mp-selector-preview" aria-label="预览选择器"><div class="mp-preview-mode"><label class="mp-label">预览来源<select id="mpPreviewSource" class="mp-select" data-preview>'+opts([['draft','草稿计划'],['saved','已保存配置']],previewSaved?'saved':'draft')+'</select></label></div><div id="mpPreviewBudget" class="mp-preview-budget-summary '+(over?'over-budget':'')+'" role="status"><strong>模型激活数 '+rows.length+'/100</strong><span>基础模型 '+base+' · Fast '+fast+' · 系统占用 '+hidden+'</span>'+(over?'<span class="mp-alert">超出激活预算，请减少发布项后再保存。</span>':'')+(previewSaved&&pending?'<span class="mp-muted">已保存配置仍待重启 / 客户端核对。</span>':'')+'</div><details class="mp-details"><summary>按渠道查看数量</summary><div class="mp-preview-budget-list">'+budgets+'<div><strong>系统占用</strong><span>'+hidden+' 项</span></div></div></details><div class="mp-preview-order" aria-label="完整选择器顺序">'+(groups||'<p class="mp-muted">没有计划发布的目录条目。</p>')+'</div><p class="mp-muted">渠道顺序 × 内部模型顺序；Fast 跟随父项，隐藏目录项计入总数。预览不改变配置或实际选择。</p></div>';
+  return '<div class="mp-selector-preview" aria-label="预览选择器"><div id="mpPreviewBudget" class="mp-preview-budget-summary '+(over?'over-budget':'')+'" role="status"><strong>模型激活数 '+rows.length+'/100</strong><span>基础模型 '+base+' · Fast '+fast+' · 系统占用 '+hidden+'</span>'+(over?'<span class="mp-alert">超出激活预算，请减少发布项后再保存。</span>':'')+(pending?'<span class="mp-muted">已保存配置仍待重启 / 客户端核对。</span>':'')+'</div><details class="mp-details"><summary>按渠道查看数量</summary><div class="mp-preview-budget-list">'+budgets+'<div><strong>系统占用</strong><span>'+hidden+' 项</span></div></div></details><div class="mp-preview-order" aria-label="完整选择器顺序">'+(groups||'<p class="mp-muted">没有计划发布的目录条目。</p>')+'</div><p class="mp-muted">预览固定当前草稿。点击渠道名称停用 / 恢复该组；点击型号标签启停单个型号，灰色标签保留以便恢复。修改仍由页面「保存」统一提交。</p></div>';
  }
  function selectorPreviewDialog(){
-  modal('预览选择器',preview(),'关闭',null,{prototypeAnnotation:{title:'选择器预览与目录预算',body:'预览当前草稿计划或最近成功保存的配置，完整顺序和激活预算共用同一投影。停用渠道保留模型选择，但不发布目录项；Fast 跟随父模型，系统隐藏项也占预算。100 是原型的兼容阈值，真实上限 / 分页与目录读回待实现核验。预览和切换来源不写入配置，不代表客户端已经加载；本轮仍为内存 mock。'}});
+  modal('预览选择器',preview(),'关闭',null,{prototypeAnnotation:{title:'选择器预览与快速启停',body:'预览固定当前草稿，不提供来源切换。点击渠道名称停用或恢复整组；停用后渠道标题置灰并保留恢复入口，模型标签全部隐藏。点击型号标签启停单个型号；停用标签保留灰色，可再次点击恢复。颜色只表达启停，Fast 能力另用文字标记。所有修改进入同一渠道草稿，关闭弹窗保留，页面统一保存后才写入运行配置。系统隐藏项计入预算但不提供启停。100 是原型的兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'}});
+ }
+ function refreshPreview(focusSelector=''){
+  const body=$('#modalBody'),node=body?.querySelector('.mp-selector-preview');if(!node)return;
+  const top=body.scrollTop;body.innerHTML='<div class="mp-dialog">'+preview()+'</div>';window.prototypeSelect?.enhance(body);
+  if(focusSelector)body.querySelector(focusSelector)?.focus({preventScroll:true});
+  body.scrollTop=top;
+ }
+ function togglePreviewChannel(pid){
+  const p=draft.providers.find(p=>p.id===pid);if(!p||p.id==='native'||busy())return;
+  change(()=>p.enabled=!p.enabled);
+  refreshPreview('[data-mp="preview-channel-toggle"][data-id="'+pid+'"]');
+  notice((p.enabled?'已恢复 ':'已停用 ')+p.name+'；修改保留在当前草稿，页面保存后生效');
+ }
+ function togglePreviewModel(key){
+  const p=draft.providers.find(p=>p.models.some(m=>m.key===key)),m=p?.models.find(m=>m.key===key);
+  if(!p||!m||p.id==='native'||busy())return;
+  const error=commitModelPatches(p.id,[{key,enabled:!modelActive(p,m)}]);
+  if(error){notice(error);return;}
+  const nextChannel=draft.providers.find(item=>item.models.some(model=>model.key===key)),nextModel=nextChannel?.models.find(model=>model.key===key);
+  refreshPreview('[data-mp="preview-model-toggle"][data-id="'+key+'"]');
+  notice((nextChannel&&nextModel&&modelActive(nextChannel,nextModel)?'已启用 ':'已停用 ')+m.id+'；修改保留在当前草稿，页面保存后生效');
  }
  const visibleModels=()=>provider().models.filter(m=>(!onlySelected||selected(provider()).includes(m))&&(!family||templateMatches(templates.find(t=>t.id===family),m,provider()))&&(m.id+' '+(m.naming?.alias||'')+' '+(m.naming?.displayName||'')).toLowerCase().includes(search.toLowerCase()));
  function batchToolbar(){const targets=scopeProviders();if(!targets.length)return '';const hidden=targets.filter(p=>!visibleProviders().includes(p)).length;return '<div class="mp-batch"><span>已选 '+targets.length+' 个渠道'+(hidden?'（含搜索外 '+hidden+' 个）':'')+'</span><div class="mp-actions">'+button('启用','enable-channels',busy()||targets.every(p=>p.enabled)?'disabled':'')+button('停用','disable-channels',busy()||targets.every(p=>!p.enabled)?'disabled':'')+button('删除','delete-channels',busy()?'disabled':'',false,true)+button('按族批量配置','batch',busy()?'disabled':'')+button('套用模版','adopt',busy()?'disabled':'')+'</div></div>';}
@@ -764,7 +788,7 @@
  function channelPage(){
   if(!channelDetail)return '<div class="mp-list-toolbar"><input class="input" data-channel-search aria-label="搜索渠道" placeholder="搜索渠道" value="'+esc(channelSearch)+'"><div class="mp-actions">'+button('新增渠道','new-channel',busy()?'disabled':'',true)+(scope.size?button('清除选择','clear-channels',busy()?'disabled':''):'')+'</div></div>'+batchToolbar()+channels()+'<p class="mp-footer-note">启用开关修改草稿，保存后提示重启；停用保留已选模型与配置。拖动渠道调整整组顺序。</p>';
   const p=provider(),rows=visibleModels(),filtered=search||family||onlySelected,locked=busy();
-  const models='<div class="mp-section-heading"><h3>模型列表 <span class="mp-badge">'+rows.length+'</span></h3><div class="mp-actions">'+(p.id==='native'?'':button(p.refresh==='loading'?'取消等待':'获取模型列表',p.refresh==='loading'?'cancel-refresh':'refresh',locked?'disabled':''))+'</div></div>'+(['loading','failed','empty'].includes(p.refresh)?'<div class="mp-inline-notice">'+(p.refresh==='loading'?'正在获取清单…':p.refresh==='failed'?'获取失败，旧清单与选择保留':'上游返回空清单，原选择保留')+'</div>':'')+'<div class="mp-filter"><input class="input" data-model-search aria-label="搜索模型 ID 或别名" placeholder="搜索 ID、别名或显示名称" value="'+esc(search)+'"><select class="mp-select" data-family aria-label="筛选模型族">'+opts([['','全部族'],...families()],family)+'</select><label class="mp-label"><input type="checkbox" data-only-selected '+(onlySelected?'checked':'')+'>仅启用</label></div>'+modelBatchToolbar()+'<div class="mp-table" aria-label="模型管理列表"><div class="mp-table-head"><input type="checkbox" data-model-pick-all aria-label="批量选择当前筛选结果" aria-checked="'+(modelSelectionState().mixed?'mixed':modelSelectionState().checked)+'" '+(modelSelectionState().checked?'checked ':'')+(p.id==='native'||locked||!rows.length?'disabled':'')+'><span>模型标识 / 别名与配置</span><span>启停</span><span>编辑与排序</span></div>'+rows.map(m=>modelRow(p,m,filtered)).join('')+(rows.length?'':'<div class="mp-empty">没有匹配项，启停与批量选择保留。</div>')+'</div><p class="mp-footer-note">'+(!p.enabled?'渠道已停用，模型配置仍可编辑；启用渠道后恢复计划选择器。':'复选框仅用于批量选择；启停独立控制。别名不改变上游 ID，行编辑加入草稿后统一保存。')+'</p>';
+  const models='<div class="mp-section-heading"><h3>模型列表 <span class="mp-badge">'+rows.length+'</span></h3><div class="mp-actions">'+(p.id==='native'?'':button(p.refresh==='loading'?'取消等待':'获取模型列表',p.refresh==='loading'?'cancel-refresh':'refresh',locked?'disabled':'')+button('手动添加','manual-model',locked?'disabled':''))+'</div></div>'+(['loading','failed','empty'].includes(p.refresh)?'<div class="mp-inline-notice">'+(p.refresh==='loading'?'正在获取清单…':p.refresh==='failed'?'获取失败，旧清单与选择保留':'上游返回空清单，原选择保留')+'</div>':'')+'<div class="mp-model-filter"><label class="mp-model-scope"><span class="sr-only">模型公开范围</span><select class="mp-select" data-mode aria-label="模型公开范围">'+opts([['whitelist','仅所选模型'],['all','全部公开'],['none','全部隐藏']],p.mode)+'</select></label><input class="input" data-model-search aria-label="搜索模型 ID 或别名" placeholder="搜索型号或名称" value="'+esc(search)+'"><label class="mp-model-family"><select class="mp-select" data-family aria-label="筛选模型族">'+opts([['','全部族'],...families()],family)+'</select></label><label class="mp-label"><input type="checkbox" data-only-selected '+(onlySelected?'checked':'')+'>仅启用</label><span class="mp-model-count">'+rows.length+' / '+p.models.length+' 项</span></div>'+modelBatchToolbar()+'<div class="mp-table" aria-label="模型管理列表"><div class="mp-table-head"><input type="checkbox" data-model-pick-all aria-label="批量选择当前筛选结果" aria-checked="'+(modelSelectionState().mixed?'mixed':modelSelectionState().checked)+'" '+(modelSelectionState().checked?'checked ':'')+(p.id==='native'||locked||!rows.length?'disabled':'')+'><span>模型标识 / 别名与配置</span><span>启停</span><span>编辑与排序</span></div>'+rows.map(m=>modelRow(p,m,filtered)).join('')+(rows.length?'':'<div class="mp-empty">没有匹配项，启停与批量选择保留。</div>')+'</div><p class="mp-footer-note">'+(!p.enabled?'渠道已停用，模型配置仍可编辑；启用渠道后恢复计划选择器。':'复选框仅用于批量选择；启停独立控制。别名不改变上游 ID，行编辑加入草稿后统一保存。')+'</p>';
   const header='<header id="mpChannelHeader" class="mp-editor-head">'+iconButton('返回渠道列表','back-channels','back')+'<div class="mp-editor-heading"><h2>'+esc(p.name)+'</h2><div class="mp-template-heading-meta"><div id="mpChannelHeadingStatus" class="mp-template-heading-status" role="status">'+channelHeadingStatusHTML(p)+'</div>'+channelStatusAnnotation()+'</div></div><select class="mp-select" data-current aria-label="当前渠道">'+opts(draft.providers.map(p=>[p.id,p.name]),current)+'</select></header>';
   const nav=channelSections.map(([id,name],i)=>'<button class="mp-nav-item" data-mp="channel-section" data-id="'+id+'" title="'+name+'" aria-controls="mpChannelSection-'+id+'" aria-current="'+(channelSection===id?'location':'false')+'"><span>'+String(i+1).padStart(2,'0')+'</span><span class="mp-nav-label">'+name+'</span></button>').join('');
   const content={models,connection:inlineConnection(p),nodes:serviceNodeList(p),defaults:channelDefaults(p)};
@@ -1084,6 +1108,19 @@
  function wizardManual(){const w=channelWizard;if(!w||w.status==='loading')return;const ids=$('#mpChannelManual').value.split(/\r?\n/).map(id=>id.trim()).filter(Boolean);if(!ids.length)return;
   if(ids.some(id=>id.length>200||/[\s\x00-\x1f]/.test(id))){$('#mpChannelError').textContent='模型 ID 不能含空白 / 控制字符，且须不超过 200 字符。';return;}
   [...new Set(ids)].forEach(id=>{if(!w.models.some(m=>m.id===id))w.models.push(discoveredModel(w.id,id,'manual'));});w.error='';drawChannelWizard();
+ }
+ function manualDetailModel(){
+  const p=provider();if(!p||p.id==='native'||busy())return;
+  const digest=channelDraftFingerprint(),pid=p.id;
+  modal('手动添加模型','<p class="mp-muted">每行一个精确上游模型 ID；不按逗号拆分。新添加项默认停用、能力未知，可在列表中继续配置并统一保存。</p><label>模型 ID<textarea id="mpDetailManual" class="mp-json" rows="4" aria-label="手动的模型 ID" placeholder="例如：gpt-5.4"></textarea></label><div id="mpDetailManualError" class="mp-alert" role="alert"></div>','加入草稿',()=>{
+   const error=$('#mpDetailManualError'),ids=$('#mpDetailManual').value.split(/\r?\n/).map(id=>id.trim()).filter(Boolean);
+   if(busy()||digest!==channelDraftFingerprint()){error.textContent='渠道或编辑内容已变化，请关闭后重新添加。';return;}
+   if(!ids.length){error.textContent='请至少填写一个模型 ID。';return;}
+   if(ids.some(id=>id.length>200||/[\s\x00-\x1f]/.test(id))){error.textContent='模型 ID 不能含空白 / 控制字符，且须不超过 200 字符。';return;}
+   const unique=[...new Set(ids)].filter(id=>!p.models.some(m=>m.id===id));
+   if(!unique.length){error.textContent='这些模型已在当前清单中，无需重复添加。';return;}
+   closeModal();change(()=>unique.forEach(id=>p.models.push(discoveredModel(pid,id,'manual'))));notice('已添加 '+unique.length+' 个模型到草稿，默认停用');
+  },{confirmKeepsOpen:true});
  }
  let serviceNodeSerial=0;
  function nodeEditable(p){
@@ -1642,6 +1679,8 @@
   else if(a==='back-channels'){channelDetail=false;render();}
   else if(a==='back-templates')returnTemplates();
   else if(a==='selector-preview')selectorPreviewDialog();
+  else if(a==='preview-channel-toggle')togglePreviewChannel(id);
+  else if(a==='preview-model-toggle')togglePreviewModel(id);
     else if(a==='agent-pick-model')selectAgentModel();
   else if(a==='agent-settings'){const field=$('#mpGenerationTarget');if(field)assistantInputs[templateId]=field.value;agentSettings(assistantOpen?'conversation':'');}
   else if(a==='conversation')conversationDialog();
@@ -1659,7 +1698,7 @@
   else if(a==='expand-all-models'){if(provider().id!=='native'){visibleModels().forEach(m=>modelExpanded.add(m.key));render();}}
   else if(a==='collapse-all-models'){if(provider().id!=='native'){provider().models.forEach(m=>modelExpanded.delete(m.key));render();}}
   else if(a==='clear-model-picks'){provider().models.forEach(m=>modelSelection.delete(m.key));render();}
-  else if(a==='expand-model'){const m=provider().models.find(m=>m.key===id);if(!m||provider().id==='native')return;modelExpanded.has(id)?modelExpanded.delete(id):modelExpanded.add(id);render();}
+  else if(a==='expand-model'){const m=provider().models.find(m=>m.key===id);if(!m||provider().id==='native')return;modelExpanded=modelExpanded.has(id)?new Set():new Set([id]);render();$$('[data-model="'+id+'"] [data-mp="expand-model"]',host)[0]?.focus({preventScroll:true});}
   else if(a==='reset-model-row'){delete modelEdits[id];render();}
   else if(a==='apply-model-row'){const edit=modelEdits[id];if(!edit)return;const error=quickRuleError(edit.rules,provider().models.find(m=>m.key===id).overrides)||commitModelPatches(current,[{key:id,rules:edit.rules,baseline:edit.baseline}]);if(error){const node=$('[data-model-quick-error="'+id+'"]',host);if(node)node.textContent=error;else modelError(id,error);}}
   else if(a==='toggle-model'){const m=provider().models.find(m=>m.key===id);if(!m)return;const error=commitModelPatches(current,[{key:id,enabled:!modelActive(provider(),m)}]);if(error)modelError(id,error);$$('[data-mp="toggle-model"]',host).find(x=>x.dataset.id===id)?.focus({preventScroll:true});}
@@ -1682,6 +1721,7 @@
   else if(a==='channel-back'&&channelWizard&&channelWizard.status!=='loading'){channelWizard.step=1;drawChannelWizard();}
   else if(a==='channel-select'||a==='channel-unselect')wizardSelection(a==='channel-select');
   else if(a==='channel-manual')wizardManual();
+  else if(a==='manual-model')manualDetailModel();
   else if(a==='refresh')refresh();
   else if(a==='cancel-refresh'){provider().refreshToken++;provider().refresh='idle';render();}
   else if(a==='provider-config')providerConfig();
@@ -1781,14 +1821,25 @@
   else if(el.matches('[data-mode]')){const p=provider(),value=el.value;if(value==='none')modal('隐藏本渠道全部模型？','<p>保留发现和顺序；选择模式明确为全部隐藏。</p>','加入草稿',()=>change(()=>p.mode=value),{onClose:render});else change(()=>p.mode=value);}
   else if(el.matches('[data-family]')){family=el.value;render();}
   else if(el.matches('[data-only-selected]')){onlySelected=el.checked;render();}
-  else if(el.matches('[data-preview]')){previewSaved=el.value==='saved';selectorPreviewDialog();window.prototypeSelect?.enhance($('#modalBody'));const source=$('#mpPreviewSource'),trigger=source?.closest?.('.select')?.querySelector?.('.select-trigger');(trigger||source)?.focus({preventScroll:true});}
   else if(el.matches('[data-current]')){current=el.value;search='';family='';render();}
   else if(el.matches('[data-template-current]'))openTemplateEditor(el.value);
   else if(el.matches('[data-template-row-version]')){const id=el.dataset.templateRowVersion;if(el.value==='history'){el.value=String(listTemplateVersion(templates.find(t=>t.id===id))?.n||'');window.prototypeSelect?.enhance(host);openTemplateHistory(id,'list');return;}const n=Number(el.value);if(version(id,n)&&!templateEditorChanged(id))templateListVersions[id]=n;else notice('先处理未保存编辑，再切换列表版本');render();window.prototypeSelect?.enhance(host);const source=$('#mpTemplateListVersion-'+id,host),trigger=source?.closest?.('.select')?.querySelector?.('.select-trigger');(trigger||source)?.focus({preventScroll:true});}
   else if(el.matches('[data-version]')){if(el.value==='history'){el.value=String(versionN);window.prototypeSelect?.enhance(host);openTemplateHistory(templateId,'editor');}else switchTemplateVersion(Number(el.value));}
  });
  document.addEventListener('input',e=>{if(e.target.id==='mpExternalRequest'){updateExternalPreview();return;}if(e.target.matches('[data-history-search]')&&templateHistoryView){const view=templateHistoryView,caret=e.target.selectionStart;openTemplateHistory(view.id,view.context,e.target.value);const field=$('#mpVersionHistorySearch');field?.focus({preventScroll:true});if(caret!=null)field?.setSelectionRange?.(caret,caret);}else if(e.target.matches('[data-channel-config]'))updateChannelConnection(e.target);else if(e.target.matches('[data-quick-value="context"]'))quickChanged(e.target);else if(e.target.matches('[data-assistant-input]'))assistantInputs[templateId]=e.target.value;else if(e.target.matches('[data-template-meta],[data-template-match]'))updateTemplateInput(e.target);else if(e.target.matches('[data-template-prompt]'))generationTarget=e.target.value;else if(e.target.matches('[data-model-search]')){search=e.target.value;render();}else if(e.target.matches('[data-channel-search]')){channelSearch=e.target.value;render();}else if(e.target.matches('[data-template-search]')){templateSearch=e.target.value;render();}else if(e.target.matches('[data-correction]')){correctionDraft=e.target.value;}});
- document.addEventListener('pointerdown',e=>{if(nodePicker&&!nodePicker.element.contains(e.target)&&!nodePicker.anchor.contains(e.target))closeNodePicker();},true);
+/* 拖拽/操作区只看手势，不阻止输入与正文选择；普通点击不会清空用户既有选择。 */
+ let gesture=null;
+ document.addEventListener('selectstart',e=>{if(gesture?.dragging&&e.target.closest?.('.mp-page'))e.preventDefault();},true);
+ document.addEventListener('pointerdown',e=>{
+  if(nodePicker&&!nodePicker.element.contains(e.target)&&!nodePicker.anchor.contains(e.target))closeNodePicker();
+  const target=e.target.closest?.('.mp-page .mp-grip,.mp-page .mp-provider-actions,.mp-page .mp-model-actions,.mp-page .mp-template-tools,.mp-page .mp-nav-item');
+  gesture=target?{target,dragging:!!e.target.closest?.('.mp-grip'),selectable:false}:null;
+ },true);
+ document.addEventListener('dragstart',e=>{if(gesture)gesture.dragging=true;},true);
+ document.addEventListener('dragend',()=>{gesture=null;},true);
+ document.addEventListener('pointerup',()=>{gesture=null;},true);
+ document.addEventListener('pointercancel',()=>{gesture=null;},true);
+ window.addEventListener?.('blur',()=>{gesture=null;});
  document.addEventListener('focusin',e=>{if(nodePicker&&!nodePicker.element.contains(e.target)&&!nodePicker.anchor.contains(e.target))closeNodePicker();});
  document.addEventListener('keydown',e=>{
   if(!nodePicker)return;if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();closeNodePicker(true);return;}
@@ -1802,7 +1853,13 @@
  document.addEventListener('scroll',e=>{if(e.target===host.closest('.main'))syncDetailSection();},{capture:true,passive:true});
  window.addEventListener?.('resize',syncDetailSection,{passive:true});
  if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(syncDetailSection);observer.observe(host);const scroller=host.closest('.main');if(scroller)observer.observe(scroller);}
- let drag=null;document.addEventListener('dragstart',e=>{if(e.target.closest('input,button,select,.select')){e.preventDefault();return;}const el=e.target.closest('[draggable="true"]');if(!el||!el.closest('#route-models'))return;drag=el.dataset.provider?{type:'provider',id:el.dataset.provider}:{type:'model',id:el.dataset.model};e.dataTransfer.setData('text/plain',drag.id);});document.addEventListener('dragover',e=>{if(drag&&e.target.closest('[draggable="true"]'))e.preventDefault();});document.addEventListener('drop',e=>{const el=e.target.closest('[draggable="true"]');if(!el||!drag)return;e.preventDefault();const target=drag.type==='provider'?el.dataset.provider:el.dataset.model;if(target){const list=drag.type==='provider'?draft.providers:provider().models,key=drag.type==='provider'?'id':'key';change(()=>{const from=list.findIndex(x=>x[key]===drag.id),to=list.findIndex(x=>x[key]===target);if(from>=0&&to>=0)list.splice(to,0,list.splice(from,1)[0]);});}drag=null;});document.addEventListener('dragend',()=>drag=null);
+ let drag=null,dragOver=null;
+ const clearDragMarks=()=>{$$('.mp-page .dragging,.mp-page .drag-over',host).forEach(node=>node.classList.remove('dragging','drag-over'));};
+ document.addEventListener('dragstart',e=>{if(e.target.closest('input,button,select,.select')){e.preventDefault();return;}const el=e.target.closest('[draggable="true"]');if(!el||!el.closest('#route-models'))return;drag=el.dataset.provider?{type:'provider',id:el.dataset.provider}:{type:'model',id:el.dataset.model};el.classList.add('dragging');e.dataTransfer.setData('text/plain',drag.id);if(e.dataTransfer)e.dataTransfer.effectAllowed='move';});
+ document.addEventListener('dragover',e=>{const el=e.target.closest('[draggable="true"]');if(!drag||!el||el===dragOver)return;e.preventDefault();dragOver?.classList.remove('drag-over');dragOver=el;el.classList.add('drag-over');});
+ document.addEventListener('dragleave',e=>{if(e.target===dragOver&&!dragOver?.contains(e.relatedTarget)){dragOver.classList.remove('drag-over');dragOver=null;}});
+ document.addEventListener('drop',e=>{const el=e.target.closest('[draggable="true"]');if(!el||!drag)return;e.preventDefault();const target=drag.type==='provider'?el.dataset.provider:el.dataset.model;clearDragMarks();if(target){const list=drag.type==='provider'?draft.providers:provider().models,key=drag.type==='provider'?'id':'key';change(()=>{const from=list.findIndex(x=>x[key]===drag.id),to=list.findIndex(x=>x[key]===target);if(from>=0&&to>=0)list.splice(to,0,list.splice(from,1)[0]);});}drag=null;dragOver=null;});
+ document.addEventListener('dragend',()=>{clearDragMarks();drag=null;dragOver=null;});
  window.modelPrototype={applyAgentDemo,openExternalTask,receiveExternalSubmission,externalTaskPack,externalSample,externalCombinedText,updateExternalPreview,state:()=>clone({draft,saved,pending,client,operation,templates,scope:[...scope],buffers,proposal,incoming,records,scenario,agent,modelSelection:[...modelSelection],modelExpanded:[...modelExpanded],modelEdits,channelDetail,templateDetail,templateScratch,templateSelection:[...templateSelection],templateListVersions,templateHistoryView,externalTask,externalTasks:[...externalTasks.values()],externalBatch,editorSection,editorNavCollapsed,channelSection,channelNavCollapsed,channelConnections,assistantOpen,assistantMaximized,assistantInputs,conversation,assistantTask,updateScope,updateRun,updateBatches,confirmedConfigurations,restoration,nodePickerChannel:nodePicker?.pid||null,nodeSpeedResults,nodeSpeedRuns,nodeSpeedScene}),templateHeadingState:()=>clone(templateHeadingState()),agentChoices,agentInfo:selection=>clone(agentInfo(selection)),versionText,refText,versionProtectionReasons,checkTemplateUpdates,reviewTemplateUpdates,openTemplateUpdate,templateRecovery,confirmTemplateUse,scene,setNodeSpeedScene,commitModelPatches,modelTargets:()=>modelTargets().map(m=>m.key),readQuick,stagedModelEdits,quickConfig,stagedChannelConnections,projection:()=>projection(),routePlan,resolveRoute:(pid,key,policy=draft)=>{const p=policy.providers.find(p=>p.id===pid);return resolveRoute(p,p.models.find(m=>m.key===key),policy);},resolve:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return resolve(p,p.models.find(m=>m.key===key));},templateMatches:(tid,modelId,pid='newapi',n)=>{const p=draft.providers.find(p=>p.id===pid);return templateMatches(templates.find(t=>t.id===tid),{id:modelId},p,n?version(tid,n):null);},templateResolution:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return templateResolution(p,p.models.find(m=>m.key===key));},render};
  if(typeof MutationObserver!=='undefined'){new MutationObserver(()=>{const route=document.documentElement.dataset.route;if(route&&route!=='models'){closeNodePicker();$('#mpAssistantHost').hidden=true;}else {$('#mpAssistantHost').hidden=false;syncDetailSection();renderAssistant();}}).observe(document.documentElement,{attributes:true,attributeFilter:['data-route','data-effects','data-theme']});}
  render();
