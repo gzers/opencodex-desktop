@@ -64,6 +64,17 @@ const officialResult = computed(() => {
   if (!app.officialRemote) return '尚未检查'
   return hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote.version) === false ? '已是最新版本' : '无法比较版本'
 })
+/** §39.1：结果页右列的一句说明摘要；取首段，CSS 限制两行。 */
+function summaryOf(text: string | null | undefined) {
+  const value = (text || '').trim()
+  if (!value) return ''
+  // 按空行分段：用 filter(Boolean) 代替正则，避免转义在不同写入方式下被破坏。
+  const paragraphs = value.split(String.fromCharCode(10).repeat(2)).filter(part => part.trim())
+  const first = (paragraphs[0] || value).replace(/\s+/g, ' ').trim()
+  return first.length > 120 ? first.slice(0, 120) + '…' : first
+}
+/** 面板更新的说明来自远端版本详情；结果页只读已有事实，不额外请求。 */
+const officialNotes = computed<string | null>(() => null)
 const selectedTitle = computed(() => selected.value === 'manager' ? '桌面管理器更新' : 'OpenCodex 面板更新')
 const selectedSource = computed(() => selected.value === 'manager' ? 'OpenCodex Desktop · ' + (status.value?.channel === 'beta' ? '测试' : '稳定') + '通道' : '官方项目 · @bitkyc08/opencodex')
 const managerUnavailableText = computed(() => session.managerError || progress.value?.stage === 'failed' ? '上次安装未完成，可进入详情重试。' : status.value?.availableVersion && hasNewerVersion(status.value.currentVersion, status.value.availableVersion) === null ? '无法比较版本。' : pendingRestart.value ? '更新已准备就绪，请进入详情重启。' : status.value?.lastCheckedAt ? '当前没有待确认的更新。' : '尚未检查。')
@@ -199,6 +210,9 @@ defineExpose({ check })
                 <div class="update-result-title"><strong>桌面管理器</strong><span class="tag" :class="{ danger: managerResult.includes('失败'), ok: pendingRestart }">{{ managerResult }}</span></div>
                 <div class="update-result-version"><span>{{ status?.currentVersion ?? app.aboutApp?.version ?? '未知' }}</span><template v-if="managerAvailable"><span aria-hidden="true">→</span><b>{{ status?.availableVersion }}</b></template></div>
                 <p class="update-result-source">OpenCodex Desktop · {{ status?.channel === 'beta' ? '测试' : '稳定' }}通道</p>
+
+                <!-- §39.1 右列：一句说明摘要，最多两行；结果页不提供展开。 -->
+                <p v-if="managerAvailable && summaryOf(status?.notes)" class="update-result-summary">{{ summaryOf(status?.notes) }}</p>
                 <p v-if="session.managerCheckError || status?.error" class="update-error" role="status">{{ session.managerCheckError || status?.error }}</p>
                 <p v-else-if="!managerAvailable" class="update-result-empty">{{ managerUnavailableText }}</p>
               </div>
@@ -209,6 +223,8 @@ defineExpose({ check })
                 <div class="update-result-title"><strong>OpenCodex 面板</strong><span class="tag" :class="{ danger: officialResult.includes('失败') }">{{ officialResult }}</span></div>
                 <div class="update-result-version"><span>{{ app.officialProject?.version ?? '未知' }}</span><template v-if="officialAvailable"><span aria-hidden="true">→</span><b>{{ app.officialRemote?.version }}</b></template></div>
                 <p class="update-result-source">官方项目 · @bitkyc08/opencodex</p>
+
+                <p v-if="officialAvailable" class="update-result-summary">{{ summaryOf(officialNotes) }}</p>
                 <p v-if="app.officialRemoteError || app.officialProjectError" class="update-error" role="status">版本查询失败，请检查网络或运行来源后重试。</p>
                 <p v-else-if="!officialAvailable" class="update-result-empty">{{ officialUnavailableText }}</p>
               </div>
@@ -283,6 +299,7 @@ defineExpose({ check })
 .update-result-version { grid-column: 2; display: flex; align-items: baseline; gap: var(--space-2); font-size: var(--text-label); color: var(--muted); font-variant-numeric: tabular-nums; }
 .update-result-version b { color: var(--text); font-family: var(--font-code); overflow-wrap: anywhere; }
 .update-result-source { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: var(--text-caption); overflow-wrap: anywhere; }
+.update-result-summary { grid-column: 1 / -1; margin: 0; color: var(--text); font-size: var(--text-caption); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .update-result-empty { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: var(--text-caption); }
 .update-result-actions { display: flex; justify-content: flex-end; flex: none; }
 .update-back { display: flex; }

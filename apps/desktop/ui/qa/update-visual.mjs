@@ -44,6 +44,7 @@ async function main(){
           hasInstallOnResult:[...root.querySelectorAll('button')].some(b=>/^确认更新$|^备份并更新面板$|^安装/.test(b.innerText.trim())),
           hasCheckboxOnResult:root.querySelectorAll('input[type=checkbox]').length,
           hasNotesDisclosure:[...root.querySelectorAll('.update-result-row details')].length,
+          summaries:[...root.querySelectorAll('.update-result-summary')].map(e=>e.textContent.trim()).filter(Boolean),
           bodyScroll: body ? { client: body.clientHeight, scroll: body.scrollHeight } : null,
           footerButtons:[...root.querySelectorAll('.update-center-foot button')].map(b=>b.innerText.trim()),
           box: box ? {w:Math.round(box.width),h:Math.round(box.height),top:Math.round(box.top),bottom:Math.round(box.bottom)}:{},
@@ -58,6 +59,7 @@ async function main(){
         check(c.name+' 结果页无安装按钮',!info.hasInstallOnResult)
         check(c.name+' 结果页无备份勾选',info.hasCheckboxOnResult===0,'checkbox='+info.hasCheckboxOnResult)
         check(c.name+' 结果页无更新内容折叠',info.hasNotesDisclosure===0,'details='+info.hasNotesDisclosure)
+        check(c.name+' 每行有一句说明摘要',info.summaries.length>0,'summaries='+info.summaries.length)
         check(c.name+' 正文一屏不滚动',!!info.bodyScroll&&info.bodyScroll.scroll<=info.bodyScroll.client+1,JSON.stringify(info.bodyScroll))
         check(c.name+' 底部只有关闭',info.footerButtons.length===1&&info.footerButtons[0]==='关闭','footer='+JSON.stringify(info.footerButtons))
         check(c.name+' 弹窗不越界',info.box.top>=0&&info.box.bottom<=info.viewportH+1,JSON.stringify(info.box))
