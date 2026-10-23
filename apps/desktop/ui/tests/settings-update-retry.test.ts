@@ -54,7 +54,8 @@ describe('settings shared update installation', () => {
     install.mockRejectedValueOnce(new Error('download interrupted'))
     const wrapper = await mountUpgrade()
     await button(wrapper, '查看管理器更新').trigger('click'); await flushPromises()
-    await button(wrapper, '安装管理器更新').trigger('click'); await flushPromises()
+    // 设置页进入时直接定位到该对象详情；安装与备份就在确认页。
+    await button(wrapper, '确认更新').trigger('click'); await flushPromises()
     expect(install).toHaveBeenCalledTimes(1)
     expect(wrapper.text()).toContain('download interrupted')
     expect(useAppStore().modal).toBeNull()
@@ -68,7 +69,7 @@ describe('settings shared update installation', () => {
     install.mockImplementationOnce(() => new Promise<void>(resolve => { finish = resolve }))
     const wrapper = await mountUpgrade()
     await button(wrapper, '查看管理器更新').trigger('click'); await flushPromises()
-    await button(wrapper, '安装管理器更新').trigger('click'); await flushPromises()
+    await button(wrapper, '确认更新').trigger('click'); await flushPromises()
     await button(wrapper, '隐藏').trigger('click')
     wrapper.unmount(); wrappers = []
     const remounted = await mountUpgrade()

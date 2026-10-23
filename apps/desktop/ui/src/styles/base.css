@@ -296,6 +296,18 @@ html[data-native-material="solid"][data-theme="dark"] body { background: #20242c
 .ui-table .ui-selection-cell { width: var(--table-selection-width); min-width: var(--table-selection-width); max-width: var(--table-selection-width); padding-inline: 0; text-align: center; }
 .ui-table .ui-nowrap { white-space: nowrap; }
 .ui-row-actions { display: flex; align-items: center; flex-wrap: nowrap; gap: var(--space-1); }
+/*
+ * WP-57：按钮、行内动作、拖拽手柄和工具条属于操作区，不参与文本选择，
+ * 避免拖拽 / 连点时误把文字框选出来。输入、日志与正文仍显式放开。
+ */
+.ui-row-actions, .ui-toolbar, .btn, .ui-inline-check, [draggable="true"] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+input, textarea, select, [contenteditable="true"], pre, code, .ui-table td, .model-row-summary {
+  -webkit-user-select: text;
+  user-select: text;
+}
 .ui-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
 .ui-toolbar > .input { flex: 1 1 180px; min-width: 120px; }
 .ui-toolbar > .ui-select-field { flex: 0 1 auto; }

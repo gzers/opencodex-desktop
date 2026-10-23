@@ -194,6 +194,13 @@ async function confirm() {
     }
   })
 }
+/** 打开备份包所在目录：定位到单次包，便于整体拷贝。 */
+async function openExportParent(){
+  const path=exportedPath.value
+  if(!path)return
+  const parent=path.slice(0,path.lastIndexOf('/'))||path
+  try{await app.openManagedPathByKey('exports')}catch{app.showToast('打开导出目录失败；可手动前往 '+parent)}
+}
 /** 选择导出目录；取消时保持当前选择。 */
 async function chooseExportDir(){
   const picked=await open({directory:true,multiple:false,title:'选择导出目录'})
@@ -237,7 +244,7 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
     <p v-if="models.error && !models.snapshot" class="model-error" role="alert">{{ models.error }}</p>
     <p v-if="error && !preview" class="model-error" role="alert">{{ error }}</p>
 <p v-if="remote&&scopeSaved" role="status">本设备范围已保存，尚未上传；采用结果另行核对。</p>
-    <div v-if="exportedPath" class="model-transfer-path"><span>导出文件</span><code>{{ exportedPath }}</code><UiButton size="sm" variant="ghost" @click="app.openManagedPathByKey('exports')">打开导出目录</UiButton></div>
+    <div v-if="exportedPath" class="model-transfer-path" role="status"><span>备份包</span><code>{{ exportedPath }}</code><UiButton size="sm" variant="ghost" @click="openExportParent">打开备份包目录</UiButton></div>
     <!-- 范围是页面主体的一部分，不再收进弹窗：原型里它是列表旁的常驻两栏工作区。 -->
     <!-- 原型结构：一条工具栏（范围预设 + 搜索 + 清空）+ 两栏；右栏是凭据清单，不是操作列。 -->
     <section class="sync-scope-workspace" aria-label="同步范围" data-testid="sync-scope-workspace">
@@ -283,7 +290,7 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
       <p v-if="error" class="model-error" role="alert">{{ error }}</p>
       <p v-if="preview?.payload.candidate" role="status">未提交草稿候选；采用后仍进入本机工作区，须另行预览并保存，不表示运行配置已写入。</p>
 
-      <div v-if="!incoming&&!remote" class="export-destination"><span>保存位置</span><div class="export-destination-row"><input class="input" type="text" readonly :value="exportTargetDir||'默认导出目录'" aria-label="导出保存位置"><UiButton size="sm" @click="chooseExportDir">选择目录…</UiButton><UiButton v-if="exportTargetDir" size="sm" variant="ghost" @click="exportTargetDir=''">恢复默认</UiButton></div><p class="model-muted">未选择目录时保存到默认导出目录。</p></div>
+      <div v-if="!incoming&&!remote" class="export-destination"><span>导出目录</span><div class="export-destination-row"><input class="input" type="text" readonly :value="exportTargetDir||'默认导出目录'" aria-label="导出目录"><UiButton size="sm" @click="chooseExportDir">选择目录…</UiButton><UiButton v-if="exportTargetDir" size="sm" variant="ghost" @click="exportTargetDir=''">恢复默认</UiButton></div><p class="model-muted">每次导出生成一个独立备份包，按“日期 / 单次包”存放，可整体拷贝到其它设备再导入。</p></div>
       <p v-if="filePlan">文件保护：{{ filePlan.protected?'独立口令加密':'未加密，完整性校验' }}</p>
       <p v-if="filePlan?.credentialCount">携带凭据：{{ filePlan.credentialCount }} 项</p>
       <p v-if="incoming?.adoption">{{ incoming.adoption.completed?'原导入已完成；当前本机配置保持。':'原导入采用范围已冻结，请核对同一操作。' }}</p><label v-if="incoming?.availableExtensionCredentials"><input v-model="adoptExtensionCredentials" type="checkbox" :disabled="busy||receiveDirty||!!incoming.adoption" />采用所选扩展凭据（新本机引用及受保护资源）</label><label v-if="incoming?.availableWebdavPasswords?.length"><input v-model="adoptWebdavPasswords" type="checkbox" :disabled="busy||receiveDirty||!!incoming?.adoption" />采用包内连接密码（{{ incoming.availableWebdavPasswords.length }} 项），连接保持未启用</label><label v-if="incoming?.availableKeys?.length"><input v-model="adoptKeys" type="checkbox" :disabled="busy||receiveDirty||!!incoming?.adoption" />采用所选渠道的Key与认证配置（{{ incoming.availableKeys.length }} 个渠道），创建受保护本机材料并进入草稿</label>

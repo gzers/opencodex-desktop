@@ -7,10 +7,17 @@ const api=readFileSync(resolve(__dirname,'../src/features/sync/modelTransfer.ts'
 const caps=readFileSync(resolve(__dirname,'../../tauri/capabilities/default.json'),'utf8')
 
 describe('导出可选保存路径 (WP-32)', () => {
-  it('确认对话框提供保存位置与选择目录', () => {
+  it('确认对话框提供导出目录与选择目录', () => {
     expect(view).toContain('export-destination')
     expect(view).toContain('选择目录…')
-    expect(view).toContain('未选择目录时保存到默认导出目录')
+    // WP-56：按“日期 / 单次备份包”组织，不再散落成单文件。
+    expect(view).toContain('每次导出生成一个独立备份包')
+    expect(view).toContain('日期 / 单次包')
+  })
+
+  it('结果区显示备份包路径与打开目录', () => {
+    expect(view).toContain('备份包')
+    expect(view).toContain('打开备份包目录')
   })
 
   it('导出调用带目标目录，默认留空', () => {

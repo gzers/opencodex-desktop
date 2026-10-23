@@ -17,7 +17,6 @@ function sessionFor(app: object) {
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
-import UiCard from '@/components/ui/UiCard.vue'
 import ReleaseNotes from './ReleaseNotes.vue'
 import { useAppStore } from '@/stores/app'
 import { useRuntimeStore } from '@/features/runtime/store'
@@ -65,6 +64,10 @@ const officialResult = computed(() => {
   if (!app.officialRemote) return '尚未检查'
   return hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote.version) === false ? '已是最新版本' : '无法比较版本'
 })
+const selectedTitle = computed(() => selected.value === 'manager' ? '桌面管理器更新' : 'OpenCodex 面板更新')
+const selectedSource = computed(() => selected.value === 'manager' ? 'OpenCodex Desktop · ' + (status.value?.channel === 'beta' ? '测试' : '稳定') + '通道' : '官方项目 · @bitkyc08/opencodex')
+const managerUnavailableText = computed(() => session.managerError || progress.value?.stage === 'failed' ? '上次安装未完成，可进入详情重试。' : status.value?.availableVersion && hasNewerVersion(status.value.currentVersion, status.value.availableVersion) === null ? '无法比较版本。' : pendingRestart.value ? '更新已准备就绪，请进入详情重启。' : status.value?.lastCheckedAt ? '当前没有待确认的更新。' : '尚未检查。')
+const officialUnavailableText = computed(() => session.officialError || app.officialUpdateError ? '上次安装未完成，可进入详情重试。' : officialAvailable.value ? '' : '当前没有待确认的更新。')
 const managerStage = computed(() => {
   if (pendingRestart.value) return '更新已准备就绪；请确认重启并应用。'
   const labels = { backup: '正在备份', checking: '正在检查更新包', downloading: '正在下载', installing: '正在安装', pending_restart: '更新已准备就绪', failed: '安装失败' }
@@ -186,102 +189,127 @@ defineExpose({ check })
     <div v-if="open" class="modal-mask update-center-mask" data-testid="update-center" @click.self="close">
       <div ref="dialog" class="modal modal-wide update-center" role="dialog" aria-modal="true" :aria-labelledby="titleId" tabindex="-1">
         <header class="update-center-head">
-          <div><span class="update-kicker">软件更新</span><h3 :id="titleId">{{ selected === 'manager' ? '桌面管理器更新' : selected === 'official' ? 'OpenCodex 面板更新' : '更新中心' }}</h3><p>检查两个更新对象，查看说明后选择安装。</p></div>
+          <div><span class="update-kicker">软件更新</span><h3 :id="titleId">{{ selected ? selectedTitle : '检查更新结果' }}</h3><p v-if="!selected">分别查看更新内容与范围，确认后才会开始更新。</p><p v-else>{{ selectedSource }}</p></div>
           <UiButton variant="ghost" aria-label="关闭更新中心" @click="close">关闭</UiButton>
         </header>
         <div class="update-center-body">
-          <div v-if="selected" class="update-back"><UiButton variant="ghost" @click="selected = null">← 全部更新</UiButton></div>
-          <UiCard v-if="!selected || selected === 'manager'" class="update-object" data-testid="manager-update-card">
-            <button class="update-object-head" type="button" aria-label="查看桌面管理器更新详情" :aria-expanded="selected === 'manager'" @click="selected = 'manager'">
-              <span class="update-object-icon" aria-hidden="true">↗</span><span><strong>桌面管理器</strong><small>OpenCodex Desktop · {{ status?.channel === 'beta' ? '测试' : '稳定' }}通道</small></span><span class="tag" :class="{ danger: managerResult.includes('失败'), ok: pendingRestart }">{{ managerResult }}</span>
-            </button>
-            <div class="update-versions"><span>当前 <b>{{ status?.currentVersion ?? app.aboutApp?.version ?? '未知' }}</b></span><span aria-hidden="true">→</span><span>可用 <b>{{ status?.availableVersion ?? '—' }}</b></span></div>
-            <p v-if="session.managerCheckError || status?.error" class="update-error" role="status">{{ session.managerCheckError || status?.error }}</p>
-            <div v-if="selected === 'manager'" class="update-detail">
+          <div v-if="!selected" class="update-result-rows" data-testid="update-result-rows">
+            <section class="update-result-row" data-testid="manager-update-row">
+              <div class="update-result-main">
+                <div class="update-result-title"><strong>桌面管理器</strong><span class="tag" :class="{ danger: managerResult.includes('失败'), ok: pendingRestart }">{{ managerResult }}</span></div>
+                <div class="update-result-version"><span>{{ status?.currentVersion ?? app.aboutApp?.version ?? '未知' }}</span><template v-if="managerAvailable"><span aria-hidden="true">→</span><b>{{ status?.availableVersion }}</b></template></div>
+                <p class="update-result-source">OpenCodex Desktop · {{ status?.channel === 'beta' ? '测试' : '稳定' }}通道</p>
+                <p v-if="session.managerCheckError || status?.error" class="update-error" role="status">{{ session.managerCheckError || status?.error }}</p>
+                <p v-else-if="!managerAvailable" class="update-result-empty">{{ managerUnavailableText }}</p>
+              </div>
+              <div class="update-result-actions"><UiButton data-testid="manager-update-detail" @click="selected = 'manager'">查看详情</UiButton></div>
+            </section>
+            <section class="update-result-row" data-testid="official-update-row">
+              <div class="update-result-main">
+                <div class="update-result-title"><strong>OpenCodex 面板</strong><span class="tag" :class="{ danger: officialResult.includes('失败') }">{{ officialResult }}</span></div>
+                <div class="update-result-version"><span>{{ app.officialProject?.version ?? '未知' }}</span><template v-if="officialAvailable"><span aria-hidden="true">→</span><b>{{ app.officialRemote?.version }}</b></template></div>
+                <p class="update-result-source">官方项目 · @bitkyc08/opencodex</p>
+                <p v-if="app.officialRemoteError || app.officialProjectError" class="update-error" role="status">版本查询失败，请检查网络或运行来源后重试。</p>
+                <p v-else-if="!officialAvailable" class="update-result-empty">{{ officialUnavailableText }}</p>
+              </div>
+              <div class="update-result-actions"><UiButton data-testid="official-update-detail" @click="selected = 'official'">查看详情</UiButton></div>
+            </section>
+          </div>
+          <template v-else>
+            <div class="update-back"><UiButton variant="ghost" @click="selected = null">← 全部更新</UiButton></div>
+            <section v-if="selected === 'manager'" class="update-object" data-testid="manager-update-card">
+              <div class="update-detail-head"><h4>桌面管理器更新详情与确认</h4><time v-if="status?.lastCheckedAt">{{ status.lastCheckedAt }}</time></div>
               <ReleaseNotes target="manager" :channel="status?.channel ?? 'stable'" :version="status?.availableVersion ?? null" :updater-notes="status?.notes" />
-              <p class="update-hint">更新包通过签名校验后准备应用；准备完成后可选择重启时机。</p>
-            </div>
-            <div v-if="managerBusy || pendingRestart || progress?.stage === 'failed'" class="update-progress" aria-live="polite">
-              <strong>{{ managerStage }}</strong><small v-if="progress?.candidateVersion || session.managerCandidate">目标版本 {{ progress?.candidateVersion || session.managerCandidate }}</small>
-              <template v-if="managerBusy">
-                <progress aria-label="管理器更新进度" :value="downloadPercent" max="100"></progress>
-                <small v-if="progress?.stage === 'downloading'">{{ bytes(progress.downloadedBytes) }}<template v-if="progress.totalBytes !== null"> / {{ bytes(progress.totalBytes) }}</template><template v-if="downloadPercent !== undefined"> · {{ Math.floor(downloadPercent) }}%</template></small>
-              </template>
-              <p v-if="pendingRestart" class="update-hint">可先隐藏此窗口，稍后回来重启。</p>
-            </div>
-            <p v-if="session.managerError" class="update-error" role="alert">{{ session.managerError }}</p>
-            <div class="update-object-actions">
-              <label v-if="!pendingRestart" class="update-backup"><input v-model="session.backup" type="checkbox" :disabled="managerBusy">更新前备份配置（推荐）</label>
-              <UiButton v-if="pendingRestart" variant="primary" :loading="restarting" @click="restart">重启并应用更新</UiButton>
-              <UiButton v-else variant="primary" :disabled="busy || !managerAvailable" :loading="managerBusy || session.checking" data-testid="install-manager-update" @click="installManager">{{ managerBusy ? '更新中' : session.checking ? '检查中' : session.managerError || progress?.stage === 'failed' ? '重试安装' : '安装管理器更新' }}</UiButton>
-            </div>
-          </UiCard>
-          <UiCard v-if="!selected || selected === 'official'" class="update-object" data-testid="official-update-card">
-            <button class="update-object-head" type="button" aria-label="查看 OpenCodex 面板更新详情" :aria-expanded="selected === 'official'" @click="selected = 'official'">
-              <span class="update-object-icon" aria-hidden="true">⌘</span><span><strong>OpenCodex 面板</strong><small>官方项目 · @bitkyc08/opencodex</small></span><span class="tag" :class="{ danger: officialResult.includes('失败') }">{{ officialResult }}</span>
-            </button>
-            <div class="update-versions"><span>当前 <b>{{ app.officialProject?.version ?? '未知' }}</b></span><span aria-hidden="true">→</span><span>可用 <b>{{ app.officialRemote?.version ?? '—' }}</b></span></div>
-            <p v-if="app.officialRemoteError || app.officialProjectError" class="update-error" role="status">版本查询失败，请检查网络或运行来源后重试。</p>
-            <div v-if="selected === 'official'" class="update-detail">
+              <div v-if="managerAvailable" class="update-confirm-scope">
+                <label class="update-backup"><input v-model="session.backup" type="checkbox" :disabled="managerBusy">更新前备份配置（推荐）</label>
+                <p class="update-hint">保存到当前数据根的备份目录：包含管理器偏好、清单与完整性摘要；不含面板完整配置、会话、登录态或安装包。</p>
+              </div>
+              <div v-if="managerBusy || pendingRestart || progress?.stage === 'failed'" class="update-progress" aria-live="polite">
+                <strong>{{ managerStage }}</strong>
+                <small v-if="progress?.candidateVersion || session.managerCandidate">目标版本 {{ progress?.candidateVersion || session.managerCandidate }}</small>
+                <template v-if="managerBusy">
+                  <progress aria-label="管理器更新进度" :value="downloadPercent" max="100"></progress>
+                  <small v-if="progress?.stage === 'downloading'">{{ bytes(progress.downloadedBytes) }}<template v-if="progress.totalBytes !== null"> / {{ bytes(progress.totalBytes) }}</template><template v-if="downloadPercent !== undefined"> · {{ Math.floor(downloadPercent) }}%</template></small>
+                </template>
+                <p v-if="pendingRestart" class="update-hint">可先隐藏此窗口，稍后回来重启。</p>
+              </div>
+              <p v-if="session.managerError" class="update-error" role="alert">{{ session.managerError }}</p>
+              <div v-if="pendingRestart || managerAvailable" class="update-object-actions">
+                <UiButton v-if="pendingRestart" variant="primary" :loading="restarting" @click="restart">重启并应用更新</UiButton>
+                <UiButton v-else variant="primary" :disabled="busy || !managerAvailable" :loading="managerBusy || session.checking" data-testid="install-manager-update" @click="installManager">{{ managerBusy ? '更新中' : session.managerError || progress?.stage === 'failed' ? '重试安装' : '确认更新' }}</UiButton>
+              </div>
+            </section>
+            <section v-else class="update-object" data-testid="official-update-card">
+              <div class="update-detail-head"><h4>OpenCodex 面板更新详情与确认</h4></div>
               <ReleaseNotes target="official" channel="official" :version="app.officialRemote?.version ?? null" />
-            </div>
-            <p class="update-hint">面板升级前必须备份配置；备份成功后才会安装选定版本。更新完成后如需重启运行中的代理，将另行提示。</p>
-            <div v-if="officialBusy || session.officialSucceeded && runtime.installOutcome?.version === session.officialCandidate" class="update-progress" aria-live="polite">
-              <strong>{{ session.officialBackingUp || app.upgradeBackupBusy ? '正在备份配置' : officialBusy ? installPhaseLabel(runtime.install?.phase ?? 'preparing') : '面板更新已完成' }}</strong>
-              <small>目标版本 {{ session.officialCandidate || app.officialRemote?.version }}</small>
-              <progress v-if="officialBusy" aria-label="面板更新进度"></progress>
-              <pre v-if="!session.officialBackingUp && runtime.installLines.length && session.officialCandidate" class="update-console" tabindex="0" aria-label="面板安装输出">{{ runtime.installLines.join('\n') }}</pre>
-              <p v-if="!officialBusy && runtime.installOutcome?.needsRestart" class="update-hint">面板更新已安装；请在运行操作中重启代理后生效。</p>
-              <p v-if="!officialBusy && runtime.installOutcome?.protectionReconciliationPending" class="update-hint" role="status">安装已完成；保护备份完整性核对未完成，备份仍保留。请查看诊断日志。</p>
-            </div>
-            <p v-if="session.officialError || app.officialUpdateError" class="update-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
-            <div class="update-object-actions"><small v-if="app.upgradeLastBackup">最近备份 {{ app.upgradeLastBackup.backupId }}</small><UiButton variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy || !officialAvailable" :loading="officialBusy || session.checking" data-testid="install-official-update" @click="installOfficial">{{ officialBusy ? '更新中' : session.checking ? '检查中' : session.officialError || app.officialUpdateError ? '重试面板更新' : '备份并更新面板' }}</UiButton></div>
-          </UiCard>
+              <p class="update-hint">面板升级前必须备份配置；备份成功后才会安装选定版本。更新完成后如需重启运行中的代理，将另行提示。</p>
+              <div v-if="officialBusy || session.officialSucceeded && runtime.installOutcome?.version === session.officialCandidate" class="update-progress" aria-live="polite">
+                <strong>{{ session.officialBackingUp || app.upgradeBackupBusy ? '正在备份配置' : officialBusy ? installPhaseLabel(runtime.install?.phase ?? 'preparing') : '面板更新已完成' }}</strong>
+                <small>目标版本 {{ session.officialCandidate || app.officialRemote?.version }}</small>
+                <progress v-if="officialBusy" aria-label="面板更新进度"></progress>
+                <pre v-if="!session.officialBackingUp && runtime.installLines.length && session.officialCandidate" class="update-console" tabindex="0" aria-label="面板安装输出">{{ runtime.installLines.join('\n') }}</pre>
+                <p v-if="!officialBusy && runtime.installOutcome?.needsRestart" class="update-hint">面板更新已安装；请在运行操作中重启代理后生效。</p>
+                <p v-if="!officialBusy && runtime.installOutcome?.protectionReconciliationPending" class="update-hint" role="status">安装已完成；保护备份完整性核对未完成，备份仍保留。请查看诊断日志。</p>
+              </div>
+              <p v-if="session.officialError || app.officialUpdateError" class="update-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
+              <div v-if="officialAvailable || session.officialError || app.officialUpdateError" class="update-object-actions">
+                <small v-if="app.upgradeLastBackup">最近备份 {{ app.upgradeLastBackup.backupId }}</small>
+                <UiButton variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy || !officialAvailable" :loading="officialBusy || session.checking" data-testid="install-official-update" @click="installOfficial">{{ officialBusy ? '更新中' : session.officialError || app.officialUpdateError ? '重试面板更新' : '备份并更新面板' }}</UiButton>
+              </div>
+            </section>
+          </template>
         </div>
-        <footer class="update-center-foot"><p>{{ managerBusy || officialBusy ? '隐藏窗口后更新继续，可重新打开查看进度。' : '更新准备完成后由你选择重启时机。' }}</p><div><UiButton variant="ghost" @click="close">{{ managerBusy || officialBusy ? '隐藏' : '稍后' }}</UiButton><UiButton :disabled="busy" :loading="session.checking" @click="check">{{ session.checking ? '检查中' : '重新检查更新' }}</UiButton></div></footer>
+        <footer class="update-center-foot"><p>{{ managerBusy || officialBusy ? '隐藏窗口后更新继续，可重新打开查看进度。' : '更新准备完成后由你选择重启时机。' }}</p><div><UiButton variant="ghost" @click="close">{{ managerBusy || officialBusy ? '隐藏' : '关闭' }}</UiButton></div></footer>
       </div>
     </div>
   </Teleport>
 </template>
 
+
 <style scoped>
-.update-center.modal { width: min(820px, 100%); max-height: calc(100% - 24px); padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+/* §39：结果页每个对象一行、一屏看完；宽度 780px，正文不出现外层滚动套嵌套滚动。 */
+.update-center.modal { width: min(780px, 100%); max-height: calc(100% - 24px); padding: 0; display: flex; flex-direction: column; overflow: hidden; }
 .update-center-head, .update-center-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-5) var(--space-6); }
 .update-center-head { border-bottom: 1px solid var(--border); }
 .update-center-head h3 { margin: var(--space-1) 0; }
 .update-center-head p, .update-center-foot p { margin: 0; font-size: var(--text-label); color: var(--muted); }
 .update-kicker { color: var(--muted); font-size: var(--text-caption); }
-.update-center-body { overflow: auto; min-height: 0; padding: var(--space-5) var(--space-6); display: grid; gap: var(--space-4); }
-.update-object { min-width: 0; padding: var(--space-5); }
-.update-object-head { display: flex; align-items: center; gap: var(--space-3); width: 100%; padding: 0; color: var(--text); background: transparent; border: 0; text-align: left; cursor: pointer; font: inherit; }
-.update-object-head > span:nth-child(2) { flex: 1; min-width: 0; }
-.update-object-head strong { display: block; font-size: var(--text-subtitle); }
-.update-object-head small { display: block; margin-top: var(--space-1); color: var(--muted); overflow-wrap: anywhere; }
-.update-object-icon { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border: 1px solid var(--border); border-radius: var(--radius); background: var(--raised); font-size: var(--text-title); }
-.update-versions { display: flex; flex-wrap: wrap; gap: var(--space-3); padding: var(--space-4) 0; font-size: var(--text-label); color: var(--muted); }
-.update-versions b { color: var(--text); font-family: var(--font-code); overflow-wrap: anywhere; }
-.update-detail { border-top: 1px solid var(--border-soft); margin-bottom: var(--space-4); padding-top: var(--space-4); }
-.update-detail-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2); }
-.update-detail h4 { margin: 0 0 var(--space-3); font-size: var(--text-control); }
-.update-detail time { color: var(--muted); font-size: var(--text-caption); }
-.update-notes, .update-console { max-height: 220px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: var(--space-4); background: var(--raised); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); font-size: var(--text-control); line-height: 1.7; }
+.update-center-body { overflow: auto; min-height: 0; padding: var(--space-4) var(--space-6); display: grid; gap: var(--space-3); }
+.update-result-rows { display: grid; gap: var(--space-2); }
+.update-result-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius); background: color-mix(in srgb, var(--raised) 62%, transparent); }
+.update-result-main { display: grid; grid-template-columns: minmax(150px,1.1fr) minmax(150px,1fr); gap: var(--space-1) var(--space-4); min-width: 0; }
+.update-result-title { grid-column: 1; display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
+.update-result-title strong { overflow-wrap: anywhere; }
+.update-result-version { grid-column: 2; display: flex; align-items: baseline; gap: var(--space-2); font-size: var(--text-label); color: var(--muted); font-variant-numeric: tabular-nums; }
+.update-result-version b { color: var(--text); font-family: var(--font-code); overflow-wrap: anywhere; }
+.update-result-source { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: var(--text-caption); overflow-wrap: anywhere; }
+.update-result-empty { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: var(--text-caption); }
+.update-result-actions { display: flex; justify-content: flex-end; flex: none; }
+.update-back { display: flex; }
+.update-object { min-width: 0; padding: var(--space-2) 0 var(--space-4); border-bottom: 1px solid var(--border-soft); }
+.update-detail-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+.update-detail-head h4 { margin: 0 0 var(--space-3); font-size: var(--text-control); }
+.update-detail-head time { color: var(--muted); font-size: var(--text-caption); }
+.update-notes, .update-console { max-height: 180px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: var(--space-3) var(--space-4); background: var(--raised); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); font-size: var(--text-control); line-height: 1.7; }
 .update-notes { font-family: inherit; margin: 0 0 var(--space-3); }
-.update-console { max-height: 150px; margin: 0; }
-.update-hint { color: var(--muted); font-size: var(--text-label); line-height: 1.7; margin: var(--space-3) 0; }
-.update-error { color: var(--red); font-size: var(--text-control); overflow-wrap: anywhere; }
-.update-object-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
-.update-object-actions > .btn { margin-left: auto; }
+.update-console { max-height: 120px; margin: 0; }
+.update-hint { color: var(--muted); font-size: var(--text-label); line-height: 1.7; margin: var(--space-2) 0; }
+.update-error { color: var(--red); font-size: var(--text-control); overflow-wrap: anywhere; margin: var(--space-2) 0; }
+.update-confirm-scope { margin: var(--space-3) 0; }
+.update-object-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-3); }
 .update-backup { display: flex; gap: var(--space-2); align-items: center; font-size: var(--text-label); }
-.update-progress { display: grid; gap: var(--space-2); margin-top: var(--space-4); }
+.update-progress { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
 .update-progress progress { width: 100%; height: 6px; accent-color: var(--accent); }
 .update-progress small, .update-object-actions small { color: var(--muted); overflow-wrap: anywhere; }
 .update-center-foot { border-top: 1px solid var(--border); }
 .update-center-foot > div { display: flex; gap: var(--space-2); flex: none; }
 @media (max-width: 600px) {
   .update-center-head, .update-center-foot { padding: var(--space-4); flex-wrap: wrap; }
-  .update-center-body { padding: var(--space-4); }
-  .update-object { padding: var(--space-4); }
-  .update-object-head { flex-wrap: wrap; }
-  .update-center-foot > div { margin-left: auto; }
+  .update-center-body { padding: var(--space-3) var(--space-4); }
+  .update-result-row { grid-template-columns: minmax(0,1fr); gap: var(--space-2); }
+  .update-result-main { grid-template-columns: minmax(0,1fr); }
+  .update-result-version { grid-column: 1; }
+  .update-result-actions { justify-content: flex-start; }
 }
 </style>
+

@@ -55,13 +55,18 @@ afterEach(() => { wrappers.forEach(w => w.unmount()); wrappers = []; document.bo
 describe('shared production update center', () => {
   it('opens without a network check, backup or installation and presents both objects', async () => {
     const wrapper = render(); await flushPromises()
-    expect(wrapper.find('[data-testid="manager-update-card"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="official-update-card"]').exists()).toBe(true)
-    expect(wrapper.get('input[type="checkbox"]').element).toHaveProperty('checked', true)
+    // 结果页每个对象只占一行，安装与备份留在各自的确认页。
+    expect(wrapper.find('[data-testid="manager-update-row"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="official-update-row"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="install-manager-update"]').exists()).toBe(false)
+    expect(wrapper.find('input[type="checkbox"]').exists()).toBe(false)
+    // 结果页不出现可展开的“更新内容”区块；说明只在单对象确认页。
+    expect(wrapper.find('.update-result-row details').exists()).toBe(false)
     expect(mocks.check).not.toHaveBeenCalled()
     expect(mocks.install).not.toHaveBeenCalled()
     expect(mocks.invoke.mock.calls.some(call => call[0] === 'create_upgrade_backup')).toBe(false)
-    await button(wrapper, '重新检查更新').trigger('click'); await flushPromises()
+    expect(wrapper.findAll('button').filter(item => item.text() === '重新检查更新')).toHaveLength(0)
+    wrapper.vm.check(); await flushPromises()
     expect(mocks.check).toHaveBeenCalledOnce()
   })
   it('renders remote notes as text and only opens validated HTTPS links', async () => {
@@ -70,14 +75,18 @@ describe('shared production update center', () => {
       : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'ready',
         notes: managerUpdateStatus.value!.notes, notesSource: 'updater', releaseUrl: 'https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10', fetchedAt: 100, publishedAt: '2026-10-10', cached: false } : null)
     const open = vi.spyOn(useAppStore(), 'openExternalLink').mockResolvedValue(true)
-    const wrapper = render({ target: 'manager' }); await flushPromises()
+    const wrapper = render(); await flushPromises()
+    await wrapper.get('[data-testid="manager-update-detail"]').trigger('click')
+    await vi.waitFor(async () => { await flushPromises(); expect(wrapper.find('.release-notes-body').exists()).toBe(true) }, { timeout: 3000 })
+    // 完整说明只在单对象确认页出现；结果页不展开说明。
     expect(wrapper.find('img').exists()).toBe(false)
     expect(wrapper.get('.release-notes-body').text()).toContain('<img src=x onerror=alert(1)>')
     await button(wrapper, '查看网页详情 ↗').trigger('click')
     expect(open).toHaveBeenCalledWith('https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10')
     for (const releaseUrl of ['javascript:alert(1)', 'http://example.com', 'https://user:secret@example.com', String.raw`https://example.com\evil`, 'file:///tmp/release', 'https://']) {
-      managerUpdateStatus.value = { ...managerUpdateStatus.value!, releaseUrl }; await wrapper.vm.$nextTick()
-      // Old metadata URLs are never read; only independently verified details are used.
+      managerUpdateStatus.value = { ...managerUpdateStatus.value!, releaseUrl }
+      await flushPromises()
+      // 旧元数据里的 URL 永不被读取；链接只来自独立核验过的说明。
       expect(wrapper.text()).toContain('查看网页详情 ↗')
     }
   })
@@ -85,6 +94,7 @@ describe('shared production update center', () => {
     let finish!: () => void
     mocks.install.mockImplementationOnce(() => new Promise<void>(resolve => { finish = resolve }))
     const wrapper = render(); await flushPromises()
+    await wrapper.get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
     await wrapper.get('input[type="checkbox"]').setValue(false)
     await wrapper.get('[data-testid="install-manager-update"]').trigger('click')
     expect(mocks.install).toHaveBeenCalledWith({ candidateVersion: '0.1.10', channel: 'stable', backup: false })
@@ -92,6 +102,7 @@ describe('shared production update center', () => {
     await wrapper.setProps({ open: false })
     wrapper.unmount(); wrappers = []
     const reopened = render(); await flushPromises()
+    await reopened.get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
     expect(reopened.get('progress[aria-label="管理器更新进度"]').attributes('value')).toBeUndefined()
     expect(reopened.get('[data-testid="install-manager-update"]').attributes('disabled')).toBeDefined()
     managerInstallProgress.value = progress({ totalBytes: 200 }); await reopened.vm.$nextTick()
@@ -110,6 +121,7 @@ describe('shared production update center', () => {
       throw new Error('download interrupted')
     })
     const wrapper = render(); await flushPromises()
+    await wrapper.get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
     await wrapper.get('[data-testid="install-manager-update"]').trigger('click'); await flushPromises()
     expect(wrapper.text()).toContain('download interrupted')
     expect(wrapper.find('progress[aria-label="管理器更新进度"]').exists()).toBe(false)
@@ -122,7 +134,8 @@ describe('shared production update center', () => {
     const updates = useUpdatesStore()
     const backup = vi.spyOn(updates, 'createUpgradeBackup').mockResolvedValueOnce(null)
     const apply = vi.spyOn(useAppStore(), 'applyOfficialUpdate').mockResolvedValue(true)
-    const wrapper = render({ target: 'official' }); await flushPromises()
+    const wrapper = render(); await flushPromises()
+    await wrapper.get('[data-testid="official-update-detail"]').trigger('click'); await flushPromises()
     await wrapper.get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
     expect(apply).not.toHaveBeenCalled()
     expect(wrapper.text()).toContain('备份失败')

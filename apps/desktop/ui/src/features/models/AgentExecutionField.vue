@@ -61,14 +61,16 @@ const summary=computed(()=>{if(!settings.value)return '尚未选择执行模型 
  <div class="model-execution" :class="{'is-compact':compact}">
   <template v-if="compact"><UiButton :disabled="disabled" :loading="busy" @click="configure" :title="summary">Agent 配置</UiButton><small v-if="settings">{{ summary }}</small></template>
   <template v-else>
-   <div class="model-execution-head"><div><h3>模型模版助手 · 本机共用</h3><p class="model-execution-summary" role="status">{{ summary }}</p></div><UiButton :variant="settings?'default':'primary'" :disabled="disabled" :loading="busy" @click="configure">{{ settings?'更换执行模型':'Agent 配置' }}</UiButton></div>
-   <p v-if="!settings" class="model-execution-empty">尚未选择执行模型。自动填充与模版检查需要先配置一个可用的执行模型。</p>
-   <div v-else class="model-execution-body">
-    <dl class="model-execution-facts"><div><dt>执行渠道</dt><dd>{{ channelName }}</dd></div><div><dt>型号</dt><dd>{{ settings.modelId }}</dd></div><div><dt>推理档位</dt><dd>{{ effort.text }}</dd></div><div><dt>快速模式</dt><dd>{{ fastCapabilityText }}</dd></div></dl>
-    <div class="model-execution-usage"><h4>适用范围</h4><ul><li>模版自动填充、单个更新、所选更新与批量检查共用此设置。</li><li>不改变 Codex 的命名、搜索与子 Agent 配置。</li><li>修改只影响之后启动的任务；已启动任务继续使用启动时的设置。</li></ul></div>
-    <div class="model-execution-note"><strong>与运行配置的边界</strong><p>保存的是本机执行偏好，写入 manager-state/preferences.json 的 modelTemplateAgent 分区；不进入默认同步或普通导出。</p></div>
+   <!-- WP-55：头部只占一行。完整事实与边界说明收进可展开的说明，不再常驻占位。 -->
+   <div class="model-execution-head">
+    <div class="model-execution-title"><strong>模型模版助手 · 本机共用</strong><button v-if="settings" type="button" class="model-execution-entry" :title="summary" :aria-label="summary" :disabled="disabled || busy" @click="configure"><span>{{ channelName }} / <span class="model-execution-model">{{ settings.modelId }}</span></span><span class="model-execution-effort">{{ effort.text }}</span></button><small v-else class="model-execution-empty">{{ summary }}</small></div>
+    <UiButton :variant="settings?'default':'primary'" :disabled="disabled" :loading="busy" @click="configure">{{ settings?'更换执行模型':'Agent 配置' }}</UiButton>
    </div>
-   <p v-if="error&&!configuring" role="alert" class="model-error">{{ error }}</p>
+   <details class="model-execution-more"><summary>{{ settings ? '执行模型与适用范围' : '为什么需要执行模型' }}</summary>
+    <p v-if="!settings" class="model-execution-empty">尚未选择执行模型。自动填充与模版检查需要先配置一个可用的执行模型。</p>
+    <div v-else class="model-execution-body"><dl class="model-execution-facts"><div><dt>执行渠道</dt><dd>{{ channelName }}</dd></div><div><dt>型号</dt><dd>{{ settings.modelId }}</dd></div><div><dt>推理档位</dt><dd>{{ effort.text }}<template v-if="effort.inherited">（模型默认）</template></dd></div><div><dt>快速模式</dt><dd>{{ fastCapabilityText }} · {{ fastSummary }}</dd></div></dl><div class="model-execution-usage"><h4>适用范围</h4><ul><li>模版自动填充、单个更新、所选更新与批量检查共用此设置。</li><li>不改变 Codex 的命名、搜索与子 Agent 配置。</li><li>修改只影响之后启动的任务；已启动任务继续使用启动时的设置。</li></ul></div><div class="model-execution-note"><strong>与运行配置的边界</strong><p>保存的是本机执行偏好，写入 manager-state/preferences.json 的 modelTemplateAgent 分区；不进入默认同步或普通导出。</p></div></div>
+    <p v-if="error&&!configuring" role="alert" class="model-error">{{ error }}</p>
+   </details>
   </template>
   <UiDialog :open="configuring" title="Agent 配置" :busy="busy" @close="configuring=false"><p>模型模版助手 · 本机共用</p><UiButton :loading="busy" @click="browse">{{ candidate?candidate.providerId+' / '+candidate.modelId:'选择执行模型' }}</UiButton><p v-if="candidate">{{ summary }}</p><p>此设置用于下一次自动填充、持续纠偏和批量模版检查。</p><p v-if="error" role="alert" class="model-error">{{ error }}</p><template #actions><UiButton @click="configuring=false">取消</UiButton><UiButton variant="primary" :disabled="!candidate" :loading="busy" @click="save">保存共用设置</UiButton></template></UiDialog>
   <ModelPicker :open="open" :loading="loading" :error="open?error:undefined" @retry="browse" :rows="allRows" :channels="channels" :current="current" reasoning title="执行模型" @close="open=false" @confirm="choose" />
@@ -76,7 +78,17 @@ const summary=computed(()=>{if(!settings.value)return '尚未选择执行模型 
 </template>
 <style scoped>
 .model-execution{display:grid;gap:16px;min-width:0}.model-execution.is-compact{gap:6px;width:max-content;max-width:100%}.model-execution.is-compact small{color:var(--muted);overflow-wrap:anywhere}
-.model-execution-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.model-execution-head>div{display:grid;gap:6px;min-width:0}.model-execution-head h3{margin:0;font-size:var(--text-label);font-weight:var(--weight-semibold)}.model-execution-summary{margin:0;color:var(--muted);font-size:var(--text-caption);overflow-wrap:anywhere}
+.model-execution-head{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);min-width:0}
+.model-execution-title{display:flex;align-items:center;gap:var(--space-2);min-width:0;font-size:var(--text-caption)}
+.model-execution-title>strong{flex:none;font-weight:var(--weight-semibold);font-size:var(--text-label)}
+.model-execution-entry{display:inline-flex;align-items:center;gap:var(--space-1);min-width:0;max-width:100%;padding:2px var(--space-2);border:1px solid var(--border);border-radius:var(--radius-2xs);background:var(--raised);color:var(--text);font:inherit;font-size:var(--text-caption);cursor:pointer}
+.model-execution-entry:hover:not(:disabled){border-color:var(--accent);background:var(--hover)}
+.model-execution-entry:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.model-execution-entry span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.model-execution-model{font-family:var(--font-code);color:var(--text)}
+.model-execution-effort{flex:none;color:var(--muted)}
+.model-execution-more>summary{cursor:pointer;color:var(--muted);font-size:var(--text-caption)}
+.model-execution-more[open]{display:grid;gap:var(--space-2)}
 .model-execution-empty{margin:0;color:var(--muted);font-size:var(--text-caption)}
 .model-execution-body{display:grid;gap:16px;min-width:0}
 .model-execution-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:0}
