@@ -90,3 +90,14 @@ PR8 head b19b01e2的CI39455864253已全部通过，Windows真实EXE覆盖模版�
 3. macOS WKWebView 与 Windows WebView2 的原生拖拽；
 4. 真机触屏的 500ms 长按手感与误触；
 5. main 集成、tag 制品、验签、公开与 stable 晋升。
+
+### 2026-10-24 合并演练（只读，已清理）
+
+为发布准备做了一次真实合并演练，回答“0.2.7 能否干净并进 main”：
+
+- `git merge-tree HEAD origin/main` 无冲突文件，merge-base 为 `d79fc170`。
+- 在临时工作树 `/tmp/ocx-027-merge-rehearsal`（分支 `rehearsal/0.2.7-merge`，基于 `origin/main` @ `4969638f`）合并 `feature/0.2.6-agent-credentials`：**Automatic merge went well**，无冲突。
+- 合并后用 `npm ci` 安装依赖并复跑：`vue-tsc --noEmit` 通过；`vitest run` **762 项通过 / 11 跳过**，与合并前一致。
+- 演练结束执行 `merge --abort`、移除临时工作树、删除演练分支；`main` 与 0.2.7 分支均未改动。
+
+结论：**代码层面具备合并条件**。这不等于可以发布——仍缺真实官方保存读回、真机触控与双平台原生验证；tag、制品、验签、公开与 stable 晋升也尚未执行。
