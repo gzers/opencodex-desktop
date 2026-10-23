@@ -1,0 +1,40 @@
+{
+  "project": "opencodex-desktop",
+  "date": "2026-10-23",
+  "reportedVersion": "0.2.6",
+  "inspectedCommit": "d79fc170a",
+  "prototypeBaselineCommit": "c72946556",
+  "scope": ["WP-54", "WP-55"],
+  "method": "User screenshots and actual prototype render functions/styles compared with implementation source",
+  "confirmed": {
+    "prototypeSidebarActions": ["Agent 自动填充", "外部任务", "复制模版"],
+    "prototypeSaveInSeparateGroup": true,
+    "prototypeMatchPreviewInMatchSection": true,
+    "prototypeComparisonInVersionHistoryMenu": true,
+    "prototypeTemplateMoreHasStylesButNoRenderedTrigger": true,
+    "implementationAdditionalSidebarActions": ["匹配预览", "与版本比较", "还原修改"],
+    "implementationSidebarUsesGenericCenteredSmButtons": true,
+    "prototypeHeaderHasVersionSelectorAndHistoryMenu": true,
+    "implementationHeaderHasDirectVersionManagementAndSeparateStatusTag": true,
+    "agentPanelOmitsCompactProp": true,
+    "agentExecutionFieldDefaultRendersFullSettingsFactsAndNotes": true,
+    "executionBlockOutsideChatScrollAndFlexNone": true,
+    "prototypeAssistantModelTriggerInHeader": true,
+    "prototypeAssistantFullSummaryInTitleAndAccessibleName": true,
+    "existingCompactBranchAloneDoesNotMatchPrototypeHeader": true
+  },
+  "validation": {
+    "sourceComparisonPerformed": true,
+    "newBehaviorTestsRun": false,
+    "pixelMeasurementsPerformed": false,
+    "nativeWindowAcceptancePerformed": false,
+    "realModelRequestsPerformed": false
+  },
+  "disposition": {
+    "documentationOnly": true,
+    "prototypeEdited": false,
+    "implementationEdited": false,
+    "releaseExecuted": false
+  },
+  "retention": "Retain with 0.2.7 investigation until acceptance; preserve full Agent settings page and existing draft/task protections when implementing compact assistant presentation"
+}
