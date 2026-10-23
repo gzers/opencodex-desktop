@@ -1,0 +1,66 @@
+{
+  "project": "opencodex-desktop",
+  "date": "2026-10-23",
+  "reportedVersion": "0.2.6",
+  "inspectedCommit": "d79fc170a",
+  "scope": [
+    "WP-48",
+    "WP-49",
+    "WP-50",
+    "WP-51",
+    "WP-52",
+    "WP-53"
+  ],
+  "method": "User screenshots and prototype/implementation source comparison; existing isolated tests",
+  "confirmed": {
+    "channelFieldsInlineInPrototype": true,
+    "prototypeInlineFieldsConfirmationCanOpenModelStep": true,
+    "implementationEditsViaNewChannelDialog": true,
+    "implementationNodePickerAlwaysReadonly": true,
+    "nodeAddHiddenAndAddressInputsDisabledByReadonly": true,
+    "prototypeNodeSectionHasAddEditChooseAndMeasure": true,
+    "modelMeasurementUsesReadonlyModelListRequests": true,
+    "measurementRequestOmitsOfficialChannelIdentityAndSourceReadRef": true,
+    "modelListFetchExistsInImplementationButOutsideModelSection": true,
+    "prototypeDetailFetchExists": true,
+    "prototypeDetailManualAddMissing": true,
+    "prototypeWizardManualAddExists": true,
+    "implementationDetailManualAddExists": true,
+    "modelRowsCurrentlyAllowMultipleExpanded": true,
+    "toolbarMixesSm28ButtonsAndMd34InputsAndSelects": true
+  },
+  "nonSecretDraftFlags": {
+    "channel": "Input-1",
+    "enabled": false,
+    "authMode": "key",
+    "hasManagerCredentialRef": false,
+    "hasPublicSourceReadRef": true,
+    "nodes": 1,
+    "activeNodeIdValid": true,
+    "observedAtAnalysisTime": true
+  },
+  "validation": {
+    "frontend": {
+      "command": "npx vitest run tests/model-node-picker.test.ts tests/model-node-measurements.test.ts tests/channel-node-select.test.ts tests/model-table-workspace.test.ts",
+      "files": 4,
+      "passed": 15
+    },
+    "backend": {
+      "command": "cargo test --locked --lib modules::model_config::measurements::tests",
+      "passed": 2,
+      "server": "local ephemeral loopback fixture",
+      "realCredentialAccess": false,
+      "realUpstreamRequests": false
+    },
+    "coverageGap": "Neither test set proves imported official credentials are correctly resolved, native node measurement works, or new accordion and layout requirements are implemented"
+  },
+  "disposition": {
+    "documentationOnly": true,
+    "prototypeEdited": false,
+    "implementationEdited": false,
+    "userDraftEdited": false,
+    "realProbeExecuted": false,
+    "releaseExecuted": false
+  },
+  "retention": "Retain with 0.2.7 investigation until acceptance; do not include raw credentials or private provider configuration"
+}
