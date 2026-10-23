@@ -155,11 +155,21 @@
 .mp-preview-order{margin:14px 0;min-width:0}
 .mp-preview-group{margin:12px 0}
 .mp-preview-group h3,.mp-preview-group-title{font-size:var(--text-label);margin:0 0 7px;font-weight:600}
-.mp-preview-group-title{display:flex;align-items:center;gap:8px;max-width:100%;padding:2px 0;border:0;background:none;color:var(--text);font:inherit;font-size:var(--text-label);text-align:left;cursor:pointer;border-radius:var(--radius-xs)}
-.mp-preview-group-title:hover{color:var(--accent)}
+/* 渠道标题是一整行可点击操作条：眼睛图标表示显示状态，右侧写明停用 / 恢复。 */
+.mp-preview-group-title{display:flex;align-items:center;gap:8px;width:100%;max-width:100%;box-sizing:border-box;min-height:34px;padding:5px 8px;border:1px solid var(--border-soft);background:color-mix(in srgb,var(--text) 2%,var(--panel));color:var(--text);font:inherit;font-size:var(--text-label);text-align:left;cursor:pointer;border-radius:var(--radius-sm)}
+.mp-preview-group-title:hover{border-color:var(--border);background:var(--hover)}
+.mp-preview-group-eye{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:5px;color:var(--muted)}
+.mp-preview-group-eye svg{width:15px;height:15px;stroke-width:1.8}
+.mp-preview-group-title:not(.is-off) .mp-preview-group-eye{color:var(--accent)}
+.mp-preview-group-title strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
 .mp-preview-group-title small,.mp-preview-group h3 small{color:var(--muted);font-size:var(--text-caption);font-weight:400;white-space:nowrap}
-.mp-preview-group-title.is-off{color:var(--muted)}
-.mp-preview-group.is-off{padding:4px 0;border:0;border-radius:0;background:transparent;opacity:.62}
+.mp-preview-group-action{margin-left:auto;flex:none;color:var(--muted);font-size:var(--text-caption);white-space:nowrap}
+.mp-preview-group-title:hover .mp-preview-group-action{color:var(--text)}
+.mp-preview-group-title.is-off{color:var(--muted);border-style:dashed}
+.mp-preview-group-title.is-off .mp-preview-group-eye{color:var(--muted)}
+.mp-preview-group-title.is-locked{cursor:default;background:transparent;border-color:var(--border-soft);margin-bottom:7px}
+.mp-preview-group-title.is-locked:hover{border-color:var(--border-soft);background:transparent}
+.mp-preview-group.is-off{padding:0;border:0;border-radius:0;background:transparent;opacity:.62}
 .mp-preview-group.is-off .mp-preview-group-title{margin-bottom:0}
 .mp-preview-items{display:flex;flex-wrap:wrap;gap:6px}
 .mp-preview-item{display:flex;align-items:center;gap:5px;padding:4px 8px;border:1px solid transparent;border-radius:6px;background:var(--rail);color:var(--text);font:inherit;font-size:var(--text-caption);max-width:100%;cursor:pointer}
