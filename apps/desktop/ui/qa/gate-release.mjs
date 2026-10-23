@@ -24,6 +24,11 @@ const steps = [
   { id: 'audit:template', cmd: ['node', ['qa/template-visual.mjs']], needsEnv: false },
   { id: 'audit:export', cmd: ['node', ['qa/export-visual.mjs']], needsEnv: false },
   { id: 'audit:update', cmd: ['node', ['qa/update-visual.mjs']], needsEnv: false },
+  // 原型并排对照：软件 UI 必须与原型一致（用户明确要求），四项各自独立。
+  { id: 'audit:parity:list', cmd: ['node', ['qa/parity-list.mjs']], needsEnv: false },
+  { id: 'audit:parity', cmd: ['node', ['qa/parity-preview.mjs']], needsEnv: false },
+  { id: 'audit:parity:export', cmd: ['node', ['qa/parity-export.mjs']], needsEnv: false },
+  { id: 'audit:parity:template', cmd: ['node', ['qa/parity-template.mjs']], needsEnv: false },
   { id: 'audit:catalog-naming', cmd: ['node', ['qa/catalog-naming-real.mjs']], needsEnv: false },
   {
     id: 'audit:catalog-crossvalidate',
