@@ -151,6 +151,20 @@ describe('保存 · 选择器预览（UI 规范 §38）',()=>{
     vi.useRealTimers()
   })
 
+  it('原生渠道整组只读：标题与型号标签都不可点（§38.2）', async()=>{
+    const wrapper=render({channels:[{id:'a',label:'官方 / 原生',enabled:true,protected:true}]})
+    // 标题是静态 h3，不是可点按钮。
+    expect(wrapper.find('h3.preview-group-title.is-locked').exists()).toBe(true)
+    expect(wrapper.findAll('button.preview-group-title')).toHaveLength(0)
+    // 型号标签禁用，点也不发启停。
+    const chips=wrapper.findAll('.preview-item')
+    expect(chips.length).toBeGreaterThan(0)
+    for (const chip of chips) expect(chip.attributes('disabled')).toBeDefined()
+    await chips[0]!.trigger('click')
+    expect(wrapper.emitted('toggle-model')).toBeUndefined()
+    wrapper.unmount()
+  })
+
   it('确认按钮始终可点：被拦下的原因走通知，不靠灰按钮堵住',async()=>{
     const wrapper=render({projection:{...projection(),knownActiveModels:128}})
     expect(wrapper.text()).toContain('超出激活预算')

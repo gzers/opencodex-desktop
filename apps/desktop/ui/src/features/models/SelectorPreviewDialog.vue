@@ -146,7 +146,7 @@ function confirm() { if (!props.saving) emit('confirm') }
       <span class="preview-group-action">{{ group.channel.enabled?'停用':'恢复' }}</span>
      </button>
      <div v-if="group.channel.enabled" class="preview-items">
-      <button v-for="item in group.items" :key="item.row.modelId" type="button" class="preview-item" :class="[item.row.selected?'is-on':'is-off',item.change]" :aria-pressed="item.row.selected" :title="(item.row.selected?'点击停用':'点击启用')+' '+item.row.modelId+(item.row.rules.fast.mode==='custom'&&item.row.rules.fast.value?' · 支持 Fast':'')+(item.change==='is-added'?' · 本次新启用':item.change==='is-removed'?' · 本次停用':'')" :disabled="busy||saving" @click="toggleModel(group.channel.id,item.row.modelId,item.row.selected)">
+      <button v-for="item in group.items" :key="item.row.modelId" type="button" class="preview-item" :class="[item.row.selected?'is-on':'is-off',item.change]" :aria-pressed="item.row.selected" :title="(group.channel.protected?'官方管理 · 只读 · ':(item.row.selected?'点击停用':'点击启用')+' ')+item.row.modelId+(item.row.rules.fast.mode==='custom'&&item.row.rules.fast.value?' · 支持 Fast':'')+(item.change==='is-added'?' · 本次新启用':item.change==='is-removed'?' · 本次停用':'')" :disabled="busy||saving||group.channel.protected" @click="toggleModel(group.channel.id,item.row.modelId,item.row.selected)">
        <em v-if="!group.channel.protected">{{ String(item.order).padStart(2,'0') }}</em><span>{{ item.row.label || item.row.modelId }}</span>
        <em v-if="item.row.rules.fast.mode==='custom'&&item.row.rules.fast.value" class="preview-fast">Fast</em>
       </button>
