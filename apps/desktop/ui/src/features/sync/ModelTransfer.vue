@@ -30,6 +30,19 @@ const upload = ref<UploadPlan | null>(null)
 const incoming = ref<IncomingPlan | null>(null)
 const incomingSource=ref<IncomingPlan|null>(null)
 const receiveRefs=ref<string[]>([]);const receiveChannels=ref<string[]>([]);const receiveGlobal=ref(false);const receiveDirty=ref(false)
+/** 生成位置预览：与后端 exports/<日期>/<单次包>/ 结构一致，仅供确认，不参与写入。 */
+const exportTreeText = computed(() => {
+  const root = exportTargetDir.value || '默认导出目录'
+  const today = new Date().toLocaleDateString('sv-SE')
+  return [
+    root + '/',
+    '└── ' + today + '/',
+    '    └── 备份包-时刻-短码/',
+    '        ├── 本次所选配置',
+    '        ├── 模版与所选版本',
+    '        └── manifest / 校验信息',
+  ].join('\n')
+})
 const exportedPath = ref('')
 const exportSource=ref('saved')
 const exportPassword=ref('');const importPassword=ref('');const passwordOpen=ref(false);const importPath=ref('')
@@ -290,7 +303,10 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
       <p v-if="error" class="model-error" role="alert">{{ error }}</p>
       <p v-if="preview?.payload.candidate" role="status">未提交草稿候选；采用后仍进入本机工作区，须另行预览并保存，不表示运行配置已写入。</p>
 
-      <div v-if="!incoming&&!remote" class="export-destination"><span>导出目录</span><div class="export-destination-row"><input class="input" type="text" readonly :value="exportTargetDir||'默认导出目录'" aria-label="导出目录"><UiButton size="sm" @click="chooseExportDir">选择目录…</UiButton><UiButton v-if="exportTargetDir" size="sm" variant="ghost" @click="exportTargetDir=''">恢复默认</UiButton></div><p class="model-muted">每次导出生成一个独立备份包，按“日期 / 单次包”存放，可整体拷贝到其它设备再导入。</p></div>
+      <div v-if="!incoming&&!remote" class="export-destination"><span>导出目录</span><div class="export-destination-row"><input class="input" type="text" readonly :value="exportTargetDir||'默认导出目录'" aria-label="导出目录"><UiButton size="sm" @click="chooseExportDir">选择目录…</UiButton><UiButton v-if="exportTargetDir" size="sm" variant="ghost" @click="exportTargetDir=''">恢复默认</UiButton></div><p class="model-muted">每次导出生成一个独立备份包，按“日期 / 单次包”存放，可整体拷贝到其它设备再导入。</p>
+        <!-- WP-58：与原型一致，导出前直接看清包内结构，而不是只给一句说明。 -->
+        <div class="export-tree" aria-label="导出目录结构"><p class="export-tree-kicker">生成位置</p><pre>{{ exportTreeText }}</pre><p class="model-muted">按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。</p></div>
+      </div>
       <p v-if="filePlan">文件保护：{{ filePlan.protected?'独立口令加密':'未加密，完整性校验' }}</p>
       <p v-if="filePlan?.credentialCount">携带凭据：{{ filePlan.credentialCount }} 项</p>
       <p v-if="incoming?.adoption">{{ incoming.adoption.completed?'原导入已完成；当前本机配置保持。':'原导入采用范围已冻结，请核对同一操作。' }}</p><label v-if="incoming?.availableExtensionCredentials"><input v-model="adoptExtensionCredentials" type="checkbox" :disabled="busy||receiveDirty||!!incoming.adoption" />采用所选扩展凭据（新本机引用及受保护资源）</label><label v-if="incoming?.availableWebdavPasswords?.length"><input v-model="adoptWebdavPasswords" type="checkbox" :disabled="busy||receiveDirty||!!incoming?.adoption" />采用包内连接密码（{{ incoming.availableWebdavPasswords.length }} 项），连接保持未启用</label><label v-if="incoming?.availableKeys?.length"><input v-model="adoptKeys" type="checkbox" :disabled="busy||receiveDirty||!!incoming?.adoption" />采用所选渠道的Key与认证配置（{{ incoming.availableKeys.length }} 个渠道），创建受保护本机材料并进入草稿</label>
@@ -334,6 +350,9 @@ label{display:flex;align-items:center;gap:8px}
 .export-destination{display:grid;gap:var(--space-1);padding-block:var(--space-2);border-top:1px solid var(--border-soft)}
 .export-destination>span{color:var(--muted);font-size:var(--text-label)}
 .export-destination-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:var(--space-2);align-items:center}
+.export-tree{margin-top:var(--space-2);padding:var(--space-3);border:1px solid var(--border-soft);border-radius:var(--radius-sm);background:var(--rail)}
+.export-tree-kicker{margin:0 0 var(--space-1-5);color:var(--muted);font-size:var(--text-caption)}
+.export-tree pre{margin:0 0 var(--space-2);font-family:var(--font-code);font-size:var(--text-caption);line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--text)}
 .export-destination-row .input{min-width:0}
 .sync-head-actions{display:flex;gap:var(--space-2);flex-wrap:wrap;justify-content:flex-end}
 .sync-scope-workspace{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:var(--space-5);margin-top:var(--space-4);min-width:0}

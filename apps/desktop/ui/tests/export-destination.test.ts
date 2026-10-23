@@ -22,6 +22,13 @@ describe('导出可选保存路径 (WP-32)', () => {
     expect(view).toContain('勾选 Skill 或 MCP 后需先复核资源内容，方可导出')
   })
 
+  it('确认页展示生成位置目录树（与原型一致，WP-58）', () => {
+    expect(view).toContain('export-tree')
+    expect(view).toContain('生成位置')
+    expect(view).toContain('manifest / 校验信息')
+    expect(view).toContain('同日多次导出各自建包')
+  })
+
   it('结果区显示备份包路径与打开目录', () => {
     expect(view).toContain('备份包')
     expect(view).toContain('打开备份包目录')
