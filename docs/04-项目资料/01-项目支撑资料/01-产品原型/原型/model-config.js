@@ -440,7 +440,7 @@
  }
  function policyStatusAnnotation(){
   const styles={clean:'灰色描边 · 保存弱化并禁用',dirty:'橙色状态框 · 可提交时保存主色强调',staged:'橙色状态框 · 先确认行 / 连接编辑，保存禁用','over-budget':'红色状态框与激活数 · 保存禁用',saving:'蓝色状态框与转动环 · 保存禁用',pending:'橙色状态框 · 重新检查入口可用',failed:'红色状态框 · 草稿保留，可重试保存',stopped:'灰色状态框 · 草稿保留，可继续保存',uncertain:'橙色状态框 · 先核对可能已经写入的结果'};
-  return mpAnn('08','渠道列表的九种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整选择器预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，但确认按钮保持禁用。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在选择器预览弹窗内显示。状态框和保存按钮等高。未保存修改与待重启可同时存在，保存状态和客户端加载 / 连接验证分开。待确认编辑和超限仍阻止保存，即使存在修改也不会伪装成可提交；保存继续先预览全渠道差异再确认。');
+  return mpAnn('08','渠道列表的九种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整选择器预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在选择器预览弹窗内显示。状态框和保存按钮等高。未保存修改与待重启可同时存在，保存状态和客户端加载 / 连接验证分开。待确认编辑和超限仍阻止保存，即使存在修改也不会伪装成可提交；保存继续先预览全渠道差异再确认。');
  }
  function channelHeadingStatusHTML(p=provider()){
   const badge=(label,tone,attribute)=>'<span class="mp-template-state '+tone+'" '+attribute+'>'+esc(label)+'</span>';
@@ -550,17 +550,18 @@
 
  function openSaveReview(){
   if(busy())return;
-  const digest=policyDigest(),baseline=baseDigest();saveReview={digest,baseline};
+  // 弹窗内的快速启停就是要提交的草稿变更：每次刷新都把基准更新为最新草稿，
+  // 只有已保存版本被外部改动（baseDigest）才算真正的基准漂移。
+  saveReview={digest:policyDigest(),baseline:baseDigest()};
   modal('保存 · 选择器预览',saveReviewHTML(),'确认保存',()=>{
-   // 基准变化只指草稿 / 已保存版本在弹窗打开后被改动；待确认编辑属于门禁原因，单独说明。
-   const stale=scenario==='drift'||digest!==policyDigest()||baseline!==baseDigest();
+   const stale=scenario==='drift'||!saveReview||saveReview.baseline!==baseDigest();
    const gated=saveReviewGated();
    if(stale||gated){
     const reason=stale?'基准已变化，本次确认未写入':saveReviewBlockedReason();
     saveReview=null;closeModal();notifySaveBlocked(reason,stale?'stale':'gated');return;
    }
    const frozen=clone(draft);saveReview=null;closeModal();startSave(frozen);
-  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'保存是唯一提交入口，也是预览入口：点击保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，但确认保存保持禁用；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停。确认后弹窗立即关闭：冻结当前草稿、先备份，再写入并核对目录，最后发布成功快照；保存后需要重启 Codex。确认时若草稿已变化或被门禁拦下，同样立即关闭弹窗，不再留在弹窗里报错，而是登记一条“模型配置未保存”通知，草稿保留。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
+  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'保存是唯一提交入口，也是预览入口：点击保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，确认会关闭弹窗并登记“模型配置未保存”通知；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停。确认后弹窗立即关闭：冻结当前草稿、先备份，再写入并核对目录，最后发布成功快照；保存后需要重启 Codex。确认时若草稿已变化或被门禁拦下，同样立即关闭弹窗，不再留在弹窗里报错，而是登记一条“模型配置未保存”通知，草稿保留。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
   $('#modal').classList.add('mp-preview-modal');syncSaveReview();
  }
  // 保存被拦下走已注册通知，不在弹窗里留第二处错误提示。
@@ -585,7 +586,7 @@
   body.innerHTML='<div class="mp-dialog">'+(saveReview?saveReviewHTML():preview())+'</div>';window.prototypeSelect?.enhance(body);
   if(focusSelector)body.querySelector(focusSelector)?.focus({preventScroll:true});
   const fresh=body.querySelector('.mp-preview-order');if(fresh)fresh.scrollTop=top;
-  if(saveReview)syncSaveReview();
+  if(saveReview){saveReview.digest=policyDigest();syncSaveReview();}
  }
  function togglePreviewChannel(pid){
   const p=draft.providers.find(p=>p.id===pid);if(!p||p.id==='native'||busy())return;

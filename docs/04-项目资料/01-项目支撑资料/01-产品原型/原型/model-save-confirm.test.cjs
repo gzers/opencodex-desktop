@@ -53,6 +53,32 @@ test('超出激活预算时同样关闭并登记通知，不写入运行配置',
   assert.equal(h.state().operation, null)
 })
 
+test('在预览里先启停再确认，第一次就能保存且写入的就是刚才那次改动', () => {
+  const h = make()
+  h.click('save')
+  h.click('preview-channel-toggle', { id: 'aimami' })
+  h.click('preview-model-toggle', { id: 'newapi::0' })
+  assert.equal(h.state().operation, null)
+  h.runConfirm()
+  assert.equal(h.state().operation.status, 'running')
+  const plan = h.state().operation.plan
+  assert.equal(plan.providers.find(p => p.id === 'aimami').enabled, false)
+  assert.equal(plan.providers.find(p => p.id === 'newapi').models.find(m => m.key === 'newapi::0').selected, false)
+  h.drain()
+  assert.equal(h.state().saved.providers.find(p => p.id === 'aimami').enabled, false)
+})
+
+test('打开后改回原样再确认，按没有未保存修改拦下', () => {
+  const h = make(), blocked = []
+  h.context.window.modelSaveBlockedBridge = payload => blocked.push(payload.reason)
+  h.click('save')
+  h.click('preview-channel-toggle', { id: 'aimami' })
+  h.click('preview-channel-toggle', { id: 'aimami' })
+  h.runConfirm()
+  assert.deepEqual(blocked, ['没有未保存的修改，本次确认未写入'])
+  assert.equal(h.state().operation, null)
+})
+
 test('弹窗正文不再含内联错误块，失败原因只走通知', () => {
   const h = make()
   open(h)
