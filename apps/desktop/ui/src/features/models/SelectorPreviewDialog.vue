@@ -120,7 +120,7 @@ function toggleModel(channelId: string, modelId: string, selected: boolean) {
 function confirm() { if (!props.saving) emit('confirm') }
 </script>
 <template>
- <UiDialog :open="open" title="保存 · 选择器预览" wide :busy="saving" @close="emit('close')">
+ <UiDialog :open="open" title="保存 · 选择器预览" wide panel-class="save-preview-dialog" :busy="saving" @close="emit('close')">
   <div class="selector-preview" aria-label="保存与选择器预览" @click="onSurfaceClick">
    <div class="selector-preview-budget" :class="{over}" role="status">
     <strong>模型激活数 {{ active }}/100</strong>
@@ -168,6 +168,8 @@ function confirm() { if (!props.saving) emit('confirm') }
  </UiDialog>
 </template>
 <style scoped>
+/* §38.1：预览弹窗宽度上限 980px（公共 wide 为 850px），窄窗仍按可用宽度收缩。
+   弹窗被 Teleport 到 body，样式写在下方非 scoped 块里才能命中。 */
 .selector-preview{display:flex;flex-direction:column;gap:var(--space-3);min-width:0;max-height:min(620px,calc(100vh / var(--ui-zoom) - 220px))}
 .selector-preview-budget{flex:none;display:flex;align-items:baseline;gap:var(--space-2) var(--space-4);flex-wrap:wrap;padding:0 0 var(--space-2-5);border-bottom:1px solid var(--border);font-size:var(--text-label);color:var(--muted)}
 .selector-preview-budget strong{color:var(--text);font-size:var(--text-control);font-variant-numeric:tabular-nums}
@@ -220,3 +222,7 @@ function confirm() { if (!props.saving) emit('confirm') }
 .preview-alert{margin:0;color:var(--red);font-size:var(--text-label);overflow-wrap:anywhere}
 </style>
 
+<style>
+/* 弹窗被 Teleport 到 body，只有全局样式能命中它。 */
+body dialog.ui-dialog.save-preview-dialog.wide{width:min(980px,calc(100vw / var(--ui-zoom) - 32px))}
+</style>

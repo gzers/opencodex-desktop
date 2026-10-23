@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 import UiButton from './UiButton.vue'
-const props = defineProps<{ open: boolean; title: string; wide?: boolean; busy?: boolean }>()
+const props = defineProps<{ open: boolean; title: string; wide?: boolean; busy?: boolean; panelClass?: string }>()
 const emit = defineEmits<{ close: [] }>()
 const dialog = ref<HTMLDialogElement | null>(null)
 const titleId = useId()
@@ -24,7 +24,7 @@ onBeforeUnmount(() => {disposed=true;if(dialog.value?.open){dialog.value.close()
 </script>
 <template>
   <Teleport to="body">
-    <dialog ref="dialog" class="ui-dialog" :class="{ wide }" :aria-labelledby="titleId" @cancel.prevent="close" @click="backdrop">
+    <dialog ref="dialog" class="ui-dialog" :class="[panelClass, { wide }]" :aria-labelledby="titleId" @cancel.prevent="close" @click="backdrop">
       <header><h2 :id="titleId">{{ title }}</h2><UiButton variant="ghost" :disabled="busy" @click="close">关闭</UiButton></header>
       <div class="ui-dialog-content"><slot /></div>
       <footer v-if="$slots.actions"><slot name="actions" /></footer>

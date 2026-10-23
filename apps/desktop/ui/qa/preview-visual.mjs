@@ -58,6 +58,8 @@ async function main(){
       check(c.name+' 渠道卡渲染',info.groups>0,'groups='+info.groups)
       check(c.name+' 型号标签渲染',info.items>0,'items='+info.items)
       check(c.name+' 弹窗不越界',!!info.box&&info.box.top>=0&&info.box.bottom<=info.viewportH+1,JSON.stringify(info.box))
+      // §38.1：宽度上限 980px；窄窗按可用宽度收缩，不得超过视口。
+      if(info.box) check(c.name+' 宽度按规格',info.box.w<=980&&info.box.w<=c.w, 'w='+info.box.w)
       check(c.name+' 无未捕获错误',errors.length===0,errors.slice(0,2).join(' | '))
       await page.screenshot({path:path.join(outDir,c.name+'.png'),fullPage:false})
       await page.close()
