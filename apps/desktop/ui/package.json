@@ -25,7 +25,8 @@
     "gate:release": "node qa/gate-release.mjs",
     "audit:parity": "node qa/parity-preview.mjs",
     "audit:parity:template": "node qa/parity-template.mjs",
-    "audit:parity:export": "node qa/parity-export.mjs"
+    "audit:parity:export": "node qa/parity-export.mjs",
+    "audit:parity:list": "node qa/parity-list.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "2.12.1",
