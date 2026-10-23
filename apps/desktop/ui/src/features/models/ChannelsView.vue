@@ -25,6 +25,7 @@ const editor = computed(() => models.channelDraft?.channels.find(c => c.id === e
 watch(editorId,id=>{if(id){models.view.channelFilters[id]??={search:'',selectedOnly:false,family:'all'};models.modelRows[id]??=createModelRowsState();models.view.navigation['channel:'+id]??={collapsed:false,activeId:'channel-config'}}},{immediate:true,flush:'sync'})
 const previewOpen = ref(false);const previewProjection = ref<DraftProjection|null>(null);const previewBusy = ref(false);const previewError = ref('')
 let previewSequence = 0
+let previewRefreshSequence = 0
 const savePlan=ref<SavePlan|null>(null);const saveOpen=ref(false);const saving=ref(false)
 const saveScopeOpen=ref(false),saveScopeIds=ref<string[]>([]),saveShared=ref(false),saveScopeError=ref('');const saveScopeTargets=ref<{id:string;label:string;kind:string}[]>([]);const saveSharedAvailable=ref(false)
 let saveScopeBaseline:{policy:string;library:string;saved:string;workspace:string}|undefined
@@ -85,13 +86,17 @@ async function prepareSave(){
   }catch(cause){if(sequence===previewSequence){previewProjection.value=null;previewError.value=errorText(cause);previewOpen.value=true}}
   finally{if(sequence===previewSequence)previewBusy.value=false}
 }
+/**
+ * 弹窗内启停后的重算。用独立序号：打开预览与刷新预览共用序号会让“打开过程中的
+ * 一次启停”把打开结果判成过期，弹窗静默不出现（真实缺陷，已由 parity 对照发现）。
+ */
 async function refreshSavePreview(){
   if(!models.channelDraft)return
-  const sequence=++previewSequence;previewBusy.value=true
+  const sequence=++previewRefreshSequence;previewBusy.value=true
   try{const projection=await modelApi.project(JSON.parse(JSON.stringify(models.channelDraft)))
-    if(sequence===previewSequence){previewProjection.value=projection;previewError.value=''}
-  }catch(cause){if(sequence===previewSequence)previewError.value=errorText(cause)}
-  finally{if(sequence===previewSequence)previewBusy.value=false}
+    if(sequence===previewRefreshSequence){previewProjection.value=projection;previewError.value=''}
+  }catch(cause){if(sequence===previewRefreshSequence)previewError.value=errorText(cause)}
+  finally{if(sequence===previewRefreshSequence)previewBusy.value=false}
   void models.persistDraft()
 }
 function togglePreviewChannel(id:string){
@@ -231,7 +236,7 @@ function dropChannel(target:string){if(draggedChannel.value)reorderChannel(dragg
 <template>
   <div class="channels-view">
     <div v-if="!editor" class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索渠道" aria-label="搜索渠道" /><div class="model-inline"><UiButton :loading="upstreamBusy" :disabled="models.busy||saving" @click="readUpstream">读取现有渠道</UiButton><UiButton :disabled="models.busy||saving" @click="create">新增渠道</UiButton></div></div>
-    <Teleport defer :to="actionsTarget??'body'" :disabled="!actionsTarget"><div v-if="props.active!==false&&!editor" class="model-inline model-policy-actions"><span class="model-policy-state" :data-tone="policyStatus.tone" role="status">● {{ policyStatus.label }}</span><UiButton :disabled="(!models.channelDirty&&!models.pendingRows.length)||models.busy||saving" @click="restore">还原修改</UiButton><UiButton :variant="models.channelDirty?'primary':'default'" :disabled="models.busy||saving||saveConfirming" :loading="models.busy" title="保存 · 先核对选择器预览，确认后写入" @click="prepareSave">保存</UiButton></div></Teleport>
+    <Teleport defer :to="actionsTarget??'body'" :disabled="!actionsTarget"><div v-if="props.active!==false&&!editor" class="model-inline model-policy-actions"><span class="model-policy-state" :data-tone="policyStatus.tone" role="status">● {{ policyStatus.label }}</span><UiButton :disabled="(!models.channelDirty&&!models.pendingRows.length)||models.busy||saving" @click="restore">还原修改</UiButton><UiButton data-testid="policy-save" :variant="models.channelDirty?'primary':'default'" :disabled="models.busy||saving||saveConfirming" :loading="models.busy" title="保存 · 先核对选择器预览，确认后写入" @click="prepareSave">保存</UiButton></div></Teleport>
     <p v-if="upstreamVersion" class="model-muted">来源：{{ upstreamVersion }} · 已读取到草稿</p>
     <p v-if="search.trim()" class="model-muted">清除搜索后可调整渠道顺序</p>
     <p v-if="models.pendingRows.length" role="status">{{ models.pendingRows.length }} 项型号编辑未确认；全局保存暂不可用。<UiButton v-for="target in [...new Set(models.pendingRows.map(r=>r.channel))]" :key="target" size="sm" variant="ghost" @click="editorId=target">查看 {{ models.channelDraft?.channels.find(c=>c.id===target)?.label??target }}</UiButton></p>
