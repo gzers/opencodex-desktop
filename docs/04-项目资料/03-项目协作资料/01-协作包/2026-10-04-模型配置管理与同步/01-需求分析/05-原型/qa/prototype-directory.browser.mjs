@@ -76,7 +76,7 @@ try {
   });
   await check('模型渠道列表及模型模版 Tab 可达', async () => {
     await go('models', '#route-models');
-    assert(await page.locator('#mpBudget').isVisible());
+    assert(await page.locator('#mpPolicySave').isVisible());
     await page.locator('[data-mp="tab"][data-tab="templates"]').click();
     assert.equal(await page.locator('[data-mp="tab"][data-tab="templates"]').getAttribute('aria-selected'), 'true');
     await page.locator('[data-mp="tab"][data-tab="channels"]').click();
@@ -118,7 +118,7 @@ try {
       const actual = new URL(page.url()), expected = new URL(entry + query);
       assert.equal(actual.search, expected.search);
       assert.equal(actual.hash, expected.hash);
-      assert(await page.locator('#mpBudget').isVisible());
+      assert(await page.locator('#mpPolicySave').isVisible());
       if (expected.searchParams.has('topic')) assert(await page.evaluate(() => document.body.classList.contains('windows-mode')));
     });
   }

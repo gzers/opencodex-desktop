@@ -146,11 +146,19 @@
 .mp-selector-preview{min-width:0}
 /* 预览摘要固定在弹窗顶部；只有渠道列表滚动，摘要与底部说明始终可见。 */
 .mp-preview-budget-summary{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;padding:10px 0;margin:0 0 12px;border-bottom:1px solid var(--border);background:var(--panel)}
+#modal.mp-modal.mp-preview-modal{width:min(980px,calc(100% - 32px));height:min(760px,calc(100% - 40px));max-height:calc(100% - 40px)}
 #modal.mp-preview-modal #modalBody{display:flex;flex-direction:column;overflow:hidden;min-height:0}
-#modal.mp-preview-modal .mp-dialog,#modal.mp-preview-modal .mp-selector-preview{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
-#modal.mp-preview-modal .mp-preview-budget-summary{flex:none;position:relative;z-index:2}
+/* 预览与核对分区滚动：选择器占主要空间，变更与写入清单紧随其后，说明与确认按钮始终可见。 */
+#modal.mp-preview-modal .mp-dialog{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+#modal.mp-preview-modal .mp-selector-preview{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;overflow:hidden}
+#modal.mp-preview-modal .mp-preview-budget-summary{flex:none}
 #modal.mp-preview-modal .mp-preview-order{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;padding-right:4px;margin:0 0 12px}
 #modal.mp-preview-modal .mp-selector-preview>p.mp-muted{flex:none;margin-top:0}
+#modal.mp-preview-modal .mp-save-review{flex:none;min-height:0;max-height:42%;overflow:auto;margin:10px 0 0;padding:10px 0 0;border-top:1px solid var(--border)}
+#modal.mp-preview-modal .mp-save-review>summary{position:sticky;top:0;z-index:1;display:flex;align-items:center;gap:8px;padding:0 0 6px;background:var(--panel);flex-wrap:nowrap}
+#modal.mp-preview-modal .mp-save-review>summary>span{flex:none}
+#modal.mp-preview-modal .mp-save-review-headline{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:var(--text-caption);font-weight:400}
+#modal.mp-preview-modal #mpSaveError:empty{display:none}
 .mp-preview-budget-summary>strong{font-size:var(--text-label);font-variant-numeric:tabular-nums}
 .mp-preview-budget-summary>span{font-size:var(--text-caption);color:var(--muted)}
 .mp-preview-budget-summary.over-budget>strong,.mp-preview-budget-summary.over-budget>.mp-alert{color:var(--red)}
@@ -299,14 +307,12 @@
  .mp-field>.select{justify-self:start}
 }
 
-/* 本轮层级：列表 → 详情；字段 / 纠偏 / 版本在需要时打开。 */
+/* 本轮层级：列表 → 详情；字段 / 纠偏 / 版本在需要时打开。保存与选择器预览合并，只保留一个主动作。 */
 .mp-list-toolbar,.mp-selection-toolbar,.mp-detail-nav,.mp-detail-actions,.mp-inline-notice{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .mp-list-toolbar{margin:22px 0 12px;gap:var(--space-3)}
 .mp-list-toolbar>.input{flex:1 1 180px;max-width:360px;min-width:100px}
 .mp-list-toolbar>.mp-actions{flex:0 1 auto;min-width:0;max-width:100%;margin-inline-start:auto;justify-content:flex-end;gap:var(--space-2)}
 .mp-list-toolbar>.mp-actions>.btn{flex:none}
-.mp-budget{border:0;background:none;font:inherit;font-size:var(--text-label);font-weight:600;color:var(--text);padding:4px;cursor:pointer}
-.mp-budget.mp-alert{color:var(--danger,#c0392b)}
 .mp-draft-tools{display:flex;justify-content:flex-end;gap:4px;margin-top:6px}
 .mp-draft-tools .btn{min-height:28px;padding:3px 7px;font-size:var(--text-caption)}
 .mp-inline-notice{margin:10px 0;padding:9px 12px;border-radius:var(--radius-sm);background:var(--rail);font-size:var(--text-label)}
@@ -555,16 +561,9 @@ html:not([data-route=models]) #mpAssistantHost{display:none}
 .nav-collapsed .mp-template-save{justify-content:center;padding:6px 0}
 @container(max-width:500px){.mp-template-save{justify-content:center;padding:6px 0}}
 .mp-template-save:disabled{opacity:1;background:var(--rail);color:var(--muted);box-shadow:none;cursor:default}
-.mp-channel-status #mpBudget{display:flex;align-items:center;gap:6px;height:28px;padding:4px 6px;font-size:var(--text-caption);box-sizing:border-box}
-.mp-channel-status.over-budget #mpBudget{color:var(--danger,#c0392b)}
 .mp-rail-helpers{display:flex;gap:4px;flex-wrap:wrap}
 .mp-policy-status{--mp-policy-control-height:var(--control-md,34px);position:relative;display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin:0 0 0 auto;padding:0;min-width:0;border:0}
 .mp-top-policy-controls{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;min-width:0}
-.mp-policy-status .mp-budget{display:flex;align-items:center;gap:6px;box-sizing:border-box;height:var(--mp-policy-control-height);padding:6px 8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);font-size:var(--text-caption);font-weight:400;white-space:nowrap}
-.mp-policy-status .mp-budget strong{font-weight:650;font-variant-numeric:tabular-nums}
-.mp-policy-status .mp-budget svg{display:block;flex:none;width:14px;height:14px;stroke-width:1.8}
-.mp-policy-status .mp-budget:hover{border-color:var(--muted);background:var(--raised)}
-.mp-policy-status .mp-budget.mp-alert{color:var(--red);border-color:color-mix(in srgb,var(--red) 42%,transparent);background:var(--red-soft)}
 .mp-template-state.mp-policy-chip{box-sizing:border-box;display:inline-flex;align-items:center;gap:7px;height:var(--mp-policy-control-height,34px);padding:6px 10px;border-width:1px;font-weight:600;line-height:20px;white-space:nowrap;box-shadow:inset 0 1px 0 color-mix(in srgb,currentColor 8%,transparent)}
 .mp-policy-chip::before{width:7px;height:7px}
 .mp-policy-chip.warning{border-color:color-mix(in srgb,var(--amber) 42%,transparent)}
@@ -578,22 +577,19 @@ html:not([data-route=models]) #mpAssistantHost{display:none}
 .mp-policy-status .mp-top-policy-save.is-changed:disabled{border-color:color-mix(in srgb,var(--amber) 42%,var(--border));color:var(--muted);box-shadow:none}
 .mp-policy-status .mp-top-policy-save:not(.is-changed):disabled{border-color:var(--border);opacity:.65}
 /* Tab 右侧使用与模版页主动作相同的标准按钮比例；行内操作继续独立使用紧凑样式。 */
-.mp-top-policy-controls :is(.mp-budget,.mp-policy-chip,.mp-top-policy-save,.mp-top-policy-reset),.mp-tabs-bar>.mp-actions>.btn{box-sizing:border-box;min-height:var(--control-md,34px);padding:7px 12px;font-size:var(--text-control);line-height:18px}
-.mp-top-policy-controls .mp-budget svg,.mp-top-policy-controls .mp-nav-action svg{width:16px;height:16px}
-
+.mp-top-policy-controls :is(.mp-policy-chip,.mp-top-policy-save,.mp-top-policy-reset),.mp-tabs-bar>.mp-actions>.btn{box-sizing:border-box;min-height:var(--control-md,34px);padding:7px 12px;font-size:var(--text-control);line-height:18px}
+.mp-top-policy-controls .mp-nav-action svg{width:16px;height:16px}
 /* 状态注释浮在操作区上方，不参与宽度、高度或换行计算；页级注释放在 Tab 左侧。 */
 .mp-policy-status>.proto-annotation{position:absolute;right:0;top:-24px;height:24px}
 .mp-policy-example-row{display:grid;grid-template-columns:minmax(142px,auto) minmax(0,1fr);align-items:center;gap:10px;font-size:var(--text-caption);line-height:1.5}
 .mp-policy-example-row .mp-policy-chip{justify-content:flex-start}
 @keyframes mp-policy-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.mp-policy-chip[data-channel-state=saving]::before,.mp-policy-chip[data-policy-example=saving]::before{animation:none}}
-.nav-collapsed .mp-channel-status #mpBudget{justify-content:center;padding:6px 0}
 .mp-template-change-group{border:1px solid var(--border);border-radius:var(--radius-sm);margin:12px 0;padding:12px}
 .mp-template-change-group>h3{margin:0 0 12px;font-size:var(--text-label)}
 #mpChannelHeader>.select{max-width:180px}
 @container(max-width:500px){
  .mp-channel-workspace{grid-template-columns:42px minmax(0,1fr);gap:12px}
- .mp-channel-status #mpBudget{justify-content:center;padding:6px 0}
  #mpChannelHeader>.select{grid-column:2;justify-self:start;max-width:100%}
  .mp-channel-form{grid-template-columns:minmax(0,1fr)}
 }

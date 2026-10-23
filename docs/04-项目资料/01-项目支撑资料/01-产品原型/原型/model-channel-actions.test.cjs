@@ -8,7 +8,7 @@ const saveButton=h=>{const html=h.nodes.get('mpPolicyStatus')?.outerHTML||h.page
 test('详情状态在标题，保存只显示保存；列表移除历史和更多，直接提供还原',()=>{
  const h=make();assert.match(h.page(),/id="mpPolicyReset"/);assert.doesNotMatch(h.page(),/<button[^>]*data-mp="(?:history|more)"/);assert.doesNotMatch(h.page(),/配置工具|data-mp="settings"|data-mp="import"|data-mp="export"/);
  assert.doesNotMatch(h.page(),/data-mp="undo"|data-mp="redo"/);h.click('edit-provider',{id:'newapi'});assert.doesNotMatch(h.page(),/mp-channel-edit-actions|data-mp="undo"|data-mp="redo"|配置工具|data-mp="settings"|data-mp="more"|data-mp="order-preview"|保存与恢复/);assert.match(h.page(),/data-save-scope="all-channels"/);assert.match(heading(h),/data-channel-state="clean"/);
- const save=h.page().match(/<button id="mpPolicySave"[\s\S]*?<\/button>/)[0];assert.match(save,/aria-label="保存"/);assert.match(save,/<span class="mp-nav-action-label">保存<\/span>/);assert.doesNotMatch(save,/<small|未修改|已保存|全渠道/);assert.equal(saveButton(h).disabled,true);
+ const save=h.page().match(/<button id="mpPolicySave"[\s\S]*?<\/button>/)[0];assert.match(save,/aria-label="保存"/);assert.doesNotMatch(save,/先预览当前草稿/);assert.match(save,/<span class="mp-nav-action-label">保存<\/span>/);assert.doesNotMatch(save,/<small|未修改|已保存|全渠道/);assert.equal(saveButton(h).disabled,false);h.click('save');assert.match(h.dialog(),/没有未保存修改/);assert.equal(h.nodes.get('modalConfirm').disabled,true);h.context.closeModal();
 });
 test('顶部还原无修改时禁用，修改后预览确认；旧历史和更多事件不再打开窗口',()=>{
  const h=make();assert.match(h.page().match(/<button id="mpPolicyReset"[^>]*>/)[0],/disabled/);h.click('more');h.click('history');assert.notEqual(h.nodes.get('modalMask').style.display,'flex');
@@ -21,7 +21,7 @@ test('跨渠道草稿保留，返回不写入；旧撤销重做事件没有动�
 });
 test('待确认的连接编辑实时更新标题并阻止保存；还原恢复状态，返回不写入也不丢输入',()=>{
  const h=make();h.click('edit-provider',{id:'newapi'});h.click('toggle-model',{id:'newapi::0'});
- h.event('input','[data-channel-config]',{channelConfig:'name'},'NewApi 临时名称');assert.equal(h.state().channelConnections.newapi.name,'NewApi 临时名称');assert.match(heading(h),/warning" data-channel-state="staged"/);assert.equal(saveButton(h).disabled,true);
+ h.event('input','[data-channel-config]',{channelConfig:'name'},'NewApi 临时名称');assert.equal(h.state().channelConnections.newapi.name,'NewApi 临时名称');assert.match(heading(h),/warning" data-channel-state="staged"/);assert.equal(saveButton(h).disabled,false);h.click('save');assert.match(h.dialog(),/未加入草稿/);assert.equal(h.nodes.get('modalConfirm').disabled,true);h.context.closeModal();
  h.click('reset-channel-connection');assert.match(heading(h),/data-channel-state="dirty"/);assert.equal(saveButton(h).disabled,false);h.event('input','[data-channel-config]',{channelConfig:'name'},'NewApi 临时名称');const saved=JSON.stringify(h.state().saved);h.click('back-channels');assert.equal(h.state().channelConnections.newapi.name,'NewApi 临时名称');assert.equal(JSON.stringify(h.state().saved),saved);
 });
 test('丢弃确认列全渠道改动与未确认连接，取消保留；确认回成功基线，Agent和模版保留',()=>{
@@ -54,7 +54,7 @@ test('保存失败和可能写入的结果分开呈现；核对后回到未保�
  for(const [scene,state] of [['backup-fail','failed'],['partial','uncertain'],['timeout','uncertain']]){
   const h=make();h.proto.scene(scene);h.click('edit-provider',{id:'newapi'});const saved=JSON.stringify(h.state().saved);h.click('save');h.runConfirm();assert.match(heading(h),/info" data-channel-state="saving"/);assert.equal(saveButton(h).disabled,true);h.drain();assert.match(heading(h),new RegExp('data-channel-state="'+state+'"'));assert.equal(JSON.stringify(h.state().saved),saved);h.click('verify');h.runConfirm();assert.match(heading(h),/data-channel-state="dirty"/);
  }
- const h=make();h.proto.scene('over-budget');h.click('edit-provider',{id:'newapi'});assert.match(heading(h),/danger" data-channel-state="over-budget"/);assert.equal(saveButton(h).disabled,true);
+ const h=make();h.proto.scene('over-budget');h.click('edit-provider',{id:'newapi'});assert.match(heading(h),/danger" data-channel-state="over-budget"/);assert.equal(saveButton(h).disabled,false);h.click('save');assert.match(h.dialog(),/超出激活预算/);assert.equal(h.nodes.get('modalConfirm').disabled,true);
 });
 test('清单获取中与失败使用独立状态，不以获取失败冒充保存失败',()=>{
  const h=make();h.proto.scene('discovery-fail');h.click('edit-provider',{id:'newapi'});h.click('refresh');assert.match(heading(h),/info" data-channel-discovery="loading"/);h.drain();assert.match(heading(h),/danger" data-channel-discovery="failed"/);assert.doesNotMatch(heading(h),/data-channel-state="failed"/);

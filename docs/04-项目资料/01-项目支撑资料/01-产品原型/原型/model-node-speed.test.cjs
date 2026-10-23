@@ -33,7 +33,7 @@ test('测速晚回绑定节点地址，编辑URL后结果失效；重测只采�
 });
 test('未确认认证阻止测速；测速更新不重建未保存的连接输入或中断弹窗',()=>{
  const h=make();h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'未确认名字');h.click('node-speed-all',{channel:'newapi'});assert.equal(h.state().nodeSpeedRuns.newapi,undefined);h.click('reset-channel-connection');h.click('node-speed-all',{channel:'newapi'});
- h.event('input','[data-channel-config]',{channelConfig:'name'},'测试期间名字');const field=h.nodes.get('mpChannelInline-name');field.value='测试期间名字';h.click('selector-preview');const dialog=h.dialog();h.drain();assert.equal(h.nodes.get('mpChannelInline-name'),field);assert.equal(field.value,'测试期间名字');assert.equal(h.state().channelConnections.newapi.name,'测试期间名字');assert.equal(h.dialog(),dialog);assert.equal(h.nodes.get('modalMask').style.display,'flex');
+ h.event('input','[data-channel-config]',{channelConfig:'name'},'测试期间名字');const field=h.nodes.get('mpChannelInline-name');field.value='测试期间名字';h.click('save');const dialog=h.dialog();h.drain();assert.equal(h.nodes.get('mpChannelInline-name'),field);assert.equal(field.value,'测试期间名字');assert.equal(h.state().channelConnections.newapi.name,'测试期间名字');assert.equal(h.dialog(),dialog);assert.equal(h.nodes.get('modalMask').style.display,'flex');
 });
 test('共用Key更换后旧测速失效；一键结果不写入渠道JSON或保存记录',()=>{
  const h=make();h.click('edit-provider',{id:'newapi'});h.click('node-speed-all',{channel:'newapi'});h.drain();assert.equal(result(h,'primary').status,'success');h.event('input','[data-channel-config]',{channelConfig:'key'},'demo-replacement');h.click('apply-channel-connection');
