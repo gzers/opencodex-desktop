@@ -45,11 +45,6 @@
 .mnt-row-source,.mnt-row-empty { margin:0; color:var(--muted); font-size:var(--text-label); overflow-wrap:anywhere; }
 .mnt-row-side { min-width:0; display:grid; gap:6px; }
 .mnt-row-summary { margin:0; color:var(--muted); font-size:var(--text-label); line-height:1.6; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
-.mnt-row-notes>summary { cursor:pointer; color:var(--accent); font-size:var(--text-label); width:max-content; }
-.mnt-row-notes>summary:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
-.mnt-row-notes[open] { margin-top:6px; }
-.mnt-row-notes .mnt-release-heading { margin:8px 0 6px; }
-.mnt-row-notes .mnt-release-notes.compact { max-height:150px; }
 .mnt-row-actions { display:flex; justify-content:flex-end; align-self:center; }
 @media(max-width:760px){ .mnt-update-row { grid-template-columns:minmax(0,1fr) auto; } .mnt-row-side { grid-column:1/-1; } }
 .mnt-update-options { display:flex; flex-direction:column; gap:24px; }

@@ -143,10 +143,13 @@ test('确认弹窗读取当前备份选项；失败不关闭，取消勾选后�
   assert.equal(h.win.maintenancePrototype.model.state.updates.runtime.current,'2.50.0');
   assert.equal(h.win.maintenancePrototype.model.state.backups.length,before);
 });
-test('结果上下排列、两对象都有内部说明与安全参考链接；设置共用详情和进度',()=>{
+test('结果每对象一行只给摘要，完整说明与安全链接放进单对象详情',()=>{
   const h=harness();h.click('check-all');h.flush(850);
-  assert.ok(h.modal().body.includes('mnt-release-notes compact'));
-  assert.ok(h.modal().body.includes('rel="noopener noreferrer"'));
+  // 结果页只保留一行摘要；展开式说明已按用户要求移除。
+  assert.ok(h.modal().body.includes('mnt-row-summary'));
+  assert.ok(!h.modal().body.includes('mnt-row-notes'));
+  assert.ok(!h.modal().body.includes('mnt-release-notes compact'));
+
   h.doc.documentElement.dataset.route='settings';h.click('apply-dialog','runtime');
   assert.ok(h.modal().body.includes('role="region"'));
   assert.ok(h.modal().body.includes('兼容性说明'));

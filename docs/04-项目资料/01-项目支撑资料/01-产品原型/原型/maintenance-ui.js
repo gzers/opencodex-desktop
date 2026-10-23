@@ -93,7 +93,8 @@
       card.querySelector('.mod-actions').innerHTML=btn('check-all','检查更新','','primary',pending)+Object.entries(state.updates).filter(([,u])=>u.phase==='applying'||u.phase==='restart-required').map(([key])=>btn('progress','查看'+(key==='manager'?'管理器':'面板')+'进度',key)).join('');
       let progress=card.querySelector('.mnt-overview-progress');
       if(!progress){card.insertAdjacentHTML('beforeend','<div class="mnt-overview-progress"></div>');progress=card.querySelector('.mnt-overview-progress');}
-      progress.innerHTML=Object.entries(state.updates).filter(([,u])=>busy(u)||u.phase==='restart-required').map(([key])=>progressMarkup(key)).join('');
+      // 检查阶段的行内状态已是反馈；这里只保留真正需要进度条的安装 / 待重启。
+      progress.innerHTML=Object.entries(state.updates).filter(([,u])=>u.phase==='applying'||u.phase==='restart-required').map(([key])=>progressMarkup(key)).join('');
       for (const [key,u] of Object.entries(state.updates)) {
         const node=$('#card-upgrade-'+(key==='runtime'?'official':'manager'));
         node.setAttribute('aria-busy',String(busy(u)));
@@ -149,7 +150,7 @@
         +'<div class="mnt-row-main"><div class="mnt-row-title"><strong>'+esc(u.label)+'</strong><span class="tag">'+labels[u.phase]+'</span></div>'
         +'<div class="mnt-row-version"><span>'+esc(u.current)+'</span>'+(avail?'<span aria-hidden="true">→</span><b>'+esc(u.candidate)+'</b>':'')+'</div>'
         +'<p class="mnt-row-source">'+esc(u.source)+'</p>'+(avail?'':'<p class="mnt-row-empty">'+(u.phase==='failed'?'未能取得候选版本，请重新检查。':'当前没有待确认的更新。')+'</p>')+'</div>'
-        +(avail?'<div class="mnt-row-side"><p class="mnt-row-summary">'+esc(notesSummary(key))+'</p><details class="mnt-row-notes"><summary>更新内容</summary>'+releaseNotes(key,true)+'</details></div>':'')
+        +(avail?'<div class="mnt-row-side"><p class="mnt-row-summary">'+esc(notesSummary(key))+'</p></div>':'')
         +'<div class="mnt-row-actions">'+btn('update-detail',u.phase==='failed'?'查看失败与重试':'查看详情',key,'',busy(u)||u.phase==='idle')+'</div></section>';
     }).join('')+'</div>','',null,{hideConfirm:true,cancelLabel:'关闭'});
   }
