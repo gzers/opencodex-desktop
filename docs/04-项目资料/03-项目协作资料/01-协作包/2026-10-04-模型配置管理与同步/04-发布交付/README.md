@@ -133,3 +133,27 @@ PR8 head b19b01e2的CI39455864253已全部通过，Windows真实EXE覆盖模版�
 
 未能执行：在 Windows WebView2 中实际运行（本机为 macOS）。
 
+### 2026-10-24 门禁扩充至 15 项（含原型对照）
+
+`gate:release` 原先只跑到实屏与真实目录检查，未含后来新增的四套原型并排对照，发布门禁因此不完整。现已补齐并完整实跑：
+
+| 步骤 | 结果 |
+| --- | --- |
+| typecheck | 通过 |
+| unit | **763 项通过 / 11 跳过** |
+| build | 通过 |
+| audit:models | 32/32 |
+| audit:preview | 30/30 |
+| audit:geometry | 21/21 |
+| audit:template | 28/28 |
+| audit:export | 18/18 |
+| audit:update | **24/24** |
+| audit:parity:list | 8/8 |
+| audit:parity（保存预览） | 10/10 |
+| audit:parity:export | 7/7 |
+| audit:parity:template | 11/11 |
+| audit:catalog-naming | 真实目录 78 行全部合规 |
+| audit:catalog-crossvalidate | 官方 `config validate` 通过 |
+
+合计 **15 项通过、0 失败、0 跳过**；界面类断言 219 项（32+30+21+28+18+24+8+10+7+11）。需要外部条件的检查不在脚本内，仍不计入通过。
+
