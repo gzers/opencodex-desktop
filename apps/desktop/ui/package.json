@@ -20,7 +20,8 @@
     "audit:catalog-crossvalidate": "node qa/catalog-naming-crossvalidate.mjs",
     "audit:export": "node qa/export-visual.mjs",
     "audit:template": "node qa/template-visual.mjs",
-    "audit:update": "node qa/update-visual.mjs"
+    "audit:update": "node qa/update-visual.mjs",
+    "audit:geometry": "node qa/geometry-visual.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "2.12.1",

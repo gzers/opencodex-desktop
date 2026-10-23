@@ -119,7 +119,9 @@ async function applyBatch(){
 <style scoped>
 .channel-model-table> .model-table-scroll>table>thead>tr>th:first-child,.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:first-child{width:36px;min-width:36px;white-space:nowrap}
 .channel-model-table{display:grid;gap:var(--space-3);min-width:0;container-type:inline-size}.model-raw-id{display:block;white-space:normal;overflow-wrap:anywhere;font-family:var(--font-mono,monospace)}
-/* WP-47：36 / 弹性 / 62 / 182；首行同轴，两行摘要留在下方。 */
+/* WP-47：36 / 弹性 / 62 / 182；首行同轴，两行摘要留在下方。
+   auto 布局会按内容重算列宽，必须固定布局才能让三列严格落在 36 / 62 / 182。 */
+.channel-model-table> .model-table-scroll>table{table-layout:fixed;width:100%}
 .channel-model-table> .model-table-scroll>table>thead>tr>th:nth-child(3),.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:nth-child(3){width:62px;min-width:62px}
 .channel-model-table> .model-table-scroll>table>thead>tr>th:nth-child(4),.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:nth-child(4){width:182px;min-width:182px}
 .channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td{vertical-align:top}
