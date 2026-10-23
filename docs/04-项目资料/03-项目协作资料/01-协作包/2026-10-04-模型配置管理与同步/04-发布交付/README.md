@@ -195,3 +195,22 @@ OCX_OFFICIAL_ENTRY=<官方 ocx.mjs> OCX_OFFICIAL_NODE=<node> npm run gate:releas
 - 不用原型或单测结果替代真实链路；不以“功能可用”放过与原型不同的界面。
 - 发布说明只在代码仓库根 `CHANGELOG.md` 维护，已有 `[0.2.7] - 2026-10-24` 段落。
 
+### 2026-10-24 补跑 Rust 集成测试（此前只跑过 --lib）
+
+此前所有后端验证只覆盖 `cargo test --lib`（967 项），**35 个集成测试文件从未全量执行**。本轮补跑：
+
+```sh
+cd apps/desktop/tauri && cargo test --tests
+```
+
+结果：**38 个测试二进制全部 `ok`，0 失败，8 项忽略**（忽略项均为需要真实官方 CLI/网络环境的 opt-in 用例，例如 `model_config_official_real` 与 `model_research_real`）。
+
+含实际的 loopback 集成用例：`config_sync_webdav_real`（6 项，15.2s）、`provider_auth_native`（8 项，15.1s）等均通过。加上 `--lib` 的 967 项与 `event_registry` 的 38 项，后端总计 **1005 项通过 / 11 忽略**。
+
+发布门禁的两条命令现为：
+
+```sh
+cd apps/desktop/tauri && cargo test --lib && cargo test --tests
+cd apps/desktop/ui && npm run gate:release
+```
+
