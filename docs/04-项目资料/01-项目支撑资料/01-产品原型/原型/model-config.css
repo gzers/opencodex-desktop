@@ -163,7 +163,7 @@
 .mp-preview-group{margin:12px 0;padding:7px 9px 9px;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--raised) 78%,transparent)}
 .mp-preview-group h3,.mp-preview-group-title{font-size:var(--text-label);margin:0 0 7px;font-weight:600}
 /* 渠道标题是一整行可点击操作条：眼睛图标表示显示状态，右侧写明停用 / 恢复。 */
-.mp-preview-group-title{display:flex;align-items:center;gap:8px;width:100%;max-width:100%;box-sizing:border-box;min-height:34px;padding:5px 6px;border:1px solid transparent;background:transparent;color:var(--text);font:inherit;font-size:var(--text-label);text-align:left;cursor:pointer;border-radius:var(--radius-sm)}
+.mp-preview-group-title{position:relative;display:flex;align-items:center;gap:8px;width:100%;max-width:100%;box-sizing:border-box;min-height:34px;padding:5px 6px;border:1px solid transparent;background:transparent;color:var(--text);font:inherit;font-size:var(--text-label);text-align:left;cursor:pointer;border-radius:var(--radius-sm)}
 .mp-preview-group-title:hover{border-color:var(--border-soft);background:var(--hover)}
 .mp-preview-group-eye{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:5px;color:var(--muted)}
 .mp-preview-group-eye svg{width:15px;height:15px;stroke-width:1.8}
@@ -172,10 +172,10 @@
 .mp-preview-group-title strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
 .mp-preview-group-title small,.mp-preview-group h3 small{color:var(--muted);font-size:var(--text-caption);font-weight:400;white-space:nowrap}
 .mp-preview-group-action{margin-left:auto;flex:none;color:var(--muted);font-size:var(--text-caption);white-space:nowrap}
+.mp-preview-group-title:hover .mp-preview-group-action{color:var(--text)}
 /* 变更直接标在渠道与型号上：渠道卡描边 + “改”标记，悬浮才展开具体启停。 */
 .mp-preview-group-title.is-changed{border-color:color-mix(in srgb,var(--amber) 45%,var(--border))}
 .mp-preview-delta-tag{flex:none;padding:0 5px;border-radius:5px;background:var(--amber-soft);color:var(--amber);font-size:10px;line-height:16px;font-weight:600}
-.mp-preview-group-title{position:relative}
 /* 悬浮时才出现的变更说明：贴右侧展开，不改变标题行宽度，也不盖住左侧型号。 */
 .mp-preview-delta-note{display:none;position:absolute;right:8px;top:calc(100% + 4px);z-index:4;max-width:70%;padding:4px 8px;border:1px solid color-mix(in srgb,var(--amber) 32%,var(--border));border-radius:6px;background:var(--panel);box-shadow:0 6px 18px #0000001f;color:var(--amber);font-size:var(--text-caption);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 .mp-preview-group-title:hover .mp-preview-delta-note,.mp-preview-group-title:focus-visible .mp-preview-delta-note{display:block}
@@ -194,8 +194,6 @@
 .mp-preview-other dd span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mp-preview-other dd em{color:var(--muted);font-style:normal;flex:none}
 
-
-.mp-preview-group-title:hover .mp-preview-group-action{color:var(--text)}
 .mp-preview-group-title.is-off{color:var(--muted)}
 .mp-preview-group-title.is-off .mp-preview-group-eye{color:var(--muted)}
 .mp-preview-group-title.is-locked{cursor:default;background:transparent;border-color:transparent;margin-bottom:7px}
