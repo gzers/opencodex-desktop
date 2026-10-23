@@ -16,7 +16,8 @@
     "inventory:components": "node qa/component-inventory.mjs",
     "audit:models": "node qa/model-visual.mjs",
     "audit:preview": "node qa/preview-visual.mjs",
-    "audit:catalog-naming": "node qa/catalog-naming-real.mjs"
+    "audit:catalog-naming": "node qa/catalog-naming-real.mjs",
+    "audit:catalog-crossvalidate": "node qa/catalog-naming-crossvalidate.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "2.12.1",
