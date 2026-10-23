@@ -33,7 +33,8 @@ test('读取不建立未保存修改，仍可直接打开保存核对且确认�
   assert.match(h.page(), /data-channel-state="clean"/)
   h.click('save')
   assert.doesNotMatch(h.dialog(), /本次变更与写入|协议写入计划/)
-  assert.equal(h.nodes.get('modalConfirm').disabled, true)
+  assert.equal(h.nodes.get('modalConfirm').disabled, false)
+  h.runConfirm(); assert.notEqual(h.nodes.get('modalMask').style.display, 'flex')
 })
 
 test('读取失败 / 无权限 / 无接口只提示，不写来源也不改草稿', () => {

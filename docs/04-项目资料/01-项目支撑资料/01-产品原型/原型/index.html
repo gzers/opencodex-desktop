@@ -6087,6 +6087,7 @@ function notificationJump(item){
   if(item.action==='restore') return ()=>openRestoreConfirm(item.target);
   if(item.action==='upgrade'||item.action==='app-update') return ()=>openSettingsSection('upgrade');
   if(item.action==='sync') return ()=>openSettingsSection('sync');
+  if(item.action==='models') return ()=>setRoute('models');
   // 跳转日志必须同时激活「日志历史」Tab，避免落在通知历史里。
   if(item.action==='logs') return ()=>{setRoute('logs');activateDiagTab('logs');};
   if(item.action==='settings-installation') return ()=>openSettingsSection('installation');
@@ -7114,6 +7115,20 @@ window.hideModelSaveNotification=id=>{if(id)modelSaveHidden.add(id);};
 window.openModelSaveNotification=id=>{
   const item=notifications.find(n=>n.id===id&&!n.deleted&&n.eventId==='model.policy.save');if(!item)return;
   item.read=true;modelSaveHidden.delete(id);closeNotificationPanel();renderNotifications();renderModelSaveTask(item);
+};
+// 保存确认被拦下（基准变化 / 待确认编辑 / 超限 / 校验错误）：登记为通知，草稿保留。
+window.modelSaveBlockedBridge=function(payload){
+  const spec=window.MaintenanceEvents.events.find(event=>event.id==='model.policy.save.blocked');
+  const reason=typeof payload?.reason==='string'&&payload.reason?payload.reason:'保存未写入，草稿保留';
+  const key='model-policy-save-blocked';
+  let item=notifications.find(entry=>entry.id===key);
+  if(item?.deleted)item=null;
+  if(!item){item={id:key,eventId:spec.id,cat:spec.category,op:key,dedupe:key,read:false,resolved:false,deleted:false};notifications.unshift(item);}
+  if(item.detail===reason&&item.read&&!item.resolved)return key;
+  Object.assign(item,{kind:'warning',title:'模型配置未保存',detail:reason+'；草稿保留，可回到模型配置重新核对。',action:'models',time:clockLabel(),read:false,resolved:false});
+  delete item.resolvedAt;
+  renderNotifications();toast('未保存：'+reason);
+  return key;
 };
 window.modelSaveNotificationBridge=function(snapshot){
   const spec=window.MaintenanceEvents.events.find(event=>event.id==='model.policy.save');

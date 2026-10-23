@@ -18,6 +18,21 @@ test('模型保存事件注册到共享任务与通知中心',()=>{
  assert.deepEqual(spec.dedupeFields,['operationId']);
 });
 
+test('保存确认被拦下登记独立通知，且不接收业务内容',()=>{
+ const spec=events.events.find(item=>item.id==='model.policy.save.blocked');
+ assert.ok(spec);
+ assert.equal(spec.module,'模型配置');
+ assert.equal(spec.severity,'warning');
+ assert.deepEqual(spec.delivery,['toast','center']);
+ assert.equal(spec.implemented,'prototype');
+ assert.equal(spec.consumer,'modelSaveBlockedBridge');
+ assert.match(spec.redaction,/不接收计划、渠道名、URL、Key/);
+ const html=source(),js=model();
+ assert.match(html,/window\.modelSaveBlockedBridge=function/);
+ assert.match(js,/modelSaveBlockedBridge/);
+ assert.doesNotMatch(js,/mpSaveError/);
+});
+
 test('模型页移除独立进度卡，保存状态只经通知宿主桥接',()=>{
  const html=source(),js=model();
  assert.match(html,/id="notifHost"/);

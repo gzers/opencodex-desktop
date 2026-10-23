@@ -538,22 +538,46 @@
   const errors=saveReviewErrors(),staged=stagedModelEdits().length+stagedChannelConnections().length,over=count()>100;
   const others=saveReviewOtherRows(),shown=others.slice(0,8);
   const other=others.length?'<details class="mp-preview-other"><summary>另有 '+others.length+' 项字段变化</summary><dl>'+shown.map(r=>'<div><dt>'+esc(r.label)+'</dt><dd><span>'+esc(r.before)+'</span><em>→</em><span>'+esc(r.after)+'</span></dd></div>').join('')+(others.length>shown.length?'<div><dt>其余 '+(others.length-shown.length)+' 项</dt><dd><span>确认保存后按草稿写入</span></dd></div>':'')+'</dl></details>':'';
-  return preview(true)+other+(staged?'<p class="mp-alert">仍有未加入草稿的行 / 连接编辑，请先处理后再保存。</p>':'')+(errors.length?'<div class="mp-alert" role="alert">'+diffHTML(errors)+'</div>':'')+(over?'<p class="mp-alert">完整投影超过 100，请先减少发布项。</p>':'')+'<div id="mpSaveError" class="mp-alert" role="alert"></div>';
+  return preview(true)+other+(staged?'<p class="mp-alert">仍有未加入草稿的行 / 连接编辑，请先处理后再保存。</p>':'')+(errors.length?'<div class="mp-alert" role="alert">'+diffHTML(errors)+'</div>':'')+(over?'<p class="mp-alert">完整投影超过 100，请先减少发布项。</p>':'')+'';
  }
  function syncSaveReview(){
   const button=$('#modalConfirm');if(!button||!saveReview)return;
-  button.disabled=saveReviewGated();
-  button.title=button.disabled?'没有可写入的修改，或仍有待确认编辑 / 超限 / 校验错误':'';
+  // 确认始终可点：门禁不通过时也立即关闭，并把原因登记为通知，不在弹窗里留错误块。
+  const gated=saveReviewGated();
+  button.disabled=false;
+  button.title=gated?'确认会关闭弹窗并登记“模型配置未保存”通知：当前没有可写入的修改，或仍有待确认编辑 / 超限 / 校验错误':'';
  }
+
  function openSaveReview(){
   if(busy())return;
   const digest=policyDigest(),baseline=baseDigest();saveReview={digest,baseline};
   modal('保存 · 选择器预览',saveReviewHTML(),'确认保存',()=>{
-   if(stagedChannelConnections().length||stagedModelEdits().length||scenario==='drift'||digest!==policyDigest()||baseline!==baseDigest()){$('#mpSaveError').textContent='基准已变化，请关闭并重新打开保存预览。旧确认不会写入。';return;}
-   if(saveReviewGated()){$('#mpSaveError').textContent='当前没有可写入的修改，或回览仍有错误；请先在预览中调整。';syncSaveReview();return;}
+   // 基准变化只指草稿 / 已保存版本在弹窗打开后被改动；待确认编辑属于门禁原因，单独说明。
+   const stale=scenario==='drift'||digest!==policyDigest()||baseline!==baseDigest();
+   const gated=saveReviewGated();
+   if(stale||gated){
+    const reason=stale?'基准已变化，本次确认未写入':saveReviewBlockedReason();
+    saveReview=null;closeModal();notifySaveBlocked(reason,stale?'stale':'gated');return;
+   }
    const frozen=clone(draft);saveReview=null;closeModal();startSave(frozen);
-  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'保存是唯一提交入口，也是预览入口：点击保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，但确认保存保持禁用；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停，确认保存只发生一次——冻结当前草稿、先备份，再写入并核对目录，最后发布成功快照；保存后需要重启 Codex，校验失败时弹窗保留并显示原因。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
+  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'保存是唯一提交入口，也是预览入口：点击保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，但确认保存保持禁用；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停。确认后弹窗立即关闭：冻结当前草稿、先备份，再写入并核对目录，最后发布成功快照；保存后需要重启 Codex。确认时若草稿已变化或被门禁拦下，同样立即关闭弹窗，不再留在弹窗里报错，而是登记一条“模型配置未保存”通知，草稿保留。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
   $('#modal').classList.add('mp-preview-modal');syncSaveReview();
+ }
+ // 保存被拦下走已注册通知，不在弹窗里留第二处错误提示。
+ // 具体原因只取第一条可解释的门禁，避免提示笼统。
+ function saveReviewBlockedReason(){
+  if(stagedChannelConnections().length)return '还有未加入草稿的连接编辑，本次确认未写入';
+  if(stagedModelEdits().length)return '还有未加入草稿的行编辑，本次确认未写入';
+  if(count()>100)return '完整投影超出 100，本次确认未写入';
+  const errors=saveReviewErrors();
+  if(errors.length)return '校验未通过：'+errors[0]+'，本次确认未写入';
+  if(!channelDraftDirty())return '没有未保存的修改，本次确认未写入';
+  return '保存条件已变化，本次确认未写入';
+ }
+ function notifySaveBlocked(reason,key='gated'){
+  const payload={reason,key,at:Date.now()};
+  if(window.modelSaveBlockedBridge)window.modelSaveBlockedBridge(payload);
+  else notice(reason+'；草稿保留');
  }
  function refreshPreview(focusSelector=''){
   const body=$('#modalBody'),node=body?.querySelector('.mp-selector-preview');if(!node)return;
