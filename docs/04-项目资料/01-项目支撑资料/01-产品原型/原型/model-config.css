@@ -145,7 +145,7 @@
 .mp-order[open] summary::before,.mp-details[open] summary::before{transform:rotate(90deg)}
 .mp-selector-preview{min-width:0}
 /* 预览摘要固定在弹窗顶部；只有渠道列表滚动，摘要与底部说明始终可见。 */
-.mp-preview-budget-summary{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;padding:10px 0;margin:0 0 12px;border-bottom:1px solid var(--border);background:var(--panel)}
+.mp-preview-budget-summary{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;padding:10px 0;margin:0 0 12px;border-bottom:1px solid var(--border);background:transparent}
 #modal.mp-modal.mp-preview-modal{width:min(980px,calc(100% - 32px));height:min(760px,calc(100% - 40px));max-height:calc(100% - 40px)}
 #modal.mp-preview-modal #modalBody{display:flex;flex-direction:column;overflow:hidden;min-height:0}
 /* 预览与核对分区滚动：选择器占主要空间，变更与写入清单紧随其后，说明与确认按钮始终可见。 */
@@ -154,8 +154,8 @@
 #modal.mp-preview-modal .mp-preview-budget-summary{flex:none}
 #modal.mp-preview-modal .mp-preview-order{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;padding-right:4px;margin:0 0 12px}
 #modal.mp-preview-modal .mp-selector-preview>p.mp-muted{flex:none;margin-top:0}
-#modal.mp-preview-modal .mp-save-review{flex:none;min-height:0;max-height:42%;overflow:auto;margin:10px 0 0;padding:10px 0 0;border-top:1px solid var(--border)}
-#modal.mp-preview-modal .mp-save-review>summary{position:sticky;top:0;z-index:1;display:flex;align-items:center;gap:8px;padding:0 0 6px;background:var(--panel);flex-wrap:nowrap}
+#modal.mp-preview-modal .mp-save-review{flex:none;min-height:0;max-height:42%;overflow:auto;margin:12px 0 0;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--raised) 78%,transparent)}
+#modal.mp-preview-modal .mp-save-review>summary{position:sticky;top:0;z-index:1;display:flex;align-items:center;gap:8px;padding:0 0 6px;background:transparent;flex-wrap:nowrap}
 #modal.mp-preview-modal .mp-save-review>summary>span{flex:none}
 #modal.mp-preview-modal .mp-save-review-headline{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:var(--text-caption);font-weight:400}
 #modal.mp-preview-modal #mpSaveError:empty{display:none}
@@ -163,11 +163,12 @@
 .mp-preview-budget-summary>span{font-size:var(--text-caption);color:var(--muted)}
 .mp-preview-budget-summary.over-budget>strong,.mp-preview-budget-summary.over-budget>.mp-alert{color:var(--red)}
 .mp-preview-order{margin:14px 0;min-width:0}
-.mp-preview-group{margin:12px 0}
+/* 渠道是一张浅色卡片：外框 + 轻背景区分组，标题行不另铺纯白底。 */
+.mp-preview-group{margin:12px 0;padding:7px 9px 9px;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--raised) 78%,transparent)}
 .mp-preview-group h3,.mp-preview-group-title{font-size:var(--text-label);margin:0 0 7px;font-weight:600}
 /* 渠道标题是一整行可点击操作条：眼睛图标表示显示状态，右侧写明停用 / 恢复。 */
-.mp-preview-group-title{display:flex;align-items:center;gap:8px;width:100%;max-width:100%;box-sizing:border-box;min-height:34px;padding:5px 8px;border:1px solid var(--border-soft);background:color-mix(in srgb,var(--text) 2%,var(--panel));color:var(--text);font:inherit;font-size:var(--text-label);text-align:left;cursor:pointer;border-radius:var(--radius-sm)}
-.mp-preview-group-title:hover{border-color:var(--border);background:var(--hover)}
+.mp-preview-group-title{display:flex;align-items:center;gap:8px;width:100%;max-width:100%;box-sizing:border-box;min-height:34px;padding:5px 6px;border:1px solid transparent;background:transparent;color:var(--text);font:inherit;font-size:var(--text-label);text-align:left;cursor:pointer;border-radius:var(--radius-sm)}
+.mp-preview-group-title:hover{border-color:var(--border-soft);background:var(--hover)}
 .mp-preview-group-eye{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:5px;color:var(--muted)}
 .mp-preview-group-eye svg{width:15px;height:15px;stroke-width:1.8}
 .mp-preview-group-title>svg{width:15px;height:15px;flex:none}
@@ -176,12 +177,12 @@
 .mp-preview-group-title small,.mp-preview-group h3 small{color:var(--muted);font-size:var(--text-caption);font-weight:400;white-space:nowrap}
 .mp-preview-group-action{margin-left:auto;flex:none;color:var(--muted);font-size:var(--text-caption);white-space:nowrap}
 .mp-preview-group-title:hover .mp-preview-group-action{color:var(--text)}
-.mp-preview-group-title.is-off{color:var(--muted);border-style:dashed}
+.mp-preview-group-title.is-off{color:var(--muted)}
 .mp-preview-group-title.is-off .mp-preview-group-eye{color:var(--muted)}
-.mp-preview-group-title.is-locked{cursor:default;background:transparent;border-color:var(--border-soft);margin-bottom:7px}
+.mp-preview-group-title.is-locked{cursor:default;background:transparent;border-color:transparent;margin-bottom:7px}
 .mp-preview-group-title.is-locked .mp-preview-group-eye{color:var(--muted)}
-.mp-preview-group-title.is-locked:hover{border-color:var(--border-soft);background:transparent}
-.mp-preview-group.is-off{padding:0;border:0;border-radius:0;background:transparent;opacity:.62}
+.mp-preview-group-title.is-locked:hover{border-color:transparent;background:transparent}
+.mp-preview-group.is-off{background:color-mix(in srgb,var(--raised) 45%,transparent);border-style:dashed;opacity:.62}
 .mp-preview-group.is-off .mp-preview-group-title{margin-bottom:0}
 .mp-preview-items{display:flex;flex-wrap:wrap;gap:6px}
 .mp-preview-item{display:flex;align-items:center;gap:5px;padding:4px 8px;border:1px solid transparent;border-radius:6px;background:var(--rail);color:var(--text);font:inherit;font-size:var(--text-caption);max-width:100%;cursor:pointer}
@@ -313,6 +314,7 @@
 .mp-list-toolbar>.input{flex:1 1 180px;max-width:360px;min-width:100px}
 .mp-list-toolbar>.mp-actions{flex:0 1 auto;min-width:0;max-width:100%;margin-inline-start:auto;justify-content:flex-end;gap:var(--space-2)}
 .mp-list-toolbar>.mp-actions>.btn{flex:none}
+.mp-upstream-note{margin:-2px 0 12px;color:var(--muted);font-size:var(--text-caption)}
 .mp-draft-tools{display:flex;justify-content:flex-end;gap:4px;margin-top:6px}
 .mp-draft-tools .btn{min-height:28px;padding:3px 7px;font-size:var(--text-caption)}
 .mp-inline-notice{margin:10px 0;padding:9px 12px;border-radius:var(--radius-sm);background:var(--rail);font-size:var(--text-label)}
