@@ -15,6 +15,13 @@ describe('导出可选保存路径 (WP-32)', () => {
     expect(view).toContain('日期 / 单次包')
   })
 
+  it('勾选 Skill / MCP 后必须能完成复核，否则导出永久禁用（WP-56 回归）', () => {
+    // assetsReviewed 曾只被读取和重置、没有可交互控件，勾选资源后导出按钮再也点不动。
+    expect(view).toContain('v-model="assetsReviewed"')
+    expect(view).toContain('已复核所选资源')
+    expect(view).toContain('勾选 Skill 或 MCP 后需先复核资源内容，方可导出')
+  })
+
   it('结果区显示备份包路径与打开目录', () => {
     expect(view).toContain('备份包')
     expect(view).toContain('打开备份包目录')

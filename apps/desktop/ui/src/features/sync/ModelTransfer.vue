@@ -276,7 +276,7 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
           <p v-if="exportSource!=='draft'&&!keyChannelIds.length" class="sync-credential-hint">先在左栏选择含 Key 认证的渠道。</p>
         </section>
         <section class="sync-credential-block">
-          <label class="sync-credential-head"><input v-model="extensionCredentials" type="checkbox" :disabled="busy||catalogueLoading||!hasAssets" />扩展凭据</label>
+          <label class="sync-credential-head"><input v-model="extensionCredentials" type="checkbox" :disabled="busy||catalogueLoading||!hasAssets" />扩展凭据</label><label v-if="hasAssets" class="sync-credential-head"><input v-model="assetsReviewed" type="checkbox" :disabled="busy||catalogueLoading" aria-label="已复核所选 Skill 与 MCP 资源" />已复核所选资源</label><p v-if="hasAssets&&!assetsReviewed" class="model-muted">勾选 Skill 或 MCP 后需先复核资源内容，方可导出。</p>
           <p class="sync-credential-hint">例如 MCP 的 Authorization / 环境变量。</p>
           <p v-if="!hasAssets" class="sync-credential-hint">先在左栏选择 Skills 或 MCP。</p>
         </section>
