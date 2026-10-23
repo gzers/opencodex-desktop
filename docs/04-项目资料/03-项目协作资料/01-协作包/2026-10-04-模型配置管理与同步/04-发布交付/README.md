@@ -235,3 +235,22 @@ node --test test/smoke/windows-bundle-identity.test.mjs
 
 需 Windows 运行时才能执行的 Powershell smoke（`windows-process-token`、`windows-acceptance-profile`、`windows-restart-handoff`）未在本机运行。
 
+### 2026-10-24 后端忽略用例清点（下游盲区收尾）
+
+后端共 11 处 `#[ignore]`，逐条核对用途，确认**没有一处是在掩盖缺陷**：
+
+| 位置 | 忽略原因 | 处置 |
+| --- | --- | --- |
+| `commands/network.rs` | 访问真实网络 | 需显式运行 |
+| `modules/about/remote.rs` | 访问 npm registry | 需显式运行 |
+| `modules/sync/config.rs` | 访问系统钥匙串 | 注释给出显式运行命令，本轮已核对其断言内容 |
+| `tests/model_config_official_real.rs` ×2 | 需已安装官方 CLI + 临时 HOME | 已获取官方 2.84.0 并尝试；受服务归属限制未完成 |
+| `tests/provider_auth_native.rs` | 需 `OPENCODEX_SANDBOX=1` | 写入/删除随机自有凭据夹具 |
+| `tests/windows_runtime.rs` | 子进程助手，由父测试显式执行 | 由父用例覆盖 |
+| `tests/model_research_real.rs` | 显式公网读取准入 | 不涉及模型生成 |
+| `tests/config_sync_webdav_real.rs` | 需自有 TLS WebDAV 夹具与本地 CA | 非忽略版本已覆盖 loopback 同步 |
+| `tests/status_snapshot.rs` | Tauri 托盘需原生主线程 | 平台限制 |
+| `tests/backup_process_lock.rs` | 子进程助手 | 由父测试覆盖 |
+
+结论：忽略项分三类——真实外部依赖（网络/官方 CLI/钥匙串）、平台限制（原生主线程）、子进程助手（由父用例触发）。第三类已被父用例实际覆盖；第一类中的官方 CLI 已尝试并记录受阻原因；其余不影响 0.2.7 的渠道/模型/导出链路。
+
