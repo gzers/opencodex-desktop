@@ -214,3 +214,24 @@ cd apps/desktop/tauri && cargo test --lib && cargo test --tests
 cd apps/desktop/ui && npm run gate:release
 ```
 
+### 2026-10-24 补跑 Windows 专项 smoke 测试
+
+CI 的 `windows-candidate.yml` 里有一组 smoke 测试。其中三份是**纯逻辑断言**（不依赖 Windows 运行时），本机可直接执行，此前从未跑过：
+
+```sh
+cd <repo>
+node --test test/smoke/windows-model-ui.test.mjs
+node --test test/smoke/windows-cdp.test.mjs
+node --test test/smoke/windows-bundle-identity.test.mjs
+```
+
+结果：**17 项全部通过，0 失败**。
+
+- `windows-model-ui`（5 项）：概览完整/门禁两态、写入必须使用已采纳沙盒、非法原生根拒绝、导出路径 Windows 规范化前缀与越界拒绝、任务预览 JSON 边界。
+- `windows-cdp`（7 项）：非数组/空目标不算渲染、双向超时、连接拒绝保留底层错误、非回环端点拒绝。
+- `windows-bundle-identity`（5 项）：缺失或歧义标记拒绝、不支持的包类型拒绝。
+
+意义：这些测试覆盖 Windows 路径安全与 UI 判据，与 0.2.7 改动的渠道/模型/导出链路直接相关。它们的通过说明改动没有破坏 Windows 侧的既有合同；但**仍不能替代**在真实 WebView2 中的拖拽与触屏验证。
+
+需 Windows 运行时才能执行的 Powershell smoke（`windows-process-token`、`windows-acceptance-profile`、`windows-restart-handoff`）未在本机运行。
+
