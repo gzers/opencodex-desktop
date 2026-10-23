@@ -31,6 +31,27 @@
 .mnt-backup-list li { display:flex; gap:12px; flex-wrap:wrap; justify-content:space-between; align-items:center; padding:12px 0; border-top:1px solid var(--border); }
 .mnt-backup-list li>div:first-child { min-width:0; flex:1 1 180px; }
 .mnt-backup-list span { display:block; font-size:var(--text-label); color:var(--muted); margin-top:5px; }
+/* 检查结果一屏看完：每个对象一行，说明折进行内，不默认出现内部滚动条。 */
+.mnt-lead { margin:0 0 16px; }
+.mnt-update-rows { display:flex; flex-direction:column; gap:0; }
+.mnt-update-row { display:grid; grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr) auto; align-items:start; gap:8px 20px; padding:14px 0; border-top:1px solid var(--border); }
+.mnt-update-row:first-child { border-top:0; padding-top:4px; }
+.mnt-row-main { min-width:0; display:grid; gap:6px; }
+.mnt-row-title { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.mnt-row-title strong { font-size:var(--text-control); font-weight:650; }
+.mnt-row-version { display:flex; align-items:baseline; gap:10px; font-size:var(--text-control); font-variant-numeric:tabular-nums; min-width:0; }
+.mnt-row-version span { color:var(--muted); }
+.mnt-row-version b { font-weight:650; }
+.mnt-row-source,.mnt-row-empty { margin:0; color:var(--muted); font-size:var(--text-label); overflow-wrap:anywhere; }
+.mnt-row-side { min-width:0; display:grid; gap:6px; }
+.mnt-row-summary { margin:0; color:var(--muted); font-size:var(--text-label); line-height:1.6; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.mnt-row-notes>summary { cursor:pointer; color:var(--accent); font-size:var(--text-label); width:max-content; }
+.mnt-row-notes>summary:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.mnt-row-notes[open] { margin-top:6px; }
+.mnt-row-notes .mnt-release-heading { margin:8px 0 6px; }
+.mnt-row-notes .mnt-release-notes.compact { max-height:150px; }
+.mnt-row-actions { display:flex; justify-content:flex-end; align-self:center; }
+@media(max-width:760px){ .mnt-update-row { grid-template-columns:minmax(0,1fr) auto; } .mnt-row-side { grid-column:1/-1; } }
 .mnt-update-options { display:flex; flex-direction:column; gap:24px; }
 .mnt-update-option p { color:var(--muted); font-size:var(--text-label); }
 .modal:has(.mnt-update-flow) { width:min(90%,780px); max-height:88%; }

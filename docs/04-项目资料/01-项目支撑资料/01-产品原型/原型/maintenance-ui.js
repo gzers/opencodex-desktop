@@ -43,6 +43,11 @@
     const status=notesState[target];
     return status==='loading'?'<p role="status">正在读取本版本更新说明…</p>':status==='failed'?'<p role="alert">更新说明暂时无法加载。版本检查结果仍有效。</p>'+btn('notes-retry','重试说明',target):status==='empty'?'<p>发布者尚未提供本版本的更新说明。</p>':releases[target].sections.slice(0,compact?2:undefined).map(([title,body])=>'<section><h5>'+esc(title)+'</h5><p>'+esc(body)+'</p></section>').join('');
   }
+  // 结果弹窗每行只留一句摘要；完整说明折进行内 details。
+  function notesSummary(target) {
+    const r=releases[target];if(!r||!r.sections||!r.sections.length)return '发布者尚未提供本版本说明';
+    const first=r.sections[0];return first[0]+'：'+String(first[1]).replace(/\s+/g,' ').slice(0,40)+'…';
+  }
   function releaseNotes(target,compact=false) {
     return '<div class="mnt-release-heading"><h4>更新内容</h4><a href="'+releases[target].url+'" target="_blank" rel="noopener noreferrer">'+(target==='manager'?'查看官方发布记录':'查看官方包页面')+' ↗</a></div><div class="mnt-release-notes '+(compact?'compact':'')+'" tabindex="0" role="region" aria-label="'+esc(state.updates[target].label)+'更新内容">'+notesContent(target,compact)+'</div>';
   }
@@ -136,7 +141,17 @@
       if(u.phase==='available'||u.phase==='failed'){applyDialog(target);return;}
       wideDialog(u.label+'更新详情','<p class="mnt-kicker">'+labels[u.phase]+'</p><div class="mnt-version-hero"><strong>'+esc(u.current)+'</strong></div><p class="mnt-note">'+esc(u.source)+'</p>','',null,{hideConfirm:true,cancelLabel:'关闭'});return;
     }
-    wideDialog('检查更新结果','<p class="mnt-note">分别查看更新内容与范围，确认后才会开始更新。</p><div class="mnt-update-options">'+Object.entries(state.updates).map(([key,u])=>'<section class="mnt-update-option"><div class="mnt-result-heading"><h4>'+u.label+'</h4><span class="tag">'+labels[u.phase]+'</span></div><div class="mnt-version-hero"><span>'+esc(u.current)+'</span>'+(u.phase==='available'?'<span aria-hidden="true">→</span><strong>'+esc(u.candidate)+'</strong>':'')+'</div><p class="mnt-note">'+esc(u.source)+'</p>'+(u.phase==='available'?releaseNotes(key,true):'<p>'+(u.phase==='failed'?'未能取得候选版本，请重新检查。':'当前没有待确认的更新。')+'</p>')+'<div class="controls">'+btn('update-detail',u.phase==='failed'?'查看失败与重试':'查看详情',key,'',busy(u)||u.phase==='idle')+'</div></section>').join('')+'</div>','',null,{hideConfirm:true,cancelLabel:'关闭'});
+    const rows=Object.entries(state.updates);
+    // 一屏看完：每个对象只占一行摘要，更新说明折进行内，需要时才展开。
+    wideDialog('检查更新结果','<p class="mnt-note mnt-lead">分别查看更新内容与范围，确认后才会开始更新。</p><div class="mnt-update-rows">'+rows.map(([key,u])=>{
+      const avail=u.phase==='available';
+      return '<section class="mnt-update-row">'
+        +'<div class="mnt-row-main"><div class="mnt-row-title"><strong>'+esc(u.label)+'</strong><span class="tag">'+labels[u.phase]+'</span></div>'
+        +'<div class="mnt-row-version"><span>'+esc(u.current)+'</span>'+(avail?'<span aria-hidden="true">→</span><b>'+esc(u.candidate)+'</b>':'')+'</div>'
+        +'<p class="mnt-row-source">'+esc(u.source)+'</p>'+(avail?'':'<p class="mnt-row-empty">'+(u.phase==='failed'?'未能取得候选版本，请重新检查。':'当前没有待确认的更新。')+'</p>')+'</div>'
+        +(avail?'<div class="mnt-row-side"><p class="mnt-row-summary">'+esc(notesSummary(key))+'</p><details class="mnt-row-notes"><summary>更新内容</summary>'+releaseNotes(key,true)+'</details></div>':'')
+        +'<div class="mnt-row-actions">'+btn('update-detail',u.phase==='failed'?'查看失败与重试':'查看详情',key,'',busy(u)||u.phase==='idle')+'</div></section>';
+    }).join('')+'</div>','',null,{hideConfirm:true,cancelLabel:'关闭'});
   }
   function progressActions(target) {
     const u=state.updates[target];
