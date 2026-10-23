@@ -61,3 +61,32 @@ PR8 head b19b01e2的CI39455864253已全部通过，Windows真实EXE覆盖模版�
 - 因此真实保存读回只能在已安装并归属本机的真实环境执行；本机服务现有 26 个渠道、247 个模型，`FeiMao-CNM` 与 `FeiMao-Claude` 已启用，具备条件但**会改写用户实际配置**，未擅自执行。
 - 已用只读方式核对本机真实服务与 `config.json` 的渠道集合一致；未执行任何写入。
 
+### 2026-10-24 发布候选门禁快照
+
+新增 `npm run gate:release`（`qa/gate-release.mjs`），一次跑完全部可自动化检查并输出汇总报告；需要外部条件的检查不在脚本内，避免把“没跑”冒充“通过”。
+
+本次结果（本机实跑，11 项全过、0 失败、0 跳过）：
+
+| 步骤 | 结果 |
+| --- | --- |
+| typecheck | 通过（2.9s） |
+| unit | **762 项通过 / 11 跳过** |
+| build | 通过（vite build 290ms） |
+| audit:models | **32/32**（1180 / 1440 / 900、深浅、150% / 200%） |
+| audit:preview | **30/30**（含宽度 980 断言） |
+| audit:geometry | **21/21**（WP-40 / 41 / 47） |
+| audit:template | **28/28** |
+| audit:export | **18/18** |
+| audit:update | **22/22** |
+| audit:catalog-naming | 真实目录 **78 条渠道行** 全部 `display_name === slug` |
+| audit:catalog-crossvalidate | 清除友好名后的配置通过官方 `config validate` |
+
+报告落盘：`GATE_OUT_DIR` 指定的 `gate-report.json`（默认临时目录）。
+
+**这份快照仍不等于可以发布。** 下列五项需要外部条件，本轮没有、也不应伪造：
+
+1. 真实官方保存 → 目录重写 → 客户端重启加载（需授权改写用户实际渠道配置）；
+2. 真实供应商带认证的模型清单耗时（需明确授权的密钥与目的地）；
+3. macOS WKWebView 与 Windows WebView2 的原生拖拽；
+4. 真机触屏的 500ms 长按手感与误触；
+5. main 集成、tag 制品、验签、公开与 stable 晋升。
