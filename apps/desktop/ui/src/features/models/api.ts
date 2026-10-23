@@ -59,6 +59,8 @@ export interface ModelProjection {connectionDigest?:string|null;nativeModelId?:s
 export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
 export interface TemplateUsage {templateId:string;revisionId:string;libraryDigest:string;policyDigest:string;workspaceDigest:string;references:{state:string;location:string}[];models:{state:string;channelId:string;channelLabel:string;modelId:string;matched:boolean;reason:string;adopted:boolean;resolutionError:string|null}[];historicalDependency:boolean}
 export interface SaveScope {channelIds:string[];includeShared:boolean}
+/** 保存被拦下的固定原因；只用于通知去重与文案，不携带业务标识。 */
+export type SaveBlockedReason = 'staged_edit'|'over_budget'|'validation'|'no_changes'|'stale'
 export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];deferredChannels?:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[];removedProviders?:string[];historySource?:string|null;runtimeChanges?:ChangeFact[] }
 export interface ModelClientState {planId:string|null;status:'not_required'|'restart_required'|'pending_verification'|'user_confirmed'|'runtime_changed';checkedAt:string|null;checkId:string|null;confirmedAt:string|null;runtimeMatches:boolean;automaticClientVerification:boolean}
 export interface ModelHistoryEntry {id:string;createdAt:string;phase:string;channelLabels:string[];recoverable:boolean}
@@ -103,6 +105,8 @@ export const modelApi = {
   preparePolicyScoped: (policy:ModelPolicy,expectedLibrary:string,expectedPolicy:string,expectedWorkspace:string,scope:SaveScope) => invoke<SavePlan>('model_policy_prepare',{policy,expectedLibrary,expectedPolicy,expectedWorkspace,scope}),
   applyPolicy: (planId:string) => invoke<SavePlan>('model_policy_apply',{planId}),
   policyResult: (planId:string) => invoke<SavePlan>('model_policy_result',{planId}),
+  /** 保存确认被门禁或基准变化拦下：只上报固定原因枚举，不带计划 / 渠道 / URL / Key。 */
+  policySaveBlocked: (reason: SaveBlockedReason) => invoke<void>('model_policy_save_blocked',{reason}),
   latestPolicy: () => invoke<SavePlan|null>('model_policy_latest'),
   clientStatus:()=>invoke<ModelClientState>('model_policy_client_status'),
   checkClient:(planId:string,confirmationCheck?:string)=>invoke<ModelClientState>('model_policy_client_check',{request:{planId,confirmationCheck:confirmationCheck??null}}),

@@ -59,4 +59,20 @@ describe('渠道草稿等价判定', () => {
     expect(samePolicyDraft(null, null)).toBe(true)
     expect(samePolicyDraft(policy([]), null)).toBe(false)
   })
+
+  it('保存后重新读取不误报未保存（WP-42 闭环）', () => {
+    // 保存写入的草稿被重新读回时，会带回来源回执等记账字段，并可能改变对象键顺序；
+    // 这些差异都不能让“刚保存完”的页面重新变成有未保存修改。
+    const saved = channel({ selection: { mode: 'whitelist', models: ['gpt-a'] } })
+    const reread = channel({
+      templateRefs: [],
+      modelRefs: {},
+      selection: { mode: 'whitelist', models: ['gpt-a'] },
+      connection: { ...saved.connection, sourceReadId: 'read-after-save', importedConfig: { id: 'import-after-save', digest: 'digest' } },
+    })
+    expect(canonicalPolicy(policy([saved]))).toBe(canonicalPolicy(policy([saved])))
+    expect(samePolicyDraft(policy([saved]), policy([reread]))).toBe(true)
+    // 读回后真正改动仍必须报出来，不能因为放宽等价而吞掉编辑。
+    expect(samePolicyDraft(policy([saved]), policy([{ ...reread, selection: { mode: 'none' } }]))).toBe(false)
+  })
 })
