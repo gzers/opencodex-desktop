@@ -492,13 +492,30 @@
   if(templateDetail)editorOffset(host.closest('.main'));
  }
  function syncSaveNotification(){window.modelSaveNotificationBridge?.(operation?{id:operation.id,status:operation.status,step:operation.step,pending}:null);}
+ // 保存前的轻量差异：只判断渠道启停与型号启停，供标签与渠道卡着色 / 悬浮说明使用。
+ function savedProvider(id){return saved.providers.find(p=>p.id===id);}
+ function savedModelActive(id,modelId){const p=savedProvider(id);if(!p)return false;const m=p.models.find(x=>x.id===modelId);return !!m&&selected(p).includes(m);}
+ function channelChanges(p){
+  const old=savedProvider(p.id),changes=[];
+  if(!old)return {added:0,removed:0,total:p.models.length,enabled:false,text:'新渠道'};
+  if(old.enabled!==p.enabled)changes.push(p.enabled?'本次启用渠道':'本次停用渠道');
+  let added=0,removed=0;
+  p.models.forEach(m=>{const was=selected(old).some(x=>x.id===m.id),now=modelActive(p,m);if(now&&!was)added++;else if(!now&&was)removed++;});
+  if(added)changes.push('新启用 '+added+' 个型号');
+  if(removed)changes.push('停用 '+removed+' 个型号');
+  const flipped=old.enabled!==p.enabled;
+  return {added,removed,total:added+removed+(flipped?1:0),enabled:flipped,text:changes.join('；')};
+ }
  function preview(saveMode=false){
   const policy=draft,rows=projection(policy),base=rows.filter(r=>r.type==='base').length,fast=rows.filter(r=>r.type==='fast').length,hidden=rows.filter(r=>r.type==='hidden').length,over=rows.length>100;
   let groups=policy.providers.map(p=>{
    const locked=p.id==='native',off=!p.enabled;
-   const title=locked?'<h3 class="mp-preview-group-title is-locked"><span class="mp-preview-group-eye">'+icon('preview')+'</span><span>'+esc(p.name)+'</span><small>官方管理 · 只读</small></h3>':off?'<button type="button" class="mp-preview-group-title is-off" data-mp="preview-channel-toggle" data-id="'+esc(p.id)+'" aria-pressed="true" title="点击恢复该渠道"><span class="mp-preview-group-eye">'+icon('preview')+'</span><strong>'+esc(p.name)+'</strong><small>已停用 · 点击恢复</small><span class="mp-preview-group-action">恢复</span></button>':'<button type="button" class="mp-preview-group-title" data-mp="preview-channel-toggle" data-id="'+esc(p.id)+'" aria-pressed="false" title="点击停用该渠道"><span class="mp-preview-group-eye">'+icon('preview')+'</span><strong>'+esc(p.name)+'</strong><small>启用 '+selected(p).length+' / '+p.models.length+'</small><span class="mp-preview-group-action">停用</span></button>';
+   const delta=locked?null:channelChanges(p),marked=!!delta&&!!delta.total;
+   const deltaTag=marked?'<span class="mp-preview-delta-tag" aria-hidden="true">改</span>':'';
+   const deltaNote=marked?'<span class="mp-preview-delta-note">'+esc(delta.text)+'</span>':'';
+   const title=locked?'<h3 class="mp-preview-group-title is-locked"><span class="mp-preview-group-eye">'+icon('preview')+'</span><span>'+esc(p.name)+'</span><small>官方管理 · 只读</small></h3>':off?'<button type="button" class="mp-preview-group-title is-off'+(marked?' is-changed':'')+'" data-mp="preview-channel-toggle" data-id="'+esc(p.id)+'" aria-pressed="true" title="'+(delta&&delta.total?esc(delta.text)+' · ':'')+'点击恢复该渠道"><span class="mp-preview-group-eye">'+icon('preview')+'</span><strong>'+esc(p.name)+'</strong>'+deltaTag+'<small>已停用 · 点击恢复</small>'+'<span class="mp-preview-group-action">恢复</span></button>':'<button type="button" class="mp-preview-group-title'+(marked?' is-changed':'')+'" data-mp="preview-channel-toggle" data-id="'+esc(p.id)+'" aria-pressed="false" title="'+(delta&&delta.total?esc(delta.text)+' · ':'')+'点击停用该渠道"><span class="mp-preview-group-eye">'+icon('preview')+'</span><strong>'+esc(p.name)+'</strong>'+deltaTag+'<small>启用 '+selected(p).length+' / '+p.models.length+'</small>'+'<span class="mp-preview-group-action">停用</span>'+deltaNote+'</button>';
    if(off)return '<section class="mp-preview-group is-off">'+title+'</section>';
-   const items=p.models.map(m=>{const on=modelActive(p,m),supported=resolve(p,m).values.fast==='supported';return '<button type="button" class="mp-preview-item '+(on?'is-on':'is-off')+(supported?' has-fast':'')+'" data-mp="preview-model-toggle" data-id="'+esc(m.key)+'" aria-pressed="'+on+'" title="'+(on?'点击停用':'点击启用')+' '+esc(m.id)+(supported?' · 支持 Fast':'')+'" '+(locked?'disabled':'')+'><span>'+esc(m.id)+'</span>'+(supported?'<em class="mp-preview-fast">Fast</em>':'')+'</button>';}).join('');
+   const items=p.models.map(m=>{const on=modelActive(p,m),supported=resolve(p,m).values.fast==='supported',was=savedModelActive(p.id,m.id),change=locked||was===on?'':' '+(on?'is-added':'is-removed'),hint=change?(on?' · 本次新启用':' · 本次停用'):'';return '<button type="button" class="mp-preview-item '+(on?'is-on':'is-off')+(supported?' has-fast':'')+change+'" data-mp="preview-model-toggle" data-id="'+esc(m.key)+'" aria-pressed="'+on+'" title="'+(on?'点击停用':'点击启用')+' '+esc(m.id)+(supported?' · 支持 Fast':'')+hint+'" '+(locked?'disabled':'')+'><span>'+esc(m.id)+'</span>'+(supported?'<em class="mp-preview-fast">Fast</em>':'')+'</button>';}).join('');
    return '<section class="mp-preview-group">'+title+'<div class="mp-preview-items">'+(items||'<p class="mp-muted">该渠道暂无模型。</p>')+'</div></section>';
   });const system=rows.filter(r=>r.type==='hidden');if(system.length)groups.push('<section class="mp-preview-group"><h3>系统占用<small>只读</small></h3><div class="mp-preview-items">'+system.map(r=>'<div class="mp-preview-item hidden-item" title="'+esc(r.id)+'"><span>'+esc(r.id)+'</span></div>').join('')+'</div></section>');groups=groups.join('');
   return '<div class="mp-selector-preview" aria-label="预览选择器"><div id="mpPreviewBudget" class="mp-preview-budget-summary '+(over?'over-budget':'')+'" role="status"><strong>模型激活数 '+rows.length+'/100</strong><span>基础模型 '+base+' · Fast '+fast+' · 系统占用 '+hidden+'</span>'+(over?'<span class="mp-alert">超出激活预算，请减少发布项后再保存。</span>':'')+(pending?'<span class="mp-muted">已保存配置仍待重启 / 客户端核对。</span>':'')+'</div><div class="mp-preview-order" aria-label="完整选择器顺序">'+(groups||'<p class="mp-muted">没有计划发布的目录条目。</p>')+'</div></div>';
@@ -508,10 +525,20 @@
   return [...draft.providers.filter(p=>p.id!=='native').map(namingError).filter(Boolean),...routePlan().errors];
  }
  function saveReviewGated(){return !channelDraftDirty()||stagedModelEdits().length>0||stagedChannelConnections().length>0||count()>100||!!saveReviewErrors().length;}
+ function saveReviewOtherRows(){
+  const rows=[];
+  for(const g of policyChanges(saved,draft))for(const r of g.rows){
+   // 启停、白名单、顺序与发现记录都已由渠道卡 / 型号标签或读取状态直接表达，不再重复列出。
+   if(/启停$/.test(r.label)||/^(启用|白名单 \/ 有效选择|内部模型顺序|发现清单|发现更新时间)$/.test(r.label))continue;
+   rows.push({group:g.name,label:r.label,before:r.before,after:r.after});
+  }
+  return rows;
+ }
  function saveReviewHTML(){
-  const items=diff(saved,draft),errors=saveReviewErrors(),staged=stagedModelEdits().length+stagedChannelConnections().length,over=count()>100,clean=!channelDraftDirty();
-  const headline=items.length?esc(items[0]):clean?'当前草稿与最近成功保存的配置一致':'本次没有可写入的配置差异';
-  return preview(true)+'<details class="mp-details mp-save-review"><summary><span>本次变更与写入（'+items.length+' 项）</span><small class="mp-save-review-headline" title="'+esc(items.join('；')||headline)+'">'+headline+(items.length>1?' 等 '+items.length+' 项':'')+'</small></summary>'+(items.length?diffHTML(items):'<p class="mp-muted">当前草稿与最近成功保存的配置一致；这里只做核对，不会重复写入。</p>')+policyDiffHTML(saved,draft,false,true)+'<details class="mp-details"><summary>协议写入计划</summary>'+routePlanHTML(draft)+'</details></details>'+(staged?'<p class="mp-alert">仍有未加入草稿的行 / 连接编辑，请先处理后再保存。</p>':'')+(errors.length?'<div class="mp-alert" role="alert">'+diffHTML(errors)+'</div>':'')+(over?'<p class="mp-alert">完整投影超过 100，请先减少发布项。</p>':'')+(clean?'':'<p class="mp-muted">确认后会先备份，再写入并核对目录，最后发布成功快照；保存后需要重启 Codex。</p>')+'<div id="mpSaveError" class="mp-alert" role="alert"></div>';
+  const errors=saveReviewErrors(),staged=stagedModelEdits().length+stagedChannelConnections().length,over=count()>100;
+  const others=saveReviewOtherRows(),shown=others.slice(0,8);
+  const other=others.length?'<details class="mp-preview-other"><summary>另有 '+others.length+' 项字段变化</summary><dl>'+shown.map(r=>'<div><dt>'+esc(r.label)+'</dt><dd><span>'+esc(r.before)+'</span><em>→</em><span>'+esc(r.after)+'</span></dd></div>').join('')+(others.length>shown.length?'<div><dt>其余 '+(others.length-shown.length)+' 项</dt><dd><span>确认保存后按草稿写入</span></dd></div>':'')+'</dl></details>':'';
+  return preview(true)+other+(staged?'<p class="mp-alert">仍有未加入草稿的行 / 连接编辑，请先处理后再保存。</p>':'')+(errors.length?'<div class="mp-alert" role="alert">'+diffHTML(errors)+'</div>':'')+(over?'<p class="mp-alert">完整投影超过 100，请先减少发布项。</p>':'')+'<div id="mpSaveError" class="mp-alert" role="alert"></div>';
  }
  function syncSaveReview(){
   const button=$('#modalConfirm');if(!button||!saveReview)return;
@@ -525,7 +552,7 @@
    if(stagedChannelConnections().length||stagedModelEdits().length||scenario==='drift'||digest!==policyDigest()||baseline!==baseDigest()){$('#mpSaveError').textContent='基准已变化，请关闭并重新打开保存预览。旧确认不会写入。';return;}
    if(saveReviewGated()){$('#mpSaveError').textContent='当前没有可写入的修改，或回览仍有错误；请先在预览中调整。';syncSaveReview();return;}
    const frozen=clone(draft);saveReview=null;closeModal();startSave(frozen);
-  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'保存是唯一提交入口，也是预览入口：点击保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，但确认保存保持禁用；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。确认保存只发生一次：冻结当前草稿、校验并开始备份写入；校验失败时弹窗保留并显示原因。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
+  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'保存是唯一提交入口，也是预览入口：点击保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，但确认保存保持禁用；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停，确认保存只发生一次——冻结当前草稿、先备份，再写入并核对目录，最后发布成功快照；保存后需要重启 Codex，校验失败时弹窗保留并显示原因。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
   $('#modal').classList.add('mp-preview-modal');syncSaveReview();
  }
  function refreshPreview(focusSelector=''){

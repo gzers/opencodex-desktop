@@ -8,7 +8,7 @@ const saveButton=h=>{const html=h.nodes.get('mpPolicyStatus')?.outerHTML||h.page
 test('详情状态在标题，保存只显示保存；列表移除历史和更多，直接提供还原',()=>{
  const h=make();assert.match(h.page(),/id="mpPolicyReset"/);assert.doesNotMatch(h.page(),/<button[^>]*data-mp="(?:history|more)"/);assert.doesNotMatch(h.page(),/配置工具|data-mp="settings"|data-mp="import"|data-mp="export"/);
  assert.doesNotMatch(h.page(),/data-mp="undo"|data-mp="redo"/);h.click('edit-provider',{id:'newapi'});assert.doesNotMatch(h.page(),/mp-channel-edit-actions|data-mp="undo"|data-mp="redo"|配置工具|data-mp="settings"|data-mp="more"|data-mp="order-preview"|保存与恢复/);assert.match(h.page(),/data-save-scope="all-channels"/);assert.match(heading(h),/data-channel-state="clean"/);
- const save=h.page().match(/<button id="mpPolicySave"[\s\S]*?<\/button>/)[0];assert.match(save,/aria-label="保存"/);assert.doesNotMatch(save,/先预览当前草稿/);assert.match(save,/<span class="mp-nav-action-label">保存<\/span>/);assert.doesNotMatch(save,/<small|未修改|已保存|全渠道/);assert.equal(saveButton(h).disabled,false);h.click('save');assert.doesNotMatch(h.dialog(),/没有未保存修改|预览固定当前草稿/);assert.match(h.dialog(),/当前草稿与最近成功保存的配置一致/);assert.equal(h.nodes.get('modalConfirm').disabled,true);h.context.closeModal();
+ const save=h.page().match(/<button id="mpPolicySave"[\s\S]*?<\/button>/)[0];assert.match(save,/aria-label="保存"/);assert.doesNotMatch(save,/先预览当前草稿/);assert.match(save,/<span class="mp-nav-action-label">保存<\/span>/);assert.doesNotMatch(save,/<small|未修改|已保存|全渠道/);assert.equal(saveButton(h).disabled,false);h.click('save');assert.doesNotMatch(h.dialog(),/没有未保存修改|预览固定当前草稿|本次变更与写入/);assert.equal(h.nodes.get('modalConfirm').disabled,true);h.context.closeModal();
 });
 test('顶部还原无修改时禁用，修改后预览确认；旧历史和更多事件不再打开窗口',()=>{
  const h=make();assert.match(h.page().match(/<button id="mpPolicyReset"[^>]*>/)[0],/disabled/);h.click('more');h.click('history');assert.notEqual(h.nodes.get('modalMask').style.display,'flex');
@@ -41,7 +41,7 @@ test('保存中还原禁用，成功保存成为新还原基准；待重启和�
  assert.match(h.page(),/warning" data-channel-state="pending"/);assert.ok(h.state().records.some(r=>r.status==='成功'));assert.equal(provider(h,'newapi','saved').models[0].selected,false);h.click('edit-provider',{id:'newapi'});h.click('toggle-model',{id:'newapi::0'});h.click('back-channels');h.click('discard');h.runConfirm();assert.equal(provider(h,'newapi').models[0].selected,false);assert.equal(JSON.stringify(h.state().draft),JSON.stringify(h.state().saved));assert.equal(h.state().pending,true);
 });
 test('传入的既有 Fast 策略草稿仍能核对与丢弃，不清待重启状态与候选',()=>{
- const h=make();h.proto.scene('incoming');assert.equal(h.state().draft.fastMode,'inherit');h.click('save');assert.match(h.dialog(),/Fast 请求策略/);h.context.closeModal();h.click('discard');h.runConfirm();assert.equal(h.state().draft.fastMode,'on');assert.ok(h.state().incoming);
+ const h=make();h.proto.scene('incoming');assert.equal(h.state().draft.fastMode,'inherit');h.click('save');assert.match(h.dialog(),/Fast 请求策略/);assert.doesNotMatch(h.dialog(),/本次变更与写入/);h.context.closeModal();h.click('discard');h.runConfirm();assert.equal(h.state().draft.fastMode,'on');assert.ok(h.state().incoming);
  h.proto.scene('pending-draft');h.click('discard');h.runConfirm();assert.equal(h.state().pending,true);
  h.proto.scene('incoming');assert.ok(h.state().incoming);h.click('discard');h.runConfirm();assert.ok(h.state().incoming);
 });

@@ -5,7 +5,7 @@ const policy=h=>JSON.stringify({draft:h.state().draft,saved:h.state().saved,pend
 test('保存是唯一入口：先打开选择器预览，列表与详情都不再有独立预览按钮',()=>{
  const h=make();assert.doesNotMatch(h.page(),/data-mp="selector-preview"|data-mp="mp-budget"|id="mpBudget"/);assert.doesNotMatch(h.page(),/data-mp="order-preview"|data-mp="budget"/);
  const button=h.page().match(/<button id="mpPolicySave"[^>]*>/)[0];assert.match(button,/aria-label="保存"/);assert.doesNotMatch(button,/先预览当前草稿/);
- h.click('save');assert.match(h.dialog(),/完整选择器顺序/);assert.match(h.dialog(),/模型激活数 89\/100/);assert.match(h.dialog(),/本次变更与写入/);h.context.closeModal();h.click('edit-provider',{id:'newapi'});h.click('save');assert.match(h.dialog(),/模型激活数 89\/100/);
+ h.click('save');assert.match(h.dialog(),/完整选择器顺序/);assert.match(h.dialog(),/模型激活数 89\/100/);assert.doesNotMatch(h.dialog(),/本次变更与写入|协议写入计划/);h.context.closeModal();h.click('edit-provider',{id:'newapi'});h.click('save');assert.match(h.dialog(),/模型激活数 89\/100/);
 });
 test('预览固定当前草稿，展示全部可选型号与不随启停变化的 Fast 文字标记',()=>{
  const h=make(),before=policy(h);h.click('save');const rows=h.proto.projection(),base=rows.filter(r=>r.type==='base').length,fast=rows.filter(r=>r.type==='fast').length,hidden=rows.filter(r=>r.type==='hidden').length;

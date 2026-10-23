@@ -154,10 +154,6 @@
 #modal.mp-preview-modal .mp-preview-budget-summary{flex:none}
 #modal.mp-preview-modal .mp-preview-order{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;padding-right:4px;margin:0 0 12px}
 #modal.mp-preview-modal .mp-selector-preview>p.mp-muted{flex:none;margin-top:0}
-#modal.mp-preview-modal .mp-save-review{flex:none;min-height:0;max-height:42%;overflow:auto;margin:12px 0 0;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--raised) 78%,transparent)}
-#modal.mp-preview-modal .mp-save-review>summary{position:sticky;top:0;z-index:1;display:flex;align-items:center;gap:8px;padding:0 0 6px;background:transparent;flex-wrap:nowrap}
-#modal.mp-preview-modal .mp-save-review>summary>span{flex:none}
-#modal.mp-preview-modal .mp-save-review-headline{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:var(--text-caption);font-weight:400}
 #modal.mp-preview-modal #mpSaveError:empty{display:none}
 .mp-preview-budget-summary>strong{font-size:var(--text-label);font-variant-numeric:tabular-nums}
 .mp-preview-budget-summary>span{font-size:var(--text-caption);color:var(--muted)}
@@ -176,6 +172,29 @@
 .mp-preview-group-title strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
 .mp-preview-group-title small,.mp-preview-group h3 small{color:var(--muted);font-size:var(--text-caption);font-weight:400;white-space:nowrap}
 .mp-preview-group-action{margin-left:auto;flex:none;color:var(--muted);font-size:var(--text-caption);white-space:nowrap}
+/* 变更直接标在渠道与型号上：渠道卡描边 + “改”标记，悬浮才展开具体启停。 */
+.mp-preview-group-title.is-changed{border-color:color-mix(in srgb,var(--amber) 45%,var(--border))}
+.mp-preview-delta-tag{flex:none;padding:0 5px;border-radius:5px;background:var(--amber-soft);color:var(--amber);font-size:10px;line-height:16px;font-weight:600}
+.mp-preview-group-title{position:relative}
+/* 悬浮时才出现的变更说明：贴右侧展开，不改变标题行宽度，也不盖住左侧型号。 */
+.mp-preview-delta-note{display:none;position:absolute;right:8px;top:calc(100% + 4px);z-index:4;max-width:70%;padding:4px 8px;border:1px solid color-mix(in srgb,var(--amber) 32%,var(--border));border-radius:6px;background:var(--panel);box-shadow:0 6px 18px #0000001f;color:var(--amber);font-size:var(--text-caption);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.mp-preview-group-title:hover .mp-preview-delta-note,.mp-preview-group-title:focus-visible .mp-preview-delta-note{display:block}
+.mp-preview-item.is-added{border-color:color-mix(in srgb,var(--green) 55%,var(--border));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--green) 22%,transparent)}
+.mp-preview-item.is-added::after{content:"新";flex:none;color:var(--green);font-size:10px;line-height:1;font-weight:600}
+.mp-preview-item.is-removed{border-style:dashed;border-color:color-mix(in srgb,var(--red) 42%,var(--border-soft));color:var(--muted)}
+.mp-preview-item.is-removed::after{content:"停";flex:none;color:var(--red);font-size:10px;line-height:1;font-weight:600}
+
+/* 启停已标在标签上，这里只折叠其余字段变化，避免再出现大段清单。 */
+.mp-preview-other{flex:none;margin:10px 0 0;padding:8px 10px;border:1px solid var(--border-soft);border-radius:8px;background:color-mix(in srgb,var(--raised) 70%,transparent);font-size:var(--text-caption)}
+.mp-preview-other>summary{cursor:pointer;color:var(--muted)}
+.mp-preview-other dl{display:grid;gap:4px;margin:8px 0 0}
+.mp-preview-other dl>div{display:grid;grid-template-columns:minmax(90px,1fr) 2fr;gap:8px;align-items:baseline;min-width:0}
+.mp-preview-other dt{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp-preview-other dd{display:flex;align-items:baseline;gap:6px;margin:0;min-width:0}
+.mp-preview-other dd span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp-preview-other dd em{color:var(--muted);font-style:normal;flex:none}
+
+
 .mp-preview-group-title:hover .mp-preview-group-action{color:var(--text)}
 .mp-preview-group-title.is-off{color:var(--muted)}
 .mp-preview-group-title.is-off .mp-preview-group-eye{color:var(--muted)}
