@@ -608,3 +608,14 @@ pub async fn model_agent_generate(
 pub fn model_agent_stop(run_id: String) -> ModelResult<()> {
     crate::modules::model_config::agent::stop(&run_id)
 }
+
+/// 保存确认被门禁或基准变化拦下：只接收固定原因枚举，不接收计划、渠道名、URL 或 Key。
+#[tauri::command]
+pub async fn model_policy_save_blocked(
+    reason: crate::modules::model_config::feedback::SaveBlockedReason,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    app: tauri::AppHandle,
+) -> ModelResult<()> {
+    crate::modules::model_config::feedback::save_blocked(&app, &data_root.0, reason);
+    Ok(())
+}

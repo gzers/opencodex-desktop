@@ -300,6 +300,7 @@ where
                 identity,
                 evidence,
                 occurred_at: chrono::Utc::now(),
+                detail: None,
             };
             if let Err(error) = publisher.publish_event(&delivery) {
                 let _ = runtime_log.append_result(
@@ -474,6 +475,7 @@ pub fn publish_runtime_state_notification_with_context(
                     identity,
                     evidence,
                     occurred_at: chrono::Utc::now(),
+                    detail: None,
                 };
                 return match publisher.publish_event(&delivery) {
                     Ok(outcome) => outcome.changed,

@@ -92,7 +92,19 @@ pub fn publish(
     identity: Option<EventIdentity>,
     trigger: Trigger,
 ) {
-    if publish_checked(app, root, event, identity, trigger).is_err() {
+    publish_detail(app, root, event, identity, trigger, None);
+}
+
+/// 正文由注册表按固定枚举生成；调用方不能传入自由文本。
+pub fn publish_detail(
+    app: &tauri::AppHandle,
+    root: &Path,
+    event: &str,
+    identity: Option<EventIdentity>,
+    trigger: Trigger,
+    detail: Option<crate::modules::notifications::registry::Detail>,
+) {
+    if publish_checked_detail(app, root, event, identity, trigger, detail).is_err() {
         diagnostic(root);
     }
 }
@@ -104,6 +116,17 @@ pub fn publish_checked(
     event: &str,
     identity: Option<EventIdentity>,
     trigger: Trigger,
+) -> crate::errors::AppResult<()> {
+    publish_checked_detail(app, root, event, identity, trigger, None)
+}
+
+pub fn publish_checked_detail(
+    app: &tauri::AppHandle,
+    root: &Path,
+    event: &str,
+    identity: Option<EventIdentity>,
+    trigger: Trigger,
+    detail: Option<crate::modules::notifications::registry::Detail>,
 ) -> crate::errors::AppResult<()> {
     let identity = identity.ok_or(crate::errors::AppError::NotConfigured)?;
     let definition = registry::lookup(event)?;
@@ -124,6 +147,7 @@ pub fn publish_checked(
         identity,
         evidence,
         occurred_at: chrono::Utc::now(),
+        detail,
     };
     let outcome = crate::commands::notifications::NotificationPublisher {
         store: store.inner(),

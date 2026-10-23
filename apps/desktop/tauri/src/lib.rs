@@ -552,6 +552,7 @@ pub fn run() {
             commands::model_config::model_policy_prepare,
             commands::model_config::model_policy_apply,
             commands::model_config::model_policy_result,
+            commands::model_config::model_policy_save_blocked,
             commands::model_config::model_policy_latest,
             commands::model_config::model_policy_history,
             commands::model_config::model_policy_client_status,

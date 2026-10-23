@@ -185,6 +185,7 @@ pub enum Fact {
 #[serde(rename_all = "snake_case")]
 pub enum PolicyId {
     ModelPolicyFailure,
+    ModelPolicyBlocked,
     ModelExternalFailure,
     StartFailure,
     StopFailure,
@@ -287,6 +288,33 @@ pub struct Delivery<'a> {
     pub identity: EventIdentity,
     pub evidence: Evidence,
     pub occurred_at: DateTime<Utc>,
+    /// 只允许注册时固定的原因枚举：正文由枚举映射，不接受调用方拼装文本。
+    pub detail: Option<Detail>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum BlockedReason {
+    StagedEdit,
+    OverBudget,
+    Validation,
+    NoChanges,
+    Stale,
+}
+impl BlockedReason {
+    pub fn text(self) -> &'static str {
+        match self {
+            Self::StagedEdit => "还有未加入草稿的行或连接编辑",
+            Self::OverBudget => "完整投影超出 100",
+            Self::Validation => "校验未通过",
+            Self::NoChanges => "没有未保存的修改",
+            Self::Stale => "保存基准已变化",
+        }
+    }
+}
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Detail {
+    ModelPolicyBlocked(BlockedReason),
 }
 /// 终态适配器：job 来自配置，身份来自操作开始时捕获的 scope。
 /// 成功证据必须由任务拥有者核验；此函数不把检查/请求成功推断为操作成功。
@@ -310,6 +338,7 @@ pub fn terminal_delivery<'a>(
         identity,
         evidence,
         occurred_at,
+        detail: None,
     };
     validate(&delivery)?;
     Ok(delivery)
@@ -491,6 +520,12 @@ pub fn deliver(
         let policy = policy(policy_id);
         if !policy.lifecycle_preference || preferences.lifecycle {
             let mut item = notification(event, delivery.occurred_at)?;
+            if let Some(Detail::ModelPolicyBlocked(reason)) = delivery.detail {
+                item.body = format!(
+                    "本次确认没有写入：{}。草稿保留，可回到模型配置重新核对后再保存。",
+                    reason.text()
+                );
+            }
             let scope = format!(
                 "{}:{:?}:{:?}:{:?}:{}",
                 delivery.identity.object_id.0,
@@ -501,6 +536,14 @@ pub fn deliver(
             );
             item.notification_id = format!("{}:{scope}", event.id);
             item.dedupe_key = Some(format!("{}:{scope}", policy.dedupe));
+            if let Some(Detail::ModelPolicyBlocked(reason)) = delivery.detail {
+                // 同一原因更新同一条；不同原因各自成条，便于逐项处理。
+                item.dedupe_key = Some(format!(
+                    "{}:{scope}:{}",
+                    policy.dedupe,
+                    reason.text()
+                ));
+            }
             item.event_identity = Some(delivery.identity.clone());
             if let Some(existing) = store
                 .notifications
@@ -576,6 +619,8 @@ enum SupportedEvent {
     ModelPolicySaveFailed,
     #[serde(rename = "model-policy-save-succeeded")]
     ModelPolicySaveSucceeded,
+    #[serde(rename = "model-policy-save-blocked")]
+    ModelPolicySaveBlocked,
     #[serde(rename = "model-config-changed")]
     ModelConfigChanged,
     #[serde(rename = "model-operation-progress")]

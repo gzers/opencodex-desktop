@@ -1591,6 +1591,20 @@
       "resolves": [
         "model-policy-save-failed"
       ]
+    },
+    {
+      "id": "model-policy-save-blocked",
+      "job": "model_config",
+      "object": "configuration",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "risk",
+      "availability": "active",
+      "policy": "model_policy_blocked",
+      "resolves": []
     }
   ],
   "notification_policies": [
@@ -1941,6 +1955,18 @@
       "dedupe": "model-policy:save-failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
+    },
+    {
+      "id": "model_policy_blocked",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "模型配置未保存",
+      "body": "本次确认没有写入。草稿保留，可回到模型配置重新核对后再保存。",
+      "action": "models",
+      "dedupe": "model-policy:save-blocked",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 1
     }
   ],
   "emission_sites": [
@@ -2408,6 +2434,11 @@
       "event": "model-policy-save-succeeded",
       "source": "commands/model_config.rs::observe_policy verified plan commit/compensation versus incomplete result; one plan identity",
       "wiring": "scoped_terminal"
+    },
+    {
+      "event": "model-policy-save-blocked",
+      "source": "commands/model_config.rs::model_policy_save_blocked fixed reason enum; one confirmation, no plan/channel/url/key",
+      "wiring": "scoped_lifecycle"
     }
   ],
   "scheduling_sites": [

@@ -382,6 +382,7 @@ mod policy_event_tests {
                 identity,
                 evidence,
                 occurred_at: chrono::Utc::now(),
+                detail: None,
             };
             let _ = crate::commands::notifications::NotificationPublisher {
                 store,
