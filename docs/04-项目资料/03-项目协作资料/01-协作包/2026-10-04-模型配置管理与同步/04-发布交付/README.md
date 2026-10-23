@@ -116,3 +116,20 @@ PR8 head b19b01e2的CI39455864253已全部通过，Windows真实EXE覆盖模版�
 因此真实保存读回仍只能在实际已安装并归属本机的环境完成，需要用户授权改写真实渠道配置，或授权执行服务注册/启动代理。本轮没有越过这两条线。
 
 可用结论：**写入产物的合规性已有实证**（官方 `config validate` 对清名后配置返回 valid），缺的是“官方真正写盘后再读回”这一段。
+
+### 2026-10-24 Windows / WebView2 静态核对（0.2.7 改动）
+
+对 `origin/main..HEAD` 的前端与后端改动做平台关键词扫描，逐项判断 WebView2 风险：
+
+| 改动 | 属性/关键字 | WebView2 风险 | 判断 |
+| --- | --- | --- | --- |
+| 防误选文字 | `user-select` / `-webkit-user-select` | 无 | WebView2（Chromium）双属性均支持 |
+| 长按看说明 | `pointerType === 'mouse'` 判定 | 无 | Pointer Events 在 WebView2 完整支持，逻辑不依赖 CSS |
+| 长按辅助 | `touch-action: manipulation` | 无 | 支持 |
+| 长按辅助 | `-webkit-touch-callout: none` | 属性无效 | 仅影响 iOS 长按菜单，Windows 无此行为；长按由 JS 计时，功能不受影响 |
+| 更新摘要两行截断 | `-webkit-line-clamp: 2` | 无 | Chromium 完整支持；项目内 `base.css` 既有同类用法 |
+
+结论：0.2.7 的改动没有引入新的平台分支或 Windows 不兼容的关键路径。仍需真机验证的是原生拖拽（Tauri `dragDropEnabled:false` 与 HTML5 拖放配合）与触屏长按手感——这两项属运行时行为，静态核对无法代替。
+
+未能执行：在 Windows WebView2 中实际运行（本机为 macOS）。
+
