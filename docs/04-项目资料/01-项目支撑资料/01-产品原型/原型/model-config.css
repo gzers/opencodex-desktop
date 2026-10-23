@@ -92,7 +92,7 @@
 .mp-model-row{font-size:var(--text-label)}
 .mp-model-item{border-bottom:1px solid var(--border-soft);min-width:0}
 .mp-model-row>.mp-row{gap:var(--space-1);flex-wrap:nowrap}
-.mp-model-identity{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,140px);align-items:center;gap:var(--space-1) var(--space-2);min-width:0}
+.mp-model-identity{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,140px);align-content:start;align-items:center;gap:var(--space-1) var(--space-2);min-width:0}
 .mp-model-identity>strong{font-weight:550;min-width:0;white-space:normal;overflow-wrap:anywhere;line-height:1.4}
 .mp-model-identity>.mp-model-meta,.mp-model-identity>.mp-alert{grid-column:1/-1;min-width:0}
 .mp-model-identity>.mp-alert:empty{display:none}
@@ -131,6 +131,11 @@
 .mp-model-meta-line{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;min-width:0}
 .mp-model-meta-line>span{min-width:0;overflow-wrap:anywhere}
 .mp-model-row>div{align-self:center;min-width:0}
+/* 型号 + 别名、勾选 / 拖拽、启停和操作按首行同轴；两行摘要留在下方，拉高行时不把控件推到摘要中线。 */
+.mp-model-row{align-items:start}
+.mp-model-row>.mp-row{align-self:start;align-items:center;min-height:30px}
+.mp-model-enabled{align-self:start}
+.mp-model-actions{align-self:start;min-height:30px}
 .mp-cell{white-space:nowrap;font-size:var(--text-label)}
 .mp-cell small{display:block;color:var(--muted);font-size:var(--text-caption)}
 .mp-model-row .btn{padding:5px 8px;min-height:30px}
@@ -154,8 +159,8 @@
 .mp-preview-group-title:hover{color:var(--accent)}
 .mp-preview-group-title small,.mp-preview-group h3 small{color:var(--muted);font-size:var(--text-caption);font-weight:400;white-space:nowrap}
 .mp-preview-group-title.is-off{color:var(--muted)}
-.mp-preview-group.is-off{padding:10px 12px;border:1px dashed var(--border);border-radius:var(--radius-sm);background:color-mix(in srgb,var(--text) 3%,var(--panel))}
-.mp-preview-group.is-off .mp-preview-group-title{margin-bottom:4px}
+.mp-preview-group.is-off{padding:4px 0;border:0;border-radius:0;background:transparent;opacity:.62}
+.mp-preview-group.is-off .mp-preview-group-title{margin-bottom:0}
 .mp-preview-items{display:flex;flex-wrap:wrap;gap:6px}
 .mp-preview-item{display:flex;align-items:center;gap:5px;padding:4px 8px;border:1px solid transparent;border-radius:6px;background:var(--rail);color:var(--text);font:inherit;font-size:var(--text-caption);max-width:100%;cursor:pointer}
 .mp-preview-item:hover:not(:disabled){border-color:var(--border);background:var(--hover)}
@@ -527,6 +532,7 @@ html:not([data-route=models]) #mpAssistantHost{display:none}
 .mp-channel-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;min-width:0}
 .mp-channel-form>label{display:grid;align-content:start;gap:8px;min-width:0;font-size:var(--text-label)}
 .mp-channel-form .input,.mp-channel-form .select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.mp-channel-form>.mp-channel-key{grid-column:1/-1}
 .mp-channel-status,.mp-template-save-status{display:grid;gap:4px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);flex:none;min-width:0}
 .mp-channel-save-controls{display:flex;align-items:center;gap:8px;min-width:0}
 .mp-channel-status .mp-channel-save-controls{display:grid;gap:6px}
