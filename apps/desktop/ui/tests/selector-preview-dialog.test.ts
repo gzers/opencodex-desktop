@@ -115,6 +115,42 @@ describe('保存 · 选择器预览（UI 规范 §38）',()=>{
     vi.useRealTimers()
   })
 
+  it('滚动开始会取消长按计时，滑动不会被当成看说明（§38.3.1）', async()=>{
+    vi.useFakeTimers()
+    const wrapper=render()
+    const title=wrapper.findAll('.preview-group-title')[0]!
+    const order=wrapper.get('.selector-preview-order')
+    await title.trigger('pointerdown',{pointerType:'touch'})
+    // 手指一滑，滚动开始：计时器必须被清掉，说明也不能出现。
+    await order.trigger('scroll')
+    vi.advanceTimersByTime(800)
+    await wrapper.vm.$nextTick()
+    expect(title.classes()).not.toContain('show-note')
+    // 抬手仍然不该启停（没有触发过长按，正常点击语义保留）。
+    await title.trigger('pointerup')
+    await title.trigger('click')
+    expect(wrapper.emitted('toggle-channel')).toHaveLength(1)
+    wrapper.unmount()
+    vi.useRealTimers()
+  })
+
+  it('长按说明后点击空白处收起，且不影响其它渠道启停（§38.3.1）', async()=>{
+    vi.useFakeTimers()
+    const wrapper=render()
+    const title=wrapper.findAll('.preview-group-title')[0]!
+    await title.trigger('pointerdown',{pointerType:'touch'})
+    vi.advanceTimersByTime(500)
+    await wrapper.vm.$nextTick()
+    expect(title.classes()).toContain('show-note')
+    await title.trigger('pointerup')
+    // 点击空白处（弹窗内容区）应收起说明。
+    await wrapper.get('.selector-preview').trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(title.classes()).not.toContain('show-note')
+    wrapper.unmount()
+    vi.useRealTimers()
+  })
+
   it('确认按钮始终可点：被拦下的原因走通知，不靠灰按钮堵住',async()=>{
     const wrapper=render({projection:{...projection(),knownActiveModels:128}})
     expect(wrapper.text()).toContain('超出激活预算')

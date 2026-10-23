@@ -96,6 +96,15 @@ function pressStart(channel: PreviewChannel, event: PointerEvent) {
 function pressChannelDelta(channel: PreviewChannel) { return channelDelta(channel) }
 function pressEnd() { clearPress() }
 function pressLeave() { clearPress(); }
+/** §38.3.1：滚动开始也要清理计时器，否则滑动手势会被当成“长按看说明”。 */
+function onOrderScroll() { if (pressTimer) { clearPress(); pressNote.value = '' } }
+/** §38.3.1「收起」还要求点击空白处：命中标题行以外就收起，点击标题行本身交给启停逻辑。 */
+function onSurfaceClick(event: MouseEvent) {
+  if (!pressNote.value) return
+  const target = event.target as HTMLElement | null
+  if (target?.closest('.preview-group-title')) return
+  pressNote.value = ''
+}
 function toggleChannel(channel: PreviewChannel) {
   if (swallowClick) { swallowClick = false; return }
   pressNote.value = ''
@@ -112,7 +121,7 @@ function confirm() { if (!props.saving) emit('confirm') }
 </script>
 <template>
  <UiDialog :open="open" title="保存 · 选择器预览" wide :busy="saving" @close="emit('close')">
-  <div class="selector-preview" aria-label="保存与选择器预览">
+  <div class="selector-preview" aria-label="保存与选择器预览" @click="onSurfaceClick">
    <div class="selector-preview-budget" :class="{over}" role="status">
     <strong>模型激活数 {{ active }}/100</strong>
     <span>基础模型 {{ rows.length }} · Fast {{ fastCount }} · 目录占用 {{ catalog ?? '未提供' }}</span>
@@ -121,7 +130,7 @@ function confirm() { if (!props.saving) emit('confirm') }
    <p v-if="busy" class="preview-muted" role="status">正在解析当前草稿…</p>
    <p v-if="note" class="preview-muted" role="status">{{ note }}</p>
    <p v-if="error" class="preview-alert" role="alert">{{ error }}</p>
-   <div class="selector-preview-order" aria-label="完整选择器顺序">
+   <div class="selector-preview-order" aria-label="完整选择器顺序" @scroll.passive="onOrderScroll">
     <section v-for="group in groups" :key="group.channel.id" class="preview-group" :class="{off:!group.channel.enabled,locked:group.channel.protected}">
      <h3 v-if="group.channel.protected" class="preview-group-title is-locked">
       <span class="preview-eye" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span>
