@@ -66,4 +66,33 @@ describe('recovering a saved operation',()=>{
    await wrapper.findAll('button').find(b=>b.text()==='核对原计划')!.trigger('click');await flushPromises()
    expect(modelApi.policyResult).toHaveBeenLastCalledWith('specific-plan');expect(modelApi.applyPolicy).not.toHaveBeenCalled();wrapper.unmount()
  })
+
+  it('连点保存只打开一次预览，不会重复提交（§38.4 重入保护）', async () => {
+    const store = useModelsStore()
+    const make = (id: string) => ({
+      id, label: id, templateRefs: [], modelRefs: {},
+      connection: { providerId: id, protocol: 'openai-chat', nodes: [], activeNodeId: '', credentialRef: null, enabled: true, allowPrivateNetwork: false },
+      selection: { mode: 'none' as const }, modelOrder: [], discovered: [],
+      defaults: { protocol: { mode: 'inherit' as const }, contextWindow: { mode: 'inherit' as const }, inputModalities: { mode: 'inherit' as const }, reasoningEfforts: { mode: 'inherit' as const }, defaultEffort: { mode: 'inherit' as const }, fast: { mode: 'inherit' as const } },
+      overrides: {}, familyOverrides: {},
+    })
+    store.snapshot!.policy.channels = [make('only')]
+    store.restoreChannels()
+    store.channelDraft!.channels[0]!.label = '改过的渠道'
+    vi.mocked(modelApi.latestPolicy).mockResolvedValue(null)
+    let release!: () => void
+    vi.mocked(modelApi.project).mockImplementationOnce(() => new Promise(resolve => { release = () => resolve(projection()) }))
+    const wrapper = render()
+    await flushPromises()
+    const save = wrapper.findAll('button').find(b => b.text() === '保存')!
+    await save.trigger('click')
+    await save.trigger('click')
+    await save.trigger('click')
+    release()
+    await flushPromises()
+    expect(vi.mocked(modelApi.project)).toHaveBeenCalledTimes(1)
+    expect(wrapper.findAll('button').filter(b => b.text() === '确认保存')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
 })

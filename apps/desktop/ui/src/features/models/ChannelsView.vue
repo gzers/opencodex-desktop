@@ -74,7 +74,9 @@ watch(()=>models.policyNotificationTarget,async target=>{
 /** 保存是唯一提交入口，也是预览入口（UI 规范 §38.1）。 */
 const saveReviewBaseline=ref<{saved:string;library:string}|null>(null),saveConfirming=ref(false)
 async function prepareSave(){
-  if(!models.channelDraft||!models.snapshot||models.busy||models.staging||saving.value)return
+  // §38.4「再次点击不会重复提交」：除按钮禁用外，函数自身也要挡住并发与重入，
+  // 因为列表与详情共用一个入口，连点或两个入口交替触发都能绕过按钮态。
+  if(!models.channelDraft||!models.snapshot||models.busy||models.staging||saving.value||saveConfirming.value||previewBusy.value||previewOpen.value)return
   const sequence=++previewSequence
   previewBusy.value=true;previewError.value='';error.value=''
   try{const projection=await modelApi.project(JSON.parse(JSON.stringify(models.channelDraft)))
