@@ -4635,6 +4635,77 @@ else:sys.exit(7)
             .any(|c| c.connection.provider_id == "test"));
     }
     #[cfg(unix)]
+
+    /// WP-64 定向验收（脚本化上游）：保存写入时清除旧友好名称；读回目录名称统一为
+    /// 渠道名/原始模型ID；顺序与选择保留；再次读回不回流旧展示名。
+    #[tokio::test]
+    async fn saved_reread_uses_channel_raw_names_and_never_restores_stale_friendly_names() {
+        let root = tempfile::tempdir().unwrap();
+        let (mut snapshot, policy) = fixture();
+        // 目录里预置旧友好名称，模拟历史残留。
+        snapshot.providers["providers"]["test"]["modelDisplayNames"] =
+            json!({"a":"旧名称A","b":"旧名称B"});
+        let context = cli_fixture(root.path(), &snapshot);
+        let store = ModelStore::new(root.path());
+        let local = store.load().unwrap();
+        let local = store
+            .stage_policy(
+                &local.policy_digest,
+                &local.workspace_digest,
+                policy.clone(),
+            )
+            .unwrap();
+        let plan = prepare(
+            root.path(),
+            &context,
+            policy.clone(),
+            local.library_digest.clone(),
+            local.policy_digest.clone(),
+            local.workspace_digest.clone(),
+        )
+        .await
+        .unwrap();
+        let committed = apply(root.path(), &context, &plan.id).await.unwrap();
+        assert_eq!(committed.phase, "committed", "{:?}", committed.error);
+
+        // 正式配置写入后：旧友好名称被清除，路由别名等其他规则不受影响。
+        let upstream = upstream::snapshot(&context).await.unwrap();
+        let names = upstream.providers["providers"]["test"]
+            .get("modelDisplayNames")
+            .and_then(Value::as_object);
+        assert!(
+            names.is_none_or(|map| !map.contains_key("a") && !map.contains_key("b")),
+            "旧友好名称不应写入正式配置: {names:?}"
+        );
+
+        // 读回：草稿投影与执行目录都使用 渠道名/原始模型ID。
+        let committed_policy = store.load().unwrap().policy;
+        let projected = compiler::project(&store.load().unwrap().library, &committed_policy).unwrap();
+        let labels = projected
+            .rows
+            .iter()
+            .map(|row| (row.model_id.clone(), row.label.clone()))
+            .collect::<BTreeMap<_, _>>();
+        assert_eq!(labels["a"], "测试渠道/a");
+        assert_eq!(labels["b"], "测试渠道/b");
+        assert!(labels.values().all(|label| !label.contains("旧名称")));
+
+        // 顺序与选择在读回后仍与确认内容一致。
+        assert_eq!(committed_policy.channels[0].model_order, vec!["b", "a"]);
+        assert_eq!(
+            committed_policy.channels[0].selection,
+            ModelSelection::Whitelist(vec!["b".into()])
+        );
+
+        // 再读一次、再投影一次，旧展示名不得回流。
+        let again = store.load().unwrap();
+        let reprojected = compiler::project(&again.library, &again.policy).unwrap();
+        assert!(reprojected
+            .rows
+            .iter()
+            .all(|row| row.label == format!("测试渠道/{}", row.model_id)));
+    }
+
     #[tokio::test]
     async fn official_save_plan_freezes_baselines_backs_up_reads_back_and_commits_once() {
         let root = tempfile::tempdir().unwrap();
