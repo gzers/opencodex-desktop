@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-23",
+  "project": "opencodex-desktop",
+  "product": "OpenCodeX Desktop",
+  "reportedVersion": "0.2.6",
+  "inspectedImplementationCommit": "d79fc170a",
+  "scope": "Read-only investigation for 0.2.7; no implementation or native configuration save",
+  "localRead": {
+    "activeDataRootConfirmed": true,
+    "savedManagerPolicyFileExists": false,
+    "draftChannels": 25,
+    "source": "Latest existing captured upstream snapshot, not a new provider/network read",
+    "capturedUpstreamVersion": "opencodex 2.84.0",
+    "modelsWithRepresentationOnlyDifference": 228,
+    "optionalRuleFields": [
+      "pinnedEffort",
+      "effortMap",
+      "noReasoning",
+      "reasoningAuthoritative",
+      "fastWire"
+    ],
+    "transitions": "omitted -> {mode:inherit}",
+    "changedLeaves": 1140,
+    "modelMembershipChanged": false,
+    "modelOrderChanged": false,
+    "remergeSameSnapshotStable": true,
+    "simulatedSavedSerializationThenReadStillDirty": true,
+    "actualRuntimeSavePerformed": false,
+    "draftFileHashUnchanged": true,
+    "countsNotScreenshotTime": true
+  },
+  "sourceConfirmed": {
+    "previewOpensWithPointerEventAsSource": true,
+    "previewItemsAreNonInteractiveSpans": true,
+    "previewGroupingDoesNotFilterSelectedOrDiscovered": true,
+    "previewFastTintReflectsFastCapabilityInsteadOfVisibility": true,
+    "existingPrototypePreviewReadOnly": true,
+    "dragSortGuard": "!disabled && !validating && !filtered && !pending.length",
+    "dragRowsKeyedBy": "model.id",
+    "projectionBusyReplacesModelSummaryWithUnknownText": true,
+    "tauriNativeFileDropDisabled": true
+  },
+  "validation": {
+    "command": "npx vitest run tests/policy-draft-equality.test.ts tests/selector-preview-dialog.test.ts tests/model-draft-ordering.test.ts",
+    "filesPassed": 3,
+    "testsPassed": 12,
+    "result": "Existing behavior passes; does not prove new requirements or native drag",
+    "nativeMacDragReproduced": false,
+    "nativeWindowsDragReproduced": false,
+    "nativeFlashCauseConfirmed": false,
+    "prototypeChanged": false,
+    "implementationChanged": false
+  },
+  "retention": "Keep with 0.2.7 issue investigation until release acceptance; contains counts and field names only, no credentials or raw snapshots"
+}
