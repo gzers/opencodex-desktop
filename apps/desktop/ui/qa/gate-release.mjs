@@ -29,6 +29,7 @@ const steps = [
   { id: 'audit:parity', cmd: ['node', ['qa/parity-preview.mjs']], needsEnv: false },
   { id: 'audit:parity:export', cmd: ['node', ['qa/parity-export.mjs']], needsEnv: false },
   { id: 'audit:parity:template', cmd: ['node', ['qa/parity-template.mjs']], needsEnv: false },
+  { id: 'audit:parity:agent', cmd: ['node', ['qa/parity-agent.mjs']], needsEnv: false },
   { id: 'audit:catalog-naming', cmd: ['node', ['qa/catalog-naming-real.mjs']], needsEnv: false },
   {
     id: 'audit:catalog-crossvalidate',
