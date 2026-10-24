@@ -183,7 +183,7 @@ OCX_OFFICIAL_ENTRY=<官方 ocx.mjs> OCX_OFFICIAL_NODE=<node> npm run gate:releas
 
 ### 合并与发布步骤
 
-1. 合并 `feature/0.2.6-agent-credentials` → `main`（已演练：无冲突、合并后 typecheck + 763 单测通过）。
+1. 合并 `feature/0.2.6-agent-credentials` → `main`（已演练 2026-10-24 晚：真合并 0 冲突；合并后 typecheck + **771** 单测、fmt、clippy、**39** 个后端测试二进制全过）。
 2. 在 `main` 上打 tag `v0.2.7` 并推送 → `.github/workflows/release.yml` 自动建草稿 Release 并出双平台制品（macOS arm64、Windows x64）。
 3. 验证制品：下载安装、旧公钥验签、版本回读为 0.2.7。
 4. 推送 `publish/v0.2.7` → `.github/workflows/publish-release.yml` 公开并保留 Latest。
