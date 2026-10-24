@@ -976,27 +976,21 @@ pub(super) fn compile_materials(
         provider["baseUrl"] = json!(node.url);
         provider["adapter"] = json!(channel.connection.protocol);
         apply_naming(provider, channel, snapshot)?;
+        // UI 规范 §29.1：本轮不使用友好名称。写入时清掉这些型号的旧展示名，
+        // 让正式配置、目录读回与客户端选择器都回到 渠道名/原始模型ID；
+        // 路由别名（modelAliases）仍按各自规则维护，不与显示名混用。
         for model in &channel.discovered {
-            let label = channel
-                .naming
-                .get(&model.id)
-                .and_then(|n| n.display_name.as_deref())
-                .unwrap_or(&model.label);
-            if label.is_empty() || label == model.id {
-                if let Some(names) = provider
-                    .get_mut("modelDisplayNames")
-                    .and_then(Value::as_object_mut)
-                {
-                    names.remove(&model.id);
-                    if names.is_empty() {
-                        provider
-                            .as_object_mut()
-                            .unwrap()
-                            .remove("modelDisplayNames");
-                    }
+            if let Some(names) = provider
+                .get_mut("modelDisplayNames")
+                .and_then(Value::as_object_mut)
+            {
+                names.remove(&model.id);
+                if names.is_empty() {
+                    provider
+                        .as_object_mut()
+                        .unwrap()
+                        .remove("modelDisplayNames");
                 }
-            } else {
-                set_map(provider, "modelDisplayNames", &model.id, json!(label))?;
             }
         }
         let mut declared = provider["models"].as_array().cloned().unwrap_or_default();
@@ -3577,10 +3571,10 @@ mod tests {
         assert_eq!(remaining.policy, draft);
         let upstream = upstream::snapshot(&context).await.unwrap();
         assert!(upstream.providers["providers"].get("deferred").is_none());
-        assert_eq!(
-            upstream.providers["providers"]["test"]["modelDisplayNames"]["b"],
-            "本次名称"
-        );
+        // §29.1：本轮不写友好名称，正式配置里该型号不再带 modelDisplayNames。
+        assert!(upstream.providers["providers"]["test"]["modelDisplayNames"]
+            .get("b")
+            .is_none());
         let mut later = remaining.policy.clone();
         later.channels[1].label = "后来编辑".into();
         let later = store
@@ -3614,17 +3608,18 @@ mod tests {
         );
         let (next, order, slugs) = compile(&snapshot, &library, &policy).unwrap();
         assert_eq!(next["providers"]["test"]["modelAliases"]["b"], "new-short");
-        assert_eq!(
-            next["providers"]["test"]["modelDisplayNames"]["b"],
-            "新的名称"
-        );
+        // §29.1：路由别名照常写入，但显示名不再写到 modelDisplayNames。
+        assert!(next["providers"]["test"]["modelDisplayNames"]
+            .get("b")
+            .is_none());
         assert_eq!(next["providers"]["test"]["selectedModels"], json!(["b"]));
         assert!(slugs.contains("test/b"));
         assert!(order.contains(&"test/b".into()));
         let projected = compiler::project(&library, &policy).unwrap();
         let row = projected.rows.iter().find(|r| r.model_id == "b").unwrap();
         assert_eq!(row.model_id, "b");
-        assert_eq!(row.label, "新的名称");
+        // §29.1：投影统一 渠道名/原始模型ID，渠道名取编辑中的 label。
+        assert_eq!(row.label, "测试渠道/b");
         assert_eq!(row.aliases, vec!["new-short"]);
         let ownership = next_ownership(&snapshot.providers, &next, &[], &policy).unwrap();
         snapshot.providers = next;
@@ -4639,6 +4634,81 @@ else:sys.exit(7)
             .iter()
             .any(|c| c.connection.provider_id == "test"));
     }
+    #[cfg(unix)]
+
+    /// WP-64 定向验收（脚本化上游）：保存写入时清除旧友好名称；读回目录名称统一为
+    /// 渠道名/原始模型ID；顺序与选择保留；再次读回不回流旧展示名。
+    #[tokio::test]
+    async fn saved_reread_uses_channel_raw_names_and_never_restores_stale_friendly_names() {
+        let root = tempfile::tempdir().unwrap();
+        let (mut snapshot, policy) = fixture();
+        // 目录里预置旧友好名称，模拟历史残留。
+        snapshot.providers["providers"]["test"]["modelDisplayNames"] =
+            json!({"a":"旧名称A","b":"旧名称B"});
+        let context = cli_fixture(root.path(), &snapshot);
+        let store = ModelStore::new(root.path());
+        let local = store.load().unwrap();
+        let local = store
+            .stage_policy(
+                &local.policy_digest,
+                &local.workspace_digest,
+                policy.clone(),
+            )
+            .unwrap();
+        let plan = prepare(
+            root.path(),
+            &context,
+            policy.clone(),
+            local.library_digest.clone(),
+            local.policy_digest.clone(),
+            local.workspace_digest.clone(),
+        )
+        .await
+        .unwrap();
+        let committed = apply(root.path(), &context, &plan.id).await.unwrap();
+        assert_eq!(committed.phase, "committed", "{:?}", committed.error);
+
+        // 正式配置写入后：旧友好名称被清除，路由别名等其他规则不受影响。
+        let upstream = upstream::snapshot(&context).await.unwrap();
+        let names = upstream.providers["providers"]["test"]
+            .get("modelDisplayNames")
+            .and_then(Value::as_object);
+        assert!(
+            names.is_none_or(|map| !map.contains_key("a") && !map.contains_key("b")),
+            "旧友好名称不应写入正式配置: {names:?}"
+        );
+
+        // 读回：草稿投影与执行目录都使用 渠道名/原始模型ID。
+        let committed_policy = store.load().unwrap().policy;
+        let projected =
+            compiler::project(&store.load().unwrap().library, &committed_policy).unwrap();
+        let labels = projected
+            .rows
+            .iter()
+            .map(|row| (row.model_id.clone(), row.label.clone()))
+            .collect::<BTreeMap<_, _>>();
+        assert_eq!(labels["a"], "测试渠道/a");
+        assert_eq!(labels["b"], "测试渠道/b");
+        assert!(labels.values().all(|label| !label.contains("旧名称")));
+
+        // 顺序与选择在读回后仍与确认内容一致。
+        assert_eq!(committed_policy.channels[0].model_order, vec!["b", "a"]);
+        assert_eq!(
+            committed_policy.channels[0].selection,
+            ModelSelection::Whitelist(vec!["b".into()])
+        );
+
+        // 再读一次、再投影一次，旧展示名不得回流。
+        let again = store.load().unwrap();
+        let reprojected = compiler::project(&again.library, &again.policy).unwrap();
+        assert!(reprojected
+            .rows
+            .iter()
+            .all(|row| row.label == format!("测试渠道/{}", row.model_id)));
+    }
+
+    // cli_fixture 是 #[cfg(unix)]：这个用例依赖它的脚本化上游，Windows 上必须一起跳过，
+    // 否则 `--all-targets` 在 Windows 编不过（macOS 能过，属只在 Windows 暴露的编译错误）。
     #[cfg(unix)]
     #[tokio::test]
     async fn official_save_plan_freezes_baselines_backs_up_reads_back_and_commits_once() {

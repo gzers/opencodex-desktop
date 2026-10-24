@@ -32,6 +32,7 @@ fn failure() -> Delivery<'static> {
         },
         evidence: Evidence::Failure,
         occurred_at: at(100),
+        detail: None,
     }
 }
 fn success() -> Delivery<'static> {
@@ -154,6 +155,145 @@ fn model_external_failures_link_to_exact_task_and_only_matching_success_resolves
     assert_eq!(deliver(&mut store, &wrong, prefs()).unwrap().resolved, 1);
     assert!(!store.all()[0].read);
 }
+#[test]
+fn deleted_blocked_save_notification_is_not_revived_by_another_confirmation() {
+    let (root, store) = setup();
+    let identity = candidate_identity(
+        root.path(),
+        ObjectKind::Configuration,
+        Action::Save,
+        Phase::Execution,
+        Channel::Local,
+        [91; 32],
+    )
+    .unwrap();
+    let publish = |when: i64| {
+        let delivery = Delivery {
+            event: "model-policy-save-blocked",
+            job: Job::ModelConfig,
+            trigger: Trigger::User,
+            identity: identity.clone(),
+            evidence: Evidence::Risk,
+            occurred_at: at(when),
+            detail: Some(Detail::ModelPolicyBlocked(BlockedReason::NoChanges)),
+        };
+        opencodex_desktop_lib::commands::notifications::NotificationPublisher {
+            store: &store,
+            data_root: root.path(),
+        }
+        .publish_event(&delivery)
+        .unwrap()
+    };
+    publish(200);
+    {
+        let mut guard = store.lock().unwrap();
+        let id = guard.all()[0].notification_id.clone();
+        assert!(guard.delete(&id));
+    }
+    assert!(store.lock().unwrap().all()[0].deleted);
+    // 用户删除后再确认同一原因：不得复活（§38.5）。
+    publish(260);
+    let guard = store.lock().unwrap();
+    let items = guard.all();
+    assert_eq!(items.len(), 1, "删除后不应新建第二条");
+    assert!(items[0].deleted, "删除状态必须保留");
+    drop(guard);
+}
+
+#[test]
+fn other_risk_notifications_still_recur_after_deletion() {
+    let (root, store) = setup();
+    let identity = candidate_identity(
+        root.path(),
+        ObjectKind::Configuration,
+        Action::Save,
+        Phase::Execution,
+        Channel::Local,
+        [92; 32],
+    )
+    .unwrap();
+    let publish = |when: i64| {
+        let delivery = Delivery {
+            event: "model-policy-save-failed",
+            job: Job::ModelConfig,
+            trigger: Trigger::User,
+            identity: identity.clone(),
+            evidence: Evidence::Failure,
+            occurred_at: at(when),
+            detail: None,
+        };
+        opencodex_desktop_lib::commands::notifications::NotificationPublisher {
+            store: &store,
+            data_root: root.path(),
+        }
+        .publish_event(&delivery)
+        .unwrap()
+    };
+    publish(200);
+    {
+        let mut guard = store.lock().unwrap();
+        let id = guard.all()[0].notification_id.clone();
+        assert!(guard.delete(&id));
+    }
+    // 运行类失败在条件复现时必须重新提醒，墓碑只对“保存被拦下”生效。
+    publish(90000);
+    let guard = store.lock().unwrap();
+    let live = guard.all().iter().filter(|item| !item.deleted).count();
+    assert!(live >= 1, "其它通知删除后仍应能复发");
+    drop(guard);
+}
+
+#[test]
+fn blocked_save_uses_fixed_reason_body_and_dedupes_per_reason() {
+    let (root, store) = setup();
+    let identity = candidate_identity(
+        root.path(),
+        ObjectKind::Configuration,
+        Action::Save,
+        Phase::Execution,
+        Channel::Local,
+        [77; 32],
+    )
+    .unwrap();
+    let publish = |evidence_identity: &EventIdentity, reason: BlockedReason| {
+        let delivery = Delivery {
+            event: "model-policy-save-blocked",
+            job: Job::ModelConfig,
+            trigger: Trigger::User,
+            identity: evidence_identity.clone(),
+            evidence: Evidence::Risk,
+            occurred_at: at(200),
+            detail: Some(Detail::ModelPolicyBlocked(reason)),
+        };
+        opencodex_desktop_lib::commands::notifications::NotificationPublisher {
+            store: &store,
+            data_root: root.path(),
+        }
+        .publish_event(&delivery)
+        .unwrap()
+    };
+    publish(&identity, BlockedReason::OverBudget);
+    {
+        let guard = store.lock().unwrap();
+        let item = &guard.all()[0];
+        assert_eq!(item.title, "模型配置未保存");
+        assert!(item.body.contains("完整投影超出 100"));
+        assert!(!item.body.contains("渠道"));
+    }
+    // 同一原因只留一条，不叠加未读。
+    publish(&identity, BlockedReason::OverBudget);
+    assert_eq!(store.lock().unwrap().all().len(), 1);
+    // 另一原因独立成条，便于逐项处理。
+    publish(&identity, BlockedReason::NoChanges);
+    let guard = store.lock().unwrap();
+    let all = guard.all();
+    assert_eq!(all.len(), 2);
+    assert!(all
+        .iter()
+        .any(|item| item.body.contains("没有未保存的修改")));
+    drop(guard);
+}
+
 #[test]
 fn policy_save_risk_links_to_its_exact_plan_and_only_verified_commit_or_compensation_resolves() {
     let mut store = NotificationStore::new();

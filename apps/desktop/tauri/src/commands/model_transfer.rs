@@ -247,14 +247,37 @@ pub async fn model_transfer_export(
                     managed
                 }
             };
-            let path = directory.join(format!(
-                "opencodex-config-{}.ocxdconf",
-                uuid::Uuid::new_v4()
-            ));
-            if directory == root.join("exports") {
+            // WP-56：目录按“日期 / 单次备份包”组织，每次导出是一个可整体拷贝的包。
+            // 同一天多次导出各成独立包，互不覆盖，也不把不同模块拆成并列目录。
+            let date = chrono::Local::now().format("%Y-%m-%d").to_string();
+            let mut stamp = format!(
+                "opencodex-backup-{}-{}",
+                chrono::Local::now().format("%H%M%S"),
+                &uuid::Uuid::new_v4().to_string()[..8]
+            );
+            let managed = directory == root.join("exports");
+            let mut path = directory
+                .join(&date)
+                .join(&stamp)
+                .join(format!("{stamp}.ocxdconf"));
+            let mut attempt = 1;
+            while managed && path.exists() && attempt < 100 {
+                attempt += 1;
+                stamp = format!(
+                    "opencodex-backup-{}-{}-{attempt}",
+                    chrono::Local::now().format("%H%M%S"),
+                    &uuid::Uuid::new_v4().to_string()[..8]
+                );
+                path = directory
+                    .join(&date)
+                    .join(&stamp)
+                    .join(format!("{stamp}.ocxdconf"));
+            }
+            if managed {
                 crate::modules::backup::safety::check_path(&root, &path, true)?;
+                std::fs::create_dir_all(path.parent().expect("package directory"))?;
             } else if path.exists() {
-                return Err(invalid("export_target", "目标文件已存在，请换一个目录"));
+                return Err(invalid("export_target", "目标包已存在，请换一个目录"));
             }
             let bytes = transfer::file_bytes(&root, &plan_id)?;
             crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)?;

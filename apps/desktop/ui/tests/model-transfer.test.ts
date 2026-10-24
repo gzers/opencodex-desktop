@@ -106,7 +106,7 @@ describe('model transfer review', () => {
     expect(mapping.props('options')).not.toEqual(expect.arrayContaining([expect.objectContaining({value:'new'})]));wrapper.unmount()
   })
 
-  it.skip('[0.2.5 待按新结构重写] share and device-transfer presets freeze separate protected selections and still require custom asset review',async()=>{
+  it.skip('[0.2.5 原型无此入口] share and device-transfer presets freeze separate protected selections and still require custom asset review',async()=>{
     vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'preset',package:pack()});const wrapper=render();await flushPromises();await flushPromises();await flushPromises()
     const preset=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='配置范围预设')!
     expect(preset.props('modelValue')).toBe('all');expect(wrapper.text()).toContain('已选 5 个对象')
@@ -140,7 +140,7 @@ describe('model transfer review', () => {
     wrapper.unmount();
   })
 
-  it.skip('[0.2.5 待按新结构重写] freezes selected extension target names only after comparing again',async()=>{
+  it.skip('[0.2.5 原型无此入口] freezes selected extension target names only after comparing again',async()=>{
     const original={id:'asset-conflict',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],previewError:'asset_conflict',assets:{skills:[{name:'fixture-skill',digest:'skill-digest',files:2,bytes:100,warnings:[],protected:false}],mcps:[{name:'fixture-mcp',digest:'mcp-digest',secretFields:[],warnings:[]}]}}
     vi.mocked(modelTransferApi.receive).mockResolvedValue(original);vi.mocked(modelTransferApi.select).mockResolvedValue({...original,previewError:null,assetMappings:{skills:{'fixture-skill':'received-skill'},mcps:{'fixture-mcp':'received-mcp'}}})
     const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await flushPromises();await flushPromises()
@@ -151,7 +151,7 @@ describe('model transfer review', () => {
     expect(modelTransferApi.select).toHaveBeenCalledWith('asset-conflict',expect.objectContaining({assetMappings:{skills:{'fixture-skill':'received-skill'},mcps:{'fixture-mcp':'received-mcp'}}}))
     expect(wrapper.text()).toContain('received-skill（来源：fixture-skill）');expect(modelTransferApi.accept).not.toHaveBeenCalled();wrapper.unmount()
   })
-  it.skip('[0.2.5 待按新结构重写] requires a new comparison for channel mapping and sends the chosen independent name',async()=>{
+  it.skip('[0.2.5 原型无此入口] requires a new comparison for channel mapping and sends the chosen independent name',async()=>{
     const value=pack();value.payload.policy={templateRefs:null,channelOrder:null,channels:[{id:'channel-source',label:'来源渠道',selection:{mode:'none'},connection:{nodes:[{id:'node-source',name:'主站',url:'https://source.example.test/v1'}]}}]}
     const original={id:'channel-incoming',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:value,notices:[],previewError:'channel_endpoint_conflict'}
     vi.mocked(modelTransferApi.receive).mockResolvedValue(original)
@@ -285,10 +285,10 @@ describe('model transfer review', () => {
     vi.mocked(modelTransferApi.latestUpload).mockResolvedValue({id:'original-remote-plan',phase:'publishing',package:pack()});vi.mocked(modelTransferApi.publish).mockResolvedValue({id:'original-remote-plan',phase:'published',package:pack()})
     const wrapper=render(true);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='查看原上传计划')!.trigger('click');await flushPromises();expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();await wrapper.findAll('button').find(b=>b.text()==='核对原上传')!.trigger('click');await flushPromises();expect(modelTransferApi.publish).toHaveBeenCalledExactlyOnceWith('original-remote-plan');expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();wrapper.unmount()
   })
-  it.skip('[0.2.5 待按新结构重写] requires review of chosen custom assets and freezes their separate credential choice into the file plan',async()=>{
+  it('requires review of chosen custom assets before export proceeds (WP-56 assetsReviewed)',async()=>{
     vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'asset-file',package:pack(),protected:false,credentialCount:0,assets:{skills:[{name:'fixture-skill',digest:'skill-digest',files:2,bytes:100,warnings:[],protected:false}],mcps:[]}})
     const wrapper=render();await flushPromises();await flushPromises();await customExportScope(wrapper);const labels=()=>wrapper.findAll('label');await chooseExport(wrapper,'Skill · fixture-skill')
-    expect(wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.attributes('disabled')).toBeDefined();await labels().find(label=>label.text().startsWith('已检查所选Skill'))!.get('input').setValue(true);await wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.trigger('click');await flushPromises()
+    expect(wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.attributes('disabled')).toBeDefined();await labels().find(label=>label.text().includes('已复核所选资源'))!.get('input').setValue(true);await wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.trigger('click');await flushPromises()
     expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.anything(),undefined,false,expect.objectContaining({skillNames:['fixture-skill'],mcpNames:[],extensionCredentials:false,assetsReviewed:true}));expect(wrapper.text()).toContain('2 文件');expect(modelTransferApi.export).not.toHaveBeenCalled();wrapper.unmount()
   })
   it('keeps the temporary file password for an encrypted Skill even when no credential was included',async()=>{

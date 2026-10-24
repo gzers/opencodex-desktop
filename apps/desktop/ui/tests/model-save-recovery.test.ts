@@ -5,7 +5,8 @@ import ChannelsView from '@/features/models/ChannelsView.vue'
 import { useModelsStore } from '@/features/models/store'
 import { modelApi, type ModelSnapshot } from '@/features/models/api'
 import {useModalStore} from '@/app/modal/store'
-vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{latestPolicy:vi.fn(),policyResult:vi.fn(),applyPolicy:vi.fn(),preparePolicy:vi.fn(),preparePolicyScoped:vi.fn(),stage:vi.fn(),load:vi.fn()}}))
+vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{latestPolicy:vi.fn(),policyResult:vi.fn(),applyPolicy:vi.fn(),preparePolicy:vi.fn(),preparePolicyScoped:vi.fn(),stage:vi.fn(),load:vi.fn(),project:vi.fn(),policySaveBlocked:vi.fn()}}))
+const projection=()=>({rows:[],knownActiveModels:0,exactCatalogCount:null,notices:[]})
 const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'}
 const plan=(id='original')=>({id,phase:'visibility_written',catalogCount:3,currentCatalogCount:2,changedChannels:['测试渠道'],error:'order_write'})
 function render(){return mount(ChannelsView,{global:{stubs:{UiDialog:dialog,ClientLoadStatus:true,ChannelEditor:true,ModelPicker:true,UiSelectField:true}}})}
@@ -35,7 +36,12 @@ describe('recovering a saved operation',()=>{
    const store=useModelsStore();const make=(id:string)=>({id,label:id,templateRefs:[],modelRefs:{},connection:{providerId:id,protocol:'openai-chat',nodes:[],activeNodeId:'',credentialRef:null,enabled:true,allowPrivateNetwork:false},selection:{mode:'none' as const},modelOrder:[],discovered:[],defaults:{protocol:{mode:'inherit' as const},contextWindow:{mode:'inherit' as const},inputModalities:{mode:'inherit' as const},reasoningEfforts:{mode:'inherit' as const},defaultEffort:{mode:'inherit' as const},fast:{mode:'inherit' as const}},overrides:{},familyOverrides:{}})
    store.snapshot!.policy.channels=[make('ready'),make('blocked')];store.restoreChannels();store.channelDraft!.channels[0]!.label='本次渠道';store.channelDraft!.channels[1]!.label='暂缓渠道'
    vi.spyOn(store,'persistDraft').mockResolvedValue(undefined);vi.mocked(modelApi.latestPolicy).mockResolvedValue(null);vi.mocked(modelApi.preparePolicy).mockRejectedValue({message:'待补连接'});vi.mocked(modelApi.preparePolicyScoped).mockResolvedValue({...plan('scoped'),phase:'prepared',error:null,changedChannels:['本次渠道'],deferredChannels:['暂缓渠道']})
-   const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='保存')!.trigger('click');await flushPromises();expect(wrapper.text()).toContain('待补连接')
+   vi.mocked(modelApi.project).mockResolvedValue(projection())
+   const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='保存')!.trigger('click');await flushPromises()
+   // 保存即预览；确认后被保存前校验拦下，原因走已注册通知，页面只保留“调整本次保存范围”。
+   await wrapper.findAll('button').find(b=>b.text()==='确认保存')!.trigger('click');await flushPromises()
+   // 通知登记“未写入”；真实原因同时留在页面，供“调整本次保存范围”定位。
+   expect(modelApi.policySaveBlocked).toHaveBeenCalledWith('validation');expect(wrapper.text()).toContain('待补连接')
    await wrapper.findAll('button').find(b=>b.text()==='调整本次保存范围')!.trigger('click');await flushPromises();const deferred=wrapper.findAll('label').find(l=>l.text().includes('暂缓渠道'))!;await deferred.get('input').setValue(false)
    expect(wrapper.text()).toContain('留待稍后');await wrapper.findAll('button').find(b=>b.text()==='比较本次范围')!.trigger('click');await flushPromises()
    expect(modelApi.preparePolicyScoped).toHaveBeenCalledWith(expect.anything(),'library','policy','workspace',{channelIds:['ready'],includeShared:false});expect(modelApi.applyPolicy).not.toHaveBeenCalled();expect(wrapper.text()).toContain('暂缓渠道；本次不提交，草稿保留。');expect(store.channelDraft!.channels[1]!.label).toBe('暂缓渠道')
@@ -60,4 +66,33 @@ describe('recovering a saved operation',()=>{
    await wrapper.findAll('button').find(b=>b.text()==='核对原计划')!.trigger('click');await flushPromises()
    expect(modelApi.policyResult).toHaveBeenLastCalledWith('specific-plan');expect(modelApi.applyPolicy).not.toHaveBeenCalled();wrapper.unmount()
  })
+
+  it('连点保存只打开一次预览，不会重复提交（§38.4 重入保护）', async () => {
+    const store = useModelsStore()
+    const make = (id: string) => ({
+      id, label: id, templateRefs: [], modelRefs: {},
+      connection: { providerId: id, protocol: 'openai-chat', nodes: [], activeNodeId: '', credentialRef: null, enabled: true, allowPrivateNetwork: false },
+      selection: { mode: 'none' as const }, modelOrder: [], discovered: [],
+      defaults: { protocol: { mode: 'inherit' as const }, contextWindow: { mode: 'inherit' as const }, inputModalities: { mode: 'inherit' as const }, reasoningEfforts: { mode: 'inherit' as const }, defaultEffort: { mode: 'inherit' as const }, fast: { mode: 'inherit' as const } },
+      overrides: {}, familyOverrides: {},
+    })
+    store.snapshot!.policy.channels = [make('only')]
+    store.restoreChannels()
+    store.channelDraft!.channels[0]!.label = '改过的渠道'
+    vi.mocked(modelApi.latestPolicy).mockResolvedValue(null)
+    let release!: () => void
+    vi.mocked(modelApi.project).mockImplementationOnce(() => new Promise(resolve => { release = () => resolve(projection()) }))
+    const wrapper = render()
+    await flushPromises()
+    const save = wrapper.findAll('button').find(b => b.text() === '保存')!
+    await save.trigger('click')
+    await save.trigger('click')
+    await save.trigger('click')
+    release()
+    await flushPromises()
+    expect(vi.mocked(modelApi.project)).toHaveBeenCalledTimes(1)
+    expect(wrapper.findAll('button').filter(b => b.text() === '确认保存')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
 })

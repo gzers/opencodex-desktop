@@ -273,6 +273,7 @@ mod tests {
                 identity,
                 evidence,
                 occurred_at: chrono::Utc::now(),
+                detail: None,
             };
             // Delivery errors deliberately do not change the save result.
             let _ = crate::commands::notifications::NotificationPublisher {

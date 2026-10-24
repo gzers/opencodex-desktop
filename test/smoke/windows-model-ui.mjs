@@ -95,7 +95,9 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await wait("document.readyState==='complete'&&[...document.querySelectorAll('.models-page .model-table tbody tr')].some(e=>e.textContent.includes('Native sort fixture'))",'staged channel visible after full reload')
  await evaluate("(()=>{const row=[...document.querySelectorAll('.model-table tbody tr')].find(e=>e.textContent.includes('Native sort fixture'));[...row.querySelectorAll('button')].find(e=>e.textContent.trim()==='编辑').click();return true})()")
  await wait("document.querySelectorAll('.channel-model-table tr[data-model]').length===3",'three actual model rows')
- const points=await evaluate("(()=>{const rows=[...document.querySelectorAll('.channel-model-table tr[data-model]')];const from=rows[0].querySelector('button[draggable=true]');from.scrollIntoView({block:'center'});const a=from.getBoundingClientRect(),b=rows[1].querySelector('strong').getBoundingClientRect();return {from:{x:a.x+a.width/2,y:a.y+a.height/2},to:{x:b.x+b.width/2,y:b.y+b.height/2},width:innerWidth,height:innerHeight,before:rows.map(e=>e.dataset.model)}})()")
+ // 行排序已从 HTML5 拖放改为指针拖拽（WKWebView 下 drop 不触发），起手元素是 .model-grip。
+ // 这里仍走真实的 WebView2 鼠标事件，而不是合成 DOM 拖拽事件：验的是用户实际动作。
+ const points=await evaluate("(()=>{const rows=[...document.querySelectorAll('.channel-model-table tr[data-model]')];const from=rows[0].querySelector('.model-grip');if(!from)throw new Error('model grip missing');from.scrollIntoView({block:'center'});const a=from.getBoundingClientRect(),b=rows[1].querySelector('strong').getBoundingClientRect();return {from:{x:a.x+a.width/2,y:a.y+a.height/2},to:{x:b.x+b.width/2,y:b.y+b.height/2},width:innerWidth,height:innerHeight,before:rows.map(e=>e.dataset.model)}})()")
  await writeFile(join(output,'model-sort-pointer.json'),JSON.stringify(points,null,2)+'\n')
  for(const point of [points.from,points.to])assert(point.x>0&&point.y>0&&point.x<points.width&&point.y<points.height,'native sort target outside viewport')
  await call('Input.dispatchMouseEvent',{type:'mouseMoved',...points.from})

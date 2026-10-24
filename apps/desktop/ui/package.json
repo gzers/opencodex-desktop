@@ -1,7 +1,7 @@
 {
   "name": "opencodex-desktop-ui",
   "private": true,
-  "version": "0.2.6",
+  "version": "0.2.7",
   "type": "module",
   "engines": {
     "node": ">=24"
@@ -13,7 +13,23 @@
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest",
     "audit:browser": "node qa/audit.browser.mjs",
-    "inventory:components": "node qa/component-inventory.mjs"
+    "inventory:components": "node qa/component-inventory.mjs",
+    "audit:models": "node qa/model-visual.mjs",
+    "audit:preview": "node qa/preview-visual.mjs",
+    "audit:catalog-naming": "node qa/catalog-naming-real.mjs",
+    "audit:catalog-crossvalidate": "node qa/catalog-naming-crossvalidate.mjs",
+    "audit:export": "node qa/export-visual.mjs",
+    "audit:template": "node qa/template-visual.mjs",
+    "audit:update": "node qa/update-visual.mjs",
+    "audit:geometry": "node qa/geometry-visual.mjs",
+    "audit:geometry:webkit": "node qa/geometry-webkit.mjs",
+    "audit:webkit": "AUDIT_ENGINE=webkit node qa/model-visual.mjs && AUDIT_ENGINE=webkit node qa/preview-visual.mjs && AUDIT_ENGINE=webkit node qa/geometry-visual.mjs && AUDIT_ENGINE=webkit node qa/template-visual.mjs && AUDIT_ENGINE=webkit node qa/export-visual.mjs && AUDIT_ENGINE=webkit node qa/update-visual.mjs",
+    "gate:release": "node qa/gate-release.mjs",
+    "audit:parity": "node qa/parity-preview.mjs",
+    "audit:parity:template": "node qa/parity-template.mjs",
+    "audit:parity:export": "node qa/parity-export.mjs",
+    "audit:parity:list": "node qa/parity-list.mjs",
+    "audit:parity:agent": "node qa/parity-agent.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "2.12.1",

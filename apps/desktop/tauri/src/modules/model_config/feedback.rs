@@ -133,6 +133,27 @@ pub fn policy_terminal(root: &Path, id: &str, success: bool) {
         Trigger::Commit,
     );
 }
+
+pub use crate::modules::notifications::registry::BlockedReason as SaveBlockedReason;
+/// 每次确认都产生一次明确事实；同一原因按固定 dedupe 更新同一条通知。
+pub fn save_blocked(app: &tauri::AppHandle, root: &Path, reason: SaveBlockedReason) {
+    let _ = crate::infrastructure::runtime_log::RuntimeLog::new(root)
+        .append_event(&format!("model policy save blocked: {}", reason.text()));
+    let identity = crate::commands::event_delivery::prepare(
+        root,
+        "model-policy-save-blocked",
+        Channel::Local,
+        &[reason as u8],
+    );
+    crate::commands::event_delivery::publish_detail(
+        app,
+        root,
+        "model-policy-save-blocked",
+        identity,
+        Trigger::User,
+        Some(crate::modules::notifications::registry::Detail::ModelPolicyBlocked(reason)),
+    );
+}
 pub fn registered() -> bool {
     registry::validate_signal(
         "model-operation-progress",

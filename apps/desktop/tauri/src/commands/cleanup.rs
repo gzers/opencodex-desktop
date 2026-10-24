@@ -564,6 +564,7 @@ mod tests {
                 identity,
                 evidence,
                 occurred_at: Utc::now(),
+                detail: None,
             };
         let mut store = crate::modules::notifications::NotificationStore::new();
         registry::deliver(

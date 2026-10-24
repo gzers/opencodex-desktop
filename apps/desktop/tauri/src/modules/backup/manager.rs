@@ -2358,6 +2358,7 @@ mod pin_event_tests {
             identity,
             evidence,
             occurred_at: Utc::now(),
+            detail: None,
         };
         let _ = crate::commands::notifications::NotificationPublisher {
             store,

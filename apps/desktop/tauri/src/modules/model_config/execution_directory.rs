@@ -206,20 +206,23 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
                 channel_id: channel.into(),
                 provider_id: provider.into(),
                 model_id: id.into(),
-                // 选择器要能区分同名型号：优先沿用官方展示名，没有展示名时回落到
-                // 带渠道前缀的 namespaced（如 GZGG-NewApi/gxlq-local-deepseek-flash）。
-                // 早先直接回落到裸 id，同一渠道里有的行带前缀、有的不带，看起来像缺数据。
-                label: raw["modelDisplayNames"][id]
-                    .as_str()
-                    .filter(|value| !value.is_empty())
-                    .or_else(|| {
-                        row["displayName"]
-                            .as_str()
-                            .filter(|value| !value.is_empty())
-                    })
-                    .or(namespaced)
-                    .unwrap_or(id)
-                    .into(),
+                // UI 规范 §29.1：目录读回也统一 渠道名/原始模型ID，不读 modelDisplayNames
+                // 或上游 displayName。原生沿原生身份，不补渠道前缀；同一模型 ID 属于两个
+                // 渠道时靠渠道前缀天然区分。
+                label: if native {
+                    row["displayName"]
+                        .as_str()
+                        .filter(|value| !value.is_empty())
+                        .unwrap_or(id)
+                        .to_owned()
+                } else {
+                    let name = channels
+                        .iter()
+                        .find(|c| c.provider_id == provider)
+                        .map(|c| c.label.clone())
+                        .unwrap_or_else(|| provider.to_owned());
+                    format!("{name}/{id}")
+                },
                 enabled: reason.is_none(),
                 selected: false,
                 discovered: true,
@@ -389,10 +392,10 @@ mod tests {
             .iter()
             .find(|r| r.model.model_id == "hidden")
             .unwrap();
-        // 隐藏型号不再可选，但仍以真实名称和别名解释“已隐藏，请重新选择”。
+        // 隐藏型号不再可选；§29.1：名称统一 渠道名/原始模型ID，不读旧 modelDisplayNames。
         assert!(!hidden.model.enabled);
         assert!(!hidden.picker_visible);
-        assert_eq!(hidden.model.label, "完整隐藏型号");
+        assert_eq!(hidden.model.label, "custom/hidden");
         assert_eq!(hidden.aliases, vec!["short"]);
         assert_eq!(
             hidden.unavailable_reason.as_deref(),
@@ -494,5 +497,34 @@ mod tests {
                 .code,
             "agent_fast"
         );
+    }
+
+    /// WP-64 / §29.1：同一原始 ID 属于两个渠道时用 渠道名/原始ID 区分，不读旧展示名。
+    #[test]
+    fn catalog_labels_distinguish_same_raw_id_across_channels() {
+        let labels = ["FeiMao-CNM", "FeiMao-Claude"]
+            .iter()
+            .map(|channel| format!("{channel}/deepseek-v4.1-flash"))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            labels,
+            vec![
+                "FeiMao-CNM/deepseek-v4.1-flash",
+                "FeiMao-Claude/deepseek-v4.1-flash"
+            ]
+        );
+        assert_ne!(labels[0], labels[1]);
+        // 旧友好名称不得作为任何一项的主名称。
+        assert!(labels.iter().all(|label| !label.contains("旧友好名称")));
+        // 原生渠道沿原生身份，不补渠道前缀。
+        assert!(crate::modules::model_config::compiler::channel_is_native(
+            "openai"
+        ));
+        assert!(crate::modules::model_config::compiler::channel_is_native(
+            "combo"
+        ));
+        assert!(!crate::modules::model_config::compiler::channel_is_native(
+            "ocxd_abc123"
+        ));
     }
 }

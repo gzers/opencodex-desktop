@@ -215,6 +215,13 @@ fn overlay_sources(target: &mut BTreeMap<String, String>, rules: &ModelRules, so
         }
     }
 }
+/// 原生 / 组合目录由客户端自己命名，不补渠道前缀（§29.1）。
+pub fn channel_is_native(provider_id: &str) -> bool {
+    matches!(
+        provider_id.to_ascii_lowercase().as_str(),
+        "openai" | "chatgpt" | "openai-multi" | "combo"
+    )
+}
 pub fn project(library: &Library, policy: &Policy) -> ModelResult<DraftProjection> {
     let mut rows = vec![];
     let mut ids = BTreeSet::new();
@@ -298,22 +305,16 @@ pub fn project(library: &Library, policy: &Policy) -> ModelResult<DraftProjectio
                 channel_id: channel.id.clone(),
                 provider_id: channel.connection.provider_id.clone(),
                 model_id: id.clone(),
-                label: channel
-                    .naming
-                    .get(&id)
-                    .and_then(|n| n.display_name.as_ref())
-                    .map(|value| {
-                        if value.is_empty() {
-                            id.clone()
-                        } else {
-                            value.clone()
-                        }
-                    })
-                    .unwrap_or_else(|| {
-                        discovered
-                            .map(|m| m.label.clone())
-                            .unwrap_or_else(|| id.clone())
-                    }),
+                // UI 规范 §29.1：渠道模型统一显示 渠道名/原始模型ID。
+                // 友好名称（naming.displayName）与上游 label 本轮都不参与主名称；
+                // 原生渠道沿原生身份，不人为补渠道前缀。
+                label: if channel_is_native(&channel.connection.provider_id) {
+                    discovered
+                        .map(|m| m.label.clone())
+                        .unwrap_or_else(|| id.clone())
+                } else {
+                    format!("{}/{}", channel.label, id)
+                },
                 aliases: channel
                     .naming
                     .get(&id)
