@@ -468,3 +468,17 @@ cd apps/desktop/tauri && cargo tauri build --bundles app,dmg
 
 结论：**可在本机验证的 CI 门已全部通过**。剩余不可本机验证的只有 Windows 专属 job，
 以及第 3、4 项的真机实证——这三类都不因本地绿灯而被视为通过。
+### 2026-10-24 晚：指针拖拽补「失焦清理」（WP-46 原有要求，之前漏了）
+
+WP-46 验收要点写着「拖动、取消、**失焦**、排序后不闪屏」，但改成指针拖拽后我只实现了 pointerup / pointercancel / Esc 三条收尾路径，没处理窗口失焦。
+
+后果比拖拽失败更难受：拖到一半切到别的应用，pointerup 不会再送进本窗口，于是——
+
+1. 那一行永远保持半透明「拖拽中」；
+2. ocx-pointer-drag 还挂在 html 上，整页文字都选不中，直到下次重开界面。
+
+修法：blur 与 visibilitychange（document.hidden）都走同一条 cleanup()，与 Esc 完全一致——清定时器、清悬停高亮、清半透明行、摘掉禁选类、解绑所有监听。
+
+验证：tests/pointer-drag.test.ts 新增 1 项（共 7 项）——拖到一半触发 blur 后，禁选类必须消失、onActive(null) 必须发出、之后抬手不得产生重排。前端全量 771 通过 / 10 跳过；门禁仍 18 / 0 / 0。
+
+这条是自查发现的，不是用户报的——按 WP-46 原文对照才看到漏项。
