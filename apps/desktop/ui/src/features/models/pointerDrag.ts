@@ -16,6 +16,25 @@ import { onBeforeUnmount } from 'vue'
 
 const ACTIVE_CLASS = 'ocx-pointer-drag'
 const THRESHOLD = 5
+/** 距可滚动容器上下边缘多少像素内开始自动滚动。 */
+const EDGE = 48
+/** 每次自动滚动步进（约每帧）；越靠边缘越快。 */
+const MAX_STEP = 14
+
+/**
+ * 指针靠近可视区上下边缘时每帧滚多少像素；0 表示不滚。
+ *
+ * 容器可能超出视口（页面 main 常比窗口高），所以只取它与视口的交集判定边缘。
+ * 抽成纯函数是为了能直接测边界：jsdom 没有布局，靠 DOM 测不到这段。
+ */
+export function edgeStep(pointerY: number, rect: { top: number; bottom: number }, viewportHeight: number): number {
+  const top = Math.max(rect.top, 0) + EDGE
+  const bottom = Math.min(rect.bottom, viewportHeight) - EDGE
+  if (bottom <= top) return 0
+  if (pointerY < top) return -Math.ceil(MAX_STEP * Math.min(1, (top - pointerY) / EDGE))
+  if (pointerY > bottom) return Math.ceil(MAX_STEP * Math.min(1, (pointerY - bottom) / EDGE))
+  return 0
+}
 
 export interface PointerDragOptions {
   /** 行选择器，例如 'tr[data-model]' */
@@ -37,11 +56,49 @@ export function usePointerDrag(options: PointerDragOptions) {
   let active = false
   let overId: string | null = null
   let listening = false
+  let raf = 0
+  let last: { x: number; y: number } | null = null
+  let scroller: HTMLElement | null = null
 
   function rowIdAt(x: number, y: number): string | null {
     const el = document.elementFromPoint?.(x, y) as HTMLElement | null
     const row = el?.closest?.(options.rowSelector) as HTMLElement | null
     return row?.getAttribute(options.itemAttr) ?? null
+  }
+
+  /**
+   * 按下时从行往上找可滚动祖先并记住它。
+   *
+   * 不在拖动过程中用 elementFromPoint 找：指针移出视口或滚到底时它返回 null，
+   * 自动滚动会静默失效（实测过）。表格本身不是滚动容器，真正滚的常是页面 main。
+   */
+  function scrollerFrom(el: HTMLElement | null): HTMLElement | null {
+    while (el && el !== document.body) {
+      const style = getComputedStyle(el)
+      // 只按 overflow 判定：真实环境里 scrollHeight 才可靠，且 tick 在「滚不动」时
+      // 会自动换上一层，不需要在这里先做一次可滚性探测。
+      if (/(auto|scroll)/.test(style.overflowY)) return el
+      el = el.parentElement
+    }
+    return null
+  }
+
+  /** 拖到视口边缘时自动滚动，否则长列表里拖不过一屏就没法把行放到远处。 */
+  function tick() {
+    raf = 0
+    if (!active || !last || !scroller) return
+    const box = scroller
+    if (box) {
+      const rect = box.getBoundingClientRect()
+      const step = edgeStep(last.y, rect, window.innerHeight)
+      if (step) {
+        const before = box.scrollTop
+        box.scrollTop = before + step
+        // 滚不动就换下一层可滚动祖先（有的页面表格自己滚，有的页面整体滚）。
+        if (box.scrollTop === before) scroller = scrollerFrom(box.parentElement)
+      }
+    }
+    raf = requestAnimationFrame(tick)
   }
 
   function setOver(next: string | null) {
@@ -51,6 +108,9 @@ export function usePointerDrag(options: PointerDragOptions) {
   }
 
   function cleanup() {
+    if (raf) { cancelAnimationFrame(raf); raf = 0 }
+    last = null
+    scroller = null
     if (active) {
       document.documentElement.classList.remove(ACTIVE_CLASS)
       options.onActive?.(null)
@@ -73,6 +133,7 @@ export function usePointerDrag(options: PointerDragOptions) {
     // 清掉按下瞬间可能已经开始的选择，避免“拖一下框住一片字”。
     window.getSelection?.()?.removeAllRanges()
     options.onActive?.(armed!.id)
+    if (!raf) raf = requestAnimationFrame(tick)
   }
 
   function onMove(event: PointerEvent) {
@@ -83,6 +144,7 @@ export function usePointerDrag(options: PointerDragOptions) {
       beginActive()
     }
     event.preventDefault()
+    last = { x: event.clientX, y: event.clientY }
     const target = rowIdAt(event.clientX, event.clientY)
     setOver(target && target !== armed.id ? target : null)
   }
@@ -110,6 +172,7 @@ export function usePointerDrag(options: PointerDragOptions) {
     const target = event.target as HTMLElement | null
     if (target?.closest('button,input,textarea,select,a,label,[contenteditable="true"]')) return
     cleanup()
+    scroller = scrollerFrom(target?.closest(options.rowSelector) as HTMLElement | null)
     armed = { id, x: event.clientX, y: event.clientY, pointerId: event.pointerId }
     if (!listening) {
       window.addEventListener('pointermove', onMove, true)

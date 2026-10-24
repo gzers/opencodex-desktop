@@ -1,7 +1,7 @@
 import {afterEach,describe,expect,it} from 'vitest'
 import {mount} from '@vue/test-utils'
 import {defineComponent,ref} from 'vue'
-import {usePointerDrag} from '@/features/models/pointerDrag'
+import {usePointerDrag, edgeStep} from '@/features/models/pointerDrag'
 
 /**
  * 指针拖拽的单元覆盖。
@@ -103,5 +103,21 @@ describe('pointer drag ordering',()=>{
     expect(events).toEqual([])
     expect(document.documentElement.classList.contains('ocx-pointer-drag')).toBe(false)
     wrapper.unmount()
+  })
+
+  it('computes edge auto-scroll steps from the visible slice of the scroller',()=>{
+    // 容器比视口高：只按交集判定边缘
+    expect(edgeStep(10,{top:-30,bottom:540},560)).toBeLessThan(0)
+    expect(edgeStep(300,{top:-30,bottom:540},560)).toBe(0)
+    expect(edgeStep(530,{top:-30,bottom:540},560)).toBeGreaterThan(0)
+    // 越靠边越快，但不超过上限
+    const near=edgeStep(498,{top:0,bottom:600},600)
+    const atEdge=edgeStep(599,{top:0,bottom:600},600)
+    expect(atEdge).toBeGreaterThan(near)
+    expect(atEdge).toBeLessThanOrEqual(14)
+    // 容器比视口还小且落在视口内：四边都有静止区
+    expect(edgeStep(50,{top:0,bottom:100},600)).toBe(0)
+    // 可视区比两个边缘带还窄：不滚，避免抖动
+    expect(edgeStep(50,{top:0,bottom:60},600)).toBe(0)
   })
 });

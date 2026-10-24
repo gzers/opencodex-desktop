@@ -165,6 +165,30 @@ try {
   check('WK 无控制台错误', errors.length === 0, errors.slice(0, 2).join(' | '))
   await page.screenshot({ path: path.join(process.env.AUDIT_OUT_DIR || os.tmpdir(), 'webkit-models.png') })
 
+  // —— 拖到视口边缘要能自动滚动，否则长列表里拖不过一屏 ——
+  {
+    await page.setViewportSize({ width: 1180, height: 520 })
+    await page.waitForTimeout(500)
+    const rowsScroll = page.locator('.channel-model-table tbody tr[data-model]')
+    await rowsScroll.nth(1).scrollIntoViewIfNeeded()
+    await page.waitForTimeout(400)
+    const src = await rowsScroll.nth(1).locator('.model-raw-id').boundingBox()
+    const mainBox = await page.locator('main.main').boundingBox()
+    if (src && mainBox) {
+      const y0 = src.y + src.height / 2
+      const yEnd = mainBox.y + mainBox.height - 14
+      await page.mouse.move(src.x + 8, y0); await page.waitForTimeout(80)
+      await page.mouse.down(); await page.waitForTimeout(120)
+      for (let i = 1; i <= 12; i++) { await page.mouse.move(src.x + 8, y0 + (yEnd - y0) * i / 12); await page.waitForTimeout(45) }
+      const beforeScroll = await page.evaluate(() => document.querySelector('main.main').scrollTop)
+      await page.waitForTimeout(1200)
+      const afterScroll = await page.evaluate(() => document.querySelector('main.main').scrollTop)
+      await page.mouse.up(); await page.waitForTimeout(300)
+      check('WK 拖到边缘自动滚动', afterScroll > beforeScroll + 5, beforeScroll + ' → ' + afterScroll)
+      check('WK 自动滚动后收尾干净', await page.evaluate(() => !document.documentElement.classList.contains('ocx-pointer-drag')))
+    }
+  }
+
   // —— 渠道列表行排序：同一套指针拖拽（原先也用 HTML5 拖放，同样会掉 drop） ——
   const back = page.locator('button', { hasText: '返回渠道列表' }).first()
   if (await back.count()) { await back.click(); await page.waitForTimeout(800) }
