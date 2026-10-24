@@ -543,3 +543,24 @@ OPENCODEX_HOME=<manager 的 opencodex-home> $OCX inspect catalog --json
 | 样例 | `A6api/glm-5.3-flash`、`A6api/gpt-6-astra` … |
 
 边界：这只证明**目录内容与命名符合规格**，不代表客户端重启后 UI 已按新目录刷新——后者仍需真实重启确认。
+### 2026-10-24 晚：updater 签名链路实证（用临时密钥，不进仓库）
+
+CI 的 tag 构建会用 `--config tauri.updater.conf.json` 产出更新包并注入签名。这条路径此前**从未本地跑过**，
+只验过普通 `cargo tauri build`。本轮用一次性临时密钥补验：
+
+```sh
+cargo tauri signer generate -w /tmp/ocx-test-updater.key --password ''   # 一次性密钥，验证后丢弃
+TAURI_SIGNING_PRIVATE_KEY=$(cat /tmp/ocx-test-updater.key) \
+  cargo tauri build --config tauri.updater.conf.json --bundles app
+```
+
+| 产物 / 检查 | 结果 |
+| --- | --- |
+| `OpenCodeX Desktop.app.tar.gz` | 生成（6.6MB，内含完整 .app，`tar -tzf` 可列） |
+| `OpenCodeX Desktop.app.tar.gz.sig` | 生成（base64 封装的 minisign 签名，含 trusted comment） |
+| **独立验签** | `minisign -V` → **`Signature and comment signature verified`** |
+| 密钥不匹配警告 | 预期：临时密钥与仓库配置的 `pubkey` 不同；正式发布用仓库密钥 |
+
+意义：证明**签名→产物→独立校验**整条链可用，不是「文件生成了就算」；也说明 CI 那步不会因签名配置缺失而产出无效包。
+
+清理：临时密钥与验证副本只在 `/tmp`，未进仓库、未写入任何配置。
