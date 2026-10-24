@@ -164,6 +164,30 @@ try {
   }
   check('WK 无控制台错误', errors.length === 0, errors.slice(0, 2).join(' | '))
   await page.screenshot({ path: path.join(process.env.AUDIT_OUT_DIR || os.tmpdir(), 'webkit-models.png') })
+
+  // —— 渠道列表行排序：同一套指针拖拽（原先也用 HTML5 拖放，同样会掉 drop） ——
+  const back = page.locator('button', { hasText: '返回渠道列表' }).first()
+  if (await back.count()) { await back.click(); await page.waitForTimeout(800) }
+  const channelRows = page.locator('.channel-table tbody tr')
+  const channelCount = await channelRows.count()
+  check('WK 渠道列表已返回', channelCount >= 3, 'rows=' + channelCount)
+  if (channelCount >= 3) {
+    const names = () => page.evaluate(() => [...document.querySelectorAll('.channel-table tbody tr')].slice(0, 4).map(tr => tr.querySelector('td:nth-child(2) strong')?.textContent))
+    const beforeChannels = await names()
+    const sb3 = await channelRows.nth(0).locator('td:nth-child(2) strong').boundingBox()
+    const db3 = await channelRows.nth(2).locator('td:nth-child(2) strong').boundingBox()
+    if (sb3 && db3) {
+      const x3 = sb3.x + 10, y3 = sb3.y + sb3.height / 2, y4 = db3.y + db3.height / 2
+      await page.mouse.move(x3, y3); await page.waitForTimeout(60)
+      await page.mouse.down(); await page.waitForTimeout(100)
+      for (let i = 1; i <= 16; i++) { await page.mouse.move(x3, y3 + (y4 - y3) * i / 16); await page.waitForTimeout(38) }
+      const duringSelection = await page.evaluate(() => String(window.getSelection() || '').trim().slice(0, 40))
+      await page.mouse.up(); await page.waitForTimeout(500)
+      const afterChannels = await names()
+      check('WK 渠道拖拽不框选文字', duringSelection === '', 'selection=' + JSON.stringify(duringSelection))
+      check('WK 渠道拖拽按落点换序', JSON.stringify(beforeChannels) !== JSON.stringify(afterChannels), beforeChannels[0] + ' → ' + afterChannels.join('|'))
+    }
+  }
 } finally {
   if (browser) await browser.close().catch(() => {})
   try { server.kill('SIGTERM') } catch {}
