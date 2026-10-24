@@ -1,13 +1,14 @@
 // 模版详情实屏（WP-54）：进入模版编辑页，核对侧栏只有三项操作、匹配预览在匹配分区。
 import fs from 'fs'; import path from 'path'; import os from 'os'; import net from 'net'
 import { spawn } from 'child_process'; import { fileURLToPath } from 'url'; import { createRequire } from 'module'
+import {pickEngine, Blocked} from './engine.mjs'
 const here = path.dirname(fileURLToPath(import.meta.url)), uiDir = path.resolve(here, '..')
 const outDir = process.env.AUDIT_OUT_DIR || fs.mkdtempSync(path.join(os.tmpdir(), 'ocx-template-shots-'))
 fs.mkdirSync(outDir, { recursive: true })
 const PORT = 5199, BASE = 'http://127.0.0.1:' + PORT
 function pw(){const n=path.join(os.homedir(),'.npm','_npx');if(fs.existsSync(n))for(const d of fs.readdirSync(n)){const c=path.join(n,d,'node_modules','playwright-core');if(fs.existsSync(path.join(c,'package.json')))return c}return null}
 function exe(){const b=path.join(os.homedir(),'Library','Caches','ms-playwright');if(!fs.existsSync(b))return null;for(const d of fs.readdirSync(b).filter(x=>x.startsWith('chromium_headless_shell-')).sort().reverse()){const p=path.join(b,d,'chrome-headless-shell-mac-arm64','chrome-headless-shell');if(fs.existsSync(p))return p}return null}
-const {chromium}=createRequire(pw()+'/')('playwright-core')
+const engine=await pickEngine()
 const waitPort=(port,t=40000)=>new Promise((res,rej)=>{const s=Date.now();const tick=()=>{const k=net.connect(port,'127.0.0.1');k.once('connect',()=>{k.destroy();res()});k.once('error',()=>{k.destroy();if(Date.now()-s>t)rej(new Error('vite'));else setTimeout(tick,200)})};tick()})
 const results=[]
 const check=(n,ok,d='')=>results.push({n,ok:!!ok,d})
@@ -17,7 +18,7 @@ async function main(){
   let browser
   try{
     await waitPort(PORT)
-    browser=await chromium.launch({executablePath:exe()})
+    browser=await engine.launch()
     for(const c of [{name:'template-1180x760-light',w:1180,h:760,theme:'light'},{name:'template-900x600-dark',w:900,h:600,theme:'dark'}]){
       const page=await browser.newPage({viewport:{width:c.w,height:c.h},deviceScaleFactor:2})
       const errors=[]
@@ -89,5 +90,5 @@ async function main(){
   console.log('shots: '+outDir+' failed='+failed.length+'/'+results.length)
   process.exit(failed.length?1:0)
 }
-main().catch(e=>{console.error(e);process.exit(3)})
+main().catch(e=>{if(e instanceof Blocked){console.log('BLOCKED: '+e.message);process.exit(2)}console.error(e);process.exit(3)})
 

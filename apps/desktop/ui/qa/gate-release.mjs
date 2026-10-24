@@ -23,6 +23,8 @@ const steps = [
   { id: 'audit:geometry', cmd: ['node', ['qa/geometry-visual.mjs']], needsEnv: false },
   // macOS 原生引擎族（WKWebView 用 WebKit）：Chromium 通过不等于原生窗口通过。
   { id: 'audit:geometry:webkit', cmd: ['node', ['qa/geometry-webkit.mjs']], needsEnv: false },
+  // 其余四套实屏检查的 WebKit 复跑：同一批断言换个引擎，专抓只在 WebKit 出现的问题。
+  { id: 'audit:webkit', cmd: ['npm', ['run', 'audit:webkit']], needsEnv: false },
   { id: 'audit:template', cmd: ['node', ['qa/template-visual.mjs']], needsEnv: false },
   { id: 'audit:export', cmd: ['node', ['qa/export-visual.mjs']], needsEnv: false },
   { id: 'audit:update', cmd: ['node', ['qa/update-visual.mjs']], needsEnv: false },

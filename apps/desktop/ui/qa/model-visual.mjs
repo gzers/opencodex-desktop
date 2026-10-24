@@ -6,6 +6,7 @@ import net from 'net'
 import { spawn } from 'child_process'
 import { fileURLToPath } from 'url'
 import { createRequire } from 'module'
+import {pickEngine, Blocked} from './engine.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const uiDir = path.resolve(here, '..')
@@ -34,7 +35,7 @@ function newestChromiumShell() {
 }
 const pwPath = resolvePlaywright(), exe = newestChromiumShell()
 if (!pwPath || !exe) { console.log('BLOCKED: 缺少 playwright-core 或 chromium'); process.exit(2) }
-const { chromium } = createRequire(pwPath + '/')( 'playwright-core')
+const engine = await pickEngine()
 
 function waitPort(port, timeoutMs = 40000) {
   return new Promise((resolve, reject) => {
@@ -74,7 +75,7 @@ async function main() {
   let browser
   try {
     await waitPort(PORT)
-    browser = await chromium.launch({ executablePath: exe })
+    browser = await engine.launch()
     for (const c of cases) {
       const page = await browser.newPage({ viewport: { width: c.width, height: c.height }, deviceScaleFactor: 2 })
       const errors = []

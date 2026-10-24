@@ -23,6 +23,7 @@
     "audit:update": "node qa/update-visual.mjs",
     "audit:geometry": "node qa/geometry-visual.mjs",
     "audit:geometry:webkit": "node qa/geometry-webkit.mjs",
+    "audit:webkit": "AUDIT_ENGINE=webkit node qa/model-visual.mjs && AUDIT_ENGINE=webkit node qa/preview-visual.mjs && AUDIT_ENGINE=webkit node qa/geometry-visual.mjs && AUDIT_ENGINE=webkit node qa/template-visual.mjs && AUDIT_ENGINE=webkit node qa/export-visual.mjs && AUDIT_ENGINE=webkit node qa/update-visual.mjs",
     "gate:release": "node qa/gate-release.mjs",
     "audit:parity": "node qa/parity-preview.mjs",
     "audit:parity:template": "node qa/parity-template.mjs",
