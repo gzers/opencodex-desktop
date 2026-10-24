@@ -256,7 +256,10 @@ pub async fn model_transfer_export(
                 &uuid::Uuid::new_v4().to_string()[..8]
             );
             let managed = directory == root.join("exports");
-            let mut path = directory.join(&date).join(&stamp).join(format!("{stamp}.ocxdconf"));
+            let mut path = directory
+                .join(&date)
+                .join(&stamp)
+                .join(format!("{stamp}.ocxdconf"));
             let mut attempt = 1;
             while managed && path.exists() && attempt < 100 {
                 attempt += 1;
@@ -265,7 +268,10 @@ pub async fn model_transfer_export(
                     chrono::Local::now().format("%H%M%S"),
                     &uuid::Uuid::new_v4().to_string()[..8]
                 );
-                path = directory.join(&date).join(&stamp).join(format!("{stamp}.ocxdconf"));
+                path = directory
+                    .join(&date)
+                    .join(&stamp)
+                    .join(format!("{stamp}.ocxdconf"));
             }
             if managed {
                 crate::modules::backup::safety::check_path(&root, &path, true)?;

@@ -222,8 +222,7 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
                         .map(|c| c.label.clone())
                         .unwrap_or_else(|| provider.to_owned());
                     format!("{name}/{id}")
-                }
-                .into(),
+                },
                 enabled: reason.is_none(),
                 selected: false,
                 discovered: true,
@@ -518,8 +517,14 @@ mod tests {
         // 旧友好名称不得作为任何一项的主名称。
         assert!(labels.iter().all(|label| !label.contains("旧友好名称")));
         // 原生渠道沿原生身份，不补渠道前缀。
-        assert!(crate::modules::model_config::compiler::channel_is_native("openai"));
-        assert!(crate::modules::model_config::compiler::channel_is_native("combo"));
-        assert!(!crate::modules::model_config::compiler::channel_is_native("ocxd_abc123"));
+        assert!(crate::modules::model_config::compiler::channel_is_native(
+            "openai"
+        ));
+        assert!(crate::modules::model_config::compiler::channel_is_native(
+            "combo"
+        ));
+        assert!(!crate::modules::model_config::compiler::channel_is_native(
+            "ocxd_abc123"
+        ));
     }
 }

@@ -4680,7 +4680,8 @@ else:sys.exit(7)
 
         // 读回：草稿投影与执行目录都使用 渠道名/原始模型ID。
         let committed_policy = store.load().unwrap().policy;
-        let projected = compiler::project(&store.load().unwrap().library, &committed_policy).unwrap();
+        let projected =
+            compiler::project(&store.load().unwrap().library, &committed_policy).unwrap();
         let labels = projected
             .rows
             .iter()

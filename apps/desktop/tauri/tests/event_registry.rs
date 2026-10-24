@@ -288,7 +288,9 @@ fn blocked_save_uses_fixed_reason_body_and_dedupes_per_reason() {
     let guard = store.lock().unwrap();
     let all = guard.all();
     assert_eq!(all.len(), 2);
-    assert!(all.iter().any(|item| item.body.contains("没有未保存的修改")));
+    assert!(all
+        .iter()
+        .any(|item| item.body.contains("没有未保存的修改")));
     drop(guard);
 }
 

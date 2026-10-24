@@ -309,7 +309,9 @@ pub fn project(library: &Library, policy: &Policy) -> ModelResult<DraftProjectio
                 // 友好名称（naming.displayName）与上游 label 本轮都不参与主名称；
                 // 原生渠道沿原生身份，不人为补渠道前缀。
                 label: if channel_is_native(&channel.connection.provider_id) {
-                    discovered.map(|m| m.label.clone()).unwrap_or_else(|| id.clone())
+                    discovered
+                        .map(|m| m.label.clone())
+                        .unwrap_or_else(|| id.clone())
                 } else {
                     format!("{}/{}", channel.label, id)
                 },

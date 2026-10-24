@@ -538,11 +538,7 @@ pub fn deliver(
             item.dedupe_key = Some(format!("{}:{scope}", policy.dedupe));
             if let Some(Detail::ModelPolicyBlocked(reason)) = delivery.detail {
                 // 同一原因更新同一条；不同原因各自成条，便于逐项处理。
-                item.dedupe_key = Some(format!(
-                    "{}:{scope}:{}",
-                    policy.dedupe,
-                    reason.text()
-                ));
+                item.dedupe_key = Some(format!("{}:{scope}:{}", policy.dedupe, reason.text()));
             }
             item.event_identity = Some(delivery.identity.clone());
             // UI 规范 §38.5：保存被拦下的通知，用户删除后不因再次确认自动复活。
