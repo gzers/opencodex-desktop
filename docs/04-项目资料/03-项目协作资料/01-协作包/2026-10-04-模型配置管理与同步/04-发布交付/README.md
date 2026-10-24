@@ -649,3 +649,32 @@ TAURI_SIGNING_PRIVATE_KEY=$(cat /tmp/ocx-test-updater.key) \
 合并后 main（`cd23d122`）的 CI run `40071962356`：**6 个 job 全 success** —— `release-tools` / `backend` / `backend-windows` / `windows-smoke-evidence` / `frontend` / `build`。
 
 至此发布链路的每一段都有实测：分支 CI → PR CI（5 job）→ 合并 → main CI（6 job）→ tag 流水线（双平台制品）→ 下载线上制品验签 → 公开 → 匿名 200。
+## v0.2.7 通道晋升完成（补记）
+
+第一次公开用的是 `publish/v0.2.7`（`preserve-latest` 语义），结果 **Latest 仍指 v0.2.6**。
+这带来一个真实的用户可见后果：应用更新器读的是 `releases/latest/download/latest.json`，
+所以**已装 0.2.6 的用户收不到 0.2.7**。这不是可选项，必须修。
+
+处理：用 `workflow_dispatch` 以 `mode=stable` 跑同一发布脚本（run `40074944025` success），
+并补推 `promote-stable/v0.2.7` tag 形成可追溯记录（run `40075078628` success）。
+
+| 检查 | 晋升前 | 晋升后 |
+| --- | --- | --- |
+| Release 状态 | 公开、非预发布 | 公开、非预发布（8 个资产） |
+| `isLatest` | v0.2.6 = true，v0.2.7 = false | **v0.2.7 = true**，v0.2.6 = false |
+| `releases/latest/download/latest.json` | **version 0.2.6** | **version 0.2.7** |
+| 更新器平台键 | — | darwin-aarch64 / darwin-aarch64-app / windows-x86_64 / -msi / -nsis |
+
+一次过程说明：改 Latest 后首次请求 `latest.json` 仍返回 0.2.6，是 **CDN 缓存**；
+带 `Cache-Control: no-cache` 重试即返回 0.2.7。记录在此，避免下次误判为晋升失败。
+
+### 最终发布事实
+
+| 项 | 值 |
+| --- | --- |
+| 版本 | **0.2.7**，公开、非预发布，2026-10-24 07:23 UTC |
+| 通道 | **Latest / stable = v0.2.7** |
+| tag | `v0.2.7`、`publish/v0.2.7`、`promote-stable/v0.2.7` |
+| main | `cd23d122`，main CI（6 job）全绿 |
+| 制品验签 | 线上 `.app.tar.gz` 用仓库正式公钥 `minisign -V` 通过，trusted comment 含 `version:0.2.7` |
+| 更新器 | `latest.json` 版本 0.2.7，五个平台键齐全 |
