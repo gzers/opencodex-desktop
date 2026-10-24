@@ -1264,3 +1264,14 @@ model.template.external走已有通知宿主，必要结果按提交身份去重
    把 13px 勾选框撑成 180px，导致「仅启用」被推远、控件高低不一。只对 `input[type=search]` / 文本输入生效。
 6. **探针**：`apps/desktop/ui/qa/geometry-visual.mjs` 的 WP58 组逐行量「单元格 `middle` / 勾选·启停·操作与整行同轴 ≤2px /
    摘要两行 / 行高上限」，并量过滤区「控件同高同轴、勾选框 ≤20px、搜索框 ≥200px、单行 ≤38px」。改表格布局必须先让这组通过。
+### 行排序必须用指针拖拽，不用 HTML5 拖放（2026-10-24）
+
+macOS 原生窗口复核发现：WKWebView 里表格滚动容器内的 HTML5 拖放会在 `dragstart` 后**不触发 `drop`**，
+排序静默失败；同一动作还会把经过区域的文字整段框选。Chromium 不复现，因此只测 Chromium 会漏掉。
+
+**规则**：凡是「拖动行调整顺序」，一律用 Pointer Events（阈值 5px、起手排除控件、拖拽期间整体禁选、
+`pointerup` / `pointercancel` / `Esc` 三条收尾路径），不要依赖 `draggable` + `dragover/drop`。
+实现见 `apps/desktop/ui/src/features/models/pointerDrag.ts`，模型行与渠道行共用。
+
+**探针**：`qa/geometry-webkit.mjs` 用 Playwright WebKit（与 WKWebView 同引擎族）跑真实指针序列，
+断言「换序成功 / 拖拽期间无选区 / Esc 不改顺序 / Esc 后无残留状态」。Chromium 侧 `qa/geometry-visual.mjs` 同时保留。
