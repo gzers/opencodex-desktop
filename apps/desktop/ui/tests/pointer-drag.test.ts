@@ -92,5 +92,16 @@ describe('pointer drag ordering',()=>{
     expect(document.documentElement.classList.contains('ocx-pointer-drag')).toBe(false)
     wrapper.unmount()
   })
-})
 
+  it('leaves touch gestures to native scrolling so the list stays scrollable',()=>{
+    const {wrapper,events}=harness()
+    const row=wrapper.get('tr[data-item="a"]').element as HTMLElement
+    const touch=pointer('pointerdown',0,0)
+    Object.defineProperty(touch,'pointerType',{value:'touch'})
+    row.dispatchEvent(touch)
+    move(0,120)
+    expect(events).toEqual([])
+    expect(document.documentElement.classList.contains('ocx-pointer-drag')).toBe(false)
+    wrapper.unmount()
+  })
+});

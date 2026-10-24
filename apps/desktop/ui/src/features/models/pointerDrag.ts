@@ -104,6 +104,9 @@ export function usePointerDrag(options: PointerDragOptions) {
   /** 绑定到行的 pointerdown。 */
   function start(event: PointerEvent, id: string) {
     if (!options.enabled() || event.button !== 0) return
+    // 触屏上「滑动列表」与「拖动行」是同一个手势，接管会直接让人滚不动列表。
+    // 触屏保留原生滚动，排序走行内 ↑↓ 按钮（原型同样只在鼠标下可拖）。
+    if (event.pointerType === 'touch') return
     const target = event.target as HTMLElement | null
     if (target?.closest('button,input,textarea,select,a,label,[contenteditable="true"]')) return
     cleanup()

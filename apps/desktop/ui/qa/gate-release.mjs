@@ -65,6 +65,9 @@ for (const step of steps) {
       encoding: 'utf8',
       timeout: 15 * 60 * 1000,
       stdio: ['ignore', 'pipe', 'pipe'],
+      // 默认 1MB 缓冲：前端测试输出（含 Vue 警告）会超过它，抛 ENOBUFS 让整项
+      // 看起来像失败。这里放宽到 64MB；真正的失败仍由退出码判定。
+      maxBuffer: 64 * 1024 * 1024,
       env: { ...process.env, AUDIT_OUT_DIR: path.join(outDir, step.id.replace(/[:]/g, '-')) },
     })
     const ms = Date.now() - started
