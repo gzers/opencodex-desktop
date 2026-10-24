@@ -399,3 +399,17 @@ cd apps/desktop/tauri && cargo tauri build --bundles app,dmg
 - 原文写「真实官方保存 → 读回已完成」但没说目录刷新走了官方降级路径，容易被误读成刷新完全正常。
 
 结论：**制品侧已可发布**。仍需第 3、4 项实证才能打 tag。
+### 2026-10-24 晚：release 二进制启动冒烟（隔离实例）
+
+制品能打出来不等于能跑。把 `target/release/opencodex-desktop` 放进独立 bundle id + 独立数据根的隔离 .app 启动，
+确认发布用的优化构建能真正起来（不碰真实配置，也不用 `/Applications` 那份）：
+
+| 检查 | 结果 |
+| --- | --- |
+| 进程启动 | 存活（pid 51229） |
+| 启动日志 | `startup version=0.2.7 commit=2983e4ac...`，与当前 HEAD 一致 |
+| 数据根初始化 | `backups / cache / exports / logs / manager-state / opencodex-home / sync-state` 全部创建 |
+| 清理 | 进程已停止，隔离根可随时删除 |
+
+意义：此前所有 UI 复核都跑在 debug 构建上；这一条证明**要发布的那个优化构建**同样能启动且版本自洽。
+窗口内可交互复核仍受锁屏限制，未做。
