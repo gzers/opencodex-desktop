@@ -3,6 +3,17 @@
 //! authorization object; runtime observations are never portable write authority.
 use super::schema::*;
 use serde_json::Value;
+/// 官方容忍但不属于 `OcxProviderConfig` 类型的历史 / 身份回显字段。
+///
+/// 实测依据（2026-10-24）：
+/// - 官方 2.84.0 的 `OcxProviderConfig`（144 个字段）**没有** `name`；
+/// - 但官方 `ocx config validate` 对含 `name` 的配置返回 ok；
+/// - 且官方 `POST /api/providers` 会把请求体里的 `name` 回写进 provider 对象。
+///
+/// 因此它既不是需要保留的写入权威，也不该让导出整体失败。
+/// 这里显式列出「已知可忽略」的字段：校验后从公开载荷剔除，
+/// 未知字段仍然拒绝——安全原则不变。
+pub const ECHO: &[&str] = &["name"];
 pub const PUBLIC: &[&str] = &[
     "alias",
     "modelAliases",
@@ -177,6 +188,7 @@ pub fn public_from_raw(raw: &Value) -> ModelResult<Value> {
         !PUBLIC.contains(&key.as_str())
             && !PRIVATE.contains(&key.as_str())
             && !RUNTIME.contains(&key.as_str())
+            && !ECHO.contains(&key.as_str())
     }) {
         return Err(invalid(
             "provider_fields",
@@ -212,6 +224,32 @@ mod tests {
         assert!(validate_public(&raw).is_err());
         let mut unknown = raw;
         unknown["futureCredentialBlock"] = json!({"secret":"x"});
+        assert!(public_from_raw(&unknown).is_err());
+    }
+    #[test]
+    fn tolerated_echo_field_does_not_block_export_and_never_becomes_write_authority() {
+        // 真实场景（2026-10-24）：官方 POST /api/providers 会把请求体里的 name 回写进
+        // provider 对象，于是真实配置里出现 name。它不在 OcxProviderConfig 里，
+        // 但官方 config validate 接受。此前我们把它判成「未知字段」并阻断整个导出，
+        // 导致含该字段的渠道永远导不出去。
+        let raw = json!({
+            "adapter": "openai-responses",
+            "baseUrl": "https://example.test/v1",
+            "name": "FeiMao-CNM",
+            "models": ["a"],
+            "selectedModels": ["a"]
+        });
+        let public = public_from_raw(&raw).expect("echo field must not block export");
+        assert!(
+            public.get("name").is_none(),
+            "echo field must not become write authority"
+        );
+        assert_eq!(public["adapter"], "openai-responses");
+        assert_eq!(public["models"][0], "a");
+
+        // 未知字段仍然拒绝：放宽的只有白名单里点名的 name。
+        let mut unknown = raw;
+        unknown["futureSecretBlock"] = json!({"secret": "x"});
         assert!(public_from_raw(&unknown).is_err());
     }
 }
