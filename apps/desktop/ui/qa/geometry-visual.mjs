@@ -102,6 +102,60 @@ async function main(){
       check('WP47 操作列 182px',Math.abs(cols.ths[3]-182)<=1,'th3='+cols.ths[3])
       check('WP47 行内按钮不越出单元格',cols.actionsOverflow<=1,'overflow='+cols.actionsOverflow)
     }
+    // WP-58 模型行垂直居中与摘要分组（2026-10-24 实屏回归）：
+    // 旧实现用 vertical-align:top 且摘要 display:block，勾选/开关/操作组各自贴顶、五段摘要挤成一行。
+    // 这里按原型 .mp-model-row 量四个单元格的中心是否与整行中心同轴，并确认摘要为两行分组。
+    const align=await page.evaluate(()=>{
+      const rows=[...document.querySelectorAll('.channel-model-table tbody tr[data-model]')].slice(0,3)
+      if(!rows.length) return null
+      return rows.map(tr=>{
+        const rr=tr.getBoundingClientRect(), mid=rr.top+rr.height/2
+        const delta=el=>{if(!el)return null;const r=el.getBoundingClientRect();return Math.round(r.top+r.height/2-mid)}
+        const summary=tr.querySelector('.model-row-summary')
+        return {
+          rowH:Math.round(rr.height),
+          cells:[...tr.children].map(td=>getComputedStyle(td).verticalAlign),
+          pick:delta(tr.querySelector('.model-row-pick')), identity:delta(tr.querySelector('.model-identity')),
+          enable:delta(tr.querySelector('.model-enabled-cell')), actions:delta(tr.querySelector('.model-row-actions')),
+          summaryLines:summary?summary.children.length:0,
+          summaryDisplay:summary?getComputedStyle(summary).display:''
+        }
+      })
+    })
+    check('WP58 模型行已渲染',!!align)
+    if(align){
+      for(const [i,row] of align.entries()){
+        check('WP58 行'+(i+1)+' 单元格垂直居中',row.cells.every(v=>v==='middle'),'cells='+row.cells.join(','))
+        check('WP58 行'+(i+1)+' 勾选列与整行同轴',Math.abs(row.pick??99)<=2,'delta='+row.pick)
+        check('WP58 行'+(i+1)+' 启停列与整行同轴',Math.abs(row.enable??99)<=2,'delta='+row.enable)
+        check('WP58 行'+(i+1)+' 操作组与整行同轴',Math.abs(row.actions??99)<=2,'delta='+row.actions)
+        check('WP58 行'+(i+1)+' 摘要分两行显示',row.summaryDisplay==='grid'&&row.summaryLines===2,'display='+row.summaryDisplay+' lines='+row.summaryLines)
+      }
+      check('WP58 模型行高度未被摘要撑破',align.every(r=>r.rowH<=112),'rowH='+align.map(r=>r.rowH).join('/'))
+    }
+    // WP-58 过滤区：公开范围 / 搜索 / 族筛选 / 仅启用 / 计数同一行、同一高度，勾选框不被撑宽。
+    // 旧实现 `.model-toolbar input{flex:1;min-width:180px}` 命中了复选框，把 13px 勾选框撑成 180px。
+    const bar=await page.evaluate(()=>{
+      const bar=document.querySelector('.model-toolbar')
+      if(!bar) return null
+      const items=[...bar.children].map(el=>{const r=el.getBoundingClientRect();return {tag:el.tagName,h:Math.round(r.height),w:Math.round(r.width),cy:Math.round(r.top+r.height/2)}})
+      const box=bar.querySelector('.ui-inline-check input[type=checkbox]')
+      const boxR=box?box.getBoundingClientRect():null
+      const search=bar.querySelector('input[type=search]')
+      return {barH:Math.round(bar.getBoundingClientRect().height),items,
+        checkboxW:boxR?Math.round(boxR.width):null,
+        searchW:search?Math.round(search.getBoundingClientRect().width):null,
+        centers:[...new Set(items.filter(i=>i.h>=28).map(i=>i.cy))]}
+    })
+    check('WP58 过滤区已渲染',!!bar)
+    if(bar){
+      const controls=bar.items.filter(i=>i.h>=28)
+      check('WP58 过滤区控件同高',new Set(controls.map(i=>i.h)).size===1,'h='+controls.map(i=>i.h).join('/'))
+      check('WP58 过滤区控件同轴',bar.centers.length===1,'centers='+bar.centers.join('/'))
+      check('WP58 仅启用勾选框未被撑宽',bar.checkboxW!==null&&bar.checkboxW<=20,'w='+bar.checkboxW)
+      check('WP58 搜索框吃剩余宽度',bar.searchW!==null&&bar.searchW>=200,'w='+bar.searchW)
+      check('WP58 过滤区不高出单行',bar.barH<=38,'barH='+bar.barH)
+    }
     check('WP47 无控制台错误',errors.length===0,errors.slice(0,2).join(' | '))
     await page.close()
   } finally { if(browser) await browser.close().catch(()=>{}); try{server.kill('SIGTERM')}catch{} }

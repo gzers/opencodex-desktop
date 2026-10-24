@@ -68,7 +68,8 @@ function expand(id:string){buffer(id);state.expanded=state.expanded.includes(id)
 function detailOpen(id:string){const value=buffer(id);detailId.value=id;detail.value=copy({rules:value.rules,naming:value.naming,reference:value.reference});detailEnabled.value=chosen(id);detailBase.value=JSON.stringify(value)}
 async function acceptDetail(){const id=detailId.value;if(!detail.value)return;if(JSON.stringify(buffer(id))!==detailBase.value){error.value='行缓冲已变化，请关闭明细后重新核对';return}if(await accept(id,detail.value,detailEnabled.value))detailId.value=''}
 function effective(id:string){return props.projectionBusy?undefined:projectionById.value.get(id)}
-function summary(id:string){const row=effective(id);if(!row)return{protocol:'协议待解析',context:'上下文未知',reasoning:'推理未知',fast:'Fast未知'};const fields=row.rules;return{protocol:fields.protocol.mode==='custom'?fields.protocol.value:props.channel.connection.protocol,context:fields.contextWindow.mode==='custom'?fields.contextWindow.value.toLocaleString()+' tokens':'上下文未知',reasoning:fields.noReasoning?.mode==='custom'&&fields.noReasoning.value?'不传推理参数':fields.reasoningEfforts.mode==='custom'?fields.reasoningEfforts.value.join(' / ')||'不显示档位':'推理未知',fast:fields.fast.mode==='custom'?(fields.fast.value?'Fast支持':'Fast不支持'):'Fast未知'}}
+// 摘要文案与原型 .mp-model-meta 一致：推理 / 快速 前缀，不用自造的 Fast未知 写法。
+function summary(id:string){const row=effective(id);if(!row)return{protocol:'协议待解析',context:'上下文未知',reasoning:'推理 未知',fast:'快速 未知'};const fields=row.rules;return{protocol:fields.protocol.mode==='custom'?fields.protocol.value:props.channel.connection.protocol,context:fields.contextWindow.mode==='custom'?fields.contextWindow.value.toLocaleString()+' tokens':'上下文未知',reasoning:'推理 '+(fields.noReasoning?.mode==='custom'&&fields.noReasoning.value?'不传推理参数':fields.reasoningEfforts.mode==='custom'?fields.reasoningEfforts.value.join(' / ')||'不显示档位':'未知'),fast:'快速 '+(fields.fast.mode==='custom'?(fields.fast.value?'支持':'不支持'):'未知')}}
 function templateText(id:string){const ref=effective(id)?.templateRef;if(!ref)return'未采用模版匹配';return(props.templates.find(t=>t.id===ref.templateId)?.label??ref.templateId)+' · '+ref.revisionId.slice(0,4)}
 const templateOptions=computed(()=>[{value:'',label:'沿用匹配结果'},...props.templates.flatMap(t=>t.revisions.map(r=>({value:JSON.stringify([t.id,r.id]),label:t.label+' · '+r.createdAt.slice(0,10)+' · '+r.id.slice(0,4)})))])
 function reference(fields:ModelRowFields,value:string){if(!value)fields.reference=null;else{const [templateId,revisionId]=JSON.parse(value) as [string,string];fields.reference={templateId,revisionId}}}
@@ -104,10 +105,10 @@ async function applyBatch(){
  <div v-if="selected.length" class="model-inline"><span>已选 {{ selected.length }} 项<span v-if="hiddenSelected.length"> · 筛选外 {{ hiddenSelected.length }} 项</span></span><UiButton size="sm" :disabled="disabled||validating" @click="batch('enable')">批量启用</UiButton><UiButton size="sm" :disabled="disabled||validating" @click="batch('disable')">批量停用</UiButton><UiButton size="sm" :disabled="disabled||validating" @click="batch()">批量编辑</UiButton><UiButton size="sm" :disabled="disabled||validating" @click="batch('inherit')">恢复字段继承</UiButton></div>
  <div class="model-table-scroll"><table class="model-table"><thead><tr><th><input type="checkbox" :checked="allSelected" :indeterminate="!allSelected&&models.some(m=>selected.includes(m.id))" aria-label="选择当前型号结果" :disabled="disabled||!models.length" @change="pickVisible" /></th><th>模型标识 / 别名与配置</th><th>启停</th><th>编辑与排序</th></tr></thead><tbody>
  <template v-for="(model,index) in models" :key="model.id"><tr :data-model="model.id" :data-pending="state.buffers[model.id]&&rowPending(state.buffers[model.id]!)" :draggable="canSort" :class="{dragging:dragged===model.id}" @dragstart="drag($event,model.id)" @dragend="dragged=''" @dragover.prevent @drop.prevent="reorder(dragged,model.id);dragged=''">
-  <td><input type="checkbox" :checked="selected.includes(model.id)" :aria-label="'操作选择 '+model.id" :disabled="disabled" @change="pick(model.id,($event.target as HTMLInputElement).checked)" /><span class="model-grip" :aria-hidden="true" title="拖动排序">↕</span></td>
-  <td><div class="model-identity"><div class="model-identity-head"><strong :title="model.id" class="model-raw-id">{{ channel.label }}/{{ model.id }}</strong><label class="model-alias"><span class="sr-only">路由别名</span><input class="input" :value="state.buffers[model.id]?.naming.alias??channel.naming?.[model.id]?.alias??''" maxlength="128" :aria-label="model.id+'路由别名'" :disabled="disabled||validating" placeholder="路由别名（可选）" @input="buffer(model.id).naming.alias=($event.target as HTMLInputElement).value" @blur="acceptAlias(model.id)" /></label></div><small class="model-row-summary"><span>{{ summary(model.id).protocol }}</span><span>{{ summary(model.id).context }}</span><span>{{ summary(model.id).reasoning }}</span><span>{{ summary(model.id).fast }}</span><span>{{ templateText(model.id) }}</span></small><span v-if="state.buffers[model.id]?.error" role="alert" class="model-error">{{ state.buffers[model.id]!.error }}</span></div></td>
-  <td><div class="model-inline"><UiSwitch :model-value="chosen(model.id)" :label="model.id+'启用状态'" :disabled="disabled||validating" @update:model-value="toggleVisibility(model.id,$event)" /><span>{{ chosen(model.id)?'启用':'停用' }}</span></div></td>
-  <td><div class="model-row-actions"><UiButton size="sm" :aria-expanded="state.expanded.includes(model.id)" @click="expand(model.id)">{{ state.expanded.includes(model.id)?'收起编辑':'展开编辑' }}</UiButton><UiButton size="sm" :disabled="disabled||validating" @click="detailOpen(model.id)">编辑明细</UiButton><span class="model-order"><UiButton size="sm" variant="ghost" :aria-label="model.id+'上移'" :disabled="!canSort||index===0" @click="move(model.id,-1)">↑</UiButton><UiButton size="sm" variant="ghost" :aria-label="model.id+'下移'" :disabled="!canSort||index===models.length-1" @click="move(model.id,1)">↓</UiButton></span></div></td>
+  <td><div class="model-row-pick"><input type="checkbox" :checked="selected.includes(model.id)" :aria-label="'操作选择 '+model.id" :disabled="disabled" @change="pick(model.id,($event.target as HTMLInputElement).checked)" /><span class="model-grip" :aria-hidden="true" title="拖动排序">↕</span></div></td>
+  <td><div class="model-identity"><div class="model-identity-head"><strong :title="model.id" class="model-raw-id">{{ channel.label }}/{{ model.id }}</strong><label class="model-alias"><span class="sr-only">路由别名</span><input class="input" :value="state.buffers[model.id]?.naming.alias??channel.naming?.[model.id]?.alias??''" maxlength="128" :aria-label="model.id+'路由别名'" :disabled="disabled||validating" placeholder="路由别名（可选）" @input="buffer(model.id).naming.alias=($event.target as HTMLInputElement).value" @blur="acceptAlias(model.id)" /></label></div><small class="model-row-summary" :title="templateText(model.id)+' · '+summary(model.id).protocol"><span class="model-row-summary-line"><span>{{ summary(model.id).protocol }}</span><span>{{ summary(model.id).context }}</span></span><span class="model-row-summary-line"><span>{{ summary(model.id).reasoning }}</span><span>{{ summary(model.id).fast }}</span></span></small><span v-if="state.buffers[model.id]?.error" role="alert" class="model-error">{{ state.buffers[model.id]!.error }}</span></div></td>
+  <td><div class="model-enabled-cell"><UiSwitch :model-value="chosen(model.id)" :label="model.id+'启用状态'" :disabled="disabled||validating" @update:model-value="toggleVisibility(model.id,$event)" /><small>{{ chosen(model.id)?'启用':'停用' }}</small></div></td>
+  <td><div class="model-row-actions"><UiButton size="sm" variant="ghost" :aria-expanded="state.expanded.includes(model.id)" @click="expand(model.id)">{{ state.expanded.includes(model.id)?'收起编辑':'展开编辑' }}</UiButton><UiButton size="sm" variant="ghost" :disabled="disabled||validating" @click="detailOpen(model.id)">编辑明细</UiButton><span class="model-order"><button class="model-move" type="button" :aria-label="model.id+'上移'" :disabled="!canSort||index===0" @click="move(model.id,-1)">↑</button><button class="model-move" type="button" :aria-label="model.id+'下移'" :disabled="!canSort||index===models.length-1" @click="move(model.id,1)">↓</button></span></div></td>
  </tr><tr v-if="state.expanded.includes(model.id)"><td :colspan="4"><div class="model-row-editor" :aria-label="model.id+'行编辑'"><ModelRuleFields basic source-caption="已加入渠道草稿的有效值（不含本行待确认编辑）" :model-value="buffer(model.id).rules" :effective="effective(model.id)" :disabled="disabled||validating" @update:model-value="buffer(model.id).rules=$event" /><UiSelectField :model-value="buffer(model.id).reference?JSON.stringify([buffer(model.id).reference!.templateId,buffer(model.id).reference!.revisionId]):''" :options="templateOptions" :label="model.id+'采用版本'" :disabled="disabled||validating" @update:model-value="reference(buffer(model.id),$event)" /><div class="model-inline"><UiButton size="sm" :disabled="disabled||validating" @click="restore(model.id)">还原本行</UiButton><UiButton size="sm" variant="primary" :loading="validating" :disabled="disabled||!rowPending(buffer(model.id))" @click="accept(model.id,copy(buffer(model.id)))">加入草稿</UiButton></div></div></td></tr></template>
  </tbody></table></div><p v-if="!models.length">没有匹配的型号。</p>
  <UiDialog :open="!!detailId" title="模型编辑明细" wide :busy="validating" @close="detailId=''">
@@ -117,22 +118,33 @@ async function applyBatch(){
 </section>
 </template>
 <style scoped>
-.channel-model-table> .model-table-scroll>table>thead>tr>th:first-child,.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:first-child{width:36px;min-width:36px;white-space:nowrap}
+.channel-model-table> .model-table-scroll>table>thead>tr>th:first-child,.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:first-child{width:36px;min-width:36px;padding-inline:0;white-space:nowrap;text-align:center}
+.model-row-pick{display:flex;align-items:center;justify-content:center;gap:var(--space-1);flex-wrap:nowrap}
+.model-row-pick .model-grip{margin-inline-start:0}
 .channel-model-table{display:grid;gap:var(--space-3);min-width:0;container-type:inline-size}.model-raw-id{display:block;white-space:normal;overflow-wrap:anywhere;font-family:var(--font-mono,monospace)}
 /* WP-47：36 / 弹性 / 62 / 182；首行同轴，两行摘要留在下方。
    auto 布局会按内容重算列宽，必须固定布局才能让三列严格落在 36 / 62 / 182。 */
 .channel-model-table> .model-table-scroll>table{table-layout:fixed;width:100%}
 .channel-model-table> .model-table-scroll>table>thead>tr>th:nth-child(3),.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:nth-child(3){width:62px;min-width:62px}
 .channel-model-table> .model-table-scroll>table>thead>tr>th:nth-child(4),.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:nth-child(4){width:182px;min-width:182px}
-.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td{vertical-align:top}
-.model-identity{display:grid;gap:var(--space-1);min-width:0}
+.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td{vertical-align:middle;padding-block:var(--space-3)}
+/* 原型 .mp-model-row 为 padding:12px 0：启停与操作列不占横向内距，182px 列宽全部留给操作组。 */
+.channel-model-table> .model-table-scroll>table>thead>tr>th:nth-child(3),.channel-model-table> .model-table-scroll>table>thead>tr>th:nth-child(4),.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:nth-child(3),.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:nth-child(4){padding-inline:0}
+.model-identity{display:grid;gap:3px;align-content:center;min-width:0}
 .model-identity-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,140px);align-items:center;gap:var(--space-2);min-width:0}
 .model-alias{min-width:0}
 .model-alias .input{width:100%;min-height:var(--control-sm);box-sizing:border-box;font-size:var(--text-caption)}
 .model-display-name{color:var(--muted);font-size:var(--text-caption);overflow-wrap:anywhere}
 .model-row-actions{display:flex;align-items:center;justify-content:flex-end;gap:var(--space-1);min-height:var(--control-sm);flex-wrap:nowrap}
 .model-row-actions .btn{white-space:nowrap}
-.model-order{display:inline-flex;align-items:center;gap:2px;flex:none}
+.model-order{display:grid;gap:1px;flex:none}
+.model-move{display:grid;place-items:center;width:22px;min-height:18px;padding:0;border:0;border-radius:5px;background:transparent;color:var(--muted);font:inherit;font-size:var(--text-label);line-height:1;cursor:pointer}
+.model-move:hover:not(:disabled){background:var(--raised);color:var(--text)}
+.model-move:disabled{opacity:.35;cursor:default}
+.model-move:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+/* 启停列与原型一致：开关在上、状态小字在下，整列居中。 */
+.model-enabled-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-1)}
+.model-enabled-cell small{font-size:var(--text-caption);line-height:1.35;color:var(--muted);white-space:nowrap}
 .model-toolbar-actions{display:flex;align-items:center;gap:var(--space-2);min-width:0;flex-wrap:nowrap}
 .model-toolbar-actions .btn{white-space:nowrap}
 .model-toolbar-sort{flex:none;min-width:130px}
@@ -142,7 +154,12 @@ async function applyBatch(){
 .channel-model-table :deep(.model-table tbody>tr.dragging){opacity:.45}
 .channel-model-table :deep(.model-table tbody>tr.drag-over){outline:2px solid var(--accent);outline-offset:-2px}
 .model-identity input,.model-row-summary,.model-display-name{-webkit-user-select:text;user-select:text}
-.model-row-editor{padding:var(--space-4);display:grid;gap:var(--space-3)}.model-batch-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-3)}small{display:block;color:var(--muted)}.model-row-summary{gap:var(--space-1) var(--space-3);line-height:1.5;margin-top:var(--space-1)}label{display:grid;gap:var(--space-1)}
+.model-row-editor{padding:var(--space-4);display:grid;gap:var(--space-3)}.model-batch-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-3)}small{display:block;color:var(--muted)}
+/* 摘要与原型一致：两条分组行，行内小间距 4px、项间距 12px；模版名进 title，不再挤成一行。 */
+.model-row-summary{display:grid;gap:4px;margin-top:3px;line-height:1.5}
+.model-row-summary-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;min-width:0}
+.model-row-summary-line>span{min-width:0;overflow-wrap:anywhere}
+label{display:grid;gap:var(--space-1)}
 @container(max-width:680px){.model-identity-head{grid-template-columns:minmax(0,1fr)}.model-alias .input{max-width:220px}}
 @container(max-width:540px){.model-row-actions{justify-content:flex-start;flex-wrap:wrap}.channel-model-table> .model-table-scroll>table>thead>tr>th:nth-child(4),.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:nth-child(4){width:auto;min-width:0}}
 @media(max-width:650px){.model-batch-fields{grid-template-columns:minmax(0,1fr)}}

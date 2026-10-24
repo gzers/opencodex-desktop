@@ -228,8 +228,10 @@ function prepareDelete() {
 .model-source-record{padding:10px 0}.model-source-record p{white-space:pre-wrap;overflow-wrap:anywhere}
 .model-editor-action{width:100%}.model-editor-action svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}
 .model-name{flex:1;min-width:120px;font-weight:var(--weight-semibold)}.model-identity{flex:1;min-width:180px}
+/* 只有文本搜索框吃剩余宽度；复选框/单选不能套这条，否则 13px 勾选框被撑成 180px
+   （0.2.7 实屏问题：模型列表「仅启用」被推远、控件高低不一）。 */
 .model-toolbar{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);margin:20px 0;flex-wrap:wrap}
-.model-toolbar input{flex:1;max-width:360px;min-width:180px}
+.model-toolbar>input[type="search"],.model-toolbar>input.input[type="text"],.model-toolbar>input.input:not([type]){flex:1 1 180px;max-width:360px;min-width:180px}
 .model-table-scroll{overflow-x:auto}
 .model-table{width:100%;border-collapse:collapse}
 .model-table th{color:var(--muted);font-weight:500;text-align:left}
