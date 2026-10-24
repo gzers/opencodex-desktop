@@ -505,3 +505,24 @@ WP-46 验收要点写着「拖动、取消、**失焦**、排序后不闪屏」�
 | **3 macOS 原生拖拽** | **已完成** |
 | 4 Windows WebView2 + 触屏手感 | 等用户实测（长按语义已有 WebKit touch 断言） |
 | 5 150%/200% 缩放 | 按用户结论跳过 |
+### 2026-10-24 晚：合并演练（真合并 + 合并后全量复跑）
+
+之前只做 `merge-tree` 的静态检查；这次在临时工作树里**真合并**并按 CI 命令全量复跑：
+
+```
+临时工作树 /tmp/ocx-027-merge2（分支 rehearsal/0.2.7-merge2，基于 origin/main @ 4969638f）
+git merge --no-ff feature/0.2.6-agent-credentials
+```
+
+| 检查 | 结果 |
+| --- | --- |
+| 冲突 | **0** 个（64 个文件新增 / 修改，含 `pointerDrag.ts`、`pointer-drag.test.ts`、`saveReview.ts`） |
+| typecheck | 通过 |
+| 前端单测 | **154 文件 / 771 通过 / 10 跳过**（与合并前一致） |
+| `cargo fmt --check` | 通过 |
+| `clippy -D warnings` | 通过 |
+| `cargo test --workspace --features integration-test` | **39 个二进制全 ok，0 失败** |
+
+演练结束已执行 `worktree remove` + 删除演练分支；**`main` 与 0.2.7 分支均未改动**（`origin/main` 仍是 `4969638f`）。
+
+结论：**代码层面已具备合并条件，且合并后不引入回归**。这不等于已发布——仍需第 4 项（Windows/触屏）与 1b（重启客户端核对）。
