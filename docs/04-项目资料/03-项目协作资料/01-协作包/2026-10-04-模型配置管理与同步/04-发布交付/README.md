@@ -450,3 +450,21 @@ cd apps/desktop/tauri && cargo tauri build --bundles app,dmg
 
 边界：这证明长按语义在 WebKit 引擎下正确（计时、吞点击、出说明），不等于真机触屏的 500ms 手感与误触率——
 后者仍需设备实测，属第 4 项剩余部分。
+### 2026-10-24 晚：CI 实际命令逐条跑过（此前跑的不是同一套）
+
+之前本地验证用 `cargo test --lib` + `--tests`，而 CI 用的是 `--locked --workspace --features integration-test`；
+前端也是 `npm run test -- --run` 而非直接 `npx vitest`。两者覆盖面不同，必须按 CI 的命令验一遍才作数。
+
+| CI job | 命令 | 本机结果 |
+| --- | --- | --- |
+| `frontend` | `npm --prefix apps/desktop/ui run test -- --run` | **154 文件 / 770 通过 / 10 跳过** |
+| `backend` | `cargo test --locked --workspace --features integration-test` | **39 个测试二进制全 ok，0 失败** |
+| `release-tools` | 三个 `unittest discover` | **29 + 13 + 6 全 OK** |
+| `backend` 前置 | `cargo fmt --check` / `clippy -D warnings` | 通过（本轮修复） |
+| `windows-smoke-evidence` | PowerShell smoke | 本机为 macOS，**跑不了**，由 CI 承担 |
+
+差异说明：带 `--features integration-test` 时测试二进制由 38 变 **39**（多一组由 feature 引入的用例），
+此前只跑 `--tests` 会漏掉这一组。
+
+结论：**可在本机验证的 CI 门已全部通过**。剩余不可本机验证的只有 Windows 专属 job，
+以及第 3、4 项的真机实证——这三类都不因本地绿灯而被视为通过。
