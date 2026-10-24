@@ -564,3 +564,18 @@ TAURI_SIGNING_PRIVATE_KEY=$(cat /tmp/ocx-test-updater.key) \
 意义：证明**签名→产物→独立校验**整条链可用，不是「文件生成了就算」；也说明 CI 那步不会因签名配置缺失而产出无效包。
 
 清理：临时密钥与验证副本只在 `/tmp`，未进仓库、未写入任何配置。
+### 2026-10-24 晚：Windows 侧可做与不可做的边界
+
+尝试用本机已有的 `x86_64-pc-windows-msvc` target 交叉编译，确认「能不能在 macOS 上验 Windows 构建」：
+
+| 尝试 | 结果 |
+| --- | --- |
+| `cargo check --target x86_64-pc-windows-msvc` | **失败**，卡在 `ring` 的 C 构建脚本 |
+| 原因 | `CC_x86_64-pc-windows-msvc = None` —— 本机没有 MSVC 编译器，不是代码问题 |
+| PowerShell smoke | 本机无 `pwsh`，跑不了 |
+
+结论：**Windows 侧任何构建/运行级验证都无法在本机完成**，只能由 CI（`windows-latest`）与用户的 Windows 机器承担。
+这条写入边界，避免以后误把 `target list` 里有 windows target 当成「已验 Windows」。
+
+仍可做且已做的 Windows 侧检查：三份纯逻辑 smoke（`windows-model-ui` / `windows-cdp` / `windows-bundle-identity`，17 项全过），
+以及对本轮前端改动的平台关键词静态核对（`user-select`、Pointer Events、`line-clamp` 在 WebView2 均支持）。
