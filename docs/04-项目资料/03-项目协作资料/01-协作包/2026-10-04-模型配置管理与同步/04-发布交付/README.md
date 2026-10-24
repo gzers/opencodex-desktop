@@ -413,3 +413,25 @@ cd apps/desktop/tauri && cargo tauri build --bundles app,dmg
 
 意义：此前所有 UI 复核都跑在 debug 构建上；这一条证明**要发布的那个优化构建**同样能启动且版本自洽。
 窗口内可交互复核仍受锁屏限制，未做。
+### 2026-10-24 晚：CI 头两道门此前是红的（已修）
+
+`ci.yml` 的 backend job 第一步就是 `cargo fmt --all -- --check`、第二步 `clippy -D warnings`。
+此前所有后端验证都只跑 `cargo test`，**这两道门从未执行过**——一旦打 tag，CI 会在编译前就失败。
+
+实测结果与修复：
+
+| 门 | 修前 | 原因 | 修后 |
+| --- | --- | --- | --- |
+| `cargo fmt --check` | **失败**（7 处 diff，6 个文件） | 本分支新增代码未按 rustfmt 落格式 | 通过 |
+| `cargo clippy -D warnings` | **失败** | `execution_directory.rs` 对已是 `String` 的值再 `.into()`（useless conversion） | 通过 |
+
+涉及文件均在 `origin/main..HEAD` 的改动范围内（`model_transfer.rs`、`compiler.rs`、`execution_directory.rs`、
+`runtime.rs`、`notifications/registry.rs`、`tests/event_registry.rs`），属本分支引入，不是历史遗留。
+
+**语义影响核对**：`execution_directory.rs` 那处只去掉同一类型上的 `.into()`，不改变命名规则
+（仍是原生渠道沿原生身份、其余 `渠道名/原始ID`）。改后重跑后端全量：
+
+- `cargo test --lib`：**967 通过 / 3 忽略**
+- `cargo test --tests`：**38 个二进制全 ok**
+
+意义：发布④的 CI 硬门现在真正可过；此前「本地全绿」并不覆盖这两道门。
