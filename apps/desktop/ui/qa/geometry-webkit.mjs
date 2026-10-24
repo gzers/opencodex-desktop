@@ -212,6 +212,40 @@ try {
       check('WK 渠道拖拽按落点换序', JSON.stringify(beforeChannels) !== JSON.stringify(afterChannels), beforeChannels[0] + ' → ' + afterChannels.join('|'))
     }
   }
+  // —— 触屏长按看说明（§38.3.1）：500ms 后出说明，抬手不得顺带改启停 ——
+  {
+    const touchPage = await browser.newPage({ viewport: { width: 1180, height: 800 }, deviceScaleFactor: 2, hasTouch: true })
+    try {
+      await touchPage.goto(BASE + '/?__audit=1&report=1&route=models&env=ready&runtime=running&effects=low&theme=light')
+      await touchPage.waitForSelector('.channel-table', { timeout: 20000 })
+      await touchPage.waitForTimeout(1200)
+      const sw = touchPage.locator('.channel-enable-cell [role=switch]').first()
+      if (await sw.count()) { await sw.click(); await touchPage.waitForTimeout(400) }
+      await touchPage.locator('button:has-text("保存")').first().click()
+      await touchPage.waitForSelector('dialog[open], .ui-dialog[open]', { timeout: 10000 })
+      await touchPage.waitForTimeout(900)
+      const hold = await touchPage.evaluate(async () => {
+        const el = [...document.querySelectorAll('.preview-group-title')].find(e => !e.disabled)
+        if (!el) return { err: 'no group title' }
+        const before = el.getAttribute('aria-pressed')
+        const fire = t => {
+          const e = new Event(t, { bubbles: true, cancelable: true })
+          Object.defineProperties(e, { pointerType: { value: 'touch' }, button: { value: 0 }, pointerId: { value: 7 }, clientX: { value: 10 }, clientY: { value: 10 } })
+          el.dispatchEvent(e)
+        }
+        fire('pointerdown')
+        await new Promise(r => setTimeout(r, 650))
+        const noteShown = document.querySelectorAll('.preview-group-title.show-note').length
+        fire('pointerup')
+        el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+        await new Promise(r => setTimeout(r, 150))
+        return { before, after: el.getAttribute('aria-pressed'), noteShown }
+      })
+      check('WK 触屏长按 500ms 出说明', !!hold && hold.noteShown === 1, JSON.stringify(hold))
+      check('WK 长按抬手不改启停', !!hold && hold.before === hold.after, (hold?.before ?? '?') + ' -> ' + (hold?.after ?? '?'))
+    } finally { await touchPage.close().catch(() => {}) }
+  }
+
 } finally {
   if (browser) await browser.close().catch(() => {})
   try { server.kill('SIGTERM') } catch {}
