@@ -374,3 +374,28 @@ node --test test/smoke/windows-bundle-identity.test.mjs
 第 3 项复核在本机锁屏前中断；解锁后重跑「拖模型行 + 拖渠道行 + Esc + 拖到边缘」四步即可收口。
 
 不把「WebKit 自动化通过」当成「原生窗口通过」——那正是本轮拖拽缺陷漏过去的同一类误判。
+### 2026-10-24 晚：本机 release 打包实证（HEAD `2983e4ac`）
+
+在真打 tag 之前先本地跑一次正式打包，验证「版本号改好但打不出包」这类问题不会拖到 CI：
+
+```sh
+cd apps/desktop/tauri && cargo tauri build --bundles app,dmg
+```
+
+| 制品 | 结果 |
+| --- | --- |
+| `OpenCodeX Desktop.app` | 版本回读 **0.2.7**，`CFBundleIdentifier=com.gzers.opencodex.desktop` |
+| `OpenCodeX Desktop_0.2.7_aarch64.dmg` | 6.5MB，`hdiutil attach` 成功，卷内含 app 与 Applications 快捷方式 |
+| 二进制架构 | Mach-O 64-bit **arm64** |
+| 签名 | `adhoc`（符合本项目未签名测试分发策略；自更新资产仍由发布流程签名） |
+| 审计夹具泄漏 | 产物内 `__audit` 命中 **0** 处（DEV 夹具未进正式构建） |
+
+同时验证了发布流水线的 CHANGELOG 抽取逻辑在当前文件上可用：`v0.2.7` 能抽出 **22 行**版本说明，
+且不含 0.2.6 段落内容；`## [0.2.7]` 段落恰 1 个。
+
+顺带更正了两处**用户可见文案与实测不符**（`CHANGELOG.md` 使用边界）：
+
+- 原文写「节点测速只在本地回环与未认证网络延迟上验证」——实际已用真实供应商端点验证六次（473–901ms，均 HTTP 200）；
+- 原文写「真实官方保存 → 读回已完成」但没说目录刷新走了官方降级路径，容易被误读成刷新完全正常。
+
+结论：**制品侧已可发布**。仍需第 3、4 项实证才能打 tag。
