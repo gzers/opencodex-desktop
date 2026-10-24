@@ -579,3 +579,22 @@ TAURI_SIGNING_PRIVATE_KEY=$(cat /tmp/ocx-test-updater.key) \
 
 仍可做且已做的 Windows 侧检查：三份纯逻辑 smoke（`windows-model-ui` / `windows-cdp` / `windows-bundle-identity`，17 项全过），
 以及对本轮前端改动的平台关键词静态核对（`user-select`、Pointer Events、`line-clamp` 在 WebView2 均支持）。
+### 2026-10-24 晚：分支首次推上 CI，抓到并修掉两个只在 Windows 暴露的缺陷
+
+0.2.7 分支此前**从未推送**（本地领先 40 个提交），因此 CI 从未在本分支跑过，两个 Windows job 一次都没执行。
+推送后连续三轮，逐轮收敛：
+
+| 轮次 | 结果 | 发现 |
+| --- | --- | --- |
+| 第 1 轮 `40064227146` | **失败** | `backend-windows`：`runtime.rs:4714` 调用 `cli_fixture` 报 `cannot find function` —— 该 helper 是 `#[cfg(unix)]`，但 `official_save_plan_freezes_baselines...` 用例漏了 `cfg` 守卫。macOS 能编、Windows 编不过。 |
+| 第 2 轮 `40065303755` | **失败** | 编译已修好；`Windows final EXE smoke` 报 `Cannot read properties of null (reading 'scrollIntoView')` —— smoke 脚本仍在找 `button[draggable=true]`（HTML5 拖放时代的抓手），改成指针拖拽后该元素不存在。 |
+| 第 3 轮 `40067543382` | **全部成功** | `backend` / `frontend` / `release-tools` / `windows-smoke-evidence` / `backend-windows` 五个 job 全 success |
+
+两处修法：
+
+1. `runtime.rs` 给该用例补 `#[cfg(unix)]`（与同文件另外 8 处调用保持一致），并注明原因防止再漏。
+2. `test/smoke/windows-model-ui.mjs` 的起手元素由 `button[draggable=true]` 改为 `.model-grip`——它本来就是在真实 WebView2 里走 `Input.dispatchMouseEvent` 的指针拖拽用例，语义不变、只跟随实现更新。
+
+**意义**：这是本轮唯一一次真正在 Windows 上验证 0.2.7。此前「Windows 侧只能靠 CI」这句是推断；现在 `backend-windows` 实跑过，含 clippy、release 构建、**真实 EXE 的 WebView2 smoke（含指针拖拽排序）**、Windows 后端回归与凭据保护检查。
+
+仍未覆盖：Windows 上**人工**触摸屏长按手感——自动化只验了语义（WebKit touch 断言），真机手感仍需用户。
