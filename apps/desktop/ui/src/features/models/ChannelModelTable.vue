@@ -7,12 +7,13 @@ import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ModelRuleFields from './ModelRuleFields.vue'
 import {useModalStore} from '@/app/modal/store'
 import {reorderSlots} from './ordering'
+import {usePointerDrag} from './pointerDrag'
 import {copy,createModelRowsState,pendingModelRows,rowFields,rowPending,writeRow,type ModelRowFields,type ModelRowBuffer,type ModelRowsState} from './modelRows'
 import {emptyRules,errorText,modelApi,type ChannelPolicy,type ModelPolicy,type ModelProjection,type Template,type ModelRules} from './api'
 const props=defineProps<{channel:ChannelPolicy;policy?:ModelPolicy;models:ChannelPolicy['discovered'];templates:Template[];projection?:ModelProjection[];projectionBusy?:boolean;disabled?:boolean;filtered?:boolean;state?:ModelRowsState}>()
 const host=ref<HTMLElement|null>(null)
 const state=props.state??reactive(createModelRowsState()),modal=useModalStore()
-const error=ref(''),validating=ref(false),dragged=ref(''),detailId=ref(''),detail=ref<ModelRowFields>(),detailEnabled=ref(false),detailBase=ref('')
+const error=ref(''),validating=ref(false),dragged=ref(''),dragOver=ref(''),detailId=ref(''),detail=ref<ModelRowFields>(),detailEnabled=ref(false),detailBase=ref('')
 let sequence=0;onBeforeUnmount(()=>{sequence++})
 const pending=computed(()=>pendingModelRows(state)),projectionById=computed(()=>new Map((props.projection??[]).map(row=>[row.modelId,row])))
 const selected=computed(()=>state.selected.filter(id=>props.channel.discovered.some(m=>m.id===id)))
@@ -75,7 +76,15 @@ const templateOptions=computed(()=>[{value:'',label:'沿用匹配结果'},...pro
 function reference(fields:ModelRowFields,value:string){if(!value)fields.reference=null;else{const [templateId,revisionId]=JSON.parse(value) as [string,string];fields.reference={templateId,revisionId}}}
 function reorder(id:string,target:string){if(!canSort.value)return;const order=[...new Set([...props.channel.modelOrder,...props.channel.discovered.map(m=>m.id)])];props.channel.modelOrder=reorderSlots(order,props.models.map(m=>m.id),id,target)}
 function move(id:string,delta:number){const index=props.models.findIndex(m=>m.id===id),target=props.models[index+delta];if(target)reorder(id,target.id)}
-function drag(event:DragEvent,id:string){const target=event.target as HTMLElement|null;if(!canSort.value||target?.closest('input,textarea,select,button,a,[contenteditable="true"]')){event.preventDefault();return}dragged.value=id;event.dataTransfer?.setData('text/plain',id);if(event.dataTransfer)event.dataTransfer.effectAllowed='move'}
+// 行排序用指针事件而非 HTML5 拖放：WKWebView 里 drop 常不触发，排序会静默失败并顺带框选文字。
+const pointerDrag=usePointerDrag({
+ rowSelector:'tr[data-model]',itemAttr:'data-model',
+ enabled:()=>canSort.value,
+ onReorder:(id,target)=>reorder(id,target),
+ onActive:id=>{dragged.value=id??''},
+ onOver:id=>{dragOver.value=id??''},
+})
+function dragStart(event:PointerEvent,id:string){dragOver.value='';pointerDrag.start(event,id)}
 function sorted(value:string){if(!canSort.value||!value)return;const indexed=props.models.map((model,index)=>({model,index}));const compare=(a:typeof indexed[number],b:typeof indexed[number])=>{const text=(id:string)=>id;const context=(id:string)=>{const f=effective(id)?.rules.contextWindow;return f?.mode==='custom'?f.value:undefined};switch(value){case'nameDesc':return text(b.model.id).localeCompare(text(a.model.id));case'alias':return(props.channel.naming?.[a.model.id]?.alias||a.model.id).localeCompare(props.channel.naming?.[b.model.id]?.alias||b.model.id);case'protocol':return summary(a.model.id).protocol.localeCompare(summary(b.model.id).protocol);case'contextAsc':case'contextDesc':{const av=context(a.model.id),bv=context(b.model.id);if(av===undefined||bv===undefined)return av===undefined?(bv===undefined?0:1):-1;return value==='contextAsc'?av-bv:bv-av}case'enabled':return Number(chosen(b.model.id))-Number(chosen(a.model.id));default:return text(a.model.id).localeCompare(text(b.model.id))}};indexed.sort((a,b)=>compare(a,b)||a.index-b.index);const eligible=new Set(props.models.map(m=>m.id));const order=[...new Set([...props.channel.modelOrder,...props.channel.discovered.map(m=>m.id)])];let cursor=0;props.channel.modelOrder=order.map(id=>eligible.has(id)?indexed[cursor++]!.model.id:id)}
 const batchOpen=ref(false),batchIds=ref<string[]>([]),batchBaseline=ref(''),batchMode=ref('keep'),batchNaming=ref('keep'),batchPrefix=ref('model-'),batchRules=ref(emptyRules()),batchFields=reactive<Record<string,string>>({})
 function batch(action='edit'){
@@ -104,7 +113,7 @@ async function applyBatch(){
  <p v-if="error" class="model-error" role="alert">{{ error }}</p>
  <div v-if="selected.length" class="model-inline"><span>已选 {{ selected.length }} 项<span v-if="hiddenSelected.length"> · 筛选外 {{ hiddenSelected.length }} 项</span></span><UiButton size="sm" :disabled="disabled||validating" @click="batch('enable')">批量启用</UiButton><UiButton size="sm" :disabled="disabled||validating" @click="batch('disable')">批量停用</UiButton><UiButton size="sm" :disabled="disabled||validating" @click="batch()">批量编辑</UiButton><UiButton size="sm" :disabled="disabled||validating" @click="batch('inherit')">恢复字段继承</UiButton></div>
  <div class="model-table-scroll"><table class="model-table"><thead><tr><th><input type="checkbox" :checked="allSelected" :indeterminate="!allSelected&&models.some(m=>selected.includes(m.id))" aria-label="选择当前型号结果" :disabled="disabled||!models.length" @change="pickVisible" /></th><th>模型标识 / 别名与配置</th><th>启停</th><th>编辑与排序</th></tr></thead><tbody>
- <template v-for="(model,index) in models" :key="model.id"><tr :data-model="model.id" :data-pending="state.buffers[model.id]&&rowPending(state.buffers[model.id]!)" :draggable="canSort" :class="{dragging:dragged===model.id}" @dragstart="drag($event,model.id)" @dragend="dragged=''" @dragover.prevent @drop.prevent="reorder(dragged,model.id);dragged=''">
+ <template v-for="(model,index) in models" :key="model.id"><tr :data-model="model.id" :data-pending="state.buffers[model.id]&&rowPending(state.buffers[model.id]!)" :class="{dragging:dragged===model.id,'drag-over':dragOver===model.id}" @pointerdown="dragStart($event,model.id)">
   <td><div class="model-row-pick"><input type="checkbox" :checked="selected.includes(model.id)" :aria-label="'操作选择 '+model.id" :disabled="disabled" @change="pick(model.id,($event.target as HTMLInputElement).checked)" /><span class="model-grip" :aria-hidden="true" title="拖动排序">↕</span></div></td>
   <td><div class="model-identity"><div class="model-identity-head"><strong :title="model.id" class="model-raw-id">{{ channel.label }}/{{ model.id }}</strong><label class="model-alias"><span class="sr-only">路由别名</span><input class="input" :value="state.buffers[model.id]?.naming.alias??channel.naming?.[model.id]?.alias??''" maxlength="128" :aria-label="model.id+'路由别名'" :disabled="disabled||validating" placeholder="路由别名（可选）" @input="buffer(model.id).naming.alias=($event.target as HTMLInputElement).value" @blur="acceptAlias(model.id)" /></label></div><small class="model-row-summary" :title="templateText(model.id)+' · '+summary(model.id).protocol"><span class="model-row-summary-line"><span>{{ summary(model.id).protocol }}</span><span>{{ summary(model.id).context }}</span></span><span class="model-row-summary-line"><span>{{ summary(model.id).reasoning }}</span><span>{{ summary(model.id).fast }}</span></span></small><span v-if="state.buffers[model.id]?.error" role="alert" class="model-error">{{ state.buffers[model.id]!.error }}</span></div></td>
   <td><div class="model-enabled-cell"><UiSwitch :model-value="chosen(model.id)" :label="model.id+'启用状态'" :disabled="disabled||validating" @update:model-value="toggleVisibility(model.id,$event)" /><small>{{ chosen(model.id)?'启用':'停用' }}</small></div></td>
@@ -150,6 +159,10 @@ async function applyBatch(){
 .model-toolbar-sort{flex:none;min-width:130px}
 /* WP-57：操作区与拖拽手柄不参与文本选择；输入、正文保持可复制。 */
 .model-row-actions,.model-order,.model-toolbar-actions,.model-grip{-webkit-user-select:none;user-select:none}
+/* 指针拖拽期间整体禁选：拖过一行不会顺手框住一路文字；松手即恢复，正文仍可复制。 */
+:global(html.ocx-pointer-drag),:global(html.ocx-pointer-drag *){-webkit-user-select:none!important;user-select:none!important}
+.model-row-pick .model-grip{cursor:grab}
+:global(html.ocx-pointer-drag) .model-grip{cursor:grabbing}
 .model-grip{display:inline-grid;place-items:center;width:16px;color:var(--muted);cursor:grab;font-size:var(--text-caption)}
 .channel-model-table :deep(.model-table tbody>tr.dragging){opacity:.45}
 .channel-model-table :deep(.model-table tbody>tr.drag-over){outline:2px solid var(--accent);outline-offset:-2px}

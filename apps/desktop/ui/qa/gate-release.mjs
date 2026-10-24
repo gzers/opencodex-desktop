@@ -21,6 +21,8 @@ const steps = [
   { id: 'audit:models', cmd: ['node', ['qa/model-visual.mjs']], needsEnv: false },
   { id: 'audit:preview', cmd: ['node', ['qa/preview-visual.mjs']], needsEnv: false },
   { id: 'audit:geometry', cmd: ['node', ['qa/geometry-visual.mjs']], needsEnv: false },
+  // macOS 原生引擎族（WKWebView 用 WebKit）：Chromium 通过不等于原生窗口通过。
+  { id: 'audit:geometry:webkit', cmd: ['node', ['qa/geometry-webkit.mjs']], needsEnv: false },
   { id: 'audit:template', cmd: ['node', ['qa/template-visual.mjs']], needsEnv: false },
   { id: 'audit:export', cmd: ['node', ['qa/export-visual.mjs']], needsEnv: false },
   { id: 'audit:update', cmd: ['node', ['qa/update-visual.mjs']], needsEnv: false },
@@ -71,6 +73,12 @@ for (const step of steps) {
   } catch (error) {
     const ms = Date.now() - started
     const output = String(error.stdout || '') + String(error.stderr || '')
+    // 环境缺失（退出码 2 + BLOCKED）记为跳过，不冒充通过也不误判为缺陷。
+    if (error.status === 2 && /^BLOCKED/m.test(output.trim())) {
+      results.push({ id: step.id, status: 'skipped', detail: output.trim().split('\n')[0].slice(0, 160) })
+      console.log('SKIP ' + step.id + ' · ' + output.trim().split('\n')[0].slice(0, 160))
+      continue
+    }
     results.push({ id: step.id, status: 'failed', ms, detail: summarize(output) || String(error.message).slice(0, 160) })
     console.log('FAIL ' + step.id + ' · ' + (summarize(output) || error.message))
   }
