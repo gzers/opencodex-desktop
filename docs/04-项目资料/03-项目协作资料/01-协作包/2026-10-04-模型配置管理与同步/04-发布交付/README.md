@@ -526,3 +526,20 @@ git merge --no-ff feature/0.2.6-agent-credentials
 演练结束已执行 `worktree remove` + 删除演练分支；**`main` 与 0.2.7 分支均未改动**（`origin/main` 仍是 `4969638f`）。
 
 结论：**代码层面已具备合并条件，且合并后不引入回归**。这不等于已发布——仍需第 4 项（Windows/触屏）与 1b（重启客户端核对）。
+### 2026-10-24 晚：1b 的可做部分（官方 CLI 只读核对）
+
+1b 是「保存后重启客户端核对」。重启真实 Codex 属于用户环境操作，未做；但「客户端会加载成什么」可以只读验：
+
+```sh
+OCX=~/Library/Application\ Support/com.gzers.opencodex.desktop/runtime/bin/ocx
+OPENCODEX_HOME=<manager 的 opencodex-home> $OCX inspect catalog --json
+```
+
+| 检查 | 结果 |
+| --- | --- |
+| 目录条目 | 87 条 |
+| 带渠道前缀（`渠道名/原始ID`） | **78** 条 —— 与 §29.1 要求一致 |
+| 残留测试渠道行 | **0** |
+| 样例 | `A6api/glm-5.3-flash`、`A6api/gpt-6-astra` … |
+
+边界：这只证明**目录内容与命名符合规格**，不代表客户端重启后 UI 已按新目录刷新——后者仍需真实重启确认。
