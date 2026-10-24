@@ -644,3 +644,8 @@ TAURI_SIGNING_PRIVATE_KEY=$(cat /tmp/ocx-test-updater.key) \
 - 提升 stable 通道（需明确决定）。
 - Windows 真机触摸屏长按手感（语义已验，手感未验）。
 - 保存后重启真实客户端再核对（目录侧已只读核对：87 条 / 78 条渠道前缀 / 无残留）。
+### main 主干 CI 最终结果
+
+合并后 main（`cd23d122`）的 CI run `40071962356`：**6 个 job 全 success** —— `release-tools` / `backend` / `backend-windows` / `windows-smoke-evidence` / `frontend` / `build`。
+
+至此发布链路的每一段都有实测：分支 CI → PR CI（5 job）→ 合并 → main CI（6 job）→ tag 流水线（双平台制品）→ 下载线上制品验签 → 公开 → 匿名 200。
