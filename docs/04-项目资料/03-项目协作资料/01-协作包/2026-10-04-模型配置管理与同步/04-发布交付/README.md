@@ -435,3 +435,18 @@ cd apps/desktop/tauri && cargo tauri build --bundles app,dmg
 - `cargo test --tests`：**38 个二进制全 ok**
 
 意义：发布④的 CI 硬门现在真正可过；此前「本地全绿」并不覆盖这两道门。
+### 2026-10-24 晚：触屏长按获得真机级证据（WebKit + touch 指针）
+
+第 4 项原写「触屏长按需真机复核」。已用 Playwright WebKit 的 hasTouch 页面、真实 touch 指针序列补进自动化，
+断言用户实际会遇到的三个事实：
+
+| 断言 | 结果 |
+| --- | --- |
+| 长按 650ms 后出现说明（.preview-group-title.show-note） | 命中 1 个 |
+| 抬手产生的 click 被吞掉，不误改渠道启停 | aria-pressed 保持 true |
+| 鼠标不参与长按（实现里 pointerType==='mouse' 直接返回） | 由代码与既有单测覆盖 |
+
+已并入 audit:geometry:webkit（40 项）；门禁仍 18 通过 / 0 失败 / 0 跳过。
+
+边界：这证明长按语义在 WebKit 引擎下正确（计时、吞点击、出说明），不等于真机触屏的 500ms 手感与误触率——
+后者仍需设备实测，属第 4 项剩余部分。
