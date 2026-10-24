@@ -4707,6 +4707,9 @@ else:sys.exit(7)
             .all(|row| row.label == format!("测试渠道/{}", row.model_id)));
     }
 
+    // cli_fixture 是 #[cfg(unix)]：这个用例依赖它的脚本化上游，Windows 上必须一起跳过，
+    // 否则 `--all-targets` 在 Windows 编不过（macOS 能过，属只在 Windows 暴露的编译错误）。
+    #[cfg(unix)]
     #[tokio::test]
     async fn official_save_plan_freezes_baselines_backs_up_reads_back_and_commits_once() {
         let root = tempfile::tempdir().unwrap();
