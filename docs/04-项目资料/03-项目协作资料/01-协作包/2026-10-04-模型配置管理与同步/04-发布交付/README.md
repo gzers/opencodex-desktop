@@ -598,3 +598,49 @@ TAURI_SIGNING_PRIVATE_KEY=$(cat /tmp/ocx-test-updater.key) \
 **意义**：这是本轮唯一一次真正在 Windows 上验证 0.2.7。此前「Windows 侧只能靠 CI」这句是推断；现在 `backend-windows` 实跑过，含 clippy、release 构建、**真实 EXE 的 WebView2 smoke（含指针拖拽排序）**、Windows 后端回归与凭据保护检查。
 
 仍未覆盖：Windows 上**人工**触摸屏长按手感——自动化只验了语义（WebKit touch 断言），真机手感仍需用户。
+## 2026-10-24 v0.2.7 已发布（公开、非草稿）
+
+| 事实 | 值 |
+| --- | --- |
+| PR | **#15** 合并到 main，merge commit **`cd23d1229`** |
+| tag | **`v0.2.7`** → `3e8b49f6` |
+| 发布流水线 | run `40072010336`：macOS 与 Windows 两个 release job 均 **success** |
+| Release | **公开、非预发布**，`publishedAt=2026-10-24T07:23:17Z` |
+| 公开流水线 | run `40073913449` success（`preserve-latest` 模式） |
+| 匿名访问 | `api.github.com/.../releases/tags/v0.2.7` → **200** |
+
+### 制品（8 个资产，匿名可下载）
+
+| 资产 | 大小 |
+| --- | --- |
+| `OpenCodeX.Desktop_0.2.7_aarch64.dmg` | 6,384,936 |
+| `OpenCodeX.Desktop_aarch64.app.tar.gz` + `.sig` | 6,491,661 / 436 |
+| `OpenCodeX.Desktop_0.2.7_x64-setup.exe` + `.sig` | 4,795,388 / 448 |
+| `OpenCodeX.Desktop_0.2.7_x64_en-US.msi` + `.sig` | 6,725,632 / 448 |
+| `latest.json` | 6,776 |
+
+### 发布前实测（下载线上制品验证，不是只看流水线绿）
+
+| 检查 | 结果 |
+| --- | --- |
+| dmg 挂载 + 版本回读 | `hdiutil attach` 成功；`CFBundleShortVersionString = 0.2.7` |
+| 二进制架构 | `Mach-O 64-bit executable arm64` |
+| **updater 签名验签** | 用仓库配置的**正式公钥** `minisign -V` → `Signature and comment signature verified`，trusted comment 含 `version:0.2.7` |
+| `latest.json` | `version=0.2.7`，平台键含 darwin-aarch64 / windows-x86_64(-msi/-nsis) |
+| Release 正文 | 来自 CHANGELOG，19 条要点 + 安装说明；含「macOS 原生窗口实测」 |
+
+### 过程中的一次基础设施失败（已重跑通过）
+
+首轮 macOS release job 在**出包成功后**上传资产时报 `getaddrinfo ENOTFOUND uploads.github.com`——runner 到 GitHub 上传端点的 DNS 瞬时故障，
+不是代码或配置问题（日志中 dmg 与 `.app.tar.gz` 均已 `Finished 2 bundles`）。`gh run rerun --failed` 后两个平台均 success。
+
+### 通道状态
+
+本次用 `publish/v0.2.7` 走 `preserve-latest`：**保留上一个 Latest（v0.2.6）**，这是该模式的既定语义。
+如需把 0.2.7 设为 Latest / stable，需再推 `promote-stable/v0.2.7`（或手动 dispatch 选 `stable`）——**尚未执行**。
+
+### 仍未做
+
+- 提升 stable 通道（需明确决定）。
+- Windows 真机触摸屏长按手感（语义已验，手感未验）。
+- 保存后重启真实客户端再核对（目录侧已只读核对：87 条 / 78 条渠道前缀 / 无残留）。
