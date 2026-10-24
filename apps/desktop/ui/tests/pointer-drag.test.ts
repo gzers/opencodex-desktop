@@ -120,4 +120,18 @@ describe('pointer drag ordering',()=>{
     // 可视区比两个边缘带还窄：不滚，避免抖动
     expect(edgeStep(50,{top:0,bottom:60},600)).toBe(0)
   })
+  it('cleans up when the window loses focus mid-drag so text stays selectable',()=>{
+    const {wrapper,events}=harness()
+    const row=wrapper.get('tr[data-item="a"]').element as HTMLElement
+    row.dispatchEvent(pointer('pointerdown',0,0))
+    move(0,80)
+    expect(document.documentElement.classList.contains('ocx-pointer-drag')).toBe(true)
+    // 拖到一半切走窗口：pointerup 不会再来，必须靠 blur 收尾
+    window.dispatchEvent(new Event('blur'))
+    expect(document.documentElement.classList.contains('ocx-pointer-drag')).toBe(false)
+    expect(events).toContain('active:null')
+    up()
+    expect(events.some(e=>e.includes('>'))).toBe(false)
+    wrapper.unmount()
+  })
 });

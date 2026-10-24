@@ -123,6 +123,8 @@ export function usePointerDrag(options: PointerDragOptions) {
       window.removeEventListener('pointerup', onUp, true)
       window.removeEventListener('pointercancel', onCancel, true)
       window.removeEventListener('keydown', onKey, true)
+      window.removeEventListener('blur', onCancel)
+      document.removeEventListener('visibilitychange', onVisibility)
       listening = false
     }
   }
@@ -159,6 +161,14 @@ export function usePointerDrag(options: PointerDragOptions) {
 
   function onCancel() { cleanup() }
 
+  /**
+   * 失焦 / 切走窗口时必须收尾。
+   *
+   * 拖拽中途切到别的应用，`pointerup` 不会再送到本窗口：行会永远半透明，
+   * 而 `ocx-pointer-drag` 还挂在 html 上让整页文字都选不中——比拖拽失败更难受。
+   */
+  function onVisibility() { if (document.hidden) cleanup() }
+
   function onKey(event: KeyboardEvent) {
     if (event.key === 'Escape' && armed) { event.preventDefault(); cleanup() }
   }
@@ -179,6 +189,8 @@ export function usePointerDrag(options: PointerDragOptions) {
       window.addEventListener('pointerup', onUp, true)
       window.addEventListener('pointercancel', onCancel, true)
       window.addEventListener('keydown', onKey, true)
+      window.addEventListener('blur', onCancel)
+      document.addEventListener('visibilitychange', onVisibility)
       listening = true
     }
   }
