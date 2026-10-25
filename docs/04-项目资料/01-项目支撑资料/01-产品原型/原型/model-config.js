@@ -440,7 +440,7 @@
  }
  function policyStatusAnnotation(){
   const styles={clean:'灰色描边 · 保存弱化并禁用',dirty:'橙色状态框 · 可提交时保存主色强调',staged:'橙色状态框 · 先确认行 / 连接编辑，保存禁用','over-budget':'红色状态框与激活数 · 保存禁用',saving:'蓝色状态框与转动环 · 保存禁用',pending:'橙色状态框 · 重新检查入口可用',failed:'红色状态框 · 草稿保留，可重试保存',stopped:'灰色状态框 · 草稿保留，可继续保存',uncertain:'橙色状态框 · 先核对可能已经写入的结果'};
-  return mpAnn('08','渠道列表的九种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整选择器预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在选择器预览弹窗内显示。状态框和保存按钮等高。未保存修改与待重启可同时存在，保存状态和客户端加载 / 连接验证分开。待确认编辑和超限仍阻止保存，即使存在修改也不会伪装成可提交；保存继续先预览全渠道差异再确认。');
+  return mpAnn('08','渠道列表的九种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。未保存修改与待重启可同时存在，保存状态和客户端加载 / 连接验证分开。待确认编辑和超限仍阻止保存，即使存在修改也不会伪装成可提交；保存继续先预览全渠道差异再确认。');
  }
  function channelHeadingStatusHTML(p=provider()){
   const badge=(label,tone,attribute)=>'<span class="mp-template-state '+tone+'" '+attribute+'>'+esc(label)+'</span>';
@@ -458,7 +458,7 @@
  const over=count()>100,staged=stagedModelEdits().length,connections=stagedChannelConnections().length,local=staged||connections,sidebar=tab==='channels'&&channelDetail,changed=dirty()||local,canOpen=!busy(),gated=local||over||!dirty();
  const helper=(name,a,mark)=>iconButton(name,a,mark,busy()?'disabled':'');
  const helpers=(staged?helper('处理 '+staged+' 行待确认编辑','review-model-rows','edit'):'')+(connections?helper('处理 '+connections+' 个待确认连接','review-channel-connection','settings'):'')+(incoming?helper('查看收到的待审候选','incoming','draft'):'')+(pending?helper('重启后重新检查','client-check','refresh'):'');
- const saveTitle=busy()?'正在保存，完成后再核对':changed?'保存 · 先核对选择器预览与全部渠道差异，确认后写入':'保存 · 打开选择器预览与保存核对；当前没有未保存修改';
+ const saveTitle=busy()?'正在保存，完成后再核对':changed?'保存 · 先核对保存预览与全部渠道差异，确认后写入':'保存 · 打开保存预览与保存核对；当前没有未保存修改';
  const save='<button id="mpPolicySave" class="btn '+(sidebar||changed?'primary':'ghost')+' mp-nav-action mp-template-save'+(!sidebar?' mp-top-policy-save'+(changed?' is-changed':''):'')+'" data-mp="save" title="'+saveTitle+'" aria-label="保存" data-save-scope="all-channels" data-save-gated="'+gated+'" '+(!canOpen?'disabled':'')+'>'+icon('save')+'<span class="mp-nav-action-label">保存</span></button>';
  const reset='<button id="mpPolicyReset" class="btn ghost mp-nav-action mp-top-policy-reset" data-mp="discard" title="'+(busy()?'正在保存，完成后再还原':changed?'还原全部渠道的修改，回到最近成功保存的配置':'没有未保存修改')+'" aria-label="还原修改" '+(busy()||!changed?'disabled':'')+'>'+icon('reset')+'<span class="mp-nav-action-label">还原修改</span></button>';
  const tools=helpers?'<div class="mp-rail-helpers" role="group" aria-label="需要处理的配置">'+helpers+'</div>':'';
@@ -553,7 +553,7 @@
   // 弹窗内的快速启停就是要提交的草稿变更：每次刷新都把基准更新为最新草稿，
   // 只有已保存版本被外部改动（baseDigest）才算真正的基准漂移。
   saveReview={digest:policyDigest(),baseline:baseDigest()};
-  modal('保存 · 选择器预览',saveReviewHTML(),'确认保存',()=>{
+  modal('保存预览',saveReviewHTML(),'确认保存',()=>{
    const stale=scenario==='drift'||!saveReview||saveReview.baseline!==baseDigest();
    const gated=saveReviewGated();
    if(stale||gated){

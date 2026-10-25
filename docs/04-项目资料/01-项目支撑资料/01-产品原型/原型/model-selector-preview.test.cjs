@@ -1,8 +1,8 @@
-/* 保存与预览合并：保存先打开当前草稿的选择器预览，确认才写入；不代表真实客户端目录。 */
+/* 保存与预览合并：保存先打开当前草稿的保存预览，确认才写入；不代表真实客户端目录。 */
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const make=require('./model-prototype-test-harness.cjs');
 const policy=h=>JSON.stringify({draft:h.state().draft,saved:h.state().saved,pending:h.state().pending,records:h.state().records});
-test('保存是唯一入口：先打开选择器预览，列表与详情都不再有独立预览按钮',()=>{
+test('保存是唯一入口：先打开保存预览，列表与详情都不再有独立预览按钮',()=>{
  const h=make();assert.doesNotMatch(h.page(),/data-mp="selector-preview"|data-mp="mp-budget"|id="mpBudget"/);assert.doesNotMatch(h.page(),/data-mp="order-preview"|data-mp="budget"/);
  const button=h.page().match(/<button id="mpPolicySave"[^>]*>/)[0];assert.match(button,/aria-label="保存"/);assert.doesNotMatch(button,/先预览当前草稿/);
  h.click('save');assert.match(h.dialog(),/完整选择器顺序/);assert.match(h.dialog(),/模型激活数 89\/100/);assert.doesNotMatch(h.dialog(),/本次变更与写入|协议写入计划/);h.context.closeModal();h.click('edit-provider',{id:'newapi'});h.click('save');assert.match(h.dialog(),/模型激活数 89\/100/);

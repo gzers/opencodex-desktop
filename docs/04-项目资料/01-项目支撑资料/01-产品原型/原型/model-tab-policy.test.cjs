@@ -1,4 +1,4 @@
-/* Tab右侧状态与保存的业务接线：保存与选择器预览合并为一个入口；实际控件等高/颜色仍需浏览器验证。 */
+/* Tab右侧状态与保存的业务接线：保存与保存预览合并为一个入口；实际控件等高/颜色仍需浏览器验证。 */
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const make=require('./model-prototype-test-harness.cjs');
 const saveTag=h=>h.page().match(/<button id="mpPolicySave"[^>]*>/)?.[0]||'';
