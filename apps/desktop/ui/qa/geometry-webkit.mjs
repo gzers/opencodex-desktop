@@ -190,7 +190,9 @@ try {
   }
 
   // —— 渠道列表行排序：同一套指针拖拽（原先也用 HTML5 拖放，同样会掉 drop） ——
-  const back = page.locator('button', { hasText: '返回渠道列表' }).first()
+  // 详情头部返回键已按原型改为 32px 图标键（只有 aria-label / title，没有可见文字），
+  // 探针改用无障碍名匹配，不再依赖已移除的可见文案。
+  const back = page.locator('button[aria-label="返回渠道列表"]').first()
   if (await back.count()) { await back.click(); await page.waitForTimeout(800) }
   const channelRows = page.locator('.channel-table tbody tr')
   const channelCount = await channelRows.count()

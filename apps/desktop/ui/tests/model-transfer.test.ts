@@ -41,7 +41,8 @@ describe('model transfer review', () => {
     expect(wrapper.find('.sync-scope-credentials').exists()).toBe(true)
     const save=()=>wrapper.findAll('button').find(b=>b.text()==='保存本机范围')!
     expect(save().attributes('disabled')).toBeDefined()
-    expect(wrapper.get('input[aria-label="导出保护口令"]').attributes('disabled')).toBeDefined()
+    // SY-1：口令只在确认弹窗内，不占范围侧栏。
+    expect(wrapper.find('input[aria-label="导出保护口令"]').exists()).toBe(false)
     expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(modelTransferApi.saveRemoteScope).not.toHaveBeenCalled()
     resolve({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:false,includeKeys:false});await flushPromises()
     expect(save().attributes('disabled')).toBeUndefined();expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled()
@@ -210,9 +211,58 @@ describe('model transfer review', () => {
     expect(modelTransferApi.prepare).toHaveBeenCalledWith({includePolicy:false,channelIds:[],includeGlobal:false,templateRefs:[{templateId:'family',revisionId:'revision-1'}]},undefined,false,{preferences:true,extensions:true,webdav:false,webdavPasswords:true})
     expect(modelTransferApi.export).not.toHaveBeenCalled()
     useModelsStore().snapshot!.library.templates[0]!.label='later'
-    await wrapper.findAll('button').find(b=>b.text()==='生成导出文件')!.trigger('click');await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises()
     expect(modelTransferApi.export).toHaveBeenCalledExactlyOnceWith('frozen-plan', undefined)
     expect(wrapper.text()).toContain('/fixture/export.json');wrapper.unmount()
+  })
+  it('SY-1/SY-2/N-SY-2：导出确认弹窗按原型顺序承载保存位置、树、说明、凭据与可选口令，范围首项保持 all',async()=>{
+    vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'prototype-shape',package:pack(),credentialCount:1})
+    vi.mocked(modelTransferApi.export).mockResolvedValue({path:'/fixture/export.json',digest:'frozen-digest',templates:1,channels:0})
+    const wrapper=render();await flushPromises();await flushPromises()
+    const preset=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='配置范围预设')!
+    expect(preset.props('modelValue')).toBe('all')
+    await customExportScope(wrapper);await chooseExport(wrapper,'测试族')
+    await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises()
+    const text=wrapper.text()
+    expect(text.indexOf('保存位置')).toBeLessThan(text.indexOf('生成位置'))
+    expect(text.indexOf('生成位置')).toBeLessThan(text.indexOf('项配置 · 同一备份包'))
+    expect(text.indexOf('项配置 · 同一备份包')).toBeLessThan(text.indexOf('加密配置包'))
+    expect(wrapper.findAll('input[type="radio"]')).toHaveLength(2)
+    expect(wrapper.find('input[aria-label="自定义导出目录"]').exists()).toBe(false)
+    await wrapper.findAll('input[type="radio"]')[1]!.setValue(true)
+    expect(wrapper.find('input[aria-label="自定义导出目录"]').exists()).toBe(true)
+    expect(wrapper.findAll('button').some(b=>b.text()==='选择目录…')).toBe(true)
+    // 口令只在弹窗内；按原型固定呈现两次输入。含凭据时默认建议加密且可取消。
+    expect((wrapper.get('input[aria-label="加密口令"]').element as HTMLInputElement).disabled).toBe(false)
+    await wrapper.findAll('label').find(l=>l.text().startsWith('加密配置包'))!.get('input').setValue(true)
+    expect(wrapper.get('input[aria-label="加密口令"]').attributes('disabled')).toBeUndefined()
+    expect(wrapper.find('input[aria-label="再次输入加密口令"]').exists()).toBe(true)
+    wrapper.unmount()
+  })
+  it('SY-1：含凭据但不加密时先确认明文风险，取消不导出',async()=>{
+    vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'plaintext-plan',package:pack(),credentialCount:2})
+    vi.mocked(modelTransferApi.export).mockResolvedValue({path:'/fixture/export.json',digest:'frozen-digest',templates:1,channels:0})
+    const wrapper=render();await flushPromises();await flushPromises();await customExportScope(wrapper);await chooseExport(wrapper,'测试族')
+    await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises()
+    await wrapper.findAll('label').find(l=>l.text().startsWith('加密配置包'))!.get('input').setValue(false)
+    await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises()
+    expect(wrapper.text()).toContain('当前范围含 2 项凭据');expect(modelTransferApi.export).not.toHaveBeenCalled()
+    await wrapper.findAll('button').find(b=>b.text()==='返回设置口令')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.export).not.toHaveBeenCalled()
+    await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='仍以明文导出')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.export).toHaveBeenCalledWith('plaintext-plan',undefined);wrapper.unmount()
+  })
+  it('N-SY-1：树表列名与原型一致',async()=>{
+    const wrapper=mount(ObjectScopeTree,{props:{objects:[{id:'x',category:'channels',categoryLabel:'渠道与模型',label:'测试渠道',detail:'原设置'}],selectedIds:['x'],label:'导出配置对象'}})
+    expect(wrapper.findAll('thead th').map(th=>th.text())).toEqual(['配置对象','范围与凭据']);wrapper.unmount()
+  })
+  it('SY-2：目录读取失败时仍保持默认范围并明确报错',async()=>{
+    vi.mocked(modelTransferApi.channelCatalog).mockRejectedValueOnce({message:'目录读取失败'})
+    const wrapper=render();await flushPromises();await flushPromises()
+    const preset=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='配置范围预设')!
+    expect(preset.props('modelValue')).toBe('all');expect(wrapper.text()).toContain('目录读取失败')
+    expect(wrapper.text()).not.toContain('自定义范围');wrapper.unmount()
   })
   it('receives only a review and requires adoption while preserving the manual template buffer', async () => {
     const store=useModelsStore();store.edit();store.draft!.label='人工输入'

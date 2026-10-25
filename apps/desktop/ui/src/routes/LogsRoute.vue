@@ -114,7 +114,7 @@ function openClearReadNotificationsModal() {
           <div class="toolbar"><UiButton class="btn" :disabled="controller.doctorLoading.value" @click="controller.runDoctor()">{{ controller.doctorLoading.value ? '诊断中…' : '环境诊断' }}</UiButton></div>
         </div>
         <pre class="doctor-out" :class="{ show: controller.doctorShown.value }">{{ controller.doctorReportText.value }}</pre>
-        <p class="doctor-hint">写入型修复需要先停止代理并显式确认；本应用只展示只读摘要。</p>
+        <p class="doctor-hint">写入型修复（<code>--reclaim-response-temps</code>、<code>--recover-zero-byte-coordinator --yes</code>）需要先停止代理并显式确认，本应用只展示只读摘要。</p>
         <!-- 界面异常自检：给出兜底条与恢复动作的可复现入口（原型「界面诊断」同款）。 -->
         <div class="selfcheck">
           <div class="card-head">

@@ -26,7 +26,7 @@ export const routeMetadata: Record<RouteName, RouteMeta> = {
   panel: { title: '面板', subtitle: '窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。' },
   extensions: { title: '扩展管理', subtitle: '集中发现与同步本机 Skills 和 MCP 服务器；目标客户端按图标开关。' },
   logs: { title: '诊断中心', subtitle: '环境诊断、日志历史与通知历史分 Tab 管理；日志支持清理与自动保留策略。' },
-  sync: {title:'配置同步',subtitle:'文件导入导出与WebDAV同步；明确选择范围、比较后采用。'},
+  sync: {title:'同步',subtitle:'按范围导入、导出与同步 OpenCodex 配置；凭据和登录状态独立选择。'},
   settings: { title: '设置', subtitle: '集中管理偏好、安装配置、备份、升级与官方归属。' },
   tray: { title: '托盘', subtitle: '系统托盘状态菜单的跨平台样式预览；控制动作走管理器自有域。' },
 }

@@ -15,7 +15,8 @@ import UiButton from '@/components/ui/UiButton.vue'
 import InformationRow from '@/components/patterns/InformationRow.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
-import { managerUpdateStatus } from '@/features/updates/update'
+import { managerInstallProgress, managerUpdateStatus } from '@/features/updates/update'
+import { hasNewerVersion } from '@/features/updates/version'
 import RuntimeMotionMark from '@/features/runtime/components/RuntimeMotionMark.vue'
 import EnvironmentGate from '@/features/environment/components/EnvironmentGate.vue'
 import { webdavStates } from '@/features/sync/states'
@@ -113,6 +114,48 @@ const version = computed(() =>
     ? (app.statusSnapshot?.facts.version_drift ?? app.officialProject?.version ?? '—')
     : '—',
 )
+// 版本行按原型「管理器 / 面板 + 版本 + 阶段 + ›」三段呈现（index.html:1877-1878；
+// 运行时阶段文案见 maintenance-ui.js:91 的 labels）。阶段只由已有更新事实推导，不补假状态。
+type UpdatePhase = 'idle' | 'checking' | 'available' | 'latest' | 'failed' | 'applying' | 'restart-required' | 'unknown'
+const updatePhaseLabels: Record<UpdatePhase, string> = {
+  idle: '尚未检查',
+  checking: '检查中…',
+  available: '有可用更新',
+  latest: '已是最新',
+  failed: '失败，可重试',
+  applying: '更新中…',
+  'restart-required': '等待重启',
+  unknown: '—',
+}
+const managerVersion = computed(() => managerUpdateStatus.value?.currentVersion ?? app.aboutApp?.version ?? '—')
+const officialVersion = computed(() => app.officialProject?.version ?? '—')
+const managerPhase = computed<UpdatePhase>(() => {
+  const stage = managerInstallProgress.value?.stage
+  if (stage === 'failed') return 'failed'
+  if (stage === 'pending_restart' || managerUpdateStatus.value?.pendingRestart) return 'restart-required'
+  if (stage) return 'applying'
+  const status = managerUpdateStatus.value
+  if (status?.error) return 'failed'
+  if (!status) return 'idle'
+  // 与 UpdateCenter 同一口径：检查完成但没有候选版本就是「已是最新」，不退回破折号。
+  const newer = status.availableVersion ? hasNewerVersion(status.currentVersion, status.availableVersion) : false
+  if (newer === true) return 'available'
+  if (!status.lastCheckedAt) return 'idle'
+  return newer === false ? 'latest' : 'unknown'
+})
+const officialPhase = computed<UpdatePhase>(() => {
+  if (app.officialUpdateBusy) return 'applying'
+  if (app.officialProjectLoading || app.officialRemoteLoading) return 'checking'
+  if (app.officialUpdateError || app.officialProjectError || app.officialRemoteError) return 'failed'
+  if (!app.officialRemote) return 'idle'
+  const newer = hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote.version)
+  return newer === true ? 'available' : newer === false ? 'latest' : 'unknown'
+})
+// 阶段无法判定时，退到数据里已有的通道名（如 stable / beta）；没有通道才用「—」。
+const managerPhaseLabel = computed(() =>
+  managerPhase.value === 'unknown' ? (managerUpdateStatus.value?.channel ?? '—') : updatePhaseLabels[managerPhase.value],
+)
+const officialPhaseLabel = computed(() => updatePhaseLabels[officialPhase.value])
 const runtime = computed(() =>
   knownInstall.value && app.statusSnapshot?.facts.runtime_label
     ? `Codex 运行时（${runtimeSourceLabel(app.statusSnapshot.facts.runtime_label)}）`
@@ -223,17 +266,32 @@ function guide() {
   routes.go('settings', { section: 'installation' })
 }
 
+// 顺序与文案对齐 0.2.0 原型 index.html:1866/1885/1905：版本升级 → 文件同步 → WebDAV 同步。
+// 「最近事件」在原型里排在模块区之前（index.html:1853），见模板顺序。
 const mods = computed(() => [
   {
     key: 'upgrade',
     title: '版本升级',
-    tag: '管理器 · 面板',
+    // 原型 index.html:1873 用「可用」；连接/清单状态区分见 N-OV-1。
+    tag: '可用',
     rows: [],
     actions: [
       { label: '检查更新', cls: 'btn primary', run: () => openUpdates(null, true) },
     ],
   },
-  { key: 'migration', title: '配置迁移', tag: '已接入', rows: [['导出配置', '加密容器'], ['导入校验', '备份后替换']], actions: [{ label: '导出配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) }, { label: '导入配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) }] },
+  {
+    key: 'migration',
+    // 原型 index.html:1891 标题是「文件同步」，不是「配置迁移」。
+    title: '文件同步',
+    // 原型 index.html:1892 用「规划中」。
+    tag: '规划中',
+    rows: [['导出范围', '可选对象'], ['凭据', '独立选择']],
+    // 原型 index.html:1881/:1900-1901 的入口是「导入配置 / 选择同步范围」。
+    actions: [
+      { label: '导入配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) },
+      { label: '选择同步范围', cls: 'btn ghost', run: () => routes.go('settings',{section:'migration'}) },
+    ],
+  },
   { key: 'sync', title: 'WebDAV 同步', tag: webdavStates[app.webdavState].tag, rows: [['连接状态', webdavStates[app.webdavState].conn], ['冲突策略', webdavStates[app.webdavState].conflict]], actions: webdavStates[app.webdavState].actions.map(a => ({ label: a.label, cls: a.cls, run: () => routes.go('sync',{tab:'webdav'}) })) },
 ])
 </script>
@@ -310,8 +368,18 @@ const mods = computed(() => [
         </div>
         <div class="mod-status">
           <template v-if="mod.key === 'upgrade'">
-            <InformationRow interactive label="桌面管理器" :value="managerUpdateStatus?.currentVersion ?? app.aboutApp?.version ?? '—'" aria-label="查看桌面管理器更新详情" @activate="openUpdates('manager')" />
-            <InformationRow interactive label="OpenCodex 面板" :value="app.officialProject?.version ?? '—'" aria-label="查看 OpenCodex 面板更新详情" @activate="openUpdates('official')" />
+            <button class="mnt-version-row" type="button" aria-label="查看桌面管理器更新详情" @click="openUpdates('manager')">
+              <span>管理器</span>
+              <b>{{ managerVersion }}</b>
+              <span class="mnt-status" :class="{ danger: managerPhase === 'failed' }">{{ managerPhaseLabel }}</span>
+              <span class="mnt-chevron" aria-hidden="true">›</span>
+            </button>
+            <button class="mnt-version-row" type="button" aria-label="查看 OpenCodex 面板更新详情" @click="openUpdates('official')">
+              <span>面板</span>
+              <b>{{ officialVersion }}</b>
+              <span class="mnt-status" :class="{ danger: officialPhase === 'failed' }">{{ officialPhaseLabel }}</span>
+              <span class="mnt-chevron" aria-hidden="true">›</span>
+            </button>
           </template>
           <template v-else><InformationRow v-for="row in mod.rows" :key="row[0]" :label="row[0]" :value="row[1]" /></template>
         </div>
@@ -436,3 +504,16 @@ const mods = computed(() => [
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 原型 .mnt-version-row / .mnt-status：版本、阶段与箭头同一行垂直居中，窄卡也不拆行。 */
+.mnt-version-row { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; padding: 4px 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; white-space: nowrap; cursor: pointer; }
+.mnt-version-row > span:first-child { flex: none; }
+.mnt-version-row > b { flex: none; color: var(--text); font-weight: 600; white-space: nowrap; }
+.mnt-version-row:hover { color: var(--accent); }
+.mnt-status { margin-inline-start: auto; min-width: 0; overflow: hidden; color: var(--muted); text-overflow: ellipsis; }
+.mnt-status.danger { color: var(--red); }
+.mnt-chevron { flex: none; color: var(--muted); }
+/* 最近事件是列表行：时间与消息同行垂直居中，消息换行时不把时间挤偏。 */
+.recent-events-list li { align-items: center; }
+</style>

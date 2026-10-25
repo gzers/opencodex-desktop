@@ -1,6 +1,6 @@
 // 0.2.7 保存预览：原型与实现并排对照（§38）。
 //
-// 同一场景各截一张：原型打开「保存 · 选择器预览」，实现打开同名弹窗，
+// 同一场景各截一张：原型打开「保存预览」，实现打开同名弹窗，
 // 并量出两侧的关键几何（宽、高、摘要位置、列表滚动区），便于逐项比对。
 // 只读：不写入任何配置，不点击确认保存。
 import fs from 'fs'; import path from 'path'; import os from 'os'; import net from 'net'
@@ -85,7 +85,7 @@ async function main(){
     // —— 对照断言：结构必须一致，数值允许按渠道数量不同 ——
     check('原型预览已打开',pInfo.open,'title='+pInfo.title)
     check('实现预览已打开',iInfo.open,'title='+iInfo.title)
-    check('两侧标题一致',pInfo.title===iInfo.title||iInfo.title.includes('保存 · 选择器预览'),pInfo.title+' vs '+iInfo.title)
+    check('两侧标题一致',pInfo.title===iInfo.title||iInfo.title.includes('保存预览'),pInfo.title+' vs '+iInfo.title)
     check('两侧都有激活摘要',pInfo.hasBudget&&iInfo.hasBudget)
     check('两侧都有顺序列表',pInfo.hasOrder&&iInfo.hasOrder)
     check('两侧都没有预览来源',!pInfo.hasSource&&!iInfo.hasSource)

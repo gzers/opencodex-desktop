@@ -1,8 +1,11 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import App from '@/App.vue'
 import { useRouteStore } from '@/stores/routes'
+import { managerUpdateStatus } from '@/features/updates/update'
 
 const invoke = vi.fn()
 
@@ -21,6 +24,12 @@ Object.defineProperty(window, 'matchMedia', {
 
 const mounted: ReturnType<typeof mount>[] = []
 afterEach(() => { for (const wrapper of mounted.splice(0)) wrapper.unmount() })
+
+async function settle(wrapper: ReturnType<typeof mount>) {
+  await wrapper.vm.$nextTick()
+  await new Promise(resolve => setTimeout(resolve, 0))
+  await wrapper.vm.$nextTick()
+}
 
 function mountOverview() {
   const pinia = createPinia()
@@ -80,5 +89,50 @@ describe('overview module cards', () => {
 
     expect(routes.current).toBe('settings')
     expect(routes.settingsSection).toBe('upgrade')
+  })
+
+  // OV-4 / N-OV-2：版本行按原型「管理器 / 面板 + 版本 + 阶段 + ›」三段呈现（index.html:1877-1878）。
+  it('renders each upgrade row as label, version, phase and chevron', async () => {
+    managerUpdateStatus.value = {
+      channel: 'stable', availableVersion: '0.2.9', currentVersion: '0.2.8', lastCheckedAt: '2026-10-25T00:00:00Z',
+      signatureVerified: true, error: null,
+    }
+    try {
+      const wrapper = mountOverview()
+      await settle(wrapper)
+      const upgrade = wrapper.findAll('.mods .mod')[0]
+      const rows = upgrade.findAll('.mnt-version-row')
+      expect(rows.map(row => Array.from(row.element.children).map(node => node.textContent?.trim()))).toEqual([
+        ['管理器', '0.2.8', '有可用更新', '›'],
+        ['面板', '—', '尚未检查', '›'],
+      ])
+      expect(rows[0].attributes('aria-label')).toBe('查看桌面管理器更新详情')
+      expect(rows[1].attributes('aria-label')).toBe('查看 OpenCodex 面板更新详情')
+    } finally {
+      managerUpdateStatus.value = null
+    }
+  })
+
+  // 统一要求：列表行内元素垂直居中，不互相挤压。
+  it('keeps version rows vertically centered without wrapping', () => {
+    const route = readFileSync(resolve(__dirname, '../src/routes/OverviewRoute.vue'), 'utf8')
+    expect(route).toMatch(/\.mnt-version-row \{[^}]*align-items: center/)
+    expect(route).toMatch(/\.mnt-version-row \{[^}]*white-space: nowrap/)
+  })
+
+  // 检查完成且无候选版本：阶段读作「已是最新」，而不是破折号。
+  it('reads a completed check without a candidate as up to date', async () => {
+    managerUpdateStatus.value = {
+      channel: 'beta', availableVersion: null, currentVersion: '0.2.8', lastCheckedAt: '2026-10-25T00:00:00Z',
+      signatureVerified: null, error: null,
+    }
+    try {
+      const wrapper = mountOverview()
+      await settle(wrapper)
+      const row = wrapper.findAll('.mnt-version-row')[0]
+      expect(Array.from(row.element.children).map(node => node.textContent?.trim())).toEqual(['管理器', '0.2.8', '已是最新', '›'])
+    } finally {
+      managerUpdateStatus.value = null
+    }
   })
 })

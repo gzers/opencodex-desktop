@@ -184,7 +184,10 @@ describe('三档特效 · 偏好接线', () => {
     expect(row.exists()).toBe(true)
     const options = row.findAll('[role=radio]')
     expect(options.map(o=>o.text())).toEqual(['高','中','低'])
-    expect(row.get('[role=radiogroup]').attributes('aria-label')).toBe('界面特效')
+    expect(row.get('[role=radiogroup]').attributes('aria-label')).toBe('视觉特效')
+    // N-SE-1：可见标题同样按原型 index.html:2355 写「视觉特效」。
+    expect(row.get('.setting-title').text()).toBe('视觉特效')
+    expect(row.text()).not.toContain('界面特效')
     expect(row.find('.select-trigger').exists()).toBe(false)
     wrapper.unmount()
   })

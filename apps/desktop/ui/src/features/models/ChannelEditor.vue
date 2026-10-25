@@ -9,9 +9,10 @@ import UiDialog from '@/components/ui/UiDialog.vue'
 import {createModelRowsState,pendingModelRows,type ModelRowsState} from './modelRows'
 import NodePicker from './NodePicker.vue'
 import {useModalStore} from '@/app/modal/store'
-import { useNodeMeasurements } from './useNodeMeasurements'
+import {protectedChannel} from './channelActions'
+import { nodeMeasurementError, useNodeMeasurements } from './useNodeMeasurements'
 import { emptyRules, modelApi, errorText, type ChannelPolicy, type Template, type TemplateRef, type ModelProjection, type ModelPolicy } from './api'
-const props = defineProps<{ channel: ChannelPolicy; templates: Template[]; busy?: boolean;existing?:boolean;globalRefs?:TemplateRef[];projection?:ModelProjection[];projectionBusy?:boolean;projectionError?:string;policy?:ModelPolicy;rowState?:ModelRowsState;navigation?:{collapsed:boolean;activeId:string};channels?:ChannelPolicy[];saveDisabled?:boolean;dirty?:boolean;saveStatus?:string;activeCount?:number;viewState?:{search:string;selectedOnly:boolean;family:string} }>()
+const props = defineProps<{ channel: ChannelPolicy; templates: Template[]; busy?: boolean;existing?:boolean;globalRefs?:TemplateRef[];projection?:ModelProjection[];projectionBusy?:boolean;projectionError?:string;policy?:ModelPolicy;rowState?:ModelRowsState;navigation?:{collapsed:boolean;activeId:string};channels?:ChannelPolicy[];saveDisabled?:boolean;dirty?:boolean;saveStatus?:string;saveTone?:string;activeCount?:number;viewState?:{search:string;selectedOnly:boolean;family:string} }>()
 const emit = defineEmits<{ close: [];switch:[string];save:[];restore:[] }>()
 const nav=props.navigation??reactive({collapsed:false,activeId:'channel-config'})
 const sections=[{id:'channel-config',label:'渠道配置'},{id:'channel-nodes',label:'服务节点'},{id:'channel-defaults',label:'模型默认'},{id:'channel-models',label:'模型列表'}]
@@ -38,6 +39,22 @@ async function discover(){
 }
 const selectionMode = computed(() => props.channel.selection.mode)
 const measurement=reactive(useNodeMeasurements(()=>props.channel,()=>apiKey.value))
+/** 已选型号数；与原型 selected(p).length 同口径（all 模式取全部发现项）。 */
+const selectedCount=computed(()=>props.channel.selection.mode==='all'?props.channel.discovered.length:props.channel.selection.mode==='whitelist'?props.channel.selection.models.length:0)
+/**
+ * 详情头部状态徽标（原型 model-config.js:449 channelHeadingStatusHTML）：
+ * 全渠道保存状态 + 启停 + 连接可用性 + 清单获取，末尾单独一个「已选 N / 发现 M」文本。
+ * 连接可用性只有节点检测结果这一个来源，未检测即「未验证」（原型同口径）。
+ */
+const connectionState=computed(():{label:string;tone:string}=>{
+ if(props.channel.connection.authMode==='none')return {label:'无需认证',tone:'neutral'}
+ const results=Object.values(measurement.results)
+ if(!results.length)return {label:'未验证',tone:'neutral'}
+ const failed=results.find(result=>result.error)
+ if(failed)return {label:nodeMeasurementError(failed.error??''),tone:'danger'}
+ return {label:'连接检查通过',tone:'success'}
+})
+const discoveryState=computed(():{label:string;tone:string}|null=>discovering.value?{label:'正在获取清单',tone:'info'}:discoveryError.value?{label:'获取清单失败',tone:'danger'}:null)
 
 function mode(value:string){
  if(props.busy||pendingModelRows(rowsState).length){discoveryError.value='请先处理未确认型号编辑';return}
@@ -66,7 +83,13 @@ function adopt(t: Template, revision: string) {
 </script>
 <template>
   <DetailWorkspace v-model:collapsed="nav.collapsed" v-model:active-id="nav.activeId" label="渠道导航" :sections="sections">
-    <template #header><UiButton @click="emit('close')">返回渠道列表</UiButton><strong class="channel-detail-name">{{ channel.label || '新渠道' }}</strong><span class="tag">{{ channel.connection.enabled?'启用':'停用' }} · {{ channel.selection.mode==='all'?channel.discovered.length:channel.selection.mode==='whitelist'?channel.selection.models.length:0 }} / {{ channel.discovered.length }}</span><UiSelectField v-if="channels?.length" :model-value="channel.id" :options="channels.map(c=>({value:c.id,label:c.label||'未命名渠道'}))" label="切换渠道" :disabled="busy" @update:model-value="emit('switch',$event)" /></template>
+    <!--
+      详情头部（原型 model-config.js:868 .mp-editor-head：32px 返回键 / 弹性标题 / 下拉）：
+      标题下挂一行状态徽标，顺序与 channelHeadingStatusHTML 一致——全渠道保存状态、启停、
+      连接可用性、清单获取，最后是「已选 N / 发现 M」纯文本。旧版把四项压成一个计数标签，
+      用户看不出保存状态与连接状态，故拆回四枚徽标 + 计数。
+    -->
+    <template #header><span class="channel-detail-back"><UiButton size="sm" variant="ghost" aria-label="返回渠道列表" title="返回渠道列表" @click="emit('close')"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></UiButton></span><div class="channel-detail-heading"><strong class="channel-detail-name">{{ channel.label || '新渠道' }}</strong><div class="channel-detail-status" role="status"><span class="channel-badge" :data-tone="saveTone??'neutral'" data-status-scope="all-channels" title="全部渠道配置的保存状态">{{ saveStatus }}</span><span v-if="protectedChannel(channel)" class="channel-badge" data-tone="neutral" data-channel-managed>官方管理</span><template v-else><span class="channel-badge" :data-tone="channel.connection.enabled?'success':'neutral'" :data-channel-enabled="channel.connection.enabled">{{ channel.connection.enabled?'已启用':'已停用' }}</span><span class="channel-badge" :data-tone="connectionState.tone" :data-channel-availability="connectionState.label">{{ connectionState.label }}</span></template><span v-if="discoveryState" class="channel-badge" :data-tone="discoveryState.tone">{{ discoveryState.label }}</span><span class="channel-detail-count">已选 {{ selectedCount }} / 发现 {{ channel.discovered.length }}</span></div></div><UiSelectField v-if="channels?.length" :model-value="channel.id" :options="channels.map(c=>({value:c.id,label:c.label||'未命名渠道'}))" label="切换渠道" :disabled="busy" @update:model-value="emit('switch',$event)" /></template>
     <template #actions="{collapsed}"><UiButton size="sm" :disabled="busy||!dirty" @click="emit('restore')" title="还原修改">{{ collapsed?'↶':'还原修改' }}</UiButton></template><template #primary="{collapsed}"><small v-if="!collapsed" role="status">{{ saveStatus }}</small><UiButton size="sm" variant="primary" :disabled="busy||saveDisabled" title="保存 · 先核对选择器预览，确认后写入" aria-label="保存渠道草稿" @click="emit('save')"><svg v-if="collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><template v-else>保存</template></UiButton></template>
     <div class="model-form">
     <section id="channel-config" tabindex="-1"><h2>渠道配置</h2><div class="channel-config-grid"><label>渠道名称<input class="input" v-model="channel.label" maxlength="80" :disabled="busy" /></label><label>渠道标识<input class="input" :value="channel.connection.providerId" readonly aria-label="渠道标识" /><span class="model-muted">标识固定，名称可修改。</span></label><label>默认接口协议<UiSelectField :model-value="channel.connection.protocol" label="默认接口协议" :disabled="busy" :options="[{value:'openai-responses',label:'openai-responses'},{value:'openai-chat',label:'openai-chat'},{value:'anthropic',label:'anthropic'},{value:'ollama-native',label:'ollama-native'}]" @update:model-value="channel.connection.protocol=$event" /></label><label>认证方式<UiSelectField :model-value="authMode" label="认证方式" :options="authOptions" :disabled="busy" @update:model-value="authMode=$event as 'key'|'none'" /></label><label v-if="authMode==='key'" class="channel-key">API Key<input class="input" type="password" autocomplete="off" v-model="apiKey" :placeholder="channel.connection.credentialRef?'已配置（不回显）；留空保留':'未配置；填写后获取模型清单时保存'" :disabled="busy" /><span class="model-muted">仅记录已配置状态，不回显已保存的 Key。</span></label></div>
@@ -82,6 +105,7 @@ function adopt(t: Template, revision: string) {
       <input v-model="modelSearch" class="input" type="search" aria-label="搜索渠道内型号" placeholder="搜索型号或名称" /><UiSelectField v-model="familyFilter" :options="familyOptions" label="渠道内型号族筛选" :disabled="projectionBusy||!!projectionError" /><label class="ui-inline-check"><input v-model="selectedOnly" type="checkbox" />仅启用</label><span class="model-muted">{{ visibleModels.length }} / {{ orderedModels.length }} 项</span></div><p v-if="modelSearch.trim()||familyFilter!=='all'||selectedOnly" class="model-muted">清除全部搜索和筛选后可调整型号顺序。</p>
       <p v-if="projectionBusy" role="status" class="model-muted">正在解析当前草稿，筛选暂用上次结果…</p><p v-else-if="projectionError" role="alert" class="model-error">{{ projectionError }}；有效值暂不可确定，筛选暂用上次结果。</p>
       <ChannelModelTable :channel="channel" :policy="policy" :models="visibleModels" :templates="templates" :projection="projection" :projection-busy="projectionBusy||!!projectionError" :disabled="busy||discovering" :filtered="!!modelSearch.trim()||familyFilter!=='all'||selectedOnly" :state="rowsState" />
+      <p class="model-footer-note">{{ channel.connection.enabled?'复选框仅用于批量选择；启停独立控制。别名不改变上游 ID，行编辑加入草稿后统一保存。':'渠道已停用，模型配置仍可编辑；启用渠道后恢复计划选择器。' }}</p>
       <UiDialog :open="manualOpen" title="手动添加精确型号" :busy="busy" @close="manualOpen=false"><label>原始模型ID<input v-model="manualId" class="input" autocapitalize="off" spellcheck="false" /></label><p>新增型号保持未启用，能力未知；当前为全部模型时改为保留已知型号的明确白名单。添加不会发送生成请求。</p><p v-if="manualError" role="alert" class="model-error">{{ manualError }}</p><template #actions><UiButton @click="manualOpen=false">取消</UiButton><UiButton variant="primary" :disabled="busy||!manualId" @click="addExactModel">添加型号</UiButton></template></UiDialog>
     </section>
   </div>
@@ -89,7 +113,22 @@ function adopt(t: Template, revision: string) {
 </template>
 
 <style scoped>
-.channel-default-summary{display:grid;grid-template-columns:max-content 1fr;gap:var(--space-2);font-size:var(--text-control)}.channel-default-summary dt{color:var(--muted)}.channel-default-summary dd{margin:0;overflow-wrap:anywhere}.channel-detail-name{flex:1;min-width:80px;overflow-wrap:anywhere}
+.channel-default-summary{display:grid;grid-template-columns:max-content 1fr;gap:var(--space-2);font-size:var(--text-control)}.channel-default-summary dt{color:var(--muted)}.channel-default-summary dd{margin:0;overflow-wrap:anywhere}
+/* 详情头部（原型 model-config.css:221/230/231/232）：标题在上、徽标行在下，行内垂直居中不换行挤压。 */
+/* 原型 iconButton 是 .mp-editor-head 第一列的 32px 图标键；这里只约束占位宽度，按钮度量交给 .btn。 */
+.channel-detail-back{flex:none;display:inline-flex;width:var(--control-md);min-width:var(--control-md)}
+.channel-detail-back :deep(.btn){flex:1;justify-content:center}
+.channel-detail-back svg{flex:none;width:16px;height:16px}
+.channel-detail-heading{flex:1;min-width:0;display:grid;gap:var(--space-1);align-content:center}
+.channel-detail-name{min-width:0;font-size:var(--text-subtitle);line-height:1.3;overflow-wrap:anywhere}
+.channel-detail-status{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0;font-size:var(--text-caption);line-height:18px}
+.channel-badge{display:inline-flex;align-items:center;gap:5px;min-height:20px;padding:2px 7px;border:1px solid color-mix(in srgb,currentColor 24%,transparent);border-radius:var(--radius-sm);font-size:var(--text-caption);font-weight:500;line-height:16px;white-space:nowrap;color:var(--muted);background:var(--rail)}
+.channel-badge::before{content:"";width:5px;height:5px;flex:none;border-radius:50%;background:currentColor}
+.channel-badge[data-tone=success]{color:var(--green);background:var(--green-soft)}
+.channel-badge[data-tone=warning]{color:var(--amber);background:var(--amber-soft)}
+.channel-badge[data-tone=danger]{color:var(--red);background:var(--red-soft)}
+.channel-badge[data-tone=info]{color:var(--blue);background:var(--blue-soft)}
+.channel-detail-count{min-width:0;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
 /* WP-53：公开范围 / 搜索 / 族筛选 / 仅启用 / 计数同处 34px 行；搜索吃剩余宽度。 */
 .model-toolbar{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;min-width:0}
 .model-toolbar>.input{flex:1 1 160px;min-height:var(--control-md);min-width:120px;box-sizing:border-box}

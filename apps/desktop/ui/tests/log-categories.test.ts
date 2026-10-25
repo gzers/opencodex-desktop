@@ -127,6 +127,10 @@ describe('log categories', () => {
     expect(wrapper.text()).toContain('运行环境诊断')
     expect(wrapper.find('.log').exists()).toBe(false)
     expect(wrapper.find('.doctor-hint').exists()).toBe(true)
+    // N-LG-1：修复开关点名原型 index.html:2226 的两条 flag。
+    const hint = wrapper.find('.doctor-hint').text()
+    expect(hint).toContain('--reclaim-response-temps')
+    expect(hint).toContain('--recover-zero-byte-coordinator --yes')
     // 默认面板里就有「界面诊断」自检入口（与原型同款）。
     expect(wrapper.find('#uiSelfCheckBtn').text()).toBe('界面诊断')
     // 三个 Tab 共处同一张内容卡：不存在第二张 doctor 卡。

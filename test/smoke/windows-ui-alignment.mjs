@@ -36,15 +36,15 @@ export async function verifyUiAlignment({call,evaluate,wait,click,output,templat
  const remote=await evaluate("(()=>{const parent=document.querySelector('#sync-webdav-panel .u-stack'),cards=parent?[...parent.children].filter(e=>e.getClientRects().length):[];return {scope:!!document.querySelector('#sync-webdav-panel .sync-scope-credentials'),gaps:cards.slice(1).map((e,i)=>e.getBoundingClientRect().top-cards[i].getBoundingClientRect().bottom),settings:!![...document.querySelectorAll('#sync-webdav-panel button')].find(e=>e.textContent.trim()==='连接设置')}})()")
  assert(remote.scope&&remote.settings);assert(remote.gaps.every(gap=>gap>=8),'WebDAV cards require spacing');receipts.push({label:'remote-scope',...remote});await shot('webdav-scope')
  await click('连接设置','.sync-route');await wait("!!document.querySelector('dialog[open]')",'on-demand connection settings');await shot('connection-dialog');await click('关闭','dialog[open]')
- await click('设置','.side');await wait("!!document.querySelector('[role=radiogroup][aria-label=界面特效]')",'quality segmented radios')
- assert.equal(await evaluate("document.querySelectorAll('[role=radiogroup][aria-label=界面特效] [role=radio]').length"),3)
+ await click('设置','.side');await wait("!!document.querySelector('[role=radiogroup][aria-label=视觉特效]')",'quality segmented radios')
+ assert.equal(await evaluate("document.querySelectorAll('[role=radiogroup][aria-label=视觉特效] [role=radio]').length"),3)
  for(const [effect,label] of [['high','高'],['mid','中'],['low','低']]){
-  await click(label,'[role=radiogroup][aria-label=界面特效]');await wait('document.documentElement.dataset.effects==='+JSON.stringify(effect),'actual quality preference '+effect)
+  await click(label,'[role=radiogroup][aria-label=视觉特效]');await wait('document.documentElement.dataset.effects==='+JSON.stringify(effect),'actual quality preference '+effect)
   for(const [theme,button] of [['light','浅色'],['dark','深色']]){
    await click(button,'.theme-seg');await wait('document.documentElement.dataset.theme==='+JSON.stringify(theme),'actual theme '+theme);await shot(theme+'-'+effect)
   }
  }
- await click('高','[role=radiogroup][aria-label=界面特效]');await click('浅色','.theme-seg')
+ await click('高','[role=radiogroup][aria-label=视觉特效]');await click('浅色','.theme-seg')
  for(const scale of [50,150,200,100]){
   await evaluate("(()=>{const input=document.querySelector('[aria-label=界面缩放数值]');input.value="+scale+";input.dispatchEvent(new Event('change',{bubbles:true}))})()")
   await wait("document.documentElement.style.getPropertyValue('--ui-zoom')==="+JSON.stringify(String(scale/100)),'production UI scale '+scale)

@@ -63,7 +63,7 @@ onBeforeUnmount(close)
   <section class="route-section active tray-route">
     <article class="card">
       <div class="card-head">
-        <div><h2>托盘菜单预览</h2><p>展示 macOS 与 Windows 的样式差异；菜单动作全部由管理器自有域触发，不直接读写 OpenCodex 配置。</p></div>
+        <div><h2>托盘原型 · 状态菜单</h2><p>展示 macOS 与 Windows 的样式差异；菜单动作全部由管理器自有域触发，不直接读写 OpenCodex 配置。</p></div>
       </div>
       <div class="tray-os" role="group">
         <button :class="{ active: trayOs === 'mac' }" @click="trayOs='mac'; trayOpen=false">macOS 菜单栏</button>

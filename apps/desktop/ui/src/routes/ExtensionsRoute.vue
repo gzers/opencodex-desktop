@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import UiButton from '@/components/ui/UiButton.vue'
-import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, watch } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import ExtensionDetailModal from '@/features/extensions/components/ExtensionDetailModal.vue'
+import ClientsPanel from '@/features/extensions/components/ClientsPanel.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
 import { useAppStore } from '@/stores/app'
@@ -20,6 +21,7 @@ import {
   targetEnabled,
 } from '@/features/extensions/presentation'
 import ClientIcon from '@/features/extensions/components/ClientIcon.vue'
+import { buildClientDirectory, isExtensionClientId } from '@/features/extensions/clients'
 import type {
   ExtensionClientId,
   ExtensionSkillDto,
@@ -29,7 +31,57 @@ import { readMcpDetail, readSkillDetail } from '@/features/extensions/api'
 
 const routes = useRouteStore()
 const app = useAppStore()
-const tab = computed(() => routes.extensionTab)
+
+// 扩展分区：原型是三个 tab（Skills / MCP / 客户端）。导航模块只知道前两个，
+// 因此第三个分区由本页持有，并同样写回 hash，保证刷新与从设置页跳转时口径一致。
+type ExtensionSection = 'skills' | 'mcp' | 'clients'
+const clientsSelected = ref(readSectionFromHash() === 'clients')
+const activeTab = computed<ExtensionSection>(() =>
+  clientsSelected.value ? 'clients' : routes.extensionTab,
+)
+
+function readSectionFromHash(): ExtensionSection {
+  if (typeof window === 'undefined') return 'skills'
+  const query = new URLSearchParams(window.location.hash.split('?')[1] ?? '')
+  const value = query.get('tab')
+  if (value === 'clients' || value === 'mcp') return value
+  return 'skills'
+}
+
+function goSection(next: ExtensionSection) {
+  if (next === 'clients') {
+    clientsSelected.value = true
+    const hash = '#extensions?tab=clients'
+    if (window.location.hash !== hash) window.history.replaceState(null, '', hash)
+    return
+  }
+  clientsSelected.value = false
+  routes.go('extensions', { tab: next })
+}
+
+function syncSectionFromLocation() {
+  if (routes.current !== 'extensions') return
+  clientsSelected.value = readSectionFromHash() === 'clients'
+}
+
+// 与原型一致：Tab 支持 ←/→/Home/End，切换后把焦点交给新分区。
+const sectionOrder: ExtensionSection[] = ['skills', 'mcp', 'clients']
+function tabKeydown(event: KeyboardEvent) {
+  const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End']
+  if (!keys.includes(event.key)) return
+  event.preventDefault()
+  const index = sectionOrder.indexOf(activeTab.value)
+  const next = event.key === 'Home'
+    ? sectionOrder[0]
+    : event.key === 'End'
+      ? sectionOrder[sectionOrder.length - 1]
+      : sectionOrder[(index + (event.key === 'ArrowRight' ? 1 : sectionOrder.length - 1)) % sectionOrder.length]
+  goSection(next)
+  void nextTick(() => {
+    document.querySelector<HTMLElement>('.ext-tabs button.active')?.focus()
+  })
+}
+
 const skillsSearch = ref('')
 const mcpSearch = ref('')
 
@@ -292,6 +344,75 @@ function confirmMcpDefinition(name: string, definition: Record<string, unknown>,
 const mcpServers = computed<ExtensionServerDto[]>(() => app.extensions?.servers ?? [])
 const extensionsError = computed(() => app.extensionsError)
 
+// 「客户端」列表的数据源：发现结果（受管资源）+ 路径投影（Skills / MCP 落点）
+// + 统一配置的启用矩阵。拿不到的字段由投影层落成「待核实」。
+function pathsByClient(kind: 'skills' | 'mcp') {
+  const paths: Partial<Record<ExtensionClientId, string>> = {}
+  for (const item of app.agentPathTargets ?? []) {
+    if (item.kind !== kind || !isExtensionClientId(item.client)) continue
+    paths[item.client] = item.path
+  }
+  return paths
+}
+
+const clientEntries = computed(() =>
+  buildClientDirectory({
+    skills: skills.value,
+    servers: mcpServers.value,
+    skillsPaths: pathsByClient('skills'),
+    mcpPaths: pathsByClient('mcp'),
+    enablement: app.extensionConfig?.enablement ?? null,
+  }),
+)
+
+async function rediscoverClients() {
+  await Promise.all([
+    app.loadExtensions(),
+    app.loadManagedPathTargets(),
+    app.loadExtensionConfig(),
+  ])
+  await nextTick()
+}
+
+// 「客户端」分区需要路径投影与启用矩阵；进入该分区时补齐，Skills / MCP 两个分区的取数不变。
+let clientsPrimed = false
+function primeClients() {
+  if (clientsPrimed) return
+  clientsPrimed = true
+  if (!app.agentPathTargets) void app.loadManagedPathTargets()
+  if (!app.extensionConfig) void app.loadExtensionConfig()
+}
+watch(activeTab, section => { if (section === 'clients') primeClients() }, { immediate: true })
+
+// 原型 client-resources：从客户端详情跳到对应资源页，并把该客户端设为筛选目标。
+function openClientResources(kind: 'skill' | 'mcp', client: ExtensionClientId) {
+  if (kind === 'skill') {
+    skillsSearch.value = ''
+    skillsClientFilter.value = client
+    goSection('skills')
+  } else {
+    mcpSearch.value = ''
+    mcpClientFilter.value = client
+    goSection('mcp')
+  }
+}
+
+function openClientItem(kind: 'skill' | 'mcp', id: string) {
+  detailOpen(kind === 'skill' ? 'skill' : 'mcp', id)
+}
+
+// 原型「管理目标」：打开该条目详情，目标开关就在同一弹窗里；不新增第二套分发入口。
+function manageClientItem(kind: 'skill' | 'mcp', name: string) {
+  const id = kind === 'skill'
+    ? skills.value.find(item => item.name === name)?.id
+    : mcpServers.value.find(item => item.name === name)?.id
+  if (!id) {
+    app.showToast('该条目已不在当前发现结果中；请重新发现。')
+    return
+  }
+  detailOpen(kind === 'skill' ? 'skill' : 'mcp', id)
+}
+
 const skillChips = computed(() => extensionChips('已安装', skills.value.length, skills.value))
 const serverChips = computed(() => extensionChips(`已配置 ${mcpServers.value.length} 个`, mcpServers.value.length, mcpServers.value))
 
@@ -545,20 +666,23 @@ function detailKeydown(kind: 'skill' | 'mcp', id: string, event: KeyboardEvent) 
 
 onMounted(() => {
   window.addEventListener('resize', markClampedDescriptions)
+  window.addEventListener('hashchange', syncSectionFromLocation)
   void nextTick(markClampedDescriptions)
 })
+onBeforeUnmount(() => window.removeEventListener('hashchange', syncSectionFromLocation))
 onUpdated(markClampedDescriptions)
 </script>
 
 <template>
   <section class="route-section active">
     <AppTopbar />
-    <StickyTabs><div class="ext-tabs" role="tablist">
-      <button :class="{ active: tab === 'skills' }" @click="routes.go('extensions', { tab: 'skills' })">Skills</button>
-      <button :class="{ active: tab === 'mcp' }" @click="routes.go('extensions', { tab: 'mcp' })">MCP</button>
+    <StickyTabs><div class="ext-tabs" role="tablist" aria-label="扩展分区" @keydown="tabKeydown">
+      <button role="tab" :aria-selected="activeTab === 'skills' ? 'true' : 'false'" :tabindex="activeTab === 'skills' ? 0 : -1" :class="{ active: activeTab === 'skills' }" @click="goSection('skills')">Skills</button>
+      <button role="tab" :aria-selected="activeTab === 'mcp' ? 'true' : 'false'" :tabindex="activeTab === 'mcp' ? 0 : -1" :class="{ active: activeTab === 'mcp' }" @click="goSection('mcp')">MCP</button>
+      <button role="tab" :aria-selected="activeTab === 'clients' ? 'true' : 'false'" :tabindex="activeTab === 'clients' ? 0 : -1" :class="{ active: activeTab === 'clients' }" @click="goSection('clients')">客户端</button>
     </div></StickyTabs>
 
-    <div v-if="tab === 'skills'" class="ext-view active">
+    <div v-if="activeTab === 'skills'" class="ext-view active">
       <UiCard>
         <UiCardHeader>
           <h2>Skills 管理</h2><p>发现本机 Skills 库，并把同一个 Skill 按需同步到各客户端配置。</p>
@@ -642,7 +766,7 @@ onUpdated(markClampedDescriptions)
       </UiCard>
     </div>
 
-    <div v-else class="ext-view active">
+    <div v-else-if="activeTab === 'mcp'" class="ext-view active">
       <UiCard>
         <UiCardHeader>
           <h2>MCP 服务器管理</h2><p>把同一个 MCP 服务器按需同步到各客户端配置；只写对应配置节点。</p>
@@ -720,6 +844,17 @@ onUpdated(markClampedDescriptions)
           </div>
         </div>
       </UiCard>
+    </div>
+
+    <div v-else class="ext-view active">
+      <ClientsPanel
+        :entries="clientEntries"
+        :busy="extensionBusy"
+        :discover="rediscoverClients"
+        @open-resources="openClientResources"
+        @open-item="openClientItem"
+        @manage-item="manageClientItem"
+      />
     </div>
 
     <ExtensionDetailModal

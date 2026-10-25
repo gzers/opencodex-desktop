@@ -289,7 +289,7 @@ try {
           p._s.get('routes').go('settings',{section:'general'});await new Promise(r=>setTimeout(r,100));
           const row=document.querySelector('[data-testid=setting-visual-effects]');row.scrollIntoView({block:'center'});
           const trigger=row.querySelector('.select-trigger');trigger.click();await new Promise(r=>setTimeout(r,100));
-          const menu=document.querySelector('.select-menu[aria-label="界面特效"]'),r=menu.getBoundingClientRect();
+          const menu=document.querySelector('.select-menu[aria-label="视觉特效"]'),r=menu.getBoundingClientRect();
           if(!menu)throw Error('menu missing');
           const style=e=>{const c=getComputedStyle(e);return {class:e.className,blur:c.backdropFilter,
             background:c.backgroundColor,filter:c.filter,opacity:c.opacity,transform:c.transform,

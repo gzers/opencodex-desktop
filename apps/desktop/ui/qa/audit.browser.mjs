@@ -1100,11 +1100,11 @@ async function auditInteractions(browser, want) {
     check('交互·选择器 选中态回读', selected.trim() === '浏览器兜底', selected)
   })
 
-  // 画质卡片（IMP-14）：与原型同构——独立卡片，含「界面特效」与「背景光渲染」两项。
+  // 画质卡片（IMP-14）：与原型同构——独立卡片，含「视觉特效」与「背景光渲染」两项。
   add('交互·画质卡片', { route: 'settings', section: 'general', prefs: 'local' }, async page => {
     const quality = page.locator('[data-testid="card-quality"]')
     check('画质卡片存在', (await quality.count()) === 1, `count=${await quality.count()}`)
-    check('画质卡片含界面特效', (await quality.locator('[data-testid="setting-visual-effects"]').count()) === 1, '')
+    check('画质卡片含视觉特效', (await quality.locator('[data-testid="setting-visual-effects"]').count()) === 1, '')
     const glowRow = quality.locator('[data-testid="setting-glow-render"]')
     check('画质卡片含背景光渲染', (await glowRow.count()) === 1, '')
     const glowValue = (await glowRow.locator('.select-value').innerText()).trim()

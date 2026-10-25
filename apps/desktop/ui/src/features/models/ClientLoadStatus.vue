@@ -14,7 +14,7 @@ watch(state,value=>{if(value)emit('change',value)})
 onMounted(()=>void refresh())
 </script>
 <template>
- <div v-if="state?.planId||error" class="model-client-status"><span class="tag" :data-tone="state?.status==='runtime_changed'?'danger':'neutral'">{{ label }}</span><UiButton size="sm" @click="opened=true">客户端加载核对</UiButton></div>
+ <div v-if="state?.planId||error" class="model-client-status"><span class="tag" :data-tone="state?.status==='runtime_changed'?'danger':'neutral'">{{ label }}</span><UiButton size="sm" @click="opened=true" title="重启 Codex 后重新检查运行目录与模型">重启后重新检查</UiButton></div>
  <UiDialog :open="opened" title="核对 Codex 客户端加载" :busy="busy" @close="opened=false">
   <p>{{ label }}</p><p>保存完成后，请先结束或保留当前会话，再手动退出并重新打开 Codex 客户端；管理器不会自动关闭客户端。</p><p>重新打开模型选择器，检查本次模型、顺序、上下文、推理和快速模式。下方检查只验证官方运行配置与目录，客户端所见结果需单独确认。</p>
   <p v-if="state?.checkedAt">最近运行核对：{{ new Date(state.checkedAt).toLocaleString() }}</p>
