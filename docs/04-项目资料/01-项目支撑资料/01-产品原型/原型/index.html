@@ -2384,7 +2384,7 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
                 <div class="setting-title">代理模式</div>
                 <div class="setting-desc">无代理直连；自动沿用系统代理设置；手动指定 HTTP 或 SOCKS5 代理。</div>
               </div>
-              <div class="controls"><div class="select" data-select>
+              <div class="controls"><div class="select" data-select id="networkProxyMode">
               <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="代理模式"><span class="select-value">自动（系统代理）</span></button>
               <div class="select-menu" role="listbox" aria-label="代理模式">
           <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">无代理</button>
@@ -2393,21 +2393,21 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
               </div>
             </div></div>
             </div>
-            <div class="setting-row">
+            <div class="setting-row" data-network-manual hidden>
               <div>
                 <div class="setting-title">代理协议</div>
                 <div class="setting-desc">手动配置时生效；SOCKS5 使用 socks5h（DNS 也走代理，避免本地泄漏）。</div>
               </div>
               <div class="controls"><span class="setting-readonly">HTTP</span></div>
             </div>
-            <div class="setting-row">
+            <div class="setting-row" data-network-manual hidden>
               <div>
                 <div class="setting-title">主机名与端口</div>
                 <div class="setting-desc">例如 127.0.0.1:7890；不接受含空白、@ 或凭据的地址。</div>
               </div>
               <div class="controls"><span class="setting-readonly">127.0.0.1:7890</span></div>
             </div>
-            <div class="setting-row">
+            <div class="setting-row" data-network-manual hidden>
               <div>
                 <div class="setting-title">不使用代理的地址</div>
                 <div class="setting-desc">逗号分隔的例外，例如 localhost,127.0.0.1,192.168.*。</div>
@@ -5449,6 +5449,7 @@ function bindExtensionPagination(kind){
     if(kind==='skills') applySkillsFilters();
     else applyMcpFilters();
   });
+  // 设置页「网络」：代理模式为「手动配置」时才展开协议 / 主机端口 / 例外三行（与软件同条件）。
   const pageSizeRoot=document.querySelector(`[data-page-size="${kind}"] [data-page-size-select]`);
   pageSizeRoot?.addEventListener('selectchange',event=>{
     const value=parseInt(event.detail.value,10);
@@ -5499,6 +5500,17 @@ document.querySelectorAll('.skills-chip').forEach(chip=>{
 document.getElementById('skillsSearch')?.addEventListener('input',applySkillsFilters);
 bindExtensionPagination('skills');
 bindExtensionPagination('mcp');
+
+// 设置页「网络」：代理模式为「手动配置」时才展开协议 / 主机端口 / 例外三行（与软件同条件）。
+function bindNetworkProxyMode(){
+  const root=document.getElementById('networkProxyMode');
+  if(!root) return;
+  root.addEventListener('selectchange',event=>{
+    const manual=event.detail.value==='手动配置';
+    document.querySelectorAll('[data-network-manual]').forEach(row=>{if(manual)row.removeAttribute('hidden');else row.setAttribute('hidden','');});
+  });
+}
+bindNetworkProxyMode();
 
 // 单条 Skill 的「检查 / 更新」：就地检查并更新这一条，不弹「全部 Skill」的窗。
 // 顶部「检查更新」（skills-rescan）才是面向全部 Skill 的，保留列明细的弹窗。
