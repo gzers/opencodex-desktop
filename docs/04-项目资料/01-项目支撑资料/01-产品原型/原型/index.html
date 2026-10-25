@@ -2371,6 +2371,66 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
           </div>
         </article>
 
+        <article class="card" id="card-general-network">
+          <div class="card-head">
+            <div>
+              <h2>网络</h2>
+              <p>应用自更新、官方版本查询与托管安装的出站请求代理；不含凭据，不写入系统代理设置。</p>
+            </div>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">代理模式</div>
+                <div class="setting-desc">无代理直连；自动沿用系统代理设置；手动指定 HTTP 或 SOCKS5 代理。</div>
+              </div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="代理模式"><span class="select-value">自动（系统代理）</span></button>
+              <div class="select-menu" role="listbox" aria-label="代理模式">
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">无代理</button>
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">自动（系统代理）</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">手动配置</button>
+              </div>
+            </div></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">代理协议</div>
+                <div class="setting-desc">手动配置时生效；SOCKS5 使用 socks5h（DNS 也走代理，避免本地泄漏）。</div>
+              </div>
+              <div class="controls"><span class="setting-readonly">HTTP</span></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">主机名与端口</div>
+                <div class="setting-desc">例如 127.0.0.1:7890；不接受含空白、@ 或凭据的地址。</div>
+              </div>
+              <div class="controls"><span class="setting-readonly">127.0.0.1:7890</span></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">不使用代理的地址</div>
+                <div class="setting-desc">逗号分隔的例外，例如 localhost,127.0.0.1,192.168.*。</div>
+              </div>
+              <div class="controls"><span class="setting-readonly">localhost,127.0.0.1</span></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">应用范围</div>
+                <div class="setting-desc">应用自更新、官方版本查询与托管安装共用此代理；TLS 证书校验不可关闭。WebDAV 同步使用其端点自带代理。</div>
+              </div>
+              <div class="controls"><span class="setting-readonly">本版不含代理鉴权</span></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">检查连接</div>
+                <div class="setting-desc">用当前配置对固定地址发一次带超时请求；只回报结果，不改写任何设置。<br><span class="setting-readonly" data-network-probe-result>尚未检查</span></div>
+              </div>
+              <div class="controls"><button class="btn ghost" type="button" data-prototype-action="network-probe">检查连接</button></div>
+            </div>
+          </div>
+        </article>
+
         <article class="card" id="card-general-shared">
           <div class="card-head">
             <div>
@@ -5709,6 +5769,10 @@ document.addEventListener('click',event=>{
     }else{
       toast('原型模拟：会打开「'+(actionTarget.getAttribute('aria-label')||'设置')+'」选项；不保存真实偏好。');
     }
+  }else if(action==='network-probe'){
+    const result=actionTarget.closest('.setting-row')?.querySelector('[data-network-probe-result]');
+    if(result)result.textContent='演示：连接检查通过；未发起网络请求。';
+    toast('原型模拟：网络连接检查通过；不发起真实请求。');
   }else if(action==='codex-shim-toggle'){
     runCodexShimToggle(actionTarget);
   }else if(action==='codex-shim-details'){

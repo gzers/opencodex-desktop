@@ -107,9 +107,11 @@
  }
  function credentialsHTML(){
   const s=state(),ids=closure().ids;
+  const reviewed=check('data-sx-reviewed','已复核所选资源')+'<p class="sx-muted">确认所选 Skills / MCP 资源清单与落点无误。</p>';
+  const hasAssets=[...ids].some(id=>['skills','mcp'].includes(find(id)?.group));
   const blocks=[['keys','渠道 API Key','包含所选渠道的 Key','渠道可单独分享，接收方自行填 Key。',x=>x.key],['extensions','扩展凭据','包含所选扩展的凭据','例如 MCP 的 Authorization / 环境变量。',x=>x.extensionSecret]].map(([key,title,label,note,match])=>{
    const items=catalog.filter(x=>ids.has(x.id)&&match(x)),active=items.some(x=>s[key].has(x.id));
-   return '<section class="sx-secret-block">'+check('data-sx-secret="'+key+'"',title,active,!items.length)+'<p class="sx-muted">'+note+'</p>'+(active?'<div class="sx-subpicks">'+items.map(x=>check('data-sx-secret-object="'+x.id+'" data-kind="'+key+'"',esc(x.name),s[key].has(x.id))).join('')+'</div>':'')+'</section>';
+   return '<section class="sx-secret-block">'+check('data-sx-secret="'+key+'"',title,active,!items.length)+(key==='extensions'&&hasAssets?reviewed:'')+'<p class="sx-muted">'+note+'</p>'+(active?'<div class="sx-subpicks">'+items.map(x=>check('data-sx-secret-object="'+x.id+'" data-kind="'+key+'"',esc(x.name),s[key].has(x.id))).join('')+'</div>':'')+'</section>';
   }).join('');
   return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户按平台能力提供可选范围；当前仅账户信息'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+blocks+'<p class="sx-note">'+(secretCount()?'所选凭据需加密':'当前不携带凭据')+'</p>'+sxAnn('02','凭据选择与加密规则','加密口令独立于 WebDAV 密码，不随包或远端数据保存。导入同一身份时保留本机已有凭据，不用空值覆盖。凭据选择只演示勾选与加密要求，不读取真实密钥；加密口令只描述规则，不做真实加密。')+'</aside>';
  }
