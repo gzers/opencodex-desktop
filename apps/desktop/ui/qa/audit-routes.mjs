@@ -109,7 +109,10 @@ function fingerprint() {
   }))
 
   // 说明性段落（原型大量用 muted 段落承载规格）
-  const notes = uniq([...document.querySelectorAll('p,.model-muted,.mp-muted')].filter(visible).map(p => text(p)).filter(t => t && t.length > 8).map(t => t.slice(0, 120)))
+  // 必须限定在当前激活路由内：原型右侧工具板 .prototype-side 也有大量 p / .mp-muted，
+  // 不限定会把工具板说明算成产品正文（2026-10-25 独立复核发现，直接造成 4 条假差异）。
+  const scope = document.querySelector('.route-section.active') || document.querySelector('main') || document.body
+  const notes = uniq([...scope.querySelectorAll('p,.model-muted,.mp-muted')].filter(visible).map(p => text(p)).filter(t => t && t.length > 8).map(t => t.slice(0, 120)))
 
   // 关键尺寸：主内容首屏标题与第一个卡片
   const main = document.querySelector('main, .mp-page, .sx-page, .cv-page') || document.body
