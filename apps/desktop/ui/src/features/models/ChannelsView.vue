@@ -9,6 +9,8 @@ import ChannelNodeSelect from './ChannelNodeSelect.vue'
 import UiSwitch from '@/components/ui/UiSwitch.vue'
 import NewChannelDialog from './NewChannelDialog.vue'
 import ClientLoadStatus from './ClientLoadStatus.vue'
+import UiStatus from '@/components/ui/UiStatus.vue'
+import {applyingPhaseLabel,channelPolicyState,clientLoadStateOf,pendingSubLabel} from '@/lib/saveStates'
 import SelectorPreviewDialog from './SelectorPreviewDialog.vue'
 import { mergeUpstream } from './upstream'
 import { inlineChanges, setModelActive } from './saveReview'
@@ -69,8 +71,13 @@ async function prepareSelectedScope(){
  }catch(cause){saveScopeError.value=errorText(cause)}finally{models.busy=false}
 }
 const clientState=ref<ModelClientState|null>(null)
-const clientLabel=computed(()=>clientState.value?.status==='user_confirmed'?'已写入 · 用户已确认':clientState.value?.status==='pending_verification'?'已写入 · 待客户端验证':clientState.value?.status==='runtime_changed'?'运行配置变化 · 待核对':clientState.value?.status==='not_required'?'已写入 · 无需新增重启':'已写入 · 待重启 Codex')
-const policyStatus=computed(()=>saving.value?{label:'正在核对',tone:'warning'}:savePlan.value&&!['prepared','committed','compensated'].includes(savePlan.value.phase)?{label:'保存待核对',tone:'danger'}:models.pendingRows.length?{label:models.pendingRows.length+' 项未确认',tone:'warning'}:models.channelDirty?{label:'未保存修改',tone:'warning'}:savePlan.value?.phase==='committed'?{label:clientLabel.value,tone:'success'}:savePlan.value?.phase==='compensated'?{label:'已撤回本次写入',tone:'neutral'}:{label:'未修改',tone:'neutral'})
+// 客户端加载态的文案与 tone 统一取自 lib/saveStates.ts；此处不再翻译第二遍。
+const clientLoad=computed(()=>clientLoadStateOf(clientState.value?.status))
+const policyStatus=computed(()=>channelPolicyState({saving:saving.value,plan:savePlan.value,pendingRows:models.pendingRows.length,draftDirty:models.channelDirty,client:clientLoad.value}))
+/** 写入中的阶段名只在 hover / focus 出现（裁决 #1）。 */
+const policyHint=computed(()=>saving.value?'正在保存':applyingPhaseLabel(savePlan.value?.phase))
+// 子标签只在「当前状态说别的事」时补一句上次结果，避免同一句话出现两遍。
+const policySub=computed(()=>policyStatus.value.label.includes('待重启')?null:pendingSubLabel(clientLoad.value))
 const detailProjection=ref<DraftProjection|null>(null),detailProjectionError=ref(''),detailProjectionBusy=ref(false)
 let detailSequence=0,detailTimer:ReturnType<typeof setTimeout>|undefined
 watch(()=>[editorId.value,JSON.stringify(models.channelDraft),models.snapshot?.libraryDigest],(_next,previous)=>{
@@ -81,7 +88,10 @@ watch(()=>[editorId.value,JSON.stringify(models.channelDraft),models.snapshot?.l
 },{immediate:true})
 let disposed=false
 onBeforeUnmount(()=>{disposed=true;detailSequence++;if(detailTimer)clearTimeout(detailTimer)})
-onMounted(async()=>{try {const plan=await modelApi.latestPolicy();if(!disposed&&!models.policyNotificationTarget)savePlan.value=plan}catch(cause){if(!disposed)error.value=errorText(cause)}})
+onMounted(async()=>{
+ // 通知已指定具体 planId 时不再拉 latest：那是另一个操作，且会重复请求同一个结果。
+ if(models.policyNotificationTarget)return
+ try {const plan=await modelApi.latestPolicy();if(!disposed&&!models.policyNotificationTarget)savePlan.value=plan}catch(cause){if(!disposed)error.value=errorText(cause)}})
 watch(()=>models.policyNotificationTarget,async target=>{
  if(!target)return
  const requested=target
@@ -262,12 +272,12 @@ function dragChannel(event:PointerEvent,id:string){draggedOver.value='';channelD
 <template>
   <div class="channels-view">
     <div v-if="!editor" class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索渠道" aria-label="搜索渠道" /><div class="model-inline"><UiButton :loading="upstreamBusy" :disabled="models.busy||saving" @click="readUpstream">读取现有渠道</UiButton><UiButton :disabled="models.busy||saving" @click="create">新增渠道</UiButton></div></div>
-    <Teleport defer :to="actionsTarget??'body'" :disabled="!actionsTarget"><div v-if="props.active!==false&&!editor" class="model-inline model-policy-actions"><span class="model-policy-state" :data-tone="policyStatus.tone" role="status">● {{ policyStatus.label }}</span><UiButton :disabled="(!models.channelDirty&&!models.pendingRows.length)||models.busy||saving" @click="restore">还原修改</UiButton><UiButton data-testid="policy-save" :variant="models.channelDirty?'primary':'default'" :disabled="models.busy||saving||saveConfirming" :loading="models.busy" title="保存 · 先核对选择器预览，确认后写入" @click="prepareSave">保存</UiButton></div></Teleport>
+    <Teleport defer :to="actionsTarget??'body'" :disabled="!actionsTarget"><div v-if="props.active!==false&&!editor" class="model-inline model-policy-actions"><UiStatus :state="policyStatus" :hint="policyHint" :sub="policySub" /><ClientLoadStatus variant="inline" @change="clientState=$event" :refresh-key="(models.snapshot?.policyDigest??'')+':'+(savePlan?.phase??'')" /><UiButton :disabled="(!models.channelDirty&&!models.pendingRows.length)||models.busy||saving" @click="restore">还原修改</UiButton><UiButton data-testid="policy-save" :variant="models.channelDirty?'primary':'default'" :disabled="models.busy||saving||saveConfirming" :loading="models.busy" title="保存 · 先核对选择器预览，确认后写入" @click="prepareSave">保存</UiButton></div></Teleport>
     <p v-if="upstreamVersion" class="model-muted">来源：{{ upstreamVersion }} · 已读取到草稿</p>
     <p v-if="search.trim()" class="model-muted">清除搜索后可调整渠道顺序</p>
     <p v-if="models.pendingRows.length" role="status">{{ models.pendingRows.length }} 项型号编辑未确认；全局保存暂不可用。<UiButton v-for="target in [...new Set(models.pendingRows.map(r=>r.channel))]" :key="target" size="sm" variant="ghost" @click="editorId=target">查看 {{ models.channelDraft?.channels.find(c=>c.id===target)?.label??target }}</UiButton></p>
-    <ClientLoadStatus @change="clientState=$event" :refresh-key="(models.snapshot?.policyDigest??'')+':'+(savePlan?.phase??'')" />
-    <div v-if="savePlan && !['prepared','compensated'].includes(savePlan.phase)" class="model-inline"><span class="tag">{{ savePlan.phase === 'committed' ? '最近保存已写入' : '上次保存尚未完成核对' }}</span><UiButton size="sm" @click="saveOpen=true">查看原保存结果</UiButton></div>
+
+    <!-- 保存结果详情不再在列表上方占一行：入口走通知中心（model_policy action），见提案 §4.1。 -->
     <p v-if="error || models.channelError" class="model-error" role="alert">{{ error || models.channelError }}</p><UiButton v-if="error&&models.channelDirty&&!models.channelDraft?.recoveryId" size="sm" variant="ghost" :disabled="models.busy||saving" @click="adjustSaveScope">调整本次保存范围</UiButton><p v-if="models.staging" class="model-muted" role="status">正在暂存渠道草稿…</p>
     <div v-if="selected.length&&!editor" class="model-inline"><span>已选 {{ selected.length }} 个渠道<span v-if="selected.some(c=>!channels.some(row=>row.id===c.id))">（含搜索外 {{ selected.filter(c=>!channels.some(row=>row.id===c.id)).length }} 个）</span></span><UiButton size="sm" :disabled="models.busy||saving" @click="enableSelected(true)">启用</UiButton><UiButton size="sm" :disabled="models.busy||saving" @click="enableSelected(false)">停用</UiButton><UiButton size="sm" variant="danger" :disabled="models.busy||saving" @click="deleteChannels(selected)">删除所选渠道</UiButton><UiButton size="sm" :disabled="models.busy||saving||!!models.pendingRows.length" @click="batchChannels={mode:'family',ids:selected.map(c=>c.id)}">按族批量配置</UiButton><UiButton size="sm" :disabled="models.busy||saving||!!models.pendingRows.length" @click="batchChannels={mode:'adopt',ids:selected.map(c=>c.id)}">套用模版</UiButton><UiButton size="sm" variant="ghost" @click="selectedIds=[]">清除选择</UiButton></div>
     <ChannelEditor v-if="editor" :key="editor.id" :navigation="models.view.navigation['channel:'+editor.id]" :channels="models.channelDraft?.channels" @switch="editorId=$event" @save="prepareSave" @restore="restore" :dirty="models.channelDirty||!!models.pendingRows.length" :save-status="policyStatus.label" :save-tone="policyStatus.tone" :save-disabled="models.busy||saving||saveConfirming" :active-count="detailProjection?.knownActiveModels" :view-state="models.view.channelFilters[editor.id]" :row-state="models.modelRows[editor.id]" :policy="models.channelDraft??undefined" :existing="models.snapshot?.policy.channels.some(c=>c.id===editorId)" :channel="editor" :global-refs="models.channelDraft?.templateRefs??[]" :projection="detailProjection?.rows.filter(row=>row.channelId===editorId)??[]" :projection-busy="detailProjectionBusy" :projection-error="detailProjectionError" :templates="models.snapshot?.library.templates ?? []" :busy="models.busy||protectedChannel(editor)" @close="editorId = ''" />

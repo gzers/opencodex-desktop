@@ -25,10 +25,14 @@ describe('recovering a saved operation',()=>{
  it('querying a committed original preserves a later persisted workspace and its next write baseline',async()=>{
    const store=useModelsStore();const saved={...store.snapshot!,workspaceDigest:'later-draft',workspace:{basePolicy:'policy',policy:{schemaVersion:1,templateRefs:[],channels:[]}}}
    vi.mocked(modelApi.latestPolicy).mockResolvedValue(plan())
-   vi.mocked(modelApi.policyResult).mockResolvedValue({...plan(),phase:'committed'})
+   vi.mocked(modelApi.policyResult).mockResolvedValueOnce(plan()).mockResolvedValue({...plan(),phase:'committed'})
    vi.mocked(modelApi.load).mockResolvedValue(saved)
    vi.mocked(modelApi.stage).mockImplementation(async(_policy,workspace,policy)=>{expect(workspace).toBe('later-draft');return {...saved,workspace:{basePolicy:'policy',policy}}})
-   const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='查看原保存结果')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='核对原计划')!.trigger('click');await flushPromises()
+   // 页面不再有「查看原保存结果」入口；从通知进入（与 model_policy action 同一路径）。
+   const wrapper=render();await flushPromises()
+   store.policyNotificationTarget={planId:'original'}
+   await flushPromises()
+   await wrapper.findAll('button').find(b=>b.text()==='核对原计划')!.trigger('click');await flushPromises()
    expect(store.snapshot!.workspaceDigest).toBe('later-draft');expect(store.channelDraft).toEqual(saved.workspace.policy)
    await store.persistDraft();expect(modelApi.stage).toHaveBeenCalledWith('policy','later-draft',saved.workspace.policy);wrapper.unmount()
  })
@@ -50,11 +54,17 @@ describe('recovering a saved operation',()=>{
  it('reopens the original plan after route remount without resubmitting writes',async()=>{
    vi.mocked(modelApi.latestPolicy).mockResolvedValue(plan())
    vi.mocked(modelApi.policyResult).mockResolvedValue(plan())
+   // 列表上方不再显示「上次保存尚未完成核对」那一行（提案 §4.1：状态区收敛为一处）。
+   // 重新打开原计划改由通知路径承担。
    const wrapper=render();await flushPromises()
-   expect(wrapper.text()).toContain('上次保存尚未完成核对')
-   await wrapper.findAll('button').find(b=>b.text()==='查看原保存结果')!.trigger('click')
+   useModelsStore().policyNotificationTarget={planId:'original'}
+   await flushPromises()
+   expect(wrapper.text()).not.toContain('上次保存尚未完成核对')
    await wrapper.findAll('button').find(b=>b.text()==='核对原计划')!.trigger('click');await flushPromises()
-   expect(modelApi.policyResult).toHaveBeenCalledExactlyOnceWith('original');expect(modelApi.applyPolicy).not.toHaveBeenCalled();wrapper.unmount()
+   // 进入时拉一次结果，点「核对原计划」再显式重查一次：两次都必须是同一 planId。
+   expect(modelApi.policyResult).toHaveBeenCalledWith('original')
+   expect(new Set(vi.mocked(modelApi.policyResult).mock.calls.map(c=>c[0]))).toEqual(new Set(['original']))
+   expect(modelApi.applyPolicy).not.toHaveBeenCalled();wrapper.unmount()
  })
  it('notification navigation keeps its exact plan even when latest returns another operation',async()=>{
    const store=useModelsStore();store.policyNotificationTarget={planId:'specific-plan'}

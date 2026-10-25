@@ -223,13 +223,8 @@ function prepareDelete() {
 /* MO-2（对齐原型 model-config.css:583/593）：这组控件不换行；状态框取与按钮相同的 34px 控件高度变量，
    按钮本身的高度由 .btn 公共配方保证（消费方不得覆盖控件度量）。 */
 .model-policy-actions{--mp-policy-control-height:var(--control-md);justify-content:flex-end;padding:6px 0;flex-wrap:nowrap;gap:var(--space-2)}
-.model-policy-actions>.model-policy-state{height:var(--mp-policy-control-height);min-height:var(--mp-policy-control-height);box-sizing:border-box}
 /* 列表页脚说明（原型 model-config.js:865/867/967 .mp-footer-note）：紧贴列表下方，弱化字号，不进表格。 */
 .model-footer-note{margin:var(--space-2) 0 0;color:var(--muted);font-size:var(--text-caption);line-height:1.7}
-.model-policy-state{display:inline-flex;align-items:center;gap:6px;min-height:var(--control-md);padding:0 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:var(--text-caption);white-space:nowrap;background:var(--surface-panel-bg,var(--panel))}
-.model-policy-state[data-tone=warning]{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 30%,var(--border))}
-.model-policy-state[data-tone=danger]{color:var(--red);border-color:color-mix(in srgb,var(--red) 30%,var(--border))}
-.model-policy-state[data-tone=success]{color:var(--green)}
 .model-source-record{padding:10px 0}.model-source-record p{white-space:pre-wrap;overflow-wrap:anywhere}
 .model-editor-action{width:100%}.model-editor-action svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}
 .model-name{flex:1;min-width:120px;font-weight:var(--weight-semibold)}.model-identity{flex:1;min-width:180px}

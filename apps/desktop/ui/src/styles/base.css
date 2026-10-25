@@ -707,6 +707,12 @@ input.input:focus-visible, .select-trigger:focus-visible, .toggle:focus-visible 
 .skill-info { min-width: 0; }
 /* 状态标签：与冻结原型 .tag 同款（面板底 + 1px 描边 + 胶囊圆角 + 小一号字）。 */
 .tag { display: inline-flex; align-items: center; min-height: 22px; padding: 2px 8px; border: 1px solid var(--border); border-radius: var(--radius-pill); background: var(--panel); color: var(--muted); font-size: var(--text-micro); font-weight: 600; white-space: nowrap; }
+
+/* 页面级状态标签的语义变体：此前只声明 .tag.danger，warning / success / ok 无定义会静默退化为中性。
+   新代码优先用 components/ui/UiStatus.vue + .state-*；这里补齐既有 .tag 消费点（UpdateCenter 等）。 */
+.tag.warning { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 32%, transparent); background: var(--amber-soft); }
+.tag.success, .tag.ok { color: var(--green); border-color: color-mix(in srgb, var(--green) 32%, transparent); background: var(--green-soft); }
+
 .skill-title { display: flex; align-items: center; gap: 8px; }
 .skill-title h3 { margin: 0; font-size: var(--text-body); font-weight: 650; line-height: 1.25; }
 .skill-title .tag { min-height: 20px; padding: 1px 6px; }

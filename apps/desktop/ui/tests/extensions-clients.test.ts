@@ -97,7 +97,7 @@ describe('extensions clients projection', () => {
     expect(codex.managed.map(item => item.key)).toEqual(['skill:design-studio', 'mcp:node_repl'])
     expect(codex.skillsReady).toBe(true)
     expect(codex.mcpReady).toBe(true)
-    expect(clientStatusTag(codex)).toEqual({ label: '可管理', tone: 'ok' })
+    expect(clientStatusTag(codex)).toEqual({ label: '可管理', tone: 'running' })
     expect(clientAdaptation(codex)).toBe('可管理')
   })
 
@@ -153,7 +153,7 @@ describe('extensions clients section', () => {
     expect(rows[0].findAll(':scope > *')).toHaveLength(4)
     expect(rows[0].find('.ext-client-cap').text()).toContain('Skills · 文档有依据')
     expect(rows[0].find('.ext-client-count').text()).toBe('2 项')
-    expect(rows[0].find('.ext-client-tag').text()).toBe('可管理')
+    expect(rows[0].find('.ext-client-state .state-pill').text()).toBe('可管理')
     await wrapper.unmount()
   })
 
@@ -216,7 +216,7 @@ describe('extensions clients section', () => {
     await nextTick()
     const rows = wrapper.findAll('.ext-client-row')
     expect(rows).toHaveLength(4)
-    expect(rows.every(row => row.find('.ext-client-tag').text() === '待核实适配')).toBe(true)
+    expect(rows.every(row => row.find('.ext-client-state .state-pill').text() === '待核实适配')).toBe(true)
     await wrapper.unmount()
   })
 

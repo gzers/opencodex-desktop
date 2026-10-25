@@ -3,6 +3,7 @@
 // extension-manager.js 的 renderClients() / renderClientDetail()。
 import UiButton from '@/components/ui/UiButton.vue'
 import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
+import UiStatus from '@/components/ui/UiStatus.vue'
 import { computed, nextTick, ref, watch } from 'vue'
 import { useAppStore } from '@/stores/app'
 import type { ExtensionClientId } from '@/features/extensions/api'
@@ -169,7 +170,7 @@ function openConfig(entry: ClientDirectoryEntry) {
           <div class="ext-client-cap">Skills · {{ clientCapabilityLabel(entry.skillsReady) }}<br>MCP · {{ clientCapabilityLabel(entry.mcpReady) }}</div>
           <span class="ext-client-count">{{ entry.managed.length }} 项</span>
           <div class="ext-client-state">
-            <span class="tag ext-client-tag" :data-tone="clientStatusTag(entry).tone">{{ clientStatusTag(entry).label }}</span>
+            <UiStatus :tone="clientStatusTag(entry).tone" :label="clientStatusTag(entry).label" />
             <span class="ext-client-meta">{{ clientDiscoveryLabel(entry) }}</span>
           </div>
         </article>
@@ -276,11 +277,8 @@ function openConfig(entry: ClientDirectoryEntry) {
 .ext-client-count { font-variant-numeric: tabular-nums; }
 .ext-client-state { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
 /* 状态沿用软件既有 .tag 状态标签；tone 与原型同源（可管理 / 待核实 / 有异常）。 */
-.ext-client-tag { min-height: 20px; padding: 1px 6px; }
-.ext-client-tag[data-tone="ok"] { color: var(--green); border-color: color-mix(in srgb, var(--green) 32%, transparent); background: var(--green-soft); }
-.ext-client-tag[data-tone="warn"] { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 32%, transparent); background: var(--amber-soft); }
-.ext-client-tag[data-tone="bad"] { color: var(--red); border-color: color-mix(in srgb, var(--red) 32%, transparent); background: var(--red-soft); }
-.ext-client-tag[data-tone="muted"] { color: var(--muted); background: var(--rail); }
+/* 状态标签外形由公共 .state-pill 提供；此处只保留紧凑内距。 */
+.ext-client-state .state-pill{min-height:20px;padding:1px 6px}
 .ext-clients-empty { padding: 40px 16px; border-bottom: 1px solid var(--border); color: var(--muted); text-align: center; }
 .ext-clients-detail { display: grid; gap: 14px; }
 .ext-client-back { justify-self: stretch; color: var(--muted); }
