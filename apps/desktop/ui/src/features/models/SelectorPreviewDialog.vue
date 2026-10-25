@@ -73,6 +73,13 @@ const groups = computed(() => props.channels.map(channel => ({
   items: rows.value.filter(row => row.channelId === channel.id).map((row, index) => ({ row, order: index + 1, change: modelState(channel.id, row.modelId, row.selected) })),
 })))
 const notices = computed(() => props.projection?.notices?.filter(notice => !notice.includes('当前为草稿基础模型投影')) ?? [])
+/**
+ * 摘要标题按内容取词：生产环境这里只会有编译器发的「未在当前清单发现，保留选择待核对」，
+ * 但 DEV 夹具与导入路径也会写说明性 notice，不能一律叫「待核对」，否则等于给用户派任务。
+ */
+const noticesLabel = computed(() => notices.value.every(notice => notice.includes('保留选择待核对'))
+  ? notices.value.length + ' 项待核对提示'
+  : notices.value.length + ' 项说明')
 const others = computed(() => (props.otherChanges ?? []).slice(0, 8))
 const otherTotal = computed(() => props.otherChanges?.length ?? 0)
 const note = ref('')
@@ -169,7 +176,16 @@ function confirm() { if (!props.saving) emit('confirm') }
     <summary>另有 {{ otherTotal }} 项字段变化</summary>
     <dl><div v-for="change in others" :key="change.label"><dt>{{ change.label }}</dt><dd><span>{{ change.before === null || change.before === undefined ? '未设置' : typeof change.before === 'string' ? change.before : JSON.stringify(change.before) }}</span><em>→</em><span>{{ change.after === null || change.after === undefined ? '未设置' : typeof change.after === 'string' ? change.after : JSON.stringify(change.after) }}</span></dd></div></dl>
    </details>
-   <p v-for="notice in notices" :key="notice" class="preview-muted">{{ notice }}</p>
+   <!--
+     待核对提示（后端投影 notices）：真实账号可能有几十条「未在当前清单发现」。
+     曾把它们逐条平铺在弹窗底部，flex 列里每条都抢高度，把上面的渠道/型号区挤到 0，
+     用户看到的就是「只有一堆提示、没有预览」——0.2.8 接报的真实缺陷。
+     改为默认收起的一行摘要，展开后给独立滚动上限，与「另有 N 项字段变化」同一形态。
+   -->
+   <details v-if="notices.length" class="preview-notices">
+    <summary>{{ noticesLabel }}</summary>
+    <ul><li v-for="notice in notices" :key="notice">{{ notice }}</li></ul>
+   </details>
   </div>
   <template #actions>
    <UiButton :disabled="saving" @click="emit('close')">取消</UiButton>
@@ -184,7 +200,8 @@ function confirm() { if (!props.saving) emit('confirm') }
 .selector-preview-budget{flex:none;display:flex;align-items:baseline;gap:var(--space-2) var(--space-4);flex-wrap:wrap;padding:0 0 var(--space-2-5);border-bottom:1px solid var(--border);font-size:var(--text-label);color:var(--muted)}
 .selector-preview-budget strong{color:var(--text);font-size:var(--text-control);font-variant-numeric:tabular-nums}
 .selector-preview-budget.over strong,.selector-preview-budget.over .preview-alert{color:var(--red)}
-.selector-preview-order{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;display:grid;gap:var(--space-2-5);padding-right:var(--space-1)}
+/* min-height 兜底：任何附加区块都不能把渠道/型号区压成 0（0.2.8 缺陷复现条件）。 */
+.selector-preview-order{flex:1 1 auto;min-height:180px;overflow:auto;overscroll-behavior:contain;display:grid;gap:var(--space-2-5);padding-right:var(--space-1)}
 .preview-group{margin:0;padding:var(--space-1-5) var(--space-2) var(--space-2);border:1px solid var(--border);border-radius:var(--radius);background:color-mix(in srgb,var(--raised) 72%,transparent)}
 .preview-group.off{background:transparent;border-style:dashed;border-color:var(--border-soft);opacity:.62}
 .preview-group.locked{background:color-mix(in srgb,var(--raised) 55%,transparent)}
@@ -231,6 +248,15 @@ function confirm() { if (!props.saving) emit('confirm') }
 .preview-other dd span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .preview-other dd em{color:var(--muted);font-style:normal;flex:none}
 .preview-muted{margin:0;color:var(--muted);font-size:var(--text-label)}
+/* 待核对提示：默认收起，展开后自身滚动，不参与上方列表的高度分配。 */
+.preview-notices{flex:none;padding:var(--space-2) var(--space-2-5);border:1px solid var(--border-soft);border-radius:var(--radius-sm);font-size:var(--text-caption);color:var(--muted)}
+.preview-notices>summary{display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none;color:var(--muted)}
+.preview-notices>summary:hover{color:var(--text)}
+.preview-notices>summary::-webkit-details-marker{display:none}
+.preview-notices>summary::before{content:"▸";flex:none;font-size:var(--text-micro)}
+.preview-notices[open]>summary::before{content:"▾"}
+.preview-notices ul{display:grid;gap:var(--space-1);max-height:112px;overflow:auto;overscroll-behavior:contain;margin:var(--space-2) 0 0;padding:0;list-style:none}
+.preview-notices li{overflow-wrap:anywhere;line-height:1.6}
 .preview-alert{margin:0;color:var(--red);font-size:var(--text-label);overflow-wrap:anywhere}
 </style>
 
