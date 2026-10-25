@@ -223,17 +223,32 @@ function guide() {
   routes.go('settings', { section: 'installation' })
 }
 
+// 顺序与文案对齐 0.2.0 原型 index.html:1866/1885/1905：版本升级 → 文件同步 → WebDAV 同步。
+// 「最近事件」在原型里排在模块区之前（index.html:1853），见模板顺序。
 const mods = computed(() => [
   {
     key: 'upgrade',
     title: '版本升级',
-    tag: '管理器 · 面板',
+    // 原型 index.html:1873 用「可用」；连接/清单状态区分见 N-OV-1。
+    tag: '可用',
     rows: [],
     actions: [
       { label: '检查更新', cls: 'btn primary', run: () => openUpdates(null, true) },
     ],
   },
-  { key: 'migration', title: '配置迁移', tag: '已接入', rows: [['导出配置', '加密容器'], ['导入校验', '备份后替换']], actions: [{ label: '导出配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) }, { label: '导入配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) }] },
+  {
+    key: 'migration',
+    // 原型 index.html:1891 标题是「文件同步」，不是「配置迁移」。
+    title: '文件同步',
+    // 原型 index.html:1892 用「规划中」。
+    tag: '规划中',
+    rows: [['导出范围', '可选对象'], ['凭据', '独立选择']],
+    // 原型 index.html:1881/:1900-1901 的入口是「导入配置 / 选择同步范围」。
+    actions: [
+      { label: '导入配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) },
+      { label: '选择同步范围', cls: 'btn ghost', run: () => routes.go('settings',{section:'migration'}) },
+    ],
+  },
   { key: 'sync', title: 'WebDAV 同步', tag: webdavStates[app.webdavState].tag, rows: [['连接状态', webdavStates[app.webdavState].conn], ['冲突策略', webdavStates[app.webdavState].conflict]], actions: webdavStates[app.webdavState].actions.map(a => ({ label: a.label, cls: a.cls, run: () => routes.go('sync',{tab:'webdav'}) })) },
 ])
 </script>
