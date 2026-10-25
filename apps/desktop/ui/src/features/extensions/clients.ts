@@ -20,7 +20,7 @@ export const clientDirectoryOrder: readonly ExtensionClientId[] = [
 
 export type ClientCapability = 'ready' | 'unknown'
 export type ClientStatusFilter = 'all' | 'installed' | 'issues' | 'unknown'
-export type ClientTagTone = 'ok' | 'warn' | 'bad' | 'muted'
+export type ClientTagTone = 'running' | 'starting' | 'warn' | 'bad' | 'muted'
 
 export interface ClientManagedResource {
   /** 同时含 Skill 与 MCP 时名称可能相同，键必须带类型。 */
@@ -120,7 +120,8 @@ export function clientStatusTag(entry: ClientDirectoryEntry): { label: string; t
   if (entry.capability === 'unknown') return { label: '待核实适配', tone: 'warn' }
   if (entry.issue) return { label: '有异常', tone: 'bad' }
   if (entry.disabled) return { label: '已停用', tone: 'muted' }
-  return { label: '可管理', tone: 'ok' }
+  // 可管理 = 语义上的「正常运行」，与 tone 唯一词表一致（不再出现 ok 别名）。
+  return { label: '可管理', tone: 'running' }
 }
 
 /** 详情「适配状态」的完整说法；与原型 reason(t) || 可管理 同口径。 */
