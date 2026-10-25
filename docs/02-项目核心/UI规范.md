@@ -1327,3 +1327,67 @@ macOS 原生窗口复核发现：WKWebView 里表格滚动容器内的 HTML5 拖
 ### 40.6 交互时序未验项
 
 视觉像素、长按、拖拽、弹窗流转的时序比对仍属未验，标 [待验]，不因“元素存在”判通过（§38.8、§39.5 同理）。
+
+## 41. 状态展示统一化（2026-10-25 已实施）
+
+依据：[状态展示统一化提案](../04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/03-确认与评审/20261025-状态展示统一化提案.md)（6 项裁决已通过）+ [WP-66 / WP-67](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.8-bugs.md)。0.2.10 已落地。
+
+### 41.1 tone 唯一词表（五类 + 一个中性）
+
+| 语义 | 唯一类名 | 用于 | 已废弃的别名 |
+| --- | --- | --- | --- |
+| 正常运行 / 成功 | `state-running` | 运行中、已同步、已完成、连接检查通过、可管理 | `success`、`ok` |
+| 进行中 / 信息 | `state-starting` | 启动中、同步中、应用中、校验中、正在保存 | `info`、`busy` |
+| 需注意 / 待处理 | `state-warn` | 待重启、待核对、部分完成、存在风险 | `warning`、`warn` |
+| 失败 / 危险 | `state-bad` | 保存失败、连接失败、不可达 | `danger`、`bad` |
+| 中性 / 未开始 | `state-muted` | 未修改、未配置、未运行、已取消、官方管理 | `neutral`、`muted` |
+
+- 形状统一为 `.state-pill`（胶囊 + 8px 圆点），**不再新建第二套**：`.tag` 及其变体只用于既有消费点，新代码一律走 `components/ui/UiStatus.vue`。
+- 页面级 `.tag` 补齐 `.tag.warning` / `.tag.success` / `.tag.ok`；此前只有 `.tag.danger` 有定义，其余静默退化为中性。
+- **已知例外**：`overview-check-value` / `motion-check-value` 的 `ok / bad / busy` 是**检查判定**文字色，不是状态标签，属另一语义域。门禁 `qa/status-contract.mjs` 已登记该例外。
+
+### 41.2 状态码：23 个后端 phase → 结论级
+
+`plan.phase` 是事务内部节奏（现有 23 个值），**界面不得直接渲染**；一律经 `lib/saveStates.ts`：
+
+| 结论 | 归入的 phase | tone |
+| --- | --- | --- |
+| `prepared` | `prepared` | muted |
+| `staging` | `staging` | starting |
+| **`applying`（正在保存）** | `applying`、`providers_written`、`order_written`、`visibility_written`、`hiding_none_selection`、`writing_credentials`、`writing_imported_authorizations`、`credentials_registered`、`registering_new`、`new_registered`、`history_providers`、`history_authorizations`、`history_registering`、`pending_active`（14 个） | starting |
+| `verified`（已保存 · 待重启） | `committed`、`runtime_verified`、`credentials_verified` | warn |
+| `partial`（保存结果待核对） | `verified_partial` | warn |
+| `rolling-back` / `rolled-back` | `compensating`、`compensating_direction` / `compensated` | warn / muted |
+| `unknown` | 未登记的 phase | warn |
+
+未知 phase **必须**落到 `unknown`，不得静默当成成功或失败（[数据与状态 §5.8](数据与状态.md)）。
+
+### 41.3 状态区只出现一次
+
+- 同一状态只在一个承载处。渠道模型列表把它放在 **Tab 右侧**（状态框 + 可选子标签），列表上方不再重复。
+- 子标签（原型 `.mp-policy-pending`）用于「当前状态说的是别的事，但上次结果仍待处理」；当前状态本身已是待重启时**不重复**显示。
+- 进行中的写入：默认只写「正在保存」，阶段名放 `title`（hover / focus），不占常驻宽度。
+- 辅助入口按原型密度收成 **28px 图标键**（`mp-rail-helpers`），不用带文字的长按钮。
+- 结果详情（保存结果）由通知中心承接；被门禁拦下的通知也打开同一份结果（`model_policy` action）。
+
+### 41.4 客户端加载态归并
+
+后端 5 值 → 单一文案源（`clientLoadStateOf`）：`not_required` / `restart_required` / `pending_verification` / `user_confirmed` / `runtime_changed`。
+此前 `ClientLoadStatus.vue` 与 `ChannelsView.vue` 各译一份，其中 3 个说法不同（含「是否已写入」互相矛盾）。**现在只允许一处**。
+
+### 41.5 门禁
+
+`qa/status-contract.mjs` + `tests/status-contract.test.ts`：
+
+| 拦什么 | 为什么 |
+| --- | --- |
+| 在 SFC 新写 `data-tone="…"` | 会让同一语义各写一份颜色；tone 只有五类 |
+| 直接插值 `*.matrix.runtime/connection/operation` | 必须经 `lib/labels.ts` / `lib/saveStates.ts` |
+
+### 41.6 验证与边界
+
+- 前端 159 文件 / 823 通过 / 10 跳过；`gate:release` 18 / 0 / 0；后端 workspace + integration 39 套件 1141 项；fmt / clippy 绿。
+- 实测：渠道列表状态区 3 处 → 1 处，表格起始 y 307 → 263（原型 256）。
+- 未验：触屏与 ≤900px 窄窗下的状态框换行；Windows WebView2 实屏。
+- 未做：概览检查判定文字色并入本词表（另一语义域，需先定口径）。
+
