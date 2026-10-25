@@ -182,3 +182,9 @@ body.component-topic-mode #ctl-tools,body.component-topic-mode #ctl-tools+.proto
 .ct-usage-source{display:inline-block;margin-left:10px;font-size:var(--text-caption);color:var(--blue);text-decoration:underline;text-underline-offset:2px}
 .ct-intro .ct-usage-legend{font-size:var(--text-caption);margin-top:6px}
 @container(max-width:480px){.ct-usage-row{grid-template-columns:minmax(0,1fr);gap:2px}.ct-usage-source{margin-left:0;display:block}}
+
+/* 状态章节：同一状态区里表达「上次结果」的子标签（与模型页 .mp-policy-pending 同形）。 */
+.ct-state-sub{margin-left:6px;font-weight:400;opacity:.85}
+.ct-state-sub::before{content:"·";margin-right:6px}
+/* 状态章节的 stage 对照行：只用于说明 hover 显示阶段名，实际界面非常驻。 */
+.ct-state-phases .state-pill{opacity:.55}
