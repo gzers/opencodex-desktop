@@ -75,6 +75,23 @@ describe('保存预览（UI 规范 §38）',()=>{
     wrapper.unmount()
   })
 
+  it('待核对提示默认收起，不挤掉渠道与型号区（0.2.8 报障）',()=>{
+    // 真实账号可能几十条「未在当前清单发现」；曾逐条平铺把列表压成 0，弹窗只剩提示文字。
+    const notices=Array.from({length:40},(_,i)=>'A6api：模型 gpt-demo-'+i+'未在当前清单发现，保留选择待核对')
+    const wrapper=render({projection:{...projection(),notices}})
+    const box=wrapper.get('.preview-notices')
+    expect(box.element.tagName).toBe('DETAILS')
+    expect(box.attributes('open')).toBeUndefined()
+    expect(box.get('summary').text()).toBe('40 项待核对提示')
+    // DEV 夹具 / 导入路径的说明性 notice 不得被称作「待核对」。
+    expect(render({projection:{...projection(),notices:['显式DEV数据，不连接真实运行服务']}}).get('.preview-notices summary').text()).toBe('1 项说明')
+    expect(box.findAll('li')).toHaveLength(40)
+    // 渠道与型号区仍在，且是独立滚动区（不再被提示挤成 0）。
+    expect(wrapper.findAll('.preview-group')).toHaveLength(2)
+    expect(wrapper.get('.selector-preview-order').attributes('aria-label')).toBe('完整选择器顺序')
+    wrapper.unmount()
+  })
+
   it('标签表达不了的字段变化折叠为一行，超出部分不逐条铺开',()=>{
     const changes=Array.from({length:11},(_,i)=>({label:'字段'+(i+1),before:'前',after:'后'}))
     const wrapper=render({'other-changes':changes})
