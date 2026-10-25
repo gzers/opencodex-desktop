@@ -1,4 +1,4 @@
-// 保存 · 选择器预览弹窗实屏（§38）：点击保存入口后截图并断言关键结构。
+// 保存预览弹窗实屏（§38）：点击保存入口后截图并断言关键结构。
 import fs from 'fs'; import path from 'path'; import os from 'os'; import net from 'net'
 import { spawn } from 'child_process'; import { fileURLToPath } from 'url'; import { createRequire } from 'module'
 import {pickEngine, Blocked} from './engine.mjs'
@@ -52,7 +52,7 @@ async function main(){
         }
       })
       check(c.name+' 弹窗打开',info.open,'title='+info.title)
-      check(c.name+' 标题为保存·选择器预览',info.title.includes('保存 · 选择器预览'),info.title)
+      check(c.name+' 标题为保存预览',info.title.includes('保存预览'),info.title)
       check(c.name+' 无预览来源',!info.hasSource)
       check(c.name+' 无按渠道查看数量',!info.hasCounts)
       check(c.name+' 无变更差异树',!info.hasChangeTree)

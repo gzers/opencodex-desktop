@@ -21,7 +21,7 @@ function render(overrides:Record<string,unknown>={}){
   return mount(SelectorPreviewDialog,{props:{open:true,projection:projection(),saved:saved(),channels:[{id:'a',label:'A渠道',enabled:true},{id:'b',label:'B渠道',enabled:true,border:true}].map(c=>({id:c.id,label:c.label,enabled:c.enabled})),...overrides},global:{stubs:{UiDialog:dialog}}})
 }
 
-describe('保存 · 选择器预览（UI 规范 §38）',()=>{
+describe('保存预览（UI 规范 §38）',()=>{
   it('固定当前草稿，没有预览来源与数量折叠',()=>{
     const wrapper=render()
     expect(wrapper.text()).not.toContain('预览来源')

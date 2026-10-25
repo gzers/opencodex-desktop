@@ -12,7 +12,7 @@ beforeEach(()=>{vi.clearAllMocks();vi.mocked(modelApi.clientStatus).mockResolved
 describe('Codex client-loaded evidence boundary',()=>{
  it('requires runtime check and separate explicit user confirmation and does not claim automatic loading',async()=>{
   vi.mocked(modelApi.checkClient).mockResolvedValueOnce({...state('pending_verification'),checkId:'fresh-check',runtimeMatches:true}).mockResolvedValueOnce({...state('user_confirmed'),confirmedAt:'2026-10-19T00:00:00Z',runtimeMatches:true})
-  const wrapper=render();await flushPromises();expect(modelApi.checkClient).not.toHaveBeenCalled();await button(wrapper,'客户端加载核对').trigger('click')
+  const wrapper=render();await flushPromises();expect(modelApi.checkClient).not.toHaveBeenCalled();await button(wrapper,'重启后重新检查').trigger('click')
   await button(wrapper,'我已重启，重新检查').trigger('click');await flushPromises();expect(modelApi.checkClient).toHaveBeenCalledWith('committed-target',undefined)
   expect(button(wrapper,'记录用户确认').attributes('disabled')).toBeDefined();expect(wrapper.text()).toContain('待客户端验证')
   await wrapper.get('input[type=checkbox]').setValue(true);await button(wrapper,'记录用户确认').trigger('click');await flushPromises()
@@ -20,7 +20,7 @@ describe('Codex client-loaded evidence boundary',()=>{
  })
  it('cannot confirm when recheck finds drift and leaves the saved target visible',async()=>{
   vi.mocked(modelApi.checkClient).mockResolvedValue({...state('runtime_changed'),checkedAt:'2026-10-19T00:00:00Z'})
-  const wrapper=render();await flushPromises();await button(wrapper,'客户端加载核对').trigger('click');await button(wrapper,'我已重启，重新检查').trigger('click');await flushPromises()
+  const wrapper=render();await flushPromises();await button(wrapper,'重启后重新检查').trigger('click');await button(wrapper,'我已重启，重新检查').trigger('click');await flushPromises()
   expect(wrapper.find('input[type=checkbox]').exists()).toBe(false);expect(wrapper.text()).toContain('运行配置已变化');expect(wrapper.findAll('button').some(b=>b.text()==='记录用户确认')).toBe(false);wrapper.unmount()
  })
 })

@@ -27,7 +27,7 @@ describe('渠道列表与原型一致的入口口径', () => {
 
   it('预览不提供来源切换与数量折叠', () => {
     const preview=readFileSync(resolve(__dirname,'../src/features/models/SelectorPreviewDialog.vue'),'utf8')
-    expect(preview).toContain('保存 · 选择器预览')
+    expect(preview).toContain('保存预览')
     expect(preview).not.toContain('预览来源')
     expect(preview).not.toContain('按渠道查看数量')
     expect(preview).not.toContain('UiSelectField')

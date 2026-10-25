@@ -6,7 +6,7 @@ import {resolve} from 'node:path'
 import SyncRoute from '@/routes/SyncRoute.vue'
 import AppSidebar from '@/components/AppSidebar.vue'
 import {useRouteStore} from '@/stores/routes'
-import {settingsSections} from '@/navigation'
+import {settingsSections,routeMetadata} from '@/navigation'
 vi.mock('@tauri-apps/api/core',()=>({invoke:vi.fn().mockResolvedValue(undefined)}))
 const transfer={template:'<div><input aria-label="范围搜索样例" /></div>'}
 beforeEach(()=>{window.location.hash='#overview';setActivePinia(createPinia())})
@@ -22,6 +22,12 @@ describe('one top-level configuration sync entry',()=>{
  })
  it('places the shared sync menu between extensions and diagnostics',()=>{
   const wrapper=mount(AppSidebar);const buttons=wrapper.findAll('nav button').map(b=>b.attributes('aria-label'));expect(buttons.indexOf('同步')).toBe(buttons.indexOf('拓展')+1);expect(buttons.indexOf('诊断')).toBe(buttons.indexOf('同步')+1);wrapper.unmount()
+ })
+ it('SY-3：页头与原型一致使用「同步」，Tab 组按同步方式命名',()=>{
+  expect(routeMetadata.sync.title).toBe('同步')
+  expect(routeMetadata.sync.subtitle).toBe('按范围导入、导出与同步 OpenCodex 配置；凭据和登录状态独立选择。')
+  const source=readFileSync(resolve(__dirname,'../src/routes/SyncRoute.vue'),'utf8')
+  expect(source).toContain('aria-label="同步方式"')
  })
   it('keeps the range workspace and its credential column in the page body',()=>{
     // 原型里同步范围与凭据栏是常驻两栏；收进弹窗会让用户看不到自己选了什么。

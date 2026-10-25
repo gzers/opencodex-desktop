@@ -1023,7 +1023,7 @@ function restoreGeneralDefaults() {
       <UiCard data-testid="card-quality">
         <UiCardHeader><h2>画质</h2><p>背景光与视觉效果的渲染方式；按设备能力自动降级。</p></UiCardHeader>
         <div class="setting-list">
-          <div class="setting-row" data-testid="setting-visual-effects"><div><div class="setting-title">界面特效</div><div class="setting-desc">高档为通知玻璃与动态光场；中档玻璃静态；低档统一实底、无光场。画质由所选档位决定，不跟随系统减少动态。即时生效并按偏好恢复。</div></div><div class="controls"><UiSegmented :model-value="preferences.visualEffects" label="界面特效" :options="[{value:'high',label:'高'},{value:'mid',label:'中'},{value:'low',label:'低'}]" @update:model-value="chooseVisualEffects($event as 'high'|'mid'|'low', $event==='high'?'高':$event==='mid'?'中':'低')" /></div></div>
+          <div class="setting-row" data-testid="setting-visual-effects"><div><div class="setting-title">视觉特效</div><div class="setting-desc">高档为通知玻璃与动态光场；中档玻璃静态；低档统一实底、无光场。画质由所选档位决定，不跟随系统减少动态。即时生效并按偏好恢复。</div></div><div class="controls"><UiSegmented :model-value="preferences.visualEffects" label="视觉特效" :options="[{value:'high',label:'高'},{value:'mid',label:'中'},{value:'low',label:'低'}]" @update:model-value="chooseVisualEffects($event as 'high'|'mid'|'low', $event==='high'?'高':$event==='mid'?'中':'低')" /></div></div>
           <div class="setting-row" data-testid="setting-glow-render"><div><div class="setting-title">背景光渲染</div><div class="setting-desc">WEBGL 用网格渐变＋颗粒着色器，过渡最平滑、色带最少；CSS 为纯极光兜底，不依赖 GPU。<span v-if="glowRender.fellBack" class="setting-note" data-testid="glow-render-fallback">当前环境不支持 WEBGL，已自动回退纯 CSS 极光。</span></div></div><div class="controls"><UiSegmented :model-value="preferences.glowRender" label="背景光渲染" :options="[{value:'mesh',label:'WEBGL'},{value:'css',label:'CSS'}]" @update:model-value="chooseGlowRender($event as 'mesh'|'css', $event==='mesh'?'WEBGL':'CSS')" /></div></div>
         </div>
       </UiCard>
@@ -1479,3 +1479,12 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
   </div>
 
 </template>
+
+<style scoped>
+/* 统一要求：设置页表格行内的路径、用途与操作按钮垂直居中，不因长路径互相挤压。 */
+.data-root-table th,
+.data-root-table td { vertical-align: middle; }
+/* 列表行（shim 指令 / 卸载残留）同样垂直居中，命令与说明不上下错位。 */
+.shim-cmds li,
+.residue-list li { align-items: center; }
+</style>

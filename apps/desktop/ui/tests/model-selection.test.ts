@@ -1,12 +1,42 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import ModelPicker from '@/features/models/ModelPicker.vue'
 import { emptyRules, type ModelProjection } from '@/features/models/api'
 import { mergeUpstream } from '@/features/models/upstream'
 const row = (id: string): ModelProjection => ({ channelId: 'channel', providerId: 'provider', modelId: id, label: id, enabled: true, selected: true, discovered: true, templateRef: null, rules: { ...emptyRules(), fast: { mode: 'custom', value: true }, reasoningEfforts: { mode: 'custom', value: ['none','high'] } }, source: {} })
 const menu = { props: ['open'], template: '<div v-if="open"><slot/></div>' }
 const dialog = { template: '<div><slot/><slot name="actions"/></div>' }
+const titledDialog = { props: ['open', 'title'], template: '<div><h2>{{ title }}</h2><slot/><slot name="actions"/></div>' }
 describe('public model selection', () => {
+  // N-MPK-1：原型 model-picker.js:263 的默认标题是「选择模型」；执行模型场景仍由调用方覆写。
+  it('uses the prototype default title and keeps the caller override', async () => {
+    const wrapper = mount(ModelPicker, { props: { open: true, rows: [row('a')], channels: [] }, global: { stubs: { UiDialog: titledDialog, UiSelectMenu: menu } } })
+    expect(wrapper.get('h2').text()).toBe('选择模型')
+    await wrapper.setProps({ title: '执行模型' })
+    expect(wrapper.get('h2').text()).toBe('执行模型')
+    wrapper.unmount()
+  })
+
+  // N-MPK-2：原型 model-picker.js:146 每个渠道行右侧显示模型数量。
+  it('shows the model count on every channel row', async () => {
+    const wrapper = mount(ModelPicker, { props: { open: true, rows: [row('a'), row('b'), { ...row('c'), channelId: 'other' }], channels: [{ id: 'channel', label: '测试渠道' }, { id: 'other', label: '另一渠道' }] }, global: { stubs: { UiDialog: dialog, UiSelectMenu: menu } } })
+    expect(wrapper.findAll('.model-picker-channel').map(item => item.text())).toEqual(['全部渠道3', '测试渠道2', '另一渠道1'])
+    await wrapper.get('input[aria-label="搜索模型"]').setValue('b')
+    // 渠道行只跟渠道搜索过滤；模型搜索变化时数量归零（与原型 count(id) 同源）。
+    expect(wrapper.findAll('.model-picker-channel').map(item => item.text())).toEqual(['全部渠道1', '测试渠道1', '另一渠道0'])
+    wrapper.unmount()
+  })
+
+  // 统一要求：渠道行与表格行内元素垂直居中，长短渠道名都不与数量互相挤压。
+  it('keeps channel and table rows vertically centered without squeezing the count', () => {
+    const source = readFileSync(resolve(__dirname, '../src/features/models/ModelPicker.vue'), 'utf8')
+    expect(source).toMatch(/\.model-picker-channel :deep\(\.btn-content\)\{[^}]*align-items:center/)
+    expect(source).toMatch(/\.model-picker-channel-count\{[^}]*flex:none/)
+    expect(source).toMatch(/\.model-picker-table td,\.model-picker-table th\{[^}]*vertical-align:middle/)
+  })
+
   it('keeps a selected identity during load/error, blocks stale submission and delegates retry to the caller',async()=>{
     const wrapper=mount(ModelPicker,{props:{open:true,rows:[row('a')],channels:[],multiple:true,current:[{channelId:'channel',modelId:'a'}],loading:true},global:{stubs:{UiDialog:dialog,UiSelectMenu:menu}}})
     expect(wrapper.text()).toContain('已选模型 · 1');expect(wrapper.text()).toContain('正在读取模型目录');expect(wrapper.findAll('button').find(b=>b.text()==='确定选择')!.attributes('disabled')).toBeDefined()

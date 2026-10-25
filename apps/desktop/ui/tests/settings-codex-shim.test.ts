@@ -46,6 +46,20 @@ describe('随 Codex 启动 OpenCodex 经官方 shim 读写', () => {
     invoke.mockReset()
   })
 
+  // N-SE-2：整句按原型 index.html:2378 原文，仅把 provider 本地化为「提供方」。
+  it('keeps the shared-config sentence aligned with the prototype wording', async () => {
+    invoke.mockImplementation((command: string) => {
+      if (command === 'codex_shim_status') return Promise.resolve(installed())
+      return Promise.resolve(null)
+    })
+    const { wrapper } = mountGeneral()
+    await flushPromises()
+    const card = wrapper.findAll('article.card').find(node => node.text().includes('官方共享配置'))!
+    expect(card.text()).toContain('与官方 OpenCodex 使用同一配置源；模型、路由与提供方仍由官方面板或官方 CLI 管理。')
+    expect(card.text()).not.toContain('provider')
+    await wrapper.unmount()
+  })
+
   it('按官方状态渲染可交互开关，而不是只读结论', async () => {
     invoke.mockImplementation((command: string) => {
       if (command === 'codex_shim_status') return Promise.resolve(installed())

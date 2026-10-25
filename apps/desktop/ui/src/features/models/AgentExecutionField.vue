@@ -59,7 +59,9 @@ const summary=computed(()=>{if(!settings.value)return '尚未选择执行模型 
 </script>
 <template>
  <div class="model-execution" :class="{'is-compact':compact}">
-  <template v-if="compact"><UiButton :disabled="disabled" :loading="busy" @click="configure" :title="summary">Agent 配置</UiButton><small v-if="settings">{{ summary }}</small></template>
+  <!-- MO-9（原型 model-config.js:425）：模版列表操作条内只有「Agent 配置」按钮，摘要不另起一行；
+       已选模型由按钮 title 提供，完整事实在 Agent 配置面板里。 -->
+  <template v-if="compact"><UiButton :disabled="disabled" :loading="busy" @click="configure" :title="summary" :aria-label="settings?'Agent 配置 · '+summary:'Agent 配置'">Agent 配置</UiButton></template>
   <template v-else>
    <!-- WP-55：头部只占一行。完整事实与边界说明收进可展开的说明，不再常驻占位。 -->
    <div class="model-execution-head">

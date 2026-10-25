@@ -1,9 +1,10 @@
 <script setup lang="ts">
 /**
- * 保存 · 选择器预览（UI 规范 §38）
+ * 保存预览（UI 规范 §38）
  *
  * 保存是唯一提交入口，也是预览入口：展示当前草稿的完整选择器顺序与激活预算，
  * 渠道与型号可在此快速启停，修改直接进入同一份草稿。预览固定当前草稿，没有来源切换。
+ * 0.2.8 决策：标题统一为「保存预览」（原型 model-config.js:556 同名），不再叫「选择器预览」。
  */
 import { computed, ref } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
@@ -19,6 +20,8 @@ const props = defineProps<{
   channels: PreviewChannel[]
   saved: ModelPolicy | null
   otherChanges?: OtherChange[]
+  /** 系统占用（原型 model-config.js:518「系统占用 只读」分组）：官方目录里已存在但选择器隐藏的条目。 */
+  systemRows?: { id: string; label: string }[]
   busy?: boolean
   saving?: boolean
   error?: string
@@ -35,6 +38,8 @@ const fastCount = computed(() => rows.value.filter(row => row.rules.fast.mode ==
 const active = computed(() => props.projection?.knownActiveModels ?? rows.value.filter(row => row.selected).length)
 const over = computed(() => active.value > 100)
 const catalog = computed(() => props.projection?.exactCatalogCount)
+/** 系统占用条目：只读展示，不计入可编辑型号，也不参与启停。 */
+const systemRows = computed(() => props.systemRows ?? [])
 
 function savedChannel(id: string) { return props.saved?.channels.find(channel => channel.id === id) }
 function savedActive(id: string, modelId: string) {
@@ -120,11 +125,11 @@ function toggleModel(channelId: string, modelId: string, selected: boolean) {
 function confirm() { if (!props.saving) emit('confirm') }
 </script>
 <template>
- <UiDialog :open="open" title="保存 · 选择器预览" wide panel-class="save-preview-dialog" :busy="saving" @close="emit('close')">
-  <div class="selector-preview" aria-label="保存与选择器预览" @click="onSurfaceClick">
+ <UiDialog :open="open" title="保存预览" wide panel-class="save-preview-dialog" :busy="saving" @close="emit('close')">
+  <div class="selector-preview" aria-label="保存预览" @click="onSurfaceClick">
    <div class="selector-preview-budget" :class="{over}" role="status">
     <strong>模型激活数 {{ active }}/100</strong>
-    <span>基础模型 {{ rows.length }} · Fast {{ fastCount }} · 目录占用 {{ catalog ?? '未提供' }}</span>
+    <span>基础模型 {{ rows.length }} · Fast {{ fastCount }} · 系统占用 {{ systemRows.length || (catalog ?? '未提供') }}</span>
     <span v-if="over" class="preview-alert">超出激活预算，请减少发布项后再保存。</span>
    </div>
    <p v-if="busy" class="preview-muted" role="status">正在解析当前草稿…</p>
@@ -153,7 +158,12 @@ function confirm() { if (!props.saving) emit('confirm') }
       <p v-if="!group.items.length" class="preview-muted">该渠道暂无型号。</p>
      </div>
     </section>
-    <p v-if="!groups.length" class="preview-muted">没有计划发布的目录条目。</p>
+    <!-- 原型 model-config.js:518：系统占用单独一段，标题带「只读」，条目不可点。 -->
+    <section v-if="systemRows.length" class="preview-group preview-group-system">
+     <h3 class="preview-group-title is-locked"><span class="preview-eye" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span><strong>系统占用</strong><small>只读</small></h3>
+     <div class="preview-items"><div v-for="row in systemRows" :key="row.id" class="preview-item hidden-item" :title="row.id"><span>{{ row.label }}</span></div></div>
+    </section>
+    <p v-if="!groups.length&&!systemRows.length" class="preview-muted">没有计划发布的目录条目。</p>
    </div>
    <details v-if="otherTotal" class="preview-other">
     <summary>另有 {{ otherTotal }} 项字段变化</summary>
@@ -210,6 +220,8 @@ function confirm() { if (!props.saving) emit('confirm') }
 .preview-item.is-removed{border-style:dashed;border-color:color-mix(in srgb,var(--red) 42%,var(--border-soft))}
 .preview-item.is-removed::after{content:"停";flex:none;color:var(--red);font-size:var(--text-micro);font-weight:600}
 .preview-fast{flex:none;padding:0 4px;border-radius:var(--radius-2xs);background:var(--accent-soft);color:var(--accent);font-size:var(--text-micro);text-decoration:none}
+.preview-group-system{background:color-mix(in srgb,var(--rail) 60%,transparent)}
+.preview-item.hidden-item{color:var(--muted);border:1px dashed var(--border);cursor:default}
 .preview-other{flex:none;padding:var(--space-2) var(--space-2-5);border:1px solid var(--border-soft);border-radius:var(--radius-sm);font-size:var(--text-caption)}
 .preview-other summary{cursor:pointer;color:var(--muted)}
 .preview-other dl{display:grid;gap:var(--space-1);margin:var(--space-2) 0 0}
