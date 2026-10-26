@@ -1279,11 +1279,25 @@
    pending=false;client='用户已确认 · 非自动加载证据';closeModal();render();
   },{confirmKeepsOpen:true});
  }
+ /* 提示消失即彻底结束：不置「待重启」、不要求回头确认（对应用户 2026-10-26 裁决 A）。 */
+ function clearModelSaveTask(id){
+   const item=notifications.find(n=>n.id===id&&!n.deleted);
+   if(item){item.deleted=true;}
+   if(operation?.id===id){operation.status='confirmed';}
+   window.hideModelSaveNotification?.(id);
+   if(typeof window.clearTask==='function')window.clearTask(id);
+   if(typeof window.renderNotifications==='function')window.renderNotifications();
+ }
  window.modelSaveNotificationAction=function(action,id){
   if(!operation||operation.id!==id)return;
   if(action==='stop')stopSave();
   else if(action==='verify'&&['timeout','failed','stopped'].includes(operation.status))verify();
   else if(action==='check'&&operation.status==='success')checkSavedClient();
+  /* 0.2.12：保存成功只给一次提示。重启要二次确认（会结束当前对话）；「稍后」直接结束，不留状态。 */
+  else if(action==='restart'&&operation.status==='success'){
+    openModal({title:'重启 Codex',body:'<p class="modal-lead">重启会立即结束当前正在进行的 Codex 对话，然后重新打开 Codex。</p><p>如果你还有没保存的对话内容，请先取消。</p>',confirmLabel:'确认重启',onConfirm:()=>{closeModal();clearModelSaveTask(id);toast('模型缓存已重建，Codex 已重启');render();}});
+  }
+  else if(action==='later'&&operation.status==='success'){clearModelSaveTask(id);render();}
  };
  function ensureTemplateBuffer(){
   if(buffer()){versionN=buffer().base;return;}const t=template(),v=version(templateId,versionN)||t?.versions[0];if(!t||!v)return;

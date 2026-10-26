@@ -3006,6 +3006,8 @@ ocx update</code></pre>
               <div style="display:flex;gap:4px;align-items:center">
                 <button class="notification-clear" id="notificationHistoryLink">历史</button>
                 <button class="notification-clear" id="notificationClear">全部已读</button>
+                <!-- 0.2.12：清理全部（软删除）。先二次确认并说清条数，避免误清未处理通知。 -->
+                <button class="notification-clear" id="notificationPurge">清理</button>
                 <button type="button" class="notify-min" id="notificationCollapse" data-collapse="panel" title="收起到铃铛" aria-label="收起到铃铛">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="M14 10 20 4"/><path d="M10 14 4 20"/></svg>
                 </button>
@@ -6380,6 +6382,17 @@ document.addEventListener('click',event=>{
     collapseToBell(task,()=>clearTask(id));
   }
 });
+document.getElementById('notificationPurge').onclick=()=>{
+  const live=notifications.filter(item=>!item.deleted);
+  if(!live.length){toast('当前没有可清理的通知。');return;}
+  const pending=live.filter(item=>!item.resolved).length;
+  openModal({
+    title:'清理全部通知',
+    body:'<p class="modal-lead">将清理全部 '+live.length+' 条通知'+(pending?'（其中 '+pending+' 条未处理）':'')+'。清理是软删除，历史判定依据保留。</p>',
+    confirmLabel:'确认清理',
+    onConfirm:()=>{notifications.forEach(item=>{item.deleted=true;});renderNotifications();closeModal();toast('全部通知已清理。');}
+  });
+};
 document.getElementById('notificationHistoryLink').onclick=()=>{
   closeNotificationPanel();
   setRoute('logs');
@@ -7143,6 +7156,33 @@ function toast(msg,opts){
    通知与反馈专题 · 原型专用演示驱动
    在真实软件界面上演出六类渠道；不写配置、不调用真实命令，仅切 mock 投影。
    ========================================================================== */
+/* 时效：终止态 8 秒后自动收起（收起不是删除），同屏最多 3 张，同类操作合并成一张。
+   与软件 apps/desktop/ui/src/app/feedback/tasks.ts 同一套口径（0.2.12）。 */
+const TASK_TERMINAL_TTL=8000, TASK_MAX_VISIBLE=3;
+const taskTimers=new Map();
+function taskKeyOf(cfg){return cfg.mergeKey||cfg.notificationId||'';}
+function scheduleTaskCollapse(card){
+  const key=card.dataset.taskNotification||'';
+  if(!key) return;
+  clearTimeout(taskTimers.get(key));
+  taskTimers.set(key,setTimeout(()=>{card.remove();syncNotifHost();reopenHidden();},TASK_TERMINAL_TTL));
+}
+/* 超出同屏上限时先收起（移除）最老的已完成卡，运行中的不删。 */
+function pretaskBudget(host,keep){
+  const cards=[...host.querySelectorAll('.task-card')];
+  if(cards.length<keep) return;
+  const surplus=cards.length-keep+1;
+  let removed=0;
+  for(const card of cards){
+    if(removed>=surplus) break;
+    if(card.classList.contains('is-complete')){clearTimeout(taskTimers.get(card.dataset.taskNotification||''));card.remove();removed++;}
+  }
+  /* 全都还在跑时按最老的收起（运行不受影响，只是不再占屏）。 */
+  for(const card of [...host.querySelectorAll('.task-card')]){
+    if(removed>=surplus) break;
+    clearTimeout(taskTimers.get(card.dataset.taskNotification||''));card.remove();removed++;
+  }
+}
 function showTask(cfg){
   const host=document.getElementById('taskHost');
   const steps=cfg.steps.map(s=>'<li class="'+logEsc(s[1])+'"><span class="mk">'+(s[1]==='done'?'✓':'')+'</span>'+logEsc(s[0])+'</li>').join('');
@@ -7153,23 +7193,60 @@ function showTask(cfg){
     '<button type="button" class="notify-min" data-collapse="task" title="收起到铃铛" aria-label="收起到铃铛">'+MIN_ICON+'</button></div>'+
     (cfg.phase?'<p class="tc-phase">'+logEsc(cfg.phase)+'</p>':'')+'<ul class="task-steps">'+steps+'</ul>'+
     (acts.length?'<div class="tc-acts">'+acts.map((a,i)=>'<button type="button" class="btn'+(a[1]==='cancel'?' cancel':(i?' ghost':''))+'" data-task-act="'+logEsc(a[1])+'" data-task-label="'+logEsc(a[0])+'">'+logEsc(a[0])+'</button>').join('')+'</div>':'')+'</div>';
+  const mergeKey=taskKeyOf(cfg);
   const existing=[...host.querySelectorAll('.task-card')].find(card=>(card.dataset.taskNotification||'')===key);
-  if(existing)existing.outerHTML=markup;else host.insertAdjacentHTML('beforeend',markup);
+  if(existing){
+    clearTimeout(taskTimers.get(key));
+    existing.outerHTML=markup;
+  }else{
+    /* 同类合并：把上一次已终止的同类卡并成「第 N 次」。 */
+    if(cfg.mergeKind){
+      const same=[...host.querySelectorAll('.task-card')].filter(card=>card.dataset.taskMergeKind===cfg.mergeKind);
+      const last=same[same.length-1];
+      if(last&&last.classList.contains('is-complete')){
+        const count=(Number(last.dataset.taskCount||'1')||1)+1;
+        same.forEach(card=>{clearTimeout(taskTimers.get(card.dataset.taskNotification||''));card.remove();});
+        pretaskBudget(host,1);
+        host.insertAdjacentHTML('beforeend',markup);
+        const created=host.lastElementChild;
+        created.dataset.taskMergeKind=cfg.mergeKind;
+        created.dataset.taskCount=String(count);
+        if(count>1)created.insertAdjacentHTML('beforeend','<p class="tc-phase">第 '+count+' 次</p>');
+        if(cfg.running===false)scheduleTaskCollapse(created);
+        if(!key)host.dataset.op=cfg.op||'';
+        host.classList.toggle('stacked',document.getElementById('toastEl').classList.contains('show'));
+        syncNotifHost();
+        return;
+      }
+    }
+    pretaskBudget(host,TASK_MAX_VISIBLE);
+    host.insertAdjacentHTML('beforeend',markup);
+    if(cfg.mergeKind)host.lastElementChild.dataset.taskMergeKind=cfg.mergeKind;
+  }
+  const card=(host.querySelector('[data-task-notification="'+key+'"]'))||host.lastElementChild;
+  if(card&&cfg.running===false)scheduleTaskCollapse(card);
   if(!key)host.dataset.op=cfg.op||'';
   host.classList.toggle('stacked',document.getElementById('toastEl').classList.contains('show'));
   syncNotifHost();
 }
 function clearTask(notificationId=''){
   const host=document.getElementById('taskHost');
-  if(host)[...host.querySelectorAll('.task-card')].filter(card=>(card.dataset.taskNotification||'')===notificationId).forEach(card=>card.remove());
+  if(host)[...host.querySelectorAll('.task-card')].filter(card=>(card.dataset.taskNotification||'')===notificationId).forEach(card=>{clearTimeout(taskTimers.get(notificationId));card.remove();});
   syncNotifHost();
+}
+/* 收起后给一个显式展开入口；不再靠「点铃铛」偷偷全部展开。 */
+function reopenHidden(){
+  const host=document.getElementById('taskHost');
+  const hint=document.getElementById('taskReopenHint');
+  if(!host||!hint) return;
+  hint.hidden=true;
 }
 // 模型保存注册到既有通知实体及壳层任务宿主；收起仅是视图状态，不取消任务或解决通知。
 const modelSaveHidden=new Set();
 const MODEL_SAVE_PHASES=['校验','备份','写入','核对目录','发布成功快照'];
 const MODEL_SAVE_STATES={
   running:['正在保存模型配置','info',false],
-  success:['保存成功 · 待重启 Codex','warning',false],
+  success:['已写入 · 重启 Codex 后生效','warning',false],
   confirmed:['模型配置已由用户确认','info',true],
   failed:['模型配置保存失败','danger',false],
   timeout:['模型配置保存结果待核对','warning',false],
@@ -7184,7 +7261,7 @@ function renderModelSaveTask(item){
   const running=task.state==='running',failed=['failed','timeout','uncertain'].includes(task.state);
   const completed=failed?Math.min(task.step,2):task.step;
   const steps=MODEL_SAVE_PHASES.map((label,index)=>[label,index<completed?'done':running&&index===task.step?'active':failed&&index===completed?'failed':'pending']);
-  const acts=!active?[]:running?[[task.step<2?'取消保存':'停止后续步骤','model-stop']]:failed?[['核对实际结果','model-verify']]:task.state==='success'?[['重启后重新检查','model-check']]:[];
+  const acts=!active?[]:running?[[task.step<2?'取消保存':'停止后续步骤','model-stop']]:failed?[['核对实际结果','model-verify']]:task.state==='success'?[['立即重启 Codex','model-restart'],['稍后','model-later']]:[];
   showTask({notificationId:item.id,title:item.title,phase:item.detail,steps,acts,running,kind:['stopped','superseded'].includes(task.state)?'neutral':item.kind});
 }
 window.hideModelSaveNotification=id=>{if(id)modelSaveHidden.add(id);};
