@@ -61,6 +61,12 @@ pub struct DiscoveryRequest {
     pub api_key: Option<String>,
     pub credential_ref: Option<String>,
     pub allow_private_network: bool,
+    /// 渠道身份（官方 provider id）。给了才允许回落到 config.json 里该渠道已配置的 Key。
+    #[serde(default)]
+    pub provider_id: Option<String>,
+    /// 官方配置根（不含 config.json 文件名）。由命令层注入，**不从界面收路径**。
+    #[serde(skip)]
+    pub home: Option<std::path::PathBuf>,
 }
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -139,7 +145,35 @@ async fn discover_inner(
     } else {
         None
     };
-    let secret = provided.as_ref().or(stored.as_ref()).map(|s| s.as_str());
+    // 管理器的 credential_ref 在「读取现有渠道」导入时是 null，用户也不该为每次检测重填 Key。
+    // 因此这里回落到官方 config.json 里该渠道已配置的 Key，但必须同源且协议一致。
+    let from_official = if provided.is_none() && stored.is_none() {
+        match (request.provider_id.as_deref(), request.home.as_deref()) {
+            (Some(provider_id), Some(home)) => {
+                let resolved = super::discovery_config::resolve(
+                    home,
+                    provider_id,
+                    &request.url,
+                    &request.protocol,
+                );
+                if resolved.missing {
+                    return Err(invalid(
+                        "credential_unconfirmed",
+                        "该节点没有可确认的凭据；请先确认该渠道地址与协议，或在本页填写 Key 后再检测",
+                    ));
+                }
+                resolved.secret
+            }
+            _ => None,
+        }
+    } else {
+        None
+    };
+    let secret = provided
+        .as_ref()
+        .or(stored.as_ref())
+        .or(from_official.as_ref())
+        .map(|s| s.as_str());
     if secret.is_some_and(|s| s.len() > 8192 || s.contains(['\r', '\n'])) {
         return Err(invalid("credential", "密钥格式无效"));
     }
@@ -365,6 +399,8 @@ mod tests {
             api_key: Some("fixture-preview-only-SECRET".into()),
             credential_ref: None,
             allow_private_network: true,
+            provider_id: None,
+            home: None,
         })
         .await
         .unwrap();
@@ -386,6 +422,8 @@ mod tests {
             api_key: None,
             credential_ref: None,
             allow_private_network: true,
+            provider_id: None,
+            home: None,
         })
         .await
         .unwrap();
@@ -409,6 +447,8 @@ mod tests {
             api_key: None,
             credential_ref: None,
             allow_private_network: false,
+            provider_id: None,
+            home: None,
         })
         .await
         .unwrap_err();
@@ -419,7 +459,9 @@ mod tests {
                 url: "https://user:password@example.test/v1".into(),
                 api_key: None,
                 credential_ref: None,
-                allow_private_network: false
+                allow_private_network: false,
+                provider_id: None,
+                home: None,
             })
             .await
             .unwrap_err()

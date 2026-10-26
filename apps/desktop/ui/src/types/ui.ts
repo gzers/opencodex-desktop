@@ -50,9 +50,8 @@ export interface NotificationItem {
   detail: string
   time: string
   read: boolean
-  // 触发来源与可过期条件：领域模型 §16 的独立维度；后端始终下发，旧夹具可省略。
+  // 触发来源：领域模型 §16 的独立维度；后端始终下发，旧夹具可省略。
   source?: 'user_action' | 'runtime' | 'sync' | 'update' | 'diagnostic'
-  expiresAt?: string | null
   // read / resolved 是互相独立的维度：已读不等于已解决；后端始终下发，旧夹具可省略。
   resolved?: boolean
   resolvedAt?: string | null

@@ -242,6 +242,8 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         api_key: Some("fixture-local-key".into()),
         credential_ref: None,
         allow_private_network: true,
+        provider_id: None,
+        home: None,
     })
     .await
     .unwrap();
@@ -1837,6 +1839,8 @@ async fn isolated_official_saved_protocol_alias_reasoning_and_fast_wire() {
         api_key: Some("fixture-wire-only-key".into()),
         credential_ref: None,
         allow_private_network: true,
+        provider_id: None,
+        home: None,
     })
     .await
     .unwrap();

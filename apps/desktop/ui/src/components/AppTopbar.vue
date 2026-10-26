@@ -5,7 +5,6 @@ import { useRouteStore } from '@/stores/routes'
 import { useThemeStore } from '@/app/appearance/theme'
 import { useAppController } from '@/composables/useAppController'
 import { useNotificationsStore } from '@/features/notifications/store'
-import { useOperationTasks } from '@/app/feedback/tasks'
 import type { NotificationItem } from '@/types/ui'
 
 const routes = useRouteStore()
@@ -60,7 +59,8 @@ function onDocumentClick(event: MouseEvent) {
 }
 
 function togglePanel() {
-  useOperationTasks().expandAll()
+  // 只开合通知面板。任务卡的展开/收起是用户显式动作（含 8 秒自动收起），
+  // 不能因为「看一眼通知」就被整体反悔——那会让收起永远无效。
   panelOpen.value = !panelOpen.value
   if (panelOpen.value) document.addEventListener('click', onDocumentClick)
   else document.removeEventListener('click', onDocumentClick)

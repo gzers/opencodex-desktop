@@ -359,11 +359,14 @@ pub async fn model_channel_forget_credential(reference: String) -> ModelResult<(
 }
 #[tauri::command]
 pub async fn model_node_measure(
-    request: crate::modules::model_config::measurements::Request,
+    mut request: crate::modules::model_config::measurements::Request,
     data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<crate::modules::model_config::measurements::ResultSet> {
     use crate::modules::model_config::feedback::{self, OperationKind, OperationPhase};
     let id = request.run_id.clone();
+    // 官方配置根由命令层注入：界面只能说是哪个渠道，不能指定读哪个路径。
+    request.home = Some(context.opencodex_home.clone());
     feedback::progress(
         &data_root.0,
         &id,

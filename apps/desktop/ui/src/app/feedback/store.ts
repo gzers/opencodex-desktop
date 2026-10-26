@@ -12,6 +12,10 @@ import type { RecentEvent } from "@/types/ui"
  *
  * 本 store 不依赖其它 app store，供根壳与各功能调用，避免循环依赖。
  */
+/** 原型口径（index.html:7137）：普通 2200 ms、错误 5200 ms。 */
+export const TOAST_INFO_MS = 2200
+export const TOAST_ERROR_MS = 5200
+
 export const useFeedbackStore = defineStore("feedback", {
   state: () => ({
     toast: "",
@@ -22,13 +26,18 @@ export const useFeedbackStore = defineStore("feedback", {
     recentEvents: [] as RecentEvent[],
   }),
   actions: {
-    showToast(message: string) {
+    /**
+     * 瞬时提示。停留时长与原型一致：普通 2200 ms、错误 5200 ms，并允许调用点覆盖。
+     * 这一层不持久、不进列表；要留痕的内容必须另写通知实体。
+     */
+    showToast(message: string, options?: { kind?: 'info' | 'error'; durationMs?: number }) {
       if (!allowsFeedbackSignal("ui-toast")) return
       this.toast = message
       const revision = ++this.toastRevision
+      const duration = options?.durationMs ?? (options?.kind === 'error' ? TOAST_ERROR_MS : TOAST_INFO_MS)
       window.setTimeout(() => {
         if (this.toastRevision === revision) this.toast = ""
-      }, 1900)
+      }, duration)
     },
     clearToast() {
       this.toastRevision += 1

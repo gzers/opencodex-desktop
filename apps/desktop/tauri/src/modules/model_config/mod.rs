@@ -8,6 +8,7 @@ pub mod client_state;
 pub mod compiler;
 pub mod config_remote;
 pub mod discovery;
+pub mod discovery_config;
 pub mod execution_directory;
 pub mod feedback;
 pub mod file_objects;

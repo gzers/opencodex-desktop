@@ -1,15 +1,18 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
-import { useOperationTasks } from '@/app/feedback/tasks'
-beforeEach(() => setActivePinia(createPinia()))
+import { MAX_VISIBLE_TASKS, TERMINAL_TTL_MS, useOperationTasks } from '@/app/feedback/tasks'
+beforeEach(() => { setActivePinia(createPinia()); vi.useRealTimers() })
 describe('registered model task observations', () => {
-  it('does not evict running, failed or pending-review observations at the display history budget, even when collapsed',()=>{
-    const tasks=useOperationTasks(),pending=Array.from({length:26},()=>crypto.randomUUID()),failed=crypto.randomUUID(),running=crypto.randomUUID()
-    for(const id of pending){tasks.apply({id,kind:'generation',phase:'running'});tasks.apply({id,kind:'generation',phase:'review'});tasks.collapse(id)}
-    tasks.apply({id:failed,kind:'policy_save',phase:'running'});tasks.apply({id:failed,kind:'policy_save',phase:'failed'});tasks.apply({id:running,kind:'transfer',phase:'running'})
-    const completed=crypto.randomUUID();tasks.apply({id:completed,kind:'research',phase:'running'});tasks.apply({id:completed,kind:'research',phase:'succeeded'})
-    expect(tasks.tasks.map(t=>t.id)).toEqual([...pending,failed,running]);expect(tasks.tasks.find(t=>t.id===failed)?.phase).toBe('failed');expect(tasks.tasks.find(t=>t.id===running)?.phase).toBe('running')
-    tasks.expandAll();expect(tasks.tasks.filter(t=>t.phase==='review')).toHaveLength(26);expect(tasks.tasks.every(t=>!t.collapsed)).toBe(true)
+  it('keeps failed observations beyond the display budget but still evicts them before running ones',()=>{
+    const tasks=useOperationTasks(),failed=crypto.randomUUID(),running=crypto.randomUUID()
+    tasks.apply({id:failed,kind:'policy_save',phase:'running'});tasks.apply({id:failed,kind:'policy_save',phase:'failed'})
+    tasks.apply({id:running,kind:'transfer',phase:'running'})
+    // 30 张已完成的卡把历史上限顶满；failed 与 running 不在淘汰候选里。
+    const done=Array.from({length:30},()=>crypto.randomUUID())
+    for(const id of done){tasks.apply({id,kind:'research',phase:'running'});tasks.apply({id,kind:'research',phase:'succeeded'})}
+    expect(tasks.tasks.find(t=>t.id===failed)?.phase).toBe('failed')
+    expect(tasks.tasks.find(t=>t.id===running)?.phase).toBe('running')
+    expect(tasks.tasks.length).toBeLessThanOrEqual(24)
   })
 
   it('rejects unknown state and raw prompt/config payloads', () => {
@@ -48,3 +51,74 @@ describe('registered model task observations', () => {
     tasks.apply({id:a,kind:'generation',phase:'running'});expect(tasks.tasks.find(t=>t.id===a)!.phase).toBe('review')
   })
 })
+
+describe('0.2.12 timing: repeat measurements fold into one card', () => {
+  it('folds a repeated node measurement into the same card and counts attempts',()=>{
+    const tasks=useOperationTasks()
+    for(let i=0;i<10;i++){
+      const id=crypto.randomUUID()
+      tasks.apply({id,kind:'node_measurement',phase:'running'})
+      tasks.apply({id,kind:'node_measurement',phase:'failed'})
+    }
+    // 十次检测只留一张（同 kind 合并），并把次数累加出来。
+    expect(tasks.tasks).toHaveLength(1)
+    expect(tasks.tasks[0]).toMatchObject({kind:'node_measurement',phase:'failed',count:10})
+  })
+
+  it('does not fold a still-running measurement into the finished one',()=>{
+    const tasks=useOperationTasks()
+    const first=crypto.randomUUID(),second=crypto.randomUUID()
+    tasks.apply({id:first,kind:'node_measurement',phase:'running'})
+    tasks.apply({id:second,kind:'node_measurement',phase:'running'})
+    // 旧的还在跑时另起一张，避免旧 run 的晚回覆盖新 run。
+    expect(tasks.tasks.map(t=>t.id)).toEqual([first,second])
+  })
+
+  it('ignores late events from a retired (folded) run so a collapsed card never pops back',()=>{
+    const tasks=useOperationTasks()
+    const first=crypto.randomUUID(),second=crypto.randomUUID()
+    tasks.apply({id:first,kind:'node_measurement',phase:'running'})
+    tasks.apply({id:first,kind:'node_measurement',phase:'failed'})
+    tasks.apply({id:second,kind:'node_measurement',phase:'running'})
+    tasks.apply({id:second,kind:'node_measurement',phase:'failed'})
+    tasks.collapse(tasks.tasks[0]!.id)
+    // 旧 run 的晚回不得复活任何卡。
+    tasks.apply({id:first,kind:'node_measurement',phase:'running'})
+    expect(tasks.tasks).toHaveLength(1)
+    expect(tasks.tasks[0]!.collapsed).toBe(true)
+  })
+
+  it('collapses a terminal card after the TTL without deleting it',()=>{
+    vi.useFakeTimers()
+    const tasks=useOperationTasks(),id=crypto.randomUUID()
+    tasks.apply({id,kind:'node_measurement',phase:'running'})
+    tasks.apply({id,kind:'node_measurement',phase:'failed'})
+    expect(tasks.tasks[0]!.collapsed).toBe(false)
+    vi.advanceTimersByTime(TERMINAL_TTL_MS-1)
+    expect(tasks.tasks[0]!.collapsed).toBe(false)
+    vi.advanceTimersByTime(1)
+    expect(tasks.tasks).toHaveLength(1)
+    expect(tasks.tasks[0]!.collapsed).toBe(true)
+    tasks.dispose()
+  })
+
+  it('never applies the TTL to a running card',()=>{
+    vi.useFakeTimers()
+    const tasks=useOperationTasks(),id=crypto.randomUUID()
+    tasks.apply({id,kind:'generation',phase:'running'})
+    vi.advanceTimersByTime(TERMINAL_TTL_MS*10)
+    expect(tasks.tasks[0]!.collapsed).toBe(false)
+    tasks.dispose()
+  })
+
+  it('caps visible cards and collapses the oldest terminal one first',()=>{
+    const tasks=useOperationTasks()
+    const ids=Array.from({length:MAX_VISIBLE_TASKS+2},()=>crypto.randomUUID())
+    for(const [index,id] of ids.entries()){
+      tasks.apply({id,kind:'research',phase:'running'})
+      if(index<MAX_VISIBLE_TASKS-1)tasks.apply({id,kind:'research',phase:'failed'})
+    }
+    expect(tasks.tasks.filter(t=>!t.collapsed).length).toBeLessThanOrEqual(MAX_VISIBLE_TASKS)
+  })
+})
+

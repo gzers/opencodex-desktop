@@ -101,6 +101,13 @@ export function useAppController(initialize = false) {
     })
   }
 
+  /** 通知中心「清理」：清空全部（软删除）。二次确认由调用方负责。 */
+  function clearAllNotifications() {
+    void app.clearNotifications().then(() => {
+      app.showToast(app.notificationsError ? '清理通知失败；已保留当前通知。' : '全部通知已清理。')
+    })
+  }
+
   async function refreshEnvironment() {
     await app.refreshEnvironment()
   }
@@ -269,5 +276,6 @@ export function useAppController(initialize = false) {
     markAllNotificationsRead,
     resolveNotification,
     clearResolvedNotifications,
+    clearAllNotifications,
   }
 }
