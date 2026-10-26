@@ -63,7 +63,9 @@ mod tests {
         std::fs::create_dir_all(root.path().join("manager-state/model-client-state.json")).unwrap();
         // 同名目录不是我们的文件，跳过而不是递归删除。
         assert_eq!(purge_retired(root.path()), 0);
-        assert!(root.path().join("manager-state/model-client-state.json").is_dir());
+        assert!(root
+            .path()
+            .join("manager-state/model-client-state.json")
+            .is_dir());
     }
 }
-

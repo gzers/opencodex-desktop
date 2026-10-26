@@ -4162,7 +4162,10 @@ mod tests {
         policy.channels[0].selection = ModelSelection::Whitelist(vec!["missing".into()]);
         let (target, order, _ids) =
             compile(&snapshot, &super::super::store::seed_library(), &policy).unwrap();
-        assert_eq!(target["providers"]["test"]["selectedModels"], serde_json::json!(["missing"]));
+        assert_eq!(
+            target["providers"]["test"]["selectedModels"],
+            serde_json::json!(["missing"])
+        );
         assert!(order.iter().any(|slug| slug == "test/missing"));
         policy.channels[0].selection = ModelSelection::All;
         let mut snapshot = snapshot;
