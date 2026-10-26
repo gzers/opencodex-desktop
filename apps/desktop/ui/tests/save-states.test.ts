@@ -3,8 +3,6 @@ import {
   TONE_CLASS,
   applyingPhaseLabel,
   channelPolicyState,
-  clientLoadStateOf,
-  pendingSubLabel,
   saveStateOf,
   type SaveStateId,
 } from '@/lib/saveStates'
@@ -91,34 +89,6 @@ describe('tone 唯一词表', () => {
   })
 })
 
-describe('客户端加载态 5 值归并', () => {
-  it('5 个后端状态各有唯一文案（此前两处各译一份、3 处说法不同）', () => {
-    const labels = ['not_required','restart_required','pending_verification','user_confirmed','runtime_changed']
-      .map(s => clientLoadStateOf(s)!.label)
-    expect(labels).toEqual([
-      '已写入 · 无需重启',
-      '已写入 · 待重启 Codex',
-      '运行目录一致 · 待客户端验证',
-      '用户已确认客户端结果',
-      '运行配置已变化 · 待重新比较',
-    ])
-  })
-
-  it('需要重启的两态 actionable 且带图标键提示', () => {
-    for (const s of ['restart_required','pending_verification','runtime_changed']) {
-      const state = clientLoadStateOf(s)!
-      expect(state.actionable, s).toBe(true)
-      expect(state.needsRestart, s).toBe(true)
-      expect(state.checkHint.length, s).toBeGreaterThan(0)
-    }
-  })
-
-  it('未知状态不假装已完成', () => {
-    const state = clientLoadStateOf('weird')!
-    expect(state.tone).toBe('warn')
-    expect(state.actionable).toBe(true)
-  })
-})
 
 describe('列表页唯一状态（3 处收敛为 1 处）', () => {
   it('进行中的保存优先于草稿修改', () => {
@@ -132,18 +102,8 @@ describe('列表页唯一状态（3 处收敛为 1 处）', () => {
     expect(channelPolicyState({ overBudget: true }).label).toBe('超出激活预算')
   })
 
-  it('没有改动且客户端无待处理时是未修改', () => {
+  it('没有改动时是未修改', () => {
     expect(channelPolicyState({}).label).toBe('未修改')
-  })
-
-  it('客户端待重启在无草稿改动时进入状态位', () => {
-    const client = clientLoadStateOf('restart_required')
-    expect(channelPolicyState({ client }).label).toBe('已写入 · 待重启 Codex')
-  })
-
-  it('子标签只在待重启时出现，内容沿用原型文案', () => {
-    expect(pendingSubLabel(clientLoadStateOf('restart_required'))).toBe('上次保存待重启')
-    expect(pendingSubLabel(clientLoadStateOf('not_required'))).toBeNull()
   })
 })
 

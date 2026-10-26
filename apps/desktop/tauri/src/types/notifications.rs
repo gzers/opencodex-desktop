@@ -37,7 +37,6 @@ pub struct NotificationDto {
     pub read: bool,
     pub resolved: bool,
     pub resolved_at: Option<String>,
-    pub expires_at: Option<String>,
     pub operation_id: Option<String>,
     #[serde(default)]
     pub object_id: Option<String>,
@@ -63,7 +62,6 @@ impl NotificationDto {
             read: value.read,
             resolved: value.resolved,
             resolved_at: value.resolved_at.clone(),
-            expires_at: value.expires_at.clone(),
             operation_id: value.operation_id.clone(),
             object_id: value
                 .event_identity
@@ -131,7 +129,6 @@ mod tests {
         assert_eq!(payload["kind"], "info");
         // 触发来源是《领域模型》§16 的独立维度，必须跨边界下发。
         assert_eq!(payload["source"], "update");
-        assert_eq!(payload["expiresAt"], serde_json::Value::Null);
         assert_eq!(payload["time"], "2026-09-15T10:16:00Z");
         assert_eq!(payload["action"], "app_update");
         assert_eq!(payload["dangerUnread"], serde_json::Value::Null);

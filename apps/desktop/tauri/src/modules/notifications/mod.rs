@@ -70,7 +70,6 @@ pub struct Notification {
     pub resolved: bool,
     pub resolved_at: Option<String>,
     pub deleted: bool,
-    pub expires_at: Option<String>,
     pub operation_id: Option<String>,
     pub dedupe_key: Option<String>,
     pub action_ref: Option<NotificationAction>,
@@ -117,7 +116,6 @@ impl Notification {
             resolved: false,
             resolved_at: None,
             deleted: false,
-            expires_at: None,
             operation_id: None,
             dedupe_key: None,
             action_ref,
@@ -151,15 +149,6 @@ impl Notification {
     pub fn with_resolved(mut self, resolved_at: impl Into<String>) -> Self {
         self.resolved = true;
         self.resolved_at = Some(resolved_at.into());
-        self
-    }
-
-    /// 可过期条件的时间（《数据与状态》§5.4）。
-    ///
-    /// `None` 表示不可自动过期；未解决风险、进行中任务、需要用户决策的事项
-    /// 一律保持 `None`，过期资格也不等于删除。
-    pub fn with_expires_at(mut self, expires_at: Option<impl Into<String>>) -> Self {
-        self.expires_at = expires_at.map(Into::into);
         self
     }
 
@@ -362,7 +351,6 @@ mod tests {
             resolved: false,
             resolved_at: None,
             deleted: false,
-            expires_at: None,
             operation_id: None,
             dedupe_key: None,
             action_ref: None,
@@ -431,7 +419,6 @@ mod tests {
             resolved: false,
             resolved_at: None,
             deleted: false,
-            expires_at: None,
             operation_id: None,
             dedupe_key: None,
             action_ref: None,
@@ -456,14 +443,7 @@ mod tests {
             None,
         )
         .expect("valid notification");
-        // 未显式声明时不可自动过期（《数据与状态》§5.4）。
-        assert_eq!(notification.expires_at, None);
         assert_eq!(notification.source, NotificationSource::Runtime);
-
-        let expiring = notification.with_expires_at(Some("2026-09-16T00:00:00Z"));
-        assert_eq!(expiring.expires_at.as_deref(), Some("2026-09-16T00:00:00Z"));
-        // 过期资格不等于删除。
-        assert!(!expiring.deleted);
 
         assert_eq!(
             serde_json::to_string(&NotificationSource::UserAction).unwrap(),

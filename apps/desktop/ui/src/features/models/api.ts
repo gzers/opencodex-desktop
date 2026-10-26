@@ -62,7 +62,7 @@ export interface SaveScope {channelIds:string[];includeShared:boolean}
 /** 保存被拦下的固定原因；只用于通知去重与文案，不携带业务标识。 */
 export type SaveBlockedReason = 'staged_edit'|'over_budget'|'validation'|'no_changes'|'stale'
 export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];deferredChannels?:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[];removedProviders?:string[];historySource?:string|null;runtimeChanges?:ChangeFact[] }
-export interface ModelClientState {planId:string|null;status:'not_required'|'restart_required'|'pending_verification'|'user_confirmed'|'runtime_changed';checkedAt:string|null;checkId:string|null;confirmedAt:string|null;runtimeMatches:boolean;automaticClientVerification:boolean}
+export interface CacheRefresh {restarted:boolean;success:boolean;summary:string}
 export interface ModelHistoryEntry {id:string;createdAt:string;phase:string;channelLabels:string[];recoverable:boolean}
 export interface ModelRecoveryRequest {sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;expectedLibrary:string;expectedPolicy:string;expectedWorkspace:string}
 export interface ModelRecoveryPreview {requiresRuntimeReview?:boolean;id:string;sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;changes:ChangeFact[];defaultChanges:ChangeFact[];channelLabels:string[];notices:string[]}
@@ -108,8 +108,8 @@ export const modelApi = {
   /** 保存确认被门禁或基准变化拦下：只上报固定原因枚举，不带计划 / 渠道 / URL / Key。 */
   policySaveBlocked: (reason: SaveBlockedReason) => invoke<void>('model_policy_save_blocked',{reason}),
   latestPolicy: () => invoke<SavePlan|null>('model_policy_latest'),
-  clientStatus:()=>invoke<ModelClientState>('model_policy_client_status'),
-  checkClient:(planId:string,confirmationCheck?:string)=>invoke<ModelClientState>('model_policy_client_check',{request:{planId,confirmationCheck:confirmationCheck??null}}),
+  /** 保存后的下一步：重建模型缓存；restartCodex 为 true 时连 Codex 桌面端一起重启。 */
+  refreshCache:(restartCodex:boolean)=>invoke<CacheRefresh>('model_policy_refresh_cache',{restartCodex}),
   policyHistory:()=>invoke<ModelHistoryEntry[]>('model_policy_history'),
   prepareRecovery:(request:ModelRecoveryRequest)=>invoke<ModelRecoveryPreview>('model_policy_recovery_prepare',{request}),
   acceptRecovery:(planId:string)=>invoke<ModelSnapshot>('model_policy_recovery_accept',{planId}),
@@ -119,7 +119,7 @@ export const modelApi = {
   upstream: () => invoke<UpstreamSnapshot>('model_upstream_snapshot'),
   discover: (request:{protocol:string;url:string;apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean}) => invoke<{models:DiscoveredModel[];credentialRef:string|null;elapsedMs:number}>('model_channel_discover',{request}),
   forgetCredential: (reference:string) => invoke<void>('model_channel_forget_credential',{reference}),
-  measureNodes:(request:{runId:string;protocol:string;nodes:ServiceNode[];apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean})=>invoke<NodeMeasurementSet>('model_node_measure',{request}),
+  measureNodes:(request:{runId:string;protocol:string;nodes:ServiceNode[];apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean;providerId?:string|null})=>invoke<NodeMeasurementSet>('model_node_measure',{request}),
   stopNodeMeasurement:(runId:string)=>invoke<void>('model_node_measure_stop',{runId}),
   external: (request: ExternalTaskRequest) => invoke<TaskBundle>('model_external_task', { request }),
   activate: (grant: TaskGrant) => invoke<void>('model_external_activate', { grant }),

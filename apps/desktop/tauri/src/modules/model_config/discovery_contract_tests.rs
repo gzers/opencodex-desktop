@@ -16,6 +16,8 @@ fn request(port: u16, protocol: &str, path: &str, key: Option<&str>) -> Discover
         api_key: key.map(str::to_owned),
         credential_ref: None,
         allow_private_network: true,
+        provider_id: None,
+        home: None,
     }
 }
 

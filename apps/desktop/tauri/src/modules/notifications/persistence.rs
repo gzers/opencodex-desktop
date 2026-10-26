@@ -197,6 +197,31 @@ mod tests {
             .all(|item| item.occurrence_count == 1 && item.last_observed_at.is_none()));
     }
 
+    /// 0.2.12 删除了 expires_at（该字段从未被赋值，界面也从不读取）。
+    /// 旧文件里仍留着这个键，必须能继续读，不能判成 corrupted 把通知历史全丢。
+    #[test]
+    fn legacy_history_with_removed_expires_at_key_still_loads() {
+        let temp = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(temp.path().join("manager-state")).unwrap();
+        let path = notifications_path(temp.path());
+        save_notifications(&path, &fixture()).unwrap();
+        let mut json: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+        for item in json["items"].as_array_mut().unwrap() {
+            item.as_object_mut().unwrap().insert(
+                "expires_at".into(),
+                serde_json::json!("2026-09-16T00:00:00Z"),
+            );
+        }
+        std::fs::write(&path, serde_json::to_vec(&json).unwrap()).unwrap();
+        let restored = load_notifications(&path).expect("legacy file must stay readable");
+        assert_eq!(restored.all().len(), fixture().all().len());
+        // 回写后不再出现该键。
+        save_notifications(&path, &restored).unwrap();
+        let rewritten = std::fs::read_to_string(&path).unwrap();
+        assert!(!rewritten.contains("expires_at"));
+    }
+
     #[test]
     fn corrupted_or_unknown_version_fails_explicitly() {
         let temp = tempfile::tempdir().expect("temp dir");

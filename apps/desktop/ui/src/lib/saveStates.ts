@@ -153,34 +153,10 @@ export function applyingPhaseLabel(phase: string | null | undefined): string | u
 }
 
 /**
- * 客户端加载态 5 值 → 结论。
- *
- * 裁决 #4：不再单列，归入「已写入（含待重启）」与「待核对」两类。
- * 文案只保留**一份**（此前 ClientLoadStatus 与 ChannelsView 各译一份，3 处说法不同）。
+ * 0.2.12：客户端加载态（restart_required / pending_verification / user_confirmed /
+ * runtime_changed）整组删除。保存成功后只给一条通知，点「稍后」即彻底结束——
+ * 不再有「之后还要再确认一次」的状态，这正是 0.2.11 死锁的根源。
  */
-export interface ClientLoadState extends SaveState {
-  /** 是否需要重启客户端才能生效。 */
-  needsRestart: boolean
-  /** 检查入口的 title（图标键无障碍名）。 */
-  checkHint: string
-}
-
-const CLIENT_META: Record<string, Omit<ClientLoadState, 'id'>> = {
-  not_required: { label: '已写入 · 无需重启', tone: 'running', actionable: false, needsRestart: false, checkHint: '核对 Codex 客户端加载结果' },
-  restart_required: { label: '已写入 · 待重启 Codex', tone: 'warn', actionable: true, needsRestart: true, checkHint: '重启 Codex 后重新检查运行目录与模型' },
-  pending_verification: { label: '运行目录一致 · 待客户端验证', tone: 'warn', actionable: true, needsRestart: true, checkHint: '在 Codex 模型选择器核对本次配置后记录确认' },
-  user_confirmed: { label: '用户已确认客户端结果', tone: 'running', actionable: false, needsRestart: false, checkHint: '查看用户确认时间与运行核对记录' },
-  runtime_changed: { label: '运行配置已变化 · 待重新比较', tone: 'warn', actionable: true, needsRestart: true, checkHint: '重新比较本机保存与运行目录' },
-}
-
-/** 客户端加载态 → 结论。未知值落到「待重新比较」，不假装已完成。 */
-export function clientLoadStateOf(status: string | null | undefined): ClientLoadState | null {
-  if (!status) return null
-  const meta = CLIENT_META[status]
-  if (!meta) return { id: 'unknown', label: '客户端状态待核对', tone: 'warn', actionable: true, needsRestart: true, checkHint: '重新检查客户端加载结果' }
-  return { id: 'verified', ...meta }
-}
-
 /** 草稿本身的编辑状态（未保存修改 / 待确认编辑 / 超限），与保存事务分开判定。 */
 export type DraftStateId = 'clean' | 'dirty' | 'staged' | 'over-budget'
 
@@ -201,7 +177,9 @@ const DRAFT_META: Record<DraftStateId, Omit<DraftState, 'id'>> = {
  * 渠道列表顶部要显示的**唯一**一个状态（裁决：3 处 → 1 处）。
  *
  * 优先级与原型 channelPolicyState() 一致：进行中 → 结果待核对 → 失败 → 取消
- * → 待确认编辑 → 超限 → 未保存 → 客户端待处理 → 未修改。
+ * → 待确认编辑 → 超限 → 未保存 → 未修改。
+ *
+ * 0.2.12：不再有「客户端待处理」一档——保存成功后只给一条通知，不置状态。
  */
 export function channelPolicyState(input: {
   saving?: boolean
@@ -209,7 +187,6 @@ export function channelPolicyState(input: {
   pendingRows?: number
   draftDirty?: boolean
   overBudget?: boolean
-  client?: ClientLoadState | null
 }): SaveState {
   if (input.saving) return { id: 'applying', ...STATE_META.applying }
 
@@ -223,17 +200,6 @@ export function channelPolicyState(input: {
   if (input.pendingRows) return { id: 'staged', ...DRAFT_META.staged } as unknown as SaveState
   if (input.overBudget) return { id: 'over-budget', ...DRAFT_META['over-budget'] } as unknown as SaveState
   if (input.draftDirty) return { id: 'dirty', ...DRAFT_META.dirty } as unknown as SaveState
-  if (input.client && input.client.actionable) return input.client
   return { id: 'idle', ...STATE_META.idle }
-}
-
-/**
- * 状态框里的**子标签**：同一状态区表达「上次结果」（原型 .mp-policy-pending）。
- * 例如当前「未保存修改」时，副标签提示「上次保存待重启」。
- */
-export function pendingSubLabel(client: ClientLoadState | null): string | null {
-  if (!client?.needsRestart) return null
-  if (client.label.includes('待重启')) return '上次保存待重启'
-  return null
 }
 
