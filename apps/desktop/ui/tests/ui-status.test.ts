@@ -1,7 +1,7 @@
 import {mount} from '@vue/test-utils'
 import {describe,expect,it} from 'vitest'
 import UiStatus from '@/components/ui/UiStatus.vue'
-import {clientLoadStateOf, saveStateOf} from '@/lib/saveStates'
+import {saveStateOf} from '@/lib/saveStates'
 
 const render = (props: Record<string, unknown>) => mount(UiStatus, {props})
 
@@ -39,8 +39,8 @@ describe('UiStatus：只接语义 tone，不接颜色名', () => {
   })
 
   it('子标签与计数分别渲染，子标签带 · 前缀类', () => {
-    const wrapper = render({state: clientLoadStateOf('restart_required'), sub: '上次保存待重启', count: 12})
-    expect(wrapper.text()).toContain('已写入 · 待重启 Codex')
+    const wrapper = render({state: saveStateOf('committed'), sub: '上次保存待重启', count: 12})
+    expect(wrapper.text()).toContain('已保存 · 待重启')
     expect(wrapper.find('.ui-status-sub').text()).toBe('上次保存待重启')
     expect(wrapper.find('.ui-status-count').text()).toBe('12')
     wrapper.unmount()

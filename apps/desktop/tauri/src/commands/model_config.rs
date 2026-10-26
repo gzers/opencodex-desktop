@@ -165,25 +165,16 @@ pub async fn model_policy_history(
     .await
     .map_err(|_| invalid("history_worker", "读取保存记录中断"))?
 }
+/// 保存已写入之后的下一个动作：重建模型缓存，可选重启 Codex。
+///
+/// 这里不判断「是否生效」——重启后由 Codex 自己读目录。管理器只如实回报命令结果，
+/// 不写任何客户端状态记录（0.2.12 删除了四态状态机）。
 #[tauri::command]
-pub async fn model_policy_client_status(
-    data_root: tauri::State<'_, SharedDataRoot>,
-) -> ModelResult<crate::modules::model_config::client_state::View> {
-    let root = data_root.0.clone();
-    tauri::async_runtime::spawn_blocking(move || {
-        crate::modules::model_config::client_state::status(&root)
-    })
-    .await
-    .map_err(|_| invalid("client_state", "读取客户端核对状态中断"))?
-}
-#[tauri::command]
-pub async fn model_policy_client_check(
-    request: crate::modules::model_config::client_state::Request,
-    data_root: tauri::State<'_, SharedDataRoot>,
+pub async fn model_policy_refresh_cache(
+    restart_codex: bool,
     context: tauri::State<'_, crate::state::SharedProcessContext>,
-) -> ModelResult<crate::modules::model_config::client_state::View> {
-    let _admission = crate::infrastructure::storage_writers::global().admit()?;
-    crate::modules::model_config::client_state::check(&data_root.0, &context, request).await
+) -> ModelResult<crate::modules::model_config::cache_refresh::CacheRefresh> {
+    crate::modules::model_config::cache_refresh::sync_cache(&context, restart_codex).await
 }
 #[tauri::command]
 pub async fn model_policy_abandon(

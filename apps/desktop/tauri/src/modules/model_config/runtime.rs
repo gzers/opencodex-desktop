@@ -260,21 +260,6 @@ pub(super) fn runtime_binding(context: &ProcessContext) -> ModelResult<String> {
         &context.opencodex_home,
     ))?))
 }
-pub(super) fn credential_runtime_changed(plan: &RuntimePlan) -> bool {
-    plan.credential_changes
-        .iter()
-        .any(|c| c.before != c.intended())
-        || !plan.imported_authorizations.is_empty()
-        || plan.history_restoration.as_ref().is_some_and(|history| {
-            history.authorizations.iter().any(|(provider, target)| {
-                plan.authorization_before
-                    .get(provider)
-                    .and_then(Option::as_ref)
-                    .map(|b| &b.digest)
-                    != target.as_ref().map(|b| &b.digest)
-            })
-        })
-}
 pub(super) async fn verify_committed_credentials(
     root: &Path,
     plan: &RuntimePlan,
@@ -4782,48 +4767,8 @@ else:sys.exit(7)
         let entries = history(root.path()).unwrap();
         assert_eq!(entries.len(), 1);
         assert!(entries[0].recoverable);
-        use super::super::client_state::{self, Request as ClientRequest, Status as ClientStatus};
-        assert!(matches!(
-            client_state::status(root.path()).unwrap().status,
-            ClientStatus::RestartRequired
-        ));
-        assert_eq!(
-            client_state::check(
-                root.path(),
-                &context,
-                ClientRequest {
-                    plan_id: plan.id.clone(),
-                    confirmation_check: Some(uuid::Uuid::new_v4().to_string())
-                }
-            )
-            .await
-            .unwrap_err()
-            .code,
-            "client_confirmation"
-        );
-        let checked = client_state::check(
-            root.path(),
-            &context,
-            ClientRequest {
-                plan_id: plan.id.clone(),
-                confirmation_check: None,
-            },
-        )
-        .await
-        .unwrap();
-        assert!(matches!(checked.status, ClientStatus::PendingVerification));
-        assert!(!checked.automatic_client_verification);
-        let confirmed = client_state::check(
-            root.path(),
-            &context,
-            ClientRequest {
-                plan_id: plan.id.clone(),
-                confirmation_check: checked.check_id,
-            },
-        )
-        .await
-        .unwrap();
-        assert!(matches!(confirmed.status, ClientStatus::UserConfirmed));
+        // 0.2.12：四态客户端状态机已删除，保存后只给一条通知，不再记录客户端核对态。
+
         let current = store.load().unwrap();
         let label_only = policy.clone();
         let staged = store
@@ -4850,31 +4795,8 @@ else:sys.exit(7)
                 .phase,
             "committed"
         );
-        let retained = client_state::status(root.path()).unwrap();
-        assert_eq!(retained.plan_id.as_deref(), Some(plan.id.as_str()));
-        assert!(matches!(retained.status, ClientStatus::UserConfirmed));
-        let mut drift = serde_json::from_slice::<Value>(
-            &std::fs::read(root.path().join("providers.json")).unwrap(),
-        )
-        .unwrap();
-        drift["providers"]["test"]["note"] = json!("later external edit");
-        std::fs::write(
-            root.path().join("providers.json"),
-            serde_json::to_vec(&drift).unwrap(),
-        )
-        .unwrap();
-        let changed = client_state::check(
-            root.path(),
-            &context,
-            ClientRequest {
-                plan_id: plan.id.clone(),
-                confirmation_check: None,
-            },
-        )
-        .await
-        .unwrap();
-        assert!(matches!(changed.status, ClientStatus::RuntimeChanged));
-        assert!(changed.confirmed_at.is_none());
+        // 同上：不再记运行时漂移，Codex 重启后自己读目录。
+
         let current = store.load().unwrap();
         let preview = prepare_recovery(
             root.path(),
@@ -4907,63 +4829,6 @@ else:sys.exit(7)
                 .find(|entry| entry.id == plan.id)
                 .unwrap()
                 .recoverable
-        );
-    }
-    /// 0.2.11：一条处理不了的旧计划不得阻塞客户端核对（WP-68 死锁）。
-    /// 这是 check() 去掉全库 reject_incomplete 的直接证据：目标计划可核对即可。
-    #[cfg(unix)]
-    #[tokio::test]
-    async fn client_check_is_not_blocked_by_unrelated_unfinished_plans() {
-        use super::super::client_state::{self, Request as ClientRequest};
-        let root = tempfile::tempdir().unwrap();
-        let (snapshot, policy) = fixture();
-        let context = cli_fixture(root.path(), &snapshot);
-        let store = ModelStore::new(root.path());
-        let local = store.load().unwrap();
-        store
-            .stage_policy(
-                &local.policy_digest,
-                &local.workspace_digest,
-                policy.clone(),
-            )
-            .unwrap();
-        let staged = store.load().unwrap();
-        let plan = prepare(
-            root.path(),
-            &context,
-            policy,
-            staged.library_digest.clone(),
-            staged.policy_digest.clone(),
-            staged.workspace_digest.clone(),
-        )
-        .await
-        .unwrap();
-        // 目标计划先真正写入，才可能成为「待客户端核对」的对象。
-        assert_eq!(
-            apply(root.path(), &context, &plan.id).await.unwrap().phase,
-            "committed"
-        );
-        // 另造一条与本次无关、且处理不了的旧计划（写入后核对部分不符）。
-        let mut orphan = load(root.path(), &plan.id).unwrap();
-        orphan.id = uuid::Uuid::new_v4().to_string();
-        orphan.phase = "verified_partial".into();
-        orphan.error = Some("provider_write".into());
-        save(root.path(), &orphan).unwrap();
-        // 旧行为：全库检查会直接报错，客户端核对无法进行。
-        assert!(reject_incomplete(root.path()).is_err());
-        // 新行为：客户端核对只看自己的目标，不被无关计划挡住。
-        let checked = client_state::check(
-            root.path(),
-            &context,
-            ClientRequest {
-                plan_id: plan.id.clone(),
-                confirmation_check: None,
-            },
-        )
-        .await;
-        assert!(
-            checked.is_ok(),
-            "client check must not be blocked by unrelated plans: {checked:?}"
         );
     }
     /// 0.2.11：用户显式放弃未完成写入 → 收口为 abandoned，不再阻塞后续保存与核对，

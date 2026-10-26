@@ -3,8 +3,8 @@
 pub mod agent;
 pub mod agent_conversation;
 pub mod broker;
+pub mod cache_refresh;
 pub(crate) mod channel_actions;
-pub mod client_state;
 pub mod compiler;
 pub mod config_remote;
 pub mod discovery;

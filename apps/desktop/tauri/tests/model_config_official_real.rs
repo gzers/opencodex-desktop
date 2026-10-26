@@ -454,22 +454,6 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         after.providers["providers"][mapped]["modelDisplayNames"]["fixture-anthropic"],
         "协议型号"
     );
-    let client = model_config::client_state::check(
-        &manager,
-        &context,
-        model_config::client_state::Request {
-            plan_id: plan.id.clone(),
-            confirmation_check: None,
-        },
-    )
-    .await
-    .unwrap();
-    assert!(client.runtime_matches);
-    assert!(matches!(
-        client.status,
-        model_config::client_state::Status::PendingVerification
-    ));
-    assert!(!client.automatic_client_verification);
     let stable_group = plan.protocol_groups[0].clone();
     // Same wire protocol can still need distinct provider-wide rule values.
     // Use the real installed owner's save/readback, then restore the original
@@ -1028,8 +1012,6 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     model_config::provider_auth::verify(&manager, &context, &third)
         .await
         .unwrap();
-    let client = model_config::client_state::status(&manager).unwrap();
-    assert_eq!(client.plan_id.as_deref(), Some(auth_only.id.as_str()));
     let replacement = history_plan(&manager, &context, &removal.id).await;
     assert_eq!(
         runtime::apply(&manager, &context, &replacement.id)

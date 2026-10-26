@@ -8,9 +8,9 @@ import ChannelBatchDialog from './ChannelBatchDialog.vue'
 import ChannelNodeSelect from './ChannelNodeSelect.vue'
 import UiSwitch from '@/components/ui/UiSwitch.vue'
 import NewChannelDialog from './NewChannelDialog.vue'
-import ClientLoadStatus from './ClientLoadStatus.vue'
+import SaveResultNotice from './SaveResultNotice.vue'
 import UiStatus from '@/components/ui/UiStatus.vue'
-import {applyingPhaseLabel,channelPolicyState,clientLoadStateOf,pendingSubLabel} from '@/lib/saveStates'
+import {applyingPhaseLabel,channelPolicyState} from '@/lib/saveStates'
 import SelectorPreviewDialog from './SelectorPreviewDialog.vue'
 import { mergeUpstream } from './upstream'
 import { inlineChanges, setModelActive } from './saveReview'
@@ -19,7 +19,7 @@ import {reorderSlots} from './ordering'
 import {usePointerDrag} from './pointerDrag'
 import {createModelRowsState} from './modelRows'
 import { useModelsStore } from './store'
-import { errorText, savePlanErrorText, modelApi, type ChannelPolicy, type DraftProjection, type ModelClientState, type ModelPolicy, type SaveBlockedReason, type SavePlan } from './api'
+import { errorText, savePlanErrorText, modelApi, type ChannelPolicy, type DraftProjection, type ModelPolicy, type SaveBlockedReason, type SavePlan } from './api'
 import { useModalStore } from '@/app/modal/store'
 const props=withDefaults(defineProps<{actionsTarget?:string;active?:boolean}>(),{active:true})
 const models = useModelsStore(); const modal = useModalStore()
@@ -70,14 +70,14 @@ async function prepareSelectedScope(){
  savePlan.value=await modelApi.preparePolicyScoped(JSON.parse(saveScopeBaseline.policy),saveScopeBaseline.library,saveScopeBaseline.saved,saveScopeBaseline.workspace,{channelIds:[...saveScopeIds.value],includeShared:saveShared.value});saveScopeOpen.value=false;saveOpen.value=true;error.value=''
  }catch(cause){saveScopeError.value=errorText(cause)}finally{models.busy=false}
 }
-const clientState=ref<ModelClientState|null>(null)
-// 客户端加载态的文案与 tone 统一取自 lib/saveStates.ts；此处不再翻译第二遍。
-const clientLoad=computed(()=>clientLoadStateOf(clientState.value?.status))
-const policyStatus=computed(()=>channelPolicyState({saving:saving.value,plan:savePlan.value,pendingRows:models.pendingRows.length,draftDirty:models.channelDirty,client:clientLoad.value}))
+// 0.2.12：不再有「待重启 / 待核对」状态机。保存成功后只弹一条通知，
+// 点「稍后」就彻底结束，界面不会留任何需要用户再确认的东西。
+const saveResultOpen=ref(false)
+const saveResultPlanId=ref<string|null>(null)
+const policyStatus=computed(()=>channelPolicyState({saving:saving.value,plan:savePlan.value,pendingRows:models.pendingRows.length,draftDirty:models.channelDirty}))
 /** 写入中的阶段名只在 hover / focus 出现（裁决 #1）。 */
 const policyHint=computed(()=>saving.value?'正在保存':applyingPhaseLabel(savePlan.value?.phase))
 // 子标签只在「当前状态说别的事」时补一句上次结果，避免同一句话出现两遍。
-const policySub=computed(()=>policyStatus.value.label.includes('待重启')?null:pendingSubLabel(clientLoad.value))
 const detailProjection=ref<DraftProjection|null>(null),detailProjectionError=ref(''),detailProjectionBusy=ref(false)
 let detailSequence=0,detailTimer:ReturnType<typeof setTimeout>|undefined
 watch(()=>[editorId.value,JSON.stringify(models.channelDraft),models.snapshot?.libraryDigest],(_next,previous)=>{
@@ -174,7 +174,13 @@ async function confirmSave(){
     savePlan.value=await modelApi.preparePolicy(frozen,library,expected,workspace)
     stage='apply'
     savePlan.value=await modelApi.applyPolicy(savePlan.value.id)
-    if(savePlan.value.phase==='committed')models.acceptTransfer(await modelApi.load())
+    if(savePlan.value.phase==='committed'){
+      models.acceptTransfer(await modelApi.load())
+      // 写入成功 → 只给一条通知（含「立即重启 / 稍后」）。不置任何持久状态：
+      // 点「稍后」就彻底结束，下次进来不会再有「待重启」。
+      saveResultPlanId.value=savePlan.value.id
+      saveResultOpen.value=true
+    }
   }catch(cause){
     error.value=errorText(cause)
     if(stage==='prepare'){
@@ -300,7 +306,7 @@ function dragChannel(event:PointerEvent,id:string){draggedOver.value='';channelD
 <template>
   <div class="channels-view">
     <div v-if="!editor" class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索渠道" aria-label="搜索渠道" /><div class="model-inline"><UiButton :loading="upstreamBusy" :disabled="models.busy||saving" @click="readUpstream">读取现有渠道</UiButton><UiButton :disabled="models.busy||saving" @click="create">新增渠道</UiButton></div></div>
-    <Teleport defer :to="actionsTarget??'body'" :disabled="!actionsTarget"><div v-if="props.active!==false&&!editor" class="model-inline model-policy-actions"><UiStatus :state="policyStatus" :hint="policyHint" :sub="policySub" /><ClientLoadStatus variant="inline" @change="clientState=$event" :refresh-key="(models.snapshot?.policyDigest??'')+':'+(savePlan?.phase??'')" /><UiButton :disabled="(!models.channelDirty&&!models.pendingRows.length)||models.busy||saving" @click="restore">还原修改</UiButton><UiButton data-testid="policy-save" :variant="models.channelDirty?'primary':'default'" :disabled="models.busy||saving||saveConfirming" :loading="models.busy" title="保存 · 先核对选择器预览，确认后写入" @click="prepareSave">保存</UiButton></div></Teleport>
+    <Teleport defer :to="actionsTarget??'body'" :disabled="!actionsTarget"><div v-if="props.active!==false&&!editor" class="model-inline model-policy-actions"><UiStatus :state="policyStatus" :hint="policyHint" /><UiButton :disabled="(!models.channelDirty&&!models.pendingRows.length)||models.busy||saving" @click="restore">还原修改</UiButton><UiButton data-testid="policy-save" :variant="models.channelDirty?'primary':'default'" :disabled="models.busy||saving||saveConfirming" :loading="models.busy" title="保存 · 先核对选择器预览，确认后写入" @click="prepareSave">保存</UiButton></div></Teleport>
     <p v-if="upstreamVersion" class="model-muted">来源：{{ upstreamVersion }} · 已读取到草稿</p>
     <p v-if="search.trim()" class="model-muted">清除搜索后可调整渠道顺序</p>
     <p v-if="models.pendingRows.length" role="status">{{ models.pendingRows.length }} 项型号编辑未确认；全局保存暂不可用。<UiButton v-for="target in [...new Set(models.pendingRows.map(r=>r.channel))]" :key="target" size="sm" variant="ghost" @click="editorId=target">查看 {{ models.channelDraft?.channels.find(c=>c.id===target)?.label??target }}</UiButton></p>
@@ -309,7 +315,8 @@ function dragChannel(event:PointerEvent,id:string){draggedOver.value='';channelD
     <p v-if="error || models.channelError" class="model-error" role="alert">{{ error || models.channelError }}</p><UiButton v-if="error&&models.channelDirty&&!models.channelDraft?.recoveryId" size="sm" variant="ghost" :disabled="models.busy||saving" @click="adjustSaveScope">调整本次保存范围</UiButton><p v-if="models.staging" class="model-muted" role="status">正在暂存渠道草稿…</p>
     <div v-if="selected.length&&!editor" class="model-inline"><span>已选 {{ selected.length }} 个渠道<span v-if="selected.some(c=>!channels.some(row=>row.id===c.id))">（含搜索外 {{ selected.filter(c=>!channels.some(row=>row.id===c.id)).length }} 个）</span></span><UiButton size="sm" :disabled="models.busy||saving" @click="enableSelected(true)">启用</UiButton><UiButton size="sm" :disabled="models.busy||saving" @click="enableSelected(false)">停用</UiButton><UiButton size="sm" variant="danger" :disabled="models.busy||saving" @click="deleteChannels(selected)">删除所选渠道</UiButton><UiButton size="sm" :disabled="models.busy||saving||!!models.pendingRows.length" @click="batchChannels={mode:'family',ids:selected.map(c=>c.id)}">按族批量配置</UiButton><UiButton size="sm" :disabled="models.busy||saving||!!models.pendingRows.length" @click="batchChannels={mode:'adopt',ids:selected.map(c=>c.id)}">套用模版</UiButton><UiButton size="sm" variant="ghost" @click="selectedIds=[]">清除选择</UiButton></div>
     <ChannelEditor v-if="editor" :key="editor.id" :navigation="models.view.navigation['channel:'+editor.id]" :channels="models.channelDraft?.channels" @switch="editorId=$event" @save="prepareSave" @restore="restore" :dirty="models.channelDirty||!!models.pendingRows.length" :save-status="policyStatus.label" :save-tone="policyStatus.tone" :save-disabled="models.busy||saving||saveConfirming" :active-count="detailProjection?.knownActiveModels" :view-state="models.view.channelFilters[editor.id]" :row-state="models.modelRows[editor.id]" :policy="models.channelDraft??undefined" :existing="models.snapshot?.policy.channels.some(c=>c.id===editorId)" :channel="editor" :global-refs="models.channelDraft?.templateRefs??[]" :projection="detailProjection?.rows.filter(row=>row.channelId===editorId)??[]" :projection-busy="detailProjectionBusy" :projection-error="detailProjectionError" :templates="models.snapshot?.library.templates ?? []" :busy="models.busy||protectedChannel(editor)" @close="editorId = ''" />
-    <template v-else><div class="model-table-scroll"><table class="model-table ui-table ui-table-fixed channel-table"><colgroup><col class="ui-selection-col"/><col class="channel-name-col"/><col class="channel-node-col"/><col class="channel-count-col"/><col class="channel-enable-col"/><col class="channel-actions-col"/></colgroup><thead><tr><th class="ui-selection-cell"><input type="checkbox" aria-label="选择当前结果中的可编辑渠道" :checked="allSelected" :indeterminate="someSelected" @change="selectAll" /></th><th>渠道</th><th>服务节点</th><th>模型</th><th>启用</th><th>操作</th></tr></thead><tbody><tr v-for="(c,channelIndex) in channels" :key="c.id" :data-channel="c.id" :class="{dragging:draggedChannel===c.id,'drag-over':draggedOver===c.id}" @pointerdown="dragChannel($event,c.id)"><td class="ui-selection-cell"><input type="checkbox" :aria-label="'选择渠道 '+c.label" :checked="selectedIds.includes(c.id)" :disabled="protectedChannel(c)||models.busy||saving" @change="selectOne(c.id)" /></td><td><strong>{{ c.label || '未命名渠道' }}</strong><small>{{ c.connection.nodes.length }} 节点 · {{ c.connection.enabled ? '启用' : '停用' }}</small></td><td><ChannelNodeSelect :channel="c" :disabled="models.busy||saving" :readonly="protectedChannel(c)" /></td><td class="ui-nowrap"><span class="channel-model-count">{{ c.selection.mode === 'all' ? c.discovered.length : c.selection.mode === 'whitelist' ? c.selection.models.length : 0 }} / {{ c.discovered.length }}</span><small class="channel-model-count-hint">已选 / 发现</small></td><td><span v-if="protectedChannel(c)">官方管理</span><div v-else class="channel-enable-cell"><UiSwitch :model-value="c.connection.enabled" :label="c.label+'渠道启用状态'" :disabled="models.busy||saving" @update:model-value="c.connection.enabled=$event" /><span>{{ c.connection.enabled?'启用':'停用' }}</span></div></td><td><div class="channel-row-actions" :class="{'is-readonly':protectedChannel(c)}"><UiButton size="sm" :data-model-focus="'channel:'+c.id" @click="editorId = c.id">{{ protectedChannel(c)?'查看':'编辑' }}</UiButton><UiButton size="sm" :disabled="protectedChannel(c)||models.busy||saving" @click="beginCopy(c)">复制</UiButton><UiButton size="sm" variant="danger" :disabled="protectedChannel(c)||models.busy||saving" @click="deleteChannels([c])">删除</UiButton><span class="channel-order" role="group" :aria-label="c.label+'排序'"><button type="button" class="channel-order-button" :disabled="!reorderAllowed||channelIndex===0" :aria-label="c.label+'上移'" :title="c.label+'上移'" @click="move(c.id,-1)">↑</button><button type="button" class="channel-order-button" :disabled="!reorderAllowed||channelIndex===channels.length-1" :aria-label="c.label+'下移'" :title="c.label+'下移'" @click="move(c.id,1)">↓</button></span></div></td></tr></tbody></table></div><p v-if="!channels.length" class="model-empty">暂无渠道</p><p class="model-footer-note">启用开关修改草稿，保存后提示重启；停用保留已选模型与配置。拖动渠道调整整组顺序。</p></template>
+    <template v-else><div class="model-table-scroll"><table class="model-table ui-table ui-table-fixed channel-table"><colgroup><col class="ui-selection-col"/><col class="channel-name-col"/><col class="channel-node-col"/><col class="channel-count-col"/><col class="channel-enable-col"/><col class="channel-actions-col"/></colgroup><thead><tr><th class="ui-selection-cell"><input type="checkbox" aria-label="选择当前结果中的可编辑渠道" :checked="allSelected" :indeterminate="someSelected" @change="selectAll" /></th><th>渠道</th><th>服务节点</th><th>模型</th><th>启用</th><th>操作</th></tr></thead><tbody><tr v-for="(c,channelIndex) in channels" :key="c.id" :data-channel="c.id" :class="{dragging:draggedChannel===c.id,'drag-over':draggedOver===c.id}" @pointerdown="dragChannel($event,c.id)"><td class="ui-selection-cell"><input type="checkbox" :aria-label="'选择渠道 '+c.label" :checked="selectedIds.includes(c.id)" :disabled="protectedChannel(c)||models.busy||saving" @change="selectOne(c.id)" /></td><td><strong>{{ c.label || '未命名渠道' }}</strong><small>{{ c.connection.nodes.length }} 节点 · {{ c.connection.enabled ? '启用' : '停用' }}</small></td><td><ChannelNodeSelect :channel="c" :disabled="models.busy||saving" :readonly="protectedChannel(c)" /></td><td class="ui-nowrap"><span class="channel-model-count">{{ c.selection.mode === 'all' ? c.discovered.length : c.selection.mode === 'whitelist' ? c.selection.models.length : 0 }} / {{ c.discovered.length }}</span><small class="channel-model-count-hint">已选 / 发现</small></td><td><span v-if="protectedChannel(c)">官方管理</span><div v-else class="channel-enable-cell"><UiSwitch :model-value="c.connection.enabled" :label="c.label+'渠道启用状态'" :disabled="models.busy||saving" @update:model-value="c.connection.enabled=$event" /><span>{{ c.connection.enabled?'启用':'停用' }}</span></div></td><td><div class="channel-row-actions" :class="{'is-readonly':protectedChannel(c)}"><UiButton size="sm" :data-model-focus="'channel:'+c.id" @click="editorId = c.id">{{ protectedChannel(c)?'查看':'编辑' }}</UiButton><UiButton size="sm" :disabled="protectedChannel(c)||models.busy||saving" @click="beginCopy(c)">复制</UiButton><UiButton size="sm" variant="danger" :disabled="protectedChannel(c)||models.busy||saving" @click="deleteChannels([c])">删除</UiButton><span class="channel-order" role="group" :aria-label="c.label+'排序'"><button type="button" class="channel-order-button" :disabled="!reorderAllowed||channelIndex===0" :aria-label="c.label+'上移'" :title="c.label+'上移'" @click="move(c.id,-1)">↑</button><button type="button" class="channel-order-button" :disabled="!reorderAllowed||channelIndex===channels.length-1" :aria-label="c.label+'下移'" :title="c.label+'下移'" @click="move(c.id,1)">↓</button></span></div></td></tr></tbody></table></div><p v-if="!channels.length" class="model-empty">暂无渠道</p><SaveResultNotice :open="saveResultOpen" :plan-id="saveResultPlanId" @close="saveResultOpen=false" />
+  <p class="model-footer-note">启用开关修改草稿，保存后提示重启；停用保留已选模型与配置。拖动渠道调整整组顺序。</p></template>
     <ChannelBatchDialog v-if="batchChannels" :mode="batchChannels.mode" :targets="batchChannels.ids" @close="batchChannels=undefined" />
     <NewChannelDialog v-if="newChannelOpen" @close="newChannelOpen=false" @added="editorId=$event" />
     <UiDialog :open="saveScopeOpen" title="调整本次保存范围" :busy="models.busy" @close="saveScopeOpen=false">
