@@ -11,6 +11,7 @@ import NewChannelDialog from './NewChannelDialog.vue'
 import SaveResultNotice from './SaveResultNotice.vue'
 import UiStatus from '@/components/ui/UiStatus.vue'
 import {applyingPhaseLabel,channelPolicyState} from '@/lib/saveStates'
+import {canonicalPolicy} from './policyEquality'
 import SelectorPreviewDialog from './SelectorPreviewDialog.vue'
 import { mergeUpstream } from './upstream'
 import { inlineChanges, setModelActive } from './saveReview'
@@ -48,10 +49,16 @@ let previewRefreshSequence = 0
 const savePlan=ref<SavePlan|null>(null);const saveOpen=ref(false);const saving=ref(false)
 const saveScopeOpen=ref(false),saveScopeIds=ref<string[]>([]),saveShared=ref(false),saveScopeError=ref('');const saveScopeTargets=ref<{id:string;label:string;kind:string}[]>([]);const saveSharedAvailable=ref(false)
 let saveScopeBaseline:{policy:string;library:string;saved:string;workspace:string}|undefined
+// 与 channelDirty 用**同一个规范化判据**（canonicalPolicy）：
+// 旧实现直接比较 JSON.stringify，会把 sourceReadId / importedConfig 这些本机记账
+// 字段的差异也算成用户修改，导致「只读取、没动过」的渠道全被列为待保存。
 const changedTargets=computed(()=>{
  const saved=models.snapshot?.policy.channels??[],draft=models.channelDraft?.channels??[]
  const ids=[...new Set([...saved,...draft].map(c=>c.id))]
- return ids.flatMap(id=>{const before=saved.find(c=>c.id===id),after=draft.find(c=>c.id===id);return JSON.stringify(before)===JSON.stringify(after)?[]:[{id,label:after?.label??before?.label??id,kind:!before?'新增':!after?'删除':'修改'}]}).concat((models.channelDraft?.pendingRemovals??[]).filter(r=>!ids.includes(r.channelId)).map(r=>({id:r.channelId,label:r.providerId,kind:'删除'})))
+ return ids.flatMap(id=>{const before=saved.find(c=>c.id===id),after=draft.find(c=>c.id===id)
+   const same=before&&after?canonicalPolicy({schemaVersion:1,templateRefs:[],channels:[before],defaultChannelId:null,recoveryId:null})===canonicalPolicy({schemaVersion:1,templateRefs:[],channels:[after],defaultChannelId:null,recoveryId:null}):!before&&!after
+   return same?[]:[{id,label:after?.label??before?.label??id,kind:!before?'新增':!after?'删除':'修改'}]})
+   .concat((models.channelDraft?.pendingRemovals??[]).filter(r=>!ids.includes(r.channelId)).map(r=>({id:r.channelId,label:r.providerId,kind:'删除'})))
 })
 // 共享项只含全局模版采用与渠道顺序；“默认渠道”不是本产品的概念，不参与差异与保存范围。
 const sharedChanged=computed(()=>{const saved=models.snapshot?.policy,draft=models.channelDraft;if(!saved||!draft)return false;return JSON.stringify([saved.templateRefs,saved.channels.map(c=>c.id)])!==JSON.stringify([draft.templateRefs,draft.channels.map(c=>c.id)])})

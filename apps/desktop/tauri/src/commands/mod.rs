@@ -18,6 +18,7 @@ pub mod notifications;
 pub mod panel;
 pub mod preferences;
 pub mod release_details;
+pub mod retired_files;
 pub mod runtime;
 pub mod sync;
 pub mod tray;

@@ -155,6 +155,9 @@ pub fn run() {
                 },
             ));
             app.manage(crate::state::SharedTrayRequests::new());
+            // 已删除功能的残留文件：删代码不等于删数据，固定文件名在这里就地清掉。
+            // 只删「读取代码已完全删除」的文件，不遍历目录、不碰用户配置与历史备份。
+            crate::commands::retired_files::purge_retired(&data_root);
             // 「启动时清理」：开启时按保留策略做一次有界的轻量清理（日志截断、通知与
             // 通知保留期），必须在通知集合载入前完成；启动不扫描、校验或删除备份。
             let (startup_cleanup, cleanup_identity) =
