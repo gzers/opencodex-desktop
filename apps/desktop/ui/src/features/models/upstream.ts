@@ -10,6 +10,12 @@ export function mergeUpstream(snapshot: UpstreamSnapshot, existing: ChannelPolic
     if (!record(raw) || typeof raw.baseUrl !== 'string' || typeof raw.adapter !== 'string') throw new Error('官方渠道缺少连接字段，未修改草稿')
     const old = existing.find(c => c.connection.providerId === providerId)
     const rows = snapshot.models.filter((row): row is Record<string, unknown> => record(row) && row.provider === providerId && typeof row.id === 'string' && row.native !== true)
+    // 唯一事实源是该渠道在 config.json 里声明的 models（UI 规范 §43）。
+    // 官方目录（snapshot.models）可能只含当前在线/活跃的型号，或读取时刚好为空；
+    // 那种情况下以声明清单为准，否则会出现「文件里有 116 个、界面显示 0 个」。
+    const declared = Array.isArray(raw.models) ? raw.models.filter((id): id is string => typeof id === 'string' && id.length > 0) : []
+    const knownIds = new Set(rows.map(row => String(row.id)))
+    const declaredOnly = declared.filter(id => !knownIds.has(id))
     const discovered: DiscoveredModel[] = rows.map(row => {
       const rules = emptyRules()
       if (typeof row.contextWindow === 'number' && row.contextWindow > 0) rules.contextWindow = { mode: 'custom', value: row.contextWindow }
@@ -26,6 +32,12 @@ export function mergeUpstream(snapshot: UpstreamSnapshot, existing: ChannelPolic
       if(record(map)&&Object.values(map).every(value=>typeof value==='string'))rules.effortMap={mode:'custom',value:map as Record<string,string>}
       return { id: String(row.id), label: record(raw.modelDisplayNames)&&typeof raw.modelDisplayNames[String(row.id)]==='string'?String(raw.modelDisplayNames[String(row.id)]):typeof row.displayName === 'string' && row.displayName!==row.namespaced ? row.displayName : String(row.id), rules }
     })
+    // 只在 config.json 声明、官方目录里没有的型号：照样列出来，规则留空（继承渠道默认）。
+    // 不标注「未核对」——管理器无法判断这类型号是否合法（各站点命名规则不同）。
+    for (const id of declaredOnly) {
+      const label = record(raw.modelDisplayNames) && typeof raw.modelDisplayNames[id] === 'string' ? String(raw.modelDisplayNames[id]) : id
+      discovered.push({ id, label, rules: emptyRules() })
+    }
     if (old) { result.push({ ...old, connection:{...old.connection,sourceReadId:snapshot.readId??old.connection.sourceReadId,authMode:typeof raw.authMode==='string'?raw.authMode:old.connection.authMode}, discovered }); continue }
     const node = { id: crypto.randomUUID(), name: '当前节点', url: raw.baseUrl }
     const selected = strings(raw.selectedModels)

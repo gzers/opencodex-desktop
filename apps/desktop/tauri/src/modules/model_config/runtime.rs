@@ -1066,6 +1066,11 @@ pub(super) fn compile_materials(
                 .iter()
                 .find(|r| r["id"].as_str() == Some(&row.model_id));
             if row.enabled && row.selected {
+                // 唯一事实源是官方 config.json 的 models（UI 规范 §43）。
+                // 官方目录里有的，用它的 namespaced 身份；没有的，按 provider/型号
+                // 直接合成——因为「我的清单里没有」不等于「这个模型不存在」。
+                // 管理器判断不了型号命名对错（各站点命名规则不同），所以这里不设
+                // 「未核对」拦截，也不再解释成用户写错。
                 let slugs = if source.is_some() {
                     known
                         .iter()
@@ -1077,13 +1082,8 @@ pub(super) fn compile_materials(
                                 .ok_or_else(|| invalid("model_identity", "官方模型缺少路由身份"))
                         })
                         .collect::<ModelResult<BTreeSet<_>>>()?
-                } else if channel.discovered.iter().any(|m| m.id == row.model_id) {
-                    BTreeSet::from([format!("{provider_id}/{}", row.model_id.replace('/', "-"))])
                 } else {
-                    return Err(invalid(
-                        "model_unverified",
-                        "所选模型未在当前发现清单中核对",
-                    ));
+                    BTreeSet::from([format!("{provider_id}/{}", row.model_id.replace('/', "-"))])
                 };
                 for slug in slugs {
                     if !expected.insert(slug.clone()) {
@@ -4155,15 +4155,20 @@ mod tests {
     }
     #[test]
     fn projection_rejects_missing_real_model_mapping_catalog_mismatch_and_budget_overflow() {
-        let (mut snapshot, mut policy) = fixture();
+        // 0.2.13 / WP-74（UI 规范 §43）：不再因为「不在发现清单里」拒绝用户的选择。
+        // 管理器无法判断型号命名对错（各站点规则不同），所以「我没读到」不等于
+        // 「它不存在」。这里断言改后的行为：仅声明在 config.json 的型号照常写入。
+        let (snapshot, mut policy) = fixture();
         policy.channels[0].selection = ModelSelection::Whitelist(vec!["missing".into()]);
+        let (target, order, _ids) =
+            compile(&snapshot, &super::super::store::seed_library(), &policy).unwrap();
         assert_eq!(
-            compile(&snapshot, &super::super::store::seed_library(), &policy)
-                .unwrap_err()
-                .code,
-            "model_unverified"
+            target["providers"]["test"]["selectedModels"],
+            serde_json::json!(["missing"])
         );
+        assert!(order.iter().any(|slug| slug == "test/missing"));
         policy.channels[0].selection = ModelSelection::All;
+        let mut snapshot = snapshot;
         snapshot.catalog["models"] = json!([{"slug":"native"}]);
         assert_eq!(
             compile(&snapshot, &super::super::store::seed_library(), &policy)
