@@ -1,0 +1,59 @@
+{
+  "analysis_date": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "purpose": "0.2.13 user feedback issue registration; read-only source analysis",
+  "code_baseline": "v0.2.13 / 1c7fdfcd88c549db5f2c48ab46be07ed180c12d0",
+  "analysis_package_version": "2.84.0",
+  "installed_package_version": "2.84.0",
+  "official_sources": [
+    {
+      "path": "src/server/management/system-routes.ts",
+      "analysis_sha256": "d58691562dda5a2cc657c4e9dfd6efd46b7b4c46b23e9e53ce3ac07a72a125ea",
+      "installed_sha256": "d58691562dda5a2cc657c4e9dfd6efd46b7b4c46b23e9e53ce3ac07a72a125ea",
+      "identical": true
+    },
+    {
+      "path": "src/server/management/config-routes.ts",
+      "analysis_sha256": "51cd9f52644e266134a68fef2ae6f422ac3cd5f7c62b2993812fbc3f02863e11",
+      "installed_sha256": "51cd9f52644e266134a68fef2ae6f422ac3cd5f7c62b2993812fbc3f02863e11",
+      "identical": true
+    },
+    {
+      "path": "src/codex/app-server-restart-service.ts",
+      "analysis_sha256": "52b1a43126e87571455e079de948699f627a73a6a489d93449c38d7c3f48e451",
+      "installed_sha256": "52b1a43126e87571455e079de948699f627a73a6a489d93449c38d7c3f48e451",
+      "identical": true
+    },
+    {
+      "path": "src/codex/desktop-app/darwin.ts",
+      "analysis_sha256": "3b18f9f37ff229b29b55bc5afa4ecf4b71400920a371911e76b2534f9671629f",
+      "installed_sha256": "3b18f9f37ff229b29b55bc5afa4ecf4b71400920a371911e76b2534f9671629f",
+      "identical": true
+    },
+    {
+      "path": "src/cli/dispatch.ts",
+      "analysis_sha256": "735de68cb32575ca9cbfb30b6229ef480cccb83f0e49e7a864551a142f3297a3",
+      "installed_sha256": "735de68cb32575ca9cbfb30b6229ef480cccb83f0e49e7a864551a142f3297a3",
+      "identical": true
+    },
+    {
+      "path": "src/cli/restart-scope.ts",
+      "analysis_sha256": "b1a0111d47f8869f26ebf7e3e0d05b1f778981bad727cc90d4bdbcc7d5f01f6b",
+      "installed_sha256": "b1a0111d47f8869f26ebf7e3e0d05b1f778981bad727cc90d4bdbcc7d5f01f6b",
+      "identical": true
+    },
+    {
+      "path": "src/adapters/anthropic.ts",
+      "analysis_sha256": "29e3eb90967b7746b25070a7cdab79064198f6b7871a41e7ccd808a3cbf4117e",
+      "installed_sha256": "29e3eb90967b7746b25070a7cdab79064198f6b7871a41e7ccd808a3cbf4117e",
+      "identical": true
+    }
+  ],
+  "boundaries": {
+    "implementation_modified": false,
+    "user_configuration_modified": false,
+    "restart_executed": false,
+    "network_reprobe_after_interruption": false,
+    "existing_probe_observation": "Earlier turn observed /models as HTTP200 HTML and /v1/models as HTTP200 JSON; no request reissued for this receipt. No Key or response body stored."
+  }
+}
