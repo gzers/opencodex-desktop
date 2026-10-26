@@ -4911,6 +4911,7 @@ else:sys.exit(7)
     }
     /// 0.2.11：一条处理不了的旧计划不得阻塞客户端核对（WP-68 死锁）。
     /// 这是 check() 去掉全库 reject_incomplete 的直接证据：目标计划可核对即可。
+    #[cfg(unix)]
     #[tokio::test]
     async fn client_check_is_not_blocked_by_unrelated_unfinished_plans() {
         use super::super::client_state::{self, Request as ClientRequest};
@@ -4967,6 +4968,7 @@ else:sys.exit(7)
     }
     /// 0.2.11：用户显式放弃未完成写入 → 收口为 abandoned，不再阻塞后续保存与核对，
     /// 且历史里可见但不可恢复。这是「重新检查与撤回都因漂移被拒」时唯一的正规出口。
+    #[cfg(unix)]
     #[tokio::test]
     async fn abandoning_an_unfinished_plan_unblocks_later_work_and_stays_visible_in_history() {
         let root = tempfile::tempdir().unwrap();
@@ -5015,6 +5017,7 @@ else:sys.exit(7)
         assert!(latest(root.path()).unwrap().is_none_or(|p| p.id != plan.id));
     }
     /// 尚未开始写入的计划没有可放弃的副作用，放弃应被拒绝。
+    #[cfg(unix)]
     #[tokio::test]
     async fn abandoning_a_prepared_plan_is_rejected() {
         let root = tempfile::tempdir().unwrap();
