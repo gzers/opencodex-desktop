@@ -114,6 +114,8 @@ export const modelApi = {
   prepareRecovery:(request:ModelRecoveryRequest)=>invoke<ModelRecoveryPreview>('model_policy_recovery_prepare',{request}),
   acceptRecovery:(planId:string)=>invoke<ModelSnapshot>('model_policy_recovery_accept',{planId}),
   compensatePolicy: (planId:string) => invoke<SavePlan>('model_policy_compensate',{planId}),
+  /** 用户显式放弃这次写入（0.2.11）：仅当重新检查与撤回都不可行时使用。 */
+  abandonPolicy: (planId:string) => invoke<SavePlan>('model_policy_abandon',{planId}),
   upstream: () => invoke<UpstreamSnapshot>('model_upstream_snapshot'),
   discover: (request:{protocol:string;url:string;apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean}) => invoke<{models:DiscoveredModel[];credentialRef:string|null;elapsedMs:number}>('model_channel_discover',{request}),
   forgetCredential: (reference:string) => invoke<void>('model_channel_forget_credential',{reference}),

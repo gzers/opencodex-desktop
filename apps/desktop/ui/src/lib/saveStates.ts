@@ -92,12 +92,14 @@ const STATE_META: Record<SaveStateId, Omit<SaveState, 'id'>> = {
   staging: { label: '正在准备', tone: 'starting', actionable: false },
   applying: { label: '正在保存', tone: 'starting', actionable: false },
   verified: { label: '已保存 · 待重启', tone: 'warn', actionable: true },
-  partial: { label: '保存结果待核对', tone: 'warn', actionable: true },
+  // 流程第 ④ 态（0.2.11）：运行目录与那次写入不一致，或写入未完整结束。
+  partial: { label: '未完整写入', tone: 'warn', actionable: true },
   'rolling-back': { label: '正在回滚', tone: 'warn', actionable: false },
   'rolled-back': { label: '已撤回本次写入', tone: 'muted', actionable: false },
   failed: { label: '保存失败', tone: 'bad', actionable: true },
   cancelled: { label: '保存已取消', tone: 'muted', actionable: true },
-  unknown: { label: '保存结果待核对', tone: 'warn', actionable: true },
+  // 未登记阶段：同样落进第 ④ 态，不静默当成成功或失败。
+  unknown: { label: '未完整写入', tone: 'warn', actionable: true },
 }
 
 /** 写入中 14 个阶段的阶段名（裁决 #1：只在 hover / focus 显示）。 */

@@ -186,6 +186,20 @@ pub async fn model_policy_client_check(
     crate::modules::model_config::client_state::check(&data_root.0, &context, request).await
 }
 #[tauri::command]
+pub async fn model_policy_abandon(
+    plan_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::runtime::SavePlanView> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::runtime::abandon(&root, &plan_id)
+    })
+    .await
+    .map_err(|_| invalid("plan_worker", "放弃计划中断，计划保持原状"))?
+}
+#[tauri::command]
 pub async fn model_policy_recovery_prepare(
     request: crate::modules::model_config::recovery::Request,
     data_root: tauri::State<'_, SharedDataRoot>,

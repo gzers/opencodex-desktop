@@ -32,7 +32,7 @@ describe('recovering a saved operation',()=>{
    const wrapper=render();await flushPromises()
    store.policyNotificationTarget={planId:'original'}
    await flushPromises()
-   await wrapper.findAll('button').find(b=>b.text()==='核对原计划')!.trigger('click');await flushPromises()
+   await wrapper.findAll('button').find(b=>b.text()==='重新检查')!.trigger('click');await flushPromises()
    expect(store.snapshot!.workspaceDigest).toBe('later-draft');expect(store.channelDraft).toEqual(saved.workspace.policy)
    await store.persistDraft();expect(modelApi.stage).toHaveBeenCalledWith('policy','later-draft',saved.workspace.policy);wrapper.unmount()
  })
@@ -60,11 +60,26 @@ describe('recovering a saved operation',()=>{
    useModelsStore().policyNotificationTarget={planId:'original'}
    await flushPromises()
    expect(wrapper.text()).not.toContain('上次保存尚未完成核对')
-   await wrapper.findAll('button').find(b=>b.text()==='核对原计划')!.trigger('click');await flushPromises()
+   await wrapper.findAll('button').find(b=>b.text()==='重新检查')!.trigger('click');await flushPromises()
    // 进入时拉一次结果，点「核对原计划」再显式重查一次：两次都必须是同一 planId。
    expect(modelApi.policyResult).toHaveBeenCalledWith('original')
    expect(new Set(vi.mocked(modelApi.policyResult).mock.calls.map(c=>c[0]))).toEqual(new Set(['original']))
    expect(modelApi.applyPolicy).not.toHaveBeenCalled();wrapper.unmount()
+ })
+ it('未完整写入时给出「重新检查」与「放弃这次」两个可达出口（0.2.11 第 ④ 态）',async()=>{
+   const store=useModelsStore()
+   vi.mocked(modelApi.latestPolicy).mockResolvedValue({...plan(),phase:'verified_partial',error:'provider_write'})
+   vi.mocked(modelApi.policyResult).mockResolvedValue({...plan(),phase:'verified_partial',error:'provider_write'})
+   const wrapper=render();await flushPromises()
+   // 悬空态不再出现：状态框用流程第 ④ 态的说法。
+   expect(wrapper.text()).not.toContain('保存结果待核对')
+   // 打开保存结果后，两个出口都必须在，且没有「无按钮的阻塞」。
+   store.policyNotificationTarget={planId:'original'}
+   await flushPromises()
+   const labels=wrapper.findAll('button').map(b=>b.text())
+   expect(labels).toContain('重新检查')
+   expect(labels.some(t=>t.includes('撤回本次未完成写入')||t.includes('放弃这次'))).toBe(true)
+   wrapper.unmount()
  })
  it('notification navigation keeps its exact plan even when latest returns another operation',async()=>{
    const store=useModelsStore();store.policyNotificationTarget={planId:'specific-plan'}
@@ -72,8 +87,8 @@ describe('recovering a saved operation',()=>{
    vi.mocked(modelApi.policyResult).mockResolvedValue(plan('specific-plan'))
    const wrapper=render();await flushPromises()
    expect(modelApi.policyResult).toHaveBeenCalledExactlyOnceWith('specific-plan')
-   expect(wrapper.findAll('button').some(b=>b.text()==='核对原计划')).toBe(true)
-   await wrapper.findAll('button').find(b=>b.text()==='核对原计划')!.trigger('click');await flushPromises()
+   expect(wrapper.findAll('button').some(b=>b.text()==='重新检查')).toBe(true)
+   await wrapper.findAll('button').find(b=>b.text()==='重新检查')!.trigger('click');await flushPromises()
    expect(modelApi.policyResult).toHaveBeenLastCalledWith('specific-plan');expect(modelApi.applyPolicy).not.toHaveBeenCalled();wrapper.unmount()
  })
 

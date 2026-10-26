@@ -186,19 +186,47 @@ async function confirmSave(){
   }finally{saving.value=false;models.busy=false;saveConfirming.value=false}
 }
 
+/** 两次都失败于漂移（不是语法/网络问题）时，UI 把主出口切到「放弃这次」。 */
+/** 流程第 ④ 态：这次写入未完整结束，必须给出可达出口（裁决：不允许无按钮的阻塞）。 */
+const partialPlan=computed(()=>!!savePlan.value&&!['prepared','committed','compensated','abandoned'].includes(savePlan.value.phase))
+const abandonProblem=ref(false)
+const abandonConfirm=ref(false)
+const abandonReason=ref('')
+/**
+ * 「重新检查」与「撤回」都可能因运行态漂移被拒（用户在那次写入后继续改过配置）。
+ * 这类拒绝不可通过重试解决，此时必须给出「放弃这次」出口，而不是让用户删文件。
+ */
+function driftBlocked(cause:unknown){const code=String((cause as {code?:string})?.code??'');const msg=errorText(cause)
+ return ['compensation_drift','reconcile_drift','credential_drift','plan_incomplete'].some(k=>code.includes(k)||msg.includes(k))}
 const compensationConfirm=ref(false)
 async function querySave(){
  if(!savePlan.value)return
  saving.value=true;error.value=''
  try{savePlan.value=await modelApi.policyResult(savePlan.value.id);if(savePlan.value.phase==='committed')models.acceptTransfer(await modelApi.load())}
- catch(cause){error.value=errorText(cause)}finally{saving.value=false}
+ catch(cause){error.value=errorText(cause);abandonProblem.value=driftBlocked(cause)}finally{saving.value=false}
+}
+/**
+ * 放弃这次写入（0.2.11，流程第 ④ 态的兜底出口）。
+ * 仅在「重新检查」与「撤回」都因漂移被拒时使用；二次确认后把计划收口为 abandoned，
+ * 不再阻塞后续保存与客户端核对。用户不必再去删 manager-state 下的文件。
+ */
+async function abandonPlan(){
+ if(!savePlan.value)return
+ if(!abandonConfirm.value){abandonConfirm.value=true;abandonReason.value='';return}
+ saving.value=true;models.busy=true;error.value=''
+ try{
+  savePlan.value=await modelApi.abandonPolicy(savePlan.value.id)
+  abandonConfirm.value=false;abandonReason.value=''
+  // 收口后不再挡路：清掉本地待核对对象，状态回到「未修改」。
+  savePlan.value=null;saveOpen.value=false
+ }catch(cause){error.value=errorText(cause)}finally{saving.value=false;models.busy=false}
 }
 async function compensate(){
  if(!savePlan.value)return
  if(!compensationConfirm.value){compensationConfirm.value=true;return}
  saving.value=true;models.busy=true;error.value=''
  try{savePlan.value=await modelApi.compensatePolicy(savePlan.value.id);compensationConfirm.value=false}
- catch(cause){error.value=errorText(cause)}finally{saving.value=false;models.busy=false}
+ catch(cause){error.value=errorText(cause);abandonProblem.value=driftBlocked(cause)}finally{saving.value=false;models.busy=false}
 }
 
 const upstreamBusy = ref(false)
@@ -290,7 +318,7 @@ function dragChannel(event:PointerEvent,id:string){draggedOver.value='';channelD
       <label v-if="saveSharedAvailable" class="model-inline"><input v-model="saveShared" type="checkbox" :disabled="models.busy" />包含全局模版采用与渠道顺序（影响全部渠道）</label>
       <template #actions><UiButton @click="saveScopeOpen=false">取消</UiButton><UiButton variant="primary" :loading="models.busy" :disabled="!saveScopeIds.length&&!saveShared" @click="prepareSelectedScope">比较本次范围</UiButton></template>
     </UiDialog>
-    <UiDialog :open="saveOpen" title="保存结果" :busy="saving" @close="saveOpen = false"><template v-if="savePlan"><p v-if="savePlan.historySource">本次保存来自成功历史恢复，按原始官方字段、目录顺序和受保护授权执行。</p><div v-if="savePlan.removedProviders?.length"><h3>将移除的运行渠道</h3><p>{{ savePlan.removedProviders.join('、') }}</p></div><p>完整目录条目：{{ savePlan.currentCatalogCount }} → {{ savePlan.catalogCount }} / 100（当前兼容预算）</p><p>范围：{{ savePlan.changedChannels.join('、') }}</p><div v-if="savePlan.deferredChannels?.length"><h3>留待稍后</h3><p>{{ savePlan.deferredChannels.join('、') }}；本次不提交，草稿保留。</p></div><div v-if="savePlan.protocolGroups?.length"><h3>协议分组</h3><p v-for="group in savePlan.protocolGroups" :key="group" class="mono">{{ group }}</p></div><div v-if="savePlan.routeChanges?.length"><h3>模型运行标识或快捷入口变更</h3><p>以下分组或别名变更会影响旧选择入口，已有会话需按对应提示重新选择型号。</p><p v-for="change in savePlan.routeChanges" :key="change" class="mono">{{ change }}</p></div><details v-if="savePlan.runtimeChanges?.length"><summary>核对原始官方字段差异（{{ savePlan.runtimeChanges.length }} 项）</summary><article v-for="change in savePlan.runtimeChanges" :key="change.field"><strong>{{ change.field }}</strong><pre>当前：{{ JSON.stringify(change.before,null,2) }}</pre><pre>恢复后：{{ JSON.stringify(change.after,null,2) }}</pre></article></details><p v-if="savePlan.phase === 'prepared'">本次已准备但尚未写入；草稿保留，可重新保存。</p><p v-else>执行阶段：{{ ({applying:'执行中',providers_written:'渠道已写入',visibility_written:'可见性已写入',order_written:'顺序已写入',runtime_verified:'运行读回已核对',committed:'保存完成，待客户端核对'}[savePlan.phase] ?? '待核对') }}</p><p v-if="compensationConfirm">将核对本次最后读回的运行态，只撤回本次写入；若发现后来修改会拒绝补偿。确认继续？</p><p v-if="savePlan.error || error" class="model-error" role="alert">{{ error || savePlanErrorText(savePlan.error) }}</p></template><template #actions><UiButton v-if="savePlan?.phase==='prepared'&&!savePlan.historySource" :disabled="models.busy||saving" @click="adjustSaveScope">调整范围</UiButton><UiButton :disabled="saving" @click="saveOpen = false">关闭</UiButton><UiButton v-if="savePlan && !['prepared','committed','compensated'].includes(savePlan.phase)" :disabled="saving" @click="querySave">核对原计划</UiButton><UiButton v-if="savePlan && !['prepared','committed','compensated'].includes(savePlan.phase)" variant="danger" :loading="saving" @click="compensate">{{ compensationConfirm ? '确认撤回本次写入' : '撤回本次未完成写入' }}</UiButton></template></UiDialog>
+    <UiDialog :open="saveOpen" title="保存结果" :busy="saving" @close="saveOpen = false"><template v-if="savePlan"><p v-if="savePlan.historySource">本次保存来自成功历史恢复，按原始官方字段、目录顺序和受保护授权执行。</p><div v-if="savePlan.removedProviders?.length"><h3>将移除的运行渠道</h3><p>{{ savePlan.removedProviders.join('、') }}</p></div><p>完整目录条目：{{ savePlan.currentCatalogCount }} → {{ savePlan.catalogCount }} / 100（当前兼容预算）</p><p>范围：{{ savePlan.changedChannels.join('、') }}</p><div v-if="savePlan.deferredChannels?.length"><h3>留待稍后</h3><p>{{ savePlan.deferredChannels.join('、') }}；本次不提交，草稿保留。</p></div><div v-if="savePlan.protocolGroups?.length"><h3>协议分组</h3><p v-for="group in savePlan.protocolGroups" :key="group" class="mono">{{ group }}</p></div><div v-if="savePlan.routeChanges?.length"><h3>模型运行标识或快捷入口变更</h3><p>以下分组或别名变更会影响旧选择入口，已有会话需按对应提示重新选择型号。</p><p v-for="change in savePlan.routeChanges" :key="change" class="mono">{{ change }}</p></div><details v-if="savePlan.runtimeChanges?.length"><summary>核对原始官方字段差异（{{ savePlan.runtimeChanges.length }} 项）</summary><article v-for="change in savePlan.runtimeChanges" :key="change.field"><strong>{{ change.field }}</strong><pre>当前：{{ JSON.stringify(change.before,null,2) }}</pre><pre>恢复后：{{ JSON.stringify(change.after,null,2) }}</pre></article></details><p v-if="savePlan.phase === 'prepared'">本次已准备但尚未写入；草稿保留，可重新保存。</p><p v-else>执行阶段：{{ ({applying:'执行中',providers_written:'渠道已写入',visibility_written:'可见性已写入',order_written:'顺序已写入',runtime_verified:'运行读回已核对',committed:'保存完成，待客户端核对'}[savePlan.phase] ?? '待核对') }}</p><p v-if="compensationConfirm">将核对本次最后读回的运行态，只撤回本次写入；若发现后来修改会拒绝补偿。确认继续？</p><p v-if="partialPlan" class="model-muted">运行目录与这次写入不一致，或那次写入未完整结束。先点「重新检查」：若运行目录已经是那次写入的结果，会直接完成；若写入只成功了一部分，可「撤回本次未完成写入」回到写入前，或「放弃这次」只把这条记录收口、不改动当前配置。</p><p v-if="abandonConfirm" class="model-error" role="alert">放弃只会把这次记录标记为已放弃，不改动当前运行配置。确认后再点一次「确认放弃这次写入」。</p><p v-if="savePlan.error || error" class="model-error" role="alert">{{ error || savePlanErrorText(savePlan.error) }}</p></template><template #actions><UiButton v-if="savePlan?.phase==='prepared'&&!savePlan.historySource" :disabled="models.busy||saving" @click="adjustSaveScope">调整范围</UiButton><!-- 关闭由 UiDialog 头部提供，底部不再重复 --><UiButton v-if="partialPlan" :disabled="saving" @click="querySave">重新检查</UiButton><UiButton v-if="partialPlan" variant="danger" :loading="saving" @click="compensate">{{ compensationConfirm ? '确认撤回本次写入' : '撤回本次未完成写入' }}</UiButton><UiButton v-if="partialPlan" variant="ghost" :loading="saving" @click="abandonPlan">{{ abandonConfirm ? '确认放弃这次写入' : '放弃这次' }}</UiButton></template></UiDialog>
     <UiDialog :open="!!copySource" title="复制渠道" :busy="models.busy" @close="copySource=null"><label>副本名称<input v-model="copyName" class="input" maxlength="256" /></label><label v-if="copySource?.connection.credentialRef"><input v-model="reuseCopyKey" type="checkbox" />副本复用此本机渠道Key</label><p>副本采用独立渠道和节点身份，保持停用。模版匹配范围需在预览中核对。</p><template #actions><UiButton @click="copySource=null">取消</UiButton><UiButton variant="primary" :disabled="!copyName.trim()" @click="confirmCopy">建立副本草稿</UiButton></template></UiDialog>
     <SelectorPreviewDialog :open="previewOpen" :system-rows="systemRows" :projection="previewProjection" :saved="models.snapshot?.policy??null" :other-changes="saveReviewChanges" :channels="(models.channelDraft?.channels ?? []).map(c=>({id:c.id,label:c.label||c.id,enabled:c.connection.enabled,protected:protectedChannel(c)}))" :busy="previewBusy" :saving="saveConfirming" :error="previewError||undefined" @toggle-channel="togglePreviewChannel" @toggle-model="togglePreviewModel" @confirm="confirmSave" @close="previewOpen = false" />
   </div>
