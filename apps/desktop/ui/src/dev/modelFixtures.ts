@@ -53,7 +53,24 @@ export function installModelFixtures() {
   modelApi.previewNewChannel=async()=>({models:structuredClone(channels[0]!.discovered),credentialRef:null,elapsedMs:12})
   modelApi.addNewChannel=async request=>{const channel=structuredClone(request.channel);snapshot={...snapshot,workspace:{basePolicy:snapshot.policyDigest,policy:{...(snapshot.workspace?.policy??snapshot.policy),channels:request.replace?(snapshot.workspace?.policy.channels??snapshot.policy.channels).map(c=>c.id===channel.id?channel:c):[...(snapshot.workspace?.policy.channels??snapshot.policy.channels),channel]}},workspaceDigest:'visual-new-channel'};const outcome={id:request.id,channel,phase:'committed' as const,error:null,snapshot:structuredClone(snapshot)};newChannelResults.set(request.id,outcome);return structuredClone(outcome)}
   modelApi.newChannelResult=async id=>{const result=newChannelResults.get(id);if(!result)throw {message:'显式DEV加入记录不存在'};return structuredClone(result)}
-  modelApi.latestPolicy=async()=>null
+  // 审计入口：?partialSave=1 时假装「上次写入未完整结束」，用于实屏核对流程第 ④ 态。
+  // 只影响 DEV 夹具，不写入任何真实状态。
+  const partialSave=new URLSearchParams(location.search).get('partialSave')==='1'
+  const partialPlan=()=>({
+    id:'visual-partial-plan',
+    phase:'verified_partial' as const,
+    catalogCount:36,
+    currentCatalogCount:36,
+    changedChannels:['NewApi'],
+    error:'provider_write',
+    protocolGroups:[],
+    routeChanges:[],
+    removedProviders:[],
+    historySource:null,
+    runtimeChanges:[],
+  })
+  modelApi.policyResult=async()=>partialSave?partialPlan():{...visualPlan(snapshot.policy),id:'visual-plan',phase:'committed' as const}
+  modelApi.latestPolicy=async()=>partialSave?partialPlan():null
   const clientPlan=crypto.randomUUID()
   let clientState:import('@/features/models/api').ModelClientState={planId:clientPlan,status:'restart_required',checkedAt:null,checkId:null,confirmedAt:null,runtimeMatches:false,automaticClientVerification:false}
   modelApi.clientStatus=async()=>structuredClone(clientState)

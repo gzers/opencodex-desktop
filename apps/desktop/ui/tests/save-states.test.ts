@@ -60,10 +60,10 @@ describe('保存状态归并（23 phase → 结论级）', () => {
     expect(applyingPhaseLabel(null)).toBeUndefined()
   })
 
-  it('未知 phase 落到「保存结果待核对」，不静默当成成功或失败', () => {
+  it('未知 phase 落到「未完整写入」，不静默当成成功或失败', () => {
     const state = saveStateOf('some_future_phase')
     expect(state.id).toBe('unknown')
-    expect(state.label).toBe('保存结果待核对')
+    expect(state.label).toBe('未完整写入')
     expect(state.tone).toBe('warn')
     expect(state.actionable).toBe(true)
   })
@@ -73,6 +73,7 @@ describe('保存状态归并（23 phase → 结论级）', () => {
     expect(saveStateOf(undefined).label).toBe('未修改')
     expect(saveStateOf('committed').actionable).toBe(true)
     expect(saveStateOf('verified_partial').actionable).toBe(true)
+    expect(saveStateOf('verified_partial').label).toBe('未完整写入')
   })
 })
 

@@ -150,7 +150,8 @@ pub struct Request {
 }
 pub async fn check(root: &Path, context: &ProcessContext, request: Request) -> ModelResult<View> {
     let _guard = runtime::execution_lock(root)?;
-    runtime::reject_incomplete(root)?;
+    // 2026-10-26：不再先做全库 reject_incomplete。其它未完成计划与「本次要核对的目标」
+    // 是否已加载无关，先全库拒绝会让一条处理不了的计划挡住所有客户端核对（WP-68 死锁）。
     let plan =
         target(root)?.ok_or_else(|| invalid("client_target", "当前没有待客户端核对的运行保存"))?;
     if plan.id != request.plan_id {

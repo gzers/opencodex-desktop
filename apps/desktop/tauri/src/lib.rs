@@ -560,6 +560,7 @@ pub fn run() {
             commands::model_config::model_policy_recovery_prepare,
             commands::model_config::model_policy_recovery_accept,
             commands::model_config::model_policy_compensate,
+            commands::model_config::model_policy_abandon,
             commands::model_config::model_upstream_snapshot,
             commands::model_config::model_channel_discover,
             commands::model_config::model_new_channel_preview,

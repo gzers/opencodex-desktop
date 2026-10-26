@@ -436,7 +436,7 @@ pub fn latest(root: &Path) -> ModelResult<Option<SavePlanView>> {
     let mut latest = None;
     for id in plan_ids(root)? {
         let plan = load(root, &id)?;
-        if ["prepared", "compensated"].contains(&plan.phase.as_str()) {
+        if ["prepared", "compensated", "abandoned"].contains(&plan.phase.as_str()) {
             continue;
         }
         let created = chrono::DateTime::parse_from_rfc3339(&plan.created_at)
@@ -455,6 +455,36 @@ pub struct HistoryEntry {
     pub phase: String,
     pub channel_labels: Vec<String>,
     pub recoverable: bool,
+}
+/// 用户明确放弃这次写入（0.2.11）：把计划收口为终态，不再阻塞后续保存与客户端核对。
+///
+/// 仅当「重新检查」与「撤回」都不可行时使用（例如写入后用户又改了配置，
+/// 核对与补偿都会因漂移被拒）。二次确认由界面承担；这里只做状态收口与留痕。
+pub fn abandon(root: &Path, id: &str) -> ModelResult<SavePlanView> {
+    let _execution = execution_lock(root)?;
+    let file = path(root, id)?;
+    safety::check_path(
+        root,
+        &crate::infrastructure::locking::lock_path_for(&file),
+        true,
+    )?;
+    let _guard = TargetFileLock::lock(&file)?;
+    let mut plan = load(root, id)?;
+    // 已是终态：幂等返回，不覆盖既有结论。
+    if ["committed", "compensated", "abandoned"].contains(&plan.phase.as_str()) {
+        return Ok(plan.view());
+    }
+    // 未开始写入的计划没有可放弃的副作用，保持原状由保存流程处理。
+    if plan.phase == "prepared" {
+        return Err(invalid(
+            "abandon_scope",
+            "该计划尚未开始写入，无需放弃；可直接重新保存",
+        ));
+    }
+    plan.phase = "abandoned".into();
+    plan.error = Some("abandoned".into());
+    save(root, &plan)?;
+    Ok(plan.view())
 }
 pub fn history(root: &Path) -> ModelResult<Vec<HistoryEntry>> {
     let mut values = vec![];
@@ -522,10 +552,11 @@ pub fn accept_recovery(root: &Path, id: &str) -> ModelResult<Snapshot> {
 pub(super) fn reject_incomplete(root: &Path) -> ModelResult<()> {
     for id in plan_ids(root)? {
         let plan = load(root, &id)?;
-        if !["prepared", "committed", "compensated"].contains(&plan.phase.as_str()) {
+        // 2026-10-26（0.2.11）：abandoned 是用户显式放弃的终态，不再阻塞后续保存与核对。
+        if !["prepared", "committed", "compensated", "abandoned"].contains(&plan.phase.as_str()) {
             return Err(invalid(
                 "plan_incomplete",
-                "已有保存计划待核对，请先核对原计划或撤回其未完成写入",
+                "有一条保存计划需要先收口：请重新检查，或放弃这次写入",
             ));
         }
     }
@@ -4876,6 +4907,149 @@ else:sys.exit(7)
                 .find(|entry| entry.id == plan.id)
                 .unwrap()
                 .recoverable
+        );
+    }
+    /// 0.2.11：一条处理不了的旧计划不得阻塞客户端核对（WP-68 死锁）。
+    /// 这是 check() 去掉全库 reject_incomplete 的直接证据：目标计划可核对即可。
+    #[cfg(unix)]
+    #[tokio::test]
+    async fn client_check_is_not_blocked_by_unrelated_unfinished_plans() {
+        use super::super::client_state::{self, Request as ClientRequest};
+        let root = tempfile::tempdir().unwrap();
+        let (snapshot, policy) = fixture();
+        let context = cli_fixture(root.path(), &snapshot);
+        let store = ModelStore::new(root.path());
+        let local = store.load().unwrap();
+        store
+            .stage_policy(
+                &local.policy_digest,
+                &local.workspace_digest,
+                policy.clone(),
+            )
+            .unwrap();
+        let staged = store.load().unwrap();
+        let plan = prepare(
+            root.path(),
+            &context,
+            policy,
+            staged.library_digest.clone(),
+            staged.policy_digest.clone(),
+            staged.workspace_digest.clone(),
+        )
+        .await
+        .unwrap();
+        // 目标计划先真正写入，才可能成为「待客户端核对」的对象。
+        assert_eq!(
+            apply(root.path(), &context, &plan.id).await.unwrap().phase,
+            "committed"
+        );
+        // 另造一条与本次无关、且处理不了的旧计划（写入后核对部分不符）。
+        let mut orphan = load(root.path(), &plan.id).unwrap();
+        orphan.id = uuid::Uuid::new_v4().to_string();
+        orphan.phase = "verified_partial".into();
+        orphan.error = Some("provider_write".into());
+        save(root.path(), &orphan).unwrap();
+        // 旧行为：全库检查会直接报错，客户端核对无法进行。
+        assert!(reject_incomplete(root.path()).is_err());
+        // 新行为：客户端核对只看自己的目标，不被无关计划挡住。
+        let checked = client_state::check(
+            root.path(),
+            &context,
+            ClientRequest {
+                plan_id: plan.id.clone(),
+                confirmation_check: None,
+            },
+        )
+        .await;
+        assert!(
+            checked.is_ok(),
+            "client check must not be blocked by unrelated plans: {checked:?}"
+        );
+    }
+    /// 0.2.11：用户显式放弃未完成写入 → 收口为 abandoned，不再阻塞后续保存与核对，
+    /// 且历史里可见但不可恢复。这是「重新检查与撤回都因漂移被拒」时唯一的正规出口。
+    #[cfg(unix)]
+    #[tokio::test]
+    async fn abandoning_an_unfinished_plan_unblocks_later_work_and_stays_visible_in_history() {
+        let root = tempfile::tempdir().unwrap();
+        let (snapshot, policy) = fixture();
+        let context = cli_fixture(root.path(), &snapshot);
+        let store = ModelStore::new(root.path());
+        let local = store.load().unwrap();
+        store
+            .stage_policy(
+                &local.policy_digest,
+                &local.workspace_digest,
+                policy.clone(),
+            )
+            .unwrap();
+        let staged = store.load().unwrap();
+        let plan = prepare(
+            root.path(),
+            &context,
+            policy,
+            staged.library_digest.clone(),
+            staged.policy_digest.clone(),
+            staged.workspace_digest.clone(),
+        )
+        .await
+        .unwrap();
+        // 模拟写入后核对部分不符（真实路径里由 reconcile 判定）。
+        let mut stored = load(root.path(), &plan.id).unwrap();
+        stored.phase = "verified_partial".into();
+        stored.error = Some("provider_write".into());
+        save(root.path(), &stored).unwrap();
+        // 未放弃前：全库拒绝。
+        assert!(reject_incomplete(root.path()).is_err());
+        // 放弃后：不再阻塞，且是幂等的。
+        let view = abandon(root.path(), &plan.id).unwrap();
+        assert_eq!(view.phase, "abandoned");
+        assert!(reject_incomplete(root.path()).is_ok());
+        assert_eq!(abandon(root.path(), &plan.id).unwrap().phase, "abandoned");
+        // 历史里仍可追溯，但不作为可恢复项。
+        let entry = history(root.path())
+            .unwrap()
+            .into_iter()
+            .find(|e| e.id == plan.id)
+            .expect("abandoned plan stays in history");
+        assert!(!entry.recoverable);
+        // 不再作为「最近保存」展示。
+        assert!(latest(root.path()).unwrap().is_none_or(|p| p.id != plan.id));
+    }
+    /// 尚未开始写入的计划没有可放弃的副作用，放弃应被拒绝。
+    #[cfg(unix)]
+    #[tokio::test]
+    async fn abandoning_a_prepared_plan_is_rejected() {
+        let root = tempfile::tempdir().unwrap();
+        let (snapshot, policy) = fixture();
+        let context = cli_fixture(root.path(), &snapshot);
+        let store = ModelStore::new(root.path());
+        let local = store.load().unwrap();
+        store
+            .stage_policy(
+                &local.policy_digest,
+                &local.workspace_digest,
+                policy.clone(),
+            )
+            .unwrap();
+        let staged = store.load().unwrap();
+        let plan = prepare(
+            root.path(),
+            &context,
+            policy,
+            staged.library_digest.clone(),
+            staged.policy_digest.clone(),
+            staged.workspace_digest.clone(),
+        )
+        .await
+        .unwrap();
+        assert_eq!(plan.phase, "prepared");
+        let error = abandon(root.path(), &plan.id).unwrap_err();
+        // 错误只对用户说「无需放弃」，不暴露内部错误码。
+        let message = format!("{error}");
+        assert!(
+            message.contains("尚未开始写入") || message.contains("abandon_scope"),
+            "unexpected message: {message}"
         );
     }
     #[cfg(unix)]
