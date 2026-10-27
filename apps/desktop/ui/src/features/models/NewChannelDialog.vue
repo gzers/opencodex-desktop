@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {computed,onBeforeUnmount,onMounted,ref,watch} from 'vue'
+import {computed,onBeforeUnmount,ref,watch} from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import {useModelsStore} from './store'
-import {emptyRules,errorText,modelApi,type DiscoveredModel,type ChannelPolicy,type NewChannelOutcome} from './api'
+import {emptyRules,errorText,modelApi,type DiscoveredModel,type ChannelPolicy} from './api'
 const props=defineProps<{original?:ChannelPolicy}>()
 const original=props.original?JSON.parse(JSON.stringify(props.original)) as ChannelPolicy:undefined
 const emit=defineEmits<{close:[];added:[string]}>()
@@ -16,8 +16,8 @@ const newUrl=ref('')
 const url=computed({get:()=>original?(nodes.value.find(n=>n.id===activeNode.value)?.url??''):newUrl.value,set:value=>{if(original){const node=nodes.value.find(n=>n.id===activeNode.value);if(node)node.url=value}else newUrl.value=value}})
 const id=original?.id??crypto.randomUUID(),nodeId=crypto.randomUUID()
 const models=ref<DiscoveredModel[]>([]),selected=ref<string[]>([]),query=ref(''),onlySelected=ref(false),manual=ref('')
-const ready=ref(false)
-const busy=ref(false),discovering=ref(false),frozen=ref(false),operationId=ref(''),error=ref(''),status=ref('')
+const ready=ref(true)
+const busy=ref(false),discovering=ref(false),error=ref(''),status=ref('')
 let generation=0,disposed=false
 const needsKey=computed(()=>protocol.value!=='ollama-native')
 const rows=computed(()=>models.value.filter(m=>(!onlySelected.value||selected.value.includes(m.id))&&(m.id+' '+m.label).toLocaleLowerCase().includes(query.value.toLocaleLowerCase())))
@@ -25,7 +25,6 @@ const allVisible=computed(()=>rows.value.length>0&&rows.value.every(m=>selected.
 const mixedVisible=computed(()=>rows.value.some(m=>selected.value.includes(m.id))&&!allVisible.value)
 watch(()=>JSON.stringify([protocol.value,url.value,apiKey.value,privateNetwork.value,nodes.value]),()=>{generation++;discovering.value=false;models.value=[];selected.value=[];status.value='';error.value=''})
 onBeforeUnmount(()=>{disposed=true;generation++;apiKey.value=''})
-onMounted(async()=>{try{const previous=await modelApi.latestNewChannel();if(!disposed&&previous){operationId.value=previous.id;frozen.value=true;step.value=2;label.value=previous.channel.label;status.value='上次加入结果待核对，请沿原操作继续。';error.value=previous.error?errorText(previous.error):''}}catch(cause){if(!disposed)error.value=errorText(cause)}finally{ready.value=true}})
 function connectionError(){
  if(!label.value.trim()||label.value.trim().length>256)return '请填写渠道名称，名称不能过长'
  if(!/^[A-Za-z0-9_-]{1,128}$/.test(providerId.value)||['openai','chatgpt','openai-multi','combo'].includes(providerId.value.toLowerCase()))return '运行标识仅支持字母、数字、连字符和下划线，且不能使用原生保留标识'
@@ -43,7 +42,7 @@ function connectionError(){
 function addEditNode(){nodes.value.push({id:crypto.randomUUID(),name:'',url:''})}
 function next(){const message=connectionError();if(message){error.value=message;return}error.value='';step.value=2}
 async function discover(){
- if(busy.value||frozen.value||discovering.value)return
+ if(busy.value||discovering.value)return
  const message=connectionError();if(message){error.value=message;step.value=1;return}
  const sequence=++generation;discovering.value=true;error.value='';status.value=''
  try{const result=await modelApi.previewNewChannel({protocol:protocol.value,url:url.value,apiKey:needsKey.value?apiKey.value:null,credentialRef:null,allowPrivateNetwork:privateNetwork.value})
@@ -57,15 +56,8 @@ async function discover(){
 function select(id:string,checked:boolean){selected.value=checked?[...new Set([...selected.value,id])]:selected.value.filter(v=>v!==id)}
 function selectVisible(){const visible=new Set(rows.value.map(m=>m.id));selected.value=allVisible.value?selected.value.filter(id=>!visible.has(id)):[...new Set([...selected.value,...visible])]}
 function addManual(){const value=manual.value;if(!value||value.trim()!==value||value.length>2048||/[\u0000-\u001f]/.test(value)){error.value='请输入完整且不含首尾空白的精确模型ID';return}if(models.value.some(m=>m.id===value)){error.value='此精确模型ID已在清单中';return}models.value.push({id:value,label:value,rules:emptyRules()});manual.value='';error.value=''}
-function outcome(result:NewChannelOutcome){
- if(result.phase==='committed'&&result.snapshot){store.acceptTransfer(result.snapshot);apiKey.value='';emit('added',result.channel.id);emit('close');return}
- error.value=result.error?errorText(result.error):'加入结果待核对'
- if(result.phase==='failed'){frozen.value=false;operationId.value='';status.value='原加入未完成；输入保留，临时凭据已清理。'}
- else{frozen.value=true;status.value='请核对原加入结果；关闭窗口不会撤回可能已经加入的渠道。'}
-}
 async function join(){
  if(busy.value||discovering.value)return
- if(frozen.value){await check();return}
  const message=connectionError();if(message){error.value=message;step.value=1;return}
  if(!selected.value.length){error.value='请选择至少一个精确型号';return}
  busy.value=true;store.busy=true;error.value=''
@@ -79,18 +71,20 @@ async function join(){
    channel.connection={...channel.connection,nodes:JSON.parse(JSON.stringify(nodes.value)),activeNodeId:activeNode.value,enabled:original.connection.enabled}
    channel.modelOrder=[...new Set([...original.modelOrder,...original.discovered.map(m=>m.id),...channel.modelOrder])]
   }
-  operationId.value=crypto.randomUUID();frozen.value=true
-  outcome(await modelApi.addNewChannel({id:operationId.value,expectedPolicy:store.snapshot.policyDigest,expectedWorkspace:store.snapshot.workspaceDigest,channel,apiKey:needsKey.value?apiKey.value:null,...(original?{replace:original}:{})}))
- }catch(cause){error.value=errorText(cause);const code=typeof cause==='object'&&cause&&'code'in cause?String(cause.code):'';if(['stale_workspace','connection_edit','new_channel_boundary','new_channel_duplicate','new_channel_selection','credential','channel','provider','node_url','nodes','active_node','model_order','model_identity','new_channel_limit'].includes(code)){frozen.value=false;operationId.value=''}if(code==='new_channel_unfinished'){const previous=await modelApi.latestNewChannel();if(previous){operationId.value=previous.id;frozen.value=true}}}
+  if(!store.channelDraft)throw {message:'请先读取当前配置'}
+  if(original)store.channelDraft.channels=store.channelDraft.channels.map(c=>c.id===original.id?channel:c)
+  else store.channelDraft.channels.push(channel)
+  if(apiKey.value)store.credentialEdits[channel.id]={channelId:channel.id,action:'replace',value:apiKey.value}
+  apiKey.value='';emit('added',channel.id);emit('close')
+ }catch(cause){error.value=errorText(cause)}
  finally{busy.value=false;store.busy=false}
 }
-async function check(){if(busy.value||!operationId.value)return;busy.value=true;store.busy=true;error.value='';try{outcome(await modelApi.newChannelResult(operationId.value))}catch(cause){error.value=errorText(cause);if(typeof cause==='object'&&cause&&'code'in cause&&cause.code==='new_channel_not_found'){frozen.value=false;operationId.value=''}}finally{busy.value=false;store.busy=false}}
 function close(){if(busy.value)return;generation++;apiKey.value='';emit('close')}
 </script>
 <template>
  <UiDialog :open="true" wide :title="original?'编辑渠道连接':'新增渠道'" :busy="busy" @close="close">
-  <p role="status">{{ frozen?'原加入结果待核对':step===1?'1 / 2 · 连接配置':'2 / 2 · 选择模型' }}</p>
-  <template v-if="!frozen&&step===1">
+  <p role="status">{{ step===1?'1 / 2 · 连接配置':'2 / 2 · 选择模型' }}</p>
+  <template v-if="step===1">
    <div class="model-columns"><label>渠道名称<input v-model="label" class="input" maxlength="256" :disabled="!!original" /></label><label>运行渠道标识<input v-model="providerId" class="input" maxlength="128" :disabled="!!original" autocapitalize="off" spellcheck="false" /></label></div>
    <label>默认协议<UiSelectField v-model="protocol" label="新渠道默认协议" :options="['openai-responses','openai-chat','anthropic','google','ollama-native'].map(value=>({value,label:value}))" /></label>
    <template v-if="original"><label>当前节点<UiSelectField v-model="activeNode" label="编辑连接的当前节点" :options="nodes.map(n=>({value:n.id,label:n.name||'未命名节点'}))" /></label><div v-for="node in nodes" :key="node.id" class="model-columns"><label>节点名称<input v-model="node.name" class="input" /></label><label>节点服务基地址<input v-model="node.url" class="input" type="url" :aria-label="node.name+'编辑地址'" /></label><UiButton size="sm" variant="danger" :disabled="nodes.length<2||node.id===activeNode" @click="nodes=nodes.filter(n=>n.id!==node.id)">删除节点</UiButton></div><UiButton size="sm" :disabled="nodes.length>=32" @click="addEditNode">新增节点</UiButton><p>修改连接后重新获取并选择型号；请重新输入用于这些节点的Key，不会把原Key自动发到新地址。</p></template>
@@ -98,7 +92,7 @@ function close(){if(busy.value)return;generation++;apiKey.value='';emit('close')
    <label v-if="needsKey">API Key<input v-model="apiKey" class="input" type="password" autocomplete="new-password" autocapitalize="off" spellcheck="false" /></label>
    <label><input v-model="privateNetwork" type="checkbox" />允许访问可信私有网络</label>
   </template>
-  <template v-else-if="!frozen">
+  <template v-else>
    <div class="model-field-title"><strong>{{ label }}</strong><UiButton :loading="discovering" :disabled="busy" @click="discover">获取模型列表</UiButton><UiButton v-if="discovering" @click="generation++;discovering=false">取消等待</UiButton></div>
    <div class="model-inline"><input v-model="query" class="input" type="search" aria-label="新渠道型号搜索" placeholder="搜索型号或名称" /><label><input v-model="onlySelected" type="checkbox" :disabled="discovering" />仅已选</label></div>
    <p>已选 {{ selected.length }} / {{ models.length }} 项<span v-if="query||onlySelected"> · 当前显示 {{ rows.length }} 项</span></p>
@@ -107,7 +101,7 @@ function close(){if(busy.value)return;generation++;apiKey.value='';emit('close')
    <details><summary>手动添加精确ID</summary><label>原始模型ID<input v-model="manual" class="input" :disabled="discovering" autocapitalize="off" spellcheck="false" /></label><UiButton size="sm" :disabled="discovering||!manual" @click="addManual">添加ID</UiButton></details>
   </template>
   <p v-if="status" role="status" class="model-muted">{{ status }}</p><p v-if="error" role="alert" class="model-error">{{ error }}</p>
-  <template #actions><UiButton :disabled="busy" @click="close">关闭</UiButton><UiButton v-if="!frozen&&step===2" :disabled="busy" @click="generation++;discovering=false;step=1">上一步</UiButton><UiButton v-if="!frozen&&step===1" variant="primary" :disabled="!ready" @click="next">下一步</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="discovering||(!frozen&&!selected.length)" @click="join">{{ frozen?'核对原加入结果':original?'确认连接并加入草稿':'加入草稿' }}</UiButton></template>
+  <template #actions><UiButton :disabled="busy" @click="close">关闭</UiButton><UiButton v-if="step===2" :disabled="busy" @click="generation++;discovering=false;step=1">上一步</UiButton><UiButton v-if="step===1" variant="primary" :disabled="!ready" @click="next">下一步</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="discovering||!selected.length" @click="join">{{ original?'确认连接并加入草稿':'加入草稿' }}</UiButton></template>
  </UiDialog>
 </template>
 <style scoped>

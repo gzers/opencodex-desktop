@@ -24,6 +24,8 @@ export function installModelFixtures() {
     template.revisions.push({...structuredClone(original),id:crypto.randomUUID(),createdAt:'2026-10-20T00:00:00Z',content:{...structuredClone(original.content),description:'显式DEV第二保存版'},digest:'explicit-second-version-fixture'})
   }
   modelApi.load=async()=>structuredClone(snapshot)
+  modelApi.credential=async()=>({configured:true,value:'example-demo-key',source:'配置文件',viewable:true})
+  modelApi.writeFile=async(_expected,policy)=>{snapshot={...snapshot,policy:structuredClone(policy),workspace:null,policyDigest:crypto.randomUUID()};return{snapshot:structuredClone(snapshot),changed:true}}
   modelApi.stage=async(_policy,_workspace,policy)=>{snapshot={...snapshot,workspace:{basePolicy:snapshot.policyDigest,policy:structuredClone(policy)},workspaceDigest:'visual-workspace'};return structuredClone(snapshot)}
   const visualPlan=(policy:import('@/features/models/api').ModelPolicy,scope?:import('@/features/models/api').SaveScope):import('@/features/models/api').SavePlan=>{const changed=policy.channels.filter(c=>JSON.stringify(c)!==JSON.stringify(snapshot.policy.channels.find(old=>old.id===c.id)));return{id:crypto.randomUUID(),phase:'prepared',catalogCount:36,currentCatalogCount:36,changedChannels:changed.filter(c=>!scope||scope.channelIds.includes(c.id)).map(c=>c.label),deferredChannels:scope?changed.filter(c=>!scope.channelIds.includes(c.id)).map(c=>c.label):[],error:null}}
   modelApi.preparePolicy=async policy=>visualPlan(policy)

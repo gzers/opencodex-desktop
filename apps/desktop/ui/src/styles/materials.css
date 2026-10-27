@@ -71,14 +71,14 @@ html[data-theme="dark"] {
 .about-hero, .about-panel, .mcp-form-card, .choice, .modal, .select-menu {
   box-shadow: var(--surface-panel-shadow);
 }
-.btn:not(.primary):not(.danger):not(.ghost):not(.btn-plain), .tag, .select-trigger {
+.btn:not(.primary):not(.danger):not(.ghost):not(.btn-plain):not(.notif-ctl), .tag, .select-trigger {
   background: var(--surface-control-bg);
   border-color: var(--surface-control-border);
   -webkit-backdrop-filter: var(--surface-control-blur);
   backdrop-filter: var(--surface-control-blur);
   box-shadow: var(--surface-control-shadow);
 }
-.btn:not(.primary):not(.danger):not(.ghost):not(.btn-plain):hover, .select-trigger:hover {
+.btn:not(.primary):not(.danger):not(.ghost):not(.btn-plain):not(.notif-ctl):hover, .select-trigger:hover {
   background: var(--surface-control-bg-hover);
 }
 

@@ -2605,6 +2605,9 @@ pub async fn reconcile(
         atomic_write(&ownership, &serde_json::to_vec(&plan.ownership)?, 0o600)?;
         plan.phase = "committed".into();
         plan.error = None;
+        if plan.history_restoration.is_some() {
+            super::config_file::record_layout(root, &plan.policy.published());
+        }
     } else if removed_match
         && history_before_matches
         && imported_before_matches
@@ -3030,6 +3033,9 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
         )?;
         plan.phase = "committed".into();
         save(root, &plan)?;
+        if plan.history_restoration.is_some() {
+            super::config_file::record_layout(root, &plan.policy.published());
+        }
         Ok(())
     }
     .await;
@@ -4579,6 +4585,7 @@ else:sys.exit(7)
             history_plan.history_source.as_deref(),
             Some(plan.id.as_str())
         );
+        super::super::config_file::record_layout(root.path(), &Policy::default());
         let history_saved = apply(root.path(), &context, &history_plan.id)
             .await
             .unwrap();
@@ -4587,6 +4594,29 @@ else:sys.exit(7)
             "{:?}",
             history_saved.error
         );
+        let restored_layout: Policy = serde_json::from_slice(
+            &std::fs::read(root.path().join("manager-state/model-channel-layout.json")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            restored_layout
+                .channels
+                .iter()
+                .map(|c| (&c.id, &c.label, &c.template_refs))
+                .collect::<Vec<_>>(),
+            store
+                .load()
+                .unwrap()
+                .policy
+                .channels
+                .iter()
+                .map(|c| (&c.id, &c.label, &c.template_refs))
+                .collect::<Vec<_>>()
+        );
+        assert!(restored_layout
+            .channels
+            .iter()
+            .all(|c| c.connection.credential_ref.is_none() && c.discovered.is_empty()));
         let actual = upstream::snapshot(&context).await.unwrap();
         assert_eq!(actual.providers, snapshot.providers);
         assert_eq!(

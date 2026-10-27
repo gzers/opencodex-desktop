@@ -72,14 +72,9 @@ const groups = computed(() => props.channels.map(channel => ({
   delta: channelDelta(channel),
   items: rows.value.filter(row => row.channelId === channel.id).map((row, index) => ({ row, order: index + 1, change: modelState(channel.id, row.modelId, row.selected) })),
 })))
-const notices = computed(() => props.projection?.notices?.filter(notice => !notice.includes('当前为草稿基础模型投影')) ?? [])
-/**
- * 摘要标题按内容取词：生产环境这里只会有编译器发的「未在当前清单发现，保留选择待核对」，
- * 但 DEV 夹具与导入路径也会写说明性 notice，不能一律叫「待核对」，否则等于给用户派任务。
- */
-const noticesLabel = computed(() => notices.value.every(notice => notice.includes('保留选择待核对'))
-  ? notices.value.length + ' 项待核对提示'
-  : notices.value.length + ' 项说明')
+const notices = computed(() => props.projection?.notices?.filter(notice => !notice.includes('当前为草稿基础模型投影')&&!notice.includes('保留选择待核对')) ?? [])
+/** 附加说明不为手写/站点型号派发“待核对”任务。 */
+const noticesLabel = computed(() => notices.value.length + ' 项说明')
 const others = computed(() => (props.otherChanges ?? []).slice(0, 8))
 const otherTotal = computed(() => props.otherChanges?.length ?? 0)
 const note = ref('')

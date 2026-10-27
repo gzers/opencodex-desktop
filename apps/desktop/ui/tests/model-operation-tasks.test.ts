@@ -1,11 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { MAX_VISIBLE_TASKS, TERMINAL_TTL_MS, useOperationTasks } from '@/app/feedback/tasks'
 beforeEach(() => { setActivePinia(createPinia()); vi.useRealTimers() })
+afterEach(() => { useOperationTasks().dispose(); vi.useRealTimers() })
 describe('registered model task observations', () => {
   it('keeps failed observations beyond the display budget but still evicts them before running ones',()=>{
     const tasks=useOperationTasks(),failed=crypto.randomUUID(),running=crypto.randomUUID()
-    tasks.apply({id:failed,kind:'policy_save',phase:'running'});tasks.apply({id:failed,kind:'policy_save',phase:'failed'})
+    tasks.apply({id:failed,kind:'research',phase:'running'});tasks.apply({id:failed,kind:'research',phase:'failed'})
     tasks.apply({id:running,kind:'transfer',phase:'running'})
     // 30 张已完成的卡把历史上限顶满；failed 与 running 不在淘汰候选里。
     const done=Array.from({length:30},()=>crypto.randomUUID())
@@ -20,11 +21,10 @@ describe('registered model task observations', () => {
     tasks.apply({id,kind:'unknown',phase:'running'});tasks.apply({id,kind:'generation',phase:'running',prompt:'private'})
     expect(tasks.tasks).toHaveLength(0)
   })
-  it('reuses the same policy plan task when readback resolves a prior failure',()=>{
+  it('ignores legacy save progress so the one-time saved feedback has no duplicate task',()=>{
     const tasks=useOperationTasks();const id=crypto.randomUUID()
-    tasks.apply({id,kind:'policy_save',phase:'running'});tasks.apply({id,kind:'policy_save',phase:'failed'});tasks.collapse(id)
-    tasks.apply({id,kind:'policy_save',phase:'running'});expect(tasks.tasks).toHaveLength(1);expect(tasks.tasks[0]).toMatchObject({phase:'running',collapsed:false})
-    tasks.apply({id,kind:'policy_save',phase:'review'});expect(tasks.tasks).toHaveLength(1);expect(tasks.tasks[0]!.phase).toBe('review')
+    for (const phase of ['running', 'failed', 'review', 'succeeded']) tasks.apply({id,kind:'policy_save',phase})
+    expect(tasks.tasks).toHaveLength(0)
   })
   it('rebinds receive to its durable receipt and adopts or retries the same transfer card',()=>{
     const tasks=useOperationTasks(),pending=crypto.randomUUID(),receipt=crypto.randomUUID()
@@ -47,12 +47,25 @@ describe('registered model task observations', () => {
     tasks.collapse(a);tasks.apply({id:a,kind:'generation',phase:'review'})
     expect(tasks.tasks.find(t=>t.id===a)).toMatchObject({phase:'review',collapsed:true})
     expect(tasks.tasks.find(t=>t.id===b)!.phase).toBe('running')
-    tasks.expandAll();expect(tasks.tasks.every(t=>!t.collapsed)).toBe(true)
+    expect(tasks.tasks.find(t=>t.id===a)!.collapsed).toBe(true)
     tasks.apply({id:a,kind:'generation',phase:'running'});expect(tasks.tasks.find(t=>t.id===a)!.phase).toBe('review')
   })
 })
 
 describe('0.2.12 timing: repeat measurements fold into one card', () => {
+  it('removes ordinary success at the TTL, including collapsed success, and rejects late events',()=>{
+    vi.useFakeTimers()
+    const tasks=useOperationTasks(),id=crypto.randomUUID()
+    tasks.apply({id,kind:'research',phase:'running'})
+    tasks.apply({id,kind:'research',phase:'succeeded'})
+    tasks.collapse(id)
+    vi.advanceTimersByTime(TERMINAL_TTL_MS - 1)
+    expect(tasks.tasks).toHaveLength(1)
+    vi.advanceTimersByTime(1)
+    expect(tasks.tasks).toHaveLength(0)
+    tasks.apply({id,kind:'research',phase:'succeeded'})
+    expect(tasks.tasks).toHaveLength(0)
+  })
   it('folds a repeated node measurement into the same card and counts attempts',()=>{
     const tasks=useOperationTasks()
     for(let i=0;i<10;i++){

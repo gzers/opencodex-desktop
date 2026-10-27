@@ -40,6 +40,8 @@ export interface ModelSnapshot {
   workspace: { basePolicy: string; policy: ModelPolicy } | null
   workspaceDigest: string
 }
+export interface CredentialEdit {channelId:string;action:'replace'|'clear';value:string|null}
+export interface CredentialView {configured:boolean;value:string;source:string;viewable:boolean}
 export interface TemplateRef { templateId: string; revisionId: string }
 export interface ServiceNode { id: string; name: string; url: string }
 export interface NodeMeasurement {nodeId:string;elapsedMs:number|null;modelCount:number|null;error:string|null}
@@ -93,7 +95,11 @@ export const modelApi = {
   addNewChannel:(request:NewChannelRequest)=>invoke<NewChannelOutcome>('model_new_channel_add',{request}),
   newChannelResult:(id:string)=>invoke<NewChannelOutcome>('model_new_channel_result',{id}),
   latestNewChannel:()=>invoke<NewChannelOutcome|null>('model_new_channel_latest'),
-  load: () => invoke<ModelSnapshot>('model_config_snapshot'),
+  load: () => invoke<ModelSnapshot>('model_file_snapshot'),
+  // Historical recovery alone uses the manager policy/workspace digest domain.
+  loadRecoveryBaseline: () => invoke<ModelSnapshot>('model_config_snapshot'),
+  writeFile: (expectedFile:string,policy:ModelPolicy,credentials:CredentialEdit[]) => invoke<{snapshot:ModelSnapshot;changed:boolean}>('model_file_save',{request:{expectedFile,policy,credentials}}),
+  credential: (providerId:string) => invoke<CredentialView>('model_file_credential',{providerId}),
   save: (draft: TemplateDraft, expectedLibrary: string) => invoke<Commit>('model_template_save', { request: { ...draft, expectedLibrary } }),
   setDefault: (expectedLibrary: string, templateId: string, revisionId: string) => invoke<ModelSnapshot>('model_template_set_default', { expectedLibrary, templateId, revisionId }),
   delete: (expectedLibrary: string, expectedPolicy: string, expectedWorkspace: string, templateId: string, revisionIds: string[]) => invoke<ModelSnapshot>('model_template_delete', { expectedLibrary, expectedPolicy, expectedWorkspace, templateId, revisionIds }),
@@ -117,7 +123,7 @@ export const modelApi = {
   /** 用户显式放弃这次写入（0.2.11）：仅当重新检查与撤回都不可行时使用。 */
   abandonPolicy: (planId:string) => invoke<SavePlan>('model_policy_abandon',{planId}),
   upstream: () => invoke<UpstreamSnapshot>('model_upstream_snapshot'),
-  discover: (request:{protocol:string;url:string;apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean}) => invoke<{models:DiscoveredModel[];credentialRef:string|null;elapsedMs:number}>('model_channel_discover',{request}),
+  discover: (request:{protocol:string;url:string;apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean;providerId?:string}) => invoke<{models:DiscoveredModel[];credentialRef:string|null;elapsedMs:number}>('model_channel_discover',{request}),
   forgetCredential: (reference:string) => invoke<void>('model_channel_forget_credential',{reference}),
   measureNodes:(request:{runId:string;protocol:string;nodes:ServiceNode[];apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean;providerId?:string|null})=>invoke<NodeMeasurementSet>('model_node_measure',{request}),
   stopNodeMeasurement:(runId:string)=>invoke<void>('model_node_measure_stop',{runId}),

@@ -73,7 +73,7 @@ pub fn validate_channel(channel: &ChannelPolicy) -> ModelResult<()> {
     if connection
         .auth_mode
         .as_deref()
-        .is_some_and(|mode| !["key", "local", "oauth", "forward"].contains(&mode))
+        .is_some_and(|mode| !["key", "none", "local", "oauth", "forward"].contains(&mode))
     {
         return Err(invalid("auth_mode", "渠道认证方式无效"));
     }
@@ -295,12 +295,8 @@ pub fn project(library: &Library, policy: &Policy) -> ModelResult<DraftProjectio
                 ModelSelection::None => false,
                 ModelSelection::Whitelist(values) => values.contains(&id),
             };
-            if selected && discovered.is_none() {
-                notices.push(format!(
-                    "{}：模型{}未在当前清单发现，保留选择待核对",
-                    channel.label, id
-                ));
-            }
+            // Exact IDs declared/selected by the user need no discovery proof.
+            // A missing observation must not create a "待核对" user task.
             rows.push(ModelProjection {
                 channel_id: channel.id.clone(),
                 provider_id: channel.connection.provider_id.clone(),

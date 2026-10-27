@@ -4,7 +4,7 @@ export type ModelOperationKind = 'generation' | 'research' | 'external_submit' |
 export type ModelOperationPhase = 'running' | 'review' | 'succeeded' | 'failed' | 'stopped'
 export interface OperationTask { id: string; kind: ModelOperationKind; phase: ModelOperationPhase; collapsed: boolean; count?: number }
 
-/** 终止态停留时长：到点自动收起。收起不是删除——铃铛与通知历史里仍在。 */
+/** 终止态停留时长：成功到点删除，其余终止态收起到铃铛的内存列表。 */
 export const TERMINAL_TTL_MS = 8000
 /** 同屏最多展开几张任务卡；超出的自动收起，避免把页面内容整片压住。 */
 export const MAX_VISIBLE_TASKS = 3
@@ -27,7 +27,6 @@ export const operationTitles: Record<ModelOperationKind,string> = { generation:'
 export const operationPhases: Record<ModelOperationPhase,string> = { running:'正在执行',review:'结果待比较，尚未保存',succeeded:'已完成',failed:'未完成，请查看对应操作',stopped:'已停止等待' }
 function phaseDetail(task: OperationTask): string {
   if(task.phase==='review'&&task.kind==='generation')return '建议已生成，可在模版编辑中查看'
-  if(task.phase==='review'&&task.kind==='policy_save')return '已写入；客户端结果请在核对入口查看'
   if(task.phase==='review'&&task.kind==='transfer')return '已接收，待比较采用'
   return operationPhases[task.phase]
 }
@@ -57,6 +56,8 @@ export const useOperationTasks = defineStore('operation-tasks', {
       if (!registered || typeof payload !== 'object' || payload === null) return
       const value = payload as Record<string,unknown>
       if (Object.keys(value).some(key => !['id','kind','phase','previousId'].includes(key)) || typeof value.id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(value.id) || typeof value.kind !== 'string' || !Object.hasOwn(operationTitles,value.kind) || typeof value.phase !== 'string' || !Object.hasOwn(operationPhases,value.phase)) return
+      // 保存结果由 modelSave 的一次反馈负责；旧保存 progress 不再生成第二张任务卡。
+      if (value.kind === 'policy_save') return
       // 被合并或淘汰的旧 run 再晚回也不复活：否则一次重试就能把已收起的卡重新刷出来。
       if (retired.has(value.id)) return
       if(value.previousId!==undefined){
@@ -70,7 +71,7 @@ export const useOperationTasks = defineStore('operation-tasks', {
       const previous = this.tasks.find(t => t.id === value.id)
       if (previous) {
         if(previous.kind!==value.kind)return
-        if((previous.kind==='policy_save'||previous.kind==='transfer')&&value.phase==='running'){previous.phase='running';previous.collapsed=false;clearCollapseTimer(previous.id);return}
+        if(previous.kind==='transfer'&&value.phase==='running'){previous.phase='running';previous.collapsed=false;clearCollapseTimer(previous.id);this.settle();return}
         if(previous.phase!=='running')return
         previous.phase=value.phase as ModelOperationPhase
         if(isTerminalPhase(previous.phase))this.scheduleCollapse(previous)
@@ -98,14 +99,17 @@ export const useOperationTasks = defineStore('operation-tasks', {
       if(isTerminalPhase(phase))this.scheduleCollapse(created)
       this.settle()
     },
-    /** 终止态到点收起（不是删除）；运行中不设 TTL。 */
+    /** 普通成功不留历史任务；运行中和待处理结果不设 TTL。 */
     scheduleCollapse(task: OperationTask) {
       if (typeof setTimeout !== 'function') return
       clearCollapseTimer(task.id)
       const timer = setTimeout(() => {
         collapseTimers.delete(task.id)
         const current = this.tasks.find(t => t.id === task.id)
-        if (current && isTerminalPhase(current.phase)) current.collapsed = true
+        if (current?.phase === 'succeeded') {
+          retire(current.id)
+          this.tasks.splice(this.tasks.indexOf(current), 1)
+        } else if (current && isTerminalPhase(current.phase)) current.collapsed = true
       }, TERMINAL_TTL_MS)
       collapseTimers.set(task.id, timer)
     },
@@ -114,7 +118,7 @@ export const useOperationTasks = defineStore('operation-tasks', {
       while (this.tasks.length > MAX_TASKS) {
         // 淘汰优先级：先丢「已完成 / 已停止」，再丢「失败」。
         // 失败卡承载用户还要处理的信息，比成功卡更该多留一会儿；但终究可以丢，
-        // 因为通知实体（铃铛）才是留痕的地方，任务卡只是观察窗口。
+        // 这份内存列表只是观察窗口，不能当作持久通知历史。
         const done = this.tasks.findIndex(t => t.phase === 'succeeded' || t.phase === 'stopped')
         const victimIndex = done >= 0 ? done : this.tasks.findIndex(t => t.phase === 'failed')
         if (victimIndex < 0) break
@@ -132,7 +136,12 @@ export const useOperationTasks = defineStore('operation-tasks', {
       }
     },
     collapse(id: string) { const task=this.tasks.find(t => t.id===id);if(task)task.collapsed=true },
-    expandAll() { for(const task of this.tasks)task.collapsed=false },
+    clearFinished() {
+      for (const task of [...this.tasks]) if (task.phase !== 'running') {
+        clearCollapseTimer(task.id);retire(task.id)
+        this.tasks.splice(this.tasks.indexOf(task),1)
+      }
+    },
     /** 供测试与退出时清理；运行期不需要调用。 */
     dispose() { for (const id of [...collapseTimers.keys()]) clearCollapseTimer(id) },
   },

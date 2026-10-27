@@ -40,6 +40,40 @@ pub fn report(
     expected_library: &str,
 ) -> ModelResult<Report> {
     let snapshot = ModelStore::new(root).load()?;
+    report_snapshot(
+        root,
+        snapshot,
+        template_id,
+        revision_id,
+        expected_library,
+        || ModelStore::new(root).load(),
+    )
+}
+pub fn report_file(
+    root: &Path,
+    home: &Path,
+    template_id: &str,
+    revision_id: &str,
+    expected_library: &str,
+) -> ModelResult<Report> {
+    let snapshot = super::config_file::snapshot(root, home)?;
+    report_snapshot(
+        root,
+        snapshot,
+        template_id,
+        revision_id,
+        expected_library,
+        || super::config_file::snapshot(root, home),
+    )
+}
+fn report_snapshot(
+    root: &Path,
+    snapshot: Snapshot,
+    template_id: &str,
+    revision_id: &str,
+    expected_library: &str,
+    read_current: impl FnOnce() -> ModelResult<Snapshot>,
+) -> ModelResult<Report> {
     if snapshot.library_digest != expected_library {
         return Err(invalid(
             "stale_baseline",
@@ -123,7 +157,7 @@ pub fn report(
         }
     }
     let historical_dependency = runtime::recovery_uses(root, template_id, revision_id)?;
-    let current = ModelStore::new(root).load()?;
+    let current = read_current()?;
     if snapshot.library_digest != current.library_digest
         || snapshot.policy_digest != current.policy_digest
         || snapshot.workspace_digest != current.workspace_digest

@@ -20,7 +20,8 @@ describe('默认渠道已退役', () => {
   it('保存范围说明不再宣称包含默认渠道', () => {
     const source=readFileSync(resolve(__dirname,'../src/features/models/ChannelsView.vue'),'utf8')
     expect(source).not.toContain('默认渠道与渠道顺序')
-    // 共享项比较只看全局模版采用与渠道顺序
-    expect(source).toContain('[saved.templateRefs,saved.channels.map(c=>c.id)]')
+    // 普通保存不再有独立范围核对弹窗，也不强制选择默认渠道。
+    expect(source.includes('调整本次保存范围')).toBe(false)
+    expect(source.includes('modelApi.writeFile(')).toBe(true)
   })
 })

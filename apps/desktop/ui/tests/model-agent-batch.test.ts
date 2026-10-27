@@ -3,7 +3,7 @@ import { mount,flushPromises } from '@vue/test-utils'
 import { createPinia,setActivePinia } from 'pinia'
 import { defineComponent,onMounted } from 'vue'
 import BatchAgentDialog from '@/features/models/BatchAgentDialog.vue'
-import { emptyContent,modelApi,type ModelSnapshot,type Submission } from '@/features/models/api'
+import { emptyContent,emptyRules,modelApi,type ModelSnapshot,type Submission } from '@/features/models/api'
 import { useModelsStore } from '@/features/models/store'
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{generate:vi.fn(),acceptAgentReview:vi.fn(),stopGeneration:vi.fn(),latestAgentResult:vi.fn()}}))
 const settings=defineComponent({emits:['update:modelValue'],setup(_,{emit}){onMounted(()=>emit('update:modelValue',{providerId:'fixture',modelId:'fixture-model',reasoningEffort:null,fast:null}));return()=>null}})
@@ -13,6 +13,39 @@ function result(base:ModelSnapshot):Submission{return {submissionId:'fixture-run
 beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks()})
 function render(base:ModelSnapshot,selected:string[]=[]){useModelsStore().snapshot=base;return mount(BatchAgentDialog,{props:{open:true,snapshot:base,selected,versions:{}},global:{stubs:{UiDialog:dialog,AgentExecutionField:settings}}})}
 describe('internal batch suggestions require review',()=>{
+ it('keeps the file snapshot and edits made while a legacy agent commit is pending',async()=>{
+  const base=snapshot()
+  base.policyDigest='actual-config-file';base.workspaceDigest='no-file-workspace'
+  base.policy.channels=[{id:'file-channel',label:'Actual file channel',templateRefs:[],modelRefs:{},connection:{providerId:'file-provider',protocol:'openai-chat',nodes:[{id:'node',name:'Main',url:'https://file.example.test/v1'}],activeNodeId:'node',credentialRef:null,enabled:true,allowPrivateNetwork:false},selection:{mode:'all'},modelOrder:[],discovered:[],defaults:emptyRules(),overrides:{},familyOverrides:{}}]
+  const wrapper=render(base),store=useModelsStore()
+  store.restoreChannels();store.edit(base.library.templates[0])
+  const channelDraft=store.channelDraft!,templateDraft=store.draft!,session=store.draftSession
+  const legacy=snapshot();legacy.libraryDigest='saved-library'
+  legacy.library.templates[0]!.revisions.push({...legacy.library.templates[0]!.revisions[0]!,id:'agent-version',content:{...emptyContent(),description:'Saved agent suggestion'}})
+  legacy.policyDigest='retired-manager-policy';legacy.workspaceDigest='retired-workspace'
+  legacy.workspace={basePolicy:'retired-manager-policy',policy:legacy.policy}
+  let finish!: (value:Awaited<ReturnType<typeof modelApi.acceptAgentReview>>)=>void
+  vi.mocked(modelApi.generate).mockResolvedValue(result(base))
+  vi.mocked(modelApi.acceptAgentReview).mockReturnValue(new Promise(resolve=>{finish=resolve}))
+  await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='检查更新')!.trigger('click');await flushPromises()
+  await wrapper.findAll('button').find(b=>b.text()==='另存所选建议版本')!.trigger('click');await flushPromises()
+  expect(modelApi.acceptAgentReview).toHaveBeenCalledTimes(1)
+  channelDraft.channels[0]!.label='Unsaved channel edit'
+  channelDraft.channels[0]!.selection={mode:'whitelist',models:['pending-model']}
+  store.editCredential('file-channel','pending-test-key','saved-test-key')
+  templateDraft.content.description='Unsaved template edit'
+  finish({snapshot:legacy,outcomes:[{templateId:'one',revisionId:'agent-version',changed:true}]});await flushPromises()
+  expect(store.snapshot).toEqual({...base,library:legacy.library,libraryDigest:legacy.libraryDigest})
+  expect(store.enabledChannels.map(c=>c.id)).toEqual(['file-channel'])
+  expect(store.channelDraft).toBe(channelDraft)
+  expect(store.channelDraft!.channels[0]).toMatchObject({label:'Unsaved channel edit',selection:{mode:'whitelist',models:['pending-model']}})
+  expect(store.channelBaseline).toBe('actual-config-file')
+  expect(store.credentialEdits).toEqual({'file-channel':{channelId:'file-channel',action:'replace',value:'pending-test-key'}})
+  expect(store.channelDirty).toBe(true)
+  expect(store.draft).toBe(templateDraft);expect(store.draft!.content.description).toBe('Unsaved template edit')
+  expect(store.draftSession).toBe(session);expect(store.dirty).toBe(true)
+  wrapper.unmount()
+ })
  it('freezes saved targets and does not save or adopt anything before confirmation',async()=>{
   const base=snapshot();const store=useModelsStore();const wrapper=render(base);store.edit();store.draft!.label='保留未保存人工输入'
   vi.mocked(modelApi.generate).mockResolvedValue(result(base));vi.mocked(modelApi.acceptAgentReview).mockResolvedValue({snapshot:{...base,libraryDigest:'saved'},outcomes:[{templateId:'one',revisionId:'new-one',changed:true},{templateId:'two',revisionId:'new-two',changed:true}]})

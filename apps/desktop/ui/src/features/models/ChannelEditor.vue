@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch, onBeforeUnmount, toRef } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
+import UiIconButton from '@/components/ui/UiIconButton.vue'
 import DetailWorkspace from '@/components/layout/DetailWorkspace.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import UiStatus from '@/components/ui/UiStatus.vue'
@@ -13,6 +14,7 @@ import NodePicker from './NodePicker.vue'
 import {useModalStore} from '@/app/modal/store'
 import {protectedChannel} from './channelActions'
 import { nodeMeasurementError, useNodeMeasurements } from './useNodeMeasurements'
+import {useModelsStore} from './store'
 import { emptyRules, modelApi, errorText, type ChannelPolicy, type Template, type TemplateRef, type ModelProjection, type ModelPolicy } from './api'
 const props = defineProps<{ channel: ChannelPolicy; templates: Template[]; busy?: boolean;existing?:boolean;globalRefs?:TemplateRef[];projection?:ModelProjection[];projectionBusy?:boolean;projectionError?:string;policy?:ModelPolicy;rowState?:ModelRowsState;navigation?:{collapsed:boolean;activeId:string};channels?:ChannelPolicy[];saveDisabled?:boolean;dirty?:boolean;saveStatus?:string;saveTone?:StatusTone;activeCount?:number;viewState?:{search:string;selectedOnly:boolean;family:string} }>()
 const emit = defineEmits<{ close: [];switch:[string];save:[];restore:[] }>()
@@ -20,27 +22,52 @@ const nav=props.navigation??reactive({collapsed:false,activeId:'channel-config'}
 const sections=[{id:'channel-config',label:'渠道配置'},{id:'channel-nodes',label:'服务节点'},{id:'channel-defaults',label:'模型默认'},{id:'channel-models',label:'模型列表'}]
 const defaultsOpen=ref(false);
 const apiKey=ref('');const discovering=ref(false);const discoveryError=ref('');let generation=0
+const models=useModelsStore()
+const keyOriginal=ref(''),keyVisible=ref(false),keyLoading=ref(false),keySource=ref(''),keyError=ref('')
+const keyExplicit=ref(false)
+let keySequence=0
+watch(()=>[props.channel.id,models.snapshot?.policyDigest],async()=>{
+ const sequence=++keySequence;keyExplicit.value=false;keyVisible.value=false;keyError.value='';keySource.value='';keyLoading.value=true;keyOriginal.value='';apiKey.value=''
+ try{
+  const saved=await modelApi.credential(props.channel.connection.providerId)
+  if(sequence!==keySequence)return
+  keyOriginal.value=saved.value;keySource.value=saved.source
+  const edit=models.credentialEdits[props.channel.id]
+  apiKey.value=edit?(edit.value??''):saved.value
+  keyExplicit.value=edit?.action==='replace'
+  if(saved.configured&&!saved.viewable)keyError.value='已配置；当前凭据来源暂无法读取明文，未修改时保留原值。'
+ }catch(cause){
+  if(sequence===keySequence){const edit=models.credentialEdits[props.channel.id];apiKey.value=edit?.value??'';if(props.existing)keyError.value=errorText(cause)}
+ }finally{if(sequence===keySequence)keyLoading.value=false}
+},{immediate:true})
+function keyChanged(){keyExplicit.value=true;models.editCredential(props.channel.id,apiKey.value,keyOriginal.value)}
+function clearKey(){apiKey.value='';keyExplicit.value=false;keyVisible.value=false;models.clearCredential(props.channel.id)}
+// Displaying a stored secret is not new consent to send it to an edited URL.
+// Untouched credentials use the backend's file/provider origin binding.
+const probeKey=computed(()=>authMode.value==='none'?'':keyExplicit.value?apiKey.value:'')
+const keyIntent=computed(()=>models.credentialEdits[props.channel.id]?.action==='clear'?'保存后清空 Key':models.credentialEdits[props.channel.id]?'保存后替换 Key':'保持原 Key')
 // 连接配置就地编辑（WP-48）：草稿即编辑目标，还原回到进入本页时的草稿值。
 const connectionOriginal=ref(JSON.parse(JSON.stringify({label:props.channel.label,label2:props.channel.connection})) as {label:string;label2:ChannelPolicy['connection']})
-const connectionChanged=computed(()=>props.channel.label!==connectionOriginal.value.label||JSON.stringify(props.channel.connection)!==JSON.stringify(connectionOriginal.value.label2))
-function resetConnection(){if(props.busy||discovering.value)return;props.channel.label=connectionOriginal.value.label;Object.assign(props.channel.connection,JSON.parse(JSON.stringify(connectionOriginal.value.label2)));apiKey.value='';discoveryError.value=''}
+watch(()=>models.snapshot?.policyDigest,()=>{if(!models.channelDirty)connectionOriginal.value=JSON.parse(JSON.stringify({label:props.channel.label,label2:props.channel.connection}))})
+const connectionChanged=computed(()=>!!models.credentialEdits[props.channel.id]||props.channel.label!==connectionOriginal.value.label||JSON.stringify(props.channel.connection)!==JSON.stringify(connectionOriginal.value.label2))
+function resetConnection(){if(props.busy||discovering.value)return;props.channel.label=connectionOriginal.value.label;Object.assign(props.channel.connection,JSON.parse(JSON.stringify(connectionOriginal.value.label2)));apiKey.value=keyOriginal.value;keyChanged();keyExplicit.value=false;discoveryError.value=''}
 const authOptions=[{value:'key',label:'API Key'},{value:'none',label:'无需认证'}]
-const authMode=computed({get:()=>props.channel.connection.authMode==='none'?'none':'key',set:(value:'key'|'none')=>{props.channel.connection.authMode=value}})
+const authMode=computed({get:()=>['none','local'].includes(props.channel.connection.authMode??'')?'none':'key',set:(value:'key'|'none')=>{props.channel.connection.authMode=value==='none'?'local':'key'}})
 watch(()=>[props.channel.id,props.channel.connection.protocol,props.channel.connection.activeNodeId,props.channel.connection.nodes.find(n=>n.id===props.channel.connection.activeNodeId)?.url],()=>{generation++;discovering.value=false;discoveryError.value=''})
-onBeforeUnmount(()=>{generation++;apiKey.value=''})
+onBeforeUnmount(()=>{generation++;keySequence++;apiKey.value='';keyOriginal.value=''})
 async function discover(){
  const node=props.channel.connection.nodes.find(n=>n.id===props.channel.connection.activeNodeId);if(!node)return
  const sequence=++generation;discovering.value=true;discoveryError.value=''
- try{const result=await modelApi.discover({protocol:props.channel.connection.protocol,url:node.url,apiKey:apiKey.value||null,credentialRef:props.channel.connection.credentialRef,allowPrivateNetwork:props.channel.connection.allowPrivateNetwork})
+ try{const result=await modelApi.discover({protocol:props.channel.connection.protocol,url:node.url,apiKey:probeKey.value||null,credentialRef:props.channel.connection.credentialRef,allowPrivateNetwork:props.channel.connection.allowPrivateNetwork,providerId:props.channel.connection.providerId})
   if(sequence!==generation){if(result.credentialRef&&result.credentialRef!==props.channel.connection.credentialRef)void modelApi.forgetCredential(result.credentialRef);return}
   const previousModels=props.channel.discovered
-  props.channel.connection.credentialRef=result.credentialRef;apiKey.value='';props.channel.discovered=result.models.map(model=>{const previous=props.channel.discovered.find(item=>item.id===model.id);return previous?{...model,label:previous.label}:model})
+  props.channel.discovered=result.models.map(model=>{const previous=props.channel.discovered.find(item=>item.id===model.id);return previous?{...model,label:previous.label}:model})
   for(const previous of previousModels)if(chosen(previous.id)&&!props.channel.discovered.some(m=>m.id===previous.id))props.channel.discovered.push(previous)
   for(const model of result.models)if(!props.channel.modelOrder.includes(model.id))props.channel.modelOrder.push(model.id)
  }catch(cause){if(sequence===generation)discoveryError.value=errorText(cause)}finally{if(sequence===generation)discovering.value=false}
 }
 const selectionMode = computed(() => props.channel.selection.mode)
-const measurement=reactive(useNodeMeasurements(()=>props.channel,()=>apiKey.value))
+const measurement=reactive(useNodeMeasurements(()=>props.channel,()=>probeKey.value))
 /** 已选型号数；与原型 selected(p).length 同口径（all 模式取全部发现项）。 */
 const selectedCount=computed(()=>props.channel.selection.mode==='all'?props.channel.discovered.length:props.channel.selection.mode==='whitelist'?props.channel.selection.models.length:0)
 /**
@@ -92,10 +119,10 @@ function adopt(t: Template, revision: string) {
       用户看不出保存状态与连接状态，故拆回四枚徽标 + 计数。
     -->
     <template #header><span class="channel-detail-back"><UiButton size="sm" variant="ghost" aria-label="返回渠道列表" title="返回渠道列表" @click="emit('close')"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></UiButton></span><div class="channel-detail-heading"><strong class="channel-detail-name">{{ channel.label || '新渠道' }}</strong><div class="channel-detail-status" role="status"><UiStatus :tone="saveTone ?? 'muted'" :label="saveStatus" data-status-scope="all-channels" :hint="'全部渠道配置的保存状态'" /><UiStatus v-if="protectedChannel(channel)" tone="muted" label="官方管理" data-channel-managed /><template v-else><UiStatus :tone="channel.connection.enabled?'running':'muted'" :label="channel.connection.enabled?'已启用':'已停用'" :data-channel-enabled="channel.connection.enabled" /><UiStatus :tone="connectionState.tone" :label="connectionState.label" :data-channel-availability="connectionState.label" /></template><UiStatus v-if="discoveryState" :tone="discoveryState.tone" :label="discoveryState.label" /><span class="channel-detail-count">已选 {{ selectedCount }} / 发现 {{ channel.discovered.length }}</span></div></div><UiSelectField v-if="channels?.length" :model-value="channel.id" :options="channels.map(c=>({value:c.id,label:c.label||'未命名渠道'}))" label="切换渠道" :disabled="busy" @update:model-value="emit('switch',$event)" /></template>
-    <template #actions="{collapsed}"><UiButton size="sm" :disabled="busy||!dirty" @click="emit('restore')" title="还原修改">{{ collapsed?'↶':'还原修改' }}</UiButton></template><template #primary="{collapsed}"><small v-if="!collapsed" role="status">{{ saveStatus }}</small><UiButton size="sm" variant="primary" :disabled="busy||saveDisabled" title="保存 · 先核对选择器预览，确认后写入" aria-label="保存渠道草稿" @click="emit('save')"><svg v-if="collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><template v-else>保存</template></UiButton></template>
+    <template #actions="{collapsed}"><UiButton size="sm" :disabled="busy||!dirty" @click="emit('restore')" title="还原修改">{{ collapsed?'↶':'还原修改' }}</UiButton></template><template #primary="{collapsed}"><small v-if="!collapsed" role="status">{{ saveStatus }}</small><UiButton size="sm" variant="primary" :disabled="busy||saveDisabled" title="保存 · 查看保存预览，确认后写入" aria-label="保存渠道草稿" @click="emit('save')"><svg v-if="collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><template v-else>保存</template></UiButton></template>
     <div class="model-form">
-    <section id="channel-config" tabindex="-1"><h2>渠道配置</h2><div class="channel-config-grid"><label>渠道名称<input class="input" v-model="channel.label" maxlength="80" :disabled="busy" /></label><label>渠道标识<input class="input" :value="channel.connection.providerId" readonly aria-label="渠道标识" /><span class="model-muted">标识固定，名称可修改。</span></label><label>默认接口协议<UiSelectField :model-value="channel.connection.protocol" label="默认接口协议" :disabled="busy" :options="[{value:'openai-responses',label:'openai-responses'},{value:'openai-chat',label:'openai-chat'},{value:'anthropic',label:'anthropic'},{value:'ollama-native',label:'ollama-native'}]" @update:model-value="channel.connection.protocol=$event" /></label><label>认证方式<UiSelectField :model-value="authMode" label="认证方式" :options="authOptions" :disabled="busy" @update:model-value="authMode=$event as 'key'|'none'" /></label><label v-if="authMode==='key'" class="channel-key">API Key<input class="input" type="password" autocomplete="off" v-model="apiKey" :placeholder="channel.connection.credentialRef?'已配置（不回显）；留空保留':'未配置；填写后获取模型清单时保存'" :disabled="busy" /><span class="model-muted">仅记录已配置状态，不回显已保存的 Key。</span></label></div>
-      <p class="model-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。更换协议或认证后，重新获取模型清单再加入草稿。</p><p v-if="discoveryError" class="model-error" role="alert">{{ discoveryError }}</p>
+    <section id="channel-config" tabindex="-1"><h2>渠道配置</h2><div class="channel-config-grid"><label>渠道名称<input class="input" v-model="channel.label" maxlength="80" :disabled="busy" /></label><label>渠道标识<input class="input" :value="channel.connection.providerId" readonly aria-label="渠道标识" /><span class="model-muted">标识固定，名称可修改。</span></label><label>默认接口协议<UiSelectField :model-value="channel.connection.protocol" label="默认接口协议" :disabled="busy" :options="[{value:'openai-responses',label:'openai-responses'},{value:'openai-chat',label:'openai-chat'},{value:'anthropic',label:'anthropic'},{value:'ollama-native',label:'ollama-native'}]" @update:model-value="channel.connection.protocol=$event" /></label><label>认证方式<UiSelectField :model-value="authMode" label="认证方式" :options="authOptions" :disabled="busy" @update:model-value="authMode=$event as 'key'|'none'" /></label><label v-if="authMode==='key'" class="channel-key">API Key<span class="channel-key-input"><input class="input" :type="keyVisible?'text':'password'" autocomplete="off" v-model="apiKey" aria-label="API Key" :placeholder="keyLoading?'正在读取…':'API Key'" :disabled="busy||keyLoading||protectedChannel(channel)" @input="keyChanged" /><UiIconButton :label="keyVisible?'隐藏 API Key':'显示 API Key'" :disabled="keyLoading||!apiKey" :aria-pressed="keyVisible" @click="keyVisible=!keyVisible"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/><path v-if="keyVisible" d="M3 3l18 18"/></svg></UiIconButton><UiButton size="sm" :disabled="busy||keyLoading||protectedChannel(channel)" @click="clearKey">清空 Key</UiButton></span><span class="model-muted">{{ keyIntent }}</span><span v-if="keySource" class="model-muted">{{ keySource }}</span><span v-if="keyError" class="model-muted" role="status">{{ keyError }}</span></label></div>
+      <p class="model-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。修改加入当前编辑，保存后写入配置文件。</p><p v-if="discoveryError" class="model-error" role="alert">{{ discoveryError }}</p>
       <div class="channel-config-footer"><span :class="connectionChanged?'model-muted':'model-muted'">{{ connectionChanged?'有连接修改，尚未加入草稿':'连接配置与草稿一致' }} · 当前节点 {{ channel.connection.nodes.find(n=>n.id===channel.connection.activeNodeId)?.name||'未选择' }}</span><div class="model-inline"><UiButton :disabled="busy||discovering||!connectionChanged" @click="resetConnection">还原配置</UiButton><UiButton variant="primary" :loading="discovering" :disabled="busy" @click="discover">确认连接与模型</UiButton><UiButton v-if="discovering" @click="generation++; discovering=false">停止等待</UiButton></div></div>
       <label class="model-inline"><input v-model="channel.connection.enabled" type="checkbox" :disabled="busy" />启用渠道</label>
     </section>
@@ -115,6 +142,8 @@ function adopt(t: Template, revision: string) {
 </template>
 
 <style scoped>
+.channel-key-input{display:flex;align-items:center;gap:var(--space-2);min-width:0}.channel-key-input .input{flex:1;min-width:0}.channel-key-input svg{width:16px;height:16px}
+
 .channel-default-summary{display:grid;grid-template-columns:max-content 1fr;gap:var(--space-2);font-size:var(--text-control)}.channel-default-summary dt{color:var(--muted)}.channel-default-summary dd{margin:0;overflow-wrap:anywhere}
 /* 详情头部（原型 model-config.css:221/230/231/232）：标题在上、徽标行在下，行内垂直居中不换行挤压。 */
 /* 原型 iconButton 是 .mp-editor-head 第一列的 32px 图标键；这里只约束占位宽度，按钮度量交给 .btn。 */

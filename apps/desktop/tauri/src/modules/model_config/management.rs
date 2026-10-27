@@ -139,6 +139,26 @@ impl Management {
         {
             return Err(invalid("management_scope", "未注册的管理操作"));
         }
+        let mut request = self.authenticated_request(method, path)?;
+        if let Some(body) = body {
+            request = request.json(&body);
+        }
+        self.receive(request).await
+    }
+    /// The panel's explicit desktop restart, independent of catalog/cache changes.
+    /// Keep it out of the general provider-operation allowlist.
+    pub async fn restart_codex(&self) -> ModelResult<Value> {
+        let request = self
+            .authenticated_request(reqwest::Method::POST, "/api/system/codex-restart")?
+            .header(reqwest::header::CONTENT_LENGTH, "0")
+            .timeout(Duration::from_secs(120));
+        self.receive(request).await
+    }
+    fn authenticated_request(
+        &self,
+        method: reqwest::Method,
+        path: &str,
+    ) -> ModelResult<reqwest::RequestBuilder> {
         self.unchanged()?;
         let token_path = self.context.opencodex_home.join("admin-api-token");
         safety::check_path(&self.context.opencodex_home, &token_path, false)?;
@@ -154,14 +174,10 @@ impl Management {
         {
             return Err(invalid("management_auth", "管理令牌格式无效"));
         }
-        let mut request = self
+        Ok(self
             .client
             .request(method, format!("{}{path}", self.base))
-            .header("Authorization", format!("Bearer {token}"));
-        if let Some(body) = body {
-            request = request.json(&body);
-        }
-        self.receive(request).await
+            .header("Authorization", format!("Bearer {token}")))
     }
     async fn receive(&self, request: reqwest::RequestBuilder) -> ModelResult<Value> {
         let mut response = request.send().await.map_err(|_| {

@@ -54,8 +54,8 @@ function closePanel() {
 
 function onDocumentClick(event: MouseEvent) {
   const target = event.target as HTMLElement
-  // 通知中心已移到全局通知层；点它内部不算「外部点击」。
-  if (!target.closest('.notification-wrap') && !target.closest('.notif-layer')) closePanel()
+  // 公共 UiDialog 会 Teleport 到 body；点确认弹窗内部也不算面板外部点击。
+  if (!target.closest('.notification-wrap, .notif-layer, .ui-dialog')) closePanel()
 }
 
 function togglePanel() {
