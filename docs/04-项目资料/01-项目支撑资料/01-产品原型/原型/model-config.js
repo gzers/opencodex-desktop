@@ -447,7 +447,7 @@
  }
  function policyStatusAnnotation(){
   const styles={clean:'灰色描边 · 保存弱化并禁用',dirty:'橙色状态框 · 可提交时保存主色强调',staged:'橙色状态框 · 先处理型号行编辑','over-budget':'红色状态框与激活数 · 保存禁用',saving:'蓝色状态框与转动环 · 保存禁用',failed:'红色状态框 · 草稿保留，可重试保存',stopped:'灰色状态框 · 草稿保留，可继续保存'};
-  return mpAnn('08','渠道列表的七种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。成功保存只在既有通知宿主提示一次，默认聚焦立即重启；稍后即结束，历史成功状态不生成待重启或客户端核对入口。待确认型号编辑和实际提交超限仍阻止保存。列表保存先预览全部剩余修改；详情保存只提交当前渠道，成功返回列表，不另弹完整预览。');
+  return mpAnn('08','渠道列表的七种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改时保存置灰且不可点击；有待确认型号编辑或超出激活预算时，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。成功保存只在既有通知宿主提示一次，默认聚焦立即重启；稍后即结束，历史成功状态不生成待重启或客户端核对入口。待确认型号编辑和实际提交超限仍阻止保存。列表保存先预览全部剩余修改；详情保存只提交当前渠道，成功返回列表，不另弹完整预览。');
  }
  function channelHeadingStatusHTML(p=provider()){
   const badge=(label,tone,attribute)=>'<span class="mp-template-state '+tone+'" '+attribute+'>'+esc(label)+'</span>';
@@ -462,10 +462,10 @@
   const heading=$('#mpChannelHeadingStatus',host);if(heading){heading.innerHTML=channelHeadingStatusHTML();channelOffset(host.closest('.main'));}else syncTabBar(host.closest('.main'));
  }
  function status(){
- const sidebar=tab==='channels'&&channelDetail,p=sidebar?provider():null,over=(p?projection(currentChannelSnapshot(p)).length:count())>100,staged=(p?stagedModelEdits().filter(([key])=>p.models.some(m=>m.key===key)):stagedModelEdits()).length,local=staged,changed=(p?currentChannelDirty(p):dirty())||local,canOpen=!busy()&&(!sidebar||changed),gated=local||over||!changed;
+ const sidebar=tab==='channels'&&channelDetail,p=sidebar?provider():null,over=(p?projection(currentChannelSnapshot(p)).length:count())>100,staged=(p?stagedModelEdits().filter(([key])=>p.models.some(m=>m.key===key)):stagedModelEdits()).length,local=staged,changed=(p?currentChannelDirty(p):dirty())||local,canOpen=!busy()&&changed,gated=local||over||!changed;
  const helper=(name,a,mark)=>iconButton(name,a,mark,busy()?'disabled':'');
  const helpers=(staged?helper('处理 '+staged+' 行待确认编辑','review-model-rows','edit'):'')+(incoming?helper('查看收到的待审候选','incoming','draft'):'');
- const saveTitle=busy()?'正在保存':sidebar?'保存当前渠道，成功后返回渠道列表；其它渠道修改保留':changed?'保存 · 先查看全部剩余修改的保存预览，确认后写入':'保存 · 打开保存预览；当前没有未保存修改';
+ const saveTitle=busy()?'正在保存':!changed?'没有未保存修改':sidebar?'保存当前渠道，成功后返回渠道列表；其它渠道修改保留':'保存 · 先查看全部剩余修改的保存预览，确认后写入';
  const save='<button id="mpPolicySave" class="btn '+(sidebar||changed?'primary':'ghost')+' mp-nav-action mp-template-save'+(!sidebar?' mp-top-policy-save'+(changed?' is-changed':''):'')+'" data-mp="save" title="'+saveTitle+'" aria-label="保存" data-save-scope="'+(sidebar?'current-channel':'all-channels')+'" data-save-gated="'+gated+'" '+(!canOpen?'disabled':'')+'>'+icon('save')+'<span class="mp-nav-action-label">保存</span></button>';
  const reset='<button id="mpPolicyReset" class="btn ghost mp-nav-action mp-top-policy-reset" data-mp="discard" title="'+(busy()?'正在保存，完成后再还原':changed?'还原全部渠道的修改，回到最近成功保存的配置':'没有未保存修改')+'" aria-label="还原修改" '+(busy()||!changed?'disabled':'')+'>'+icon('reset')+'<span class="mp-nav-action-label">还原修改</span></button>';
  const tools=helpers?'<div class="mp-rail-helpers" role="group" aria-label="需要处理的配置">'+helpers+'</div>':'';
@@ -555,7 +555,7 @@
  }
 
  function openSaveReview(){
-  if(busy())return;
+  if(busy()||!channelDraftDirty())return;
   // 弹窗内的快速启停就是要提交的草稿变更：每次刷新都把基准更新为最新草稿，
   // 只有已保存文件快照变化才算保存冲突；不读取历史计划或运行目录准入。
   saveReview={digest:policyDigest(),baseline:JSON.stringify(saved)};
@@ -567,7 +567,7 @@
     saveReview=null;closeModal();notifySaveBlocked(reason,stale?'stale':'gated');return;
    }
    const frozen=clone(draft);saveReview=null;closeModal();startSave(frozen);
-  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'列表保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，确认会关闭弹窗并登记“模型配置未保存”通知；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停。确认后弹窗立即关闭：冻结当前草稿、只备份并原子写入文件，成功只在原通知宿主反馈一次；稍后即结束。确认时若草稿已变化或被门禁拦下，同样立即关闭弹窗，不再留在弹窗里报错，而是登记一条“模型配置未保存”通知，草稿保留。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
+  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'列表保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。无修改时不能打开保存预览；已有修改但仍有未确认型号编辑或超限时，确认会关闭弹窗并登记“模型配置未保存”通知；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停。确认后弹窗立即关闭：冻结当前草稿、只备份并原子写入文件，成功只在原通知宿主反馈一次；稍后即结束。确认时若草稿已变化或被门禁拦下，同样立即关闭弹窗，不再留在弹窗里报错，而是登记一条“模型配置未保存”通知，草稿保留。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
   $('#modal').classList.add('mp-preview-modal');syncSaveReview();
  }
  // 保存被拦下走已注册通知，不在弹窗里留第二处错误提示。
@@ -1352,12 +1352,13 @@
  }
  function saveCurrentChannel(){
   const p=provider();if(busy()||!p||p.id==='native')return;
-  if(stagedModelEdits().some(([key])=>p.models.some(model=>model.key===key))){notifySaveBlocked('当前渠道还有未加入草稿的型号编辑，请先处理后保存','channel-staged');return;}
+  const staged=stagedModelEdits().some(([key])=>p.models.some(model=>model.key===key));
+  if(!currentChannelDirty(p)&&!staged)return;
+  if(staged){notifySaveBlocked('当前渠道还有未加入草稿的型号编辑，请先处理后保存','channel-staged');return;}
   const snapshot=currentChannelSnapshot(p),error=channelConfigError(p,snapshot);
   if(error){notifySaveBlocked(error+'；当前渠道未写入，编辑保留','channel-validation');return;}
   if(projection(snapshot).length>100){notifySaveBlocked('保存当前渠道后超出激活预算，编辑保留','channel-budget');return;}
   if(scenario==='drift'){notifySaveBlocked('配置文件基准已变化，当前渠道未写入，编辑保留','stale');return;}
-  if(!currentChannelDirty(p)){channelDetail=false;render();return;}
   startSave(snapshot,{channelId:p.id});
  }
  function startSave(snapshot,options={}){

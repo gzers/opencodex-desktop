@@ -27,15 +27,10 @@ test('读取中禁用入口并提示，读取完成后显示来源但不动草�
   assert.doesNotMatch(h.page(), /data-mp="read-upstream"[^>]*disabled/)
 })
 
-test('读取不建立未保存修改，仍可直接打开保存核对且确认禁用', () => {
-  const h = make()
-  h.click('read-upstream'); h.drain()
-  assert.match(h.page(), /data-channel-state="clean"/)
-  h.click('save')
-  assert.doesNotMatch(h.dialog(), /本次变更与写入|协议写入计划/)
-  assert.equal(h.nodes.get('modalConfirm').disabled, false)
-  h.runConfirm(); assert.notEqual(h.nodes.get('modalMask').style.display, 'flex')
-})
+test('读取不建立未保存修改，完成后保存仍置灰且旧点击不会打开预览',()=>{
+ const h=make(),before=policy(h);h.click('read-upstream');h.drain();assert.match(h.page(),/data-channel-state="clean"/);assert.match(h.page().match(/<button id="mpPolicySave"[^>]*>/)[0],/disabled/);
+ h.click('save');assert.notEqual(h.nodes.get('modalMask').style.display,'flex');assert.equal(h.state().operation,null);assert.equal(policy(h),before);
+});
 
 test('读取失败 / 无权限 / 无接口只提示，不写来源也不改草稿', () => {
   for (const scene of ['discovery-fail', 'discovery-unauthorized', 'discovery-unsupported']) {

@@ -13,19 +13,11 @@ test('确认保存后弹窗立即关闭并开始写入，不再停留在弹窗�
   assert.equal(h.state().operation.status, 'running')
 })
 
-test('没有可写入修改时确认仍可点，点了关闭并登记“模型配置未保存”通知', () => {
-  const h = make(), blocked = []
-  h.context.window.modelSaveBlockedBridge = payload => blocked.push(payload)
-  open(h)
-  assert.equal(h.nodes.get('modalConfirm').disabled, false)
-  assert.match(h.nodes.get('modalConfirm').title, /模型配置未保存/)
-  h.runConfirm()
-  assert.notEqual(h.nodes.get('modalMask').style.display, 'flex')
-  assert.equal(blocked.length, 1)
-  assert.match(blocked[0].reason, /没有未保存的修改/)
-  assert.equal(blocked[0].key, 'gated')
-  assert.equal(h.state().operation, null)
-})
+test('没有修改时保存置灰，旧点击事件也不打开预览或登记保存通知',()=>{
+ const h=make(),blocked=[],saved=JSON.stringify(h.state().saved);h.context.window.modelSaveBlockedBridge=payload=>blocked.push(payload);
+ assert.match(h.page().match(/<button id="mpPolicySave"[^>]*>/)[0],/disabled/);h.click('save');assert.notEqual(h.nodes.get('modalMask').style.display,'flex');assert.equal(h.state().operation,null);assert.equal(JSON.stringify(h.state().saved),saved);assert.equal(blocked.length,0);
+ h.click('edit-provider',{id:'newapi'});assert.match(h.page().match(/<button id="mpPolicySave"[^>]*>/)[0],/disabled/);h.click('save');assert.equal(h.state().channelDetail,true);assert.equal(h.state().operation,null);
+});
 
 test('无效连接字段在全局保存时关闭预览并登记原因，保留当前编辑',()=>{
  const h=make(),blocked=[];h.context.window.modelSaveBlockedBridge=payload=>blocked.push(payload);h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'');h.click('back-channels');open(h);h.runConfirm();
@@ -45,6 +37,7 @@ test('超出激活预算时同样关闭并登记通知，不写入运行配置',
 
 test('在预览里先启停再确认，第一次就能保存且写入的就是刚才那次改动', () => {
   const h = make()
+  h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'NewApi 修改');h.click('back-channels')
   h.click('save')
   h.click('preview-channel-toggle', { id: 'aimami' })
   h.click('preview-model-toggle', { id: 'newapi::0' })
@@ -61,8 +54,8 @@ test('在预览里先启停再确认，第一次就能保存且写入的就是�
 test('打开后改回原样再确认，按没有未保存修改拦下', () => {
   const h = make(), blocked = []
   h.context.window.modelSaveBlockedBridge = payload => blocked.push(payload.reason)
+  h.click('toggle-provider',{id:'aimami'})
   h.click('save')
-  h.click('preview-channel-toggle', { id: 'aimami' })
   h.click('preview-channel-toggle', { id: 'aimami' })
   h.runConfirm()
   assert.deepEqual(blocked, ['没有未保存的修改，本次确认未写入'])
@@ -70,7 +63,7 @@ test('打开后改回原样再确认，按没有未保存修改拦下', () => {
 })
 
 test('弹窗正文不再含内联错误块，失败原因只走通知', () => {
-  const h = make()
+  const h = make();h.click('toggle-provider',{id:'aimami'})
   open(h)
   assert.doesNotMatch(h.dialog(), /mpSaveError/)
   assert.doesNotMatch(h.dialog(), /确认后会先备份/)

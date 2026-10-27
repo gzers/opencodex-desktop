@@ -59,6 +59,22 @@
       "sha256": "34dd2baab44326370abc6b7ff5901f7e1f6a464ff12a914595ebb9977fa3636d"
     },
     {
+      "path": ".adg/evidence/prototype-channel-save-20261027/no-change-save-regression.tap",
+      "sha256": "00f81de142f0dd793f0ff1b31885d33b0bf70c3842096cd8e86dd7e9c2521d71"
+    },
+    {
+      "path": ".adg/evidence/prototype-channel-save-20261027/notification-dark.jpg",
+      "sha256": "07a7e9b03e311411f64f73106aa4fa51036cb0ebe0eaea94105bc38f47d6ad3a"
+    },
+    {
+      "path": ".adg/evidence/prototype-channel-save-20261027/notification-light.jpg",
+      "sha256": "0b7b392dbf57688dc25c1a392976860f209715edd082f1fb3215fada7e510222"
+    },
+    {
+      "path": ".adg/evidence/prototype-channel-save-20261027/notification-material-save-disabled.json",
+      "sha256": "991400e873551d88b3904ce84e2ac1586ce2c35f77936783df7069645a960f70"
+    },
+    {
       "path": ".adg/evidence/prototype-channel-save-20261027/related-regression.tap",
       "sha256": "44e33e44b582253a765b51d54b8ed5e6599ba53584b0a6ce75340fdcfd1a68ef"
     },
@@ -66,5 +82,10 @@
       "path": ".adg/evidence/prototype-channel-save-20261027/sync-adoption.tap",
       "sha256": "8c95e00227b932f77400172a243a209c0583088d1188ca47284d8b1aa82888fa"
     }
-  ]
+  ],
+  "followUp": {
+    "report": ".adg/evidence/prototype-channel-save-20261027/notification-material-save-disabled.json",
+    "relatedTests": 48,
+    "status": "passed"
+  }
 }

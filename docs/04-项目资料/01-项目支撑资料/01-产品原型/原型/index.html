@@ -1106,16 +1106,18 @@ body[data-page-material="clear"] .main{background:var(--page-fill-clear)}
 .toast.k-card .notify-min{position:absolute;top:6px;right:6px}
 .task-card{position:relative}
 .notification-panel,.toast.k-card,.task-card{
+  /* 未设置评审材质变量时仍保持可读底板，避免 var() 使整个背景失效。 */
   background:
-    linear-gradient(158deg,var(--notif-tint-a),#0000 62%),
-    linear-gradient(24deg,var(--notif-tint-b),#0000 58%),
-    var(--glass-fill);
-  -webkit-backdrop-filter:var(--glass-blur-notif);
-  backdrop-filter:var(--glass-blur-notif);
+    linear-gradient(158deg,var(--notif-tint-a,#0000),#0000 62%),
+    linear-gradient(24deg,var(--notif-tint-b,#0000),#0000 58%),
+    var(--glass-fill,rgba(244,245,249,.52));
+  -webkit-backdrop-filter:var(--glass-blur-notif,saturate(1.5) blur(8px));
+  backdrop-filter:var(--glass-blur-notif,saturate(1.5) blur(8px));
   border-color:color-mix(in srgb,var(--text) 13%,transparent);
   box-shadow:0 18px 44px #10182814,0 2px 6px #1018280f;
 }
 html[data-theme="dark"] .notification-panel,html[data-theme="dark"] .toast.k-card,html[data-theme="dark"] .task-card{
+  background-color:var(--glass-fill,rgba(34,36,42,.56));
   box-shadow:0 18px 44px #00000066,0 2px 6px #0006;
 }
 /* 对照档：退回实底，便于判断玻璃是否合适。 */

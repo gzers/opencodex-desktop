@@ -1,0 +1,46 @@
+{
+  "scope": "prototype-only follow-up to browser comments",
+  "date": "2026-10-27",
+  "issues": [
+    "success notification was fully transparent",
+    "clean list Save remained enabled"
+  ],
+  "cause": "The previous localhost server used the child prototype folder as root; ../glass-tokens.css and other parent assets returned404. Missing variables invalidated the shared notification background declaration. The list Save availability also omitted the clean guard.",
+  "fix": [
+    "serve the parent01-产品原型 directory with /原型/index.html; old/index.html redirects to proper path",
+    "preserve shared light/dark glass tokens; add fallback to same fill/blur recipe",
+    "both list and detail Save disabled without edits; handler guard cannot open preview or create operation/notification/history",
+    "after save, reverting edits, and upstream read without edits retain clean disabled state"
+  ],
+  "browser": {
+    "sharedStylesheetsLoaded": [
+      "glass-tokens.css",
+      "glass-components.css",
+      "glass-effects.css"
+    ],
+    "before": {
+      "background": "rgba(0,0,0,0)",
+      "blur": "none"
+    },
+    "light": {
+      "background": "rgba(244,245,249,0.52)",
+      "blur": "saturate(1.5) blur(8px)",
+      "buttonBackground": "rgba(13,13,13,0.06)",
+      "saveDisabledAfterSave": true
+    },
+    "dark": {
+      "background": "rgba(34,36,42,0.56)",
+      "blur": "saturate(1.5) blur(8px)",
+      "buttonBackground": "rgba(255,255,255,0.1)",
+      "saveDisabledAfterSave": true
+    },
+    "final": "light theme, clean list, Save disabled, original shared fill loaded"
+  },
+  "relatedRegression": {
+    "passed": 48,
+    "failed": 0,
+    "skipped": 0
+  },
+  "softwareChanged": false,
+  "realConfigOrNetworkOperations": false
+}
