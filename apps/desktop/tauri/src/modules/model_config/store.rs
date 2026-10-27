@@ -202,19 +202,93 @@ fn validate_policy(library: &Library, policy: &Policy) -> ModelResult<()> {
 pub struct ModelStore {
     root: PathBuf,
 }
+#[derive(Clone, Copy)]
+enum SnapshotScope {
+    Library,
+    Legacy,
+}
 impl ModelStore {
     pub fn new(root: &Path) -> Self {
         Self { root: root.into() }
     }
     /// The template library is independent of retired channel drafts/save plans.
     pub fn library_only(&self) -> ModelResult<(Library, String)> {
+        let snapshot = self.load_library()?;
+        Ok((snapshot.library, snapshot.library_digest))
+    }
+    /// Only merge `library` and `library_digest` from this snapshot into a channel
+    /// editor. Its empty policy/workspace are placeholders, not channel state.
+    /// Legacy multi-file recovery remains exclusive to `load`/`accept_import`.
+    pub fn load_library(&self) -> ModelResult<Snapshot> {
+        let _guard = self.lock()?;
+        self.load_library_unlocked()
+    }
+    fn load_library_unlocked(&self) -> ModelResult<Snapshot> {
         let bytes = self.bytes(LIBRARY_PATH)?;
         let library = match &bytes {
             Some(bytes) => serde_json::from_slice(bytes)?,
             None => seed_library(),
         };
         validate_library(&library)?;
-        Ok((library, sha256(bytes.as_deref().unwrap_or_default())))
+        Ok(Snapshot {
+            library,
+            library_digest: sha256(bytes.as_deref().unwrap_or_default()),
+            policy: Policy::default(),
+            policy_digest: sha256(b""),
+            workspace: None,
+            workspace_digest: sha256(b""),
+        })
+    }
+    /// Commit a merged, append-only library candidate against its exact digest.
+    /// Existing versions, defaults and local submission receipts must survive
+    /// unchanged; imported templates cannot choose a default automatically.
+    /// No legacy policy, draft or recovery journal is read or written. The
+    /// returned snapshot has the same library-only semantics as `load_library`.
+    pub fn accept_library(
+        &self,
+        expected_library: &str,
+        library: Library,
+    ) -> ModelResult<Snapshot> {
+        let _guard = self.lock()?;
+        let snapshot = self.load_library_unlocked()?;
+        if snapshot.library_digest != expected_library {
+            return Err(invalid("stale_baseline", "模版库已变化，请重新比较导入"));
+        }
+        validate_library(&library)?;
+        for old in &snapshot.library.templates {
+            let incoming = library
+                .templates
+                .iter()
+                .find(|t| t.id == old.id)
+                .ok_or_else(|| invalid("revision_conflict", "导入不能移除已有模版"))?;
+            if old.source != incoming.source {
+                return Err(invalid("source", "导入不能更改本机模版来源"));
+            }
+            if old.default_revision != incoming.default_revision {
+                return Err(invalid("default_revision", "导入不能更改本机默认版本"));
+            }
+            for revision in &old.revisions {
+                if !incoming.revisions.contains(revision) {
+                    return Err(invalid("revision_conflict", "导入不能改写或移除已有版本"));
+                }
+            }
+        }
+        if library.templates.iter().any(|t| {
+            t.default_revision.is_some()
+                && !snapshot.library.templates.iter().any(|old| old.id == t.id)
+        }) {
+            return Err(invalid(
+                "default_revision",
+                "导入新模版不能自动设置默认版本",
+            ));
+        }
+        if library.submission_receipts != snapshot.library.submission_receipts {
+            return Err(invalid("submission_conflict", "导入不能更改本机提交回执"));
+        }
+        if library == snapshot.library {
+            return Ok(snapshot);
+        }
+        self.persist_in_scope(&library, &snapshot, SnapshotScope::Library)
     }
     fn path(&self, relative: &str) -> ModelResult<PathBuf> {
         let path = self.root.join(relative);
@@ -435,22 +509,36 @@ impl ModelStore {
         let _guard = self.lock()?;
         Ok(self.load_unlocked()?.0)
     }
-    pub(super) fn with_locked_snapshot<T>(
-        &self,
-        work: impl FnOnce(&Snapshot) -> ModelResult<T>,
-    ) -> ModelResult<T> {
-        let _guard = self.lock()?;
-        work(&self.load_unlocked()?.0)
-    }
-    fn persist(&self, library: &Library, expected: &Snapshot) -> ModelResult<Snapshot> {
-        validate_library(library)?;
-        let before = self.bytes(LIBRARY_PATH)?;
-        if sha256(before.as_deref().unwrap_or_default()) != expected.library_digest
-            || sha256(self.bytes(POLICY_PATH)?.as_deref().unwrap_or_default())
-                != expected.policy_digest
-            || sha256(self.bytes(DRAFT_PATH)?.as_deref().unwrap_or_default())
-                != expected.workspace_digest
+    fn check_baseline(&self, expected: &Snapshot, scope: SnapshotScope) -> ModelResult<()> {
+        if sha256(self.bytes(LIBRARY_PATH)?.as_deref().unwrap_or_default())
+            != expected.library_digest
+            || (matches!(scope, SnapshotScope::Legacy)
+                && (sha256(self.bytes(POLICY_PATH)?.as_deref().unwrap_or_default())
+                    != expected.policy_digest
+                    || sha256(self.bytes(DRAFT_PATH)?.as_deref().unwrap_or_default())
+                        != expected.workspace_digest))
         {
+            return Err(invalid(
+                "stale_baseline",
+                "配置已在其他位置修改，请重新读取并比较",
+            ));
+        }
+        Ok(())
+    }
+    fn persist_in_scope(
+        &self,
+        library: &Library,
+        expected: &Snapshot,
+        scope: SnapshotScope,
+    ) -> ModelResult<Snapshot> {
+        validate_library(library)?;
+        let bytes = serde_json::to_vec_pretty(library)?;
+        if bytes.len() as u64 > MAX_DOCUMENT {
+            return Err(invalid("limit", "模版库超过文件大小上限"));
+        }
+        self.check_baseline(expected, scope)?;
+        let before = self.bytes(LIBRARY_PATH)?;
+        if sha256(before.as_deref().unwrap_or_default()) != expected.library_digest {
             return Err(invalid(
                 "stale_baseline",
                 "配置已在其他位置修改，请重新读取并比较",
@@ -467,18 +555,8 @@ impl ModelStore {
                 Some("模型模版保存前保护".into()),
             )?;
         }
-        let bytes = serde_json::to_vec_pretty(library)?;
-        if bytes.len() as u64 > MAX_DOCUMENT {
-            return Err(invalid("limit", "模版库超过文件大小上限"));
-        }
         // Recheck after the backup operation, before replacing a concurrent external edit.
-        if sha256(self.bytes(LIBRARY_PATH)?.as_deref().unwrap_or_default())
-            != expected.library_digest
-            || sha256(self.bytes(POLICY_PATH)?.as_deref().unwrap_or_default())
-                != expected.policy_digest
-        {
-            return Err(invalid("stale_baseline", "备份期间检测到外部修改，未覆盖"));
-        }
+        self.check_baseline(expected, scope)?;
         atomic_write(&path, &bytes, 0o600)?;
         let actual = self
             .bytes(LIBRARY_PATH)?
@@ -495,6 +573,7 @@ impl ModelStore {
             workspace_digest: expected.workspace_digest.clone(),
         })
     }
+    /// Save an immutable version and return a library-only snapshot.
     pub fn save(&self, request: SaveTemplate) -> ModelResult<Commit> {
         let expected = request.expected_library.clone();
         let result = self.save_batch(&expected, vec![request])?;
@@ -555,6 +634,7 @@ impl ModelStore {
         snapshot.workspace_digest = sha256(&bytes);
         Ok(snapshot)
     }
+    /// Save the complete batch atomically; the snapshot is library-only.
     pub fn save_batch(
         &self,
         expected: &str,
@@ -562,6 +642,8 @@ impl ModelStore {
     ) -> ModelResult<BatchCommit> {
         self.save_submission(expected, requests, None)
     }
+    /// Versions and the idempotency receipt commit in the same library write.
+    /// Successful replays return the current library-only snapshot.
     pub fn save_submission(
         &self,
         expected: &str,
@@ -594,7 +676,7 @@ impl ModelStore {
         origin: Option<SaveOrigin>,
     ) -> ModelResult<BatchCommit> {
         let _guard = self.lock()?;
-        let (snapshot, _) = self.load_unlocked()?;
+        let snapshot = self.load_library_unlocked()?;
         if let Some((id, digest)) = submission {
             if let Some(receipt) = snapshot.library.submission_receipts.get(id) {
                 if receipt.digest != digest {
@@ -660,7 +742,7 @@ impl ModelStore {
             );
         }
         let snapshot = if submission.is_some() || outcomes.iter().any(|v| v.changed) {
-            self.persist(&library, &snapshot)?
+            self.persist_in_scope(&library, &snapshot, SnapshotScope::Library)?
         } else {
             snapshot
         };
@@ -760,6 +842,7 @@ impl ModelStore {
         self.recover_pending()?;
         self.load_unlocked().map(|v| v.0)
     }
+    /// Explicitly change a library default, returning a library-only snapshot.
     pub fn set_default(
         &self,
         expected: &str,
@@ -767,7 +850,7 @@ impl ModelStore {
         revision: &str,
     ) -> ModelResult<Snapshot> {
         let _guard = self.lock()?;
-        let (snapshot, _) = self.load_unlocked()?;
+        let snapshot = self.load_library_unlocked()?;
         if expected != snapshot.library_digest {
             return Err(invalid("stale_baseline", "默认设置基准已变化"));
         }
@@ -784,7 +867,24 @@ impl ModelStore {
             return Ok(snapshot);
         }
         target.default_revision = Some(revision.into());
-        self.persist(&library, &snapshot)
+        self.persist_in_scope(&library, &snapshot, SnapshotScope::Library)
+    }
+    /// Delete only library versions. The caller must guard current file/editor
+    /// adoption references; this transaction protects builtins, defaults and
+    /// historical runtime recovery references without reading legacy drafts.
+    /// Returns a library-only snapshot, like `load_library`.
+    pub fn delete_library(
+        &self,
+        expected_library: &str,
+        template: &str,
+        revisions: &[String],
+    ) -> ModelResult<Snapshot> {
+        let _guard = self.lock()?;
+        let snapshot = self.load_library_unlocked()?;
+        if expected_library != snapshot.library_digest {
+            return Err(invalid("stale_baseline", "删除确认已过期，请重新查看依赖"));
+        }
+        self.delete_from_snapshot(snapshot, template, revisions, SnapshotScope::Library)
     }
     pub fn delete(
         &self,
@@ -795,13 +895,22 @@ impl ModelStore {
         revisions: &[String],
     ) -> ModelResult<Snapshot> {
         let _guard = self.lock()?;
-        let (snapshot, policy) = self.load_unlocked()?;
+        let (snapshot, _) = self.load_unlocked()?;
         if expected_library != snapshot.library_digest
             || expected_policy != snapshot.policy_digest
             || expected_workspace != snapshot.workspace_digest
         {
             return Err(invalid("stale_baseline", "删除确认已过期，请重新查看依赖"));
         }
+        self.delete_from_snapshot(snapshot, template, revisions, SnapshotScope::Legacy)
+    }
+    fn delete_from_snapshot(
+        &self,
+        snapshot: Snapshot,
+        template: &str,
+        revisions: &[String],
+        scope: SnapshotScope,
+    ) -> ModelResult<Snapshot> {
         let ids: BTreeSet<_> = revisions.iter().cloned().collect();
         if ids.is_empty() || ids.len() != revisions.len() {
             return Err(invalid("selection", "请选择明确且不重复的版本"));
@@ -827,11 +936,13 @@ impl ModelStore {
                     "内置基线或默认版本不能删除，整批未删除",
                 ));
             }
-            let used = policy
+            let used = snapshot
+                .policy
                 .template_refs
                 .iter()
                 .chain(
-                    policy
+                    snapshot
+                        .policy
                         .channels
                         .iter()
                         .flat_map(|c| c.template_refs.iter().chain(c.model_refs.values())),
@@ -860,7 +971,7 @@ impl ModelStore {
         }
         target.revisions.retain(|r| !ids.contains(&r.id));
         library.templates.retain(|t| !t.revisions.is_empty());
-        self.persist(&library, &snapshot)
+        self.persist_in_scope(&library, &snapshot, scope)
     }
 }
 
@@ -972,6 +1083,462 @@ fn change_facts(
         after: new.get(*key).cloned().unwrap_or(Value::Null),
     })
     .collect())
+}
+
+#[cfg(test)]
+mod library_tests {
+    use super::*;
+
+    fn request(snapshot: &Snapshot) -> SaveTemplate {
+        SaveTemplate {
+            expected_library: snapshot.library_digest.clone(),
+            template_id: None,
+            base_revision: None,
+            label: "local template".into(),
+            content: snapshot.library.templates[0].revisions[0].content.clone(),
+        }
+    }
+
+    #[test]
+    fn library_read_save_and_accept_never_inspect_unreadable_legacy_paths() {
+        let root = tempfile::tempdir().unwrap();
+        for path in [POLICY_PATH, DRAFT_PATH, JOURNAL_PATH] {
+            std::fs::create_dir_all(root.path().join(path)).unwrap();
+        }
+        let store = ModelStore::new(root.path());
+        assert!(store.load().is_err());
+        let before = store.load_library().unwrap();
+        assert_eq!(
+            store.library_only().unwrap(),
+            (before.library.clone(), before.library_digest.clone())
+        );
+        assert_eq!(
+            store
+                .accept_library(&before.library_digest, before.library.clone())
+                .unwrap(),
+            before
+        );
+        assert!(!root.path().join(LIBRARY_PATH).exists());
+        let saved = store.save(request(&before)).unwrap();
+        let mut candidate = saved.snapshot.library.clone();
+        prepare_template(&mut candidate, request(&saved.snapshot)).unwrap();
+        let merged = store
+            .accept_library(&saved.snapshot.library_digest, candidate)
+            .unwrap();
+        assert_eq!(store.load_library().unwrap(), merged);
+        assert_eq!(merged.policy, Policy::default());
+        assert!(merged.workspace.is_none());
+        assert_eq!(merged.policy_digest, sha256(b""));
+        assert_eq!(merged.workspace_digest, sha256(b""));
+        for path in [POLICY_PATH, DRAFT_PATH, JOURNAL_PATH] {
+            assert!(root.path().join(path).is_dir());
+        }
+        // A corrupt library itself is still a hard failure, never a seed fallback.
+        std::fs::write(root.path().join(LIBRARY_PATH), b"corrupt library").unwrap();
+        assert!(store.save(request(&merged)).is_err());
+        assert_eq!(
+            std::fs::read(root.path().join(LIBRARY_PATH)).unwrap(),
+            b"corrupt library"
+        );
+    }
+
+    #[test]
+    fn accept_library_is_append_only_and_preserves_defaults_and_local_receipts() {
+        let root = tempfile::tempdir().unwrap();
+        let store = ModelStore::new(root.path());
+        let before = store.load_library().unwrap();
+        let saved = store
+            .save_submission(
+                &before.library_digest,
+                vec![request(&before)],
+                Some(("local-operation", "local-digest")),
+            )
+            .unwrap();
+        let original = &saved.outcomes[0];
+        let mut candidate = saved.snapshot.library.clone();
+        let mut edit = request(&saved.snapshot);
+        edit.template_id = Some(original.template_id.clone());
+        edit.base_revision = Some(original.revision_id.clone());
+        edit.content.description = "imported new revision".into();
+        prepare_template(&mut candidate, edit).unwrap();
+        let new = prepare_template(&mut candidate, request(&saved.snapshot)).unwrap();
+        let mut automatic_default = candidate.clone();
+        automatic_default
+            .templates
+            .iter_mut()
+            .find(|t| t.id == new.template_id)
+            .unwrap()
+            .default_revision = Some(new.revision_id.clone());
+        assert_eq!(
+            store
+                .accept_library(&saved.snapshot.library_digest, automatic_default)
+                .unwrap_err()
+                .code,
+            "default_revision"
+        );
+        let accepted = store
+            .accept_library(&saved.snapshot.library_digest, candidate)
+            .unwrap();
+        assert_eq!(
+            accepted.library.submission_receipts,
+            saved.snapshot.library.submission_receipts
+        );
+        assert_eq!(
+            store
+                .save_submission(
+                    &before.library_digest,
+                    vec![request(&before)],
+                    Some(("local-operation", "local-digest"))
+                )
+                .unwrap()
+                .outcomes,
+            saved.outcomes
+        );
+        let bytes = std::fs::read(root.path().join(LIBRARY_PATH)).unwrap();
+        let family_index = accepted
+            .library
+            .templates
+            .iter()
+            .position(|t| t.id == original.template_id)
+            .unwrap();
+        for mutation in [
+            "rewrite",
+            "remove_revision",
+            "remove_template",
+            "default",
+            "receipt",
+            "source",
+        ] {
+            let mut bad = accepted.library.clone();
+            match mutation {
+                "rewrite" => {
+                    bad.templates[family_index].revisions[0].created_at =
+                        "2000-01-01T00:00:00Z".into()
+                }
+                "remove_revision" => {
+                    bad.templates[family_index].revisions.remove(0);
+                }
+                "remove_template" => {
+                    bad.templates.remove(family_index);
+                }
+                "default" => {
+                    bad.templates[family_index].default_revision =
+                        Some(original.revision_id.clone())
+                }
+                "receipt" => {
+                    bad.submission_receipts.clear();
+                }
+                _ => bad.templates[family_index].source = TemplateSource::Builtin,
+            }
+            let expected = match mutation {
+                "default" => "default_revision",
+                "receipt" => "submission_conflict",
+                "source" => "source",
+                _ => "revision_conflict",
+            };
+            assert_eq!(
+                store
+                    .accept_library(&accepted.library_digest, bad)
+                    .unwrap_err()
+                    .code,
+                expected,
+                "{mutation}"
+            );
+            assert_eq!(
+                std::fs::read(root.path().join(LIBRARY_PATH)).unwrap(),
+                bytes
+            );
+        }
+        assert_eq!(
+            store
+                .accept_library(&saved.snapshot.library_digest, accepted.library.clone())
+                .unwrap_err()
+                .code,
+            "stale_baseline"
+        );
+        assert_eq!(
+            store
+                .accept_library(&accepted.library_digest, accepted.library.clone())
+                .unwrap(),
+            accepted
+        );
+        assert_eq!(
+            std::fs::read(root.path().join(LIBRARY_PATH)).unwrap(),
+            bytes
+        );
+    }
+
+    #[test]
+    fn concurrent_library_saves_share_the_transaction_lock_and_reject_the_losing_baseline() {
+        let root = tempfile::tempdir().unwrap();
+        let before = ModelStore::new(root.path()).load_library().unwrap();
+        let barrier = std::sync::Arc::new(std::sync::Barrier::new(2));
+        let writers = (0..2)
+            .map(|_| {
+                let barrier = barrier.clone();
+                let path = root.path().to_owned();
+                let request = request(&before);
+                std::thread::spawn(move || {
+                    barrier.wait();
+                    ModelStore::new(&path).save(request)
+                })
+            })
+            .collect::<Vec<_>>();
+        let results = writers
+            .into_iter()
+            .map(|writer| writer.join().unwrap())
+            .collect::<Vec<_>>();
+        assert_eq!(results.iter().filter(|r| r.is_ok()).count(), 1);
+        assert_eq!(
+            results.iter().find_map(|r| r.as_ref().err()).unwrap().code,
+            "stale_baseline"
+        );
+        assert_eq!(
+            ModelStore::new(root.path())
+                .load_library()
+                .unwrap()
+                .library
+                .templates
+                .len(),
+            before.library.templates.len() + 1
+        );
+    }
+
+    #[test]
+    fn defaults_and_deletion_ignore_legacy_documents_and_guard_the_whole_selection() {
+        let root = tempfile::tempdir().unwrap();
+        let store = ModelStore::new(root.path());
+        let before = store.load_library().unwrap();
+        let first = store.save(request(&before)).unwrap();
+        let mut edit = request(&first.snapshot);
+        edit.template_id = Some(first.template_id.clone());
+        edit.base_revision = Some(first.revision_id.clone());
+        edit.content.description = "later version".into();
+        let next = store.save(edit).unwrap();
+        for path in [POLICY_PATH, DRAFT_PATH] {
+            std::fs::write(root.path().join(path), b"corrupt retired document").unwrap();
+        }
+        let selected = store
+            .set_default(
+                &next.snapshot.library_digest,
+                &first.template_id,
+                &first.revision_id,
+            )
+            .unwrap();
+        assert_eq!(
+            store
+                .set_default(
+                    &selected.library_digest,
+                    &first.template_id,
+                    &first.revision_id
+                )
+                .unwrap(),
+            selected
+        );
+        assert_eq!(
+            store
+                .set_default(
+                    &next.snapshot.library_digest,
+                    &first.template_id,
+                    &next.revision_id
+                )
+                .unwrap_err()
+                .code,
+            "stale_baseline"
+        );
+        for (revisions, code) in [
+            (
+                vec![next.revision_id.clone(), first.revision_id.clone()],
+                "protected_revision",
+            ),
+            (
+                vec![next.revision_id.clone(), next.revision_id.clone()],
+                "selection",
+            ),
+            (
+                vec![next.revision_id.clone(), uuid::Uuid::new_v4().to_string()],
+                "not_found",
+            ),
+            (vec![], "selection"),
+        ] {
+            assert_eq!(
+                store
+                    .delete_library(&selected.library_digest, &first.template_id, &revisions)
+                    .unwrap_err()
+                    .code,
+                code
+            );
+            assert_eq!(store.load_library().unwrap(), selected);
+        }
+        assert_eq!(
+            store
+                .delete_library(
+                    &next.snapshot.library_digest,
+                    &first.template_id,
+                    std::slice::from_ref(&next.revision_id)
+                )
+                .unwrap_err()
+                .code,
+            "stale_baseline"
+        );
+        let deleted = store
+            .delete_library(
+                &selected.library_digest,
+                &first.template_id,
+                std::slice::from_ref(&next.revision_id),
+            )
+            .unwrap();
+        let family = deleted
+            .library
+            .templates
+            .iter()
+            .find(|t| t.id == first.template_id)
+            .unwrap();
+        assert_eq!(family.revisions.len(), 1);
+        assert_eq!(family.default_revision.as_ref(), Some(&first.revision_id));
+        let extra = store.save(request(&deleted)).unwrap();
+        let removed = store
+            .delete_library(
+                &extra.snapshot.library_digest,
+                &extra.template_id,
+                std::slice::from_ref(&extra.revision_id),
+            )
+            .unwrap();
+        assert!(!removed
+            .library
+            .templates
+            .iter()
+            .any(|t| t.id == extra.template_id));
+        let builtin = &before.library.templates[0];
+        assert_eq!(
+            store
+                .delete_library(
+                    &removed.library_digest,
+                    &builtin.id,
+                    std::slice::from_ref(&builtin.revisions[0].id)
+                )
+                .unwrap_err()
+                .code,
+            "protected_revision"
+        );
+        for path in [POLICY_PATH, DRAFT_PATH] {
+            assert_eq!(
+                std::fs::read(root.path().join(path)).unwrap(),
+                b"corrupt retired document"
+            );
+        }
+    }
+
+    #[test]
+    fn library_deletion_preserves_revisions_used_by_historical_policy_or_recovery_baseline() {
+        for from_baseline in [false, true] {
+            let root = tempfile::tempdir().unwrap();
+            let store = ModelStore::new(root.path());
+            let before = store.load_library().unwrap();
+            let saved = store.save(request(&before)).unwrap();
+            let mut historical = saved.snapshot.clone();
+            historical.policy.template_refs.push(TemplateRef {
+                template_id: saved.template_id.clone(),
+                revision_id: saved.revision_id.clone(),
+            });
+            let id = uuid::Uuid::new_v4().to_string();
+            let plan = json!({
+                "id": id, "phase": "committed", "expectedLibrary": saved.snapshot.library_digest,
+                "expectedPolicy": sha256(b""), "expectedWorkspace": sha256(b""),
+                "policy": if from_baseline { Policy::default() } else { historical.policy.clone() },
+                "before": {"version":"fixture", "providers":{}, "models":[], "order":{}, "catalog":{}},
+                "nextProviders":{}, "nextOrder":[], "expectedSlugs":[],
+                "runtimeExecutable":"unused-fixture", "error":null, "createdAt":"2026-10-27T00:00:00Z",
+                "ownership":[], "previousOwnership":[], "disabledBefore":[], "observedProviders":{},
+                "observedOrder":[], "observedDisabled":[],
+                "recovery": if from_baseline { Some(super::super::recovery::Baseline::capture(&historical).unwrap()) } else { None }
+            });
+            atomic_write(
+                &root
+                    .path()
+                    .join("manager-state/model-save-plans")
+                    .join(format!("{id}.json")),
+                &serde_json::to_vec(&plan).unwrap(),
+                0o600,
+            )
+            .unwrap();
+            for path in [POLICY_PATH, DRAFT_PATH] {
+                std::fs::create_dir(root.path().join(path)).unwrap();
+            }
+            assert_eq!(
+                store
+                    .delete_library(
+                        &saved.snapshot.library_digest,
+                        &saved.template_id,
+                        std::slice::from_ref(&saved.revision_id)
+                    )
+                    .unwrap_err()
+                    .code,
+                "protected_revision"
+            );
+            assert_eq!(store.load_library().unwrap(), saved.snapshot);
+        }
+    }
+
+    #[test]
+    fn explicit_legacy_recovery_and_import_remain_available_after_a_library_save() {
+        let root = tempfile::tempdir().unwrap();
+        let store = ModelStore::new(root.path());
+        let before = store.load_library().unwrap();
+        let policy = Policy {
+            template_refs: vec![TemplateRef {
+                template_id: before.library.templates[0].id.clone(),
+                revision_id: before.library.templates[0].revisions[0].id.clone(),
+            }],
+            ..Default::default()
+        };
+        let policy_bytes = serde_json::to_vec(&policy).unwrap();
+        let draft = PolicyDraft {
+            base_policy: sha256(&policy_bytes),
+            policy: policy.clone(),
+        };
+        let journal = PendingFiles {
+            expected_policy: sha256(b""),
+            runtime_commit: true,
+            files: vec![
+                PendingFile {
+                    path: POLICY_PATH.into(),
+                    before: None,
+                    after: policy_bytes,
+                },
+                PendingFile {
+                    path: DRAFT_PATH.into(),
+                    before: None,
+                    after: serde_json::to_vec(&draft).unwrap(),
+                },
+            ],
+        };
+        let journal_bytes = serde_json::to_vec(&journal).unwrap();
+        atomic_write(&root.path().join(JOURNAL_PATH), &journal_bytes, 0o600).unwrap();
+        let saved = store.save(request(&before)).unwrap();
+        assert_eq!(
+            std::fs::read(root.path().join(JOURNAL_PATH)).unwrap(),
+            journal_bytes
+        );
+        assert!(!root.path().join(POLICY_PATH).exists());
+        assert!(!root.path().join(DRAFT_PATH).exists());
+        let recovered = store.load().unwrap();
+        assert_eq!(recovered.library, saved.snapshot.library);
+        assert_eq!(recovered.policy, policy);
+        assert_eq!(recovered.workspace, Some(draft));
+        assert!(!root.path().join(JOURNAL_PATH).exists());
+        let imported = store
+            .accept_import(
+                &recovered.library_digest,
+                &recovered.policy_digest,
+                &recovered.workspace_digest,
+                recovered.library.clone(),
+                Some(Policy::default()),
+            )
+            .unwrap();
+        assert_eq!(imported.policy, recovered.policy);
+        assert_eq!(imported.workspace.unwrap().policy, Policy::default());
+    }
 }
 
 #[cfg(test)]

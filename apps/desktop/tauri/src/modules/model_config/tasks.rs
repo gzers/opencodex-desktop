@@ -181,7 +181,7 @@ impl Tasks {
         if request.targets.is_empty() && !request.allow_new && request.scene != Scene::CheckOnly {
             return Err(invalid("task_scope", "请选择已有模版或明确允许新建"));
         }
-        let snapshot = ModelStore::new(&self.root).load()?;
+        let snapshot = ModelStore::new(&self.root).load_library()?;
         if request
             .expected_library
             .as_ref()
@@ -402,7 +402,7 @@ impl Tasks {
             }
         }
         if require_current
-            && ModelStore::new(&self.root).load()?.library_digest != task.expected_library
+            && ModelStore::new(&self.root).load_library()?.library_digest != task.expected_library
         {
             return Err(invalid(
                 "stale_baseline",
@@ -457,7 +457,7 @@ impl Tasks {
         };
         let key = format!("{id}/{submission}");
         if let Some(value) = ModelStore::new(&self.root)
-            .load()?
+            .load_library()?
             .library
             .submission_receipts
             .get(&key)
@@ -640,6 +640,254 @@ pub fn contract_definition() -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn template_task_lifecycle_ignores_missing_or_corrupt_legacy_documents() {
+        for policy in [None, Some(b"{broken old policy".as_slice())] {
+            for draft in [None, Some(b"{broken old draft".as_slice())] {
+                let root = tempfile::tempdir().unwrap();
+                std::fs::create_dir(root.path().join("manager-state")).unwrap();
+                for (path, bytes) in [(POLICY_PATH, policy), (DRAFT_PATH, draft)] {
+                    if let Some(bytes) = bytes {
+                        std::fs::write(root.path().join(path), bytes).unwrap();
+                    }
+                }
+                let config = root.path().join("config.json");
+                std::fs::write(&config, b"channel file before task").unwrap();
+                let store = ModelStore::new(root.path());
+                let before = store.load_library().unwrap();
+                let template = &before.library.templates[0];
+                let mut content = template.revisions[0].content.clone();
+                content.description = "unsaved editor buffer".into();
+                content.locked_fields.insert("description".into());
+                let tasks = Tasks::new(root.path());
+                let grant = tasks
+                    .prepare(CreateTask {
+                        scene: Scene::AuditAndRevise,
+                        targets: vec![TemplateRef {
+                            template_id: template.id.clone(),
+                            revision_id: template.revisions[0].id.clone(),
+                        }],
+                        allow_new: false,
+                        requirements: "preserve the current buffer".into(),
+                        expected_library: Some(before.library_digest.clone()),
+                        buffers: vec![EditingBuffer {
+                            template_id: template.id.clone(),
+                            base_revision: template.revisions[0].id.clone(),
+                            label: template.label.clone(),
+                            content: content.clone(),
+                        }],
+                    })
+                    .unwrap();
+                tasks.activate(&grant).unwrap();
+                let request = Submission {
+                    submission_id: uuid::Uuid::new_v4().to_string(),
+                    contract_version: 1,
+                    proposals: vec![Proposal {
+                        template_id: Some(template.id.clone()),
+                        base_revision: Some(template.revisions[0].id.clone()),
+                        label: template.label.clone(),
+                        content,
+                    }],
+                    report: None,
+                };
+                tasks.validate_prepared(&grant.task, &request).unwrap();
+                assert_eq!(
+                    tasks
+                        .preflight(&grant.task.id, &grant.token, &request)
+                        .unwrap()["saved"],
+                    false
+                );
+                assert!(!root.path().join(LIBRARY_PATH).exists());
+                // A channel save during the task does not change its library baseline.
+                std::fs::write(&config, b"channel file saved while task ran").unwrap();
+                if policy.is_some() {
+                    std::fs::write(root.path().join(POLICY_PATH), b"later invalid policy").unwrap();
+                }
+                if draft.is_some() {
+                    std::fs::write(root.path().join(DRAFT_PATH), b"later invalid draft").unwrap();
+                }
+                let saved = tasks
+                    .submit(&grant.task.id, &grant.token, request.clone())
+                    .unwrap();
+                assert_eq!(saved.state, "saved");
+                let report = root.path().join(TASK_DIR).join(format!(
+                    "{}-{}.report.json",
+                    grant.task.id, request.submission_id
+                ));
+                std::fs::remove_file(report).unwrap();
+                let restarted = Tasks::new(root.path());
+                assert_eq!(
+                    restarted
+                        .receipt(&grant.task.id, &grant.token, &request.submission_id)
+                        .unwrap(),
+                    Some(saved.clone())
+                );
+                assert_eq!(
+                    restarted
+                        .owner_result(&grant.task.id, &request.submission_id)
+                        .unwrap()["receipt"],
+                    serde_json::to_value(&saved).unwrap()
+                );
+                assert_eq!(
+                    restarted
+                        .submit(&grant.task.id, &grant.token, request.clone())
+                        .unwrap(),
+                    saved
+                );
+                let mut changed = request;
+                changed.proposals[0].label.push_str(" changed replay");
+                assert_eq!(
+                    restarted
+                        .submit(&grant.task.id, &grant.token, changed)
+                        .unwrap_err()
+                        .code,
+                    "submission_conflict"
+                );
+                let after = store.load_library().unwrap();
+                assert_eq!(after.library.templates[0].revisions.len(), 2);
+                assert_eq!(
+                    after.library.templates[0].revisions[0],
+                    template.revisions[0]
+                );
+                assert_eq!(
+                    after.library.templates[0].default_revision,
+                    template.default_revision
+                );
+                assert_eq!(after.policy, Policy::default());
+                assert!(after.workspace.is_none());
+                assert_eq!(
+                    std::fs::read(&config).unwrap(),
+                    b"channel file saved while task ran"
+                );
+                for (path, expected) in [
+                    (
+                        POLICY_PATH,
+                        policy.map(|_| b"later invalid policy".as_slice()),
+                    ),
+                    (DRAFT_PATH, draft.map(|_| b"later invalid draft".as_slice())),
+                ] {
+                    assert_eq!(
+                        std::fs::read(root.path().join(path)).ok().as_deref(),
+                        expected
+                    );
+                }
+            }
+        }
+    }
+    #[test]
+    fn corrupt_legacy_documents_do_not_weaken_scope_locks_check_only_or_library_conflicts() {
+        let root = tempfile::tempdir().unwrap();
+        std::fs::create_dir(root.path().join("manager-state")).unwrap();
+        for path in [POLICY_PATH, DRAFT_PATH] {
+            std::fs::write(root.path().join(path), b"invalid retired document").unwrap();
+        }
+        let store = ModelStore::new(root.path());
+        let before = store.load_library().unwrap();
+        let template = &before.library.templates[0];
+        let mut content = template.revisions[0].content.clone();
+        content.locked_fields.insert("description".into());
+        let tasks = Tasks::new(root.path());
+        let scope = CreateTask {
+            scene: Scene::AuditAndRevise,
+            targets: vec![TemplateRef {
+                template_id: template.id.clone(),
+                revision_id: template.revisions[0].id.clone(),
+            }],
+            allow_new: false,
+            requirements: String::new(),
+            expected_library: Some(before.library_digest.clone()),
+            buffers: vec![EditingBuffer {
+                template_id: template.id.clone(),
+                base_revision: template.revisions[0].id.clone(),
+                label: template.label.clone(),
+                content: content.clone(),
+            }],
+        };
+        let grant = tasks.create(scope.clone()).unwrap();
+        let request = Submission {
+            submission_id: uuid::Uuid::new_v4().to_string(),
+            contract_version: 1,
+            proposals: vec![Proposal {
+                template_id: Some(template.id.clone()),
+                base_revision: Some(template.revisions[0].id.clone()),
+                label: template.label.clone(),
+                content,
+            }],
+            report: None,
+        };
+        for (code, mut rejected) in [
+            ("locked_field", request.clone()),
+            ("task_scope", request.clone()),
+            ("task_baseline", request.clone()),
+        ] {
+            rejected.submission_id = uuid::Uuid::new_v4().to_string();
+            match code {
+                "locked_field" => rejected.proposals[0]
+                    .content
+                    .description
+                    .push_str("changed"),
+                "task_scope" => rejected.proposals[0] = proposal(),
+                _ => rejected.proposals[0].base_revision = Some(uuid::Uuid::new_v4().to_string()),
+            }
+            assert_eq!(
+                tasks
+                    .submit(&grant.task.id, &grant.token, rejected.clone())
+                    .unwrap_err()
+                    .code,
+                code
+            );
+            assert_eq!(
+                tasks
+                    .receipt(&grant.task.id, &grant.token, &rejected.submission_id)
+                    .unwrap()
+                    .unwrap()
+                    .state,
+                "rejected"
+            );
+        }
+        let mut check = scope;
+        check.scene = Scene::CheckOnly;
+        let check = tasks.create(check).unwrap();
+        assert_eq!(
+            tasks
+                .submit(&check.task.id, &check.token, request.clone())
+                .unwrap_err()
+                .code,
+            "read_only_task"
+        );
+        let report = Submission {
+            submission_id: uuid::Uuid::new_v4().to_string(),
+            contract_version: 1,
+            proposals: vec![],
+            report: Some("checked without writing versions".into()),
+        };
+        let receipt = tasks
+            .submit(&check.task.id, &check.token, report.clone())
+            .unwrap();
+        assert_eq!(receipt.state, "report");
+        assert_eq!(
+            tasks.submit(&check.task.id, &check.token, report).unwrap(),
+            receipt
+        );
+        assert!(!root.path().join(LIBRARY_PATH).exists());
+        let later = store
+            .save(SaveTemplate {
+                expected_library: before.library_digest,
+                template_id: None,
+                base_revision: None,
+                label: "later manual template".into(),
+                content: proposal().content,
+            })
+            .unwrap();
+        assert_eq!(
+            tasks
+                .submit(&grant.task.id, &grant.token, request)
+                .unwrap_err()
+                .code,
+            "stale_baseline"
+        );
+        assert_eq!(store.load_library().unwrap(), later.snapshot);
+    }
     fn create(scene: Scene) -> CreateTask {
         CreateTask {
             scene,

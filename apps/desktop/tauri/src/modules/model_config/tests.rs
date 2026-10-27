@@ -194,7 +194,18 @@ fn saved_policy_reference_protects_version_and_policy_is_not_changed() {
             &first.revision_id,
         )
         .unwrap();
-    assert_eq!(after.policy_digest, current.policy_digest);
+    assert_eq!(store.load().unwrap().policy_digest, current.policy_digest);
+    assert_eq!(
+        after
+            .library
+            .templates
+            .iter()
+            .find(|t| t.id == first.template_id)
+            .unwrap()
+            .default_revision
+            .as_deref(),
+        Some(first.revision_id.as_str())
+    );
     assert_eq!(std::fs::read(root.path().join(POLICY_PATH)).unwrap(), bytes);
 }
 #[test]
