@@ -1,5 +1,5 @@
 {
-  "codeHead": "a71798dfeb1b12a739725b43bfa9cdd44bb0bb99",
+  "codeHead": "7a4e14ba25301e522decc7d012d3f4b56095510d",
   "source": "0.2.15-bugs.md mandatory14scenarios",
   "cases": [
     {
@@ -119,17 +119,28 @@
     {
       "id": 13,
       "scope": "Windows WebView2/native packages plus macOS corresponding engine",
-      "status": "pending",
+      "status": "passed",
       "evidence": [
-        ".adg/evidence/0.2.16/file-browser-webkit/report.json"
+        ".adg/evidence/0.2.16/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.16/windows-native/model-ui.json",
+        ".adg/evidence/0.2.16/release-windows/msi/model-ui.json",
+        ".adg/evidence/0.2.16/release-windows/nsis/model-ui.json"
       ]
     },
     {
       "id": 14,
       "scope": "CI/installers/update signatures/public stable manifest",
-      "status": "pending",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/ci-final.json",
+        ".adg/evidence/0.2.16/release-build.json",
+        ".adg/evidence/0.2.16/release-windows/installer-verification.json",
+        ".adg/evidence/0.2.16/publish-public.log",
+        ".adg/evidence/0.2.16/publish-stable.log",
+        ".adg/evidence/0.2.16/release-summary.json"
+      ]
     }
   ],
-  "boundary": "Only final platform and publication receipts can close13/14. macOS WebKit actual Rust fixture is engine evidence, not all real-device or OS installation behavior."
+  "boundary": "All14scenarios verified at their stated scope: real isolated Rust file interfaces in Chromium/WebKit, Windows nativeEXE and final installers, published package/signature/anonymous checks; no blanket physical-device/OTA or all-provider claim.",
+  "sourceIdentity": "test-only-followup-identity.json proves unchanged production trees from full gate"
 }

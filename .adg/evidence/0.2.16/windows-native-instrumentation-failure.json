@@ -1,0 +1,20 @@
+{
+  "run": 40477188918,
+  "head": "a71798dfeb1b12a739725b43bfa9cdd44bb0bb99",
+  "result": "failed native smoke; no release/tag created",
+  "rootCause": "test assigned to non-writable Tauri __TAURI_INTERNALS__.invoke; wrapper was not installed and capture array remained empty",
+  "source": "locked tauri 2.12.1 scripts/core.js Object.defineProperty invoke value without writable/configurable",
+  "actualFailureSite": "windows-model-ui.mjs:150",
+  "actualSavedFileEvidence": {
+    "BModelOrder": [
+      "fixture-beta",
+      "fixture-alpha",
+      "fixture-gamma"
+    ],
+    "otherProvidersUnchanged": true,
+    "BKeyPreserved": true,
+    "BWriteExistsInOwnedSandbox": true
+  },
+  "resolution": "repair test-only observer; retain actual before/after raw file/layout/Key and memory assertions; new-head Windows CI required",
+  "boundary": "This failure is not counted as complete native UI pass; subsequent native operations still pending."
+}

@@ -1,0 +1,232 @@
+publish	Set up job	﻿2026-10-27T12:04:20.7163976Z Current runner version: '2.338.0'
+publish	Set up job	2026-10-27T12:04:20.7202783Z ##[group]Runner Image Provisioner
+publish	Set up job	2026-10-27T12:04:20.7204171Z Hosted Compute Agent
+publish	Set up job	2026-10-27T12:04:20.7205249Z Version: 20261021.618
+publish	Set up job	2026-10-27T12:04:20.7206557Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+publish	Set up job	2026-10-27T12:04:20.7207921Z Build Date: 2026-10-21T00:45:21Z
+publish	Set up job	2026-10-27T12:04:20.7209192Z Worker ID: {c00e4350-7aa8-4860-8773-1c1e1798c873}
+publish	Set up job	2026-10-27T12:04:20.7210748Z Region: eastus
+publish	Set up job	2026-10-27T12:04:20.7211679Z Cloud: Azure
+publish	Set up job	2026-10-27T12:04:20.7212700Z ##[endgroup]
+publish	Set up job	2026-10-27T12:04:20.7215307Z ##[group]Operating System
+publish	Set up job	2026-10-27T12:04:20.7216592Z Ubuntu
+publish	Set up job	2026-10-27T12:04:20.7217552Z 26.04.1
+publish	Set up job	2026-10-27T12:04:20.7218499Z LTS
+publish	Set up job	2026-10-27T12:04:20.7219425Z ##[endgroup]
+publish	Set up job	2026-10-27T12:04:20.7220757Z ##[group]Runner Image
+publish	Set up job	2026-10-27T12:04:20.7221946Z Image: ubuntu-26.04
+publish	Set up job	2026-10-27T12:04:20.7223062Z Version: 20261012.163.1
+publish	Set up job	2026-10-27T12:04:20.7224970Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261012.163/images/ubuntu/Ubuntu2604-Readme.md
+publish	Set up job	2026-10-27T12:04:20.7228103Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261012.163
+publish	Set up job	2026-10-27T12:04:20.7230351Z ##[endgroup]
+publish	Set up job	2026-10-27T12:04:20.7232347Z ##[group]GITHUB_TOKEN Permissions
+publish	Set up job	2026-10-27T12:04:20.7235065Z Contents: write
+publish	Set up job	2026-10-27T12:04:20.7236138Z Metadata: read
+publish	Set up job	2026-10-27T12:04:20.7237225Z ##[endgroup]
+publish	Set up job	2026-10-27T12:04:20.7240705Z Secret source: Actions
+publish	Set up job	2026-10-27T12:04:20.7242436Z Cache mode: write
+publish	Set up job	2026-10-27T12:04:20.7243634Z Prepare workflow directory
+publish	Set up job	2026-10-27T12:04:20.7727733Z Prepare all required actions
+publish	Set up job	2026-10-27T12:04:20.7775540Z Getting action download info
+publish	Set up job	2026-10-27T12:04:20.9209556Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+publish	Set up job	2026-10-27T12:04:21.1186842Z Complete job name: publish
+publish	Run actions/checkout@v5	﻿2026-10-27T12:04:21.2230549Z ##[group]Run actions/checkout@v5
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2231510Z with:
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2231979Z   repository: gzers/opencodex-desktop
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2236090Z   token: ***
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2236534Z   ssh-strict: true
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2236985Z   ssh-user: git
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2237438Z   persist-credentials: true
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2237940Z   clean: true
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2238393Z   sparse-checkout-cone-mode: true
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2238910Z   fetch-depth: 1
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2239334Z   fetch-tags: false
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2239770Z   show-progress: true
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2240402Z   lfs: false
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2240818Z   submodules: false
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2241265Z   set-safe-directory: true
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2241771Z   allow-unsafe-pr-checkout: false
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.2242533Z ##[endgroup]
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.4899371Z Syncing repository: gzers/opencodex-desktop
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.4902419Z ##[group]Getting Git version info
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.4903854Z Working directory is '/home/runner/work/opencodex-desktop/opencodex-desktop'
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.4905753Z [command]/usr/bin/git version
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.4906651Z git version 2.55.0
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.4932218Z ##[endgroup]
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.4943208Z Temporarily overriding HOME='/home/runner/work/_temp/d9868625-9a85-43e5-8bec-07d8d1204933' before making global git config changes
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.4947194Z Adding repository directory to the temporary git global config as a safe directory
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.4951948Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/opencodex-desktop/opencodex-desktop
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5008034Z Deleting the contents of '/home/runner/work/opencodex-desktop/opencodex-desktop'
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5012539Z ##[group]Initializing the repository
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5017610Z [command]/usr/bin/git init /home/runner/work/opencodex-desktop/opencodex-desktop
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5130670Z hint: Using 'master' as the name for the initial branch. This default branch name
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5134297Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5139187Z hint: to use in all of your new repositories, which will suppress this warning,
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5142289Z hint: call:
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5143994Z hint:
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5146068Z hint: 	git config --global init.defaultBranch <name>
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5148128Z hint:
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5150525Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5153914Z hint: 'development'. The just-created branch can be renamed via this command:
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5156342Z hint:
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5157994Z hint: 	git branch -m <name>
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5159762Z hint:
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5162414Z hint: Disable this message with "git config set advice.defaultBranchName false"
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5166075Z Initialized empty Git repository in /home/runner/work/opencodex-desktop/opencodex-desktop/.git/
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5172804Z [command]/usr/bin/git remote add origin https://github.com/gzers/opencodex-desktop
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5201466Z ##[endgroup]
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5204028Z ##[group]Disabling automatic garbage collection
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5206198Z [command]/usr/bin/git config --local gc.auto 0
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5238738Z ##[endgroup]
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5241255Z ##[group]Setting up auth
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5245144Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5280089Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5748852Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.5786465Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.6063746Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.6099317Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.6368772Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.6408046Z ##[endgroup]
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.6409720Z ##[group]Fetching the repository
+publish	Run actions/checkout@v5	2026-10-27T12:04:21.6419025Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d2c08dd7d62e2caada507f2eeb4d05804460b6a8:refs/remotes/origin/main
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.3380832Z From https://github.com/gzers/opencodex-desktop
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.3382225Z  * [new ref]         d2c08dd7d62e2caada507f2eeb4d05804460b6a8 -> origin/main
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.3386788Z ##[endgroup]
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.3387430Z ##[group]Determining the checkout info
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.3389145Z ##[endgroup]
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.3395038Z [command]/usr/bin/git sparse-checkout disable
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.3448618Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.3477114Z ##[group]Checking out the ref
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.3483524Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.4144222Z Switched to a new branch 'main'
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.4146695Z branch 'main' set up to track 'origin/main'.
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.4154451Z ##[endgroup]
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.4199363Z [command]/usr/bin/git log -1 --format=%H
+publish	Run actions/checkout@v5	2026-10-27T12:04:22.4225156Z d2c08dd7d62e2caada507f2eeb4d05804460b6a8
+publish	安装签名验证工具	﻿2026-10-27T12:04:22.4467545Z ##[group]Run sudo apt-get update && sudo apt-get install -y minisign
+publish	安装签名验证工具	2026-10-27T12:04:22.4468466Z ^[[36;1msudo apt-get update && sudo apt-get install -y minisign^[[0m
+publish	安装签名验证工具	2026-10-27T12:04:22.4633419Z shell: /usr/bin/bash -e {0}
+publish	安装签名验证工具	2026-10-27T12:04:22.4633970Z ##[endgroup]
+publish	安装签名验证工具	2026-10-27T12:04:22.5501641Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+publish	安装签名验证工具	2026-10-27T12:04:22.5714849Z Get:6 https://packages.microsoft.com/ubuntu/26.04/prod resolute InRelease [3964 B]
+publish	安装签名验证工具	2026-10-27T12:04:22.5844051Z Hit:2 http://azure.archive.ubuntu.com/ubuntu resolute InRelease
+publish	安装签名验证工具	2026-10-27T12:04:22.5877798Z Get:3 http://azure.archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.5911469Z Get:4 http://azure.archive.ubuntu.com/ubuntu resolute-backports InRelease [137 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.5944335Z Get:5 http://azure.archive.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6024130Z Get:7 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main arm64 Packages [114 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6225734Z Get:8 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main amd64 Packages [125 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6329244Z Get:9 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main armhf Packages [967 B]
+publish	安装签名验证工具	2026-10-27T12:04:22.6354310Z Get:10 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 Packages [753 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6508475Z Get:11 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main Translation-en [178 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6538606Z Get:12 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 Packages [335 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6568179Z Get:13 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe Translation-en [111 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6571238Z Get:14 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted amd64v3 Packages [518 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6614853Z Get:15 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted Translation-en [104 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6651857Z Get:16 http://azure.archive.ubuntu.com/ubuntu resolute-security/main amd64v3 Packages [608 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6674505Z Get:17 http://azure.archive.ubuntu.com/ubuntu resolute-security/main Translation-en [141 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6697778Z Get:18 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe amd64v3 Packages [206 kB]
+publish	安装签名验证工具	2026-10-27T12:04:22.6732716Z Get:19 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe Translation-en [67.9 kB]
+publish	安装签名验证工具	2026-10-27T12:04:24.7844707Z Fetched 3675 kB in 0s (11.3 MB/s)
+publish	安装签名验证工具	2026-10-27T12:04:25.4352735Z Reading package lists...
+publish	安装签名验证工具	2026-10-27T12:04:25.4693121Z Reading package lists...
+publish	安装签名验证工具	2026-10-27T12:04:25.6357502Z Building dependency tree...
+publish	安装签名验证工具	2026-10-27T12:04:25.6365362Z Reading state information...
+publish	安装签名验证工具	2026-10-27T12:04:25.7202388Z Solving dependencies...
+publish	安装签名验证工具	2026-10-27T12:04:25.8163639Z The following NEW packages will be installed:
+publish	安装签名验证工具	2026-10-27T12:04:25.8164235Z   minisign
+publish	安装签名验证工具	2026-10-27T12:04:25.8361215Z 0 upgraded, 1 newly installed, 0 to remove and 89 not upgraded.
+publish	安装签名验证工具	2026-10-27T12:04:25.8361973Z Need to get 18.0 kB of archives.
+publish	安装签名验证工具	2026-10-27T12:04:25.8362567Z After this operation, 56.3 kB of additional disk space will be used.
+publish	安装签名验证工具	2026-10-27T12:04:25.8363294Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+publish	安装签名验证工具	2026-10-27T12:04:25.8825643Z Get:2 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 minisign amd64 0.12-1build1 [18.0 kB]
+publish	安装签名验证工具	2026-10-27T12:04:26.1961300Z Fetched 18.0 kB in 0s (254 kB/s)
+publish	安装签名验证工具	2026-10-27T12:04:26.2198972Z Selecting previously unselected package minisign.
+publish	安装签名验证工具	2026-10-27T12:04:26.2480439Z (Reading database ...
+publish	安装签名验证工具	2026-10-27T12:04:26.2481267Z (Reading database ... 5%
+publish	安装签名验证工具	2026-10-27T12:04:26.2482066Z (Reading database ... 10%
+publish	安装签名验证工具	2026-10-27T12:04:26.2482606Z (Reading database ... 15%
+publish	安装签名验证工具	2026-10-27T12:04:26.2483291Z (Reading database ... 20%
+publish	安装签名验证工具	2026-10-27T12:04:26.2484023Z (Reading database ... 25%
+publish	安装签名验证工具	2026-10-27T12:04:26.2484744Z (Reading database ... 30%
+publish	安装签名验证工具	2026-10-27T12:04:26.2485448Z (Reading database ... 35%
+publish	安装签名验证工具	2026-10-27T12:04:26.2486132Z (Reading database ... 40%
+publish	安装签名验证工具	2026-10-27T12:04:26.2486849Z (Reading database ... 45%
+publish	安装签名验证工具	2026-10-27T12:04:26.2488131Z (Reading database ... 50%
+publish	安装签名验证工具	2026-10-27T12:04:26.2920787Z (Reading database ... 55%
+publish	安装签名验证工具	2026-10-27T12:04:26.3724556Z (Reading database ... 60%
+publish	安装签名验证工具	2026-10-27T12:04:26.4199078Z (Reading database ... 65%
+publish	安装签名验证工具	2026-10-27T12:04:26.4885539Z (Reading database ... 70%
+publish	安装签名验证工具	2026-10-27T12:04:26.5242427Z (Reading database ... 75%
+publish	安装签名验证工具	2026-10-27T12:04:26.5842767Z (Reading database ... 80%
+publish	安装签名验证工具	2026-10-27T12:04:26.7866162Z (Reading database ... 85%
+publish	安装签名验证工具	2026-10-27T12:04:26.9457600Z (Reading database ... 90%
+publish	安装签名验证工具	2026-10-27T12:04:27.0958840Z (Reading database ... 95%
+publish	安装签名验证工具	2026-10-27T12:04:27.0959506Z (Reading database ... 100%
+publish	安装签名验证工具	2026-10-27T12:04:27.0960612Z (Reading database ... 211065 files and directories currently installed.)
+publish	安装签名验证工具	2026-10-27T12:04:27.1002967Z Preparing to unpack .../minisign_0.12-1build1_amd64v3.deb ...
+publish	安装签名验证工具	2026-10-27T12:04:27.1029125Z Unpacking minisign (0.12-1build1) ...
+publish	安装签名验证工具	2026-10-27T12:04:27.1466403Z Setting up minisign (0.12-1build1) ...
+publish	安装签名验证工具	2026-10-27T12:04:27.1498868Z Processing triggers for man-db (2.13.1-1build1) ...
+publish	安装签名验证工具	2026-10-27T12:04:27.1521985Z Not building database; man-db/auto-update is not 'true'.
+publish	安装签名验证工具	2026-10-27T12:04:27.7896315Z
+publish	安装签名验证工具	2026-10-27T12:04:27.7897230Z Running kernel seems to be up-to-date.
+publish	安装签名验证工具	2026-10-27T12:04:27.7897802Z
+publish	安装签名验证工具	2026-10-27T12:04:27.7897956Z Restarting services...
+publish	安装签名验证工具	2026-10-27T12:04:27.7991671Z
+publish	安装签名验证工具	2026-10-27T12:04:27.7992178Z Service restarts being deferred:
+publish	安装签名验证工具	2026-10-27T12:04:27.7996004Z  systemctl restart hosted-compute-agent.service
+publish	安装签名验证工具	2026-10-27T12:04:27.7996636Z
+publish	安装签名验证工具	2026-10-27T12:04:27.7997158Z No containers need to be restarted.
+publish	安装签名验证工具	2026-10-27T12:04:27.7997510Z
+publish	安装签名验证工具	2026-10-27T12:04:27.7997853Z No user sessions are running outdated binaries.
+publish	安装签名验证工具	2026-10-27T12:04:27.7998240Z
+publish	安装签名验证工具	2026-10-27T12:04:27.7998577Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+publish	公开版本并验证所选通道	﻿2026-10-27T12:04:28.6833042Z ##[group]Run set -euo pipefail
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.6833404Z ^[[36;1mset -euo pipefail^[[0m
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.6833712Z ^[[36;1mtag="${INPUT_TAG:-${GITHUB_REF_NAME#*/}}"^[[0m
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.6834111Z ^[[36;1mpython3 .github/scripts/publish_release.py "$tag" \^[[0m
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.6834957Z ^[[36;1m  --repo "$GITHUB_REPOSITORY" --mode "$PUBLISH_MODE" 2>&1 | tee /tmp/publish-diag.txt^[[0m
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.6899628Z shell: /usr/bin/bash -e {0}
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.6900157Z env:
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.6903420Z   GH_TOKEN: ***
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.6903659Z   INPUT_TAG: v0.2.16
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.6903911Z   PUBLISH_MODE: preserve-latest
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.6904204Z ##[endgroup]
+publish	公开版本并验证所选通道	2026-10-27T12:04:28.7585412Z Reading release metadata for v0.2.16
+publish	公开版本并验证所选通道	2026-10-27T12:04:29.7344109Z Downloading candidate manifest for v0.2.16
+publish	公开版本并验证所选通道	2026-10-27T12:04:30.6777243Z Reading tagged updater public key for v0.2.16
+publish	公开版本并验证所选通道	2026-10-27T12:04:31.7591650Z Cryptographically verified darwin-aarch64: OpenCodeX.Desktop_aarch64.app.tar.gz; size=6593510; sha256=a65ef8eb53de97caf2b62e4f9ae12b2dc8b85b83ae49c88d3145969a7d7708a5
+publish	公开版本并验证所选通道	2026-10-27T12:04:32.7798015Z Cryptographically verified windows-x86_64: OpenCodeX.Desktop_0.2.16_x64_en-US.msi; size=6815744; sha256=f3bbf281c9e018eb827e12e6cd22c1cbc5ca9000ca51a90e6806295c3cc8d8f2
+publish	公开版本并验证所选通道	2026-10-27T12:04:33.3834087Z Cryptographically verified windows-x86_64-nsis: OpenCodeX.Desktop_0.2.16_x64-setup.exe; size=4868794; sha256=40dfc659dde954fd6671732e8fc3a2d75124bdf958585348b2132bb11178f286
+publish	公开版本并验证所选通道	2026-10-27T12:04:33.3842507Z Target: v0.2.16; mode: preserve-latest; previous Latest: v0.2.15
+publish	公开版本并验证所选通道	2026-10-27T12:04:36.7108645Z Verified public release v0.2.16; Latest=v0.2.15
+publish	公开诊断结果	﻿2026-10-27T12:04:36.7379665Z ##[group]Run set -euo pipefail
+publish	公开诊断结果	2026-10-27T12:04:36.7380393Z ^[[36;1mset -euo pipefail^[[0m
+publish	公开诊断结果	2026-10-27T12:04:36.7380704Z ^[[36;1mcp /tmp/publish-diag.txt publish-diag.txt^[[0m
+publish	公开诊断结果	2026-10-27T12:04:36.7381065Z ^[[36;1mgit config user.name "opencodex-ci"^[[0m
+publish	公开诊断结果	2026-10-27T12:04:36.7381403Z ^[[36;1mgit config user.email "ci@opencodex.invalid"^[[0m
+publish	公开诊断结果	2026-10-27T12:04:36.7381725Z ^[[36;1mgit checkout --orphan ci-logs^[[0m
+publish	公开诊断结果	2026-10-27T12:04:36.7382030Z ^[[36;1mgit rm -rf --cached . >/dev/null 2>&1 || true^[[0m
+publish	公开诊断结果	2026-10-27T12:04:36.7382346Z ^[[36;1mgit add -f publish-diag.txt^[[0m
+publish	公开诊断结果	2026-10-27T12:04:36.7382684Z ^[[36;1mgit commit -m "ci: publish 诊断 (40500890565)" >/dev/null^[[0m
+publish	公开诊断结果	2026-10-27T12:04:36.7383043Z ^[[36;1mgit push --force origin ci-logs^[[0m
+publish	公开诊断结果	2026-10-27T12:04:36.7442727Z shell: /usr/bin/bash -e {0}
+publish	公开诊断结果	2026-10-27T12:04:36.7442982Z ##[endgroup]
+publish	公开诊断结果	2026-10-27T12:04:36.7914522Z Switched to a new branch 'ci-logs'
+publish	公开诊断结果	2026-10-27T12:04:37.9741114Z To https://github.com/gzers/opencodex-desktop
+publish	公开诊断结果	2026-10-27T12:04:37.9741850Z  + ba677f5...fc58548 ci-logs -> ci-logs (forced update)
+publish	Post Run actions/checkout@v5	﻿2026-10-27T12:04:37.9904893Z Post job cleanup.
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.0751294Z [command]/usr/bin/git version
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.0797902Z git version 2.55.0
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.0841855Z Temporarily overriding HOME='/home/runner/work/_temp/9f08f3f7-8fd4-4e8f-944e-12e8e896228a' before making global git config changes
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.0843849Z Adding repository directory to the temporary git global config as a safe directory
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.0847991Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/opencodex-desktop/opencodex-desktop
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.0889516Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.0927608Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.1260389Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.1310907Z http.https://github.com/.extraheader
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.1313274Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.1356240Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.1664915Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+publish	Post Run actions/checkout@v5	2026-10-27T12:04:38.1700921Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+publish	Complete job	﻿2026-10-27T12:04:38.2156644Z Cleaning up orphan processes

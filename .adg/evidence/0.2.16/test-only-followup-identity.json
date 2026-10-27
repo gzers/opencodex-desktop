@@ -1,0 +1,32 @@
+{
+  "gateCommit": "a71798dfeb1b12a739725b43bfa9cdd44bb0bb99",
+  "newHead": "7a4e14ba25301e522decc7d012d3f4b56095510d",
+  "productionUnchanged": [
+    {
+      "path": "apps/desktop/ui/src",
+      "object": "5f0fffb26808370da7908a7ca1379cbcaccd9501",
+      "unchangedFromFullGate": true
+    },
+    {
+      "path": "apps/desktop/tauri/src",
+      "object": "7dbb4671709c97394dea1c6b0327f4ac07d7a228",
+      "unchangedFromFullGate": true
+    },
+    {
+      "path": "apps/desktop/ui/package-lock.json",
+      "object": "e4889c1c22d7a15432acd4704df1673cf5a2dab8",
+      "unchangedFromFullGate": true
+    },
+    {
+      "path": "apps/desktop/tauri/Cargo.lock",
+      "object": "4bd011890b65279c8a4c44c4e45bf8bdfa8c18db",
+      "unchangedFromFullGate": true
+    }
+  ],
+  "changedFiles": [
+    "test/smoke/windows-model-ui.mjs",
+    "test/smoke/windows-model-ui.test.mjs"
+  ],
+  "windowsProtocolTests": 14,
+  "newPlatformCI": "required before merge/tag/release"
+}

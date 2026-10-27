@@ -9,7 +9,7 @@
 
 ## 实施计划入口
 
-- [下一轮开发清单：渠道详情与保存交互](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.15-bugs.md)：0.2.16，WP-85～WP-88；用户已授权目标模式至发布，[IMP-25](IMP-OPENCODEX-DESKTOP-25.md) 实施中，清单单一入口维护。
+- [下一轮开发清单：渠道详情与保存交互](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.15-bugs.md)：0.2.16，WP-85～WP-88；开发、完整回归、双平台CI/原生安装器及原公钥验签已完成，PR25合并/tag d2c08dd7，v0.2.16已公开并晋升stable/Latest；[IMP-25](IMP-OPENCODEX-DESKTOP-25.md)、[发布记录](REL-OPENCODEX-DESKTOP-19.md)。
 
 - [0.2.15 配置传输、Agent 与旧配置迁移](IMP-OPENCODEX-DESKTOP-24.md)：WP-82～WP-84 和共同清理已完成，PR #23/#24 合并，双平台安装器与三个更新包验签通过，v0.2.15 已发布 stable/Latest；[发布记录](REL-OPENCODEX-DESKTOP-18.md)。
 

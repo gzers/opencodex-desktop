@@ -1,0 +1,24 @@
+{
+  "objective": "0.2.16 WP85-WP88 through stable release",
+  "status": "all requirements proven",
+  "source": "7a4e14ba25301e522decc7d012d3f4b56095510d",
+  "merge": "d2c08dd7d62e2caada507f2eeb4d05804460b6a8",
+  "checklist": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.15-bugs.md",
+  "matrix": "acceptance-matrix.json",
+  "all14ScenariosPassed": true,
+  "independentFindings": "P1/P2 and global lateinput corrected and independently verified",
+  "finalCI": 40480837148,
+  "release": 40490173181,
+  "public": 40500890565,
+  "stable": 40503451702,
+  "latest": "v0.2.16",
+  "updaterSignatures": "three assets verified on public,stable,and independent local anonymous downloads",
+  "stillPending": [],
+  "notClaimed": [
+    "OS code signing or Apple notarization",
+    "forced restart of active Codex",
+    "daily configuration or app replacement",
+    "all-provider/network/device acceptance",
+    "two-file atomicity after process crash or power loss"
+  ]
+}

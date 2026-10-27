@@ -1,0 +1,47 @@
+backend-windows	Windows final EXE smoke	﻿2026-10-27T09:18:38.4847302Z ##[group]Run & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
+backend-windows	Windows final EXE smoke	2026-10-27T09:18:38.4848070Z ^[[36;1m& ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup^[[0m
+backend-windows	Windows final EXE smoke	2026-10-27T09:18:38.4902381Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	Windows final EXE smoke	2026-10-27T09:18:38.4902630Z env:
+backend-windows	Windows final EXE smoke	2026-10-27T09:18:38.4902947Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	Windows final EXE smoke	2026-10-27T09:18:38.4903171Z   CARGO_INCREMENTAL: 0
+backend-windows	Windows final EXE smoke	2026-10-27T09:18:38.4903349Z   CARGO_TERM_COLOR: always
+backend-windows	Windows final EXE smoke	2026-10-27T09:18:38.4903524Z ##[endgroup]
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4843623Z node:internal/modules/run_main:107
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4847012Z     triggerUncaughtException(
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4847365Z     ^
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4847478Z
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4847796Z AssertionError [ERR_ASSERTION]: B detail save must send camelCase scope and preserve all Keys
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4848552Z + actual - expected
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4848681Z
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4848797Z + []
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4848965Z - [
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4849123Z -   {
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4849308Z -     credentialChannels: [],
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4849529Z -     scope: {
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4849764Z -       channelId: 'ca1c1d48-cd4a-4974-90f6-851cc66af641'
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4850008Z -     }
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4850176Z -   }
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4850330Z - ]
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4850444Z
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4850696Z     at verifyWindowsModelUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-model-ui.mjs:150:9)
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4851254Z     at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-webview.mjs:100:56 {
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4851592Z   generatedMessage: false,
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4851786Z   code: 'ERR_ASSERTION',
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4851971Z   actual: [],
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4852146Z   expected: [
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4852340Z     {
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4852587Z       scope: { channelId: 'ca1c1d48-cd4a-4974-90f6-851cc66af641' },
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4852849Z       credentialChannels: []
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4853040Z     }
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4853191Z   ],
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4853371Z   operator: 'deepStrictEqual',
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4853589Z   diff: 'simple'
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4853752Z }
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4853823Z
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:14.4853907Z Node.js v24.22.1
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:15.2954222Z ^[[31;1mException: ^[[0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1:101^[[0m
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:15.2954805Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:15.2955326Z ^[[31;1m^[[0m^[[36;1m^[[36;1m 101 | ^[[0m … ($LASTEXITCODE -ne 0) { ^[[36;1mthrow "WebView smoke failed: $LASTEXITCODE"^[[0m }^[[0m
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:15.2955868Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^[[0m
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:15.2956353Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mWebView smoke failed: 1^[[0m
+backend-windows	Windows final EXE smoke	2026-10-27T09:19:15.3281472Z ##[error]Process completed with exit code 1.

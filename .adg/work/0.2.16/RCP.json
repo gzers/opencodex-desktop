@@ -1,7 +1,7 @@
 {
   "id": "RCP-OPENCODEX-0.2.16",
   "task_id": "TASK-OPENCODEX-0.2.16",
-  "result": "in_progress",
+  "result": "passed",
   "checks": [
     {
       "name": "review:scoped-file",
@@ -9,7 +9,9 @@
       "evidence": [
         ".adg/evidence/0.2.16/backend-regression.log",
         ".adg/evidence/0.2.16/file-browser/report.json",
-        ".adg/evidence/0.2.16/file-browser-webkit/report.json"
+        ".adg/evidence/0.2.16/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.16/windows-native/model-ui.json",
+        ".adg/evidence/0.2.16/release-windows/nsis/model-ui.json"
       ],
       "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
     },
@@ -62,11 +64,23 @@
     },
     {
       "name": "review:release",
-      "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/ci-final.json",
+        ".adg/evidence/0.2.16/accepted-merge.json",
+        ".adg/evidence/0.2.16/release-build.json",
+        ".adg/evidence/0.2.16/release-windows/installer-verification.json",
+        ".adg/evidence/0.2.16/publish-public.log",
+        ".adg/evidence/0.2.16/publish-stable.log",
+        ".adg/evidence/0.2.16/release-summary.json",
+        ".adg/evidence/0.2.16/mac-release-verification.json",
+        ".adg/evidence/0.2.16/local-assets-verification.json"
+      ],
+      "scope": "Accepted exact source, final platform CI/nativeEXE, MSI/NSIS, public/stable, anonymous manifest/8hashes and3updater signatures."
     }
   ],
-  "code_commit": "a71798dfeb1b12a739725b43bfa9cdd44bb0bb99",
-  "recorded_at": "2026-10-27T09:06:58.867484+00:00"
+  "code_commit": "7a4e14ba25301e522decc7d012d3f4b56095510d",
+  "recorded_at": "2026-10-27T13:05:59.646637+00:00",
+  "merge_commit": "d2c08dd7d62e2caada507f2eeb4d05804460b6a8",
+  "release": "docs/03-开发实施/REL-OPENCODEX-DESKTOP-19.md"
 }
