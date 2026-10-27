@@ -9,6 +9,8 @@
 
 ## 实施计划入口
 
+- [下一轮开发清单：渠道详情与保存交互](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.15-bugs.md)：拟 0.2.16，WP-85～WP-88；仅完成清单，待软件实施/验证/发布，单一入口维护。
+
 - [0.2.15 配置传输、Agent 与旧配置迁移](IMP-OPENCODEX-DESKTOP-24.md)：WP-82～WP-84 和共同清理已完成，PR #23/#24 合并，双平台安装器与三个更新包验签通过，v0.2.15 已发布 stable/Latest；[发布记录](REL-OPENCODEX-DESKTOP-18.md)。
 
 - [0.2.14 文件读写、连接测速与原型通知统一](IMP-OPENCODEX-DESKTOP-23.md)：已公开并晋升 stable/Latest，main/tag 56c11220b；21 项门禁、双平台 CI、Windows 安装器与三个更新包签名通过；[发布记录](REL-OPENCODEX-DESKTOP-17.md)。
