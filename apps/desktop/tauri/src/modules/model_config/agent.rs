@@ -1158,6 +1158,10 @@ mod tests {
             working_directory: root.path().into(),
             opencodex_home: root.path().join("home"),
         };
+        std::fs::write(
+            context.opencodex_home.join("config.json"),
+            serde_json::to_vec(&json!({"providers":{"test":{"adapter":"openai-chat","baseUrl":"https://example.test/v1","authMode":"key","models":["model-a"],"selectedModels":["model-a"]}}})).unwrap(),
+        ).unwrap();
         let actual = upstream::snapshot(&context).await.unwrap();
         let configured = settings(root.path()).unwrap().unwrap();
         let configured =
