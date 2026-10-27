@@ -88,13 +88,8 @@ export interface Commit { snapshot: ModelSnapshot; templateId: string; revisionI
 export interface MatchPreview { matched: boolean; reason: string; variantId: string | null; rules: ModelRules }
 export const emptyRules = (): ModelRules => ({ protocol: { mode: 'inherit' }, contextWindow: { mode: 'inherit' }, inputModalities: { mode: 'inherit' }, reasoningEfforts: { mode: 'inherit' }, defaultEffort: { mode: 'inherit' }, fast: { mode: 'inherit' }, pinnedEffort:{mode:'inherit'}, effortMap:{mode:'inherit'}, noReasoning:{mode:'inherit'},reasoningAuthoritative:{mode:'inherit'},fastWire:{mode:'inherit'} })
 export const emptyContent = (): TemplateContent => ({ description: '', matching: { include: [{ kind: 'prefix', value: '' }], exclude: [], caseSensitive: false, channelMode: 'all', channels: [], priority: 0 }, rules: emptyRules(), variants: [], lockedFields: [], sources: [] })
-export interface NewChannelRequest {id:string;expectedPolicy:string;expectedWorkspace:string;channel:ChannelPolicy;apiKey:string|null;replace?:ChannelPolicy}
-export interface NewChannelOutcome {id:string;channel:ChannelPolicy;phase:'prepared'|'staging'|'committed'|'failed'|'conflict'|'cleanup_pending';error:{code:string;message:string}|null;snapshot:ModelSnapshot|null}
 export const modelApi = {
   previewNewChannel:(request:{protocol:string;url:string;apiKey:string|null;credentialRef:null;allowPrivateNetwork:boolean})=>invoke<{models:DiscoveredModel[];credentialRef:null;elapsedMs:number}>('model_new_channel_preview',{request}),
-  addNewChannel:(request:NewChannelRequest)=>invoke<NewChannelOutcome>('model_new_channel_add',{request}),
-  newChannelResult:(id:string)=>invoke<NewChannelOutcome>('model_new_channel_result',{id}),
-  latestNewChannel:()=>invoke<NewChannelOutcome|null>('model_new_channel_latest'),
   load: () => invoke<ModelSnapshot>('model_file_snapshot'),
   // Historical recovery alone uses the manager policy/workspace digest domain.
   loadRecoveryBaseline: () => invoke<ModelSnapshot>('model_config_snapshot'),
@@ -106,7 +101,6 @@ export const modelApi = {
   templateUsage:(templateId:string,revisionId:string,expectedLibrary:string)=>invoke<TemplateUsage>('model_template_usage',{templateId,revisionId,expectedLibrary}),
   preview: (content: TemplateContent, channelId: string, modelId: string) => invoke<MatchPreview>('model_match_preview', { content, channelId, modelId }),
   project: (policy: ModelPolicy) => invoke<DraftProjection>('model_policy_preview', { policy }),
-  stage: (expectedPolicy: string, expectedWorkspace: string, policy: ModelPolicy) => invoke<ModelSnapshot>('model_policy_stage', { expectedPolicy, expectedWorkspace, policy }),
   preparePolicy: (policy:ModelPolicy,expectedLibrary:string,expectedPolicy:string,expectedWorkspace:string) => invoke<SavePlan>('model_policy_prepare',{policy,expectedLibrary,expectedPolicy,expectedWorkspace}),
   preparePolicyScoped: (policy:ModelPolicy,expectedLibrary:string,expectedPolicy:string,expectedWorkspace:string,scope:SaveScope) => invoke<SavePlan>('model_policy_prepare',{policy,expectedLibrary,expectedPolicy,expectedWorkspace,scope}),
   applyPolicy: (planId:string) => invoke<SavePlan>('model_policy_apply',{planId}),

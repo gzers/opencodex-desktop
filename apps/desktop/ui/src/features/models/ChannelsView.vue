@@ -85,7 +85,6 @@ async function refreshSavePreview(){
     if(sequence===previewRefreshSequence){previewProjection.value=projection;previewError.value=''}
   }catch(cause){if(sequence===previewRefreshSequence)previewError.value=errorText(cause)}
   finally{if(sequence===previewRefreshSequence)previewBusy.value=false}
-  void models.persistDraft()
 }
 function togglePreviewChannel(id:string){
   const channel=models.channelDraft?.channels.find(c=>c.id===id)

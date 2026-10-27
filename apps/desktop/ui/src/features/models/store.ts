@@ -1,14 +1,87 @@
 import type {AgentViewContext} from './agentView'
 import { computed, onScopeDispose, ref } from 'vue'
 import { defineStore } from 'pinia'
-import {pendingModelRows,type ModelRowsState} from './modelRows'
+import {pendingModelRows,writeRow,type ModelRowsState} from './modelRows'
 import {canonicalPolicy} from './policyEquality'
-import { emptyContent, errorText, modelApi, savePlanErrorText, type CredentialEdit, type ModelSnapshot, type ModelPolicy, type SavePlan, type Template, type TemplateDraft } from './api'
+import { emptyContent, emptyRules, errorText, modelApi, savePlanErrorText, type CredentialEdit, type ModelSnapshot, type ModelPolicy, type SavePlan, type Template, type TemplateDraft } from './api'
 
 interface HistoricalRecovery {
   id:string; sourceId:string; policy:ModelPolicy
   libraryDigest:string; policyDigest:string; workspaceDigest:string
   plan:SavePlan|null
+}
+
+type MergeValue = undefined|null|boolean|number|string|MergeValue[]|{[key:string]:MergeValue}
+const copyTransfer = <T>(value:T):T => value === undefined ? value : JSON.parse(JSON.stringify(value))
+const mergeObject = (value:MergeValue):value is {[key:string]:MergeValue} => !!value && typeof value === 'object' && !Array.isArray(value)
+const transferField = (value:{[key:string]:MergeValue},key:string):MergeValue => Object.hasOwn(value,key)?value[key]:undefined
+function sameTransferValue(left:MergeValue,right:MergeValue):boolean {
+  if (left === right) return true
+  if (Array.isArray(left)&&Array.isArray(right)) return left.length===right.length&&left.every((value,index)=>sameTransferValue(value,right[index]))
+  if (!mergeObject(left)||!mergeObject(right)) return false
+  const keys=[...new Set([...Object.keys(left),...Object.keys(right)])]
+  return keys.every(key=>sameTransferValue(transferField(left,key),transferField(right,key)))
+}
+function transferConflict():never {
+  throw {code:'transfer_draft_conflict',message:'导入内容与当前渠道、型号或 Key 修改冲突，请先保存或还原冲突修改后重新比较；当前输入已保留。'}
+}
+function mergeTransferValue(base:MergeValue,local:MergeValue,incoming:MergeValue,key='',path:string[]=[]):MergeValue {
+  // Reads of the same file digest can mint different local receipts. They do
+  // not constitute competing edits; raw importedConfig receipts remain atomic.
+  if (path.length===4&&path[0]==='channels'&&path[2]==='connection'&&key==='sourceReadId') return copyTransfer(incoming??local)
+  if (sameTransferValue(local,base)) return copyTransfer(incoming)
+  if (sameTransferValue(incoming,base)||sameTransferValue(local,incoming)) return copyTransfer(local)
+  if (Array.isArray(base)&&Array.isArray(local)&&Array.isArray(incoming)) {
+    const keyed=(values:MergeValue[])=>values.every(value=>mergeObject(value)&&typeof value.id==='string')&&new Set(values.map(value=>(value as {id:string}).id)).size===values.length
+    if (keyed(base)&&keyed(local)&&keyed(incoming)) {
+      const byId=(values:MergeValue[])=>new Map(values.map(value=>[(value as {id:string}).id,value]))
+      const before=byId(base),ours=byId(local),theirs=byId(incoming),merged=new Map<string,MergeValue>()
+      for (const id of new Set([...before.keys(),...ours.keys(),...theirs.keys()])) {
+        const value=mergeTransferValue(before.get(id),ours.get(id),theirs.get(id),'',[...path,id])
+        if (value!==undefined) merged.set(id,value)
+      }
+      // Existing order is a separate field. New objects from either side can
+      // share a gap, but incompatible ordering must never silently move input.
+      const retained=(values:Map<string,MergeValue>)=>[...values.keys()].filter(id=>before.has(id)&&merged.has(id))
+      const order=mergeTransferValue(retained(before),retained(ours),retained(theirs)) as string[]
+      const edges=new Map([...merged.keys()].map(id=>[id,new Set<string>()]))
+      for (let i=1;i<order.length;i++) edges.get(order[i-1]!)!.add(order[i]!)
+      for (const values of [ours,theirs]) {
+        const ids=[...values.keys()].filter(id=>merged.has(id))
+        for (let i=1;i<ids.length;i++) if (!before.has(ids[i-1]!)||!before.has(ids[i]!)) edges.get(ids[i-1]!)!.add(ids[i]!)
+      }
+      const degree=new Map([...merged.keys()].map(id=>[id,0]))
+      for (const targets of edges.values()) for (const id of targets) degree.set(id,degree.get(id)!+1)
+      const ready=[...merged.keys()].filter(id=>degree.get(id)===0),result:MergeValue[]=[]
+      for (let i=0;i<ready.length;i++) {
+        const id=ready[i]!;result.push(merged.get(id)!)
+        for (const target of edges.get(id)!) {
+          degree.set(target,degree.get(target)!-1)
+          if (degree.get(target)===0) ready.push(target)
+        }
+      }
+      if (result.length!==merged.size) transferConflict()
+      return result
+    }
+  }
+  // Exact template revisions and raw import receipts are indivisible; merging
+  // their individual identifiers could authorize unrelated material at Save.
+  if ((base===undefined||mergeObject(base))&&mergeObject(local)&&mergeObject(incoming)&&key!=='importedConfig'&&!('revisionId' in local)&&!('revisionId' in incoming)&&!(base===undefined&&(typeof local.id==='string'||typeof incoming.id==='string'||typeof local.mode==='string'||typeof incoming.mode==='string'))) {
+    // An absent per-model override inherits every rule. Independent fields can
+    // both be the first edit to that model (or to its optional naming map).
+    const rules=(value:{[key:string]:MergeValue})=>['protocol','contextWindow','fast'].every(name=>mergeObject(transferField(value,name))&&typeof (value[name] as {mode:MergeValue}).mode==='string')
+    const previous=base??(rules(local)&&rules(incoming)?emptyRules() as unknown as {[key:string]:MergeValue}:{})
+    const result:{[key:string]:MergeValue}={}
+    for (const name of new Set([...Object.keys(previous),...Object.keys(local),...Object.keys(incoming)])) {
+      const value=mergeTransferValue(transferField(previous,name),transferField(local,name),transferField(incoming,name),name,[...path,name])
+      if (value!==undefined) Object.defineProperty(result,name,{value,enumerable:true,configurable:true,writable:true})
+    }
+    return result
+  }
+  return transferConflict()
+}
+function mergeTransferPolicy(base:ModelPolicy,local:ModelPolicy,incoming:ModelPolicy):ModelPolicy {
+  return mergeTransferValue(base as unknown as MergeValue,local as unknown as MergeValue,incoming as unknown as MergeValue) as unknown as ModelPolicy
 }
 
 // Route changes retain drafts; a refresh never discards an editor buffer.
@@ -40,6 +113,7 @@ export const useModelsStore = defineStore('model-config', () => {
   const channelClean = ref('')
   const channelBaseline = ref('')
   const workspaceBaseline = ref('')
+  const transferAdopted = ref(false)
   const channelError = ref('')
   const staging = ref(false)
   // Explicit historical restoration has its own legacy baselines and runtime
@@ -57,10 +131,16 @@ export const useModelsStore = defineStore('model-config', () => {
   function clearCredential(channelId:string) {
     credentialEdits.value[channelId]={channelId,action:'clear',value:null}
   }
-  async function persistDraft(): Promise<void> { channelError.value='' }
   onScopeDispose(() => { credentialEdits.value={} })
   // 读取现有渠道会带上本机读取回执等记账字段；按等价草稿比较，避免“只读取未编辑”误报。
-  const channelDirty = computed(() => historicalRecovery.value !== null || Object.keys(credentialEdits.value).length>0 || channelDraft.value !== null && canonicalPolicy(channelDraft.value) !== channelClean.value)
+  // An explicitly adopted raw provider can contain changes beyond the modeled
+  // fields. Its receipt must reach Save even when canonicalPolicy is unchanged.
+  const transferMaterialDirty=computed(()=>transferAdopted.value&&channelDraft.value?.channels.some(channel=>{
+    const receipt=channel.connection.importedConfig
+    const saved=snapshot.value?.policy.channels.find(saved=>saved.id===channel.id)?.connection.importedConfig
+    return !!receipt&&!sameTransferValue(receipt,saved)
+  }))
+  const channelDirty = computed(() => historicalRecovery.value !== null || transferMaterialDirty.value || Object.keys(credentialEdits.value).length>0 || channelDraft.value !== null && canonicalPolicy(channelDraft.value) !== channelClean.value)
   const dirty = computed(() => draft.value !== null && JSON.stringify(draft.value) !== clean.value)
   async function load() {
     if (busy.value) return
@@ -123,6 +203,7 @@ export const useModelsStore = defineStore('model-config', () => {
   }
   function restoreChannels() {
     historicalRecovery.value=null
+    transferAdopted.value=false
     modelRows.value={}
     credentialEdits.value={}
     if (!snapshot.value) return
@@ -132,6 +213,7 @@ export const useModelsStore = defineStore('model-config', () => {
   }
   function acceptTransfer(saved: ModelSnapshot) {
     historicalRecovery.value=null
+    transferAdopted.value=false
     credentialEdits.value={}
     snapshot.value = saved
     channelDraft.value = JSON.parse(JSON.stringify(saved.workspace?.policy ?? saved.policy))
@@ -139,6 +221,49 @@ export const useModelsStore = defineStore('model-config', () => {
     channelBaseline.value = saved.workspace?.basePolicy ?? saved.policyDigest
     workspaceBaseline.value = saved.workspaceDigest
     // The template editor keeps its original buffer and optimistic baseline.
+  }
+  async function adoptTransfer(plan:{expectedPolicy:string;mergedPolicy?:ModelPolicy|null},accept:()=>Promise<ModelSnapshot>) {
+    if (busy.value||staging.value) throw {message:'模型配置正在处理，请稍后重试；当前输入已保留。'}
+    if (!snapshot.value) throw {message:'无法读取当前模型配置'}
+    const before=copyTransfer(snapshot.value)
+    function mergeIncoming(policy:ModelPolicy,expectedFile:string) {
+      if (historicalRecovery.value||channelDraft.value?.recoveryId||policy.recoveryId) throw {message:'请先保存或还原已有的历史恢复草稿；当前草稿已保留。'}
+      if (expectedFile!==before.policyDigest||snapshot.value?.policyDigest!==before.policyDigest||channelDraft.value&&channelBaseline.value!==before.policyDigest) throw {message:'配置文件基准已变化，请重新比较；当前输入已保留。'}
+      const local=channelDraft.value??before.policy
+      const merged=mergeTransferPolicy(before.policy,local,policy)
+      if (Object.keys(credentialEdits.value).some(id=>!merged.channels.some(channel=>channel.id===id))) transferConflict()
+      if (pendingRows.value.length) {
+        const pending=copyTransfer(local)
+        for (const row of pendingRows.value) {
+          const channel=pending.channels.find(channel=>channel.id===row.channel)
+          if (!channel||!merged.channels.some(channel=>channel.id===row.channel)) transferConflict()
+          writeRow(channel,row.model,modelRows.value[row.channel]!.buffers[row.model]!)
+        }
+        mergeTransferPolicy(before.policy,pending,policy)
+      }
+      return merged
+    }
+    // Fail before credentials, settings or templates can be adopted by IPC.
+    if (plan.mergedPolicy) mergeIncoming(plan.mergedPolicy,plan.expectedPolicy)
+    else if (plan.mergedPolicy===undefined&&historicalRecovery.value) throw {message:'请先保存或还原已有的历史恢复草稿；当前草稿已保留。'}
+    busy.value=true
+    try {
+      const saved=await accept()
+      // Template-only adoption never promotes an unrelated disk workspace or
+      // replaces the actual-file snapshot/baseline, including during recovery.
+      snapshot.value={...snapshot.value!,library:saved.library,libraryDigest:saved.libraryDigest}
+      if (plan.mergedPolicy===null||!saved.workspace) return
+      if (saved.workspace.basePolicy!==saved.policyDigest) throw {message:'导入草稿与当前配置文件不符，请重新比较；当前输入已保留。'}
+      // Re-read live input after IPC: even a field typed while awaiting the
+      // backend participates in the merge and can block this adoption.
+      const merged=mergeIncoming(saved.workspace.policy,saved.policyDigest)
+      snapshot.value=saved
+      channelDraft.value=merged
+      transferAdopted.value=true
+      channelClean.value=canonicalPolicy(saved.policy)
+      channelBaseline.value=saved.policyDigest
+      workspaceBaseline.value=saved.workspaceDigest
+    } finally { busy.value=false }
   }
   function assertRecoveryInputs() {
     if (historicalRecovery.value) throw {message:'请先保存或还原已有的历史恢复草稿；当前草稿已保留。'}
@@ -193,6 +318,6 @@ export const useModelsStore = defineStore('model-config', () => {
   // 这里只做同步读取，真正的“可用型号”判定仍在选择器里按每一行解释。
   const enabledChannels = computed(() => snapshot.value?.policy.channels.filter(c => c.connection.enabled) ?? [])
 
-  return { historicalRecovery,assertRecoveryReady,acceptHistoricalRecovery,saveHistoricalRecovery,credentialEdits,editCredential,clearCredential,modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels, enabledChannels }
+  return { historicalRecovery,assertRecoveryReady,acceptHistoricalRecovery,saveHistoricalRecovery,credentialEdits,editCredential,clearCredential,modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, adoptTransfer, acceptTransfer, load, edit, leave, save, restoreChannels, enabledChannels }
 })
 

@@ -8,7 +8,7 @@ import ObjectScopeTree,{type ScopeObject} from './ObjectScopeTree.vue'
 import ChannelModelScope from './ChannelModelScope.vue'
 import { useModelsStore } from '@/features/models/store'
 import {useAppStore} from '@/stores/app'
-import { errorText, versionLabel, type ChannelPolicy } from '@/features/models/api'
+import { errorText, versionLabel, type ChannelPolicy, type ModelPolicy } from '@/features/models/api'
 import { modelTransferApi, scopeFor,remoteScope, accountInformationLabel, accountInformationSupported, accountTransferLabel, accountPlatforms, type AccountCatalogEntry, type ChannelImportMapping, type DraftCandidate, type FamilyScope, type FilePlan, type IncomingPlan, type ManagerScope, type RemoteOptions, type TransferScope, type UploadPlan } from './modelTransfer'
 import {getSyncConfig} from './api'
 const props = defineProps<{ remote?: boolean }>()
@@ -121,7 +121,7 @@ const destinationMode=ref<'default'|'custom'>('default')
 const encryptExport=ref(false)
 const exportPackagePassword=ref('');const exportPackagePasswordAgain=ref('')
 const plaintextConfirmOpen=ref(false)
-type PreparedExport={kind:'file'|'remote';scope:TransferScope;includeKeys:boolean;managerScope:ManagerScope;draft?:DraftCandidate;options?:RemoteOptions}
+type PreparedExport={kind:'file'|'remote';scope:TransferScope;includeKeys:boolean;managerScope:ManagerScope;draft?:DraftCandidate;policy?:ModelPolicy;options?:RemoteOptions}
 const preparedExport=ref<PreparedExport|null>(null)
 const exportCredentialCount=computed(()=>{
  const reported=filePlan.value?.credentialCount
@@ -179,12 +179,13 @@ function managerScope():ManagerScope{return {...(accountIds.value.length?{accoun
 async function prepare() {
   if (props.remote&&!remoteScopeLoaded.value||!models.snapshot || !hasScope.value||!familyScopesValid.value||catalogueLoading.value) return
   await perform(async () => {
-    const scope = transferScope()
+    const scope = JSON.parse(JSON.stringify(transferScope())) as TransferScope
     if(exportSource.value==='draft'&&!props.remote){
-      await models.persistDraft();if(models.channelError)throw {message:models.channelError};if(!models.snapshot)throw {message:'工作区未读取'};
+      if(!models.snapshot||!models.channelDraft)throw {message:'工作区未读取'}
       const draft={expectedLibrary:models.snapshot.libraryDigest,expectedPolicy:models.snapshot.policyDigest,expectedWorkspace:models.snapshot.workspaceDigest}
-      filePlan.value=await modelTransferApi.prepareDraft(scope,draft)
-      preparedExport.value={kind:'file',scope,includeKeys:false,managerScope:managerScope(),draft}
+      const policy=JSON.parse(JSON.stringify(models.channelDraft)) as ModelPolicy
+      filePlan.value=await modelTransferApi.prepareDraft(scope,draft,undefined,policy)
+      preparedExport.value={kind:'file',scope,includeKeys:false,managerScope:managerScope(),draft,policy}
     }else if (props.remote){
       const options=remoteOptions()
       upload.value = await modelTransferApi.prepareUpload(scope,options)
@@ -200,10 +201,9 @@ async function prepare() {
   })
 }
 /** 用户在确认弹窗选择加密后，按同一冻结范围重新生成受口令保护的计划；未勾选则沿用已预览计划。 */
-async function preparedWithPassphrase(passphrase?:string){const prepared=preparedExport.value;if(!prepared)throw {message:'导出范围已失效，请重新选择范围并导出。'};if(prepared.kind==='remote'){const options:RemoteOptions={...(prepared.options??remoteOptions()),passphrase};prepared.options=options;return await modelTransferApi.prepareUpload(prepared.scope,options)}if(prepared.draft)return await modelTransferApi.prepareDraft(prepared.scope,prepared.draft,passphrase);return await modelTransferApi.prepare(prepared.scope,passphrase,prepared.includeKeys,prepared.managerScope)}
+async function preparedWithPassphrase(passphrase?:string){const prepared=preparedExport.value;if(!prepared)throw {message:'导出范围已失效，请重新选择范围并导出。'};if(prepared.kind==='remote'){const options:RemoteOptions={...(prepared.options??remoteOptions()),passphrase};prepared.options=options;return await modelTransferApi.prepareUpload(prepared.scope,options)}if(prepared.draft)return await modelTransferApi.prepareDraft(prepared.scope,prepared.draft,passphrase,prepared.policy);return await modelTransferApi.prepare(prepared.scope,passphrase,prepared.includeKeys,prepared.managerScope)}
 async function receive() {
   await perform(async () => {
-    if (models.channelDirty) { await models.persistDraft(); if (models.channelError) throw { message: models.channelError } }
     if (props.remote){try{incoming.value = await modelTransferApi.download()}catch(cause){if(typeof cause==='object'&&cause!==null&&'code' in cause&&cause.code==='passphrase_required'){remoteUnlock.value=true;passwordOpen.value=true;importPassword.value='';return}throw cause}}
     else {
       const selected = await open({ multiple: false, directory: false, filters: [{ name: '配置文件', extensions: ['ocxdconf','json'] }] })
@@ -225,15 +225,16 @@ async function unlockFile(){await perform(async()=>{incoming.value=remoteUnlock.
 async function recompareOriginal(){if(!incomingSource.value)return;await perform(async()=>{recompareId.value=incomingSource.value!.id;openingOriginal.value=false;try{incoming.value=await modelTransferApi.recompare(recompareId.value);selectIncoming(incoming.value)}catch(cause){if(typeof cause==='object'&&cause!==null&&'code' in cause&&cause.code==='passphrase_required'){passwordOpen.value=true;importPassword.value='';return}throw cause}})}
 
 async function confirm() {
-  if(incoming.value&&!unlockedPassword&&((adoptKeys.value||adoptWebdavPasswords.value&&incoming.value.availableWebdavPasswords?.length||adoptExtensionCredentials.value))){recompareId.value=incoming.value.id;openingOriginal.value=true;passwordOpen.value=true;importPassword.value='';return}
+  if(incoming.value?.protected&&!unlockedPassword&&((adoptKeys.value||adoptWebdavPasswords.value&&incoming.value.availableWebdavPasswords?.length||adoptExtensionCredentials.value))){recompareId.value=incoming.value.id;openingOriginal.value=true;passwordOpen.value=true;importPassword.value='';return}
   await perform(async () => {
     if (incoming.value) {
       if(receiveDirty.value||incoming.value.previewError)return
-      if (models.channelDirty) { await models.persistDraft(); if (models.channelError) throw { message: models.channelError } }
       const includeDav=adoptWebdavPasswords.value&&!!incoming.value.availableWebdavPasswords?.length
-      let saved
-      try{saved=adoptKeys.value||includeDav||adoptExtensionCredentials.value||incoming.value.protected&&!!(incoming.value.assets?.skills.length||incoming.value.assets?.mcps.length)?await modelTransferApi.accept(incoming.value.id,{adoptKeys:adoptKeys.value,...(includeDav?{adoptWebdavPasswords:true}:{}),...(adoptExtensionCredentials.value?{adoptExtensionCredentials:true}:{}),passphrase:unlockedPassword}):await modelTransferApi.accept(incoming.value.id)}catch(cause){try{const latest=await modelTransferApi.latestIncoming();if(latest?.id===incoming.value.id&&latest.adoption)incoming.value.adoption=latest.adoption}catch{}throw cause}
-      models.acceptTransfer(saved);const updatePreferences=!!incoming.value.manager?.preferences; incoming.value = null;incomingSource.value=null;unlockedPassword='';if(updatePreferences)await app.loadPreferences()
+      const plan=incoming.value
+      await models.adoptTransfer(plan,async()=>{
+        try{return adoptKeys.value||includeDav||adoptExtensionCredentials.value||plan.protected&&!!(plan.assets?.skills.length||plan.assets?.mcps.length)?await modelTransferApi.accept(plan.id,{adoptKeys:adoptKeys.value,...(includeDav?{adoptWebdavPasswords:true}:{}),...(adoptExtensionCredentials.value?{adoptExtensionCredentials:true}:{}),passphrase:unlockedPassword}):await modelTransferApi.accept(plan.id)}catch(cause){try{const latest=await modelTransferApi.latestIncoming();if(latest?.id===plan.id&&latest.adoption)plan.adoption=latest.adoption}catch{}throw cause}
+      })
+      const updatePreferences=!!plan.manager?.preferences; incoming.value = null;incomingSource.value=null;unlockedPassword='';if(updatePreferences)await app.loadPreferences()
     } else if (upload.value) {
       if(preparedExport.value?.kind==='remote'&&remotePassword.value){const options:RemoteOptions={...(preparedExport.value.options??remoteOptions()),passphrase:remotePassword.value};upload.value=await modelTransferApi.prepareUpload(preparedExport.value.scope,options)}
       upload.value = await modelTransferApi.publish(upload.value.id)

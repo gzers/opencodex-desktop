@@ -7,7 +7,7 @@ import {modelApi,type ModelSnapshot,type ModelRecoveryPreview} from '@/features/
 import {useModelsStore} from '@/features/models/store'
 const go=vi.hoisted(()=>vi.fn())
 vi.mock('@/stores/routes',()=>({useRouteStore:()=>({go})}))
-vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{policyHistory:vi.fn(),prepareRecovery:vi.fn(),acceptRecovery:vi.fn(),loadRecoveryBaseline:vi.fn(),load:vi.fn(),stage:vi.fn()}}))
+vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{policyHistory:vi.fn(),prepareRecovery:vi.fn(),acceptRecovery:vi.fn(),loadRecoveryBaseline:vi.fn(),load:vi.fn()}}))
 const dialog=defineComponent({props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'})
 const snapshot=():ModelSnapshot=>({library:{schemaVersion:1,templates:[]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'actual-file',workspaceDigest:'empty-workspace',workspace:null})
 const baseline=():ModelSnapshot=>({...snapshot(),policyDigest:'legacy-policy',workspaceDigest:'legacy-workspace'})
@@ -23,7 +23,7 @@ describe('successful model save history',()=>{
   await button(wrapper,'比较恢复差异').trigger('click');await flushPromises()
   expect(modelApi.prepareRecovery).toHaveBeenCalledExactlyOnceWith({sourceId:'successful-save',side:'before',scope:'affected',restoreDefaults:false,expectedLibrary:'library',expectedPolicy:'legacy-policy',expectedWorkspace:'legacy-workspace'})
   await button(wrapper,'放入恢复草稿').trigger('click');await flushPromises();expect(modelApi.acceptRecovery).toHaveBeenCalledExactlyOnceWith('restore-plan')
-  expect(useModelsStore().snapshot).toEqual(snapshot());expect(useModelsStore().historicalRecovery?.workspaceDigest).toBe('recovered');expect(useModelsStore().channelDraft?.recoveryId).toBe('restore-plan');expect(modelApi.stage).not.toHaveBeenCalled()
+  expect(useModelsStore().snapshot).toEqual(snapshot());expect(useModelsStore().historicalRecovery?.workspaceDigest).toBe('recovered');expect(useModelsStore().channelDraft?.recoveryId).toBe('restore-plan')
   expect(wrapper.text()).toContain('运行配置尚未改变');await button(wrapper,'前往模型页保存').trigger('click');expect(go).toHaveBeenCalledWith('models');wrapper.unmount()
  })
  it('keeps an uncertain original recovery ID for retry instead of preparing another candidate',async()=>{

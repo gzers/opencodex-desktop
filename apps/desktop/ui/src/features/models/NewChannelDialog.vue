@@ -62,7 +62,6 @@ async function join(){
  if(!selected.value.length){error.value='请选择至少一个精确型号';return}
  busy.value=true;store.busy=true;error.value=''
  try{
-  await store.persistDraft();if(store.channelError)throw {message:store.channelError}
   if(!store.snapshot)throw {message:'请先读取本机渠道工作区'}
   const channel:ChannelPolicy={id,label:label.value.trim(),templateRefs:[],modelRefs:{},connection:{providerId:providerId.value,protocol:protocol.value,nodes:[{id:nodeId,name:'默认节点',url:url.value}],activeNodeId:nodeId,credentialRef:null,enabled:false,allowPrivateNetwork:privateNetwork.value},selection:{mode:'whitelist',models:[...selected.value]},modelOrder:models.value.map(m=>m.id),discovered:JSON.parse(JSON.stringify(models.value)),defaults:emptyRules(),overrides:{},familyOverrides:{}}
   if(original){
