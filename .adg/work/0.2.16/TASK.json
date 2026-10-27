@@ -1,0 +1,20 @@
+{
+  "id": "TASK-OPENCODEX-0.2.16",
+  "source": "docs/03-\u5f00\u53d1\u5b9e\u65bd/IMP-OPENCODEX-DESKTOP-25.md",
+  "scope": "WP-85-WP-88 and14acceptance scenarios",
+  "authority": "User explicitly authorized development/tests/stable release on2026-10-27",
+  "baseline": "2e687a60a9acebb3749f6b5abc1c2bdd243b5b8b",
+  "required_checks": [
+    "review:scoped-file",
+    "review:edit-preservation",
+    "review:connection-ui",
+    "review:save-state",
+    "review:prototype-notification",
+    "review:legacy-cleanup",
+    "review:release"
+  ],
+  "write_scopes": {
+    "code": "ocx-022-model-selector / codex/0.2.16-channel-save",
+    "docs": "governance-main / docs/governance-main"
+  }
+}
