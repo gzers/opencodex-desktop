@@ -6,7 +6,9 @@ use axum::{
     routing::{get, post},
     Json, Router,
 };
-use opencodex_desktop_lib::modules::model_config::{compiler, config_file, schema::ModelError};
+use opencodex_desktop_lib::modules::model_config::{
+    compiler, config_file, file_objects, portable_channels, schema::ModelError, transfer,
+};
 use serde_json::{json, Value};
 use std::{path::PathBuf, sync::Arc};
 struct Fixture {
@@ -56,11 +58,73 @@ async fn rpc(State(s): State<Arc<Fixture>>, Json(body): Json<Value>) -> (HeaderM
                 serde_json::from_value(args.clone())?,
             )?)
             .map_err(Into::into),
+            "prepareTransfer" => {
+                let source = s.root.join("fixture-source");
+                let home = s.root.join("fixture-source-home");
+                std::fs::create_dir_all(&source).unwrap();
+                std::fs::create_dir_all(&home).unwrap();
+                std::fs::create_dir_all(source.join("manager-state")).unwrap();
+                std::fs::write(
+                    source.join("manager-state/model-policy.json"),
+                    b"broken old copy",
+                )
+                .unwrap();
+                std::fs::write(
+                    source.join("manager-state/model-config-draft.json"),
+                    b"broken old draft",
+                )
+                .unwrap();
+                std::fs::write(home.join("config.json"), serde_json::to_vec(&json!({"providers":{"import-fixture":{"adapter":"openai-chat","authMode":"local","baseUrl":"https://source.example.test/v1","models":["site/exact-import"],"selectedModels":["site/exact-import"],"note":"current-file-source","retryOn429":false}}})).unwrap()).unwrap();
+                let snap = config_file::snapshot(&source, &home)?;
+                let scope = transfer::ExportScope {
+                    channel_families: Default::default(),
+                    channel_models: Default::default(),
+                    include_policy: true,
+                    include_global: false,
+                    template_refs: vec![],
+                    channel_ids: snap.policy.channels.iter().map(|c| c.id.clone()).collect(),
+                };
+                let manager = opencodex_desktop_lib::modules::sync::portable_manager::Scope {
+                    upstream_root: Some(home),
+                    ..Default::default()
+                };
+                let prepared = transfer::prepare_file_scope(&source, scope, None, false, &manager)?;
+                let bytes = transfer::file_bytes(&source, &prepared.id)?;
+                std::fs::write(s.root.join("fixture-transfer.ocxdconf"), bytes).unwrap();
+                Ok(
+                    json!({"sourceModels":prepared.package.payload.policy.unwrap().channels[0].model_order}),
+                )
+            }
+            "receive" => {
+                let bytes = std::fs::read(s.root.join("fixture-transfer.ocxdconf")).unwrap();
+                serde_json::to_value(file_objects::receive_context_file(
+                    &s.root, &bytes, None, None, &s.home,
+                )?)
+                .map_err(Into::into)
+            }
+            "select" => serde_json::to_value(transfer::select_received_context(
+                &s.root,
+                args["id"].as_str().unwrap(),
+                serde_json::from_value(args["scope"].clone())?,
+                None,
+            )?)
+            .map_err(Into::into),
+            "accept" => serde_json::to_value(file_objects::accept_extended(
+                &s.root,
+                args["id"].as_str().unwrap(),
+                false,
+                false,
+                false,
+                None,
+            )?)
+            .map_err(Into::into),
+            "catalog" => serde_json::to_value(portable_channels::catalog_file(&s.root, &s.home)?)
+                .map_err(Into::into),
             "disk" => {
                 let raw: Value =
                     serde_json::from_slice(&std::fs::read(s.home.join("config.json")).unwrap())?;
                 Ok(
-                    json!({"key":raw["providers"]["demo"]["apiKey"],"url":raw["providers"]["demo"]["baseUrl"],"unknown":raw["providers"]["demo"]["unknown"],"models":raw["providers"]["demo"]["models"],"backups":std::fs::read_dir(s.root.join("backups/model-config")).map(|i|i.count()).unwrap_or(0)}),
+                    json!({"key":raw["providers"]["demo"]["apiKey"],"url":raw["providers"]["demo"]["baseUrl"],"unknown":raw["providers"]["demo"]["unknown"],"models":raw["providers"]["demo"]["models"],"providerCount":raw["providers"].as_object().unwrap().len(),"imported":raw["providers"].as_object().unwrap().values().find(|r|r["note"]=="current-file-source"),"backups":std::fs::read_dir(s.root.join("backups/model-config")).map(|i|i.count()).unwrap_or(0)}),
                 )
             }
             "finish" => {

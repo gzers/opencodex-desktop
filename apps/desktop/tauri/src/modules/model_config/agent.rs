@@ -173,7 +173,7 @@ pub fn latest_result(
         return Err(invalid("agent_result_identity", "上次建议的目标身份不一致"));
     }
     let reviewed = super::ModelStore::new(root)
-        .load()?
+        .load_library()?
         .library
         .submission_receipts
         .contains_key(&format!("internal/{}", record.run_id));
@@ -298,7 +298,7 @@ pub fn accept_review(root: &Path, request: ReviewRequest) -> ModelResult<BatchCo
         .collect();
     let store = super::ModelStore::new(root);
     if store
-        .load()?
+        .load_library()?
         .library
         .submission_receipts
         .contains_key(&operation)
@@ -806,7 +806,7 @@ mod tests {
     }
 
     fn reviewed_fixture(root: &Path, scene: Scene) -> (ReviewRequest, super::super::Snapshot) {
-        let snapshot = super::super::ModelStore::new(root).load().unwrap();
+        let snapshot = super::super::ModelStore::new(root).load_library().unwrap();
         let targets = snapshot
             .library
             .templates
@@ -863,6 +863,82 @@ mod tests {
             },
             snapshot,
         )
+    }
+    #[test]
+    fn internal_review_results_and_conversations_ignore_corrupt_legacy_documents() {
+        for policy in [None, Some(b"broken old policy".as_slice())] {
+            for draft in [None, Some(b"broken old draft".as_slice())] {
+                let root = tempfile::tempdir().unwrap();
+                std::fs::create_dir(root.path().join("manager-state")).unwrap();
+                for (path, bytes) in [(POLICY_PATH, policy), (DRAFT_PATH, draft)] {
+                    if let Some(bytes) = bytes {
+                        std::fs::write(root.path().join(path), bytes).unwrap();
+                    }
+                }
+                let (request, before) = reviewed_fixture(root.path(), Scene::AuditAndRevise);
+                let first = &request.proposals[0];
+                let conversation = super::super::agent_conversation::save(
+                    root.path(),
+                    super::super::agent_conversation::Request {
+                        template_id: first.template_id.clone(),
+                        expected_digest: None,
+                        content: super::super::agent_conversation::Content {
+                            base_revision: first.base_revision.clone(),
+                            input: "unsent correction".into(),
+                            history: vec![AgentMessage {
+                                role: MessageRole::User,
+                                text: "prior correction".into(),
+                            }],
+                            sources: vec![],
+                        },
+                    },
+                )
+                .unwrap();
+                assert!(
+                    !latest_result(root.path(), first.template_id.as_deref())
+                        .unwrap()
+                        .unwrap()
+                        .reviewed
+                );
+                let mut outside_scope = request.clone();
+                outside_scope.proposals[0].template_id = None;
+                outside_scope.proposals[0].base_revision = None;
+                assert_eq!(
+                    accept_review(root.path(), outside_scope).unwrap_err().code,
+                    "task_scope"
+                );
+                assert!(!root.path().join(LIBRARY_PATH).exists());
+                let result = accept_review(root.path(), request.clone()).unwrap();
+                assert_eq!(result.outcomes.len(), 2);
+                assert_eq!(result.snapshot.policy, Policy::default());
+                assert!(result.snapshot.workspace.is_none());
+                assert_eq!(accept_review(root.path(), request.clone()).unwrap(), result);
+                let latest = latest_result(root.path(), None).unwrap().unwrap();
+                assert!(latest.reviewed);
+                assert_eq!(latest.expected_library, before.library_digest);
+                let restored = super::super::agent_conversation::load(
+                    root.path(),
+                    first.template_id.as_deref(),
+                )
+                .unwrap()
+                .unwrap();
+                assert_eq!(restored.digest, conversation.digest);
+                assert_eq!(restored.content.input, "unsent correction");
+                assert_eq!(restored.content.history[0].text, "prior correction");
+                for (path, bytes) in [(POLICY_PATH, policy), (DRAFT_PATH, draft)] {
+                    assert_eq!(std::fs::read(root.path().join(path)).ok().as_deref(), bytes);
+                }
+                for (old, family) in before
+                    .library
+                    .templates
+                    .iter()
+                    .zip(&result.snapshot.library.templates)
+                {
+                    assert_eq!(old.default_revision, family.default_revision);
+                    assert_eq!(old.revisions[0], family.revisions[0]);
+                }
+            }
+        }
     }
     #[test]
     fn reviewed_internal_batch_is_atomic_provenance_bound_and_idempotent_after_reloading() {
@@ -1082,6 +1158,10 @@ mod tests {
             working_directory: root.path().into(),
             opencodex_home: root.path().join("home"),
         };
+        std::fs::write(
+            context.opencodex_home.join("config.json"),
+            serde_json::to_vec(&json!({"providers":{"test":{"adapter":"openai-chat","baseUrl":"https://example.test/v1","authMode":"key","models":["model-a"],"selectedModels":["model-a"]}}})).unwrap(),
+        ).unwrap();
         let actual = upstream::snapshot(&context).await.unwrap();
         let configured = settings(root.path()).unwrap().unwrap();
         let configured =

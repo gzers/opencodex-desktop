@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed,onBeforeUnmount,onMounted,ref} from 'vue'
+import {computed,onBeforeUnmount,onMounted,ref,watch} from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import ModelPicker,{type ModelChoice} from './ModelPicker.vue'
@@ -10,7 +10,6 @@ defineProps<{disabled?:boolean;compact?:boolean}>()
 const error=ref('');const busy=ref(false);const open=ref(false);const configuring=ref(false)
 const loading=ref(false)
 const candidate=ref<AgentSettings|null>(null);const directory=ref<ExecutionDirectory|null>(null)
-const directoryLoaded=ref(false)
 const models=useModelsStore()
 /**
  * 打开选择器先用模型配置里已保存的渠道/型号即时呈现，避免每次等 Tauri 目录往返。
@@ -28,26 +27,37 @@ const localDirectory=computed<ExecutionDirectory>(()=>{
 const allRows=computed(()=>directory.value?.rows??localDirectory.value.rows)
 const channels=computed(()=>directory.value?.channels??localDirectory.value.channels)
 let disposed=false
-onBeforeUnmount(()=>{disposed=true})
+let directoryRequest=0
+onBeforeUnmount(()=>{disposed=true;directoryRequest++})
 onMounted(async()=>{busy.value=true;try{const value=await modelApi.agentSettings();if(!disposed)settings.value=value}catch(cause){if(!disposed)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}})
 const current=computed<ModelChoice[]>(()=>{const value=candidate.value;const channel=channels.value.find(c=>c.providerId===value?.providerId);return value?[{channelId:value.channelId??channel?.id??value.providerId,modelId:value.modelId,...(value.reasoningEffort===null?{}:{reasoningEffort:value.reasoningEffort}),...(value.fast===null?{}:{fast:value.fast})}]:[]})
 function configure(){if(busy.value)return;candidate.value=settings.value?{...settings.value}:null;error.value='';configuring.value=true}
-let directoryRequest:Promise<void>|null=null
-function refreshDirectory(){
- if(directoryLoaded.value)return Promise.resolve()
- if(directoryRequest)return directoryRequest
+// File loads/saves replace the saved policy, including layout-only renames whose
+// file digest is unchanged. Unsaved channel/Key buffers are not execution facts.
+watch([()=>models.snapshot?.policyDigest,()=>models.snapshot?.policy],()=>{
+ directoryRequest++
+ directory.value=null
+ loading.value=false
+ if(open.value)void refreshDirectory()
+},{flush:'sync'})
+async function refreshDirectory(){
+ const request=++directoryRequest
+ directory.value=null
+ error.value=''
  loading.value=true
- directoryRequest=modelApi.executionDirectory().then(actual=>{
-  if(!disposed){directory.value=actual;directoryLoaded.value=true}
- }).catch(cause=>{if(!disposed&&!localDirectory.value.rows.length)error.value=errorText(cause)}).finally(()=>{directoryRequest=null;if(!disposed)loading.value=false})
- return directoryRequest
+ try{
+  const actual=await modelApi.executionDirectory()
+  if(!disposed&&request===directoryRequest)directory.value=actual
+ }catch(cause){
+  if(!disposed&&request===directoryRequest)error.value=errorText(cause)
+ }finally{if(!disposed&&request===directoryRequest)loading.value=false}
 }
 function browse(){if(busy.value)return;error.value='';open.value=true;void refreshDirectory()}
-function choose(picks:ModelChoice[]){const pick=picks[0];if(!pick||pick.nativeModelId)return;const row=allRows.value.find(r=>r.channelId===pick.channelId&&r.modelId===pick.modelId);if(!row||row.unavailableReason||!row.enabled)return;candidate.value={channelId:pick.channelId,connectionDigest:row.connectionDigest,providerId:row.providerId,modelId:pick.modelId!,reasoningEffort:pick.reasoningEffort??null,fast:pick.fast??null};open.value=false}
+function choose(picks:ModelChoice[]){if(loading.value||error.value)return;const pick=picks[0];if(!pick||pick.nativeModelId)return;const row=directory.value?.rows.find(r=>r.channelId===pick.channelId&&r.modelId===pick.modelId);if(!row||row.unavailableReason||!row.enabled||!row.connectionDigest)return;candidate.value={channelId:pick.channelId,connectionDigest:row.connectionDigest,providerId:row.providerId,modelId:pick.modelId!,reasoningEffort:pick.reasoningEffort??null,fast:pick.fast??null};open.value=false}
 async function save(){if(!candidate.value||busy.value)return;busy.value=true;error.value='';try{const value=await modelApi.saveAgentSettings({...candidate.value});if(!disposed){settings.value=value;configuring.value=false}}catch(cause){if(!disposed)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}}
 /** 档位中文名；与原型 levels 表一致，未知值原样显示。 */
 const EFFORTS:Record<string,string>={none:'无',minimal:'最低',low:'低',medium:'中',high:'高',xhigh:'极高',max:'最高'}
-const committedRow=computed(()=>{const value=settings.value;if(!value)return null;return allRows.value.find(r=>r.modelId===value.modelId&&(!value.channelId||r.channelId===value.channelId))??null})
+const committedRow=computed(()=>{const value=settings.value;if(!value)return null;return allRows.value.find(r=>r.providerId===value.providerId&&r.modelId===value.modelId&&(!value.channelId||r.channelId===value.channelId))??null})
 const channelName=computed(()=>{const value=settings.value;if(!value)return '';return channels.value.find(c=>c.id===value.channelId||c.providerId===value.providerId)?.label??value.providerId})
 /** 继承时取模型默认档位，并标记「（模型默认）」。 */
 const effort=computed(()=>{const value=settings.value;if(!value)return{text:'',inherited:false};const inherited=value.reasoningEffort===null;const actual=inherited?(committedRow.value?.rules.defaultEffort.mode==='custom'?committedRow.value.rules.defaultEffort.value:null):value.reasoningEffort;return{text:actual?EFFORTS[actual]??actual:'未知',inherited}})

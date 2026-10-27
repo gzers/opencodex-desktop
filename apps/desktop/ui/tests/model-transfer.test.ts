@@ -276,6 +276,42 @@ describe('model transfer review', () => {
     expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('incoming');expect(store.snapshot!.libraryDigest).toBe('received')
     expect(store.draft!.label).toBe('人工输入');expect(store.dirty).toBe(true);wrapper.unmount()
   })
+  it('blocks a preview overlapping live channel edits before calling accept',async()=>{
+    const store=useModelsStore(),base=snapshot()
+    const channel:ChannelPolicy={id:'channel',label:'saved label',templateRefs:[],modelRefs:{},connection:{providerId:'provider',protocol:'openai-chat',nodes:[],activeNodeId:'',credentialRef:null,enabled:false,allowPrivateNetwork:false},selection:{mode:'all'},modelOrder:[],discovered:[],defaults:emptyRules(),overrides:{},familyOverrides:{}}
+    base.policy.channels=[channel];store.acceptTransfer(base);store.channelDraft!.channels[0]!.label='unsaved label';store.clearCredential('channel')
+    const incoming=structuredClone(base.policy);incoming.channels[0]!.label='incoming label'
+    vi.mocked(modelTransferApi.receive).mockResolvedValue({id:'overlap',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',mergedPolicy:incoming,package:pack(),notices:[]})
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(wrapper.text()).toContain('当前输入已保留')
+    expect(store.channelDraft!.channels[0]!.label).toBe('unsaved label');expect(store.credentialEdits.channel?.action).toBe('clear');wrapper.unmount()
+  })
+  it('exports the frozen in-memory draft policy and reuses it for optional passphrase preparation',async()=>{
+    const store=useModelsStore(),base=snapshot()
+    base.policy.channels=[{id:'channel',label:'saved label',templateRefs:[],modelRefs:{},connection:{providerId:'provider',protocol:'openai-chat',nodes:[],activeNodeId:'',credentialRef:null,enabled:false,allowPrivateNetwork:false},selection:{mode:'all'},modelOrder:[],discovered:[],defaults:emptyRules(),overrides:{},familyOverrides:{}}]
+    store.acceptTransfer(base);store.channelDraft!.channels[0]!.label='in-memory label';store.editCredential('channel','local-only-secret','saved')
+    const frozen=JSON.parse(JSON.stringify(store.channelDraft))
+    vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue(base.policy.channels)
+    vi.mocked(modelTransferApi.prepareDraft).mockResolvedValueOnce({id:'plain-draft',package:pack(),credentialCount:0}).mockResolvedValueOnce({id:'encrypted-draft',package:pack(),credentialCount:0,protected:true})
+    vi.mocked(modelTransferApi.export).mockResolvedValue({path:'/fixture/draft.ocxdconf',digest:'digest',templates:0,channels:1})
+    const wrapper=render();await flushPromises();await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='清空选择')!.trigger('click')
+    ;(wrapper.vm.$ as unknown as {setupState:{exportSource:string}}).setupState.exportSource='draft'
+    wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='配置范围预设')!.vm.$emit('update:modelValue','all');await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises()
+    const candidate={expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace'}
+    expect(modelTransferApi.prepareDraft).toHaveBeenCalledExactlyOnceWith({includePolicy:true,channelIds:['channel'],includeGlobal:false,templateRefs:[]},candidate,undefined,frozen)
+    expect(modelTransferApi.prepare).not.toHaveBeenCalled();expect(JSON.stringify(vi.mocked(modelTransferApi.prepareDraft).mock.calls[0]![3])).not.toContain('local-only-secret')
+    store.channelDraft!.channels[0]!.label='typed after export preview'
+    expect(wrapper.get<HTMLInputElement>('.export-encrypt input[type="checkbox"]').element.checked).toBe(false)
+    await wrapper.get('.export-encrypt input[type="checkbox"]').setValue(true)
+    await wrapper.get('input[aria-label="加密口令"]').setValue('fixture-export-passphrase');await wrapper.get('input[aria-label="再次输入加密口令"]').setValue('fixture-export-passphrase')
+    await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.prepareDraft).toHaveBeenLastCalledWith({includePolicy:true,channelIds:['channel'],includeGlobal:false,templateRefs:[]},candidate,'fixture-export-passphrase',frozen)
+    expect(modelTransferApi.export).toHaveBeenCalledExactlyOnceWith('encrypted-draft',undefined)
+    expect(store.channelDraft!.channels[0]!.label).toBe('typed after export preview');expect(store.credentialEdits.channel?.value).toBe('local-only-secret');wrapper.unmount()
+  })
   it.skip('[0.2.5 待按新结构重写] retains the original operation ID after uncertain WebDAV publication', async () => {
     vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue({id:'upload-once',phase:'prepared',package:pack()})
     vi.mocked(modelTransferApi.publish).mockRejectedValueOnce({message:'结果待核对'}).mockResolvedValue({id:'upload-once',phase:'published',package:pack()})

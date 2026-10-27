@@ -46,20 +46,8 @@ fn read(home: &Path) -> ModelResult<(Value, Zeroizing<Vec<u8>>)> {
     }
     Ok((value, bytes))
 }
-fn metadata(root: &Path) -> Policy {
-    // One-time compatibility input for ids, extra node labels and template
-    // adoptions; factual connection/selection data always comes from config.
-    for relative in [METADATA, POLICY_PATH] {
-        let path = root.join(relative);
-        if safety::check_path(root, &path, true).is_ok() {
-            if let Ok(bytes) = safety::read_file(&path, MAX_CONFIG) {
-                if let Ok(value) = serde_json::from_slice::<Policy>(&bytes) {
-                    return value;
-                }
-            }
-        }
-    }
-    Policy::default()
+fn metadata(root: &Path) -> ModelResult<Policy> {
+    super::legacy_migration::load_layout(root)
 }
 fn snapshot_value(
     root: &Path,
@@ -79,7 +67,7 @@ fn snapshot_value(
 }
 pub fn snapshot(root: &Path, home: &Path) -> ModelResult<Snapshot> {
     let (value, bytes) = read(home)?;
-    snapshot_value(root, &value, &bytes, &metadata(root))
+    snapshot_value(root, &value, &bytes, &metadata(root)?)
 }
 /// Library mutations must not return a retired channel-policy snapshot to the
 /// shared models page or compare a file digest with a manager-policy digest.
@@ -119,14 +107,7 @@ pub fn delete_template(
         ));
     }
     let store = ModelStore::new(root);
-    let local = store.load()?;
-    store.delete(
-        expected_library,
-        &local.policy_digest,
-        &local.workspace_digest,
-        template,
-        revisions,
-    )?;
+    store.delete_library(expected_library, template, revisions)?;
     snapshot(root, home)
 }
 
@@ -221,6 +202,91 @@ fn apply_credentials(
     }
     Ok(())
 }
+fn seed_imports(
+    root: &Path,
+    config: &mut Value,
+    before: &Policy,
+    intended: &Policy,
+) -> ModelResult<Policy> {
+    let mut mapping_before = before.clone();
+    for channel in &intended.channels {
+        // A receipt is produced only by explicit full-provider adoption. Local
+        // mappings and partial imports do not carry source raw-field authority.
+        let Some(reference) = &channel.connection.imported_config else {
+            continue;
+        };
+        let existing = before.channels.iter().find(|c| c.id == channel.id);
+        if protected(channel)
+            || existing
+                .is_some_and(|old| old.connection.provider_id != channel.connection.provider_id)
+            || existing.is_none()
+                && config["providers"]
+                    .get(&channel.connection.provider_id)
+                    .is_some()
+        {
+            return Err(invalid(
+                "provider_import_scope",
+                "导入目标与已有或官方渠道冲突，未写入",
+            ));
+        }
+        let material = super::provider_import::load(root, channel, reference)?;
+        let mut raw = config["providers"]
+            .get(&channel.connection.provider_id)
+            .cloned()
+            .unwrap_or_else(|| json!({}));
+        let object = raw
+            .as_object_mut()
+            .ok_or_else(|| invalid("provider_import_scope", "当前渠道原字段无效"))?;
+        // Preserve unrecognized local fields and local secrets when credentials
+        // were not selected, while adopting the complete known public object.
+        object.retain(|key, _| !super::provider_fields::PUBLIC.contains(&key.as_str()));
+        object.extend(material.public.as_object().unwrap().clone());
+        if let Some(auth) = &material.authorization {
+            let mut fields = super::provider_auth::imported_file_fields(
+                root,
+                &material.id,
+                &material.provider_id,
+                &material.public,
+                auth,
+            )?;
+            raw.as_object_mut()
+                .unwrap()
+                .retain(|key, _| !super::provider_fields::PRIVATE.contains(&key.as_str()));
+            raw.as_object_mut()
+                .unwrap()
+                .extend(fields.as_object_mut().unwrap().clone());
+            super::provider_auth::erase_value(&mut fields);
+        }
+        if !config["providers"].is_object() {
+            config["providers"] = json!({});
+        }
+        config["providers"][&channel.connection.provider_id] = raw;
+        let mut imported = config_file_mapping::read_policy(config, intended)?
+            .channels
+            .into_iter()
+            .find(|c| c.id == channel.id)
+            .ok_or_else(|| invalid("provider_import_scope", "导入渠道无法从拟写文件读取"))?;
+        // The seed describes raw fields before this edit. In-memory template
+        // choices must remain a difference so their projected fields are written.
+        imported.template_refs = existing
+            .map(|c| c.template_refs.clone())
+            .unwrap_or_default();
+        imported.model_refs = existing.map(|c| c.model_refs.clone()).unwrap_or_default();
+        imported.family_overrides = existing
+            .map(|c| c.family_overrides.clone())
+            .unwrap_or_default();
+        if let Some(slot) = mapping_before
+            .channels
+            .iter_mut()
+            .find(|c| c.id == channel.id)
+        {
+            *slot = imported;
+        } else {
+            mapping_before.channels.push(imported);
+        }
+    }
+    Ok(mapping_before)
+}
 pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveResult> {
     let path = config_path(home)?;
     let _lock = TargetFileLock::lock(&path)?;
@@ -231,10 +297,28 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
             "配置文件已在其它地方修改，请刷新后再保存；当前编辑已保留",
         ));
     }
-    let meta = metadata(root);
+    let meta = metadata(root)?;
     let before = config_file_mapping::read_policy(&config, &meta)?;
     let (library, _) = ModelStore::new(root).library_only()?;
-    config_file_mapping::write_policy(&mut config, &before, &request.policy, &library)?;
+    let mapping_before = seed_imports(root, &mut config, &before, &request.policy)?;
+    config_file_mapping::write_policy(&mut config, &mapping_before, &request.policy, &library)?;
+    // Legacy portable single-Key entries are adopted only at explicit Save.
+    // A local-mapping import has no source reference and cannot replace its Key.
+    for channel in &request.policy.channels {
+        if before.channels.iter().any(|c| c.id == channel.id)
+            || request
+                .credentials
+                .iter()
+                .any(|e| e.channel_id == channel.id)
+            || protected(channel)
+        {
+            continue;
+        }
+        if let Some(reference) = &channel.connection.credential_ref {
+            let key = super::discovery::credential(reference)?;
+            config["providers"][&channel.connection.provider_id]["apiKey"] = json!(key.as_str());
+        }
+    }
     apply_credentials(&mut config, &request.policy, &request.credentials)?;
     let old: Value = serde_json::from_slice(&before_bytes)
         .map_err(|_| invalid("config_document", "模型配置文件格式不正确"))?;
@@ -286,10 +370,16 @@ pub(super) fn record_layout(root: &Path, policy: &Policy) {
         c.naming.clear();
     }
     let meta_path = root.join(METADATA);
-    if safety::check_path(root, &meta_path, true).is_ok() {
+    let lock_path = crate::infrastructure::locking::lock_path_for(&meta_path);
+    if safety::check_path(root, &meta_path, true).is_ok()
+        && safety::check_path(root, &lock_path, true).is_ok()
+    {
         // The authoritative config write has succeeded. A UI layout failure
         // cannot honestly be reported as an unsuccessful config write.
-        if let Ok(bytes) = serde_json::to_vec(&layout) {
+        if let (Ok(_guard), Ok(bytes)) = (
+            TargetFileLock::lock(&meta_path),
+            serde_json::to_vec(&layout),
+        ) {
             let _ = atomic_write(&meta_path, &bytes, 0o600);
         }
     }
@@ -476,6 +566,130 @@ mod tests {
         assert_eq!(c["providers"]["demo"]["futureField"]["keep"], 42);
         assert_eq!(credential(&home, "demo").unwrap().value, "test-replaced");
         assert_eq!(c["unrelated"], true);
+    }
+    #[test]
+    fn imported_provider_fields_join_only_at_confirmed_file_save() {
+        let (_t, root, home) = fixture();
+        let original = std::fs::read(home.join("config.json")).unwrap();
+        let mut current = snapshot(&root, &home).unwrap();
+        let mut channel = current.policy.channels[0].clone();
+        channel.id = uuid::Uuid::new_v4().to_string();
+        channel.connection.provider_id = "imported".into();
+        channel.connection.enabled = false;
+        let public = json!({"adapter":"openai-chat","baseUrl":"https://example.test","authMode":"key","models":["vendor/custom"],"selectedModels":["vendor/custom"],"note":"exact source note","retryOn429":false});
+        let reference =
+            super::super::provider_import::stage(&root, &channel, &public, None).unwrap();
+        channel.connection.imported_config = Some(reference);
+        current.policy.channels.push(channel);
+        assert!(std::fs::read(home.join("config.json")).unwrap() == original);
+        save(
+            &root,
+            &home,
+            SaveRequest {
+                expected_file: current.policy_digest,
+                policy: current.policy,
+                credentials: vec![],
+            },
+        )
+        .unwrap();
+        let saved = read(&home).unwrap().0;
+        assert_eq!(saved["providers"]["imported"]["note"], "exact source note");
+        assert_eq!(saved["providers"]["imported"]["retryOn429"], false);
+        assert_eq!(saved["providers"]["imported"]["disabled"], true);
+        assert_eq!(
+            saved["providers"]["demo"]["futureField"],
+            json!({"keep":42})
+        );
+        assert!(saved["providers"]["demo"]["apiKey"].as_str() == Some("test-original"));
+        let reopened = snapshot(&root, &home).unwrap();
+        assert_eq!(reopened.policy.channels.len(), 2);
+        assert!(reopened
+            .policy
+            .channels
+            .iter()
+            .all(|c| c.connection.imported_config.is_none()));
+    }
+    #[test]
+    fn explicit_same_identity_import_writes_raw_overlay_but_keeps_unselected_local_key() {
+        let (_t, root, home) = fixture();
+        let mut current = snapshot(&root, &home).unwrap();
+        let public = json!({"adapter":"openai-chat","baseUrl":"https://example.test","models":["vendor/custom"],"selectedModels":["vendor/custom"],"note":"adopted raw change","retryOn429":false});
+        let channel = &mut current.policy.channels[0];
+        channel.connection.imported_config =
+            Some(super::super::provider_import::stage(&root, channel, &public, None).unwrap());
+        let saved = save(
+            &root,
+            &home,
+            SaveRequest {
+                expected_file: current.policy_digest,
+                policy: current.policy,
+                credentials: vec![],
+            },
+        )
+        .unwrap();
+        assert!(saved.changed);
+        let raw = read(&home).unwrap().0;
+        assert_eq!(raw["providers"]["demo"]["note"], "adopted raw change");
+        assert_eq!(raw["providers"]["demo"]["retryOn429"], false);
+        assert_eq!(raw["providers"]["demo"]["futureField"], json!({"keep":42}));
+        assert!(raw["providers"]["demo"]["apiKey"].as_str() == Some("test-original"));
+    }
+    #[test]
+    fn imported_raw_seed_does_not_hide_new_template_adoption() {
+        for same_identity in [false, true] {
+            let (_t, root, home) = fixture();
+            let store = ModelStore::new(&root);
+            let library = store.load_library().unwrap();
+            let mut content = TemplateContent::default();
+            content.matching.include = vec![Pattern {
+                kind: MatchKind::Exact,
+                value: "vendor/custom".into(),
+            }];
+            content.rules.context_window = Field::Custom(128000);
+            let template = store
+                .save(SaveTemplate {
+                    expected_library: library.library_digest,
+                    template_id: None,
+                    base_revision: None,
+                    label: "Imported template".into(),
+                    content,
+                })
+                .unwrap();
+            let mut current = snapshot(&root, &home).unwrap();
+            let mut channel = current.policy.channels[0].clone();
+            if !same_identity {
+                channel.id = uuid::Uuid::new_v4().to_string();
+                channel.connection.provider_id = "imported".into();
+            }
+            let public = json!({"adapter":"openai-chat","baseUrl":"https://example.test","models":["vendor/custom"],"selectedModels":["vendor/custom"]});
+            channel.connection.imported_config =
+                Some(super::super::provider_import::stage(&root, &channel, &public, None).unwrap());
+            channel.template_refs = vec![TemplateRef {
+                template_id: template.template_id,
+                revision_id: template.revision_id,
+            }];
+            let provider = channel.connection.provider_id.clone();
+            if same_identity {
+                current.policy.channels[0] = channel;
+            } else {
+                current.policy.channels.push(channel);
+            }
+            save(
+                &root,
+                &home,
+                SaveRequest {
+                    expected_file: current.policy_digest,
+                    policy: current.policy,
+                    credentials: vec![],
+                },
+            )
+            .unwrap();
+            assert_eq!(
+                read(&home).unwrap().0["providers"][provider]["modelContextWindows"]
+                    ["vendor/custom"],
+                128000
+            );
+        }
     }
     #[test]
     fn external_file_change_preserves_both_edit_and_external_file() {

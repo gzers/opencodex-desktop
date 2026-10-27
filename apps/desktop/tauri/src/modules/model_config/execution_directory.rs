@@ -1,10 +1,7 @@
-//! Read-only execution choices use actual saved upstream facts and stable local
-//! channel identities. Native rows remain visible with an explicit binding reason.
+//! Execution choices join the actual file's channel identities with the supported
+//! upstream execution routes. Native rows retain an explicit binding reason.
 use super::{
-    agent::AgentSettings,
-    compiler::ModelProjection,
-    schema::*,
-    store::{sha256, ModelStore},
+    agent::AgentSettings, compiler::ModelProjection, config_file, schema::*, store::sha256,
     upstream::UpstreamSnapshot,
 };
 use crate::{
@@ -48,6 +45,8 @@ pub struct Directory {
 #[derive(Default, Serialize, Deserialize)]
 #[serde(transparent)]
 pub(super) struct Ids(pub BTreeMap<String, String>);
+// Compatibility for portable_channels until its file-backed integration lands.
+// The bound Agent directory must never read or create this retired registry.
 pub(super) fn stable_ids(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Ids> {
     let path = root.join("manager-state/model-execution-source-ids.json");
     safety::check_path(root, &path, true)?;
@@ -116,9 +115,25 @@ fn rules(row: &Value) -> ModelResult<ModelRules> {
     rules.validate()?;
     Ok(rules)
 }
-pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory> {
-    let local = ModelStore::new(root).load()?;
-    let ids = stable_ids(root, snapshot)?;
+pub fn build(
+    root: &Path,
+    context: &ProcessContext,
+    snapshot: &UpstreamSnapshot,
+) -> ModelResult<Directory> {
+    let saved = config_file::snapshot(root, &context.opencodex_home)?;
+    build_with_policy(snapshot, &saved.policy)
+}
+fn connection_matches(channel: &ChannelPolicy, raw: &Value) -> bool {
+    let connection = &channel.connection;
+    connection.protocol == raw["adapter"].as_str().unwrap_or("")
+        && connection.nodes.iter().any(|node| {
+            node.id == connection.active_node_id
+                && Some(node.url.as_str()) == raw["baseUrl"].as_str()
+        })
+        && connection.auth_mode.as_deref().unwrap_or("key")
+            == raw["authMode"].as_str().unwrap_or("key")
+}
+fn build_with_policy(snapshot: &UpstreamSnapshot, policy: &Policy) -> ModelResult<Directory> {
     let providers = snapshot.providers["providers"]
         .as_object()
         .ok_or_else(|| invalid("execution_directory", "官方渠道目录无效"))?;
@@ -134,23 +149,13 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
         .models
         .as_array()
         .ok_or_else(|| invalid("execution_directory", "官方型号目录无效"))?;
-    let mut channels = providers
+    let mut channels = policy
+        .channels
         .iter()
-        .map(|(provider, _)| {
-            let saved = local
-                .policy
-                .channels
-                .iter()
-                .find(|c| &c.connection.provider_id == provider);
-            Channel {
-                id: saved
-                    .map(|c| c.id.clone())
-                    .unwrap_or_else(|| ids.0[provider].clone()),
-                label: saved
-                    .map(|c| c.label.clone())
-                    .unwrap_or_else(|| provider.clone()),
-                provider_id: provider.clone(),
-            }
+        .map(|saved| Channel {
+            id: saved.id.clone(),
+            label: saved.label.clone(),
+            provider_id: saved.connection.provider_id.clone(),
         })
         .collect::<Vec<_>>();
     let mut rows = vec![];
@@ -162,23 +167,33 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
             .ok_or_else(|| invalid("execution_directory", "型号缺少完整原始ID"))?;
         let provider = row["provider"].as_str().unwrap_or("openai");
         let native = row["native"] == true;
+        let saved = policy
+            .channels
+            .iter()
+            .find(|channel| channel.connection.provider_id == provider);
         let channel = if native {
             NATIVE
+        } else if let Some(saved) = saved {
+            saved.id.as_str()
         } else {
-            channels
-                .iter()
-                .find(|c| c.provider_id == provider)
-                .map(|c| c.id.as_str())
-                .ok_or_else(|| invalid("execution_directory", "实际型号没有对应渠道来源"))?
+            // A stale runtime row must not resurrect a provider deleted from the
+            // file or invent a second identity for a newly created channel.
+            continue;
         };
         if !seen.insert((channel.to_owned(), id.to_owned())) {
             return Err(invalid("execution_identity", "实际目录存在重复型号身份"));
         }
-        let raw = &snapshot.providers["providers"][provider];
-        let channel_disabled = raw["disabled"] == true;
+        let raw = providers.get(provider).unwrap_or(&Value::Null);
+        let channel_disabled =
+            raw["disabled"] == true || saved.is_some_and(|channel| !channel.connection.enabled);
         let namespaced = row["namespaced"].as_str().filter(|value| !value.is_empty());
         let hidden = row["disabled"] == true
             || row["initialSelectionPending"] == true
+            || saved.is_some_and(|channel| match &channel.selection {
+                ModelSelection::All => false,
+                ModelSelection::None => true,
+                ModelSelection::Whitelist(models) => !models.iter().any(|model| model == id),
+            })
             || picker_order
                 .as_ref()
                 .is_some_and(|visible| !visible.contains(namespaced.unwrap_or(id)));
@@ -188,6 +203,8 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
             Some("此渠道不用于制模执行".into())
         } else if channel_disabled {
             Some("渠道停用".into())
+        } else if saved.is_some_and(|channel| !connection_matches(channel, raw)) {
+            Some("渠道连接已变化，请重新读取执行目录".into())
         } else if row["initialSelectionPending"] == true {
             Some("型号尚待首次选择确认".into())
         } else if hidden {
@@ -250,7 +267,7 @@ pub fn bound_directory(
     context: &ProcessContext,
     snapshot: &UpstreamSnapshot,
 ) -> ModelResult<Directory> {
-    let mut result = build(root, snapshot)?;
+    let mut result = build(root, context, snapshot)?;
     for row in &mut result.rows {
         if row.native_model_id.is_none() {
             row.connection_digest = Some(connection_binding(
@@ -284,7 +301,7 @@ pub fn bind(
     snapshot: &UpstreamSnapshot,
     mut settings: AgentSettings,
 ) -> ModelResult<AgentSettings> {
-    let directory = build(root, snapshot)?;
+    let directory = build(root, context, snapshot)?;
     let chosen = directory
         .rows
         .iter()
@@ -376,13 +393,38 @@ mod tests {
             opencodex_home: root.join("upstream"),
         }
     }
+    fn write_config(context: &ProcessContext, snapshot: &UpstreamSnapshot) {
+        std::fs::create_dir_all(&context.opencodex_home).unwrap();
+        let mut config = snapshot.providers.clone();
+        if let Some(order) = snapshot.order.get("pickerOrder") {
+            config["modelPickerOrder"] = order.clone();
+        }
+        std::fs::write(
+            context.opencodex_home.join("config.json"),
+            serde_json::to_vec(&config).unwrap(),
+        )
+        .unwrap();
+    }
+    fn settings() -> AgentSettings {
+        AgentSettings {
+            provider_id: "custom".into(),
+            model_id: "chosen".into(),
+            reasoning_effort: Some("none".into()),
+            fast: Some(false),
+            channel_id: None,
+            connection_digest: None,
+        }
+    }
     #[test]
     fn full_execution_directory_is_stable_includes_selector_hidden_models_and_explains_native_binding(
     ) {
         let root = tempfile::tempdir().unwrap();
+        let context = context(root.path());
         let snapshot = snapshot();
-        let first = build(root.path(), &snapshot).unwrap();
-        let second = build(root.path(), &snapshot).unwrap();
+        write_config(&context, &snapshot);
+        let saved = config_file::snapshot(root.path(), &context.opencodex_home).unwrap();
+        let first = bound_directory(root.path(), &context, &snapshot).unwrap();
+        let second = bound_directory(root.path(), &context, &snapshot).unwrap();
         assert_eq!(
             first.channels.iter().map(|c| &c.id).collect::<Vec<_>>(),
             second.channels.iter().map(|c| &c.id).collect::<Vec<_>>()
@@ -416,6 +458,17 @@ mod tests {
             .find(|r| r.model.model_id == "chosen")
             .unwrap();
         assert_eq!(chosen.model.label, "custom/chosen");
+        assert_eq!(
+            chosen.model.channel_id,
+            saved
+                .policy
+                .channels
+                .iter()
+                .find(|c| c.connection.provider_id == "custom")
+                .unwrap()
+                .id
+        );
+        assert!(chosen.connection_digest.is_some());
         let native = first
             .rows
             .iter()
@@ -446,6 +499,10 @@ mod tests {
                 .enabled
         );
         assert!(!root.path().join(POLICY_PATH).exists());
+        assert!(!root
+            .path()
+            .join("manager-state/model-execution-source-ids.json")
+            .exists());
     }
     #[test]
     fn saved_execution_identity_rejects_endpoint_auth_or_root_changes_and_preserves_explicit_none_false(
@@ -453,20 +510,8 @@ mod tests {
         let root = tempfile::tempdir().unwrap();
         let context = context(root.path());
         let snapshot = snapshot();
-        let settings = bind(
-            root.path(),
-            &context,
-            &snapshot,
-            AgentSettings {
-                provider_id: "custom".into(),
-                model_id: "chosen".into(),
-                reasoning_effort: Some("none".into()),
-                fast: Some(false),
-                channel_id: None,
-                connection_digest: None,
-            },
-        )
-        .unwrap();
+        write_config(&context, &snapshot);
+        let settings = bind(root.path(), &context, &snapshot, settings()).unwrap();
         require_uuid(settings.channel_id.as_deref().unwrap()).unwrap();
         validate_binding(root.path(), &context, &snapshot, &settings).unwrap();
         assert_eq!(settings.reasoning_effort.as_deref(), Some("none"));
@@ -474,6 +519,7 @@ mod tests {
         let mut changed = snapshot.clone();
         changed.providers["providers"]["custom"]["baseUrl"] =
             json!("https://another.example.test/v1");
+        write_config(&context, &changed);
         assert_eq!(
             validate_binding(root.path(), &context, &changed, &settings)
                 .unwrap_err()
@@ -482,9 +528,11 @@ mod tests {
         );
         let mut changed = snapshot.clone();
         changed.providers["providers"]["custom"]["authMode"] = json!("oauth");
+        write_config(&context, &changed);
         assert!(validate_binding(root.path(), &context, &changed, &settings).is_err());
         let mut other = context;
         other.opencodex_home = root.path().join("other");
+        write_config(&other, &snapshot);
         assert!(validate_binding(root.path(), &other, &snapshot, &settings).is_err());
         let mut legacy = settings.clone();
         legacy.connection_digest = None;
@@ -499,12 +547,249 @@ mod tests {
         );
     }
 
+    #[test]
+    fn file_layout_identity_wins_with_a_corrupt_legacy_draft_and_identity_registry() {
+        let root = tempfile::tempdir().unwrap();
+        let context = context(root.path());
+        let snapshot = snapshot();
+        write_config(&context, &snapshot);
+        let mut layout = config_file::snapshot(root.path(), &context.opencodex_home)
+            .unwrap()
+            .policy;
+        let channel = layout
+            .channels
+            .iter_mut()
+            .find(|c| c.connection.provider_id == "custom")
+            .unwrap();
+        channel.id = uuid::Uuid::new_v4().to_string();
+        channel.label = "文件布局渠道".into();
+        let expected_id = channel.id.clone();
+        std::fs::create_dir_all(root.path().join("manager-state")).unwrap();
+        std::fs::write(
+            root.path().join("manager-state/model-channel-layout.json"),
+            serde_json::to_vec(&layout).unwrap(),
+        )
+        .unwrap();
+        let mut legacy = layout.clone();
+        legacy.channels.iter_mut().for_each(|c| {
+            c.id = uuid::Uuid::new_v4().to_string();
+            c.label = "过期旧副本".into();
+        });
+        std::fs::write(
+            root.path().join(POLICY_PATH),
+            serde_json::to_vec(&legacy).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(root.path().join(DRAFT_PATH), b"{broken draft").unwrap();
+        let registry = root
+            .path()
+            .join("manager-state/model-execution-source-ids.json");
+        std::fs::write(&registry, b"{broken registry").unwrap();
+        for _ in 0..2 {
+            let actual = bound_directory(root.path(), &context, &snapshot).unwrap();
+            let channel = actual
+                .channels
+                .iter()
+                .find(|c| c.provider_id == "custom")
+                .unwrap();
+            assert_eq!(channel.id, expected_id);
+            assert_eq!(channel.label, "文件布局渠道");
+            let row = actual
+                .rows
+                .iter()
+                .find(|r| r.model.model_id == "chosen")
+                .unwrap();
+            assert_eq!(row.model.channel_id, expected_id);
+            assert_eq!(row.model.label, "文件布局渠道/chosen");
+            let bound = bind(
+                root.path(),
+                &context,
+                &snapshot,
+                AgentSettings {
+                    channel_id: Some(expected_id.clone()),
+                    connection_digest: row.connection_digest.clone(),
+                    ..settings()
+                },
+            )
+            .unwrap();
+            validate_binding(root.path(), &context, &snapshot, &bound).unwrap();
+        }
+        assert_eq!(std::fs::read(registry).unwrap(), b"{broken registry");
+        assert_eq!(
+            std::fs::read(root.path().join(DRAFT_PATH)).unwrap(),
+            b"{broken draft"
+        );
+        std::fs::write(root.path().join(POLICY_PATH), b"{broken legacy policy").unwrap();
+        let actual = bound_directory(root.path(), &context, &snapshot).unwrap();
+        assert_eq!(
+            actual
+                .channels
+                .iter()
+                .find(|c| c.provider_id == "custom")
+                .unwrap()
+                .id,
+            expected_id
+        );
+    }
+
+    #[test]
+    fn changed_file_connection_or_recreated_identity_cannot_reuse_the_old_runtime_binding() {
+        let root = tempfile::tempdir().unwrap();
+        let context = context(root.path());
+        let snapshot = snapshot();
+        write_config(&context, &snapshot);
+        let bound = bind(root.path(), &context, &snapshot, settings()).unwrap();
+        let mut changed = snapshot.clone();
+        changed.providers["providers"]["custom"]["baseUrl"] =
+            json!("https://changed.example.test/v1");
+        write_config(&context, &changed);
+        let bytes = std::fs::read(context.opencodex_home.join("config.json")).unwrap();
+        // Even an older upstream read cannot execute after the file changed.
+        let directory = bound_directory(root.path(), &context, &snapshot).unwrap();
+        let row = directory
+            .rows
+            .iter()
+            .find(|r| r.model.model_id == "chosen")
+            .unwrap();
+        assert!(!row.model.enabled);
+        assert!(row
+            .unavailable_reason
+            .as_deref()
+            .unwrap()
+            .contains("连接已变化"));
+        assert!(validate_binding(root.path(), &context, &snapshot, &bound).is_err());
+        assert_eq!(
+            std::fs::read(context.opencodex_home.join("config.json")).unwrap(),
+            bytes
+        );
+        write_config(&context, &snapshot);
+        let mut layout = config_file::snapshot(root.path(), &context.opencodex_home)
+            .unwrap()
+            .policy;
+        let recreated = layout
+            .channels
+            .iter_mut()
+            .find(|c| c.connection.provider_id == "custom")
+            .unwrap();
+        recreated.id = uuid::Uuid::new_v4().to_string();
+        recreated.label = "重建渠道".into();
+        std::fs::create_dir_all(root.path().join("manager-state")).unwrap();
+        std::fs::write(
+            root.path().join("manager-state/model-channel-layout.json"),
+            serde_json::to_vec(&layout).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            validate_binding(root.path(), &context, &snapshot, &bound)
+                .unwrap_err()
+                .code,
+            "agent_binding"
+        );
+    }
+
+    #[test]
+    fn exact_file_model_without_an_execution_route_can_be_saved_without_changing_preferences() {
+        let root = tempfile::tempdir().unwrap();
+        let context = context(root.path());
+        let snapshot = snapshot();
+        write_config(&context, &snapshot);
+        let original = bind(root.path(), &context, &snapshot, settings()).unwrap();
+        let current = config_file::snapshot(root.path(), &context.opencodex_home).unwrap();
+        let mut policy = current.policy;
+        let channel = policy
+            .channels
+            .iter_mut()
+            .find(|c| c.connection.provider_id == "custom")
+            .unwrap();
+        let exact_id = "site/exact-unlisted-model";
+        channel.discovered.push(DiscoveredModel {
+            id: exact_id.into(),
+            label: exact_id.into(),
+            rules: ModelRules::default(),
+        });
+        channel.model_order.push(exact_id.into());
+        channel.selection = ModelSelection::Whitelist(vec![exact_id.into()]);
+        let result = config_file::save(
+            root.path(),
+            &context.opencodex_home,
+            config_file::SaveRequest {
+                expected_file: current.policy_digest,
+                policy,
+                credentials: vec![],
+            },
+        )
+        .unwrap();
+        assert!(result.changed);
+        let saved_channel = result
+            .snapshot
+            .policy
+            .channels
+            .iter()
+            .find(|c| c.connection.provider_id == "custom")
+            .unwrap();
+        assert!(saved_channel.discovered.iter().any(|m| m.id == exact_id));
+        let bytes = std::fs::read(context.opencodex_home.join("config.json")).unwrap();
+        let chosen = AgentSettings {
+            model_id: exact_id.into(),
+            ..settings()
+        };
+        let error = bind(root.path(), &context, &snapshot, chosen.clone()).unwrap_err();
+        assert_eq!(error.code, "agent_model");
+        // A newer saved selection also invalidates a previously selected model
+        // while the upstream response still contains its old picker order.
+        assert_eq!(
+            validate_binding(root.path(), &context, &snapshot, &original)
+                .unwrap_err()
+                .code,
+            "agent_model"
+        );
+        assert_eq!(chosen.model_id, exact_id);
+        assert_eq!(
+            std::fs::read(context.opencodex_home.join("config.json")).unwrap(),
+            bytes
+        );
+        let mut removed = snapshot.clone();
+        removed.providers["providers"]
+            .as_object_mut()
+            .unwrap()
+            .remove("custom");
+        write_config(&context, &removed);
+        let directory = bound_directory(root.path(), &context, &snapshot).unwrap();
+        assert!(!directory.channels.iter().any(|c| c.provider_id == "custom"));
+        assert!(!directory
+            .rows
+            .iter()
+            .any(|r| r.model.provider_id == "custom"));
+    }
+
     /// WP-64 / §29.1：同一原始 ID 属于两个渠道时用 渠道名/原始ID 区分，不读旧展示名。
     #[test]
     fn catalog_labels_distinguish_same_raw_id_across_channels() {
-        let labels = ["FeiMao-CNM", "FeiMao-Claude"]
+        let root = tempfile::tempdir().unwrap();
+        let context = context(root.path());
+        let snapshot = UpstreamSnapshot {
+            providers: json!({"providers":{
+                "first":{"name":"FeiMao-CNM","adapter":"openai-chat","baseUrl":"https://first.example.test/v1","selectedModels":["deepseek-v4.1-flash"]},
+                "second":{"name":"FeiMao-Claude","adapter":"openai-chat","baseUrl":"https://second.example.test/v1","selectedModels":["deepseek-v4.1-flash"]}
+            }}),
+            models: json!([
+                {"provider":"first","id":"deepseek-v4.1-flash","displayName":"旧友好名称"},
+                {"provider":"second","id":"deepseek-v4.1-flash","displayName":"旧友好名称"},
+                {"provider":"openai","native":true,"id":"native-model","displayName":"原生型号"}
+            ]),
+            order: json!({}),
+            ..snapshot()
+        };
+        write_config(&context, &snapshot);
+        let directory = bound_directory(root.path(), &context, &snapshot).unwrap();
+        let rows = directory
+            .rows
             .iter()
-            .map(|channel| format!("{channel}/deepseek-v4.1-flash"))
+            .filter(|r| r.native_model_id.is_none())
+            .collect::<Vec<_>>();
+        let labels = rows
+            .iter()
+            .map(|row| row.model.label.as_str())
             .collect::<Vec<_>>();
         assert_eq!(
             labels,
@@ -514,17 +799,17 @@ mod tests {
             ]
         );
         assert_ne!(labels[0], labels[1]);
+        assert_ne!(rows[0].model.channel_id, rows[1].model.channel_id);
+        assert!(rows.iter().all(|row| row.model.enabled));
         // 旧友好名称不得作为任何一项的主名称。
         assert!(labels.iter().all(|label| !label.contains("旧友好名称")));
         // 原生渠道沿原生身份，不补渠道前缀。
-        assert!(crate::modules::model_config::compiler::channel_is_native(
-            "openai"
-        ));
-        assert!(crate::modules::model_config::compiler::channel_is_native(
-            "combo"
-        ));
-        assert!(!crate::modules::model_config::compiler::channel_is_native(
-            "ocxd_abc123"
-        ));
+        let native = directory
+            .rows
+            .iter()
+            .find(|row| row.native_model_id.is_some())
+            .unwrap();
+        assert_eq!(native.model.label, "原生型号");
+        assert!(native.connection_digest.is_none());
     }
 }

@@ -1670,6 +1670,47 @@ pub(super) fn bind_portable(
         &System,
     )
 }
+
+/// Decode only the immutable, explicitly adopted import authorization. The
+/// ordinary file writer owns the final atomic config replacement; this helper
+/// neither contacts the running server nor installs an account/provider.
+pub(super) fn imported_file_fields(
+    root: &Path,
+    id: &str,
+    provider: &str,
+    public: &serde_json::Value,
+    backup: &Backup,
+) -> ModelResult<serde_json::Value> {
+    imported_file_fields_with(root, id, provider, public, backup, &System)
+}
+fn imported_file_fields_with(
+    root: &Path,
+    id: &str,
+    provider: &str,
+    public: &serde_json::Value,
+    backup: &Backup,
+    credentials: &impl SafeStore,
+) -> ModelResult<serde_json::Value> {
+    require_uuid(id)?;
+    let value = unseal(root, backup, credentials)?;
+    let transport: Auth = serde_json::from_value(public.clone())?;
+    if backup.provider != provider
+        || value.provider != provider
+        || value.binding != format!("channel-import/{id}")
+        || !transport_matches(&transport, &value.auth)
+    {
+        return Err(invalid(
+            "provider_auth_scope",
+            "导入授权与当前渠道、服务或协议不同，未写入",
+        ));
+    }
+    references_match(&value, provider)?;
+    let mut fields = private_fields(&value.auth)?;
+    if let Some(key) = &value.auth.api_key {
+        fields["apiKey"] = serde_json::json!(key);
+    }
+    Ok(fields)
+}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1714,6 +1755,52 @@ mod tests {
             mcp_servers: None,
             desktop_executor: None,
         }
+    }
+    #[test]
+    fn file_import_preserves_pool_headers_and_active_key_without_runtime_binding() {
+        let root = tempfile::tempdir().unwrap();
+        let memory = Memory::default();
+        let id = uuid::Uuid::new_v4().to_string();
+        let public = json!({"adapter":"openai-chat","authMode":"key","baseUrl":"https://fixture.example.test/v1"});
+        let backup = freeze(
+            root.path(),
+            "imported",
+            &Protected {
+                provider: "imported".into(),
+                binding: format!("channel-import/{id}"),
+                auth: auth(),
+                reference_digests: BTreeMap::new(),
+            },
+            &memory,
+        )
+        .unwrap();
+        let mut fields =
+            imported_file_fields_with(root.path(), &id, "imported", &public, &backup, &memory)
+                .unwrap();
+        assert_eq!(fields["apiKeyPool"].as_array().unwrap().len(), 2);
+        assert!(fields["apiKey"].as_str() == Some("fixture-second-SECRET"));
+        assert!(fields["headers"]["X-Authorization"].as_str() == Some("fixture-header-SECRET"));
+        assert!(imported_file_fields_with(
+            root.path(),
+            &uuid::Uuid::new_v4().to_string(),
+            "imported",
+            &public,
+            &backup,
+            &memory
+        )
+        .is_err());
+        let mut changed = public;
+        changed["baseUrl"] = json!("https://elsewhere.example.test/v1");
+        assert!(imported_file_fields_with(
+            root.path(),
+            &id,
+            "imported",
+            &changed,
+            &backup,
+            &memory
+        )
+        .is_err());
+        erase_value(&mut fields);
     }
     #[test]
     fn portable_pool_is_complete_and_private_blocks_never_enter_public_fields() {

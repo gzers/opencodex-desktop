@@ -4,19 +4,20 @@ import {createPinia,setActivePinia} from 'pinia'
 import NewChannelDialog from '@/features/models/NewChannelDialog.vue'
 import {emptyRules,modelApi,type ModelSnapshot} from '@/features/models/api'
 import {useModelsStore} from '@/features/models/store'
-vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{latestNewChannel:vi.fn(),previewNewChannel:vi.fn(),addNewChannel:vi.fn(),newChannelResult:vi.fn(),stage:vi.fn(),discover:vi.fn(),forgetCredential:vi.fn()}}))
+const ipc=vi.hoisted(()=>vi.fn())
+vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
+vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{previewNewChannel:vi.fn(),discover:vi.fn(),forgetCredential:vi.fn()}}))
 const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'}
 function render(){return mount(NewChannelDialog,{global:{stubs:{UiDialog:dialog,UiSelectField:true}}})}
 function button(wrapper:ReturnType<typeof render>,name:string){return wrapper.findAll('button').find(b=>b.text()===name)!}
 async function fill(wrapper:ReturnType<typeof render>,label:string,value:string){await wrapper.findAll('label').find(l=>l.text()===label)!.get('input').setValue(value)}
 async function firstStep(wrapper:ReturnType<typeof render>){await fill(wrapper,'渠道名称','独立渠道');await fill(wrapper,'运行渠道标识','custom-new');await fill(wrapper,'服务基地址','https://example.test/v1');await fill(wrapper,'API Key','fixture-new-SECRET');await button(wrapper,'下一步').trigger('click');await flushPromises()}
 let pinia:ReturnType<typeof createPinia>
-beforeEach(()=>{pinia=createPinia();setActivePinia(pinia);vi.clearAllMocks();vi.mocked(modelApi.latestNewChannel).mockResolvedValue(null);const snapshot={policy:{schemaVersion:1,templateRefs:[],channels:[]},workspace:null,workspaceDigest:'w',policyDigest:'p',libraryDigest:'l',library:{schemaVersion:1,templates:[]}} as ModelSnapshot;useModelsStore().acceptTransfer(snapshot);vi.spyOn(useModelsStore(),'persistDraft').mockResolvedValue()})
+beforeEach(()=>{pinia=createPinia();setActivePinia(pinia);vi.clearAllMocks();const snapshot={policy:{schemaVersion:1,templateRefs:[],channels:[]},workspace:null,workspaceDigest:'w',policyDigest:'p',libraryDigest:'l',library:{schemaVersion:1,templates:[]}} as ModelSnapshot;useModelsStore().acceptTransfer(snapshot)})
 afterEach(()=>pinia._s.forEach(store=>store.$dispose()))
 describe('new channel two-step buffer',()=>{
  it.each([[30,17],[104,32]])('retains a full %i-row discovery while explicitly adding only %i selected IDs',async(total,count)=>{
   const rows=Array.from({length:total},(_,i)=>({id:'exact/'+i.toString().padStart(3,'0'),label:'Model '+i,rules:emptyRules()}));vi.mocked(modelApi.previewNewChannel).mockResolvedValue({models:rows,credentialRef:null,elapsedMs:3})
-  vi.mocked(modelApi.addNewChannel).mockImplementation(async request=>({id:request.id,channel:request.channel,phase:'committed',error:null,snapshot:{...useModelsStore().snapshot!,workspace:{basePolicy:'p',policy:{...useModelsStore().snapshot!.policy,channels:[request.channel]}},workspaceDigest:'joined'}}))
   const wrapper=render();await flushPromises();await firstStep(wrapper);await button(wrapper,'获取模型列表').trigger('click');await flushPromises()
   expect(wrapper.text()).toContain('已选 0 / '+total);for(const row of rows.slice(0,count))await wrapper.get('input[aria-label="选择新渠道型号 '+row.id+'"]').setValue(true)
   await wrapper.get('input[aria-label="新渠道型号搜索"]').setValue('exact/'+(total-1).toString().padStart(3,'0'));expect(wrapper.text()).toContain('已选 '+count+' / '+total);expect(wrapper.text()).toContain('当前显示 1 项')
@@ -27,12 +28,12 @@ describe('new channel two-step buffer',()=>{
   const row={id:'manual/exact',label:'Manual',rules:emptyRules()};vi.mocked(modelApi.previewNewChannel).mockResolvedValueOnce({models:[row],credentialRef:null,elapsedMs:1}).mockRejectedValueOnce({code:'discovery_failed',message:'发现接口返回HTTP409，没有执行生成请求'}).mockResolvedValueOnce({models:[],credentialRef:null,elapsedMs:1})
   const wrapper=render();await flushPromises();await firstStep(wrapper);await button(wrapper,'获取模型列表').trigger('click');await flushPromises();await wrapper.get('input[aria-label="选择新渠道型号 manual/exact"]').setValue(true)
   await button(wrapper,'获取模型列表').trigger('click');await flushPromises();expect(wrapper.get('[role=alert]').text()).toContain('HTTP409');expect(wrapper.text()).toContain('已选 1 / 1')
-  await button(wrapper,'获取模型列表').trigger('click');await flushPromises();expect(wrapper.find('[role=alert]').exists()).toBe(false);expect(wrapper.text()).toContain('清单为空');expect(wrapper.text()).toContain('已选 1 / 1');expect(wrapper.get<HTMLInputElement>('input[aria-label="选择新渠道型号 manual/exact"]').element.checked).toBe(true);expect(modelApi.addNewChannel).not.toHaveBeenCalled();wrapper.unmount()
+  await button(wrapper,'获取模型列表').trigger('click');await flushPromises();expect(wrapper.find('[role=alert]').exists()).toBe(false);expect(wrapper.text()).toContain('清单为空');expect(wrapper.text()).toContain('已选 1 / 1');expect(wrapper.get<HTMLInputElement>('input[aria-label="选择新渠道型号 manual/exact"]').element.checked).toBe(true);wrapper.unmount()
  })
 
  it('next validates locally and closing never inserts an empty channel or persists a key',async()=>{
   const wrapper=render();await flushPromises();await firstStep(wrapper)
-  expect(wrapper.text()).toContain('2 / 2');expect(modelApi.previewNewChannel).not.toHaveBeenCalled();expect(modelApi.addNewChannel).not.toHaveBeenCalled();expect(modelApi.discover).not.toHaveBeenCalled()
+  expect(wrapper.text()).toContain('2 / 2');expect(modelApi.previewNewChannel).not.toHaveBeenCalled();expect(modelApi.discover).not.toHaveBeenCalled()
   await button(wrapper,'关闭').trigger('click');expect(wrapper.emitted('close')).toHaveLength(1);expect(useModelsStore().channelDraft!.channels).toHaveLength(0);expect(modelApi.forgetCredential).not.toHaveBeenCalled();wrapper.unmount()
  })
  it('discovery is read-only, starts unselected and a cancelled late result cannot change the buffer',async()=>{
@@ -48,7 +49,7 @@ describe('new channel two-step buffer',()=>{
   const store=useModelsStore(),channel=store.channelDraft!.channels[0]!
   expect(channel.selection).toEqual({mode:'whitelist',models:['native/manual']});expect(channel.connection.enabled).toBe(false)
   expect(store.credentialEdits[channel.id]).toEqual({channelId:channel.id,action:'replace',value:'fixture-new-SECRET'})
-  expect(modelApi.addNewChannel).not.toHaveBeenCalled();expect(modelApi.stage).not.toHaveBeenCalled();expect(modelApi.newChannelResult).not.toHaveBeenCalled();expect(wrapper.emitted('added')?.[0]).toEqual([channel.id]);wrapper.unmount()
+  expect(wrapper.emitted('added')?.[0]).toEqual([channel.id]);expect(ipc).not.toHaveBeenCalled();wrapper.unmount()
  })
  it('same connection back/next keeps selection but a changed target clears old IDs',async()=>{
   vi.mocked(modelApi.previewNewChannel).mockResolvedValue({models:[{id:'first',label:'first',rules:{} as never}],credentialRef:null,elapsedMs:1})
@@ -65,12 +66,10 @@ describe('new channel two-step buffer',()=>{
   await fill(wrapper,'API Key','replacement-SECRET');await button(wrapper,'下一步').trigger('click');expect(modelApi.previewNewChannel).not.toHaveBeenCalled()
   vi.mocked(modelApi.previewNewChannel).mockResolvedValue({models:[{id:'new',label:'new',rules}],credentialRef:null,elapsedMs:1});await button(wrapper,'获取模型列表').trigger('click');await flushPromises();expect(wrapper.text()).toContain('已选 0 / 1');expect(modelApi.previewNewChannel).toHaveBeenCalledWith(expect.objectContaining({url:'https://new.example.test/v1',credentialRef:null,apiKey:'replacement-SECRET'}))
   await wrapper.get('input[aria-label="选择新渠道型号 new"]').setValue(true)
-  vi.mocked(modelApi.addNewChannel).mockImplementation(async request=>({id:request.id,channel:request.channel,phase:'committed',error:null,snapshot:{...store.snapshot!,workspace:{basePolicy:'p',policy:{...store.snapshot!.policy,channels:[request.channel]}},workspaceDigest:'updated'}}))
   await button(wrapper,'确认连接并加入草稿').trigger('click');await flushPromises();const request={channel:useModelsStore().channelDraft!.channels.at(-1)!}
-  expect(modelApi.addNewChannel).not.toHaveBeenCalled();expect(request.channel.id).toBe(original.id);expect(request.channel.connection.providerId).toBe('stable-provider');expect(request.channel.connection.enabled).toBe(true);expect(request.channel.connection.credentialRef).toBe(null);expect(request.channel.selection).toEqual({mode:'whitelist',models:['new']});expect(request.channel.modelOrder).toEqual(['old','new']);expect(request.channel.defaults).toEqual(original.defaults);expect(modelApi.discover).not.toHaveBeenCalled();wrapper.unmount()
+  expect(request.channel.id).toBe(original.id);expect(request.channel.connection.providerId).toBe('stable-provider');expect(request.channel.connection.enabled).toBe(true);expect(request.channel.connection.credentialRef).toBe(null);expect(request.channel.selection).toEqual({mode:'whitelist',models:['new']});expect(request.channel.modelOrder).toEqual(['old','new']);expect(request.channel.defaults).toEqual(original.defaults);expect(modelApi.discover).not.toHaveBeenCalled();wrapper.unmount()
  })
  it('does not resurrect a retired unfinished admission when opening a new channel',async()=>{
-  vi.mocked(modelApi.latestNewChannel).mockRejectedValue({message:'retired pending operation'})
-  const wrapper=render();await flushPromises();expect(wrapper.text()).not.toContain('待核对');expect(wrapper.text()).toContain('1 / 2');expect(modelApi.latestNewChannel).not.toHaveBeenCalled();expect(wrapper.find('input[type=password]').exists()).toBe(true);wrapper.unmount()
+  const wrapper=render();await flushPromises();expect(wrapper.text()).not.toContain('待核对');expect(wrapper.text()).toContain('1 / 2');expect(wrapper.find('input[type=password]').exists()).toBe(true);expect(ipc).not.toHaveBeenCalled();wrapper.unmount()
  })
 })

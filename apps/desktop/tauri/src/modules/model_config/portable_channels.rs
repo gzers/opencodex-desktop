@@ -9,6 +9,59 @@ use super::{
 };
 use serde_json::Value;
 use std::{collections::BTreeSet, path::Path};
+/// The normal transfer inventory shares file identities, selection, ordering
+/// and layout adoptions with the models page. No CLI catalog is consulted.
+pub fn catalog_file(root: &Path, home: &Path) -> ModelResult<Vec<ChannelPolicy>> {
+    Ok(super::config_file::snapshot(root, home)?.policy.channels)
+}
+pub fn export_file(root: &Path, home: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
+    let snapshot = super::config_file::snapshot(root, home)?;
+    if scope
+        .channel_ids
+        .iter()
+        .any(|id| !snapshot.policy.channels.iter().any(|c| &c.id == id))
+    {
+        return Err(invalid(
+            "provider_scope",
+            "所选文件渠道已不存在，请重新读取范围",
+        ));
+    }
+    let mut package = transfer::export_snapshot(&snapshot, scope.clone())?;
+    for channel in package
+        .payload
+        .policy
+        .iter_mut()
+        .flat_map(|p| &mut p.channels)
+    {
+        if channel.family_scope.is_some() {
+            continue;
+        }
+        let source = snapshot
+            .policy
+            .channels
+            .iter()
+            .find(|c| c.id == channel.id)
+            .ok_or_else(|| invalid("provider_scope", "所选文件渠道已不存在"))?;
+        let raw = super::provider_auth::source_row(home, &source.connection.provider_id)?;
+        let fields = super::provider_fields::public_from_raw(&raw)?;
+        if let Some(connection) = channel.connection.as_mut() {
+            connection.provider = Some(fields);
+        }
+    }
+    // Restrict raw fields after attaching them so subsets cannot leak other
+    // models' public overrides. Family fragments deliberately have no provider.
+    transfer::scope_models(&mut package, &scope.channel_ids, &scope.channel_models)?;
+    package.format_version = transfer::package_version(&package.payload);
+    package.digest = super::store::sha256(&serde_json::to_vec(&package.payload)?);
+    transfer::validate_package(&package)?;
+    if super::config_file::snapshot(root, home)?.policy_digest != snapshot.policy_digest {
+        return Err(invalid(
+            "provider_source_drift",
+            "导出期间渠道源文件已改变，请重新比较",
+        ));
+    }
+    Ok(package)
+}
 pub fn catalog(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Vec<ChannelPolicy>> {
     let local = ModelStore::new(root).load()?;
     let identities = super::execution_directory::stable_ids(root, snapshot)?;

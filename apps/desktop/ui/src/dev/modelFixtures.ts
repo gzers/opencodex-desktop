@@ -26,7 +26,6 @@ export function installModelFixtures() {
   modelApi.load=async()=>structuredClone(snapshot)
   modelApi.credential=async()=>({configured:true,value:'example-demo-key',source:'配置文件',viewable:true})
   modelApi.writeFile=async(_expected,policy)=>{snapshot={...snapshot,policy:structuredClone(policy),workspace:null,policyDigest:crypto.randomUUID()};return{snapshot:structuredClone(snapshot),changed:true}}
-  modelApi.stage=async(_policy,_workspace,policy)=>{snapshot={...snapshot,workspace:{basePolicy:snapshot.policyDigest,policy:structuredClone(policy)},workspaceDigest:'visual-workspace'};return structuredClone(snapshot)}
   const visualPlan=(policy:import('@/features/models/api').ModelPolicy,scope?:import('@/features/models/api').SaveScope):import('@/features/models/api').SavePlan=>{const changed=policy.channels.filter(c=>JSON.stringify(c)!==JSON.stringify(snapshot.policy.channels.find(old=>old.id===c.id)));return{id:crypto.randomUUID(),phase:'prepared',catalogCount:36,currentCatalogCount:36,changedChannels:changed.filter(c=>!scope||scope.channelIds.includes(c.id)).map(c=>c.label),deferredChannels:scope?changed.filter(c=>!scope.channelIds.includes(c.id)).map(c=>c.label):[],error:null}}
   modelApi.preparePolicy=async policy=>visualPlan(policy)
   modelApi.preparePolicyScoped=async(policy,_library,_saved,_workspace,scope)=>visualPlan(policy,scope)
@@ -50,11 +49,7 @@ export function installModelFixtures() {
 
   modelApi.agentConversation=async id=>structuredClone(conversations.get(id??'new')??null)
   modelApi.saveAgentConversation=async request=>{const saved={templateId:request.templateId,digest:crypto.randomUUID(),content:structuredClone(request.content)};conversations.set(request.templateId??'new',saved);return saved}
-  const newChannelResults=new Map<string,import('@/features/models/api').NewChannelOutcome>()
-  modelApi.latestNewChannel=async()=>null
   modelApi.previewNewChannel=async()=>({models:structuredClone(channels[0]!.discovered),credentialRef:null,elapsedMs:12})
-  modelApi.addNewChannel=async request=>{const channel=structuredClone(request.channel);snapshot={...snapshot,workspace:{basePolicy:snapshot.policyDigest,policy:{...(snapshot.workspace?.policy??snapshot.policy),channels:request.replace?(snapshot.workspace?.policy.channels??snapshot.policy.channels).map(c=>c.id===channel.id?channel:c):[...(snapshot.workspace?.policy.channels??snapshot.policy.channels),channel]}},workspaceDigest:'visual-new-channel'};const outcome={id:request.id,channel,phase:'committed' as const,error:null,snapshot:structuredClone(snapshot)};newChannelResults.set(request.id,outcome);return structuredClone(outcome)}
-  modelApi.newChannelResult=async id=>{const result=newChannelResults.get(id);if(!result)throw {message:'显式DEV加入记录不存在'};return structuredClone(result)}
   // 审计入口：?partialSave=1 时假装「上次写入未完整结束」，用于实屏核对流程第 ④ 态。
   // 只影响 DEV 夹具，不写入任何真实状态。
   const partialSave=new URLSearchParams(location.search).get('partialSave')==='1'

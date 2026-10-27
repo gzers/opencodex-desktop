@@ -25,6 +25,32 @@ impl TargetFileLock {
         Self::try_lock_with_timeout(target, TARGET_LOCK_TIMEOUT)
     }
 
+    /// Windows byte-range locks deny reads through a second handle, even in
+    /// this process. Inspect bounded legacy lock metadata through its owning
+    /// handle while retaining the same exclusive lock and inode.
+    pub fn read_metadata(&self, limit: u64) -> Result<Vec<u8>, AppError> {
+        use std::io::{Read, Seek, SeekFrom};
+        if self._file.metadata().map_err(fs_error)?.len() > limit {
+            return Err(fs_error(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "lock metadata exceeds limit",
+            )));
+        }
+        let mut file = &self._file;
+        file.seek(SeekFrom::Start(0)).map_err(fs_error)?;
+        let mut bytes = Vec::new();
+        file.take(limit.saturating_add(1))
+            .read_to_end(&mut bytes)
+            .map_err(fs_error)?;
+        if bytes.len() as u64 > limit {
+            return Err(fs_error(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "lock metadata exceeds limit",
+            )));
+        }
+        Ok(bytes)
+    }
+
     pub fn try_lock_with_timeout(target: &Path, timeout: Duration) -> Result<Self, AppError> {
         let lock_path = lock_path_for(target);
         if let Some(parent) = lock_path.parent() {
@@ -104,6 +130,21 @@ mod tests {
             ._file
             .write_all(b"holder")
             .expect("write lock metadata");
+    }
+    #[test]
+    fn owning_handle_reads_bounded_metadata_without_releasing_the_lock() {
+        let temp = tempfile::tempdir().unwrap();
+        let target = temp.path().join("legacy");
+        std::fs::write(lock_path_for(&target), b"legacy metadata").unwrap();
+        let guard = TargetFileLock::lock(&target).unwrap();
+        assert_eq!(guard.read_metadata(15).unwrap(), b"legacy metadata");
+        assert!(guard.read_metadata(14).is_err());
+        assert!(TargetFileLock::try_lock_with_timeout(&target, Duration::ZERO).is_err());
+        drop(guard);
+        assert_eq!(
+            std::fs::read(lock_path_for(&target)).unwrap(),
+            b"legacy metadata"
+        );
     }
 
     #[test]

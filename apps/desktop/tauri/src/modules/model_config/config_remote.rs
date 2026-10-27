@@ -187,7 +187,10 @@ impl Scope {
         }
     }
     fn export(&self, root: &Path) -> ModelResult<ExportScope> {
-        let snapshot = ModelStore::new(root).load()?;
+        let snapshot = match self.upstream_root.as_deref() {
+            Some(home) => super::config_file::snapshot(root, home)?,
+            None => ModelStore::new(root).load()?,
+        };
         let mut refs = vec![];
         let template_ids = if self.all_templates {
             snapshot
@@ -211,7 +214,9 @@ impl Scope {
                 revision_id: r.id.clone(),
             }));
         }
-        let channel_inventory = if let Some(upstream) = &self.upstream_snapshot {
+        let channel_inventory = if self.upstream_root.is_some() {
+            snapshot.policy.channels.clone()
+        } else if let Some(upstream) = &self.upstream_snapshot {
             super::portable_channels::catalog(root, upstream)?
         } else {
             snapshot.policy.channels.clone()
@@ -509,6 +514,39 @@ pub async fn download_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     home: Option<&Path>,
     unchanged: F,
 ) -> ModelResult<IncomingPlan> {
+    download_bound_context(root, transport, config, passphrase, home, None, unchanged).await
+}
+#[allow(clippy::too_many_arguments)]
+pub async fn download_context_file<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
+    root: &Path,
+    transport: &T,
+    config: &WebDavConfig,
+    passphrase: Option<&str>,
+    local_home: Option<&Path>,
+    config_home: &Path,
+    unchanged: F,
+) -> ModelResult<IncomingPlan> {
+    download_bound_context(
+        root,
+        transport,
+        config,
+        passphrase,
+        local_home,
+        Some(config_home),
+        unchanged,
+    )
+    .await
+}
+#[allow(clippy::too_many_arguments)]
+async fn download_bound_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
+    root: &Path,
+    transport: &T,
+    config: &WebDavConfig,
+    passphrase: Option<&str>,
+    home: Option<&Path>,
+    config_home: Option<&Path>,
+    unchanged: F,
+) -> ModelResult<IncomingPlan> {
     let scope = load_scope(root)?;
     let base = remote::pointer_for(remote::CONFIG, transport, config)
         .await?
@@ -548,6 +586,7 @@ pub async fn download_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         .collect();
     let mut manager = scope.manager();
     manager.local_home = home.map(Path::to_path_buf);
+    manager.upstream_root = config_home.map(Path::to_path_buf);
     manager.account_ids = remote_account_ids(&scope, &summary.manager.accounts);
     if scope.all_skills {
         manager.skill_names = summary
@@ -613,6 +652,165 @@ pub async fn download_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
 mod tests {
     use super::super::remote::tests::Memory;
     use super::*;
+    #[tokio::test]
+    async fn file_channels_use_the_same_export_and_webdav_source_without_retired_policy_or_cli() {
+        use super::super::{config_file, portable_channels};
+        use serde_json::json;
+        let remote = Memory::default();
+        let source = tempfile::tempdir().unwrap();
+        let source_home = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let target_home = tempfile::tempdir().unwrap();
+        let mut raw = json!({"providers":{
+            "source":{"adapter":"openai-chat","baseUrl":"https://source.example.test/v1","models":["native/custom/a","native/custom-b"],"selectedModels":["native/custom-b"],"modelAliases":{"native/custom/a":"keep-alias"},"note":"current-file"},
+            "other":{"adapter":"ollama-native","baseUrl":"http://127.0.0.1:11434","models":["local:tag"],"newModelPolicy":"off"}
+        }});
+        std::fs::write(
+            source_home.path().join("config.json"),
+            serde_json::to_vec(&raw).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            target_home.path().join("config.json"),
+            br#"{"providers":{},"localOnly":true}"#,
+        )
+        .unwrap();
+        for root in [source.path(), target.path()] {
+            std::fs::create_dir_all(root.join("manager-state")).unwrap();
+            std::fs::write(root.join(POLICY_PATH), b"retired broken policy").unwrap();
+            std::fs::write(root.join(DRAFT_PATH), b"retired broken draft").unwrap();
+        }
+        let source_scope = save_scope(
+            source.path(),
+            Scope {
+                all_channels: true,
+                include_global: true,
+                preferences: false,
+                extensions: false,
+                upstream_root: Some(source_home.path().into()),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let file = transfer::prepare_file_scope(
+            source.path(),
+            source_scope.export(source.path()).unwrap(),
+            None,
+            false,
+            &source_scope.manager(),
+        )
+        .unwrap();
+        let prepared = prepare(
+            source.path(),
+            &remote,
+            &config(),
+            "file-bound",
+            source_scope.clone(),
+            None,
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        assert_eq!(
+            serde_json::to_value(&prepared.package.payload).unwrap(),
+            serde_json::to_value(&file.package.payload).unwrap()
+        );
+        assert_eq!(
+            prepared
+                .package
+                .payload
+                .policy
+                .as_ref()
+                .unwrap()
+                .channels
+                .len(),
+            2
+        );
+        publish(
+            source.path(),
+            &remote,
+            &config(),
+            &prepared.id,
+            "file-bound",
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        save_scope(
+            target.path(),
+            Scope {
+                all_channels: true,
+                include_global: true,
+                preferences: false,
+                extensions: false,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let saved = config_file::snapshot(target.path(), target_home.path()).unwrap();
+        let incoming = download_context_file(
+            target.path(),
+            &remote,
+            &config(),
+            None,
+            None,
+            target_home.path(),
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        assert_eq!(incoming.file_home.as_deref(), Some(target_home.path()));
+        assert_eq!(incoming.expected_policy, saved.policy_digest);
+        let adopted = file_objects::accept(target.path(), &incoming.id, false, None).unwrap();
+        assert_eq!(adopted.policy, saved.policy);
+        assert_eq!(adopted.policy_digest, saved.policy_digest);
+        assert_eq!(
+            adopted.workspace.as_ref().unwrap().base_policy,
+            saved.policy_digest
+        );
+        assert_eq!(adopted.workspace.unwrap().policy.channels.len(), 2);
+        assert_eq!(
+            config_file::snapshot(target.path(), target_home.path())
+                .unwrap()
+                .policy,
+            saved.policy
+        );
+        assert_eq!(
+            std::fs::read(target.path().join(DRAFT_PATH)).unwrap(),
+            b"retired broken draft"
+        );
+        raw["providers"]["source"]["note"] = json!("file-only-later");
+        std::fs::write(
+            source_home.path().join("config.json"),
+            serde_json::to_vec(&raw).unwrap(),
+        )
+        .unwrap();
+        let next = prepare(
+            source.path(),
+            &remote,
+            &config(),
+            "file-bound",
+            source_scope,
+            None,
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        let source_id = portable_channels::catalog_file(source.path(), source_home.path())
+            .unwrap()
+            .into_iter()
+            .find(|c| c.connection.provider_id == "source")
+            .unwrap()
+            .id;
+        assert_eq!(
+            portable_channels::provider(&next.package, &source_id).unwrap()["note"],
+            "file-only-later"
+        );
+        assert_eq!(
+            std::fs::read(source.path().join(POLICY_PATH)).unwrap(),
+            b"retired broken policy"
+        );
+    }
     #[tokio::test]
     async fn account_only_sync_is_reviewed_and_preserves_an_existing_local_login_store() {
         use crate::modules::sync::portable_accounts;

@@ -138,6 +138,28 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await wait("JSON.stringify([...document.querySelectorAll('.channel-model-table tr[data-model]')].map(e=>e.dataset.model))==="+JSON.stringify(JSON.stringify(orderedIds)),'reopened file preserves confirmed native order')
  assert(!await evaluate("document.querySelector('main').innerText.includes('待重启')"),'later/reopen must not resurrect restart state')
  await writeFile(join(output,'model-sort-native.json'),JSON.stringify({result:'pass',input:'WebView2 CDP mouse press/move/release, not synthetic DOM drag events',channelId,before:points.before,after:order,memoryEditBeforeSave:true,confirmedFileWrite:true,reopenedOrder:true,existingKeyMasked:true,keyEye:true,keyPreserved:true,runtimeSave:false},null,2)+'\n')
+ // Portable configuration exercises the installed file-aware backend and native
+ // credential staging. Only synthetic material in this admitted sandbox exists.
+ const transferBaseline=await invoke('model_file_snapshot')
+ const channelScope={includePolicy:true,channelIds:[channelId],includeGlobal:false,templateRefs:[]}
+ const portable=await invoke('model_transfer_prepare',{scope:channelScope,passphrase:null,includeKeys:true,managerScope:{preferences:false,extensions:false,webdav:false,webdavPasswords:false}})
+ const portableFile=await invoke('model_transfer_export',{planId:portable.id})
+ assertModelExportPath(portableFile.path,expected)
+ const received=await invoke('model_transfer_receive',{path:portableFile.path,passphrase:null})
+ const sourceId=received.package.payload.policy.channels[0].id
+ const selected=await invoke('model_transfer_select',{incomingId:received.id,scope:{templateRefs:[],channelIds:[sourceId],includeGlobal:false,channelMappings:{[sourceId]:{mode:'new',label:'Native portable copy'}}},passphrase:null})
+ const beforeAdopt=await readFile(configPath)
+ const accepted=await invoke('model_transfer_accept',{incomingId:selected.id,adoptKeys:true,adoptWebdavPasswords:false,adoptExtensionCredentials:false,passphrase:null})
+ assert((await readFile(configPath)).equals(beforeAdopt),'portable adoption must not write config.json')
+ assert.equal(accepted.policyDigest,transferBaseline.policyDigest)
+ assert.equal(accepted.workspace.basePolicy,transferBaseline.policyDigest)
+ const copy=accepted.workspace.policy.channels.find(c=>c.label==='Native portable copy')
+ assert(copy?.connection.importedConfig,'raw authorization receipt missing from portable draft')
+ const writtenCopy=await invoke('model_file_save',{request:{expectedFile:accepted.policyDigest,policy:accepted.workspace.policy,credentials:[]}})
+ const rawCopy=JSON.parse(await readFile(configPath)).providers[copy.connection.providerId]
+ assert.equal(rawCopy.apiKey,'native-sandbox-key','portable Key must reach the final file only on Save')
+ assert.deepEqual(writtenCopy.snapshot.policy.channels.find(c=>c.id===copy.id).modelOrder,orderedIds)
+ await writeFile(join(output,'model-transfer-native.json'),JSON.stringify({result:'pass',exportCurrentFile:true,optionalPlaintextFile:true,adoptionFileUnchanged:true,trueFileBaseline:true,importedAuthorizationSaved:true,modelOrderPreserved:true,otherProviderPreserved:true},null,2)+'\n')
  await new Promise(resolve=>setTimeout(resolve,100))
  const tasks=await evaluate("[...document.querySelectorAll('.model-operation-task,.model-operation-card')].filter(e=>e.getClientRects().length).map(e=>e.textContent)")
  const screenshot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model-template-native.png'),Buffer.from(screenshot.data,'base64'))
