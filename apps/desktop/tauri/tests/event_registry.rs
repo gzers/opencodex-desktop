@@ -11,6 +11,10 @@ use opencodex_desktop_lib::{
 };
 use std::sync::{Arc, Mutex};
 
+const MIGRATION_EVENT: &str = "model-config-migration-incomplete";
+const MIGRATION_TITLE: &str = "旧配置迁移未完成";
+const MIGRATION_BODY: &str = "部分旧配置暂未完成迁移或归档，原件已保留；当前配置文件未改动。可重开管理器重试，持续失败请查看诊断日志。";
+
 fn opaque(n: u128) -> OpaqueId {
     OpaqueId::parse(&uuid::Uuid::from_u128(n).to_string()).unwrap()
 }
@@ -65,6 +69,198 @@ fn setup() -> (tempfile::TempDir, Arc<Mutex<NotificationStore>>) {
     let root = tempfile::tempdir().unwrap();
     std::fs::create_dir_all(root.path().join("manager-state")).unwrap();
     (root, Arc::new(Mutex::new(NotificationStore::new())))
+}
+
+fn migration_risk(identity: EventIdentity, occurred_at: DateTime<Utc>) -> Delivery<'static> {
+    Delivery {
+        event: MIGRATION_EVENT,
+        job: Job::ModelConfig,
+        trigger: Trigger::Startup,
+        identity,
+        evidence: Evidence::Risk,
+        occurred_at,
+        detail: None,
+    }
+}
+
+#[test]
+fn model_config_migration_startup_risk_delivers_fixed_registered_content() {
+    let event = lookup(MIGRATION_EVENT).unwrap();
+    assert_eq!(event.job, Job::ModelConfig);
+    assert_eq!(event.object, ObjectKind::Configuration);
+    assert_eq!(event.action, Action::Migrate);
+    assert_eq!(event.phase, Phase::Execution);
+    assert_eq!(event.channels, [Channel::Local]);
+    assert_eq!(event.fact, Fact::Risk);
+    assert_eq!(event.availability, Availability::Active);
+    assert!(event.resolves.is_empty());
+    let config = registry().unwrap();
+    let job = config.jobs.iter().find(|job| job.id == event.job).unwrap();
+    assert!(job.triggers.contains(&Trigger::Startup));
+    let policy = config
+        .notification_policies
+        .iter()
+        .find(|policy| Some(policy.id) == event.policy)
+        .unwrap();
+    assert_eq!(policy.dedupe, "model-config:migration-incomplete");
+    assert_eq!(policy.cooldown_seconds, 86400);
+    assert!(!policy.lifecycle_preference);
+
+    let identity = EventIdentity {
+        object: ObjectKind::Configuration,
+        object_id: opaque(1),
+        action: Action::Migrate,
+        phase: Phase::Execution,
+        channel: Channel::Local,
+        candidate: opaque(2),
+    };
+    let mut store = NotificationStore::new();
+    let delivery = migration_risk(identity.clone(), at(100));
+    assert!(
+        deliver(
+            &mut store,
+            &delivery,
+            NotificationPreferences { lifecycle: false }
+        )
+        .unwrap()
+        .added
+    );
+    let saved = &store.all()[0];
+    assert_eq!(saved.title, MIGRATION_TITLE);
+    assert_eq!(saved.body, MIGRATION_BODY);
+    assert_eq!(saved.level, NotificationLevel::Warning);
+    assert_eq!(saved.category, NotificationCategory::System);
+    assert_eq!(saved.source, NotificationSource::Diagnostic);
+    assert_eq!(saved.event_identity.as_ref(), Some(&identity));
+    assert_eq!(
+        NotificationDto::from_domain(saved).action,
+        Some(opencodex_desktop_lib::modules::notifications::NotificationAction::Models)
+    );
+
+    // The legacy adapter must select the same fixed policy, never old JSON or errors.
+    let mut raw = legacy(MIGRATION_EVENT);
+    raw.title = "/Users/legacy/private/model-policy.json".into();
+    raw.body = "old channel=private-site apiKey=secret token=legacy".into();
+    raw.operation_id = Some("/private/legacy-draft".into());
+    raw.dedupe_key = Some("raw legacy credential".into());
+    let canonical = canonical_legacy(&raw).unwrap();
+    assert_eq!(canonical.title, MIGRATION_TITLE);
+    assert_eq!(canonical.body, MIGRATION_BODY);
+    assert!(canonical.operation_id.is_none());
+    let text = serde_json::to_string(&canonical).unwrap();
+    for old in [
+        "/Users/legacy",
+        "/private/legacy-draft",
+        "private-site",
+        "secret",
+        "raw legacy credential",
+    ] {
+        assert!(!text.contains(old));
+    }
+}
+
+#[test]
+fn model_config_migration_scope_dedupes_after_persistence_and_restart() {
+    let (root, store) = setup();
+    let identity = operation_identity(root.path(), MIGRATION_EVENT, 82);
+    let publisher = NotificationPublisher {
+        store: &store,
+        data_root: root.path(),
+    };
+    assert!(
+        publisher
+            .publish_event(&migration_risk(identity.clone(), at(100)))
+            .unwrap()
+            .added
+    );
+    let loaded = load_notifications(&notifications_path(root.path())).unwrap();
+    let dedupe = loaded.all()[0].dedupe_key.clone();
+    let restarted = Arc::new(Mutex::new(loaded));
+    let publisher = NotificationPublisher {
+        store: &restarted,
+        data_root: root.path(),
+    };
+    let repeated = operation_identity(root.path(), MIGRATION_EVENT, 82);
+    assert_eq!(repeated, identity);
+    assert!(
+        !publisher
+            .publish_event(&migration_risk(repeated, at(110)))
+            .unwrap()
+            .added
+    );
+    let saved = load_notifications(&notifications_path(root.path())).unwrap();
+    assert_eq!(saved.all().len(), 1);
+    assert_eq!(saved.all()[0].dedupe_key, dedupe);
+    assert_eq!(saved.all()[0].occurrence_count, 2);
+    assert_eq!(saved.all()[0].created_at, at(100).to_rfc3339());
+    assert_eq!(saved.all()[0].title, MIGRATION_TITLE);
+    assert_eq!(saved.all()[0].body, MIGRATION_BODY);
+
+    let different = operation_identity(root.path(), MIGRATION_EVENT, 83);
+    assert_ne!(different.candidate, identity.candidate);
+    assert!(
+        publisher
+            .publish_event(&migration_risk(different, at(120)))
+            .unwrap()
+            .added
+    );
+    assert_eq!(
+        load_notifications(&notifications_path(root.path()))
+            .unwrap()
+            .all()
+            .len(),
+        2
+    );
+    let text = std::fs::read_to_string(notifications_path(root.path())).unwrap();
+    assert!(!text.contains(root.path().to_str().unwrap()));
+}
+
+#[test]
+fn model_config_migration_rejects_non_risk_facts_and_unrelated_scopes() {
+    let (root, _) = setup();
+    let identity = operation_identity(root.path(), MIGRATION_EVENT, 82);
+    let mut delivery = migration_risk(identity.clone(), at(100));
+    let mut store = NotificationStore::new();
+    for evidence in [
+        Evidence::Failure,
+        Evidence::Signal,
+        Evidence::Success {
+            candidate: identity.candidate.clone(),
+            verified: true,
+        },
+    ] {
+        delivery.evidence = evidence;
+        assert_eq!(
+            deliver(&mut store, &delivery, prefs()),
+            Err(RegistryError::InvalidFact)
+        );
+    }
+    delivery.evidence = Evidence::Risk;
+    delivery.trigger = Trigger::Deadline;
+    assert_eq!(
+        deliver(&mut store, &delivery, prefs()),
+        Err(RegistryError::InvalidJob)
+    );
+    delivery.trigger = Trigger::Startup;
+    for (action, phase, channel) in [
+        (Action::Save, Phase::Execution, Channel::Local),
+        (Action::Migrate, Phase::Query, Channel::Local),
+        (Action::Migrate, Phase::Execution, Channel::Official),
+    ] {
+        delivery.identity.action = action;
+        delivery.identity.phase = phase;
+        delivery.identity.channel = channel;
+        assert_eq!(
+            deliver(&mut store, &delivery, prefs()),
+            Err(RegistryError::InvalidIdentity)
+        );
+    }
+    assert!(store.all().is_empty());
+    assert!(!notifications_path(root.path()).exists());
+    assert_eq!(
+        lookup("migration-completed").unwrap_err(),
+        RegistryError::Planned
+    );
 }
 
 #[test]

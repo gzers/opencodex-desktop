@@ -576,7 +576,7 @@ fn preserve_join_candidates(root: &Path, report: &mut MigrationReport) {
         }
     }
     let Ok(lock_path) = path(root, JOIN_LOCK) else {
-        report.info("admission_archive_deferred_lock_retained", JOIN_LOCK);
+        report.info("admission_unavailable_originals_retained", JOIN_LOCK);
         return;
     };
     match std::fs::symlink_metadata(&lock_path) {
@@ -588,20 +588,27 @@ fn preserve_join_candidates(root: &Path, report: &mut MigrationReport) {
             }
         }
         _ => {
-            report.info("admission_archive_deferred_lock_retained", JOIN_LOCK);
+            report.info("admission_unavailable_originals_retained", JOIN_LOCK);
             return;
         }
     }
     let Ok(target) = path(root, JOIN_ADMISSION) else {
-        report.info("admission_archive_deferred_lock_retained", JOIN_LOCK);
+        report.info("admission_unavailable_originals_retained", JOIN_LOCK);
         return;
     };
-    let Ok(guard) = TargetFileLock::try_lock_with_timeout(&target, Duration::ZERO) else {
-        report.info("admission_archive_deferred_lock_retained", JOIN_LOCK);
-        return;
+    let guard = match TargetFileLock::try_lock_with_timeout(&target, Duration::ZERO) {
+        Ok(guard) => guard,
+        Err(crate::errors::AppError::TargetLockTimeout { .. }) => {
+            report.info("admission_archive_deferred_lock_retained", JOIN_LOCK);
+            return;
+        }
+        Err(_) => {
+            report.info("admission_unavailable_originals_retained", JOIN_LOCK);
+            return;
+        }
     };
     if safety::check_path(root, &lock_path, false).is_err() {
-        report.info("admission_archive_deferred_lock_retained", JOIN_LOCK);
+        report.info("admission_unavailable_originals_retained", JOIN_LOCK);
         return;
     }
     // Never unlink this inode: an older process can be waiting for the same
