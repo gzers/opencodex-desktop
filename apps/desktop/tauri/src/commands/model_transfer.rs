@@ -10,6 +10,16 @@ use crate::{
 };
 use serde::Serialize;
 
+fn require_file_plan(root: &std::path::Path, home: &std::path::Path, id: &str) -> ModelResult<()> {
+    let plan = transfer::read_incoming(root, id)?;
+    if plan.file_home.as_deref() != Some(home) {
+        return Err(invalid(
+            "incoming_source",
+            "接收记录属于旧来源或其它配置目录，请重新比较原文件；当前编辑保持",
+        ));
+    }
+    Ok(())
+}
 fn active_remote(root: &std::path::Path) -> ModelResult<(String, WebDavConfig, String)> {
     let config = crate::modules::sync::config::SyncConfigStore::new(root).load()?;
     let endpoint = config
@@ -100,17 +110,6 @@ pub async fn config_sync_prepare(
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<config_remote::UploadView> {
-    let upstream_snapshot = if scope.all_channels
-        || scope
-            .channel_ids
-            .iter()
-            .any(|id| !scope.channel_families.contains_key(id))
-        || scope.include_global
-    {
-        Some(crate::modules::model_config::upstream::snapshot(&context).await?)
-    } else {
-        None
-    };
     let upstream_root = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let local_home = home.0.clone();
@@ -125,7 +124,7 @@ pub async fn config_sync_prepare(
             let mut scope = scope;
             scope.local_home = Some(local_home);
             scope.upstream_root = Some(upstream_root);
-            scope.upstream_snapshot = upstream_snapshot;
+            scope.upstream_snapshot = None;
             let scope = config_remote::save_scope(&root, scope)?;
             tauri::async_runtime::block_on(config_remote::prepare(
                 &root,
@@ -164,9 +163,11 @@ pub async fn config_sync_publish(
 #[tauri::command]
 pub async fn config_sync_download(
     passphrase: Option<String>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<IncomingPlan> {
+    let config_home = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let local_home = home.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
@@ -181,12 +182,13 @@ pub async fn config_sync_download(
         let password = passphrase.or(stored).map(zeroize::Zeroizing::new);
         crate::modules::model_config::feedback::receive_transfer(&root, || {
             remote_operation(&root, |transport, config, _, unchanged| {
-                tauri::async_runtime::block_on(config_remote::download_context(
+                tauri::async_runtime::block_on(config_remote::download_context_file(
                     &root,
                     transport,
                     config,
                     password.as_deref().map(|p| p.as_str()),
                     Some(&local_home),
+                    &config_home,
                     unchanged,
                 ))
             })
@@ -304,18 +306,23 @@ pub async fn model_transfer_export(
 pub async fn model_transfer_prepare_draft(
     scope: ExportScope,
     draft: transfer::DraftCandidate,
+    policy: Option<Policy>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
     passphrase: Option<String>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<FileExportPlan> {
+    let config_home = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         let passphrase = passphrase.map(zeroize::Zeroizing::new);
-        transfer::prepare_draft_file(
+        transfer::prepare_memory_file(
             &root,
+            &config_home,
             scope,
             draft,
+            policy.ok_or_else(|| invalid("draft_export", "请选择当前内存中的渠道草稿"))?,
             passphrase.as_deref().map(|p| p.as_str()),
         )
     })
@@ -332,17 +339,6 @@ pub async fn model_transfer_prepare(
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<FileExportPlan> {
-    let upstream_snapshot = if scope.include_policy
-        && (scope.include_global
-            || scope
-                .channel_ids
-                .iter()
-                .any(|id| !scope.channel_families.contains_key(id)))
-    {
-        Some(crate::modules::model_config::upstream::snapshot(&context).await?)
-    } else {
-        None
-    };
     let upstream_root = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let local_home = home.0.clone();
@@ -353,7 +349,7 @@ pub async fn model_transfer_prepare(
         let mut manager_scope = manager_scope.unwrap_or_default();
         manager_scope.local_home = Some(local_home);
         manager_scope.upstream_root = Some(upstream_root);
-        manager_scope.upstream_snapshot = upstream_snapshot;
+        manager_scope.upstream_snapshot = None;
         transfer::prepare_file_scope(
             &root,
             scope,
@@ -369,9 +365,11 @@ pub async fn model_transfer_prepare(
 pub async fn model_transfer_receive(
     path: String,
     passphrase: Option<String>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<IncomingPlan> {
+    let config_home = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let local_home = home.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
@@ -384,11 +382,12 @@ pub async fn model_transfer_receive(
             }
             let bytes = crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)?;
             let passphrase = passphrase.map(zeroize::Zeroizing::new);
-            crate::modules::model_config::file_objects::receive_context(
+            crate::modules::model_config::file_objects::receive_context_file(
                 &root,
                 &bytes,
                 passphrase.as_deref().map(|p| p.as_str()),
                 Some(&local_home),
+                &config_home,
             )
         })
     })
@@ -402,12 +401,15 @@ pub async fn model_transfer_accept(
     passphrase: Option<String>,
     adopt_webdav_passwords: Option<bool>,
     adopt_extension_credentials: Option<bool>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<Snapshot> {
+    let config_home = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
+        require_file_plan(&root, &config_home, &incoming_id)?;
         crate::modules::model_config::feedback::transfer(&root, &incoming_id, false, || {
             let passphrase = passphrase.map(zeroize::Zeroizing::new);
             crate::modules::model_config::file_objects::accept_extended(
@@ -428,12 +430,15 @@ pub async fn model_transfer_select(
     incoming_id: String,
     scope: crate::modules::model_config::transfer::ReceiveScope,
     passphrase: Option<String>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<IncomingPlan> {
+    let config_home = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
+        require_file_plan(&root, &config_home, &incoming_id)?;
         let passphrase = passphrase.map(zeroize::Zeroizing::new);
         transfer::select_received_context(
             &root,
@@ -462,17 +467,20 @@ pub async fn portable_latest_incoming(
 pub async fn portable_recompare(
     incoming_id: String,
     passphrase: Option<String>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<IncomingPlan> {
+    let config_home = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         let passphrase = passphrase.map(zeroize::Zeroizing::new);
-        crate::modules::model_config::file_objects::recompare(
+        crate::modules::model_config::file_objects::recompare_file(
             &root,
             &incoming_id,
             passphrase.as_deref().map(|p| p.as_str()),
+            &config_home,
         )
     })
     .await
@@ -482,12 +490,15 @@ pub async fn portable_recompare(
 pub async fn portable_open_received(
     incoming_id: String,
     passphrase: Option<String>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<IncomingPlan> {
+    let config_home = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
+        require_file_plan(&root, &config_home, &incoming_id)?;
         let passphrase = passphrase.map(zeroize::Zeroizing::new);
         crate::modules::model_config::file_objects::open_received(
             &root,
@@ -533,6 +544,11 @@ pub async fn portable_channel_catalog(
     context: tauri::State<'_, crate::state::SharedProcessContext>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<Vec<ChannelPolicy>> {
-    let snapshot = crate::modules::model_config::upstream::snapshot(&context).await?;
-    crate::modules::model_config::portable_channels::catalog(&data_root.0, &snapshot)
+    let root = data_root.0.clone();
+    let config_home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::portable_channels::catalog_file(&root, &config_home)
+    })
+    .await
+    .map_err(|_| invalid("provider_scope", "读取当前渠道文件中断"))?
 }

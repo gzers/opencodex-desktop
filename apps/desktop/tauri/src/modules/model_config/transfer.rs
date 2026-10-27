@@ -6,7 +6,7 @@ use super::{
 use serde::{Deserialize, Serialize};
 use std::{
     collections::{BTreeMap, BTreeSet},
-    path::Path,
+    path::{Path, PathBuf},
 };
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -196,6 +196,10 @@ pub struct ChannelBinding {
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct IncomingPlan {
     pub id: String,
+    /// An explicit file context keeps ordinary imports independent of retired
+    /// manager policy/drafts. Missing on historical and model-only callers.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub file_home: Option<PathBuf>,
     pub expected_library: String,
     pub expected_policy: String,
     pub expected_workspace: String,
@@ -299,7 +303,14 @@ pub fn prepare_file_scope(
             || !manager_scope.skill_names.is_empty()
             || !manager_scope.mcp_names.is_empty()
             || !manager_scope.account_ids.is_empty());
-    let mut package = if let Some(snapshot) = &manager_scope.upstream_snapshot {
+    let source_digest = manager_scope
+        .upstream_root
+        .as_deref()
+        .map(|home| super::config_file::snapshot(root, home).map(|s| s.policy_digest))
+        .transpose()?;
+    let mut package = if let Some(home) = &manager_scope.upstream_root {
+        super::portable_channels::export_file(root, home, scope)?
+    } else if let Some(snapshot) = &manager_scope.upstream_snapshot {
         super::portable_channels::export(root, scope, snapshot)?
     } else {
         export(root, scope)?
@@ -308,7 +319,16 @@ pub fn prepare_file_scope(
         package.payload.templates.clear();
         package.digest = sha256(&serde_json::to_vec(&package.payload)?);
     }
-    freeze_file_package(root, id, package, passphrase, include_keys, manager_scope)
+    let plan = freeze_file_package(root, id, package, passphrase, include_keys, manager_scope)?;
+    if let (Some(home), Some(expected)) = (&manager_scope.upstream_root, source_digest) {
+        if super::config_file::snapshot(root, home)?.policy_digest != expected {
+            return Err(invalid(
+                "provider_source_drift",
+                "导出期间渠道源文件已改变，请重新比较",
+            ));
+        }
+    }
+    Ok(plan)
 }
 fn freeze_file_package(
     root: &Path,
@@ -376,6 +396,49 @@ pub fn prepare_draft_file(
         return Err(invalid("draft_export", "所选渠道不在当前工作区"));
     }
     snapshot.policy = workspace.policy;
+    let mut package = export_snapshot(&snapshot, scope)?;
+    package.payload.candidate = Some(expected);
+    package.format_version = package_version(&package.payload);
+    package.digest = sha256(&serde_json::to_vec(&package.payload)?);
+    validate_package(&package)?;
+    freeze_file_package(
+        root,
+        uuid::Uuid::new_v4().to_string(),
+        package,
+        passphrase,
+        false,
+        &Default::default(),
+    )
+}
+/// Freeze a caller-owned, unsaved channel candidate without staging a normal
+/// manager draft or consulting the retired policy/workspace.
+pub fn prepare_memory_file(
+    root: &Path,
+    home: &Path,
+    scope: ExportScope,
+    expected: DraftCandidate,
+    policy: Policy,
+    passphrase: Option<&str>,
+) -> ModelResult<FileExportPlan> {
+    let mut snapshot = super::config_file::snapshot(root, home)?;
+    if snapshot.library_digest != expected.expected_library
+        || snapshot.policy_digest != expected.expected_policy
+    {
+        return Err(invalid(
+            "stale_baseline",
+            "文件或模版库已变化，请重新核对草稿导出范围",
+        ));
+    }
+    if !scope.include_policy
+        || scope.channel_ids.is_empty()
+        || scope
+            .channel_ids
+            .iter()
+            .any(|id| !policy.channels.iter().any(|c| &c.id == id))
+    {
+        return Err(invalid("draft_export", "请明确选择当前内存草稿中的渠道"));
+    }
+    snapshot.policy = policy;
     let mut package = export_snapshot(&snapshot, scope)?;
     package.payload.candidate = Some(expected);
     package.format_version = package_version(&package.payload);
@@ -945,7 +1008,10 @@ pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
     let snapshot = ModelStore::new(root).load()?;
     export_snapshot(&snapshot, scope)
 }
-fn export_snapshot(snapshot: &Snapshot, scope: ExportScope) -> ModelResult<ModelPackage> {
+pub(super) fn export_snapshot(
+    snapshot: &Snapshot,
+    scope: ExportScope,
+) -> ModelResult<ModelPackage> {
     let mut wanted: BTreeSet<(String, String)> = scope
         .template_refs
         .iter()
@@ -1418,7 +1484,16 @@ fn merge(
                 } else {
                     connection.provider_id = format!("ocxd_import_{}", channel.id.replace('-', ""));
                     connection.nodes = incoming_connection.nodes.clone();
-                    connection.active_node_id = connection.nodes[0].id.clone();
+                    // File exports retain other labeled nodes as layout. Their
+                    // order must not redirect the source's actual connection.
+                    connection.active_node_id = incoming_connection
+                        .provider
+                        .as_ref()
+                        .and_then(|p| p["baseUrl"].as_str())
+                        .and_then(|url| connection.nodes.iter().find(|node| node.url == url))
+                        .unwrap_or(&connection.nodes[0])
+                        .id
+                        .clone();
                     // Staged candidates never inherit the source's enabled state,
                     // active runtime provider, Keychain reference or private-network permission.
                     connection.enabled = false;
@@ -1705,15 +1780,33 @@ fn incoming_path(root: &Path, id: &str) -> ModelResult<std::path::PathBuf> {
     Ok(path)
 }
 pub fn receive(root: &Path, package: ModelPackage) -> ModelResult<IncomingPlan> {
-    receive_bound(root, package, BTreeMap::new())
+    receive_bound(root, package, BTreeMap::new(), None)
+}
+pub(super) fn receive_file(
+    root: &Path,
+    package: ModelPackage,
+    home: &Path,
+) -> ModelResult<IncomingPlan> {
+    receive_bound(root, package, BTreeMap::new(), Some(home))
+}
+/// Resolve the baseline from the plan's original context, including on retry.
+pub fn local_for_plan(root: &Path, plan: &IncomingPlan) -> ModelResult<Snapshot> {
+    local_for_home(root, plan.file_home.as_deref())
+}
+fn local_for_home(root: &Path, home: Option<&Path>) -> ModelResult<Snapshot> {
+    match home {
+        Some(home) => super::config_file::snapshot(root, home),
+        None => ModelStore::new(root).load(),
+    }
 }
 fn receive_bound(
     root: &Path,
     package: ModelPackage,
     mut bindings: BTreeMap<String, ChannelBinding>,
+    home: Option<&Path>,
 ) -> ModelResult<IncomingPlan> {
     validate_package(&package)?;
-    let local = ModelStore::new(root).load()?;
+    let local = local_for_home(root, home)?;
     let policy = local
         .workspace
         .as_ref()
@@ -1754,6 +1847,7 @@ fn receive_bound(
     }
     let plan = IncomingPlan {
         id: uuid::Uuid::new_v4().to_string(),
+        file_home: home.map(Path::to_path_buf),
         expected_library: local.library_digest,
         expected_policy: local.policy_digest,
         expected_workspace: local.workspace_digest,
@@ -1898,7 +1992,7 @@ pub fn select_received_context(
     if original.id != id {
         return Err(invalid("incoming_identity", "接收记录身份不一致"));
     }
-    let current = ModelStore::new(root).load()?;
+    let current = local_for_plan(root, &original)?;
     if (
         current.library_digest,
         current.policy_digest,
@@ -2023,7 +2117,7 @@ pub fn select_received_context(
         };
         bindings.insert(source, binding);
     }
-    let mut selected = receive_bound(root, package, bindings)?;
+    let mut selected = receive_bound(root, package, bindings, original.file_home.as_deref())?;
     if !scope.account_ids.is_empty() && original.manager.is_none() {
         return Err(invalid("import_scope", "选择了包内不存在的账户信息"));
     }
@@ -2138,11 +2232,30 @@ struct AcceptanceReceipt {
     id: String,
     package_digest: String,
     intent_digest: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    candidate_digest: Option<String>,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct FileAcceptanceCandidate {
+    workspace: Option<PolicyDraft>,
 }
 fn intent_digest(
     plan: &IncomingPlan,
     credentials: &BTreeMap<String, String>,
 ) -> ModelResult<String> {
+    if plan.file_home.is_some() {
+        return Ok(sha256(&serde_json::to_vec(&(
+            &plan.file_home,
+            &plan.expected_policy,
+            &plan.expected_library,
+            &plan.merged_library,
+            &plan.merged_policy,
+            credentials,
+            &plan.channel_bindings,
+            &plan.asset_mappings,
+        ))?));
+    }
     let imported = plan
         .merged_policy
         .iter()
@@ -2217,7 +2330,12 @@ pub(super) fn intended_applied(
     plan: &IncomingPlan,
     credentials: &BTreeMap<String, String>,
 ) -> ModelResult<bool> {
-    let local = ModelStore::new(root).load()?;
+    let local = local_for_plan(root, plan)?;
+    if plan.file_home.is_some() {
+        return Ok(plan.preview_error.is_none()
+            && local.policy_digest == plan.expected_policy
+            && local.library == plan.merged_library);
+    }
     let mut policy = plan.merged_policy.clone();
     bind_credentials(&mut policy, credentials)?;
     Ok(plan.preview_error.is_none()
@@ -2229,7 +2347,7 @@ pub(super) fn intended_applied(
                 .is_some_and(|w| &w.policy == policy)
         }))
 }
-pub(super) fn read_incoming(root: &Path, id: &str) -> ModelResult<IncomingPlan> {
+pub fn read_incoming(root: &Path, id: &str) -> ModelResult<IncomingPlan> {
     let plan: IncomingPlan = serde_json::from_slice(&crate::modules::backup::safety::read_file(
         &incoming_path(root, id)?,
         64 * 1024 * 1024,
@@ -2261,7 +2379,7 @@ pub(super) fn accept_with_credentials(
     )?;
     let _guard = crate::infrastructure::locking::TargetFileLock::lock(&path)?;
     let plan = read_incoming(root, id)?;
-    let local = ModelStore::new(root).load()?;
+    let local = local_for_plan(root, &plan)?;
     for (channel, reference) in credentials {
         require_uuid(reference)?;
         if plan.package.payload.policy.as_ref().is_none_or(|p| {
@@ -2275,6 +2393,16 @@ pub(super) fn accept_with_credentials(
     let intent_digest = intent_digest(&plan, credentials)?;
     let receipt_path = path.with_extension("accepted.json");
     crate::modules::backup::safety::check_path(root, &receipt_path, true)?;
+    if plan.file_home.is_some() {
+        return accept_file_candidate(
+            root,
+            &plan,
+            local,
+            credentials,
+            &receipt_path,
+            &intent_digest,
+        );
+    }
     if verify_acceptance(root, &plan, credentials)? {
         return Ok(local);
     }
@@ -2306,46 +2434,7 @@ pub(super) fn accept_with_credentials(
     let snapshot = if already_applied {
         local
     } else {
-        let effective = mapped_package(&local, &plan.package, &plan.channel_bindings)?;
-        let (library, mut policy, _) = merge(&local, &effective)?;
-        for intended in plan.merged_policy.iter().flat_map(|p| &p.channels) {
-            let Some(reference) = &intended.connection.imported_config else {
-                continue;
-            };
-            let source = plan
-                .package
-                .payload
-                .policy
-                .iter()
-                .flat_map(|p| &p.channels)
-                .find(|source| key_target(&plan, &source.id) == Some(intended.id.as_str()))
-                .and_then(|source| source.connection.as_ref())
-                .and_then(|c| c.provider.as_ref());
-            let Some(source) = source else {
-                continue;
-            };
-            let target = policy
-                .as_mut()
-                .and_then(|p| p.channels.iter_mut().find(|c| c.id == intended.id))
-                .ok_or_else(|| invalid("provider_import_scope", "重算接收目标缺失"))?;
-            let staged = super::provider_import::load(root, target, reference)?;
-            if staged.public != *source {
-                return Err(invalid(
-                    "provider_import_scope",
-                    "受保护原字段不属于当前源渠道",
-                ));
-            }
-            target.connection.imported_config = Some(reference.clone());
-            target.connection.auth_mode = source["authMode"].as_str().map(str::to_owned);
-            target.connection.enabled = false;
-        }
-        bind_credentials(&mut policy, credentials)?;
-        if library != plan.merged_library || policy != intended_policy {
-            return Err(invalid(
-                "incoming_intent",
-                "采用重算与已确认范围不同，未写入",
-            ));
-        }
+        let (library, policy) = recompute_acceptance(root, &plan, &local, credentials)?;
         ModelStore::new(root).accept_import(
             &plan.expected_library,
             &plan.expected_policy,
@@ -2360,10 +2449,171 @@ pub(super) fn accept_with_credentials(
             id: id.into(),
             package_digest: plan.package.digest,
             intent_digest,
+            candidate_digest: None,
         })?,
         0o600,
     )?;
     Ok(snapshot)
+}
+fn recompute_acceptance(
+    root: &Path,
+    plan: &IncomingPlan,
+    local: &Snapshot,
+    credentials: &BTreeMap<String, String>,
+) -> ModelResult<(Library, Option<Policy>)> {
+    let effective = mapped_package(local, &plan.package, &plan.channel_bindings)?;
+    let (library, mut policy, _) = merge(local, &effective)?;
+    for intended in plan.merged_policy.iter().flat_map(|p| &p.channels) {
+        let Some(reference) = &intended.connection.imported_config else {
+            continue;
+        };
+        let source = plan
+            .package
+            .payload
+            .policy
+            .iter()
+            .flat_map(|p| &p.channels)
+            .find(|source| key_target(plan, &source.id) == Some(intended.id.as_str()))
+            .and_then(|source| source.connection.as_ref())
+            .and_then(|c| c.provider.as_ref());
+        let Some(source) = source else {
+            continue;
+        };
+        let target = policy
+            .as_mut()
+            .and_then(|p| p.channels.iter_mut().find(|c| c.id == intended.id))
+            .ok_or_else(|| invalid("provider_import_scope", "重算接收目标缺失"))?;
+        let staged = super::provider_import::load(root, target, reference)?;
+        if staged.public != *source {
+            return Err(invalid(
+                "provider_import_scope",
+                "受保护原字段不属于当前源渠道",
+            ));
+        }
+        target.connection.imported_config = Some(reference.clone());
+        target.connection.auth_mode = source["authMode"].as_str().map(str::to_owned);
+        target.connection.enabled = false;
+    }
+    bind_credentials(&mut policy, credentials)?;
+    let mut intended_policy = plan.merged_policy.clone();
+    bind_credentials(&mut intended_policy, credentials)?;
+    if library != plan.merged_library || policy != intended_policy {
+        return Err(invalid(
+            "incoming_intent",
+            "采用重算与已确认范围不同，未写入",
+        ));
+    }
+
+    Ok((library, policy))
+}
+/// Transfer candidates live beside their receipt, never in the ordinary disk
+/// draft. Replaying reads current file/library state and returns that candidate.
+pub(super) fn accepted_snapshot(root: &Path, plan: &IncomingPlan) -> ModelResult<Snapshot> {
+    let mut snapshot = local_for_plan(root, plan)?;
+    if plan.file_home.is_none() {
+        return Ok(snapshot);
+    }
+    let receipt_path = incoming_path(root, &plan.id)?.with_extension("accepted.json");
+    crate::modules::backup::safety::check_path(root, &receipt_path, false)?;
+    let receipt: AcceptanceReceipt = serde_json::from_slice(
+        &crate::modules::backup::safety::read_file(&receipt_path, 4096)?,
+    )?;
+    let candidate_path = incoming_path(root, &plan.id)?.with_extension("candidate.json");
+    crate::modules::backup::safety::check_path(root, &candidate_path, false)?;
+    let bytes = crate::modules::backup::safety::read_file(&candidate_path, 64 * 1024 * 1024)?;
+    if receipt.id != plan.id
+        || receipt.package_digest != plan.package.digest
+        || receipt.candidate_digest.as_deref() != Some(sha256(&bytes).as_str())
+    {
+        return Err(invalid(
+            "import_replay_conflict",
+            "接收候选与原回执不同，未替换当前配置",
+        ));
+    }
+    let candidate: FileAcceptanceCandidate = serde_json::from_slice(&bytes)?;
+    if candidate
+        .workspace
+        .as_ref()
+        .is_some_and(|w| w.base_policy != plan.expected_policy)
+    {
+        return Err(invalid("incoming_intent", "接收候选的文件基准不同"));
+    }
+    attach_candidate(&mut snapshot, candidate.workspace)?;
+    Ok(snapshot)
+}
+fn attach_candidate(snapshot: &mut Snapshot, candidate: Option<PolicyDraft>) -> ModelResult<()> {
+    snapshot.workspace_digest = match &candidate {
+        Some(candidate) => sha256(&serde_json::to_vec(candidate)?),
+        None => sha256(&[]),
+    };
+    snapshot.workspace = candidate;
+    Ok(())
+}
+fn accept_file_candidate(
+    root: &Path,
+    plan: &IncomingPlan,
+    local: Snapshot,
+    credentials: &BTreeMap<String, String>,
+    receipt_path: &Path,
+    intent: &str,
+) -> ModelResult<Snapshot> {
+    if verify_acceptance(root, plan, credentials)? {
+        return accepted_snapshot(root, plan);
+    }
+    if local.policy_digest != plan.expected_policy
+        || local.workspace_digest != plan.expected_workspace
+        || (local.library_digest != plan.expected_library && local.library != plan.merged_library)
+    {
+        return Err(invalid(
+            "stale_baseline",
+            "采用前文件或模版库已变化，请重新比较",
+        ));
+    }
+    if let Some(error) = &plan.preview_error {
+        return Err(invalid(error, "所选配置仍有冲突，请比较后再采用"));
+    }
+    let (library, policy) = recompute_acceptance(root, plan, &local, credentials)?;
+    let candidate = FileAcceptanceCandidate {
+        workspace: policy.map(|policy| PolicyDraft {
+            base_policy: plan.expected_policy.clone(),
+            policy,
+        }),
+    };
+    let bytes = serde_json::to_vec(&candidate)?;
+    let candidate_path = incoming_path(root, &plan.id)?.with_extension("candidate.json");
+    crate::modules::backup::safety::check_path(root, &candidate_path, true)?;
+    crate::infrastructure::atomic_write::atomic_write(&candidate_path, &bytes, 0o600)?;
+    let current = local_for_plan(root, plan)?;
+    if current.policy_digest != plan.expected_policy
+        || current.library_digest != local.library_digest
+    {
+        return Err(invalid(
+            "stale_baseline",
+            "采用前文件或模版库已变化，请重新比较",
+        ));
+    }
+    let committed = ModelStore::new(root).accept_library(&current.library_digest, library)?;
+    let mut result = local_for_plan(root, plan)?;
+    if result.policy_digest != plan.expected_policy {
+        return Err(invalid(
+            "stale_baseline",
+            "采用期间文件已改变，候选已保留，请重新比较",
+        ));
+    }
+    result.library = committed.library;
+    result.library_digest = committed.library_digest;
+    attach_candidate(&mut result, candidate.workspace)?;
+    crate::infrastructure::atomic_write::atomic_write(
+        receipt_path,
+        &serde_json::to_vec(&AcceptanceReceipt {
+            id: plan.id.clone(),
+            package_digest: plan.package.digest.clone(),
+            intent_digest: intent.into(),
+            candidate_digest: Some(sha256(&bytes)),
+        })?,
+        0o600,
+    )?;
+    Ok(result)
 }
 fn bind_credentials(
     policy: &mut Option<Policy>,

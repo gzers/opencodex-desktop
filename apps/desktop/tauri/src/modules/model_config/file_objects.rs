@@ -1,6 +1,9 @@
 //! Portable object payloads keep secrets behind the shared protected envelope.
 //! Incoming metadata/IPC never contains key values. Adoption creates fresh local
 //! keyring references and only stages policy through the common transaction.
+#[cfg(test)]
+#[path = "file_objects_file_tests.rs"]
+mod file_tests;
 use super::{
     discovery,
     schema::*,
@@ -269,69 +272,57 @@ fn seal_scope(
     scope: &ManagerScope,
     credentials: &impl Credentials,
 ) -> ModelResult<(Vec<u8>, usize, Settings, portable_assets::Summary)> {
-    // 口令可选：用户可以选择不加密携带凭据，风险由其自行承担。
-    let upstream_source = if package
-        .payload
-        .policy
-        .iter()
-        .flat_map(|p| &p.channels)
-        .any(|c| c.connection.as_ref().is_some_and(|v| v.provider.is_some()))
-    {
-        let source = scope
+    // A bound config home always wins over CLI snapshots and retired manager
+    // policy. Its digest also freezes secret-only and family-only source edits.
+    let file_snapshot = scope
+        .upstream_root
+        .as_deref()
+        .map(|home| super::config_file::snapshot(root, home))
+        .transpose()?;
+    let mut public_sources = BTreeMap::new();
+    for channel in package.payload.policy.iter().flat_map(|p| &p.channels) {
+        let Some(public) = channel
+            .connection
+            .as_ref()
+            .and_then(|c| c.provider.as_ref())
+        else {
+            continue;
+        };
+        let home = scope
             .upstream_root
             .as_deref()
-            .ok_or_else(|| invalid("provider_source", "原渠道导出尚未绑定官方数据根"))?;
-        let file = source.join("config.json");
-        safety::check_path(source, &file, false)?;
-        Some((
-            file,
-            sha256(&Zeroizing::new(safety::read_file(
-                &source.join("config.json"),
-                16 * 1024 * 1024,
-            )?)),
-        ))
-    } else {
-        None
-    };
-    if let (Some(snapshot), Some(source)) = (&scope.upstream_snapshot, &scope.upstream_root) {
-        let catalog = super::portable_channels::catalog(root, snapshot)?;
-        let local = ModelStore::new(root).load()?;
-        for channel in package.payload.policy.iter().flat_map(|p| &p.channels) {
-            if let Some(_public) = channel
-                .connection
-                .as_ref()
-                .and_then(|c| c.provider.as_ref())
-            {
-                let original = catalog
-                    .iter()
-                    .find(|c| c.id == channel.id)
-                    .ok_or_else(|| invalid("provider_scope", "原渠道已不存在"))?;
-                let mut expected =
-                    transfer::adopted_portable(original, &local.policy.template_refs);
-                expected.connection.as_mut().unwrap().provider =
-                    Some(snapshot.providers["providers"][&original.connection.provider_id].clone());
-                if !transfer::is_scoped_channel(&expected, channel)? {
-                    return Err(invalid("provider_scope", "所选型号字段不属于冻结源渠道"));
-                }
-                let raw =
-                    super::provider_auth::source_row(source, &original.connection.provider_id)?;
-                let actual = super::provider_fields::public_from_raw(&raw)?;
-                if actual.as_object().unwrap().iter().any(|(key, value)| {
-                    snapshot.providers["providers"][&original.connection.provider_id].get(key)
-                        != Some(value)
-                }) {
-                    return Err(invalid(
-                        "provider_source_drift",
-                        "原渠道字段在比较后改变，未混合导出",
-                    ));
-                }
-            }
+            .ok_or_else(|| invalid("provider_source", "原渠道导出尚未绑定配置目录"))?;
+        let local = file_snapshot.as_ref().unwrap();
+        let original = local
+            .policy
+            .channels
+            .iter()
+            .find(|c| c.id == channel.id)
+            .ok_or_else(|| invalid("provider_scope", "所选文件渠道已不存在"))?;
+        let raw = super::provider_auth::source_row(home, &original.connection.provider_id)?;
+        let fields = super::provider_fields::public_from_raw(&raw)?;
+        let mut expected = transfer::adopted_portable(original, &local.policy.template_refs);
+        expected
+            .connection
+            .as_mut()
+            .ok_or_else(|| invalid("provider_scope", "文件渠道缺少连接"))?
+            .provider = Some(fields.clone());
+        if !transfer::is_scoped_channel(&expected, channel)? {
+            return Err(invalid(
+                "provider_source_drift",
+                "渠道字段在比较后改变，未混合导出",
+            ));
         }
+        super::provider_fields::validate_public(public)?;
+        public_sources.insert(channel.id.clone(), fields);
     }
     let mut keys = SecretValues::default();
     let mut authorizations = BTreeMap::new();
     if include_keys {
-        let snapshot = ModelStore::new(root).load()?;
+        let snapshot = match &file_snapshot {
+            Some(snapshot) => snapshot.clone(),
+            None => ModelStore::new(root).load()?,
+        };
         let channels = package
             .payload
             .policy
@@ -341,41 +332,38 @@ fn seal_scope(
         if channels.is_empty() {
             return Err(invalid(
                 "credential_scope",
-                "选择携带渠道Key前，请先选择已提交渠道",
+                "选择携带渠道Key前，请先选择已保存渠道",
             ));
         }
         for channel in channels {
             if channel.family_scope.is_some() {
                 continue;
             }
-            if let (Some(public), Some(upstream), Some(upstream_root)) = (
-                channel
-                    .connection
-                    .as_ref()
-                    .and_then(|c| c.provider.as_ref()),
-                &scope.upstream_snapshot,
-                &scope.upstream_root,
-            ) {
-                let catalog = super::portable_channels::catalog(root, upstream)?;
-                let original = catalog
+            if let Some(home) = scope.upstream_root.as_deref() {
+                let original = snapshot
+                    .policy
+                    .channels
                     .iter()
                     .find(|c| c.id == channel.id)
-                    .ok_or_else(|| invalid("credential_scope", "所选原渠道已不存在"))?;
+                    .ok_or_else(|| invalid("credential_scope", "所选文件渠道已不存在"))?;
+                let public = channel
+                    .connection
+                    .as_ref()
+                    .and_then(|c| c.provider.as_ref())
+                    .ok_or_else(|| invalid("credential_scope", "文件渠道缺少已冻结的原字段"))?;
                 if public["authMode"]
                     .as_str()
                     .is_some_and(|m| ["oauth", "forward"].contains(&m))
                 {
-                    // Login material belongs to the separately selected account
-                    // domain; a bulk channel export must not convert it to keys.
                     continue;
                 }
                 authorizations.insert(
                     channel.id.clone(),
                     super::provider_auth::export_portable_scoped(
-                        upstream_root,
+                        home,
                         &original.connection.provider_id,
                         public,
-                        &upstream.providers["providers"][&original.connection.provider_id],
+                        &public_sources[&channel.id],
                     )?,
                 );
                 continue;
@@ -450,11 +438,11 @@ fn seal_scope(
             );
         }
     }
-    if let Some((file, expected)) = upstream_source {
-        if sha256(&Zeroizing::new(safety::read_file(&file, 16 * 1024 * 1024)?)) != expected {
+    if let (Some(home), Some(snapshot)) = (scope.upstream_root.as_deref(), &file_snapshot) {
+        if super::config_file::snapshot(root, home)?.policy_digest != snapshot.policy_digest {
             return Err(invalid(
                 "provider_source_drift",
-                "导出期间原渠道源已改变，请重新比较",
+                "导出期间渠道源文件已改变，请重新比较",
             ));
         }
     }
@@ -765,11 +753,12 @@ pub fn select_remote(
         &document,
         passphrase,
     )?;
-    let incoming = receive_context(
+    let incoming = receive_bound_context(
         root,
         &selected_file,
         passphrase,
         manager.local_home.as_deref(),
+        manager.upstream_root.as_deref(),
     )?;
     let template_refs = models
         .template_refs
@@ -831,6 +820,24 @@ pub fn receive_context(
     bytes: &[u8],
     passphrase: Option<&str>,
     home: Option<&Path>,
+) -> ModelResult<IncomingPlan> {
+    receive_bound_context(root, bytes, passphrase, home, None)
+}
+pub fn receive_context_file(
+    root: &Path,
+    bytes: &[u8],
+    passphrase: Option<&str>,
+    local_home: Option<&Path>,
+    config_home: &Path,
+) -> ModelResult<IncomingPlan> {
+    receive_bound_context(root, bytes, passphrase, local_home, Some(config_home))
+}
+fn receive_bound_context(
+    root: &Path,
+    bytes: &[u8],
+    passphrase: Option<&str>,
+    home: Option<&Path>,
+    config_home: Option<&Path>,
 ) -> ModelResult<IncomingPlan> {
     let format: serde_json::Value = serde_json::from_slice(bytes)
         .map_err(|_| invalid("import_format", "所选配置文件不是有效JSON"))?;
@@ -928,7 +935,10 @@ pub fn receive_context(
         decode(bytes)?
     };
     let credential_count = secret_objects(&objects);
-    let mut plan = transfer::receive(root, objects.models.clone())?;
+    let mut plan = match config_home {
+        Some(home) => transfer::receive_file(root, objects.models.clone(), home)?,
+        None => transfer::receive(root, objects.models.clone())?,
+    };
     plan.protected = format["format"] == "OCXDCONF" && format["payload"]["kind"] == "protected";
     if legacy {
         plan.notices.push("已按旧容器实际区段转换；旧文件不含模型库、真实登录态或Key。扩展名清单不表示资源/凭据已恢复。".into());
@@ -1085,6 +1095,24 @@ fn attach_adoption(root: &Path, plan: &mut IncomingPlan) -> ModelResult<()> {
 }
 pub fn recompare(root: &Path, id: &str, passphrase: Option<&str>) -> ModelResult<IncomingPlan> {
     let plan = transfer::read_incoming(root, id)?;
+    recompare_context(root, id, passphrase, plan.file_home.as_deref())
+}
+/// Recompare older saved transfers against an explicitly selected file home.
+pub fn recompare_file(
+    root: &Path,
+    id: &str,
+    passphrase: Option<&str>,
+    config_home: &Path,
+) -> ModelResult<IncomingPlan> {
+    recompare_context(root, id, passphrase, Some(config_home))
+}
+fn recompare_context(
+    root: &Path,
+    id: &str,
+    passphrase: Option<&str>,
+    config_home: Option<&Path>,
+) -> ModelResult<IncomingPlan> {
+    let plan = transfer::read_incoming(root, id)?;
     let bytes = safety::read_file(
         &cache_path(root, id, "ocxdconf")?,
         portable_file::FILE_LIMIT as u64,
@@ -1103,7 +1131,7 @@ pub fn recompare(root: &Path, id: &str, passphrase: Option<&str>) -> ModelResult
     } else {
         None
     };
-    receive_context(root, &bytes, passphrase, home.as_deref())
+    receive_bound_context(root, &bytes, passphrase, home.as_deref(), config_home)
 }
 pub fn open_received(root: &Path, id: &str, passphrase: Option<&str>) -> ModelResult<IncomingPlan> {
     let mut plan = transfer::read_incoming(root, id)?;
@@ -1133,6 +1161,7 @@ pub(super) fn copy_source(
     original: &IncomingPlan,
     selected: &mut IncomingPlan,
 ) -> ModelResult<()> {
+    selected.file_home = original.file_home.clone();
     selected.protected = original.protected;
     selected.available_keys = original
         .available_keys
@@ -1302,6 +1331,7 @@ fn stage_provider_materials(
     adopt_keys: bool,
     passphrase: Option<&str>,
 ) -> ModelResult<()> {
+    let local = transfer::local_for_plan(root, plan)?;
     let channels = plan
         .package
         .payload
@@ -1348,14 +1378,7 @@ fn stage_provider_materials(
         if !transfer::is_scoped_channel(original, &source)? {
             return Err(invalid("provider_import_scope", "原字段不属于所选源渠道"));
         }
-        if source.model_subset.is_some()
-            && ModelStore::new(root)
-                .load()?
-                .policy
-                .channels
-                .iter()
-                .any(|c| c.id == target)
-        {
+        if source.model_subset.is_some() && local.policy.channels.iter().any(|c| c.id == target) {
             continue;
         }
         let reference = if let Some(reference) = bindings.get(&target) {
@@ -1436,10 +1459,10 @@ fn accept_domains(
         }
     };
     if record.completed {
-        return ModelStore::new(root).load();
+        return transfer::accepted_snapshot(root, &plan);
     }
     if !transfer::accepted(root, &plan)? {
-        let local = ModelStore::new(root).load()?;
+        let local = transfer::local_for_plan(root, &plan)?;
         if (
             local.library_digest,
             local.policy_digest,
@@ -1503,8 +1526,11 @@ fn accept_domains(
         }
         let opened = portable_file::open(&bytes, passphrase)?;
         let objects = decode(&opened.document)?;
-        if !opened.protected || opened.manifest.sections != sections(&objects) {
-            return Err(invalid("portable_protection", "连接密码未通过保护核验"));
+        if opened.manifest.sections != sections(&objects) {
+            return Err(invalid(
+                "portable_protection",
+                "连接密码未通过文件完整性核验",
+            ));
         }
         let bindings_path = cache_path(root, id, "webdav-bindings.json")?;
         let mut bindings: BTreeMap<String, String> = if bindings_path.exists() {
@@ -1608,11 +1634,16 @@ fn accept_with(
             "接收源文件已变化，未采用凭据",
         ));
     }
-    let opened = portable_file::open(&bytes, passphrase)?;
-    let objects = decode(&opened.document)?;
-    if !opened.protected || opened.manifest.secret_objects != secret_objects(&objects) {
-        return Err(invalid("portable_protection", "凭据载荷未通过文件保护核验"));
-    }
+    let objects = if plan.file_home.is_some() {
+        open_source(root, &plan, passphrase)?
+    } else {
+        let opened = portable_file::open(&bytes, passphrase)?;
+        let objects = decode(&opened.document)?;
+        if !opened.protected || opened.manifest.secret_objects != secret_objects(&objects) {
+            return Err(invalid("portable_protection", "凭据载荷未通过文件保护核验"));
+        }
+        objects
+    };
     let mut wanted = BTreeMap::new();
     for channel in plan
         .package
@@ -1674,16 +1705,19 @@ fn accept_with(
     if transfer::verify_acceptance(root, &plan, &bindings)? {
         return transfer::accept_with_credentials(root, id, &bindings);
     }
-    let local = ModelStore::new(root).load()?;
-    if (
+    let local = transfer::local_for_plan(root, &plan)?;
+    let baselines_match = (
         local.library_digest,
         local.policy_digest,
         local.workspace_digest,
-    ) != (
+    ) == (
         plan.expected_library.clone(),
         plan.expected_policy.clone(),
         plan.expected_workspace.clone(),
-    ) {
+    );
+    let library_only_retry =
+        plan.file_home.is_some() && transfer::intended_applied(root, &plan, &bindings)?;
+    if !baselines_match && !library_only_retry {
         for (channel, value) in &wanted {
             if credentials.read(&bindings[channel])?.as_str() != value.as_str() {
                 return Err(invalid(
@@ -1702,7 +1736,7 @@ fn accept_with(
         transfer::accept_with_credentials(root, id, &bindings)
     })();
     if result.is_err() {
-        if let Ok(current) = ModelStore::new(root).load() {
+        if let Ok(current) = transfer::local_for_plan(root, &plan) {
             for reference in bindings.values() {
                 let used = current
                     .policy
@@ -1753,9 +1787,12 @@ mod tests {
             order: serde_json::json!({"pickerOrder":["p/a","p/b"]}),
             catalog: serde_json::json!({"models":[{"slug":"p/a"},{"slug":"p/b"}]}),
         };
-        let id = super::super::portable_channels::catalog(source.path(), &snapshot).unwrap()[0]
-            .id
-            .clone();
+        let id = super::super::portable_channels::catalog_file(source.path(), upstream.path())
+            .unwrap()
+            .into_iter()
+            .find(|c| c.connection.provider_id == "p")
+            .unwrap()
+            .id;
         let plan = transfer::prepare_file_scope(
             source.path(),
             transfer::ExportScope {
@@ -2756,6 +2793,114 @@ mod tests {
             &keys,
         )
         .unwrap();
+        assert_eq!(
+            crate::modules::preferences::PreferencesStore::new(target.path())
+                .load()
+                .unwrap()
+                .interface_scale,
+            125
+        );
+        assert!(SyncConfigStore::new(target.path())
+            .load()
+            .unwrap()
+            .active()
+            .is_none());
+        let connections = portable_manager::load_candidates(target.path()).unwrap();
+        assert_eq!(connections.len(), 1);
+        assert_eq!(
+            keys.read(connections[0].credential_ref.as_deref().unwrap())
+                .unwrap()
+                .as_str(),
+            "fixture-dav-password"
+        );
+        let again = accept_all(target.path(), &incoming.id, false, true, None, &keys).unwrap();
+        assert_eq!(again, accepted);
+        assert_eq!(*keys.writes.lock().unwrap(), 1);
+    }
+    #[test]
+    fn plaintext_manifest_restores_only_selected_inactive_webdav_password() {
+        use crate::modules::sync::config::{
+            CredentialRef, SyncConfig, SyncConfigStore, SyncEndpointConfig,
+        };
+        let source = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let keys = Memory::default();
+        let reference = crate::infrastructure::keychain::new_ref_id();
+        keys.values
+            .lock()
+            .unwrap()
+            .insert(reference.clone(), "fixture-dav-password".into());
+        let source_config = SyncConfig {
+            schema_version: 1,
+            endpoints: vec![SyncEndpointConfig {
+                endpoint_id: "default".into(),
+                url: "https://fixture.example.test".into(),
+                remote_path: "portable".into(),
+                username: "fixture".into(),
+                conflict_policy: "ask".into(),
+                tls_policy: "verify_required".into(),
+                legacy_encryption: String::new(),
+                credential_ref: CredentialRef {
+                    ref_id: reference,
+                    backend: "keychain".into(),
+                    service_name: crate::infrastructure::keychain::keychain_service_name().into(),
+                    account_key: "fixture".into(),
+                    purpose: crate::infrastructure::keychain::WEBDAV_CREDENTIAL_PURPOSE.into(),
+                    created_at: chrono::Utc::now().to_rfc3339(),
+                    updated_at: chrono::Utc::now().to_rfc3339(),
+                },
+            }],
+        };
+        atomic_write(
+            &source
+                .path()
+                .join(crate::modules::sync::config::SYNC_ENDPOINTS_RELATIVE_PATH),
+            &serde_json::to_vec(&source_config).unwrap(),
+            0o600,
+        )
+        .unwrap();
+        crate::modules::preferences::PreferencesStore::new(source.path())
+            .save(&crate::modules::preferences::Preferences {
+                interface_scale: 125,
+                ..Default::default()
+            })
+            .unwrap();
+        let package = transfer::export(
+            source.path(),
+            transfer::ExportScope {
+                channel_families: Default::default(),
+                channel_models: Default::default(),
+                include_policy: false,
+                channel_ids: vec![],
+                template_refs: vec![],
+                include_global: false,
+            },
+        )
+        .unwrap();
+        let (bytes, count, _, _) = seal_scope(
+            source.path(),
+            &uuid::Uuid::new_v4().to_string(),
+            &package,
+            false,
+            None,
+            &ManagerScope {
+                preferences: true,
+                extensions: true,
+                webdav: true,
+                webdav_passwords: true,
+                ..Default::default()
+            },
+            &keys,
+        )
+        .unwrap();
+        assert_eq!(count, 1);
+        let incoming = receive(target.path(), &bytes, None).unwrap();
+        assert!(incoming.manager.as_ref().unwrap().preferences.is_some());
+        assert_eq!(incoming.available_webdav_passwords, vec!["default"]);
+        assert!(!serde_json::to_string(&incoming)
+            .unwrap()
+            .contains("fixture-dav-password"));
+        let accepted = accept_all(target.path(), &incoming.id, false, true, None, &keys).unwrap();
         assert_eq!(
             crate::modules::preferences::PreferencesStore::new(target.path())
                 .load()
