@@ -20,12 +20,20 @@
   {
     "run": 40452748873,
     "head": "aa567e7a431ce245f5ba20777c307f086df832fe",
-    "result": "in_progress",
+    "result": "success",
     "reason": "owning-handle metadata fix; no lock replacement or release",
     "partial_failure": {
       "job": "windows-smoke-evidence",
       "job_id": 122019025380,
       "message": "Replacement marker was not produced within fixture wait; helper exit 0, later uploaded marker says old process generation was not alive. Exact job retry pending until active run completes."
+    },
+    "retry": {
+      "attempt": 2,
+      "job_id": 122027480594,
+      "result": "success",
+      "unchangedSource": true,
+      "cases": 5,
+      "checks": 40
     }
   }
 ]

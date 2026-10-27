@@ -1,198 +1,324 @@
 [
   {
     "path": ".adg/evidence/0.2.15/agent-loopback.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "3395e14c263ec0bf0ff52acdc8c875409dd32ee773b63d68c2c7d8913773f751",
     "size_bytes": 764,
     "media_type": "text/plain"
   },
   {
     "path": ".adg/evidence/0.2.15/backend-regression.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "c7b7e873e41c71741e8347ee4bb57af5ce2c0985eb6c38b5393c3b8c753991e9",
     "size_bytes": 136656,
     "media_type": "text/plain"
   },
   {
     "path": ".adg/evidence/0.2.15/backend-summary.json",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "4f996e4d496935cd0a2b5f302d0e6e5d0b4d3fe653c96f81cca58b6c68a27670",
     "size_bytes": 315,
     "media_type": "application/json"
   },
   {
     "path": ".adg/evidence/0.2.15/ci-attempts.json",
-    "role": "validation evidence; log whitespace normalized",
-    "sha256": "1f2e341ddffc4b8c3e66d10d4e83b6bef8711a9bf9b25dd64b9b8f0e4c6fb126",
-    "size_bytes": 1098,
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "8d5671f838dddae9c73993b649329fbc3485e06604cac6748b19e135292fd03f",
+    "size_bytes": 1261,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/ci-final.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "e5cdfa9bc7de69e325285b74e13bca6276056d3ee6548d96570d33adf0edb588",
+    "size_bytes": 1809,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/ci-macos-backend-summary.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "c06ef39b9159fe675782e454a4c77331eac6e7931ee396a66afd6972cece4af4",
+    "size_bytes": 369,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/ci-windows-backend-summary.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "3526c14bdb5ec00573649fa1a2a430de7c36a3c0174e5063c78f61f104ce57fe",
+    "size_bytes": 3596,
     "media_type": "application/json"
   },
   {
     "path": ".adg/evidence/0.2.15/clippy-lock-fixed.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "84bcfaee9fa75d2f6d8c169696c2157828566e572d3ae586a35de7473e13e90b",
     "size_bytes": 206,
     "media_type": "text/plain"
   },
   {
     "path": ".adg/evidence/0.2.15/clippy.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "ded0fdcc052c28974405de7d5fc052218a15bd345f0456c91bbebd52bceda437",
     "size_bytes": 207,
     "media_type": "text/plain"
   },
   {
     "path": ".adg/evidence/0.2.15/file-browser/imported-dark.png",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "020dc5d8ccd573dbcc073bb97faf936ca0660e0649a0d25955636d9f1167deb5",
     "size_bytes": 72823,
     "media_type": "image/png"
   },
   {
     "path": ".adg/evidence/0.2.15/file-browser/report.json",
-    "role": "validation evidence; log whitespace normalized",
-    "sha256": "d2d3381a8d28d25a731c35ef5c24a0ccb6d20ab6c90e84335ee3535d570c2d60",
-    "size_bytes": 1889,
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "b483dc9a5cc7133f43cc0392b0f8c59c096ac311be1aeace86da44ac66ad8c38",
+    "size_bytes": 1890,
     "media_type": "application/json"
   },
   {
+    "path": ".adg/evidence/0.2.15/file-browser/saved-dark.png",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "473cfd86f3ab0e1b482c6c3e20e23474d21707d52f9fcde462f69153a32208ce",
+    "size_bytes": 90297,
+    "media_type": "image/png"
+  },
+  {
     "path": ".adg/evidence/0.2.15/file-browser-webkit/imported-dark.png",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "d83ae906ad42fb0a195b0c252f7243a9e0dc22bfc9659f81fdaedff874124450",
     "size_bytes": 91938,
     "media_type": "image/png"
   },
   {
     "path": ".adg/evidence/0.2.15/file-browser-webkit/report.json",
-    "role": "validation evidence; log whitespace normalized",
-    "sha256": "d2d3381a8d28d25a731c35ef5c24a0ccb6d20ab6c90e84335ee3535d570c2d60",
-    "size_bytes": 1889,
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "b483dc9a5cc7133f43cc0392b0f8c59c096ac311be1aeace86da44ac66ad8c38",
+    "size_bytes": 1890,
     "media_type": "application/json"
   },
   {
+    "path": ".adg/evidence/0.2.15/file-browser-webkit/saved-dark.png",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "bd98187b4fb933cbdfd7febe1dd96bc8676d272a5d835a4d488b527023bf4be6",
+    "size_bytes": 112120,
+    "media_type": "image/png"
+  },
+  {
     "path": ".adg/evidence/0.2.15/gate-release.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "574abe2f2eb8d92b99406755033b451610ac81c2f244292f7ddabf4812c7c868",
     "size_bytes": 2116,
     "media_type": "text/plain"
   },
   {
     "path": ".adg/evidence/0.2.15/gate-report.json",
-    "role": "validation evidence; log whitespace normalized",
-    "sha256": "fcb8f36284088b75df5e3f983c0e4dddc84eda63b304abc42633fca1bd13a507",
-    "size_bytes": 3610,
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "8ba3b3894941ce147963029748bbf1a3aa893dcd3b443e1fc25d3d75d60d5158",
+    "size_bytes": 3611,
     "media_type": "application/json"
   },
   {
     "path": ".adg/evidence/0.2.15/https-fixture.json",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "00136d54d5bf7a2a1472c229c6825403bf597d49063a05a314ac7a89e6cc5874",
     "size_bytes": 628,
     "media_type": "application/json"
   },
   {
     "path": ".adg/evidence/0.2.15/https-webdav.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "75970f9108501c1bd3ede9af56ad4763813824cf6bbeef604a23b067a69728a7",
     "size_bytes": 629,
     "media_type": "text/plain"
   },
   {
     "path": ".adg/evidence/0.2.15/legacy-dispositions.json",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "66edad218c63cb80d1663ae5844851801b25ce0cbf629d0e201e15cf52c1812d",
     "size_bytes": 4869,
     "media_type": "application/json"
   },
   {
     "path": ".adg/evidence/0.2.15/locking-fixed.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "2066da2946ef3e31104dfbe94bf9ac003ba4860cd0b3c4669bbfba7664130a4b",
     "size_bytes": 537,
     "media_type": "text/plain"
   },
   {
     "path": ".adg/evidence/0.2.15/migration-lock-fixed.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "e04fa3f360400c8a59a10ab6eb6562a1d08f2587449a1a18c30c75042d3f00b8",
     "size_bytes": 3138,
     "media_type": "text/plain"
   },
   {
     "path": ".adg/evidence/0.2.15/migration-tests.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "68cbcfc237a311a546143291d92bba0318d2ca2e99bbe21788dea6e9ef12076b",
     "size_bytes": 3273,
     "media_type": "text/plain"
   },
   {
     "path": ".adg/evidence/0.2.15/native-contract.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "0a79d33d5cca61bcc4585dc6d182389612f1ed6758d471b85becdb40a2c648a1",
     "size_bytes": 802,
     "media_type": "text/plain"
   },
   {
+    "path": ".adg/evidence/0.2.15/pr-merged.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "ca365e7678bb8d299b8f990e2b6f3ba0bcec9eb2ff8c3b62ebdac673f1e30a00",
+    "size_bytes": 233,
+    "media_type": "application/json"
+  },
+  {
     "path": ".adg/evidence/0.2.15/prototype/integrated-model-saved.png",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "27c2281dd10cbebc856d22abbed276056421459f821150024c206e4925ec1736",
     "size_bytes": 119221,
     "media_type": "image/png"
   },
   {
     "path": ".adg/evidence/0.2.15/prototype/integrated-save-preview.png",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "a64dbbbe46629e5509db2bf3ace4c891941a3c122e20ab952019b8925bf7571f",
     "size_bytes": 94962,
     "media_type": "image/png"
   },
   {
     "path": ".adg/evidence/0.2.15/prototype/integration-layout.json",
-    "role": "validation evidence; log whitespace normalized",
-    "sha256": "bf46d5aa0e2ff04fea74160cd18ccdd04e94fca2a8ce985ccaa7a0e3d616f50a",
-    "size_bytes": 2770,
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "e9f0a16a6b729735381c9121df2f2bdf0515b6e9933506d155f35e9bfacc407e",
+    "size_bytes": 2771,
     "media_type": "application/json"
   },
   {
     "path": ".adg/evidence/0.2.15/prototype/layout-before.json",
-    "role": "validation evidence; log whitespace normalized",
-    "sha256": "bf46d5aa0e2ff04fea74160cd18ccdd04e94fca2a8ce985ccaa7a0e3d616f50a",
-    "size_bytes": 2770,
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "e9f0a16a6b729735381c9121df2f2bdf0515b6e9933506d155f35e9bfacc407e",
+    "size_bytes": 2771,
     "media_type": "application/json"
   },
   {
     "path": ".adg/evidence/0.2.15/prototype-regression.tap",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "3831cc018036f0b9211f4ff9a374022da3748a525c1a1343fe70fae6d6bafb3b",
     "size_bytes": 33091,
     "media_type": "application/octet-stream"
   },
   {
     "path": ".adg/evidence/0.2.15/reserved-model-ids.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "e820c63231432a841b4f30de1aebae70ca9611da6cf313c467331401f535f905",
     "size_bytes": 256,
     "media_type": "text/plain"
   },
   {
     "path": ".adg/evidence/0.2.15/source-trees.json",
-    "role": "validation evidence; log whitespace normalized",
-    "sha256": "b177caad35f428f6227a0b018521d457e8620126914b62d39c519dfb78b73bf5",
-    "size_bytes": 1600,
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "d9d278803ca38fc51ea41fcf4376bfcbc62d77447375428b73e6e7f9056c0b76",
+    "size_bytes": 2145,
     "media_type": "application/json"
   },
   {
     "path": ".adg/evidence/0.2.15/transfer-ui.log",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "875b82ee0b9759864a1f2df6937d1ec003aebaa69f91dba0910543fbd0b3070f",
     "size_bytes": 269,
     "media_type": "text/plain"
   },
   {
+    "path": ".adg/evidence/0.2.15/windows-native/model-editor-context-native.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f",
+    "size_bytes": 277,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-native/model-export-boundary.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "581eb34c82e34e49ad271478d31e21f923da12326fcdb219b5af13cbf33f74c2",
+    "size_bytes": 378,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-native/model-sort-native.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "fef0b281a3ed8582ee86ed2df1fe71f529a111ec9d5e4db8ea7a84ee17c91db8",
+    "size_bytes": 502,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-native/model-transfer-native.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67",
+    "size_bytes": 249,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-native/model-ui.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "cd5c07748cbbb7b68e4d80a8a77d927b14d20bfe29624d42b59be26c61a53e1e",
+    "size_bytes": 716,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-native/startup.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "3b132cd0238a86f879147de9aff5423cb70f6951914a4c467ce135958afbbbbb",
+    "size_bytes": 1396,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-native/ui021-alignment.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "506b6a741b41c33393baa598aba29a9b34f0cc395893870214e77fa5bfd9d18c",
+    "size_bytes": 3257,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-native/ui021-channel-detail.png",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "4d1004392fb36960dac5900d19ae760732c63b08b5deb3d8cea5ea79fa2b7a84",
+    "size_bytes": 107458,
+    "media_type": "image/png"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-native/ui021-channels.png",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "3457c34229aff1277ff9390bf4803df66a71c1370f54d72237b14b4dc79eb4fd",
+    "size_bytes": 112522,
+    "media_type": "image/png"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-native/ui021-templates.png",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "4d0de857db711f1921be33de29ccabba46f8c913b979fdb9cc2ca49d42d3a5c4",
+    "size_bytes": 179288,
+    "media_type": "image/png"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-native/webview.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "4d4f71a9182e1971331a7a0e2b5062428c3af4f7aaa575f1a27f8ed5d140059b",
+    "size_bytes": 698,
+    "media_type": "application/json"
+  },
+  {
     "path": ".adg/evidence/0.2.15/windows-restart-fixture-failure.json",
-    "role": "validation evidence; log whitespace normalized",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "e7f57bf4a52989313f75009d64e0e10e7fda99b18c48a2e8d5b6541152194265",
     "size_bytes": 555,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/windows-restart-retry.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "f56297eba3510a3b8bbaef057ebccb6821727a167d3a97a29265ec5872474247",
+    "size_bytes": 1480,
     "media_type": "application/json"
   }
 ]
