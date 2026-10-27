@@ -1,0 +1,28 @@
+{
+  "id": "TASK-OPENCODEX-0.2.17",
+  "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-26.md",
+  "demand": "docs/01-需求管理/需求/DMD-OPENCODEX-DESKTOP-MANAGER.md",
+  "acceptance_ids": [
+    "AC-WIN-017-01",
+    "AC-WIN-017-02",
+    "AC-WIN-017-03",
+    "AC-WIN-017-04",
+    "AC-WIN-017-05",
+    "AC-WIN-017-06"
+  ],
+  "scope": "WP89-WP95 through stable release; user-authorized2026-10-28",
+  "baseline": "d2c08dd7d62e2caada507f2eeb4d05804460b6a8",
+  "required_checks": [
+    "review:windows-path",
+    "review:install-transaction",
+    "review:version-probe",
+    "review:tool-discovery",
+    "review:packaged-docs-cli",
+    "review:native-windows",
+    "review:regression-release"
+  ],
+  "write_scopes": {
+    "code": "ocx-022-model-selector/codex/0.2.17-windows-install",
+    "docs": "governance-main/docs/governance-main"
+  }
+}
