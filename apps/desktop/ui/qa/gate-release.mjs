@@ -18,6 +18,11 @@ const steps = [
   { id: 'typecheck', cmd: ['npx', ['vue-tsc', '--noEmit']], needsEnv: false },
   { id: 'unit', cmd: ['npx', ['vitest', 'run']], needsEnv: false },
   { id: 'build', cmd: ['npx', ['vite', 'build']], needsEnv: false },
+  // Confirm Save and reopen through the actual Rust file writer, using only an
+  // isolated temporary configuration. No user file or desktop restart is touched.
+  { id: 'audit:file-save', cmd: ['node', ['qa/file-save-browser.mjs']], needsEnv: false },
+  { id: 'audit:notification-feedback', cmd: ['node', ['tests/notification-feedback.browser.mjs']], needsEnv: false },
+  { id: 'audit:notification-parity', cmd: ['node', ['qa/notification-parity.mjs']], needsEnv: false },
   { id: 'audit:models', cmd: ['node', ['qa/model-visual.mjs']], needsEnv: false },
   { id: 'audit:preview', cmd: ['node', ['qa/preview-visual.mjs']], needsEnv: false },
   { id: 'audit:geometry', cmd: ['node', ['qa/geometry-visual.mjs']], needsEnv: false },
