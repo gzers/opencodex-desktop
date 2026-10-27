@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "command": "OCX_LIVE_MODEL_VERIFY=1 OCX_TEST_OFFICIAL_HOME=<user-authorized-official-home> cargo test --test model_file_live -- --ignored --nocapture",
+  "measurements": [
+    {
+      "elapsedMs": 318,
+      "error": null,
+      "modelCount": 29,
+      "provider": "GZGG-NewApi"
+    },
+    {
+      "elapsedMs": 892,
+      "error": null,
+      "modelCount": 6,
+      "provider": "FeiMao"
+    }
+  ],
+  "fileRoundtrip": {
+    "isolatedWrite": true,
+    "keyOnlySupported": true,
+    "liveSourceUnchanged": true,
+    "officialValidated": true,
+    "providers": 26
+  },
+  "secretsStored": false,
+  "checks": {
+    "review:discovery": {
+      "result": "passed",
+      "scope": "Actual measurements::measure backend against 2 existing user channels; no generation requests"
+    },
+    "review:file-authority": {
+      "result": "passed",
+      "scope": "Actual user-format isolated clone save/read; original bytes unchanged"
+    }
+  },
+  "testedImplementationBeforeVersionBump": true
+}

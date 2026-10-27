@@ -9,6 +9,8 @@
 
 ## 实施计划入口
 
+- [0.2.14 文件读写、连接测速与原型通知统一](IMP-OPENCODEX-DESKTOP-23.md)：WP-75～WP-81 已实施并验证，PR #22 与平台 CI 在途；[发布记录](REL-OPENCODEX-DESKTOP-17.md) 随正式发布回写。
+
 - [0.2.1公共UI与原型还原修复发布](REL-OPENCODEX-DESKTOP-12.md)：已公开/stable，main/tag fbd6e1d1；独立验签、双平台实际回读和匿名清单/资产核对通过。
 
 - [0.2.1公共UI收敛与原型还原修复](IMP-OPENCODEX-DESKTOP-22.md)：**completed，修复、制品与公开stable均完成**；15项UI问题、公共采用守卫及双平台适用检查通过，新工作树/分批提交已合并。

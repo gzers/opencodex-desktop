@@ -1,0 +1,12 @@
+   Compiling opencodex-desktop v0.2.13 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.36s
+     Running tests/model_file_live.rs (target/debug/deps/model_file_live-fd7747351ea6bf14)
+
+running 2 tests
+LIVE_NODE_MEASUREMENT {"elapsedMs":318,"error":null,"modelCount":29,"provider":"GZGG-NewApi"}
+LIVE_FILE_ROUNDTRIP {"isolatedWrite":true,"keyOnlySupported":true,"liveSourceUnchanged":true,"officialValidated":true,"providers":26}
+test installed_configuration_roundtrips_as_an_isolated_file ... ok
+LIVE_NODE_MEASUREMENT {"elapsedMs":892,"error":null,"modelCount":6,"provider":"FeiMao"}
+test real_model_measurements_use_the_backend_without_altering_config ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.21s

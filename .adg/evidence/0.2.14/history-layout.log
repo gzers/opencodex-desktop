@@ -1,0 +1,13 @@
+   Compiling opencodex-desktop v0.2.14 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.70s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-19a87904ee58c138)
+
+running 6 tests
+test modules::model_config::config_file::tests::read_ignores_old_draft_and_unfinished_plan ... ok
+test modules::model_config::config_file::tests::external_file_change_preserves_both_edit_and_external_file ... ok
+test modules::model_config::config_file::tests::key_only_save_survives_offline_and_preserves_unknown_fields ... ok
+test modules::model_config::config_file::tests::restored_layout_retains_adoptions_but_file_remains_authority ... ok
+test modules::model_config::config_file::tests::template_deletion_respects_current_file_layout_adoption ... ok
+test modules::model_config::config_file::tests::template_deletion_uses_the_file_digest_and_returns_file_channels ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1037 filtered out; finished in 0.23s
