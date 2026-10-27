@@ -1,0 +1,31 @@
+[
+  {
+    "run": 40448639493,
+    "head": "184269a60b670535b43e7fe695fe9b0364562239",
+    "result": "cancelled",
+    "reason": "superseded by new commit"
+  },
+  {
+    "run": 40449116192,
+    "head": "f698f363816b97a3376a0fa10887a9538f422b00",
+    "result": "cancelled",
+    "reason": "superseded by new commit"
+  },
+  {
+    "run": 40449979401,
+    "head": "6e016fb920d4226b9e25d2c7521097ef50aa9e9f",
+    "result": "failure",
+    "reason": "Windows LockFileEx denies second-handle reading of held legacy admission metadata; 2 migration assertions failed. macOS/backend and frontend passed."
+  },
+  {
+    "run": 40452748873,
+    "head": "aa567e7a431ce245f5ba20777c307f086df832fe",
+    "result": "in_progress",
+    "reason": "owning-handle metadata fix; no lock replacement or release",
+    "partial_failure": {
+      "job": "windows-smoke-evidence",
+      "job_id": 122019025380,
+      "message": "Replacement marker was not produced within fixture wait; helper exit 0, later uploaded marker says old process generation was not alive. Exact job retry pending until active run completes."
+    }
+  }
+]

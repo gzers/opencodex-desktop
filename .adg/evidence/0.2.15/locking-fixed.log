@@ -1,0 +1,9 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.15s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-be6bed1909c9f188)
+
+running 3 tests
+test infrastructure::locking::tests::lock_path_uses_frozen_suffix ... ok
+test infrastructure::locking::tests::owning_handle_reads_bounded_metadata_without_releasing_the_lock ... ok
+test infrastructure::locking::tests::target_lock_serializes_writers ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1081 filtered out; finished in 0.03s

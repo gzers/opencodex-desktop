@@ -2,8 +2,8 @@
   "id": "RCP-OPENCODEX-0.2.15",
   "task_id": "TASK-OPENCODEX-0.2.15",
   "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-24.md",
-  "recorded_at": "2026-10-27T04:23:54.292399+00:00",
-  "code_commit": "6e016fb920d4226b9e25d2c7521097ef50aa9e9f",
+  "recorded_at": "2026-10-27T05:00:32.109956+00:00",
+  "code_commit": "aa567e7a431ce245f5ba20777c307f086df832fe",
   "result": "in_progress",
   "checks": [
     {
@@ -50,12 +50,15 @@
     },
     {
       "name": "review:legacy-cleanup",
-      "status": "passed",
+      "status": "failed",
       "evidence": [
         ".adg/evidence/0.2.15/migration-tests.log",
-        ".adg/evidence/0.2.15/legacy-dispositions.json"
+        ".adg/evidence/0.2.15/legacy-dispositions.json",
+        ".adg/evidence/0.2.15/migration-lock-fixed.log",
+        ".adg/evidence/0.2.15/locking-fixed.log",
+        ".adg/evidence/0.2.15/ci-attempts.json"
       ],
-      "scope": "22 migration cases, exact archive/readback/terminal cleanup and explicit history/credential/lock retention; retired writer/IPC code removed."
+      "scope": "macOS 22 migration and 3 lock cases pass after owning-handle correction; Windows CI 40449979401 failed 2 lock-handle assertions. Awaiting corrected full-platform CI 40452748873."
     },
     {
       "name": "review:prototype",
@@ -72,9 +75,10 @@
       "name": "review:release",
       "status": "failed",
       "evidence": [
-        ".adg/evidence/0.2.15/gate-report.json"
+        ".adg/evidence/0.2.15/gate-report.json",
+        ".adg/evidence/0.2.15/ci-attempts.json"
       ],
-      "scope": "Final exact commit release gate and PR CI 40449979401 are running; no platform release claim."
+      "scope": "Exact head aa567e7a platform CI 40452748873 running after Windows lock correction. No merge/tag/release claim."
     }
   ],
   "limits": [
