@@ -1,9 +1,10 @@
 {
+  "codeCommit": "f37fa3b8eeaf3f452ed59942d2e50e48e31ac61f",
   "date": "2026-10-27",
   "command": "cargo test --locked --workspace --features integration-test",
   "suites": 41,
-  "passed": 1212,
+  "passed": 1213,
   "failed": 0,
   "ignored": 13,
-  "note": "Opt-in live/fixture/native platform tests are separately recorded; ignored does not count as passed."
+  "note": "Ignored opt-in/platform checks not counted as passed."
 }
