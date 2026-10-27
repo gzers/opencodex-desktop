@@ -1,0 +1,85 @@
+{
+  "adapter": "production Rust config_file via temporary loopback fixture",
+  "checks": [
+    {
+      "name": "actual file model appears in the channel table",
+      "ok": true
+    },
+    {
+      "name": "existing Key loaded masked",
+      "ok": true
+    },
+    {
+      "name": "eye reveals the current saved Key",
+      "ok": true
+    },
+    {
+      "name": "preview includes exact custom ID",
+      "ok": true
+    },
+    {
+      "name": "confirmed UI save reached actual config.json",
+      "ok": true
+    },
+    {
+      "name": "unrelated raw field and model remain",
+      "ok": true
+    },
+    {
+      "name": "one prewrite backup exists",
+      "ok": true
+    },
+    {
+      "name": "one global result, no bottom placeholder",
+      "ok": true
+    },
+    {
+      "name": "reopened editor reads the written Key masked",
+      "ok": true
+    },
+    {
+      "name": "no restart/check state resurrected",
+      "ok": true
+    },
+    {
+      "name": "empty input keeps saved Key",
+      "ok": true
+    },
+    {
+      "name": "explicit clear persists deletion",
+      "ok": true
+    },
+    {
+      "name": "export uses current file despite damaged legacy policy/draft",
+      "ok": true
+    },
+    {
+      "name": "receiving and comparing does not write config.json",
+      "ok": true
+    },
+    {
+      "name": "adopting imported channels still leaves file unchanged",
+      "ok": true
+    },
+    {
+      "name": "adoption retains independent channel and Key input",
+      "ok": true
+    },
+    {
+      "name": "the existing save preview contains the imported exact model",
+      "ok": true
+    },
+    {
+      "name": "confirmed Save writes imported raw fields and preserved local Key",
+      "ok": true
+    },
+    {
+      "name": "reopen reads imported channel and original opaque field",
+      "ok": true
+    },
+    {
+      "name": "no browser exceptions",
+      "ok": true
+    }
+  ]
+}

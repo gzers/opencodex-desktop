@@ -1,0 +1,84 @@
+{
+  "id": "RCP-OPENCODEX-0.2.15",
+  "task_id": "TASK-OPENCODEX-0.2.15",
+  "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-24.md",
+  "recorded_at": "2026-10-27T04:23:54.292399+00:00",
+  "code_commit": "f698f363816b97a3376a0fa10887a9538f422b00",
+  "result": "in_progress",
+  "checks": [
+    {
+      "name": "review:transfer-export",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/file-browser/report.json",
+        ".adg/evidence/0.2.15/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/https-webdav.log"
+      ],
+      "scope": "Current-file export including damaged legacy copies, full/family/shared scopes and actual HTTPS roundtrip; selected credential checks isolated."
+    },
+    {
+      "name": "review:transfer-import",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/file-browser/report.json",
+        ".adg/evidence/0.2.15/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.15/transfer-ui.log",
+        ".adg/evidence/0.2.15/backend-regression.log"
+      ],
+      "scope": "Adopt does not write file; actual existing Save Preview confirms Rust write and reopen, independent input/Key preservation and raw template projection."
+    },
+    {
+      "name": "review:internal-agent",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/agent-loopback.log",
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/gate-report.json"
+      ],
+      "scope": "Actual file identities, refresh/race/retry and bound generation parameters through owned loopback management adapter; no paid external generation."
+    },
+    {
+      "name": "review:external-task",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/gate-report.json"
+      ],
+      "scope": "Library-only task, proposal, receipt/idempotency, scope/lock/check-only behavior; damaged unrelated policy/draft do not block."
+    },
+    {
+      "name": "review:legacy-cleanup",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/migration-tests.log",
+        ".adg/evidence/0.2.15/legacy-dispositions.json"
+      ],
+      "scope": "22 migration cases, exact archive/readback/terminal cleanup and explicit history/credential/lock retention; retired writer/IPC code removed."
+    },
+    {
+      "name": "review:prototype",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/prototype-regression.tap",
+        ".adg/evidence/0.2.15/prototype/integrated-save-preview.png",
+        ".adg/evidence/0.2.15/prototype/integrated-model-saved.png",
+        ".adg/evidence/0.2.15/gate-report.json"
+      ],
+      "scope": "311 prototype checks, existing UI geometry and both engine file-save flow; no added CSS/layout/dialog/status row."
+    },
+    {
+      "name": "review:release",
+      "status": "failed",
+      "evidence": [
+        ".adg/evidence/0.2.15/gate-report.json"
+      ],
+      "scope": "Local 21-gate and clippy passed; final PR CI 40449116192, installers/assets/signature/public stable still in progress."
+    }
+  ],
+  "limits": [
+    "No paid external model generation, user WebDAV, active Codex restart or daily user config writes.",
+    "Loopback HTTPS, native installer, in-memory prototype and browser fixtures are separate validation scopes.",
+    "Ignored/skipped cases not counted as passed; OS signing/notarization remain unavailable test distribution."
+  ]
+}

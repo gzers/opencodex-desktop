@@ -1,0 +1,97 @@
+{
+  "source": "apps/desktop/tauri/src/modules/model_config/legacy_migration.rs",
+  "entries": [
+    {
+      "path": "manager-state/model-policy.json",
+      "disposition": "ArchiveAndRetain",
+      "consumers": "store::ModelStore historical load/publish/recover_pending; runtime explicit historical restoration. config_file ordinary metadata reads only load_layout."
+    },
+    {
+      "path": "manager-state/model-config-draft.json",
+      "disposition": "ArchiveAndRetain",
+      "consumers": "store::ModelStore workspace/stage; runtime/recovery explicit restoration. Candidate only, never current layout input."
+    },
+    {
+      "path": "manager-state/model-execution-source-ids.json",
+      "disposition": "ArchiveAndRetain",
+      "consumers": "execution_directory::stable_ids compatibility registry; preserve saved Agent selection identities during layout upgrade. Policy identity wins for the same provider."
+    },
+    {
+      "path": "manager-state/model-source-reads",
+      "disposition": "RetainHistory",
+      "consumers": "discovery_paths and channel_actions load exact source reads; runtime source/slug audit."
+    },
+    {
+      "path": "manager-state/model-save-plans",
+      "disposition": "RetainHistory",
+      "consumers": "runtime plan loading, success history, compensation and explicit restoration snapshots."
+    },
+    {
+      "path": "manager-state/model-recovery-plans",
+      "disposition": "RetainHistory",
+      "consumers": "recovery loads explicit restoration candidates and source baselines."
+    },
+    {
+      "path": "manager-state/model-runtime-ownership.json",
+      "disposition": "RetainActive",
+      "consumers": "runtime historical save/restore ownership checks."
+    },
+    {
+      "path": "manager-state/model-config-journal.json",
+      "disposition": "RetainActive",
+      "consumers": "store::ModelStore::recover_pending replays a validated interrupted transaction."
+    },
+    {
+      "path": "manager-state/model-config-transaction.lock",
+      "disposition": "RetainActive",
+      "consumers": "store::ModelStore transaction lock; removing a lock file could split live lock ownership."
+    },
+    {
+      "path": "manager-state/model-file-incoming",
+      "disposition": "RetainActive",
+      "consumers": "file_objects incoming-plan adoption/cancellation, including protected authorization candidates."
+    },
+    {
+      "path": "manager-state/imported-provider-configs",
+      "disposition": "RetainActive",
+      "consumers": "provider_import exact imported_config references; may still contain required authorization facts."
+    },
+    {
+      "path": "manager-state/new-channel-operations",
+      "disposition": "ArchiveAndRetireTerminal",
+      "consumers": "No ordinary reader/writer: new_channel add/result/latest and their IPC wrappers were removed. Baseline 56c11220 latest_unlocked/reconcile treats only committed/failed as terminal; conflict, cleanup_pending and noWriteProven candidates stay. Retire terminal records only under the nonblocking old admission lock after exact archive verification and unchanged source readback. Never traverse or delete Key/import references."
+    },
+    {
+      "path": "manager-state/new-channel-admission.lock",
+      "disposition": "ArchiveAndRetain",
+      "consumers": "Retired new_channel admission lock; an older process may still hold its inode. Archive only after nonblocking acquisition; create a missing lock only for a populated operations directory. Never unlink the lock inode."
+    },
+    {
+      "path": "manager-state/model-template-tasks",
+      "disposition": "RetainActive",
+      "consumers": "tasks prepare/load/submission receipt recovery; library submission_receipts also remain untouched."
+    },
+    {
+      "path": "backups",
+      "disposition": "RetainHistory",
+      "consumers": "backup browser/restore and runtime protected backups, including model-config-draft.json.bak-* candidates."
+    },
+    {
+      "path": "manager-state/model-client-state.json",
+      "disposition": "RemoveDeadFile",
+      "consumers": "No reader/writer remains; commands::retired_files::RETIRED_FILES already declares this exact file dead."
+    },
+    {
+      "path": "manager-state/.model-layout-upgrade-v1",
+      "disposition": "RemoveOwnedUnreferencedTemp",
+      "consumers": "Only this module writes layout.json and its exact atomic_write temporary siblings, under the layout lock. No history/journal consumer reads them. Other temporary namespaces are retained."
+    }
+  ],
+  "removed_code": [
+    "new_channel.rs",
+    "model_new_channel_add/result/latest IPC",
+    "model_policy_stage IPC",
+    "UI persistDraft no-op and unused stage wrappers"
+  ],
+  "boundary": "Historical recovery, task receipts, credential objects, unknown/incomplete candidates and locks remain. Proven terminal new-channel records archived/readback-checked before removal."
+}

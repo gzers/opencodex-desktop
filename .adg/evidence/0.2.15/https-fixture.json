@@ -1,0 +1,9 @@
+{
+  "client": "production ReqwestWebDavTransport with integration-test-only root certificate injection",
+  "network": "explicit loopback HTTPS, synthetic Basic credentials, no user remote",
+  "certificateValidation": "separate ephemeral CA and server leaf; application certificate validation unchanged",
+  "serverScriptSha256": "7f8efc7fcc54a0aa22111e5191ad4a86c5b187186f8e0a736ba6465dad3c22a0",
+  "caCertificateSha256": "1bd52cba540085f19e5db92e8fb737976f418e099670537ab22893c1be15d276",
+  "test": "config_sync_webdav_real::current_file_channel_roundtrips_over_verified_https_before_explicit_file_save",
+  "result": "passed"
+}

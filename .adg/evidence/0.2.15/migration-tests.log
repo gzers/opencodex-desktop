@@ -1,0 +1,29 @@
+   Compiling opencodex-desktop v0.2.15 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.90s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-be6bed1909c9f188)
+
+running 22 tests
+test modules::model_config::legacy_migration::tests::failed_quarantine_reports_retention_without_claiming_an_archive_exists ... ok
+test modules::model_config::legacy_migration::tests::new_install_creates_only_empty_layout_and_repeats_without_rewriting ... ok
+test modules::model_config::legacy_migration::tests::links_and_directories_are_preserved_without_reading_or_removing_outside_files ... ok
+test modules::model_config::legacy_migration::tests::cleanup_removes_only_dead_fixed_file_and_owned_unreferenced_temporary_names ... ok
+test modules::model_config::legacy_migration::tests::changed_source_or_archive_prevents_terminal_record_unlink ... ok
+test modules::model_config::legacy_migration::tests::concurrent_upgrade_publishes_once_and_never_duplicates_metadata_or_archives ... ok
+test modules::model_config::legacy_migration::tests::current_layout_wins_and_ordinary_reads_never_reopen_legacy ... ok
+test modules::model_config::legacy_migration::tests::draft_candidate_is_archived_but_never_used_as_current_metadata ... ok
+test modules::model_config::legacy_migration::tests::malformed_retired_facts_do_not_discard_valid_metadata ... ok
+test modules::model_config::legacy_migration::tests::policy_identity_wins_and_source_only_identity_survives_for_saved_agent_preferences ... ok
+test modules::model_config::legacy_migration::tests::archive_failure_preserves_source_and_still_creates_required_layout ... ok
+test modules::model_config::legacy_migration::tests::damaged_identity_and_sensitive_node_address_keep_valid_slot_and_adoption_metadata ... ok
+test modules::model_config::legacy_migration::tests::busy_retired_admission_lock_is_never_replaced_removed_or_archived ... ok
+test modules::model_config::legacy_migration::tests::empty_or_unrecognized_join_directory_never_creates_an_admission_lock ... ok
+test modules::model_config::legacy_migration::tests::current_file_facts_and_exact_bytes_win_over_legacy_metadata ... ok
+test modules::model_config::legacy_migration::tests::upgrade_salvages_metadata_and_archives_exact_unsanitized_bytes ... ok
+test modules::model_config::legacy_migration::tests::terminal_join_record_is_retained_when_archive_cannot_be_verified ... ok
+test modules::model_config::legacy_migration::tests::retired_join_candidates_and_unlocked_admission_are_archived_without_deleting_references ... ok
+test modules::model_config::legacy_migration::tests::corrupt_legacy_documents_do_not_block_new_file_snapshot_or_save ... ok
+test modules::model_config::legacy_migration::tests::interrupted_before_and_after_publication_is_repeatable_and_keeps_history_bytes ... ok
+test modules::model_config::legacy_migration::tests::terminal_join_records_are_archived_retired_and_repeat_without_new_archives ... ok
+test modules::model_config::legacy_migration::tests::incomplete_conflicting_unknown_and_corrupt_join_records_keep_originals ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 1061 filtered out; finished in 0.25s

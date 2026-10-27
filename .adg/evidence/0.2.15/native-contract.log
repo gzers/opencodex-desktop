@@ -1,0 +1,14 @@
+✔ overview accepts either complete cards or the real settled setup gate, never an empty or partial page (0.994167ms)
+✔ writes require the exact admitted immutable and saved sandbox, never a relative root or another account directory (0.445292ms)
+✔ invalid native roots are rejected before invoking any application command (0.37975ms)
+✔ native file writes require both saved and immutable model homes inside the admitted sandbox (0.231166ms)
+✔ export containment handles Windows canonical prefixes while rejecting siblings, root files and traversal (0.180584ms)
+✔ task preview JSON begins after the instruction section even when receipt instructions contain braces (0.30675ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 39.204084

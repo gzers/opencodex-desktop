@@ -1,0 +1,28 @@
+
+> opencodex-desktop-ui@0.2.15 gate:release
+> node qa/gate-release.mjs
+
+PASS typecheck ·  · 3794ms
+PASS unit · Tests  901 passed | 10 skipped (911) · 8101ms
+PASS build · ✓ built in 443ms · 752ms
+PASS audit:file-save · {"engine":"chromium","passed":20,"failed":0,"out":"/tmp/ocx-v15-gate/audit-file-save"} · 67615ms
+PASS audit:notification-feedback · {"engine":"chromium","passed":56,"failed":0,"outDir":"/tmp/ocx-v15-gate/audit-notification-feedback"} · 26596ms
+PASS audit:notification-parity · notification recipe parity failed=0/20 · 4296ms
+PASS audit:models · shots: /tmp/ocx-v15-gate/audit-models  failed=0/32 · 11413ms
+PASS audit:preview · shots: /tmp/ocx-v15-gate/audit-preview failed=0/30 · 9628ms
+PASS audit:geometry · failed=0/44 · 7235ms
+PASS audit:geometry:webkit · failed=0/40 · 16933ms
+PASS audit:webkit · shots: /tmp/ocx-v15-gate/audit-webkit  failed=0/32 · 56423ms
+PASS audit:template · shots: /tmp/ocx-v15-gate/audit-template failed=0/28 · 8803ms
+PASS audit:export · shots: /tmp/ocx-v15-gate/audit-export failed=0/18 · 10562ms
+PASS audit:update · shots: /tmp/ocx-v15-gate/audit-update failed=0/24 · 3938ms
+PASS audit:parity:list · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-onstAM failed=0/8 · 6849ms
+PASS audit:parity · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-WnwfcV failed=0/10 · 10982ms
+PASS audit:parity:export · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-export-Q73wLA failed=0/7 · 10056ms
+PASS audit:parity:template · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-template-Xw0kIs failed=0/11 · 10215ms
+PASS audit:parity:agent · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-agent-f1ls5i failed=0/7 · 10398ms
+PASS audit:catalog-naming · CHECKED 50 routed rows; providers=26 · 55ms
+PASS audit:catalog-crossvalidate · PASS 清除友好名后的配置通过官方 config validate · 491ms
+
+门禁快照：21 通过 / 0 失败 / 0 跳过
+报告：/tmp/ocx-v15-gate/gate-report.json
