@@ -1,6 +1,6 @@
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
-import {assertModelSandbox,assertModelExportPath,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
+import {assertModelSandbox,assertModelExportPath,modelConfigPath,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
 import {overviewScene} from './windows-ui-alignment.mjs'
 test('overview accepts either complete cards or the real settled setup gate, never an empty or partial page',()=>{
  assert.equal(overviewScene(Array(6).fill({}),{}),'ready')
@@ -19,6 +19,14 @@ test('writes require the exact admitted immutable and saved sandbox, never a rel
 })
 test('invalid native roots are rejected before invoking any application command',async()=>{
  let invoked=false;await assert.rejects(verifyWindowsModelUi(async()=>{invoked=true},'.',facts,'C:\\other'));assert.equal(invoked,false)
+})
+test('native file writes require both saved and immutable model homes inside the admitted sandbox',()=>{
+ const home=root+'\\opencodex-home'
+ const bound={...facts,dataRoot:{...facts.dataRoot,opencodexHomeMode:'inside',currentOpencodexHome:home,opencodexHome:home}}
+ assert.equal(modelConfigPath(bound,root),home+'\\config.json')
+ for(const change of [{opencodexHomeMode:'external'},{currentOpencodexHome:'C:\\Users\\daily'},{opencodexHome:home+'-other'},{currentOpencodexHome:'relative'}]){
+  assert.throws(()=>modelConfigPath({...bound,dataRoot:{...bound.dataRoot,...change}},root))
+ }
 })
 
 test('export containment handles Windows canonical prefixes while rejecting siblings, root files and traversal',()=>{

@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import {win32,join} from 'node:path'
 import {randomUUID} from 'node:crypto'
-import {writeFile} from 'node:fs/promises'
+import {writeFile,readFile} from 'node:fs/promises'
 import {verifyUiAlignment} from './windows-ui-alignment.mjs'
 function normalize(value){assert(typeof value==='string'&&win32.isAbsolute(value),'absolute active root required');const canonical=value.startsWith('\\\\?\\UNC\\')?'\\\\'+value.slice(8):value.replace(/^\\\\\?\\/,'');return win32.resolve(canonical).toLowerCase()}
 export function assertModelExportPath(path,expected){
@@ -22,8 +22,16 @@ export function assertModelSandbox(facts,expected){
  assert.equal(normalize(facts.dataRoot.activeDataRoot),normalize(expected),'saved root differs from startup sandbox')
  assert.equal(facts.dataRoot.runtimeActive,true,'startup root is not active')
 }
-export async function verifyWindowsModelUi(call,output,facts,expected){
+export function modelConfigPath(facts,expected){
  assertModelSandbox(facts,expected)
+ const home=win32.join(expected,'opencodex-home')
+ assert.equal(facts.dataRoot.opencodexHomeMode,'inside','native model writes require the isolated internal home')
+ assert.equal(normalize(facts.dataRoot.currentOpencodexHome),normalize(home),'runtime model home escaped admitted sandbox')
+ assert.equal(normalize(facts.dataRoot.opencodexHome),normalize(home),'saved model home escaped admitted sandbox')
+ return win32.join(home,'config.json')
+}
+export async function verifyWindowsModelUi(call,output,facts,expected){
+ const configPath=modelConfigPath(facts,expected)
  async function evaluate(expression){const result=await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});assert(!result.exceptionDetails,JSON.stringify(result.exceptionDetails));return result.result.value}
  const invoke=(command,args={})=>evaluate('window.__TAURI_INTERNALS__.invoke('+JSON.stringify(command)+','+JSON.stringify(args)+')')
  async function wait(expression,label){
@@ -34,7 +42,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  const visible="e.getClientRects().length>0"
  async function click(text,selector='.models-page'){const done=await evaluate("(()=>{const root=document.querySelector("+JSON.stringify(selector)+");const button=[...root?.querySelectorAll('button')??[]].find(e=>(e.textContent.trim()==="+JSON.stringify(text)+"||e.getAttribute('aria-label')==="+JSON.stringify(text)+")&&"+visible+"&&!e.disabled);if(!button)return false;button.click();return true})()");assert(done,'Native visible action missing: '+text)}
  const label='Windows native fixture '+randomUUID().slice(0,8),firstDescription='source version',secondDescription='edited through native Vue handler'
- const before=await invoke('model_config_snapshot')
+ const before=await invoke('model_file_snapshot')
  const content={description:firstDescription,matching:{include:[{kind:'prefix',value:'windows-fixture-'}],exclude:[],caseSensitive:false,channelMode:'all',channels:[],priority:0},rules:Object.fromEntries(['protocol','contextWindow','inputModalities','reasoningEfforts','defaultEffort','fast','pinnedEffort','effortMap','noReasoning','reasoningAuthoritative','fastWire'].map(k=>[k,{mode:'inherit'}])),variants:[],lockedFields:[],sources:[]}
  const created=await invoke('model_template_save',{request:{expectedLibrary:before.libraryDigest,templateId:null,baseRevision:null,label,content}})
  assert(created.changed&&created.templateId&&created.revisionId)
@@ -47,7 +55,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  const comparison=await wait("(()=>{const dialog=[...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('与版本比较'));return dialog&&dialog.textContent.includes("+JSON.stringify(firstDescription)+")&&dialog.textContent.includes("+JSON.stringify(secondDescription)+")?{rows:dialog.querySelectorAll('.model-comparison-row').length}:null})()",'native readonly comparison shows source and current buffer')
  assert.equal(comparison.rows,1)
  await click('关闭','dialog[open]')
- const beforeSave=await invoke('model_config_snapshot');assert.equal(beforeSave.library.templates.find(t=>t.id===created.templateId).revisions.length,1,'comparison must not save')
+ const beforeSave=await invoke('model_file_snapshot');assert.equal(beforeSave.library.templates.find(t=>t.id===created.templateId).revisions.length,1,'comparison must not save')
  await click('Agent自动填充')
  await wait("!!document.querySelector('.model-agent-panel [aria-label=\"导出上下文\"]')",'assistant context tools visible')
  await click('导出上下文','.model-agent-panel')
@@ -57,7 +65,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await evaluate("(()=>{document.querySelector('.model-agent-panel button[aria-label=\"收起\"]').click();return true})()")
  await writeFile(join(output,'model-editor-context-native.json'),JSON.stringify({result:'pass',comparisonRows:comparison.rows,comparisonDidNotSave:true,externalCurrentTargetCount:externalContext.targets.length,exactBufferDescription:true,includesSharedContractAndTransport:true,privateChatExcluded:true,taskActivated:false,generationRequests:0},null,2)+'\n')
  await click('保存')
- const changed=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_config_snapshot');const t=s.library.templates.find(t=>t.id==="+JSON.stringify(created.templateId)+");return t?.revisions.length===2?{snapshot:s,template:t}:null})()",'native save persisted new revision')
+ const changed=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_file_snapshot');const t=s.library.templates.find(t=>t.id==="+JSON.stringify(created.templateId)+");return t?.revisions.length===2?{snapshot:s,template:t}:null})()",'native save persisted new revision')
  assert.equal(changed.template.revisions[0].content.description,firstDescription)
  const revision=changed.template.revisions.find(r=>r.content.description===secondDescription);assert(revision,'edited saved content missing')
  assert.equal(changed.template.defaultRevision,null,'saving must not silently choose a default')
@@ -69,7 +77,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await click('设为默认','dialog[open]')
  await wait("document.querySelectorAll('dialog[open]').length===0&&!!document.querySelector('.modal-mask')",'application confirmation above native dialog')
  await click('设为默认','.modal-mask')
- const pointed=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_config_snapshot');return s.library.templates.find(t=>t.id==="+JSON.stringify(created.templateId)+")?.defaultRevision==="+JSON.stringify(revision.id)+"?s:null})()",'default pointer committed')
+ const pointed=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_file_snapshot');return s.library.templates.find(t=>t.id==="+JSON.stringify(created.templateId)+")?.defaultRevision==="+JSON.stringify(revision.id)+"?s:null})()",'default pointer committed')
  assert.deepEqual(pointed.policy,before.policy,'default pointer must not upgrade adoption')
  await wait("document.querySelectorAll('dialog[open]').length===1",'return to version manager')
  await click('关闭','dialog[open]')
@@ -83,16 +91,18 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  assert.equal(incoming.package.payload.templates[0].id,created.templateId)
  const adopted=await invoke('model_transfer_accept',{incomingId:incoming.id,adoptKeys:false,adoptWebdavPasswords:false,adoptExtensionCredentials:false,passphrase:null})
  assert.deepEqual(adopted.policy,before.policy);assert.equal(adopted.library.templates.find(t=>t.id===created.templateId).defaultRevision,revision.id)
- // Persist explicit fixture-only channels through the real draft IPC, never runtime Save.
- // This exercises native HTML5 row sorting; no DEV store injection or provider request.
+ // Seed only the admitted sandbox's actual file through the production writer.
+ // Ordinary channel edits intentionally do not survive an application reload.
  const modelIds=['fixture-alpha','fixture-beta','fixture-gamma'],channelId=randomUUID(),nodeId=randomUUID()
- const channel={id:channelId,label:'Native sort fixture',templateRefs:[],modelRefs:{},selection:{mode:'none'},modelOrder:modelIds,discovered:modelIds.map(id=>({id,label:id,rules:content.rules})),defaults:content.rules,overrides:{},familyOverrides:{},connection:{providerId:'native-sort-fixture',protocol:'openai-chat',nodes:[{id:nodeId,name:'Fixture only',url:'https://example.test/v1'}],activeNodeId:nodeId,credentialRef:null,enabled:false,allowPrivateNetwork:false,authMode:'none'}}
- const staged=await invoke('model_policy_stage',{expectedPolicy:adopted.policyDigest,expectedWorkspace:adopted.workspaceDigest,policy:{...adopted.policy,channels:[...adopted.policy.channels,channel]}})
- assert.deepEqual(staged.policy,adopted.policy,'staging must not commit runtime policy')
- // A route return intentionally retains the user's existing in-memory draft.
- // Reload this isolated WebView to read the explicitly staged fixture like a new startup.
+ const channel={id:channelId,label:'Native sort fixture',templateRefs:[],modelRefs:{},selection:{mode:'none'},modelOrder:modelIds,discovered:modelIds.map(id=>({id,label:id,rules:content.rules})),defaults:content.rules,overrides:{},familyOverrides:{},connection:{providerId:'native-sort-fixture',protocol:'openai-chat',nodes:[{id:nodeId,name:'Fixture only',url:'https://example.test/v1'}],activeNodeId:nodeId,credentialRef:null,enabled:false,allowPrivateNetwork:false,authMode:'key'}}
+ const fileBaseline=await invoke('model_file_snapshot')
+ const seeded=await invoke('model_file_save',{request:{expectedFile:fileBaseline.policyDigest,policy:{...fileBaseline.policy,channels:[...fileBaseline.policy.channels,channel]},credentials:[{channelId,action:'replace',value:'native-sandbox-key'}]}})
+ assert.equal(seeded.changed,true)
+ const initialBytes=await readFile(configPath),initialFile=JSON.parse(initialBytes)
+ assert.equal(initialFile.providers['native-sort-fixture'].apiKey,'native-sandbox-key','fixture must reach actual sandbox config.json')
+ assert.deepEqual(seeded.snapshot.policy.channels.find(c=>c.id===channelId).modelOrder,modelIds)
  await call('Page.reload',{ignoreCache:true})
- await wait("document.readyState==='complete'&&[...document.querySelectorAll('.models-page .model-table tbody tr')].some(e=>e.textContent.includes('Native sort fixture'))",'staged channel visible after full reload')
+ await wait("document.readyState==='complete'&&[...document.querySelectorAll('.models-page .model-table tbody tr')].some(e=>e.textContent.includes('Native sort fixture'))",'file channel visible after full reload')
  await evaluate("(()=>{const row=[...document.querySelectorAll('.model-table tbody tr')].find(e=>e.textContent.includes('Native sort fixture'));[...row.querySelectorAll('button')].find(e=>e.textContent.trim()==='编辑').click();return true})()")
  await wait("document.querySelectorAll('.channel-model-table tr[data-model]').length===3",'three actual model rows')
  // 行排序已从 HTML5 拖放改为指针拖拽（WKWebView 下 drop 不触发），起手元素是 .model-grip。
@@ -104,13 +114,34 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await call('Input.dispatchMouseEvent',{type:'mousePressed',...points.from,button:'left',buttons:1,clickCount:1})
  for(let step=1;step<=12;step++){await call('Input.dispatchMouseEvent',{type:'mouseMoved',x:points.from.x+(points.to.x-points.from.x)*step/12,y:points.from.y+(points.to.y-points.from.y)*step/12,button:'left',buttons:1});await new Promise(resolve=>setTimeout(resolve,25))}
  await call('Input.dispatchMouseEvent',{type:'mouseReleased',...points.to,button:'left',buttons:0,clickCount:1})
- const order=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_config_snapshot');const c=s.workspace?.policy.channels.find(c=>c.id==="+JSON.stringify(channelId)+");return c?.modelOrder[0]==='fixture-beta'&&c.modelOrder[1]==='fixture-alpha'?{order:c.modelOrder,snapshot:s}:null})()",'native pointer sort persisted to draft')
- assert.deepEqual(order.order,['fixture-beta','fixture-alpha','fixture-gamma']);assert.deepEqual(order.snapshot.policy,before.policy,'sorting draft must not save runtime')
- await writeFile(join(output,'model-sort-native.json'),JSON.stringify({result:'pass',input:'WebView2 CDP mouse press/move/release, not synthetic DOM drag events',channelId,before:points.before,after:order.order,policyUnchanged:true,runtimeSave:false},null,2)+'\n')
+ const orderedIds=['fixture-beta','fixture-alpha','fixture-gamma']
+ const order=await wait("(()=>{const order=[...document.querySelectorAll('.channel-model-table tr[data-model]')].map(e=>e.dataset.model);return order[0]==='fixture-beta'&&order[1]==='fixture-alpha'?order:null})()",'native pointer sort updates in-memory rows')
+ assert.deepEqual(order,orderedIds)
+ assert((await readFile(configPath)).equals(initialBytes),'unconfirmed pointer sort must not write config.json')
+ const keyState=await wait("(()=>{const input=document.querySelector('input[aria-label=\"API Key\"]');return input?.value==='native-sandbox-key'?{type:input.type,value:input.value}:null})()",'native editor loads the current file Key')
+ assert.equal(keyState.type,'password');assert.equal(keyState.value,'native-sandbox-key','native editor must load existing Key')
+ await click('显示 API Key');assert.equal(await evaluate("document.querySelector('input[aria-label=\"API Key\"]').type"),'text')
+ await click('隐藏 API Key')
+ await click('保存渠道草稿')
+ await wait("!![...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('保存预览'))",'existing save preview before native file write')
+ await click('确认保存','dialog[open]')
+ const saved=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_file_snapshot');const c=s.policy.channels.find(c=>c.id==="+JSON.stringify(channelId)+");return c?.modelOrder[0]==='fixture-beta'&&c.modelOrder[1]==='fixture-alpha'?s:null})()",'confirmed native sort writes actual file')
+ const written=JSON.parse(await readFile(configPath))
+ assert.equal(written.providers['native-sort-fixture'].apiKey,'native-sandbox-key','sort-only Save must preserve existing Key')
+ assert.notEqual(saved.policyDigest,seeded.snapshot.policyDigest)
+ await wait("!!document.querySelector('.notif-layer .process-progress')",'global save result')
+ assert.equal(await evaluate("document.querySelectorAll('main .save-result,main .process-progress,.task-reopen').length"),0,'save result must not occupy page or a second notification entry')
+ await click('稍后','.notif-layer')
+ await call('Page.reload',{ignoreCache:true})
+ await wait("document.readyState==='complete'&&[...document.querySelectorAll('.models-page .model-table tbody tr')].some(e=>e.textContent.includes('Native sort fixture'))",'saved channel after reopen')
+ await evaluate("(()=>{const row=[...document.querySelectorAll('.model-table tbody tr')].find(e=>e.textContent.includes('Native sort fixture'));[...row.querySelectorAll('button')].find(e=>e.textContent.trim()==='编辑').click();return true})()")
+ await wait("JSON.stringify([...document.querySelectorAll('.channel-model-table tr[data-model]')].map(e=>e.dataset.model))==="+JSON.stringify(JSON.stringify(orderedIds)),'reopened file preserves confirmed native order')
+ assert(!await evaluate("document.querySelector('main').innerText.includes('待重启')"),'later/reopen must not resurrect restart state')
+ await writeFile(join(output,'model-sort-native.json'),JSON.stringify({result:'pass',input:'WebView2 CDP mouse press/move/release, not synthetic DOM drag events',channelId,before:points.before,after:order,memoryEditBeforeSave:true,confirmedFileWrite:true,reopenedOrder:true,existingKeyMasked:true,keyEye:true,keyPreserved:true,runtimeSave:false},null,2)+'\n')
  await new Promise(resolve=>setTimeout(resolve,100))
  const tasks=await evaluate("[...document.querySelectorAll('.model-operation-task,.model-operation-card')].filter(e=>e.getClientRects().length).map(e=>e.textContent)")
  const screenshot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model-template-native.png'),Buffer.from(screenshot.data,'base64'))
  await verifyUiAlignment({call,evaluate,wait,click,output,templateLabel:label})
- const result={result:'pass',scope:'native template edit/save/default-confirm plus exact template file export/receive/adopt; no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,readonlyComparison:true,externalContextBundle:true}
+ const result={result:'pass',scope:'native template and file-backed channel edit/preview/confirm/reopen, exact template transfer; isolated config writes, no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,confirmedChannelFileSave:true,channelReopen:true,existingKeyEye:true,readonlyComparison:true,externalContextBundle:true}
  await writeFile(join(output,'model-ui.json'),JSON.stringify(result,null,2)+'\n');return result
 }
