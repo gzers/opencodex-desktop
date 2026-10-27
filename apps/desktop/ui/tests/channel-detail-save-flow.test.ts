@@ -13,6 +13,13 @@ function render(){return mount(ChannelsView,{global:{stubs:{ChannelEditor:editor
 function receipt(policy:ModelPolicy){return {changed:true,snapshot:{...initial(),policy:structuredClone(policy),policyDigest:'file-after'}}}
 beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();const s=useModelsStore();s.acceptTransfer(initial());s.view.channelEditor='a';vi.mocked(modelApi.project).mockResolvedValue({rows:[],knownActiveModels:1,exactCatalogCount:null,notices:[]})})
 describe('current-channel Save navigation and state',()=>{
+ it.each(['detail','inactive route'])('discards a delayed list preview after entering %s',async target=>{
+  const s=useModelsStore();s.view.channelEditor='';s.channelDraft!.channels[0]!.label='pending';let finish!:(value:Awaited<ReturnType<typeof modelApi.project>>)=>void
+  vi.mocked(modelApi.project).mockReturnValueOnce(new Promise(resolve=>{finish=resolve}));const w=render();await flushPromises();await w.get('[data-testid="policy-save"]').trigger('click');await flushPromises()
+  if(target==='detail')s.view.channelEditor='a';else await w.setProps({active:false});await flushPromises()
+  finish({rows:[],knownActiveModels:1,exactCatalogCount:null,notices:[]});await flushPromises()
+  expect(w.text()).not.toContain('确认保存');expect(modelApi.writeFile).not.toHaveBeenCalled();expect(s.view.channelEditor).toBe(target==='detail'?'a':'');w.unmount()
+ })
  it('keeps clean A disabled when B has edits, including stale emitted events',async()=>{
   const s=useModelsStore();s.channelDraft!.channels[1]!.label='B pending';const w=render();await flushPromises()
   expect(w.get('.detail-save').attributes('disabled')).toBeDefined();expect(w.get('.status').text()).toBe('未修改')

@@ -51,6 +51,149 @@ beforeEach(()=>{
   vi.mocked(modelApi.load).mockImplementation(async()=>copy(disk))
   vi.mocked(modelApi.executionDirectory).mockResolvedValue({channels:[],rows:[]})
 })
+
+describe('global shared store save transactions',()=>{
+  it('projects and writes the frozen full policy without scope, consuming only submitted Key intents',async()=>{
+    const store=useModelsStore();await importRaw()
+    const draft=store.channelDraft!,a=draft.channels[0]!,b=draft.channels[1]!
+    a.label='saved A';b.label='saved B';draft.channels=[b,channel('new'),a]
+    draft.templateRefs=[];draft.defaultChannelId='new'
+    store.editCredential('a','new A','old A');store.clearCredential('b');store.clearCredential('removed-channel')
+    const candidate=copy(draft),accept=vi.spyOn(store,'acceptTransfer')
+    await expect(store.saveAllChannels(candidate,'file-0')).resolves.toEqual({changed:true})
+    expect(modelApi.project).toHaveBeenCalledExactlyOnceWith(candidate)
+    expect(modelApi.writeFile).toHaveBeenCalledExactlyOnceWith('file-0',candidate,[{channelId:'a',action:'replace',value:'new A'},{channelId:'b',action:'clear',value:null}])
+    expect(accept).not.toHaveBeenCalled();expect(store.channelDraft).toBe(draft)
+    expect(draft).toEqual(disk.policy);expect(draft.channels.every(channel=>!channel.connection.importedConfig)).toBe(true)
+    expect(store.credentialEdits).toEqual({'removed-channel':{channelId:'removed-channel',action:'clear',value:null}})
+    expect(store.snapshot).toEqual(disk);expect(store.channelBaseline).toBe('file-1');expect(store.busy).toBe(false)
+    delete store.credentialEdits['removed-channel'];expect(store.channelDirty).toBe(false)
+  })
+
+  it('freezes before projection and preserves later discovery, raw, row, template, Key and order input through receipt and retry',async()=>{
+    const store=useModelsStore();await importRaw()
+    store.channelDraft!.channels[0]!.label='submitted A';store.editCredential('a','submitted Key','old Key');store.clearCredential('b')
+    store.edit(store.snapshot!.library.templates[0]);store.draft!.label='buffer one';const firstSession=store.draftSession
+    store.edit(store.snapshot!.library.templates[1]);store.draft!.label='buffer two';const template=store.draft,session=store.draftSession
+    const frozen=copy(store.channelDraft!),sent=copy(frozen),preview=deferred<DraftProjection>(),write=deferred<Awaited<ReturnType<typeof modelApi.writeFile>>>()
+    vi.mocked(modelApi.project).mockReturnValueOnce(preview.promise);vi.mocked(modelApi.writeFile).mockReturnValueOnce(write.promise)
+    const saving=store.saveAllChannels(frozen,'file-0'),live=store.channelDraft!
+    frozen.channels[0]!.label='caller mutated frozen argument'
+    live.channels[0]!.label='typed during projection';store.clearCredential('a');store.editCredential('b','later B Key','old B Key')
+    preview.resolve(projection());await flushPromises()
+    expect(modelApi.project).toHaveBeenCalledWith(sent)
+    expect(modelApi.writeFile).toHaveBeenCalledExactlyOnceWith('file-0',sent,[{channelId:'a',action:'replace',value:'submitted Key'},{channelId:'b',action:'clear',value:null}])
+    const b=live.channels[1]!
+    b.discovered.push({id:'late-discovery',label:'late-discovery',rules:emptyRules()});b.modelOrder.push('late-discovery')
+    b.connection.importedConfig={id:'later-import',digest:'later raw'}
+    const row=pending('b')
+    live.channels.reverse();live.channels.shift();live.channels.push(channel('late-added'))
+    live.templateRefs=[];live.defaultChannelId='late-added'
+    const result=receipt(sent);result.snapshot.policy.channels[1]!.connection.nodes[0]!.name='normalized node'
+    write.resolve(result);await saving
+    expect(store.channelDraft).toBe(live);expect(live.channels.map(channel=>channel.id)).toEqual(['b','a','late-added'])
+    expect(live.channels[1]!.label).toBe('typed during projection');expect(live.channels[1]!.connection.importedConfig).toBeUndefined()
+    expect(live.channels[0]!.connection).toMatchObject({nodes:[{name:'normalized node'}],importedConfig:{id:'later-import',digest:'later raw'}})
+    expect(live.channels[0]!.discovered.map(model=>model.id)).toEqual(['model','late-discovery'])
+    expect(store.modelRows.b).toBe(row);expect(store.draft).toBe(template);expect(store.draftSession).toBe(session)
+    expect(store.credentialEdits).toEqual({a:{channelId:'a',action:'clear',value:null},b:{channelId:'b',action:'replace',value:'later B Key'}})
+    expect(store.snapshot!.policy).toEqual(result.snapshot.policy);expect(store.channelBaseline).toBe('file-1')
+    expect(store.channelIsDirty('a')).toBe(true);expect(store.channelIsDirty('b')).toBe(true);expect(store.channelDirty).toBe(true)
+    delete store.modelRows.b
+    const retry=copy(live);await store.saveAllChannels(retry,'file-1')
+    expect(modelApi.writeFile).toHaveBeenNthCalledWith(2,'file-1',retry,[{channelId:'a',action:'clear',value:null},{channelId:'b',action:'replace',value:'later B Key'}])
+    expect(store.channelDirty).toBe(false);expect(store.credentialEdits).toEqual({});expect(store.dirty).toBe(true)
+    store.edit(store.snapshot!.library.templates[0]);expect(store.draft!.label).toBe('buffer one');expect(store.draftSession).toBe(firstSession)
+  })
+
+  it.each(['same replacement','same clear','mutated intent'] as const)('retains a later %s instead of consuming the submitted Key',async kind=>{
+    const store=useModelsStore(),write=deferred<Awaited<ReturnType<typeof modelApi.writeFile>>>()
+    if(kind==='same clear')store.clearCredential('a');else store.editCredential('a','submitted','original')
+    vi.mocked(modelApi.writeFile).mockReturnValueOnce(write.promise)
+    const frozen=copy(store.channelDraft!),saving=store.saveAllChannels(frozen,'file-0');await flushPromises()
+    if(kind==='same clear')store.clearCredential('a')
+    else if(kind==='same replacement')store.editCredential('a','submitted','original')
+    else store.credentialEdits.a!.value='mutated after submission'
+    const intent=store.credentialEdits.a
+    write.resolve(receipt(frozen));await saving
+    expect(store.credentialEdits.a).toBe(intent);expect(store.channelIsDirty('a')).toBe(true);expect(store.busy).toBe(false)
+  })
+
+  it('guards global/scoped reentry during both projection and writing',async()=>{
+    const store=useModelsStore(),preview=deferred<DraftProjection>(),write=deferred<Awaited<ReturnType<typeof modelApi.writeFile>>>()
+    store.clearCredential('a');const frozen=copy(store.channelDraft!)
+    vi.mocked(modelApi.project).mockReturnValueOnce(preview.promise);vi.mocked(modelApi.writeFile).mockReturnValueOnce(write.promise)
+    const saving=store.saveAllChannels(frozen,'file-0')
+    await expect(store.saveAllChannels(frozen,'file-0')).rejects.toMatchObject({message:expect.stringContaining('正在处理')})
+    await expect(store.saveCurrentChannel('a')).rejects.toMatchObject({message:expect.stringContaining('正在处理')})
+    preview.resolve(projection());await flushPromises()
+    await expect(store.saveAllChannels(frozen,'file-0')).rejects.toMatchObject({message:expect.stringContaining('正在处理')})
+    expect(modelApi.project).toHaveBeenCalledOnce();expect(modelApi.writeFile).toHaveBeenCalledOnce();expect(store.busy).toBe(true)
+    write.resolve(receipt(frozen));await saving;expect(store.busy).toBe(false)
+    store.staging=true
+    await expect(store.saveAllChannels(frozen,'file-1')).rejects.toMatchObject({message:expect.stringContaining('正在处理')})
+    expect(store.busy).toBe(false)
+  })
+
+  it.each(['before','after projection'] as const)('blocks pending rows in any channel %s, preserving all input',async when=>{
+    const store=useModelsStore(),preview=deferred<DraftProjection>()
+    store.clearCredential('a');const frozen=copy(store.channelDraft!)
+    if(when==='before')pending('c');else vi.mocked(modelApi.project).mockReturnValueOnce(preview.promise)
+    const saving=store.saveAllChannels(frozen,'file-0')
+    if(when!=='before'){pending('b');preview.resolve(projection())}
+    await expect(saving).rejects.toMatchObject({message:expect.stringContaining('全部渠道未确认')})
+    expect(modelApi.writeFile).not.toHaveBeenCalled();expect(store.pendingRows).toHaveLength(1)
+    expect(store.channelBaseline).toBe('file-0');expect(store.credentialEdits.a).toBeDefined();expect(store.busy).toBe(false)
+  })
+
+  it.each(['candidate recovery','live recovery','explicit recovery','stale expected','late baseline','late snapshot','late history'] as const)('rejects %s before ordinary writing',async kind=>{
+    const store=useModelsStore(),preview=deferred<DraftProjection>()
+    if(kind==='explicit recovery'){
+      const recovery={...copy(disk.policy),recoveryId:'restore-id'}
+      vi.mocked(modelApi.acceptRecovery).mockResolvedValue({...copy(disk),policyDigest:'legacy',workspace:{basePolicy:'legacy',policy:recovery}})
+      await store.acceptHistoricalRecovery('restore-id','history-id')
+    }
+    const frozen=copy(store.channelDraft!)
+    if(kind==='candidate recovery')frozen.recoveryId='restore-id'
+    if(kind==='live recovery')store.channelDraft!.recoveryId='restore-id'
+    if(kind.startsWith('late'))vi.mocked(modelApi.project).mockReturnValueOnce(preview.promise)
+    const saving=store.saveAllChannels(frozen,kind==='stale expected'?'stale':'file-0')
+    if(kind==='late baseline')store.channelBaseline='another-file'
+    if(kind==='late snapshot')store.snapshot!.policyDigest='another-file'
+    if(kind==='late history')store.channelDraft!.recoveryId='restore-id'
+    preview.resolve(projection())
+    await expect(saving).rejects.toMatchObject({message:expect.stringContaining(kind.includes('recovery')||kind==='late history'?'历史恢复':'保存基准')})
+    expect(modelApi.writeFile).not.toHaveBeenCalled();expect(modelApi.preparePolicy).not.toHaveBeenCalled();expect(modelApi.applyPolicy).not.toHaveBeenCalled();expect(store.busy).toBe(false)
+    if(kind==='explicit recovery')expect(store.historicalRecovery?.id).toBe('restore-id')
+  })
+
+  it.each(['preview error','over budget','write error'] as const)('retains baseline, raw material and credentials on %s, then permits retry',async failure=>{
+    const store=useModelsStore();await importRaw();store.clearCredential('a');store.editCredential('b','new B','old B')
+    const frozen=copy(store.channelDraft!),draft=store.channelDraft,snapshot=store.snapshot,keys=copy(store.credentialEdits)
+    if(failure==='preview error')vi.mocked(modelApi.project).mockRejectedValueOnce({message:'配置校验失败'})
+    else if(failure==='over budget')vi.mocked(modelApi.project).mockResolvedValueOnce({...projection(),knownActiveModels:101})
+    else vi.mocked(modelApi.writeFile).mockRejectedValueOnce({message:'文件写入失败'})
+    await expect(store.saveAllChannels(frozen,'file-0')).rejects.toMatchObject({message:expect.stringContaining(failure==='preview error'?'校验失败':failure==='over budget'?'100':'写入失败')})
+    expect(store.channelDraft).toBe(draft);expect(draft).toEqual(frozen);expect(store.snapshot).toBe(snapshot)
+    expect(store.channelBaseline).toBe('file-0');expect(store.credentialEdits).toEqual(keys);expect(store.busy).toBe(false)
+    if(failure!=='write error')expect(modelApi.writeFile).not.toHaveBeenCalled()
+    vi.mocked(modelApi.project).mockResolvedValueOnce({...projection(),knownActiveModels:100})
+    await store.saveAllChannels(frozen,'file-0');expect(store.channelDirty).toBe(false);expect(store.busy).toBe(false)
+  })
+
+  it('accepts a metadata-only global receipt without changing the file digest or dropping later edits',async()=>{
+    const store=useModelsStore(),write=deferred<Awaited<ReturnType<typeof modelApi.writeFile>>>()
+    store.channelDraft!.channels[0]!.label='metadata A'
+    const frozen=copy(store.channelDraft!);vi.mocked(modelApi.writeFile).mockReturnValueOnce(write.promise)
+    const saving=store.saveAllChannels(frozen,'file-0');await flushPromises()
+    store.channelDraft!.channels[1]!.label='late B';pending('c')
+    write.resolve({changed:false,snapshot:{...copy(disk),policy:copy(frozen)}})
+    await expect(saving).resolves.toEqual({changed:false})
+    expect(store.channelBaseline).toBe('file-0');expect(store.channelIsDirty('a')).toBe(false)
+    expect(store.channelDraft!.channels[1]!.label).toBe('late B');expect(store.channelIsDirty('b')).toBe(true)
+    expect(store.pendingRows).toEqual([{channel:'c',model:'model'}]);expect(store.busy).toBe(false)
+  })
+})
 afterEach(()=>pinia._s.forEach(store=>store.$dispose()))
 
 describe('channel-scoped shared store saves',()=>{
@@ -289,6 +432,125 @@ describe('channel-scoped shared store saves',()=>{
     expect(store.credentialEdits).toEqual({});expect(store.channelDirty).toBe(false)
     await expect(store.saveCurrentChannel('a')).resolves.toEqual({changed:false})
     expect(modelApi.writeFile).toHaveBeenCalledOnce();expect(store.busy).toBe(false)
+  })
+
+  it('absorbs the latest locked layout from a metadata-only A receipt even when the file digest is unchanged',async()=>{
+    const store=useModelsStore(),draft=store.channelDraft!
+    draft.channels[0]!.label='saved metadata A'
+    const latest=copy(disk)
+    latest.policy.channels[1]!.label='newly saved B'
+    latest.policy.channels[1]!.connection.nodes[0]!.name='latest B node'
+    latest.policy.channels[1]!.templateRefs=[{templateId:'two',revisionId:'revision'}]
+    latest.policy.templateRefs=[];latest.policy.channels.reverse()
+    vi.mocked(modelApi.writeFile).mockImplementationOnce(async(expected,policy,credentials,scope)=>{
+      expect(expected).toBe('file-0');expect(scope).toEqual({channelId:'a'});expect(credentials).toEqual([])
+      // Like the backend's latest_locked_layout test: the stale B and global
+      // metadata in this request never replace the layout held by its lock.
+      expect(policy.channels[1]!.label).toBe('b');expect(policy.templateRefs).toEqual(initial().policy.templateRefs)
+      latest.policy.channels[2]=copy(policy.channels[0]!)
+      disk=copy(latest);return {changed:false,snapshot:copy(latest)}
+    })
+    await expect(store.saveCurrentChannel('a')).resolves.toEqual({changed:false})
+    expect(store.channelDraft).toBe(draft);expect(draft).toEqual(latest.policy)
+    expect(store.channelBaseline).toBe('file-0');expect(store.channelDirty).toBe(false)
+    expect(store.channelIsDirty('b')).toBe(false)
+    await store.saveCurrentChannel('a');expect(modelApi.writeFile).toHaveBeenCalledOnce()
+    const b=draft.channels.find(channel=>channel.id==='b')!
+    b.defaults.fast={mode:'custom',value:true}
+    const wrapper=mount(ChannelsView,{global:{stubs:{UiDialog:{props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'},ChannelEditor:true,ChannelNodeSelect:true,UiSelectField:true}}})
+    try{
+      await flushPromises();await wrapper.get('[data-testid="policy-save"]').trigger('click');await flushPromises()
+      await wrapper.findAll('button').find(button=>button.text()==='确认保存')!.trigger('click');await flushPromises()
+      const [expected,policy,,scope]=vi.mocked(modelApi.writeFile).mock.calls[1]!
+      expect(expected).toBe('file-0');expect(scope).toBeUndefined()
+      expect(policy.channels.find(channel=>channel.id==='b')).toMatchObject({label:'newly saved B',connection:{nodes:[{name:'latest B node'}]},templateRefs:[{templateId:'two',revisionId:'revision'}],defaults:{fast:{mode:'custom',value:true}}})
+      expect(store.channelDirty).toBe(false)
+    }finally{wrapper.unmount()}
+  })
+
+  it.each(['replace','clear'] as const)('rebases unedited B fields while preserving local B fields and its %s Key intent',async action=>{
+    const store=useModelsStore(),b=store.channelDraft!.channels[1]!
+    store.channelDraft!.channels[0]!.label='submitted A';b.label='local B'
+    b.connection.nodes[0]!.url='https://local-b.example.test'
+    b.defaults.fast={mode:'custom',value:true}
+    if(action==='clear')store.clearCredential('b');else store.editCredential('b','local B Key','old B Key')
+    const key=store.credentialEdits.b
+    vi.mocked(modelApi.writeFile).mockImplementationOnce(async(_expected,policy,_credentials,scope)=>{
+      expect(scope).toEqual({channelId:'a'});expect(policy.channels[1]).toEqual(initial().policy.channels[1])
+      const result=receipt(policy),latestB=result.snapshot.policy.channels[1]!
+      latestB.label='external B';latestB.connection.nodes[0]!.name='external node name'
+      latestB.templateRefs=[{templateId:'two',revisionId:'revision'}]
+      return result
+    })
+    await store.saveCurrentChannel('a')
+    expect(store.channelDraft!.channels[1]).toMatchObject({label:'local B',connection:{nodes:[{name:'external node name',url:'https://local-b.example.test'}]},defaults:{fast:{mode:'custom',value:true}},templateRefs:[{templateId:'two',revisionId:'revision'}]})
+    expect(store.credentialEdits.b).toBe(key);expect(store.channelIsDirty('b')).toBe(true)
+    expect(store.channelIsDirty('a')).toBe(false);expect(store.channelDirty).toBe(true)
+  })
+
+  it('retains B row, raw import and template buffers plus global ordering/add/delete intent across a latest-layout receipt',async()=>{
+    const store=useModelsStore();await importRaw()
+    const rows=pending('b'),raw=store.channelDraft!.channels[1]!.connection.importedConfig
+    store.edit(store.snapshot!.library.templates[0]);store.draft!.label='retained one';const firstSession=store.draftSession
+    store.edit(store.snapshot!.library.templates[1]);store.draft!.label='active two';const active=store.draft,session=store.draftSession
+    const a=store.channelDraft!.channels[0]!,b=store.channelDraft!.channels[1]!
+    a.label='submitted A';store.channelDraft!.channels=[b,channel('new-local'),a]
+    store.channelDraft!.templateRefs=[];store.channelDraft!.defaultChannelId='new-local'
+    store.channelDraft!.pendingRemovals=[{readId:'old-import',channelId:'removed-local',providerId:'removed',credentialRef:null}]
+    vi.mocked(modelApi.writeFile).mockImplementationOnce(async(_expected,policy)=>{
+      const result=receipt(policy);result.snapshot.policy.channels[1]!.label='latest B'
+      result.snapshot.policy.templateRefs=[{templateId:'two',revisionId:'revision'}]
+      result.snapshot.policy.channels.reverse();return result
+    })
+    await store.saveCurrentChannel('a')
+    expect(store.channelDraft!.channels.map(channel=>channel.id)).toEqual(['b','new-local','a'])
+    expect(store.channelDraft!.channels[0]!.label).toBe('latest B')
+    expect(store.channelDraft!.channels[0]!.connection.importedConfig).toEqual(raw)
+    expect(store.modelRows.b).toBe(rows);expect(store.pendingRows).toEqual([{channel:'b',model:'model'}])
+    expect(store.draft).toBe(active);expect(store.draftSession).toBe(session);expect(store.dirty).toBe(true)
+    store.edit(store.snapshot!.library.templates[0]);expect(store.draft!.label).toBe('retained one');expect(store.draftSession).toBe(firstSession)
+    expect(store.channelDraft!.templateRefs).toEqual([]);expect(store.channelDraft!.defaultChannelId).toBe('new-local')
+    expect(store.channelDraft!.pendingRemovals).toHaveLength(1)
+    expect(store.channelIsDirty('a')).toBe(false);expect(store.channelIsDirty('b')).toBe(true);expect(store.channelDirty).toBe(true)
+  })
+
+  it('preserves later B field/deletion/order input while accepting independent latest B fields',async()=>{
+    const store=useModelsStore(),preview=deferred<DraftProjection>(),write=deferred<Awaited<ReturnType<typeof modelApi.writeFile>>>()
+    store.channelDraft!.channels[0]!.label='submitted A'
+    vi.mocked(modelApi.project).mockReturnValueOnce(preview.promise);vi.mocked(modelApi.writeFile).mockReturnValueOnce(write.promise)
+    const saving=store.saveCurrentChannel('a')
+    const b=store.channelDraft!.channels[1]!
+    b.label='typed during projection';b.connection.nodes[0]!.url='https://late.example.test'
+    store.clearCredential('b');preview.resolve(projection());await flushPromises()
+    b.naming!.model={alias:'typed during write'};store.channelDraft!.channels.reverse();store.channelDraft!.channels.shift()
+    const result=receipt(vi.mocked(modelApi.writeFile).mock.calls[0]![1])
+    result.snapshot.policy.channels[1]!.label='latest B'
+    result.snapshot.policy.channels[1]!.connection.nodes[0]!.name='latest B node'
+    result.snapshot.policy.channels[1]!.templateRefs=[{templateId:'two',revisionId:'revision'}]
+    write.resolve(result);await saving
+    expect(store.channelDraft!.channels.map(channel=>channel.id)).toEqual(['b','a'])
+    expect(store.channelDraft!.channels[0]).toMatchObject({label:'typed during projection',connection:{nodes:[{name:'latest B node',url:'https://late.example.test'}]},naming:{model:{alias:'typed during write'}},templateRefs:[{templateId:'two',revisionId:'revision'}]})
+    expect(store.credentialEdits.b?.action).toBe('clear');expect(store.channelIsDirty('b')).toBe(true);expect(store.channelDirty).toBe(true)
+  })
+
+  it('merges independent first edits to optional B naming maps without combining exact template references',async()=>{
+    const store=useModelsStore(),base=initial()
+    delete base.policy.channels[1]!.naming
+    base.policy.channels[1]!.modelRefs.model={templateId:'one',revisionId:'original'}
+    store.acceptTransfer(base)
+    store.channelDraft!.channels[0]!.label='submitted A'
+    store.channelDraft!.channels[1]!.naming={model:{alias:'local alias'}}
+    store.channelDraft!.channels[1]!.modelRefs.model={templateId:'two',revisionId:'original'}
+    vi.mocked(modelApi.writeFile).mockImplementationOnce(async(_expected,policy)=>{
+      const result=receipt(policy)
+      result.snapshot.policy.channels[1]!.naming={model:{displayName:'latest display name'}}
+      result.snapshot.policy.channels[1]!.modelRefs.model={templateId:'one',revisionId:'latest'}
+      return result
+    })
+    await store.saveCurrentChannel('a')
+    expect(store.channelDraft!.channels[1]!.naming).toEqual({model:{alias:'local alias',displayName:'latest display name'}})
+    expect(store.channelDraft!.channels[1]!.modelRefs.model).toEqual({templateId:'two',revisionId:'original'})
+    expect(store.channelIsDirty('b')).toBe(true)
   })
 
   it.each(['explicit recovery','provenance only'] as const)('rejects %s through a clear historical-flow message without consuming anything',async kind=>{

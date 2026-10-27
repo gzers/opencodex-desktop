@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url'
 import http from 'node:http'
 import {pickEngine} from './engine.mjs'
 const ui=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..')
-const proto=path.resolve(ui,'../../../../governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html')
+const proto=process.env.PROTOTYPE_FILE||path.resolve(ui,'../../../../governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html')
 const out=process.env.AUDIT_OUT_DIR||'/tmp/ocx-v16-notification-parity';fs.mkdirSync(out,{recursive:true})
 if(!fs.existsSync(proto)){console.log('BLOCKED: sole prototype not available');process.exit(2)}
 const server=spawn(path.join(ui,'node_modules/.bin/vite'),['--host','127.0.0.1','--port','5219','--strictPort'],{cwd:ui,stdio:'ignore'})

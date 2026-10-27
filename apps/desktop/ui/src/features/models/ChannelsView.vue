@@ -66,10 +66,13 @@ let disposed=false
 onBeforeUnmount(()=>{disposed=true;detailSequence++;if(detailTimer)clearTimeout(detailTimer)})
 /** 列表保存先预览全部剩余修改；详情保存独立按当前渠道提交（UI 规范 §47）。 */
 const saveReviewBaseline=ref<{saved:string;library:string;recovery:string|null}|null>(null),saveConfirming=ref(false)
+watch(()=>[editorId.value,props.active],()=>{
+  previewSequence++;previewRefreshSequence++;previewBusy.value=false;previewOpen.value=false;previewProjection.value=null;saveReviewBaseline.value=null
+})
 async function prepareSave(){
   // §38.4「再次点击不会重复提交」：除按钮禁用外，函数自身也要挡住并发与重入，
   // 列表预览与详情写入也共享互斥状态，旧事件不能绕过按钮态。
-  if(!models.channelDraft||!models.snapshot||!models.channelDirty&&!models.pendingRows.length||models.busy||models.staging||saving.value||saveConfirming.value||previewBusy.value||previewOpen.value)return
+  if(editorId.value||props.active===false||!models.channelDraft||!models.snapshot||!models.channelDirty&&!models.pendingRows.length||models.busy||models.staging||saving.value||saveConfirming.value||previewBusy.value||previewOpen.value)return
   const sequence=++previewSequence
   previewBusy.value=true;previewError.value='';error.value=''
   try{const projection=await modelApi.project(JSON.parse(JSON.stringify(models.channelDraft)))
@@ -127,21 +130,18 @@ async function confirmSave(){
   const recovery=models.historicalRecovery
   const reason=saveGateReason()
   saveConfirming.value=true;previewOpen.value=false;previewProjection.value=null;saveReviewBaseline.value=null
+  if(reason==='no_changes'){saveConfirming.value=false;return}
   if(reason){
     try{await modelApi.policySaveBlocked(reason)}catch{useFeedbackStore().showToast('本次没有写入，当前编辑已保留。',{kind:'error'})}
     saveConfirming.value=false;return
   }
-  saving.value=true;models.busy=true;error.value=''
+  saving.value=true;if(recovery)models.busy=true;error.value=''
   try{
     if(recovery)await models.saveHistoricalRecovery(frozen)
-    else{
-      const edits=Object.values(models.credentialEdits).filter(e=>frozen.channels.some(c=>c.id===e.channelId)).map(e=>({...e}))
-      const result=await modelApi.writeFile(expected,frozen,edits)
-      models.acceptTransfer(result.snapshot)
-    }
+    else await models.saveAllChannels(frozen,expected)
     useModelSaveFeedback().showSaved()
   }catch(cause){const message=(recovery?'历史恢复未完成：':'未写入：')+errorText(cause);if(recovery)error.value=message;useFeedbackStore().showToast(message,{kind:'error'})}
-  finally{saving.value=false;models.busy=false;saveConfirming.value=false}
+  finally{saving.value=false;if(recovery)models.busy=false;saveConfirming.value=false}
 }
 
 /** Detail Save shares the file writer but commits only this channel. Navigation
