@@ -46,7 +46,13 @@ async function save(){
  if(saving.value||busy.value||saved.value)return
  if(!review.value){if(stale.value||!frozen.value||!selectedCount.value)return;const proposals=items.value.filter(item=>chosen.value[item.id]?.length).map(item=>{const accepted=acceptProposal(item.base,item.fields,chosen.value[item.id]??[]);return{templateId:accepted.templateId,baseRevision:accepted.baseRevision,label:accepted.label,content:accepted.content}});review.value={runId:resultRun.value,expectedLibrary:frozen.value.libraryDigest,proposals}}
  saving.value=true;error.value=''
- try{const committed=await modelApi.acceptAgentReview(JSON.parse(JSON.stringify(review.value)));models.snapshot=committed.snapshot;saved.value=true;report.value='已另存 '+committed.outcomes.filter(o=>o.changed).length+' 个版本；默认与已有采用保持。'}catch(cause){error.value=errorText(cause)}finally{saving.value=false}
+ try{
+  const committed=await modelApi.acceptAgentReview(JSON.parse(JSON.stringify(review.value)))
+  // Agent commits carry the legacy manager policy. Only the library changed;
+  // retain the file snapshot and every channel/Key edit still in memory.
+  if(models.snapshot)models.snapshot={...models.snapshot,library:committed.snapshot.library,libraryDigest:committed.snapshot.libraryDigest}
+  saved.value=true;report.value='已另存 '+committed.outcomes.filter(o=>o.changed).length+' 个版本；默认与已有采用保持。'
+ }catch(cause){error.value=errorText(cause)}finally{saving.value=false}
 }
 </script>
 <template>
