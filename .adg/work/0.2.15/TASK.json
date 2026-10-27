@@ -1,0 +1,20 @@
+{
+  "id": "TASK-OPENCODEX-0.2.15",
+  "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-24.md",
+  "scope": "WP-82-WP-84 and shared legacy migration/cleanup",
+  "authority": "User explicitly authorized documents, development, testing and stable release on 2026-10-27",
+  "required_checks": [
+    "review:transfer-export",
+    "review:transfer-import",
+    "review:internal-agent",
+    "review:external-task",
+    "review:legacy-cleanup",
+    "review:prototype",
+    "review:release"
+  ],
+  "write_scopes": {
+    "code": "ocx-022-model-selector / codex/0.2.15-channel-consumers",
+    "docs": "governance-main / docs/governance-main"
+  },
+  "baseline": "56c11220b77b69de948f933e3b4c7fb93dae8256"
+}
