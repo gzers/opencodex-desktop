@@ -506,6 +506,266 @@ fn stale_file_rejects_before_credentials_layout_or_backup() {
     assert!(f.backups().is_empty());
 }
 
+fn named_draft(f: &Fixture, raw_change: bool) -> (Policy, String) {
+    let mut draft = f.snapshot().policy;
+    let a = channel_mut(&mut draft, "a");
+    a.label = "name awaiting durable layout".into();
+    if raw_change {
+        a.connection.enabled = !a.connection.enabled;
+    }
+    let id = a.id.clone();
+    (draft, id)
+}
+
+#[test]
+fn actual_layout_lock_timeout_never_acknowledges_metadata_or_raw_and_is_retryable() {
+    for raw_change in [false, true] {
+        let f = Fixture::new();
+        let (draft, id) = named_draft(&f, raw_change);
+        let request = f.request(draft.clone(), &id);
+        let before = f.bytes();
+        let layout_before = std::fs::read(f.root.join(METADATA)).unwrap();
+        let guard = TargetFileLock::lock(&f.root.join(METADATA)).unwrap();
+        assert_eq!(f.save(request).err().unwrap().code, "layout_lock");
+        assert!(f.bytes() == before);
+        assert!(std::fs::read(f.root.join(METADATA)).unwrap() == layout_before);
+        assert!(f.backups().is_empty());
+        drop(guard);
+        let result = f.save(f.request(draft, &id)).unwrap();
+        assert_eq!(result.changed, raw_change);
+        assert_eq!(
+            channel(&result.snapshot.policy, "a").label,
+            "name awaiting durable layout"
+        );
+        assert_eq!(result.snapshot.policy, f.snapshot().policy);
+    }
+}
+
+#[cfg(unix)]
+struct ReadOnlyDirectory {
+    path: PathBuf,
+    permissions: std::fs::Permissions,
+}
+#[cfg(unix)]
+impl ReadOnlyDirectory {
+    fn new(path: &Path) -> Self {
+        use std::os::unix::fs::PermissionsExt;
+        let permissions = std::fs::metadata(path).unwrap().permissions();
+        std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o500)).unwrap();
+        let guard = Self {
+            path: path.into(),
+            permissions,
+        };
+        // Prove this fixture really denies atomic writes; never claim a fault
+        // test passed merely because a privileged process bypassed mode bits.
+        assert!(atomic_write(&path.join("fixture-write-probe"), b"probe", 0o600).is_err());
+        guard
+    }
+}
+#[cfg(unix)]
+impl Drop for ReadOnlyDirectory {
+    fn drop(&mut self) {
+        std::fs::set_permissions(&self.path, self.permissions.clone()).unwrap();
+    }
+}
+
+#[cfg(unix)]
+#[test]
+fn actual_layout_write_failure_rolls_back_raw_and_metadata_only_never_succeeds() {
+    for raw_change in [false, true] {
+        let f = Fixture::new();
+        let (draft, id) = named_draft(&f, raw_change);
+        let request = f.request(draft.clone(), &id);
+        let before = f.bytes();
+        let layout_before = std::fs::read(f.root.join(METADATA)).unwrap();
+        let denied = ReadOnlyDirectory::new(&f.root.join("manager-state"));
+        assert_eq!(f.save(request).err().unwrap().code, "layout_write");
+        assert!(f.bytes() == before);
+        assert!(std::fs::read(f.root.join(METADATA)).unwrap() == layout_before);
+        let backups = f.backups();
+        assert_eq!(backups.len(), usize::from(raw_change));
+        if raw_change {
+            assert!(std::fs::read(&backups[0]).unwrap() == before);
+        }
+        drop(denied);
+        let result = f.save(f.request(draft, &id)).unwrap();
+        assert_eq!(result.changed, raw_change);
+        assert_eq!(result.snapshot.policy, f.snapshot().policy);
+        assert_eq!(
+            channel(&result.snapshot.policy, "a").label,
+            "name awaiting durable layout"
+        );
+    }
+}
+
+#[cfg(unix)]
+#[test]
+fn actual_raw_write_failure_preserves_layout_and_allows_same_baseline_retry() {
+    let f = Fixture::new();
+    let (draft, id) = named_draft(&f, true);
+    let request = f.request(draft.clone(), &id);
+    let before = f.bytes();
+    let layout_before = std::fs::read(f.root.join(METADATA)).unwrap();
+    let denied = ReadOnlyDirectory::new(&f.home);
+    assert_eq!(f.save(request).err().unwrap().code, "storage");
+    assert!(f.bytes() == before);
+    assert!(std::fs::read(f.root.join(METADATA)).unwrap() == layout_before);
+    drop(denied);
+    assert!(f.save(f.request(draft, &id)).unwrap().changed);
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_layout_replace_denied_preserves_metadata_and_rolls_back_raw_then_retries() {
+    use std::os::windows::fs::OpenOptionsExt;
+    use windows_sys::Win32::Storage::FileSystem::{FILE_SHARE_READ, FILE_SHARE_WRITE};
+    for raw_change in [false, true] {
+        let f = Fixture::new();
+        let (draft, id) = named_draft(&f, raw_change);
+        let request = f.request(draft.clone(), &id);
+        let before = f.bytes();
+        let layout_path = f.root.join(METADATA);
+        let layout_before = std::fs::read(&layout_path).unwrap();
+        // Retain read/write sharing so baseline reads and the layout lock work.
+        // Omit FILE_SHARE_DELETE to make the real atomic rename fail on Windows.
+        let deny_replace = std::fs::OpenOptions::new()
+            .read(true)
+            .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE)
+            .open(&layout_path)
+            .unwrap();
+        assert!(
+            atomic_write(&layout_path, b"replace must fail", 0o600).is_err(),
+            "fixture must actually prevent atomic layout replacement"
+        );
+        assert!(std::fs::read(&layout_path).unwrap() == layout_before);
+        assert_eq!(f.save(request).err().unwrap().code, "layout_write");
+        assert!(f.bytes() == before);
+        assert!(std::fs::read(&layout_path).unwrap() == layout_before);
+        let backups = f.backups();
+        assert_eq!(backups.len(), usize::from(raw_change));
+        if raw_change {
+            assert!(std::fs::read(&backups[0]).unwrap() == before);
+        }
+        drop(deny_replace);
+        let result = f.save(f.request(draft, &id)).unwrap();
+        assert_eq!(result.changed, raw_change);
+        assert_eq!(result.snapshot.policy, f.snapshot().policy);
+        assert_eq!(
+            channel(&result.snapshot.policy, "a").label,
+            "name awaiting durable layout"
+        );
+    }
+}
+
+#[cfg(unix)]
+#[test]
+fn layout_write_failure_restores_absent_raw_file_as_absent() {
+    let f = Fixture::new();
+    let mut incoming = channel(&f.snapshot().policy, "a").clone();
+    incoming.label = "new unsaved name".into();
+    let id = incoming.id.clone();
+    std::fs::remove_file(f.home.join("config.json")).unwrap();
+    let draft = Policy {
+        channels: vec![incoming],
+        ..Policy::default()
+    };
+    let request = f.request(draft.clone(), &id);
+    let layout_before = std::fs::read(f.root.join(METADATA)).unwrap();
+    let denied = ReadOnlyDirectory::new(&f.root.join("manager-state"));
+    assert_eq!(f.save(request).err().unwrap().code, "layout_write");
+    assert!(!f.home.join("config.json").exists());
+    assert!(std::fs::read(f.root.join(METADATA)).unwrap() == layout_before);
+    drop(denied);
+    assert!(f.save(f.request(draft, &id)).unwrap().changed);
+}
+
+thread_local! {
+    static AFTER_LAYOUT_WRITE: std::cell::RefCell<Option<Box<dyn FnOnce()>>> = const { std::cell::RefCell::new(None) };
+}
+pub(super) fn after_layout_write() {
+    if let Some(callback) = AFTER_LAYOUT_WRITE.with(|slot| slot.borrow_mut().take()) {
+        callback();
+    }
+}
+struct AfterLayoutWrite;
+impl AfterLayoutWrite {
+    fn install(callback: impl FnOnce() + 'static) -> Self {
+        AFTER_LAYOUT_WRITE.with(|slot| *slot.borrow_mut() = Some(Box::new(callback)));
+        Self
+    }
+}
+impl Drop for AfterLayoutWrite {
+    fn drop(&mut self) {
+        AFTER_LAYOUT_WRITE.with(|slot| slot.borrow_mut().take());
+    }
+}
+
+#[test]
+fn snapshot_read_failure_after_both_commits_rolls_back_exact_bytes_and_allows_retry() {
+    for raw_change in [false, true] {
+        let f = Fixture::new();
+        unmatched_reference(&f.root); // Materialize an isolated library file.
+        let (draft, id) = named_draft(&f, raw_change);
+        let request = f.request(draft.clone(), &id);
+        let before = f.bytes();
+        let layout_before = std::fs::read(f.root.join(METADATA)).unwrap();
+        let library_path = f.root.join(LIBRARY_PATH);
+        let library_before = std::fs::read(&library_path).unwrap();
+        let fault_path = library_path.clone();
+        // This is real invalid on-disk input, not a mocked success/error result.
+        let hook = AfterLayoutWrite::install(move || {
+            std::fs::write(fault_path, b"broken snapshot library").unwrap()
+        });
+        assert_eq!(f.save(request).err().unwrap().code, "invalid_document");
+        assert!(f.bytes() == before);
+        assert!(std::fs::read(f.root.join(METADATA)).unwrap() == layout_before);
+        std::fs::write(library_path, library_before).unwrap();
+        drop(hook);
+        let result = f.save(f.request(draft, &id)).unwrap();
+        assert_eq!(result.changed, raw_change);
+        assert_eq!(result.snapshot.policy, f.snapshot().policy);
+    }
+}
+
+#[test]
+fn external_raw_after_commit_is_not_overwritten_by_compensation() {
+    let f = Fixture::new();
+    let (draft, id) = named_draft(&f, true);
+    let request = f.request(draft, &id);
+    let layout_before = std::fs::read(f.root.join(METADATA)).unwrap();
+    let mut external = f.raw();
+    external["external-writer"] = json!(true);
+    let external_bytes = serde_json::to_vec(&external).unwrap();
+    let expected_external = external_bytes.clone();
+    let path = f.home.join("config.json");
+    let _hook =
+        AfterLayoutWrite::install(move || atomic_write(&path, &external_bytes, 0o600).unwrap());
+    assert_eq!(f.save(request).err().unwrap().code, "save_rollback_failed");
+    assert!(f.bytes() == expected_external);
+    assert!(std::fs::read(f.root.join(METADATA)).unwrap() == layout_before);
+    assert_eq!(f.backups().len(), 1);
+}
+
+#[test]
+fn success_snapshot_reads_persisted_layout_instead_of_using_unsaved_request_fields() {
+    let f = Fixture::new();
+    let mut draft = f.snapshot().policy;
+    channel_mut(&mut draft, "a").label.clear();
+    // Legacy global saves accept this shape, but the layout reader drops the
+    // empty display label. A success response must agree with reopening it.
+    let result = f
+        .save(SaveRequest {
+            expected_file: f.snapshot().policy_digest,
+            policy: draft,
+            credentials: vec![],
+            scope: None,
+        })
+        .unwrap();
+    assert!(!result.changed);
+    assert_eq!(result.snapshot.policy, f.snapshot().policy);
+    assert_eq!(channel(&result.snapshot.policy, "a").label, "a");
+}
+
 #[test]
 fn imported_public_fields_preserve_local_key_and_other_channels() {
     let f = Fixture::new();

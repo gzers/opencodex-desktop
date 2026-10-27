@@ -2,6 +2,7 @@
 //! process, historical save-plan or manager draft is required to read/write it.
 use super::{
     config_file_mapping,
+    legacy_migration::LockedLayout,
     schema::*,
     store::{sha256, ModelStore},
 };
@@ -45,9 +46,6 @@ fn read(home: &Path) -> ModelResult<(Value, Zeroizing<Vec<u8>>)> {
         ));
     }
     Ok((value, bytes))
-}
-fn metadata(root: &Path) -> ModelResult<Policy> {
-    super::legacy_migration::load_layout(root)
 }
 fn current_policy(value: &Value, layout: &Policy) -> ModelResult<Policy> {
     let mut policy = config_file_mapping::read_policy(value, layout)?;
@@ -104,8 +102,12 @@ fn snapshot_value(
     })
 }
 pub fn snapshot(root: &Path, home: &Path) -> ModelResult<Snapshot> {
+    // Readers share the save lock order and cannot observe a half-published
+    // raw/layout pair during a live transaction or its compensation.
+    let _lock = TargetFileLock::lock(&config_path(home)?)?;
+    let layout = LockedLayout::acquire(root)?;
     let (value, bytes) = read(home)?;
-    snapshot_value(root, &value, &bytes, &metadata(root)?)
+    snapshot_value(root, &value, &bytes, &layout.policy()?)
 }
 /// Library mutations must not return a retired channel-policy snapshot to the
 /// shared models page or compare a file digest with a manager-policy digest.
@@ -491,6 +493,7 @@ fn scope_picker(
 pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveResult> {
     let path = config_path(home)?;
     let _lock = TargetFileLock::lock(&path)?;
+    let before_existed = path.exists();
     let (mut config, before_bytes) = read(home)?;
     if sha256(&before_bytes) != request.expected_file {
         return Err(invalid(
@@ -498,7 +501,8 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
             "配置文件已在其它地方修改，请刷新后再保存；当前编辑已保留",
         ));
     }
-    let meta = metadata(root)?;
+    let mut layout = LockedLayout::acquire(root)?;
+    let meta = layout.policy()?;
     let before = current_policy(&config, &meta)?;
     let intended = if let Some(scope) = &request.scope {
         if request
@@ -565,29 +569,92 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
         safety::check_path(root, &dir, true)?;
         std::fs::create_dir_all(&dir)?;
         atomic_write(&dir.join("config.json"), &before_bytes, 0o600)?;
-        // Check external writers once more immediately before the atomic swap.
-        if read(home)?.1.as_slice() != before_bytes.as_slice() {
+        bytes
+    } else {
+        Zeroizing::new(before_bytes.to_vec())
+    };
+    let mut raw_written = false;
+    let committed = (|| {
+        // Check even a metadata-only save: a non-cooperating external writer
+        // must not make us acknowledge a stale raw/layout combination.
+        if read(home)?.1.as_slice() != before_bytes.as_slice() || path.exists() != before_existed {
             return Err(invalid(
                 "file_changed",
                 "保存期间配置文件发生变化，未覆盖；当前编辑已保留",
             ));
         }
-        atomic_write(&path, &bytes, 0o600)?;
-        bytes
-    } else {
-        before_bytes
-    };
-    record_layout(root, &intended);
-    Ok(SaveResult {
-        snapshot: snapshot_value(root, &config, &bytes, &intended)?,
-        changed,
-    })
+        if changed {
+            atomic_write(&path, &bytes, 0o600)?;
+            raw_written = true;
+        }
+        layout.write(&layout_policy(&intended))?;
+        #[cfg(test)]
+        scoped_tests::after_layout_write();
+        let (actual, actual_bytes) = read(home)?;
+        if actual_bytes.as_slice() != bytes.as_slice()
+            || path.exists() != (before_existed || changed)
+        {
+            return Err(invalid(
+                "file_changed",
+                "保存期间配置文件发生变化，未确认保存；当前编辑已保留",
+            ));
+        }
+        // Only persisted, read-back metadata may acknowledge an edit. In
+        // particular, changed=false never implies a layout write succeeded.
+        snapshot_value(root, &actual, &actual_bytes, &layout.policy()?)
+    })();
+    match committed {
+        Ok(snapshot) => Ok(SaveResult { snapshot, changed }),
+        Err(error) => {
+            // Try both compensations even if one fails. Guard each restore so
+            // an external writer's newer contents cannot be overwritten.
+            let layout_restored = layout.rollback();
+            let raw_restored = if raw_written {
+                rollback_raw(home, &path, &before_bytes, before_existed, &bytes)
+            } else {
+                Ok(())
+            };
+            if layout_restored.is_err() || raw_restored.is_err() {
+                return Err(invalid(
+                    "save_rollback_failed",
+                    format!(
+                        "保存失败（{}），且部分回滚未完成；已有原配置备份及当前编辑已保留",
+                        error.code
+                    ),
+                ));
+            }
+            Err(error)
+        }
+    }
 }
 
-/// Also used after an explicitly requested historical restoration commits.
-/// Metadata is never a second copy of current connections/rules/selection.
-/// Failure here cannot turn a completed authoritative file write into failure.
-pub(super) fn record_layout(root: &Path, policy: &Policy) {
+fn rollback_raw(
+    home: &Path,
+    path: &Path,
+    before: &[u8],
+    existed: bool,
+    written: &[u8],
+) -> ModelResult<()> {
+    let actual = read(home)?.1;
+    if actual.as_slice() == before && path.exists() == existed {
+        return Ok(());
+    }
+    if actual.as_slice() != written || !path.exists() {
+        return Err(invalid("file_changed", "配置文件已被外部修改，未覆盖回滚"));
+    }
+    safety::check_path(home, path, false)?;
+    if existed {
+        atomic_write(path, before, 0o600)?;
+    } else {
+        std::fs::remove_file(path)?;
+    }
+    if read(home)?.1.as_slice() != before || path.exists() != existed {
+        return Err(invalid("file_readback", "配置文件回滚读回不同"));
+    }
+    Ok(())
+}
+
+fn layout_policy(policy: &Policy) -> Policy {
     let mut layout = policy.clone();
     for c in &mut layout.channels {
         c.connection.credential_ref = None;
@@ -600,6 +667,13 @@ pub(super) fn record_layout(root: &Path, policy: &Policy) {
         c.overrides.clear();
         c.naming.clear();
     }
+    layout
+}
+
+/// Best-effort compatibility for an already-committed historical restoration.
+/// Ordinary file saves must use LockedLayout inside their transaction instead.
+pub(super) fn record_layout(root: &Path, policy: &Policy) {
+    let layout = layout_policy(policy);
     let meta_path = root.join(METADATA);
     let lock_path = crate::infrastructure::locking::lock_path_for(&meta_path);
     if safety::check_path(root, &meta_path, true).is_ok()
