@@ -1,0 +1,24 @@
+{
+  "id": "TASK-OPENCODEX-0.2.14",
+  "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-23.md",
+  "required_checks": [
+    "review:file-authority",
+    "review:key-save",
+    "review:discovery",
+    "review:notifications",
+    "review:restart",
+    "review:release"
+  ],
+  "scope": "WP-75-WP-81",
+  "authority": "user explicitly authorized development, tests, live measurements and release",
+  "write_scopes": {
+    "code": "ocx-022-model-selector / codex/0.2.14-file-models",
+    "docs": "governance-main / docs/governance-main"
+  },
+  "prototype_exclusive_owner": "prototype contributor; parent integrates",
+  "prototype_source_sha256": {
+    "index.html": "edcc51acd963a8e5bff69f2c7f64914bec427a194697205a596f4c4fcfa79271",
+    "model-config.js": "d1e2b15f4fc30e4c9c1807c5a55a36569294298b07eeac8e54a4b27a099fd48b",
+    "model-config.css": "cdaf0f7401addbca5e6885dbb361e695bb9c858ff23324da1c62f6c744b9abcf"
+  }
+}
