@@ -127,6 +127,17 @@ describe('transfer adoption into the current file draft',()=>{
     expect(store.channelDraft!.channels[0]!.naming!.sourceReadId!.alias).toBe('local-alias')
     expect(store.channelDraft!.channels[0]!.naming!.model!.displayName).toBe('imported-model')
   })
+  it.each(['importedConfig','revisionId'])('merges independent naming edits for the exact model ID %s',async id=>{
+    const store=useModelsStore(),base=actual()
+    base.policy.channels[0]!.discovered.push({id,label:id,rules:emptyRules()})
+    base.policy.channels[0]!.naming={[id]:{alias:'before',displayName:'before'}}
+    store.acceptTransfer(base)
+    store.channelDraft!.channels[0]!.naming![id]!.alias='local-alias'
+    const incoming=copy(base.policy)
+    incoming.channels[0]!.naming![id]!.displayName='imported display'
+    await store.adoptTransfer(plan(incoming),vi.fn().mockResolvedValue({...adopted(incoming),policy:base.policy}))
+    expect(store.channelDraft!.channels[0]!.naming![id]).toEqual({alias:'local-alias',displayName:'imported display'})
+  })
 
   it('retains unrelated fields and replacement/clear Key input typed during IPC',async()=>{
     const store=useModelsStore(),incoming=actual().policy

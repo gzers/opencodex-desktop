@@ -66,7 +66,9 @@ function mergeTransferValue(base:MergeValue,local:MergeValue,incoming:MergeValue
   }
   // Exact template revisions and raw import receipts are indivisible; merging
   // their individual identifiers could authorize unrelated material at Save.
-  if ((base===undefined||mergeObject(base))&&mergeObject(local)&&mergeObject(incoming)&&key!=='importedConfig'&&!('revisionId' in local)&&!('revisionId' in incoming)&&!(base===undefined&&(typeof local.id==='string'||typeof incoming.id==='string'||typeof local.mode==='string'||typeof incoming.mode==='string'))) {
+  const receipt=path.length===4&&path[0]==='channels'&&path[2]==='connection'&&key==='importedConfig'
+  const revision=(value:{[key:string]:MergeValue})=>typeof value.templateId==='string'&&typeof value.revisionId==='string'
+  if ((base===undefined||mergeObject(base))&&mergeObject(local)&&mergeObject(incoming)&&!receipt&&!revision(local)&&!revision(incoming)&&!(base===undefined&&(typeof local.id==='string'||typeof incoming.id==='string'||typeof local.mode==='string'||typeof incoming.mode==='string'))) {
     // An absent per-model override inherits every rule. Independent fields can
     // both be the first edit to that model (or to its optional naming map).
     const rules=(value:{[key:string]:MergeValue})=>['protocol','contextWindow','fast'].every(name=>mergeObject(transferField(value,name))&&typeof (value[name] as {mode:MergeValue}).mode==='string')
