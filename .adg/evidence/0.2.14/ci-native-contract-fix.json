@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-27",
+  "failedRun": 40435805180,
+  "failedJob": 121964077568,
+  "failedStep": "Windows final EXE smoke",
+  "error": "Native model UI timeout: staged channel visible after full reload",
+  "diagnosis": "Native smoke still used retired model_policy_stage disk drafts and expected unconfirmed edits after full reload. Backend tests, credential checks and release build passed; final EXE test did not.",
+  "fixCommit": "47102d6473bb840fa7da08844212a6948dc5d586",
+  "fix": "Seed admitted sandbox actual config through model_file_save; pointer edit must leave file unchanged; Save Preview + Confirm writes actual file; reopen verifies order and Key preserved and no restart state; model home containment enforced.",
+  "localProtocolTests": {
+    "passed": 13,
+    "failed": 0
+  },
+  "newRun": 40438355951,
+  "newRunStatus": "in_progress",
+  "runtimeCodeChanged": false
+}

@@ -28,7 +28,7 @@ source_refs:
 
 ## 发布事实
 
-PR [#22](https://github.com/gzers/opencodex-desktop/pull/22)；最终源码、tag、双平台 CI、Release 构建、公开、stable、资产 sha256 与密码学签名核验结果待发布后补记。本文件此阶段不作为已发布证明。
+PR [#22](https://github.com/gzers/opencodex-desktop/pull/22)，运行实现基线 f37fa3b8，原生检查修正 47102d64。首轮 Windows 原生检查合同失配已记录，最终 CI 40438355951 在途；最终源码、tag、双平台 CI、Release 构建、公开、stable、资产 sha256 与密码学签名核验结果待发布后补记。本文件此阶段不作为已发布证明。
 
 ## 边界与回退
 

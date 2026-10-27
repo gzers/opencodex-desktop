@@ -1,0 +1,77 @@
+{
+  "id": "RCP-OPENCODEX-0.2.14",
+  "task_id": "TASK-OPENCODEX-0.2.14",
+  "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-23.md",
+  "code_commit": "47102d6473bb840fa7da08844212a6948dc5d586",
+  "recorded_at": "2026-10-27T02:07:18.436583+00:00",
+  "result": "in_progress",
+  "checks": [
+    {
+      "name": "review:file-authority",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/backend-summary.json",
+        ".adg/evidence/0.2.14/file-browser/report.json",
+        ".adg/evidence/0.2.14/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.14/provider-live.json"
+      ],
+      "scope": "Current file snapshot and field-preserving atomic writer; legacy drafts ignored; external conflicts retained; 26-provider isolated copy official validation passed."
+    },
+    {
+      "name": "review:key-save",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/file-browser/report.json",
+        ".adg/evidence/0.2.14/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.14/backend-regression.log"
+      ],
+      "scope": "Masked load/eye, only-Key write, empty preserve, explicit clear, reopen; replaced-Key transmission binding and copy in-memory credential regression covered."
+    },
+    {
+      "name": "review:discovery",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/backend-regression.log",
+        ".adg/evidence/0.2.14/provider-live.json",
+        ".adg/evidence/0.2.14/provider-live-final.log"
+      ],
+      "scope": "29 discovery tests; real read-only requests GZGG-NewApi / FeiMao (29 / 6 models) with actual backend, no generation or user config write."
+    },
+    {
+      "name": "review:notifications",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/gate-report.json",
+        ".adg/evidence/0.2.14/notification-parity/report.json",
+        ".adg/evidence/0.2.14/notification-feedback/report.json",
+        ".adg/evidence/0.2.14/notification-feedback-webkit/report.json",
+        ".adg/evidence/0.2.14/prototype-regression.tap"
+      ],
+      "scope": "Existing bell and global host, no bottom result/second reopen, one save result, later/Esc ends; recipe parity and light/dark/narrow UI."
+    },
+    {
+      "name": "review:restart",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/backend-regression.log"
+      ],
+      "scope": "17 controlled official API tests including unchanged cache, auth, no-op/error/malformed/partial desktop result. Physical active-session restart not executed; explicitly accepted validation boundary in IMP23."
+    },
+    {
+      "name": "review:release",
+      "status": "failed",
+      "evidence": [
+        ".adg/evidence/0.2.14/gate-report.json",
+        ".adg/evidence/0.2.14/ci-native-contract-fix.json",
+        ".adg/evidence/0.2.14/ci-macos-backend-summary.json"
+      ],
+      "scope": "Local 21-gate passed; Windows native smoke contract corrected in test-only commit; new CI 40438355951 and all publication evidence remain pending."
+    }
+  ],
+  "limits": [
+    "No physical restart of the active Codex host; do not infer restart from response mocks.",
+    "No all-provider/proxy/native-touchscreen UI claim.",
+    "Ignored tests not counted as passed."
+  ],
+  "same_application_source_evidence": ".adg/evidence/0.2.14/source-trees.json"
+}
