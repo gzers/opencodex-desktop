@@ -1,0 +1,47 @@
+{
+  "baseline": "v0.2.16",
+  "ciRun": 40480837148,
+  "ciJobs": {
+    "backend-windows": "success",
+    "backend": "success",
+    "windows-smoke-evidence": "success",
+    "frontend": "success",
+    "release-tools": "success",
+    "build": "skipped"
+  },
+  "startup": {
+    "result": "pass",
+    "mode": "any",
+    "applicationElevated": true,
+    "sourceCommitMatched": true
+  },
+  "releaseRun": 40490173181,
+  "installers": [
+    {
+      "kind": "msi",
+      "result": "pass",
+      "version": "0.2.16",
+      "explicitInstallDirectory": true,
+      "defaultUninstallRetainedData": true,
+      "nativeModelUI": "pass"
+    },
+    {
+      "kind": "nsis",
+      "result": "pass",
+      "version": "0.2.16",
+      "explicitInstallDirectory": true,
+      "defaultUninstallRetainedData": true,
+      "nativeModelUI": "pass"
+    }
+  ],
+  "reportedLimits": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "nativeUIReportedLimits": "actual production consumers and 6 theme/quality combinations; no network sync or model generation",
+  "notProven": [
+    "Default Desktop installer directory without /D or INSTALLDIR override",
+    "Ordinary non-elevated Windows user profile on this release",
+    "OpenCodex actual managed install/reinstall/upgrade/offline workflow",
+    "Physical Windows10/11, mixed DPI and high contrast matrix",
+    "Actual old version OTA replacement and application restart",
+    "Enterprise proxy/PAC and real external provider connectivity"
+  ]
+}

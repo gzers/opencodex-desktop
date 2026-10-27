@@ -1,0 +1,3 @@
+use std::path::Path;
+use opencodex_desktop_lib::modules::runtime::install::{RealVersionProbe,VersionProbe};
+fn main(){println!("build_commit={}",opencodex_desktop_lib::build_commit());let values:Vec<String>=std::env::args().collect();let version=RealVersionProbe::default().probe(Some(Path::new(&values[1])),Path::new(&values[2]));println!("probe_version={version:?}");}

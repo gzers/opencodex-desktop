@@ -1,0 +1,38 @@
+{
+  "platform": "macOS arm64",
+  "method": "temporary external rustc harness linked to existing production rlib; isolated temporary roots; synthetic package/npm and injected version for installation faults; actual Nodeexit7 for RealVersionProbe",
+  "windowsScope": "Common source defects; native Windows manifestations not executed this round",
+  "cases": [
+    {
+      "scenario": "launcher-failure",
+      "stdout": "build_commit=a71798dfeb1b12a739725b43bfa9cdd44bb0bb99\npackage=@bitkyc08/opencodex error=Some(\"filesystem\") old_preserved=false new_package_exists=true launcher_exists=false",
+      "stderr": "",
+      "exitCode": 0
+    },
+    {
+      "scenario": "unowned-target",
+      "stdout": "build_commit=a71798dfeb1b12a739725b43bfa9cdd44bb0bb99\npackage=@bitkyc08/opencodex error=None old_preserved=false new_package_exists=true launcher_exists=true",
+      "stderr": "",
+      "exitCode": 0
+    },
+    {
+      "scenario": "rejected-target-side-effect",
+      "stdout": "build_commit=a71798dfeb1b12a739725b43bfa9cdd44bb0bb99\nerror=Some(\"symlink_component\") rejected_target_parent_created=true",
+      "stderr": "",
+      "exitCode": 0
+    },
+    {
+      "scenario": "nonzero-version-probe",
+      "runtimeExitCode": 7,
+      "runtimeStdout": "2.77.0",
+      "productionProbe": "build_commit=a71798dfeb1b12a739725b43bfa9cdd44bb0bb99\nprobe_version=Some(\"2.77.0\")",
+      "exitCode": 0
+    },
+    {
+      "scenario": "valid-previous-managed-install-then-launcher-failure",
+      "stdout": "build_commit=a71798dfeb1b12a739725b43bfa9cdd44bb0bb99\ninitial_managed_install=true manifest_exists=true\npackage=@bitkyc08/opencodex error=Some(\"filesystem\") old_preserved=false new_package_exists=true launcher_exists=false",
+      "stderr": "",
+      "exitCode": 0
+    }
+  ]
+}

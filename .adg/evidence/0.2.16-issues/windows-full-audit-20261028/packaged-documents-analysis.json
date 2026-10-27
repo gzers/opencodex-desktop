@@ -1,0 +1,10 @@
+{
+  "archive": "published macOS0.2.16 app archive used only to inspect common packaging contract",
+  "licenseNamedEntries": [],
+  "resourceCount": 1,
+  "resources": [
+    "OpenCodeX Desktop.app/Contents/Resources/icon.icns"
+  ],
+  "windowsPackagingSource": "tauri.conf.json and tauri.windows.conf.json define no bundle.resources; Windows actual install resource listing not independently executed this round",
+  "sourceDefect": "open_local_document_with_id resolves compile-time CARGO_MANIFEST_DIR ancestors instead of app resource directory"
+}

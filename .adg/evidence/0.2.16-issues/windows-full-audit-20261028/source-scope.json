@@ -1,0 +1,309 @@
+{
+  "tag": "v0.2.16",
+  "acceptedHead": "7a4e14ba25301e522decc7d012d3f4b56095510d",
+  "releaseCommit": "d2c08dd7d62e2caada507f2eeb4d05804460b6a8",
+  "sourceIdenticalToRelease": true,
+  "auditedSourceAnchors": [
+    {
+      "scope": "installer",
+      "path": "apps/desktop/tauri/tauri.windows.conf.json",
+      "bytes": 470,
+      "sha256": "a6f3f4e91e7631bbf1c2d5fd5ec0f524ba536a7e30e826fed2672e8c3d9b47cd"
+    },
+    {
+      "scope": "installer",
+      "path": "apps/desktop/tauri/windows/installer-hooks.nsh",
+      "bytes": 1074,
+      "sha256": "66e8591be04f3378d0fb890180a31fa5675c7fa8c7add18d89260c09289e7164"
+    },
+    {
+      "scope": "installer",
+      "path": "test/smoke/windows-installer.ps1",
+      "bytes": 6644,
+      "sha256": "b04d48d07db6135763179d193849ebf58ba3c4dbc20c67820172e033c10a123f"
+    },
+    {
+      "scope": "installer",
+      "path": "test/smoke/windows-installer-retention.ps1",
+      "bytes": 9540,
+      "sha256": "46183efb1bfde48397577757e22d4c08278e07b3be737cddb61b36db2866d77d"
+    },
+    {
+      "scope": "runtime-install",
+      "path": "apps/desktop/ui/src/features/runtime/installPath.ts",
+      "bytes": 2493,
+      "sha256": "6f92f931d4a022b4f1a1c1068cbcda19faa225c7c0d10e629d58a9d6a66f399b"
+    },
+    {
+      "scope": "runtime-install",
+      "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+      "bytes": 110108,
+      "sha256": "1715009285c10f4009d26097041f8200e9407d31dc6cbab3b1316a75e93b73f4"
+    },
+    {
+      "scope": "runtime-install",
+      "path": "apps/desktop/ui/tests/settings-install-path.test.ts",
+      "bytes": 6384,
+      "sha256": "78efe2309f831cc7fa0a5ff4b7b27f84ed1d4f576b7e7faf9c2afc67387f0120"
+    },
+    {
+      "scope": "runtime-install",
+      "path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "bytes": 45025,
+      "sha256": "6e582957871a92490c06056c804dc779f2a8b042954f6aeac6bae4758235a945"
+    },
+    {
+      "scope": "runtime-install",
+      "path": "apps/desktop/tauri/src/modules/runtime/install.rs",
+      "bytes": 105031,
+      "sha256": "aae4c3fdea87881e15bb013ee14583f01cb4861e5adb077c1d99502fa7646618"
+    },
+    {
+      "scope": "runtime-install",
+      "path": "apps/desktop/tauri/src/modules/runtime/archive.rs",
+      "bytes": 24979,
+      "sha256": "2477ef7d34f15ea27f9574903709b24faf4b88536cd4509946eab242d32b30d0"
+    },
+    {
+      "scope": "runtime-install",
+      "path": "apps/desktop/tauri/src/modules/runtime/paths.rs",
+      "bytes": 13389,
+      "sha256": "668e24a04c9e2adad1be9a149685a421f8525c34c16274d02e9511548856d669"
+    },
+    {
+      "scope": "runtime-install",
+      "path": "apps/desktop/tauri/src/modules/runtime/uninstall.rs",
+      "bytes": 71462,
+      "sha256": "2cc23090dc9d510e0975265714e3847f91e50966485b51b111c45491afeeaa6a"
+    },
+    {
+      "scope": "discovery-process",
+      "path": "apps/desktop/tauri/src/infrastructure/discovery_paths.rs",
+      "bytes": 12809,
+      "sha256": "a6f55531e4d038ecc58a6e9d7e0c2ba8a0a9eebccff3d6a231fa799a2c4e64b6"
+    },
+    {
+      "scope": "discovery-process",
+      "path": "apps/desktop/tauri/src/infrastructure/platform.rs",
+      "bytes": 8456,
+      "sha256": "4e39b27a1888c30e7a15bb804947d31d31018e581685c07e769991296b93442f"
+    },
+    {
+      "scope": "discovery-process",
+      "path": "apps/desktop/tauri/src/infrastructure/process_runner.rs",
+      "bytes": 21349,
+      "sha256": "6d8761acf280aef922aae80d2738ae9f16108086be4fa65bed482dc7a0edfe6a"
+    },
+    {
+      "scope": "discovery-process",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "bytes": 5987,
+      "sha256": "0cc42c3eb30b333f6b799f4924ef47e2c54f05ff31917ee860d04b62687b9341"
+    },
+    {
+      "scope": "discovery-process",
+      "path": "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+      "bytes": 6903,
+      "sha256": "e6314a2d0f22bb237030e74ae4cf5e922f551c327e734117d1c3ab23724fde02"
+    },
+    {
+      "scope": "discovery-process",
+      "path": "apps/desktop/tauri/src/infrastructure/official_cli_source.rs",
+      "bytes": 3863,
+      "sha256": "742aff2a6f5cef2f0f29bdbe1822a0657e065d090111ac9a33a1de88df0dd10c"
+    },
+    {
+      "scope": "discovery-process",
+      "path": "apps/desktop/tauri/tests/windows_runtime.rs",
+      "bytes": 16169,
+      "sha256": "ed77e9ab7d14bfc9c3da6174113b6319ff8d0b5a2ab944cdb1152c9189484fc1"
+    },
+    {
+      "scope": "roots-migration",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "bytes": 48832,
+      "sha256": "952e7fdbc33d086953168e478b963e921f44382ffdc73d53f5888ed2671ce0cc"
+    },
+    {
+      "scope": "roots-migration",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_restart.rs",
+      "bytes": 8830,
+      "sha256": "ab3f466386e2c41ddb01a6bf5ce7fa943c637aadf5827939bb2492e5f9d48d61"
+    },
+    {
+      "scope": "roots-migration",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+      "bytes": 3011,
+      "sha256": "946c4e0fe9aa1dde254836bfe99cb0078ea99f93fe2cdb3d622efd5b2c539240"
+    },
+    {
+      "scope": "roots-migration",
+      "path": "apps/desktop/tauri/src/modules/data_root/bootstrap.rs",
+      "bytes": 12384,
+      "sha256": "b089b4d0dbf5abc1d2a7a8c6f6e597a29f98933239b6799eb51ac8f74338fc4f"
+    },
+    {
+      "scope": "roots-migration",
+      "path": "apps/desktop/tauri/src/modules/data_root/uninstall.rs",
+      "bytes": 17851,
+      "sha256": "85eedcbd79b06417aeebdcc21591d6b8af92636d489ef827123f009ee723a486"
+    },
+    {
+      "scope": "roots-migration",
+      "path": "apps/desktop/tauri/src/modules/runtime/relocation.rs",
+      "bytes": 23510,
+      "sha256": "8dc1528c77af20c339259a60803f004614df26eac9e9532fe3ffa05662e810ed"
+    },
+    {
+      "scope": "update",
+      "path": "apps/desktop/tauri/src/commands/update.rs",
+      "bytes": 43043,
+      "sha256": "c10950eb8eeabbcc088a395360f018c4a8ec06d348fc02f44894ecb41fc7e6bd"
+    },
+    {
+      "scope": "update",
+      "path": "apps/desktop/tauri/src/modules/update/storage.rs",
+      "bytes": 7454,
+      "sha256": "3c55f06ba01a381152fbb2c1f856526ebaf30439080c914729524076cf46a1e5"
+    },
+    {
+      "scope": "update",
+      "path": "apps/desktop/tauri/src/modules/update/schedule.rs",
+      "bytes": 16320,
+      "sha256": "3bf88d62f2fed2d9b56b3e74f6027461b46dd6aa474930603cd8f5ca440f380c"
+    },
+    {
+      "scope": "update",
+      "path": ".github/workflows/ci.yml",
+      "bytes": 13287,
+      "sha256": "c4b970e53814782c327be4550c58d9f2b1a9ad0c5e59600b781a1cdc257010c2"
+    },
+    {
+      "scope": "update",
+      "path": ".github/workflows/release.yml",
+      "bytes": 5376,
+      "sha256": "f37330645e1fdf034a8db9fca05e57ad19f0e1fe0b3d89736bd8018e3c426910"
+    },
+    {
+      "scope": "update",
+      "path": ".github/workflows/publish-release.yml",
+      "bytes": 2066,
+      "sha256": "b4bebe8e488e2024805146c94be8c8d49581bbb0312f00a936a9d3a49765c471"
+    },
+    {
+      "scope": "models-secrets-sync",
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file.rs",
+      "bytes": 39999,
+      "sha256": "d2034c9ba63f3bb6031354a266a326603d2acc720864507c5615f3141b20f2e1"
+    },
+    {
+      "scope": "models-secrets-sync",
+      "path": "apps/desktop/tauri/src/modules/model_config/legacy_migration.rs",
+      "bytes": 72428,
+      "sha256": "1eaab6bd518df29332618efee025b39c72e3113bfcf6ced955d63710a98d5a4b"
+    },
+    {
+      "scope": "models-secrets-sync",
+      "path": "apps/desktop/tauri/src/modules/model_config/cache_refresh.rs",
+      "bytes": 9533,
+      "sha256": "d2e382f6617d110e91783c299b62f2a89a95832eea7ae326967ed61fa5131b9d"
+    },
+    {
+      "scope": "models-secrets-sync",
+      "path": "apps/desktop/tauri/src/infrastructure/credentials.rs",
+      "bytes": 13651,
+      "sha256": "d12f3fbac86018e48c03b0f5454d3bd259e4c422f7c12f9f8555bfd8b18b3d42"
+    },
+    {
+      "scope": "models-secrets-sync",
+      "path": "apps/desktop/tauri/src/modules/sync/config.rs",
+      "bytes": 32548,
+      "sha256": "f1c6a98cf9e847cddb779a9e354ad2a8a1a7eaa924272ce6c2494d3618709ff9"
+    },
+    {
+      "scope": "models-secrets-sync",
+      "path": "apps/desktop/tauri/src/modules/extensions/source_dir.rs",
+      "bytes": 11840,
+      "sha256": "c7dee460b091bcaaf29160796242b33f3fb7508e8c6c45456394905c12637b71"
+    },
+    {
+      "scope": "models-secrets-sync",
+      "path": "apps/desktop/tauri/src/modules/backup/safety.rs",
+      "bytes": 9802,
+      "sha256": "46dad3eeb7a0ce5c3c5349fb0fff7fdfd354179b0d0fd0808680d98e2205e602"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "apps/desktop/tauri/src/commands/network.rs",
+      "bytes": 4222,
+      "sha256": "9ce47815969f79d8ed25e0f355e7576eeab7909feea921bf16f565ca97e92974"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "apps/desktop/tauri/src/commands/panel.rs",
+      "bytes": 24630,
+      "sha256": "30e7e829c36dab12c12b245f3af93858b4ddb784f8e0973cd5b68d63186aa62f"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "apps/desktop/tauri/src/commands/workspace.rs",
+      "bytes": 18275,
+      "sha256": "1460fb4f98bba7159f8383db69381069e26c1eb8337a6a0528d253fde988d8b6"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "apps/desktop/tauri/src/commands/preferences.rs",
+      "bytes": 23418,
+      "sha256": "b3a0cb7f50ac68908aacd76c324be5acfb653ecab00f670abb29765f2abe85f5"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "apps/desktop/tauri/src/modules/ipc/endpoint.rs",
+      "bytes": 22170,
+      "sha256": "d69205aabf6cc71ceb3c3a3e66f3b20e86dc256aa706b6f7ac5d8e8215b7247a"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 12540,
+      "sha256": "7be8b2cc483b3772943a6614617029f6894a9d9827ee38a49d748a3e502d3e1d"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "apps/desktop/tauri/src/infrastructure/window_appearance.rs",
+      "bytes": 14562,
+      "sha256": "f4d318555bc1764dcdfbd5e311d99137a2fe5b15d1257cfda4f12f783032b6cc"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+      "bytes": 2716,
+      "sha256": "d7dc620967cc02ef624f696390b5d9caad9eb9cefb1e65e685fac50f0ee09f64"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "test/smoke/windows-model-ui.mjs",
+      "bytes": 31473,
+      "sha256": "d0f4689c65dd0ab2670ad86daa812a9322be7e820bf673cbc313f8d013ed4050"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "test/smoke/windows-ui-alignment.mjs",
+      "bytes": 9009,
+      "sha256": "025410666b7657499c4bac9bbd58b5e8fa630659d155921d2582f2993af09592"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "test/smoke/windows-native.ps1",
+      "bytes": 23565,
+      "sha256": "6b7d872c4b4c39b5b7ad44b72df6e717e5bf6f3500685a63b7bee673a8c4150c"
+    },
+    {
+      "scope": "ui-network-ipc",
+      "path": "test/smoke/windows-startup.ps1",
+      "bytes": 7639,
+      "sha256": "2b7d68b80ac4fbe5efc0f039395679b4ee7bb8a714a26b47badf1aedec5a6f97"
+    }
+  ],
+  "limitation": "Source audit and existing 0.2.16 native evidence, plus new local isolated reproductions; not a fresh full Windows10/11 device matrix or production remediation."
+}

@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-28 Asia/Shanghai",
+  "scope": "Full Windows source/lifecycle and coverage audit; no implementation",
+  "groupCount": 7,
+  "findings": [
+    {
+      "id": "WP-89",
+      "priority": "P1",
+      "classification": "confirmed frontend defect",
+      "issue": "automatic Windows extended install path rejected",
+      "evidence": "../windows-default-install-path/analysis.json"
+    },
+    {
+      "id": "WP-90",
+      "priority": "P1",
+      "classification": "confirmed common-source defects",
+      "issue": "unowned directory replaced; launcher failure after activation discards prior prefix; parent created before rejection",
+      "evidence": "common-source-reproductions.json",
+      "windowsNative": "pending"
+    },
+    {
+      "id": "WP-91",
+      "priority": "P1",
+      "classification": "confirmed common-source defect",
+      "issue": "RealVersionProbe accepts nonzero exit when stdout contains semver",
+      "evidence": "common-source-reproductions.json",
+      "windowsNative": "pending"
+    },
+    {
+      "id": "WP-92",
+      "priority": "P2",
+      "classification": "compatibility risk; not platform-reproduced",
+      "issue": "discovery candidate roots do not fully model VOLTA_HOME/FNM_DIR/version-specific roots; controlled PATH intentionally retained",
+      "evidence": "source-scope.json"
+    },
+    {
+      "id": "WP-93",
+      "priority": "P2",
+      "classification": "source-confirmed packaged behavior defect; platform-shared",
+      "issue": "local license buttons resolve build-machine source directories rather than bundled resources",
+      "evidence": "packaged-documents-analysis.json",
+      "windowsNative": "pending"
+    },
+    {
+      "id": "WP-94",
+      "priority": "P2",
+      "classification": "confirmed UI/backend capability description mismatch",
+      "issue": "Windows CLI remains disabled while message claims IPC unimplemented despite named-pipe server/client implementations",
+      "evidence": "source-scope.json",
+      "remediation": "Clarify actual support contract; do not enable unvalidated feature by inference."
+    },
+    {
+      "id": "WP-95",
+      "priority": "P1",
+      "classification": "confirmed validation gaps, not additional runtime defects",
+      "issue": "elevated startup/custom install directories and mocked runtime tests do not prove default path, managed install, ordinary user, OTA, DPI, real network",
+      "evidence": "prior-windows-coverage.json"
+    }
+  ],
+  "newChecks": {
+    "runtimeSharedMacOS": 95,
+    "ui": 45,
+    "nodeProtocol": 19,
+    "publishScripts": 29,
+    "retentionContract": 6,
+    "etwContract": 13
+  },
+  "allChecksPassedDoesNotCloseFindings": true,
+  "macOSProbeLibraryCommit": "a71798dfeb1b12a739725b43bfa9cdd44bb0bb99; audited runtime source identical to final release",
+  "sourceFilesReviewed": 50
+}
