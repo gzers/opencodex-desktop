@@ -713,6 +713,7 @@ mod tests {
             root.path(),
             &context.opencodex_home,
             config_file::SaveRequest {
+                scope: None,
                 expected_file: current.policy_digest,
                 policy,
                 credentials: vec![],

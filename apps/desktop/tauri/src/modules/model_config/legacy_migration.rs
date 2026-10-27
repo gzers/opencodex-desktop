@@ -1106,6 +1106,7 @@ mod tests {
             root.path(),
             home.path(),
             config_file::SaveRequest {
+                scope: None,
                 expected_file: snapshot.policy_digest,
                 policy: snapshot.policy,
                 credentials: vec![],

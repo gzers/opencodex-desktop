@@ -137,6 +137,7 @@ async fn current_file_channel_roundtrips_over_verified_https_before_explicit_fil
         target.path(),
         &target_home,
         config_file::SaveRequest {
+            scope: None,
             expected_file: adopted.policy_digest,
             policy: candidate.policy,
             credentials: vec![],

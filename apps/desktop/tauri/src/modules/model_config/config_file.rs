@@ -49,6 +49,44 @@ fn read(home: &Path) -> ModelResult<(Value, Zeroizing<Vec<u8>>)> {
 fn metadata(root: &Path) -> ModelResult<Policy> {
     super::legacy_migration::load_layout(root)
 }
+fn current_policy(value: &Value, layout: &Policy) -> ModelResult<Policy> {
+    let mut policy = config_file_mapping::read_policy(value, layout)?;
+    let ordered: BTreeSet<_> = value
+        .get("modelPickerOrder")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .filter_map(Value::as_str)
+        .filter_map(|slug| slug.split_once('/').map(|(provider, _)| provider))
+        .collect();
+    // An empty channel has no picker row in which to persist its position.
+    // Use its saved layout anchor, while file order still owns visible groups.
+    for (index, saved) in layout.channels.iter().enumerate() {
+        if ordered.contains(saved.connection.provider_id.as_str()) {
+            continue;
+        }
+        let Some(position) = policy
+            .channels
+            .iter()
+            .position(|c| c.connection.provider_id == saved.connection.provider_id)
+        else {
+            continue;
+        };
+        let channel = policy.channels.remove(position);
+        let insertion = layout.channels[..index]
+            .iter()
+            .rev()
+            .find_map(|previous| {
+                policy
+                    .channels
+                    .iter()
+                    .position(|c| c.connection.provider_id == previous.connection.provider_id)
+            })
+            .map_or(0, |position| position + 1);
+        policy.channels.insert(insertion, channel);
+    }
+    Ok(policy)
+}
 fn snapshot_value(
     root: &Path,
     value: &Value,
@@ -59,7 +97,7 @@ fn snapshot_value(
     Ok(Snapshot {
         library,
         library_digest,
-        policy: config_file_mapping::read_policy(value, meta)?,
+        policy: current_policy(value, meta)?,
         policy_digest: sha256(bytes),
         workspace: None,
         workspace_digest: sha256(&[]),
@@ -132,6 +170,13 @@ pub struct SaveRequest {
     pub policy: Policy,
     #[serde(default)]
     pub credentials: Vec<CredentialEdit>,
+    #[serde(default)]
+    pub scope: Option<SaveScope>,
+}
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct SaveScope {
+    pub channel_id: String,
 }
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -287,6 +332,162 @@ fn seed_imports(
     }
     Ok(mapping_before)
 }
+
+/// A channel save overlays the locked file snapshot, never a filtered request
+/// list. Existing channels keep their positions; only a new channel uses the
+/// request's nearest already-saved predecessor as an insertion anchor.
+fn scoped_policy(before: &Policy, requested: &Policy, scope: &SaveScope) -> ModelResult<Policy> {
+    if requested.recovery_id.is_some() {
+        return Err(invalid("save_scope", "历史恢复不能作为单渠道普通保存提交"));
+    }
+    let mut matches = requested
+        .channels
+        .iter()
+        .enumerate()
+        .filter(|(_, channel)| channel.id == scope.channel_id);
+    let Some((index, channel)) = matches.next() else {
+        return Err(invalid("save_scope", "所选保存渠道不在当前草稿中"));
+    };
+    if matches.next().is_some() {
+        return Err(invalid("save_scope", "所选保存渠道身份重复"));
+    }
+    if before.channels.iter().any(|old| {
+        (old.id == channel.id) != (old.connection.provider_id == channel.connection.provider_id)
+    }) {
+        return Err(invalid(
+            "provider_identity",
+            "已有渠道的运行绑定或管理身份不能修改",
+        ));
+    }
+    let mut intended = before.clone();
+    if let Some(existing) = intended.channels.iter_mut().find(|c| c.id == channel.id) {
+        *existing = channel.clone();
+    } else {
+        let insertion = requested.channels[..index]
+            .iter()
+            .rev()
+            .find_map(|previous| intended.channels.iter().position(|c| c.id == previous.id))
+            .map_or(0, |position| position + 1);
+        intended.channels.insert(insertion, channel.clone());
+    }
+    Ok(intended)
+}
+
+/// The global mapper can regroup every provider when one inventory changes.
+/// Keep its exact/opaque target slugs, but splice only that provider's rows into
+/// the original order so a scoped save cannot sort unrelated file contents.
+fn scope_picker(
+    config: &mut Value,
+    original: Option<Value>,
+    before: &Policy,
+    intended: &Policy,
+    scope: &SaveScope,
+) {
+    let channel = intended
+        .channels
+        .iter()
+        .find(|c| c.id == scope.channel_id)
+        .unwrap();
+    let prefix = format!("{}/", channel.connection.provider_id);
+    let belongs = |value: &Value| value.as_str().is_some_and(|slug| slug.starts_with(&prefix));
+    let old_order = original
+        .as_ref()
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default();
+    let old_rows: Vec<_> = old_order
+        .iter()
+        .filter(|row| belongs(row))
+        .cloned()
+        .collect();
+    let mut rows: Vec<_> = config
+        .get("modelPickerOrder")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .filter(|row| belongs(row))
+        .cloned()
+        .collect();
+    let is_new = !before.channels.iter().any(|c| c.id == channel.id);
+    if is_new && rows.is_empty() {
+        // A full-provider import seeds the mapper's before-image. Its inventory
+        // can already equal the intended one, so the mapper need not emit order.
+        let selected = match &channel.selection {
+            ModelSelection::Whitelist(ids) => ids.as_slice(),
+            _ => &[],
+        };
+        for id in channel
+            .model_order
+            .iter()
+            .chain(channel.discovered.iter().map(|m| &m.id))
+            .chain(selected)
+        {
+            let slug = json!(format!("{prefix}{}", id.replace('/', "-")));
+            if !rows.contains(&slug) {
+                rows.push(slug);
+            }
+        }
+    }
+    let next = if old_rows == rows {
+        original
+    } else {
+        let insertion = old_order.iter().position(&belongs).unwrap_or_else(|| {
+            let index = intended
+                .channels
+                .iter()
+                .position(|c| c.id == channel.id)
+                .unwrap();
+            // The predecessor may have interleaved rows after the next
+            // channel's first row. Insert before that successor to preserve
+            // channel order without regrouping any existing provider rows.
+            let successor = intended.channels[index + 1..].iter().find_map(|next| {
+                let prefix = format!("{}/", next.connection.provider_id);
+                old_order
+                    .iter()
+                    .position(|row| row.as_str().is_some_and(|s| s.starts_with(&prefix)))
+            });
+            successor
+                .or_else(|| {
+                    intended.channels[..index]
+                        .iter()
+                        .rev()
+                        .find_map(|previous| {
+                            let prefix = format!("{}/", previous.connection.provider_id);
+                            old_order
+                                .iter()
+                                .rposition(|row| {
+                                    row.as_str().is_some_and(|s| s.starts_with(&prefix))
+                                })
+                                .map(|position| position + 1)
+                        })
+                })
+                .unwrap_or(0)
+        });
+        let old_len = old_order.len();
+        let mut order = Vec::new();
+        for (index, row) in old_order.into_iter().enumerate() {
+            if index == insertion {
+                order.extend(rows.iter().cloned());
+            }
+            if !belongs(&row) {
+                order.push(row);
+            }
+        }
+        // At an end anchor there was no loop iteration at the insertion offset.
+        if insertion == old_len {
+            order.extend(rows);
+        }
+        Some(Value::Array(order))
+    };
+    match next {
+        Some(value) => {
+            config["modelPickerOrder"] = value;
+        }
+        None => {
+            config.as_object_mut().unwrap().remove("modelPickerOrder");
+        }
+    }
+}
 pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveResult> {
     let path = config_path(home)?;
     let _lock = TargetFileLock::lock(&path)?;
@@ -298,13 +499,43 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
         ));
     }
     let meta = metadata(root)?;
-    let before = config_file_mapping::read_policy(&config, &meta)?;
+    let before = current_policy(&config, &meta)?;
+    let intended = if let Some(scope) = &request.scope {
+        if request
+            .credentials
+            .iter()
+            .any(|edit| edit.channel_id != scope.channel_id)
+        {
+            return Err(invalid(
+                "credential_scope",
+                "单渠道保存不能修改其他渠道的密钥",
+            ));
+        }
+        scoped_policy(&before, &request.policy, scope)?
+    } else {
+        request.policy
+    };
+    let original_picker = config.get("modelPickerOrder").cloned();
     let (library, _) = ModelStore::new(root).library_only()?;
-    let mapping_before = seed_imports(root, &mut config, &before, &request.policy)?;
-    config_file_mapping::write_policy(&mut config, &mapping_before, &request.policy, &library)?;
+    if request.scope.is_some() {
+        // Compile the full merged candidate: unrelated unsaved channels and
+        // global draft adoptions must not affect validation or its budget.
+        let projection = super::compiler::project(&library, &intended)?;
+        if projection.known_active_models > 100 {
+            return Err(invalid(
+                "catalog_budget",
+                "保存后已知启用型号超过100个，请调整当前渠道后重试；当前编辑已保留",
+            ));
+        }
+    }
+    let mapping_before = seed_imports(root, &mut config, &before, &intended)?;
+    config_file_mapping::write_policy(&mut config, &mapping_before, &intended, &library)?;
+    if let Some(scope) = &request.scope {
+        scope_picker(&mut config, original_picker, &before, &intended, scope);
+    }
     // Legacy portable single-Key entries are adopted only at explicit Save.
     // A local-mapping import has no source reference and cannot replace its Key.
-    for channel in &request.policy.channels {
+    for channel in &intended.channels {
         if before.channels.iter().any(|c| c.id == channel.id)
             || request
                 .credentials
@@ -319,7 +550,7 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
             config["providers"][&channel.connection.provider_id]["apiKey"] = json!(key.as_str());
         }
     }
-    apply_credentials(&mut config, &request.policy, &request.credentials)?;
+    apply_credentials(&mut config, &intended, &request.credentials)?;
     let old: Value = serde_json::from_slice(&before_bytes)
         .map_err(|_| invalid("config_document", "模型配置文件格式不正确"))?;
     let changed = old != config;
@@ -346,9 +577,9 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
     } else {
         before_bytes
     };
-    record_layout(root, &request.policy);
+    record_layout(root, &intended);
     Ok(SaveResult {
-        snapshot: snapshot_value(root, &config, &bytes, &request.policy)?,
+        snapshot: snapshot_value(root, &config, &bytes, &intended)?,
         changed,
     })
 }
@@ -551,6 +782,7 @@ mod tests {
             &root,
             &home,
             SaveRequest {
+                scope: None,
                 expected_file: s.policy_digest,
                 policy: s.policy,
                 credentials: vec![CredentialEdit {
@@ -586,6 +818,7 @@ mod tests {
             &root,
             &home,
             SaveRequest {
+                scope: None,
                 expected_file: current.policy_digest,
                 policy: current.policy,
                 credentials: vec![],
@@ -621,6 +854,7 @@ mod tests {
             &root,
             &home,
             SaveRequest {
+                scope: None,
                 expected_file: current.policy_digest,
                 policy: current.policy,
                 credentials: vec![],
@@ -678,6 +912,7 @@ mod tests {
                 &root,
                 &home,
                 SaveRequest {
+                    scope: None,
                     expected_file: current.policy_digest,
                     policy: current.policy,
                     credentials: vec![],
@@ -709,6 +944,7 @@ mod tests {
             &root,
             &home,
             SaveRequest {
+                scope: None,
                 expected_file: s.policy_digest,
                 policy: s.policy,
                 credentials: vec![],
@@ -720,3 +956,7 @@ mod tests {
         assert_eq!(read(&home).unwrap().0["external"], "later");
     }
 }
+
+#[cfg(test)]
+#[path = "config_file_scoped_tests.rs"]
+mod scoped_tests;

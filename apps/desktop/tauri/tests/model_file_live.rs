@@ -44,6 +44,7 @@ fn installed_configuration_roundtrips_as_an_isolated_file() {
         &root,
         &home,
         config_file::SaveRequest {
+            scope: None,
             expected_file: current.policy_digest,
             policy: current.policy,
             credentials: vec![config_file::CredentialEdit {
