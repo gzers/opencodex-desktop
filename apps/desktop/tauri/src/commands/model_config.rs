@@ -150,18 +150,6 @@ pub async fn model_template_delete(
     .await
 }
 #[tauri::command]
-pub async fn model_policy_stage(
-    expected_policy: String,
-    expected_workspace: String,
-    policy: Policy,
-    data_root: tauri::State<'_, SharedDataRoot>,
-) -> ModelResult<Snapshot> {
-    execute(data_root.0.clone(), move |store| {
-        store.stage_policy(&expected_policy, &expected_workspace, policy)
-    })
-    .await
-}
-#[tauri::command]
 pub async fn model_policy_prepare(
     scope: Option<crate::modules::model_config::runtime::SaveScope>,
     policy: Policy,
@@ -369,38 +357,6 @@ pub async fn model_new_channel_preview(
     request: crate::modules::model_config::discovery::DiscoveryRequest,
 ) -> ModelResult<crate::modules::model_config::discovery::DiscoveryResult> {
     crate::modules::model_config::discovery::preview(request).await
-}
-#[tauri::command]
-pub async fn model_new_channel_add(
-    request: crate::modules::model_config::new_channel::Request,
-    data_root: tauri::State<'_, SharedDataRoot>,
-) -> ModelResult<crate::modules::model_config::new_channel::Outcome> {
-    let root = data_root.0.clone();
-    execute(root.clone(), move |_| {
-        crate::modules::model_config::new_channel::add(&root, request)
-    })
-    .await
-}
-#[tauri::command]
-pub async fn model_new_channel_result(
-    id: String,
-    data_root: tauri::State<'_, SharedDataRoot>,
-) -> ModelResult<crate::modules::model_config::new_channel::Outcome> {
-    let root = data_root.0.clone();
-    execute(root.clone(), move |_| {
-        crate::modules::model_config::new_channel::result(&root, &id)
-    })
-    .await
-}
-#[tauri::command]
-pub async fn model_new_channel_latest(
-    data_root: tauri::State<'_, SharedDataRoot>,
-) -> ModelResult<Option<crate::modules::model_config::new_channel::Outcome>> {
-    let root = data_root.0.clone();
-    execute(root.clone(), move |_| {
-        crate::modules::model_config::new_channel::latest(&root)
-    })
-    .await
 }
 #[tauri::command]
 pub async fn model_channel_discover(

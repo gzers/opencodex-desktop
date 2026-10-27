@@ -158,6 +158,9 @@ pub fn run() {
             // 已删除功能的残留文件：删代码不等于删数据，固定文件名在这里就地清掉。
             // 只删「读取代码已完全删除」的文件，不遍历目录、不碰用户配置与历史备份。
             crate::commands::retired_files::purge_retired(&data_root);
+            // Repeatable, bounded upgrade of layout/candidates only. Failure
+            // keeps source bytes and does not stop unrelated application use.
+            let _ = crate::modules::model_config::legacy_migration::migrate(&data_root);
             // 「启动时清理」：开启时按保留策略做一次有界的轻量清理（日志截断、通知与
             // 通知保留期），必须在通知集合载入前完成；启动不扫描、校验或删除备份。
             let (startup_cleanup, cleanup_identity) =
@@ -554,7 +557,6 @@ pub fn run() {
             commands::model_config::model_template_delete,
             commands::model_config::model_match_preview,
             commands::model_config::model_policy_preview,
-            commands::model_config::model_policy_stage,
             commands::model_config::model_policy_prepare,
             commands::model_config::model_policy_apply,
             commands::model_config::model_policy_result,
@@ -569,9 +571,6 @@ pub fn run() {
             commands::model_config::model_upstream_snapshot,
             commands::model_config::model_channel_discover,
             commands::model_config::model_new_channel_preview,
-            commands::model_config::model_new_channel_add,
-            commands::model_config::model_new_channel_result,
-            commands::model_config::model_new_channel_latest,
             commands::model_config::model_channel_forget_credential,
             commands::model_config::model_node_measure,
             commands::model_config::model_node_measure_stop,
