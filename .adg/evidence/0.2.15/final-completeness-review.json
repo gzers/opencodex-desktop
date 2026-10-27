@@ -17,10 +17,7 @@
     "readOnly": true,
     "scope": "six changed files: startup ordering, classification, stable dedupe, fixed content/privacy, existing protection/no UI change"
   },
-  "stillPending": [
-    "tagged final installers in Release40460616784",
-    "updater signatures/public/stable verification"
-  ],
+  "stillPending": [],
   "notClaimed": [
     "paid external model generation",
     "user WebDAV service",
@@ -32,5 +29,18 @@
     "run": 40457220770,
     "result": "success",
     "head": "750c9f35e0c9b0e57c694ecef1b5b90367c316f7"
+  },
+  "releaseVerification": {
+    "release": 40460616784,
+    "result": "success",
+    "installers": [
+      "MSI",
+      "NSIS"
+    ],
+    "public": 40462386552,
+    "stable": 40462525375,
+    "threeAssetCryptographicSignatures": "verified twice",
+    "anonymousLatestManifest": "0.2.15",
+    "independentMacArchiveSignatureAndVersion": "verified"
   }
 }

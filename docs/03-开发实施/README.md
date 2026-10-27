@@ -9,7 +9,7 @@
 
 ## 实施计划入口
 
-- [0.2.15 配置传输、Agent 与旧配置迁移](IMP-OPENCODEX-DESKTOP-24.md)：WP-82～WP-84 和共同清理已实施，双平台候选通过，PR #23 已合并 / v0.2.15 已打 tag，制品验收在途；[发布记录](REL-OPENCODEX-DESKTOP-18.md)。
+- [0.2.15 配置传输、Agent 与旧配置迁移](IMP-OPENCODEX-DESKTOP-24.md)：WP-82～WP-84 和共同清理已完成，PR #23/#24 合并，双平台安装器与三个更新包验签通过，v0.2.15 已发布 stable/Latest；[发布记录](REL-OPENCODEX-DESKTOP-18.md)。
 
 - [0.2.14 文件读写、连接测速与原型通知统一](IMP-OPENCODEX-DESKTOP-23.md)：已公开并晋升 stable/Latest，main/tag 56c11220b；21 项门禁、双平台 CI、Windows 安装器与三个更新包签名通过；[发布记录](REL-OPENCODEX-DESKTOP-17.md)。
 

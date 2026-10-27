@@ -107,8 +107,8 @@
   {
     "path": ".adg/evidence/0.2.15/final-completeness-review.json",
     "role": "validation evidence; text line endings and trailing whitespace normalized",
-    "sha256": "b429a1d82c280946584318a213136052ddca487b816cef08d7d574fd85fc0341",
-    "size_bytes": 1222,
+    "sha256": "471ad25e0d0503009585ddd039fea64bfa0d4f76c85d877e0658476064d55588",
+    "size_bytes": 1465,
     "media_type": "application/json"
   },
   {
@@ -140,6 +140,13 @@
     "media_type": "text/plain"
   },
   {
+    "path": ".adg/evidence/0.2.15/latest-anonymous.json",
+    "role": "exact published asset bytes",
+    "sha256": "9bc44e28874ca28777514499fdf11798aa55b2da20bd9fb2db5dee0ef5d6d67b",
+    "size_bytes": 5402,
+    "media_type": "application/json"
+  },
+  {
     "path": ".adg/evidence/0.2.15/legacy-dispositions.json",
     "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "66edad218c63cb80d1663ae5844851801b25ce0cbf629d0e201e15cf52c1812d",
@@ -152,6 +159,13 @@
     "sha256": "2066da2946ef3e31104dfbe94bf9ac003ba4860cd0b3c4669bbfba7664130a4b",
     "size_bytes": 537,
     "media_type": "text/plain"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/mac-release-verification.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "0f2ac05b6502ec5e122365507741945056965c7fd7a31ade78614001405e9beb",
+    "size_bytes": 556,
+    "media_type": "application/json"
   },
   {
     "path": ".adg/evidence/0.2.15/migration-lock-fixed.log",
@@ -245,10 +259,143 @@
     "media_type": "application/octet-stream"
   },
   {
+    "path": ".adg/evidence/0.2.15/publish-public.log",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "6e9b378595539f20d12af07815c32e8b20f752096586d0c10b749c40f2d5bc6c",
+    "size_bytes": 25541,
+    "media_type": "text/plain"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/publish-stable.log",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "dbf7a393f381c3c0a9172747510f09d4712cea8af73e3ac4fe6729b876a665b7",
+    "size_bytes": 25528,
+    "media_type": "text/plain"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-build.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "3acab67a312c25de61374d8aa17c3bd458a8a5b99222de2720878ca978e70204",
+    "size_bytes": 4883,
+    "media_type": "application/json"
+  },
+  {
     "path": ".adg/evidence/0.2.15/release-candidate-withdrawal.json",
     "role": "validation evidence; text line endings and trailing whitespace normalized",
     "sha256": "9e5a6db37b1375585208d6334f19e3446c104c06d4ee1c42999a73771fdb50b8",
     "size_bytes": 580,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-summary.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "a7e6cd977ecffa378e2105eb7b1cd84b3cd7d9dadf4901ba9db2179b69e26cbc",
+    "size_bytes": 3565,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/installer-verification.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "b4f92135c894722daef5edb580998bfa7e1b15b02950f27449fe1d4ddb48c2c1",
+    "size_bytes": 2955,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/msi/model-export-boundary.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "31443b5942da1550d4205b0bf619390339292a01e5e8bd8e65a43ebdc588d2c9",
+    "size_bytes": 424,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/msi/model-sort-native.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "dc58f326199a510ea1aa41049d903795a76104d01d31dc234f8732832e2b25f4",
+    "size_bytes": 502,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/msi/model-transfer-native.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67",
+    "size_bytes": 249,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/msi/model-ui.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "e2566d4cf11f2ce2673a1ad2d5dcd4e805b99fd17240b69c8f463343756a5f26",
+    "size_bytes": 716,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/msi/startup.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "190bc9dc9f71e43247e3ce4f4d5c29cd2dc4caefee2d19efb24e35f835cf0615",
+    "size_bytes": 1385,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/msi/ui021-alignment.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "506b6a741b41c33393baa598aba29a9b34f0cc395893870214e77fa5bfd9d18c",
+    "size_bytes": 3257,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/msi/webview.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "4d4f71a9182e1971331a7a0e2b5062428c3af4f7aaa575f1a27f8ed5d140059b",
+    "size_bytes": 698,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/nsis/model-export-boundary.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "ec824dd767f511928f623753105db537c0e4a9f608f3f5bf38b43f21cbb11bfe",
+    "size_bytes": 426,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/nsis/model-sort-native.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "23a8397945d2ff6900ab1f2d756704746f1ba5d49949a91457d3e9e606601d09",
+    "size_bytes": 502,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/nsis/model-transfer-native.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67",
+    "size_bytes": 249,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/nsis/model-ui.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "0e6b1d22a1f70ee2796ca99c1ecc592bbbc4086f9ccd4ab471a55f5cabb02a8b",
+    "size_bytes": 716,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/nsis/startup.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "a3972df499fc0bd5ec39c47e4658c3b992889c66f27edea30f37bdb5c04f5e83",
+    "size_bytes": 1388,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/nsis/ui021-alignment.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "506b6a741b41c33393baa598aba29a9b34f0cc395893870214e77fa5bfd9d18c",
+    "size_bytes": 3257,
+    "media_type": "application/json"
+  },
+  {
+    "path": ".adg/evidence/0.2.15/release-windows/nsis/webview.json",
+    "role": "validation evidence; text line endings and trailing whitespace normalized",
+    "sha256": "4d4f71a9182e1971331a7a0e2b5062428c3af4f7aaa575f1a27f8ed5d140059b",
+    "size_bytes": 698,
     "media_type": "application/json"
   },
   {
@@ -261,8 +408,8 @@
   {
     "path": ".adg/evidence/0.2.15/source-trees.json",
     "role": "validation evidence; text line endings and trailing whitespace normalized",
-    "sha256": "a3c57e19ef4f8b7b147c1ed9cae7d478fdf6696ea0c2d46766229de96505c965",
-    "size_bytes": 2999,
+    "sha256": "26b686416381d0d39023e21db3ab722e13f47ca997896fee6e5983111efd92fd",
+    "size_bytes": 3165,
     "media_type": "application/json"
   },
   {

@@ -1,0 +1,369 @@
+{
+  "date": "2026-10-27",
+  "task": "TASK-OPENCODEX-0.2.15",
+  "objectiveScope": "WP-82～WP-84 and shared cleanup; documents/prototype/development/tests/stable release",
+  "checks": [
+    {
+      "name": "review:transfer-export",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/file-browser/report.json",
+        ".adg/evidence/0.2.15/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/https-webdav.log",
+        ".adg/evidence/0.2.15/windows-native/model-transfer-native.json"
+      ]
+    },
+    {
+      "name": "review:transfer-import",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/file-browser/report.json",
+        ".adg/evidence/0.2.15/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.15/transfer-ui.log",
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/reserved-model-ids.log",
+        ".adg/evidence/0.2.15/windows-native/model-transfer-native.json",
+        ".adg/evidence/0.2.15/windows-native/model-sort-native.json"
+      ]
+    },
+    {
+      "name": "review:internal-agent",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/agent-loopback.log",
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/gate-report.json"
+      ]
+    },
+    {
+      "name": "review:external-task",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/gate-report.json"
+      ]
+    },
+    {
+      "name": "review:legacy-cleanup",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/migration-tests.log",
+        ".adg/evidence/0.2.15/legacy-dispositions.json",
+        ".adg/evidence/0.2.15/migration-lock-fixed.log",
+        ".adg/evidence/0.2.15/locking-fixed.log",
+        ".adg/evidence/0.2.15/ci-attempts.json",
+        ".adg/evidence/0.2.15/ci-macos-backend-summary.json",
+        ".adg/evidence/0.2.15/ci-windows-backend-summary.json",
+        ".adg/evidence/0.2.15/migration-notice-tests.log",
+        ".adg/evidence/0.2.15/migration-notice-upgrade.log"
+      ]
+    },
+    {
+      "name": "review:prototype",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/prototype-regression.tap",
+        ".adg/evidence/0.2.15/prototype/integrated-save-preview.png",
+        ".adg/evidence/0.2.15/prototype/integrated-model-saved.png",
+        ".adg/evidence/0.2.15/gate-report.json",
+        ".adg/evidence/0.2.15/windows-native/ui021-alignment.json"
+      ]
+    },
+    {
+      "name": "review:release",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.15/gate-report.json",
+        ".adg/evidence/0.2.15/ci-attempts.json",
+        ".adg/evidence/0.2.15/ci-final.json",
+        ".adg/evidence/0.2.15/windows-restart-retry.json",
+        ".adg/evidence/0.2.15/windows-native/model-ui.json",
+        ".adg/evidence/0.2.15/release-candidate-withdrawal.json",
+        ".adg/evidence/0.2.15/release-build.json",
+        ".adg/evidence/0.2.15/release-summary.json",
+        ".adg/evidence/0.2.15/publish-public.log",
+        ".adg/evidence/0.2.15/publish-stable.log",
+        ".adg/evidence/0.2.15/mac-release-verification.json",
+        ".adg/evidence/0.2.15/release-windows/msi/model-transfer-native.json",
+        ".adg/evidence/0.2.15/release-windows/nsis/model-transfer-native.json"
+      ]
+    }
+  ],
+  "release": "https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.15",
+  "result": "passed",
+  "retainedLimits": [
+    "No paid external model generation, user WebDAV, active Codex restart or daily user config writes.",
+    "Loopback HTTPS, native installer, in-memory prototype and browser fixtures are separate validation scopes.",
+    "Ignored/skipped cases not counted as passed; OS signing/notarization remain unavailable test distribution."
+  ],
+  "completionReview": ".adg/evidence/0.2.15/final-completeness-review.json",
+  "unpublishedCandidateWithdrawal": ".adg/evidence/0.2.15/release-candidate-withdrawal.json",
+  "requirementAudit": [
+    {
+      "requirement": "WP82.1",
+      "description": "Saved-channel export is current-file based across full/family/shared scopes; stale legacy copies do not gate it",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "file_export_ignores_stale_policy_and_cli_and_carries_current_raw_authorization",
+        "family_scope_is_applied_to_remote_file_before_key_selection_or_adoption"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/https-webdav.log",
+        ".adg/evidence/0.2.15/windows-native/model-transfer-native.json"
+      ]
+    },
+    {
+      "requirement": "WP82.2",
+      "description": "Import comparison/adoption leaves file untouched, keeps actual baseline; existing Save Preview commits then reopens",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "file_compare_accept_and_replay_keep_saved_file_and_retired_draft_separate_from_candidate",
+        "imported_provider_fields_join_only_at_confirmed_file_save"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/file-browser/report.json",
+        ".adg/evidence/0.2.15/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.15/release-windows/msi/model-transfer-native.json",
+        ".adg/evidence/0.2.15/release-windows/nsis/model-transfer-native.json"
+      ]
+    },
+    {
+      "requirement": "WP82.3",
+      "description": "Live channel/model/Key and template edits protected; library-only adoption and late/conflicting results do not replace input",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "template_only_file_acceptance_and_legacy_recompare_never_create_a_channel_workspace"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/gate-report.json",
+        ".adg/evidence/0.2.15/reserved-model-ids.log",
+        ".adg/evidence/0.2.15/file-browser/report.json"
+      ]
+    },
+    {
+      "requirement": "WP82.4",
+      "description": "Selected source authorization adopted only through final Save; local mapping retains own credentials; protection optional",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "file_acceptance_checks_file_digest_before_installing_plain_keys_and_mapping_keeps_local_connection",
+        "explicit_same_identity_import_writes_raw_overlay_but_keeps_unselected_local_key"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/file-browser/report.json",
+        ".adg/evidence/0.2.15/release-windows/msi/model-transfer-native.json",
+        ".adg/evidence/0.2.15/release-windows/nsis/model-transfer-native.json"
+      ]
+    },
+    {
+      "requirement": "WP82.5",
+      "description": "File and WebDAV share current file/scope and memory adoption rules; verified TLS roundtrip before Save",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "family_scope_is_applied_to_remote_file_before_key_selection_or_adoption"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/https-webdav.log",
+        ".adg/evidence/0.2.15/https-fixture.json"
+      ]
+    },
+    {
+      "requirement": "WP83.1",
+      "description": "Agent identity and labels use file/layout; changed connection/recreated identity rejects stale runtime binding",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "file_layout_identity_wins_with_a_corrupt_legacy_draft_and_identity_registry",
+        "changed_file_connection_or_recreated_identity_cannot_reuse_the_old_runtime_binding"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/gate-report.json"
+      ]
+    },
+    {
+      "requirement": "WP83.2",
+      "description": "Fresh browsing/file loads refresh directory; failure retry and superseded/disposed response protections",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "full_execution_directory_is_stable_includes_selector_hidden_models_and_explains_native_binding"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/gate-report.json"
+      ]
+    },
+    {
+      "requirement": "WP83.3",
+      "description": "Missing route/choice does not silently switch or clear edits; execution constraints do not gate file legality",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "exact_file_model_without_an_execution_route_can_be_saved_without_changing_preferences",
+        "saved_execution_identity_rejects_endpoint_auth_or_root_changes_and_preserves_explicit_none_false"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/agent-loopback.log",
+        ".adg/evidence/0.2.15/gate-report.json"
+      ]
+    },
+    {
+      "requirement": "WP83.4",
+      "description": "Exact raw execution model parameters follow official route through controlled adapter, existing Agent UI retained",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "generation_uses_bound_model_parameters_and_returns_a_validated_proposal_without_saving"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/agent-loopback.log",
+        ".adg/evidence/0.2.15/gate-report.json"
+      ]
+    },
+    {
+      "requirement": "WP84.1",
+      "description": "Template task prepare/submit/receipt works with missing/corrupt irrelevant legacy policy/draft",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "template_task_lifecycle_ignores_missing_or_corrupt_legacy_documents"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log"
+      ]
+    },
+    {
+      "requirement": "WP84.2",
+      "description": "Scope, exact version, manual locks, check-only and immutable idempotent receipts retained",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "external_submission_is_scoped_atomic_and_replays_after_restart_without_a_second_version",
+        "corrupt_legacy_documents_do_not_weaken_scope_locks_check_only_or_library_conflicts",
+        "check_only_service_rejects_any_version_write_and_only_records_a_report"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log"
+      ]
+    },
+    {
+      "requirement": "WP84.3",
+      "description": "Results update template library without overriding current channel/file/Key/template input",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "external_proposals_cannot_change_locked_values_or_expand_scope"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/gate-report.json"
+      ]
+    },
+    {
+      "requirement": "WP84.4",
+      "description": "Explicit template adoption reaches file only through existing confirmation Save and readback",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "imported_raw_seed_does_not_hide_new_template_adoption"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/file-browser/report.json",
+        ".adg/evidence/0.2.15/file-browser-webkit/report.json"
+      ]
+    },
+    {
+      "requirement": "CLEAN.1",
+      "description": "17 concrete consumer dispositions; preserve active history/credentials/candidates and remove dead writer/IPC",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "cleanup_removes_only_dead_fixed_file_and_owned_unreferenced_temporary_names"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/legacy-dispositions.json"
+      ]
+    },
+    {
+      "requirement": "CLEAN.2",
+      "description": "New install, actual legacy upgrade, corruption, interruptions, repeatability/concurrency preserve current file and identities",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "new_install_creates_only_empty_layout_and_repeats_without_rewriting",
+        "upgrade_salvages_metadata_and_archives_exact_unsanitized_bytes",
+        "interrupted_before_and_after_publication_is_repeatable_and_keeps_history_bytes",
+        "concurrent_upgrade_publishes_once_and_never_duplicates_metadata_or_archives"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/ci-macos-backend-summary.json",
+        ".adg/evidence/0.2.15/ci-windows-backend-summary.json"
+      ]
+    },
+    {
+      "requirement": "CLEAN.3",
+      "description": "Cleanup only after exact archive/readback/unchanged source while retaining lock inode and useful unfinished candidates",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "changed_source_or_archive_prevents_terminal_record_unlink",
+        "busy_retired_admission_lock_is_never_replaced_removed_or_archived",
+        "incomplete_conflicting_unknown_and_corrupt_join_records_keep_originals"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/ci-windows-backend-summary.json",
+        ".adg/evidence/0.2.15/legacy-dispositions.json"
+      ]
+    },
+    {
+      "requirement": "CLEAN.4",
+      "description": "Faults use fixed existing-bell notice; no legacy secrets/paths/errors; dedupe and silent success/busy lock",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [
+        "archive_failure_reaches_the_existing_persisted_bell_without_legacy_content",
+        "successful_upgrade_and_busy_old_admission_do_not_create_notification_noise",
+        "model_config_migration_scope_dedupes_after_persistence_and_restart"
+      ],
+      "evidence": [
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/migration-notice-tests.log",
+        ".adg/evidence/0.2.15/ci-windows-backend-summary.json"
+      ]
+    },
+    {
+      "requirement": "DESIGN",
+      "description": "Existing 0.2.0 prototype, Save Preview/Agent/bell/button geometry; no new CSS/status/modal",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [],
+      "evidence": [
+        ".adg/evidence/0.2.15/prototype-regression.tap",
+        ".adg/evidence/0.2.15/prototype/integration-layout.json",
+        ".adg/evidence/0.2.15/gate-report.json",
+        ".adg/evidence/0.2.15/windows-native/ui021-alignment.json"
+      ]
+    },
+    {
+      "requirement": "RELEASE",
+      "description": "Final head/CI/tag tree match, final platform installers, updater signatures, public/stable and anonymous manifest verified",
+      "result": "proven_with_recorded_limits",
+      "verifiedTests": [],
+      "evidence": [
+        ".adg/evidence/0.2.15/source-trees.json",
+        ".adg/evidence/0.2.15/ci-final.json",
+        ".adg/evidence/0.2.15/release-build.json",
+        ".adg/evidence/0.2.15/release-summary.json",
+        ".adg/evidence/0.2.15/release-windows/installer-verification.json",
+        ".adg/evidence/0.2.15/publish-public.log",
+        ".adg/evidence/0.2.15/publish-stable.log",
+        ".adg/evidence/0.2.15/mac-release-verification.json",
+        ".adg/evidence/0.2.15/latest-anonymous.json"
+      ]
+    }
+  ],
+  "uiTestSourcesCoveredByFinal903UnitPass": [
+    "apps/desktop/ui/tests/model-transfer-adoption.test.ts",
+    "apps/desktop/ui/tests/model-execution-field.test.ts"
+  ],
+  "scopeLimitsVerifiedNotPromotedToClaims": true
+}

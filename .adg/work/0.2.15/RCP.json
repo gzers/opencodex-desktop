@@ -2,9 +2,9 @@
   "id": "RCP-OPENCODEX-0.2.15",
   "task_id": "TASK-OPENCODEX-0.2.15",
   "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-24.md",
-  "recorded_at": "2026-10-27T06:21:54.054568+00:00",
+  "recorded_at": "2026-10-27T06:42:17.627783+00:00",
   "code_commit": "750c9f35e0c9b0e57c694ecef1b5b90367c316f7",
-  "result": "in_progress",
+  "result": "passed",
   "checks": [
     {
       "name": "review:transfer-export",
@@ -65,7 +65,7 @@
         ".adg/evidence/0.2.15/migration-notice-tests.log",
         ".adg/evidence/0.2.15/migration-notice-upgrade.log"
       ],
-      "scope": "Final750c9f35fault classification and existing-bell delivery passed4actualfault/silence tests,41registrychecks,22mac/21Windowsmigrationcases,completebackend1261andfinal5jobCI40457220770. No added UI or config writes."
+      "scope": "17 explicit consumer dispositions; safe migration/archive/readback/removal, busy-lock inode, history/credential/candidate retention; fixed existing-bell startup fault delivery and actual persisted isolated failure tests passed on final platforms."
     },
     {
       "name": "review:prototype",
@@ -81,21 +81,53 @@
     },
     {
       "name": "review:release",
-      "status": "failed",
+      "status": "passed",
       "evidence": [
         ".adg/evidence/0.2.15/gate-report.json",
         ".adg/evidence/0.2.15/ci-attempts.json",
         ".adg/evidence/0.2.15/ci-final.json",
         ".adg/evidence/0.2.15/windows-restart-retry.json",
         ".adg/evidence/0.2.15/windows-native/model-ui.json",
-        ".adg/evidence/0.2.15/release-candidate-withdrawal.json"
+        ".adg/evidence/0.2.15/release-candidate-withdrawal.json",
+        ".adg/evidence/0.2.15/release-build.json",
+        ".adg/evidence/0.2.15/release-summary.json",
+        ".adg/evidence/0.2.15/publish-public.log",
+        ".adg/evidence/0.2.15/publish-stable.log",
+        ".adg/evidence/0.2.15/mac-release-verification.json",
+        ".adg/evidence/0.2.15/release-windows/msi/model-transfer-native.json",
+        ".adg/evidence/0.2.15/release-windows/nsis/model-transfer-native.json"
       ],
-      "scope": "Final5requiredCIjobs40457220770passed;PR24merged2e687a60;finalv0.2.15tagmatchesacceptedtree. AwaitRelease40460616784installers,3updater signatures and public/stable verification."
+      "scope": "Final 21-step gate and 5 required PR jobs passed; Windows EXE/MSI/NSIS native file transfer/save/reopen passed; both release platforms succeeded; 3 updater assets cryptographically verified in public/stable flows and anonymous Latest manifest 0.2.15."
     }
   ],
   "limits": [
     "No paid external model generation, user WebDAV, active Codex restart or daily user config writes.",
     "Loopback HTTPS, native installer, in-memory prototype and browser fixtures are separate validation scopes.",
     "Ignored/skipped cases not counted as passed; OS signing/notarization remain unavailable test distribution."
+  ],
+  "completed_at": "2026-10-27T06:42:17.627783+00:00",
+  "release_commit": "2e687a60a9acebb3749f6b5abc1c2bdd243b5b8b",
+  "same_application_source_evidence": ".adg/evidence/0.2.15/source-trees.json",
+  "fact_impacts": [
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "after_sha256": "9ad778216a06cd213ff1dcfdf1b61c2636d50e6d6e385745e27bd2642214058e"
+    },
+    {
+      "path": "docs/02-项目核心/数据与状态.md",
+      "after_sha256": "ed75536597ff58a857bf40c479f46c7f6c1be3dfc3099d8c4e39f67a7816a132"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-24.md",
+      "after_sha256": "246d9e18998971fe0bf18f7d1911a9b65a060e899975b884747ef57de95e61bb"
+    },
+    {
+      "path": "docs/03-开发实施/REL-OPENCODEX-DESKTOP-18.md",
+      "after_sha256": "9eed626e8f78c77b6297bb152bb38a902ef9604d961a0d75987602d73de46513"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.14-bugs.md",
+      "after_sha256": "5b313ea0f315474b498080aae6ff9422bde6c85115383588ae44f442cbc733c3"
+    }
   ]
 }
