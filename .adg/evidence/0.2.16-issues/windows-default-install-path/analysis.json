@@ -1,0 +1,36 @@
+{
+  "sourceCommit": "7a4e14ba25301e522decc7d012d3f4b56095510d",
+  "releaseTag": "v0.2.16",
+  "method": "Transpile and invoke actual installPath.ts in Node; read-only lexical reproduction, no install command",
+  "cases": [
+    {
+      "path": "D:\\Software\\Develop\\OpenCodeX Desktop\\data\\runtime\\opencodex",
+      "platform": "Windows",
+      "issue": "",
+      "canAdvance": true
+    },
+    {
+      "path": "\\\\?\\D:\\Software\\Develop\\OpenCodeX Desktop\\data\\runtime\\opencodex",
+      "platform": "Windows",
+      "issue": "安装位置必须是当前平台的完整绝对路径，且不能包含 . 或 ..",
+      "canAdvance": false
+    },
+    {
+      "path": "\\\\server\\share\\OpenCodeX Desktop\\data\\runtime\\opencodex",
+      "platform": "Windows",
+      "issue": "",
+      "canAdvance": true
+    },
+    {
+      "path": "\\\\?\\UNC\\server\\share\\OpenCodeX Desktop\\data\\runtime\\opencodex",
+      "platform": "Windows",
+      "issue": "安装位置必须是当前平台的完整绝对路径，且不能包含 . 或 ..",
+      "canAdvance": false
+    }
+  ],
+  "containment": {
+    "ordinary": true,
+    "extended": null
+  },
+  "limitation": "No Windows filesystem admission or real npm installation executed; screenshot exact installed version unconfirmed."
+}
