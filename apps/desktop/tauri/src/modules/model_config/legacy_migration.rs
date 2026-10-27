@@ -596,7 +596,7 @@ fn preserve_join_candidates(root: &Path, report: &mut MigrationReport) {
         report.info("admission_archive_deferred_lock_retained", JOIN_LOCK);
         return;
     };
-    let Ok(_guard) = TargetFileLock::try_lock_with_timeout(&target, Duration::ZERO) else {
+    let Ok(guard) = TargetFileLock::try_lock_with_timeout(&target, Duration::ZERO) else {
         report.info("admission_archive_deferred_lock_retained", JOIN_LOCK);
         return;
     };
@@ -606,8 +606,12 @@ fn preserve_join_candidates(root: &Path, report: &mut MigrationReport) {
     }
     // Never unlink this inode: an older process can be waiting for the same
     // lock. Busy admission skips both archival and cleanup of its records.
-    if let Some(bytes) = legacy(root, JOIN_LOCK, report) {
-        preserve(root, JOIN_LOCK, &bytes, false, report);
+    match guard.read_metadata(MAX_DOCUMENT) {
+        Ok(bytes) => preserve(root, JOIN_LOCK, &bytes, false, report),
+        Err(_) => report.info(
+            "admission_metadata_archive_deferred_lock_retained",
+            JOIN_LOCK,
+        ),
     }
     let mut remaining = MAX_JOIN_BYTES;
     for relative in candidates {
@@ -1539,7 +1543,7 @@ mod tests {
         assert!(!has_archive(root.path(), &report, &bytes, false));
         assert_eq!(std::fs::read(root.path().join(&relative)).unwrap(), bytes);
         assert_eq!(
-            std::fs::read(root.path().join(JOIN_LOCK)).unwrap(),
+            guard.read_metadata(MAX_DOCUMENT).unwrap(),
             b"held lock bytes"
         );
         assert!(TargetFileLock::try_lock_with_timeout(
