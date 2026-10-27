@@ -1,0 +1,185 @@
+{
+  "adapter": "production Rust config_file via temporary loopback fixture",
+  "checks": [
+    {
+      "name": "file contains demo and two existing scope channels",
+      "ok": true
+    },
+    {
+      "name": "clean list Save is disabled",
+      "ok": true
+    },
+    {
+      "name": "clean detail Save is disabled",
+      "ok": true
+    },
+    {
+      "name": "A name, Key and pending model row stay in memory",
+      "ok": true
+    },
+    {
+      "name": "returning from A leaves file bytes unchanged",
+      "ok": true
+    },
+    {
+      "name": "clean B Save is disabled while A is dirty",
+      "ok": true
+    },
+    {
+      "name": "detail Save returns to list without full Preview",
+      "ok": true
+    },
+    {
+      "name": "detail RPC carries only current-channel credentials",
+      "ok": true
+    },
+    {
+      "name": "B detail Save actually writes B Key",
+      "ok": true
+    },
+    {
+      "name": "B scope creates one prewrite backup",
+      "ok": true
+    },
+    {
+      "name": "one global result, no bottom placeholder",
+      "ok": true
+    },
+    {
+      "name": "reopened B is clean with written name and masked Key",
+      "ok": true
+    },
+    {
+      "name": "reopened A is dirty with pending row",
+      "ok": true
+    },
+    {
+      "name": "list Save retains global Preview with both channels",
+      "ok": true
+    },
+    {
+      "name": "canceling list Preview cannot undo B or write A",
+      "ok": true
+    },
+    {
+      "name": "canceling Preview retains remaining A Key",
+      "ok": true
+    },
+    {
+      "name": "remaining confirmation writes A Key and confirmed row",
+      "ok": true
+    },
+    {
+      "name": "list RPC uses global scope",
+      "ok": true
+    },
+    {
+      "name": "no remaining changes disables list Save",
+      "ok": true
+    },
+    {
+      "name": "existing Key loaded masked",
+      "ok": true
+    },
+    {
+      "name": "eye reveals saved Key",
+      "ok": true
+    },
+    {
+      "name": "eye alone leaves Save disabled",
+      "ok": true
+    },
+    {
+      "name": "Key-only edit enables detail Save",
+      "ok": true
+    },
+    {
+      "name": "detail Save returns to list without full Preview",
+      "ok": true
+    },
+    {
+      "name": "detail RPC carries only current-channel credentials",
+      "ok": true
+    },
+    {
+      "name": "Key-only direct Save reached actual config.json",
+      "ok": true
+    },
+    {
+      "name": "unrelated raw field and exact custom ID remain",
+      "ok": true
+    },
+    {
+      "name": "Key-only Save creates one prewrite backup",
+      "ok": true
+    },
+    {
+      "name": "reopened editor reads written Key masked and clean",
+      "ok": true
+    },
+    {
+      "name": "no restart/check state resurrected",
+      "ok": true
+    },
+    {
+      "name": "empty input alone keeps Save disabled",
+      "ok": true
+    },
+    {
+      "name": "detail Save returns to list without full Preview",
+      "ok": true
+    },
+    {
+      "name": "detail RPC carries only current-channel credentials",
+      "ok": true
+    },
+    {
+      "name": "empty input keeps saved Key",
+      "ok": true
+    },
+    {
+      "name": "detail Save returns to list without full Preview",
+      "ok": true
+    },
+    {
+      "name": "detail RPC carries only current-channel credentials",
+      "ok": true
+    },
+    {
+      "name": "explicit clear persists deletion",
+      "ok": true
+    },
+    {
+      "name": "export uses current file despite damaged legacy policy/draft",
+      "ok": true
+    },
+    {
+      "name": "receiving and comparing leaves complete file unchanged",
+      "ok": true
+    },
+    {
+      "name": "adopting imported channels leaves file unchanged",
+      "ok": true
+    },
+    {
+      "name": "adoption retains independent channel and Key input",
+      "ok": true
+    },
+    {
+      "name": "global Preview contains imported exact model",
+      "ok": true
+    },
+    {
+      "name": "confirmed Save writes imported raw fields and local Key",
+      "ok": true
+    },
+    {
+      "name": "reopen reads imported channel and original opaque field",
+      "ok": true
+    },
+    {
+      "name": "no browser exceptions",
+      "ok": true
+    }
+  ]
+}

@@ -5,39 +5,60 @@
   "checks": [
     {
       "name": "review:scoped-file",
-      "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/file-browser-webkit/report.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
     },
     {
       "name": "review:edit-preservation",
-      "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/independent-review.json",
+        ".adg/evidence/0.2.16/file-browser/report.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
     },
     {
       "name": "review:connection-ui",
-      "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/file-browser/report.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
     },
     {
       "name": "review:save-state",
-      "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/file-browser/report.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
     },
     {
       "name": "review:prototype-notification",
-      "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/notification-parity/report.json",
+        ".adg/evidence/0.2.16/gate-report.json",
+        ".adg/evidence/0.2.16/prototype-authority.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
     },
     {
       "name": "review:legacy-cleanup",
-      "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/legacy-dispositions.json",
+        ".adg/evidence/0.2.16/independent-review.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
     },
     {
       "name": "review:release",
@@ -45,5 +66,7 @@
       "evidence": [],
       "scope": "implementation/verification pending"
     }
-  ]
+  ],
+  "code_commit": "a71798dfeb1b12a739725b43bfa9cdd44bb0bb99",
+  "recorded_at": "2026-10-27T09:06:58.867484+00:00"
 }

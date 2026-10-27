@@ -1,0 +1,93 @@
+{
+  "prototype": {
+    "nav": {
+      "text": "01\n基本信息\n02\n匹配范围\n03\n族通用配置\n04\n版本或后缀\n05\n来源与版本\nAgent 自动填充\n外部任务\n复制模版\n保存",
+      "hasAgent": true,
+      "hasExternal": true,
+      "hasCopy": true,
+      "hasPreview": false,
+      "hasSave": true,
+      "hasVersionSwitch": true,
+      "hasCompare": false,
+      "itemCount": 9
+    },
+    "matching": {
+      "exists": true,
+      "hasPreview": true
+    }
+  },
+  "implementation": {
+    "nav": {
+      "text": "收起导航\n01\n基本信息\n02\n匹配规则\n03\n通用配置\n04\n版本或后缀\n05\n来源与版本\nAgent自动填充\n外部任务\n复制模版\n还原修改\n保存",
+      "hasAgent": true,
+      "hasExternal": true,
+      "hasCopy": true,
+      "hasPreview": false,
+      "hasSave": true,
+      "hasVersionSwitch": false,
+      "hasCompare": true,
+      "itemCount": 11
+    },
+    "matching": {
+      "exists": true,
+      "hasPreview": true
+    }
+  },
+  "results": [
+    {
+      "n": "原型模版侧栏存在",
+      "ok": true,
+      "d": ""
+    },
+    {
+      "n": "实现模版侧栏存在",
+      "ok": true,
+      "d": ""
+    },
+    {
+      "n": "两侧都有 Agent 自动填充",
+      "ok": true,
+      "d": ""
+    },
+    {
+      "n": "两侧都有外部任务",
+      "ok": true,
+      "d": ""
+    },
+    {
+      "n": "两侧都有复制模版",
+      "ok": true,
+      "d": ""
+    },
+    {
+      "n": "两侧侧栏都没有匹配预览",
+      "ok": true,
+      "d": "proto=false impl=false"
+    },
+    {
+      "n": "两侧都有保存",
+      "ok": true,
+      "d": ""
+    },
+    {
+      "n": "两侧匹配分区都有匹配预览",
+      "ok": true,
+      "d": "proto=true impl=true"
+    },
+    {
+      "n": "原型有版本切换入口",
+      "ok": true,
+      "d": "proto=true"
+    },
+    {
+      "n": "单版本时不渲染多余版本下拉",
+      "ok": true,
+      "d": "impl=false"
+    },
+    {
+      "n": "实现有与版本比较入口",
+      "ok": true,
+      "d": "impl=true"
+    }
+  ]
+}

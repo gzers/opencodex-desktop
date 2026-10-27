@@ -1,0 +1,28 @@
+
+> opencodex-desktop-ui@0.2.16 gate:release
+> node qa/gate-release.mjs
+
+PASS typecheck ·  · 4245ms
+FAIL unit · Tests  985 passed | 10 skipped (995)
+PASS build · ✓ built in 399ms · 718ms
+PASS audit:file-save · {"engine":"chromium","passed":45,"failed":0,"out":"/tmp/ocx-v16-gate-approved/audit-file-save"} · 90466ms
+PASS audit:notification-feedback · {"engine":"chromium","passed":56,"failed":0,"outDir":"/tmp/ocx-v16-gate-approved/audit-notification-feedback"} · 27098ms
+PASS audit:notification-parity · notification recipe parity failed=0/84 · 9812ms
+PASS audit:models · shots: /tmp/ocx-v16-gate-approved/audit-models  failed=0/32 · 11695ms
+PASS audit:preview · shots: /tmp/ocx-v16-gate-approved/audit-preview failed=0/30 · 9532ms
+PASS audit:geometry · failed=0/44 · 6610ms
+PASS audit:geometry:webkit · failed=0/40 · 17493ms
+PASS audit:webkit · shots: /tmp/ocx-v16-gate-approved/audit-webkit  failed=0/32 · 58088ms
+PASS audit:template · shots: /tmp/ocx-v16-gate-approved/audit-template failed=0/28 · 8940ms
+PASS audit:export · shots: /tmp/ocx-v16-gate-approved/audit-export failed=0/18 · 10704ms
+PASS audit:update · shots: /tmp/ocx-v16-gate-approved/audit-update failed=0/24 · 4168ms
+PASS audit:parity:list · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-o7j4wF failed=0/8 · 6950ms
+PASS audit:parity · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-gDz6Ba failed=0/10 · 8960ms
+PASS audit:parity:export · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-export-tD0fl9 failed=0/7 · 9371ms
+PASS audit:parity:template · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-template-ezVadW failed=0/11 · 9373ms
+PASS audit:parity:agent · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-agent-DiZrTr failed=0/7 · 9415ms
+PASS audit:catalog-naming · CHECKED 50 routed rows; providers=26 · 29ms
+PASS audit:catalog-crossvalidate · PASS 清除友好名后的配置通过官方 config validate · 343ms
+
+门禁快照：20 通过 / 1 失败 / 0 跳过
+报告：/tmp/ocx-v16-gate-approved/gate-report.json

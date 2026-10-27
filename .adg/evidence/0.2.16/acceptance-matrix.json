@@ -1,0 +1,135 @@
+{
+  "codeHead": "a71798dfeb1b12a739725b43bfa9cdd44bb0bb99",
+  "source": "0.2.15-bugs.md mandatory14scenarios",
+  "cases": [
+    {
+      "id": 1,
+      "scope": "clean list/detail, read-only events",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 2,
+      "scope": "restore fields to original, eye/probe do not dirty",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/file-browser/report.json"
+      ]
+    },
+    {
+      "id": 3,
+      "scope": "save B retains A name/Key/node/model memory",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 4,
+      "scope": "reopen B clean, A dirty",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/file-browser-webkit/report.json"
+      ]
+    },
+    {
+      "id": 5,
+      "scope": "remaining global Preview/cancel/restore/save preserve prior B",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 6,
+      "scope": "Key replace/keep/clear and legitimate offline save",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 7,
+      "scope": "scope budget100/101, unrelated pending and unsaved disable",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 8,
+      "scope": "new/delete/globalorder/references and exact model order",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 9,
+      "scope": "late input/nav/repeat/global stale Preview",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/independent-review.json"
+      ]
+    },
+    {
+      "id": 10,
+      "scope": "lock/write/backup/conflict/fault rollback/retry",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/independent-review.json"
+      ]
+    },
+    {
+      "id": 11,
+      "scope": "import raw refs/template buffers/explicit history",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/file-browser/report.json"
+      ]
+    },
+    {
+      "id": 12,
+      "scope": "themes/effects/narrow table geometry/notification parity",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/notification-parity/report.json",
+        ".adg/evidence/0.2.16/gate-audit-geometry.log",
+        ".adg/evidence/0.2.16/gate-audit-geometry-webkit.log",
+        ".adg/evidence/0.2.16/gate-report.json"
+      ]
+    },
+    {
+      "id": 13,
+      "scope": "Windows WebView2/native packages plus macOS corresponding engine",
+      "status": "pending",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser-webkit/report.json"
+      ]
+    },
+    {
+      "id": 14,
+      "scope": "CI/installers/update signatures/public stable manifest",
+      "status": "pending",
+      "evidence": []
+    }
+  ],
+  "boundary": "Only final platform and publication receipts can close13/14. macOS WebKit actual Rust fixture is engine evidence, not all real-device or OS installation behavior."
+}

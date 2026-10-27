@@ -1,0 +1,22 @@
+[
+  {
+    "log": "attempt-ocx-v16-gate.log",
+    "scope": "initial fixture port contention",
+    "terminalSummary": "门禁快照：20 通过 / 1 失败 / 0 跳过"
+  },
+  {
+    "log": "attempt-ocx-v16-gate-final.log",
+    "scope": "first complete gate before independent findings",
+    "terminalSummary": "门禁快照：21 通过 / 0 失败 / 0 跳过"
+  },
+  {
+    "log": "attempt-ocx-v16-gate-approved.log",
+    "scope": "post-fix gate had nonzero unit process despite passing count; independently rerun then rerun complete gate with raw logs",
+    "terminalSummary": "门禁快照：20 通过 / 1 失败 / 0 跳过"
+  },
+  {
+    "log": "attempt-ocx-v16-gate-release.log",
+    "scope": "final accepted-head gate running",
+    "terminalSummary": "running"
+  }
+]

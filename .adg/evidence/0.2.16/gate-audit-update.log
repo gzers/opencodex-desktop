@@ -1,0 +1,25 @@
+PASS update-1180x760-light 结果页已打开
+PASS update-1180x760-light 标题为检查更新结果
+PASS update-1180x760-light 每个对象一行 | rows=2
+PASS update-1180x760-light 只留查看详情 | detail=2
+PASS update-1180x760-light 结果页无安装按钮
+PASS update-1180x760-light 结果页无备份勾选 | checkbox=0
+PASS update-1180x760-light 结果页无更新内容折叠 | details=0
+PASS update-1180x760-light 每行有一句说明摘要 | summaries=1
+PASS update-1180x760-light 正文一屏不滚动 | {"client":202,"scroll":202}
+PASS update-1180x760-light 底部只有关闭 | footer=["关闭"]
+PASS update-1180x760-light 弹窗不越界 | {"w":780,"h":397,"top":182,"bottom":578}
+PASS update-1180x760-light 无未捕获错误
+PASS update-900x600-dark 结果页已打开
+PASS update-900x600-dark 标题为检查更新结果
+PASS update-900x600-dark 每个对象一行 | rows=2
+PASS update-900x600-dark 只留查看详情 | detail=2
+PASS update-900x600-dark 结果页无安装按钮
+PASS update-900x600-dark 结果页无备份勾选 | checkbox=0
+PASS update-900x600-dark 结果页无更新内容折叠 | details=0
+PASS update-900x600-dark 每行有一句说明摘要 | summaries=1
+PASS update-900x600-dark 正文一屏不滚动 | {"client":202,"scroll":202}
+PASS update-900x600-dark 底部只有关闭 | footer=["关闭"]
+PASS update-900x600-dark 弹窗不越界 | {"w":780,"h":397,"top":102,"bottom":498}
+PASS update-900x600-dark 无未捕获错误
+shots: /tmp/ocx-v16-gate-release/audit-update failed=0/24

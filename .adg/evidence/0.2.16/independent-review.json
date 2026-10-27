@@ -1,0 +1,14 @@
+{
+  "reviewer": "Kant isolated subagent",
+  "initialFindings": [
+    "P1 layout write failure falsely acknowledged",
+    "P2 newest unedited B metadata left stale in draft"
+  ],
+  "resolution": "Both fixed and independently reviewed; global late-input acceptance and obsolete preview invalidation included.",
+  "independentTests": {
+    "rust": 49,
+    "frontend": 70,
+    "typecheck": "passed"
+  },
+  "boundary": "Windows fault test and native package remain pending CI; no claim of two-file crash atomicity"
+}

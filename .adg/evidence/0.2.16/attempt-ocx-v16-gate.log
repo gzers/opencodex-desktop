@@ -1,0 +1,28 @@
+
+> opencodex-desktop-ui@0.2.16 gate:release
+> node qa/gate-release.mjs
+
+PASS typecheck ·  · 4892ms
+PASS unit · Tests  957 passed | 10 skipped (967) · 9364ms
+PASS build · ✓ built in 360ms · 689ms
+FAIL audit:file-save · Node.js v26.8.1
+PASS audit:notification-feedback · {"engine":"chromium","passed":56,"failed":0,"outDir":"/tmp/ocx-v16-gate/audit-notification-feedback"} · 26408ms
+PASS audit:notification-parity · notification recipe parity failed=0/78 · 10099ms
+PASS audit:models · shots: /tmp/ocx-v16-gate/audit-models  failed=0/32 · 11840ms
+PASS audit:preview · shots: /tmp/ocx-v16-gate/audit-preview failed=0/30 · 10037ms
+PASS audit:geometry · failed=0/44 · 7104ms
+PASS audit:geometry:webkit · failed=0/40 · 21545ms
+PASS audit:webkit · shots: /tmp/ocx-v16-gate/audit-webkit  failed=0/32 · 61368ms
+PASS audit:template · shots: /tmp/ocx-v16-gate/audit-template failed=0/28 · 9059ms
+PASS audit:export · shots: /tmp/ocx-v16-gate/audit-export failed=0/18 · 10652ms
+PASS audit:update · shots: /tmp/ocx-v16-gate/audit-update failed=0/24 · 4047ms
+PASS audit:parity:list · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-pgVl3O failed=0/8 · 7340ms
+PASS audit:parity · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-PFCjpx failed=0/10 · 9227ms
+PASS audit:parity:export · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-export-e0bIAd failed=0/7 · 9543ms
+PASS audit:parity:template · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-template-rOFQI4 failed=0/11 · 9744ms
+PASS audit:parity:agent · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-agent-LkcS4Q failed=0/7 · 9575ms
+PASS audit:catalog-naming · CHECKED 50 routed rows; providers=26 · 38ms
+PASS audit:catalog-crossvalidate · PASS 清除友好名后的配置通过官方 config validate · 407ms
+
+门禁快照：20 通过 / 1 失败 / 0 跳过
+报告：/tmp/ocx-v16-gate/gate-report.json

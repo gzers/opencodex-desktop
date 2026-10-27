@@ -1,0 +1,28 @@
+
+> opencodex-desktop-ui@0.2.16 gate:release
+> node qa/gate-release.mjs
+
+PASS typecheck ·  · 4286ms
+PASS unit · Tests  985 passed | 10 skipped (995) · 8683ms
+PASS build · ✓ built in 346ms · 638ms
+PASS audit:file-save · {"engine":"chromium","passed":45,"failed":0,"out":"/tmp/ocx-v16-gate-release/audit-file-save"} · 12946ms
+PASS audit:notification-feedback · {"engine":"chromium","passed":56,"failed":0,"outDir":"/tmp/ocx-v16-gate-release/audit-notification-feedback"} · 26039ms
+PASS audit:notification-parity · notification recipe parity failed=0/84 · 10353ms
+PASS audit:models · shots: /tmp/ocx-v16-gate-release/audit-models  failed=0/32 · 11579ms
+PASS audit:preview · shots: /tmp/ocx-v16-gate-release/audit-preview failed=0/30 · 9661ms
+PASS audit:geometry · failed=0/44 · 6697ms
+PASS audit:geometry:webkit · failed=0/40 · 16996ms
+PASS audit:webkit · shots: /tmp/ocx-v16-gate-release/audit-webkit  failed=0/32 · 57135ms
+PASS audit:template · shots: /tmp/ocx-v16-gate-release/audit-template failed=0/28 · 8878ms
+PASS audit:export · shots: /tmp/ocx-v16-gate-release/audit-export failed=0/18 · 10664ms
+PASS audit:update · shots: /tmp/ocx-v16-gate-release/audit-update failed=0/24 · 3978ms
+PASS audit:parity:list · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-IJmFSW failed=0/8 · 7060ms
+PASS audit:parity · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-aU1hla failed=0/10 · 8779ms
+PASS audit:parity:export · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-export-b5tmDO failed=0/7 · 9557ms
+PASS audit:parity:template · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-template-wsq8Lu failed=0/11 · 9643ms
+PASS audit:parity:agent · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-agent-jUWo85 failed=0/7 · 9631ms
+PASS audit:catalog-naming · CHECKED 50 routed rows; providers=26 · 30ms
+PASS audit:catalog-crossvalidate · PASS 清除友好名后的配置通过官方 config validate · 318ms
+
+门禁快照：21 通过 / 0 失败 / 0 跳过
+报告：/tmp/ocx-v16-gate-release/gate-report.json
