@@ -36,13 +36,13 @@ test('仅有未确认连接也能丢弃，纯新建编辑缓冲不误伤模版�
  const h=make();h.click('new-template');const id=h.state().templateScratch.id;h.meta('description','未保存模版内容');h.click('tab',{tab:'channels'});h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'只改未确认连接');h.click('back-channels');
  h.click('discard');assert.match(h.dialog(),/未确认的连接编辑/);h.runConfirm();assert.equal(h.state().buffers[id].description,'未保存模版内容');assert.equal(h.state().templateScratch.id,id);assert.equal(JSON.stringify(h.state().draft),JSON.stringify(h.state().saved));
 });
-test('保存中还原禁用，成功保存成为新还原基准；待重启和底层记录保留',()=>{
+test('保存中还原禁用，成功保存成为新还原基准；不留待重启且底层记录保留',()=>{
  const h=make();h.click('edit-provider',{id:'newapi'});h.click('toggle-model',{id:'newapi::0'});h.click('back-channels');h.click('save');h.runConfirm();const draft=JSON.stringify(h.state().draft);h.click('undo');h.click('redo');h.click('discard');assert.equal(JSON.stringify(h.state().draft),draft);assert.match(h.page().match(/<button id="mpPolicyReset"[^>]*>/)[0],/disabled/);h.drain();
- assert.match(h.page(),/warning" data-channel-state="pending"/);assert.ok(h.state().records.some(r=>r.status==='成功'));assert.equal(provider(h,'newapi','saved').models[0].selected,false);h.click('edit-provider',{id:'newapi'});h.click('toggle-model',{id:'newapi::0'});h.click('back-channels');h.click('discard');h.runConfirm();assert.equal(provider(h,'newapi').models[0].selected,false);assert.equal(JSON.stringify(h.state().draft),JSON.stringify(h.state().saved));assert.equal(h.state().pending,true);
+ assert.match(h.page(),/neutral" data-channel-state="clean"/);assert.ok(h.state().records.some(r=>r.status==='成功'));assert.equal(provider(h,'newapi','saved').models[0].selected,false);h.click('edit-provider',{id:'newapi'});h.click('toggle-model',{id:'newapi::0'});h.click('back-channels');h.click('discard');h.runConfirm();assert.equal(provider(h,'newapi').models[0].selected,false);assert.equal(JSON.stringify(h.state().draft),JSON.stringify(h.state().saved));assert.equal(h.state().pending,false);
 });
-test('传入的既有 Fast 策略草稿仍能核对与丢弃，不清待重启状态与候选',()=>{
+test('传入的既有 Fast 策略草稿仍能核对与丢弃，历史不复活待重启且候选保留',()=>{
  const h=make();h.proto.scene('incoming');assert.equal(h.state().draft.fastMode,'inherit');h.click('save');assert.match(h.dialog(),/Fast 请求策略/);assert.doesNotMatch(h.dialog(),/本次变更与写入/);h.context.closeModal();h.click('discard');h.runConfirm();assert.equal(h.state().draft.fastMode,'on');assert.ok(h.state().incoming);
- h.proto.scene('pending-draft');h.click('discard');h.runConfirm();assert.equal(h.state().pending,true);
+ h.proto.scene('pending-draft');h.click('discard');h.runConfirm();assert.equal(h.state().pending,false);
  h.proto.scene('incoming');assert.ok(h.state().incoming);h.click('discard');h.runConfirm();assert.ok(h.state().incoming);
 });
 test('启停与连接状态独立显示，停用不清选择；官方渠道沿用同一标题',()=>{
@@ -50,9 +50,9 @@ test('启停与连接状态独立显示，停用不清选择；官方渠道沿�
  const before=provider(h,'newapi').models.filter(m=>m.selected).length;h.click('toggle-provider',{id:'newapi'});assert.match(heading(h),/neutral" data-channel-enabled="false"/);assert.equal(provider(h,'newapi').models.filter(m=>m.selected).length,before);
  h.click('edit-provider',{id:'a6api'});assert.match(heading(h),/warning" data-channel-availability="no-credit"/);h.click('edit-provider',{id:'native'});assert.match(heading(h),/data-channel-managed/);assert.doesNotMatch(heading(h),/data-channel-availability|data-channel-enabled/);
 });
-test('保存失败和可能写入的结果分开呈现；核对后回到未保存修改，预算超限阻止保存',()=>{
- for(const [scene,state] of [['backup-fail','failed'],['partial','uncertain'],['timeout','uncertain']]){
-  const h=make();h.proto.scene(scene);h.click('edit-provider',{id:'newapi'});const saved=JSON.stringify(h.state().saved);h.click('save');h.runConfirm();assert.match(heading(h),/info" data-channel-state="saving"/);assert.equal(saveButton(h).disabled,true);h.drain();assert.match(heading(h),new RegExp('data-channel-state="'+state+'"'));assert.equal(JSON.stringify(h.state().saved),saved);h.click('verify');h.runConfirm();assert.match(heading(h),/data-channel-state="dirty"/);
+test('备份与原子写入失败保留草稿，可直接重试；预算超限阻止保存',()=>{
+ for(const [scene,state] of [['backup-fail','failed'],['partial','failed'],['timeout','failed']]){
+  const h=make();h.proto.scene(scene);h.click('edit-provider',{id:'newapi'});const saved=JSON.stringify(h.state().saved);h.click('save');h.runConfirm();assert.match(heading(h),/info" data-channel-state="saving"/);assert.equal(saveButton(h).disabled,true);h.drain();assert.match(heading(h),new RegExp('data-channel-state="'+state+'"'));assert.equal(JSON.stringify(h.state().saved),saved);assert.doesNotMatch(h.page(),/data-mp="(?:verify|client-check)"/);h.click('save');h.runConfirm();assert.equal(h.state().operation.status,'running');
  }
  const h=make();h.proto.scene('over-budget');h.click('edit-provider',{id:'newapi'});assert.match(heading(h),/danger" data-channel-state="over-budget"/);assert.equal(saveButton(h).disabled,false);h.click('save');assert.match(h.dialog(),/超出激活预算/);assert.equal(h.nodes.get('modalConfirm').disabled,false);h.runConfirm();assert.notEqual(h.nodes.get('modalMask').style.display,'flex');
 });

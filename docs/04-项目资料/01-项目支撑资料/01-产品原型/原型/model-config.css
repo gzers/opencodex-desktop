@@ -1,5 +1,6 @@
 /* COL-LOCAL-20261004-01 · 0.2.0 可评审原型，沿用桌面公共令牌。 */
 .mp-page{container-type:inline-size;min-width:0}
+#mpContent{min-width:0}
 .mp-page input,.mp-page select,.mp-dialog input,.mp-dialog select,.mp-dialog textarea{font:inherit}
 .mp-toolbar,.mp-status,.mp-row,.mp-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .mp-toolbar{justify-content:space-between;gap:12px}
@@ -571,6 +572,11 @@ html:not([data-route=models]) #mpAssistantHost{display:none}
 .mp-channel-form>label{display:grid;align-content:start;gap:8px;min-width:0;font-size:var(--text-label)}
 .mp-channel-form .input,.mp-channel-form .select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
 .mp-channel-form>.mp-channel-key{grid-column:1/-1}
+.mp-channel-key{display:grid;gap:8px;min-width:0;font-size:var(--text-label)}
+.mp-key-input{display:flex;align-items:center;gap:8px;min-width:0}
+.mp-key-input>.input{flex:1;width:0;min-width:0}
+.mp-key-input>.btn,.mp-key-input>.icon-btn{flex:none}
+.mp-key-input>.icon-btn{display:grid;place-items:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0}
 .mp-channel-status,.mp-template-save-status{display:grid;gap:4px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);flex:none;min-width:0}
 .mp-channel-save-controls{display:flex;align-items:center;gap:8px;min-width:0}
 .mp-channel-status .mp-channel-save-controls{display:grid;gap:6px}
@@ -588,8 +594,6 @@ html:not([data-route=models]) #mpAssistantHost{display:none}
 .mp-policy-chip.danger{border-color:color-mix(in srgb,var(--red) 42%,transparent)}
 .mp-policy-chip.info{border-color:color-mix(in srgb,var(--blue) 42%,transparent)}
 .mp-policy-chip[data-channel-state=saving]::before,.mp-policy-chip[data-policy-example=saving]::before{box-sizing:border-box;width:12px;height:12px;background:none;border:2px solid currentColor;border-right-color:transparent;animation:mp-policy-spin .9s linear infinite}
-.mp-policy-pending{font-size:var(--text-caption);font-weight:400;color:var(--amber)}
-.mp-policy-pending::before{content:"·";margin-right:6px}
 .mp-policy-status .mp-top-policy-save,.mp-policy-status .mp-top-policy-reset{height:var(--mp-policy-control-height);min-height:var(--mp-policy-control-height);padding:6px 10px;justify-content:center;font-size:var(--text-caption);white-space:nowrap}
 .mp-policy-status .mp-top-policy-save.is-changed:not(:disabled){border:1px solid color-mix(in srgb,var(--accent) 75%,var(--text));box-shadow:0 0 0 2px var(--accent-soft);font-weight:650}
 .mp-policy-status .mp-top-policy-save.is-changed:disabled{border-color:color-mix(in srgb,var(--amber) 42%,var(--border));color:var(--muted);box-shadow:none}

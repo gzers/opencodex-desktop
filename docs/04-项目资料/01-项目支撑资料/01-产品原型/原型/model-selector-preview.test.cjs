@@ -24,6 +24,6 @@ test('点击型号启停进入当前草稿，停用标签保留恢复；关闭�
 test('原生渠道与系统占用只读，快速启停不绕过保存门禁',()=>{
  const h=make();h.proto.scene('over-budget');h.click('save');assert.match(h.dialog(),/mp-preview-group is-off/);assert.doesNotMatch(h.dialog(),/data-mp="preview-channel-toggle" data-id="native"/);assert.equal((h.dialog().match(/class="mp-preview-item hidden-item"/g)||[]).length,2);h.context.closeModal();h.click('save');assert.equal(h.state().operation,null);
 });
-test('待重启提示保留且没有来源切换所需的保存/丢弃副作用',()=>{
- const h=make();h.proto.scene('pending-draft');const before=policy(h);h.click('save');assert.match(h.dialog(),/仍待重启 \/ 客户端核对/);assert.doesNotMatch(h.dialog(),/data-preview/);assert.equal(policy(h),before);
+test('历史成功不恢复待重启提示，预览不改草稿',()=>{
+ const h=make();h.proto.scene('pending-draft');const before=policy(h);h.click('save');assert.doesNotMatch(h.dialog(),/仍待重启|客户端核对/);assert.doesNotMatch(h.dialog(),/data-preview/);assert.equal(policy(h),before);
 });

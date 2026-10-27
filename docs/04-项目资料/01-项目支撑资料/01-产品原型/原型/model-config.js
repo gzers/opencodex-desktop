@@ -62,7 +62,13 @@
  // 模版来源与版本来源分开；系统基线不因换默认或删除其他版本而解除保护。
  templates.forEach(t=>{t.originType='builtin';t.versions[0].systemBaseline=true;t.versions[0].systemCurrent=true;t.nextRevision=Math.max(...t.versions.map(v=>v.n))+1;for(const v of t.versions)if(v.systemBaseline){v.origin='软件内置';}});
  const versionDropdownRecent=5;
- let draft=clone(initial),saved=clone(initial),pending=false,client='目录已核对 · 客户端待验证';
+ // 凭据仅在私有内存中演示；公开状态 / 保存记录只带不透明引用。
+ const mockCredentials=new Map(),channelKeyInputs=new Map();let mockCredentialSerial=0,wizardKeyValue='';
+ function mockCredential(value){const ref='mock-key:'+ ++mockCredentialSerial;mockCredentials.set(ref,value);return ref;}
+ function resetMockCredentials(){channelKeyInputs.clear();initial.providers.filter(p=>p.connection?.keyConfigured).forEach(p=>{if(!p.connection.credentialRef)p.connection.credentialRef=mockCredential('demo-'+p.id+'-key');});}
+ resetMockCredentials();
+ const keyValue=connection=>mockCredentials.get(connection?.credentialRef)||'';
+ let draft=clone(initial),saved=clone(initial),pending=false,client='已写入';
  let channelDetail=false,templateDetail=false,templateSearch='',correctionDraft='',generationTarget='',generationSources='provided';
  let agent={providerId:'',modelId:'',effort:'inherit',fast:false};
  let tab='channels',current='newapi',search='',family='',onlySelected=false,channelSearch='',scope=new Set();
@@ -75,7 +81,7 @@
  let operation=null,operationId=0,scenario='normal',incoming=null;
  let channelWizard=null,wizardToken=0;
  let channelSection='connection',channelNavCollapsed=false,channelViewId=null,channelConnections={};
- let upstreamReading=false,upstreamSource='';
+ let upstreamReading=false,upstreamSource='',discoveryResults={};
  let nodeSpeedResults={},nodeSpeedRuns={},nodeSpeedSerial=0,nodeSpeedScene='normal',nodeAuthRevision={};
  let nodePicker=null;
  const records=[{id:0,time:'10-03 16:20',status:'成功',policy:clone(initial),before:clone(initial),client:'用户已确认（示例）'}];
@@ -408,7 +414,7 @@
    if(!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/.test(pid)||['native','openai','system','constructor','prototype','__proto__'].includes(pid.toLowerCase())){error.textContent='渠道标识无效或为保留标识。';return;}
    if(draft.providers.some(p=>p.id.toLowerCase()===pid.toLowerCase()||p.name.toLowerCase()===name.toLowerCase())){error.textContent='新渠道名称或标识已存在。';return;}
    const reuse=canReuse&&!!$('#mpCopyProviderKey')?.checked,next=clone(source);
-   Object.assign(next,{id:pid,name,enabled:false,models:source.models.map((m,i)=>({...clone(m),key:pid+'::'+i})),connection:{auth:source.connection?.auth||'apikey',keyConfigured:reuse},refresh:'idle',refreshToken:0,updated:'待刷新（复制）',addedInPrototype:true,availability:reuse&&source.availability?.kind==='no-credit'?clone(source.availability):{kind:'unknown'},copiedFrom:source.id});
+   Object.assign(next,{id:pid,name,enabled:false,models:source.models.map((m,i)=>({...clone(m),key:pid+'::'+i})),connection:{auth:source.connection?.auth||'apikey',keyConfigured:reuse,...(reuse?{credentialRef:source.connection.credentialRef}:{})},refresh:'idle',refreshToken:0,updated:'待刷新（复制）',addedInPrototype:true,availability:reuse&&source.availability?.kind==='no-credit'?clone(source.availability):{kind:'unknown'},copiedFrom:source.id});
    closeModal();nodeAuthRevision[pid]=(nodeAuthRevision[pid]||0)+1;change(()=>{draft.providers.push(next);current=pid;channelDetail=true;tab='channels';search='';family='';onlySelected=false;channelSearch='';});notice('新渠道副本已加入草稿，默认停用；保存后生效');
   },{confirmKeepsOpen:true});
  }
@@ -428,19 +434,18 @@
 
  function channelAction(name,action,mark,attrs='',primary=false){const title=/\btitle=/.test(attrs)?'':' title="'+esc(name)+'"';return '<button class="btn '+(primary?'primary':'ghost')+' mp-nav-action" data-mp="'+action+'" '+attrs+title+' aria-label="'+esc(name)+'">'+icon(mark)+'<span class="mp-nav-action-label">'+esc(name)+'</span></button>';}
  // 保存状态在标题集中展示；列表顶部直接提供还原修改与保存。
- const channelPolicyStates={clean:['未修改','neutral'],dirty:['未保存修改','warning'],staged:['有待确认编辑','warning'],'over-budget':['超出激活预算','danger'],saving:['正在保存','info'],pending:['已保存 · 待重启','warning'],failed:['保存失败','danger'],stopped:['保存已取消','neutral'],uncertain:['保存结果待核对','warning']};
+ const channelPolicyStates={clean:['未修改','neutral'],dirty:['未保存修改','warning'],staged:['有待确认编辑','warning'],'over-budget':['超出激活预算','danger'],saving:['正在保存','info'],failed:['保存失败','danger'],stopped:['保存已取消','neutral']};
  function channelPolicyState(){
-  const uncertain=operation?.status==='timeout'||['failed','stopped'].includes(operation?.status)&&operation.step>=2;
-  const id=busy()?'saving':uncertain?'uncertain':operation?.status==='failed'&&dirty()?'failed':operation?.status==='stopped'&&dirty()?'stopped':stagedModelEdits().length||stagedChannelConnections().length?'staged':count()>100?'over-budget':dirty()?'dirty':pending?'pending':'clean';
+  const id=busy()?'saving':operation?.status==='failed'&&dirty()?'failed':operation?.status==='stopped'&&dirty()?'stopped':stagedModelEdits().length||stagedChannelConnections().length?'staged':count()>100?'over-budget':dirty()?'dirty':'clean';
   const [label,tone]=channelPolicyStates[id];return {id,label,tone};
  }
  function channelPolicyStatusHTML(framed=false){
-  const state=channelPolicyState(),previous=pending&&state.id!=='pending',context='全部渠道配置的保存状态'+(previous?'；上次保存待重启':'');
-  return '<span class="mp-template-state '+(framed?'mp-policy-chip ':'')+state.tone+'" data-channel-state="'+state.id+'" data-status-scope="all-channels" title="'+context+'" '+(framed?'role="status" aria-live="polite" aria-busy="'+busy()+'"':'')+'>'+esc(state.label)+(framed&&previous?'<span class="mp-policy-pending" data-channel-pending>上次保存待重启</span>':'')+'</span>'+(!framed&&previous?'<span class="mp-template-state warning" data-channel-pending>上次保存待重启</span>':'');
+  const state=channelPolicyState();
+  return '<span class="mp-template-state '+(framed?'mp-policy-chip ':'')+state.tone+'" data-channel-state="'+state.id+'" data-status-scope="all-channels" title="全部渠道配置的保存状态" '+(framed?'role="status" aria-live="polite" aria-busy="'+busy()+'"':'')+'>'+esc(state.label)+'</span>';
  }
  function policyStatusAnnotation(){
-  const styles={clean:'灰色描边 · 保存弱化并禁用',dirty:'橙色状态框 · 可提交时保存主色强调',staged:'橙色状态框 · 先确认行 / 连接编辑，保存禁用','over-budget':'红色状态框与激活数 · 保存禁用',saving:'蓝色状态框与转动环 · 保存禁用',pending:'橙色状态框 · 重新检查入口可用',failed:'红色状态框 · 草稿保留，可重试保存',stopped:'灰色状态框 · 草稿保留，可继续保存',uncertain:'橙色状态框 · 先核对可能已经写入的结果'};
-  return mpAnn('08','渠道列表的九种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。未保存修改与待重启可同时存在，保存状态和客户端加载 / 连接验证分开。待确认编辑和超限仍阻止保存，即使存在修改也不会伪装成可提交；保存继续先预览全渠道差异再确认。');
+  const styles={clean:'灰色描边 · 保存弱化并禁用',dirty:'橙色状态框 · 可提交时保存主色强调',staged:'橙色状态框 · 先确认行 / 连接编辑，保存禁用','over-budget':'红色状态框与激活数 · 保存禁用',saving:'蓝色状态框与转动环 · 保存禁用',failed:'红色状态框 · 草稿保留，可重试保存',stopped:'灰色状态框 · 草稿保留，可继续保存'};
+  return mpAnn('08','渠道列表的七种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。成功保存只在既有通知宿主提示一次，默认聚焦立即重启；稍后即结束，历史成功状态不生成待重启或客户端核对入口。待确认编辑和超限仍阻止保存，即使存在修改也不会伪装成可提交；保存继续先预览全渠道差异再确认。');
  }
  function channelHeadingStatusHTML(p=provider()){
   const badge=(label,tone,attribute)=>'<span class="mp-template-state '+tone+'" '+attribute+'>'+esc(label)+'</span>';
@@ -448,7 +453,7 @@
   const discovery={loading:['正在获取清单','info'],failed:['获取清单失败','danger'],empty:['清单为空','warning']}[p.refresh];
   return channelPolicyStatusHTML()+(p.id==='native'?badge('官方管理','neutral','data-channel-managed'):badge(p.enabled?'已启用':'已停用',p.enabled?'success':'neutral','data-channel-enabled="'+p.enabled+'"')+badge(availabilityText(p),connectionTone,'data-channel-availability="'+esc(kind)+'"'))+(discovery?badge(discovery[0],discovery[1],'data-channel-discovery="'+p.refresh+'"'):'')+'<span class="mp-template-state-context">已选 '+selected(p).length+' / 发现 '+p.models.length+'</span>';
  }
- function channelStatusAnnotation(){return mpAnn('05','渠道状态与保存范围','标题分开显示全渠道保存状态、当前渠道启停、连接状态和清单获取状态，沿用模版详情的彩色标记。<br>保存状态：未修改（中性）；未保存修改 / 有待确认编辑 / 已保存 · 待重启（橙色）；超出激活预算 / 保存失败（红色）；正在保存（蓝色）；保存已取消（中性）；保存结果待核对（橙色）。已有待重启结果时独立保留。<br>启用与连接检查通过为绿色，停用 / 未验证 / 官方管理为中性，无额度为橙色，认证或连接失败为红色。连接检查通过不等于客户端已加载。<br>保存仍先预览全部渠道差异，确认后才写入；待确认行 / 连接编辑和超限会阻止保存。返回只退出详情，不写入配置，工作区草稿保留。撤销 / 重做入口已移除；需要还原草稿时返回渠道列表，点击顶部“还原修改”并确认全部范围。');}
+ function channelStatusAnnotation(){return mpAnn('05','渠道状态与保存范围','标题分开显示全渠道保存状态、当前渠道启停、连接状态和清单获取状态，沿用模版详情的彩色标记。<br>保存状态：未修改（中性）；未保存修改 / 有待确认编辑（橙色）；超出激活预算 / 保存失败（红色）；正在保存（蓝色）；保存已取消（中性）。成功保存不留下待重启状态。<br>启用与连接检查通过为绿色，停用 / 未验证 / 官方管理为中性，无额度为橙色，认证或连接失败为红色。连接检查通过不等于客户端已加载。<br>保存仍先预览全部渠道差异，确认后才写入；待确认行 / 连接编辑和超限会阻止保存。返回只退出详情，不写入配置，工作区草稿保留。撤销 / 重做入口已移除；需要还原草稿时返回渠道列表，点击顶部“还原修改”并确认全部范围。');}
  function updateChannelStatus(){
   const node=$('#mpPolicyStatus',host);if(node)node.outerHTML=status();
   const nodes=$('#mpChannelSection-nodes',host);if(nodes)nodes.innerHTML=serviceNodeList(provider());
@@ -457,7 +462,7 @@
  function status(){
  const over=count()>100,staged=stagedModelEdits().length,connections=stagedChannelConnections().length,local=staged||connections,sidebar=tab==='channels'&&channelDetail,changed=dirty()||local,canOpen=!busy(),gated=local||over||!dirty();
  const helper=(name,a,mark)=>iconButton(name,a,mark,busy()?'disabled':'');
- const helpers=(staged?helper('处理 '+staged+' 行待确认编辑','review-model-rows','edit'):'')+(connections?helper('处理 '+connections+' 个待确认连接','review-channel-connection','settings'):'')+(incoming?helper('查看收到的待审候选','incoming','draft'):'')+(pending?helper('重启后重新检查','client-check','refresh'):'');
+ const helpers=(staged?helper('处理 '+staged+' 行待确认编辑','review-model-rows','edit'):'')+(connections?helper('处理 '+connections+' 个待确认连接','review-channel-connection','settings'):'')+(incoming?helper('查看收到的待审候选','incoming','draft'):'');
  const saveTitle=busy()?'正在保存，完成后再核对':changed?'保存 · 先核对保存预览与全部渠道差异，确认后写入':'保存 · 打开保存预览与保存核对；当前没有未保存修改';
  const save='<button id="mpPolicySave" class="btn '+(sidebar||changed?'primary':'ghost')+' mp-nav-action mp-template-save'+(!sidebar?' mp-top-policy-save'+(changed?' is-changed':''):'')+'" data-mp="save" title="'+saveTitle+'" aria-label="保存" data-save-scope="all-channels" data-save-gated="'+gated+'" '+(!canOpen?'disabled':'')+'>'+icon('save')+'<span class="mp-nav-action-label">保存</span></button>';
  const reset='<button id="mpPolicyReset" class="btn ghost mp-nav-action mp-top-policy-reset" data-mp="discard" title="'+(busy()?'正在保存，完成后再还原':changed?'还原全部渠道的修改，回到最近成功保存的配置':'没有未保存修改')+'" aria-label="还原修改" '+(busy()||!changed?'disabled':'')+'>'+icon('reset')+'<span class="mp-nav-action-label">还原修改</span></button>';
@@ -471,9 +476,9 @@
   const baseline=channelDraftFingerprint(),groups=policyChanges(saved,draft),rows=stagedModelEdits(),connections=stagedChannelConnections(),names=new Set(groups.map(g=>g.name));
   const pendingRows=rows.map(([key])=>{const p=draft.providers.find(p=>p.models.some(m=>m.key===key)),m=p?.models.find(m=>m.key===key);if(p)names.add(p.name+' · '+p.id);return (p?.name||'已移除渠道')+' / '+(m?.id||key)+' · 未确认的模型编辑';});
   const pendingConnections=connections.map(([id])=>{const p=draft.providers.find(p=>p.id===id);names.add((p?.name||id)+' · '+id);return (p?.name||id)+' · 未确认的连接编辑';});
-  modal('还原修改','<p>将还原全部渠道的未保存修改和未确认编辑，回到最近成功保存的配置。</p><p><strong>受影响范围：</strong>'+esc([...names].join('；'))+'</p>'+(groups.length?policyDiffHTML(saved,draft,false,true):'')+(pendingRows.length||pendingConnections.length?'<h3>尚未确认的编辑</h3>'+diffHTML([...pendingRows,...pendingConnections]):'')+'<p class="mp-muted">已保存配置、待重启状态、模版版本、Agent 执行设置和收到的待审候选保留。</p><div id="mpDiscardError" class="mp-alert" role="alert"></div>','还原修改',()=>{
+  modal('还原修改','<p>将还原全部渠道的未保存修改和未确认编辑，回到最近成功保存的配置。</p><p><strong>受影响范围：</strong>'+esc([...names].join('；'))+'</p>'+(groups.length?policyDiffHTML(saved,draft,false,true):'')+(pendingRows.length||pendingConnections.length?'<h3>尚未确认的编辑</h3>'+diffHTML([...pendingRows,...pendingConnections]):'')+'<p class="mp-muted">已保存配置、模版版本、Agent 执行设置和收到的待审候选保留。</p><div id="mpDiscardError" class="mp-alert" role="alert"></div>','还原修改',()=>{
    if(busy()||baseline!==channelDraftFingerprint()){$('#mpDiscardError').textContent='配置或未确认编辑已变化，请关闭并重新核对范围。';return;}
-   closeModal();draft=clone(saved);modelEdits={};channelConnections={};restoration=null;render();notice('已还原到最近成功保存的配置');
+   closeModal();draft=clone(saved);modelEdits={};channelConnections={};channelKeyInputs.clear();restoration=null;render();notice('已还原到最近成功保存的配置');
   },{confirmKeepsOpen:true,cancelLabel:'保留修改'});
  }
  function templateSaveStatus(){
@@ -518,11 +523,11 @@
    const items=p.models.map(m=>{const on=modelActive(p,m),supported=resolve(p,m).values.fast==='supported',was=savedModelActive(p.id,m.id),change=locked||was===on?'':' '+(on?'is-added':'is-removed'),hint=change?(on?' · 本次新启用':' · 本次停用'):'';return '<button type="button" class="mp-preview-item '+(on?'is-on':'is-off')+(supported?' has-fast':'')+change+'" data-mp="preview-model-toggle" data-id="'+esc(m.key)+'" aria-pressed="'+on+'" title="'+(on?'点击停用':'点击启用')+' '+esc(m.id)+(supported?' · 支持 Fast':'')+hint+'" '+(locked?'disabled':'')+'><span>'+esc(m.id)+'</span>'+(supported?'<em class="mp-preview-fast">Fast</em>':'')+'</button>';}).join('');
    return '<section class="mp-preview-group">'+title+'<div class="mp-preview-items">'+(items||'<p class="mp-muted">该渠道暂无模型。</p>')+'</div></section>';
   });const system=rows.filter(r=>r.type==='hidden');if(system.length)groups.push('<section class="mp-preview-group"><h3>系统占用<small>只读</small></h3><div class="mp-preview-items">'+system.map(r=>'<div class="mp-preview-item hidden-item" title="'+esc(r.id)+'"><span>'+esc(r.id)+'</span></div>').join('')+'</div></section>');groups=groups.join('');
-  return '<div class="mp-selector-preview" aria-label="预览选择器"><div id="mpPreviewBudget" class="mp-preview-budget-summary '+(over?'over-budget':'')+'" role="status"><strong>模型激活数 '+rows.length+'/100</strong><span>基础模型 '+base+' · Fast '+fast+' · 系统占用 '+hidden+'</span>'+(over?'<span class="mp-alert">超出激活预算，请减少发布项后再保存。</span>':'')+(pending?'<span class="mp-muted">已保存配置仍待重启 / 客户端核对。</span>':'')+'</div><div class="mp-preview-order" aria-label="完整选择器顺序">'+(groups||'<p class="mp-muted">没有计划发布的目录条目。</p>')+'</div></div>';
+  return '<div class="mp-selector-preview" aria-label="预览选择器"><div id="mpPreviewBudget" class="mp-preview-budget-summary '+(over?'over-budget':'')+'" role="status"><strong>模型激活数 '+rows.length+'/100</strong><span>基础模型 '+base+' · Fast '+fast+' · 系统占用 '+hidden+'</span>'+(over?'<span class="mp-alert">超出激活预算，请减少发布项后再保存。</span>':'')+'</div><div class="mp-preview-order" aria-label="完整选择器顺序">'+(groups||'<p class="mp-muted">没有计划发布的目录条目。</p>')+'</div></div>';
  }
  let saveReview=null;
  function saveReviewErrors(){
-  return [...draft.providers.filter(p=>p.id!=='native').map(namingError).filter(Boolean),...routePlan().errors];
+  return [...draft.providers.filter(p=>p.id!=='native').map(namingError).filter(Boolean)];
  }
  function saveReviewGated(){return !channelDraftDirty()||stagedModelEdits().length>0||stagedChannelConnections().length>0||count()>100||!!saveReviewErrors().length;}
  function saveReviewOtherRows(){
@@ -550,18 +555,23 @@
 
  function openSaveReview(){
   if(busy())return;
+  // 仅改 Key 可直接进入统一保存；其它未确认连接编辑仍保留原有门禁。
+  for(const [id,b] of stagedChannelConnections()){
+   const p=draft.providers.find(p=>p.id===id);
+   if(b.keyChanged&&b.baseline===connectionBaseline(p)&&b.name===p.name&&b.protocol===p.protocol&&b.connection.auth===p.connection.auth&&b.connection.baseUrl===activeNode(p)?.url)applyChannelConnection(p,false);
+  }
   // 弹窗内的快速启停就是要提交的草稿变更：每次刷新都把基准更新为最新草稿，
-  // 只有已保存版本被外部改动（baseDigest）才算真正的基准漂移。
-  saveReview={digest:policyDigest(),baseline:baseDigest()};
+  // 只有已保存文件快照变化才算保存冲突；不读取历史计划或运行目录准入。
+  saveReview={digest:policyDigest(),baseline:JSON.stringify(saved)};
   modal('保存预览',saveReviewHTML(),'确认保存',()=>{
-   const stale=scenario==='drift'||!saveReview||saveReview.baseline!==baseDigest();
+   const stale=scenario==='drift'||!saveReview||saveReview.baseline!==JSON.stringify(saved);
    const gated=saveReviewGated();
    if(stale||gated){
     const reason=stale?'基准已变化，本次确认未写入':saveReviewBlockedReason();
     saveReview=null;closeModal();notifySaveBlocked(reason,stale?'stale':'gated');return;
    }
    const frozen=clone(draft);saveReview=null;closeModal();startSave(frozen);
-  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'保存是唯一提交入口，也是预览入口：点击保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，确认会关闭弹窗并登记“模型配置未保存”通知；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停。确认后弹窗立即关闭：冻结当前草稿、先备份，再写入并核对目录，最后发布成功快照；保存后需要重启 Codex。确认时若草稿已变化或被门禁拦下，同样立即关闭弹窗，不再留在弹窗里报错，而是登记一条“模型配置未保存”通知，草稿保留。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
+  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'保存是唯一提交入口，也是预览入口：点击保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，确认会关闭弹窗并登记“模型配置未保存”通知；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停。确认后弹窗立即关闭：冻结当前草稿、只备份并原子写入文件，成功只在原通知宿主反馈一次；稍后即结束。确认时若草稿已变化或被门禁拦下，同样立即关闭弹窗，不再留在弹窗里报错，而是登记一条“模型配置未保存”通知，草稿保留。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
   $('#modal').classList.add('mp-preview-modal');syncSaveReview();
  }
  // 保存被拦下走已注册通知，不在弹窗里留第二处错误提示。
@@ -715,28 +725,66 @@
  const connectionBaseline=p=>JSON.stringify(connectionValue(p));
  function channelConnectionBuffer(p=provider()){
   if(!p||p.id==='native')return null;
-  return channelConnections[p.id]||=({...connectionValue(p),baseline:connectionBaseline(p),retainedKeyConfigured:!!p.connection?.keyConfigured,keyChanged:0});
+  return channelConnections[p.id]||=({...connectionValue(p),baseline:connectionBaseline(p),retainedKeyConfigured:!!keyValue(p.connection),keyChanged:0,keyIntent:'keep',keyVisible:false});
  }
  const stagedChannelConnections=()=>Object.entries(channelConnections).filter(([id,b])=>draft.providers.some(p=>p.id===id)&&(b.keyChanged||JSON.stringify({name:b.name,protocol:b.protocol,connection:b.connection})!==b.baseline));
+ function channelKeyStatus(b){return b.keyIntent==='clear'?'保存后清空 Key':b.keyIntent==='replace'?'保存后替换 Key':'保持原 Key';}
+ function updateChannelConnectionStatus(){
+  updateChannelStatus();const b=channelConnectionBuffer(),changed=stagedChannelConnections().some(([id])=>id===provider().id),stale=b.baseline!==connectionBaseline(provider());
+  const reset=$('#mpChannelReset',host),label=$('#mpChannelConnectionPending',host),keyStatus=$('#mpChannelKeyStatus',host);
+  if(reset)reset.disabled=!changed&&!stale;if(label)label.textContent=changed?'有连接修改，尚未加入草稿':'连接配置与草稿一致';if(keyStatus)keyStatus.textContent=channelKeyStatus(b);
+ }
  function updateChannelConnection(el){
-  if(busy()||provider()?.id==='native')return;const b=channelConnectionBuffer(),key=el.dataset.channelConfig;
-  if(key==='key'){if(el.value){b.keyChanged++;b.retainedKeyConfigured=true;}b.connection.keyConfigured=b.connection.auth==='apikey'&&b.retainedKeyConfigured;}
-  else if(key==='name'||key==='protocol')b[key]=el.value;
+  if(busy()||provider()?.id==='native')return;const p=provider(),b=channelConnectionBuffer(),key=el.dataset.channelConfig;
+  if(key==='key'){
+   channelKeyInputs.set(p.id,el.value);b.keyIntent=el.value&&el.value!==keyValue(p.connection)?'replace':'keep';b.keyChanged=b.keyIntent==='replace'?1:0;
+   b.retainedKeyConfigured=b.keyChanged?true:!!keyValue(p.connection);b.connection.keyConfigured=b.connection.auth==='apikey'&&b.retainedKeyConfigured;
+  }else if(key==='name'||key==='protocol')b[key]=el.value;
   else if(key==='auth'){b.connection.auth=el.value;b.connection.keyConfigured=el.value==='apikey'&&b.retainedKeyConfigured;}
-  if(key==='auth')render();else {updateChannelStatus();const changed=stagedChannelConnections().some(([id])=>id===provider().id),stale=b.baseline!==connectionBaseline(provider()),reset=$('#mpChannelReset',host),pendingLabel=$('#mpChannelConnectionPending',host),keyStatus=$('#mpChannelKeyStatus',host);if(reset)reset.disabled=!changed&&!stale;if(pendingLabel)pendingLabel.textContent=changed?'有连接修改，尚未加入草稿':'连接配置与草稿一致';if(keyStatus)keyStatus.textContent=b.keyChanged?'已记录替换意图，不保存输入值。':'仅记录已配置状态，不保存输入值。';}
+  if(key==='auth')render();else updateChannelConnectionStatus();
+ }
+ function keyControls(id,value,visible,action,clearAction,locked=''){
+  return '<div class="mp-key-input"><input id="'+id+'" class="input" '+(id==='mpChannelInline-key'?'data-channel-config="key" ':'')+'type="'+(visible?'text':'password')+'" autocomplete="off" spellcheck="false" aria-label="API Key" value="'+esc(value)+'" '+locked+'>'+iconButton(visible?'隐藏 Key':'显示 Key',action,'preview','aria-controls="'+id+'" aria-pressed="'+visible+'" '+locked)+button('清空 Key',clearAction,locked)+'</div>';
  }
  function inlineConnection(p){
   if(p.id==='native')return '<h3>渠道配置</h3><p class="mp-muted">官方 / 原生连接由 Codex 管理，这里仅展示模型信息。</p>';
   const b=channelConnectionBuffer(p),locked=busy()?'disabled':'',changed=stagedChannelConnections().some(([id])=>id===p.id),stale=b.baseline!==connectionBaseline(p);
   const input=(key,value,extra='')=>'<input id="mpChannelInline-'+key+'" class="input" data-channel-config="'+key+'" value="'+esc(value)+'" '+extra+' '+locked+'>';
-  return '<h3>渠道配置</h3><div class="mp-channel-form"><label>渠道名称'+input('name',b.name,'maxlength="80"')+'</label><label>渠道标识<input class="input" value="'+esc(p.id)+'" readonly aria-label="渠道标识"><span class="mp-muted">标识固定，名称可修改。</span></label><label>默认接口协议<select id="mpChannelInline-protocol" class="mp-select" data-channel-config="protocol" '+locked+'>'+protocolOptions(b.protocol)+'</select></label><label>认证方式<select id="mpChannelInline-auth" class="mp-select" data-channel-config="auth" '+locked+'>'+opts([['apikey','API Key'],['none','无需认证']],b.connection.auth)+'</select></label>'+(b.connection.auth==='apikey'?'<label class="mp-channel-key">API Key'+input('key','','type="password" autocomplete="off" placeholder="'+(b.connection.keyConfigured?'已配置（不回显）；留空保留':'仅填演示值，请勿输入真实密钥')+'"')+'<span id="mpChannelKeyStatus" class="mp-muted">'+(b.keyChanged?'已记录替换意图，不保存输入值。':'仅记录已配置状态，不保存输入值。')+'</span></label>':'')+'</div><p class="mp-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。更换协议或认证后，确认模型清单再加入草稿。静态演示，不连接上游；请勿输入真实密钥。</p>'+(stale?'<p class="mp-alert">连接基准已变化，请还原配置后重新编辑。</p>':'')+'<div class="mp-quick-footer"><span id="mpChannelConnectionPending" class="mp-muted">'+(changed?'有连接修改，尚未加入草稿':'连接配置与草稿一致')+'</span><div class="mp-actions">'+button('还原配置','reset-channel-connection','id="mpChannelReset" '+(locked||!changed&&!stale?'disabled':''))+button('确认连接与模型','apply-channel-connection',locked||stale?'disabled':'',true)+'</div></div>';
+  return '<h3>渠道配置</h3><div class="mp-channel-form"><label>渠道名称'+input('name',b.name,'maxlength="80"')+'</label><label>渠道标识<input class="input" value="'+esc(p.id)+'" readonly aria-label="渠道标识"><span class="mp-muted">标识固定，名称可修改。</span></label><label>默认接口协议<select id="mpChannelInline-protocol" class="mp-select" data-channel-config="protocol" '+locked+'>'+protocolOptions(b.protocol)+'</select></label><label>认证方式<select id="mpChannelInline-auth" class="mp-select" data-channel-config="auth" '+locked+'>'+opts([['apikey','API Key'],['none','无需认证']],b.connection.auth)+'</select></label>'+(b.connection.auth==='apikey'?'<div class="mp-channel-key"><label for="mpChannelInline-key">API Key</label>'+keyControls('mpChannelInline-key',channelKeyInputs.has(p.id)?channelKeyInputs.get(p.id):keyValue(p.connection),b.keyVisible,'toggle-channel-key','clear-channel-key',locked)+'<span id="mpChannelKeyStatus" class="mp-muted">'+channelKeyStatus(b)+'</span></div>':'')+'</div><p class="mp-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。</p>'+(stale?'<p class="mp-alert">连接基准已变化，请还原配置后重新编辑。</p>':'')+'<div class="mp-quick-footer"><span id="mpChannelConnectionPending" class="mp-muted">'+(changed?'有连接修改，尚未加入草稿':'连接配置与草稿一致')+'</span><div class="mp-actions">'+button('还原配置','reset-channel-connection','id="mpChannelReset" '+(locked||!changed&&!stale?'disabled':''))+button('加入草稿','apply-channel-connection',locked||stale?'disabled':'',true)+'</div></div>'+mpAnn('09','Key 编辑与离线保存','仅使用私有内存中的演示 Key，不读写真实文件，不请求网络或 CLI。已有 Key 默认掩码，眼睛切换只作用于当前编辑器；保持原值、替换、明确清空分开，空输入保留原值。只改 Key 可直接点击页级保存并在预览确认，也可先加入草稿；无需获取清单。公开状态、日志、预览和恢复记录仅保留不透明引用。');
+ }
+ function applyChannelConnection(p=provider(),announce=true){
+  const b=channelConnectionBuffer(p);if(!b||busy())return;
+  if(b.baseline!==connectionBaseline(p)){notice('连接基准已变化，请还原配置后重新编辑');return;}
+  const name=b.name.trim();if(!name||name.length>80||draft.providers.some(x=>x.id!==p.id&&x.name.toLowerCase()===name.toLowerCase())){notice('请填写 1–80 字且不重复的渠道名称');return;}
+  if(stagedModelEdits().some(([key])=>p.models.some(m=>m.key===key))){notice('请先确认或还原本渠道的行编辑');return;}
+  change(()=>{
+   p.name=name;p.protocol=b.protocol;
+   const c=clone(b.connection);delete c.baseUrl;
+   if(b.keyIntent==='replace'){c.credentialRef=mockCredential(channelKeyInputs.get(p.id));c.keyConfigured=c.auth==='apikey';}
+   else if(b.keyIntent==='clear'){delete c.credentialRef;c.keyConfigured=false;}
+   if(JSON.stringify(p.connection)!==JSON.stringify(c)){nodeAuthRevision[p.id]=(nodeAuthRevision[p.id]||0)+1;p.availability={kind:'unknown'};}
+   p.connection=c;delete channelConnections[p.id];channelKeyInputs.delete(p.id);
+  });if(announce)notice('连接配置已加入草稿，保存后生效');
+ }
+ // 与清单获取共用同源候选；仅演出路径归一化和有效清单判定，不执行 HTTP。
+ function mockModelDiscovery(protocol,base,scene='normal'){
+  let url;try{url=new URL(nodeURL(base));}catch{return {status:'invalid',reason:'地址无效',attemptedPaths:[]};}
+  const path=url.pathname.replace(/\/+$/,''),suffix=protocol==='Google'?'/v1beta/models':protocol==='Ollama'?'/api/tags':'/v1/models';
+  const full=/\/(models|api\/tags)$/.test(path),version=/\/v\d+(?:beta\d*)?$/.test(path);
+  const preferred=full?path:protocol==='Ollama'&&path.endsWith('/api')?path+'/tags':version?path+'/models':path+suffix;
+  const prefix=full?path.replace(/\/(?:v\d+(?:beta\d*)?\/)?models$|\/api\/tags$/,''):version?path.replace(/\/v\d+(?:beta\d*)?$/,''):path;
+  const candidates=[...new Set([preferred,protocol==='Ollama'?prefix+'/api/tags':prefix+'/models',prefix+suffix])];
+  const failure={auth:'认证失败（401）',dns:'域名解析失败',tls:'安全连接失败',timeout:'连接超时','invalid-list':'未返回有效模型清单'}[scene];
+  if(failure)return {status:scene==='timeout'?'timeout':scene==='auth'?'auth':'failed',reason:failure,attemptedPaths:[url.origin+candidates[0]]};
+  const fallback=['html-fallback','path-fallback'].includes(scene),paths=candidates.slice(0,fallback?2:1).map(p=>url.origin+p);
+  return {status:'success',path:paths.at(-1),attemptedPaths:paths,count:8};
  }
  function nodeSpeedKey(pid,nid){return pid+'::'+nid;}
  function nodeSpeedFingerprint(p,n){return JSON.stringify([n?.url,p.protocol,p.connection,nodeAuthRevision[p.id]||0]);}
  function nodeSpeedResult(p,n){const r=nodeSpeedResults[nodeSpeedKey(p.id,n.id)];return r?.fingerprint===nodeSpeedFingerprint(p,n)?r:null;}
  function nodeSpeedStatusHTML(p,n,detect=false){
   const r=n&&nodeSpeedResult(p,n),state=r?.status||'untested';
-  const words={untested:'未测速',waiting:'等待测速',running:'测速中…',success:r?.ms+' ms',failed:'连接失败',timeout:'超时',cancelled:'已停止',invalid:'地址待配置',auth:'认证待配置'};
+  const words={untested:'未测速',waiting:'等待测速',running:'测速中…',success:r?.ms+' ms',failed:r?.reason||'连接失败',timeout:'超时',cancelled:'已停止',invalid:'地址待配置',auth:r?.reason||'认证待配置'};
   const tone=state==='success'?'success':['failed','invalid','auth'].includes(state)?'danger':state==='timeout'?'warning':['waiting','running'].includes(state)?'info':'neutral';
   const label=detect?String(words[state]).replaceAll('测速','检测'):words[state];
   return '<span class="mp-node-speed '+tone+'" data-speed-status="'+state+'" title="'+esc(r?.finishedAt?'接口响应耗时 · '+r.finishedAt:'接口响应耗时')+'">'+esc(label)+'</span>';
@@ -792,7 +840,7 @@
  function serviceNodeList(p){
   if(p.id==='native')return '<h3>服务节点</h3><p class="mp-muted">官方 / 原生连接由 Codex 管理。</p>';
   const nodes=serviceNodes(p),locked=busy()||stagedChannelConnections().some(([id])=>id===p.id);
-  return '<div class="mp-toolbar"><h3>服务节点</h3><div class="mp-actions">'+nodeSpeedButton(p,'',true)+button('新增节点','add-node',locked?'disabled':'')+'</div></div><p class="mp-muted">所有节点共用渠道认证与 API Key；模型统一使用当前节点。</p><div id="mpNodeSpeedSummary-'+esc(p.id)+'" role="status">'+nodeSpeedSummaryHTML(p)+'</div>'+nodes.map(n=>'<div class="mp-service-node-row"><div><strong>'+esc(n.name)+(n.id===p.activeNodeId?' <span class="mp-template-state info">当前使用</span>':'')+'</strong><small>'+esc(n.url||'待配置地址')+'</small><div id="mpNodeSpeed-'+esc(p.id)+'-'+esc(n.id)+'" role="status">'+nodeSpeedStatusHTML(p,n)+'</div></div><div class="mp-actions">'+nodeSpeedButton(p,n.id)+(n.id===p.activeNodeId?'':button('设为当前','use-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':'')))+button('编辑','edit-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':''))+button('删除','delete-node','data-id="'+esc(n.id)+'" '+(locked||n.id===p.activeNodeId||nodes.length<=1?'disabled':'') ,false,true)+'</div></div>').join('')+(nodes.length?'':'<p class="mp-alert">尚无服务节点，请添加地址。</p>')+mpAnn('06','服务节点、测速与协议的边界','一个渠道维护一份认证和 Key，节点仅含名称及 URL。新增渠道的 Base URL 自动成为默认节点；后续地址只在这里编辑。<br>列表服务节点独立成列，单行触发器显示当前节点及耗时；选择器内逐节点展示检测结果 / 单独检测，顶部一键检测 / 停止。选节点与检测动作独立，检测不自动选择。详情支持单节点 / 一键测速。接口响应耗时以 ms 显示，不代表模型生成速度、模型能力或额度。测速结果仅本机会话，分别显示等待 / 测速中 / 成功 / 失败 / 超时 / 停止。<br>本原型使用确定性 mock，不请求网络、不读取或发出真实 Key；结果场景在右侧工具板设置。一键测速最多两个模拟任务并行，可停止，结果不自动切节点。节点地址、协议或认证变化后旧结果失效，晚回不会覆盖新配置。<br>节点切换加入全渠道草稿，保存确认展示地址变化，成功后仍需重启 / 核对。节点不复制模型清单或凭据，不为每个模型分别指定。当前节点不可直接删除，至少保留一条；未确认渠道配置先处理。没有自动故障转移或请求重发，真实测速的轻量探测与适配方法待实施。');
+  return '<div class="mp-toolbar"><h3>服务节点</h3><div class="mp-actions">'+nodeSpeedButton(p,'',true)+button('新增节点','add-node',locked?'disabled':'')+'</div></div><p class="mp-muted">所有节点共用渠道认证与 API Key；模型统一使用当前节点。</p><div id="mpNodeSpeedSummary-'+esc(p.id)+'" role="status">'+nodeSpeedSummaryHTML(p)+'</div>'+nodes.map(n=>'<div class="mp-service-node-row"><div><strong>'+esc(n.name)+(n.id===p.activeNodeId?' <span class="mp-template-state info">当前使用</span>':'')+'</strong><small>'+esc(n.url||'待配置地址')+'</small><div id="mpNodeSpeed-'+esc(p.id)+'-'+esc(n.id)+'" role="status">'+nodeSpeedStatusHTML(p,n)+'</div></div><div class="mp-actions">'+nodeSpeedButton(p,n.id)+(n.id===p.activeNodeId?'':button('设为当前','use-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':'')))+button('编辑','edit-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':''))+button('删除','delete-node','data-id="'+esc(n.id)+'" '+(locked||n.id===p.activeNodeId||nodes.length<=1?'disabled':'') ,false,true)+'</div></div>').join('')+(nodes.length?'':'<p class="mp-alert">尚无服务节点，请添加地址。</p>')+mpAnn('06','服务节点、测速与协议的边界','一个渠道维护一份认证和 Key，节点仅含名称及 URL。新增渠道的 Base URL 自动成为默认节点；后续地址只在这里编辑。<br>列表服务节点独立成列，单行触发器显示当前节点及耗时；选择器内逐节点展示检测结果 / 单独检测，顶部一键检测 / 停止。选节点与检测动作独立，检测不自动选择。详情支持单节点 / 一键测速。接口响应耗时以 ms 显示，不代表模型生成速度、模型能力或额度。测速结果仅本机会话，分别显示等待 / 测速中 / 成功 / 失败 / 超时 / 停止。<br>本原型使用确定性 mock，不请求网络、不读取或发出真实 Key；结果场景在右侧工具板设置。一键测速最多两个模拟任务并行，可停止，结果不自动切节点。节点地址、协议或认证变化后旧结果失效，晚回不会覆盖新配置。<br>节点切换加入全渠道草稿，保存确认展示地址变化，成功后只在既有通知宿主提示一次；稍后即结束。节点不复制模型清单或凭据，不为每个模型分别指定。当前节点不可直接删除，至少保留一条；未确认渠道配置先处理。测速与获取模型清单共用同源路径归一化：根地址自动补 /v1/models，保留版本路径 / 完整清单地址 / 自定义前缀；HTML 或路径不存在才有限回退。认证、DNS、TLS、超时不重试路径，仅有效模型清单算成功。基址保持原样。全部为内存 mock，不代表真实连接验收。');
  }
  // 测速是会话级观察，独立于策略、保存和连接验证；任何晚回都核对测量对象。
  function nodeSpeedUI(){
@@ -829,9 +877,10 @@
      else{
       let status='success';try{nodeURL(n.url);}catch{status='invalid';}
       if(status==='success'&&current.connection?.auth==='apikey'&&!current.connection.keyConfigured)status='auth';
-      if(status==='success'&&run.scene==='timeout')status='timeout';else if(status==='success'&&run.scene==='mixed'&&(index===1||run.items.length===1))status='failed';
+      if(status==='success'&&run.scene==='mixed'&&(index===1||run.items.length===1))status='failed';
+      const discovery=status==='success'?mockModelDiscovery(current.protocol,n.url,run.scene):{};if(discovery.status)status=discovery.status;
       const seed=[...n.url].reduce((total,c)=>total+c.charCodeAt(0),0),ms=58+seed%230;
-      item.status=status;nodeSpeedResults[nodeSpeedKey(pid,n.id)]={status,fingerprint:item.fingerprint,...(status==='success'?{ms}:{}),finishedAt:new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false})};
+      item.status=status;nodeSpeedResults[nodeSpeedKey(pid,n.id)]={...discovery,status,fingerprint:item.fingerprint,...(status==='success'?{ms}:{}),finishedAt:new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false})};
      }
      if(cursor===run.items.length&&inflight===0)run.status='complete';else pump();nodeSpeedUI();
     },360+index*50);
@@ -844,8 +893,8 @@
   run.items.filter(item=>['waiting','running'].includes(item.status)).forEach(item=>{item.status='cancelled';nodeSpeedResults[nodeSpeedKey(pid,item.nodeId)]={status:'cancelled',fingerprint:item.fingerprint};});nodeSpeedUI();
  }
  function setNodeSpeedScene(value){
-  if(!['normal','mixed','timeout'].includes(value))return;
-  nodeSpeedSerial++;nodeSpeedResults={};nodeSpeedRuns={};nodeSpeedScene=value;nodeSpeedUI();notice('节点测速演示：'+({normal:'正常',mixed:'部分失败',timeout:'超时'})[value]);
+  if(!['normal','mixed','timeout','html-fallback','path-fallback','auth','dns','tls','invalid-list'].includes(value))return;
+  nodeSpeedSerial++;nodeSpeedResults={};nodeSpeedRuns={};nodeSpeedScene=value;nodeSpeedUI();notice('节点测速演示：'+({normal:'正常',mixed:'部分失败',timeout:'超时','html-fallback':'首页回退','path-fallback':'路径回退',auth:'认证失败',dns:'域名失败',tls:'安全连接失败','invalid-list':'无效清单'})[value]);
  }
  function channelDefaults(p){return '<div class="mp-toolbar"><h3>模型默认</h3>'+button('编辑默认配置','provider-config',p.id==='native'||busy()?'disabled':'')+'</div><p class="mp-muted">作用于本渠道全部模型。未覆盖字段继续使用模版或模型声明。</p><div class="mp-rule-summary">'+[['protocol','协议'],['context','上下文窗口'],['efforts','推理等级'],['default','默认档位'],['fast','快速模式']].map(([key,name])=>'<div><span>'+name+'</span><strong>'+esc(Object.hasOwn(p.defaults,key)?ruleText(key,p.defaults[key]):'继承')+'</strong></div>').join('')+'</div>';}
  function channelNodes(){return channelSections.map(([id])=>$('#mpChannelSection-'+id,host)).filter(Boolean);}
@@ -976,7 +1025,7 @@
   if(tab==='templates'&&templateDetail)ensureTemplateBuffer();
   const scroller=host.closest('.main'),channelEditing=tab==='channels'&&channelDetail,sameChannel=channelEditing&&channelViewId===current,channelPosition=sameChannel?channelScrollPosition(scroller):null,editing=tab==='templates'&&templateDetail&&!!buffer(),sameEditor=editing&&editorViewId===templateId,position=sameEditor?editorScrollPosition(scroller):null;
   if(editing&&!sameEditor)editorSection='basic';if(channelEditing&&!sameChannel)channelSection=channelSections[0][0];
-  for(const id of Object.keys(channelConnections))if(!draft.providers.some(p=>p.id===id))delete channelConnections[id];
+  for(const id of Object.keys(channelConnections))if(!draft.providers.some(p=>p.id===id)){delete channelConnections[id];channelKeyInputs.delete(id);}
   const validKeys=new Set(draft.providers.flatMap(p=>p.models.map(m=>m.key)));modelSelection=new Set([...modelSelection].filter(k=>validKeys.has(k)));modelExpanded=new Set([...modelExpanded].filter(k=>validKeys.has(k)));for(const key of Object.keys(modelEdits))if(!validKeys.has(key))delete modelEdits[key];
   if(!provider()){current=draft.providers[0]?.id;channelDetail=false;}scope=new Set([...scope].filter(id=>draft.providers.some(p=>p.id===id&&id!=='native')));const active=document.activeElement,focus=active?.matches('[data-model-search]')?'[data-model-search]':active?.matches('[data-channel-search]')?'[data-channel-search]':active?.matches('[data-template-search]')?'[data-template-search]':active?.matches('[data-model-alias]')?'[data-model-alias="'+active.dataset.modelAlias+'"]':null,caret=active?.selectionStart,fieldId=active?.id&&host.querySelector('#'+active.id)?active.id:null;host.innerHTML=toolbar()+(tab==='channels'?channelPage():templatePage());
   $$('[data-model-quick] input,[data-model-quick] select,[data-model-quick] button',host).forEach(el=>el.disabled=busy());
@@ -1097,6 +1146,7 @@
    const xc=x.connection||{},yc=y.connection||{};
    add(g,'当前节点 URL',activeNode(x)?.url,activeNode(y)?.url,v=>v||'无');add(g,'认证方式',xc.auth,yc.auth,v=>v==='apikey'?'API Key':v==='none'?'无需认证':'无');
    add(g,'密钥配置状态',xc.keyConfigured,yc.keyConfigured,v=>v?'已配置（不显示密钥）':'未配置');
+   if(xc.keyConfigured&&yc.keyConfigured&&xc.credentialRef!==yc.credentialRef)g.rows.push({label:'API Key',before:'保持原值',after:'替换 Key'});
    add(g,'模型选择模式',x.mode,y.mode,mode);add(g,'渠道 Fast 策略',x.fastEnabled,y.fastEnabled,fast);
    add(g,'白名单 / 有效选择',old?selected(old).map(m=>m.id):[],next?selected(next).map(m=>m.id):[],list);
    const xm=x.models||[],ym=y.models||[];
@@ -1144,12 +1194,23 @@
    notice({'discovery-fail':'读取现有渠道失败，草稿与已选保留','discovery-unauthorized':'认证失败，无法读取官方渠道；未修改草稿','discovery-unsupported':'没有可用的读取接口；未修改草稿'}[scenario]);
   },650);
  }
- function refresh(){const p=provider(),token=++p.refreshToken;p.refresh='loading';render();setTimeout(()=>{if(p.refreshToken!==token||!draft.providers.includes(p))return;p.refresh=scenario==='discovery-fail'?'failed':scenario==='discovery-empty'?'empty':'idle';if(p.refresh==='idle'&&p.addedInPrototype)p.models=mergeDiscovered(p.models,[...discoveryFixture(p.id),discoveredModel(p.id,'upstream-added-demo')]);p.updated='刚刚（演示）';render();notice(p.refresh==='idle'?'模拟刷新完成，新增项未勾选；原白名单和位置保留':'未覆盖原清单或白名单');},650);}
+ function discoveryScene(){return {'discovery-fail':'dns','discovery-unauthorized':'auth','discovery-unsupported':'invalid-list','discovery-html':'html-fallback','discovery-path':'path-fallback'}[scenario]||'normal';}
+ function refresh(){
+  const p=provider(),token=++p.refreshToken;p.refresh='loading';render();
+  setTimeout(()=>{
+   if(p.refreshToken!==token||!draft.providers.includes(p))return;
+   const result=mockModelDiscovery(p.protocol,activeNode(p)?.url||'',discoveryScene());discoveryResults[p.id]=result;
+   p.refresh=result.status!=='success'?'failed':scenario==='discovery-empty'?'empty':'idle';
+   if(p.refresh==='idle'&&p.addedInPrototype)p.models=mergeDiscovered(p.models,[...discoveryFixture(p.id),discoveredModel(p.id,'upstream-added-demo')]);
+   p.updated='刚刚（演示）';render();notice(p.refresh==='idle'?'模拟刷新完成，新增项未勾选；原白名单和位置保留':result.reason||'未覆盖原清单或白名单');
+  },650);
+ }
  function channelConnection(edit=false,inline=false){
   const p=edit?provider():null;if(p?.id==='native'||busy())return;
   if(p&&stagedModelEdits().some(([key])=>p.models.some(m=>m.key===key))){notice('请先确认或还原本渠道的行编辑，再调整连接');return;}
   const b=p&&channelConnections[p.id];if(b&&b.baseline!==connectionBaseline(p)){notice('连接基准已变化，请还原配置后重新编辑');return;}
-  channelWizard={editId:p?.id||'',id:p?.id||'',name:p?.name||'',protocol:p?.protocol||'Responses',connection:p?nodeConnection(p):{baseUrl:'',auth:'apikey',keyConfigured:false},models:clone(p?.models||[]),step:1,status:'idle',filter:'',only:false,keyChanged:0,previewKeyVersion:0,retainedKeyConfigured:p?.connection?.keyConfigured||false,error:'',retrieved:false};
+  wizardKeyValue=p?keyValue(p.connection):'';
+  channelWizard={keyVisible:false,keyIntent:'keep',editId:p?.id||'',id:p?.id||'',name:p?.name||'',protocol:p?.protocol||'Responses',connection:p?nodeConnection(p):{baseUrl:'',auth:'apikey',keyConfigured:false},models:clone(p?.models||[]),step:1,status:'idle',filter:'',only:false,keyChanged:0,previewKeyVersion:0,retainedKeyConfigured:p?.connection?.keyConfigured||false,error:'',retrieved:false};
   if(p){const chosen=new Set(selected(p).map(m=>m.id));channelWizard.models.forEach(m=>m.selected=chosen.has(m.id));}
   channelWizard.previous=p?JSON.stringify({protocol:p.protocol,connection:nodeConnection(p)}):'';
   channelWizard.providerDigest=p?JSON.stringify(p):'';channelWizard.bufferDigest=b?JSON.stringify(b):'';
@@ -1157,31 +1218,31 @@
   if(inline){channelWizard.error=validateConnection();if(channelWizard.error){notice(channelWizard.error);channelWizard=null;return;}const same=channelWizard.previous===JSON.stringify({protocol:channelWizard.protocol,connection:channelWizard.connection})&&!channelWizard.keyChanged;if(!same){channelWizard.models=[];channelWizard.retrieved=false;channelWizard.status='idle';}channelWizard.previous=JSON.stringify({protocol:channelWizard.protocol,connection:channelWizard.connection});channelWizard.previewKeyVersion=channelWizard.keyChanged;channelWizard.step=2;}
   wizardToken++;drawChannelWizard();
  }
- function captureConnection(){const w=channelWizard;if(!w||w.step!==1)return;w.name=$('#mpChannelName').value.trim();w.id=$('#mpChannelId').value.trim();w.protocol=$('#mpChannelProtocol').value;w.connection.baseUrl=$('#mpChannelURL').value.trim().replace(/\/+$/,'');w.connection.auth=$('#mpChannelAuth').value;w.connection.keyConfigured=w.connection.auth==='apikey'&&(w.retainedKeyConfigured||$('#mpChannelKey').value.length>0);}
+ function captureConnection(){const w=channelWizard;if(!w||w.step!==1)return;w.name=$('#mpChannelName').value.trim();w.id=$('#mpChannelId').value.trim();w.protocol=$('#mpChannelProtocol').value;w.connection.baseUrl=$('#mpChannelURL').value.trim().replace(/\/+$/,'');w.connection.auth=$('#mpChannelAuth').value;const value=$('#mpChannelKey').value;if(value){wizardKeyValue=value;w.keyIntent=value===keyValue(draft.providers.find(p=>p.id===w.editId)?.connection)?'keep':'replace';}else if(w.keyIntent!=='clear'){wizardKeyValue=keyValue(draft.providers.find(p=>p.id===w.editId)?.connection);w.keyIntent='keep';}w.connection.keyConfigured=w.connection.auth==='apikey'&&!!wizardKeyValue;}
  function validateConnection(){
   const w=channelWizard;if(!w.name)return '请填写渠道名称。';
   if(!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/.test(w.id)||['native','openai','system','constructor','prototype','__proto__'].includes(w.id.toLowerCase()))return '渠道标识使用字母、数字、点、下划线或连字符；不能使用保留标识。';
   if(draft.providers.some(p=>p.id!==w.editId&&(p.id.toLowerCase()===w.id.toLowerCase()||p.name.toLowerCase()===w.name.toLowerCase())))return '渠道名称或标识已存在，请换一个。';
   try{const url=new URL(w.connection.baseUrl);if(!['https:','http:'].includes(url.protocol)||url.username||url.password||url.search||url.hash)throw Error();}catch{return '请填写完整 HTTP(S) Base URL，不附密钥、查询参数或模型接口路径。';}
-  if(/\/(models|responses|chat\/completions)\/?$/i.test(w.connection.baseUrl))return '请填写 Base URL，不填写 /models 或生成接口。';
+  if(/\/(responses|chat\/completions)\/?$/i.test(w.connection.baseUrl))return '请填写服务地址或模型清单地址，不填写生成接口。';
   if(w.connection.auth==='apikey'&&!w.connection.keyConfigured)return '请填写演示 API Key，或选择无需认证。';return '';
  }
  function drawChannelWizard(){
   const w=channelWizard;if(!w)return;const first=w.step===1,loading=w.status==='loading',title=(w.editId?'编辑渠道连接':'新增渠道')+' · '+(first?'连接配置':'选择模型');
   const steps='<ol class="mp-wizard-steps" aria-label="新增渠道步骤"><li '+(first?'aria-current="step"':'')+'>1 连接配置</li><li '+(!first?'aria-current="step"':'')+'>2 选择模型</li></ol>';
   const help=w.protocol==='Ollama'?'Ollama：例如 http://localhost:11434；使用原生适配器。':w.protocol==='Anthropic'?'Anthropic：使用服务根地址或 /v1。':w.protocol==='Google'?'Google AI Studio：使用服务根地址，不附 /v1beta/models。':'OpenAI 兼容：例如 https://newapi.example.com/v1，系统按适配器获取模型。';
-  const form='<div class="mp-agent-form"><label>渠道名称<input class="input" id="mpChannelName" maxlength="80" value="'+esc(w.name)+'" placeholder="例如：NewApi 备用"></label><label>渠道标识<input class="input" id="mpChannelId" maxlength="64" value="'+esc(w.id)+'" placeholder="例如：newapi-backup" '+(w.editId?'readonly':'')+'><span class="mp-muted">保存后保持稳定，用来绑定模型策略。</span></label><label>默认接口协议<select class="mp-select" id="mpChannelProtocol">'+protocolOptions(w.protocol)+'</select></label><label>'+(w.editId?'当前节点 URL':'Base URL')+'<input class="input" id="mpChannelURL" type="url" value="'+esc(w.connection.baseUrl)+'" placeholder="https://newapi.example.com/v1" '+(w.editId?'readonly':'')+'><span class="mp-muted">'+help+'</span></label><label>认证方式<select class="mp-select" id="mpChannelAuth">'+opts([['apikey','API Key'],['none','无需认证']],w.connection.auth)+'</select></label>'+(w.connection.auth==='apikey'?'<label>API Key<input class="input" id="mpChannelKey" type="password" autocomplete="off" placeholder="'+(w.connection.keyConfigured?'已配置（不回显）；留空保留':'仅填演示值，请勿输入真实密钥')+'"><span class="mp-muted">本原型只记录是否已配置，不保存或发出输入值。</span></label>':'<input id="mpChannelKey" type="hidden" value="">')+'</div>';
+  const form='<div class="mp-agent-form"><label>渠道名称<input class="input" id="mpChannelName" maxlength="80" value="'+esc(w.name)+'" placeholder="例如：NewApi 备用"></label><label>渠道标识<input class="input" id="mpChannelId" maxlength="64" value="'+esc(w.id)+'" placeholder="例如：newapi-backup" '+(w.editId?'readonly':'')+'><span class="mp-muted">保存后保持稳定，用来绑定模型策略。</span></label><label>默认接口协议<select class="mp-select" id="mpChannelProtocol">'+protocolOptions(w.protocol)+'</select></label><label>'+(w.editId?'当前节点 URL':'Base URL')+'<input class="input" id="mpChannelURL" type="url" value="'+esc(w.connection.baseUrl)+'" placeholder="https://newapi.example.com/v1" '+(w.editId?'readonly':'')+'><span class="mp-muted">'+help+'</span></label><label>认证方式<select class="mp-select" id="mpChannelAuth">'+opts([['apikey','API Key'],['none','无需认证']],w.connection.auth)+'</select></label>'+(w.connection.auth==='apikey'?'<div class="mp-channel-key"><label for="mpChannelKey">API Key</label>'+keyControls('mpChannelKey',wizardKeyValue,w.keyVisible,'toggle-wizard-key','clear-wizard-key')+'</div>':'<input id="mpChannelKey" type="hidden" value="">')+'</div>';
   const shown=w.models.filter(m=>(!w.only||m.selected)&&m.id.toLowerCase().includes(w.filter.toLowerCase())),selectedCount=w.models.filter(m=>m.selected).length;
   const messages={idle:'先获取模型列表，或手动添加模型 ID。',loading:'正在模拟获取上游清单…',ready:'已获取 '+w.models.filter(m=>m.source!=='manual').length+' 个模型；新发现项默认不勾选。',failed:'获取失败（演示网络错误）。可以重试、检查连接，或手动添加 ID。',empty:'上游返回空清单（演示）；原选择保留，可重试或手动添加。',unauthorized:'认证失败（演示 401）。返回检查 API Key；不会发推理请求。',unsupported:'该服务未提供可用的模型清单接口（演示），请手动添加 ID。'};
   const list='<div class="mp-inline-notice"><span>'+esc(w.name)+'</span>'+button('返回连接配置','channel-back',loading?'disabled':'')+'</div><div class="mp-row">'+button(loading?'取消等待':w.retrieved?'重新获取':'获取模型列表',loading?'channel-cancel-fetch':'channel-fetch','',true)+'<span class="mp-muted" role="status">'+messages[w.status]+'</span></div><div class="mp-filter"><input class="input" id="mpChannelSearch" value="'+esc(w.filter)+'" placeholder="搜索模型 ID" aria-label="搜索待加入模型"><label class="mp-label"><input id="mpChannelOnly" type="checkbox" '+(w.only?'checked':'')+'>仅已选</label></div><div class="mp-row"><span id="mpChannelCount">已选 '+selectedCount+' / 清单 '+w.models.length+'</span>'+button('选择结果 '+shown.length+' 项','channel-select',loading?'disabled':'')+button('取消结果','channel-unselect',loading?'disabled':'')+'</div><div class="mp-discovery-list">'+shown.map(m=>'<label class="mp-discovery-item"><input type="checkbox" data-channel-model="'+esc(m.id)+'" '+(m.selected?'checked':'')+' '+(loading?'disabled':'')+'><span>'+esc(m.id)+'<small>'+esc(templateLabel({id:channelWizard.id},m))+' · '+(m.source==='manual'?'手动添加 / 能力未知':'上游清单（演示） / 能力待核对')+(m.discovered===false?' · 本次未发现':'')+'</small></span></label>').join('')+(shown.length?'':'<div class="mp-empty">没有匹配的模型</div>')+'</div><details class="mp-details"><summary>手动添加模型</summary><p>每行一个精确模型 ID，不按逗号拆分；去重后仍需勾选，能力保持未知。</p><textarea id="mpChannelManual" aria-label="手动模型 ID" placeholder="例如：gpt-5.4"></textarea>'+button('添加到清单','channel-manual',loading?'disabled':'')+'</details><p class="mp-muted">加入后在渠道详情调整族规则和顺序。发现继续开启；本次只是列表获取，不验证推理或 Fast。</p>';
   modal(title,steps+'<p class="mp-muted">静态演示表单，请勿输入真实密钥；不会连接上游。</p>'+(first?form+(w.editId?'<p class="mp-muted">更换协议、地址或认证后，重新获取并选择模型；原策略在页级保存前保持。</p>':''):list)+'<div class="mp-alert" id="mpChannelError" role="alert">'+esc(w.error)+'</div>',first?'下一步':'加入草稿',()=>{
-   if(first){captureConnection();w.error=validateConnection();if(w.error){$('#mpChannelError').textContent=w.error;return;}w.retainedKeyConfigured=w.connection.keyConfigured;$('#mpChannelKey').value='';const same=w.previous===JSON.stringify({protocol:w.protocol,connection:w.connection})&&w.previewKeyVersion===w.keyChanged;if(!same){w.models=[];w.retrieved=false;w.status='idle';}w.previous=JSON.stringify({protocol:w.protocol,connection:w.connection});w.previewKeyVersion=w.keyChanged;w.step=2;drawChannelWizard();return;}
+   if(first){captureConnection();w.error=validateConnection();if(w.error){$('#mpChannelError').textContent=w.error;return;}w.retainedKeyConfigured=w.connection.keyConfigured;const same=w.previous===JSON.stringify({protocol:w.protocol,connection:w.connection})&&w.previewKeyVersion===w.keyChanged;if(!same){w.models=[];w.retrieved=false;w.status='idle';}w.previous=JSON.stringify({protocol:w.protocol,connection:w.connection});w.previewKeyVersion=w.keyChanged;w.step=2;drawChannelWizard();return;}
    if(w.status==='loading'||!w.models.some(m=>m.selected))return;
    const old=draft.providers.find(p=>p.id===w.editId);
    if(busy()||w.editId&&(JSON.stringify(old)!==w.providerDigest||JSON.stringify(channelConnections[w.editId]||'')!== (w.bufferDigest||JSON.stringify(''))||stagedModelEdits().some(([key])=>old?.models.some(m=>m.key===key)))){$('#mpChannelError').textContent='渠道或连接编辑已变化，请关闭后重新确认。';return;}
    const next=old?clone(old):{id:w.id,name:w.name,protocol:w.protocol,enabled:true,mode:'whitelist',models:[],defaults:{},familyOverrides:{},refs:{},fastEnabled:'inherit',refresh:'idle',refreshToken:0,updated:'刚刚（演示）',addedInPrototype:true};
-   Object.assign(next,{name:w.name,protocol:w.protocol,connection:{auth:w.connection.auth,keyConfigured:w.connection.keyConfigured},models:clone(w.models),mode:'whitelist'});if(!old){next.nodes=[{id:'primary',name:'默认节点',url:nodeURL(w.connection.baseUrl)}];next.activeNodeId='primary';}if(w.previous!==JSON.stringify({protocol:old?.protocol,connection:old?nodeConnection(old):null})||w.keyChanged)next.availability={kind:'unknown'};if(!old||w.keyChanged||JSON.stringify(old.connection)!==JSON.stringify(next.connection))nodeAuthRevision[next.id]=(nodeAuthRevision[next.id]||0)+1;if(w.editId)delete channelConnections[w.editId];closeModal();change(()=>{if(old)draft.providers[draft.providers.indexOf(old)]=next;else draft.providers.push(next);current=next.id;channelDetail=true;search='';family='';onlySelected=false;channelSearch='';});notice('渠道和白名单已加入草稿；页级保存后才写入，随后重启 Codex');
-  },{confirmKeepsOpen:true,onClose:()=>{const key=$('#mpChannelKey');if(key)key.value='';wizardToken++;channelWizard=null;}});
+   Object.assign(next,{name:w.name,protocol:w.protocol,connection:{auth:w.connection.auth,keyConfigured:w.connection.keyConfigured,...(wizardKeyValue?{credentialRef:w.keyIntent==='keep'&&old?.connection?.credentialRef?old.connection.credentialRef:mockCredential(wizardKeyValue)}:{})},models:clone(w.models),mode:'whitelist'});if(!old){next.nodes=[{id:'primary',name:'默认节点',url:nodeURL(w.connection.baseUrl)}];next.activeNodeId='primary';}if(w.previous!==JSON.stringify({protocol:old?.protocol,connection:old?nodeConnection(old):null})||w.keyChanged)next.availability={kind:'unknown'};if(!old||w.keyChanged||JSON.stringify(old.connection)!==JSON.stringify(next.connection))nodeAuthRevision[next.id]=(nodeAuthRevision[next.id]||0)+1;if(w.editId)delete channelConnections[w.editId];closeModal();change(()=>{if(old)draft.providers[draft.providers.indexOf(old)]=next;else draft.providers.push(next);current=next.id;channelDetail=true;search='';family='';onlySelected=false;channelSearch='';});notice('渠道和白名单已加入草稿；页级保存后才写入，随后重启 Codex');
+  },{confirmKeepsOpen:true,onClose:()=>{const key=$('#mpChannelKey');if(key)key.value='';wizardKeyValue='';wizardToken++;channelWizard=null;}});
   $('#modalConfirm').disabled=!first&&(loading||!selectedCount);
   if(first){
    const invalidate=()=>{captureConnection();wizardToken++;w.retrieved=false;w.status='idle';w.error='';};
@@ -1193,7 +1254,15 @@
    $('#mpChannelOnly').onchange=()=>{w.only=$('#mpChannelOnly').checked;drawChannelWizard();};
   }
  }
- function fetchChannelModels(){const w=channelWizard;if(!w||w.status==='loading')return;const token=++wizardToken;w.status='loading';w.error='';drawChannelWizard();setTimeout(()=>{if(channelWizard!==w||wizardToken!==token)return;w.status={'discovery-fail':'failed','discovery-empty':'empty','discovery-unauthorized':'unauthorized','discovery-unsupported':'unsupported'}[scenario]||'ready';if(w.status==='ready'){w.models=mergeDiscovered(w.models,discoveryFixture(w.id));w.retrieved=true;}drawChannelWizard();},650);}
+ function fetchChannelModels(){
+  const w=channelWizard;if(!w||w.status==='loading')return;const token=++wizardToken;w.status='loading';w.error='';drawChannelWizard();
+  setTimeout(()=>{
+   if(channelWizard!==w||wizardToken!==token)return;
+   const result=mockModelDiscovery(w.protocol,w.connection.baseUrl,discoveryScene());discoveryResults[w.id]=result;
+   w.status=result.status==='success'?(scenario==='discovery-empty'?'empty':'ready'):result.status==='auth'?'unauthorized':scenario==='discovery-unsupported'?'unsupported':'failed';
+   if(w.status==='ready'){w.models=mergeDiscovered(w.models,discoveryFixture(w.id));w.retrieved=true;}drawChannelWizard();
+  },650);
+ }
  function wizardSelection(value){const w=channelWizard;if(!w||w.status==='loading')return;w.models.filter(m=>(!w.only||m.selected)&&m.id.toLowerCase().includes(w.filter.toLowerCase())).forEach(m=>m.selected=value);drawChannelWizard();}
  function wizardManual(){const w=channelWizard;if(!w||w.status==='loading')return;const ids=$('#mpChannelManual').value.split(/\r?\n/).map(id=>id.trim()).filter(Boolean);if(!ids.length)return;
   if(ids.some(id=>id.length>200||/[\s\x00-\x1f]/.test(id))){$('#mpChannelError').textContent='模型 ID 不能含空白 / 控制字符，且须不超过 200 字符。';return;}
@@ -1221,10 +1290,10 @@
  function nodeURL(value){
   if(value.length>2048)throw Error('节点 URL 过长。');
   let url;try{url=new URL(value.trim());}catch{throw Error('请填写完整 HTTP(S) Base URL。');}
-  if(!['https:','http:'].includes(url.protocol)||url.username||url.password||url.search||url.hash||/\/(models|messages|responses|chat\/completions)\/?$/i.test(url.pathname))throw Error('请填写服务 Base URL，不附密钥、查询参数或生成接口路径。');
+  if(!['https:','http:'].includes(url.protocol)||url.username||url.password||url.search||url.hash||/\/(messages|responses|chat\/completions)\/?$/i.test(url.pathname))throw Error('请填写服务 Base URL，不附密钥、查询参数或生成接口路径。');
   return url.href.replace(/\/+$/,'');
  }
- function nodeChanged(p){delete channelConnections[p.id];p.refreshToken++;p.refresh='idle';if(p.availability?.kind!=='no-credit')p.availability={kind:'unknown'};}
+ function nodeChanged(p){delete channelConnections[p.id];channelKeyInputs.delete(p.id);p.refreshToken++;p.refresh='idle';if(p.availability?.kind!=='no-credit')p.availability={kind:'unknown'};}
  function editServiceNode(id=''){
   const p=provider();if(!nodeEditable(p))return;const old=serviceNodes(p).find(n=>n.id===id);if(id&&!old)return;
   const pid=p.id,baseline=channelDraftFingerprint();
@@ -1269,35 +1338,44 @@
  function providerConfig(){const p=provider();editFields(p.name+' · 渠道默认',p.defaults,{values:{},sources:{}},rules=>change(()=>p.defaults=rules),'<p>作用于渠道内所有模型；未覆盖字段继续沿各自模板或声明解析。</p>');}
  function batch(){const targets=draft.providers.filter(p=>scope.has(p.id)&&p.id!=='native');if(!targets.length){notice('请选择可配置的自定义渠道');return;}modal('按族批量配置','<p>范围：'+targets.map(p=>esc(p.name)).join('、')+'。按已采用精确版本匹配；先采用模版，再设置该族覆盖。白名单不因此改变。</p><label class="mp-label">模型族 / 模版<select id="mpBatchFamily" class="mp-select">'+opts(families(),'gpt')+'</select></label><div id="mpBatchError" class="mp-alert"></div>','下一步',()=>{const f=$('#mpBatchFamily').value,hits=targets.flatMap(p=>p.models.filter(m=>templateResolution(p,m).id===f));if(!hits.length){$('#mpBatchError').textContent='该范围没有采用并匹配此模版的模型，请先采用精确版本';return;}closeModal();editFields(f+' · '+targets.length+' 个渠道',{},null,rules=>change(()=>targets.forEach(p=>p.familyOverrides[f]=clone(rules))),'<p>匹配 '+hits.length+' 个模型，覆盖位置为渠道族；保留单模型例外。</p>');},{confirmKeepsOpen:true});}
  function adopt(exact=false){if(exact&&templateEditorChanged()){notice('先保存模版修改，再采用已保存版本');return;}const t=template(),v=version(t.id,versionN),chosen=exact?t.id:'gpt',targetIds=new Set(scope);modal('采用模版精确版本','<label class="mp-label">模版 <select id="mpAdoptTemplate" class="mp-select">'+opts(templates.map(x=>[x.id,x.name]),chosen)+'</select></label><label class="mp-label">精确版本 <select id="mpAdoptVersion" class="mp-select"></select></label><label class="mp-label">范围 <select id="mpAdoptScope" class="mp-select">'+opts([['channels','所选渠道的该模型族'],['global','全部渠道的全局族默认']],'channels')+'</select></label><div class="mp-checks" id="mpAdoptChannels">'+draft.providers.filter(p=>p.id!=='native').map(p=>'<label><input type="checkbox" id="mpAdoptChannel-'+esc(p.id)+'" '+(targetIds.has(p.id)?'checked':'')+'>'+esc(p.name)+(p.enabled?'':' · 停用')+'</label>').join('')+'</div><p id="mpAdoptInfo"></p><label class="mp-label"><input id="mpAdoptClear" type="checkbox">明确清除目标单模型例外</label><label class="mp-label"><input id="mpAdoptMain" type="checkbox">设为默认（独立主指针动作）</label><div id="mpAdoptError" class="mp-alert"></div>','采用到草稿',()=>{const id=$('#mpAdoptTemplate').value,n=Number($('#mpAdoptVersion').value),type=$('#mpAdoptScope').value,tt=templates.find(x=>x.id===id),vv=version(id,n),targets=draft.providers.filter(p=>targetIds.has(p.id)&&p.id!=='native');if(!vv){$('#mpAdoptError').textContent='请选择已保存版本';return;}if(type==='channels'&&!targets.length){$('#mpAdoptError').textContent='请勾选要采用的渠道；仅浏览渠道不自动加入范围';return;}const clear=$('#mpAdoptClear').checked,main=$('#mpAdoptMain').checked;closeModal();change(()=>{if(type==='global')draft.globalRefs[tt.id]=id+':'+n;else targets.forEach(p=>{p.refs[tt.id]=id+':'+n;if(clear)p.models.filter(m=>templateMatches(tt,m,p,vv)).forEach(m=>{m.overrides={};});});});if(main)tt.main=n;tab='channels';render();notice('精确版本已加入草稿；已有覆盖保留，保存后才写入'+(main?'。主指针已更新':''));},{confirmKeepsOpen:true});const fill=()=>{const tt=templates.find(x=>x.id===$('#mpAdoptTemplate').value);$('#mpAdoptVersion').innerHTML=opts(tt.versions.map(v=>[v.n,v.versionLabel+' · '+versionState(tt.id,v.n)]),exact&&tt.id===t.id?v.n:tt.main);$('#mpAdoptInfo').textContent='主版本仅影响默认版本。模板来源选择一份；输出协议覆盖渠道默认，已有族 / 单模型例外保留。当前节点地址和渠道认证须在保存前补齐。当前所选：'+[...targetIds].join('、');};fill();$('#mpAdoptTemplate').onchange=fill;draft.providers.filter(p=>p.id!=='native').forEach(p=>{const el=$('#mpAdoptChannel-'+p.id);el.onchange=()=>{el.checked?targetIds.add(p.id):targetIds.delete(p.id);fill();};});$('#mpAdoptScope').onchange=()=>{$('#mpAdoptChannels').hidden=$('#mpAdoptScope').value==='global';};}
- function startSave(plan){if(busy())return;const id=++operationId;operation={id,status:'running',step:0,plan,before:clone(saved),message:'校验冻结计划…'};render();function step(){if(operation?.id!==id||operation.status!=='running')return;operation.step++;if(operation.step===1&&scenario==='backup-fail'){operation.status='failed';operation.message='备份失败 · 未写入，草稿保留';render();return;}if(operation.step===3&&['partial','timeout'].includes(scenario)){operation.status=scenario==='timeout'?'timeout':'failed';operation.message=scenario==='timeout'?'写入响应超时 · 先核对，不重复提交':'部分写入失败 · 实际结果待核对，未发布成功快照';records.push({id,time:'刚刚',status:'部分 / 待核对',policy:clone(plan),before:clone(saved)});render();return;}if(operation.step>=5){saved=clone(plan);pending=true;client='运行目录已核对 · 客户端待重启';records.push({id,time:updates.stamp(records).versionLabel,restores:restoration?.recordId||null,status:'成功',policy:clone(plan),before:clone(operation.before),client});restoration=null;operation.status='success';operation.message='保存成功 · 待重启 Codex';render();return;}operation.message=['校验','备份','写入','核对目录','发布成功快照'][operation.step]+'…';render();setTimeout(step,350);}setTimeout(step,350);}
- function verify(){if(!operation)return;const partial=operation.step>=2;modal('核对实际结果','<p>'+ (partial?'演示核对：部分运行字段已有变化，但 Desktop 成功快照未发布。根据 journal 生成安全补偿，保留本次草稿。外部变化先比较，不能覆盖。':'演示核对：未发生运行写入，本次草稿保留。')+'</p>','完成核对',()=>{operation.status='verified';operation.message=partial?'已核对并模拟安全补偿 · 草稿保留，需重新保存':'已核对 · 未写入，草稿保留';render();});}
- function stopSave(){if(operation?.status!=='running')return;operation.status='stopped';operation.message=operation.step<2?'已取消 · 未写入，草稿保留':'已停止后续步骤 · 可能已有写入，先核对';render();}
- function checkSavedClient(){
-  if(!pending)return;const id=operation?.id,baseline=JSON.stringify(saved);
-  modal('重新检查 Codex 客户端','<p>演示目录核对通过；原型无法获取客户端加载证据。请目视确认模型顺序 / 选项后记录用户确认。</p><div id="mpClientCheckError" class="mp-alert" role="alert"></div>','我已目视确认',()=>{
-   if(id!==operation?.id||baseline!==JSON.stringify(saved)){$('#mpClientCheckError').textContent='保存目标已变化，请重新检查最新配置。';return;}
-   pending=false;client='用户已确认 · 非自动加载证据';closeModal();render();
-  },{confirmKeepsOpen:true});
+ function startSave(snapshot){
+  if(busy())return;const id=++operationId;
+  operation={id,status:'running',step:0,snapshot,before:clone(saved),message:'备份…'};render();
+  function step(){
+   if(operation?.id!==id||operation.status!=='running')return;operation.step++;
+   if(operation.step===1&&scenario==='backup-fail'){
+    operation.status='failed';operation.message='备份失败 · 未写入，草稿保留';render();return;
+   }
+   if(operation.step===1){operation.message='原子写入…';render();setTimeout(step,350);return;}
+   if(['partial','timeout'].includes(scenario)){
+    // 兼容旧演示场景名；失败发生于 mock 原子替换之前，没有部分发布或核对流程。
+    operation.status='failed';operation.message=scenario==='timeout'?'原子写入超时 · 原文件与草稿保留':'原子写入失败 · 原文件与草稿保留';render();return;
+   }
+   saved=clone(snapshot);pending=false;client='已写入';
+   records.push({id,time:updates.stamp(records).versionLabel,restores:restoration?.recordId||null,status:'成功',policy:clone(snapshot),before:clone(operation.before),client});
+   restoration=null;operation.status='written';operation.message='已写入';render();
+  }
+  setTimeout(step,350);
  }
- /* 提示消失即彻底结束：不置「待重启」、不要求回头确认（对应用户 2026-10-26 裁决 A）。 */
+ function stopSave(){if(operation?.status!=='running')return;operation.status='stopped';operation.message='已取消 · 未写入，草稿保留';render();}
+ /* 稍后即结束；通知 ID 与 operation ID 明确转换，历史不驱动当前状态。 */
  function clearModelSaveTask(id){
-   const item=notifications.find(n=>n.id===id&&!n.deleted);
-   if(item){item.deleted=true;}
-   if(operation?.id===id){operation.status='confirmed';}
-   window.hideModelSaveNotification?.(id);
-   if(typeof window.clearTask==='function')window.clearTask(id);
-   if(typeof window.renderNotifications==='function')window.renderNotifications();
+  if(operation?.id!==id)return;
+  pending=false;client='已写入';operation.status='completed';operation.message='已写入';
+  const notificationId='model-policy-save:'+id;
+  window.hideModelSaveNotification?.(notificationId);
+  window.clearTask?.(notificationId);
+  syncSaveNotification();
  }
  window.modelSaveNotificationAction=function(action,id){
   if(!operation||operation.id!==id)return;
   if(action==='stop')stopSave();
-  else if(action==='verify'&&['timeout','failed','stopped'].includes(operation.status))verify();
-  else if(action==='check'&&operation.status==='success')checkSavedClient();
-  /* 0.2.12：保存成功只给一次提示。重启要二次确认（会结束当前对话）；「稍后」直接结束，不留状态。 */
-  else if(action==='restart'&&operation.status==='success'){
-    openModal({title:'重启 Codex',body:'<p class="modal-lead">重启会立即结束当前正在进行的 Codex 对话，然后重新打开 Codex。</p><p>如果你还有没保存的对话内容，请先取消。</p>',confirmLabel:'确认重启',onConfirm:()=>{closeModal();clearModelSaveTask(id);toast('模型缓存已重建，Codex 已重启');render();}});
-  }
-  else if(action==='later'&&operation.status==='success'){clearModelSaveTask(id);render();}
+  else if(action==='restart'&&operation.status==='written'){
+   openModal('重启 Codex','<p class="modal-lead">重启会立即结束当前正在进行的 Codex 对话，然后重新打开 Codex。</p><p>如果你还有没保存的对话内容，请先取消。</p>','确认重启',()=>{
+    if(operation?.id!==id||operation.status!=='written')return;
+    closeModal();clearModelSaveTask(id);toast('原型模拟：Codex 已重启');render();
+   });
+  }else if(action==='later'&&operation.status==='written'){clearModelSaveTask(id);render();}
  };
  function ensureTemplateBuffer(){
   if(buffer()){versionN=buffer().base;return;}const t=template(),v=version(templateId,versionN)||t?.versions[0];if(!t||!v)return;
@@ -1758,10 +1836,10 @@
  function restore(id){const record=records.find(r=>r.id===Number(id));if(record?.status==='成功')recoveryPreview(record.before,record.policy,'采用记录 '+record.time,record.id);}
  function restoreConfirmed(id){const record=confirmedConfigurations.find(c=>c.id===id);if(record)recoveryPreview(record.policy,saved,'确认可用 '+versionText(record.templateId,record.n)+' · '+record.uses.join('、'),record.id,false);}
 
- function scene(name){templateHistoryView=null;templateListVersions={};nodeSpeedSerial++;nodeSpeedResults={};nodeSpeedRuns={};nodeAuthRevision={};nodeSpeedScene='normal';channelConnections={};channelViewId=null;channelSection=channelSections[0][0];modelSelection.clear();modelExpanded.clear();modelEdits={};if(channelWizard)closeModal();wizardToken++;channelWizard=null;scenario=name;upstreamReading=false;upstreamSource='';updateSerial++;updateRun=null;restoration=null;operationId++;operation=null;generationToken++;generating=false;draft=clone(initial);saved=clone(initial);pending=false;client='目录已核对 · 客户端待验证';scope=new Set();current='newapi';tab='channels';channelDetail=false;templateDetail=false;search='';family='';onlySelected=false;incoming=null;proposal=null;
+ function scene(name){resetMockCredentials();wizardKeyValue='';templateHistoryView=null;templateListVersions={};nodeSpeedSerial++;nodeSpeedResults={};nodeSpeedRuns={};nodeAuthRevision={};nodeSpeedScene='normal';channelConnections={};channelViewId=null;channelSection=channelSections[0][0];modelSelection.clear();modelExpanded.clear();modelEdits={};if(channelWizard)closeModal();wizardToken++;channelWizard=null;scenario=name;upstreamReading=false;upstreamSource='';discoveryResults={};updateSerial++;updateRun=null;restoration=null;operationId++;operation=null;generationToken++;generating=false;draft=clone(initial);saved=clone(initial);pending=false;client='已写入';scope=new Set();current='newapi';tab='channels';channelDetail=false;templateDetail=false;search='';family='';onlySelected=false;incoming=null;proposal=null;
   if(name==='template-history'){const t=templates.find(t=>t.id==='gpt'),base=t.versions[0];while(t.versions.length<18){const n=nextVersionN(t);t.versions.push({...clone(base),...updates.stamp(templates.flatMap(t=>t.versions)),n,systemBaseline:false,systemCurrent:false,origin:'人工',nameAtSave:t.name,basedOn:base.revisionId,rules:{...clone(base.rules),context:64000+n*1000}});const saved=t.versions.at(-1);saved.summaryFacts=summaryEngine.summarize(templateVersionSnapshot(t,base),templateVersionSnapshot(t,saved),{kind:'revision',templateId:t.id,revisionId:base.revisionId});saved.summary=saved.summaryFacts.text;t.nextRevision=n+1;}tab='templates';templateDetail=false;templateId='gpt';templateListVersions.gpt=1;}
   if(name==='over-budget'){draft.providers[1].mode='all';}
-  if(name==='pending-draft'){pending=true;draft.providers[0].models[1].selected=false;}
+  if(name==='pending-draft'){pending=false;draft.providers[0].models[1].selected=false;}
   if(name==='incoming'){draft.fastMode='inherit';incoming={kind:'policy',source:'WebDAV 演示下载',scope:'fields',baseDigest:baseDigest(),policy:{fastMode:'off'}};}
   if(['backup-fail','partial','timeout','drift'].includes(name))draft.providers[0].models[1].selected=false;
   if(name==='late-generation'){tab='templates';templateDetail=true;templateId='gpt';versionN=3;templateEdit();}
@@ -1771,15 +1849,25 @@
   if(a==='node-picker-open')openNodePicker(el.dataset.channel,$('#mpChannelNode-'+el.dataset.channel,host));
   else if(a==='node-picker-close')closeNodePicker(true);
   else if(a==='node-picker-choose')chooseNodeFromPicker(el.dataset.channel,id);
-  else if(a==='tab'){tab=el.dataset.tab;render();}
+  else if(a==='tab'){for(const b of Object.values(channelConnections))b.keyVisible=false;tab=el.dataset.tab;render();}
   else if(a==='copy-provider')copyProvider(id);
-  else if(a==='edit-provider'){closeModal();current=id;channelDetail=true;search='';family='';render();}
+  else if(a==='edit-provider'){closeModal();for(const b of Object.values(channelConnections))b.keyVisible=false;current=id;channelDetail=true;search='';family='';render();}
   else if(a==='channel-section')scrollChannelSection(id);
   else if(a==='toggle-channel-nav')toggleChannelNav();
-  else if(a==='apply-channel-connection')channelConnection(true,true);
-  else if(a==='reset-channel-connection'){delete channelConnections[current];render();}
+  else if(a==='apply-channel-connection')applyChannelConnection();
+  else if(a==='toggle-channel-key'){
+   const b=channelConnectionBuffer();b.keyVisible=!b.keyVisible;const input=$('#mpChannelInline-key');if(input)input.type=b.keyVisible?'text':'password';
+   el.setAttribute('aria-pressed',String(b.keyVisible));el.setAttribute('aria-label',b.keyVisible?'隐藏 Key':'显示 Key');el.title=b.keyVisible?'隐藏 Key':'显示 Key';
+  }
+  else if(a==='clear-channel-key'&&!busy()){
+   const b=channelConnectionBuffer();channelKeyInputs.set(current,'');b.keyIntent='clear';b.keyChanged=1;b.retainedKeyConfigured=false;b.connection.keyConfigured=false;
+   const input=$('#mpChannelInline-key');if(input)input.value='';updateChannelConnectionStatus();
+  }
+  else if(a==='toggle-wizard-key'&&channelWizard){const w=channelWizard;w.keyVisible=!w.keyVisible;const input=$('#mpChannelKey');if(input)input.type=w.keyVisible?'text':'password';el.setAttribute('aria-pressed',String(w.keyVisible));el.setAttribute('aria-label',w.keyVisible?'隐藏 Key':'显示 Key');el.title=w.keyVisible?'隐藏 Key':'显示 Key';}
+  else if(a==='clear-wizard-key'&&channelWizard){channelWizard.keyIntent='clear';wizardKeyValue='';channelWizard.retainedKeyConfigured=false;channelWizard.connection.keyConfigured=false;$('#mpChannelKey').value='';}
+  else if(a==='reset-channel-connection'){delete channelConnections[current];channelKeyInputs.delete(current);render();}
   else if(a==='review-channel-connection'){const item=stagedChannelConnections()[0];if(item){current=item[0];tab='channels';channelDetail=true;setRoute('models');render();scrollChannelSection('connection');}}
-  else if(a==='back-channels'){channelDetail=false;render();}
+  else if(a==='back-channels'){for(const b of Object.values(channelConnections))b.keyVisible=false;channelDetail=false;render();}
   else if(a==='back-templates')returnTemplates();
   else if(a==='preview-channel-toggle')togglePreviewChannel(id);
   else if(a==='preview-model-toggle')togglePreviewModel(id);
@@ -1833,8 +1921,7 @@
   else if(a==='adopt'||a==='adopt-version')adopt(a==='adopt-version');
   else if(a==='save')openSaveReview();
   else if(a==='stop')stopSave();
-  else if(a==='verify')verify();
-  else if(a==='client-check')checkSavedClient();
+
   else if(a==='discard')discardChannelDrafts();
   else if(a==='settings'){closeModal();setRoute('settings');showSettingsSection('models');}
   else if(a==='go-channels'){tab='channels';setRoute('models');render();}
@@ -1963,7 +2050,7 @@
  document.addEventListener('dragleave',e=>{if(e.target===dragOver&&!dragOver?.contains(e.relatedTarget)){dragOver.classList.remove('drag-over');dragOver=null;}});
  document.addEventListener('drop',e=>{const el=e.target.closest('[draggable="true"]');if(!el||!drag)return;e.preventDefault();const target=drag.type==='provider'?el.dataset.provider:el.dataset.model;clearDragMarks();if(target){const list=drag.type==='provider'?draft.providers:provider().models,key=drag.type==='provider'?'id':'key';change(()=>{const from=list.findIndex(x=>x[key]===drag.id),to=list.findIndex(x=>x[key]===target);if(from>=0&&to>=0)list.splice(to,0,list.splice(from,1)[0]);});}drag=null;dragOver=null;});
  document.addEventListener('dragend',()=>{clearDragMarks();drag=null;dragOver=null;});
- window.modelPrototype={applyAgentDemo,openExternalTask,receiveExternalSubmission,externalTaskPack,externalSample,externalCombinedText,updateExternalPreview,state:()=>clone({draft,saved,pending,client,operation,templates,scope:[...scope],buffers,proposal,incoming,records,scenario,agent,modelSelection:[...modelSelection],modelExpanded:[...modelExpanded],modelEdits,channelDetail,templateDetail,templateScratch,templateSelection:[...templateSelection],templateListVersions,templateHistoryView,externalTask,externalTasks:[...externalTasks.values()],externalBatch,editorSection,editorNavCollapsed,channelSection,channelNavCollapsed,channelConnections,assistantOpen,assistantMaximized,assistantInputs,conversation,assistantTask,updateScope,updateRun,updateBatches,confirmedConfigurations,restoration,nodePickerChannel:nodePicker?.pid||null,nodeSpeedResults,nodeSpeedRuns,nodeSpeedScene}),templateHeadingState:()=>clone(templateHeadingState()),agentChoices,agentInfo:selection=>clone(agentInfo(selection)),versionText,refText,versionProtectionReasons,checkTemplateUpdates,reviewTemplateUpdates,openTemplateUpdate,templateRecovery,confirmTemplateUse,scene,setNodeSpeedScene,commitModelPatches,modelTargets:()=>modelTargets().map(m=>m.key),readQuick,stagedModelEdits,quickConfig,stagedChannelConnections,projection:()=>projection(),routePlan,resolveRoute:(pid,key,policy=draft)=>{const p=policy.providers.find(p=>p.id===pid);return resolveRoute(p,p.models.find(m=>m.key===key),policy);},resolve:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return resolve(p,p.models.find(m=>m.key===key));},templateMatches:(tid,modelId,pid='newapi',n)=>{const p=draft.providers.find(p=>p.id===pid);return templateMatches(templates.find(t=>t.id===tid),{id:modelId},p,n?version(tid,n):null);},templateResolution:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return templateResolution(p,p.models.find(m=>m.key===key));},render};
- if(typeof MutationObserver!=='undefined'){new MutationObserver(()=>{const route=document.documentElement.dataset.route;if(route&&route!=='models'){closeNodePicker();$('#mpAssistantHost').hidden=true;}else {$('#mpAssistantHost').hidden=false;syncDetailSection();renderAssistant();}}).observe(document.documentElement,{attributes:true,attributeFilter:['data-route','data-effects','data-theme']});}
+ window.modelPrototype={applyAgentDemo,openExternalTask,receiveExternalSubmission,externalTaskPack,externalSample,externalCombinedText,updateExternalPreview,state:()=>clone({draft,saved,pending,client,operation,templates,scope:[...scope],buffers,proposal,incoming,records,scenario,agent,modelSelection:[...modelSelection],modelExpanded:[...modelExpanded],modelEdits,channelDetail,templateDetail,templateScratch,templateSelection:[...templateSelection],templateListVersions,templateHistoryView,externalTask,externalTasks:[...externalTasks.values()],externalBatch,editorSection,editorNavCollapsed,channelSection,channelNavCollapsed,channelConnections,assistantOpen,assistantMaximized,assistantInputs,conversation,assistantTask,updateScope,updateRun,updateBatches,confirmedConfigurations,restoration,nodePickerChannel:nodePicker?.pid||null,nodeSpeedResults,nodeSpeedRuns,nodeSpeedScene,discoveryResults}),templateHeadingState:()=>clone(templateHeadingState()),agentChoices,agentInfo:selection=>clone(agentInfo(selection)),versionText,refText,versionProtectionReasons,checkTemplateUpdates,reviewTemplateUpdates,openTemplateUpdate,templateRecovery,confirmTemplateUse,scene,setNodeSpeedScene,commitModelPatches,modelTargets:()=>modelTargets().map(m=>m.key),readQuick,stagedModelEdits,quickConfig,stagedChannelConnections,projection:()=>projection(),routePlan,resolveRoute:(pid,key,policy=draft)=>{const p=policy.providers.find(p=>p.id===pid);return resolveRoute(p,p.models.find(m=>m.key===key),policy);},resolve:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return resolve(p,p.models.find(m=>m.key===key));},templateMatches:(tid,modelId,pid='newapi',n)=>{const p=draft.providers.find(p=>p.id===pid);return templateMatches(templates.find(t=>t.id===tid),{id:modelId},p,n?version(tid,n):null);},templateResolution:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return templateResolution(p,p.models.find(m=>m.key===key));},render};
+ if(typeof MutationObserver!=='undefined'){new MutationObserver(()=>{const route=document.documentElement.dataset.route;if(route&&route!=='models'){closeNodePicker();for(const b of Object.values(channelConnections))b.keyVisible=false;const key=$('#mpChannelInline-key'),eye=$('[data-mp=toggle-channel-key]');if(key)key.type='password';if(eye){eye.setAttribute('aria-pressed','false');eye.setAttribute('aria-label','显示 Key');eye.title='显示 Key';}$('#mpAssistantHost').hidden=true;}else {$('#mpAssistantHost').hidden=false;syncDetailSection();renderAssistant();}}).observe(document.documentElement,{attributes:true,attributeFilter:['data-route','data-effects','data-theme']});}
  render();
 })();

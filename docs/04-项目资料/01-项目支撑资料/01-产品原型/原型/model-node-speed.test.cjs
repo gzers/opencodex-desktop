@@ -37,8 +37,7 @@ test('未确认认证阻止测速；测速更新不重建未保存的连接输�
 });
 test('共用Key更换后旧测速失效；一键结果不写入渠道JSON或保存记录',()=>{
  const h=make();h.click('edit-provider',{id:'newapi'});h.click('node-speed-all',{channel:'newapi'});h.drain();assert.equal(result(h,'primary').status,'success');h.event('input','[data-channel-config]',{channelConfig:'key'},'demo-replacement');h.click('apply-channel-connection');
- // 认证替换需重新确认模型清单；使用手动模型完成现有流程。
- h.nodes.get('mpChannelManual').value='test-model';h.click('channel-manual');h.event('change','[data-channel-model]',{channelModel:'test-model'},'',true);h.runConfirm();h.proto.render();assert.match(h.page(),/data-speed-status="untested"/);assert.doesNotMatch(JSON.stringify(h.state().draft),/nodeSpeed|finishedAt|demo-replacement/);
+ h.proto.render();assert.match(h.page(),/data-speed-status="untested"/);assert.doesNotMatch(JSON.stringify(h.state().draft),/nodeSpeed|finishedAt|demo-replacement/);
 });
 test('部分完成后停止保留已完成结果，未完成项不计为完成，也不会被晚回覆盖',()=>{
  const h=make();h.click('edit-provider',{id:'newapi'});add(h,'第三节点','https://third.example.com/v1');const queue=[];h.context.setTimeout=fn=>queue.push(fn);h.click('node-speed-all',{channel:'newapi'});queue.shift()();assert.equal(result(h,'primary').status,'success');h.click('node-speed-stop',{channel:'newapi'});
@@ -47,4 +46,40 @@ test('部分完成后停止保留已完成结果，未完成项不计为完成�
 test('删除后重建同ID同URL渠道也不复用旧认证的测速结果或晚回',()=>{
  const h=make();h.click('node-speed-current',{channel:'newapi'});h.click('delete-provider',{id:'newapi'});h.runConfirm();h.click('new-channel');for(const [id,value] of [['mpChannelName','NewApi 重建'],['mpChannelId','newapi'],['mpChannelURL','https://newapi.example.com/v1'],['mpChannelKey','new-demo-key']])h.nodes.get(id).value=value;
  h.runConfirm();h.nodes.get('mpChannelManual').value='test-model';h.click('channel-manual');h.event('change','[data-channel-model]',{channelModel:'test-model'},'',true);h.runConfirm();h.drain();assert.equal(h.state().nodeSpeedRuns.newapi.items[0].status,'stale');h.proto.render();assert.match(h.page(),/data-speed-status="untested"/);
+});
+
+/* 仅检查 mock 路径行为；没有真实测速证据。 */
+function configure(h,url,protocol='Anthropic'){
+ h.click('edit-provider',{id:'newapi'});h.event('change','[data-channel-config]',{channelConfig:'protocol'},protocol);h.click('apply-channel-connection');
+ h.click('edit-node',{id:'primary'});h.nodes.get('mpServiceNodeName').value='默认节点';h.nodes.get('mpServiceNodeURL').value=url;h.runConfirm();
+}
+test('根 / 版本 / 完整清单 / 自定义前缀共用自动补齐，测速与获取清单保持同一结果且不改基址',()=>{
+ for(const [protocol,input,path] of [
+  ['Anthropic','https://service.example','/v1/models'],
+  ['Responses','https://service.example/v1/','/v1/models'],
+  ['Chat','https://service.example/v1/models','/v1/models'],
+  ['Anthropic','https://service.example/proxy/v1','/proxy/v1/models'],
+  ['Responses','https://service.example/proxy','/proxy/v1/models'],
+  ['Google','https://service.example','/v1beta/models'],
+  ['Ollama','https://service.example','/api/tags']
+ ]){
+  const h=make();configure(h,input,protocol);const savedURL=h.state().draft.providers[0].nodes[0].url;
+  h.click('node-speed-one',{channel:'newapi',id:'primary'});h.drain();assert.equal(result(h,'primary').status,'success');assert.equal(result(h,'primary').path,'https://service.example'+path);assert.equal(result(h,'primary').count,8);
+  h.click('refresh');h.drain();assert.equal(h.state().discoveryResults.newapi.path,result(h,'primary').path);assert.equal(h.state().draft.providers[0].nodes[0].url,savedURL);
+  assert.doesNotMatch(result(h,'primary').path,/v1\/v1|models\/models/);
+ }
+});
+test('HTML 与路径不存在有限同源回退，保留代理前缀；只得到有效清单才有耗时',()=>{
+ for(const [scene,mode] of [['discovery-html','html-fallback'],['discovery-path','path-fallback']]){
+  const h=make();h.proto.scene(scene);configure(h,'https://service.example:8443/proxy/v1');h.proto.setNodeSpeedScene(mode);
+  h.click('node-speed-one',{channel:'newapi',id:'primary'});h.drain();const r=result(h,'primary');assert.equal(r.status,'success');assert.equal(r.attemptedPaths.length,2);
+  assert.ok(r.attemptedPaths.every(p=>p.startsWith('https://service.example:8443/proxy/')));assert.equal(r.path,'https://service.example:8443/proxy/models');assert.ok(r.ms>0);
+  h.click('refresh');h.drain();assert.deepEqual(h.state().discoveryResults.newapi.attemptedPaths,r.attemptedPaths);
+ }
+});
+test('认证 / DNS / TLS / 超时 / 无效清单不重试路径且不伪造耗时',()=>{
+ for(const mode of ['auth','dns','tls','timeout','invalid-list']){
+  const h=make();h.proto.setNodeSpeedScene(mode);h.click('node-speed-one',{channel:'newapi',id:'primary'});h.drain();const r=result(h,'primary');
+  assert.notEqual(r.status,'success');assert.equal(r.ms,undefined);assert.equal(r.attemptedPaths.length,1);assert.ok(r.reason);
+ }
 });

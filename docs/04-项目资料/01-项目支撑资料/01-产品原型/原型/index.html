@@ -139,7 +139,8 @@ button{font:inherit}
 .window{
   width:100%;height:min(var(--win-h),calc(100vh - 48px));min-width:0;min-height:600px;
   display:grid;grid-template-columns:var(--side-w) minmax(0,1fr);grid-template-rows:28px minmax(0,1fr);
-  border-radius:14px;overflow:hidden;
+  /* 裁剪外壳而不建立隐藏滚动区，避免保存弹窗聚焦把整个软件窗口推离原位。 */
+  border-radius:14px;overflow:hidden;overflow:clip;
   /* 底层就一整块：菜单、标题栏那条通行区、内容四周，全是同一个底面（菜单不再自带底色）。 */
   background:var(--glass-rail);border:1px solid color-mix(in srgb,var(--text) 10%,transparent);
   box-shadow:0 24px 70px #00000026,0 6px 18px #00000017;position:relative;isolation:isolate;
@@ -1686,7 +1687,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="../overview-dual.css">
 <link rel="stylesheet" href="../proto-controls.css">
 <link rel="stylesheet" href="action-menu.css?v=20261014-channel-actions">
-<link rel="stylesheet" href="model-config.css?v=20261015-external-single-dialog">
+<link rel="stylesheet" href="model-config.css?v=20261027-0214">
 <link rel="stylesheet" href="sync-config.css?v=4">
 <link rel="stylesheet" href="conversation-config.css?v=20261015-prototype-version">
 <link rel="stylesheet" href="extension-manager.css?v=20261014-col-extensions">
@@ -3369,7 +3370,7 @@ ocx update</code></pre>
       </div>
       <p class="pctl-hint">只切「卸载」弹窗里备份检测的 mock：影响提示文案与「卸载前自动备份」默认勾选。<b>无备份只提醒、不阻断卸载</b>；只切 mock，不写盘、不删任何文件。</p>
     </div>
-<details class="proto-card" id="mpDemoCard" data-proto-contexts="models" open><summary>模型配置 · 演示场景</summary><div class="pctl-grid"><button type="button" data-mp="scene" data-scene="normal">正常</button><button type="button" data-mp="scene" data-scene="over-budget" data-proto-contexts="models:channels">超预算</button><button type="button" data-mp="scene" data-scene="pending-draft">待重启＋草稿</button><button type="button" data-mp="scene" data-scene="discovery-fail" data-proto-contexts="models:channels">发现失败</button><button type="button" data-mp="scene" data-scene="discovery-empty" data-proto-contexts="models:channels">发现空清单</button><button type="button" data-mp="scene" data-scene="discovery-unauthorized" data-proto-contexts="models:channels">认证失败</button><button type="button" data-mp="scene" data-scene="discovery-unsupported" data-proto-contexts="models:channels">无清单接口</button><button type="button" data-mp="scene" data-scene="backup-fail">备份失败</button><button type="button" data-mp="scene" data-scene="partial">部分写入</button><button type="button" data-mp="scene" data-scene="timeout">写入超时</button><button type="button" data-mp="scene" data-scene="drift">基准漂移</button><button type="button" data-mp="scene" data-scene="late-generation" data-proto-contexts="models:templates">生成晚回</button><button type="button" data-mp="scene" data-scene="incoming">同步候选</button><button type="button" data-mp="scene" data-scene="template-history" data-proto-contexts="models:templates">多版本与清理</button><button type="button" data-mp="scene" data-scene="update-none" data-proto-contexts="models:templates">资料无变化</button><button type="button" data-mp="scene" data-scene="update-fail" data-proto-contexts="models:templates">检索失败</button><button type="button" data-mp="scene" data-scene="update-conflict" data-proto-contexts="models:templates">人工冲突</button><button type="button" data-mp="scene" data-scene="update-late" data-proto-contexts="models:templates">更新晚回</button></div><p class="pctl-hint">只改变内存演示状态；不会调用 A6api、搜索、CLI 或运行写入。</p></details>
+<details class="proto-card" id="mpDemoCard" data-proto-contexts="models" open><summary>模型配置 · 演示场景</summary><div class="pctl-grid"><button type="button" data-mp="scene" data-scene="normal">正常</button><button type="button" data-mp="scene" data-scene="over-budget" data-proto-contexts="models:channels">超预算</button><button type="button" data-mp="scene" data-scene="pending-draft">历史成功＋新草稿</button><button type="button" data-mp="scene" data-scene="discovery-fail" data-proto-contexts="models:channels">发现失败</button><button type="button" data-mp="scene" data-scene="discovery-empty" data-proto-contexts="models:channels">发现空清单</button><button type="button" data-mp="scene" data-scene="discovery-unauthorized" data-proto-contexts="models:channels">认证失败</button><button type="button" data-mp="scene" data-scene="discovery-unsupported" data-proto-contexts="models:channels">无清单接口</button><button type="button" data-mp="scene" data-scene="backup-fail">备份失败</button><button type="button" data-mp="scene" data-scene="partial">写入失败</button><button type="button" data-mp="scene" data-scene="timeout">写入超时</button><button type="button" data-mp="scene" data-scene="drift">基准漂移</button><button type="button" data-mp="scene" data-scene="late-generation" data-proto-contexts="models:templates">生成晚回</button><button type="button" data-mp="scene" data-scene="incoming">同步候选</button><button type="button" data-mp="scene" data-scene="template-history" data-proto-contexts="models:templates">多版本与清理</button><button type="button" data-mp="scene" data-scene="update-none" data-proto-contexts="models:templates">资料无变化</button><button type="button" data-mp="scene" data-scene="update-fail" data-proto-contexts="models:templates">检索失败</button><button type="button" data-mp="scene" data-scene="update-conflict" data-proto-contexts="models:templates">人工冲突</button><button type="button" data-mp="scene" data-scene="update-late" data-proto-contexts="models:templates">更新晚回</button></div><p class="pctl-hint">只改变内存演示状态；不会调用 A6api、搜索、CLI 或运行写入。</p></details>
 <details class="proto-card" id="mpExternalTaskDemo" data-proto-contexts="models:templates" open><summary>外部任务 · 提交演示</summary><div class="pctl-grid"><button type="button" data-mp="external-context">打开当前任务</button><button type="button" data-mp="external-preflight">模拟校验</button><button type="button" data-mp="external-submit">模拟提交 / 重试</button><button type="button" data-mp="external-submit" data-scene="invalid">模拟字段错误</button></div><p class="pctl-hint">先从弹窗一次复制完整任务。仅演示读取契约、校验、软件分配版本与回执；不调用外部Agent、接口或文件。待处理结果经已登记事件进入右上角通知。</p></details>
 <details class="proto-card" id="mpNodeSpeedDemo" data-proto-contexts="models:channels" open><summary>节点测速 · 演示结果</summary><div class="pctl-grid"><button type="button" data-mp="node-speed-scene" data-scene="normal">正常</button><button type="button" data-mp="node-speed-scene" data-scene="mixed">部分失败</button><button type="button" data-mp="node-speed-scene" data-scene="timeout">超时</button></div><p class="pctl-hint">只影响下一次测速的模拟结果，保留渠道草稿；不联网、不使用真实 Key，也不自动切换节点。</p></details>
     <div class="proto-card" id="logDemoCard" data-proto-contexts="logs:logs">
@@ -6021,20 +6022,20 @@ document.addEventListener('click',event=>{
         '<p class="modal-warning"><strong>注意：</strong><span>默认只清理已解决通知；继续将连同未处理通知一起清理</span></p>'+
         '将清空通知中心与通知历史，包括 '+openItems.length+' 条未解决通知（冲突、失败、接管等）。此操作不可撤销。',
         '连同未处理一起清理',()=>{
-          notifications.forEach(item=>{item.deleted=true});
+          notifications.forEach(softDeleteNotification);
           renderNotifications();
           toast('原型模拟：已清理全部 '+notifications.length+' 条通知（含未处理）。');
         });
     }else{
       openModal('清理已解决通知','将清理全部已解决通知；当前没有未处理通知。','清理',()=>{
-        notifications.forEach(item=>{if(item.resolved)item.deleted=true});
+        notifications.filter(item=>item.resolved).forEach(softDeleteNotification);
         renderNotifications();
         toast('原型模拟：已清理已解决通知。');
       });
     }
   }else if(action==='clear-read-notifications'){
     openModal('清理已读通知','仅清空已读通知，未读通知保留在通知中心。','清理',()=>{
-      notifications.forEach(item=>{if(item.read)item.deleted=true});
+      notifications.filter(item=>item.read).forEach(softDeleteNotification);
       renderNotifications();
       toast('原型模拟：已读通知已清理。');
     });
@@ -6145,13 +6146,14 @@ function resolveNotification(id){
   toast('原型模拟：已标记「'+item.title+'」为已解决。');
 }
 
+function softDeleteNotification(item){
+  item.deleted=true;clearTask(item.id);window.hideModelSaveNotification?.(item.id);
+}
 // 单条删除：软删除，通知中心与通知历史共用同一份数据。
 function deleteNotification(id){
   const item=notifications.find(entry=>entry.id===id);
   if(!item) return;
-  item.deleted=true;
-  if(item.eventId?.startsWith('component.demo.'))clearTask(item.id);
-  if(item.eventId==='model.policy.save'){modelSaveHidden.add(item.id);clearTask(item.id);}
+  softDeleteNotification(item);
   renderNotifications();
   closeNotificationPanel();
   toast('原型模拟：已删除通知「'+item.title+'」。');
@@ -6243,7 +6245,7 @@ function openModal(title,body,confirmText,handler,opts){
   modalMask.style.display='flex';
   // 键盘可达性：记录来源焦点，打开后把焦点移入弹窗，关闭后归还。
   window.__modalReturnFocus=document.activeElement;
-  requestAnimationFrame(()=>{window.prototypeAnnotations?.refresh();(!modalConfirm.hidden?modalConfirm:modalCancel).focus();});
+  requestAnimationFrame(()=>{window.prototypeAnnotations?.refresh();(!modalConfirm.hidden?modalConfirm:modalCancel).focus({preventScroll:true});});
 }
 function closeModal(){
   window.prototypeSelect?.close();
@@ -6266,7 +6268,7 @@ function closeModal(){
   window.__extDetailRow=null;
   const back=window.__modalReturnFocus;
   window.__modalReturnFocus=null;
-  if(back&&typeof back.focus==='function'){try{back.focus()}catch(e){}}
+  if(back&&typeof back.focus==='function'){try{back.focus({preventScroll:true})}catch(e){}}
   if(typeof window.__modalOnClose==='function'){const hook=window.__modalOnClose;window.__modalOnClose=null;try{hook()}catch(e){}}
 }
 // 遮罩点击只允许取消，不得确认；Escape 等价于取消。
@@ -6383,14 +6385,13 @@ document.addEventListener('click',event=>{
   }
 });
 document.getElementById('notificationPurge').onclick=()=>{
-  const live=notifications.filter(item=>!item.deleted);
+  const live=liveNotifications();
   if(!live.length){toast('当前没有可清理的通知。');return;}
   const pending=live.filter(item=>!item.resolved).length;
-  openModal({
-    title:'清理全部通知',
-    body:'<p class="modal-lead">将清理全部 '+live.length+' 条通知'+(pending?'（其中 '+pending+' 条未处理）':'')+'。清理是软删除，历史判定依据保留。</p>',
-    confirmLabel:'确认清理',
-    onConfirm:()=>{notifications.forEach(item=>{item.deleted=true;});renderNotifications();closeModal();toast('全部通知已清理。');}
+  closeNotificationPanel();
+  openModal('清理全部通知','<p class="modal-lead">将清理全部 '+live.length+' 条通知'+(pending?'（其中 '+pending+' 条未处理）':'')+'。</p>','确认清理',()=>{
+    live.forEach(softDeleteNotification);
+    renderNotifications();closeModal();toast('全部通知已清理。');
   });
 };
 document.getElementById('notificationHistoryLink').onclick=()=>{
@@ -7165,7 +7166,7 @@ function scheduleTaskCollapse(card){
   const key=card.dataset.taskNotification||'';
   if(!key) return;
   clearTimeout(taskTimers.get(key));
-  taskTimers.set(key,setTimeout(()=>{card.remove();syncNotifHost();reopenHidden();},TASK_TERMINAL_TTL));
+  taskTimers.set(key,setTimeout(()=>{taskTimers.delete(key);window.hideModelSaveNotification?.(key);card.remove();syncNotifHost();},TASK_TERMINAL_TTL));
 }
 /* 超出同屏上限时先收起（移除）最老的已完成卡，运行中的不删。 */
 function pretaskBudget(host,keep){
@@ -7191,7 +7192,7 @@ function showTask(cfg){
   const key=cfg.notificationId||'';
   const markup='<div class="task-card'+(cfg.running===false?' is-complete':'')+'"'+(key?' data-task-notification="'+logEsc(key)+'"':'')+'><div class="tc-head">'+(mark?'<span class="tc-result '+logEsc(cfg.kind||'info')+'">'+mark+'</span>':'<span class="tc-spin"></span>')+'<h4>'+logEsc(cfg.title)+'</h4>'+
     '<button type="button" class="notify-min" data-collapse="task" title="收起到铃铛" aria-label="收起到铃铛">'+MIN_ICON+'</button></div>'+
-    (cfg.phase?'<p class="tc-phase">'+logEsc(cfg.phase)+'</p>':'')+'<ul class="task-steps">'+steps+'</ul>'+
+    (cfg.phase?'<p class="tc-phase">'+logEsc(cfg.phase)+'</p>':'')+(steps?'<ul class="task-steps">'+steps+'</ul>':'')+
     (acts.length?'<div class="tc-acts">'+acts.map((a,i)=>'<button type="button" class="btn'+(a[1]==='cancel'?' cancel':(i?' ghost':''))+'" data-task-act="'+logEsc(a[1])+'" data-task-label="'+logEsc(a[0])+'">'+logEsc(a[0])+'</button>').join('')+'</div>':'')+'</div>';
   const mergeKey=taskKeyOf(cfg);
   const existing=[...host.querySelectorAll('.task-card')].find(card=>(card.dataset.taskNotification||'')===key);
@@ -7225,49 +7226,44 @@ function showTask(cfg){
   }
   const card=(host.querySelector('[data-task-notification="'+key+'"]'))||host.lastElementChild;
   if(card&&cfg.running===false)scheduleTaskCollapse(card);
+  if(card&&cfg.focusAction&&document.getElementById('modalMask')?.style.display!=='flex')card.querySelector('[data-task-act="'+cfg.focusAction+'"]')?.focus({preventScroll:true});
   if(!key)host.dataset.op=cfg.op||'';
   host.classList.toggle('stacked',document.getElementById('toastEl').classList.contains('show'));
   syncNotifHost();
 }
 function clearTask(notificationId=''){
   const host=document.getElementById('taskHost');
-  if(host)[...host.querySelectorAll('.task-card')].filter(card=>(card.dataset.taskNotification||'')===notificationId).forEach(card=>{clearTimeout(taskTimers.get(notificationId));card.remove();});
+  clearTimeout(taskTimers.get(notificationId));taskTimers.delete(notificationId);
+  if(host)[...host.querySelectorAll('.task-card')].filter(card=>(card.dataset.taskNotification||'')===notificationId).forEach(card=>card.remove());
   syncNotifHost();
-}
-/* 收起后给一个显式展开入口；不再靠「点铃铛」偷偷全部展开。 */
-function reopenHidden(){
-  const host=document.getElementById('taskHost');
-  const hint=document.getElementById('taskReopenHint');
-  if(!host||!hint) return;
-  hint.hidden=true;
 }
 // 模型保存注册到既有通知实体及壳层任务宿主；收起仅是视图状态，不取消任务或解决通知。
 const modelSaveHidden=new Set();
-const MODEL_SAVE_PHASES=['校验','备份','写入','核对目录','发布成功快照'];
+const MODEL_SAVE_PHASES=['备份','原子写入'];
 const MODEL_SAVE_STATES={
   running:['正在保存模型配置','info',false],
-  success:['已写入 · 重启 Codex 后生效','warning',false],
-  confirmed:['模型配置已由用户确认','info',true],
+  written:['已写入','success',true],
+  completed:['已写入','success',true],
   failed:['模型配置保存失败','danger',false],
-  timeout:['模型配置保存结果待核对','warning',false],
   stopped:['模型配置保存已取消','info',true],
-  uncertain:['已停止后续步骤 · 结果待核对','warning',false],
-  verified:['已核对 · 草稿保留，需重新保存','info',true],
   superseded:['已由后续保存替代','info',true]
 };
-function renderModelSaveTask(item){
-  if(item.deleted||modelSaveHidden.has(item.id))return;
+function renderModelSaveTask(item,focus=false){
+  if(item.deleted||modelSaveHidden.has(item.id)||['completed','superseded'].includes(item.modelSave.state))return;
   const task=item.modelSave,active=window.modelPrototype?.state().operation?.id===task.id;
-  const running=task.state==='running',failed=['failed','timeout','uncertain'].includes(task.state);
-  const completed=failed?Math.min(task.step,2):task.step;
-  const steps=MODEL_SAVE_PHASES.map((label,index)=>[label,index<completed?'done':running&&index===task.step?'active':failed&&index===completed?'failed':'pending']);
-  const acts=!active?[]:running?[[task.step<2?'取消保存':'停止后续步骤','model-stop']]:failed?[['核对实际结果','model-verify']]:task.state==='success'?[['立即重启 Codex','model-restart'],['稍后','model-later']]:[];
-  showTask({notificationId:item.id,title:item.title,phase:item.detail,steps,acts,running,kind:['stopped','superseded'].includes(task.state)?'neutral':item.kind});
+  if(!active)return;
+  const running=task.state==='running',failed=task.state==='failed',written=task.state==='written';
+  const completed=failed?Math.max(0,task.step-1):task.step;
+  const steps=written?[]:MODEL_SAVE_PHASES.map((label,index)=>[label,index<completed?'done':running&&index===task.step?'active':failed&&index===completed?'failed':'pending']);
+  const acts=running?[['取消保存','model-stop']]:written?[['立即重启 Codex','model-restart'],['稍后','model-later']]:[];
+  showTask({notificationId:item.id,title:item.title,phase:item.detail,steps,acts,running,kind:task.state==='stopped'?'neutral':item.kind,focusAction:focus&&written?'model-restart':''});
 }
-window.hideModelSaveNotification=id=>{if(id)modelSaveHidden.add(id);};
+window.hideModelSaveNotification=id=>{if(id?.startsWith('model-policy-save:'))modelSaveHidden.add(id);};
 window.openModelSaveNotification=id=>{
   const item=notifications.find(n=>n.id===id&&!n.deleted&&n.eventId==='model.policy.save');if(!item)return;
-  item.read=true;modelSaveHidden.delete(id);closeNotificationPanel();renderNotifications();renderModelSaveTask(item);
+  item.read=true;closeNotificationPanel();renderNotifications();
+  if(['completed','superseded'].includes(item.modelSave.state))return;
+  modelSaveHidden.delete(id);renderModelSaveTask(item,true);
 };
 // 保存确认被拦下（基准变化 / 待确认编辑 / 超限 / 校验错误）：登记为通知，草稿保留。
 window.modelSaveBlockedBridge=function(payload){
@@ -7286,28 +7282,30 @@ window.modelSaveBlockedBridge=function(payload){
 window.modelSaveNotificationBridge=function(snapshot){
   const spec=window.MaintenanceEvents.events.find(event=>event.id==='model.policy.save');
   if(!snapshot){
-    notifications.filter(item=>item.eventId===spec.id).forEach(item=>{item.deleted=true;modelSaveHidden.delete(item.id);clearTask(item.id);});
+    notifications.filter(item=>item.eventId===spec.id).forEach(item=>{modelSaveHidden.add(item.id);clearTask(item.id);});
     renderNotifications();return;
   }
-  const {id,status,step,pending}=snapshot;
-  if(!Number.isSafeInteger(id)||!Number.isInteger(step)||step<0||step>5||!['running','success','failed','timeout','stopped','verified'].includes(status))return;
-  const state=status==='success'?(pending?'success':'confirmed'):status==='stopped'&&step>=2?'uncertain':status;
+  const {id,status}=snapshot,step=Math.min(snapshot.step,2);
+  if(!Number.isSafeInteger(id)||!Number.isInteger(snapshot.step)||snapshot.step<0||snapshot.step>5)return;
+  // 旧成功 / 已确认 / 待重启只保留完成历史，不恢复旧任务或客户端核对。
+  const state=['success','confirmed','pending','verified'].includes(status)?'completed':['timeout','uncertain'].includes(status)?'failed':status;
+  if(!Object.hasOwn(MODEL_SAVE_STATES,state))return;
   const key='model-policy-save:'+id,revision=state+':'+step;
   let item=notifications.find(entry=>entry.id===key);
-  if(item?.modelSave.revision===revision)return;
+  if(item?.modelSave.revision===revision||item?.modelSave.state==='completed')return;
   const [title,kind,resolved]=MODEL_SAVE_STATES[state];
-  const detail=state==='running'?'全渠道保存 · '+MODEL_SAVE_PHASES[Math.min(step,4)]+'…':state==='success'?'运行目录已核对；请手动重启 Codex 后重新检查客户端。':state==='confirmed'?'用户目视确认；不作为自动加载证据。':state==='failed'?(step<2?'备份未成功，未写入，草稿保留。':'可能已有部分写入，先核对实际结果。'):state==='timeout'||state==='uncertain'?'可能已有写入，先核对实际结果，不重复提交。':state==='stopped'?'未写入，草稿保留。':'已完成核对，草稿保留。';
+  const detail=state==='running'?'全渠道保存 · '+MODEL_SAVE_PHASES[Math.min(step,1)]+'…':state==='failed'?'保存未完成，原文件与草稿保留。':state==='stopped'?'未写入，草稿保留。':'';
   if(!item){
-    notifications.filter(other=>other.eventId===spec.id).forEach(other=>{modelSaveHidden.add(other.id);clearTask(other.id);});
+    notifications.filter(other=>other.eventId===spec.id).forEach(other=>{
+      modelSaveHidden.add(other.id);clearTask(other.id);
+      if(other.modelSave.state==='written')Object.assign(other,{title:'已写入',detail:'',read:true,resolved:true,modelSave:{...other.modelSave,state:'completed'}});
+    });
     item={id:key,eventId:spec.id,cat:spec.category,op:key,dedupe:key,read:false,resolved:false,deleted:false};notifications.unshift(item);
-  }
-  else if(item.modelSave.state!==state)item.read=false;
+  }else if(item.modelSave.state!==state)item.read=false;
   Object.assign(item,{title,kind,detail,resolved,time:clockLabel(),modelSave:{id,state,step,revision}});
   if(resolved)item.resolvedAt=item.time;
-  if(state==='success')notifications.filter(other=>other.eventId===spec.id&&other!==item&&other.modelSave.state==='success').forEach(other=>{
-    other.modelSave.state='superseded';other.title=MODEL_SAVE_STATES.superseded[0];other.detail='以最新成功保存的配置为准。';other.kind='info';other.resolved=true;other.resolvedAt=item.time;renderModelSaveTask(other);
-  });
-  renderNotifications();renderModelSaveTask(item);
+  if(state==='completed'){item.read=true;modelSaveHidden.add(key);clearTask(key);}
+  renderNotifications();renderModelSaveTask(item,state==='written');
 };
 // 任务卡动作：原型只做 mock 反馈，不执行真实副作用。
 document.getElementById('taskHost').addEventListener('click',event=>{
@@ -7732,7 +7730,7 @@ window.addEventListener('prototype:data-paths',event=>{
 <script src="model-template-summary.js?v=20261014-change-summary-v2"></script>
 <script src="component-views.js?v=20261015"></script>
 <script src="model-external-notification.js?v=20261015-external-single-dialog"></script>
-<script src="model-config.js?v=20261015-prototype-note-boundary"></script>
+<script src="model-config.js?v=20261027-0214"></script>
 <script src="conversation-config.js?v=20261015-prototype-version"></script>
 <script src="extension-manager.js?v=20261014-col-extensions"></script>
 <script src="sync-account-capabilities.js?v=20261020-multi-account-platform"></script>
