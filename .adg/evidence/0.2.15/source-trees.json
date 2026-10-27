@@ -20,7 +20,7 @@
     "apps/desktop/ui/src": "f71c466d02bf556ee26763993f8768079b1852c2",
     "apps/desktop/tauri/src": "c2693b8ca59d659a10d26666dedf8a3e964d2224"
   },
-  "note": "Final gate now uses750c9f35. Initial accepted source and cancelled unpublished tag remain phase evidence; final merge/tag identity will be recorded after PR24.",
+  "note": "Final gate750c9f35, PR24CI40457220770 and final tag2e687a60 use the same code tree. Initial candidate was withdrawn before assets/publication.",
   "postGateCorrection": {
     "commit": "aa567e7a431ce245f5ba20777c307f086df832fe",
     "paths": [
@@ -42,13 +42,13 @@
       "ci-macos-backend-summary.json"
     ]
   },
-  "headTree": "24e7330cc1f9ee7b72b624de3ebffcd2170ce546",
+  "headTree": "b3be1cd3a8910e61b8e65ec36ccd690516a1a580",
   "prCIMerge": {
     "commit": "564cd7a748a3c9a1087815554d2a91a7b3f487ec",
     "tree": "24e7330cc1f9ee7b72b624de3ebffcd2170ce546"
   },
-  "mergeCommit": "6a8e06c6ec87951f823ce50e179026bf089ac1be",
-  "mergeTree": "24e7330cc1f9ee7b72b624de3ebffcd2170ce546",
+  "mergeCommit": "2e687a60a9acebb3749f6b5abc1c2bdd243b5b8b",
+  "mergeTree": "b3be1cd3a8910e61b8e65ec36ccd690516a1a580",
   "tag": "v0.2.15",
   "ciAndTagTreesMatch": true,
   "noticeCorrection": {
@@ -67,5 +67,11 @@
       "migration-notice-clippy.log"
     ],
     "freshCI": 40457220770
-  }
+  },
+  "initialUnpublishedMerge": {
+    "commit": "6a8e06c6ec87951f823ce50e179026bf089ac1be",
+    "tree": "24e7330cc1f9ee7b72b624de3ebffcd2170ce546",
+    "releaseCancelled": 40455658537
+  },
+  "finalReleaseRun": 40460616784
 }

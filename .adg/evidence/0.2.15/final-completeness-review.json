@@ -18,8 +18,7 @@
     "scope": "six changed files: startup ordering, classification, stable dedupe, fixed content/privacy, existing protection/no UI change"
   },
   "stillPending": [
-    "fresh platform CI40457220770",
-    "tagged final installers",
+    "tagged final installers in Release40460616784",
     "updater signatures/public/stable verification"
   ],
   "notClaimed": [
@@ -28,5 +27,10 @@
     "physical active Codex restart",
     "OS signing/notarization",
     "all-provider/network/device combinations"
-  ]
+  ],
+  "finalPlatformCI": {
+    "run": 40457220770,
+    "result": "success",
+    "head": "750c9f35e0c9b0e57c694ecef1b5b90367c316f7"
+  }
 }

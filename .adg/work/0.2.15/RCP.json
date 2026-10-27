@@ -2,7 +2,7 @@
   "id": "RCP-OPENCODEX-0.2.15",
   "task_id": "TASK-OPENCODEX-0.2.15",
   "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-24.md",
-  "recorded_at": "2026-10-27T05:47:36.480200+00:00",
+  "recorded_at": "2026-10-27T06:21:54.054568+00:00",
   "code_commit": "750c9f35e0c9b0e57c694ecef1b5b90367c316f7",
   "result": "in_progress",
   "checks": [
@@ -53,7 +53,7 @@
     },
     {
       "name": "review:legacy-cleanup",
-      "status": "failed",
+      "status": "passed",
       "evidence": [
         ".adg/evidence/0.2.15/migration-tests.log",
         ".adg/evidence/0.2.15/legacy-dispositions.json",
@@ -65,7 +65,7 @@
         ".adg/evidence/0.2.15/migration-notice-tests.log",
         ".adg/evidence/0.2.15/migration-notice-upgrade.log"
       ],
-      "scope": "Startup fixed fault classification and existing bell delivery implemented in750c9f35,4 actual fault/silence persistence tests and22 migration cases passed; fresh platform CI40457220770 pending."
+      "scope": "Final750c9f35fault classification and existing-bell delivery passed4actualfault/silence tests,41registrychecks,22mac/21Windowsmigrationcases,completebackend1261andfinal5jobCI40457220770. No added UI or config writes."
     },
     {
       "name": "review:prototype",
@@ -90,7 +90,7 @@
         ".adg/evidence/0.2.15/windows-native/model-ui.json",
         ".adg/evidence/0.2.15/release-candidate-withdrawal.json"
       ],
-      "scope": "Correction PR24 CI40457220770 and full local gate running. Prior candidate release cancelled before public assets; rebuild unpublished0.2.15 after correction checks."
+      "scope": "Final5requiredCIjobs40457220770passed;PR24merged2e687a60;finalv0.2.15tagmatchesacceptedtree. AwaitRelease40460616784installers,3updater signatures and public/stable verification."
     }
   ],
   "limits": [
