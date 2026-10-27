@@ -31,12 +31,12 @@ test('测速晚回绑定节点地址，编辑URL后结果失效；重测只采�
  const h=make();h.click('edit-provider',{id:'newapi'});h.click('node-speed-one',{channel:'newapi',id:'primary'});h.click('edit-node',{id:'primary'});h.nodes.get('mpServiceNodeName').value='默认节点';h.nodes.get('mpServiceNodeURL').value='https://changed.example.com/v1';h.runConfirm();h.drain();assert.equal(h.state().nodeSpeedRuns.newapi.items[0].status,'stale');
  h.proto.render();assert.match(h.nodes.get('mpNodeSpeed-newapi-primary').innerHTML||h.page(),/data-speed-status="untested"/);h.click('node-speed-one',{channel:'newapi',id:'primary'});h.drain();assert.equal(result(h,'primary').status,'success');assert.match(result(h,'primary').fingerprint,/changed.example.com/);
 });
-test('未确认认证阻止测速；测速更新不重建未保存的连接输入或中断弹窗',()=>{
- const h=make();h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'未确认名字');h.click('node-speed-all',{channel:'newapi'});assert.equal(h.state().nodeSpeedRuns.newapi,undefined);h.click('reset-channel-connection');h.click('node-speed-all',{channel:'newapi'});
- h.event('input','[data-channel-config]',{channelConfig:'name'},'测试期间名字');const field=h.nodes.get('mpChannelInline-name');field.value='测试期间名字';h.click('save');const dialog=h.dialog();h.drain();assert.equal(h.nodes.get('mpChannelInline-name'),field);assert.equal(field.value,'测试期间名字');assert.equal(h.state().channelConnections.newapi.name,'测试期间名字');assert.equal(h.dialog(),dialog);assert.equal(h.nodes.get('modalMask').style.display,'flex');
+test('直接连接字段可测速，测速更新不重建输入也不执行保存',()=>{
+ const h=make();h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'测试期间名字');h.click('node-speed-all',{channel:'newapi'});assert.equal(h.state().nodeSpeedRuns.newapi.status,'running');
+ const field=h.nodes.get('mpChannelInline-name');field.value='测试期间名字';const saved=JSON.stringify(h.state().saved);h.drain();assert.equal(h.nodes.get('mpChannelInline-name'),field);assert.equal(field.value,'测试期间名字');assert.equal(p(h).name,'测试期间名字');assert.equal(JSON.stringify(h.state().saved),saved);assert.equal(h.state().operation,null);
 });
 test('共用Key更换后旧测速失效；一键结果不写入渠道JSON或保存记录',()=>{
- const h=make();h.click('edit-provider',{id:'newapi'});h.click('node-speed-all',{channel:'newapi'});h.drain();assert.equal(result(h,'primary').status,'success');h.event('input','[data-channel-config]',{channelConfig:'key'},'demo-replacement');h.click('apply-channel-connection');
+ const h=make();h.click('edit-provider',{id:'newapi'});h.click('node-speed-all',{channel:'newapi'});h.drain();assert.equal(result(h,'primary').status,'success');h.event('input','[data-channel-config]',{channelConfig:'key'},'demo-replacement');
  h.proto.render();assert.match(h.page(),/data-speed-status="untested"/);assert.doesNotMatch(JSON.stringify(h.state().draft),/nodeSpeed|finishedAt|demo-replacement/);
 });
 test('部分完成后停止保留已完成结果，未完成项不计为完成，也不会被晚回覆盖',()=>{
@@ -50,7 +50,7 @@ test('删除后重建同ID同URL渠道也不复用旧认证的测速结果或晚
 
 /* 仅检查 mock 路径行为；没有真实测速证据。 */
 function configure(h,url,protocol='Anthropic'){
- h.click('edit-provider',{id:'newapi'});h.event('change','[data-channel-config]',{channelConfig:'protocol'},protocol);h.click('apply-channel-connection');
+ h.click('edit-provider',{id:'newapi'});h.event('change','[data-channel-config]',{channelConfig:'protocol'},protocol);
  h.click('edit-node',{id:'primary'});h.nodes.get('mpServiceNodeName').value='默认节点';h.nodes.get('mpServiceNodeURL').value=url;h.runConfirm();
 }
 test('根 / 版本 / 完整清单 / 自定义前缀共用自动补齐，测速与获取清单保持同一结果且不改基址',()=>{

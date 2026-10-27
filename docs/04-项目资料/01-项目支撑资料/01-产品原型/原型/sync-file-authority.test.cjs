@@ -151,9 +151,15 @@ test('WebDAV 采用远端渠道真实进入当前草稿，保存确认前不改�
  }
 });
 
-for(const kind of ['connection','row','alias'])test(kind+' 未确认输入受到保护，采用失败不改草稿/文件/模版；处理输入后可重新采用',async t=>{
+test('连接字段直接进入编辑后，导入可合并独立名称，凭据重叠仍保留输入',async t=>{
+ const h=await setup(t);h.w.setRoute('models');h.click('[data-mp=edit-provider][data-id=newapi]');h.input('#mpChannelInline-name','independent-local-name');const saved=json(model(h).saved);
+ importPreview(h);h.click('#modalConfirm');assert.equal(sync(h).dialogKind,'');assert.equal(model(h).draft.providers[0].name,'independent-local-name');assert.equal(first(model(h).draft).naming.alias,'primary-model');assert.equal(json(model(h).saved),saved);assert.equal(model(h).operation,null);
+ h.w.setRoute('models');h.click('[data-mp=back-channels]');h.click('[data-mp=discard]');h.click('#modalConfirm');h.click('[data-mp=edit-provider][data-id=newapi]');h.input('#mpChannelInline-key','demo-local-edit-protected');const draft=json(model(h).draft);
+ importPreview(h,'encrypted');h.change('[data-sx-compare-credential="channel:newapi"]',true);h.click('#modalConfirm');assert.match(h.document.querySelector('#sxError').textContent,/重叠草稿/);assert.equal(json(model(h).draft),draft);assert.equal(json(model(h).saved),saved);assert.equal(model(h).operation,null);
+});
+
+for(const kind of ['row','alias'])test(kind+' 未确认输入受到保护，采用失败不改草稿/文件/模版；处理输入后可重新采用',async t=>{
  const h=await setup(t);h.w.setRoute('models');h.click('[data-mp=edit-provider][data-id=newapi]');
- if(kind==='connection')h.input('#mpChannelInline-name','unconfirmed-name');
  if(kind==='alias')h.input('[data-model-alias="newapi::0"]','unconfirmed-alias');
  if(kind==='row'){h.click('[data-mp=expand-model][data-id="newapi::0"]');h.change('[data-model-quick="newapi::0"] [data-quick-mode=context]','custom');}
  const before=model(h),saved=json(before.saved),draft=json(before.draft),templates=json(before.templates),connections=json(before.channelConnections),edits=json(before.modelEdits);
@@ -161,7 +167,6 @@ for(const kind of ['connection','row','alias'])test(kind+' 未确认输入受到
  assert.equal(json(model(h).saved),saved);assert.equal(json(model(h).draft),draft);assert.equal(json(model(h).templates),templates);assert.equal(json(model(h).channelConnections),connections);assert.equal(json(model(h).modelEdits),edits);
  assert.equal(model(h).operation,null);assert.equal(sync(h).channelAdoption,null);
  h.click('#modalCancel');h.w.setRoute('models');
- if(kind==='connection'){assert.equal(h.document.querySelector('#mpChannelInline-name').value,'unconfirmed-name');h.click('[data-mp=reset-channel-connection]');}
  if(kind==='row')h.click('[data-mp=reset-model-row][data-id="newapi::0"]');
  if(kind==='alias'){assert.equal(h.document.querySelector('[data-model-alias="newapi::0"]').value,'unconfirmed-alias');h.input('[data-model-alias="newapi::0"]','');}
  importPreview(h);h.click('#modalConfirm');assert.equal(sync(h).dialogKind,'');assert.equal(first(model(h).draft).naming.alias,'primary-model');

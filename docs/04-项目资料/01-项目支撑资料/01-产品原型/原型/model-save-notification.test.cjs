@@ -120,23 +120,18 @@ test('终态8秒自动收起后仅从铃铛查看，重渲染不重复提示',as
  h.click('#notificationBtn');assert.equal(h.document.querySelector(selector),null);assert.equal(h.document.querySelector('#taskReopenHint,.task-reopen'),null);noEffects(h);
 });
 
-test('Key 默认掩码 / 眼睛 / 离线只改Key保存 / 重开 / 空输入保持 / 明确清空；明文不进公开状态或记录',async t=>{
- const h=await make('#models');t.after(()=>h.dispose());const d=h.document,$=q=>d.querySelector(q);
+test('Key 显隐、离线详情保存并返回、空输入保持与明确清空沿同一内存保存链',async t=>{
+ const h=await make('#models');t.after(()=>h.dispose());const d=h.document,$=q=>d.querySelector(q),state=()=>h.w.modelPrototype.state();
+ const saved=async()=>{for(let i=0;i<120&&state().operation?.status==='running';i++)await h.wait(30);assert.equal(state().operation.status,'written');assert.equal(state().channelDetail,false);assert.notEqual($('#modalMask').style.display,'flex');};
  h.w.modelPrototype.scene('discovery-fail');h.click('[data-mp=edit-provider][data-id=newapi]');
- const original=$('#mpChannelInline-key').value,models=JSON.stringify(h.w.modelPrototype.state().draft.providers[0].models);assert.equal(original,'demo-newapi-key');assert.equal($('#mpChannelInline-key').type,'password');
- h.click('[data-mp=toggle-channel-key]');assert.equal($('#mpChannelInline-key').type,'text');assert.equal($('[data-mp=toggle-channel-key]').getAttribute('aria-pressed'),'true');
- h.click('[data-mp=toggle-channel-key]');assert.equal($('#mpChannelInline-key').type,'password');
- const replacement='demo-only-replaced<&"';h.input('#mpChannelInline-key',replacement);h.click('[data-mp=back-channels]');h.click('[data-mp=edit-provider][data-id=newapi]');
- assert.equal($('#mpChannelInline-key').value,replacement);assert.equal($('#mpChannelInline-key').type,'password');
- h.click('[data-mp=apply-channel-connection]');assert.equal($('#modalMask').style.display,'none');assert.equal(JSON.stringify(h.w.modelPrototype.state().draft.providers[0].models),models);
- h.click('#mpPolicySave');assert.match($('#modalBody').textContent,/替换 Key/);assert.equal($('#modalBody').textContent.includes(replacement),false);h.click('#modalConfirm');
- for(let i=0;i<120&&h.w.modelPrototype.state().operation.status==='running';i++)await h.wait(30);
- assert.equal(h.w.modelPrototype.state().operation.status,'written');h.click('[data-task-act=model-later]');
- h.click('[data-mp=back-channels]');h.click('[data-mp=edit-provider][data-id=newapi]');assert.equal($('#mpChannelInline-key').value,replacement);assert.equal($('#mpChannelInline-key').type,'password');
- h.input('#mpChannelInline-key','');h.click('[data-mp=apply-channel-connection]');assert.equal($('#mpChannelInline-key').value,replacement);
- assert.equal(JSON.stringify(h.w.modelPrototype.state()).includes(replacement),false);assert.equal(h.w.eval('JSON.stringify(notifications)').includes(replacement),false);
- h.click('[data-mp=clear-channel-key]');assert.match($('#mpChannelKeyStatus').textContent,/清空/);h.click('[data-mp=apply-channel-connection]');
- h.click('#mpPolicySave');h.click('#modalConfirm');
- for(let i=0;i<120&&h.w.modelPrototype.state().operation.status==='running';i++)await h.wait(30);
- assert.equal(h.w.modelPrototype.state().operation.status,'written');assert.equal(h.w.modelPrototype.state().saved.providers[0].connection.keyConfigured,false);assert.equal($('#mpChannelInline-key').value,'');noEffects(h);
+ const original=$('#mpChannelInline-key').value,models=JSON.stringify(state().draft.providers[0].models);assert.equal(original,'demo-newapi-key');assert.equal($('#mpChannelInline-key').type,'password');
+ h.click('[data-mp=toggle-channel-key]');assert.equal($('#mpChannelInline-key').type,'text');assert.equal($('[data-mp=toggle-channel-key]').getAttribute('aria-pressed'),'true');h.click('[data-mp=toggle-channel-key]');assert.equal($('#mpChannelInline-key').type,'password');
+ const replacement='demo-only-replaced<&"';h.input('#mpChannelInline-key',replacement);h.click('[data-mp=back-channels]');h.click('[data-mp=edit-provider][data-id=newapi]');assert.equal($('#mpChannelInline-key').value,replacement);assert.equal($('#mpChannelInline-key').type,'password');
+ assert.equal($('[data-mp=apply-channel-connection]'),null);assert.equal($('[data-mp=reset-channel-connection]'),null);assert.equal(JSON.stringify(state().draft.providers[0].models),models);
+ h.click('#mpPolicySave');assert.notEqual($('#modalMask').style.display,'flex');assert.equal(state().operation.channelId,'newapi');await saved();h.click('[data-task-act=model-later]');
+ h.click('[data-mp=edit-provider][data-id=newapi]');assert.equal($('#mpChannelInline-key').value,replacement);assert.equal($('#mpChannelInline-key').type,'password');const ref=state().saved.providers[0].connection.credentialRef;
+ h.input('#mpChannelInline-key','');assert.equal(state().draft.providers[0].connection.credentialRef,ref);h.click('[data-mp=back-channels]');h.click('[data-mp=edit-provider][data-id=newapi]');assert.equal($('#mpChannelInline-key').value,replacement);
+ assert.equal(JSON.stringify(state()).includes(replacement),false);assert.equal(h.w.eval('JSON.stringify(notifications)').includes(replacement),false);
+ h.click('[data-mp=clear-channel-key]');assert.match($('#mpChannelKeyStatus').textContent,/清空/);assert.equal(state().saved.providers[0].connection.keyConfigured,true);h.click('#mpPolicySave');await saved();
+ assert.equal(state().saved.providers[0].connection.keyConfigured,false);h.click('[data-task-act=model-later]');h.click('[data-mp=edit-provider][data-id=newapi]');assert.equal($('#mpChannelInline-key').value,'');noEffects(h);
 });

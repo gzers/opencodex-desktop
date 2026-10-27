@@ -27,20 +27,10 @@ test('没有可写入修改时确认仍可点，点了关闭并登记“模型�
   assert.equal(h.state().operation, null)
 })
 
-test('待确认编辑被拦下时关闭弹窗、保留草稿，并给出具体原因', () => {
-  const h = make(), blocked = []
-  h.context.window.modelSaveBlockedBridge = payload => blocked.push(payload)
-  h.click('edit-provider', { id: 'newapi' })
-  h.event('input', '[data-channel-config]', { channelConfig: 'name' }, '未确认名字')
-  h.click('back-channels')
-  open(h)
-  h.runConfirm()
-  assert.notEqual(h.nodes.get('modalMask').style.display, 'flex')
-  assert.equal(blocked.length, 1)
-  assert.match(blocked[0].reason, /连接编辑/)
-  assert.equal(h.state().channelConnections.newapi.name, '未确认名字')
-  assert.equal(h.state().operation, null)
-})
+test('无效连接字段在全局保存时关闭预览并登记原因，保留当前编辑',()=>{
+ const h=make(),blocked=[];h.context.window.modelSaveBlockedBridge=payload=>blocked.push(payload);h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'');h.click('back-channels');open(h);h.runConfirm();
+ assert.notEqual(h.nodes.get('modalMask').style.display,'flex');assert.equal(blocked.length,1);assert.match(blocked[0].reason,/渠道名称/);assert.equal(h.state().draft.providers[0].name,'');assert.equal(h.state().saved.providers[0].name,'NewApi');assert.equal(h.state().operation,null);
+});
 
 test('超出激活预算时同样关闭并登记通知，不写入运行配置', () => {
   const h = make(), blocked = []
@@ -89,21 +79,20 @@ test('弹窗正文不再含内联错误块，失败原因只走通知', () => {
 const edit=(h,value)=>{h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'key'},value);};
 test('只改Key直接点保存：离线不重新选模型，冻结凭据引用且明文不进入预览或记录',()=>{
  const h=make();h.proto.scene('discovery-fail');const old=h.state().saved.providers[0],models=JSON.stringify(old.models);
- edit(h,'demo-direct-key');h.click('save');assert.match(h.dialog(),/替换 Key/);assert.doesNotMatch(h.dialog(),/demo-direct-key|未加入草稿/);
- h.runConfirm();assert.equal(h.state().operation.status,'running');assert.notEqual(h.state().operation.snapshot.providers[0].connection.credentialRef,old.connection.credentialRef);h.drain();
+ edit(h,'demo-direct-key');h.click('save');assert.notEqual(h.nodes.get('modalMask').style.display,'flex');assert.equal(h.state().operation.status,'running');assert.notEqual(h.state().operation.snapshot.providers[0].connection.credentialRef,old.connection.credentialRef);h.drain();
  assert.equal(h.state().operation.status,'written');assert.equal(JSON.stringify(h.state().saved.providers[0].models),models);assert.doesNotMatch(JSON.stringify(h.state()),/demo-direct-key/);
  h.click('back-channels');h.click('edit-provider',{id:'newapi'});assert.equal(h.nodes.get('mpChannelInline-key').value,'demo-direct-key');assert.equal(h.state().channelConnections.newapi.keyVisible,false);
 });
 test('空输入保持原值；明确清空可直接保存，重开为空，不需要清单接口成功',()=>{
- const h=make(),blocked=[];h.context.window.modelSaveBlockedBridge=p=>blocked.push(p.reason);edit(h,'');h.click('save');h.runConfirm();assert.equal(h.state().operation,null);assert.match(blocked[0],/没有未保存/);
- h.click('clear-channel-key');h.click('save');h.runConfirm();h.drain();assert.equal(h.state().operation.status,'written');assert.equal(h.state().saved.providers[0].connection.keyConfigured,false);
+ const h=make(),old=h.state().saved.providers[0].connection.credentialRef;edit(h,'');assert.equal(h.state().draft.providers[0].connection.credentialRef,old);assert.equal(h.state().operation,null);assert.match(h.page().match(/<button id="mpPolicySave"[^>]*>/)[0],/disabled/);
+ h.click('clear-channel-key');h.click('save');h.drain();assert.equal(h.state().operation.status,'written');assert.equal(h.state().saved.providers[0].connection.keyConfigured,false);
  h.click('back-channels');h.click('edit-provider',{id:'newapi'});assert.equal(h.nodes.get('mpChannelInline-key').value,'');
 });
-test('Key草稿在失败时不改已保存值，还原修改与还原连接均回到原Key',()=>{
- const h=make();h.proto.scene('backup-fail');const old=h.state().saved.providers[0].connection.credentialRef;edit(h,'demo-not-committed');h.click('save');h.runConfirm();h.drain();
+test('Key编辑在失败时不改已保存值，全局还原回原Key且无局部还原入口',()=>{
+ const h=make();h.proto.scene('backup-fail');const old=h.state().saved.providers[0].connection.credentialRef;edit(h,'demo-not-committed');h.click('save');h.drain();
  assert.equal(h.state().operation.status,'failed');assert.equal(h.state().saved.providers[0].connection.credentialRef,old);
  h.click('back-channels');h.click('discard');h.runConfirm();h.click('edit-provider',{id:'newapi'});assert.equal(h.nodes.get('mpChannelInline-key').value,'demo-newapi-key');
- h.event('input','[data-channel-config]',{channelConfig:'key'},'demo-reset');h.click('reset-channel-connection');assert.equal(h.nodes.get('mpChannelInline-key').value,'demo-newapi-key');
+ h.event('input','[data-channel-config]',{channelConfig:'key'},'demo-reset');assert.doesNotMatch(h.page(),/data-mp="reset-channel-connection"/);h.click('back-channels');h.click('discard');h.runConfirm();h.click('edit-provider',{id:'newapi'});assert.equal(h.nodes.get('mpChannelInline-key').value,'demo-newapi-key');
 });
 
 test('新渠道加入时Key仅进入内存草稿，页级保存前不改已保存快照，丢弃可全部还原',()=>{

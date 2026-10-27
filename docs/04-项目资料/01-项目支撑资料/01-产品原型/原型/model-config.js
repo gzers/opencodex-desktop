@@ -403,7 +403,7 @@
  }).join('')+(rows.length?'':'<div class="mp-empty">没有匹配渠道，搜索外的已选范围保留。</div>')+'</div>'; }
  function copyProvider(id){
   const source=draft.providers.find(p=>p.id===id);if(!source||source.id==='native'||busy())return;
-  if(stagedChannelConnections().some(([pid])=>pid===id)||stagedModelEdits().some(([key])=>source.models.some(m=>m.key===key))){notice('先确认或还原源渠道的待处理编辑，再复制');return;}
+  if(stagedModelEdits().some(([key])=>source.models.some(m=>m.key===key))){notice('先确认或还原源渠道的待处理编辑，再复制');return;}
   const baseline=channelDraftFingerprint(),baseId=source.id.slice(0,54)+'-copy';let newId=baseId,newName=source.name.slice(0,73)+' 副本',suffix=2;
   while(draft.providers.some(p=>p.id.toLowerCase()===newId.toLowerCase()))newId=baseId+'-'+suffix++;
   suffix=2;while(draft.providers.some(p=>p.name.toLowerCase()===newName.toLowerCase()))newName=source.name.slice(0,70)+' 副本 '+suffix++;
@@ -437,16 +437,17 @@
  // 保存状态在标题集中展示；列表顶部直接提供还原修改与保存。
  const channelPolicyStates={clean:['未修改','neutral'],dirty:['未保存修改','warning'],staged:['有待确认编辑','warning'],'over-budget':['超出激活预算','danger'],saving:['正在保存','info'],failed:['保存失败','danger'],stopped:['保存已取消','neutral']};
  function channelPolicyState(){
-  const id=busy()?'saving':operation?.status==='failed'&&dirty()?'failed':operation?.status==='stopped'&&dirty()?'stopped':stagedModelEdits().length||stagedChannelConnections().length?'staged':count()>100?'over-budget':dirty()?'dirty':'clean';
+  const local=tab==='channels'&&channelDetail?provider():null,rows=local?stagedModelEdits().filter(([key])=>local.models.some(m=>m.key===key)):stagedModelEdits(),changed=local?currentChannelDirty(local):dirty(),relevant=!local||!operation?.channelId||operation.channelId===local.id;
+  const id=busy()?'saving':relevant&&operation?.status==='failed'&&changed?'failed':relevant&&operation?.status==='stopped'&&changed?'stopped':rows.length?'staged':(local?projection(currentChannelSnapshot(local)).length:count())>100?'over-budget':changed?'dirty':'clean';
   const [label,tone]=channelPolicyStates[id];return {id,label,tone};
  }
  function channelPolicyStatusHTML(framed=false){
   const state=channelPolicyState();
-  return '<span class="mp-template-state '+(framed?'mp-policy-chip ':'')+state.tone+'" data-channel-state="'+state.id+'" data-status-scope="all-channels" title="全部渠道配置的保存状态" '+(framed?'role="status" aria-live="polite" aria-busy="'+busy()+'"':'')+'>'+esc(state.label)+'</span>';
+  return '<span class="mp-template-state '+(framed?'mp-policy-chip ':'')+state.tone+'" data-channel-state="'+state.id+'" data-status-scope="'+(channelDetail?'current-channel':'all-channels')+'" title="'+(channelDetail?'当前渠道的保存状态':'全部渠道配置的保存状态')+'" '+(framed?'role="status" aria-live="polite" aria-busy="'+busy()+'"':'')+'>'+esc(state.label)+'</span>';
  }
  function policyStatusAnnotation(){
-  const styles={clean:'灰色描边 · 保存弱化并禁用',dirty:'橙色状态框 · 可提交时保存主色强调',staged:'橙色状态框 · 先确认行 / 连接编辑，保存禁用','over-budget':'红色状态框与激活数 · 保存禁用',saving:'蓝色状态框与转动环 · 保存禁用',failed:'红色状态框 · 草稿保留，可重试保存',stopped:'灰色状态框 · 草稿保留，可继续保存'};
-  return mpAnn('08','渠道列表的七种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。成功保存只在既有通知宿主提示一次，默认聚焦立即重启；稍后即结束，历史成功状态不生成待重启或客户端核对入口。待确认编辑和超限仍阻止保存，即使存在修改也不会伪装成可提交；保存继续先预览全渠道差异再确认。');
+  const styles={clean:'灰色描边 · 保存弱化并禁用',dirty:'橙色状态框 · 可提交时保存主色强调',staged:'橙色状态框 · 先处理型号行编辑','over-budget':'红色状态框与激活数 · 保存禁用',saving:'蓝色状态框与转动环 · 保存禁用',failed:'红色状态框 · 草稿保留，可重试保存',stopped:'灰色状态框 · 草稿保留，可继续保存'};
+  return mpAnn('08','渠道列表的七种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。成功保存只在既有通知宿主提示一次，默认聚焦立即重启；稍后即结束，历史成功状态不生成待重启或客户端核对入口。待确认型号编辑和实际提交超限仍阻止保存。列表保存先预览全部剩余修改；详情保存只提交当前渠道，成功返回列表，不另弹完整预览。');
  }
  function channelHeadingStatusHTML(p=provider()){
   const badge=(label,tone,attribute)=>'<span class="mp-template-state '+tone+'" '+attribute+'>'+esc(label)+'</span>';
@@ -454,30 +455,29 @@
   const discovery={loading:['正在获取清单','info'],failed:['获取清单失败','danger'],empty:['清单为空','warning']}[p.refresh];
   return channelPolicyStatusHTML()+(p.id==='native'?badge('官方管理','neutral','data-channel-managed'):badge(p.enabled?'已启用':'已停用',p.enabled?'success':'neutral','data-channel-enabled="'+p.enabled+'"')+badge(availabilityText(p),connectionTone,'data-channel-availability="'+esc(kind)+'"'))+(discovery?badge(discovery[0],discovery[1],'data-channel-discovery="'+p.refresh+'"'):'')+'<span class="mp-template-state-context">已选 '+selected(p).length+' / 发现 '+p.models.length+'</span>';
  }
- function channelStatusAnnotation(){return mpAnn('05','渠道状态与保存范围','标题分开显示全渠道保存状态、当前渠道启停、连接状态和清单获取状态，沿用模版详情的彩色标记。<br>保存状态：未修改（中性）；未保存修改 / 有待确认编辑（橙色）；超出激活预算 / 保存失败（红色）；正在保存（蓝色）；保存已取消（中性）。成功保存不留下待重启状态。<br>启用与连接检查通过为绿色，停用 / 未验证 / 官方管理为中性，无额度为橙色，认证或连接失败为红色。连接检查通过不等于客户端已加载。<br>保存仍先预览全部渠道差异，确认后才写入；待确认行 / 连接编辑和超限会阻止保存。返回只退出详情，不写入配置，工作区草稿保留。撤销 / 重做入口已移除；需要还原草稿时返回渠道列表，点击顶部“还原修改”并确认全部范围。');}
+ function channelStatusAnnotation(){return mpAnn('05','渠道状态与保存范围','标题分开显示当前渠道保存状态、当前渠道启停、连接状态和清单获取状态，沿用模版详情的彩色标记。<br>保存状态：未修改（中性）；未保存修改 / 有待确认编辑（橙色）；超出激活预算 / 保存失败（红色）；正在保存（蓝色）；保存已取消（中性）。成功保存不留下待重启状态。<br>启用与连接检查通过为绿色，停用 / 未验证 / 官方管理为中性，无额度为橙色，认证或连接失败为红色。连接检查通过不等于客户端已加载。<br>详情保存只提交当前渠道，成功返回列表，不弹完整预览；其它渠道编辑、全局顺序与全局采用保留未保存。只有本渠道的未确认型号编辑和实际提交后的预算 / 校验错误会阻止本次保存。列表保存继续预览全部剩余修改。返回只退出详情，不写入配置，内存编辑保留。撤销 / 重做入口已移除；需要还原草稿时返回渠道列表，点击顶部“还原修改”并确认全部范围。');}
  function updateChannelStatus(){
   const node=$('#mpPolicyStatus',host);if(node)node.outerHTML=status();
   const nodes=$('#mpChannelSection-nodes',host);if(nodes)nodes.innerHTML=serviceNodeList(provider());
   const heading=$('#mpChannelHeadingStatus',host);if(heading){heading.innerHTML=channelHeadingStatusHTML();channelOffset(host.closest('.main'));}else syncTabBar(host.closest('.main'));
  }
  function status(){
- const over=count()>100,staged=stagedModelEdits().length,connections=stagedChannelConnections().length,local=staged||connections,sidebar=tab==='channels'&&channelDetail,changed=dirty()||local,canOpen=!busy(),gated=local||over||!dirty();
+ const sidebar=tab==='channels'&&channelDetail,p=sidebar?provider():null,over=(p?projection(currentChannelSnapshot(p)).length:count())>100,staged=(p?stagedModelEdits().filter(([key])=>p.models.some(m=>m.key===key)):stagedModelEdits()).length,local=staged,changed=(p?currentChannelDirty(p):dirty())||local,canOpen=!busy()&&(!sidebar||changed),gated=local||over||!changed;
  const helper=(name,a,mark)=>iconButton(name,a,mark,busy()?'disabled':'');
- const helpers=(staged?helper('处理 '+staged+' 行待确认编辑','review-model-rows','edit'):'')+(connections?helper('处理 '+connections+' 个待确认连接','review-channel-connection','settings'):'')+(incoming?helper('查看收到的待审候选','incoming','draft'):'');
- const saveTitle=busy()?'正在保存，完成后再核对':changed?'保存 · 先核对保存预览与全部渠道差异，确认后写入':'保存 · 打开保存预览与保存核对；当前没有未保存修改';
- const save='<button id="mpPolicySave" class="btn '+(sidebar||changed?'primary':'ghost')+' mp-nav-action mp-template-save'+(!sidebar?' mp-top-policy-save'+(changed?' is-changed':''):'')+'" data-mp="save" title="'+saveTitle+'" aria-label="保存" data-save-scope="all-channels" data-save-gated="'+gated+'" '+(!canOpen?'disabled':'')+'>'+icon('save')+'<span class="mp-nav-action-label">保存</span></button>';
+ const helpers=(staged?helper('处理 '+staged+' 行待确认编辑','review-model-rows','edit'):'')+(incoming?helper('查看收到的待审候选','incoming','draft'):'');
+ const saveTitle=busy()?'正在保存':sidebar?'保存当前渠道，成功后返回渠道列表；其它渠道修改保留':changed?'保存 · 先查看全部剩余修改的保存预览，确认后写入':'保存 · 打开保存预览；当前没有未保存修改';
+ const save='<button id="mpPolicySave" class="btn '+(sidebar||changed?'primary':'ghost')+' mp-nav-action mp-template-save'+(!sidebar?' mp-top-policy-save'+(changed?' is-changed':''):'')+'" data-mp="save" title="'+saveTitle+'" aria-label="保存" data-save-scope="'+(sidebar?'current-channel':'all-channels')+'" data-save-gated="'+gated+'" '+(!canOpen?'disabled':'')+'>'+icon('save')+'<span class="mp-nav-action-label">保存</span></button>';
  const reset='<button id="mpPolicyReset" class="btn ghost mp-nav-action mp-top-policy-reset" data-mp="discard" title="'+(busy()?'正在保存，完成后再还原':changed?'还原全部渠道的修改，回到最近成功保存的配置':'没有未保存修改')+'" aria-label="还原修改" '+(busy()||!changed?'disabled':'')+'>'+icon('reset')+'<span class="mp-nav-action-label">还原修改</span></button>';
  const tools=helpers?'<div class="mp-rail-helpers" role="group" aria-label="需要处理的配置">'+helpers+'</div>':'';
  return '<div id="mpPolicyStatus" class="'+(sidebar?'mp-channel-status':'mp-policy-status')+(over?' over-budget':'')+'">'+(sidebar?'<div class="mp-channel-save-controls">'+save+'</div>'+tools:'<div class="mp-top-policy-controls">'+channelPolicyStatusHTML(true)+'<div class="mp-channel-save-controls">'+reset+save+'</div></div>'+tools+policyStatusAnnotation())+'</div>';
  }
- function channelDraftDirty(){return dirty()||stagedModelEdits().length>0||stagedChannelConnections().length>0;}
+ function channelDraftDirty(){return dirty()||stagedModelEdits().length>0;}
  function channelDraftFingerprint(){return JSON.stringify({saved,draft,modelEdits,channelConnections});}
  function discardChannelDrafts(){
   if(busy()){notice('正在保存，完成后再处理草稿');return;}if(!channelDraftDirty()){notice('没有未保存修改');return;}
-  const baseline=channelDraftFingerprint(),groups=policyChanges(saved,draft),rows=stagedModelEdits(),connections=stagedChannelConnections(),names=new Set(groups.map(g=>g.name));
+  const baseline=channelDraftFingerprint(),groups=policyChanges(saved,draft),rows=stagedModelEdits(),names=new Set(groups.map(g=>g.name));
   const pendingRows=rows.map(([key])=>{const p=draft.providers.find(p=>p.models.some(m=>m.key===key)),m=p?.models.find(m=>m.key===key);if(p)names.add(p.name+' · '+p.id);return (p?.name||'已移除渠道')+' / '+(m?.id||key)+' · 未确认的模型编辑';});
-  const pendingConnections=connections.map(([id])=>{const p=draft.providers.find(p=>p.id===id);names.add((p?.name||id)+' · '+id);return (p?.name||id)+' · 未确认的连接编辑';});
-  modal('还原修改','<p>将还原全部渠道的未保存修改和未确认编辑，回到最近成功保存的配置。</p><p><strong>受影响范围：</strong>'+esc([...names].join('；'))+'</p>'+(groups.length?policyDiffHTML(saved,draft,false,true):'')+(pendingRows.length||pendingConnections.length?'<h3>尚未确认的编辑</h3>'+diffHTML([...pendingRows,...pendingConnections]):'')+'<p class="mp-muted">已保存配置、模版版本、Agent 执行设置和收到的待审候选保留。</p><div id="mpDiscardError" class="mp-alert" role="alert"></div>','还原修改',()=>{
+  modal('还原修改','<p>将还原全部渠道的未保存修改和未确认编辑，回到最近成功保存的配置。</p><p><strong>受影响范围：</strong>'+esc([...names].join('；'))+'</p>'+(groups.length?policyDiffHTML(saved,draft,false,true):'')+(pendingRows.length?'<h3>尚未确认的编辑</h3>'+diffHTML(pendingRows):'')+'<p class="mp-muted">已保存配置、模版版本、Agent 执行设置和收到的待审候选保留。</p><div id="mpDiscardError" class="mp-alert" role="alert"></div>','还原修改',()=>{
    if(busy()||baseline!==channelDraftFingerprint()){$('#mpDiscardError').textContent='配置或未确认编辑已变化，请关闭并重新核对范围。';return;}
    closeModal();draft=clone(saved);modelEdits={};channelConnections={};channelKeyInputs.clear();restoration=null;render();notice('已还原到最近成功保存的配置');
   },{confirmKeepsOpen:true,cancelLabel:'保留修改'});
@@ -528,9 +528,9 @@
  }
  let saveReview=null;
  function saveReviewErrors(){
-  return [...draft.providers.filter(p=>p.id!=='native').map(namingError).filter(Boolean)];
+  return draft.providers.filter(p=>p.id!=='native').map(p=>channelConfigError(p,draft)).filter(Boolean);
  }
- function saveReviewGated(){return !channelDraftDirty()||stagedModelEdits().length>0||stagedChannelConnections().length>0||count()>100||!!saveReviewErrors().length;}
+ function saveReviewGated(){return !channelDraftDirty()||stagedModelEdits().length>0||count()>100||!!saveReviewErrors().length;}
  function saveReviewOtherRows(){
   const rows=[];
   for(const g of policyChanges(saved,draft))for(const r of g.rows){
@@ -541,10 +541,10 @@
   return rows;
  }
  function saveReviewHTML(){
-  const errors=saveReviewErrors(),staged=stagedModelEdits().length+stagedChannelConnections().length,over=count()>100;
+  const errors=saveReviewErrors(),staged=stagedModelEdits().length,over=count()>100;
   const others=saveReviewOtherRows(),shown=others.slice(0,8);
   const other=others.length?'<details class="mp-preview-other"><summary>另有 '+others.length+' 项字段变化</summary><dl>'+shown.map(r=>'<div><dt>'+esc(r.label)+'</dt><dd><span>'+esc(r.before)+'</span><em>→</em><span>'+esc(r.after)+'</span></dd></div>').join('')+(others.length>shown.length?'<div><dt>其余 '+(others.length-shown.length)+' 项</dt><dd><span>确认保存后按草稿写入</span></dd></div>':'')+'</dl></details>':'';
-  return preview(true)+other+(staged?'<p class="mp-alert">仍有未加入草稿的行 / 连接编辑，请先处理后再保存。</p>':'')+(errors.length?'<div class="mp-alert" role="alert">'+diffHTML(errors)+'</div>':'')+(over?'<p class="mp-alert">完整投影超过 100，请先减少发布项。</p>':'')+'';
+  return preview(true)+other+(staged?'<p class="mp-alert">仍有未加入草稿的型号编辑，请先处理后再保存。</p>':'')+(errors.length?'<div class="mp-alert" role="alert">'+diffHTML(errors)+'</div>':'')+(over?'<p class="mp-alert">完整投影超过 100，请先减少发布项。</p>':'')+'';
  }
  function syncSaveReview(){
   const button=$('#modalConfirm');if(!button||!saveReview)return;
@@ -556,11 +556,6 @@
 
  function openSaveReview(){
   if(busy())return;
-  // 仅改 Key 可直接进入统一保存；其它未确认连接编辑仍保留原有门禁。
-  for(const [id,b] of stagedChannelConnections()){
-   const p=draft.providers.find(p=>p.id===id);
-   if(b.keyChanged&&b.baseline===connectionBaseline(p)&&b.name===p.name&&b.protocol===p.protocol&&b.connection.auth===p.connection.auth&&b.connection.baseUrl===activeNode(p)?.url)applyChannelConnection(p,false);
-  }
   // 弹窗内的快速启停就是要提交的草稿变更：每次刷新都把基准更新为最新草稿，
   // 只有已保存文件快照变化才算保存冲突；不读取历史计划或运行目录准入。
   saveReview={digest:policyDigest(),baseline:JSON.stringify(saved)};
@@ -572,13 +567,12 @@
     saveReview=null;closeModal();notifySaveBlocked(reason,stale?'stale':'gated');return;
    }
    const frozen=clone(draft);saveReview=null;closeModal();startSave(frozen);
-  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'保存是唯一提交入口，也是预览入口：点击保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，确认会关闭弹窗并登记“模型配置未保存”通知；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停。确认后弹窗立即关闭：冻结当前草稿、只备份并原子写入文件，成功只在原通知宿主反馈一次；稍后即结束。确认时若草稿已变化或被门禁拦下，同样立即关闭弹窗，不再留在弹窗里报错，而是登记一条“模型配置未保存”通知，草稿保留。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
+  },{confirmKeepsOpen:true,prototypeAnnotation:{title:'保存与预览合并',body:'列表保存先展示当前草稿的完整选择器顺序与激活预算，渠道与型号可在此快速启停，修改直接进入当前草稿。没有修改、仍有未确认编辑或超限时仍可打开核对，确认会关闭弹窗并登记“模型配置未保存”通知；可在预览里点一下渠道或型号恢复可保存状态。摘要固定在顶部，只有渠道列表滚动。变更不再单列清单：渠道卡与型号标签直接着色，悬浮显示本次启停。确认后弹窗立即关闭：冻结当前草稿、只备份并原子写入文件，成功只在原通知宿主反馈一次；稍后即结束。确认时若草稿已变化或被门禁拦下，同样立即关闭弹窗，不再留在弹窗里报错，而是登记一条“模型配置未保存”通知，草稿保留。系统隐藏项计入预算但不提供启停。100 是原型兼容阈值，真实上限 / 分页与目录读回待实现核验；本轮仍为内存 mock。'},onClose:()=>{$('#modal').classList.remove('mp-preview-modal');saveReview=null;}});
   $('#modal').classList.add('mp-preview-modal');syncSaveReview();
  }
  // 保存被拦下走已注册通知，不在弹窗里留第二处错误提示。
  // 具体原因只取第一条可解释的门禁，避免提示笼统。
  function saveReviewBlockedReason(){
-  if(stagedChannelConnections().length)return '还有未加入草稿的连接编辑，本次确认未写入';
   if(stagedModelEdits().length)return '还有未加入草稿的行编辑，本次确认未写入';
   if(count()>100)return '完整投影超出 100，本次确认未写入';
   const errors=saveReviewErrors();
@@ -724,24 +718,39 @@
  const channelSections=[['connection','渠道配置'],['nodes','服务节点'],['defaults','模型默认'],['models','模型列表']];
  const connectionValue=p=>({name:p.name,protocol:p.protocol,connection:nodeConnection(p)});
  const connectionBaseline=p=>JSON.stringify(connectionValue(p));
+ // Connection fields edit the shared memory draft directly. This object only
+ // keeps editor-local Key visibility/original-reference intent, never a second
+ // connection confirmation buffer or saved configuration.
  function channelConnectionBuffer(p=provider()){
   if(!p||p.id==='native')return null;
-  return channelConnections[p.id]||=({...connectionValue(p),baseline:connectionBaseline(p),retainedKeyConfigured:!!keyValue(p.connection),keyChanged:0,keyIntent:'keep',keyVisible:false});
+  const b=channelConnections[p.id]||={originalRef:p.connection?.credentialRef,originalConfigured:!!p.connection?.keyConfigured,keyChanged:0,keyIntent:'keep',keyVisible:false};
+  Object.assign(b,connectionValue(p),{baseline:connectionBaseline(p)});return b;
  }
- const stagedChannelConnections=()=>Object.entries(channelConnections).filter(([id,b])=>draft.providers.some(p=>p.id===id)&&(b.keyChanged||JSON.stringify({name:b.name,protocol:b.protocol,connection:b.connection})!==b.baseline));
+ // Kept for the read-only prototype inspector; connections have no staged step.
+ const stagedChannelConnections=()=>[];
  function channelKeyStatus(b){return b.keyIntent==='clear'?'保存后清空 Key':b.keyIntent==='replace'?'保存后替换 Key':'保持原 Key';}
  function updateChannelConnectionStatus(){
-  updateChannelStatus();const b=channelConnectionBuffer(),changed=stagedChannelConnections().some(([id])=>id===provider().id),stale=b.baseline!==connectionBaseline(provider());
-  const reset=$('#mpChannelReset',host),label=$('#mpChannelConnectionPending',host),keyStatus=$('#mpChannelKeyStatus',host);
-  if(reset)reset.disabled=!changed&&!stale;if(label)label.textContent=changed?'有连接修改，尚未加入草稿':'连接配置与草稿一致';if(keyStatus)keyStatus.textContent=channelKeyStatus(b);
+  updateChannelStatus();const b=channelConnectionBuffer(),keyStatus=$('#mpChannelKeyStatus',host);
+  if(keyStatus)keyStatus.textContent=channelKeyStatus(b);
+  const name=$('.mp-editor-heading h2',host);if(name)name.textContent=provider().name;
  }
  function updateChannelConnection(el){
-  if(busy()||provider()?.id==='native')return;const p=provider(),b=channelConnectionBuffer(),key=el.dataset.channelConfig;
+  if(busy()||provider()?.id==='native')return;const p=provider(),b=channelConnectionBuffer(),key=el.dataset.channelConfig,before=JSON.stringify({protocol:p.protocol,connection:p.connection});
   if(key==='key'){
-   channelKeyInputs.set(p.id,el.value);b.keyIntent=el.value&&el.value!==keyValue(p.connection)?'replace':'keep';b.keyChanged=b.keyIntent==='replace'?1:0;
-   b.retainedKeyConfigured=b.keyChanged?true:!!keyValue(p.connection);b.connection.keyConfigured=b.connection.auth==='apikey'&&b.retainedKeyConfigured;
-  }else if(key==='name'||key==='protocol')b[key]=el.value;
-  else if(key==='auth'){b.connection.auth=el.value;b.connection.keyConfigured=el.value==='apikey'&&b.retainedKeyConfigured;}
+   if(el.value)channelKeyInputs.set(p.id,el.value);else channelKeyInputs.delete(p.id);
+   const original=keyValue({credentialRef:b.originalRef});
+   b.keyIntent=el.value&&el.value!==original?'replace':'keep';b.keyChanged=b.keyIntent==='replace'?1:0;
+   if(b.keyIntent==='replace')p.connection.credentialRef=mockCredential(el.value);
+   else if(b.originalRef)p.connection.credentialRef=b.originalRef;
+   else delete p.connection.credentialRef;
+   p.connection.keyConfigured=p.connection.auth==='apikey'&&!!keyValue(p.connection);
+  }else if(key==='name')p.name=el.value;
+  else if(key==='protocol')p.protocol=el.value;
+  else if(key==='auth'){p.connection.auth=el.value;p.connection.keyConfigured=el.value==='apikey'&&!!keyValue(p.connection);}
+  if(before!==JSON.stringify({protocol:p.protocol,connection:p.connection})){
+   nodeAuthRevision[p.id]=(nodeAuthRevision[p.id]||0)+1;p.availability={kind:'unknown'};p.refreshToken++;
+  }
+  channelConnectionBuffer(p);
   if(key==='auth')render();else updateChannelConnectionStatus();
  }
  function keyControls(id,value,visible,action,clearAction,locked=''){
@@ -749,23 +758,14 @@
  }
  function inlineConnection(p){
   if(p.id==='native')return '<h3>渠道配置</h3><p class="mp-muted">官方 / 原生连接由 Codex 管理，这里仅展示模型信息。</p>';
-  const b=channelConnectionBuffer(p),locked=busy()?'disabled':'',changed=stagedChannelConnections().some(([id])=>id===p.id),stale=b.baseline!==connectionBaseline(p);
+  const b=channelConnectionBuffer(p),locked=busy()?'disabled':'';
   const input=(key,value,extra='')=>'<input id="mpChannelInline-'+key+'" class="input" data-channel-config="'+key+'" value="'+esc(value)+'" '+extra+' '+locked+'>';
-  return '<h3>渠道配置</h3><div class="mp-channel-form"><label>渠道名称'+input('name',b.name,'maxlength="80"')+'</label><label>渠道标识<input class="input" value="'+esc(p.id)+'" readonly aria-label="渠道标识"><span class="mp-muted">标识固定，名称可修改。</span></label><label>默认接口协议<select id="mpChannelInline-protocol" class="mp-select" data-channel-config="protocol" '+locked+'>'+protocolOptions(b.protocol)+'</select></label><label>认证方式<select id="mpChannelInline-auth" class="mp-select" data-channel-config="auth" '+locked+'>'+opts([['apikey','API Key'],['none','无需认证']],b.connection.auth)+'</select></label>'+(b.connection.auth==='apikey'?'<div class="mp-channel-key"><label for="mpChannelInline-key">API Key</label>'+keyControls('mpChannelInline-key',channelKeyInputs.has(p.id)?channelKeyInputs.get(p.id):keyValue(p.connection),b.keyVisible,'toggle-channel-key','clear-channel-key',locked)+'<span id="mpChannelKeyStatus" class="mp-muted">'+channelKeyStatus(b)+'</span></div>':'')+'</div><p class="mp-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。</p>'+(stale?'<p class="mp-alert">连接基准已变化，请还原配置后重新编辑。</p>':'')+'<div class="mp-quick-footer"><span id="mpChannelConnectionPending" class="mp-muted">'+(changed?'有连接修改，尚未加入草稿':'连接配置与草稿一致')+'</span><div class="mp-actions">'+button('还原配置','reset-channel-connection','id="mpChannelReset" '+(locked||!changed&&!stale?'disabled':''))+button('加入草稿','apply-channel-connection',locked||stale?'disabled':'',true)+'</div></div>'+mpAnn('09','Key 编辑与离线保存','仅使用私有内存中的演示 Key，不读写真实文件，不请求网络或 CLI。已有 Key 默认掩码，眼睛切换只作用于当前编辑器；保持原值、替换、明确清空分开，空输入保留原值。只改 Key 可直接点击页级保存并在预览确认，也可先加入草稿；无需获取清单。公开状态、日志、预览和恢复记录仅保留不透明引用。');
+  return '<h3>渠道配置</h3><div class="mp-channel-form"><label>渠道名称'+input('name',p.name,'maxlength="80"')+'</label><label>渠道标识<input class="input" value="'+esc(p.id)+'" readonly aria-label="渠道标识"><span class="mp-muted">标识固定，名称可修改。</span></label><label>默认接口协议<select id="mpChannelInline-protocol" class="mp-select" data-channel-config="protocol" '+locked+'>'+protocolOptions(p.protocol)+'</select></label><label>认证方式<select id="mpChannelInline-auth" class="mp-select" data-channel-config="auth" '+locked+'>'+opts([['apikey','API Key'],['none','无需认证']],p.connection.auth)+'</select></label>'+(p.connection.auth==='apikey'?'<div class="mp-channel-key"><label for="mpChannelInline-key">API Key</label>'+keyControls('mpChannelInline-key',channelKeyInputs.has(p.id)?channelKeyInputs.get(p.id):keyValue(p.connection),b.keyVisible,'toggle-channel-key','clear-channel-key',locked)+'<span id="mpChannelKeyStatus" class="mp-muted">'+channelKeyStatus(b)+'</span></div>':'')+'</div><p class="mp-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。</p>'+mpAnn('09','连接编辑与当前渠道保存','名称、协议、认证与 Key 直接进入当前内存编辑；不再另点确认连接或加入草稿，获取模型列表在模型列表，连接检测在服务节点。详情保存只模拟写入当前渠道，成功返回列表，不弹完整保存预览；其它渠道修改保留。列表保存仍预览全部剩余修改。已有 Key 默认掩码，眼睛仅切换当前编辑器；空输入保留原值，明确清空才删除。全部为私有内存 mock，不读写真实文件、设置或网络。');
  }
- function applyChannelConnection(p=provider(),announce=true){
-  const b=channelConnectionBuffer(p);if(!b||busy())return;
-  if(b.baseline!==connectionBaseline(p)){notice('连接基准已变化，请还原配置后重新编辑');return;}
-  const name=b.name.trim();if(!name||name.length>80||draft.providers.some(x=>x.id!==p.id&&x.name.toLowerCase()===name.toLowerCase())){notice('请填写 1–80 字且不重复的渠道名称');return;}
-  if(stagedModelEdits().some(([key])=>p.models.some(m=>m.key===key))){notice('请先确认或还原本渠道的行编辑');return;}
-  change(()=>{
-   p.name=name;p.protocol=b.protocol;
-   const c=clone(b.connection);delete c.baseUrl;
-   if(b.keyIntent==='replace'){c.credentialRef=mockCredential(channelKeyInputs.get(p.id));c.keyConfigured=c.auth==='apikey';}
-   else if(b.keyIntent==='clear'){delete c.credentialRef;c.keyConfigured=false;}
-   if(JSON.stringify(p.connection)!==JSON.stringify(c)){nodeAuthRevision[p.id]=(nodeAuthRevision[p.id]||0)+1;p.availability={kind:'unknown'};}
-   p.connection=c;delete channelConnections[p.id];channelKeyInputs.delete(p.id);
-  });if(announce)notice('连接配置已加入草稿，保存后生效');
+ function channelConfigError(p,policy=draft){
+  const name=p.name.trim();
+  if(!name||name.length>80||policy.providers.some(other=>other.id!==p.id&&other.name.trim().toLowerCase()===name.toLowerCase()))return '请填写 1–80 字且不重复的渠道名称';
+  return namingError(p);
  }
  // 与清单获取共用同源候选；仅演出路径归一化和有效清单判定，不执行 HTTP。
  function mockModelDiscovery(protocol,base,scene='normal'){
@@ -803,11 +803,11 @@
  }
  function quickNodeControls(p){
   if(p.id==='native')return '<span class="mp-muted">官方管理</span>';
-  const nodes=serviceNodes(p),blocked=busy()||stagedChannelConnections().some(([id])=>id===p.id),active=activeNode(p);
+  const nodes=serviceNodes(p),blocked=busy(),active=activeNode(p);
   return '<button id="mpChannelNode-'+esc(p.id)+'" class="mp-node-picker-trigger" data-mp="node-picker-open" data-channel="'+esc(p.id)+'" aria-haspopup="dialog" aria-expanded="false" aria-label="'+esc(p.name)+' 服务节点选择与检测" title="'+esc(active?active.name+' · '+active.url:'选择服务节点')+'" '+(blocked||!nodes.length?'disabled':'')+'><span class="mp-node-picker-value">'+esc(active?.name||'请选择节点')+'</span><span id="mpNodeSpeedCurrent-'+esc(p.id)+'" class="mp-node-picker-current-speed">'+nodeSpeedStatusHTML(p,active,true)+'</span><span class="mp-node-picker-chevron" aria-hidden="true">▾</span></button>';
  }
  function nodePickerHTML(p){
-  const blocked=busy()||stagedChannelConnections().some(([id])=>id===p.id);
+  const blocked=busy();
   return window.PrototypeNodeView.picker({titleId:'mpNodePickerTitle',title:p.name+' · 服务节点',close:button('关闭','node-picker-close','aria-label="关闭节点选择器"'),all:nodeSpeedButton(p,'',true,true),summaryId:'mpNodeSpeedSummary-'+p.id,summary:nodeSpeedSummaryHTML(p),rows:serviceNodes(p).map(n=>window.PrototypeNodeView.row({id:n.id,choiceId:'mpNodePickerChoice-'+n.id,choiceAttrs:'data-mp="node-picker-choose" data-channel="'+esc(p.id)+'" data-id="'+esc(n.id)+'"',selected:n.id===p.activeNodeId,title:n.name+' · '+n.url,disabled:blocked,name:n.name,speedId:'mpNodePickerSpeed-'+n.id,speed:nodeSpeedStatusHTML(p,n,true),test:nodeSpeedButton(p,n.id,false,true)})).join('')});
  }
  function closeNodePicker(focus=false){
@@ -825,7 +825,7 @@
   element.style.left=left+'px';element.style.top=top+'px';
  }
  function openNodePicker(pid,anchor=$('#mpChannelNode-'+pid,host)){
-  const p=draft.providers.find(p=>p.id===pid);if(!p||p.id==='native'||!anchor||anchor.disabled||busy()||stagedChannelConnections().some(([id])=>id===pid))return;
+  const p=draft.providers.find(p=>p.id===pid);if(!p||p.id==='native'||!anchor||anchor.disabled||busy())return;
   if(nodePicker?.pid===pid){closeNodePicker(true);return;}
   closeNodePicker();window.prototypeActionMenu?.close();window.prototypeSelect?.close();
   const element=document.createElement('div');element.id='mpNodePicker';element.className='mp-node-picker';element.setAttribute('role','dialog');element.setAttribute('aria-modal','false');element.setAttribute('aria-labelledby','mpNodePickerTitle');element.innerHTML=nodePickerHTML(p);document.body.appendChild(element);
@@ -839,9 +839,10 @@
   closeNodePicker();useServiceNode(nid,pid);$('#mpChannelNode-'+pid,host)?.focus({preventScroll:true});
  }
  function serviceNodeList(p){
-  if(p.id==='native')return '<h3>服务节点</h3><p class="mp-muted">官方 / 原生连接由 Codex 管理。</p>';
-  const nodes=serviceNodes(p),locked=busy()||stagedChannelConnections().some(([id])=>id===p.id);
-  return '<div class="mp-toolbar"><h3>服务节点</h3><div class="mp-actions">'+nodeSpeedButton(p,'',true)+button('新增节点','add-node',locked?'disabled':'')+'</div></div><p class="mp-muted">所有节点共用渠道认证与 API Key；模型统一使用当前节点。</p><div id="mpNodeSpeedSummary-'+esc(p.id)+'" role="status">'+nodeSpeedSummaryHTML(p)+'</div>'+nodes.map(n=>'<div class="mp-service-node-row"><div><strong>'+esc(n.name)+(n.id===p.activeNodeId?' <span class="mp-template-state info">当前使用</span>':'')+'</strong><small>'+esc(n.url||'待配置地址')+'</small><div id="mpNodeSpeed-'+esc(p.id)+'-'+esc(n.id)+'" role="status">'+nodeSpeedStatusHTML(p,n)+'</div></div><div class="mp-actions">'+nodeSpeedButton(p,n.id)+(n.id===p.activeNodeId?'':button('设为当前','use-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':'')))+button('编辑','edit-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':''))+button('删除','delete-node','data-id="'+esc(n.id)+'" '+(locked||n.id===p.activeNodeId||nodes.length<=1?'disabled':'') ,false,true)+'</div></div>').join('')+(nodes.length?'':'<p class="mp-alert">尚无服务节点，请添加地址。</p>')+mpAnn('06','服务节点、测速与协议的边界','一个渠道维护一份认证和 Key，节点仅含名称及 URL。新增渠道的 Base URL 自动成为默认节点；后续地址只在这里编辑。<br>列表服务节点独立成列，单行触发器显示当前节点及耗时；选择器内逐节点展示检测结果 / 单独检测，顶部一键检测 / 停止。选节点与检测动作独立，检测不自动选择。详情支持单节点 / 一键测速。接口响应耗时以 ms 显示，不代表模型生成速度、模型能力或额度。测速结果仅本机会话，分别显示等待 / 测速中 / 成功 / 失败 / 超时 / 停止。<br>本原型使用确定性 mock，不请求网络、不读取或发出真实 Key；结果场景在右侧工具板设置。一键测速最多两个模拟任务并行，可停止，结果不自动切节点。节点地址、协议或认证变化后旧结果失效，晚回不会覆盖新配置。<br>节点切换加入全渠道草稿，保存确认展示地址变化，成功后只在既有通知宿主提示一次；稍后即结束。节点不复制模型清单或凭据，不为每个模型分别指定。当前节点不可直接删除，至少保留一条；未确认渠道配置先处理。测速与获取模型清单共用同源路径归一化：根地址自动补 /v1/models，保留版本路径 / 完整清单地址 / 自定义前缀；HTML 或路径不存在才有限回退。认证、DNS、TLS、超时不重试路径，仅有效模型清单算成功。基址保持原样。全部为内存 mock，不代表真实连接验收。');
+  const transport='<button type="button" class="btn ghost btn-sm" data-tp="open-settings" aria-label="打开全局连接与传输设置" title="全局设置 · 连接与传输">连接与传输</button>';
+  if(p.id==='native')return '<div class="mp-toolbar"><h3>服务节点</h3><div class="mp-actions">'+transport+'</div></div><p class="mp-muted">官方 / 原生连接由 Codex 管理。</p>';
+  const nodes=serviceNodes(p),locked=busy();
+  return '<div class="mp-toolbar"><h3>服务节点</h3><div class="mp-actions">'+transport+nodeSpeedButton(p,'',true)+button('新增节点','add-node',locked?'disabled':'')+'</div></div><p class="mp-muted">所有节点共用渠道认证与 API Key；模型统一使用当前节点。</p><div id="mpNodeSpeedSummary-'+esc(p.id)+'" role="status">'+nodeSpeedSummaryHTML(p)+'</div>'+nodes.map(n=>'<div class="mp-service-node-row"><div><strong>'+esc(n.name)+(n.id===p.activeNodeId?' <span class="mp-template-state info">当前使用</span>':'')+'</strong><small>'+esc(n.url||'待配置地址')+'</small><div id="mpNodeSpeed-'+esc(p.id)+'-'+esc(n.id)+'" role="status">'+nodeSpeedStatusHTML(p,n)+'</div></div><div class="mp-actions">'+nodeSpeedButton(p,n.id)+(n.id===p.activeNodeId?'':button('设为当前','use-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':'')))+button('编辑','edit-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':''))+button('删除','delete-node','data-id="'+esc(n.id)+'" '+(locked||n.id===p.activeNodeId||nodes.length<=1?'disabled':'') ,false,true)+'</div></div>').join('')+(nodes.length?'':'<p class="mp-alert">尚无服务节点，请添加地址。</p>')+mpAnn('06','服务节点、测速与协议的边界','一个渠道维护一份认证和 Key，节点仅含名称及 URL。新增渠道的 Base URL 自动成为默认节点；后续地址只在这里编辑。<br>列表服务节点独立成列，单行触发器显示当前节点及耗时；选择器内逐节点展示检测结果 / 单独检测，顶部一键检测 / 停止。选节点与检测动作独立，检测不自动选择。详情支持单节点 / 一键测速。接口响应耗时以 ms 显示，不代表模型生成速度、模型能力或额度。测速结果仅本机会话，分别显示等待 / 测速中 / 成功 / 失败 / 超时 / 停止。<br>本原型使用确定性 mock，不请求网络、不读取或发出真实 Key；结果场景在右侧工具板设置。一键测速最多两个模拟任务并行，可停止，结果不自动切节点。节点地址、协议或认证变化后旧结果失效，晚回不会覆盖新配置。<br>节点切换加入全渠道草稿，保存确认展示地址变化，成功后只在既有通知宿主提示一次；稍后即结束。节点不复制模型清单或凭据，不为每个模型分别指定。当前节点不可直接删除，至少保留一条；字段直接进入当前编辑。测速与获取模型清单共用同源路径归一化：根地址自动补 /v1/models，保留版本路径 / 完整清单地址 / 自定义前缀；HTML 或路径不存在才有限回退。认证、DNS、TLS、超时不重试路径，仅有效模型清单算成功。基址保持原样。全部为内存 mock，不代表真实连接验收。');
  }
  // 测速是会话级观察，独立于策略、保存和连接验证；任何晚回都核对测量对象。
  function nodeSpeedUI(){
@@ -862,7 +863,6 @@
  }
  function startNodeSpeed(pid,nid=''){
   const p=draft.providers.find(p=>p.id===pid);if(!p||p.id==='native'||busy()||nodeSpeedRuns[pid]?.status==='running')return;
-  if(stagedChannelConnections().some(([id])=>id===pid)){notice('先确认或还原渠道认证配置，再测速');return;}
   const targets=nid?serviceNodes(p).filter(n=>n.id===nid):serviceNodes(p);if(!targets.length)return;
   const run={id:++nodeSpeedSerial,status:'running',scene:nodeSpeedScene,items:targets.map(n=>({nodeId:n.id,url:n.url,fingerprint:nodeSpeedFingerprint(p,n),status:'waiting'}))};nodeSpeedRuns[pid]=run;
   run.items.forEach(item=>nodeSpeedResults[nodeSpeedKey(pid,item.nodeId)]={status:'waiting',fingerprint:item.fingerprint});
@@ -1032,7 +1032,7 @@
   $$('[data-model-quick] input,[data-model-quick] select,[data-model-quick] button',host).forEach(el=>el.disabled=busy());
   const selection=scopeState();$$('[data-scope-all]').forEach(el=>el.indeterminate=selection.mixed);$$('[data-model-pick-all]',host).forEach(el=>el.indeterminate=modelSelectionState().mixed);
   if(tab==='templates'&&templateDetail&&buffer())bindFields($('[data-field-editor]',host),buffer().rules,null,(rules,valid)=>{buffer().rules=rules;buffer().valid=valid;editorDigest++;updateTemplateSaveStatus();});
-  if(focus||fieldId){const el=$(focus||'#'+fieldId);if(el){el.focus({preventScroll:true});if(caret!=null&&el.setSelectionRange)el.setSelectionRange(caret,active.selectionEnd??caret);}}else if(active?.matches('[data-scope-all]'))$('[data-scope-all]',host)?.focus();else if(active?.matches('[data-scope]'))$$('[data-scope]',host).find(el=>el.dataset.scope===active.dataset.scope)?.focus();if(active?.matches('[data-model-pick-all]'))$('[data-model-pick-all]',host)?.focus({preventScroll:true});else if(active?.matches('[data-model-pick]'))$$('[data-model-pick]',host).find(el=>el.dataset.modelPick===active.dataset.modelPick)?.focus({preventScroll:true});renderSettings();renderAssistant();
+  if(focus||fieldId){const el=$(focus||'#'+fieldId);if(el){el.focus({preventScroll:true});if(caret!=null&&el.setSelectionRange)el.setSelectionRange(caret,active.selectionEnd??caret);}}else if(active?.matches('[data-scope-all]'))$('[data-scope-all]',host)?.focus();else if(active?.matches('[data-scope]'))$$('[data-scope]',host).find(el=>el.dataset.scope===active.dataset.scope)?.focus();if(active?.matches('[data-model-pick-all]'))$('[data-model-pick-all]',host)?.focus({preventScroll:true});else if(active?.matches('[data-model-pick]'))$$('[data-model-pick]',host).find(el=>el.dataset.modelPick===active.dataset.modelPick)?.focus({preventScroll:true});renderSettings();renderAssistant();window.transportPrototype?.refreshContexts();
   syncTabBar(scroller);channelViewId=tab==='channels'&&channelDetail?current:null;if(channelViewId&&scroller){channelOffset(scroller);if(sameChannel)restoreEditorScroll(scroller,channelPosition,channelOffset);else scroller.scrollTop=0;channelOffset(scroller);syncChannelSection();}
   editorViewId=editing?templateId:null;if(tab==='templates'&&templateDetail&&scroller)editorOffset(scroller);if(editing&&scroller){if(sameEditor)restoreEditorScroll(scroller,position);else scroller.scrollTop=0;syncEditorSection();}syncSaveNotification();
  }
@@ -1285,7 +1285,6 @@
  let serviceNodeSerial=0;
  function nodeEditable(p){
   if(!p||p.id==='native'||busy())return false;
-  if(stagedChannelConnections().some(([id])=>id===p.id)){notice('先确认或还原本渠道的认证配置，再管理节点');return false;}
   return true;
  }
  function nodeURL(value){
@@ -1339,9 +1338,31 @@
  function providerConfig(){const p=provider();editFields(p.name+' · 渠道默认',p.defaults,{values:{},sources:{}},rules=>change(()=>p.defaults=rules),'<p>作用于渠道内所有模型；未覆盖字段继续沿各自模板或声明解析。</p>');}
  function batch(){const targets=draft.providers.filter(p=>scope.has(p.id)&&p.id!=='native');if(!targets.length){notice('请选择可配置的自定义渠道');return;}modal('按族批量配置','<p>范围：'+targets.map(p=>esc(p.name)).join('、')+'。按已采用精确版本匹配；先采用模版，再设置该族覆盖。白名单不因此改变。</p><label class="mp-label">模型族 / 模版<select id="mpBatchFamily" class="mp-select">'+opts(families(),'gpt')+'</select></label><div id="mpBatchError" class="mp-alert"></div>','下一步',()=>{const f=$('#mpBatchFamily').value,hits=targets.flatMap(p=>p.models.filter(m=>templateResolution(p,m).id===f));if(!hits.length){$('#mpBatchError').textContent='该范围没有采用并匹配此模版的模型，请先采用精确版本';return;}closeModal();editFields(f+' · '+targets.length+' 个渠道',{},null,rules=>change(()=>targets.forEach(p=>p.familyOverrides[f]=clone(rules))),'<p>匹配 '+hits.length+' 个模型，覆盖位置为渠道族；保留单模型例外。</p>');},{confirmKeepsOpen:true});}
  function adopt(exact=false){if(exact&&templateEditorChanged()){notice('先保存模版修改，再采用已保存版本');return;}const t=template(),v=version(t.id,versionN),chosen=exact?t.id:'gpt',targetIds=new Set(scope);modal('采用模版精确版本','<label class="mp-label">模版 <select id="mpAdoptTemplate" class="mp-select">'+opts(templates.map(x=>[x.id,x.name]),chosen)+'</select></label><label class="mp-label">精确版本 <select id="mpAdoptVersion" class="mp-select"></select></label><label class="mp-label">范围 <select id="mpAdoptScope" class="mp-select">'+opts([['channels','所选渠道的该模型族'],['global','全部渠道的全局族默认']],'channels')+'</select></label><div class="mp-checks" id="mpAdoptChannels">'+draft.providers.filter(p=>p.id!=='native').map(p=>'<label><input type="checkbox" id="mpAdoptChannel-'+esc(p.id)+'" '+(targetIds.has(p.id)?'checked':'')+'>'+esc(p.name)+(p.enabled?'':' · 停用')+'</label>').join('')+'</div><p id="mpAdoptInfo"></p><label class="mp-label"><input id="mpAdoptClear" type="checkbox">明确清除目标单模型例外</label><label class="mp-label"><input id="mpAdoptMain" type="checkbox">设为默认（独立主指针动作）</label><div id="mpAdoptError" class="mp-alert"></div>','采用到草稿',()=>{const id=$('#mpAdoptTemplate').value,n=Number($('#mpAdoptVersion').value),type=$('#mpAdoptScope').value,tt=templates.find(x=>x.id===id),vv=version(id,n),targets=draft.providers.filter(p=>targetIds.has(p.id)&&p.id!=='native');if(!vv){$('#mpAdoptError').textContent='请选择已保存版本';return;}if(type==='channels'&&!targets.length){$('#mpAdoptError').textContent='请勾选要采用的渠道；仅浏览渠道不自动加入范围';return;}const clear=$('#mpAdoptClear').checked,main=$('#mpAdoptMain').checked;closeModal();change(()=>{if(type==='global')draft.globalRefs[tt.id]=id+':'+n;else targets.forEach(p=>{p.refs[tt.id]=id+':'+n;if(clear)p.models.filter(m=>templateMatches(tt,m,p,vv)).forEach(m=>{m.overrides={};});});});if(main)tt.main=n;tab='channels';render();notice('精确版本已加入草稿；已有覆盖保留，保存后才写入'+(main?'。主指针已更新':''));},{confirmKeepsOpen:true});const fill=()=>{const tt=templates.find(x=>x.id===$('#mpAdoptTemplate').value);$('#mpAdoptVersion').innerHTML=opts(tt.versions.map(v=>[v.n,v.versionLabel+' · '+versionState(tt.id,v.n)]),exact&&tt.id===t.id?v.n:tt.main);$('#mpAdoptInfo').textContent='主版本仅影响默认版本。模板来源选择一份；输出协议覆盖渠道默认，已有族 / 单模型例外保留。当前节点地址和渠道认证须在保存前补齐。当前所选：'+[...targetIds].join('、');};fill();$('#mpAdoptTemplate').onchange=fill;draft.providers.filter(p=>p.id!=='native').forEach(p=>{const el=$('#mpAdoptChannel-'+p.id);el.onchange=()=>{el.checked?targetIds.add(p.id):targetIds.delete(p.id);fill();};});$('#mpAdoptScope').onchange=()=>{$('#mpAdoptChannels').hidden=$('#mpAdoptScope').value==='global';};}
- function startSave(snapshot){
+ function currentChannelSnapshot(p=provider()){
+  const next=clone(saved),index=next.providers.findIndex(item=>item.id===p.id);
+  if(index>=0)next.providers[index]=clone(p);
+  else{
+   const previous=draft.providers.slice(0,draft.providers.findIndex(item=>item.id===p.id)).reverse().find(item=>next.providers.some(old=>old.id===item.id));
+   next.providers.splice(previous?next.providers.findIndex(item=>item.id===previous.id)+1:0,0,clone(p));
+  }
+  return next;
+ }
+ function currentChannelDirty(p=provider()){
+  return !!p&&JSON.stringify(p)!==JSON.stringify(saved.providers.find(item=>item.id===p.id));
+ }
+ function saveCurrentChannel(){
+  const p=provider();if(busy()||!p||p.id==='native')return;
+  if(stagedModelEdits().some(([key])=>p.models.some(model=>model.key===key))){notifySaveBlocked('当前渠道还有未加入草稿的型号编辑，请先处理后保存','channel-staged');return;}
+  const snapshot=currentChannelSnapshot(p),error=channelConfigError(p,snapshot);
+  if(error){notifySaveBlocked(error+'；当前渠道未写入，编辑保留','channel-validation');return;}
+  if(projection(snapshot).length>100){notifySaveBlocked('保存当前渠道后超出激活预算，编辑保留','channel-budget');return;}
+  if(scenario==='drift'){notifySaveBlocked('配置文件基准已变化，当前渠道未写入，编辑保留','stale');return;}
+  if(!currentChannelDirty(p)){channelDetail=false;render();return;}
+  startSave(snapshot,{channelId:p.id});
+ }
+ function startSave(snapshot,options={}){
   if(busy())return;const id=++operationId;
-  operation={id,status:'running',step:0,snapshot,before:clone(saved),message:'备份…'};render();
+  operation={id,status:'running',step:0,snapshot,before:clone(saved),baseline:JSON.stringify(saved),channelId:options.channelId||null,message:'备份…'};render();
   function step(){
    if(operation?.id!==id||operation.status!=='running')return;operation.step++;
    if(operation.step===1&&scenario==='backup-fail'){
@@ -1352,9 +1373,14 @@
     // 兼容旧演示场景名；失败发生于 mock 原子替换之前，没有部分发布或核对流程。
     operation.status='failed';operation.message=scenario==='timeout'?'原子写入超时 · 原文件与草稿保留':'原子写入失败 · 原文件与草稿保留';render();return;
    }
+   if(operation.baseline!==JSON.stringify(saved)){operation.status='failed';operation.message='配置文件基准已变化 · 未写入，编辑保留';render();return;}
    saved=clone(snapshot);pending=false;client='已写入';
-   records.push({id,time:updates.stamp(records).versionLabel,restores:restoration?.recordId||null,status:'成功',policy:clone(snapshot),before:clone(operation.before),client});
-   restoration=null;operation.status='written';operation.message='已写入';render();
+   records.push({id,time:updates.stamp(records).versionLabel,restores:!operation.channelId?restoration?.recordId||null:null,status:'成功',policy:clone(snapshot),before:clone(operation.before),client});
+   if(!operation.channelId)restoration=null;
+   const committed=operation.channelId?[operation.channelId]:snapshot.providers.map(p=>p.id);for(const pid of committed){delete channelConnections[pid];channelKeyInputs.delete(pid);}
+   operation.status='written';operation.message='已写入';
+   if(operation.channelId&&channelDetail&&current===operation.channelId){channelDetail=false;channelSection='connection';}
+   render();
   }
   setTimeout(step,350);
  }
@@ -1854,7 +1880,7 @@
    seen.add(choice.id);const pid=choice.id==='channel:legacy'&&choice.mapping==='new'?'legacy-imported':item.provider.id;
    const current=draft.providers.find(p=>p.id===pid),old=request.baseline.saved.providers.find(p=>p.id===pid),reviewed=request.baseline.draft.providers.find(p=>p.id===pid);
    if(!same(saved.providers.find(p=>p.id===pid),old)||!same(current,reviewed))return fail('渠道已变化，请关闭并重新比较。');
-   if(stagedChannelConnections().some(([id])=>id===pid)||stagedModelEdits().some(([key])=>current?.models.some(m=>m.key===key)))return fail('目标渠道有未确认输入，请先加入草稿或还原后重新比较。');
+   if(stagedModelEdits().some(([key])=>current?.models.some(m=>m.key===key)))return fail('目标渠道有未确认输入，请先加入草稿或还原后重新比较。');
    if((!item.base&&!same(current,old))||(choice.credential&&!same(current?.connection,old?.connection)))return fail('目标渠道有重叠草稿，请先处理后重新比较。');
    let next=syncProviderCandidate(item,old);
    next.id=pid;
@@ -1922,7 +1948,7 @@
   if(name==='late-generation'){tab='templates';templateDetail=true;templateId='gpt';versionN=3;templateEdit();}
   if(name.startsWith('update-')){tab='templates';templateDetail=true;templateId='gpt';versionN=template().main;assistantTask='update';assistantOpen=true;}setRoute('models');render();notice('已切换演示场景：'+name);}
  document.addEventListener('click',e=>{const el=e.target.closest('[data-mp]');if(!el||el.disabled)return;const a=el.dataset.mp,id=el.dataset.id;
-  if(busy()&&['apply-channel-connection','reset-channel-connection','batch','adopt','model-config','provider-config','new-channel','channel-connection','add-node','edit-node','use-node','delete-node','discard','save','clear-channels','enable-channels','disable-channels','delete-channels','delete-provider','copy-provider','toggle-model','expand-model','apply-model-row','reset-model-row','enable-models','disable-models','edit-models','reset-models','expand-all-models','collapse-all-models','clear-model-picks'].includes(a))return;
+  if(busy()&&['batch','adopt','model-config','provider-config','new-channel','channel-connection','add-node','edit-node','use-node','delete-node','discard','save','clear-channels','enable-channels','disable-channels','delete-channels','delete-provider','copy-provider','toggle-model','expand-model','apply-model-row','reset-model-row','enable-models','disable-models','edit-models','reset-models','expand-all-models','collapse-all-models','clear-model-picks'].includes(a))return;
   if(a==='node-picker-open')openNodePicker(el.dataset.channel,$('#mpChannelNode-'+el.dataset.channel,host));
   else if(a==='node-picker-close')closeNodePicker(true);
   else if(a==='node-picker-choose')chooseNodeFromPicker(el.dataset.channel,id);
@@ -1931,19 +1957,16 @@
   else if(a==='edit-provider'){closeModal();for(const b of Object.values(channelConnections))b.keyVisible=false;current=id;channelDetail=true;search='';family='';render();}
   else if(a==='channel-section')scrollChannelSection(id);
   else if(a==='toggle-channel-nav')toggleChannelNav();
-  else if(a==='apply-channel-connection')applyChannelConnection();
   else if(a==='toggle-channel-key'){
    const b=channelConnectionBuffer();b.keyVisible=!b.keyVisible;const input=$('#mpChannelInline-key');if(input)input.type=b.keyVisible?'text':'password';
    el.setAttribute('aria-pressed',String(b.keyVisible));el.setAttribute('aria-label',b.keyVisible?'隐藏 Key':'显示 Key');el.title=b.keyVisible?'隐藏 Key':'显示 Key';
   }
   else if(a==='clear-channel-key'&&!busy()){
-   const b=channelConnectionBuffer();channelKeyInputs.set(current,'');b.keyIntent='clear';b.keyChanged=1;b.retainedKeyConfigured=false;b.connection.keyConfigured=false;
+   const p=provider(),b=channelConnectionBuffer();if(busy()||!b)return;channelKeyInputs.set(current,'');b.keyIntent='clear';b.keyChanged=1;delete p.connection.credentialRef;p.connection.keyConfigured=false;nodeAuthRevision[p.id]=(nodeAuthRevision[p.id]||0)+1;p.refreshToken++;p.availability={kind:'unknown'};channelConnectionBuffer(p);
    const input=$('#mpChannelInline-key');if(input)input.value='';updateChannelConnectionStatus();
   }
   else if(a==='toggle-wizard-key'&&channelWizard){const w=channelWizard;w.keyVisible=!w.keyVisible;const input=$('#mpChannelKey');if(input)input.type=w.keyVisible?'text':'password';el.setAttribute('aria-pressed',String(w.keyVisible));el.setAttribute('aria-label',w.keyVisible?'隐藏 Key':'显示 Key');el.title=w.keyVisible?'隐藏 Key':'显示 Key';}
   else if(a==='clear-wizard-key'&&channelWizard){channelWizard.keyIntent='clear';wizardKeyValue='';channelWizard.retainedKeyConfigured=false;channelWizard.connection.keyConfigured=false;$('#mpChannelKey').value='';}
-  else if(a==='reset-channel-connection'){delete channelConnections[current];channelKeyInputs.delete(current);render();}
-  else if(a==='review-channel-connection'){const item=stagedChannelConnections()[0];if(item){current=item[0];tab='channels';channelDetail=true;setRoute('models');render();scrollChannelSection('connection');}}
   else if(a==='back-channels'){for(const b of Object.values(channelConnections))b.keyVisible=false;channelDetail=false;render();}
   else if(a==='back-templates')returnTemplates();
   else if(a==='preview-channel-toggle')togglePreviewChannel(id);
@@ -1996,7 +2019,7 @@
   else if(a==='batch')batch();
   else if(a==='model-config'){const p=draft.providers.find(p=>p.models.some(m=>m.key===id)),m=p.models.find(m=>m.key===id);if(p.id==='native'){modal('模型详情 · 只读',fieldEditor({},resolve(p,m),true)+'<p>原生目录由官方管理，此处仅查看声明。</p>','关闭');return;}editModel(p,m);}
   else if(a==='adopt'||a==='adopt-version')adopt(a==='adopt-version');
-  else if(a==='save')openSaveReview();
+  else if(a==='save'){if(tab==='channels'&&channelDetail)saveCurrentChannel();else openSaveReview();}
   else if(a==='stop')stopSave();
 
   else if(a==='discard')discardChannelDrafts();
