@@ -91,7 +91,7 @@ const STATE_META: Record<SaveStateId, Omit<SaveState, 'id'>> = {
   prepared: { label: '待写入', tone: 'muted', actionable: false },
   staging: { label: '正在准备', tone: 'starting', actionable: false },
   applying: { label: '正在保存', tone: 'starting', actionable: false },
-  verified: { label: '已保存 · 待重启', tone: 'warn', actionable: true },
+  verified: { label: '已保存', tone: 'muted', actionable: false },
   // 流程第 ④ 态（0.2.11）：运行目录与那次写入不一致，或写入未完整结束。
   partial: { label: '未完整写入', tone: 'warn', actionable: true },
   'rolling-back': { label: '正在回滚', tone: 'warn', actionable: false },
@@ -176,8 +176,7 @@ const DRAFT_META: Record<DraftStateId, Omit<DraftState, 'id'>> = {
 /**
  * 渠道列表顶部要显示的**唯一**一个状态（裁决：3 处 → 1 处）。
  *
- * 优先级与原型 channelPolicyState() 一致：进行中 → 结果待核对 → 失败 → 取消
- * → 待确认编辑 → 超限 → 未保存 → 未修改。
+ * 进行中的保存与未完整写入优先；已完成的旧计划不能遮住后来编辑的草稿。
  *
  * 0.2.12：不再有「客户端待处理」一档——保存成功后只给一条通知，不置状态。
  */
@@ -193,13 +192,13 @@ export function channelPolicyState(input: {
   const plan = input.plan
   if (plan?.phase) {
     const state = saveStateOf(plan.phase)
-    // 写入中 / 已核实 / 部分 / 回滚中 / 已回滚 直接占据状态位。
-    if (state.id !== 'idle') return state
+    if (!['idle', 'verified', 'rolled-back'].includes(state.id)) return state
   }
 
   if (input.pendingRows) return { id: 'staged', ...DRAFT_META.staged } as unknown as SaveState
   if (input.overBudget) return { id: 'over-budget', ...DRAFT_META['over-budget'] } as unknown as SaveState
   if (input.draftDirty) return { id: 'dirty', ...DRAFT_META.dirty } as unknown as SaveState
+  if (plan?.phase) return saveStateOf(plan.phase)
   return { id: 'idle', ...STATE_META.idle }
 }
 

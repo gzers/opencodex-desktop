@@ -19,15 +19,16 @@ describe('UiStatus：只接语义 tone，不接颜色名', () => {
   })
 
   it('不产生 data-tone 别名', () => {
-    const wrapper = render({tone: 'warn', label: '待重启'})
+    const wrapper = render({tone: 'warn', label: '未完整写入'})
     expect(wrapper.attributes('data-tone')).toBeUndefined()
     wrapper.unmount()
   })
 
   it('直接接 SaveState 时用其 label 与 tone', () => {
     const wrapper = render({state: saveStateOf('committed')})
-    expect(wrapper.text()).toContain('已保存 · 待重启')
-    expect(wrapper.classes()).toContain('state-warn')
+    expect(wrapper.text()).toBe('已保存')
+    expect(wrapper.text()).not.toContain('待重启')
+    expect(wrapper.classes()).toContain('state-muted')
     wrapper.unmount()
   })
 
@@ -39,9 +40,9 @@ describe('UiStatus：只接语义 tone，不接颜色名', () => {
   })
 
   it('子标签与计数分别渲染，子标签带 · 前缀类', () => {
-    const wrapper = render({state: saveStateOf('committed'), sub: '上次保存待重启', count: 12})
-    expect(wrapper.text()).toContain('已保存 · 待重启')
-    expect(wrapper.find('.ui-status-sub').text()).toBe('上次保存待重启')
+    const wrapper = render({state: saveStateOf('committed'), sub: '本次写入 12 项', count: 12})
+    expect(wrapper.text()).toContain('已保存')
+    expect(wrapper.find('.ui-status-sub').text()).toBe('本次写入 12 项')
     expect(wrapper.find('.ui-status-count').text()).toBe('12')
     wrapper.unmount()
   })

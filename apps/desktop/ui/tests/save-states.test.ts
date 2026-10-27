@@ -66,10 +66,10 @@ describe('保存状态归并（23 phase → 结论级）', () => {
     expect(state.actionable).toBe(true)
   })
 
-  it('没有 plan 是未修改；verified / partial / failed 都是需要处理的结果', () => {
+  it('已保存无需继续处理，未完整写入才保留处理状态', () => {
     expect(saveStateOf(null).id).toBe('idle')
     expect(saveStateOf(undefined).label).toBe('未修改')
-    expect(saveStateOf('committed').actionable).toBe(true)
+    expect(saveStateOf('committed')).toMatchObject({ label: '已保存', tone: 'muted', actionable: false })
     expect(saveStateOf('verified_partial').actionable).toBe(true)
     expect(saveStateOf('verified_partial').label).toBe('未完整写入')
   })
@@ -91,6 +91,16 @@ describe('tone 唯一词表', () => {
 
 
 describe('列表页唯一状态（3 处收敛为 1 处）', () => {
+  it.each(['committed', 'runtime_verified', 'credentials_verified', 'compensated'])('已结束的 %s 不遮住新草稿状态', phase => {
+    expect(channelPolicyState({ plan: { phase }, draftDirty: true }).label).toBe('未保存修改')
+    expect(channelPolicyState({ plan: { phase }, pendingRows: 1, draftDirty: true }).label).toBe('有待确认编辑')
+    expect(channelPolicyState({ plan: { phase }, overBudget: true }).label).toBe('超出激活预算')
+  })
+
+  it('committed 在重新打开后也没有待重启状态', () => {
+    expect(channelPolicyState({ plan: { phase: 'committed' } })).toMatchObject({ label: '已保存', actionable: false })
+  })
+
   it('进行中的保存优先于草稿修改', () => {
     const state = channelPolicyState({ saving: true, draftDirty: true, pendingRows: 2 })
     expect(state.label).toBe('正在保存')
