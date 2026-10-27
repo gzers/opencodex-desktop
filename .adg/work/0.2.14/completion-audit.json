@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-27",
+  "task": "TASK-OPENCODEX-0.2.14",
+  "objectiveScope": "WP-75-WP-81; documents/prototype/development/tests/live measurements/release",
+  "checks": [
+    {
+      "name": "review:file-authority",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/backend-summary.json",
+        ".adg/evidence/0.2.14/file-browser/report.json",
+        ".adg/evidence/0.2.14/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.14/provider-live.json",
+        ".adg/evidence/0.2.14/windows-native/model-sort-native.json",
+        ".adg/evidence/0.2.14/release-windows/msi/model-sort-native.json",
+        ".adg/evidence/0.2.14/release-windows/nsis/model-sort-native.json"
+      ]
+    },
+    {
+      "name": "review:key-save",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/file-browser/report.json",
+        ".adg/evidence/0.2.14/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.14/backend-regression.log"
+      ]
+    },
+    {
+      "name": "review:discovery",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/backend-regression.log",
+        ".adg/evidence/0.2.14/provider-live.json",
+        ".adg/evidence/0.2.14/provider-live-final.log"
+      ]
+    },
+    {
+      "name": "review:notifications",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/gate-report.json",
+        ".adg/evidence/0.2.14/notification-parity/report.json",
+        ".adg/evidence/0.2.14/notification-feedback/report.json",
+        ".adg/evidence/0.2.14/notification-feedback-webkit/report.json",
+        ".adg/evidence/0.2.14/prototype-regression.tap"
+      ]
+    },
+    {
+      "name": "review:restart",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/backend-regression.log"
+      ]
+    },
+    {
+      "name": "review:release",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.14/gate-report.json",
+        ".adg/evidence/0.2.14/ci-final.json",
+        ".adg/evidence/0.2.14/release-build.json",
+        ".adg/evidence/0.2.14/release-summary.json",
+        ".adg/evidence/0.2.14/publish-stable.log",
+        ".adg/evidence/0.2.14/release-windows/nsis/model-ui.json",
+        ".adg/evidence/0.2.14/release-windows/msi/model-ui.json"
+      ]
+    }
+  ],
+  "release": "https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.14",
+  "result": "passed",
+  "retainedLimits": [
+    "No physical restart of the active Codex host; do not infer restart from response mocks.",
+    "No all-provider/proxy/native-touchscreen UI claim.",
+    "Ignored tests not counted as passed."
+  ],
+  "postMergeRepeatCI": "40440609508 is an additional repeat; PR CI and tagged installer acceptance have completed successfully."
+}

@@ -4,7 +4,7 @@
   "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-23.md",
   "code_commit": "47102d6473bb840fa7da08844212a6948dc5d586",
   "recorded_at": "2026-10-27T02:07:18.436583+00:00",
-  "result": "in_progress",
+  "result": "succeeded",
   "checks": [
     {
       "name": "review:file-authority",
@@ -13,7 +13,10 @@
         ".adg/evidence/0.2.14/backend-summary.json",
         ".adg/evidence/0.2.14/file-browser/report.json",
         ".adg/evidence/0.2.14/file-browser-webkit/report.json",
-        ".adg/evidence/0.2.14/provider-live.json"
+        ".adg/evidence/0.2.14/provider-live.json",
+        ".adg/evidence/0.2.14/windows-native/model-sort-native.json",
+        ".adg/evidence/0.2.14/release-windows/msi/model-sort-native.json",
+        ".adg/evidence/0.2.14/release-windows/nsis/model-sort-native.json"
       ],
       "scope": "Current file snapshot and field-preserving atomic writer; legacy drafts ignored; external conflicts retained; 26-provider isolated copy official validation passed."
     },
@@ -59,13 +62,17 @@
     },
     {
       "name": "review:release",
-      "status": "failed",
+      "status": "passed",
       "evidence": [
         ".adg/evidence/0.2.14/gate-report.json",
-        ".adg/evidence/0.2.14/ci-native-contract-fix.json",
-        ".adg/evidence/0.2.14/ci-macos-backend-summary.json"
+        ".adg/evidence/0.2.14/ci-final.json",
+        ".adg/evidence/0.2.14/release-build.json",
+        ".adg/evidence/0.2.14/release-summary.json",
+        ".adg/evidence/0.2.14/publish-stable.log",
+        ".adg/evidence/0.2.14/release-windows/nsis/model-ui.json",
+        ".adg/evidence/0.2.14/release-windows/msi/model-ui.json"
       ],
-      "scope": "Local 21-gate passed; Windows native smoke contract corrected in test-only commit; new CI 40438355951 and all publication evidence remain pending."
+      "scope": "21 local gate steps passed; required PR CI jobs passed, actual Windows WebView2 file write/reopen passed, NSIS and MSI installed-release checks passed; macOS bundle version/public-key signature verified; all 3 updater assets cryptographically verified and stable Latest manifest is 0.2.14."
     }
   ],
   "limits": [
@@ -73,5 +80,29 @@
     "No all-provider/proxy/native-touchscreen UI claim.",
     "Ignored tests not counted as passed."
   ],
-  "same_application_source_evidence": ".adg/evidence/0.2.14/source-trees.json"
+  "same_application_source_evidence": ".adg/evidence/0.2.14/source-trees.json",
+  "completed_at": "2026-10-27T03:08:19.619060+00:00",
+  "release_commit": "56c11220b77b69de948f933e3b4c7fb93dae8256",
+  "fact_impacts": [
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "after_sha256": "475148ac05f1c39004b2457149aeb9fb8c13c2333e706f21967cf18800835790"
+    },
+    {
+      "path": "docs/02-项目核心/数据与状态.md",
+      "after_sha256": "aa61a9200938d38d18053173bd2fa023848441ba3340c62b39d0f30381778122"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-23.md",
+      "after_sha256": "99f61ccc69d254404a580faca546c1e4f039a6dc10957ceff2298b1c1c14ff2a"
+    },
+    {
+      "path": "docs/03-开发实施/REL-OPENCODEX-DESKTOP-17.md",
+      "after_sha256": "e61c61a8ab4ba72c6d664839d4a76e3a2f6848324c0f4628f159063a3c7f45b5"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.13-bugs.md",
+      "after_sha256": "7d821797cba3537447a9fe150d2a818af48f4507e033b0de942ba981207f0ab7"
+    }
+  ]
 }
