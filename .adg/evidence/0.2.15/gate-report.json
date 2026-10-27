@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27T04:32:45.747Z",
+  "generatedAt": "2026-10-27T05:50:47.186Z",
   "total": 21,
   "passed": 21,
   "failed": 0,
@@ -8,127 +8,127 @@
     {
       "id": "typecheck",
       "status": "passed",
-      "ms": 4371,
+      "ms": 3835,
       "detail": ""
     },
     {
       "id": "unit",
       "status": "passed",
-      "ms": 9437,
+      "ms": 8109,
       "detail": "Tests  903 passed | 10 skipped (913)"
     },
     {
       "id": "build",
       "status": "passed",
-      "ms": 719,
-      "detail": "✓ built in 395ms"
+      "ms": 737,
+      "detail": "✓ built in 412ms"
     },
     {
       "id": "audit:file-save",
       "status": "passed",
-      "ms": 16504,
-      "detail": "{\"engine\":\"chromium\",\"passed\":20,\"failed\":0,\"out\":\"/tmp/ocx-v15-gate-final/audit-file-save\"}"
+      "ms": 43089,
+      "detail": "{\"engine\":\"chromium\",\"passed\":20,\"failed\":0,\"out\":\"/tmp/ocx-v15-gate-notice/audit-file-save\"}"
     },
     {
       "id": "audit:notification-feedback",
       "status": "passed",
-      "ms": 25731,
-      "detail": "{\"engine\":\"chromium\",\"passed\":56,\"failed\":0,\"outDir\":\"/tmp/ocx-v15-gate-final/audit-notification-feedback\"}"
+      "ms": 27408,
+      "detail": "{\"engine\":\"chromium\",\"passed\":56,\"failed\":0,\"outDir\":\"/tmp/ocx-v15-gate-notice/audit-notification-feedback\"}"
     },
     {
       "id": "audit:notification-parity",
       "status": "passed",
-      "ms": 4851,
+      "ms": 4003,
       "detail": "notification recipe parity failed=0/20"
     },
     {
       "id": "audit:models",
       "status": "passed",
-      "ms": 11648,
-      "detail": "shots: /tmp/ocx-v15-gate-final/audit-models  failed=0/32"
+      "ms": 11339,
+      "detail": "shots: /tmp/ocx-v15-gate-notice/audit-models  failed=0/32"
     },
     {
       "id": "audit:preview",
       "status": "passed",
-      "ms": 9626,
-      "detail": "shots: /tmp/ocx-v15-gate-final/audit-preview failed=0/30"
+      "ms": 9505,
+      "detail": "shots: /tmp/ocx-v15-gate-notice/audit-preview failed=0/30"
     },
     {
       "id": "audit:geometry",
       "status": "passed",
-      "ms": 6430,
+      "ms": 6390,
       "detail": "failed=0/44"
     },
     {
       "id": "audit:geometry:webkit",
       "status": "passed",
-      "ms": 16862,
+      "ms": 17170,
       "detail": "failed=0/40"
     },
     {
       "id": "audit:webkit",
       "status": "passed",
-      "ms": 57139,
-      "detail": "shots: /tmp/ocx-v15-gate-final/audit-webkit  failed=0/32"
+      "ms": 55946,
+      "detail": "shots: /tmp/ocx-v15-gate-notice/audit-webkit  failed=0/32"
     },
     {
       "id": "audit:template",
       "status": "passed",
-      "ms": 8909,
-      "detail": "shots: /tmp/ocx-v15-gate-final/audit-template failed=0/28"
+      "ms": 8937,
+      "detail": "shots: /tmp/ocx-v15-gate-notice/audit-template failed=0/28"
     },
     {
       "id": "audit:export",
       "status": "passed",
-      "ms": 10684,
-      "detail": "shots: /tmp/ocx-v15-gate-final/audit-export failed=0/18"
+      "ms": 10559,
+      "detail": "shots: /tmp/ocx-v15-gate-notice/audit-export failed=0/18"
     },
     {
       "id": "audit:update",
       "status": "passed",
-      "ms": 3981,
-      "detail": "shots: /tmp/ocx-v15-gate-final/audit-update failed=0/24"
+      "ms": 3987,
+      "detail": "shots: /tmp/ocx-v15-gate-notice/audit-update failed=0/24"
     },
     {
       "id": "audit:parity:list",
       "status": "passed",
-      "ms": 6606,
-      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-4m5VnD failed=0/8"
+      "ms": 6395,
+      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-mVsk9y failed=0/8"
     },
     {
       "id": "audit:parity",
       "status": "passed",
-      "ms": 8280,
-      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-bXZFY4 failed=0/10"
+      "ms": 8306,
+      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-Dxdf66 failed=0/10"
     },
     {
       "id": "audit:parity:export",
       "status": "passed",
-      "ms": 9790,
-      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-export-pTNBPC failed=0/7"
+      "ms": 9225,
+      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-export-Uo7fSr failed=0/7"
     },
     {
       "id": "audit:parity:template",
       "status": "passed",
-      "ms": 10094,
-      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-template-yofI2X failed=0/11"
+      "ms": 9362,
+      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-template-ltGW1k failed=0/11"
     },
     {
       "id": "audit:parity:agent",
       "status": "passed",
-      "ms": 10080,
-      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-agent-oXXq33 failed=0/7"
+      "ms": 9432,
+      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-agent-cmkbsL failed=0/7"
     },
     {
       "id": "audit:catalog-naming",
       "status": "passed",
-      "ms": 36,
+      "ms": 30,
       "detail": "CHECKED 50 routed rows; providers=26"
     },
     {
       "id": "audit:catalog-crossvalidate",
       "status": "passed",
-      "ms": 369,
+      "ms": 1087,
       "detail": "PASS 清除友好名后的配置通过官方 config validate"
     }
   ]

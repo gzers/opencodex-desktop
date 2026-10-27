@@ -1,0 +1,32 @@
+{
+  "scope": "WP82-WP84 and shared legacy cleanup",
+  "initialFinding": {
+    "description": "Startup discarded migration result and incomplete diagnostics; existing bell requirement was unfulfilled.",
+    "status": "corrected",
+    "commit": "750c9f35e0c9b0e57c694ecef1b5b90367c316f7",
+    "checks": [
+      "4 actual migration fault/silence to persisted notification tests",
+      "41 event registry checks",
+      "22 local migration cases",
+      "21-step full release gate",
+      "1261 full backend tests"
+    ]
+  },
+  "independentPatchReview": {
+    "result": "no blocking finding",
+    "readOnly": true,
+    "scope": "six changed files: startup ordering, classification, stable dedupe, fixed content/privacy, existing protection/no UI change"
+  },
+  "stillPending": [
+    "fresh platform CI40457220770",
+    "tagged final installers",
+    "updater signatures/public/stable verification"
+  ],
+  "notClaimed": [
+    "paid external model generation",
+    "user WebDAV service",
+    "physical active Codex restart",
+    "OS signing/notarization",
+    "all-provider/network/device combinations"
+  ]
+}
