@@ -121,10 +121,10 @@ async fn rpc(State(s): State<Arc<Fixture>>, Json(body): Json<Value>) -> (HeaderM
             "catalog" => serde_json::to_value(portable_channels::catalog_file(&s.root, &s.home)?)
                 .map_err(Into::into),
             "disk" => {
-                let raw: Value =
-                    serde_json::from_slice(&std::fs::read(s.home.join("config.json")).unwrap())?;
+                let text = std::fs::read_to_string(s.home.join("config.json")).unwrap();
+                let raw: Value = serde_json::from_str(&text)?;
                 Ok(
-                    json!({"key":raw["providers"]["demo"]["apiKey"],"url":raw["providers"]["demo"]["baseUrl"],"unknown":raw["providers"]["demo"]["unknown"],"models":raw["providers"]["demo"]["models"],"providerCount":raw["providers"].as_object().unwrap().len(),"imported":raw["providers"].as_object().unwrap().values().find(|r|r["note"]=="current-file-source"),"backups":std::fs::read_dir(s.root.join("backups/model-config")).map(|i|i.count()).unwrap_or(0)}),
+                    json!({"configText":text,"providers":raw["providers"],"key":raw["providers"]["demo"]["apiKey"],"url":raw["providers"]["demo"]["baseUrl"],"unknown":raw["providers"]["demo"]["unknown"],"models":raw["providers"]["demo"]["models"],"providerCount":raw["providers"].as_object().unwrap().len(),"imported":raw["providers"].as_object().unwrap().values().find(|r|r["note"]=="current-file-source"),"backups":std::fs::read_dir(s.root.join("backups/model-config")).map(|i|i.count()).unwrap_or(0)}),
                 )
             }
             "finish" => {
@@ -155,7 +155,35 @@ async fn file_browser_fixture() {
     let home = temp.path().join("official");
     std::fs::create_dir_all(&root).unwrap();
     std::fs::create_dir_all(&home).unwrap();
-    std::fs::write(home.join("config.json"),serde_json::to_vec(&json!({"providers":{"demo":{"adapter":"openai-chat","baseUrl":"https://example.test","authMode":"key","apiKey":"fixture-original-key","models":["site/custom-id"],"selectedModels":["site/custom-id"],"modelContextWindows":{"site/custom-id":64000},"unknown":{"keep":42}}}})).unwrap()).unwrap();
+    // Every credential and endpoint is synthetic; only this temp home is read
+    // or written. Keep demo for the 0.2.15 Key/import roundtrip regressions.
+    let config = json!({
+        "providers": {
+            "demo": {
+                "adapter": "openai-chat", "baseUrl": "https://example.test",
+                "authMode": "key", "apiKey": "fixture-original-key",
+                "models": ["site/custom-id"], "selectedModels": ["site/custom-id"],
+                "modelContextWindows": {"site/custom-id": 64000}, "unknown": {"keep": 42}
+            },
+            "fixture-a": {
+                "adapter": "openai-chat", "baseUrl": "https://a.example.test/v1",
+                "authMode": "key", "apiKey": "fixture-a-original-key",
+                "models": ["site/model-a"], "selectedModels": ["site/model-a"],
+                "modelContextWindows": {"site/model-a": 64000}, "unknown": {"keep": "a"}
+            },
+            "fixture-b": {
+                "adapter": "openai-chat", "baseUrl": "https://b.example.test/v1",
+                "authMode": "key", "apiKey": "fixture-b-original-key",
+                "models": ["site/model-b"], "selectedModels": ["site/model-b"],
+                "unknown": {"keep": "b"}
+            }
+        }
+    });
+    std::fs::write(
+        home.join("config.json"),
+        serde_json::to_vec(&config).unwrap(),
+    )
+    .unwrap();
     let state = Arc::new(Fixture {
         root,
         home,

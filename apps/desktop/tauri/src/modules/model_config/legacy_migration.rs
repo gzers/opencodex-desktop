@@ -398,15 +398,125 @@ pub fn load_layout(root: &Path) -> ModelResult<Policy> {
     }
 }
 
+/// Strict current-file saves retain this guard from baseline read through
+/// publication/readback or compensation. Acquire after the config file lock.
+pub(super) struct LockedLayout<'a> {
+    root: &'a Path,
+    target: PathBuf,
+    _guard: TargetFileLock,
+    before: Zeroizing<Vec<u8>>,
+    attempted: Option<Vec<u8>>,
+}
+impl<'a> LockedLayout<'a> {
+    pub(super) fn acquire(root: &'a Path) -> ModelResult<Self> {
+        let (target, guard) = lock_layout_file(root)
+            .map_err(|_| invalid("layout_lock", "无法锁定渠道布局，未保存；当前编辑已保留"))?;
+        if current(root)?.is_none() {
+            // Reuse the upgrade while already locked; never recursively lock
+            // a missing layout through load_layout -> migrate.
+            migrate_locked(root, &target)?;
+        }
+        let before = read(root, LAYOUT_PATH)?
+            .ok_or_else(|| invalid("layout_changed", "渠道布局已变化，请重试"))?;
+        Ok(Self {
+            root,
+            target,
+            _guard: guard,
+            before,
+            attempted: None,
+        })
+    }
+
+    pub(super) fn policy(&self) -> ModelResult<Policy> {
+        let actual = read(self.root, LAYOUT_PATH)?;
+        let expected = self.attempted.as_deref().unwrap_or(self.before.as_slice());
+        if actual.as_ref().map(|bytes| bytes.as_slice()) != Some(expected) {
+            return Err(invalid(
+                "layout_changed",
+                "渠道布局已变化，未确认保存，请重试",
+            ));
+        }
+        sanitize(actual.as_ref().unwrap())
+            .ok_or_else(|| invalid("layout_document", "当前布局元数据格式无效，原文件已保留"))
+    }
+
+    pub(super) fn write(&mut self, policy: &Policy) -> ModelResult<()> {
+        let bytes = serde_json::to_vec(policy)?;
+        if read(self.root, LAYOUT_PATH)?
+            .as_ref()
+            .map(|bytes| bytes.as_slice())
+            != Some(self.before.as_slice())
+        {
+            return Err(invalid(
+                "layout_changed",
+                "渠道布局在保存期间已变化，未覆盖",
+            ));
+        }
+        if bytes != *self.before {
+            safety::check_path(self.root, &self.target, false)?;
+            self.attempted = Some(bytes);
+            atomic_write(&self.target, self.attempted.as_ref().unwrap(), 0o600)
+                .map_err(|_| invalid("layout_write", "保存渠道名称或布局失败；当前编辑已保留"))?;
+        }
+        let expected = self.attempted.as_deref().unwrap_or(self.before.as_slice());
+        if read(self.root, LAYOUT_PATH)?
+            .as_ref()
+            .map(|bytes| bytes.as_slice())
+            != Some(expected)
+        {
+            return Err(invalid(
+                "layout_readback",
+                "渠道布局写后读回不同，未确认保存",
+            ));
+        }
+        Ok(())
+    }
+
+    pub(super) fn rollback(&self) -> ModelResult<()> {
+        let Some(attempted) = &self.attempted else {
+            return Ok(());
+        };
+        let actual = read(self.root, LAYOUT_PATH)?;
+        if actual.as_ref().map(|bytes| bytes.as_slice()) == Some(self.before.as_slice()) {
+            return Ok(());
+        }
+        if actual.as_ref().map(|bytes| bytes.as_slice()) != Some(attempted.as_slice()) {
+            return Err(invalid(
+                "layout_changed",
+                "渠道布局已被外部修改，未覆盖回滚",
+            ));
+        }
+        safety::check_path(self.root, &self.target, false)?;
+        atomic_write(&self.target, &self.before, 0o600)?;
+        if read(self.root, LAYOUT_PATH)?
+            .as_ref()
+            .map(|bytes| bytes.as_slice())
+            != Some(self.before.as_slice())
+        {
+            return Err(invalid("layout_readback", "渠道布局回滚读回不同"));
+        }
+        Ok(())
+    }
+}
+
+fn lock_layout_file(root: &Path) -> ModelResult<(PathBuf, TargetFileLock)> {
+    let target = path(root, LAYOUT_PATH)?;
+    path(root, &format!("{LAYOUT_PATH}.lock"))?;
+    let guard = TargetFileLock::lock(&target)?;
+    safety::check_path(root, &lock_path_for(&target), false)?;
+    Ok((target, guard))
+}
+
 /// Archive candidates before publishing. Legacy read/parse/archive failures are
 /// info diagnostics with originals retained; they cannot deny a fresh layout.
 /// Errors are limited to the required new layout/root/lock/publication itself.
 /// Existing layout bytes are never changed, including on explicit repeat runs.
 pub fn migrate(root: &Path) -> ModelResult<MigrationReport> {
-    let target = path(root, LAYOUT_PATH)?;
-    path(root, &format!("{LAYOUT_PATH}.lock"))?;
-    let _guard = TargetFileLock::lock(&target)?;
-    safety::check_path(root, &lock_path_for(&target), false)?;
+    let (target, _guard) = lock_layout_file(root)?;
+    migrate_locked(root, &target)
+}
+
+fn migrate_locked(root: &Path, target: &Path) -> ModelResult<MigrationReport> {
     let existing = current(root)?;
     let mut report = MigrationReport::new(existing.clone().unwrap_or_default());
     let policy = legacy(root, POLICY_PATH, &mut report);
@@ -433,8 +543,8 @@ pub fn migrate(root: &Path) -> ModelResult<MigrationReport> {
         // A hard link publishes one fully flushed file atomically without
         // replacing a layout created after our initial existence check. Both
         // names are inside the same data root; no external link is followed.
-        safety::check_path(root, &target, true)?;
-        match std::fs::hard_link(&staging, &target) {
+        safety::check_path(root, target, true)?;
+        match std::fs::hard_link(&staging, target) {
             Ok(()) => {
                 report.created_layout = true;
                 report.layout = layout;
@@ -1106,6 +1216,7 @@ mod tests {
             root.path(),
             home.path(),
             config_file::SaveRequest {
+                scope: None,
                 expected_file: snapshot.policy_digest,
                 policy: snapshot.policy,
                 credentials: vec![],

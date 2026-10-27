@@ -93,7 +93,7 @@ export const modelApi = {
   load: () => invoke<ModelSnapshot>('model_file_snapshot'),
   // Historical recovery alone uses the manager policy/workspace digest domain.
   loadRecoveryBaseline: () => invoke<ModelSnapshot>('model_config_snapshot'),
-  writeFile: (expectedFile:string,policy:ModelPolicy,credentials:CredentialEdit[]) => invoke<{snapshot:ModelSnapshot;changed:boolean}>('model_file_save',{request:{expectedFile,policy,credentials}}),
+  writeFile: (expectedFile:string,policy:ModelPolicy,credentials:CredentialEdit[],scope?:{channelId:string}) => invoke<{snapshot:ModelSnapshot;changed:boolean}>('model_file_save',{request:{expectedFile,policy,credentials,...(scope?{scope}:{})}}),
   credential: (providerId:string) => invoke<CredentialView>('model_file_credential',{providerId}),
   save: (draft: TemplateDraft, expectedLibrary: string) => invoke<Commit>('model_template_save', { request: { ...draft, expectedLibrary } }),
   setDefault: (expectedLibrary: string, templateId: string, revisionId: string) => invoke<ModelSnapshot>('model_template_set_default', { expectedLibrary, templateId, revisionId }),

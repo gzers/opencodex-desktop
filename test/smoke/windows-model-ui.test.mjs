@@ -1,6 +1,9 @@
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
-import {assertModelSandbox,assertModelExportPath,modelConfigPath,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
+import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises'
+import {tmpdir} from 'node:os'
+import {join} from 'node:path'
+import {modelFileEvidence,assertModelFileWrite,assertModelSandbox,assertModelExportPath,modelConfigPath,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
 import {overviewScene} from './windows-ui-alignment.mjs'
 test('overview accepts either complete cards or the real settled setup gate, never an empty or partial page',()=>{
  assert.equal(overviewScene(Array(6).fill({}),{}),'ready')
@@ -41,4 +44,32 @@ test('task preview JSON begins after the instruction section even when receipt i
  const pack={contract:{required:['submissionId']},task:{id:'fixture'},transport:{headers:{Authorization:'fixture-only'}}}
  const text='断连先GET /receipts/{submissionId}再决定重试。\n\n'+JSON.stringify(pack,null,2)
  assert.deepEqual(parseTaskContent(text),pack);assert.throws(()=>parseTaskContent('only {instructions}'))
+})
+
+test('native Save evidence requires changed file bytes and one exact backup without losing prior backups',async t=>{
+ const directory=await mkdtemp(join(tmpdir(),'ocx-native-file-evidence-'))
+ t.after(()=>rm(directory,{recursive:true,force:true}))
+ const config=join(directory,'config.json'),backupRoot=join(directory,'backups','model-config')
+ const original=Buffer.from('{"providers":{"fixture":{"apiKey":"synthetic-key"}}}\n')
+ await writeFile(config,original)
+ const before=await modelFileEvidence(config,directory)
+ assert.deepEqual(before.backups,[])
+ await mkdir(join(backupRoot,'first'),{recursive:true});await writeFile(join(backupRoot,'first','config.json'),original)
+ await writeFile(config,'{"providers":{"fixture":{"apiKey":"synthetic-replacement"}}}\n')
+ const saved=await modelFileEvidence(config,directory)
+ await assertModelFileWrite(before,saved,directory)
+ await assert.rejects(assertModelFileWrite(saved,saved,directory),/change actual config/)
+ await assert.rejects(assertModelFileWrite(before,{...saved,backups:[]},directory),/exactly one/)
+ await assert.rejects(assertModelFileWrite(before,{...saved,backups:['first','extra']},directory),/exactly one/)
+ await writeFile(join(backupRoot,'first','config.json'),'wrong preimage')
+ await assert.rejects(assertModelFileWrite(before,saved,directory),/exact prewrite/)
+ await mkdir(join(backupRoot,'second'));await writeFile(join(backupRoot,'second','config.json'),saved.bytes)
+ await writeFile(config,'{"providers":{"fixture":{"apiKey":"synthetic-third"}}}\n')
+ const final=await modelFileEvidence(config,directory)
+ await assertModelFileWrite(saved,final,directory)
+ await assert.rejects(assertModelFileWrite(saved,{...final,backups:['second']},directory),/preserve earlier/)
+ // Cancel evidence compares actual bytes and backup entries, without an IPC counter.
+ const canceled=await modelFileEvidence(config,directory)
+ assert(canceled.bytes.equals(final.bytes));assert.deepEqual(canceled.backups,final.backups)
+ assert((await readFile(config)).equals(final.bytes))
 })

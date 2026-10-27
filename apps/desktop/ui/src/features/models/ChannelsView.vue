@@ -49,22 +49,30 @@ const saving=ref(false)
 const editingLocked=computed(()=>models.busy||saving.value||!!models.historicalRecovery)
 const policyStatus=computed(()=>channelPolicyState({saving:saving.value,pendingRows:models.pendingRows.length,draftDirty:models.channelDirty}))
 const policyHint=computed(()=>saving.value?'正在保存':undefined)
+const detailPending=computed(()=>models.pendingRows.filter(row=>row.channel===editorId.value))
+const detailDirty=computed(()=>!!editorId.value&&models.channelIsDirty(editorId.value))
+const detailStatus=computed(()=>channelPolicyState({saving:saving.value,pendingRows:detailPending.value.length,draftDirty:detailDirty.value}))
 const detailProjection=ref<DraftProjection|null>(null),detailProjectionError=ref(''),detailProjectionBusy=ref(false)
 let detailSequence=0,detailTimer:ReturnType<typeof setTimeout>|undefined
-watch(()=>[editorId.value,JSON.stringify(models.channelDraft),models.snapshot?.libraryDigest],(_next,previous)=>{
+watch(()=>[editorId.value,JSON.stringify(models.channelDraft),models.snapshot?.libraryDigest,models.snapshot?.policyDigest],(_next,previous)=>{
  const sequence=++detailSequence;if(detailTimer)clearTimeout(detailTimer);if(!previous||previous[0]!==editorId.value)detailProjection.value=null;detailProjectionError.value='';detailProjectionBusy.value=false
  if(!editorId.value||!models.channelDraft)return
- const policy=JSON.parse(JSON.stringify(models.channelDraft));detailProjectionBusy.value=true
+ let policy:ModelPolicy
+ try{policy=models.channelSaveCandidate(editorId.value)}catch(cause){detailProjectionError.value=errorText(cause);return}
+ detailProjectionBusy.value=true
  detailTimer=setTimeout(async()=>{try{const result=await modelApi.project(policy);if(!disposed&&sequence===detailSequence)detailProjection.value=result}catch(cause){if(!disposed&&sequence===detailSequence)detailProjectionError.value=errorText(cause)}finally{if(sequence===detailSequence)detailProjectionBusy.value=false}},200)
 },{immediate:true})
 let disposed=false
 onBeforeUnmount(()=>{disposed=true;detailSequence++;if(detailTimer)clearTimeout(detailTimer)})
-/** 保存是唯一提交入口，也是预览入口（UI 规范 §38.1）。 */
+/** 列表保存先预览全部剩余修改；详情保存独立按当前渠道提交（UI 规范 §47）。 */
 const saveReviewBaseline=ref<{saved:string;library:string;recovery:string|null}|null>(null),saveConfirming=ref(false)
+watch(()=>[editorId.value,props.active],()=>{
+  previewSequence++;previewRefreshSequence++;previewBusy.value=false;previewOpen.value=false;previewProjection.value=null;saveReviewBaseline.value=null
+})
 async function prepareSave(){
   // §38.4「再次点击不会重复提交」：除按钮禁用外，函数自身也要挡住并发与重入，
-  // 因为列表与详情共用一个入口，连点或两个入口交替触发都能绕过按钮态。
-  if(!models.channelDraft||!models.snapshot||models.busy||models.staging||saving.value||saveConfirming.value||previewBusy.value||previewOpen.value)return
+  // 列表预览与详情写入也共享互斥状态，旧事件不能绕过按钮态。
+  if(editorId.value||props.active===false||!models.channelDraft||!models.snapshot||!models.channelDirty&&!models.pendingRows.length||models.busy||models.staging||saving.value||saveConfirming.value||previewBusy.value||previewOpen.value)return
   const sequence=++previewSequence
   previewBusy.value=true;previewError.value='';error.value=''
   try{const projection=await modelApi.project(JSON.parse(JSON.stringify(models.channelDraft)))
@@ -122,21 +130,33 @@ async function confirmSave(){
   const recovery=models.historicalRecovery
   const reason=saveGateReason()
   saveConfirming.value=true;previewOpen.value=false;previewProjection.value=null;saveReviewBaseline.value=null
+  if(reason==='no_changes'){saveConfirming.value=false;return}
   if(reason){
     try{await modelApi.policySaveBlocked(reason)}catch{useFeedbackStore().showToast('本次没有写入，当前编辑已保留。',{kind:'error'})}
     saveConfirming.value=false;return
   }
-  saving.value=true;models.busy=true;error.value=''
+  saving.value=true;if(recovery)models.busy=true;error.value=''
   try{
     if(recovery)await models.saveHistoricalRecovery(frozen)
-    else{
-      const edits=Object.values(models.credentialEdits).filter(e=>frozen.channels.some(c=>c.id===e.channelId)).map(e=>({...e}))
-      const result=await modelApi.writeFile(expected,frozen,edits)
-      models.acceptTransfer(result.snapshot)
-    }
+    else await models.saveAllChannels(frozen,expected)
     useModelSaveFeedback().showSaved()
   }catch(cause){const message=(recovery?'历史恢复未完成：':'未写入：')+errorText(cause);if(recovery)error.value=message;useFeedbackStore().showToast(message,{kind:'error'})}
-  finally{saving.value=false;models.busy=false;saveConfirming.value=false}
+  finally{saving.value=false;if(recovery)models.busy=false;saveConfirming.value=false}
+}
+
+/** Detail Save shares the file writer but commits only this channel. Navigation
+ * belongs to this still-current editor; a late response never closes another. */
+async function saveDetail(){
+  const id=editorId.value
+  if(!id||!editor.value||protectedChannel(editor.value)||editingLocked.value||saveConfirming.value||!detailDirty.value&&!detailPending.value.length)return
+  saving.value=true;error.value=''
+  try{
+    await models.saveCurrentChannel(id)
+    useModelSaveFeedback().showSaved()
+    if(props.active!==false&&editorId.value===id&&!models.channelIsDirty(id)&&!models.pendingRows.some(row=>row.channel===id))editorId.value=''
+  }catch(cause){
+    useFeedbackStore().showToast('未写入：'+errorText(cause),{kind:'error'})
+  }finally{saving.value=false}
 }
 
 const upstreamBusy = ref(false)
@@ -233,14 +253,14 @@ function dragChannel(event:PointerEvent,id:string){draggedOver.value='';channelD
 <template>
   <div class="channels-view">
     <div v-if="!editor" class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索渠道" aria-label="搜索渠道" /><div class="model-inline"><UiButton :loading="upstreamBusy" :disabled="models.busy||saving" @click="readUpstream">读取现有渠道</UiButton><UiButton :disabled="editingLocked" @click="create">新增渠道</UiButton></div></div>
-    <Teleport defer :to="actionsTarget??'body'" :disabled="!actionsTarget"><div v-if="props.active!==false&&!editor" class="model-inline model-policy-actions"><UiStatus :state="policyStatus" :hint="policyHint" /><UiButton :disabled="(!models.channelDirty&&!models.pendingRows.length)||models.busy||saving" @click="restore">还原修改</UiButton><UiButton data-testid="policy-save" :variant="models.channelDirty?'primary':'default'" :disabled="models.busy||saving||saveConfirming" :loading="models.busy" title="保存 · 查看保存预览，确认后写入" @click="prepareSave">保存</UiButton></div></Teleport>
+    <Teleport defer :to="actionsTarget??'body'" :disabled="!actionsTarget"><div v-if="props.active!==false&&!editor" class="model-inline model-policy-actions"><UiStatus :state="policyStatus" :hint="policyHint" /><UiButton :disabled="(!models.channelDirty&&!models.pendingRows.length)||models.busy||saving" @click="restore">还原修改</UiButton><UiButton data-testid="policy-save" :variant="models.channelDirty?'primary':'default'" :disabled="!models.channelDirty&&!models.pendingRows.length||models.busy||saving||saveConfirming" :loading="models.busy" :title="models.channelDirty||models.pendingRows.length?'保存 · 查看剩余修改的保存预览，确认后写入':'没有未保存修改'" @click="prepareSave">保存</UiButton></div></Teleport>
     <p v-if="search.trim()" class="model-muted">清除搜索后可调整渠道顺序</p>
-    <p v-if="models.pendingRows.length" role="status">{{ models.pendingRows.length }} 项型号编辑未确认；全局保存暂不可用。<UiButton v-for="target in [...new Set(models.pendingRows.map(r=>r.channel))]" :key="target" size="sm" variant="ghost" @click="editorId=target">查看 {{ models.channelDraft?.channels.find(c=>c.id===target)?.label??target }}</UiButton></p>
+    <p v-if="!editor&&models.pendingRows.length" role="status">{{ models.pendingRows.length }} 项型号编辑未确认；全局保存暂不可用。<UiButton v-for="target in [...new Set(models.pendingRows.map(r=>r.channel))]" :key="target" size="sm" variant="ghost" @click="editorId=target">查看 {{ models.channelDraft?.channels.find(c=>c.id===target)?.label??target }}</UiButton></p>
 
     <!-- 保存结果详情不再在列表上方占一行：入口走通知中心（model_policy action），见提案 §4.1。 -->
     <p v-if="error || models.channelError" class="model-error" role="alert">{{ error || models.channelError }}</p>
     <div v-if="selected.length&&!editor" class="model-inline"><span>已选 {{ selected.length }} 个渠道<span v-if="selected.some(c=>!channels.some(row=>row.id===c.id))">（含搜索外 {{ selected.filter(c=>!channels.some(row=>row.id===c.id)).length }} 个）</span></span><UiButton size="sm" :disabled="editingLocked" @click="enableSelected(true)">启用</UiButton><UiButton size="sm" :disabled="editingLocked" @click="enableSelected(false)">停用</UiButton><UiButton size="sm" variant="danger" :disabled="editingLocked" @click="deleteChannels(selected)">删除所选渠道</UiButton><UiButton size="sm" :disabled="editingLocked||!!models.pendingRows.length" @click="batchChannels={mode:'family',ids:selected.map(c=>c.id)}">按族批量配置</UiButton><UiButton size="sm" :disabled="editingLocked||!!models.pendingRows.length" @click="batchChannels={mode:'adopt',ids:selected.map(c=>c.id)}">套用模版</UiButton><UiButton size="sm" variant="ghost" @click="selectedIds=[]">清除选择</UiButton></div>
-    <ChannelEditor v-if="editor" :key="editor.id" :navigation="models.view.navigation['channel:'+editor.id]" :channels="models.channelDraft?.channels" @switch="editorId=$event" @save="prepareSave" @restore="restore" :dirty="models.channelDirty||!!models.pendingRows.length" :save-status="policyStatus.label" :save-tone="policyStatus.tone" :save-disabled="models.busy||saving||saveConfirming" :active-count="detailProjection?.knownActiveModels" :view-state="models.view.channelFilters[editor.id]" :row-state="models.modelRows[editor.id]" :policy="models.channelDraft??undefined" :existing="models.snapshot?.policy.channels.some(c=>c.id===editorId)" :channel="editor" :global-refs="models.channelDraft?.templateRefs??[]" :projection="detailProjection?.rows.filter(row=>row.channelId===editorId)??[]" :projection-busy="detailProjectionBusy" :projection-error="detailProjectionError" :templates="models.snapshot?.library.templates ?? []" :busy="editingLocked||protectedChannel(editor)" @close="editorId = ''" />
+    <ChannelEditor v-if="editor" :key="editor.id" :navigation="models.view.navigation['channel:'+editor.id]" :channels="models.channelDraft?.channels" @switch="editorId=$event" @save="saveDetail" :dirty="detailDirty||!!detailPending.length" :save-status="detailStatus.label" :save-tone="detailStatus.tone" :save-disabled="!detailDirty&&!detailPending.length||models.busy||saving||saveConfirming||!!models.historicalRecovery" :active-count="detailProjection?.knownActiveModels" :view-state="models.view.channelFilters[editor.id]" :row-state="models.modelRows[editor.id]" :policy="models.channelDraft??undefined" :existing="models.snapshot?.policy.channels.some(c=>c.id===editorId)" :channel="editor" :global-refs="models.channelDraft?.templateRefs??[]" :projection="detailProjection?.rows.filter(row=>row.channelId===editorId)??[]" :projection-busy="detailProjectionBusy" :projection-error="detailProjectionError" :templates="models.snapshot?.library.templates ?? []" :busy="editingLocked||protectedChannel(editor)" @close="editorId = ''" />
     <template v-else><div class="model-table-scroll"><table class="model-table ui-table ui-table-fixed channel-table"><colgroup><col class="ui-selection-col"/><col class="channel-name-col"/><col class="channel-node-col"/><col class="channel-count-col"/><col class="channel-enable-col"/><col class="channel-actions-col"/></colgroup><thead><tr><th class="ui-selection-cell"><input type="checkbox" aria-label="选择当前结果中的可编辑渠道" :checked="allSelected" :indeterminate="someSelected" @change="selectAll" /></th><th>渠道</th><th>服务节点</th><th>模型</th><th>启用</th><th>操作</th></tr></thead><tbody><tr v-for="(c,channelIndex) in channels" :key="c.id" :data-channel="c.id" :class="{dragging:draggedChannel===c.id,'drag-over':draggedOver===c.id}" @pointerdown="dragChannel($event,c.id)"><td class="ui-selection-cell"><input type="checkbox" :aria-label="'选择渠道 '+c.label" :checked="selectedIds.includes(c.id)" :disabled="protectedChannel(c)||editingLocked" @change="selectOne(c.id)" /></td><td><strong>{{ c.label || '未命名渠道' }}</strong><small>{{ c.connection.nodes.length }} 节点 · {{ c.connection.enabled ? '启用' : '停用' }}</small></td><td><ChannelNodeSelect :channel="c" :disabled="editingLocked" :readonly="protectedChannel(c)" /></td><td class="ui-nowrap"><span class="channel-model-count">{{ c.selection.mode === 'all' ? c.discovered.length : c.selection.mode === 'whitelist' ? c.selection.models.length : 0 }} / {{ c.discovered.length }}</span><small class="channel-model-count-hint">已选 / 发现</small></td><td><span v-if="protectedChannel(c)">官方管理</span><div v-else class="channel-enable-cell"><UiSwitch :model-value="c.connection.enabled" :label="c.label+'渠道启用状态'" :disabled="editingLocked" @update:model-value="c.connection.enabled=$event" /><span>{{ c.connection.enabled?'启用':'停用' }}</span></div></td><td><div class="channel-row-actions" :class="{'is-readonly':protectedChannel(c)}"><UiButton size="sm" :data-model-focus="'channel:'+c.id" @click="editorId = c.id">{{ protectedChannel(c)?'查看':'编辑' }}</UiButton><UiButton size="sm" :disabled="protectedChannel(c)||editingLocked" @click="beginCopy(c)">复制</UiButton><UiButton size="sm" variant="danger" :disabled="protectedChannel(c)||editingLocked" @click="deleteChannels([c])">删除</UiButton><span class="channel-order" role="group" :aria-label="c.label+'排序'"><button type="button" class="channel-order-button" :disabled="!reorderAllowed||channelIndex===0" :aria-label="c.label+'上移'" :title="c.label+'上移'" @click="move(c.id,-1)">↑</button><button type="button" class="channel-order-button" :disabled="!reorderAllowed||channelIndex===channels.length-1" :aria-label="c.label+'下移'" :title="c.label+'下移'" @click="move(c.id,1)">↓</button></span></div></td></tr></tbody></table></div><p v-if="!channels.length" class="model-empty">暂无渠道</p>
   <p class="model-footer-note">启用开关修改当前编辑；停用保留已选模型与配置。拖动渠道调整整组顺序。</p></template>
     <ChannelBatchDialog v-if="batchChannels" :mode="batchChannels.mode" :targets="batchChannels.ids" @close="batchChannels=undefined" />

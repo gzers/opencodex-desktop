@@ -78,11 +78,13 @@ for (const step of steps) {
       env: { ...process.env, AUDIT_OUT_DIR: path.join(outDir, step.id.replace(/[:]/g, '-')) },
     })
     const ms = Date.now() - started
+    fs.writeFileSync(path.join(outDir, step.id.replace(/[:]/g, '-') + '.log'), output)
     results.push({ id: step.id, status: 'passed', ms, detail: summarize(output) })
     console.log('PASS ' + step.id + ' · ' + summarize(output) + ' · ' + ms + 'ms')
   } catch (error) {
     const ms = Date.now() - started
     const output = String(error.stdout || '') + String(error.stderr || '')
+    fs.writeFileSync(path.join(outDir, step.id.replace(/[:]/g, '-') + '.log'), output)
     // 环境缺失（退出码 2 + BLOCKED）记为跳过，不冒充通过也不误判为缺陷。
     if (error.status === 2 && /^BLOCKED/m.test(output.trim())) {
       results.push({ id: step.id, status: 'skipped', detail: output.trim().split('\n')[0].slice(0, 160) })

@@ -85,6 +85,47 @@ function mergeTransferValue(base:MergeValue,local:MergeValue,incoming:MergeValue
 function mergeTransferPolicy(base:ModelPolicy,local:ModelPolicy,incoming:ModelPolicy):ModelPolicy {
   return mergeTransferValue(base as unknown as MergeValue,local as unknown as MergeValue,incoming as unknown as MergeValue) as unknown as ModelPolicy
 }
+// Accept file normalization only where the live field still equals the submitted
+// field. Later input (including deletions and array ordering) always wins.
+function acceptChannelValue(submitted:MergeValue,live:MergeValue,saved:MergeValue):MergeValue {
+  if (sameTransferValue(live,submitted)) return copyTransfer(saved)
+  if (Array.isArray(submitted)&&Array.isArray(live)&&Array.isArray(saved)) {
+    const keyed=(values:MergeValue[])=>values.every(value=>mergeObject(value)&&typeof value.id==='string')&&new Set(values.map(value=>(value as {id:string}).id)).size===values.length
+    if (keyed(submitted)&&keyed(live)&&keyed(saved)) {
+      const byId=(values:MergeValue[])=>new Map(values.map(value=>[(value as {id:string}).id,value]))
+      const before=byId(submitted),current=byId(live),incoming=byId(saved),merged=new Map<string,MergeValue>()
+      for (const id of new Set([...before.keys(),...current.keys(),...incoming.keys()])) {
+        const value=acceptChannelValue(before.get(id),current.get(id),incoming.get(id))
+        if (value!==undefined) merged.set(id,value)
+      }
+      // Field edits do not own array order. Adopt a newer saved order only if
+      // the live IDs still match the submission; local add/delete/reorder wins.
+      const currentIds=[...current.keys()],incomingIds=[...incoming.keys()]
+      const order=(sameTransferValue([...before.keys()],currentIds)?incomingIds:currentIds).filter(id=>merged.has(id))
+      for (const ids of [incomingIds,currentIds]) for (let index=0;index<ids.length;index++) {
+        const id=ids[index]!
+        if (!merged.has(id)||order.includes(id)) continue
+        const previous=ids.slice(0,index).reverse().find(id=>order.includes(id))
+        order.splice(previous===undefined?0:order.indexOf(previous)+1,0,id)
+      }
+      return order.map(id=>merged.get(id)!)
+    }
+  }
+  // References, import receipts and tagged rule/selection values are atomic;
+  // combining their identifiers or modes could invent unconfirmed intent.
+  const atomic=(value:MergeValue)=>mergeObject(value)&&(typeof value.mode==='string'||typeof value.templateId==='string'&&typeof value.revisionId==='string'||typeof value.id==='string'&&typeof value.digest==='string')
+  if (atomic(live)||atomic(saved)) return copyTransfer(live)
+  if ((submitted===undefined||mergeObject(submitted))&&mergeObject(live)&&mergeObject(saved)) {
+    const before=submitted??{}
+    const result:{[key:string]:MergeValue}={}
+    for (const key of new Set([...Object.keys(live),...Object.keys(saved)])) {
+      const value=acceptChannelValue(transferField(before,key),transferField(live,key),transferField(saved,key))
+      if (value!==undefined) Object.defineProperty(result,key,{value,enumerable:true,configurable:true,writable:true})
+    }
+    return result
+  }
+  return copyTransfer(live)
+}
 
 // Route changes retain drafts; a refresh never discards an editor buffer.
 export const useModelsStore = defineStore('model-config', () => {
@@ -137,12 +178,106 @@ export const useModelsStore = defineStore('model-config', () => {
   // 读取现有渠道会带上本机读取回执等记账字段；按等价草稿比较，避免“只读取未编辑”误报。
   // An explicitly adopted raw provider can contain changes beyond the modeled
   // fields. Its receipt must reach Save even when canonicalPolicy is unchanged.
-  const transferMaterialDirty=computed(()=>transferAdopted.value&&channelDraft.value?.channels.some(channel=>{
+  function channelImportDirty(id:string) {
+    const channel=channelDraft.value?.channels.find(channel=>channel.id===id)
+    if (!transferAdopted.value||!channel) return false
     const receipt=channel.connection.importedConfig
-    const saved=snapshot.value?.policy.channels.find(saved=>saved.id===channel.id)?.connection.importedConfig
+    const saved=snapshot.value?.policy.channels.find(saved=>saved.id===id)?.connection.importedConfig
     return !!receipt&&!sameTransferValue(receipt,saved)
-  }))
+  }
+  const transferMaterialDirty=computed(()=>channelDraft.value?.channels.some(channel=>channelImportDirty(channel.id))??false)
   const channelDirty = computed(() => historicalRecovery.value !== null || transferMaterialDirty.value || Object.keys(credentialEdits.value).length>0 || channelDraft.value !== null && canonicalPolicy(channelDraft.value) !== channelClean.value)
+  function channelIsDirty(id:string):boolean {
+    const current=channelDraft.value?.channels.find(channel=>channel.id===id)
+    const saved=snapshot.value?.policy.channels.find(channel=>channel.id===id)
+    const canonicalChannel=(channel:typeof current)=>canonicalPolicy({schemaVersion:1,templateRefs:[],channels:channel?[channel]:[]})
+    // A row opened/edited while Save was awaiting IPC must also keep the editor
+    // open, even if its confirmed policy fields are already clean.
+    return !!credentialEdits.value[id]||channelImportDirty(id)||pendingRows.value.some(row=>row.channel===id)||canonicalChannel(current)!==canonicalChannel(saved)
+  }
+  function channelSaveCandidate(id:string):ModelPolicy {
+    if (historicalRecovery.value||channelDraft.value?.recoveryId) throw {message:'历史恢复草稿不能按单渠道保存，请使用原历史恢复保存流程；当前输入已保留。'}
+    if (!snapshot.value||!channelDraft.value) throw {message:'无法读取当前模型配置；当前输入已保留。'}
+    const current=channelDraft.value.channels.find(channel=>channel.id===id)
+    if (!current) throw {message:'当前渠道已移除，不能按单渠道保存；请在全部渠道保存中确认删除。'}
+    const candidate=copyTransfer(snapshot.value.policy)
+    const index=candidate.channels.findIndex(channel=>channel.id===id)
+    if (index<0) {
+      // New channels retain their draft insertion anchor without committing the
+      // draft's reordering, additions or deletions of any other saved channel.
+      const before=channelDraft.value.channels.slice(0,channelDraft.value.channels.findIndex(channel=>channel.id===id))
+      const previous=before.reverse().find(channel=>candidate.channels.some(saved=>saved.id===channel.id))
+      const insertion=previous?candidate.channels.findIndex(channel=>channel.id===previous.id)+1:0
+      candidate.channels.splice(insertion,0,copyTransfer(current))
+    } else candidate.channels[index]=copyTransfer(current)
+    return candidate
+  }
+  function acceptFileSave(candidate:ModelPolicy,saved:ModelSnapshot,intents:CredentialEdit[],credentials:CredentialEdit[]) {
+    if (channelDraft.value) {
+      // The locked file receipt can include newer layout metadata for B even
+      // when its config digest did not change. Rebase every unchanged field
+      // against the frozen candidate before promoting that receipt to clean.
+      const live=channelDraft.value
+      const accepted=acceptChannelValue(candidate as unknown as MergeValue,live as unknown as MergeValue,saved.policy as unknown as MergeValue) as unknown as ModelPolicy
+      accepted.channels=accepted.channels.map(channel=>{
+        const current=live.channels.find(current=>current.id===channel.id)
+        return current&&sameTransferValue(current as unknown as MergeValue,channel as unknown as MergeValue)?current:channel
+      })
+      for (const key of Object.keys(live) as (keyof ModelPolicy)[]) if (!Object.hasOwn(accepted,key)) delete live[key]
+      Object.assign(live,accepted)
+    }
+    // Consume only these exact submissions. A newly typed replacement/clear is
+    // a distinct intent, even when its text happens to equal the sent value.
+    intents.forEach((intent,index)=>{
+      if (credentialEdits.value[intent.channelId]===intent&&sameTransferValue(intent as unknown as MergeValue,credentials[index] as unknown as MergeValue)) delete credentialEdits.value[intent.channelId]
+    })
+    snapshot.value=saved
+    channelClean.value=canonicalPolicy(saved.policy)
+    channelBaseline.value=saved.policyDigest
+    workspaceBaseline.value=saved.workspaceDigest
+  }
+  async function saveCurrentChannel(id:string):Promise<{changed:boolean}> {
+    if (busy.value||staging.value) throw {message:'模型配置正在处理，请稍后重试；当前输入已保留。'}
+    busy.value=true
+    try {
+      const candidate=channelSaveCandidate(id)
+      const assertRows=()=>{if(pendingRows.value.some(row=>row.channel===id))throw {message:'请先确认或还原当前渠道未确认的型号编辑；当前输入已保留。'}}
+      assertRows()
+      if (!channelIsDirty(id)) return {changed:false}
+      const keyIntent=credentialEdits.value[id]
+      const credentials=keyIntent?[copyTransfer(keyIntent)]:[]
+      const expected=channelBaseline.value
+      const projection=await modelApi.project(candidate)
+      if (projection.knownActiveModels>100) throw {message:'保存后已知启用型号超过 100 个，请调整当前渠道后重试；当前输入已保留。'}
+      assertRows()
+      if (historicalRecovery.value||channelDraft.value?.recoveryId||channelBaseline.value!==expected) throw {message:'保存基准或历史恢复草稿已变化，请重新核对；当前输入已保留。'}
+      const result=await modelApi.writeFile(expected,candidate,credentials,{channelId:id})
+      acceptFileSave(candidate,result.snapshot,keyIntent?[keyIntent]:[],credentials)
+      return {changed:result.changed}
+    } finally { busy.value=false }
+  }
+  async function saveAllChannels(frozen:ModelPolicy,expected:string):Promise<{changed:boolean}> {
+    if (busy.value||staging.value) throw {message:'模型配置正在处理，请稍后重试；当前输入已保留。'}
+    busy.value=true
+    try {
+      const candidate=copyTransfer(frozen)
+      const assertInputs=()=>{
+        if (historicalRecovery.value||candidate.recoveryId||channelDraft.value?.recoveryId) throw {message:'历史恢复草稿不能作为普通渠道保存提交，请使用原历史恢复保存流程；当前输入已保留。'}
+        if (!snapshot.value||!channelDraft.value) throw {message:'无法读取当前模型配置；当前输入已保留。'}
+        if (pendingRows.value.length) throw {message:'请先确认或还原全部渠道未确认的型号编辑；当前输入已保留。'}
+        if (expected!==channelBaseline.value||expected!==snapshot.value.policyDigest) throw {message:'保存基准已变化，请重新核对；当前输入已保留。'}
+      }
+      assertInputs()
+      const intents=Object.values(credentialEdits.value).filter(edit=>candidate.channels.some(channel=>channel.id===edit.channelId))
+      const credentials=copyTransfer(intents)
+      const projection=await modelApi.project(candidate)
+      if (projection.knownActiveModels>100) throw {message:'保存后已知启用型号超过 100 个，请调整渠道后重试；当前输入已保留。'}
+      assertInputs()
+      const result=await modelApi.writeFile(expected,candidate,credentials)
+      acceptFileSave(candidate,result.snapshot,intents,credentials)
+      return {changed:result.changed}
+    } finally { busy.value=false }
+  }
   const dirty = computed(() => draft.value !== null && JSON.stringify(draft.value) !== clean.value)
   async function load() {
     if (busy.value) return
@@ -320,6 +455,6 @@ export const useModelsStore = defineStore('model-config', () => {
   // 这里只做同步读取，真正的“可用型号”判定仍在选择器里按每一行解释。
   const enabledChannels = computed(() => snapshot.value?.policy.channels.filter(c => c.connection.enabled) ?? [])
 
-  return { historicalRecovery,assertRecoveryReady,acceptHistoricalRecovery,saveHistoricalRecovery,credentialEdits,editCredential,clearCredential,modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, adoptTransfer, acceptTransfer, load, edit, leave, save, restoreChannels, enabledChannels }
+  return { historicalRecovery,assertRecoveryReady,acceptHistoricalRecovery,saveHistoricalRecovery,credentialEdits,editCredential,clearCredential,modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelIsDirty, channelSaveCandidate, saveCurrentChannel, saveAllChannels, channelBaseline, channelError, staging, adoptTransfer, acceptTransfer, load, edit, leave, save, restoreChannels, enabledChannels }
 })
 

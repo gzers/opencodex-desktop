@@ -14,6 +14,12 @@ function render(){return mount(ChannelsView,{global:{stubs:{UiDialog:dialog,Chan
 async function confirm(w:ReturnType<typeof render>){await w.get('[data-testid="policy-save"]').trigger('click');await flushPromises();await w.findAll('button').find(b=>b.text()==='确认保存')!.trigger('click');await flushPromises()}
 beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();useModelsStore().acceptTransfer(initial());vi.mocked(modelApi.project).mockResolvedValue({rows:[],knownActiveModels:0,exactCatalogCount:null,notices:[]})})
 describe('current-file channel saves',()=>{
+ it('silently closes an old preview after all edits are restored to saved values',async()=>{
+  const s=useModelsStore();s.channelDraft!.channels[0]!.label='temporary';const shown=vi.spyOn(useModelSaveFeedback(),'showSaved');const w=render();await flushPromises()
+  await w.get('[data-testid="policy-save"]').trigger('click');await flushPromises();s.channelDraft!.channels[0]!.label='demo';await flushPromises()
+  await w.findAll('button').find(b=>b.text()==='确认保存')!.trigger('click');await flushPromises()
+  expect(modelApi.writeFile).not.toHaveBeenCalled();expect(modelApi.policySaveBlocked).not.toHaveBeenCalled();expect(shown).not.toHaveBeenCalled();expect(w.text()).not.toContain('确认保存');expect(w.get('[data-testid="policy-save"]').attributes('disabled')).toBeDefined();w.unmount()
+ })
  it('does not reload or gate on unfinished historical plans',async()=>{
   vi.mocked(modelApi.latestPolicy).mockRejectedValue({code:'plan_incomplete'});const w=render();await flushPromises()
   expect(modelApi.latestPolicy).not.toHaveBeenCalled();expect(w.text()).not.toContain('待重启');expect(w.text()).not.toContain('调整本次保存范围');w.unmount()

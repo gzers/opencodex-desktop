@@ -29,6 +29,9 @@ async function main(){
     const proto=await browser.newPage({viewport:{width:1180,height:760},deviceScaleFactor:2})
     await proto.goto('file://' + encodeURI(PROTOTYPE) + '#models')
     await proto.waitForTimeout(1500)
+    // Both sides start clean. Preview belongs to a real remaining edit now;
+    // a clean disabled Save is itself the intended WP-87 behavior.
+    await proto.locator('[data-mp="toggle-provider"]:not(:disabled)').first().click()
     const protoSave=proto.locator('[data-mp="save"], #mpPolicySave').first()
     if(await protoSave.count()) await protoSave.click().catch(()=>{})
     await proto.waitForSelector('#modal[style*="flex"], .mp-selector-preview',{timeout:8000}).catch(()=>{})

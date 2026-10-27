@@ -32,7 +32,7 @@ function render(component:typeof ModelSaveHistory|typeof ChannelsView){const w=m
 function button(w:VueWrapper,text:string){const result=w.findAll('button').find(node=>node.text()===text);expect(result,'button: '+text).toBeDefined();return result!}
 async function compareHistory(){const w=render(ModelSaveHistory);await flushPromises();await button(w,'生成恢复草稿').trigger('click');await button(w,'比较恢复差异').trigger('click');await flushPromises();return w}
 async function acceptHistory(){const w=await compareHistory();await button(w,'放入恢复草稿').trigger('click');await flushPromises();expect(useModelsStore().historicalRecovery?.id).toBe('recovery-id');return w}
-async function previewSave(w:VueWrapper){await w.get('[data-testid="policy-save"]').trigger('click');await flushPromises();expect(w.findAll('[data-dialog-title="保存预览"]')).toHaveLength(1);expect(w.findAll('.channels-view > p[role="status"]')).toHaveLength(0);expect(w.text()).not.toContain('保存历史恢复')}
+async function previewSave(w:VueWrapper){await flushPromises();await w.get('[data-testid="policy-save"]').trigger('click');await flushPromises();expect(w.findAll('[data-dialog-title="保存预览"]')).toHaveLength(1);expect(w.findAll('.channels-view > p[role="status"]')).toHaveLength(0);expect(w.text()).not.toContain('保存历史恢复')}
 async function confirmSave(w:VueWrapper){await previewSave(w);await button(w,'确认保存').trigger('click');await flushPromises()}
 async function openCopy(w:VueWrapper,reuse=true){await button(w,'复制').trigger('click');await w.get('input[maxlength="256"]').setValue('My copy');const checkbox=w.findAll('label').find(label=>label.text()==='副本复用此本机渠道Key')!.get('input');await checkbox.setValue(reuse)}
 function copied(){return useModelsStore().channelDraft!.channels.find(c=>c.id!=='source')!}
