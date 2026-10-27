@@ -96,6 +96,8 @@ export const modelApi = {
   newChannelResult:(id:string)=>invoke<NewChannelOutcome>('model_new_channel_result',{id}),
   latestNewChannel:()=>invoke<NewChannelOutcome|null>('model_new_channel_latest'),
   load: () => invoke<ModelSnapshot>('model_file_snapshot'),
+  // Historical recovery alone uses the manager policy/workspace digest domain.
+  loadRecoveryBaseline: () => invoke<ModelSnapshot>('model_config_snapshot'),
   writeFile: (expectedFile:string,policy:ModelPolicy,credentials:CredentialEdit[]) => invoke<{snapshot:ModelSnapshot;changed:boolean}>('model_file_save',{request:{expectedFile,policy,credentials}}),
   credential: (providerId:string) => invoke<CredentialView>('model_file_credential',{providerId}),
   save: (draft: TemplateDraft, expectedLibrary: string) => invoke<Commit>('model_template_save', { request: { ...draft, expectedLibrary } }),

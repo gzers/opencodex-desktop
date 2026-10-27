@@ -3,27 +3,30 @@ import {computed,onMounted,ref} from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
-import {errorText,modelApi,type ModelHistoryEntry,type ModelRecoveryPreview} from '@/features/models/api'
+import {errorText,modelApi,type ModelHistoryEntry,type ModelRecoveryPreview,type ModelSnapshot} from '@/features/models/api'
 import {useModelsStore} from '@/features/models/store'
 import {useRouteStore} from '@/stores/routes'
 const models=useModelsStore();const routes=useRouteStore()
 const records=ref<ModelHistoryEntry[]>([]);const query=ref('');const error=ref('');const busy=ref(false)
 const selected=ref<ModelHistoryEntry|null>(null);const side=ref<'before'|'after'>('before');const scope=ref<'affected'|'all'>('affected');const restoreDefaults=ref(false)
 const preview=ref<ModelRecoveryPreview|null>(null);const restored=ref(false)
+const recoveryBaseline=ref<ModelSnapshot|null>(null)
 const visible=computed(()=>records.value.filter(r=>(r.createdAt+' '+r.id+' '+r.channelLabels.join(' ')).toLowerCase().includes(query.value.toLowerCase())))
 async function perform(action:()=>Promise<void>){if(busy.value)return;busy.value=true;error.value='';try{await action()}catch(cause){error.value=errorText(cause)}finally{busy.value=false}}
 async function refresh(){await perform(async()=>{records.value=await modelApi.policyHistory()})}
-function choose(record:ModelHistoryEntry){selected.value=record;side.value='before';scope.value='affected';restoreDefaults.value=false;preview.value=null;restored.value=false;error.value=''}
-function invalidate(){preview.value=null;restored.value=false}
+function choose(record:ModelHistoryEntry){selected.value=record;side.value='before';scope.value='affected';restoreDefaults.value=false;invalidate();error.value=''}
+function invalidate(){preview.value=null;recoveryBaseline.value=null;restored.value=false}
 async function compare(){if(!selected.value)return;await perform(async()=>{
+ models.assertRecoveryReady()
  if(!models.snapshot)await models.load()
  if(!models.snapshot)throw {message:'无法读取当前模型配置'}
- if(models.channelDraft){await models.persistDraft();if(models.channelError)throw {message:models.channelError}}
- const snapshot=models.snapshot
+ const snapshot=await modelApi.loadRecoveryBaseline()
+ models.assertRecoveryReady()
  preview.value=await modelApi.prepareRecovery({sourceId:selected.value!.id,side:side.value,scope:scope.value,restoreDefaults:restoreDefaults.value,expectedLibrary:snapshot.libraryDigest,expectedPolicy:snapshot.policyDigest,expectedWorkspace:snapshot.workspaceDigest})
+ recoveryBaseline.value=snapshot
 })}
-async function accept(){if(!preview.value)return;await perform(async()=>{const saved=await modelApi.acceptRecovery(preview.value!.id);models.acceptTransfer(saved);restored.value=true})}
-function close(){if(!busy.value){selected.value=null;preview.value=null;error.value=''}}
+async function accept(){if(!preview.value||!recoveryBaseline.value)return;await perform(async()=>{await models.acceptHistoricalRecovery(preview.value!.id,preview.value!.sourceId);restored.value=true})}
+function close(){if(!busy.value){selected.value=null;invalidate();error.value=''}}
 function date(value:string){return new Date(value).toLocaleString()}
 function field(value:string){const name=value.split('/').at(-1)??value;return ({connection:'连接与节点',templateRefs:'模版采用',modelRefs:'单模型采用',selection:'模型选择',modelOrder:'模型顺序',discovered:'模型定义',defaults:'渠道默认能力',overrides:'单模型覆盖',familyOverrides:'模型族覆盖',label:'渠道名称',channelOrder:'渠道组顺序',globalTemplateRefs:'全局模版采用'} as Record<string,string>)[name]??(value.startsWith('default/')?'模版默认版本':'渠道对象')}
 function content(value:unknown):string{
