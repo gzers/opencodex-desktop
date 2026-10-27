@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import {win32,join} from 'node:path'
 import {randomUUID} from 'node:crypto'
-import {writeFile,readFile} from 'node:fs/promises'
+import {writeFile,readFile,readdir} from 'node:fs/promises'
 import {verifyUiAlignment} from './windows-ui-alignment.mjs'
 function normalize(value){assert(typeof value==='string'&&win32.isAbsolute(value),'absolute active root required');const canonical=value.startsWith('\\\\?\\UNC\\')?'\\\\'+value.slice(8):value.replace(/^\\\\\?\\/,'');return win32.resolve(canonical).toLowerCase()}
 export function assertModelExportPath(path,expected){
@@ -30,6 +30,18 @@ export function modelConfigPath(facts,expected){
  assert.equal(normalize(facts.dataRoot.opencodexHome),normalize(home),'saved model home escaped admitted sandbox')
  return win32.join(home,'config.json')
 }
+export async function modelFileEvidence(configPath,root){
+ let backups
+ try{backups=(await readdir(join(root,'backups','model-config'))).sort()}catch(error){if(error.code!=='ENOENT')throw error;backups=[]}
+ return {bytes:await readFile(configPath),backups}
+}
+export async function assertModelFileWrite(before,after,root){
+ assert(!after.bytes.equals(before.bytes),'Save must change actual config.json bytes')
+ const added=after.backups.filter(name=>!before.backups.includes(name))
+ assert.equal(added.length,1,'Save must create exactly one prewrite backup')
+ assert.deepEqual(after.backups.filter(name=>before.backups.includes(name)),before.backups,'Save must preserve earlier backups')
+ assert((await readFile(join(root,'backups','model-config',added[0],'config.json'))).equals(before.bytes),'backup must contain exact prewrite config.json bytes')
+}
 export async function verifyWindowsModelUi(call,output,facts,expected){
  const configPath=modelConfigPath(facts,expected)
  async function evaluate(expression){const result=await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});assert(!result.exceptionDetails,JSON.stringify(result.exceptionDetails));return result.result.value}
@@ -41,6 +53,9 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  }
  const visible="e.getClientRects().length>0"
  async function click(text,selector='.models-page'){const done=await evaluate("(()=>{const root=document.querySelector("+JSON.stringify(selector)+");const button=[...root?.querySelectorAll('button')??[]].find(e=>(e.textContent.trim()==="+JSON.stringify(text)+"||e.getAttribute('aria-label')==="+JSON.stringify(text)+")&&"+visible+"&&!e.disabled);if(!button)return false;button.click();return true})()");assert(done,'Native visible action missing: '+text)}
+ // Tauri defines invoke as a non-writable property. Inspect it without replacing IPC.
+ const invokeDescriptor=await evaluate("(()=>{const d=Object.getOwnPropertyDescriptor(window.__TAURI_INTERNALS__,'invoke');return {type:typeof d?.value,writable:d?.writable,configurable:d?.configurable}})()")
+ await writeFile(join(output,'model-ipc-descriptor.json'),JSON.stringify(invokeDescriptor,null,2)+'\n')
  const label='Windows native fixture '+randomUUID().slice(0,8),firstDescription='source version',secondDescription='edited through native Vue handler'
  const before=await invoke('model_file_snapshot')
  const content={description:firstDescription,matching:{include:[{kind:'prefix',value:'windows-fixture-'}],exclude:[],caseSensitive:false,channelMode:'all',channels:[],priority:0},rules:Object.fromEntries(['protocol','contextWindow','inputModalities','reasoningEfforts','defaultEffort','fast','pinnedEffort','effortMap','noReasoning','reasoningAuthoritative','fastWire'].map(k=>[k,{mode:'inherit'}])),variants:[],lockedFields:[],sources:[]}
@@ -99,7 +114,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  const fileBaseline=await invoke('model_file_snapshot')
  const seeded=await invoke('model_file_save',{request:{expectedFile:fileBaseline.policyDigest,policy:{...fileBaseline.policy,channels:[...fileBaseline.policy.channels,otherChannel,channel]},credentials:[{channelId,action:'replace',value:'native-sandbox-key'},{channelId:otherChannelId,action:'replace',value:'native-scope-a-original-key'}]}})
  assert.equal(seeded.changed,true)
- const initialBytes=await readFile(configPath),initialFile=JSON.parse(initialBytes)
+ const initialEvidence=await modelFileEvidence(configPath,expected),initialBytes=initialEvidence.bytes,initialFile=JSON.parse(initialBytes)
  assert.equal(initialFile.providers['native-sort-fixture'].apiKey,'native-sandbox-key','fixture must reach actual sandbox config.json')
  assert.equal(initialFile.providers['native-scope-a-fixture'].apiKey,'native-scope-a-original-key')
  assert.deepEqual(seeded.snapshot.policy.channels.find(c=>c.id===channelId).modelOrder,modelIds)
@@ -142,14 +157,14 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  assert.equal(keyState.type,'password');assert.equal(keyState.value,'native-sandbox-key','native editor must load existing Key')
  await click('显示 API Key');assert.equal(await evaluate("document.querySelector('input[aria-label=\"API Key\"]').type"),'text')
  await click('隐藏 API Key')
- // Observe transport fields while still calling the real installed Tauri IPC.
- await evaluate("(()=>{const original=window.__TAURI_INTERNALS__.invoke;window.__nativeFileSaves=[];window.__TAURI_INTERNALS__.invoke=function(command,args){if(command==='model_file_save')window.__nativeFileSaves.push({scope:args.request.scope??null,credentialChannels:args.request.credentials.map(e=>e.channelId)});return original.call(this,command,args)};return true})()")
+ // Native scope is verified by file/backup/snapshot results. Request fields
+ // are covered separately by store/API units and Rust/browser loopback tests.
  await click('保存渠道草稿')
  await wait("!!document.querySelector('.channel-table')&&!document.querySelector('.channel-detail-name')",'B detail Save returns directly to list')
  assert.equal(await evaluate("[...document.querySelectorAll('dialog[open]')].some(e=>e.textContent.includes('保存预览'))"),false,'detail Save must not open full Preview')
- assert.deepEqual(await evaluate("window.__nativeFileSaves"),[{scope:{channelId},credentialChannels:[]}],'B detail save must send camelCase scope and preserve all Keys')
  const saved=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_file_snapshot');const c=s.policy.channels.find(c=>c.id==="+JSON.stringify(channelId)+");return c?.modelOrder[0]==='fixture-beta'&&c.modelOrder[1]==='fixture-alpha'?s:null})()",'direct native sort Save writes actual file')
- const written=JSON.parse(await readFile(configPath))
+ const writtenEvidence=await modelFileEvidence(configPath,expected),written=JSON.parse(writtenEvidence.bytes)
+ await assertModelFileWrite(initialEvidence,writtenEvidence,expected)
  assert.equal(written.providers['native-sort-fixture'].apiKey,'native-sandbox-key','sort-only Save must preserve existing Key')
  assert.deepEqual(written.modelPickerOrder.filter(slug=>slug.startsWith('native-sort-fixture/')),orderedIds.map(id=>'native-sort-fixture/'+id),'B actual file picker order')
  assert.deepEqual(written.providers['native-sort-fixture'].models,initialFile.providers['native-sort-fixture'].models,'sort preserves raw model inventory')
@@ -159,7 +174,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await wait("!!document.querySelector('.notif-layer .process-progress')",'global save result')
  assert.equal(await evaluate("document.querySelectorAll('main .save-result,main .process-progress,.task-reopen').length"),0,'save result must not occupy page or a second notification entry')
  await click('稍后','.notif-layer')
- const savedBBytes=await readFile(configPath)
+ const savedBBytes=writtenEvidence.bytes
  await openChannel(channelId,'native-sandbox-key')
  assert.equal(await evaluate(detailSaveDisabled),true,'reopened B must be clean despite pending A')
  assert.equal(await evaluate("document.querySelector('input[aria-label=\"API Key\"]').type"),'password','reopened B Key is masked')
@@ -180,14 +195,23 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  assert.equal(await evaluate("(()=>{const d=document.querySelector('dialog[open]');return d.textContent.includes('Native scope A pending')&&d.textContent.includes('Native sort fixture')})()"),true,'list Preview still shows all channels')
  await click('取消','dialog[open]');await wait("!document.querySelector('dialog[open]')",'cancel list Preview')
  assert((await readFile(configPath)).equals(savedBBytes),'cancel Preview must neither revert B nor write A')
- assert.equal(await evaluate("window.__nativeFileSaves.length"),1,'cancel Preview must not call the file writer')
+ const canceled=await modelFileEvidence(configPath,expected),canceledSnapshot=await invoke('model_file_snapshot')
+ assert.deepEqual(canceled.backups,writtenEvidence.backups,'cancel Preview must not create a backup')
+ assert.equal(canceledSnapshot.policyDigest,saved.policyDigest,'cancel Preview must preserve file digest')
+ assert.deepEqual(canceledSnapshot.policy,saved.policy,'cancel Preview must not commit A or revert B layout')
  await openSavePreview();await click('确认保存','dialog[open]')
  await wait("!!document.querySelector('.notif-layer .process-progress')",'remaining A file Save result')
- const remaining=JSON.parse(await readFile(configPath))
+ const remainingEvidence=await modelFileEvidence(configPath,expected),remaining=JSON.parse(remainingEvidence.bytes)
+ await assertModelFileWrite(writtenEvidence,remainingEvidence,expected)
  assert.equal(remaining.providers['native-scope-a-fixture'].apiKey,'native-scope-a-pending-key','remaining Save commits A Key')
  assert.equal(remaining.providers['native-scope-a-fixture'].modelContextWindows['fixture-scope-a'],96000,'remaining Save commits confirmed A row')
  for(const [providerId,provider] of Object.entries(written.providers))if(providerId!=='native-scope-a-fixture')assert.deepEqual(remaining.providers[providerId],provider,'remaining Save changed saved B or another Key: '+providerId)
- assert.deepEqual(await evaluate("window.__nativeFileSaves.at(-1)"),{scope:null,credentialChannels:[otherChannelId]},'list confirmation saves remaining A through global RPC')
+ assert.equal(Object.keys(remaining.providers).length,Object.keys(written.providers).length,'remaining Save preserves provider set')
+ const remainingSnapshot=await invoke('model_file_snapshot'),remainingA=remainingSnapshot.policy.channels.find(c=>c.id===otherChannelId)
+ assert.notEqual(remainingSnapshot.policyDigest,saved.policyDigest,'remaining Save changes real file digest')
+ assert.equal(remainingA.label,'Native scope A pending','remaining Save commits A name')
+ assert.equal(remainingA.overrides['fixture-scope-a'].contextWindow.value,96000,'snapshot reads back confirmed A row')
+ assert.deepEqual(remainingSnapshot.policy.channels.find(c=>c.id===channelId),saved.policy.channels.find(c=>c.id===channelId),'remaining Save preserves B snapshot and order')
  await wait("document.querySelector('[data-testid=policy-save]')?.disabled",'remaining changes now clean')
  await click('稍后','.notif-layer')
  await call('Page.reload',{ignoreCache:true})
@@ -196,7 +220,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await wait("JSON.stringify([...document.querySelectorAll('.channel-model-table tr[data-model]')].map(e=>e.dataset.model))==="+JSON.stringify(JSON.stringify(orderedIds)),'reopened file preserves directly saved native order')
  assert.equal(await evaluate(detailSaveDisabled),true,'full reload leaves B clean')
  assert(!await evaluate("document.querySelector('main').innerText.includes('待重启')"),'later/reopen must not resurrect restart state')
- await writeFile(join(output,'model-sort-native.json'),JSON.stringify({result:'pass',input:'WebView2 CDP mouse press/move/release, not synthetic DOM drag events',channelId,before:points.before,after:order,memoryEditBeforeSave:true,directScopedFileWrite:true,detailReturnedToList:true,noDetailPreview:true,otherChannelMemoryRetained:true,otherProviderAndKeysPreserved:true,canceledListPreviewPreservedFile:true,remainingListConfirmation:true,reopenedOrder:true,existingKeyMasked:true,keyEye:true,keyPreserved:true,runtimeSave:false},null,2)+'\n')
+ await writeFile(join(output,'model-sort-native.json'),JSON.stringify({result:'pass',input:'WebView2 CDP mouse press/move/release, not synthetic DOM drag events',channelId,before:points.before,after:order,memoryEditBeforeSave:true,nativeFileScopeVerified:true,detailReturnedToList:true,noDetailPreview:true,otherChannelMemoryRetained:true,otherProviderAndKeysPreserved:true,canceledListPreviewPreservedFile:true,remainingListConfirmation:true,reopenedOrder:true,existingKeyMasked:true,keyEye:true,keyPreserved:true,runtimeSave:false},null,2)+'\n')
  // Portable configuration exercises the installed file-aware backend and native
  // credential staging. Only synthetic material in this admitted sandbox exists.
  const transferBaseline=await invoke('model_file_snapshot')
@@ -224,6 +248,6 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  const tasks=await evaluate("[...document.querySelectorAll('.model-operation-task,.model-operation-card')].filter(e=>e.getClientRects().length).map(e=>e.textContent)")
  const screenshot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model-template-native.png'),Buffer.from(screenshot.data,'base64'))
  await verifyUiAlignment({call,evaluate,wait,click,output,templateLabel:label})
- const result={result:'pass',scope:'native template, direct current-channel file Save/reopen, remaining global Preview/cancel/confirm, exact transfer; isolated config writes, no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,directScopedChannelFileSave:true,otherChannelMemoryRetained:true,otherProviderAndKeysPreserved:true,canceledListPreviewPreservedFile:true,remainingGlobalFileSave:true,channelReopen:true,existingKeyEye:true,readonlyComparison:true,externalContextBundle:true}
+ const result={result:'pass',scope:'native template, direct current-channel file Save/reopen, remaining global Preview/cancel/confirm, exact transfer; isolated config writes, no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,nativeFileScopeVerified:true,otherChannelMemoryRetained:true,otherProviderAndKeysPreserved:true,canceledListPreviewPreservedFile:true,remainingGlobalFileSave:true,channelReopen:true,existingKeyEye:true,readonlyComparison:true,externalContextBundle:true}
  await writeFile(join(output,'model-ui.json'),JSON.stringify(result,null,2)+'\n');return result
 }
