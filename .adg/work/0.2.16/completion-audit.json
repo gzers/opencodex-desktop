@@ -1,0 +1,233 @@
+{
+  "date": "2026-10-27",
+  "task": "TASK-OPENCODEX-0.2.16",
+  "objectiveScope": "WP-85-WP-88 plus shared cleanup and14mandatory scenarios through stable release",
+  "result": "passed",
+  "checks": [
+    {
+      "name": "review:scoped-file",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.16/windows-native/model-ui.json",
+        ".adg/evidence/0.2.16/release-windows/nsis/model-ui.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
+    },
+    {
+      "name": "review:edit-preservation",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/independent-review.json",
+        ".adg/evidence/0.2.16/file-browser/report.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
+    },
+    {
+      "name": "review:connection-ui",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/file-browser/report.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
+    },
+    {
+      "name": "review:save-state",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/file-browser/report.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
+    },
+    {
+      "name": "review:prototype-notification",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/notification-parity/report.json",
+        ".adg/evidence/0.2.16/gate-report.json",
+        ".adg/evidence/0.2.16/prototype-authority.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
+    },
+    {
+      "name": "review:legacy-cleanup",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/legacy-dispositions.json",
+        ".adg/evidence/0.2.16/independent-review.json"
+      ],
+      "scope": "Final local source and actual isolated file/engine evidence passed; platform/release check stays separate."
+    },
+    {
+      "name": "review:release",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/ci-final.json",
+        ".adg/evidence/0.2.16/accepted-merge.json",
+        ".adg/evidence/0.2.16/release-build.json",
+        ".adg/evidence/0.2.16/release-windows/installer-verification.json",
+        ".adg/evidence/0.2.16/publish-public.log",
+        ".adg/evidence/0.2.16/publish-stable.log",
+        ".adg/evidence/0.2.16/release-summary.json",
+        ".adg/evidence/0.2.16/mac-release-verification.json",
+        ".adg/evidence/0.2.16/local-assets-verification.json"
+      ],
+      "scope": "Accepted exact source, final platform CI/nativeEXE, MSI/NSIS, public/stable, anonymous manifest/8hashes and3updater signatures."
+    }
+  ],
+  "requirementAudit": [
+    {
+      "id": 1,
+      "scope": "clean list/detail, read-only events",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 2,
+      "scope": "restore fields to original, eye/probe do not dirty",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/file-browser/report.json"
+      ]
+    },
+    {
+      "id": 3,
+      "scope": "save B retains A name/Key/node/model memory",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 4,
+      "scope": "reopen B clean, A dirty",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/file-browser-webkit/report.json"
+      ]
+    },
+    {
+      "id": 5,
+      "scope": "remaining global Preview/cancel/restore/save preserve prior B",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 6,
+      "scope": "Key replace/keep/clear and legitimate offline save",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser/report.json",
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 7,
+      "scope": "scope budget100/101, unrelated pending and unsaved disable",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 8,
+      "scope": "new/delete/globalorder/references and exact model order",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/gate-unit.log"
+      ]
+    },
+    {
+      "id": 9,
+      "scope": "late input/nav/repeat/global stale Preview",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/independent-review.json"
+      ]
+    },
+    {
+      "id": 10,
+      "scope": "lock/write/backup/conflict/fault rollback/retry",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/independent-review.json"
+      ]
+    },
+    {
+      "id": 11,
+      "scope": "import raw refs/template buffers/explicit history",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/backend-regression.log",
+        ".adg/evidence/0.2.16/gate-unit.log",
+        ".adg/evidence/0.2.16/file-browser/report.json"
+      ]
+    },
+    {
+      "id": 12,
+      "scope": "themes/effects/narrow table geometry/notification parity",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/notification-parity/report.json",
+        ".adg/evidence/0.2.16/gate-audit-geometry.log",
+        ".adg/evidence/0.2.16/gate-audit-geometry-webkit.log",
+        ".adg/evidence/0.2.16/gate-report.json"
+      ]
+    },
+    {
+      "id": 13,
+      "scope": "Windows WebView2/native packages plus macOS corresponding engine",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/file-browser-webkit/report.json",
+        ".adg/evidence/0.2.16/windows-native/model-ui.json",
+        ".adg/evidence/0.2.16/release-windows/msi/model-ui.json",
+        ".adg/evidence/0.2.16/release-windows/nsis/model-ui.json"
+      ]
+    },
+    {
+      "id": 14,
+      "scope": "CI/installers/update signatures/public stable manifest",
+      "status": "passed",
+      "evidence": [
+        ".adg/evidence/0.2.16/ci-final.json",
+        ".adg/evidence/0.2.16/release-build.json",
+        ".adg/evidence/0.2.16/release-windows/installer-verification.json",
+        ".adg/evidence/0.2.16/publish-public.log",
+        ".adg/evidence/0.2.16/publish-stable.log",
+        ".adg/evidence/0.2.16/release-summary.json"
+      ]
+    }
+  ],
+  "release": "https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.16",
+  "acceptedHead": "7a4e14ba25301e522decc7d012d3f4b56095510d",
+  "merge": "d2c08dd7d62e2caada507f2eeb4d05804460b6a8",
+  "sourceIdentity": ".adg/evidence/0.2.16/test-only-followup-identity.json",
+  "completionReview": ".adg/evidence/0.2.16/final-completeness-review.json",
+  "retainedLimits": [
+    "No daily config writes or app replacement; no forced active Codex restart.",
+    "Local unit/source, actual Rust file WebKit/Chromium, native Windows installer and updater signatures recorded separately.",
+    "OS signing/Apple notarization unavailable; no sudden-crash two-file atomicity or all-provider claim."
+  ]
+}
