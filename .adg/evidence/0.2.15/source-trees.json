@@ -1,6 +1,5 @@
 {
   "gateCommit": "184269a60b670535b43e7fe695fe9b0364562239",
-  "headCommit": "f698f363816b97a3376a0fa10887a9538f422b00",
   "changesAfterGate": [
     "apps/desktop/tauri/tests/config_sync_webdav_real.rs"
   ],
@@ -13,5 +12,13 @@
       "gate": "c2693b8ca59d659a10d26666dedf8a3e964d2224",
       "head": "c2693b8ca59d659a10d26666dedf8a3e964d2224"
     }
-  }
+  },
+  "priorHeadCommit": "f698f363816b97a3376a0fa10887a9538f422b00",
+  "finalGateCommit": "6e016fb920d4226b9e25d2c7521097ef50aa9e9f",
+  "headCommit": "6e016fb920d4226b9e25d2c7521097ef50aa9e9f",
+  "finalRuntimeTrees": {
+    "apps/desktop/ui/src": "f71c466d02bf556ee26763993f8768079b1852c2",
+    "apps/desktop/tauri/src": "c2693b8ca59d659a10d26666dedf8a3e964d2224"
+  },
+  "note": "Initial gate was followed by reserved model-ID UI merge correction; final 21-step gate uses current exact commit."
 }

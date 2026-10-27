@@ -3,7 +3,7 @@
   "task_id": "TASK-OPENCODEX-0.2.15",
   "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-24.md",
   "recorded_at": "2026-10-27T04:23:54.292399+00:00",
-  "code_commit": "f698f363816b97a3376a0fa10887a9538f422b00",
+  "code_commit": "6e016fb920d4226b9e25d2c7521097ef50aa9e9f",
   "result": "in_progress",
   "checks": [
     {
@@ -24,7 +24,8 @@
         ".adg/evidence/0.2.15/file-browser/report.json",
         ".adg/evidence/0.2.15/file-browser-webkit/report.json",
         ".adg/evidence/0.2.15/transfer-ui.log",
-        ".adg/evidence/0.2.15/backend-regression.log"
+        ".adg/evidence/0.2.15/backend-regression.log",
+        ".adg/evidence/0.2.15/reserved-model-ids.log"
       ],
       "scope": "Adopt does not write file; actual existing Save Preview confirms Rust write and reopen, independent input/Key preservation and raw template projection."
     },
@@ -73,7 +74,7 @@
       "evidence": [
         ".adg/evidence/0.2.15/gate-report.json"
       ],
-      "scope": "Local 21-gate and clippy passed; final PR CI 40449116192, installers/assets/signature/public stable still in progress."
+      "scope": "Final exact commit release gate and PR CI 40449979401 are running; no platform release claim."
     }
   ],
   "limits": [
