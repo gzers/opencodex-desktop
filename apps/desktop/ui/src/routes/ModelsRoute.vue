@@ -141,6 +141,9 @@ async function remove() {
   if (!models.snapshot || !manager.value || models.busy) return
   if (!deletion.value) return
   const { library: libraryDigest, policy: policyDigest, workspace: workspaceDigest, template: id, ids } = deletion.value
+  const policy=models.channelDraft
+  const refs=[...(policy?.templateRefs??[]),...(policy?.channels.flatMap(c=>[...c.templateRefs,...Object.values(c.modelRefs)])??[])]
+  if(refs.some(ref=>ref.templateId===id&&ids.includes(ref.revisionId))){historyError.value='当前渠道编辑仍采用所选版本，未删除';return}
   models.busy = true; historyError.value = ''
   try {
     models.snapshot = await modelApi.delete(libraryDigest, policyDigest, workspaceDigest, id, ids)

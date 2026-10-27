@@ -75,14 +75,15 @@ describe('保存预览（UI 规范 §38）',()=>{
     wrapper.unmount()
   })
 
-  it('待核对提示默认收起，不挤掉渠道与型号区（0.2.8 报障）',()=>{
-    // 真实账号可能几十条「未在当前清单发现」；曾逐条平铺把列表压成 0，弹窗只剩提示文字。
-    const notices=Array.from({length:40},(_,i)=>'A6api：模型 gpt-demo-'+i+'未在当前清单发现，保留选择待核对')
+  it('附加说明默认收起，不挤掉渠道与型号区；旧型号核对提示不再显示',()=>{
+    const notices=Array.from({length:40},(_,i)=>'配置说明 '+i)
     const wrapper=render({projection:{...projection(),notices}})
     const box=wrapper.get('.preview-notices')
     expect(box.element.tagName).toBe('DETAILS')
     expect(box.attributes('open')).toBeUndefined()
-    expect(box.get('summary').text()).toBe('40 项待核对提示')
+    expect(box.get('summary').text()).toBe('40 项说明')
+    const retired=render({projection:{...projection(),notices:['旧数据：模型未在当前清单发现，保留选择待核对']}})
+    expect(retired.find('.preview-notices').exists()).toBe(false)
     // DEV 夹具 / 导入路径的说明性 notice 不得被称作「待核对」。
     expect(render({projection:{...projection(),notices:['显式DEV数据，不连接真实运行服务']}}).get('.preview-notices summary').text()).toBe('1 项说明')
     expect(box.findAll('li')).toHaveLength(40)

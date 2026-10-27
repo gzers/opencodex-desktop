@@ -23,17 +23,68 @@ pub async fn model_config_snapshot(
 ) -> ModelResult<Snapshot> {
     execute(data_root.0.clone(), |store| store.load()).await
 }
+/// Channel pages read the official file directly. Local template operations
+/// retain their separate model_config_snapshot contract.
+#[tauri::command]
+pub async fn model_file_snapshot(
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<Snapshot> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::config_file::snapshot(&root, &home)
+    })
+    .await
+    .map_err(|_| invalid("file_worker", "读取模型配置文件中断"))?
+}
+#[tauri::command]
+pub async fn model_file_save(
+    request: crate::modules::model_config::config_file::SaveRequest,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<crate::modules::model_config::config_file::SaveResult> {
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::config_file::save(&root, &home, request)
+    })
+    .await
+    .map_err(|_| {
+        invalid(
+            "file_worker",
+            "模型配置写入结果未返回，请刷新查看文件；当前编辑已保留",
+        )
+    })?
+}
+#[tauri::command]
+pub async fn model_file_credential(
+    provider_id: String,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<crate::modules::model_config::config_file::CredentialView> {
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::config_file::credential(&home, &provider_id)
+    })
+    .await
+    .map_err(|_| invalid("credential", "读取当前渠道密钥中断"))?
+}
 #[tauri::command]
 pub async fn model_template_usage(
     template_id: String,
     revision_id: String,
     expected_library: String,
     data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<crate::modules::model_config::usage::Report> {
     let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
     tauri::async_runtime::spawn_blocking(move || {
-        crate::modules::model_config::usage::report(
+        crate::modules::model_config::usage::report_file(
             &root,
+            &home,
             &template_id,
             &revision_id,
             &expected_library,
@@ -46,8 +97,16 @@ pub async fn model_template_usage(
 pub async fn model_template_save(
     request: SaveTemplate,
     data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<Commit> {
-    execute(data_root.0.clone(), move |store| store.save(request)).await
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    execute(root.clone(), move |store| {
+        let mut result = store.save(request)?;
+        result.snapshot = crate::modules::model_config::config_file::snapshot(&root, &home)?;
+        Ok(result)
+    })
+    .await
 }
 #[tauri::command]
 pub async fn model_template_set_default(
@@ -55,9 +114,13 @@ pub async fn model_template_set_default(
     template_id: String,
     revision_id: String,
     data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<Snapshot> {
-    execute(data_root.0.clone(), move |store| {
-        store.set_default(&expected_library, &template_id, &revision_id)
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    execute(root.clone(), move |store| {
+        store.set_default(&expected_library, &template_id, &revision_id)?;
+        crate::modules::model_config::config_file::snapshot(&root, &home)
     })
     .await
 }
@@ -69,12 +132,17 @@ pub async fn model_template_delete(
     template_id: String,
     revision_ids: Vec<String>,
     data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<Snapshot> {
-    execute(data_root.0.clone(), move |store| {
-        store.delete(
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    execute(root.clone(), move |_| {
+        let _ = expected_workspace;
+        crate::modules::model_config::config_file::delete_template(
+            &root,
+            &home,
             &expected_library,
             &expected_policy,
-            &expected_workspace,
             &template_id,
             &revision_ids,
         )
@@ -281,8 +349,8 @@ pub async fn model_policy_preview(
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<DraftProjection> {
     execute(data_root.0.clone(), move |store| {
-        let snapshot = store.load()?;
-        project(&snapshot.library, &policy)
+        let (library, _) = store.library_only()?;
+        project(&library, &policy)
     })
     .await
 }
@@ -336,9 +404,11 @@ pub async fn model_new_channel_latest(
 }
 #[tauri::command]
 pub async fn model_channel_discover(
-    request: crate::modules::model_config::discovery::DiscoveryRequest,
+    mut request: crate::modules::model_config::discovery::DiscoveryRequest,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<crate::modules::model_config::discovery::DiscoveryResult> {
-    crate::modules::model_config::discovery::discover(request).await
+    request.home = Some(context.opencodex_home.clone());
+    crate::modules::model_config::discovery::preview(request).await
 }
 #[tauri::command]
 pub async fn model_channel_forget_credential(reference: String) -> ModelResult<()> {

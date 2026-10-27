@@ -206,6 +206,16 @@ impl ModelStore {
     pub fn new(root: &Path) -> Self {
         Self { root: root.into() }
     }
+    /// The template library is independent of retired channel drafts/save plans.
+    pub fn library_only(&self) -> ModelResult<(Library, String)> {
+        let bytes = self.bytes(LIBRARY_PATH)?;
+        let library = match &bytes {
+            Some(bytes) => serde_json::from_slice(bytes)?,
+            None => seed_library(),
+        };
+        validate_library(&library)?;
+        Ok((library, sha256(bytes.as_deref().unwrap_or_default())))
+    }
     fn path(&self, relative: &str) -> ModelResult<PathBuf> {
         let path = self.root.join(relative);
         safety::check_path(&self.root, &path, true)?;

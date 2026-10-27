@@ -1,9 +1,9 @@
 import type {AgentViewContext} from './agentView'
-import { computed, onScopeDispose, ref, watch } from 'vue'
+import { computed, onScopeDispose, ref } from 'vue'
 import { defineStore } from 'pinia'
 import {pendingModelRows,type ModelRowsState} from './modelRows'
 import {canonicalPolicy} from './policyEquality'
-import { emptyContent, errorText, modelApi, type ModelSnapshot, type ModelPolicy, type Template, type TemplateDraft } from './api'
+import { emptyContent, errorText, modelApi, type CredentialEdit, type ModelSnapshot, type ModelPolicy, type Template, type TemplateDraft } from './api'
 
 // Route changes retain drafts; a refresh never discards an editor buffer.
 export const useModelsStore = defineStore('model-config', () => {
@@ -36,47 +36,33 @@ export const useModelsStore = defineStore('model-config', () => {
   const workspaceBaseline = ref('')
   const channelError = ref('')
   const staging = ref(false)
-  let stageWork: Promise<void> | undefined
-  let stageTimer: ReturnType<typeof setTimeout> | undefined
-  function persistDraft(): Promise<void> {
-    if (stageTimer) { clearTimeout(stageTimer); stageTimer = undefined }
-    if (stageWork) return stageWork
-    stageWork = stageDraftLoop().finally(() => { stageWork = undefined })
-    return stageWork
+  // Channel edits live in this process until explicit Save. In particular, Key
+  // input must never enter the retired disk draft or an audit/event payload.
+  const credentialEdits = ref<Record<string, CredentialEdit>>({})
+  function editCredential(channelId:string,value:string,original:string) {
+    // An emptied text field keeps the previous saved credential. Deletion is
+    // an explicit action, matching the prototype's “清空 Key” control.
+    if(value===original||!value)delete credentialEdits.value[channelId]
+    else credentialEdits.value[channelId]={channelId,action:'replace',value}
   }
-  async function stageDraftLoop() {
-    if (!channelDraft.value || !snapshot.value) return
-    staging.value = true; channelError.value = ''
-    try {
-      while (channelDraft.value && snapshot.value) {
-        const serialized = JSON.stringify(channelDraft.value)
-        const saved = await modelApi.stage(channelBaseline.value, workspaceBaseline.value, JSON.parse(serialized))
-        workspaceBaseline.value = saved.workspaceDigest
-        snapshot.value.workspace = saved.workspace; snapshot.value.workspaceDigest = saved.workspaceDigest
-        if (JSON.stringify(channelDraft.value) === serialized) break
-      }
-    } catch (cause) { channelError.value = errorText(cause) }
-    finally { staging.value = false }
+  function clearCredential(channelId:string) {
+    credentialEdits.value[channelId]={channelId,action:'clear',value:null}
   }
-  function queueDraft(force = false) {
-    if (stageTimer) clearTimeout(stageTimer)
-    if (!force && !channelDirty.value) return
-    stageTimer = setTimeout(() => { void persistDraft() }, 350)
-  }
-  watch(channelDraft, () => queueDraft(), { deep: true })
-  onScopeDispose(() => { if (stageTimer) clearTimeout(stageTimer) })
+  async function persistDraft(): Promise<void> { channelError.value='' }
+  onScopeDispose(() => { credentialEdits.value={} })
   // 读取现有渠道会带上本机读取回执等记账字段；按等价草稿比较，避免“只读取未编辑”误报。
-  const channelDirty = computed(() => channelDraft.value !== null && canonicalPolicy(channelDraft.value) !== channelClean.value)
+  const channelDirty = computed(() => Object.keys(credentialEdits.value).length>0 || channelDraft.value !== null && canonicalPolicy(channelDraft.value) !== channelClean.value)
   const dirty = computed(() => draft.value !== null && JSON.stringify(draft.value) !== clean.value)
   async function load() {
     if (busy.value) return
     busy.value = true; error.value = ''
     try {
+      const refreshChannels=!channelDirty.value&&!pendingRows.value.length
       snapshot.value = await modelApi.load()
-      if (!channelDraft.value) {
-        channelDraft.value = JSON.parse(JSON.stringify(snapshot.value.workspace?.policy ?? snapshot.value.policy))
+      if (!channelDraft.value||refreshChannels) {
+        channelDraft.value = JSON.parse(JSON.stringify(snapshot.value.policy))
         channelClean.value = canonicalPolicy(snapshot.value.policy)
-        channelBaseline.value = snapshot.value.workspace?.basePolicy ?? snapshot.value.policyDigest
+        channelBaseline.value = snapshot.value.policyDigest
         workspaceBaseline.value = snapshot.value.workspaceDigest
       }
     } catch (cause) { error.value = errorText(cause) } finally { busy.value = false }
@@ -116,7 +102,9 @@ export const useModelsStore = defineStore('model-config', () => {
     busy.value = true; error.value = ''
     try {
       const result = await modelApi.save(request, expected)
-      snapshot.value = result.snapshot
+      // Template commits do not replace the authoritative file-backed channel
+      // snapshot with the old manager-policy copy returned by legacy storage.
+      snapshot.value = {...snapshot.value,library:result.snapshot.library,libraryDigest:result.snapshot.libraryDigest}
       const template = result.snapshot.library.templates.find(item => item.id === result.templateId)
       buffers.delete(bufferKey);draft.value=null
       edit(template, result.revisionId)
@@ -127,13 +115,14 @@ export const useModelsStore = defineStore('model-config', () => {
   }
   function restoreChannels() {
     modelRows.value={}
+    credentialEdits.value={}
     if (!snapshot.value) return
     channelDraft.value = JSON.parse(JSON.stringify(snapshot.value.policy))
     channelClean.value = canonicalPolicy(channelDraft.value); channelBaseline.value = snapshot.value.policyDigest
     workspaceBaseline.value = snapshot.value.workspaceDigest
-    queueDraft(true)
   }
   function acceptTransfer(saved: ModelSnapshot) {
+    credentialEdits.value={}
     snapshot.value = saved
     channelDraft.value = JSON.parse(JSON.stringify(saved.workspace?.policy ?? saved.policy))
     channelClean.value = canonicalPolicy(saved.policy)
@@ -146,6 +135,6 @@ export const useModelsStore = defineStore('model-config', () => {
   // 这里只做同步读取，真正的“可用型号”判定仍在选择器里按每一行解释。
   const enabledChannels = computed(() => snapshot.value?.policy.channels.filter(c => c.connection.enabled) ?? [])
 
-  return { modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels, enabledChannels }
+  return { credentialEdits,editCredential,clearCredential,modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels, enabledChannels }
 })
 

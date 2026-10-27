@@ -6,6 +6,8 @@ pub mod broker;
 pub mod cache_refresh;
 pub(crate) mod channel_actions;
 pub mod compiler;
+pub mod config_file;
+mod config_file_mapping;
 pub mod config_remote;
 pub mod discovery;
 pub mod discovery_config;
