@@ -309,7 +309,8 @@
       "availability": "active",
       "triggers": [
         "user",
-        "commit"
+        "commit",
+        "startup"
       ]
     }
   ],
@@ -1505,6 +1506,20 @@
       ]
     },
     {
+      "id": "model-config-migration-incomplete",
+      "job": "model_config",
+      "object": "configuration",
+      "action": "migrate",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "risk",
+      "availability": "active",
+      "policy": "model_config_migration_incomplete",
+      "resolves": []
+    },
+    {
       "id": "model-config-changed",
       "job": "model_config",
       "object": "configuration",
@@ -1929,6 +1944,18 @@
       "body": "扩展配置读取、保护备份、保存或最终核验失败。客户端文件可能已部分改变，请检查配置和备份后再重试。配置保存成功不代表客户端资产同步已核验。",
       "action": "logs",
       "dedupe": "extension-config-save:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "model_config_migration_incomplete",
+      "level": "warning",
+      "category": "system",
+      "source": "diagnostic",
+      "title": "旧配置迁移未完成",
+      "body": "部分旧配置暂未完成迁移或归档，原件已保留；当前配置文件未改动。可重开管理器重试，持续失败请查看诊断日志。",
+      "action": "models",
+      "dedupe": "model-config:migration-incomplete",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
     },
@@ -2404,6 +2431,11 @@
       "event": "extension-config-save-succeeded",
       "source": "commands/extensions::execute_extension_write_registered (both GUI write and standalone client toggle; configuration-only candidate + explicit HOME; final exact config readback before target lock release)",
       "wiring": "scoped_terminal"
+    },
+    {
+      "event": "model-config-migration-incomplete",
+      "source": "lib.rs startup after notification-store load; modules/model_config/feedback.rs::migration_startup/publish_migration_notice fixed fault classification, no legacy payload",
+      "wiring": "scoped_lifecycle"
     },
     {
       "event": "model-config-changed",

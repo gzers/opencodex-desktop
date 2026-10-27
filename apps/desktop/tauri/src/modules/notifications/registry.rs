@@ -184,6 +184,7 @@ pub enum Fact {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum PolicyId {
+    ModelConfigMigrationIncomplete,
     ModelPolicyFailure,
     ModelPolicyBlocked,
     ModelExternalFailure,
@@ -622,6 +623,8 @@ pub struct EmissionSite {
 
 #[derive(Debug, Deserialize)]
 enum SupportedEvent {
+    #[serde(rename = "model-config-migration-incomplete")]
+    ModelConfigMigrationIncomplete,
     #[serde(rename = "model-policy-save-failed")]
     ModelPolicySaveFailed,
     #[serde(rename = "model-policy-save-succeeded")]

@@ -160,7 +160,8 @@ pub fn run() {
             crate::commands::retired_files::purge_retired(&data_root);
             // Repeatable, bounded upgrade of layout/candidates only. Failure
             // keeps source bytes and does not stop unrelated application use.
-            let _ = crate::modules::model_config::legacy_migration::migrate(&data_root);
+            let model_layout_migration =
+                crate::modules::model_config::legacy_migration::migrate(&data_root);
             // 「启动时清理」：开启时按保留策略做一次有界的轻量清理（日志截断、通知与
             // 通知保留期），必须在通知集合载入前完成；启动不扫描、校验或删除备份。
             let (startup_cleanup, cleanup_identity) =
@@ -182,6 +183,9 @@ pub fn run() {
             app.manage(std::sync::Arc::new(std::sync::Mutex::new(
                 crate::commands::notifications::startup_notification_store(&data_root),
             )));
+            crate::modules::model_config::feedback::migration_startup(
+                app.handle(), &data_root, &model_layout_migration,
+            );
             // Terminal facts use the post-cleanup store, never an earlier in-memory copy.
             if match &startup_cleanup { Ok(outcome) => outcome.ran, Err(_) => true } {
                 crate::commands::event_delivery::publish(
