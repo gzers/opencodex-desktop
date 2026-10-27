@@ -60,6 +60,15 @@ pub fn resolve_from_config(
     node_url: &str,
     protocol: &str,
 ) -> Resolved {
+    if matches!(
+        declared_auth_mode(config, provider_id).as_deref(),
+        Some("none" | "local")
+    ) {
+        return Resolved {
+            secret: None,
+            missing: false,
+        };
+    }
     let needs_key = declared_auth_mode(config, provider_id).is_none_or(|mode| mode == "key");
     let Some(expected) = declared_base_url(config, provider_id) else {
         return Resolved {
@@ -77,7 +86,14 @@ pub fn resolve_from_config(
         };
     }
     let secret = provider(config, provider_id)
-        .and_then(|row| row.get("apiKey"))
+        .and_then(|row| {
+            row.get("apiKey").or_else(|| {
+                row.get("apiKeyPool")
+                    .and_then(Value::as_array)
+                    .and_then(|pool| pool.first())
+                    .and_then(|slot| slot.get("key"))
+            })
+        })
         .and_then(Value::as_str)
         .filter(|key| !key.trim().is_empty() && key.len() <= 8192 && !key.contains(['\r', '\n']))
         .map(|key| Zeroizing::new(key.to_owned()));
@@ -104,7 +120,19 @@ pub fn resolve(home: &Path, provider_id: &str, node_url: &str, protocol: &str) -
     let Ok(config) = serde_json::from_slice::<Value>(&bytes) else {
         return empty;
     };
-    resolve_from_config(&config, provider_id, node_url, protocol)
+    let mut resolved = resolve_from_config(&config, provider_id, node_url, protocol);
+    if resolved
+        .secret
+        .as_ref()
+        .is_some_and(|key| key.starts_with('$') || key.starts_with("keychain:"))
+    {
+        let view = super::config_file::credential(home, provider_id).ok();
+        resolved.secret = view
+            .filter(|view| view.viewable)
+            .map(|view| Zeroizing::new(view.value));
+        resolved.missing = resolved.secret.is_none();
+    }
+    resolved
 }
 
 #[cfg(test)]
@@ -126,6 +154,37 @@ mod tests {
             Some("sk-fixture-SECRET")
         );
         assert!(!resolved.missing);
+    }
+    #[test]
+    fn no_auth_omits_old_keys_and_pool_only_config_has_a_credential() {
+        let mut config = config();
+        config["providers"]["demo"]["authMode"] = serde_json::json!("none");
+        let result = resolve_from_config(
+            &config,
+            "demo",
+            "https://api.example.test",
+            "openai-responses",
+        );
+        assert!(result.secret.is_none());
+        assert!(!result.missing);
+        config["providers"]["demo"]
+            .as_object_mut()
+            .unwrap()
+            .remove("apiKey");
+        config["providers"]["demo"]["authMode"] = serde_json::json!("key");
+        config["providers"]["demo"]["apiKeyPool"] =
+            serde_json::json!([{"id":"fixture","key":"fixture-pool-only"}]);
+        let result = resolve_from_config(
+            &config,
+            "demo",
+            "https://api.example.test",
+            "openai-responses",
+        );
+        assert!(result
+            .secret
+            .as_ref()
+            .is_some_and(|s| s.as_str() == "fixture-pool-only"));
+        assert!(!result.missing);
     }
     #[test]
     fn refuses_a_different_host_scheme_or_port() {

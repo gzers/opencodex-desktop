@@ -4,6 +4,9 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{collections::BTreeSet, time::Duration};
 use zeroize::Zeroizing;
+#[path = "discovery_paths.rs"]
+mod paths;
+
 const PURPOSE: &str = "model_channel";
 fn entry(reference: &str) -> ModelResult<keyring::Entry> {
     require_uuid(reference)?;
@@ -185,26 +188,8 @@ async fn discover_inner(
         .resolve_to_addrs(host, &addresses)
         .build()
         .map_err(|_| invalid("discovery_client", "发现连接未就绪"))?;
-    let path = url.path().trim_end_matches('/');
-    let models_path = match request.protocol.as_str() {
-        "ollama-native" => format!("{path}/api/tags"),
-        "google" => {
-            if path.ends_with("/v1beta") {
-                format!("{path}/models")
-            } else {
-                format!("{path}/v1beta/models")
-            }
-        }
-        _ => {
-            if path.ends_with("/models") {
-                path.into()
-            } else {
-                format!("{path}/models")
-            }
-        }
-    };
-    let mut target = url.clone();
-    target.set_path(&models_path);
+    let (mut target, response) = read_first_page(&client, &url, &request.protocol, secret).await?;
+    let mut first_page = Some(response);
     let mut next: Option<String> = None;
     let mut pages = BTreeSet::new();
     let mut seen = BTreeSet::new();
@@ -229,53 +214,16 @@ async fn discover_inner(
                 value,
             );
         }
-        let mut query = client.get(target.clone());
-        // Protocol version is part of the request even for an auth-free relay.
-        if request.protocol == "anthropic" {
-            query = query.header("anthropic-version", "2023-06-01");
-        }
-        if let Some(secret) = secret {
-            query = match request.protocol.as_str() {
-                "anthropic" => query.header("x-api-key", secret),
-                "google" => query.header("x-goog-api-key", secret),
-                _ => query.bearer_auth(secret),
-            };
-        }
-        let mut response = query.send().await.map_err(|error| {
-            invalid(
-                if error.is_timeout() {
-                    "discovery_timeout"
-                } else {
-                    "discovery_failed"
-                },
-                "读取模型失败；连接和选择保留，未注册渠道",
-            )
-        })?;
-        if !response.status().is_success() {
+        let response = match first_page.take() {
+            Some(response) => response,
+            None => read_page(&client, &target, &request.protocol, secret).await?,
+        };
+        if response.get("error").is_some_and(|error| !error.is_null()) {
             return Err(invalid(
-                if [401, 403].contains(&response.status().as_u16()) {
-                    "discovery_auth"
-                } else {
-                    "discovery_failed"
-                },
-                format!(
-                    "发现接口返回HTTP{}，没有执行生成请求",
-                    response.status().as_u16()
-                ),
+                "discovery_shape",
+                "接口返回错误对象，未取得有效模型清单",
             ));
         }
-        let mut bytes = vec![];
-        while let Some(chunk) = response
-            .chunk()
-            .await
-            .map_err(|_| invalid("discovery_failed", "发现响应中断"))?
-        {
-            if bytes.len() + chunk.len() > 8 * 1024 * 1024 {
-                return Err(invalid("discovery_limit", "发现响应超过8MiB"));
-            }
-            bytes.extend_from_slice(&chunk);
-        }
-        let response: Value = serde_json::from_slice(&bytes)?;
         let entries = response
             .get("data")
             .or_else(|| response.get("models"))
@@ -298,7 +246,7 @@ async fn discover_inner(
             } else {
                 raw
             };
-            if id.is_empty() || id.len() > 2048 {
+            if id.trim().is_empty() || id.len() > 2048 {
                 return Err(invalid("discovery_identity", "模型身份为空或过长"));
             }
             if seen.insert(id.to_string()) {
@@ -373,6 +321,114 @@ async fn discover_inner(
         credential_ref: reference,
         elapsed_ms: started.elapsed().as_millis() as u64,
     })
+}
+
+async fn read_first_page(
+    client: &reqwest::Client,
+    base: &reqwest::Url,
+    protocol: &str,
+    secret: Option<&str>,
+) -> ModelResult<(reqwest::Url, Value)> {
+    let mut candidates = paths::candidates(base, protocol).into_iter().peekable();
+    while let Some(target) = candidates.next() {
+        match read_page(client, &target, protocol, secret).await {
+            // Select an endpoint only before accepting its first page. Never mix pages
+            // from different paths, or retry authentication/transport failures.
+            Err(error)
+                if matches!(error.code.as_str(), "discovery_html" | "discovery_path")
+                    && candidates.peek().is_some() => {}
+            result => return result.map(|response| (target, response)),
+        }
+    }
+    Err(invalid(
+        "discovery_protocol",
+        "此协议没有可用的模型清单路径",
+    ))
+}
+
+async fn read_page(
+    client: &reqwest::Client,
+    target: &reqwest::Url,
+    protocol: &str,
+    secret: Option<&str>,
+) -> ModelResult<Value> {
+    let mut query = client
+        .get(target.clone())
+        .header(reqwest::header::ACCEPT, "application/json");
+    // Protocol version is required even for an auth-free Anthropic relay.
+    if protocol == "anthropic" {
+        query = query.header("anthropic-version", "2023-06-01");
+    }
+    if let Some(secret) = secret {
+        query = match protocol {
+            "anthropic" => query.header("x-api-key", secret),
+            "google" => query.header("x-goog-api-key", secret),
+            _ => query.bearer_auth(secret),
+        };
+    }
+    let mut response = query.send().await.map_err(transport_error)?;
+    let status = response.status().as_u16();
+    if !response.status().is_success() {
+        return Err(invalid(
+            match status {
+                401 | 403 => "discovery_auth",
+                404 | 405 | 410 => "discovery_path",
+                _ => "discovery_failed",
+            },
+            format!("模型清单接口返回 HTTP{status}，未取得有效清单"),
+        ));
+    }
+    let html_content_type = response
+        .headers()
+        .get(reqwest::header::CONTENT_TYPE)
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.split(';').next())
+        .is_some_and(|value| {
+            value.trim().eq_ignore_ascii_case("text/html")
+                || value.trim().eq_ignore_ascii_case("application/xhtml+xml")
+        });
+    let mut bytes = vec![];
+    while let Some(chunk) = response.chunk().await.map_err(transport_error)? {
+        if bytes.len() + chunk.len() > 8 * 1024 * 1024 {
+            return Err(invalid("discovery_limit", "发现响应超过8MiB"));
+        }
+        bytes.extend_from_slice(&chunk);
+    }
+    // Accept a valid JSON list even when a relay mislabels Content-Type. Never
+    // include upstream bytes or parser diagnostics in public errors (they can echo a Key).
+    serde_json::from_slice(&bytes).map_err(|_| {
+        let prefix = String::from_utf8_lossy(&bytes[..bytes.len().min(512)]);
+        let prefix = prefix
+            .trim_start_matches('\u{feff}')
+            .trim_start()
+            .to_ascii_lowercase();
+        if html_content_type
+            || ["<!doctype html", "<html", "<head", "<body"]
+                .iter()
+                .any(|tag| prefix.starts_with(tag))
+        {
+            invalid(
+                "discovery_html",
+                "模型清单接口返回 HTML 页面，请检查服务地址及代理路径",
+            )
+        } else {
+            invalid(
+                "discovery_json",
+                "模型清单响应不是有效 JSON，请检查接口及代理响应",
+            )
+        }
+    })
+}
+
+fn transport_error(error: reqwest::Error) -> ModelError {
+    if error.is_timeout() {
+        invalid("discovery_timeout", "读取模型清单超时，请检查节点连接")
+    } else {
+        invalid(
+            "discovery_failed",
+            "模型清单连接失败或响应中断，请检查网络、端口和 TLS 证书",
+        )
+    }
 }
 
 #[cfg(test)]
