@@ -262,8 +262,18 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
     } else {
         before_bytes
     };
-    // Metadata is not a second copy of current connections/rules/selection.
-    let mut layout = request.policy.clone();
+    record_layout(root, &request.policy);
+    Ok(SaveResult {
+        snapshot: snapshot_value(root, &config, &bytes, &request.policy)?,
+        changed,
+    })
+}
+
+/// Also used after an explicitly requested historical restoration commits.
+/// Metadata is never a second copy of current connections/rules/selection.
+/// Failure here cannot turn a completed authoritative file write into failure.
+pub(super) fn record_layout(root: &Path, policy: &Policy) {
+    let mut layout = policy.clone();
     for c in &mut layout.channels {
         c.connection.credential_ref = None;
         c.connection.source_read_id = None;
@@ -279,12 +289,10 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
     if safety::check_path(root, &meta_path, true).is_ok() {
         // The authoritative config write has succeeded. A UI layout failure
         // cannot honestly be reported as an unsuccessful config write.
-        let _ = atomic_write(&meta_path, &serde_json::to_vec(&layout)?, 0o600);
+        if let Ok(bytes) = serde_json::to_vec(&layout) {
+            let _ = atomic_write(&meta_path, &bytes, 0o600);
+        }
     }
-    Ok(SaveResult {
-        snapshot: snapshot_value(root, &config, &bytes, &request.policy)?,
-        changed,
-    })
 }
 
 #[derive(Serialize)]
@@ -418,6 +426,31 @@ mod tests {
         assert_eq!(s.policy.channels.len(), 1);
         assert_eq!(s.policy.channels[0].connection.provider_id, "demo");
         assert!(s.workspace.is_none());
+    }
+    #[test]
+    fn restored_layout_retains_adoptions_but_file_remains_authority() {
+        let (_temp, root, home) = fixture();
+        let original = std::fs::read(home.join("config.json")).unwrap();
+        let mut history = snapshot(&root, &home).unwrap().policy;
+        let (template_id, revision_id) = custom_revision(&root);
+        let channel = &mut history.channels[0];
+        channel.label = "历史显示名称".into();
+        channel.template_refs = vec![TemplateRef {
+            template_id,
+            revision_id,
+        }];
+        channel.connection.credential_ref = Some("retired-reference".into());
+        channel.connection.nodes[0].url = "https://stale.example.test".into();
+        channel.selection = ModelSelection::None;
+        record_layout(&root, &history);
+        let reopened = snapshot(&root, &home).unwrap();
+        let channel = &reopened.policy.channels[0];
+        assert_eq!(channel.label, "历史显示名称");
+        assert_eq!(channel.template_refs, history.channels[0].template_refs);
+        assert_eq!(channel.connection.nodes[0].url, "https://example.test");
+        assert!(channel.connection.credential_ref.is_none());
+        assert!(channel.discovered.iter().any(|m| m.id == "vendor/custom"));
+        assert!(std::fs::read(home.join("config.json")).unwrap() == original);
     }
     #[test]
     fn key_only_save_survives_offline_and_preserves_unknown_fields() {
