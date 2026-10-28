@@ -1,0 +1,20 @@
+{
+  "reportedDate": "2026-10-28",
+  "timezone": "Asia/Shanghai",
+  "source": "user Windows screenshot after 0.2.17 release; screenshot itself does not show exact installed version",
+  "screenshotSha256": "b6d807662aae50155864ff74c32b5f092982a9561d3605def1c3b002e2d434fd",
+  "confirmed": [
+    "Windows extended path prefix and mixed slash spelling remain in wizard input",
+    "Next button appears enabled and no red path validation error is visible",
+    "source_dto emits raw managed/default prefix; wizard uses it unchanged",
+    "native UI regression asserts display value equals raw DTO and does not assert readable presentation"
+  ],
+  "notProven": [
+    "Failure after Next or during install",
+    "Wrong physical install target",
+    "Exact installed version from screenshot"
+  ],
+  "codeBaseline": "v0.2.17/d7c7978f043278baae8f2fc8c2119315a4660f12",
+  "issue": "WP-89 follow-up; display/prefill acceptance incomplete",
+  "actionThisTurn": "record and source diagnosis only; no software/config mutation or new release"
+}
