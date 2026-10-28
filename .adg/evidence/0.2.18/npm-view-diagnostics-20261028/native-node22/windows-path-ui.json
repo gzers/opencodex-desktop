@@ -1,0 +1,11 @@
+{
+  "result": "fail",
+  "checks": [
+    "installation data root/home/all six managed partitions/native placeholder use readable ordinary paths"
+  ],
+  "rawDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22\\OpenCodeX Native 中文 Spaces",
+  "documentFocusEmulated": true,
+  "isolatedClipboardPermissionGranted": true,
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ ''\n- 'D:\\\\Users\\\\15119\\\\WorkSpace\\\\Code\\\\tools\\\\opencodex-desktop\\\\code\\\\test\\\\out\\\\remote-diagnostics\\\\native-node22\\\\OpenCodeX Native 中文 Spaces'\n\n    at verifyWindowsPathUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:55:12)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-install-recovery.mjs:74:3",
+  "clipboardRestored": true
+}

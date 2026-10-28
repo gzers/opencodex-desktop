@@ -1,0 +1,36 @@
+0 verbose cli D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\home\.local\bin\node.exe D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.0
+2 info using node@v22.12.0
+3 silly config load:file:D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\npmrc
+4 silly config load:file:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\runtime\opencodex.new-65de9a31ebb8\.downloads\.npmrc
+5 silly config load:file:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\home\.npmrc
+6 silly config load:file:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\home\.local\bin\etc\npmrc
+7 verbose title npm pack @bitkyc08/opencodex@999.0.0-ocx-native-failure
+8 verbose argv "pack" "@bitkyc08/opencodex@999.0.0-ocx-native-failure" "--pack-destination" "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\accepted-node22\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex.new-65de9a31ebb8\\.downloads" "--loglevel" "info"
+9 verbose logfile logs-max:10 dir:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\cache\npm\_logs\2026-10-28T12_55_59_172Z-
+10 verbose logfile D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\cache\npm\_logs\2026-10-28T12_55_59_172Z-debug-0.log
+11 silly logfile done cleaning log files
+12 http fetch GET 200 http://127.0.0.1:64477/@bitkyc08%2fopencodex 48ms (cache miss)
+13 http fetch GET 200 http://127.0.0.1:64477/@bitkyc08%2fopencodex 15ms (cache updated)
+14 http fetch GET 404 http://127.0.0.1:64477/blocked.tgz 4ms (cache skip)
+15 verbose stack HttpErrorGeneral: 404 Not Found - GET http://127.0.0.1:64477/blocked.tgz - E404
+15 verbose stack     at D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\node_modules\npm-registry-fetch\lib\check-response.js:95:15
+15 verbose stack     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+16 verbose statusCode 404
+17 verbose pkgid http://127.0.0.1:64477/blocked.tgz
+18 error code E404
+19 error 404 Not Found - GET http://127.0.0.1:64477/blocked.tgz - E404
+20 error 404
+21 error 404  'http://127.0.0.1:64477/blocked.tgz' is not in this registry.
+22 error 404 This package name is not valid, because 
+23 error 404  1. name can only contain URL-friendly characters
+24 error 404
+25 error 404 Note that you can also install from a
+26 error 404 tarball, folder, http url, or git url.
+27 verbose cwd D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\runtime\opencodex.new-65de9a31ebb8\.downloads
+28 verbose os Windows_NT 10.0.26100
+29 verbose node v22.12.0
+30 verbose npm  v10.9.0
+31 verbose exit 1
+32 verbose code 1
+33 error A complete log of this run can be found in: D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\cache\npm\_logs\2026-10-28T12_55_59_172Z-debug-0.log

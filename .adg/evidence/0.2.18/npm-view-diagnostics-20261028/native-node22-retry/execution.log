@@ -1,0 +1,17 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: query UI action: 关闭更新中心
+    at click (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-query-ui.mjs:43:5)
+    at async verifyWindowsQueryUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-query-ui.mjs:98:5)
+    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-install-recovery.mjs:104:3 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

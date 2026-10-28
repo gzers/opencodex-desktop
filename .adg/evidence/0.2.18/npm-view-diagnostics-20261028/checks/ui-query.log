@@ -1,0 +1,78 @@
+
+ RUN  v5.0.0 D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/apps/desktop/ui
+
+ ❯ tests/update-center.test.ts (12 tests | 1 failed) 335ms
+   ❯ shared production update center (12)
+     × retains remote query failure details through close/reopen and clears them after retry 66ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > retains remote query failure details through close/reopen and clears them after retry
+Error: Unable to get [data-testid="install-official-update"] within: <teleport-stub data-v-c975c606="" to="body">
+  <div data-v-c975c606="" class="modal-mask update-center-mask" data-testid="update-center">
+    <div data-v-c975c606="" class="modal modal-wide update-center" role="dialog" aria-modal="true" aria-labelledby="update-center-v-0" tabindex="-1">
+      <header data-v-c975c606="" class="update-center-head">
+        <div data-v-c975c606=""><span data-v-c975c606="" class="update-kicker">软件更新</span>
+          <h3 data-v-c975c606="" id="update-center-v-0">OpenCodex 面板更新</h3>
+          <p data-v-c975c606="">官方项目 · @bitkyc08/opencodex</p>
+        </div><button data-v-c975c606="" class="btn ghost" type="button" aria-label="关闭更新中心">
+          <!--v-if--><span class="btn-content">关闭</span>
+        </button>
+      </header>
+      <div data-v-c975c606="" class="update-center-body">
+        <div data-v-c975c606="" class="update-back"><button data-v-c975c606="" class="btn ghost" type="button">
+            <!--v-if--><span class="btn-content">← 全部更新</span>
+          </button></div>
+        <section data-v-c975c606="" class="update-object" data-testid="official-update-card">
+          <div data-v-c975c606="" class="update-detail-head">
+            <h4 data-v-c975c606="">OpenCodex 面板更新详情与确认</h4>
+          </div>
+          <!--v-if-->
+          <section data-v-80202013="" data-v-c975c606="" class="release-notes" tabindex="-1" aria-busy="false">
+            <div data-v-80202013="" class="release-notes-head">
+              <h4 data-v-80202013="">更新说明</h4>
+              <!--v-if-->
+            </div>
+            <!--v-if-->
+            <p data-v-80202013="">尚无可核验的更新候选。</p>
+            <div data-v-80202013="" class="release-notes-actions">
+              <!--v-if-->
+              <!--v-if-->
+            </div>
+          </section>
+          <p data-v-c975c606="" class="update-hint">面板升级前必须备份配置；备份成功后才会安装选定版本。更新完成后如需重启运行中的代理，将另行提示。</p>
+          <!--v-if-->
+          <!--v-if-->
+          <!--v-if-->
+        </section>
+      </div>
+      <footer data-v-c975c606="" class="update-center-foot">
+        <p data-v-c975c606="">更新准备完成后由你选择重启时机。</p>
+        <div data-v-c975c606=""><button data-v-c975c606="" class="btn ghost" type="button">
+            <!--v-if--><span class="btn-content">关闭</span>
+          </button></div>
+      </footer>
+    </div>
+  </div>
+</teleport-stub>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/update-center.test.ts:82:20
+     80|     expect(updates.officialRemoteError).toBe(false)
+     81|     expect(wrapper.find('[data-testid="official-query-error"]').exists…
+     82|     expect(wrapper.get('[data-testid="install-official-update"]').attr…
+       |                    ^
+     83|   })
+     84|   it('opens without a network check, backup or installation and presen…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 19 passed (20)
+   Start at  20:10:59
+   Duration  3.25s (environment 50%, transform 34%, tests 8%, import 7%)
+
+  Transform  transforming modules took 2.93s · 34% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

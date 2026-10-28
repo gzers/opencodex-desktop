@@ -1,0 +1,73 @@
+{
+  "result": "fail",
+  "checks": [
+    "real npm E404 from isolated loopback registry; actual argv/cwd/selected HOME/cache/native COMSPEC and both streams recorded"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    }
+  ],
+  "before": {
+    "tag": "latest",
+    "version": "2.93.0",
+    "integrity": "sha512-rJEdLp7KheKwivmZXck7kN5HR9ipDM8WdzcvUkT+qsKHXNFyQI9zrCpUKmvp7BUdliv7cZZgdrJkTPvOO70HUQ=="
+  },
+  "failureRegistry": "http://127.0.0.1:56362/",
+  "error": "npm view 以退出码 1 结束。\nnpm error code E404\nnpm error 404 Not Found - GET http://127.0.0.1:56362/@bitkyc08%2fopencodex - E404\nnpm error 404\nnpm error 404  '@bitkyc08/opencodex@latest' is not in this registry.\nnpm error 404\nnpm error 404 Note that you can also install from a\nnpm error 404 tarball, folder, http url, or git url.\nnpm error A complete log of this run can be found in: D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-28T12_42_43_318Z-debug-0.log\n日志：\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\logs\\runtime-query\\npm-view-f1c852fd-9bf9-4f1e-982b-e2ed630e891b.log",
+  "failureLog": {
+    "name": "npm-view-f1c852fd-9bf9-4f1e-982b-e2ed630e891b.log",
+    "records": [
+      {
+        "arguments": [
+          "view",
+          "@bitkyc08/opencodex@latest",
+          "version",
+          "dist.integrity",
+          "--json"
+        ],
+        "environment": {
+          "APPDATA": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\home\\AppData/Roaming",
+          "COMSPEC": "C:\\WINDOWS\\System32\\cmd.exe",
+          "HOME": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\home",
+          "LOCALAPPDATA": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\home\\AppData/Local",
+          "OPENCODEX_HOME": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\opencodex-home",
+          "PATH": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\home\\.local/bin;C:\\WINDOWS\\System32;C:\\WINDOWS",
+          "SystemRoot": "C:\\WINDOWS",
+          "TEMP": "C:\\Users\\15119\\AppData\\Local\\Temp\\",
+          "TMP": "C:\\Users\\15119\\AppData\\Local\\Temp\\",
+          "USERPROFILE": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\home",
+          "WINDIR": "C:\\WINDOWS",
+          "npm_config_cache": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\cache\\npm",
+          "npm_config_update_notifier": "false"
+        },
+        "environmentCleared": true,
+        "program": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\home\\.local/bin\\npm.cmd",
+        "startedAt": "2026-10-28T12:42:42.996957900+00:00",
+        "workingDirectory": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\home"
+      },
+      {
+        "capturedBytes": 278,
+        "complete": true,
+        "partialRecordOmitted": false,
+        "stream": "stdout",
+        "text": "{\n  \"error\": {\n    \"code\": \"E404\",\n    \"summary\": \"Not Found - GET http://127.0.0.1:56362/@bitkyc08%2fopencodex - E404\",\n    \"detail\": \"'@bitkyc08/opencodex@latest' is not in this registry.\\n\\nNote that you can also install from a\\ntarball, folder, http url, or git url.\"\n  }\n}\n"
+      },
+      {
+        "capturedBytes": 549,
+        "complete": true,
+        "partialRecordOmitted": false,
+        "stream": "stderr",
+        "text": "npm error code E404\nnpm error 404 Not Found - GET http://127.0.0.1:56362/@bitkyc08%2fopencodex - E404\nnpm error 404\nnpm error 404  '@bitkyc08/opencodex@latest' is not in this registry.\nnpm error 404\nnpm error 404 Note that you can also install from a\nnpm error 404 tarball, folder, http url, or git url.\nnpm error A complete log of this run can be found in: D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-retry\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-28T12_42_43_318Z-debug-0.log\n"
+      },
+      {
+        "detail": "npm view 以退出码 1 结束。",
+        "endedAt": "2026-10-28T12:42:43.732338300+00:00",
+        "exitCode": 1,
+        "reason": "npm_view_exit"
+      }
+    ]
+  },
+  "errorStack": "AssertionError [ERR_ASSERTION]: query UI action: 关闭更新中心\n    at click (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-query-ui.mjs:43:5)\n    at async verifyWindowsQueryUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-query-ui.mjs:98:5)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-install-recovery.mjs:104:3"
+}

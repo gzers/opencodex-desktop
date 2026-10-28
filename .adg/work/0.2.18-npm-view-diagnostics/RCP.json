@@ -1,0 +1,188 @@
+{
+  "id": "RCP-OPENCODEX-0.2.18-NPM-VIEW-DIAGNOSTICS",
+  "task": "TASK-OPENCODEX-0.2.18-NPM-VIEW-DIAGNOSTICS",
+  "sourceCommit": "9c5db679a9114a5b5dd4424eac19c496d465e61d",
+  "buildCommit": "08879052bdf1d4e6c8627b5b43c5fd04449a9f0d",
+  "applicationTree": "708b51798a476072ba68fbd5a836ee240e5d71b3",
+  "executableSha256": "cbc5abd05680960003d076798e90857da284e93ff43343e2b150073d0511da9a",
+  "targetVersion": "0.2.18",
+  "result": "passed_for_confirmed_fixes_and_local_matrix",
+  "checks": [
+    {
+      "name": "review:command-context-and-sanitization",
+      "result": "passed",
+      "evidence": [
+        "checks/backend-before.log",
+        "checks/backend-query-last.log",
+        "checks/backend-workspace-committed.log",
+        "native-matrix.json"
+      ],
+      "scope": "command is logged before spawn with explicit allowed environment; stdout16KiB/stderr64KiB concurrent capture, complete flags and omitted partial records; credentials masked in JSON values and UI summaries; selected OPENCODEX_HOME preserved"
+    },
+    {
+      "name": "test:failure-before-controls",
+      "result": "passed",
+      "evidence": [
+        "checks/backend-before.log",
+        "checks/ui-update-console-before.log",
+        "native-node22-final/logs/runtime-query",
+        "native-node22-final/native-query-recovery.json"
+      ],
+      "scope": "original application source lost fixture EQUERYFIXTURE/stderr; update console hidden after failure; actual npm10 string output with absent integrity rejected before parsing fix"
+    },
+    {
+      "name": "test:windows-query-pipes-and-owned-tree",
+      "result": "passed",
+      "passed": 18,
+      "ignored": 1,
+      "evidence": [
+        "checks/backend-query-last.log",
+        "checks/backend-workspace-committed.log"
+      ],
+      "scope": "both streams, huge stderr, output bounds, OEM/nonUTF8 stderr, invalid JSON/version/encoding, missing executable, log-create failure, timed-out stdout/stderr descendants, success/nonzero/overflow ownership cleanup; same two-second process fixture deadline and unrelated control preservation"
+    },
+    {
+      "name": "test:frontend-full",
+      "result": "passed",
+      "files": 170,
+      "passed": 1036,
+      "skipped": 10,
+      "evidence": [
+        "checks/ui-complete.log"
+      ],
+      "scope": "failure detail survives close/reopen; success clears remote failure; failed install output snapshot survives later unrelated install and is absent on backup failure"
+    },
+    {
+      "name": "test:windows-workspace",
+      "result": "passed",
+      "suites": 40,
+      "passed": 1013.0,
+      "ignored": 16.0,
+      "evidence": [
+        "checks/backend-workspace-committed.log",
+        "checks/backend-committed-summary.json"
+      ],
+      "scope": "final source 9c5db679, matching build application tree; top-level results only, nested self-process outcome excluded; opt-in external services not inferred from suite results"
+    },
+    {
+      "name": "test:native-node22",
+      "result": "passed",
+      "evidence": [
+        "accepted-node22/launcher.json",
+        "accepted-node22/native-install-recovery.json",
+        "accepted-node22/native-query-recovery.json",
+        "accepted-node22/windows-path-ui.json",
+        "accepted-node22/logs"
+      ],
+      "scope": "Node22.12.0/npm10.9.0 through explicit sandbox cmd adapter; actual registry installs and missing-version rollback/recovery, E404 query and tarball failures, actual preference backup, preserved source/launcher bytes, reopened diagnostics, registry metadata recovery to2.93.0 and sandbox npmrc restoration"
+    },
+    {
+      "name": "test:native-node24",
+      "result": "passed",
+      "evidence": [
+        "accepted-node24/launcher.json",
+        "accepted-node24/native-install-recovery.json",
+        "accepted-node24/native-query-recovery.json",
+        "accepted-node24/windows-path-ui.json",
+        "accepted-node24/logs"
+      ],
+      "scope": "Node24.22.1/npm11.21.0 through explicit sandbox cmd adapter; same real install/failure/recovery matrix and path/font checks"
+    },
+    {
+      "name": "test:fmt-clippy-typecheck-build",
+      "result": "passed",
+      "evidence": [
+        "checks/fmt-last.log",
+        "checks/clippy-complete.log",
+        "checks/clippy-metadata-final.log",
+        "checks/clippy-last.log",
+        "checks/typecheck-complete.log",
+        "checks/ui-build-complete.log",
+        "checks/native-build-final.log",
+        "checks/artifact-final-provenance.json"
+      ],
+      "scope": "unchanged compiler deadlines/threads; jobs2 compilation; known cached CRT missing-PDB warnings retained; exact native-tested EXE restored after feature-switch workspace tests and SHA256 rechecked"
+    },
+    {
+      "name": "review:daily-files-unchanged",
+      "result": "passed",
+      "evidence": [
+        "checks/daily-files-before.json",
+        "checks/daily-files-final.json"
+      ],
+      "scope": "daily executable/runtime/preferences match the originally captured SHA256; no daily uninstall/shim modification or configuration reset"
+    },
+    {
+      "name": "writeback:version-issues-and-implementation",
+      "result": "passed",
+      "evidence": [
+        {
+          "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.18-bugs.md",
+          "beforeGitBlob": "77b0fddca9dd0c7578461b364b23923b2081bcae",
+          "afterGitBlob": "f0c7253819f742c569aace0396c4ee902ecc8873",
+          "workingSha256": "2610aceb41f5c46cb15432f8353f8e26b25fdd5d0c44323fce24fc3ca67d9e2c"
+        },
+        {
+          "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-26.md",
+          "beforeGitBlob": "a3d1f92a83a0c06c27ecc5f6a6bcecd07d87a321",
+          "afterGitBlob": "8eefca6b33b9243ec058d2de03629f2cf9b57251",
+          "workingSha256": "5f6eee00f42ae25cb597b381b12bbe179cd357cfe4230973fce65f828877343b"
+        }
+      ],
+      "scope": "W18-10..13 root causes, implementation, actual coverage, invalid early pass and historical unknown retained in version issues and IMP26"
+    }
+  ],
+  "writeback": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.18-bugs.md",
+      "beforeGitBlob": "77b0fddca9dd0c7578461b364b23923b2081bcae",
+      "afterGitBlob": "bc3af7bb239758ba8401921d1b81c1679906e8c6",
+      "workingSha256": "0646ac65ffc85b3a1d4c4cf4e4d0109bee0e324cad0ba218a5aefff62e688d9c"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-26.md",
+      "beforeGitBlob": "a3d1f92a83a0c06c27ecc5f6a6bcecd07d87a321",
+      "afterGitBlob": "8eefca6b33b9243ec058d2de03629f2cf9b57251",
+      "workingSha256": "5f6eee00f42ae25cb597b381b12bbe179cd357cfe4230973fce65f828877343b"
+    }
+  ],
+  "earlyRuns": [
+    {
+      "run": "native-node22",
+      "result": "failed",
+      "reason": "native clipboard write was read before its asynchronous completion"
+    },
+    {
+      "run": "native-node22-retry",
+      "result": "failed",
+      "reason": "close action looked for aria-label text as visible button text; query E404 itself captured"
+    },
+    {
+      "run": "native-node22-final",
+      "result": "failed",
+      "reason": "actual npm10 returned string metadata without integrity; production parse rejected it before fix"
+    },
+    {
+      "run": "verified-node22",
+      "result": "invalidated",
+      "reason": "original report said pass but after.version remained fake candidate; recovery assertion read old cache before new query completion; not counted as final success"
+    }
+  ],
+  "acceptedRuns": [
+    "accepted-node22",
+    "accepted-node24"
+  ],
+  "reviewKind": "assistant source review and actual local tests; no independent acceptance/release certificate claimed",
+  "openIssues": [
+    "historical 2026-10-28 16:44:36/17:18:37 installation exit1 remains unassigned because original stdout/stderr are absent",
+    "unexecuted real SMB/enterprise proxy/PAC/certificate/OS/DPI/font/permissions and additional Node matrices",
+    "no new MSI/NSIS/OTA release acceptance"
+  ],
+  "systemPageFileChanged": false,
+  "testDeadlinesOrThreadsRelaxed": false,
+  "dailyConfigurationReset": false,
+  "dailyUninstallOrShimModified": false,
+  "published": false,
+  "recordedAt": "2026-10-28T21:05:40.8330895+08:00",
+  "formatCheckScope": "Authored Markdown/work records checked with git diff --cached --check. Raw evidence excluded from whitespace lint because it preserves npm trailing spaces and native CRLF; all archive files instead verified byte-for-byte against staged Git blobs and SHA256 manifest."
+}

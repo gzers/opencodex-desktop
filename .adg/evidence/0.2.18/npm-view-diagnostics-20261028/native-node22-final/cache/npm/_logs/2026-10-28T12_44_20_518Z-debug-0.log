@@ -1,0 +1,31 @@
+0 verbose cli D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\native-node22-final\OpenCodeX Native 中文 Spaces\home\.local\bin\node.exe D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.0
+2 info using node@v22.12.0
+3 silly config load:file:D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\npmrc
+4 silly config load:file:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\native-node22-final\OpenCodeX Native 中文 Spaces\runtime\opencodex.new-2f1dc76fe669\.downloads\.npmrc
+5 silly config load:file:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\native-node22-final\OpenCodeX Native 中文 Spaces\home\.npmrc
+6 silly config load:file:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\native-node22-final\OpenCodeX Native 中文 Spaces\home\.local\bin\etc\npmrc
+7 verbose title npm pack @bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery
+8 verbose argv "pack" "@bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery" "--pack-destination" "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\native-node22-final\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex.new-2f1dc76fe669\\.downloads" "--loglevel" "info"
+9 verbose logfile logs-max:10 dir:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\native-node22-final\OpenCodeX Native 中文 Spaces\cache\npm\_logs\2026-10-28T12_44_20_518Z-
+10 verbose logfile D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\native-node22-final\OpenCodeX Native 中文 Spaces\cache\npm\_logs\2026-10-28T12_44_20_518Z-debug-0.log
+11 silly logfile done cleaning log files
+12 http fetch GET 200 https://registry.npmjs.org/@bitkyc08%2fopencodex 13ms (cache hit)
+13 verbose type version
+14 verbose stack @bitkyc08/opencodex: No matching version found for @bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery.
+14 verbose stack     at module.exports (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\node_modules\npm-pick-manifest\lib\index.js:215:23)
+14 verbose stack     at RegistryFetcher.manifest (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\node_modules\pacote\lib\registry.js:130:54)
+14 verbose stack     at async Pack.exec (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\lib\commands\pack.js:37:24)
+14 verbose stack     at async Npm.exec (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\lib\npm.js:207:9)
+14 verbose stack     at async module.exports (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\lib\cli\entry.js:74:5)
+15 error code ETARGET
+16 error notarget No matching version found for @bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery.
+17 error notarget In most cases you or one of your dependencies are requesting
+17 error notarget a package version that doesn't exist.
+18 verbose cwd D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\native-node22-final\OpenCodeX Native 中文 Spaces\runtime\opencodex.new-2f1dc76fe669\.downloads
+19 verbose os Windows_NT 10.0.26100
+20 verbose node v22.12.0
+21 verbose npm  v10.9.0
+22 verbose exit 1
+23 verbose code 1
+24 error A complete log of this run can be found in: D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\native-node22-final\OpenCodeX Native 中文 Spaces\cache\npm\_logs\2026-10-28T12_44_20_518Z-debug-0.log

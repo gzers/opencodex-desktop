@@ -1,0 +1,17 @@
+{"arguments":["pack","@bitkyc08/opencodex@999.0.0-ocx-native-failure","--pack-destination","D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\accepted-node24\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex.new-f90608ac8d82\\.downloads","--loglevel","info"],"environment":{"APPDATA":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\accepted-node24\\OpenCodeX Native 中文 Spaces\\home\\AppData/Roaming","COMSPEC":"C:\\WINDOWS\\System32\\cmd.exe","HOME":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\accepted-node24\\OpenCodeX Native 中文 Spaces\\home","LANG":"C.UTF-8","LC_ALL":"C.UTF-8","LOCALAPPDATA":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\accepted-node24\\OpenCodeX Native 中文 Spaces\\home\\AppData/Local","PATH":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\accepted-node24\\OpenCodeX Native 中文 Spaces\\home\\.local/bin;C:\\WINDOWS\\System32;C:\\WINDOWS","SystemRoot":"C:\\WINDOWS","TEMP":"C:\\Users\\15119\\AppData\\Local\\Temp\\","TMP":"C:\\Users\\15119\\AppData\\Local\\Temp\\","USERPROFILE":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\accepted-node24\\OpenCodeX Native 中文 Spaces\\home","WINDIR":"C:\\WINDOWS","npm_config_audit":"false","npm_config_cache":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\accepted-node24\\OpenCodeX Native 中文 Spaces\\cache\\npm","npm_config_fund":"false","npm_config_progress":"false","npm_config_update_notifier":"false"},"program":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\accepted-node24\\OpenCodeX Native 中文 Spaces\\home\\.local/bin\\npm.cmd","startedAt":"2026-10-28T12:57:37Z","workingDirectory":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\accepted-node24\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex.new-f90608ac8d82\\.downloads"}
+[stderr] npm info using npm@11.21.0
+[stderr] npm info using node@v24.22.1
+[stderr] npm http fetch GET 200 http://127.0.0.1:63793/@bitkyc08%2fopencodex 33ms (cache miss)
+[stderr] npm http fetch GET 200 http://127.0.0.1:63793/@bitkyc08%2fopencodex 10ms (cache updated)
+[stderr] npm http fetch GET 404 http://127.0.0.1:63793/blocked.tgz 5ms (cache skip)
+[stderr] npm error code E404
+[stderr] npm error 404 Not Found - GET http://127.0.0.1:63793/blocked.tgz - E404
+[stderr] npm error 404
+[stderr] npm error 404  The requested resource 'http://127.0.0.1:63793/blocked.tgz' could not be found or you do not have permission to access it.
+[stderr] npm error 404 This package name is not valid, because 
+[stderr] npm error 404  1. name can only contain URL-friendly characters
+[stderr] npm error 404
+[stderr] npm error 404 Note that you can also install from a
+[stderr] npm error 404 tarball, folder, http url, or git url.
+[stderr] npm error A complete log of this run can be found in: D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node24\OpenCodeX Native 中文 Spaces\cache\npm\_logs\2026-10-28T12_57_37_398Z-debug-0.log
+exitCode=1 endedAt=2026-10-28T12:57:37Z

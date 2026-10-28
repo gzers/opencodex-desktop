@@ -1,0 +1,34 @@
+   Compiling tauri v2.12.1
+   Compiling opencodex-desktop v0.2.18 (D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\apps\desktop\tauri)
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-dialog v2.8.1
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-process v2.4.0
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src\modules\about\remote_windows_tests.rs:179:6
+    |
+179 |   ) -> (
+    |  ______^
+180 | |     Result<(String, Option<String>), AppError>,
+181 | |     Vec<serde_json::Value>,
+182 | | ) {
+    | |_^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+    = note: `-D clippy::type-complexity` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src\modules\about\remote_windows_tests.rs:189:6
+    |
+189 |   ) -> (
+    |  ______^
+190 | |     Result<(String, Option<String>), AppError>,
+191 | |     Vec<serde_json::Value>,
+192 | | ) {
+    | |_^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...

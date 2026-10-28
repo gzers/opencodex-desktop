@@ -1,0 +1,14 @@
+{
+  "result": "fail",
+  "screenshots": [],
+  "checks": [],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.18",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ ''\n- 'D:\\\\Users\\\\15119\\\\WorkSpace\\\\Code\\\\tools\\\\opencodex-desktop\\\\code\\\\test\\\\out\\\\remote-diagnostics\\\\native-node22\\\\OpenCodeX Native 中文 Spaces'\n\n    at verifyWindowsPathUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:55:12)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-install-recovery.mjs:74:3"
+}

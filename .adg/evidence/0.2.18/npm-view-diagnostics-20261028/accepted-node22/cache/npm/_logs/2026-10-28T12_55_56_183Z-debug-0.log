@@ -1,0 +1,37 @@
+0 verbose cli D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\home\.local\bin\node.exe D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.0
+2 info using node@v22.12.0
+3 silly config load:file:D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\npmrc
+4 silly config load:file:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\home\.npmrc
+5 silly config load:file:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\home\.local\bin\etc\npmrc
+6 verbose title npm view @bitkyc08/opencodex@latest version dist.integrity
+7 verbose argv "view" "@bitkyc08/opencodex@latest" "version" "dist.integrity" "--json"
+8 verbose logfile logs-max:10 dir:D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\cache\npm\_logs\2026-10-28T12_55_56_183Z-
+9 verbose logfile D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\cache\npm\_logs\2026-10-28T12_55_56_183Z-debug-0.log
+10 silly logfile done cleaning log files
+11 http fetch GET 404 http://127.0.0.1:64477/@bitkyc08%2fopencodex 20ms (cache skip)
+12 verbose stack HttpErrorGeneral: 404 Not Found - GET http://127.0.0.1:64477/@bitkyc08%2fopencodex - E404
+12 verbose stack     at D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\node_modules\npm-registry-fetch\lib\check-response.js:95:15
+12 verbose stack     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+12 verbose stack     at async RegistryFetcher.packument (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\node_modules\pacote\lib\registry.js:90:19)
+12 verbose stack     at async #getData (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\lib\commands\view.js:135:20)
+12 verbose stack     at async #viewPackage (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\lib\commands\view.js:112:28)
+12 verbose stack     at async View.exec (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\lib\commands\view.js:70:5)
+12 verbose stack     at async Npm.exec (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\lib\npm.js:207:9)
+12 verbose stack     at async module.exports (D:\Libraries\Nodejs\versions\22.12.0\node_modules\npm\lib\cli\entry.js:74:5)
+13 verbose statusCode 404
+14 verbose pkgid @bitkyc08/opencodex@latest
+15 error code E404
+16 error 404 Not Found - GET http://127.0.0.1:64477/@bitkyc08%2fopencodex - E404
+17 error 404
+18 error 404  '@bitkyc08/opencodex@latest' is not in this registry.
+19 error 404
+20 error 404 Note that you can also install from a
+21 error 404 tarball, folder, http url, or git url.
+22 verbose cwd D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\home
+23 verbose os Windows_NT 10.0.26100
+24 verbose node v22.12.0
+25 verbose npm  v10.9.0
+26 verbose exit 1
+27 verbose code 1
+28 error A complete log of this run can be found in: D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\test\out\remote-diagnostics\accepted-node22\OpenCodeX Native 中文 Spaces\cache\npm\_logs\2026-10-28T12_55_56_183Z-debug-0.log

@@ -1,0 +1,16 @@
+{
+  "result": "fail",
+  "screenshots": [],
+  "checks": [
+    "prefill/reset/readable native Windows path"
+  ],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.18",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "error": "AssertionError [ERR_ASSERTION]: query UI action: 关闭更新中心\n    at click (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-query-ui.mjs:43:5)\n    at async verifyWindowsQueryUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-query-ui.mjs:98:5)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-install-recovery.mjs:104:3"
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "run": "accepted-node22",
+    "result": "pass",
+    "node": "D:\\Libraries\\Nodejs\\versions\\22.12.0\\node.exe",
+    "npmCli": "D:\\Libraries\\Nodejs\\versions\\22.12.0\\node_modules\\npm\\bin\\npm-cli.js",
+    "startupVersion": "0.2.18",
+    "startupCommit": "08879052bdf1d4e6c8627b5b43c5fd04449a9f0d",
+    "driverCommit": "9c5db679a9114a5b5dd4424eac19c496d465e61d",
+    "applicationTree": "708b51798a476072ba68fbd5a836ee240e5d71b3",
+    "exeSha256": "CBC5ABD05680960003D076798E90857DA284E93FF43343E2B150073D0511DA9A",
+    "registryVersionBefore": "2.93.0",
+    "registryVersionAfter": "2.93.0",
+    "queryFailure": {
+      "detail": "npm view 以退出码 1 结束。",
+      "endedAt": "2026-10-28T12:55:56.534543800+00:00",
+      "exitCode": 1,
+      "reason": "npm_view_exit"
+    },
+    "font": "Consolas, \"Cascadia Code\", SFMono-Regular, Menlo, \"Microsoft YaHei\", monospace",
+    "checks": [
+      "real npm E404 from isolated loopback registry; actual argv/cwd/selected HOME/cache/native COMSPEC and both streams recorded",
+      "close/reopen retains query stderr and command log reference",
+      "real npm pack tarball failure after production backup; failed update retains console through close/reopen",
+      "actual registry metadata recovery clears failure; installed runtime source unchanged"
+    ]
+  },
+  {
+    "run": "accepted-node24",
+    "result": "pass",
+    "node": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "npmCli": "C:\\Users\\15119\\.cache\\opencodex-windows-018\\npm-tool\\bin\\npm-cli.js",
+    "startupVersion": "0.2.18",
+    "startupCommit": "08879052bdf1d4e6c8627b5b43c5fd04449a9f0d",
+    "driverCommit": "9c5db679a9114a5b5dd4424eac19c496d465e61d",
+    "applicationTree": "708b51798a476072ba68fbd5a836ee240e5d71b3",
+    "exeSha256": "CBC5ABD05680960003D076798E90857DA284E93FF43343E2B150073D0511DA9A",
+    "registryVersionBefore": "2.93.0",
+    "registryVersionAfter": "2.93.0",
+    "queryFailure": {
+      "detail": "npm view 以退出码 1 结束。",
+      "endedAt": "2026-10-28T12:57:35.143769200+00:00",
+      "exitCode": 1,
+      "reason": "npm_view_exit"
+    },
+    "font": "Consolas, \"Cascadia Code\", SFMono-Regular, Menlo, \"Microsoft YaHei\", monospace",
+    "checks": [
+      "real npm E404 from isolated loopback registry; actual argv/cwd/selected HOME/cache/native COMSPEC and both streams recorded",
+      "close/reopen retains query stderr and command log reference",
+      "real npm pack tarball failure after production backup; failed update retains console through close/reopen",
+      "actual registry metadata recovery clears failure; installed runtime source unchanged"
+    ]
+  }
+]

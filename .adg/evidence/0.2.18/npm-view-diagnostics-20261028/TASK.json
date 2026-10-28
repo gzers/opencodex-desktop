@@ -1,0 +1,33 @@
+{
+  "id": "TASK-OPENCODEX-0.2.18-NPM-VIEW-DIAGNOSTICS",
+  "source": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.18-bugs.md",
+  "authority": "user 2026-10-28: continue 0.2.18 fixes and Windows verification",
+  "targetVersion": "0.2.18",
+  "sourceBaseline": "98022b83503b6e2853069e6df4005fa220ac1852",
+  "sourceBranch": "feature/0.2.18-windows-install-diagnostics",
+  "status": "complete_for_confirmed_fixes_and_local_matrix",
+  "scope": "WP95 npm view diagnostics, selected OPENCODEX_HOME, retained update failure output, native failure/recovery",
+  "required_checks": [
+    "review:command-context-and-sanitization",
+    "test:failure-before-controls",
+    "test:windows-query-pipes-and-owned-tree",
+    "test:frontend-full",
+    "test:windows-workspace",
+    "test:native-node22",
+    "test:native-node24",
+    "test:fmt-clippy-typecheck-build",
+    "review:daily-files-unchanged",
+    "writeback:version-issues-and-implementation"
+  ],
+  "excluded": [
+    "release or daily executable replacement",
+    "user configuration reset or actual daily uninstall",
+    "historical exit1 root-cause attribution without raw output",
+    "untested SMB, enterprise proxy/certificate and full OS/DPI/Node matrix"
+  ],
+  "sourceCommit": "9c5db679a9114a5b5dd4424eac19c496d465e61d",
+  "buildCommit": "08879052bdf1d4e6c8627b5b43c5fd04449a9f0d",
+  "applicationTree": "708b51798a476072ba68fbd5a836ee240e5d71b3",
+  "evidenceRoot": ".adg/evidence/0.2.18/npm-view-diagnostics-20261028",
+  "completedAt": "2026-10-28T21:05:40.6397405+08:00"
+}

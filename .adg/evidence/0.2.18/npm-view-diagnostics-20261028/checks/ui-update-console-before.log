@@ -1,0 +1,78 @@
+
+ RUN  v5.0.0 D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/apps/desktop/ui
+
+ ❯ tests/update-center.test.ts (13 tests | 1 failed) 348ms
+   ❯ shared production update center (13)
+     × keeps this panel update output visible after failure and reopen, without stale output on backup failure 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > keeps this panel update output visible after failure and reopen, without stale output on backup failure
+Error: Unable to get pre[aria-label="面板安装输出"] within: <teleport-stub data-v-c975c606="" to="body">
+  <div data-v-c975c606="" class="modal-mask update-center-mask" data-testid="update-center">
+    <div data-v-c975c606="" class="modal modal-wide update-center" role="dialog" aria-modal="true" aria-labelledby="update-center-v-0" tabindex="-1">
+      <header data-v-c975c606="" class="update-center-head">
+        <div data-v-c975c606=""><span data-v-c975c606="" class="update-kicker">软件更新</span>
+          <h3 data-v-c975c606="" id="update-center-v-0">OpenCodex 面板更新</h3>
+          <p data-v-c975c606="">官方项目 · @bitkyc08/opencodex</p>
+        </div><button data-v-c975c606="" class="btn ghost" type="button" aria-label="关闭更新中心">
+          <!--v-if--><span class="btn-content">关闭</span>
+        </button>
+      </header>
+      <div data-v-c975c606="" class="update-center-body">
+        <div data-v-c975c606="" class="update-back"><button data-v-c975c606="" class="btn ghost" type="button">
+            <!--v-if--><span class="btn-content">← 全部更新</span>
+          </button></div>
+        <section data-v-c975c606="" class="update-object" data-testid="official-update-card">
+          <div data-v-c975c606="" class="update-detail-head">
+            <h4 data-v-c975c606="">OpenCodex 面板更新详情与确认</h4>
+          </div>
+          <!--v-if-->
+          <section data-v-80202013="" data-v-c975c606="" class="release-notes" tabindex="-1" aria-busy="false">
+            <div data-v-80202013="" class="release-notes-head">
+              <h4 data-v-80202013="">更新说明</h4>
+              <!--v-if-->
+            </div>
+            <!--v-if-->
+            <p data-v-80202013="">发布者尚未提供本版本更新说明。</p>
+            <div data-v-80202013="" class="release-notes-actions">
+              <!--v-if-->
+              <!--v-if-->
+            </div>
+          </section>
+          <p data-v-c975c606="" class="update-hint">面板升级前必须备份配置；备份成功后才会安装选定版本。更新完成后如需重启运行中的代理，将另行提示。</p>
+          <!--v-if-->
+          <p data-v-c975c606="" class="update-error" role="alert">官方更新安装失败；已保留当前版本。</p>
+          <div data-v-c975c606="" class="update-object-actions">
+            <!--v-if--><button data-v-c975c606="" class="btn primary" type="button" data-testid="install-official-update">
+              <!--v-if--><span class="btn-content">重试面板更新</span>
+            </button>
+          </div>
+        </section>
+      </div>
+      <footer data-v-c975c606="" class="update-center-foot">
+        <p data-v-c975c606="">更新准备完成后由你选择重启时机。</p>
+        <div data-v-c975c606=""><button data-v-c975c606="" class="btn ghost" type="button">
+            <!--v-if--><span class="btn-content">关闭</span>
+          </button></div>
+      </footer>
+    </div>
+  </div>
+</teleport-stub>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/update-center.test.ts:206:20
+    204|     const wrapper = render({ target: 'official' }); await flushPromise…
+    205|     await wrapper.get('[data-testid="install-official-update"]').trigg…
+    206|     expect(wrapper.get('pre[aria-label="面板安装输出"]').text()).toContain('…
+       |                    ^
+    207|     expect(wrapper.text()).toContain('面板更新失败')
+    208|     await wrapper.setProps({ open: false }); await wrapper.setProps({ …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  20:21:09
+   Duration  2.66s (transform 59%, environment 18%, tests 14%, import 9%)
+

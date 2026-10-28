@@ -1,0 +1,110 @@
+{
+  "result": "pass",
+  "checks": [
+    "real npm E404 from isolated loopback registry; actual argv/cwd/selected HOME/cache/native COMSPEC and both streams recorded",
+    "close/reopen retains query stderr and command log reference",
+    "real npm pack tarball failure after production backup; failed update retains console through close/reopen",
+    "actual registry metadata recovery clears failure; installed runtime source unchanged"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    },
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    },
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    },
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    },
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    },
+    {
+      "method": "GET",
+      "url": "/blocked.tgz"
+    }
+  ],
+  "before": {
+    "tag": "latest",
+    "version": "2.93.0",
+    "integrity": "sha512-rJEdLp7KheKwivmZXck7kN5HR9ipDM8WdzcvUkT+qsKHXNFyQI9zrCpUKmvp7BUdliv7cZZgdrJkTPvOO70HUQ=="
+  },
+  "failureRegistry": "http://127.0.0.1:60301/",
+  "typography": {
+    "font": "Consolas, \"Cascadia Code\", SFMono-Regular, Menlo, \"Microsoft YaHei\", monospace",
+    "hasWon": false
+  },
+  "error": "npm view 以退出码 1 结束。\nnpm error code E404\nnpm error 404 Not Found - GET http://127.0.0.1:60301/@bitkyc08%2fopencodex - E404\nnpm error 404\nnpm error 404  '@bitkyc08/opencodex@latest' is not in this registry.\nnpm error 404\nnpm error 404 Note that you can also install from a\nnpm error 404 tarball, folder, http url, or git url.\nnpm error A complete log of this run can be found in: D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-28T12_52_09_455Z-debug-0.log\n日志：D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\logs\\runtime-query\\npm-view-20199964-8534-4c5e-b986-004095d8705d.log",
+  "failureLog": {
+    "name": "npm-view-20199964-8534-4c5e-b986-004095d8705d.log",
+    "records": [
+      {
+        "arguments": [
+          "view",
+          "@bitkyc08/opencodex@latest",
+          "version",
+          "dist.integrity",
+          "--json"
+        ],
+        "environment": {
+          "APPDATA": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\home\\AppData/Roaming",
+          "COMSPEC": "C:\\WINDOWS\\System32\\cmd.exe",
+          "HOME": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\home",
+          "LOCALAPPDATA": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\home\\AppData/Local",
+          "OPENCODEX_HOME": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\opencodex-home",
+          "PATH": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\home\\.local/bin;C:\\WINDOWS\\System32;C:\\WINDOWS",
+          "SystemRoot": "C:\\WINDOWS",
+          "TEMP": "C:\\Users\\15119\\AppData\\Local\\Temp\\",
+          "TMP": "C:\\Users\\15119\\AppData\\Local\\Temp\\",
+          "USERPROFILE": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\home",
+          "WINDIR": "C:\\WINDOWS",
+          "npm_config_cache": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\cache\\npm",
+          "npm_config_update_notifier": "false"
+        },
+        "environmentCleared": true,
+        "program": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\home\\.local/bin\\npm.cmd",
+        "startedAt": "2026-10-28T12:52:09.137370200+00:00",
+        "workingDirectory": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\home"
+      },
+      {
+        "capturedBytes": 278,
+        "complete": true,
+        "partialRecordOmitted": false,
+        "stream": "stdout",
+        "text": "{\n  \"error\": {\n    \"code\": \"E404\",\n    \"summary\": \"Not Found - GET http://127.0.0.1:60301/@bitkyc08%2fopencodex - E404\",\n    \"detail\": \"'@bitkyc08/opencodex@latest' is not in this registry.\\n\\nNote that you can also install from a\\ntarball, folder, http url, or git url.\"\n  }\n}\n"
+      },
+      {
+        "capturedBytes": 545,
+        "complete": true,
+        "partialRecordOmitted": false,
+        "stream": "stderr",
+        "text": "npm error code E404\nnpm error 404 Not Found - GET http://127.0.0.1:60301/@bitkyc08%2fopencodex - E404\nnpm error 404\nnpm error 404  '@bitkyc08/opencodex@latest' is not in this registry.\nnpm error 404\nnpm error 404 Note that you can also install from a\nnpm error 404 tarball, folder, http url, or git url.\nnpm error A complete log of this run can be found in: D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-28T12_52_09_455Z-debug-0.log\n"
+      },
+      {
+        "detail": "npm view 以退出码 1 结束。",
+        "endedAt": "2026-10-28T12:52:09.880219+00:00",
+        "exitCode": 1,
+        "reason": "npm_view_exit"
+      }
+    ]
+  },
+  "failedUpdate": {
+    "error": "npm 命令失败（退出码 1）：npm pack：npm error code E404；日志：\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-add0f3ce3fa4.log",
+    "console": "命令：D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\home\\.local/bin\\npm.cmd [\"pack\", \"@bitkyc08/opencodex@999.0.0-ocx-native-failure\", \"--pack-destination\", \"D:\\\\Users\\\\15119\\\\WorkSpace\\\\Code\\\\tools\\\\opencodex-desktop\\\\code\\\\test\\\\out\\\\remote-diagnostics\\\\verified-node22\\\\OpenCodeX Native 中文 Spaces\\\\runtime\\\\opencodex.new-b1f2ae438dbc\\\\.downloads\", \"--loglevel\", \"info\"]\n工作目录：D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex.new-b1f2ae438dbc\\.downloads\n日志：\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-add0f3ce3fa4.log\nnpm info using npm@10.9.0\nnpm info using node@v22.12.0\nnpm http fetch GET 200 http://127.0.0.1:60301/@bitkyc08%2fopencodex 40ms (cache miss)\nnpm http fetch GET 200 http://127.0.0.1:60301/@bitkyc08%2fopencodex 15ms (cache updated)\nnpm http fetch GET 404 http://127.0.0.1:60301/blocked.tgz 6ms (cache skip)\nnpm error code E404\nnpm error 404 Not Found - GET http://127.0.0.1:60301/blocked.tgz - E404\nnpm error 404\nnpm error 404  'http://127.0.0.1:60301/blocked.tgz' is not in this registry.\nnpm error 404 This package name is not valid, because \nnpm error 404  1. name can only contain URL-friendly characters\nnpm error 404\nnpm error 404 Note that you can also install from a\nnpm error 404 tarball, folder, http url, or git url.\nnpm error A complete log of this run can be found in: D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-28T12_52_12_656Z-debug-0.log\n退出码：1；日志：\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-add0f3ce3fa4.log",
+    "text": "OpenCodex 面板更新详情与确认更新说明更新说明获取失败；版本检查和安装状态不受影响。重试说明面板升级前必须备份配置；备份成功后才会安装选定版本。更新完成后如需重启运行中的代理，将另行提示。面板更新失败目标版本 999.0.0-ocx-native-failure命令：D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\home\\.local/bin\\npm.cmd [\"pack\", \"@bitkyc08/opencodex@999.0.0-ocx-native-failure\", \"--pack-destination\", \"D:\\\\Users\\\\15119\\\\WorkSpace\\\\Code\\\\tools\\\\opencodex-desktop\\\\code\\\\test\\\\out\\\\remote-diagnostics\\\\verified-node22\\\\OpenCodeX Native 中文 Spaces\\\\runtime\\\\opencodex.new-b1f2ae438dbc\\\\.downloads\", \"--loglevel\", \"info\"]\n工作目录：D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex.new-b1f2ae438dbc\\.downloads\n日志：\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-add0f3ce3fa4.log\nnpm info using npm@10.9.0\nnpm info using node@v22.12.0\nnpm http fetch GET 200 http://127.0.0.1:60301/@bitkyc08%2fopencodex 40ms (cache miss)\nnpm http fetch GET 200 http://127.0.0.1:60301/@bitkyc08%2fopencodex 15ms (cache updated)\nnpm http fetch GET 404 http://127.0.0.1:60301/blocked.tgz 6ms (cache skip)\nnpm error code E404\nnpm error 404 Not Found - GET http://127.0.0.1:60301/blocked.tgz - E404\nnpm error 404\nnpm error 404  'http://127.0.0.1:60301/blocked.tgz' is not in this registry.\nnpm error 404 This package name is not valid, because \nnpm error 404  1. name can only contain URL-friendly characters\nnpm error 404\nnpm error 404 Note that you can also install from a\nnpm error 404 tarball, folder, http url, or git url.\nnpm error A complete log of this run can be found in: D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-28T12_52_12_656Z-debug-0.log\n退出码：1；日志：\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-add0f3ce3fa4.lognpm 命令失败（退出码 1）：npm pack：npm error code E404；日志：\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\remote-diagnostics\\verified-node22\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-add0f3ce3fa4.log最近备份 bk_20261028125211_a595c6ff重试面板更新"
+  },
+  "after": {
+    "tag": "latest",
+    "version": "999.0.0-ocx-native-failure",
+    "integrity": null
+  },
+  "sandboxNpmrcRestored": true
+}
