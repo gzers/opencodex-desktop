@@ -18,6 +18,22 @@ try {
  $taskUser=New-LocalUser -Name $taskName -Password $taskSecure -AccountNeverExpires -PasswordNeverExpires -Description 'Disposable OpenCodeX CI acceptance account'
  $taskUsers=Get-LocalGroup -SID 'S-1-5-32-545'
  Add-LocalGroupMember -Group $taskUsers -Member $taskUser
+ if(!('OcxNativeProfileProvision' -as [type])){
+  Add-Type -TypeDefinition @"
+using System;
+using System.Text;
+using System.Runtime.InteropServices;
+public static class OcxNativeProfileProvision {
+ [DllImport("userenv.dll", CharSet=CharSet.Unicode, ExactSpelling=true)]
+ public static extern int CreateProfile(string sid,string name,StringBuilder path,uint size);
+}
+"@
+ }
+ $taskProfilePath=[Text.StringBuilder]::new(32768)
+ $taskProfileResult=[OcxNativeProfileProvision]::CreateProfile($taskUser.SID.Value,$taskName,$taskProfilePath,32768)
+ if($taskProfileResult -ne 0){[Runtime.InteropServices.Marshal]::ThrowExceptionForHR($taskProfileResult)}
+ if(!(Test-Path -LiteralPath $taskProfilePath.ToString() -PathType Container)){throw 'Windows Profile service did not provision the temporary account'}
+
  & icacls.exe $taskOutput /grant ($taskName+':(OI)(CI)M') | Out-Null
  if($LASTEXITCODE -ne 0){throw 'Cannot provision isolated acceptance output directory'}
  $taskChild=Join-Path $taskOutput 'ordinary-child.ps1'
@@ -57,6 +73,7 @@ public static class OcxFirstLogonFolders {
  $profile=$registered
  $roaming=[OcxFirstLogonFolders]::Read('3eb685db-65f9-4cf6-a03a-e3ef65729f3d')
  $local=[OcxFirstLogonFolders]::Read('f1b32785-6fba-4fcf-9d55-7b8e7f157091')
+ [ordered]@{registered=$registered;profile=$profile;roaming=$roaming;local=$local;processProfile=$env:USERPROFILE} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path (Split-Path -Parent $InputFile) 'ordinary-known-folders.json') -Encoding utf8
  if(!$profile -or !$roaming.StartsWith($profile+'\',[StringComparison]::OrdinalIgnoreCase) -or !$local.StartsWith($profile+'\',[StringComparison]::OrdinalIgnoreCase)){throw 'Known Folders escaped the temporary account Profile'}
  New-Item -ItemType Directory -Force $roaming,$local | Out-Null
  $env:USERPROFILE=$profile;$env:APPDATA=$roaming;$env:LOCALAPPDATA=$local
@@ -73,7 +90,7 @@ public static class OcxFirstLogonFolders {
  $taskProcess=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $taskCredential -LoadUserProfile -WorkingDirectory $taskOutput -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+$taskChild+'"'),'-InputFile',('"'+$taskConfig+'"')) -RedirectStandardOutput (Join-Path $taskOutput 'ordinary-stdout.log') -RedirectStandardError (Join-Path $taskOutput 'ordinary-stderr.log') -PassThru
  if(!$taskProcess.WaitForExit(300000)){$taskProcess.Kill($true);throw 'Ordinary native startup deadline expired'}
  if($taskProcess.ExitCode -ne 0){
-  foreach($name in @('ordinary-stderr.log','startup/startup-stderr.log')){
+  foreach($name in @('ordinary-stderr.log','ordinary-known-folders.json','startup/startup-stderr.log')){
    $path=Join-Path $taskOutput $name
    if(Test-Path -LiteralPath $path){Get-Content -LiteralPath $path -Tail 20 | Write-Output}
   }
