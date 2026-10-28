@@ -1,13 +1,14 @@
 /* DOM 接线验证；不代替布局、真实配置写入或执行端验证。 */
 const test=require('node:test'),assert=require('node:assert/strict');
 const {make}=require('./component-topic-harness.cjs');
+const {pickModel}=require('./conversation-picker-test-helper.cjs');
 test('全局迁移、草稿隔离与继承闭环',async t=>{
  const h=await make('#conversations'),{w,document:d}=h,$=q=>d.querySelector(q),state=()=>w.conversationPrototype.state();t.after(()=>h.dispose());
- assert.equal($('#conversationContent [data-cv=tab]'),null);assert.equal($('#conversationContent [data-cv-field="naming.model"]'),null);assert.equal(d.querySelectorAll('[data-cv-field="naming.model"]').length,1);
- h.change('#conversationContent [data-cv-field="subagent.effort"]','low');h.click('#conversationContent [data-cv=global-policy]');await h.settle();assert.equal($('.settings-panel.active').id,'settings-dialog-policy');assert.equal(w.dialogPolicyPrototype.state().part,'models');
- h.change('#conversationGlobalPolicy [data-cv-field="search.model"]','newapi|gpt-5.4');assert.ok($('#conversationGlobalPolicy').contains(d.activeElement));assert.equal(state().drafts.global['search.model'],'newapi|gpt-5.4');assert.equal(state().drafts['project:tools']['subagent.effort'],'low');assert.equal(state().saved.global['search.model'],undefined);
- h.change('#conversationGlobalPolicy [data-cv-field="subagent.model"]','newapi|gpt-5.4-mini');h.click('#conversationGlobalPolicy [data-cv=save]');assert.equal(state().saved.global['search.model'],'newapi|gpt-5.4');assert.equal(state().drafts.global,undefined);assert.equal(state().drafts['project:tools']['subagent.effort'],'low');assert.equal(w.conversationPrototype.resolve('project:tools','search.model').value,'newapi|gpt-5.4');assert.equal(w.conversationPrototype.resolve('project:tools','subagent.model').value,'newapi|gpt-5.4');assert.equal(w.conversationPrototype.resolve('thread:web','subagent.model').value,'newapi|gpt-5.4-mini');
- w.setRoute('conversations');await h.settle();assert.equal($('#conversationContent [data-cv-field="subagent.effort"]').value,'low');assert.equal(h.network.length,0);assert.deepEqual(h.errors,[]);
+ assert.equal($('#conversationContent [data-cv=tab]'),null);assert.equal($('#conversationContent [data-cv-picker="naming.model"]'),null);assert.equal(d.querySelectorAll('[data-cv-picker="naming.model"]').length,1);
+ pickModel(h,'#conversationContent','subagent.model','newapi|gpt-5.4','low');h.click('#conversationContent [data-cv=global-policy]');await h.settle();assert.equal($('.settings-panel.active').id,'settings-dialog-policy');assert.equal(w.dialogPolicyPrototype.state().part,'models');
+ pickModel(h,'#conversationGlobalPolicy','search.model','newapi|gpt-5.4');assert.ok($('#conversationGlobalPolicy').contains(d.activeElement));assert.equal(state().drafts.global['search.model'],'newapi|gpt-5.4');assert.equal(state().drafts['project:tools']['subagent.effort'],'low');assert.equal(state().saved.global['search.model'],undefined);
+ pickModel(h,'#conversationGlobalPolicy','subagent.model','newapi|gpt-5.4-mini');h.click('#conversationGlobalPolicy [data-cv=save]');assert.equal(state().saved.global['search.model'],'newapi|gpt-5.4');assert.equal(state().drafts.global,undefined);assert.equal(state().drafts['project:tools']['subagent.effort'],'low');assert.equal(w.conversationPrototype.resolve('project:tools','search.model').value,'newapi|gpt-5.4');assert.equal(w.conversationPrototype.resolve('project:tools','subagent.model').value,'newapi|gpt-5.4');assert.equal(w.conversationPrototype.resolve('thread:web','subagent.model').value,'newapi|gpt-5.4-mini');
+ w.setRoute('conversations');await h.settle();assert.equal(w.conversationPrototype.resolve('project:tools','subagent.effort').value,'low');assert.equal(h.network.length,0);assert.deepEqual(h.errors,[]);
 });
 test('三分组、旧连接入口与直接链接均保持配置草稿',async t=>{
  const h=await make('#settings?section=dialog-policy&policy=context'),{w,document:d}=h,$=q=>d.querySelector(q);t.after(()=>h.dispose());

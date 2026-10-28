@@ -23,7 +23,7 @@
  const initial={global:{},'project:tools':{'subagent.model':'newapi|gpt-5.4','subagent.effort':'high'},'thread:config':{'subagent.effort':'medium'}};
  let saved=clone(initial),drafts={},orphanDrafts={},revisions={},savedStates={},tab='objects',selected='project:tools',query='',archived=false,onlyOwn=false,detailOpen=false;
  let objectNavigation=null,objectPanel=null,objectNodesSignature='',objectFilterSignature='',scenario='normal',source='local',notice='',noticeScope='project:tools',pagePositions={};
- const defaults={'naming.model':'newapi|gpt-5.4-mini','search.path':'sidecar','search.model':'newapi|gpt-5.4-mini','search.effort':'medium','subagent.model':'newapi|gpt-5.4','subagent.effort':'medium','subagent.roster':'newapi|gpt-5.4-mini','subagent.concurrency':4,'subagent.instructions':''};
+ const defaults={'naming.model':'newapi|gpt-5.4-mini','search.path':'sidecar','search.model':'newapi|gpt-5.4-mini','search.effort':'medium','search.fast':false,'subagent.model':'newapi|gpt-5.4','subagent.effort':'medium','subagent.fast':false,'subagent.roster':[{kind:'channel',channelId:'newapi',modelId:'gpt-5.4-mini'}],'subagent.concurrency':4,'subagent.instructions':''};
  const requestedDesignScope=new URLSearchParams(location.search).get('design');
  let designScope=requestedDesignScope==='capabilities'?'capabilities':requestedDesignScope==='extensions'?'extensions':requestedDesignScope==='conversations'||location.hash.startsWith('#conversations')?'conversations':'models';
  let recovery=null,operationToken=0,exported=null,imported=[],restoreCounter=0,recoveryScene='normal';
@@ -43,44 +43,94 @@
   for(const k of chain)if(!(skipOwn&&k===key)&&own(policy(k,editing&&k===key),field)){value=policy(k,editing&&k===key)[field];from=k==='global'?'全局对话策略':k===key?'本'+o.kind+'设置':object(k).kind+' · '+object(k).name;}
   return {value,from};
  }
- function modelList(){
-  const state=window.modelPrototype?.state(),entries=[];
-  for(const p of state?.saved.providers||[])for(const m of p.models.filter(m=>m.selected)){
-   const unavailable=!p.enabled||p.availability?.kind==='no-credit';
-   entries.push({id:p.id+'|'+m.id,label:p.name+' / '+m.id,disabled:unavailable,efforts:m.official.efforts||[],default:m.official.default||'medium'});
+ const effortLabels={none:'无',minimal:'最低',low:'低',medium:'中',high:'高',xhigh:'极高',max:'最高',ultra:'超高'};
+ const modelRef=id=>{const [channelId,...parts]=String(id).split('|');const modelId=parts.join('|');return channelId==='native'?{kind:'native',nativeModelId:modelId}:{kind:'channel',channelId,modelId};};
+ const modelId=ref=>(ref.kind==='native'?'native':ref.channelId)+'|'+(ref.nativeModelId||ref.modelId);
+ let modelCatalog=null;
+ function modelList(refresh=false){
+  if(modelCatalog&&!refresh)return modelCatalog;
+  const state=window.modelPrototype?.state(),resolved=window.modelPrototype?.agentChoices?.()||[],entries=[];
+  for(const p of state?.saved.providers||[])for(const m of p.models){
+   const row=resolved.find(row=>modelId(row.ref)===p.id+'|'+m.id);
+   const values={context:row?.context??m.overrides?.context??p.defaults?.context??m.official?.context,default:row?.effort??m.overrides?.default??p.defaults?.default??m.official?.default,efforts:row?.efforts?.length?row.efforts:m.overrides?.efforts??p.defaults?.efforts??m.official?.efforts,fast:row?.fastCapability??m.overrides?.fast??p.defaults?.fast??m.official?.fast,modalities:row?.modalities||m.official?.modalities};
+   const reason=!p.enabled?'渠道已停用':({'no-credit':'渠道无额度','auth-failed':'认证未通过','connection-failed':'连接不可用',unavailable:'上游不可用'})[p.availability?.kind]||(!m.selected?'模型未启用':'');
+   const ref=p.id==='native'?{kind:'native',nativeModelId:m.id}:{kind:'channel',channelId:p.id,modelId:m.id};
+   entries.push({id:p.id+'|'+m.id,ref,channelName:p.name,name:m.naming?.displayName||m.id,alias:m.naming?.alias||'',label:p.name+' / '+m.id,reason,disabled:!!reason,context:values.context??null,efforts:values.efforts||[],effort:values.default??null,fastCapability:values.fast||'unknown',fastDefault:false,modalities:values.modalities||[]});
   }
-  return entries;
+  modelCatalog=entries;return entries;
  }
  const modelName=id=>modelList().find(m=>m.id===id)?.label||id;
- function modelOptions(value){const list=modelList();return (value!==undefined&&!list.some(m=>m.id===value)?'<option value="'+esc(value)+'" selected>'+esc(value)+' · 不在可用目录</option>':'')+list.map(m=>'<option value="'+esc(m.id)+'" '+(m.id===value?'selected':'')+(m.disabled?' disabled':'')+'>'+esc(m.label)+(m.disabled?' · 暂不可用':'')+'</option>').join('');}
- function display(field,value){if(field.endsWith('.model'))return modelName(value);if(field==='subagent.roster')return String(value).split('\n').filter(Boolean).map(modelName).join('、')||'未选择推荐模型';return ({sidecar:'OpenCodex 搜索 sidecar',hosted:'原生 hosted search',service:'搜索服务',low:'低',medium:'中',high:'高',xhigh:'极高'})[value]??(value===''?'未设置':value);}
+ function rosterRefs(value){return Array.isArray(value)?clone(value):String(value||'').split('\n').filter(Boolean).map(modelRef);}
+ function actualEffort(key,prefix){const value=resolve(key,prefix+'.effort').value;return value==='model-default'?modelList().find(m=>m.id===resolve(key,prefix+'.model').value)?.effort:value;}
+ function combinationText(ref,withOptions=true){const m=modelList().find(m=>m.id===modelId(ref));return (m?.label||modelId(ref))+(withOptions?' · '+(effortLabels[ref.reasoningEffort||m?.effort]||'推理未知')+(ref.fast?' · Fast':''):'');}
+ function selectedModelRefs(key,field){
+  if(field==='subagent.roster')return rosterRefs(resolve(key,field).value);
+  const ref=modelRef(resolve(key,field).value);if(field==='naming.model')return [ref];
+  const prefix=field.split('.')[0],effort=resolve(key,prefix+'.effort').value,fast=resolve(key,prefix+'.fast').value;
+  if(effort&&effort!=='model-default')ref.reasoningEffort=effort;
+  if(typeof fast==='boolean')ref.fast=fast;
+  return [ref];
+ }
+ function display(field,value){if(field.endsWith('.model'))return modelName(value);if(field==='subagent.roster')return rosterRefs(value).map(ref=>combinationText(ref)).join('、')||'未选择推荐模型';if(field.endsWith('.fast'))return value?'开启':'关闭';return ({sidecar:'OpenCodex 搜索 sidecar',hosted:'原生 hosted search',service:'搜索服务','model-default':'模型默认',...effortLabels})[value]??(value===''?'未设置':value);}
+ function modelField(field,label,note=''){
+  const key=currentKey(),p=policy(key),multiple=field==='subagent.roster',prefix=field.split('.')[0],fields=multiple||prefix==='naming'?[field]:[field,prefix+'.effort',prefix+'.fast'];
+  const custom=fields.some(f=>own(p,f)),disabled=!!object(key).archived,refs=selectedModelRefs(key,field),withOptions=prefix!=='naming';
+  const modelSource=resolve(key,field).from,optionSources=!multiple&&withOptions?[resolve(key,prefix+'.effort').from,resolve(key,prefix+'.fast').from]:[];
+  const source=optionSources.some(from=>from!==modelSource)?'型号：'+modelSource+' · 推理：'+resolve(key,prefix+'.effort').from+' · 快速：'+resolve(key,prefix+'.fast').from:modelSource;
+  const inherited=!custom?'继承上层':'当前选择';
+  const choices=refs.map(ref=>'<span class="cv-model-choice"><span class="cv-model-name">'+esc(modelName(modelId(ref)))+'</span>'+(withOptions?'<span class="cv-model-options">'+esc(effortLabels[ref.reasoningEffort||modelList().find(m=>m.id===modelId(ref))?.effort]||'推理未知')+(ref.fast?' · Fast':'')+'</span>':'')+'</span>').join('');
+  return '<div class="cv-field cv-model-field" data-cv-model-field="'+field+'"><div class="cv-field-head"><label>'+label+'</label><span class="cv-field-origin">'+(custom?'本层自定义':'继承上层')+'</span></div><button type="button" class="cv-model-trigger" data-cv="pick-model" data-cv-picker="'+field+'" aria-haspopup="dialog" aria-label="选择'+label+'" '+(disabled?'disabled':'')+'><span class="cv-model-choices">'+(choices||'<span class="cv-model-empty">未选择推荐模型</span>')+'</span><span class="cv-model-action">'+(multiple?'选择模型':'更换')+'<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6"/></svg></span></button><div class="cv-effective"><strong>'+esc(inherited+(multiple?' · '+refs.length+' 个模型':''))+'</strong><span>来源：'+esc(source)+'</span></div>'+(custom?btn('恢复继承','model-inherit','data-field="'+field+'" '+(disabled?'disabled':'')):'')+(note?'<small class="cv-muted">'+note+'</small>':'')+'</div>';
+ }
+ function openModelSelection(field){
+  if(!['naming.model','search.model','subagent.model','subagent.roster'].includes(field))return;
+  const key=currentKey(),targetSource=source;if(object(key).archived||key!=='global'&&field==='naming.model')return;
+  const original=JSON.stringify(policy(key)),refs=selectedModelRefs(key,field),multiple=field==='subagent.roster',options=field!=='naming.model';
+  const labels={'naming.model':'命名模型','search.model':'搜索模型','subagent.model':'子 Agent 默认模型','subagent.roster':'推荐模型列表'};
+  const focus=()=>{const scope=key==='global'?globalHost:host;$('[data-cv-picker="'+field+'"]',scope)?.focus({preventScroll:true});};
+  const picker=window.modelPickerPrototype;
+  if(!picker?.choose){noticeScope=key;notice='公共模型选择器尚未加载，请刷新原型。';render();return;}
+  picker.choose({title:'选择'+labels[field],mode:multiple?'multiple':'single',reasoning:options,fast:options,ordered:multiple,models:refs,getCatalog:()=>modelList(true),
+   onSelect:result=>{
+    if(source!==targetSource||object(key).archived||JSON.stringify(policy(key))!==original)return;
+    if(JSON.stringify(result.models)===JSON.stringify(refs)){focus();return;}
+    const draft=buffer(key);
+    if(multiple)draft[field]=clone(result.models);
+    else{
+     const ref=result.models[0];if(!ref)return;
+     const changedModel=modelId(ref)!==modelId(refs[0]);
+     if(changedModel||own(draft,field))draft[field]=modelId(ref);
+     if(options){const prefix=field.split('.')[0];if(changedModel||ref.reasoningEffort!==refs[0].reasoningEffort)draft[prefix+'.effort']=ref.reasoningEffort||'model-default';if(changedModel||ref.fast!==refs[0].fast)draft[prefix+'.fast']=typeof ref.fast==='boolean'?ref.fast:false;}
+    }
+    noticeScope=key;notice='选择已加入当前配置，保存后生效。';render();focus();
+   },onCancel:()=>focus()
+  });
+ }
  function ann(){return '<div class="proto-annotation" id="ann-cv-01" data-annotation-number="01" data-annotation-title="对话配置 · 版本未定" data-annotation-category="设计探索 · 对话"><button type="button" class="annotation-marker" aria-label="原型注释 01：对话配置 · 版本未定" aria-expanded="false" aria-controls="annotationPopover"><span>原型</span><span>01</span><span>＋</span></button><div class="annotation-source" hidden><p>本页只使用虚构对象和内存设置，不连接 Codex、模型或文件。模型目录复用模型页已保存样例；项目覆盖不改模型模版。保存与实际采用分别演示。</p></div></div>';}
  function field(field,label,type='select',entries=[],note=''){
+  if(type==='model'||type==='models')return modelField(field,label,note);
   const key=currentKey(),o=object(key),custom=own(policy(key),field),effective=resolve(key,field),inherited=resolve(key,field,true,true),disabled=!!o.archived;
   const attrs=' id="'+(key==='global'?'cvGlobal-':'cv-')+field.replaceAll('.','-')+'" data-cv-field="'+field+'" aria-label="'+label+'" '+(disabled?'disabled':'');
   const inheritLabel='继承：'+display(field,inherited.value)+'（'+inherited.from+'）';
   let control='';
-  if(type==='models'){
-   const picked=new Set(String(effective.value).split('\n'));control='<select multiple'+attrs+'>'+modelList().map(m=>'<option value="'+esc(m.id)+'" '+(picked.has(m.id)?'selected':'')+(m.disabled?' disabled':'')+'>'+esc(m.label)+(m.disabled?' · 暂不可用':'')+'</option>').join('')+'</select>';
-  }else if(type==='model'||type==='select'){
-   const value=custom?effective.value:'__inherit';
-   const values=type==='model'?modelOptions(custom?effective.value:undefined):opts(entries,custom?effective.value:undefined);
-   const unknown=custom&&type==='select'&&!entries.some(([id])=>String(id)===String(effective.value))?'<option selected disabled value="'+esc(effective.value)+'">'+esc(display(field,effective.value))+' · 当前值不兼容</option>':'';
+  if(type==='select'){
+   const values=opts(entries,custom?effective.value:undefined);
+   const unknown=custom&&!entries.some(([id])=>String(id)===String(effective.value))?'<option selected disabled value="'+esc(effective.value)+'">'+esc(display(field,effective.value))+' · 当前值不兼容</option>':'';
    control='<select'+attrs+'><option value="__inherit" '+(!custom?'selected':'')+'>'+esc(inheritLabel)+'</option>'+unknown+values+'</select>';
   }else if(type==='textarea')control='<textarea class="input"'+attrs+'>'+esc(effective.value)+'</textarea>';
   else control='<input class="input" type="number" min="1" max="32"'+attrs+' value="'+esc(effective.value)+'">';
   return '<div class="cv-field"><div class="cv-field-head"><label>'+label+'</label><span class="cv-field-origin">'+(custom?'本层自定义':'继承上层')+'</span></div><div class="cv-field-control">'+control+'</div><div class="cv-effective"><strong>当前有效：'+esc(display(field,effective.value))+'</strong><span>来源：'+(effective.from==='全局对话策略'?'<button type="button" class="cv-source-link" data-cv="global-policy">全局对话策略</button>':esc(effective.from))+'</span></div>'+(custom||type==='models'?btn('恢复继承','field-inherit','data-field="'+field+'" '+(disabled?'disabled':'')):'')+(note?'<small class="cv-muted">'+note+'</small>':'')+'</div>';
  }
 
- function effortField(prefix){const chosen=modelList().find(m=>m.id===resolve(currentKey(),prefix+'.model').value);return field(prefix+'.effort','推理档位','select',(chosen?.efforts||[]).map(x=>[x,display('effort',x)]),'仅选择该模型已声明的档位。');}
  function fieldError(key){
   const problems=[];
   for(const prefix of ['naming','search','subagent']){
    if(prefix==='naming'&&key!=='global'||prefix==='search'&&resolve(key,'search.path').value!=='sidecar')continue;
    const id=resolve(key,prefix+'.model').value,m=modelList().find(m=>m.id===id);
    if(!m||m.disabled||scenario==='no-model')problems.push('所选'+({naming:'命名',search:'搜索',subagent:'子 Agent'})[prefix]+'模型暂不可用；保留引用，实际采用待处理。');
-   if(prefix!=='naming'&&m&&!m.efforts.includes(resolve(key,prefix+'.effort').value))problems.push('推理档位与所选模型不匹配，请调整本层或上层设置。');
+   if(prefix!=='naming'&&m&&actualEffort(key,prefix)&&!m.efforts.includes(actualEffort(key,prefix)))problems.push('推理档位与所选模型不匹配，请调整本层或上层设置。');
   }
+  for(const prefix of ['search','subagent']){if(prefix==='search'&&resolve(key,'search.path').value!=='sidecar')continue;const m=modelList().find(m=>m.id===resolve(key,prefix+'.model').value);if(resolve(key,prefix+'.fast').value===true&&m?.fastCapability!=='supported')problems.push('已选快速模式当前不可用，请重新选择模型组合。');}
+  for(const ref of rosterRefs(resolve(key,'subagent.roster').value)){const m=modelList().find(m=>m.id===modelId(ref));if(!m||m.disabled||ref.reasoningEffort&&!m.efforts.includes(ref.reasoningEffort)||ref.fast===true&&m.fastCapability!=='supported')problems.push('推荐列表中有模型组合暂不可用；保留引用，请重新选择。');}
   const count=resolve(key,'subagent.concurrency').value;if(!Number.isInteger(count)||count<1||count>32)problems.push('最大并发请输入 1–32 的整数。');
   return problems;
  }
@@ -101,8 +151,8 @@
    (scenario==='offline'?'<div class="cv-banner cv-warning">数据源暂不可达，显示上次对象信息。已有绑定可以继续编辑和保存，执行采用等待重连。</div>':'')+
    (issues.length?'<div class="cv-banner cv-warning" role="status">'+issues.map(esc).join('<br>')+'</div>':'')+
    (key==='global'?'<section class="cv-section" aria-labelledby="'+prefix+'NamingTitle"><div class="cv-heading"><h3 id="'+prefix+'NamingTitle">命名模型</h3><span class="cv-status">'+groupStatus('naming')+'</span></div><p class="cv-muted">沿用 Codex 自动命名，只设置全局使用的命名模型。</p>'+field('naming.model','命名模型','model')+'</section>':'')+
-   '<section class="cv-section" aria-labelledby="'+prefix+'SearchTitle"><div class="cv-heading"><h3 id="'+prefix+'SearchTitle">联网搜索</h3><span class="cv-status">'+groupStatus('search')+'</span></div><p class="cv-muted">先确认搜索路径，再选择该路径实际使用的模型。</p>'+field('search.path','搜索路径','select',[['sidecar','OpenCodex 搜索 sidecar'],['hosted','原生 hosted search'],['service','搜索服务']])+(path==='sidecar'?field('search.model','搜索模型','model')+effortField('search'):'<div class="cv-banner">'+(path==='hosted'?'此路径由原生上游执行，sidecar 模型设置不影响它。':'此路径使用搜索服务，不提供 LLM 模型与推理档位设置。')+'</div>')+'</section>'+
-   '<section class="cv-section" aria-labelledby="'+prefix+'AgentTitle"><div class="cv-heading"><h3 id="'+prefix+'AgentTitle">子 Agent</h3><span class="cv-status">'+groupStatus('subagent')+'</span></div><p class="cv-muted">用于 Codex 对话中的子任务。模型模版页的自动填充助手另行配置。</p>'+field('subagent.model','子 Agent 默认模型','model',[],'执行端支持硬性默认时采用；推荐列表不会替代默认值。')+effortField('subagent')+'<details class="cv-advanced"><summary>推荐模型、并发与公共指令</summary>'+field('subagent.roster','推荐模型列表','models',[],'可多选模型；这是推荐，不保证执行器强制选择。')+field('subagent.concurrency','最大并发','number',[],'限制范围取决于执行器；降低数值不会取消运行中的任务。')+field('subagent.instructions','公共子 Agent 指令','textarea')+'<p class="cv-muted">已有角色的模型 / 推理映射待对应执行器接通；新建角色和权限编辑未纳入本轮通用表单。</p></details></section>'+
+   '<section class="cv-section" aria-labelledby="'+prefix+'SearchTitle"><div class="cv-heading"><h3 id="'+prefix+'SearchTitle">联网搜索</h3><span class="cv-status">'+groupStatus('search')+'</span></div><p class="cv-muted">先确认搜索路径，再选择该路径实际使用的模型。</p>'+field('search.path','搜索路径','select',[['sidecar','OpenCodex 搜索 sidecar'],['hosted','原生 hosted search'],['service','搜索服务']])+(path==='sidecar'?field('search.model','搜索模型','model'):'<div class="cv-banner">'+(path==='hosted'?'此路径由原生上游执行，sidecar 模型设置不影响它。':'此路径使用搜索服务，不提供 LLM 模型与推理档位设置。')+'</div>')+'</section>'+
+   '<section class="cv-section" aria-labelledby="'+prefix+'AgentTitle"><div class="cv-heading"><h3 id="'+prefix+'AgentTitle">子 Agent</h3><span class="cv-status">'+groupStatus('subagent')+'</span></div><p class="cv-muted">用于 Codex 对话中的子任务。模型模版页的自动填充助手另行配置。</p>'+field('subagent.model','子 Agent 默认模型','model',[],'执行端支持硬性默认时采用；推荐列表不会替代默认值。')+'<details class="cv-advanced"><summary>推荐模型、并发与公共指令</summary>'+field('subagent.roster','推荐模型列表','models',[],'可多选模型，并为每项设置推理与快速模式；推荐不保证执行器强制选择。')+field('subagent.concurrency','最大并发','number',[],'限制范围取决于执行器；降低数值不会取消运行中的任务。')+field('subagent.instructions','公共子 Agent 指令','textarea')+'<p class="cv-muted">已有角色的模型 / 推理映射待对应执行器接通；新建角色和权限编辑未纳入本轮通用表单。</p></details></section>'+
    executionDetails(key,isGlobal)+'</div>';
  }
  function executionDetails(key,isGlobal){
@@ -146,6 +196,7 @@
   mount.replaceWith(objectPanel);syncObjectNavigation();
  }
  function render(){
+  modelCatalog=null;
   const previousScope=editingKey;editingKey=null;
   const scroller=host.closest('.main'),position=scroller?.scrollTop||0,navFocus=objectPanel?.contains(document.activeElement)?document.activeElement:null,navCaret=navFocus?.selectionStart,navScroll=objectPanel?.querySelector('.tn-tree')?.scrollTop||0;
   objectPanel?.remove();
@@ -157,7 +208,7 @@
   host.dataset.objectKey=currentKey();for(const el of $$('.cv-advanced',host))el.open=(advancedStates[currentKey()]||[]).includes($('summary',el)?.textContent);
   window.prototypeSelect?.enhance();window.prototypePanel?.refresh();window.transportPrototype?.refreshContexts();window.contextPolicyPrototype?.refreshObservations();if(scroller)scroller.scrollTop=position;renderGlobal();editingKey=previousScope;
  }
- function renderGlobal(){if(!globalHost)return;const previous=editingKey;editingKey='global';const opened=$$('.cv-advanced[open]',globalHost).map(el=>$('summary',el)?.textContent);globalHost.innerHTML=editor();for(const el of $$('.cv-advanced',globalHost))el.open=opened.includes($('summary',el)?.textContent);window.prototypeSelect?.enhance(globalHost);editingKey=previous;}
+ function renderGlobal(){if(!globalHost)return;modelCatalog=null;const previous=editingKey;editingKey='global';const opened=$$('.cv-advanced[open]',globalHost).map(el=>$('summary',el)?.textContent);globalHost.innerHTML=editor();for(const el of $$('.cv-advanced',globalHost))el.open=opened.includes($('summary',el)?.textContent);window.prototypeSelect?.enhance(globalHost);editingKey=previous;}
  function openGlobal(){if(window.openDialogPolicy)window.openDialogPolicy('models');else window.openSettingsSection?.('dialog-policy');}
 
  function choose(key){const main=host.closest('.main');pagePositions[currentKey()]=main.scrollTop;selected=key;detailOpen=true;notice='';render();main.scrollTop=pagePositions[key]||0;requestAnimationFrame(()=>{if(objectPanel&&!objectPanel.getClientRects().length){const heading=$('.cv-editor h2',host);heading?.setAttribute('tabindex','-1');heading?.focus({preventScroll:true});}});}
@@ -185,7 +236,7 @@
  function commit(keys,quiet=false){
   noticeScope=keys.length===1?keys[0]:currentKey();
   if(keys.some(k=>object(k).archived)){notice='归档对象不能保存新的专属覆盖。';render();return false;}
-  if(keys.some(k=>fieldError(k).some(x=>x.includes('整数')||x.includes('不匹配')))){notice='请先修正档位组合或并发数；草稿已保留。';render();return false;}
+  if(keys.some(k=>fieldError(k).some(x=>x.includes('整数')||x.includes('不匹配')||x.includes('快速模式')||x.includes('推荐列表')))){notice='请先修正档位组合或并发数；草稿已保留。';render();return false;}
   if(scenario==='save-fail'){notice='保存失败，草稿已保留。请稍后重试。';render();return false;}
   for(const k of keys){const p=scopedPolicy(k,clone(policy(k)));if(Object.keys(p).length)saved[k]=p;else delete saved[k];delete drafts[k];revisions[k]=(revisions[k]||0)+1;savedStates[k]=scenario==='offline'||scenario==='unsupported'?'pending':'saved';}
   notice=quiet?'':'配置已保存。实际采用状态按功能分别观察。';render();return true;
@@ -232,15 +283,20 @@
   if(!importing&&r.step===0){content=recSelection();actions=btn('下一步：体积与位置','rec-next',recThreads().length?'':'disabled',true);}
   if(!importing&&r.step===1){const draftsInScope=recKeys().filter(dirty);content='<dl class="cv-summary"><div><dt>所选历史</dt><dd>'+recThreads().length+' 份 · '+units(recThreads().reduce((n,t)=>n+t.bytes,0))+'</dd></div><div><dt>关联配置</dt><dd>'+recKeys().length+' 个作用域</dd></div><div><dt>原始量合计</dt><dd>'+units(recSize())+'</dd></div><div><dt>压缩后大小</dt><dd>生成时计算</dd></div></dl>'+ (recThreads().some(t=>t.bytes>1073741824)?'<div class="cv-banner cv-warning">包含 GiB 级原生记录。完整恢复保留这些记录，预览不会假定固定压缩率；可返回调整范围。</div>':'')+'<label class="cv-path-field">保存到重装后仍可访问的位置<input class="input" id="cvExportPath" value="'+esc(r.destination)+'" placeholder="例如外置磁盘或不会被清理的目录"></label><p class="cv-muted">此路径为内存示例，不会生成真实文件。包不包含整个项目源码或账户凭据。</p>'+(draftsInScope.length?'<div class="cv-banner">范围内有 '+draftsInScope.length+' 个未保存对象。'+btn('保存相关草稿后导出','rec-save-drafts')+'<label><input type="checkbox" data-cv-rec="reviewed" '+(r.reviewed?'checked':'')+'>仅导出已保存配置</label></div>':'');actions=btn('返回范围','rec-back')+btn('生成本地恢复包','rec-run',!draftsInScope.length||r.reviewed?'':'disabled',true);}
   if(importing&&r.step===0){content='<div class="cv-banner">选择重装前保存的本地包，先读取清单再恢复。对话配置和历史均不自动开启同步。</div>'+btn('选择本地恢复包','rec-file')+(r.package?'<dl class="cv-summary"><div><dt>恢复包</dt><dd>'+esc(r.package.name)+'</dd></div><div><dt>内容</dt><dd>'+r.package.threads.length+' 份对话 · '+Object.keys(r.package.policies).length+' 份配置</dd></div></dl>':'<p class="cv-muted">尚未选择文件。原型选择只载入示例，不读取磁盘。</p>');actions=btn('读取并核对','rec-next',r.package?'':'disabled',true);}
-  if(importing&&r.step===1){content='<div class="cv-banner">'+(recoveryScene==='conflict'?'目标已存在同名项目。恢复为新对话，保留原对象；旧 ID 仅用于包内映射。':'目标为重装后的空环境，先恢复记录并重新关联配置。')+'</div><div class="cv-map-row"><span>目标 Codex 来源</span><strong>本机 Codex · 重装后</strong></div><label class="cv-map-row"><span>项目工作目录</span><input class="input" id="cvImportRoot" value="'+esc(r.target)+'"></label><label class="cv-map-row"><span>恢复项目的子 Agent 默认模型</span><select id="cvImportModel" aria-label="恢复后的模型">'+modelOptions(r.model||'newapi|gpt-5.4')+'</select></label><label class="cv-rec-options"><input type="checkbox" data-cv-rec="restoreGlobal" '+(r.restoreGlobal?'checked':'')+'>采用包内全局对话配置（影响目标环境的继承值）</label><dl class="cv-summary"><div><dt>项目 / 对话</dt><dd>'+r.package.threads.length+' 份记录，恢复后建立身份映射</dd></div><div><dt>配置</dt><dd>按新对象关联，继承关系保留</dd></div><div><dt>下一步</dt><dd>恢复后由用户主动继续对话</dd></div></dl><p class="cv-muted">不恢复运行中的请求、终端或命名任务，不自动开始模型调用。缺依赖 / 版本不支持由结果单独说明。</p>';actions=btn('返回文件','rec-back')+btn('恢复项目与对话','rec-run','',true);}
+  if(importing&&r.step===1){content='<div class="cv-banner">'+(recoveryScene==='conflict'?'目标已存在同名项目。恢复为新对话，保留原对象；旧 ID 仅用于包内映射。':'目标为重装后的空环境，先恢复记录并重新关联配置。')+'</div><div class="cv-map-row"><span>目标 Codex 来源</span><strong>本机 Codex · 重装后</strong></div><label class="cv-map-row"><span>项目工作目录</span><input class="input" id="cvImportRoot" value="'+esc(r.target)+'"></label><div class="cv-map-row"><span>恢复项目的子 Agent 默认模型</span><button type="button" class="cv-model-trigger" data-cv="rec-model" aria-haspopup="dialog" aria-label="选择恢复后的模型"><span class="cv-model-name">'+esc(combinationText(r.modelChoice||modelRef(r.model||'newapi|gpt-5.4')))+'</span><span class="cv-model-action">更换</span></button></div><label class="cv-rec-options"><input type="checkbox" data-cv-rec="restoreGlobal" '+(r.restoreGlobal?'checked':'')+'>采用包内全局对话配置（影响目标环境的继承值）</label><dl class="cv-summary"><div><dt>项目 / 对话</dt><dd>'+r.package.threads.length+' 份记录，恢复后建立身份映射</dd></div><div><dt>配置</dt><dd>按新对象关联，继承关系保留</dd></div><div><dt>下一步</dt><dd>恢复后由用户主动继续对话</dd></div></dl><p class="cv-muted">不恢复运行中的请求、终端或命名任务，不自动开始模型调用。缺依赖 / 版本不支持由结果单独说明。</p>';actions=btn('返回文件','rec-back')+btn('恢复项目与对话','rec-run','',true);}
   if(r.step===2){content='<p role="status">'+esc(r.status==='running'?(importing?'正在恢复记录与配置':'正在生成恢复包'):r.status==='complete'?(importing?'恢复完成 · 内存演示':'恢复包已准备 · 内存演示'):r.status==='partial'?'部分完成 · 可重试未完成步骤':r.status==='cancelled'?'已取消，源数据保持':'操作未完成')+'</p><progress class="cv-progress" max="100" value="'+r.progress+'"></progress>'+(r.status==='running'?'<p class="cv-muted">'+(r.progress<50?'核对范围与读取历史':'处理关联配置与完成校验')+'。大文件分段处理，不需要一次加载全部记录。</p>':r.status==='complete'?'<ol class="cv-result-list">'+(importing?'<li>'+r.package.threads.length+' 份对话历史已恢复。</li><li>配置已关联到恢复后的对象，未沿用旧执行状态。</li><li>未自动启动任务，WebDAV 范围保持原选择。</li>':'<li>保存位置：'+esc(r.destination)+'</li><li>'+recThreads().length+' 份历史及 '+recKeys().length+' 个作用域配置。</li><li>原对象归档不会删除这个独立恢复包。</li>')+'</ol>':'<div class="cv-banner">'+esc(r.error||'记录已恢复，配置绑定尚未完成。重试仅完成剩余步骤，不重复创建对话。')+'</div>');actions=r.status==='running'?btn('取消本次操作','rec-cancel'):r.status==='complete'?(importing?btn('查看恢复后的对话','rec-view','',true):btn('演示重装后导入此包','rec-import','',true))+btn('返回文件同步','rec-close'):btn('返回核对','rec-back')+btn('重试未完成步骤','rec-retry','',true);}
   return '<div class="cv-recovery"><header class="cv-heading"><div><h2>'+(importing?'导入重装恢复包':'导出重装恢复包')+'</h2><p class="cv-muted">本地文件 · 历史与配置关联恢复</p></div>'+btn('返回文件同步','rec-close',r.status==='running'?'disabled':'')+'</header><ol class="cv-steps">'+steps.map((s,i)=>'<li '+(r.step===i?'aria-current="step"':'')+'>'+(i+1)+' '+s+'</li>').join('')+'</ol><div class="cv-recovery-content">'+content+(r.error&&r.step!==2?'<div class="cv-banner cv-error" role="alert">'+esc(r.error)+'</div>':'')+'</div><footer class="cv-recovery-footer"><span class="cv-muted">'+(importing?'只恢复本次选择的对象':recThreads().length+' 份记录 · 原始量 '+units(recSize()))+'</span><div class="cv-actions">'+actions+'</div></footer></div>';
+ }
+ function selectRecoveryModel(){
+  const r=recovery;if(!r||r.mode!=='import'||r.step!==1)return;
+  r.target=$('#cvImportRoot')?.value.trim()||r.target;
+  window.modelPickerPrototype?.choose({title:'选择恢复后的子 Agent 模型',mode:'single',reasoning:true,fast:true,models:[r.modelChoice||modelRef(r.model||'newapi|gpt-5.4')],getCatalog:()=>modelList(true),onSelect:result=>{if(recovery!==r||!result.models[0])return;r.modelChoice=clone(result.models[0]);r.model=modelId(r.modelChoice);redrawRecovery();$('[data-cv="rec-model"]')?.focus({preventScroll:true});}});
  }
  function redrawRecovery(){window.syncPrototype?.render();}
  function runRecovery(retry=false){
   const r=recovery;if(!r)return;
   if(!retry&&r.mode==='export'){r.destination=$('#cvExportPath')?.value.trim()||r.destination;if(!r.destination){r.error='请选择保存位置。';redrawRecovery();return;}}
-  if(!retry&&r.mode==='import'){r.target=$('#cvImportRoot')?.value.trim()||'';r.model=$('#cvImportModel')?.value;if(!r.target){r.error='请指定恢复后的项目工作目录。';redrawRecovery();return;}}
+  if(!retry&&r.mode==='import'){r.target=$('#cvImportRoot')?.value.trim()||'';if(!r.target){r.error='请指定恢复后的项目工作目录。';redrawRecovery();return;}}
   const token=++operationToken;r.step=2;r.status='running';r.error='';r.progress=15;redrawRecovery();
   const advance=()=>{
    if(token!==operationToken||recovery!==r)return;r.progress=Math.min(100,r.progress+25);
@@ -257,7 +313,7 @@
     }
     if(!retry&&recoveryScene==='partial')r.status='partial';
     else {r.status='complete';if(r.restoreGlobal)saved.global=scopedPolicy('global',{...(saved.global||{}),...(r.package.policies.global||{})});
-     for(const [oldId,newId] of Object.entries(r.projectMapping))saved['project:'+newId]=scopedPolicy('project:'+newId,{...(r.package.policies['project:'+oldId]||{}),...(recovery.includeConfig&&r.model?{'subagent.model':r.model}:{})});
+     for(const [oldId,newId] of Object.entries(r.projectMapping))saved['project:'+newId]=scopedPolicy('project:'+newId,{...(r.package.policies['project:'+oldId]||{}),...(recovery.includeConfig&&r.model?{'subagent.model':r.model,...(r.modelChoice?{'subagent.effort':r.modelChoice.reasoningEffort||'model-default','subagent.fast':r.modelChoice.fast===true}:{})}:{})});
      for(const t of r.package.threads){const p=scopedPolicy('thread:'+r.mapping[t.id],clone(r.package.policies['thread:'+t.id]||{}));if(Object.keys(p).length)saved['thread:'+r.mapping[t.id]]=p;}
     }
    }
@@ -285,6 +341,8 @@
   else if(a==='tree-filter'){archived=b.dataset.filter==='archived';onlyOwn=b.dataset.filter==='own';syncObjectNavigation();}
   else if(a==='tree-expand'||a==='tree-collapse'){a==='tree-expand'?objectNavigation?.expandAll():objectNavigation?.collapseAll();const menu=b.closest('details');if(menu)menu.open=false;}
 
+  else if(a==='pick-model')openModelSelection(b.dataset.cvPicker);
+  else if(a==='model-inherit'){const field=b.dataset.field,prefix=field.split('.')[0],fields=field==='subagent.roster'||prefix==='naming'?[field]:[field,prefix+'.effort',prefix+'.fast'];const draft=buffer(currentKey());for(const f of fields)delete draft[f];notice='该模型组合已恢复继承，保存后生效。';render();const scope=editorHost();$('[data-cv-picker="'+field+'"]',scope)?.focus({preventScroll:true});}
   else if(a==='save')commit([currentKey()]);
   else if(a==='rename')editTitle(false);
   else if(a==='regenerate-title')editTitle(true);
@@ -304,6 +362,7 @@
   else if(a==='rec-fold'){recovery.folds.has(id)?recovery.folds.delete(id):recovery.folds.add(id);redrawRecovery();}
   else if(a==='rec-next'){if(recovery.mode==='import'&&!recovery.package)return;recovery.step=1;recovery.error='';redrawRecovery();}
   else if(a==='rec-back'){operationToken++;recovery.step=Math.max(0,recovery.step-1);recovery.error='';redrawRecovery();}
+  else if(a==='rec-model')selectRecoveryModel();
   else if(a==='rec-file'){recovery.package=exported||{name:'Codex-重装前示例.zip',threads:clone(seedThreads.filter(t=>['config','review'].includes(t.id))),policies:clone(initial)};redrawRecovery();}
   else if(a==='rec-save-drafts'){if(commit(recKeys().filter(dirty),true)){recovery.reviewed=true;redrawRecovery();}else recovery.error='相关草稿未保存，已保留输入。请返回对话页处理或仅导出已保存配置。';redrawRecovery();}
   else if(a==='rec-run')runRecovery();else if(a==='rec-retry')runRecovery(true);

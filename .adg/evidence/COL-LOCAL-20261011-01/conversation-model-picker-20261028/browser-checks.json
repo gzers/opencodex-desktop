@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-28",
+  "branch": "docs/governance-main",
+  "kind": "prototype-consumer-integration",
+  "checks": [
+    {
+      "name": "全局搜索单选",
+      "status": "passed",
+      "evidence": "公共双栏模型弹窗，推理与Fast连续编辑，主确认回填组合，页面保存单独执行"
+    },
+    {
+      "name": "命名模型",
+      "status": "passed",
+      "evidence": "公共单选弹窗，只选择型号，无推理入口或Fast开关"
+    },
+    {
+      "name": "推荐列表",
+      "status": "passed",
+      "evidence": "公共多选，底部有序模型与独立推理组合，确认后页面保存"
+    },
+    {
+      "name": "项目与对话",
+      "status": "passed",
+      "evidence": "均可打开同一组件；同模型选项覆盖保留型号继承，来源逐项显示"
+    },
+    {
+      "name": "恢复继承",
+      "status": "passed",
+      "evidence": "清除对话本层组合后回到项目型号与高档位"
+    },
+    {
+      "name": "取消",
+      "status": "passed",
+      "evidence": "换模型调档后主取消，原模型mini/中保留，全局保存按钮仍禁用"
+    },
+    {
+      "name": "本地恢复映射",
+      "status": "passed",
+      "evidence": "对话专题进入同步本地恢复，公共选择器带回gpt-5.4/极高，输入目录保留"
+    },
+    {
+      "name": "亮暗主题",
+      "status": "passed",
+      "evidence": "相同玻璃弹窗与已选标签可见，未重新验证窄窗"
+    },
+    {
+      "name": "控制台",
+      "status": "passed",
+      "evidence": "最终页面warn/error查询为空"
+    }
+  ],
+  "tests": {
+    "passed": 66,
+    "failed": 0,
+    "log": "tests.tap"
+  },
+  "screenshots": [
+    "01-search-picker.png",
+    "02-roster-multiple.png",
+    "03-search-dark.png",
+    "04-recovery-mapping.png",
+    "05-final-picker.png"
+  ],
+  "limits": [
+    "只使用fixture和内存状态，无真实配置写入或模型调用",
+    "本轮恢复入口在design=conversations范围验证",
+    "未重新验证窄窗或其他平台，不代替生产执行验收"
+  ],
+  "sourceSha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-config.js": "a0975582d696773cd5a6d4c1d281dfaed3bd29bc000b87a4baba8d822a12df92",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-config.css": "8e5eb4376a708c740ae0c72a10acb7e499b46c631a684c4566acdc3f3f36dd1d",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-picker-test-helper.cjs": "37b1c44c2a1c21a9aa34aec7179955202617d1ba1284b81f41cae60364ff6cde",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-model-picker.test.cjs": "c23117853da8a717bf16bb79302c5bd985e87f9bca8f12cc91257cd0aa79a24c",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/dialog-policy.test.cjs": "1ebd120f4b18a1e75bd09bdd88e93caf4fc6d94befea9d67d8d279bd265ec5f6",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-tree.test.cjs": "4ab9704158408c3b06347a1ff62164837df9d3590a386387b5f35f8bdec55d8f",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "777417260bfd755d72faa9df4258b1a69b540a8bc43347a378cc91ab8ee49fe3",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-picker.js": "5a217d1f000c9a0c9b06b723e85fec8ac1ff32628bba728cebf8489d6117c2d7",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-picker.css": "37faa40dda31ff3b4a1db02e2ebe0cda6380eec9dff660f5558633ca2700a5a1"
+  }
+}

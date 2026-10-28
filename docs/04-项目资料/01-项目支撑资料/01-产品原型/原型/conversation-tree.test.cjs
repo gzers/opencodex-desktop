@@ -1,6 +1,8 @@
 /* 对话页消费公共树的接线回归；内存DOM不代替实屏或真实Codex存储验证。 */
 const test=require('node:test'),assert=require('node:assert/strict');
 const {make}=require('./component-topic-harness.cjs');
+const {pickModel}=require('./conversation-picker-test-helper.cjs');
+const effort=(h,value)=>pickModel(h,'#conversationContent','subagent.model','newapi|gpt-5.4',value);
 test('项目与对话复用公共树，保留原配置与生命周期',async t=>{
  const h=await make('#conversations'),{w,document:d}=h,$=q=>d.querySelector(q),state=()=>w.conversationPrototype.state(),nav=()=>w.conversationPrototype.navigationState();t.after(()=>h.dispose());
  const tree=$('#cvObjectTree .tn-tree'),panel=$('.cv-tree-panel');
@@ -14,12 +16,12 @@ test('项目与对话复用公共树，保留原配置与生命周期',async t=>
  });
  await t.test('点击选择带回原编辑，往返全局设置保留树实例、展开与搜索',async()=>{
   h.click('[data-tn-id="thread:config"]');assert.equal(state().selected,'thread:config');assert.match($('.cv-editor h2').textContent,/模型配置/);
-  h.change('[data-cv-field="subagent.effort"]','high');assert.equal(state().drafts['thread:config']['subagent.effort'],'high');assert.equal(state().saved['thread:config']['subagent.effort'],'medium');assert.match($('[data-tn-id="thread:config"]').textContent,/未保存/);assert.equal($('#cvObjectTree .tn-tree'),tree);assert.equal($('.cv-tree-panel'),panel);
+  effort(h,'high');assert.equal(state().drafts['thread:config']['subagent.effort'],'high');assert.equal(state().saved['thread:config']['subagent.effort'],'medium');assert.match($('[data-tn-id="thread:config"]').textContent,/未保存/);assert.equal($('#cvObjectTree .tn-tree'),tree);assert.equal($('.cv-tree-panel'),panel);
   h.input('#cvObjectSearch','模型');const expanded=nav().expanded;h.click('[data-cv=global-policy]');await h.settle();w.setRoute('conversations');await h.settle();assert.equal($('#cvObjectSearch').value,'模型');assert.deepEqual(nav().expanded,expanded);assert.equal($('#cvObjectTree .tn-tree'),tree);assert.equal(state().drafts['thread:config']['subagent.effort'],'high');h.click('[data-cv=tree-clear]');
  });
  await t.test('切对象保留草稿，隐藏所选可定位，筛选不自动保存或采用',()=>{
   h.click('[data-tn-id="thread:review"]');const saved=JSON.stringify(state().saved);h.click('[data-cv=tree-filter][data-filter=own]');assert.equal(state().selected,'thread:review');assert.equal(nav().selectionOutside,true);assert.match($('#cvObjectTree .tn-outside').textContent,/审阅/);h.click('[data-tn-reveal]');assert.equal(nav().selectionOutside,false);assert.equal($('[data-cv=tree-filter][data-filter=all]').getAttribute('aria-pressed'),'true');assert.equal(JSON.stringify(state().saved),saved);
-  h.click('[data-tn-id="thread:config"]');assert.equal($('[data-cv-field="subagent.effort"]').value,'high');h.click('[data-tn-id="thread:window"]');h.change('[data-cv-field="subagent.effort"]','medium');h.click('[data-cv=tree-filter][data-filter=own]');assert.ok($('[data-tn-id="thread:window"]'));assert.match($('[data-tn-id="thread:window"]').textContent,/未保存/);h.click('[data-cv=tree-filter][data-filter=all]');
+  h.click('[data-tn-id="thread:config"]');assert.equal(w.conversationPrototype.resolve(state().selected,'subagent.effort').value,'high');h.click('[data-tn-id="thread:window"]');effort(h,'medium');h.click('[data-cv=tree-filter][data-filter=own]');assert.ok($('[data-tn-id="thread:window"]'));assert.match($('[data-tn-id="thread:window"]').textContent,/未保存/);h.click('[data-cv=tree-filter][data-filter=all]');
  });
  await t.test('失败保存保留草稿与树状态，原保存仅提交当前对象',()=>{
   h.input('#cvObjectSearch','窗口');const original=state().saved['thread:window'];w.conversationPrototype.scene('save-fail');h.click('[data-cv=save]');assert.match($('#conversationContent').textContent,/保存失败/);assert.deepEqual(state().saved['thread:window'],original);assert.equal(state().drafts['thread:window']['subagent.effort'],'medium');assert.equal($('#cvObjectSearch').value,'窗口');assert.equal($('#cvObjectTree .tn-tree'),tree);
@@ -41,9 +43,9 @@ test('项目与对话复用公共树，保留原配置与生命周期',async t=>
   h.click('[data-tn-id="thread:review"]');h.input('#cvObjectSearch','审阅');const saved=JSON.stringify(state().saved);h.click('[data-cv=rename]');h.input('#cvTitleInput','复核继承更新');h.click('#modalConfirm');assert.equal(state().selected,'thread:review');assert.equal(nav().selected,'thread:review');assert.equal(nav().selectedLabel,'复核继承更新');assert.equal(nav().selectionOutside,true);assert.match($('#cvObjectTree .tn-outside').textContent,/复核继承更新/);assert.equal(JSON.stringify(state().saved),saved);h.click('[data-cv=tree-clear]');
  });
  await t.test('配置导入更新干净目标的有效值，真正脏草稿仍阻止采用',async()=>{
-  h.click('[data-tn-id="thread:window"]');h.change('[data-cv-field="subagent.effort"]','high');h.change('[data-cv-field="subagent.effort"]','medium');assert.ok(state().drafts['thread:window']);
+  h.click('[data-tn-id="thread:window"]');effort(h,'high');effort(h,'medium');assert.ok(state().drafts['thread:window']);
   h.click('[data-cv=config-import]');h.change('#cvPolicyTarget','thread:window');h.click('#modalConfirm');assert.equal(state().saved['thread:window']['subagent.effort'],'high');assert.equal(state().drafts['thread:window'],undefined);assert.equal(w.conversationPrototype.resolve('thread:window','subagent.effort').value,'high');
-  w.setRoute('conversations');await h.settle();assert.equal(nav().selected,'thread:window');h.change('[data-cv-field="subagent.effort"]','low');h.click('[data-cv=config-import]');h.change('#cvPolicyTarget','thread:window');h.click('#modalConfirm');assert.match($('#cvPolicyError').textContent,/未保存/);assert.equal(state().saved['thread:window']['subagent.effort'],'high');assert.equal(state().drafts['thread:window']['subagent.effort'],'low');w.closeModal();w.setRoute('conversations');await h.settle();h.click('[data-cv=discard]');
+  w.setRoute('conversations');await h.settle();assert.equal(nav().selected,'thread:window');effort(h,'low');h.click('[data-cv=config-import]');h.change('#cvPolicyTarget','thread:window');h.click('#modalConfirm');assert.match($('#cvPolicyError').textContent,/未保存/);assert.equal(state().saved['thread:window']['subagent.effort'],'high');assert.equal(state().drafts['thread:window']['subagent.effort'],'low');w.closeModal();w.setRoute('conversations');await h.settle();h.click('[data-cv=discard]');
  });
  await t.test('恢复新项目与父子映射可直接进入公共树，先前筛选不隐藏新选择',async()=>{
   h.click('[data-cv=tree-filter][data-filter=archived]');w.conversationPrototype.openRecovery('import');h.click('[data-cv=rec-file]');h.click('[data-cv=rec-next]');h.click('[data-cv=rec-run]');const until=Date.now()+10000;while(state().recovery?.status==='running'&&Date.now()<until)await h.wait(50);assert.equal(state().recovery.status,'complete');assert.equal(state().imported.length,2);

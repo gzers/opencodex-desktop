@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-27",
+  "scope": "只读静态原型，所有保存及观察为内存mock",
+  "method": "cua_repl实屏与可访问树；DOM只读尺寸核对",
+  "softwareWindows": [
+    "1180x760",
+    "900x600"
+  ],
+  "browserViewportDuringResponsiveCheck": "1800x1128，已恢复默认",
+  "checks": [
+    {
+      "id": "B01",
+      "check": "设置中对话策略与三个分组可达",
+      "result": "pass",
+      "evidence": "01-context-light.png"
+    },
+    {
+      "id": "B02",
+      "check": "模型与工具完整显示全局命名、联网搜索与子 Agent",
+      "result": "pass",
+      "evidence": "02-global-models.png"
+    },
+    {
+      "id": "B03",
+      "check": "后台策略显示自动阈值、后台比例与独立轮末比例",
+      "result": "pass",
+      "method": "可访问树检查；输入100000和65"
+    },
+    {
+      "id": "B04",
+      "check": "保存上下文只显示已保存待重启，不声称已采用",
+      "result": "pass",
+      "evidence": "01-context-light.png"
+    },
+    {
+      "id": "B05",
+      "check": "连接分组继续按 Provider 管理，未观察不显示使用中",
+      "result": "pass",
+      "evidence": "03-connection.png"
+    },
+    {
+      "id": "B06",
+      "check": "policy=connection 重载仍落在连接分组",
+      "result": "pass",
+      "method": "reload后可访问树核对"
+    },
+    {
+      "id": "B07",
+      "check": "渠道能力专题可进入对话且保留专题，不强制转为对话包",
+      "result": "pass",
+      "method": "重载后点击对话，原型版本仍渠道特殊能力与代理兼容"
+    },
+    {
+      "id": "B08",
+      "check": "对话页只见项目与对话导航，无全局Tab；选对话可看专属设置",
+      "result": "pass",
+      "evidence": "04-thread-observation.png"
+    },
+    {
+      "id": "B09",
+      "check": "右侧代理摘要示例在选中对话执行详情展示，传输仍未观察",
+      "result": "pass",
+      "method": "可访问树包含代理摘要、历史与笔记未使用、传输未观察"
+    },
+    {
+      "id": "B10",
+      "check": "管理全局上下文策略快捷按钮进入同一上下文分组",
+      "result": "pass",
+      "method": "点击快捷按钮后的URL和可访问树"
+    },
+    {
+      "id": "B11",
+      "check": "深色主题与共享控件显示正常",
+      "result": "pass",
+      "evidence": "05-context-dark.png"
+    },
+    {
+      "id": "B12",
+      "check": "900×600软件窗口内表单不横向溢出，页面可滚动",
+      "result": "pass",
+      "evidence": "06-context-window-900.png",
+      "measurement": "cp-row scrollWidth=clientWidth=575"
+    },
+    {
+      "id": "B13",
+      "check": "历史与笔记预设显示当前第三方入口尚未接通",
+      "result": "pass",
+      "evidence": "07-history-notes.png"
+    },
+    {
+      "id": "B14",
+      "check": "改为Krill直连后提示模型与ChatGPT认证要求，不推断API Key可用",
+      "result": "pass",
+      "method": "切换Provider后的可访问树"
+    }
+  ],
+  "productionVerified": false
+}

@@ -35,6 +35,17 @@ html[data-design-scope=conversations] .window{overflow:clip}
 .cv-field>.btn{justify-self:start;font-size:11px;min-height:26px;padding:4px 7px}
 .cv-field-control{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0}
 .cv-field-control>.input,.cv-field-control>.select{flex:1;min-width:100px;max-width:100%;box-sizing:border-box}
+.cv-model-trigger{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:0;min-height:38px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm,6px);background:var(--glass-fill,var(--rail));color:var(--text);font:inherit;text-align:left;cursor:pointer;box-sizing:border-box;transition:background 100ms,border-color 100ms}
+.cv-model-trigger:hover:not(:disabled){background:var(--hover,var(--rail));border-color:var(--muted)}
+.cv-model-trigger:disabled{opacity:.5;cursor:default}
+.cv-model-choices{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.cv-model-choice{display:inline-flex;align-items:center;gap:7px;min-width:0;max-width:100%;font-size:12px;flex-wrap:wrap}
+.cv-model-name{min-width:0;overflow-wrap:anywhere;font-size:12px;line-height:1.5;font-weight:550}
+.cv-model-options{color:var(--muted);font-size:11px;white-space:nowrap}
+.cv-model-choice+.cv-model-choice{border-left:1px solid var(--border);padding-left:7px}
+.cv-model-action{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);flex:none}
+.cv-model-action svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.4}
+.cv-model-empty{color:var(--muted);font-size:12px}
 .cv-page select,.cv-recovery select{font:inherit;color:var(--text);background:var(--card,var(--bg));border:1px solid var(--border);border-radius:var(--radius-sm,6px);padding:7px 9px;max-width:100%}
 .cv-field select[data-cv-mode]{font-size:12px;flex:none;width:100px}
 .cv-field textarea{width:100%;min-height:76px;box-sizing:border-box;resize:vertical;font:inherit;line-height:1.6}
