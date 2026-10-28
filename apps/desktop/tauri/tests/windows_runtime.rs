@@ -555,7 +555,7 @@ fn windows_npm_cmd_runner_passes_paths_and_controlled_environment() {
     runner
         .install_package(
             &NpmInstallRequest {
-                npm_path: npm,
+                npm_path: npm.clone(),
                 node_dir: node().parent().map(Path::to_path_buf),
                 prefix: root.path().join("安装 prefix"),
                 version: "2.77.0".to_owned(),
@@ -588,12 +588,48 @@ fn windows_npm_cmd_runner_passes_paths_and_controlled_environment() {
         std::env::split_paths(std::ffi::OsStr::new(evidence["path"].as_str().unwrap()))
             .any(|path| Some(path.as_path()) == node().parent())
     );
+    let archive = root.path().join("离线 package.tgz");
+    std::fs::write(&archive, b"adapter fixture only").unwrap();
+    let archive = archive.canonicalize().unwrap();
+    runner
+        .install_package(
+            &NpmInstallRequest {
+                npm_path: npm,
+                node_dir: node().parent().map(Path::to_path_buf),
+                prefix: root.path().join("offline prefix"),
+                version: archive.to_string_lossy().into_owned(),
+                proxy: None,
+                scripts_enabled: false,
+                offline: true,
+            },
+            &Sink,
+            &CancelFlag::new(),
+        )
+        .unwrap();
+    let actual: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(root.path().join("arguments.json")).unwrap())
+            .unwrap();
+    let args: Vec<String> = serde_json::from_value(actual["argv"].clone()).unwrap();
+    assert!(
+        args.contains(&dunce::simplified(&archive).to_string_lossy().into_owned()),
+        "npm must receive the local tarball as one absolute source argument: {args:?}"
+    );
+    assert!(!args
+        .iter()
+        .any(|arg| arg.starts_with("@bitkyc08/opencodex@") && arg.contains(".tgz")));
 }
 
 #[test]
 #[ignore = "explicit CI official registry install; no daily profile or generation"]
 fn windows_official_managed_registry_upgrade_and_offline_reinstall() {
-    use opencodex_desktop_lib::modules::runtime::install::NullProgressSink;
+    struct LiveProgress;
+    impl InstallProgressSink for LiveProgress {
+        fn emit(&self, progress: InstallProgress) {
+            if let Some(line) = progress.line {
+                eprintln!("managed-live {:?}: {}", progress.phase, line);
+            }
+        }
+    }
     use opencodex_desktop_lib::modules::runtime::RuntimeStore;
     assert_eq!(std::env::var("OPENCODEX_MANAGED_LIVE").as_deref(), Ok("1"));
     let root = tempfile::Builder::new()
@@ -625,7 +661,7 @@ fn windows_official_managed_registry_upgrade_and_offline_reinstall() {
             &data,
             &runner,
             Some(root.path().to_path_buf()),
-            &NullProgressSink,
+            &LiveProgress,
             &probe,
             Some(node()),
         )
@@ -656,10 +692,13 @@ fn windows_official_managed_registry_upgrade_and_offline_reinstall() {
                 proxy: None,
                 work_dir: data.join("download"),
             },
-            &NullProgressSink,
+            &LiveProgress,
             &CancelFlag::new(),
         )
         .unwrap();
+    let record_before = std::fs::read(RuntimeStore::new(&data).path()).unwrap();
+    let entry_before = std::fs::read(data.join("runtime/bin/ocx.cmd")).unwrap();
+    std::fs::write(prefix.join("offline-retain"), b"verified old package").unwrap();
     let request = InstallRequest {
         prefix: prefix.clone(),
         source: InstallSource::Offline { archive },
@@ -671,12 +710,30 @@ fn windows_official_managed_registry_upgrade_and_offline_reinstall() {
         &data,
         &runner,
         Some(root.path().to_path_buf()),
-        &NullProgressSink,
+        &LiveProgress,
         &probe,
         Some(node()),
     )
-    .install(&request)
-    .expect("actual npm offline reinstall from warmed isolated cache");
+    .install(&request);
+    let outcome = match outcome {
+        Ok(outcome) => outcome,
+        Err(error) => {
+            assert_eq!(
+                std::fs::read(prefix.join("offline-retain")).unwrap(),
+                b"verified old package"
+            );
+            assert_eq!(
+                std::fs::read(data.join("runtime/bin/ocx.cmd")).unwrap(),
+                entry_before
+            );
+            assert_eq!(
+                std::fs::read(RuntimeStore::new(&data).path()).unwrap(),
+                record_before
+            );
+            panic!("actual npm offline reinstall failed; prior package/entry/source bytes retained: {error:?}");
+        }
+    };
+    assert!(!prefix.join("offline-retain").exists());
     assert_eq!(outcome.version, "2.91.0");
     assert_eq!(
         RuntimeStore::new(&data)

@@ -587,7 +587,7 @@ pub struct NpmInstallRequest {
     pub npm_path: PathBuf,
     pub node_dir: Option<PathBuf>,
     pub prefix: PathBuf,
-    /// 精确版本（不是 `latest`），保证前缀内容与校验过的 tarball 一致。
+    /// Registry version/tag, or the absolute validated tarball when offline.
     pub version: String,
     pub proxy: Option<ProxyConfig>,
     /// 为真时**不**传 `--ignore-scripts`（会执行包内代码）。
@@ -936,7 +936,16 @@ impl NpmRunner for SystemNpmRunner {
             None => (Vec::new(), None),
         };
         let masker = masker_for(request.proxy.as_ref());
-        let spec = format!("{OFFICIAL_PACKAGE}@{}", request.version);
+        let spec = if request.offline && Path::new(&request.version).is_absolute() {
+            // A validated local tarball is an npm source in its own right.
+            // Prefixing it with the registry package name produces an invalid
+            // extended Windows path and fails with ENOENT.
+            dunce::simplified(Path::new(&request.version))
+                .as_os_str()
+                .to_os_string()
+        } else {
+            std::ffi::OsString::from(format!("{OFFICIAL_PACKAGE}@{}", request.version))
+        };
 
         let mut command = self.base_command(&request.npm_path, request.node_dir.as_deref());
         command
