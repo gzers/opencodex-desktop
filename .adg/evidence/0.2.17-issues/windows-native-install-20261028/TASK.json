@@ -1,0 +1,27 @@
+{
+  "id": "TASK-OPENCODEX-0.2.17-WINDOWS-INSTALL-FOLLOWUP",
+  "source": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-26.md",
+  "scope": "WP89/WP95 post-release native Windows diagnosis, implementation and actual install/upgrade/failure recovery; no release",
+  "baseline": "65581b589c8b210049e96022ce58603350450426",
+  "authority": "user 2026-10-28",
+  "codeBranch": "feature/0.2.17-windows-install-diagnostics",
+  "docsBranch": "docs/governance-main",
+  "status": "verified_with_open_historical_diagnosis",
+  "required_checks": [
+    "review:command-evidence",
+    "review:path-display",
+    "review:npm-diagnostics",
+    "review:source-phase-ui",
+    "test:windows-runtime",
+    "test:native-install-upgrade-recovery",
+    "test:webview-install-recovery",
+    "test:frontend-regression",
+    "test:rust-install-regression",
+    "test:fmt-clippy-build"
+  ],
+  "writeback": [
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.17-bugs.md",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-26.md"
+  ],
+  "codeCommit": "0ca7689b85ce4eeb01aa0a212a86920dd490b3a4"
+}

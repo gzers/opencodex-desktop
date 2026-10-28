@@ -1,0 +1,79 @@
+{
+  "id": "RCP-OPENCODEX-0.2.17-WINDOWS-INSTALL-FOLLOWUP",
+  "task": "TASK-OPENCODEX-0.2.17-WINDOWS-INSTALL-FOLLOWUP",
+  "sourceCommit": "0ca7689b85ce4eeb01aa0a212a86920dd490b3a4",
+  "applicationTree": "6a20c2579249b58dc7f9ddb950b762c8952a15df",
+  "result": "passed_for_implemented_scope",
+  "historicalFailureRootCause": "unknown; not reproduced",
+  "releasePerformed": false,
+  "checks": [
+    {
+      "detail": "Historical missing output remains explicitly unknown",
+      "evidence": "environment.json; original-process-allowed-context.json; rust-*-command.log; nvmd-native/commands; webview-committed/commands",
+      "result": "passed",
+      "name": "review:command-evidence"
+    },
+    {
+      "evidence": "webview-committed/runtime-install-ui.json; checks/ui-verified-regression.log",
+      "result": "passed",
+      "name": "review:path-display"
+    },
+    {
+      "evidence": "checks/diagnostics-unit.log; batch-boundary-summary.json; nvmd-native/validation.json",
+      "result": "passed",
+      "name": "review:npm-diagnostics"
+    },
+    {
+      "evidence": "checks/ui-matrix.log; webview-committed/native-install-recovery.json",
+      "result": "passed",
+      "name": "review:source-phase-ui"
+    },
+    {
+      "detail": "13 passed, 3 explicitly ignored",
+      "evidence": "checks/windows-runtime-verified.log",
+      "result": "passed",
+      "name": "test:windows-runtime"
+    },
+    {
+      "evidence": "nvmd-native/validation.json; checks/local-full-install-02.log",
+      "result": "passed",
+      "name": "test:native-install-upgrade-recovery"
+    },
+    {
+      "evidence": "webview-committed/native-install-recovery.json; webview-committed/app.log",
+      "result": "passed",
+      "name": "test:webview-install-recovery"
+    },
+    {
+      "detail": "1002 passed, 10 pre-existing skips",
+      "evidence": "checks/ui-verified-regression.log",
+      "result": "passed",
+      "name": "test:frontend-regression"
+    },
+    {
+      "detail": "3 diagnostic tests; 2 native launcher/bounded probe tests",
+      "evidence": "checks/diagnostics-unit.log; checks/runtime-install-unit.log",
+      "result": "passed",
+      "name": "test:rust-install-regression"
+    },
+    {
+      "evidence": "checks/fmt-final.log; checks/clippy-verified.log; checks/typecheck-verified.log; checks/ui-verified-build.log; checks/committed-app-build.log",
+      "result": "passed",
+      "name": "test:fmt-clippy-build"
+    }
+  ],
+  "writeback": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.17-bugs.md",
+      "beforeSha256": "b18232e32acfd626714803903f3a64e40686a634ebd8ca090ba73658cc75adf6",
+      "afterSha256": "9d01a15e763a78e40cc5e1adfd8b0fe1c83b58f7e3da01f45b2be6e75fd8ab91"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-26.md",
+      "beforeSha256": "f854d50da189bead2475fa1d7dd25d1bbffcb06de906c6aa2405bdd449b751b8",
+      "afterSha256": "1208614bce30a717e6c9c61d4d26337cc8258cc19edf5883d57722bd1d9385d4"
+    }
+  ],
+  "retainedCleanup": "owned-diagnostic-retention.json",
+  "recordedAt": "2026-10-28T18:27:17.1871769+08:00"
+}

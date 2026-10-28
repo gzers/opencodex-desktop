@@ -1,0 +1,558 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28",
+  "timezone": "Asia/Shanghai",
+  "sourceBranch": "feature/0.2.17-windows-install-diagnostics",
+  "sourceCommit": "0ca7689b85ce4eeb01aa0a212a86920dd490b3a4",
+  "applicationTree": "6a20c2579249b58dc7f9ddb950b762c8952a15df",
+  "documentationBranch": "docs/governance-main",
+  "exeSha256": "036620aec75e8762338ee8f9e7d124f1d6a69fa8a89efb7a5f5469156d65594c",
+  "exeStartupSourceVerified": true,
+  "historicalFailureRootCause": "unknown; no original stdout/stderr was retained",
+  "verifiedScope": "native managed OpenCodex install, upgrade, pack/offline-install failure rollback and production WebView recovery",
+  "unverified": [
+    "historical exit1 attribution",
+    "Node22.20.0/npm10.9.3",
+    "real SMB/UNC",
+    "other Windows versions",
+    "new MSI/NSIS/OTA validation"
+  ],
+  "checkResults": [
+    {
+      "detail": "Historical missing output remains explicitly unknown",
+      "evidence": "environment.json; original-process-allowed-context.json; rust-*-command.log; nvmd-native/commands; webview-committed/commands",
+      "result": "passed",
+      "name": "review:command-evidence"
+    },
+    {
+      "evidence": "webview-committed/runtime-install-ui.json; checks/ui-verified-regression.log",
+      "result": "passed",
+      "name": "review:path-display"
+    },
+    {
+      "evidence": "checks/diagnostics-unit.log; batch-boundary-summary.json; nvmd-native/validation.json",
+      "result": "passed",
+      "name": "review:npm-diagnostics"
+    },
+    {
+      "evidence": "checks/ui-matrix.log; webview-committed/native-install-recovery.json",
+      "result": "passed",
+      "name": "review:source-phase-ui"
+    },
+    {
+      "detail": "13 passed, 3 explicitly ignored",
+      "evidence": "checks/windows-runtime-verified.log",
+      "result": "passed",
+      "name": "test:windows-runtime"
+    },
+    {
+      "evidence": "nvmd-native/validation.json; checks/local-full-install-02.log",
+      "result": "passed",
+      "name": "test:native-install-upgrade-recovery"
+    },
+    {
+      "evidence": "webview-committed/native-install-recovery.json; webview-committed/app.log",
+      "result": "passed",
+      "name": "test:webview-install-recovery"
+    },
+    {
+      "detail": "1002 passed, 10 pre-existing skips",
+      "evidence": "checks/ui-verified-regression.log",
+      "result": "passed",
+      "name": "test:frontend-regression"
+    },
+    {
+      "detail": "3 diagnostic tests; 2 native launcher/bounded probe tests",
+      "evidence": "checks/diagnostics-unit.log; checks/runtime-install-unit.log",
+      "result": "passed",
+      "name": "test:rust-install-regression"
+    },
+    {
+      "evidence": "checks/fmt-final.log; checks/clippy-verified.log; checks/typecheck-verified.log; checks/ui-verified-build.log; checks/committed-app-build.log",
+      "result": "passed",
+      "name": "test:fmt-clippy-build"
+    }
+  ],
+  "files": [
+    {
+      "path": "batch-boundary-summary.json",
+      "bytes": 298,
+      "sha256": "6265751a5bfd1b973d8725364f4132b4ad133de741445e2edae845bd24dd424b"
+    },
+    {
+      "path": "environment.json",
+      "bytes": 577,
+      "sha256": "e900eae55a11f415c06e7fb0bfd5cb96751194c64ff36de93b1aa4a1193cd64e"
+    },
+    {
+      "path": "extended-entry-command.json",
+      "bytes": 1348,
+      "sha256": "b7020493a47247dbc4b6ccabd90c85199a9b71a7585fdc7cd8b3d272aa420101"
+    },
+    {
+      "path": "extended-entry-stderr-oem.log",
+      "bytes": 35,
+      "sha256": "d2268dc5713937b3f461510447681b53c0908357f50eb07b2a3185590b1aa37f"
+    },
+    {
+      "path": "extended-entry-stderr.bin",
+      "bytes": 24,
+      "sha256": "3c33cd9e7f4e01692decf4b7844853853f041d6b6e07318bb7ef86eec9fbf22f"
+    },
+    {
+      "path": "extended-entry-stderr.log",
+      "bytes": 48,
+      "sha256": "b6db7c298f08e804f098eaee505f84517505c286c811240cfedf4cba8627d4ea"
+    },
+    {
+      "path": "extended-entry-stdout.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extended-entry-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-entry-command.json",
+      "bytes": 1339,
+      "sha256": "add3512237614255f4738e461c403c7f1a1606542c362fb4b2e2f8ccb6856894"
+    },
+    {
+      "path": "native-entry-stderr.log",
+      "bytes": 118175,
+      "sha256": "139dca0d94af09e569f6645a212d77a985c65f7a089d46b0890514a99ed1f9d7"
+    },
+    {
+      "path": "native-entry-stdout.log",
+      "bytes": 30,
+      "sha256": "12d5fd58076b77fb62c2fd4896546634bc0f43ef9da26d9610d97b41d22bb5ff"
+    },
+    {
+      "path": "nvmd-exe-command.json",
+      "bytes": 1331,
+      "sha256": "ba4fbcf65ba1b0a5f8ce65481ca54b7804c2c8a751443b6b5dd7b5b4d8fc7add"
+    },
+    {
+      "path": "nvmd-exe-extended-cwd-command.json",
+      "bytes": 1351,
+      "sha256": "80a6676788bf5138f69597a147555572dc400ad69ff704d301b20d2aad08f70b"
+    },
+    {
+      "path": "nvmd-exe-extended-cwd-stderr.log",
+      "bytes": 118418,
+      "sha256": "95814faac523480f94684b7d785e20bf65a7ce9cc492199abe61b67365c719d1"
+    },
+    {
+      "path": "nvmd-exe-extended-cwd-stdout.log",
+      "bytes": 30,
+      "sha256": "12d5fd58076b77fb62c2fd4896546634bc0f43ef9da26d9610d97b41d22bb5ff"
+    },
+    {
+      "path": "nvmd-exe-stderr.log",
+      "bytes": 118175,
+      "sha256": "0aac6a48c5e85c7fc0e2079b218a1e5ec8c55f77a7777e70264317ea181cd8cf"
+    },
+    {
+      "path": "nvmd-exe-stdout.log",
+      "bytes": 30,
+      "sha256": "12d5fd58076b77fb62c2fd4896546634bc0f43ef9da26d9610d97b41d22bb5ff"
+    },
+    {
+      "path": "original-files-after-diagnosis.json",
+      "bytes": 630,
+      "sha256": "979f985b421b58568db9db6a16ae0a359f17ecfb9e9ea80040c907ca6a9c77b2"
+    },
+    {
+      "path": "original-process-allowed-context.json",
+      "bytes": 1279,
+      "sha256": "d467eef6b591dff21e5bf1ed4eb1d6728a9f17983a2e776fc4b2555628e62923"
+    },
+    {
+      "path": "original-successful-view.log",
+      "bytes": 1133,
+      "sha256": "1ac5e51ebe5e15b5f265753a01e2e524fc60db4b4c977fdf2489e0e4a780c650"
+    },
+    {
+      "path": "owned-diagnostic-retention.json",
+      "bytes": 456,
+      "sha256": "09b2a078fb539cfdceec26ac2b280e127bd62c43c732dab1114e58a519f9d055"
+    },
+    {
+      "path": "pack-reproduction-command.json",
+      "bytes": 1479,
+      "sha256": "d4265c54dc5a55bf9a6743f951a49cc23785930cf3921b9994fe6c22c4955a4d"
+    },
+    {
+      "path": "pack-reproduction-stderr.log",
+      "bytes": 118328,
+      "sha256": "214c46aa06505b5827281e90807c98f87d1ca42dced1fb5a44d4e6c1559b0b2a"
+    },
+    {
+      "path": "pack-reproduction-stdout.log",
+      "bytes": 30,
+      "sha256": "12d5fd58076b77fb62c2fd4896546634bc0f43ef9da26d9610d97b41d22bb5ff"
+    },
+    {
+      "path": "RCP.json",
+      "bytes": 3180,
+      "sha256": "af52cef2cfa5bf5f5ad654a150d17dedf2aa8efc6963d6c1d5f1a32b326920de"
+    },
+    {
+      "path": "reproduce-install.rs",
+      "bytes": 1464,
+      "sha256": "d9aec04a625272bd32e3a622f1a918446ea2ea879db96c5b81abb8255eae8dfd"
+    },
+    {
+      "path": "reproduce-original-env.rs",
+      "bytes": 1549,
+      "sha256": "216408ca0453702ceda37662afab775a23aa7c369b9e7e87b7437950012618ce"
+    },
+    {
+      "path": "reproduce.rs",
+      "bytes": 1430,
+      "sha256": "33b3e39b4b7ce094ff1933dbd4c5465af24817b894d7ded0a51461a9b5b3faf8"
+    },
+    {
+      "path": "rust-baseline-command.log",
+      "bytes": 261,
+      "sha256": "0b9408b583b2e5d779192d5a42e2a96b8f7e02e5b4e4a0dc4eb1f6e90378328e"
+    },
+    {
+      "path": "rust-baseline-stderr.bin",
+      "bytes": 118175,
+      "sha256": "e23bf3ea33548609c3f58d49e82a0444e75410e48685b9a49800ef7938985ef8"
+    },
+    {
+      "path": "rust-baseline-stdout.bin",
+      "bytes": 30,
+      "sha256": "12d5fd58076b77fb62c2fd4896546634bc0f43ef9da26d9610d97b41d22bb5ff"
+    },
+    {
+      "path": "rust-install-command.log",
+      "bytes": 294,
+      "sha256": "576838109a3640e6ba6bbd201f6b59025b9b6df4fd746c7561a3feb05293135e"
+    },
+    {
+      "path": "rust-install-stderr.bin",
+      "bytes": 32672,
+      "sha256": "ffff964d8153a41e71a4af46c6b9c289621d200fbd94efb00afebdf76279b04b"
+    },
+    {
+      "path": "rust-install-stdout.bin",
+      "bytes": 27,
+      "sha256": "42251933030d42c9814fbf47820a537782e6d6203dc1d8e7551719a8f58824a0"
+    },
+    {
+      "path": "rust-original-env-command.log",
+      "bytes": 261,
+      "sha256": "0b9408b583b2e5d779192d5a42e2a96b8f7e02e5b4e4a0dc4eb1f6e90378328e"
+    },
+    {
+      "path": "rust-original-env-stderr.bin",
+      "bytes": 118175,
+      "sha256": "629d2a160346519fb08bcd3b72219f1c095602793557eb6c3917f21858606ba3"
+    },
+    {
+      "path": "rust-original-env-stdout.bin",
+      "bytes": 30,
+      "sha256": "12d5fd58076b77fb62c2fd4896546634bc0f43ef9da26d9610d97b41d22bb5ff"
+    },
+    {
+      "path": "TASK.json",
+      "bytes": 1104,
+      "sha256": "56ea9a6f4cd10fb22def3926df7d64a881e44a2d338a3a696e01f69e30ba0dd8"
+    },
+    {
+      "path": "writeback-before.json",
+      "bytes": 358,
+      "sha256": "3fac30225909b03ffcf223578c853d2ccf2bf05bfbd0b523233fe22851e423c5"
+    },
+    {
+      "path": "writeback.json",
+      "bytes": 534,
+      "sha256": "f64b3fec025bd1f0bfe0562b229e8305412b2871022838d851ecb076f7fc41df"
+    },
+    {
+      "path": "checks/baseline-build.log",
+      "bytes": 38044,
+      "sha256": "5a1b2f5573d3edc276966b3c7b01b66bfbbd038937aa920ac0a58daa57b3e0ac"
+    },
+    {
+      "path": "checks/clippy-verified.log",
+      "bytes": 193,
+      "sha256": "e2ce38653a5d644922a82b825a711de89cbcc2b13996b9d3a900e30aa43e1a00"
+    },
+    {
+      "path": "checks/committed-app-build.log",
+      "bytes": 26949,
+      "sha256": "76cbe4d1a407667801d4cd6784874c42e88323f4a6fcfc396335428b05daade0"
+    },
+    {
+      "path": "checks/diagnostics-unit.log",
+      "bytes": 15161,
+      "sha256": "2af185ca248cd99eb4220c18998313c7980d1b3661055a4c3dcd85eb6c5f92b0"
+    },
+    {
+      "path": "checks/fmt-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/instrumented-build.log",
+      "bytes": 27135,
+      "sha256": "508f4176aed85c070974a36f9e62be2d95e559ec23a5e0421e0330ea151f7fb0"
+    },
+    {
+      "path": "checks/local-full-install-01.log",
+      "bytes": 300,
+      "sha256": "ec140621efa0c8885b30e0443aa112cc6da69c61b1f1e97f21f9e9fb924aca5c"
+    },
+    {
+      "path": "checks/local-full-install-02.log",
+      "bytes": 27435,
+      "sha256": "e90b771ff6171f56c16fe26dfc5f5b26ab53d177dd2029fd50b62fcc008e7e6c"
+    },
+    {
+      "path": "checks/native-app-verified-build.log",
+      "bytes": 26949,
+      "sha256": "958cc0503f4254412f7c9f9044484067f7a4672bbb37c2704e8af24bbbcdaf74"
+    },
+    {
+      "path": "checks/runtime-install-unit.log",
+      "bytes": 15248,
+      "sha256": "394feb365425a3978b1ec87c8462956bbc603bfc541f94e6ccb21cc618e8e8d0"
+    },
+    {
+      "path": "checks/typecheck-verified.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/ui-matrix.log",
+      "bytes": 510,
+      "sha256": "2c64ce9cc513dac0b2077ee4b63d343b671b3bf481e60a4a9aa07e1683d9bf92"
+    },
+    {
+      "path": "checks/ui-verified-build.log",
+      "bytes": 4060,
+      "sha256": "70f7352e4775138555373857383c9abca28342c55a0c3f3c92105ef21412e23f"
+    },
+    {
+      "path": "checks/ui-verified-regression.log",
+      "bytes": 782,
+      "sha256": "643fded08ad06f3b964defb9829bd5667705402471d88b4c1f20cd4eff092f67"
+    },
+    {
+      "path": "checks/windows-runtime-verified.log",
+      "bytes": 28627,
+      "sha256": "bb1ad3ccde4faaa53589929e0e16648bb47391a36d722609b2df8d1d750962f9"
+    },
+    {
+      "path": "nvmd-native/validation.json",
+      "bytes": 907,
+      "sha256": "3ac670b1f6025382c0f67f80b65c2722876f22797e5d6599b328a0317a690182"
+    },
+    {
+      "path": "nvmd-native/commands/npm-downloading-065a01e478b0.log",
+      "bytes": 137992,
+      "sha256": "b4ac4b9509b320febf387aca7484071a0a9a8f99214855935c5cf57c06638ef0"
+    },
+    {
+      "path": "nvmd-native/commands/npm-downloading-0d5d7b0107ee.log",
+      "bytes": 138216,
+      "sha256": "a5741874ff63c051941bfd77ddc04462e7e9e124f78e8dfe07adcac41e771f2a"
+    },
+    {
+      "path": "nvmd-native/commands/npm-downloading-29e7579b5bcf.log",
+      "bytes": 140706,
+      "sha256": "a619fe729c013863c48257f4879f8a3cb2e33c48bf619f7b39ac3ce947fe2679"
+    },
+    {
+      "path": "nvmd-native/commands/npm-downloading-5e82428d2a1f.log",
+      "bytes": 2130,
+      "sha256": "53ccf531fe96f109fd198e08671a94e18cbc5723dddc6fed36b4be80ca8fdc53"
+    },
+    {
+      "path": "nvmd-native/commands/npm-installing-a523ebc60919.log",
+      "bytes": 36274,
+      "sha256": "3d254db81e5fd58794de911a7a2bd49f82387511a15c5f82b4bfc035e825ae7f"
+    },
+    {
+      "path": "nvmd-native/commands/npm-installing-e9d1993927b1.log",
+      "bytes": 2067,
+      "sha256": "d6842e1cbf0fbe00041c385a9505fdfac510b0fb297b6bd7d84598459cb2e1cd"
+    },
+    {
+      "path": "nvmd-native/commands/npm-installing-ed317750e9e1.log",
+      "bytes": 21280,
+      "sha256": "0847c80b9b4eb799b4321cc8bb622fe06e7f0172d9b78b265842b29bcfdaa098"
+    },
+    {
+      "path": "webview-committed/app.log",
+      "bytes": 257,
+      "sha256": "9eb18642c66eb7427e181d7a283586ae56a8fc5eb33cb3df6370f21d15db6e3c"
+    },
+    {
+      "path": "webview-committed/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "webview-committed/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "webview-committed/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "webview-committed/failure-retains-output.png",
+      "bytes": 507717,
+      "sha256": "405bc8a39c3de5c9b4049f22ff9b73fce9e29e95926676842e8861d53e39d7b2"
+    },
+    {
+      "path": "webview-committed/installed-2.91.0.png",
+      "bytes": 438280,
+      "sha256": "e47bec3dc73e46d2d23d1b86fae492d98c5b44773f8587b5b06ded4d5de0444a"
+    },
+    {
+      "path": "webview-committed/launcher.json",
+      "bytes": 900,
+      "sha256": "985a3a48ba7d6702b737bcc8447c44480318c478cb8a747dc6b840f9ff22171c"
+    },
+    {
+      "path": "webview-committed/native-install-recovery.json",
+      "bytes": 3239,
+      "sha256": "99fa7fc559059f8d5486ec411e99a55caa8e7c4b4feec95ae143efda94daf60b"
+    },
+    {
+      "path": "webview-committed/recovered-upgraded-2.93.0.png",
+      "bytes": 457830,
+      "sha256": "22fb3db4a4f032a2bba0470bdb185dc0cf0dbc2a1169493249998dcf5981423d"
+    },
+    {
+      "path": "webview-committed/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288"
+    },
+    {
+      "path": "webview-committed/runtime.json",
+      "bytes": 1736,
+      "sha256": "38137e81540b704da0de337779efe50445b76a0647637acf09109842de31083a"
+    },
+    {
+      "path": "webview-committed/commands/npm-downloading-50b4483dadf0.log",
+      "bytes": 141427,
+      "sha256": "7b6bffc4eea3fa27ad4a1493d74730462e6da68a559ecec22cbd244be8fed302"
+    },
+    {
+      "path": "webview-committed/commands/npm-downloading-5da3a2c53984.log",
+      "bytes": 2967,
+      "sha256": "087d0dd580016c2c81f4ecf5af691685c52607f0827d0e95fc762bc122d2fd64"
+    },
+    {
+      "path": "webview-committed/commands/npm-downloading-c6c4d478d1ce.log",
+      "bytes": 138942,
+      "sha256": "1e23df9f91427cf6e6ccd85fe8413840032357953152f9236d4193a0f99f63f9"
+    },
+    {
+      "path": "webview-committed/commands/npm-installing-1e52eba6ec0b.log",
+      "bytes": 26682,
+      "sha256": "ced40e42e2408a30a6d348306b5e17865d1c12d36cb36b7b0f7b74e37986e503"
+    },
+    {
+      "path": "webview-committed/commands/npm-installing-baffc45c12db.log",
+      "bytes": 14403,
+      "sha256": "4a4a2e3812f23fe10e45f32bafd6d4acadfb028513501ad3c62b5595f77dadfc"
+    },
+    {
+      "path": "webview-first-attempt/execution.log",
+      "bytes": 31950,
+      "sha256": "c836fe630f0ba67536fec819ade3f8ffab8640431de558be7517e5a2561a43ce"
+    },
+    {
+      "path": "webview-first-attempt/launcher.json",
+      "bytes": 897,
+      "sha256": "cd626cf69430c806207d6cfde2cf2ea698ae325bb875fbbed1586e79008d58ba"
+    },
+    {
+      "path": "webview-first-attempt/native-install-recovery.json",
+      "bytes": 32759,
+      "sha256": "0ba3992c628dc21d7cedd85233ac2676815e70dbd271af229a7aa1919ece872c"
+    },
+    {
+      "path": "webview-native-pass/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "webview-native-pass/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "webview-native-pass/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "webview-native-pass/failure-retains-output.png",
+      "bytes": 503913,
+      "sha256": "6f29f7100886dc5ca9b74b4669c0ed116fffeb89a888e6e0915742b14421e2f8"
+    },
+    {
+      "path": "webview-native-pass/installed-2.91.0.png",
+      "bytes": 437542,
+      "sha256": "7e0b631664b35aa0b2e400f95112fd1eb1cadd24d2c31f4cb70346f51f1c56dd"
+    },
+    {
+      "path": "webview-native-pass/launcher.json",
+      "bytes": 898,
+      "sha256": "690a7406e790cd5745521dc5aeea169b9590bd3204ca0667a4b48ac86236582b"
+    },
+    {
+      "path": "webview-native-pass/native-install-recovery.json",
+      "bytes": 3215,
+      "sha256": "601de076d9da2cf601993d8c2f5a14c59eaa97e3bd663f264288398c3f7f600b"
+    },
+    {
+      "path": "webview-native-pass/recovered-upgraded-2.93.0.png",
+      "bytes": 454839,
+      "sha256": "bb98bbf2996544ec717ebef8a564eb60859d9d7e011ed332844fa2424f5bd70e"
+    },
+    {
+      "path": "webview-native-pass/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288"
+    },
+    {
+      "path": "webview-native-pass/commands/npm-downloading-06ee1c4198b2.log",
+      "bytes": 138915,
+      "sha256": "136ab43c315d3c2728dc0b9f513553ef3bd21fd8267a0f7d70f86e33834879d9"
+    },
+    {
+      "path": "webview-native-pass/commands/npm-downloading-a0b21e403711.log",
+      "bytes": 141400,
+      "sha256": "a031c2f1278a737c4d75bacb6334913e43f6d07a7b1e511007e623e22f10227b"
+    },
+    {
+      "path": "webview-native-pass/commands/npm-downloading-e4f558704f1c.log",
+      "bytes": 2937,
+      "sha256": "e0363e37ef95c5dd188fd10ba9016015bf40b51c7a5b531d36c091f6cc1ed3ce"
+    },
+    {
+      "path": "webview-native-pass/commands/npm-installing-3c99a2e2363c.log",
+      "bytes": 14374,
+      "sha256": "8343bd3f78c629b0f6901d1857424b9601d25552acbb1cd32d95e072c7a36a16"
+    },
+    {
+      "path": "webview-native-pass/commands/npm-installing-eea2915f69bf.log",
+      "bytes": 26664,
+      "sha256": "d83c08f913575a0596b4d7dd777ccc00d4cae4e3295baaa8b0b1ee719a1e4052"
+    }
+  ]
+}
