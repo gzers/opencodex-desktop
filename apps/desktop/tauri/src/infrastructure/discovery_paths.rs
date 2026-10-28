@@ -212,11 +212,6 @@ fn windows_declared_candidates(
     for path in windows_home_candidates(home) {
         append(path);
     }
-    for key in ["ProgramFiles", "ProgramFiles(x86)"] {
-        if let Some(path) = env(key) {
-            append(path.join("nodejs"));
-        }
-    }
     for root in roots {
         if !root.is_absolute() {
             continue;
@@ -256,6 +251,11 @@ fn windows_declared_candidates(
             for (_, path) in versions.into_iter().take(16) {
                 append(path);
             }
+        }
+    }
+    for key in ["ProgramFiles", "ProgramFiles(x86)"] {
+        if let Some(path) = env(key) {
+            append(path.join("nodejs"));
         }
     }
     result
