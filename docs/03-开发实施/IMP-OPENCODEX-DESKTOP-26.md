@@ -67,3 +67,9 @@ CI40627338213（7683c569a）前置windows-smoke-evidence已通过。原始日志
 ## 原型证据人工复核范围
 
 列表截图人工复核：实现表格间距、单行顶部状态与无修改保存禁用符合本轮保持原结构要求；file URL原型截图有部分文字未正常显示，但DOM列头/操作/排序入口检查通过。因此parity-list通过仅声明这些结构项，不将该截图当作像素完全一致的证明。本轮没有改列表/预览/通知布局，只改安装脚本确认按钮条件；完整浏览器行为和材质门禁另有独立报告。
+
+## 普通账户最终EXE暴露的实际启动错误
+
+普通Profile前置通过后，CI40627338213仍在最终EXE普通账户setup阶段返回tray icon error Access denied。源码追溯为Windows托盘颜色刷新set_icon的Shell_NotifyIcon(NIM_MODIFY)错误经问号传播，导致整个应用setup失败。07854ea7在已有托盘对象存在时将这项可选外观刷新错误记录到运行日志，保留默认图标；下次window_appearance刷新仍调用refresh，State尚未成功不会缓存“已完成”。不关闭业务/窗口/令牌检查，不把托盘完整跨账户能力声称已通过。
+
+GUI测试环境还限定给刚创建的SID窗口站和输入桌面访问，保留并在finally恢复两者原DACL；不修改其它用户/系统目录ACL，应用令牌仍为标准用户。这一准备步骤前置执行，报告须读取实际恢复成功字段。失败日志ordinary-tray-artwork-failure.log保留。

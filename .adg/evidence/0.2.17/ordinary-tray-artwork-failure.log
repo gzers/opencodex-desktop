@@ -1,0 +1,78 @@
+2026-10-28T04:11:39.3451447Z PASS: Windows rendered, Tauri commands succeeded, sandbox initialized.
+2026-10-28T04:11:40.9771008Z ##[group]Run & ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-ordinary
+2026-10-28T04:11:40.9772605Z [36;1m& ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-ordinary[0m
+2026-10-28T04:11:40.9848182Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-28T04:11:40.9848612Z env:
+2026-10-28T04:11:40.9848879Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-28T04:11:40.9849220Z   CARGO_INCREMENTAL: 0
+2026-10-28T04:11:40.9849494Z   CARGO_TERM_COLOR: always
+2026-10-28T04:11:40.9849750Z ##[endgroup]
+2026-10-28T04:12:12.1502925Z Application exited before smoke completed: -1073740791
+2026-10-28T04:12:12.1509019Z at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1: line 97
+2026-10-28T04:12:12.1512147Z at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\out\windows-ordinary\ordinary-child.ps1: line 65
+2026-10-28T04:12:12.1526770Z {
+2026-10-28T04:12:12.1528831Z   "registered": "C:\\Users\\ocxacc5ad2552b",
+2026-10-28T04:12:12.1531463Z   "profile": "C:\\Users\\ocxacc5ad2552b",
+2026-10-28T04:12:12.1533309Z   "roaming": "C:\\Users\\ocxacc5ad2552b\\AppData\\Roaming",
+2026-10-28T04:12:12.1535259Z   "local": "C:\\Users\\ocxacc5ad2552b\\AppData\\Local",
+2026-10-28T04:12:12.1537075Z   "processProfile": "C:\\Users\\ocxacc5ad2552b"
+2026-10-28T04:12:12.1539115Z }
+2026-10-28T04:12:12.1549916Z 
+2026-10-28T04:12:12.1552868Z thread 'main' (2360) panicked at C:\Users\runneradmin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tauri-2.12.1\src\app.rs:1444:11:
+2026-10-28T04:12:12.1554319Z Failed to setup app: error encountered during setup hook: tray icon error: Access is denied. (os error 5)
+2026-10-28T04:12:12.1556350Z note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+2026-10-28T04:12:12.1558018Z 
+2026-10-28T04:12:13.0379478Z [31;1mException: [0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-ordinary-startup.ps1:120[0m
+2026-10-28T04:12:13.0380968Z [31;1m[0m[36;1mLine |[0m
+2026-10-28T04:12:13.0381864Z [31;1m[0m[36;1m[36;1m 120 | [0m   [36;1mthrow 'Ordinary native startup failed; see retained output'[0m
+2026-10-28T04:12:13.0382749Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-10-28T04:12:13.0384058Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mOrdinary native startup failed; see retained output[0m
+2026-10-28T04:12:13.0795676Z ##[error]Process completed with exit code 1.
+2026-10-28T04:12:13.1294992Z ##[group]Run actions/upload-artifact@v4
+2026-10-28T04:12:13.1295433Z with:
+2026-10-28T04:12:13.1295695Z   name: windows-startup-evidence
+2026-10-28T04:12:13.1296715Z   path: test/out/windows-startup
+2026-10-28T04:12:13.1297724Z   if-no-files-found: warn
+2026-10-28T04:12:13.1297997Z   compression-level: 6
+2026-10-28T04:12:13.1298260Z   overwrite: false
+2026-10-28T04:12:13.1298531Z   include-hidden-files: false
+2026-10-28T04:12:13.1298841Z env:
+2026-10-28T04:12:13.1299102Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-28T04:12:13.1299413Z   CARGO_INCREMENTAL: 0
+2026-10-28T04:12:13.1299667Z   CARGO_TERM_COLOR: always
+2026-10-28T04:12:13.1299923Z ##[endgroup]
+2026-10-28T04:12:14.0245071Z (node:8012) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-28T04:12:14.0245880Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-28T04:12:16.1308137Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-28T04:12:16.1312415Z The least common ancestor is D:\a\opencodex-desktop\opencodex-desktop\test. This will be the root directory of the artifact
+2026-10-28T04:12:16.1314049Z With the provided path, there will be 60 files uploaded
+2026-10-28T04:12:16.1319792Z Artifact name is valid!
+2026-10-28T04:12:16.1321901Z Root directory input is valid!
+2026-10-28T04:12:16.4076251Z Beginning upload of artifact content to blob storage
+2026-10-28T04:12:17.2118254Z (node:8012) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-28T04:12:17.4203989Z Uploaded bytes 8388608
+2026-10-28T04:12:18.3441372Z Uploaded bytes 16777216
+2026-10-28T04:12:18.4341049Z Uploaded bytes 19123586
+2026-10-28T04:12:18.4543600Z Finished uploading artifact content to blob storage!
+2026-10-28T04:12:18.4555165Z SHA256 digest of uploaded artifact zip is 6b1f8cc5f713f82c004e4702377ade75cc5e399dd698de6899fe32cf2595e5e8
+2026-10-28T04:12:18.4557255Z Finalizing artifact upload
+2026-10-28T04:12:18.9031981Z Artifact windows-startup-evidence.zip successfully finalized. Artifact ID 12791218335
+2026-10-28T04:12:18.9033372Z Artifact windows-startup-evidence has been successfully uploaded! Final size is 19123586 bytes. Artifact ID is 12791218335
+2026-10-28T04:12:18.9062876Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/40627338213/artifacts/12791218335
+2026-10-28T04:12:18.9743259Z Post job cleanup.
+2026-10-28T04:12:19.1722692Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-28T04:12:19.2101326Z git version 2.56.0.windows.2
+2026-10-28T04:12:19.2180718Z Temporarily overriding HOME='D:\a\_temp\44c0f659-41b4-4bdd-8200-90a032634bfa' before making global git config changes
+2026-10-28T04:12:19.2181781Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T04:12:19.2192318Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-10-28T04:12:19.2626917Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T04:12:19.3019354Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-28T04:12:19.9878679Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T04:12:20.0211501Z http.https://github.com/.extraheader
+2026-10-28T04:12:20.0258722Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-28T04:12:20.0643164Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-28T04:12:20.6063342Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T04:12:20.6441430Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-28T04:12:21.2320078Z Cleaning up orphan processes
+2026-10-28T04:12:21.4098997Z Terminate orphan process: pid (4012) (vctip)
+2026-10-28T04:12:21.5186881Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
