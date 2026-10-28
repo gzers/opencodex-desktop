@@ -15,7 +15,7 @@ foreach($name in $taskExpected.Keys){
  if((Get-FileHash -LiteralPath (Join-Path $taskAssets $name)).Hash.ToLowerInvariant() -cne $taskExpected[$name]){throw 'Existing installer bytes changed; do not rebuild or overwrite the tag'}
 }
 $taskBundle=Join-Path $taskOutput 'bundle'
-foreach($kind in @('msi','nsis')){New-Item -ItemType Directory -Force (Join-Path $taskBundle $kind)|Out-Null}
+foreach($taskBundleKind in @('msi','nsis')){New-Item -ItemType Directory -Force (Join-Path $taskBundle $taskBundleKind)|Out-Null}
 Copy-Item -LiteralPath (Join-Path $taskAssets 'OpenCodeX.Desktop_0.2.17_x64_en-US.msi') -Destination (Join-Path $taskBundle 'msi')
 Copy-Item -LiteralPath (Join-Path $taskAssets 'OpenCodeX.Desktop_0.2.17_x64-setup.exe') -Destination (Join-Path $taskBundle 'nsis')
 $taskPayload=Join-Path $taskOutput 'administrative-payload'
@@ -40,4 +40,4 @@ fs.writeFileSync(output,matches[0]);
 & node (Join-Path $taskOutput 'recover-identity.cjs') $taskImages[0].FullName $taskOriginal
 if($LASTEXITCODE -ne 0){throw 'Original release identity verification failed'}
 & (Join-Path $PSScriptRoot 'windows-installer.ps1') -BundleDirectory $taskBundle -BuiltExecutable $taskOriginal -Node (Get-Command node).Source -OutputDirectory (Join-Path $taskOutput 'verification') -ExpectedCommit d7c7978f043278baae8f2fc8c2119315a4660f12 -Kind $Kind -Mode $Mode
-[ordered]@{result='pass';tag='v0.2.17';source='d7c7978f043278baae8f2fc8c2119315a4660f12';originalReleaseRun=40636062852;existingAssetsUnchanged=$true;rebuilt=$false;originalBuiltSha256='610fb4ccbc3e2984d5a8a311aac90d1a498089deaeb3208ece9adc39f5365776';installers=$taskExpected} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $taskOutput 'existing-assets-verification.json') -Encoding utf8
+[ordered]@{result='pass';tag='v0.2.17';source='d7c7978f043278baae8f2fc8c2119315a4660f12';originalReleaseRun=40636062852;kind=$Kind;mode=$Mode;existingAssetsUnchanged=$true;rebuilt=$false;originalBuiltSha256='610fb4ccbc3e2984d5a8a311aac90d1a498089deaeb3208ece9adc39f5365776';installers=$taskExpected} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $taskOutput 'existing-assets-verification.json') -Encoding utf8
