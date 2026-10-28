@@ -30,7 +30,7 @@ try{
  $c=Get-Content -LiteralPath $InputFile -Raw | ConvertFrom-Json
  $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
  if($identity.User.Value -cne $c.accountSid){throw 'Unexpected native acceptance account'}
- $profileKey='HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList'+$identity.User.Value
+ $profileKey=Join-Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' $identity.User.Value
  $registered=[Environment]::ExpandEnvironmentVariables((Get-ItemProperty -LiteralPath $profileKey -Name ProfileImagePath).ProfileImagePath)
  if(!$registered -or !(Test-Path -LiteralPath $registered -PathType Container) -or (Split-Path -Leaf $registered) -notlike 'ocxacc*'){throw 'Registered temporary Profile missing'}
  # CreateProcessWithLogonW can retain the parent's environment block even with
