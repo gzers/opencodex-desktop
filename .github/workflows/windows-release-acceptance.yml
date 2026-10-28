@@ -15,6 +15,11 @@ permissions:
   contents: read
 jobs:
   installers:
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [msi, nsis]
+        mode: [default, custom]
     permissions:
       contents: write
     if: inputs.phase == 'installers'
@@ -29,11 +34,11 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
-        run: ./test/smoke/windows-release-installers.ps1 -OutputDirectory test/out/release-existing-installers
+        run: ./test/smoke/windows-release-installers.ps1 -OutputDirectory test/out/release-existing-installers -Kind ${{ matrix.kind }} -Mode ${{ matrix.mode }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: release-existing-installer-evidence
+          name: release-existing-installer-${{ matrix.kind }}-${{ matrix.mode }}
           path: |
             test/out/release-existing-installers/**/*.json
             test/out/release-existing-installers/**/*.log

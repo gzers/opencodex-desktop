@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$OutputDirectory)
+param([Parameter(Mandatory=$true)][string]$OutputDirectory,[ValidateSet('msi','nsis')][string]$Kind,[ValidateSet('default','custom')][string]$Mode)
 $ErrorActionPreference='Stop'
 if(!$IsWindows -or $env:GITHUB_ACTIONS -cne 'true' -or $env:GITHUB_REPOSITORY -cne 'gzers/opencodex-desktop'){throw 'Restricted to project disposable Windows runner'}
 $taskOutput=[IO.Path]::GetFullPath($OutputDirectory)
@@ -39,5 +39,5 @@ fs.writeFileSync(output,matches[0]);
 '@ | Set-Content -LiteralPath (Join-Path $taskOutput 'recover-identity.cjs') -Encoding utf8
 & node (Join-Path $taskOutput 'recover-identity.cjs') $taskImages[0].FullName $taskOriginal
 if($LASTEXITCODE -ne 0){throw 'Original release identity verification failed'}
-& (Join-Path $PSScriptRoot 'windows-installer.ps1') -BundleDirectory $taskBundle -BuiltExecutable $taskOriginal -Node (Get-Command node).Source -OutputDirectory (Join-Path $taskOutput 'verification') -ExpectedCommit d7c7978f043278baae8f2fc8c2119315a4660f12
+& (Join-Path $PSScriptRoot 'windows-installer.ps1') -BundleDirectory $taskBundle -BuiltExecutable $taskOriginal -Node (Get-Command node).Source -OutputDirectory (Join-Path $taskOutput 'verification') -ExpectedCommit d7c7978f043278baae8f2fc8c2119315a4660f12 -Kind $Kind -Mode $Mode
 [ordered]@{result='pass';tag='v0.2.17';source='d7c7978f043278baae8f2fc8c2119315a4660f12';originalReleaseRun=40636062852;existingAssetsUnchanged=$true;rebuilt=$false;originalBuiltSha256='610fb4ccbc3e2984d5a8a311aac90d1a498089deaeb3208ece9adc39f5365776';installers=$taskExpected} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $taskOutput 'existing-assets-verification.json') -Encoding utf8
