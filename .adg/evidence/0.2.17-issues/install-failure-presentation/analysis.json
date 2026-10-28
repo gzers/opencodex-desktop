@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-28",
+  "source": "user screenshot of fourth install step; actual selected install source not shown",
+  "screenshotSha256": "a87ebb03be986ac2fd4354de1a61a3cefcd1314fce25f4b88275dd868cba8379",
+  "baseline": "v0.2.17/d7c7978f043278baae8f2fc8c2119315a4660f12",
+  "observed": [
+    "failure stage",
+    "generic npm_failed exit1",
+    "offline labeled checklist with three pending steps",
+    "no npm output console",
+    "scripts retry disabled"
+  ],
+  "reproducedFromActualModule": {
+    "executingRegistryShowsOutput": true,
+    "failedRegistryShowsOutput": false,
+    "failedFallback": [
+      {
+        "label": "校验离线包",
+        "state": "pending"
+      },
+      {
+        "label": "展开到私有前缀并链接 bin",
+        "state": "pending"
+      },
+      {
+        "label": "校验并切换运行来源",
+        "state": "pending"
+      }
+    ]
+  },
+  "confirmedUiCause": "showInstallCommandLine requires downloading/installing phase; failure phase makes it false and template v-else unconditionally renders offlineSteps regardless of installSource",
+  "existingRelatedCause": "InstallError::message drops NpmFailed.detail before error serialization and failure history recording",
+  "npmRootCause": "still unknown; source mode cannot be inferred from fallback labels",
+  "npmLogLocation": "<active data root>/cache/npm/_logs; command explicitly sets npm cache",
+  "softwareModified": false
+}
