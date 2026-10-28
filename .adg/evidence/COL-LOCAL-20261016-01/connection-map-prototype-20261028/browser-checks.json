@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-28",
+  "route": "index.html?design=capabilities#connection-map",
+  "branch": "docs/governance-main",
+  "status": "prototype-for-user-review",
+  "checks": [
+    {
+      "name": "非功能菜单往返",
+      "status": "passed",
+      "evidence": "概览→连接关系，路由、工具名称及场景正确"
+    },
+    {
+      "name": "亮暗主题",
+      "status": "passed",
+      "evidence": "现有Logo/光场收到主题与运行中状态，玻璃面及标签可读"
+    },
+    {
+      "name": "原生直连",
+      "status": "passed",
+      "evidence": "配置旁路经过代理下方，代理保留管理虚线，无请求记录"
+    },
+    {
+      "name": "多来源",
+      "status": "passed",
+      "evidence": "App与CLI汇入同一代理，CLI仅配置虚线"
+    },
+    {
+      "name": "回退与详情",
+      "status": "passed",
+      "evidence": "同一请求首次超时、备用成功，节点详情显示第二次尝试"
+    },
+    {
+      "name": "图列表一致",
+      "status": "passed",
+      "evidence": "列表保留管理、入口、失败及回退四项关系，选中对象保持"
+    },
+    {
+      "name": "未运行与失败",
+      "status": "passed",
+      "evidence": "状态文字分别未运行和本次读取失败，保留上次信息"
+    },
+    {
+      "name": "900x600",
+      "status": "passed",
+      "evidence": "图clientWidth=scrollWidth=579，所有节点位于图的左右边界内，长内容纵向滚动"
+    },
+    {
+      "name": "低特效",
+      "status": "passed",
+      "evidence": "玻璃backdropFilter=none，iframe参数effects=low"
+    },
+    {
+      "name": "生命周期",
+      "status": "passed",
+      "evidence": "离开专题inactive，返回保留场景；DOM验证相同iframe实例"
+    },
+    {
+      "name": "保存与副作用",
+      "status": "passed",
+      "evidence": "fixture操作无模型、网络或配置修改；与业务草稿隔离"
+    }
+  ],
+  "tests": {
+    "passed": 14,
+    "failed": 0,
+    "log": "tests.tap"
+  },
+  "screenshots": [
+    "01-light-recent.png",
+    "02-direct.png",
+    "03-dark-multiple.png",
+    "04-narrow-dark.png",
+    "05-dark-recent.png"
+  ],
+  "limits": [
+    "只模拟，不是实时数据或生产接入",
+    "正式概览未替换",
+    "900x600长内容与详情保留纵向滚动",
+    "未做跨平台辅助技术或生产性能专项验收"
+  ],
+  "sourceSha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.js": "aec87a69eaaef201d1e710746dcde7ef48052128fc8e3322d5c5c26aa6d1ef5b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.css": "b14f9ea7b9942cd937505a2fe89b044e77b8f2dfd0bdf1abd4573d4bfd2d476f",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.test.cjs": "68b66bdb71187f2ea7026df471ed95eddbd33b9775150c8f83fdb3f589c0ae80",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-panel.js": "fadabff3fd4f975901e79f68c40b62179c12b9c606d740c782858256b864692b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "dcb8494a0558269e4c6e9ecf36bf44b5c2d7e5d6aad48c4b6542e82e668ec8b1"
+  }
+}

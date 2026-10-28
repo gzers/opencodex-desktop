@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-28",
+  "route": "index.html?design=capabilities#connection-map",
+  "scope": "desktop-path-and-centered-tab-dialogs",
+  "checks": [
+    {
+      "name": "默认Desktop支路",
+      "evidence": "聚合图包含proxy→adapter→krill和desktop→adapter，普通渠道仍proxy→渠道",
+      "status": "passed"
+    },
+    {
+      "name": "居中概览设置",
+      "evidence": "客户端／渠道／显示三个Tab；切换保留草稿，取消保留原显示",
+      "status": "passed"
+    },
+    {
+      "name": "直接节点弹窗",
+      "evidence": "点击Logo或节点名称直接打开共用居中Modal；操作集中在Tab",
+      "status": "passed"
+    },
+    {
+      "name": "模型选择器往返",
+      "evidence": "取消与确认均返回NewApi模型Tab；确认只改专题预览",
+      "status": "passed"
+    },
+    {
+      "name": "窄窗居中",
+      "evidence": "900×600实测弹窗620×460，与软件中心横纵偏移均0",
+      "status": "passed"
+    },
+    {
+      "name": "键盘",
+      "evidence": "Tab左右切换和Esc取消，关闭焦点回概览设置",
+      "status": "passed"
+    },
+    {
+      "name": "渠道搜索",
+      "evidence": "居中搜索Gateway结果正确；DOM检查输入不重建",
+      "status": "passed"
+    },
+    {
+      "name": "管理显隐",
+      "evidence": "隐藏管理线仍保留出站参与的Desktop后台节点和归属",
+      "status": "passed"
+    },
+    {
+      "name": "明暗",
+      "evidence": "亮暗弹窗实屏检查，分组、说明和底部动作完整",
+      "status": "passed"
+    }
+  ],
+  "tests": {
+    "passed": 21,
+    "failed": 0,
+    "log": "tests.tap"
+  },
+  "screenshots": [
+    "01-desktop-path.png",
+    "02-centered-settings.png",
+    "03-node-actions.png",
+    "04-narrow-centered.png",
+    "05-dark-node.png"
+  ],
+  "limits": [
+    "全部运行、安装和更新均为内存fixture",
+    "Desktop出站适配为目标配置，未接入生产，不证明上下文能力已通",
+    "正式概览与运行配置未改",
+    "旧共享嵌入资源的MutationObserver初始化错误不作为本轮零错误验收",
+    "未新增真实请求或跨平台辅助技术验收"
+  ],
+  "sourceSha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.js": "cabd3e9b5ff334136d702ef66b761c84c219251e378e10a293cf3363d2964dba",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.css": "8b1dfbaaa5c42c39cb0f47f3b4bd718d24e46172c3bb17bae44703854fddcc9b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.test.cjs": "233e2599c01e14ccd54688c6285e258fea2f2de05d030d778d9da698cf22bb8a",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "aa005b4d8e7cbeb95ab402d40c6c8efb4db38a96e91a919729eb45fb94f19d41"
+  }
+}

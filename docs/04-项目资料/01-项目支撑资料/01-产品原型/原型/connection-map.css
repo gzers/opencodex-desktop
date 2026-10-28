@@ -1,0 +1,199 @@
+/* 全景概览：节点和背景光在同一画面，不包围成关系卡片。 */
+html[data-route=connection-map] .window{overflow:clip}
+html[data-route=connection-map] .main{padding:18px 22px 18px;overflow:clip;display:flex;flex-direction:column}
+html[data-route=connection-map] .topbar{flex:none;margin-bottom:8px}
+html[data-route=connection-map] #statePill{display:none}
+#route-connection-map.active{display:flex;flex:1;min-height:0;min-width:0;isolation:isolate}
+#connectionMapPage{display:flex;flex:1;min-width:0;container-type:inline-size}
+.pv-workspace{position:relative;width:100%;height:100%;min-height:450px;display:flex;flex-direction:column;isolation:isolate}
+.pv-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;height:38px;min-height:38px;z-index:4}
+.pv-breadcrumb{font-size:11px;color:var(--muted);display:flex;gap:9px;align-items:center}
+.pv-breadcrumb strong{font-weight:500;color:var(--text)}
+.pv-breadcrumb span{opacity:.4}
+.pv-action{font:inherit;color:var(--muted);font-size:11px;border:0;border-radius:6px;background:transparent;display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:28px;padding:4px 8px;cursor:pointer;white-space:nowrap;text-decoration:none}
+.pv-action svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.pv-action:hover{color:var(--text);background:var(--hover)}
+.pv-action.pv-primary{background:var(--accent);color:var(--accent-ink);padding-inline:11px}
+.pv-action.pv-primary:hover{opacity:.9}
+.pv-action.pv-danger{color:var(--red)}
+.pv-canvas{position:relative;flex:1;min-height:380px;isolation:isolate}
+.pv-backdrop{position:absolute;z-index:-2;border:0;background:transparent;pointer-events:none;max-width:none}
+.pv-edges{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1;overflow:visible}
+.pv-wire-halo{fill:none;stroke:var(--bg);stroke-width:4.6;opacity:.25;stroke-linecap:round}
+.pv-wire{fill:none;stroke:color-mix(in srgb,var(--blue) 72%,var(--text));stroke-width:1.6;stroke-linecap:round}
+.pv-wire.observed{stroke:color-mix(in srgb,var(--blue) 65%,var(--text));opacity:.68;stroke-width:1.8}
+.pv-wire.config{stroke-dasharray:4 6;opacity:.62}
+.pv-wire.manage{stroke:var(--muted);stroke-dasharray:2 6;stroke-width:1.3;opacity:.65}
+.pv-wire.warning{stroke:var(--amber);stroke-dasharray:5 4;opacity:.95}
+.pv-wire.is-dim,.pv-wire-halo.is-dim{opacity:.16}
+.pv-wire-label{font-size:10px;font-family:inherit;fill:var(--text);text-anchor:middle;paint-order:stroke;stroke:var(--bg);stroke-width:6;stroke-linejoin:round}
+.pv-node{--node-size:56px;position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,calc(var(--node-size) / -2));display:flex;flex-direction:column;align-items:center;gap:5px;max-width:158px;width:21%;min-width:0;text-align:center;z-index:1}
+.pv-node-main{display:flex;flex-direction:column;align-items:center;gap:9px;max-width:100%;border:0;background:none;color:var(--text);font:inherit;padding:0;cursor:pointer}
+.pv-node-main strong{font-size:12px;font-weight:600;line-height:18px;max-width:100%;overflow-wrap:anywhere}
+.pv-tile{height:var(--node-size);width:var(--node-size);box-sizing:border-box;flex:none;border-radius:50%;border:1px solid color-mix(in srgb,var(--text) 19%,transparent);display:grid;place-items:center;color:var(--text);background:linear-gradient(145deg,#ffffff36,transparent 60%),var(--glass-fill);backdrop-filter:var(--glass-blur-notif);-webkit-backdrop-filter:var(--glass-blur-notif);box-shadow:inset 0 1px 1px #ffffff75,0 5px 14px #10203d13;transition:background .12s,border-color .12s,box-shadow .12s}
+.pv-tile svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.pv-tile .pv-brand-icon{fill:currentColor;stroke:none;width:28px;height:28px}
+.pv-node-main:hover .pv-tile,.pv-node.is-selected .pv-tile{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 13%,transparent),inset 0 1px 1px #ffffff75,0 5px 14px #10203d13}
+.pv-provider{font-size:19px;font-weight:600;font-family:var(--font-sans,inherit);color:color-mix(in srgb,var(--blue) 70%,var(--text))}
+.pv-provider.purple{color:color-mix(in srgb,var(--brand) 75%,var(--text))}
+.pv-provider.teal{color:color-mix(in srgb,var(--green) 70%,var(--text))}
+.pv-provider.neutral{color:var(--muted)}
+.pv-node-info{display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;font-size:10px;line-height:16px;color:var(--muted)}
+.pv-node-info>span+span:not(.pv-state)::before{content:'·';margin-right:6px;opacity:.5}
+.pv-node small{font-size:10px;line-height:15px;color:var(--muted);overflow-wrap:anywhere;max-width:100%}
+.pv-state{font-size:10px;color:var(--muted);display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.pv-state i{width:4px;height:4px;border-radius:50%;background:var(--muted)}
+.pv-state.success i{background:var(--green)}
+.pv-state.warning{color:var(--amber)}
+.pv-state.warning i{background:var(--amber)}
+.pv-more-channels{position:absolute;left:87%;top:95%;transform:translate(-50%,-50%);font:inherit;font-size:11px;color:var(--muted);border:0;border-radius:6px;background:transparent;padding:4px 7px;display:flex;align-items:center;gap:7px;cursor:pointer;white-space:nowrap}
+.pv-more-channels:hover{background:var(--hover);color:var(--text)}
+.pv-more-channels span{font-size:10px;background:color-mix(in srgb,var(--text) 6%,transparent);padding:0 5px;border-radius:5px}
+.pv-more-channels svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.4}
+.pv-footer{min-height:34px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:3;padding:9px 0 0;flex-wrap:wrap}
+.pv-legend{display:inline-flex;gap:5px;align-items:center;font-size:9px;line-height:16px;color:var(--muted);white-space:nowrap}
+.pv-legend i{width:15px;border-top:2.3px solid var(--blue);opacity:.92;display:inline-block;margin-left:5px}
+.pv-legend i:first-child{margin-left:0}
+.pv-legend .config{border-top:2px dashed var(--brand)}
+.pv-legend .manage{border-top:1.3px dotted var(--muted)}
+.pv-request{font:inherit;font-size:10px;text-align:right;border:0;background:none;color:var(--muted);padding:5px 0;cursor:pointer;line-height:16px}
+.pv-request:hover:not(:disabled),.pv-request[aria-pressed=true]{color:var(--text)}
+.pv-request:disabled{cursor:default}
+.pv-note{position:absolute;right:0;top:-24px;width:0;height:0;z-index:6}
+.pv-note .proto-annotation{position:absolute;right:0;top:0;width:max-content}
+.pv-channel-results{max-height:280px;overflow:auto;margin-top:8px}
+.pv-channel-results>button{display:flex;flex-direction:column;gap:3px;padding:8px;width:100%;border:0;background:none;color:var(--text);font:inherit;font-size:12px;text-align:left;border-radius:6px;cursor:pointer}
+.pv-channel-results>button:hover{background:var(--hover)}
+.pv-channel-results small,.pv-channel-results p{color:var(--muted);font-size:10px}
+#pvChannelSearch{font-size:12px;width:100%;box-sizing:border-box}
+.pv-option{display:flex;gap:8px;align-items:center;font-size:11px;line-height:17px;padding:5px 0;cursor:pointer}
+.pv-option input,.pv-pin-options input{width:13px;height:13px;flex:none;accent-color:var(--accent);margin:0}
+.pv-option small{display:block;font-size:9px;color:var(--muted)}
+.pv-option.is-disabled{opacity:.45;cursor:default}
+.pv-pin-options{display:grid;grid-template-columns:1fr 1fr;gap:9px;font-size:11px;padding-top:3px}
+.pv-pin-options label{display:flex;gap:6px;align-items:center}
+.pv-notice{position:absolute;z-index:16;bottom:42px;left:50%;transform:translateX(-50%);max-width:85%;border-radius:8px;background:var(--accent);color:var(--accent-ink);padding:9px 12px;box-shadow:0 6px 24px #0002;font-size:11px;line-height:1.6;text-align:center}
+.pv-empty{position:absolute;left:1%;top:44%;width:24%;text-align:center;font-size:11px;line-height:1.7;color:var(--muted)}
+.pv-demo-scenes{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}
+.pv-demo-scenes .btn{font-size:11px;min-height:31px;padding:5px 7px}
+.pv-demo-scenes button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}
+#connectionMapPage :focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+@container (max-width:680px){.pv-node-main strong{font-size:11px}.pv-node{--node-size:46px;width:23%}.pv-node-info{gap:3px;font-size:9px}.pv-node small{font-size:9px}.pv-tile svg{width:23px;height:23px}.pv-tile .pv-brand-icon{width:25px;height:25px}.pv-toolbar{height:34px;min-height:34px}.pv-canvas{min-height:340px}.pv-workspace{min-height:410px}.pv-footer{align-items:flex-start;padding-top:6px;gap:2px;min-height:31px}.pv-request{font-size:9px}.pv-more-channels{font-size:10px}.pv-legend{font-size:8px}}
+
+
+
+.pv-more-clients{position:absolute;left:10%;top:95%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;font:inherit;font-size:10px;color:var(--muted);background:none;border:0;border-radius:6px;padding:5px;cursor:pointer;white-space:nowrap}
+.pv-more-clients:hover{background:var(--hover)}
+.pv-more-clients svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.4}
+.pv-more-clients span{font-size:9px;background:var(--hover);padding:1px 4px;border-radius:4px}
+
+.pv-arrow{fill:color-mix(in srgb,var(--blue) 72%,var(--text));stroke:none}
+.pv-arrow.observed{fill:var(--blue)}
+.pv-arrow.warning{fill:var(--amber)}
+
+.pv-node:hover,.pv-node:focus-within,.pv-node.is-selected{z-index:6}
+
+/* 所有节点和概览选项都复用居中共享 Modal；不再使用侧边浮层。 */
+#modal.pv-dialog{width:min(620px,calc(100% - 20px));height:min(460px,calc(100% - 20px));max-height:calc(100% - 20px)}
+.pv-dialog .modal-head{padding:17px 20px 13px;border-bottom:1px solid var(--border);flex:none}
+.pv-dialog .modal-head h3{font-size:16px;line-height:22px;margin:0}
+.pv-dialog #modalBody{padding:0;display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+.pv-dialog .modal-actions{padding:11px 20px;min-height:52px;box-sizing:border-box;align-items:center;flex:none}
+.pv-dialog .modal-actions .btn{font-size:12px;min-height:30px;padding:5px 12px}
+.pv-dialog-tabs{display:flex;align-items:center;gap:20px;padding:0 20px;border-bottom:1px solid var(--border);flex:none;min-height:42px;overflow-x:auto}
+.pv-dialog-tabs button{padding:12px 1px 10px;border:0;border-bottom:2px solid transparent;background:none;font:inherit;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.pv-dialog-tabs button[aria-selected=true]{color:var(--text);border-bottom-color:var(--accent);font-weight:550}
+.pv-dialog-panel{padding:17px 20px 20px;overflow:auto;flex:1;min-height:0;overscroll-behavior:contain}
+.pv-dialog-copy{font-size:12px!important;line-height:1.7;margin:0 0 13px!important;color:var(--muted)}
+.pv-dialog-facts{margin:0;font-size:12px;line-height:1.65}
+.pv-dialog-facts>div{display:grid;grid-template-columns:96px minmax(0,1fr);gap:20px;padding:10px 0;border-bottom:1px solid var(--border)}
+.pv-dialog-facts>div:last-child{border:0}
+.pv-dialog-facts dt{color:var(--muted)}
+.pv-dialog-facts dd{margin:0;overflow-wrap:anywhere;text-align:right}
+.pv-dialog-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:15px}
+.pv-dialog .pv-action{border:1px solid var(--border);min-height:32px;font-size:12px;padding:6px 10px;color:var(--text);background:var(--glass-fill)}
+.pv-dialog .pv-action.pv-primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.pv-dialog .pv-action.pv-danger{color:var(--red);border-color:color-mix(in srgb,var(--red) 30%,transparent)}
+.pv-option-list{display:grid;grid-template-columns:1fr 1fr;column-gap:24px}
+.pv-dialog .pv-option{font-size:12px;padding:9px 0;line-height:19px}
+.pv-dialog .pv-option small{font-size:10px;line-height:16px}
+.pv-dialog .pv-pin-options{font-size:12px;gap:17px;padding-top:6px}
+.pv-dialog .pv-reset{margin-top:15px;font-size:11px;background:none;color:var(--muted)}
+.pv-dialog-result{font-size:11px!important;line-height:1.7;margin:12px 0 0!important}
+.pv-dialog .pv-search-label{display:block;font-size:11px;color:var(--muted);margin-bottom:7px}
+.pv-dialog .pv-channel-results{max-height:none;margin-top:12px}
+.pv-dialog .pv-channel-results>button{font-size:12px;padding:10px;border-bottom:1px solid var(--border);border-radius:5px}
+.pv-dialog .pv-channel-results small{font-size:10px}
+.pv-dialog :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+html[data-effects=low] .pv-tile{background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
+@media(max-height:650px){#modal.pv-dialog{height:min(420px,calc(100% - 12px))}}
+
+/* 品牌身份：动态图形只属于Desktop，OpenCodex服务使用独立的既有标识。 */
+.pv-desktop-main{position:absolute;left:64%;top:73%;transform:translate(-50%,-43px);display:flex;flex-direction:column;align-items:center;width:250px;z-index:2;text-align:center}
+.pv-desktop-logo-hit{width:86px;height:86px;border:0;border-radius:38%;background:transparent;cursor:pointer;padding:0}
+.pv-desktop-logo-hit:hover{outline:1px solid color-mix(in srgb,var(--brand) 20%,transparent);outline-offset:3px}
+.pv-desktop-title{font:inherit;font-size:16px;line-height:22px;font-weight:600;color:var(--text);border:0;border-radius:5px;background:none;padding:5px 0 2px;display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap}
+.pv-desktop-title svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;opacity:.5}
+.pv-desktop-meta{display:flex;align-items:center;justify-content:center;gap:8px;font-size:10px;line-height:17px;color:var(--muted)}
+.pv-desktop-meta .pv-update{font-size:9px;padding:1px 4px;min-height:19px;line-height:16px}
+.pv-update{font:inherit;font-size:9px;line-height:15px;min-height:19px;padding:1px 6px;border-radius:10px;border:0;cursor:pointer;background:color-mix(in srgb,var(--blue) 9%,transparent);color:color-mix(in srgb,var(--blue) 75%,var(--text))}
+.pv-service{left:37%;top:31%;width:190px;max-width:190px;gap:4px}
+.pv-service .pv-node-main{gap:8px}
+.pv-service .pv-node-main strong{font-size:14px;line-height:20px}
+.pv-service-mark{position:relative}
+.pv-service-mark>img{display:block;width:39px;height:39px}
+.pv-service-mark>img.pv-service-logo-dark{display:none}
+html[data-theme=dark] .pv-service-logo-light{display:none}
+html[data-theme=dark] .pv-service-mark>img.pv-service-logo-dark{display:block}
+.pv-service-fallback{display:none;width:32px;height:32px;border-radius:50%;place-items:center}
+.pv-service-fallback svg{width:27px;height:27px;fill:none;stroke:var(--text);stroke-width:1.4}
+.pv-service-mark.asset-missing>img{display:none!important}
+.pv-service-mark.asset-missing .pv-service-fallback{display:grid}
+.pv-service-state .pv-state{font-size:11px}
+.pv-service .pv-update{margin-top:3px}
+.pv-desktop-capability,.pv-desktop-sync{font:inherit;font-size:10px;line-height:17px;min-height:19px;border:0;border-radius:5px;background:none;color:var(--muted);padding:1px 5px;cursor:pointer;display:flex;align-items:center;gap:5px}
+.pv-desktop-capability{color:color-mix(in srgb,var(--blue) 75%,var(--text))}
+.pv-desktop-sync svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5}
+.pv-desktop-capability:hover,.pv-desktop-sync:hover{background:var(--hover);color:var(--text)}
+.pv-desktop-main [hidden]{display:none}
+html[data-theme=dark] .pv-tile{background:linear-gradient(145deg,#ffffff15,transparent 60%),var(--glass-fill);box-shadow:inset 0 1px 1px #ffffff2e,0 6px 18px #0003}
+html[data-effects=low] .pv-tile{background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
+@container (max-width:680px){.pv-desktop-main{top:66%;width:210px;transform:translate(-50%,-34px)}.pv-desktop-logo-hit{width:68px;height:68px}.pv-desktop-title{font-size:14px;line-height:20px}.pv-desktop-meta{font-size:9px;gap:5px}.pv-service{width:160px;max-width:160px}.pv-service-mark>img{width:33px;height:33px}.pv-service .pv-node-main strong{font-size:13px}.pv-desktop-capability,.pv-desktop-sync{font-size:9px;line-height:15px;min-height:17px}}
+
+/* 圆角折线为关系骨架；只有当前请求叠加定向数据脉冲。 */
+.pv-wire.is-live{stroke:var(--blue);stroke-width:2.4;opacity:1}
+.pv-wire.is-dim,.pv-wire-halo.is-dim{opacity:.12}
+.pv-flow-pulse{fill:none;stroke:var(--blue);stroke-width:3.6;stroke-linecap:round;stroke-dasharray:22 978;animation:pv-send 2.7s linear infinite;animation-delay:var(--delay);filter:drop-shadow(0 0 3px color-mix(in srgb,var(--blue) 80%,transparent))}
+.pv-flow.is-return .pv-flow-pulse{stroke:var(--green);animation-name:pv-return}
+@keyframes pv-send{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+@keyframes pv-return{from{stroke-dashoffset:0}to{stroke-dashoffset:1000}}
+.pv-activity{position:absolute;left:0;right:0;top:8px;display:flex;justify-content:center;align-items:center;gap:16px;font-size:11px;line-height:20px;color:var(--muted);white-space:nowrap;z-index:3}
+.pv-activity[hidden]{display:none}
+.pv-activity-state{display:flex;align-items:center;gap:6px;font-weight:550;color:var(--text)}
+.pv-activity-state i{width:5px;height:5px;background:var(--blue);border-radius:50%}
+.pv-activity[data-phase=streaming] .pv-activity-state i{background:var(--green)}
+.pv-activity[data-phase=failed] .pv-activity-state i{background:var(--amber)}
+.pv-activity-path span,.pv-token-count>span{opacity:.4;margin-inline:4px}
+.pv-token-count{font-variant-numeric:tabular-nums}
+.pv-token-count b{font-weight:550;color:var(--text)}
+.pv-usage-pending{font-size:10px;color:var(--amber)}
+#connectionMapPage[data-active=false] .pv-flow-pulse{animation-play-state:paused}
+html[data-effects=mid] .pv-flow-pulse{filter:none;stroke-width:2.8}
+html[data-effects=mid] .pv-flow-pulse:nth-child(3){display:none}
+html[data-effects=low] .pv-flow{display:none}
+@media(prefers-reduced-motion:reduce){.pv-flow{display:none}}
+@container (max-width:680px){.pv-activity{font-size:10px;gap:9px;top:0;flex-wrap:wrap;row-gap:0}.pv-activity-path{display:none}.pv-flow-pulse{stroke-width:2.8}}
+
+.pv-arrow.return{fill:var(--green)}
+.pv-wire.is-live.is-return{stroke:color-mix(in srgb,var(--green) 65%,var(--blue))}
+
+/* 直连时本地服务退到上方管理区，直连线不穿过任何本地节点。 */
+#connectionMapPage[data-scene=direct] .pv-desktop-main{top:10%}
+#connectionMapPage[data-scene=direct] .pv-service{top:10%}
+#connectionMapPage[data-scene=direct] .pv-service-state,#connectionMapPage[data-scene=direct] .pv-service>small,#connectionMapPage[data-scene=direct] .pv-service>.pv-update{display:none}
+
+#connectionMapPage[data-scene=direct] :is(.pv-client,.pv-channel){gap:2px}
+#connectionMapPage[data-scene=direct] :is(.pv-client,.pv-channel) .pv-node-main{gap:4px}
+#connectionMapPage[data-scene=direct] :is(.pv-client,.pv-channel) strong{line-height:16px}
+#connectionMapPage[data-scene=direct] :is(.pv-client,.pv-channel) .pv-node-info{font-size:9px;line-height:14px}
+#connectionMapPage[data-scene=direct] .pv-channel>small,#connectionMapPage[data-scene=direct] .pv-desktop-meta,#connectionMapPage[data-scene=direct] .pv-desktop-sync{display:none}

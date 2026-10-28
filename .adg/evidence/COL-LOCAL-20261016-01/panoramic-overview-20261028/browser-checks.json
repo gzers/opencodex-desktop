@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-28",
+  "scope": "panoramic-topic-v2",
+  "route": "index.html?design=capabilities#connection-map",
+  "status": "prototype-awaiting-design-review",
+  "checks": [
+    {
+      "name": "默认布局",
+      "evidence": "Logo与连线锚点重合，无上下关系面板，默认窗口3渠道",
+      "status": "passed"
+    },
+    {
+      "name": "显示设置",
+      "evidence": "取消恢复原显示；应用后Gemini为未接入且没有接入线",
+      "status": "passed"
+    },
+    {
+      "name": "本机存在性",
+      "evidence": "未确认安装的Cursor不可选；所有存在性为fixture",
+      "status": "passed"
+    },
+    {
+      "name": "大量渠道",
+      "evidence": "30项目录搜索渠道21，展开仍3项，其他渠道计数27",
+      "status": "passed"
+    },
+    {
+      "name": "Desktop能力适配",
+      "evidence": "仅目标支路插入并显示Desktop托管，未标成当前已接通",
+      "status": "passed"
+    },
+    {
+      "name": "窄窗",
+      "evidence": "900x600收敛2渠道，配置同步移到管理侧，设置动作可达",
+      "status": "passed"
+    },
+    {
+      "name": "主题与特效",
+      "evidence": "亮暗实屏，低档backdropFilter=none，公共光场",
+      "status": "passed"
+    },
+    {
+      "name": "模型入口",
+      "evidence": "节点操作真实打开公共选择器，取消不改业务配置",
+      "status": "passed"
+    },
+    {
+      "name": "路径语义",
+      "evidence": "配置场景没有observed线，直连绕过proxy，回退仅两次尝试",
+      "status": "passed"
+    },
+    {
+      "name": "生命周期与草稿",
+      "evidence": "DOM确认同一iframe、离开inactive，业务配置保持，返回偏好保留",
+      "status": "passed"
+    }
+  ],
+  "nodeTests": {
+    "passed": 19,
+    "failed": 0,
+    "log": "tests.tap"
+  },
+  "screenshots": [
+    "01-light-panorama.png",
+    "02-settings.png",
+    "03-adapter.png",
+    "04-narrow-dark.png",
+    "05-fallback.png",
+    "06-dark-panorama.png"
+  ],
+  "limits": [
+    "版本、安装、请求、更新全部内存fixture",
+    "正式概览和真实配置未改",
+    "适配场景不证明上下文能力已打通",
+    "没有跨平台辅助技术或生产性能验收",
+    "旧共享嵌入资源存在MutationObserver初始化错误记录，未记为控制台零错误验收"
+  ],
+  "sourceSha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.js": "7c2ba36aa844a94d5bfb4a7bcf5319b4ad9f25b90d7a102f897f21fabedd8950",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.css": "31bd3b0a2e669e04fd8cacc9e6cc70917626721f9621cc33ee9b10fa2fea2f8d",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.test.cjs": "f70b6c375ca37354ebbc7f2e78956c97d983ccf0aac8110328b3e7c3172ab196",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "29df409f750fb8bfc9dcb9293efdccf94aac3688656ec60d313fd467e2d7ae4d",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-panel.js": "a27ab5077824630a89c59a9a59e9c1c6333e559b340e475ad89c476cdde72595"
+  }
+}

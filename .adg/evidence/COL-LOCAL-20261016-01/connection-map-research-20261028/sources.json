@@ -1,0 +1,174 @@
+{
+  "date": "2026-10-28",
+  "scope": "source-review-and-package-plan-only",
+  "repository": "krill-lab/superba",
+  "tag": "v0.1.1-alpha.12",
+  "commit": "f78d77a2849aceb8dffc1f27a83869ffceab7e90",
+  "treeTruncated": false,
+  "files": [
+    {
+      "path": "crates/superba-gui/src/pages/overview/hero.rs",
+      "blobSha": "737561662a44ea7722f6385f201e2dcdc5322bd8",
+      "url": "https://github.com/krill-lab/superba/blob/f78d77a2849aceb8dffc1f27a83869ffceab7e90/crates/superba-gui/src/pages/overview/hero.rs",
+      "lines": 1104
+    },
+    {
+      "path": "crates/superba-gui/src/pages/overview/lines.rs",
+      "blobSha": "1ce8586ef1a9303f1380d5e646caf792f4ae3e89",
+      "url": "https://github.com/krill-lab/superba/blob/f78d77a2849aceb8dffc1f27a83869ffceab7e90/crates/superba-gui/src/pages/overview/lines.rs",
+      "lines": 452
+    },
+    {
+      "path": "crates/superba-gui/src/pages/overview/lanes.rs",
+      "blobSha": "1b7a3b26e6c8e4b4fd7f77385e0b00d11a2e4853",
+      "url": "https://github.com/krill-lab/superba/blob/f78d77a2849aceb8dffc1f27a83869ffceab7e90/crates/superba-gui/src/pages/overview/lanes.rs",
+      "lines": 646
+    },
+    {
+      "path": "crates/superba-gui/src/pages/overview/mod.rs",
+      "blobSha": "f7002bf050a86f76d4531ee3f17a3fb520d7f2c0",
+      "url": "https://github.com/krill-lab/superba/blob/f78d77a2849aceb8dffc1f27a83869ffceab7e90/crates/superba-gui/src/pages/overview/mod.rs",
+      "lines": 454
+    },
+    {
+      "path": "crates/superba-gui/src/pages/overview/tools.rs",
+      "blobSha": "69676f8dbeb1fb1e968355bd403d28447e223b93",
+      "url": "https://github.com/krill-lab/superba/blob/f78d77a2849aceb8dffc1f27a83869ffceab7e90/crates/superba-gui/src/pages/overview/tools.rs",
+      "lines": 402
+    },
+    {
+      "path": "crates/superba-gui/src/pages/overview/usage.rs",
+      "blobSha": "3547f9f416cb204461f1ae414d0ebb555f5a564d",
+      "url": "https://github.com/krill-lab/superba/blob/f78d77a2849aceb8dffc1f27a83869ffceab7e90/crates/superba-gui/src/pages/overview/usage.rs",
+      "lines": 682
+    },
+    {
+      "path": "crates/superba-gui/tests/overview_dashboard_tests.rs",
+      "blobSha": "f831c74339485391263ae44fd73b05d9a8fdab99",
+      "url": "https://github.com/krill-lab/superba/blob/f78d77a2849aceb8dffc1f27a83869ffceab7e90/crates/superba-gui/tests/overview_dashboard_tests.rs",
+      "lines": 117
+    }
+  ],
+  "screenshots": {
+    "sourceVersion": "0.1.1-alpha.7",
+    "sourceCommit": "92e65caf80569eee09d4732d35304b4e8200c381",
+    "window": "1280x800",
+    "note": "Metadata from docs/screenshots/README.md; no image downloaded or visually verified this turn.",
+    "files": [
+      {
+        "path": "docs/screenshots/overview-light-zh.png",
+        "blobSha": "16fc70e7f28085bcb1edc0fbe777bb95e0fe9159"
+      },
+      {
+        "path": "docs/screenshots/overview-dark-zh.png",
+        "blobSha": "8fde2507489eb49e328429c53aa7aa314bd648a4"
+      }
+    ]
+  },
+  "findings": [
+    "single-tool static route hero",
+    "multi-tool shared-router lanes",
+    "dashed bezier bypass for disabled router",
+    "latency pill represents probe latency",
+    "latest observed upstream differs from route preference",
+    "no request-flow particle implementation found in reviewed connection drawing",
+    "overview read interval is 20 seconds while shown"
+  ],
+  "checks": {
+    "superbaRuntimeExecuted": false,
+    "prototypeModified": false,
+    "realConfigModified": false,
+    "modelRequests": 0
+  },
+  "desktop": {
+    "version": "0.2.17",
+    "worktreeCommit": "b9fcc1b6080135233d6ef44a3e5478fd209aa16d"
+  },
+  "opencodex": {
+    "installedPackageVersion": "2.84.0",
+    "liveProcessVersionVerified": false
+  },
+  "localSourceFiles": {
+    "desktop": [
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+        "sha256": "40b4f89e2b8c384ce39e8c004e2cfcc0aa525f5c56e0ee02825fd08bef053ce6"
+      },
+      {
+        "path": "apps/desktop/tauri/src/modules/status/polling.rs",
+        "sha256": "14648131ea49250bba604d491c580a5f5f992d2b44b565811ee083f41e76750a"
+      },
+      {
+        "path": "apps/desktop/tauri/src/modules/model_config/management.rs",
+        "sha256": "a8556b22a9ccecc083697d0ef9e0bc4b7e3b207e6a72bb6b6d09ff5de4b73edc"
+      },
+      {
+        "path": "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "sha256": "d5ad3b6b4da3b84ca542a3065cc2ddac5420c6babdf5e27ec1047c463b3cd48c"
+      },
+      {
+        "path": "apps/desktop/ui/src/contracts/runtimeStatus.ts",
+        "sha256": "a6e59784bec07a20545ab5f85f1e4cf2225716fc980bba6e499748b98dd4abfb"
+      }
+    ],
+    "opencodex": [
+      {
+        "path": "src/codex/inject/routing-classify.ts",
+        "sha256": "7e8908000165b07db426476a455f5c524ea60b065d5f0198ee1415249d16d1ba"
+      },
+      {
+        "path": "src/codex/routing-adoption.ts",
+        "sha256": "373c91736adb0cdac11de1545031654cfb8167e94a2f66dd5b3e7fcc15a8ac37"
+      },
+      {
+        "path": "src/server/management/request-history-routes.ts",
+        "sha256": "8f6bd12fc8da4dc70d04b13e01c99b44432be17c3ceee8dce26c9042b171f726"
+      },
+      {
+        "path": "src/server/request-log.ts",
+        "sha256": "23aa114ca77113ecee09ce91be5e3ac5084c876e6bef582f353c7465e7ac98a9"
+      }
+    ]
+  },
+  "documentChecks": {
+    "localLinks": [
+      {
+        "file": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-16-渠道特殊能力与代理兼容/01-需求分析/02-方案草案/20261028-Superba连接关系源码核对与原型计划.md",
+        "target": "../../../../../01-项目支撑资料/01-产品原型/原型/index.html?design=capabilities#overview",
+        "exists": true
+      },
+      {
+        "file": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-16-渠道特殊能力与代理兼容/01-需求分析/02-方案草案/20261028-Superba连接关系源码核对与原型计划.md",
+        "target": "../../../../../../../.adg/evidence/COL-LOCAL-20261016-01/connection-map-research-20261028/sources.json",
+        "exists": true
+      },
+      {
+        "file": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-16-渠道特殊能力与代理兼容/README.md",
+        "target": "01-需求分析/02-方案草案/20261028-Superba连接关系源码核对与原型计划.md",
+        "exists": true
+      },
+      {
+        "file": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-16-渠道特殊能力与代理兼容/COL-LOCAL-20261016-01.md",
+        "target": "01-需求分析/02-方案草案/20261028-Superba连接关系源码核对与原型计划.md",
+        "exists": true
+      },
+      {
+        "file": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-16-渠道特殊能力与代理兼容/01-需求分析/README.md",
+        "target": "02-方案草案/20261028-Superba连接关系源码核对与原型计划.md",
+        "exists": true
+      },
+      {
+        "file": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-16-渠道特殊能力与代理兼容/01-需求分析/01-原始输入/需求输入.md",
+        "target": "../02-方案草案/20261028-Superba连接关系源码核对与原型计划.md",
+        "exists": true
+      },
+      {
+        "file": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-16-渠道特殊能力与代理兼容/02-开发实施/README.md",
+        "target": "../01-需求分析/02-方案草案/20261028-Superba连接关系源码核对与原型计划.md",
+        "exists": true
+      }
+    ],
+    "fixedSourceReferences": 10,
+    "prototypeAndProductCodeModifiedThisTurn": false
+  }
+}

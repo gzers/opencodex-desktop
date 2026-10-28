@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-28",
+  "scope": "OpenCodex Desktop / nonfunctional connection-map prototype",
+  "final": {
+    "effects": "high",
+    "flows": [],
+    "paths": [
+      {
+        "d": "M 126.8984375 104.5 H 181.93 Q 199.93 104.5 199.93 122.5 V 136.5 Q 199.93 154.5 217.93 154.5 H 295.9436244138479",
+        "from": "codex",
+        "to": "proxy"
+      },
+      {
+        "d": "M 126.8984375 253 H 191.93 Q 209.93 253 209.93 235 V 188.5 Q 209.93 170.5 227.93 170.5 H 290.921875",
+        "from": "claude",
+        "to": "proxy"
+      },
+      {
+        "d": "M 126.8984375 401.5 H 201.93 Q 219.93 401.5 219.93 383.5 V 204.5 Q 219.93 186.5 237.93 186.5 H 295.9436244138479",
+        "from": "opencode",
+        "to": "proxy"
+      },
+      {
+        "d": "M 361.9001255861521 154.5 H 577.63 Q 595.63 154.5 595.63 136.5 V 122.5 Q 595.63 104.5 613.63 104.5 H 735.4296875",
+        "from": "proxy",
+        "to": "newapi"
+      },
+      {
+        "d": "M 366.921875 170.5 H 599.855 Q 617.855 170.5 617.855 188.5 V 235 Q 617.855 253 635.855 253 H 735.4296875",
+        "from": "proxy",
+        "to": "aimami"
+      },
+      {
+        "d": "M 360.36948558952724 188.5 H 479.953125 Q 491.953125 188.5 491.953125 200.5 V 389.5 Q 491.953125 401.5 503.953125 401.5 H 515.953125",
+        "from": "proxy",
+        "to": "desktop"
+      },
+      {
+        "d": "M 621.953125 401.5 L 735.4296875 401.5",
+        "from": "desktop",
+        "to": "krill"
+      }
+    ],
+    "route": "connection-map",
+    "theme": "light",
+    "usage": "已完成Codex App / NewApi输入 12,840 / 输出 1,286 token",
+    "window": {
+      "height": 760,
+      "width": 1180
+    }
+  },
+  "animation": {
+    "before": {
+      "dash": "161.993px",
+      "text": "正在生成Codex App / NewApi输入 12,840 / 输出 384 token"
+    },
+    "after": {
+      "dash": "321.511px",
+      "text": "正在生成Codex App / NewApi输入 12,840 / 输出 444 token"
+    },
+    "frames": 24
+  },
+  "sending": {
+    "flows": [
+      [
+        "codex",
+        "proxy"
+      ],
+      [
+        "proxy",
+        "newapi"
+      ]
+    ],
+    "text": "正在发送Codex App / NewApi用量待返回"
+  },
+  "completed": {
+    "flows": 0,
+    "text": "已完成Codex App / NewApi输入 12,840 / 输出 1,286 token"
+  },
+  "narrow": {
+    "flow": 2,
+    "paths": [
+      {
+        "d": "M 93.8984375 75.4296875 H 102.61421874999999 Q 111.32999999999998 75.4296875 111.32999999999998 84.14546874999999 V 102.34671875000001 Q 111.32999999999998 111.0625 120.04578124999998 111.0625 H 195.69889562965142",
+        "from": "codex",
+        "to": "proxy"
+      },
+      {
+        "d": "M 93.890625 182.6171875 H 107.61031249999999 Q 121.32999999999998 182.6171875 121.32999999999998 168.8975 V 136.7821875 Q 121.32999999999998 123.0625 135.04968749999998 123.0625 H 192.3203125",
+        "from": "claude",
+        "to": "proxy"
+      },
+      {
+        "d": "M 93.8984375 289.8046875 H 113.32999999999998 Q 131.32999999999998 289.8046875 131.32999999999998 271.8046875 V 153.0625 Q 131.32999999999998 135.0625 149.32999999999998 135.0625 H 195.69889562965142",
+        "from": "opencode",
+        "to": "proxy"
+      },
+      {
+        "d": "M 257.5239158111745 117.0625 H 390.03000000000003 Q 408.03000000000003 117.0625 408.03000000000003 99.0625 V 93.4296875 Q 408.03000000000003 75.4296875 426.03000000000003 75.4296875 H 496.828125",
+        "from": "proxy",
+        "to": "newapi"
+      },
+      {
+        "d": "M 252.79879927660625 138.0125 H 309.7578125 Q 321.7578125 138.0125 321.7578125 150.0125 V 246.046875 Q 321.7578125 258.046875 333.7578125 258.046875 H 345.7578125",
+        "from": "proxy",
+        "to": "desktop"
+      },
+      {
+        "d": "M 433.7578125 258.046875 H 463.30859375 Q 465.29296875 258.046875 465.29296875 260.03125 V 260.03125 Q 465.29296875 262.015625 467.27734375 262.015625 H 496.828125",
+        "from": "desktop",
+        "to": "krill"
+      }
+    ],
+    "size": {
+      "height": 600,
+      "width": 900
+    },
+    "status": {
+      "height": 20,
+      "width": 609,
+      "x": 417.5,
+      "y": 461
+    }
+  },
+  "low": {
+    "display": [
+      "none",
+      "none"
+    ],
+    "effects": "low",
+    "status": "正在生成Codex App / NewApi输入 12,840 / 输出 456 token"
+  },
+  "tests": {
+    "all": 25,
+    "failed": 0,
+    "finalTargeted": 3
+  },
+  "checked": [
+    "Light and dark default layout",
+    "900x600 streaming, token text and low-effects degradation",
+    "Direct connections avoid local product/service nodes",
+    "Request arrows forward, streaming arrows reverse",
+    "Current request flow only; target adapter remains configuration",
+    "All states are fixtures; no actual token charging"
+  ],
+  "remaining": [
+    "Real request/usage event subscription and multi-request aggregation",
+    "Existing shared iframe initialization MutationObserver error",
+    "Version and production adoption undecided"
+  ]
+}

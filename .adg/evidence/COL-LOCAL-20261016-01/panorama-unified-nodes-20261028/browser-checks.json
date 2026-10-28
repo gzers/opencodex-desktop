@@ -1,0 +1,163 @@
+{
+  "date": "2026-10-28",
+  "product": "OpenCodex Desktop",
+  "scope": "Nonfunctional connection-map prototype",
+  "current": {
+    "circles": [
+      {
+        "blur": "saturate(1.5) blur(8px)",
+        "height": 56,
+        "radius": "50%",
+        "width": 56
+      },
+      {
+        "blur": "saturate(1.5) blur(8px)",
+        "height": 56,
+        "radius": "50%",
+        "width": 56
+      },
+      {
+        "blur": "saturate(1.5) blur(8px)",
+        "height": 56,
+        "radius": "50%",
+        "width": 56
+      },
+      {
+        "blur": "saturate(1.5) blur(8px)",
+        "height": 56,
+        "radius": "50%",
+        "width": 56
+      },
+      {
+        "blur": "saturate(1.5) blur(8px)",
+        "height": 56,
+        "radius": "50%",
+        "width": 56
+      },
+      {
+        "blur": "saturate(1.5) blur(8px)",
+        "height": 56,
+        "radius": "50%",
+        "width": 56
+      },
+      {
+        "blur": "saturate(1.5) blur(8px)",
+        "height": 56,
+        "radius": "50%",
+        "width": 56
+      }
+    ],
+    "effects": "high",
+    "images": [
+      {
+        "loaded": true,
+        "src": "../../../04-品牌与图标素材/01-原始素材/opencodex-mark-light.svg"
+      },
+      {
+        "loaded": true,
+        "src": "../../../04-品牌与图标素材/01-原始素材/opencodex-mark-dark.svg"
+      }
+    ],
+    "nodes": [
+      "codex",
+      "claude",
+      "opencode",
+      "newapi",
+      "aimami",
+      "krill",
+      "desktop",
+      "proxy"
+    ],
+    "paths": [
+      {
+        "from": "codex",
+        "marker": "url(#pv-arrow-observed)",
+        "opacity": "0.92",
+        "to": "proxy",
+        "width": "2.3px"
+      },
+      {
+        "from": "claude",
+        "marker": "url(#pv-arrow-observed)",
+        "opacity": "0.92",
+        "to": "proxy",
+        "width": "2.3px"
+      },
+      {
+        "from": "opencode",
+        "marker": "url(#pv-arrow-config)",
+        "opacity": "0.9",
+        "to": "proxy",
+        "width": "2px"
+      },
+      {
+        "from": "proxy",
+        "marker": "url(#pv-arrow-observed)",
+        "opacity": "0.92",
+        "to": "newapi",
+        "width": "2.3px"
+      },
+      {
+        "from": "proxy",
+        "marker": "url(#pv-arrow-observed)",
+        "opacity": "0.92",
+        "to": "aimami",
+        "width": "2.3px"
+      },
+      {
+        "from": "proxy",
+        "marker": "url(#pv-arrow-config)",
+        "opacity": "0.9",
+        "to": "desktop",
+        "width": "2px"
+      },
+      {
+        "from": "desktop",
+        "marker": "url(#pv-arrow-config)",
+        "opacity": "0.9",
+        "to": "krill",
+        "width": "2px"
+      }
+    ],
+    "route": "connection-map",
+    "theme": "light",
+    "window": {
+      "height": 760,
+      "width": 1180
+    }
+  },
+  "checked": [
+    "1180x760 light/dark",
+    "900x600 light/dark; model text separated from other-channel button",
+    "low effects: all six visible circular bases blur=none shadow=none radius=50%",
+    "Desktop background-adaptation and sync tabs; no standalone adapter or sync node"
+  ],
+  "tests": {
+    "command": "node --test connection-map.test.cjs dialog-policy.test.cjs prototype-annotation-contract.test.cjs prototype-version-control.test.cjs",
+    "passed": 22,
+    "failed": 0,
+    "note": "Only color/label/narrow-position refinements followed the successful run; browser rechecked those refinements."
+  },
+  "console": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-28T07:25:13.247Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-28T07:26:13.309Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-28T07:29:50.551Z"
+    }
+  ],
+  "limitations": [
+    "Fixtures only; no scan, runtime configuration or networking",
+    "Existing shared iframe initialization MutationObserver error remains",
+    "Not adopted by production overview; version and implementation timing undetermined"
+  ]
+}

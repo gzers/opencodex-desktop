@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-28",
+  "scope": "desktop-and-opencodex-brand-identity",
+  "route": "index.html?design=capabilities#connection-map",
+  "status": "prototype-awaiting-user-review",
+  "checks": [
+    {
+      "name": "品牌身份",
+      "evidence": "动态图形和v0.2.17属Desktop；服务终端云和v2.84.0属OpenCodex",
+      "status": "passed"
+    },
+    {
+      "name": "资源加载",
+      "evidence": "既有light/dark两个SVG均加载成功，按主题只显示其一",
+      "status": "passed"
+    },
+    {
+      "name": "请求路径",
+      "evidence": "客户端→OpenCodex→普通渠道；目标配置支路经Desktop后台适配",
+      "status": "passed"
+    },
+    {
+      "name": "管理层",
+      "evidence": "Desktop居上方管理节点，同步居管理侧；管理／归属点线与出站箭头区分",
+      "status": "passed"
+    },
+    {
+      "name": "节点弹窗",
+      "evidence": "Desktop与OpenCodex点击各自详情，标题、版本及职责分开，居中Tab保持",
+      "status": "passed"
+    },
+    {
+      "name": "明暗与窄窗",
+      "evidence": "1180×760亮暗、900×600暗色实屏核对；名称版本未被请求线穿过",
+      "status": "passed"
+    },
+    {
+      "name": "设置",
+      "evidence": "概览设置三个Tab正常打开并关闭；原业务草稿和实例不变",
+      "status": "passed"
+    }
+  ],
+  "tests": {
+    "passed": 22,
+    "failed": 0,
+    "log": "tests.tap"
+  },
+  "screenshots": [
+    "01-light-identity.png",
+    "02-dark-identity.png",
+    "03-narrow-dark.png"
+  ],
+  "limits": [
+    "仅修改独立专题，正式概览未替换",
+    "版本、安装、更新、请求全部fixture",
+    "Desktop后台适配仍为目标配置，不代表上下文能力已接入",
+    "共享嵌入资源此前MutationObserver问题未升级为本轮零控制台错误验收",
+    "旧静态图和旧截图保留历史，其误标不作为品牌基准"
+  ],
+  "sourceSha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.js": "4227c9093c80b1222cd6f29c634cd081963f127f15a273d9a5a841d5a77d1233",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.css": "cb6631c4b153276d5b5b1a88810d5da8cd6e4f44018357c8bc11e542be937cb1",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/connection-map.test.cjs": "eab4a89811b6e4253e37e30f01fc1c81619944793724b3c271a3369ddeccd4d1",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "9dc318af4a7ed8cbd562f75de88a43d723f395f626d90630a3502a5e26a2281e",
+    "docs/04-项目资料/04-品牌与图标素材/01-原始素材/opencodex-mark-light.svg": "d5602123e4e15ed81c2939b01681005244a340feb1f920659da3cbc5b23ee1c4",
+    "docs/04-项目资料/04-品牌与图标素材/01-原始素材/opencodex-mark-dark.svg": "229aa8855db13eefb9f3a529f02dd04fda77e7fddcd1b126cb47688a9d366cb6"
+  }
+}
