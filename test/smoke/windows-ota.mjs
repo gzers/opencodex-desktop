@@ -27,7 +27,7 @@ try{
   const prior=JSON.parse(await readFile(join(output,'ota-data-before.json'),'utf8'))
   assert.equal(hash(await readFile(config)),prior.configSha256,'actual config and synthetic credentials changed during OTA')
   const status=await invoke('get_update_status');assert.equal(status.currentVersion,version);assert.equal(status.pendingRestart,null)
-  await writeFile(join(output,'ota-verified.json'),JSON.stringify({result:'pass',version,actualReopenedApplication:true,configAndCredentialBytesUnchanged:true,immutableSandboxUnchanged:true,pendingRestartCleared:true},null,2)+'\n')
+  await writeFile(join(output,'ota-verified.json'),JSON.stringify({result:'pass',version,updatedApplicationReadback:true,automaticRestartEvidence:'ota-result.json OS process observation',configAndCredentialBytesUnchanged:true,immutableSandboxUnchanged:true,pendingRestartCleared:true},null,2)+'\n')
  }else{
   assert.equal(facts.about.version,'0.2.16')
   if(phase==='prepare-exit'){

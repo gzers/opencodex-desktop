@@ -66,5 +66,8 @@ jobs:
         if: always()
         with:
           name: windows-ota-${{ matrix.kind }}
-          path: test/out/windows-ota-${{ matrix.kind }}
+          path: |
+            test/out/windows-ota-${{ matrix.kind }}/*.json
+            test/out/windows-ota-${{ matrix.kind }}/*.png
+            test/out/windows-ota-${{ matrix.kind }}/actual-sandbox/logs/*.log
           if-no-files-found: error
