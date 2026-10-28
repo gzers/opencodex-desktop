@@ -2,7 +2,10 @@ param(
     [Parameter(Mandatory=$true)][string]$BundleDirectory,
     [Parameter(Mandatory=$true)][string]$BuiltExecutable,
     [Parameter(Mandatory=$true)][string]$Node,
-    [Parameter(Mandatory=$true)][string]$OutputDirectory
+    [Parameter(Mandatory=$true)][string]$OutputDirectory,
+    [string]$ExpectedCommit = '',
+    [ValidateSet('all','msi','nsis')][string]$Kind='all',
+    [ValidateSet('all','default','custom')][string]$Mode='all'
 )
 $ErrorActionPreference = 'Stop'
 if (!$IsWindows -or $env:GITHUB_ACTIONS -ne 'true') {
@@ -11,7 +14,7 @@ if (!$IsWindows -or $env:GITHUB_ACTIONS -ne 'true') {
 $taskBundle = (Resolve-Path -LiteralPath $BundleDirectory).Path
 $taskBuilt = (Resolve-Path -LiteralPath $BuiltExecutable).Path
 $taskOutput = [System.IO.Path]::GetFullPath($OutputDirectory)
-$taskSource = (& git rev-parse HEAD).Trim()
+$taskSource = if ($ExpectedCommit) { $ExpectedCommit } else { (& git rev-parse HEAD).Trim() }
 if ($LASTEXITCODE -ne 0 -or $taskSource -notmatch '^[0-9a-f]{40}$') { throw 'Source commit missing' }
 $taskHash = (Get-FileHash -LiteralPath $taskBuilt -Algorithm SHA256).Hash.ToLower()
 $taskVersion = (Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw | ConvertFrom-Json).version
@@ -33,18 +36,20 @@ function Find-DefaultInstalledDirectory {
     $entries=@(Get-ItemProperty -Path $roots -ErrorAction SilentlyContinue | Where-Object DisplayName -ceq 'OpenCodeX Desktop')
     $directories=@()
     foreach($item in $entries){
-        if($item.InstallLocation){$directories+=[string]$item.InstallLocation}
+        if($item.InstallLocation){$directories+=([string]$item.InstallLocation).Trim().Trim('"')}
         if($item.DisplayIcon -match '^"?([^"\r\n]+?\.exe)'){$directories+=Split-Path -Parent $Matches[1]}
         if($item.UninstallString -match '^"([^"\r\n]+uninstall\.exe)"'){$directories+=Split-Path -Parent $Matches[1]}
     }
-    $found=@($directories | Sort-Object -Unique | Where-Object {Test-Path -LiteralPath (Join-Path $_ 'opencodex-desktop.exe')})
+    $found=@($directories | Where-Object {![string]::IsNullOrWhiteSpace($_)} | ForEach-Object {$_.Trim().Trim('"')} | Sort-Object -Unique | Where-Object {Test-Path -LiteralPath (Join-Path $_ 'opencodex-desktop.exe')})
     if($found.Count -ne 1){throw 'Could not identify one product-owned default install directory'}
     return $found[0]
 }
 try {
     # No /D or INSTALLDIR override: exercise the installer's actual default/remembered path.
     $taskResult.defaultInstallChecks=@()
-    foreach($kind in @('msi','nsis')){
+    $taskKinds=if($Kind -ceq 'all'){@('msi','nsis')}else{@($Kind)}
+    if($Mode -cne 'custom'){
+    foreach($kind in $taskKinds){
         $pattern=if($kind -eq 'nsis'){'*-setup.exe'}else{'*.msi'}
         $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $kind) -Filter $pattern -File)
         if($package.Count -ne 1){throw 'Exact default installer package missing'}
@@ -54,7 +59,7 @@ try {
         try{
             $defaultExe=Join-Path $defaultRoot 'opencodex-desktop.exe'
             & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind+'-default-startup')) -ExpectedCommit $taskSource
-            $taskResult.defaultInstallChecks+=@{kind=$kind;result='pass';installDirectory=$defaultRoot;pathOverride=$false;boundary='MSI fresh first; NSIS may honor the existing product remembered directory'}
+            $taskResult.defaultInstallChecks+=@{kind=$kind;result='pass';installDirectory=$defaultRoot;pathOverride=$false;boundary=$(if($Kind -ceq 'all'){'MSI fresh first; NSIS may honor the existing product remembered directory'}else{'fresh isolated runner; no earlier installed product or directory override'})}
             foreach($resource in @('LICENSE','THIRD-PARTY-NOTICES.txt')){
                 if(!(Test-Path -LiteralPath (Join-Path $defaultRoot ('resources/'+$resource)))){throw 'Installed local documentation resource missing'}
             }
@@ -63,9 +68,11 @@ try {
             else{[void](Invoke-Installer 'msiexec.exe' ('/x "'+$package[0].FullName+'" /qn /norestart'))}
         }
     }
+    }
     # MSI reads the shared remembered InstallDir even after NSIS uninstall.
     # Test MSI on the fresh runner first; NSIS /D explicitly chooses its own root.
-    foreach ($kind in @('msi', 'nsis')) {
+    if($Mode -cne 'default'){
+    foreach ($kind in $taskKinds) {
         $pattern = if ($kind -eq 'nsis') { '*-setup.exe' } else { '*.msi' }
         $packages = @(Get-ChildItem -LiteralPath (Join-Path $taskBundle $kind) -Filter $pattern -File)
         if ($packages.Count -ne 1) { throw "Expected one $kind package, found $($packages.Count)" }
@@ -128,6 +135,7 @@ try {
             }
         }
         $entry.result = 'pass'
+    }
     }
     $taskResult.result = 'pass'
 } catch {
