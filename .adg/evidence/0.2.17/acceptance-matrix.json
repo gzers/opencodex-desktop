@@ -1,101 +1,92 @@
 {
   "version": "0.2.17",
-  "baseline": "d2c08dd7d62e2caada507f2eeb4d05804460b6a8",
-  "source_head": "1347e2b79ce023356bdaa458eee3e50a5e819ae5",
+  "baseline": "v0.2.16/d2c08dd7",
+  "acceptedHead": "f77327aa86d70090c65adb4acc7321fa87f3ffac",
+  "tagCommit": "d7c7978f043278baae8f2fc8c2119315a4660f12",
+  "mainAfterHarnessOnlyPrs": "65581b589c8b210049e96022ce58603350450426",
+  "productTreeUnchangedAfterTag": true,
+  "sourceTrees": "source-trees.json",
   "items": [
     {
       "id": "WP-89",
-      "scope": "default-install-path",
-      "status": "local-passed-windows-pending",
+      "result": "passed",
+      "verifiedScope": "Windows host default/restore UI, ordinary and extended drive identity, path storage normalization, traversal/device/ADS/forbidden target admission",
       "evidence": [
-        "gate-report.json",
-        "ui-regression.log"
-      ],
-      "note": "Native host default/restore and extended filesystem path in current CI"
+        "windows-native/out/windows-startup/runtime-install-ui.json",
+        "ci-final.json",
+        "path-final.log"
+      ]
     },
     {
       "id": "WP-90",
-      "scope": "transaction-and-ownership",
-      "status": "local-passed-windows-pending",
+      "result": "passed",
+      "verifiedScope": "Read-only target admission, nonowned target refusal, old package/launcher/source-record rollback and exact retry; no sudden-power-loss cross-file atomicity claim",
       "evidence": [
-        "backend-regression.log"
-      ],
-      "note": "Reject nonowned target before writing; preserve package, launcher and source record on failed activation; Windows lock cases pending"
+        "backend-offline-final.log",
+        "ci-final.json",
+        "windows-native/out/windows-backend/managed-live.json"
+      ]
     },
     {
       "id": "WP-91",
-      "scope": "real-probe",
-      "status": "local-passed-windows-pending",
+      "result": "passed",
+      "verifiedScope": "Real Node zero-exit/version/output/inherited-pipe deadlines and owned-family cleanup; actual official package version readback",
       "evidence": [
-        "backend-regression.log"
-      ],
-      "note": "Real Node nonzero/output/inherited pipe bound; official fixed-version execution pending"
+        "probe-postreview.log",
+        "ci-final-windows-summary.log",
+        "windows-native/out/windows-backend/managed-live.json"
+      ]
     },
     {
       "id": "WP-92",
-      "scope": "controlled-discovery",
-      "status": "local-passed-windows-pending",
+      "result": "passed",
+      "verifiedScope": "Controlled Known Folders/declared managers/bounded version directories, user precedence and sandbox isolation; upstream manager matrix boundary retained",
       "evidence": [
-        "backend-regression.log"
-      ],
-      "note": "Read-only Known Folders and explicit version-manager declarations; bounded recognized version layouts, no PATH/profile execution"
+        "discovery-final.log",
+        "ci-final.json"
+      ]
     },
     {
       "id": "WP-93",
-      "scope": "packaged-documents",
-      "status": "unit-passed-bundle-pending",
+      "result": "passed",
+      "verifiedScope": "Resource-root resolver and exact packaged license/notices in signed mac archive and real Windows default installations",
       "evidence": [
-        "backend-regression.log"
-      ],
-      "note": "Resource-root lookup and exact license notice; final installer resources pending"
+        "mac-release-verification.json",
+        "installers-final-summary.json"
+      ]
     },
     {
       "id": "WP-94",
-      "scope": "cli-description",
-      "status": "local-passed-ci-pending",
+      "result": "passed",
+      "verifiedScope": "Public Windows CLI stays disabled; inaccurate IPC claim corrected",
       "evidence": [
-        "ui-regression.log",
-        "backend-regression.log"
-      ],
-      "note": "Windows public CLI stays disabled; accurate named-pipe implementation / unaccepted public feature description"
+        "ui-script-confirm-regression.log",
+        "ci-final.json"
+      ]
     },
     {
       "id": "WP-95",
-      "scope": "native-and-release",
-      "status": "pending",
-      "evidence": [],
-      "note": "Final EXE default path, ordinary account, real npm, MSI/NSIS default/custom/retention, actual OTA, signatures and anonymous stable still required"
+      "result": "passed_with_explicit_environment_boundaries",
+      "verifiedScope": "True official npm/UI installs, upgrade/offline, native faults, ordinary token and business workflows, four final signed-installer scenes, actual OTA and release chain; unsupported/unperformed device/network matrix remains explicit",
+      "evidence": [
+        "windows-native/out/windows-ordinary/ordinary-summary.json",
+        "windows-native/out/windows-startup/runtime-managed-ui-live.json",
+        "installers-final-summary.json",
+        "ota-summary.json",
+        "release-summary.json"
+      ]
     }
   ],
-  "unperformed_environment_boundaries": [
-    "physical Windows10/11 device matrix",
-    "physical mixed-DPI/multi-monitor",
-    "real SMB/UNC server and redirected corporate profiles",
-    "enterprise PAC/custom trust roots and private services",
-    "paid generation requests"
+  "environmentBoundaries": [
+    "Windows runner is Server 2025 build26100, not a physical Win10/11 matrix; physical DPI/mixed monitors/high contrast and all accessibility device combinations not executed.",
+    "Real SMB/UNC server, AppData corporate redirection, all enterprise identities, PAC/custom enterprise certificates and private services not available; lexical/identity and system-path admission covered without claiming those deployments.",
+    "NVM/Volta/fnm/pnpm declarations and bounded layouts tested with filesystem fixtures and Windows discovery; not installation of every upstream version manager.",
+    "Ordinary acceptance uses a temporary standard SID, native Profile, correction of hosted-image Default User LocalAppData only in that SID and temporary GUI desktop access restored; it does not prove unprepared enterprise profiles.",
+    "Native directory picker, installer cancel/locked-running interactive UX, all shortcuts/tray system shell policies and each live panel login/network provider not exercised as a human device matrix; existing guards/regressions and supported native scenes are identified separately.",
+    "OTA verifies production signed stable download, ordinary exit protection, real replacement and OS-observed auto restart. Since Shell restart drops test-only environment variables, updated app is then relaunched with the same explicit immutable sandbox for file/Tauri readback; this is not a direct CDP observation of the automatic process.",
+    "No paid generation/private service requests or user daily app/config changes. OS code signing/Apple notarization remain unconfigured; updater signatures independently verified.",
+    "Prototype list screenshot has missing rendered text; DOM/header/action/order checks passed but not a pixel-perfect proof. Browser/geometry/material reports and no changed list/preview styles provide separate bounded evidence."
   ],
-  "daily_configuration_changed": false,
-  "release_complete": false,
-  "local_final": {
-    "frontend_passed": 988,
-    "frontend_existing_skips": 10,
-    "backend_passed": 1289,
-    "backend_existing_ignored": 14,
-    "gate_passed": 21,
-    "gate_failed": 0,
-    "gate_skipped": 0
-  },
-  "native_progress": {
-    "observed_run": 40618515412,
-    "source": "e83ed669cb5af86e20d49389263ffb7593d322bd",
-    "windows_backend_regression": "passed",
-    "native_credential_protection": "passed",
-    "official_managed_live": "passed; actual official 2.90 to 2.91 and warmed-cache offline reinstall",
-    "final_exe_build": "running",
-    "ordinary_account": "Previous first-Profile initialization failure retained; corrected script is running, no pass claimed",
-    "formal_installer": "pending",
-    "ota": "pending",
-    "stable": "pending",
-    "final_head_ci": 40621630300
-  }
+  "releaseComplete": true,
+  "releaseUrl": "https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.17"
 }

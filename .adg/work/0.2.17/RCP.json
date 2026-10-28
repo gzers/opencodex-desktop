@@ -1,68 +1,87 @@
 {
   "id": "RCP-OPENCODEX-0.2.17",
   "task_id": "TASK-OPENCODEX-0.2.17",
-  "result": "in_progress",
+  "result": "passed",
   "checks": [
     {
       "name": "review:windows-path",
-      "status": "failed",
+      "status": "passed",
       "evidence": [
-        ".adg/evidence/0.2.17/ui-script-confirm-regression.log",
-        ".adg/evidence/0.2.17/backend-offline-final.log"
+        ".adg/evidence/0.2.17/path-final.log",
+        ".adg/evidence/0.2.17/ci-final.json",
+        ".adg/evidence/0.2.17/windows-native/out/windows-startup/runtime-install-ui.json"
       ],
-      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
+      "scope": "Verified supported production scope; see acceptance-matrix.json for explicit unperformed physical/corporate environments, prototype screenshot and OTA observation boundaries.",
+      "notes": "No assertion that all Windows environments have passed."
     },
     {
       "name": "review:install-transaction",
-      "status": "failed",
+      "status": "passed",
       "evidence": [
         ".adg/evidence/0.2.17/backend-offline-final.log",
-        ".adg/evidence/0.2.17/ci83-native-progress.json"
+        ".adg/evidence/0.2.17/ci-final-windows-summary.log",
+        ".adg/evidence/0.2.17/windows-native/out/windows-backend/managed-live.json"
       ],
-      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
+      "scope": "Verified supported production scope; see acceptance-matrix.json for explicit unperformed physical/corporate environments, prototype screenshot and OTA observation boundaries.",
+      "notes": "No assertion that all Windows environments have passed."
     },
     {
       "name": "review:version-probe",
-      "status": "failed",
+      "status": "passed",
       "evidence": [
         ".adg/evidence/0.2.17/probe-postreview.log",
-        ".adg/evidence/0.2.17/ci83-native-progress.json"
+        ".adg/evidence/0.2.17/ci-final-windows-summary.log",
+        ".adg/evidence/0.2.17/windows-native/out/windows-backend/managed-live.json"
       ],
-      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
+      "scope": "Verified supported production scope; see acceptance-matrix.json for explicit unperformed physical/corporate environments, prototype screenshot and OTA observation boundaries.",
+      "notes": "No assertion that all Windows environments have passed."
     },
     {
       "name": "review:tool-discovery",
-      "status": "failed",
+      "status": "passed",
       "evidence": [
-        ".adg/evidence/0.2.17/discovery-final.log"
+        ".adg/evidence/0.2.17/discovery-final.log",
+        ".adg/evidence/0.2.17/ci-final.json"
       ],
-      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
+      "scope": "Verified supported production scope; see acceptance-matrix.json for explicit unperformed physical/corporate environments, prototype screenshot and OTA observation boundaries.",
+      "notes": "No assertion that all Windows environments have passed."
     },
     {
       "name": "review:packaged-docs-cli",
-      "status": "failed",
+      "status": "passed",
       "evidence": [
-        ".adg/evidence/0.2.17/source-release-identity.json",
+        ".adg/evidence/0.2.17/mac-release-verification.json",
+        ".adg/evidence/0.2.17/installers-final-summary.json",
         ".adg/evidence/0.2.17/ui-script-confirm-regression.log"
       ],
-      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
+      "scope": "Verified supported production scope; see acceptance-matrix.json for explicit unperformed physical/corporate environments, prototype screenshot and OTA observation boundaries.",
+      "notes": "No assertion that all Windows environments have passed."
     },
     {
       "name": "review:native-windows",
-      "status": "failed",
+      "status": "passed",
       "evidence": [
-        ".adg/evidence/0.2.17/ci83-official-live-failure.log"
+        ".adg/evidence/0.2.17/windows-native/out/windows-ordinary/ordinary-summary.json",
+        ".adg/evidence/0.2.17/windows-native/out/windows-startup/runtime-managed-ui-live.json",
+        ".adg/evidence/0.2.17/installers-final-summary.json",
+        ".adg/evidence/0.2.17/ota-summary.json"
       ],
-      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
+      "scope": "Verified supported production scope; see acceptance-matrix.json for explicit unperformed physical/corporate environments, prototype screenshot and OTA observation boundaries.",
+      "notes": "No assertion that all Windows environments have passed."
     },
     {
       "name": "review:regression-release",
-      "status": "failed",
+      "status": "passed",
       "evidence": [
+        ".adg/evidence/0.2.17/gate-after-script-confirm.json",
         ".adg/evidence/0.2.17/backend-offline-final-summary.json",
-        ".adg/evidence/0.2.17/gate-after-script-confirm.json"
+        ".adg/evidence/0.2.17/ci-final.json",
+        ".adg/evidence/0.2.17/source-trees.json",
+        ".adg/evidence/0.2.17/release-summary.json",
+        ".adg/evidence/0.2.17/ota-summary.json"
       ],
-      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
+      "scope": "Verified supported production scope; see acceptance-matrix.json for explicit unperformed physical/corporate environments, prototype screenshot and OTA observation boundaries.",
+      "notes": "No assertion that all Windows environments have passed."
     }
   ]
 }

@@ -1,0 +1,2427 @@
+{
+  "version": "0.2.17",
+  "release": "https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.17",
+  "evidenceScope": "reports, selected logs and screenshots; includes preserved failed attempts and final passing receipts; OS/environment limits in acceptance-matrix.json",
+  "files": [
+    {
+      "path": "acceptance-matrix.json",
+      "bytes": 5037,
+      "sha256": "62730f0a09d99d568b6e08c0910824bb8581c5ddf894a1bed221bb13e1541a7f"
+    },
+    {
+      "path": "accepted-merge.json",
+      "bytes": 531,
+      "sha256": "f15421fbdaf08aa8e21f8b79d502be6c8009942c1f7cb734fe0065a715a99ba7"
+    },
+    {
+      "path": "anonymous-latest.json",
+      "bytes": 4913,
+      "sha256": "7e5161fa8824f8d01f75b9f4f4519007adcc49f6512d03d51d3de437cadc898a"
+    },
+    {
+      "path": "anonymous-release.json",
+      "bytes": 19833,
+      "sha256": "bcac1e1a3e439e3e0d938e2bf0f9a6779ebedaee3766239ff83a7fb30e7a21f9"
+    },
+    {
+      "path": "backend-offline-final-summary.json",
+      "bytes": 301,
+      "sha256": "aab604d54491eb59ddc26359b78fcc2a5ec120c7814a6dce51b281aa35f402f3"
+    },
+    {
+      "path": "backend-offline-final.log",
+      "bytes": 141673,
+      "sha256": "994ef3db739c3b3b6c7123c5d01b2190bd5dc0753bcf92ff56f4c2b7369b420e"
+    },
+    {
+      "path": "backend-regression.log",
+      "bytes": 141730,
+      "sha256": "71d72cc3388e6af37462a76413f3256d57c0c6cd096ff0a2fe4326664e631a09"
+    },
+    {
+      "path": "backend-summary.json",
+      "bytes": 162,
+      "sha256": "71b6f1fa31f8be631df66d4fc21ba193032343823fd5fd0066ab3933b89e4216"
+    },
+    {
+      "path": "cdp-protocol.log",
+      "bytes": 1483,
+      "sha256": "ab6114e5b065c736e1e064e78a8e22b716734d2c5196c5ebaf347b2fea562a72"
+    },
+    {
+      "path": "ci-final-windows-summary.log",
+      "bytes": 5774,
+      "sha256": "d83f8c4f5132ef0d2c60c4dbc94669aa26e009fdc1f17d879e1bfdb0a5c7aff5"
+    },
+    {
+      "path": "ci-final.json",
+      "bytes": 11517,
+      "sha256": "5e1e39a02a0316f42f9b34f007375f8cc27993ab0867f6288bc1a8735c17ef97"
+    },
+    {
+      "path": "ci-initial-failure.log",
+      "bytes": 456187,
+      "sha256": "9d86fdd545fde1d76d81c7595f3e8b8dc8c87d141b4f120e2a722e93aa37c5c0"
+    },
+    {
+      "path": "ci-second-failure.log",
+      "bytes": 382549,
+      "sha256": "7a301f762bc39f0a210c74e3f66fea0f055499166c8012a8c993f6e45c3c917b"
+    },
+    {
+      "path": "ci83-native-progress.json",
+      "bytes": 426,
+      "sha256": "939f98c645b5a9e2445e55cbfde3a9ccadb4cc69adccd7e5a790675ac171029d"
+    },
+    {
+      "path": "ci83-official-live-failure.log",
+      "bytes": 5791,
+      "sha256": "e5dfe11d1eab51367d6003004ca7a25d83625a54cb0c3e85210e9d737affe8e6"
+    },
+    {
+      "path": "clippy.log",
+      "bytes": 207,
+      "sha256": "8ca90a01c63bde9d7e8afe6921c5b9725c7c55514b9979fb2b4a502c5b312efb"
+    },
+    {
+      "path": "discovery-final.log",
+      "bytes": 1102,
+      "sha256": "55b8533a31cec32c054ca1a82d772bc907fe206bc67a9123fabb99fcd49a4f9c"
+    },
+    {
+      "path": "discovery-postreview.log",
+      "bytes": 968,
+      "sha256": "056881a029cd1d6c1c2d55ec474b77e1680e2c694542d30ebafe486e85b560c2"
+    },
+    {
+      "path": "draft-three-signatures.json",
+      "bytes": 1180,
+      "sha256": "df3fc3304269abf56129b5883b66953b0d0647f3b5376ae95dd1ddf9d1e72a69"
+    },
+    {
+      "path": "final-completeness-review.json",
+      "bytes": 5019,
+      "sha256": "f13c9be4e5765107bf10f74126a428ec5b0d07aa5b565e6521474294f97bcf15"
+    },
+    {
+      "path": "gate-after-script-confirm.json",
+      "bytes": 3616,
+      "sha256": "c0d37b9ee83d1bd210bc0b036d8a6b00e8568334003bfcb7dc40685ee87a3c26"
+    },
+    {
+      "path": "gate-after-script-confirm.log",
+      "bytes": 2123,
+      "sha256": "3f4a60d55672b33e026aa2fa5d6d6a509cb11948a5ee32532ca4f30a0d9bc13d"
+    },
+    {
+      "path": "gate-artifacts/audit-catalog-crossvalidate.log",
+      "bytes": 146,
+      "sha256": "a064fdde47811e9b8f225cfc7a895da8ce178336ecad772cc5ca496f920c451b"
+    },
+    {
+      "path": "gate-artifacts/audit-catalog-naming.log",
+      "bytes": 93,
+      "sha256": "4b71c31a9ca381ced826cc5a6e41dba6fa0e7569541c12d8b9b3358666deaf11"
+    },
+    {
+      "path": "gate-artifacts/audit-export/export-1180x760-light.png",
+      "bytes": 239143,
+      "sha256": "83f73b1b69afeb04bcebb8ec487ec44cf340847407f1371f00772573231a7b6e"
+    },
+    {
+      "path": "gate-artifacts/audit-export/export-900x600-dark.png",
+      "bytes": 155601,
+      "sha256": "75df3b88a055722e388d08a15ed6a9e2b80362076c1887749f2862f99b2f578a"
+    },
+    {
+      "path": "gate-artifacts/audit-export/export-report.json",
+      "bytes": 1907,
+      "sha256": "1cfc47bff80c60eae775dc2ca748bdb03fe35e9d14772778111fc0439f36a301"
+    },
+    {
+      "path": "gate-artifacts/audit-export.log",
+      "bytes": 947,
+      "sha256": "870d07050ea3c971f3680dd6890418654714ad7134a4dc0b31229c4665684cde"
+    },
+    {
+      "path": "gate-artifacts/audit-file-save/backend.log",
+      "bytes": 449,
+      "sha256": "867bfe9478275fff7e4f68a2780f779deed515b19ef90f6b2aa91bade5dd6c30"
+    },
+    {
+      "path": "gate-artifacts/audit-file-save/imported-dark.png",
+      "bytes": 93526,
+      "sha256": "d57b47cbac61dc6e35dd58eeed64fb9a18e01a723916413766fcfe684cf871d2"
+    },
+    {
+      "path": "gate-artifacts/audit-file-save/remaining-preview-dark.png",
+      "bytes": 68684,
+      "sha256": "d535fbb20f4d13ddf21c38249faf1e14d6f851070cf60917276024a3adbbb61f"
+    },
+    {
+      "path": "gate-artifacts/audit-file-save/remaining-saved-dark.png",
+      "bytes": 83160,
+      "sha256": "ad959254aad5eece2eb00f9abe7dd5ed3638f2094fb8cfa5b698326fddc47a6f"
+    },
+    {
+      "path": "gate-artifacts/audit-file-save/report.json",
+      "bytes": 4156,
+      "sha256": "394769007cb91a07c08695b7486ebd63d6bae3420ee20d4315f76cc75e4d3992"
+    },
+    {
+      "path": "gate-artifacts/audit-file-save/saved-dark.png",
+      "bytes": 84118,
+      "sha256": "4654d66670e6bf6d24e38442f11adfc233f51aa6d65772dbce5844c3e950ad16"
+    },
+    {
+      "path": "gate-artifacts/audit-file-save/scoped-a-retained-dark.png",
+      "bytes": 101435,
+      "sha256": "bb2574caff11bebf60d0e27b2bec69700fb375745a34fc1a7ec434a58e78b5e9"
+    },
+    {
+      "path": "gate-artifacts/audit-file-save/scoped-b-dark.png",
+      "bytes": 89419,
+      "sha256": "fb724c69616be592cc375d7716d3a664ab65edea60f45b44b497db7633d763cf"
+    },
+    {
+      "path": "gate-artifacts/audit-file-save/scoped-b-reopened-dark.png",
+      "bytes": 81168,
+      "sha256": "078c921ed139857fc3a6dd6f8f4a2e701637643bdda5a71ab3f4e09b32d70c87"
+    },
+    {
+      "path": "gate-artifacts/audit-file-save.log",
+      "bytes": 94,
+      "sha256": "77b54c433fd770019dce68b8f1f6756a9c69c19f8640e43c7527140d8a74f3b1"
+    },
+    {
+      "path": "gate-artifacts/audit-geometry-webkit/webkit-models.png",
+      "bytes": 424969,
+      "sha256": "c748fb85fa99982985de87b72980f9f184e2cd054631942ae4fadbed5224708e"
+    },
+    {
+      "path": "gate-artifacts/audit-geometry-webkit.log",
+      "bytes": 2192,
+      "sha256": "4712a4b8e2ba71ef57636452dd37d4794fc0b14216c7cd3b3d0e48e4812f2843"
+    },
+    {
+      "path": "gate-artifacts/audit-geometry.log",
+      "bytes": 2156,
+      "sha256": "9d06420075e91c33b3cc14dfd6fac573ea8fe66ed36eefdd597eee369ae15656"
+    },
+    {
+      "path": "gate-artifacts/audit-models/model-shots-report.json",
+      "bytes": 3747,
+      "sha256": "7acee6477485d91d07699c1c2a9c3a7289f8c2f5c71743a7ce9f5d12c69eb70f"
+    },
+    {
+      "path": "gate-artifacts/audit-models/models-1180x760-dark.png",
+      "bytes": 258647,
+      "sha256": "7bd9293022ef73d65808ee65223b604e5e7b36b1aefd23e9f3eff5ea42559694"
+    },
+    {
+      "path": "gate-artifacts/audit-models/models-1180x760-light.png",
+      "bytes": 276576,
+      "sha256": "584a33160f74a8d210509a13338da6a678b63fe11604e9a63488c1549847230d"
+    },
+    {
+      "path": "gate-artifacts/audit-models/models-1440x900-light.png",
+      "bytes": 352469,
+      "sha256": "61d5964355a4117abda98e6df912e58b4b1410fdab3f2b2ccdbe368d28774d3e"
+    },
+    {
+      "path": "gate-artifacts/audit-models/models-1440x900-scale150.png",
+      "bytes": 336981,
+      "sha256": "8c275f73e71c8b36ab650a6a6971d9cd9c483518a5a9ed86dffae54a13316582"
+    },
+    {
+      "path": "gate-artifacts/audit-models/models-1440x900-scale200.png",
+      "bytes": 257310,
+      "sha256": "069213ba8251ab93315dad7aff56495f9e58b00de13c3579127bece5401d4e74"
+    },
+    {
+      "path": "gate-artifacts/audit-models/models-900x600-light.png",
+      "bytes": 203468,
+      "sha256": "f52975bbaabd9de4f0a5b5f6d6fbeed6e23d9ae63f433aea28b631c71da19165"
+    },
+    {
+      "path": "gate-artifacts/audit-models.log",
+      "bytes": 1830,
+      "sha256": "f1b53ef66df7617f70b734fbdd2859e4a6ef3e61d73190253e15de2dd8303fd7"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-1180x760-dark-bell.png",
+      "bytes": 623601,
+      "sha256": "716c0b54c0e44d880559006d553af459595d851b1e38891ff5fe06ca1a95af5b"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-1180x760-dark-clear.png",
+      "bytes": 577658,
+      "sha256": "0d4e0ca1a173b11a2b205d466937bfbfe3c91ae8bf8138552a1d91dda2ba5a90"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-1180x760-dark-restart.png",
+      "bytes": 712798,
+      "sha256": "8f1f9bf9b1b922bc542e906642fe34e62d6fc41c775dd6fa0695b0a4d5507533"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-1180x760-dark-saved.png",
+      "bytes": 751272,
+      "sha256": "7edc62764ca2f31c4ff7c7d53a977731861b723fcb8448d1a485e0d89c269bda"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-1180x760-light-bell.png",
+      "bytes": 583094,
+      "sha256": "6ac63f7c6b6ea723da74135cb7b13fe622478eb222e052b08b390c47db369fc5"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-1180x760-light-clear.png",
+      "bytes": 514440,
+      "sha256": "a651f7be5d00f7214fb436dfe69e133f4bdd07d4733ad5700389de877588b11f"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-1180x760-light-restart.png",
+      "bytes": 643283,
+      "sha256": "f3e368e55481143ae5b8b326bb021cf6292862af3141ee88d934100f518bedbb"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-1180x760-light-saved.png",
+      "bytes": 697137,
+      "sha256": "a0c1047358b4a132c367a91c06779dce133118b0948012ddf8ae7cede39c3b21"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-900x600-dark-bell.png",
+      "bytes": 397303,
+      "sha256": "d0e7cb52abe1786f9285e058c6902dbef82452c66239b57ea1ca3f0cb8307caf"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-900x600-dark-clear.png",
+      "bytes": 356268,
+      "sha256": "a2575220ce889716e4795f7482b10706872b94207494153ffcb72d7be135e1ce"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-900x600-dark-restart.png",
+      "bytes": 421441,
+      "sha256": "0463e737a9e37a98a5d9d273c9560aa2ce15575f19874784dad4acdcbd20a126"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-900x600-dark-saved.png",
+      "bytes": 489333,
+      "sha256": "ec6cabf79a8a32140b5a059c7a971ce6ca0c1c6c6f6ef55f3b88111df29be2fa"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-900x600-light-bell.png",
+      "bytes": 368894,
+      "sha256": "7185a0f251a71f98a57c78fd3accc95e90f9fa142e148f4f492fffa164d935a8"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-900x600-light-clear.png",
+      "bytes": 318516,
+      "sha256": "88514c77a08f43da8dfed20227e0c4b7fbc47d0faf97f6a332b341cac691f590"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-900x600-light-restart.png",
+      "bytes": 386456,
+      "sha256": "343bca2dba843d9db6d4665559a2ae6856032482a42cc110abf055cf84ff5d85"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/chromium-900x600-light-saved.png",
+      "bytes": 456516,
+      "sha256": "46088736950e2353ffb9484232f2269c5905df2037431e11b9e752d7f9a2a42b"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback/report.json",
+      "bytes": 7453,
+      "sha256": "2cff3ebb275fe513c3c2607d25ed2094f4f926afaf774919b8c0c964f0230426"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-feedback.log",
+      "bytes": 109,
+      "sha256": "e3ff3ab0b3568a9a89311badb198ca291995cb4e50c10943561457ca898967c6"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/dark-high-implementation.png",
+      "bytes": 928200,
+      "sha256": "1c555dfed6c2dd1253dbf77b27e7cbd9d6d432e721864e95c8216e8aece860fd"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/dark-high-prototype.png",
+      "bytes": 798814,
+      "sha256": "f467ec7f33345eca7814ec74aa1dd9987a7a5255629493666e9ef2c382075e2f"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/dark-low-implementation.png",
+      "bytes": 132125,
+      "sha256": "caeec345c32c76f715d20839c95f796302813449862b5ee82e4be221c9ca83cf"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/dark-low-prototype.png",
+      "bytes": 317965,
+      "sha256": "08bcc083001ce386242d1b5698549ede8dc91cf5dc91465d2ded477f4c683fbb"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/dark-mid-implementation.png",
+      "bytes": 928200,
+      "sha256": "1c555dfed6c2dd1253dbf77b27e7cbd9d6d432e721864e95c8216e8aece860fd"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/dark-mid-prototype.png",
+      "bytes": 798965,
+      "sha256": "1670369b2d9dc7741d09df114c831f1874ecc94677436b0a6ab0f07e114c55a0"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/light-high-implementation.png",
+      "bytes": 855983,
+      "sha256": "5e40c03c0c4afa897f13c901c40a9fb912e36e0f6f77cafcd66d2fe7cc97b85a"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/light-high-prototype.png",
+      "bytes": 802314,
+      "sha256": "a3aeb1638b0df0e1f3dc57951c05469235c87ceb1220544cadf34496db008352"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/light-low-implementation.png",
+      "bytes": 141607,
+      "sha256": "49b4f7c8f6de4ce1ebb7ffdd9e6df2eba26b7824712d60dc59c2153ce1377a2b"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/light-low-prototype.png",
+      "bytes": 303433,
+      "sha256": "02805683be732f526e2ce3779906338f419c9fbcfc9278c67abe8b48fc373e68"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/light-mid-implementation.png",
+      "bytes": 855983,
+      "sha256": "5e40c03c0c4afa897f13c901c40a9fb912e36e0f6f77cafcd66d2fe7cc97b85a"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/light-mid-prototype.png",
+      "bytes": 802314,
+      "sha256": "a3aeb1638b0df0e1f3dc57951c05469235c87ceb1220544cadf34496db008352"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity/report.json",
+      "bytes": 19566,
+      "sha256": "366dcd43c247d24cdaf35b5bbc18a8e542bd07fe6469453486a189da77825b3b"
+    },
+    {
+      "path": "gate-artifacts/audit-notification-parity.log",
+      "bytes": 39,
+      "sha256": "f3aa544f559e6983e242146024df38228baee9a5042ffcb2751c34fcb02648a5"
+    },
+    {
+      "path": "gate-artifacts/audit-parity-agent.log",
+      "bytes": 369,
+      "sha256": "696980190b4aff329f070038656c1a56c18894ea882c126e7cba5d00c4708680"
+    },
+    {
+      "path": "gate-artifacts/audit-parity-export.log",
+      "bytes": 367,
+      "sha256": "86ec0630533aeca1706a04611ccd76a48b37e31c127cea7b7ec6f4a4e94608ce"
+    },
+    {
+      "path": "gate-artifacts/audit-parity-list.log",
+      "bytes": 735,
+      "sha256": "4356ed3ccc7ae26e673701b6778cfcfb50d373cc3a5194211857cd1e34e887bd"
+    },
+    {
+      "path": "gate-artifacts/audit-parity-template.log",
+      "bytes": 557,
+      "sha256": "3f3e1ecbd03805042bc8949b57b1def642746e7c52466390f5ff6aea5e878d00"
+    },
+    {
+      "path": "gate-artifacts/audit-parity.log",
+      "bytes": 588,
+      "sha256": "bc078454ba3dba95cc48fed5f022373c493955a269a66a23e4f1bd751713de96"
+    },
+    {
+      "path": "gate-artifacts/audit-preview/preview-1180x760-dark.png",
+      "bytes": 208156,
+      "sha256": "750ceae056b3793afa9d30a6327c39d4383c65b867c6b5f9f6dc36b6058574cd"
+    },
+    {
+      "path": "gate-artifacts/audit-preview/preview-1180x760-light.png",
+      "bytes": 213532,
+      "sha256": "92d6e32a818f3c6c1bb5a12b53f7db765d40aae332ba8327333849887a5c4125"
+    },
+    {
+      "path": "gate-artifacts/audit-preview/preview-900x600-light.png",
+      "bytes": 133504,
+      "sha256": "246ace6af15df2ee70b9c58b2c70e8d095d6f34d17f81bf99a3904389c7bfe9c"
+    },
+    {
+      "path": "gate-artifacts/audit-preview/preview-report.json",
+      "bytes": 3331,
+      "sha256": "da3dfa17f3bff139f3bcdc596c682fa4af5157bf04816b740cde9994b735cc92"
+    },
+    {
+      "path": "gate-artifacts/audit-preview.log",
+      "bytes": 1748,
+      "sha256": "055fc7cbb5b57a679856fe0ac157048f8ed4cf1e3cdf0f448879487209a4a93f"
+    },
+    {
+      "path": "gate-artifacts/audit-template/template-1180x760-light.png",
+      "bytes": 207599,
+      "sha256": "710dac8582fb3d233c47ffdc39f90932ad3e739a974285eb519dbd143529a8e7"
+    },
+    {
+      "path": "gate-artifacts/audit-template/template-900x600-dark.png",
+      "bytes": 150750,
+      "sha256": "9b4292306ceb1122171cacfbb739092039dc4aeb7ba61d54b0c646d2bb764db8"
+    },
+    {
+      "path": "gate-artifacts/audit-template/template-report.json",
+      "bytes": 3029,
+      "sha256": "b03a3d2b48140ac3da9977050ffa82126371b62e19dd7953779594c811bdd046"
+    },
+    {
+      "path": "gate-artifacts/audit-template.log",
+      "bytes": 1537,
+      "sha256": "7fb242972e6df665956f0a206b19fa134fc58796f33f2af270614461f6f2a446"
+    },
+    {
+      "path": "gate-artifacts/audit-update/update-1180x760-light.png",
+      "bytes": 104289,
+      "sha256": "fd9076f6f17a5b3123083eb2c34a776792438ad5ea52378c2fe4cfa452d7d716"
+    },
+    {
+      "path": "gate-artifacts/audit-update/update-900x600-dark.png",
+      "bytes": 91137,
+      "sha256": "c1e361ccf466c279c0f9e8abca9d9e4c89deb0742f7f442d07386c7622b79c8c"
+    },
+    {
+      "path": "gate-artifacts/audit-update/update-report.json",
+      "bytes": 2795,
+      "sha256": "9cac06452c4d4420dc43213ea725f38356c3c8f274c2c3ee4c2c9e1d8ac76203"
+    },
+    {
+      "path": "gate-artifacts/audit-update.log",
+      "bytes": 1525,
+      "sha256": "3e65cfc9ff851eb5a5489bfe216b64891756d481f1a427a772c052c4c5662299"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/export-1180x760-light.png",
+      "bytes": 312232,
+      "sha256": "9bd024885b07adaf6bf079bb0406188d162a301e9abc61dece33b259dc0577dd"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/export-900x600-dark.png",
+      "bytes": 198190,
+      "sha256": "6fdac50de35113e2d39049e9f8e17d90799a207091aee132eb4b9b6e53627c53"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/export-report.json",
+      "bytes": 1907,
+      "sha256": "1cfc47bff80c60eae775dc2ca748bdb03fe35e9d14772778111fc0439f36a301"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/model-shots-report.json",
+      "bytes": 3747,
+      "sha256": "7acee6477485d91d07699c1c2a9c3a7289f8c2f5c71743a7ce9f5d12c69eb70f"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/models-1180x760-dark.png",
+      "bytes": 348784,
+      "sha256": "1a2e41438b06664d6ed7d0b3c5e53783e99783efd079001815d87a78ee16060e"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/models-1180x760-light.png",
+      "bytes": 392383,
+      "sha256": "0a501ab44d418b3c9178dfb6c4e384421f334a5f13b43bc51488537d9bafa9f7"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/models-1440x900-light.png",
+      "bytes": 507217,
+      "sha256": "1c9d0b2507fe8f4d99bf988533a553cde2ee29160b6715e4b97e0a39752cb736"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/models-1440x900-scale150.png",
+      "bytes": 483436,
+      "sha256": "3fe9c9dde6bf3c35e72764309d2d95c3f6f3abd51f00b121d657680cd9dea6db"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/models-1440x900-scale200.png",
+      "bytes": 380037,
+      "sha256": "3b1b200402a4079446cef334e60bb50487d4513b6921eebdd9055fe3d91bef69"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/models-900x600-light.png",
+      "bytes": 278184,
+      "sha256": "44ef2560a4a2d406dad16cc9671dab2a3d8c5a3a45f53b08936949c570a300ea"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/preview-1180x760-dark.png",
+      "bytes": 281748,
+      "sha256": "e62777ce8a74ae5900af915253bf9c562a7e0105bdc235f9cec489f1ae79b65c"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/preview-1180x760-light.png",
+      "bytes": 292777,
+      "sha256": "01637a787eb81e6ecfb320f50e72607080ab83576d10d46927b3d7a744f57dac"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/preview-900x600-light.png",
+      "bytes": 173536,
+      "sha256": "f18c5aa3b3da960f3086a7bb1829c70f084b66b003097bf952ff52d41a814454"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/preview-report.json",
+      "bytes": 3331,
+      "sha256": "da3dfa17f3bff139f3bcdc596c682fa4af5157bf04816b740cde9994b735cc92"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/template-1180x760-light.png",
+      "bytes": 297057,
+      "sha256": "6c4bdd190fe3db48906021019f159080b884e16874ba89c9b6634b934728549d"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/template-900x600-dark.png",
+      "bytes": 198228,
+      "sha256": "413654d62baf213f4d7cc1386cf73c2747b8dcb601f63c17db7995e8740d4f5f"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/template-report.json",
+      "bytes": 3029,
+      "sha256": "b03a3d2b48140ac3da9977050ffa82126371b62e19dd7953779594c811bdd046"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/update-1180x760-light.png",
+      "bytes": 167415,
+      "sha256": "2d3402aa2ecf27f5f1926ee1bcb2006808f2d33e8a7478df8b96cf8e8d6a7856"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/update-900x600-dark.png",
+      "bytes": 128009,
+      "sha256": "d7c2af8f9539739d3ddb3eab845d355feda7b79bc44482b818f7514f199f7cde"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit/update-report.json",
+      "bytes": 2795,
+      "sha256": "9cac06452c4d4420dc43213ea725f38356c3c8f274c2c3ee4c2c9e1d8ac76203"
+    },
+    {
+      "path": "gate-artifacts/audit-webkit.log",
+      "bytes": 10082,
+      "sha256": "b2a266a5969736a6e9124580a9bd9a98a54eddb71a2054766cc0b8e7f027a7f1"
+    },
+    {
+      "path": "gate-artifacts/build.log",
+      "bytes": 2191,
+      "sha256": "e613c0c4bf35a62c8f2d32e28821c93e262163065eac5dd3cd946e33e0df7615"
+    },
+    {
+      "path": "gate-artifacts/gate-report.json",
+      "bytes": 3616,
+      "sha256": "c0d37b9ee83d1bd210bc0b036d8a6b00e8568334003bfcb7dc40685ee87a3c26"
+    },
+    {
+      "path": "gate-artifacts/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "gate-artifacts/unit.log",
+      "bytes": 578,
+      "sha256": "b3abf942e71f81a10b02e26439aa51e8310194f62f434fe64f7c09352e55c6b3"
+    },
+    {
+      "path": "gate-release.log",
+      "bytes": 2114,
+      "sha256": "efc53681a00364dddb6a917d39c3b7d8f9b95d71931adc1295439a5f4080e87a"
+    },
+    {
+      "path": "gate-report.json",
+      "bytes": 3608,
+      "sha256": "348d7ec358e6bab01230bf64ef4eed8ec3abd31c7eba2461c9f160fe92ae3b74"
+    },
+    {
+      "path": "harness-powershell-parse.log",
+      "bytes": 24,
+      "sha256": "9409bc2ba179db3fba84513bd9c570873aae2f9833fd0d56baf47299cb1f768a"
+    },
+    {
+      "path": "harness-pr27-merged.json",
+      "bytes": 233,
+      "sha256": "ff8eebb9e8054666b30b7527ea608f42b5a6cfd85cf863a9821e856e7d5c8ddf"
+    },
+    {
+      "path": "harness-pr28-merged.json",
+      "bytes": 233,
+      "sha256": "67fc0f4b2d08ffa28d4757089e10e32fbbe1b1be081062b61332651dbe391bf6"
+    },
+    {
+      "path": "harness-tests.log",
+      "bytes": 1762,
+      "sha256": "9a896035724084867ab9f7a3937aaffafedef633f7b1917e7d48253ea7bf3da8"
+    },
+    {
+      "path": "installers-final-summary.json",
+      "bytes": 4294,
+      "sha256": "3d31cc0e1216f02c42e1873dfab577a093ee198b97ebe20b70f485b8cfb72424"
+    },
+    {
+      "path": "mac-release-verification.json",
+      "bytes": 556,
+      "sha256": "64c17cd953d39c659da0ef24eeb7e2ea1f8d013345dd9e0105fefdfd6cbab884"
+    },
+    {
+      "path": "native-b9/artifact-identity.json",
+      "bytes": 418,
+      "sha256": "0ba169a6fb32336df754df03c4a855ae383b92ca0c0aaffd6e7cd3954a005cfa"
+    },
+    {
+      "path": "native-b9/out/windows-backend/managed-live.json",
+      "bytes": 319,
+      "sha256": "8b29e75817152c379bab548c6c4ba8f06c36ae4987d3383389658045f01c3cc9"
+    },
+    {
+      "path": "native-b9/out/windows-ordinary/ordinary-stderr.log",
+      "bytes": 56,
+      "sha256": "9f15ff9ec491a2de557d20d64759cf44c3adea98d56be47e610874c095e14c04"
+    },
+    {
+      "path": "native-b9/out/windows-ordinary/ordinary-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-b9/out/windows-ordinary/startup/startup-diagnostics.json",
+      "bytes": 883,
+      "sha256": "9015dca3d93bf233d25c7e5b97d6108ba6016f6e87974091bb1939bbc113dc07"
+    },
+    {
+      "path": "native-b9/out/windows-ordinary/startup/startup-stderr.log",
+      "bytes": 350,
+      "sha256": "bb9b68b84a22a46a7a39f775afcfdbae13e2488024f1449827d017e3488c3417"
+    },
+    {
+      "path": "native-b9/out/windows-ordinary/startup/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "native-b9/out/windows-ordinary/startup/startup.json",
+      "bytes": 1501,
+      "sha256": "ad766998a534434837668d0dbb444bb410562f129bf2fe380683a0e546d46dc5"
+    },
+    {
+      "path": "native-b9/out/windows-startup/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "d97406e9bd5e1341e7aca08746caba8019bab1edf3b17a13bde9990c3552ff2d"
+    },
+    {
+      "path": "native-b9/out/windows-startup/runtime-managed-ui-live.json",
+      "bytes": 252,
+      "sha256": "0b44b6f7e3abc56107823c7c1a6132474a92b3cc272eeffaf4e15ebda53566b4"
+    },
+    {
+      "path": "native-b9/out/windows-startup/sandbox-36c851527f454bbe8ae719e058ac4290/logs/app.log",
+      "bytes": 1270,
+      "sha256": "898b59158b56ff8e837bb756d03217cde1dc5d640a7dad1dc878719852db260b"
+    },
+    {
+      "path": "native-b9/out/windows-startup/startup-diagnostics.json",
+      "bytes": 10893,
+      "sha256": "c752bafe34295a0b818e0e01373084e1660db2f366e6ef9332914697a0eb5194"
+    },
+    {
+      "path": "native-b9/out/windows-startup/startup-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "native-b9/out/windows-startup/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "native-b9/out/windows-startup/startup.json",
+      "bytes": 1434,
+      "sha256": "03c30d790e94ddeb231e49ad9d66586a14f96eee178a8a0ebbac15385260965c"
+    },
+    {
+      "path": "offline-fix-clippy.log",
+      "bytes": 206,
+      "sha256": "63e1b0c3147815f2aab4a5f46ecad47488cc60c7ee76100a9c16648938bf4867"
+    },
+    {
+      "path": "offline-fix-runtime-regression.log",
+      "bytes": 10518,
+      "sha256": "370fb408b124a346400ef633a00a218a25995f811eb9184f96cbde5e15d8f36f"
+    },
+    {
+      "path": "ordinary-profile-first-attempt.log",
+      "bytes": 2558,
+      "sha256": "9ec21903e7cd83f75da66d6f93eccb2aae6d8603afb91cde9c4adaa538937675"
+    },
+    {
+      "path": "ordinary-profile-preflight-passed.log",
+      "bytes": 30508,
+      "sha256": "c8a9697debf1b6a1e17c7b4be53161a8350e38d9d81ce9e455cf635d264a0019"
+    },
+    {
+      "path": "ordinary-tray-artwork-failure.log",
+      "bytes": 7853,
+      "sha256": "7b031f9ad1a0681776d17f4f8179dffd4e0bd19c846f6c6c9bc2983627373578"
+    },
+    {
+      "path": "ota/windows-ota-msi/model-editor-context-native.json",
+      "bytes": 277,
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "ota/windows-ota-msi/model-export-boundary.json",
+      "bytes": 326,
+      "sha256": "ad861cc65932c168abf6e596b81e8abeae0bec3ddb7dbe748533f836d1e27a86"
+    },
+    {
+      "path": "ota/windows-ota-msi/model-ipc-descriptor.json",
+      "bytes": 71,
+      "sha256": "78b7eb7d71df0db435ba38a648b1ae08591bb0ca8d5b15135e3d34699290de46"
+    },
+    {
+      "path": "ota/windows-ota-msi/model-sort-native.json",
+      "bytes": 726,
+      "sha256": "55ac2cabbf1e5d60dd0e4f98705aeffda8f9f3a7d22b9a5ecdd22fb046fefd13"
+    },
+    {
+      "path": "ota/windows-ota-msi/model-sort-pointer.json",
+      "bytes": 219,
+      "sha256": "42663ecff1e895d2ba4b8776c3f430764198b96ac4f0e0de690acae708494e83"
+    },
+    {
+      "path": "ota/windows-ota-msi/model-template-native.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "ota/windows-ota-msi/model-transfer-native.json",
+      "bytes": 249,
+      "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67"
+    },
+    {
+      "path": "ota/windows-ota-msi/model-ui.json",
+      "bytes": 894,
+      "sha256": "b7b243070822b21cc29efe4cc188eabd400e6b3d4c0bf7edefb69f2bd6c5311f"
+    },
+    {
+      "path": "ota/windows-ota-msi/ota-data-before.json",
+      "bytes": 190,
+      "sha256": "9f01083ab3bd202f1a37157a7b5a4cacacf25c88f71de362af8ecaf4fe6e7192"
+    },
+    {
+      "path": "ota/windows-ota-msi/ota-result.json",
+      "bytes": 1138,
+      "sha256": "0401a3b965915ae26ffed9640f0dfc274ec643f4ac12c7702a961d2f468379da"
+    },
+    {
+      "path": "ota/windows-ota-msi/ota-verified.json",
+      "bytes": 271,
+      "sha256": "d586977dcd78644434c73748a65a63bd8ff31961c24b054959a00d4e97994ec8"
+    },
+    {
+      "path": "ota/windows-ota-msi/prepare-exit.json",
+      "bytes": 1906,
+      "sha256": "caad6bd17ea9a722dbf6206958a44ed78b0785140032e81c6fc2ec8ccac83998"
+    },
+    {
+      "path": "ota/windows-ota-msi/prepare-restart.json",
+      "bytes": 1906,
+      "sha256": "11f165dd4e4c8fe909d1ce38aa3f792d483659fb427f76bd7291d35b60fe5e18"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-agent-settings.png",
+      "bytes": 105796,
+      "sha256": "438c98b38611bc9e74814336c60e40680f73e154d7303600d4f2c6e19ed964f0"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-alignment.json",
+      "bytes": 3257,
+      "sha256": "6927d74e885958f89c42cdb06e6e74963314373ded76e68681430af323ed0408"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-channel-detail.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-channels.png",
+      "bytes": 132895,
+      "sha256": "01d847f356dd251e53b6f74406624bba51b9217d1af0c25ca27e3ba460c7319e"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-connection-dialog.png",
+      "bytes": 163438,
+      "sha256": "e69027beab4c88fab8b19bc50d4897de81f69bb8ce9b1771d380e289a6ee57c2"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-dark-high.png",
+      "bytes": 150202,
+      "sha256": "8b323ad832c5a9b524333a5105faaef00c72d1b27e8e66137090365fa7f3bffc"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-dark-low.png",
+      "bytes": 157873,
+      "sha256": "70ec10d2fd16a33f3368127fca4309a492988ac9b393a2fd1a2543f3d8ceafcf"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-dark-mid.png",
+      "bytes": 157721,
+      "sha256": "7f1616b35f68711405111e142eba66d9d73dde693bff9c867b617740fc3a1fa9"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-file-scope.png",
+      "bytes": 131853,
+      "sha256": "ee04aef2dfabdd707ab7ac41164ac6339674a0f6cc4d2569f71f761f9805f7cf"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-light-high.png",
+      "bytes": 146289,
+      "sha256": "d687815c3602f3680961c4e750b5bcfa88cc596cc52fd37f0bd496d711a36118"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-light-low.png",
+      "bytes": 149013,
+      "sha256": "2137eaafcf8a1e42dd1974d235d12cad0e1542ad5c94b9db8bbe34b2dec01bac"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-light-mid.png",
+      "bytes": 153818,
+      "sha256": "1a8839dea58f981bae54db2cf55961cce6799b6500a6f26eacb539bd9adcbfc7"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-overview.png",
+      "bytes": 437049,
+      "sha256": "417bfaaa5d52751843c4725eb2475511f9c482c040b3256af411e5e439f3dc33"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-template-detail.png",
+      "bytes": 127546,
+      "sha256": "f96005250ed0c99b300c4750867a001c82328ea9c9157a29364de9f9431bdf82"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-template-zoom-100.png",
+      "bytes": 172744,
+      "sha256": "ad6652a1a64426cb8e6e2d5bb7d5a47540a385001c8feb34d43189f4e09e91d7"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-template-zoom-150.png",
+      "bytes": 191596,
+      "sha256": "5d2d3ecf65f1d43a85da4a398ed86cd0fcafe6a037ecf35ec074ae55a2e742e2"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-template-zoom-200.png",
+      "bytes": 212382,
+      "sha256": "727582c87dbbcbaf93efdc9226477d644f345c5d06a7ebce17469e6176a38df9"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-template-zoom-50.png",
+      "bytes": 105101,
+      "sha256": "a5e684056de33c1f84c148dd5ad149cd3a5b6380b9284b651857ef143798ab7c"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-templates.png",
+      "bytes": 179314,
+      "sha256": "7fe30b1c1c639f9a8c6941db40b99138cd034b142000fcfebc3ef517b403d32a"
+    },
+    {
+      "path": "ota/windows-ota-msi/ui021-webdav-scope.png",
+      "bytes": 136623,
+      "sha256": "d197f097a7172cf4f77fbe6bda3b40917d489caebd6375d6e5451e9ac2124bf3"
+    },
+    {
+      "path": "ota/windows-ota-nsis/model-editor-context-native.json",
+      "bytes": 277,
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "ota/windows-ota-nsis/model-export-boundary.json",
+      "bytes": 328,
+      "sha256": "a0a46c4703b65bc6ef918de15e871ead183e126f0b6d3f15df6cbac8ce650d53"
+    },
+    {
+      "path": "ota/windows-ota-nsis/model-ipc-descriptor.json",
+      "bytes": 71,
+      "sha256": "78b7eb7d71df0db435ba38a648b1ae08591bb0ca8d5b15135e3d34699290de46"
+    },
+    {
+      "path": "ota/windows-ota-nsis/model-sort-native.json",
+      "bytes": 726,
+      "sha256": "e1e2a881ddcc0e2ae57e40b4b27587afc948195dd62516f1349558384a6b5d19"
+    },
+    {
+      "path": "ota/windows-ota-nsis/model-sort-pointer.json",
+      "bytes": 219,
+      "sha256": "42663ecff1e895d2ba4b8776c3f430764198b96ac4f0e0de690acae708494e83"
+    },
+    {
+      "path": "ota/windows-ota-nsis/model-template-native.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "ota/windows-ota-nsis/model-transfer-native.json",
+      "bytes": 249,
+      "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67"
+    },
+    {
+      "path": "ota/windows-ota-nsis/model-ui.json",
+      "bytes": 894,
+      "sha256": "be1b71dad90364801eea1b6dbb959eabdb7929f38ee24bc4927e1fc5e0c3106b"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ota-data-before.json",
+      "bytes": 190,
+      "sha256": "2cbf23edef460a98ee0ecf5f03401ffa0f1953be435627b589b3f3856faa4e69"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ota-result.json",
+      "bytes": 1142,
+      "sha256": "95528f4aabd13ab070eb4ff6f163440cf48b269040f91a532f8ab063d69e6597"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ota-verified.json",
+      "bytes": 271,
+      "sha256": "d586977dcd78644434c73748a65a63bd8ff31961c24b054959a00d4e97994ec8"
+    },
+    {
+      "path": "ota/windows-ota-nsis/prepare-exit.json",
+      "bytes": 1602,
+      "sha256": "3aba57853b42a89b9069d3f4829c2927a84be56ff89fec356eee1bc8bca282c6"
+    },
+    {
+      "path": "ota/windows-ota-nsis/prepare-restart.json",
+      "bytes": 1610,
+      "sha256": "734be418f8d559b7914ef4d99d2f99d00f8547cf06f50418f31ccbea2ba33364"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-agent-settings.png",
+      "bytes": 105959,
+      "sha256": "2aff90ebbe023778c7421324c3ffe992fcc288389463e51513a25c58e48847c1"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-alignment.json",
+      "bytes": 3257,
+      "sha256": "6927d74e885958f89c42cdb06e6e74963314373ded76e68681430af323ed0408"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-channel-detail.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-channels.png",
+      "bytes": 132895,
+      "sha256": "01d847f356dd251e53b6f74406624bba51b9217d1af0c25ca27e3ba460c7319e"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-connection-dialog.png",
+      "bytes": 163438,
+      "sha256": "e69027beab4c88fab8b19bc50d4897de81f69bb8ce9b1771d380e289a6ee57c2"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-dark-high.png",
+      "bytes": 152198,
+      "sha256": "69abfee1227b479662c384385030e88ba45320f37467908191535bf845b519b4"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-dark-low.png",
+      "bytes": 161347,
+      "sha256": "d75ed09f413473ac631ed5aa63d0e9c341c6fd60f55db731a4889fc4fe964f98"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-dark-mid.png",
+      "bytes": 157721,
+      "sha256": "7f1616b35f68711405111e142eba66d9d73dde693bff9c867b617740fc3a1fa9"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-file-scope.png",
+      "bytes": 131853,
+      "sha256": "ee04aef2dfabdd707ab7ac41164ac6339674a0f6cc4d2569f71f761f9805f7cf"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-light-high.png",
+      "bytes": 146203,
+      "sha256": "50971177edc525578b2861f6341df94fd11a9fe45b2a0dbdcb94cd0eb81e974c"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-light-low.png",
+      "bytes": 153675,
+      "sha256": "455d1ec986736a1cfbff40b10c199acf8dd0477d4c554ad629995919e8d373e1"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-light-mid.png",
+      "bytes": 149282,
+      "sha256": "8992bb03266467930bd627ba28736248348ffbacdd6679f42fa9148d0499eda3"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-overview.png",
+      "bytes": 437231,
+      "sha256": "f7806567ef8ca2f4fe1358d0098774d0b6b3f7b0775f3e515c14a32f05cae6cd"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-template-detail.png",
+      "bytes": 127070,
+      "sha256": "50c95b7f7aef48d80611682b501f8471e2a2842e9c90338d75092b8b0bd39132"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-template-zoom-100.png",
+      "bytes": 172235,
+      "sha256": "1732521ff35d2c4caeddc0f057cd3fc5f4ecd13c7e5ef57cd161a5bb6a15ae11"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-template-zoom-150.png",
+      "bytes": 191132,
+      "sha256": "05b6839e0a5228e252ea597886fa7eae48f8d5409110d086b71f4c4aae17c923"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-template-zoom-200.png",
+      "bytes": 210758,
+      "sha256": "f2fe064ad3f31d88f54d017fee143c608490eb6f4f81fdc3b435656f614b2e63"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-template-zoom-50.png",
+      "bytes": 105024,
+      "sha256": "178f57dfde124ab1e75daf3b070ef16abf9fdef92f3397c31b32c2d45758fe4b"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-templates.png",
+      "bytes": 179395,
+      "sha256": "53e617a0e741ce6a07ec4e067d0bc62bb2025bfd727f369bb1b93e37b8703eb0"
+    },
+    {
+      "path": "ota/windows-ota-nsis/ui021-webdav-scope.png",
+      "bytes": 136623,
+      "sha256": "d197f097a7172cf4f77fbe6bda3b40917d489caebd6375d6e5451e9ac2124bf3"
+    },
+    {
+      "path": "ota-final.json",
+      "bytes": 3573,
+      "sha256": "aa02cca8a79dbf0b2a4fee11f1803f322056e39e5c8b2c523d8572bf4920161d"
+    },
+    {
+      "path": "ota-summary.json",
+      "bytes": 1120,
+      "sha256": "546ad12f132c3301bb332273851c09b3fd89081f95f90ff9b04cc5b3fd81b8da"
+    },
+    {
+      "path": "parity-agent/implementation-agent.png",
+      "bytes": 274966,
+      "sha256": "bd5c2d1f2e078f81d9ff0570fc960009b8d4602f92d7bf4b803e62a994dcf58d"
+    },
+    {
+      "path": "parity-agent/parity-agent.json",
+      "bytes": 1037,
+      "sha256": "f0ac6a398a38475ead59c4fed2947b2d987fdfc82311139d6b3e6f4a519eb1c2"
+    },
+    {
+      "path": "parity-agent/prototype-agent.png",
+      "bytes": 2000427,
+      "sha256": "6960b31867145c527d02e25571af19814a3568305d660f5d844a5a5672e1fefb"
+    },
+    {
+      "path": "parity-export/implementation-export.png",
+      "bytes": 239143,
+      "sha256": "83f73b1b69afeb04bcebb8ec487ec44cf340847407f1371f00772573231a7b6e"
+    },
+    {
+      "path": "parity-export/parity-export.json",
+      "bytes": 1526,
+      "sha256": "71c4696580c28113ab5425d64461f67ae3ab40d901d3607a65193a2465c8d48f"
+    },
+    {
+      "path": "parity-export/prototype-export.png",
+      "bytes": 1964730,
+      "sha256": "f9109b92a9cb498081f916fd449b1c4e78359354016b49ef43fba7232bca0644"
+    },
+    {
+      "path": "parity-list/implementation-list.png",
+      "bytes": 276576,
+      "sha256": "584a33160f74a8d210509a13338da6a678b63fe11604e9a63488c1549847230d"
+    },
+    {
+      "path": "parity-list/parity-list.json",
+      "bytes": 1781,
+      "sha256": "b94cb7ee1195cd76e7785bca0fad12ea68e8920b593d57ae20c2764c697a86ed"
+    },
+    {
+      "path": "parity-list/prototype-list.png",
+      "bytes": 2445776,
+      "sha256": "b6aea65184db2d4964e93973131c24129d37d0205748bcb1bab9759e9f5e989e"
+    },
+    {
+      "path": "parity-preview/implementation-preview.png",
+      "bytes": 213532,
+      "sha256": "92d6e32a818f3c6c1bb5a12b53f7db765d40aae332ba8327333849887a5c4125"
+    },
+    {
+      "path": "parity-preview/parity.json",
+      "bytes": 1630,
+      "sha256": "996dfc27ed07377be168c1d37c4ba72e8d5dc135e423f376e1fb0ec39010057a"
+    },
+    {
+      "path": "parity-preview/prototype-preview.png",
+      "bytes": 1144561,
+      "sha256": "1d51662db2c2f14ee0a59d298a5c8eabd0f015e4c4a1ba6d302cd89e44767056"
+    },
+    {
+      "path": "parity-template/implementation-template.png",
+      "bytes": 198610,
+      "sha256": "23280a5d4aa81efcff24ec4d3d83d7be0d8b039c3636f0bb7a13a726e6f040d9"
+    },
+    {
+      "path": "parity-template/parity-template.json",
+      "bytes": 2068,
+      "sha256": "47dbfef5b5c082d9b08036292c986c172d7bc7bf18695a653c48e89592c8f37a"
+    },
+    {
+      "path": "parity-template/prototype-template.png",
+      "bytes": 2202259,
+      "sha256": "a1e68bcae4575fdf483b79ca7323979c97afc1cff2672fec525f136ce5e8764b"
+    },
+    {
+      "path": "path-final-clippy.log",
+      "bytes": 206,
+      "sha256": "785876fd2b552f814991431add72469684a14ff67ca3fa0ca117e7fc50df6939"
+    },
+    {
+      "path": "path-final.log",
+      "bytes": 1123,
+      "sha256": "983a7d38449acfdd78eca8849067249b4c590ba6f3b7068e449830301b1cddf9"
+    },
+    {
+      "path": "pr-merged.json",
+      "bytes": 233,
+      "sha256": "62e47fd0c5d2ea021394d577ba2850bbd869a702884989b115c33ec6608bab8b"
+    },
+    {
+      "path": "probe-postreview.log",
+      "bytes": 545,
+      "sha256": "34632ea3e56ef4514b9c22714c9740bd73f72e9f02e5c95e575d2cbd87e7ff80"
+    },
+    {
+      "path": "prototype-authority.json",
+      "bytes": 935,
+      "sha256": "e2a66f788242e9ff530b375f987cc0af8a0fdbb1cce3b073e3a7e4be1c39189d"
+    },
+    {
+      "path": "publish-public.log",
+      "bytes": 25548,
+      "sha256": "fac07a7dde887b388d8b0045ddc43b800efc411575a05db9a9dc505ef72ed29f"
+    },
+    {
+      "path": "publish-stable.log",
+      "bytes": 25372,
+      "sha256": "dc8260b6fc3fced013faea47e4285b66b5feddc187fccc2e1d5fc30ada0fe9f1"
+    },
+    {
+      "path": "release-initial-installer-failure.log",
+      "bytes": 6357,
+      "sha256": "eb6fa73550f0c437e1bb266be0d4dc21282c496b14c5447d538c69f16fd9ceef"
+    },
+    {
+      "path": "release-initial-installer-verification.json",
+      "bytes": 781,
+      "sha256": "7595b5b043f7498b11c92279c9a5a1739aaeedfcd0c2c8530322ff2a45c83fe4"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/assets/latest.json",
+      "bytes": 4913,
+      "sha256": "7e5161fa8824f8d01f75b9f4f4519007adcc49f6512d03d51d3de437cadc898a"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/existing-assets-verification.json",
+      "bytes": 586,
+      "sha256": "f27a4ea2d923de0ed979dfbf1ee970493d515ae198fe9e05a424ff01c743c83e"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/installer-verification.json",
+      "bytes": 1750,
+      "sha256": "683dff6f8b687f9e91cbd599273ba4d0e881858e5b460ab4375f7b30acdf978e"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/cdp-diagnostics.json",
+      "bytes": 1744,
+      "sha256": "e29b4f84c24f897710c6c6ec8be2e9fc4160f4faf2471fe0d316e459918bae78"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/main-window.png",
+      "bytes": 563814,
+      "sha256": "e3b017ebcdbf4bb899ecf88a2bd66b8d98b8658c554cc4a2c979c071be5a9f94"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/model-editor-context-native.json",
+      "bytes": 277,
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/model-export-boundary.json",
+      "bytes": 456,
+      "sha256": "675c7efce677cd050076b2700cd4323ce25790a8423cfefc9323e0a3037fbd5f"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/model-ipc-descriptor.json",
+      "bytes": 71,
+      "sha256": "78b7eb7d71df0db435ba38a648b1ae08591bb0ca8d5b15135e3d34699290de46"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/model-sort-native.json",
+      "bytes": 726,
+      "sha256": "c749055291e65fbe3e5985bb78aba5f4119c19e0aeedaf8d8bcd846d2f37a330"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/model-sort-pointer.json",
+      "bytes": 219,
+      "sha256": "42663ecff1e895d2ba4b8776c3f430764198b96ac4f0e0de690acae708494e83"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/model-template-native.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/model-transfer-native.json",
+      "bytes": 249,
+      "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/model-ui.json",
+      "bytes": 894,
+      "sha256": "8cc50eb57c0c3a43720fc9571e22fdf0b552f9499e05044b5738f58156a69d4d"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/startup-diagnostics.json",
+      "bytes": 9105,
+      "sha256": "a86fafac5a668d884fbb832809cdb4e61a973cb0c1e950285db11361d50c9197"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/startup.json",
+      "bytes": 1437,
+      "sha256": "234a402320c312afcf0b23176b360a81d71c0582e708b043671f69064bfce113"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-agent-settings.png",
+      "bytes": 106202,
+      "sha256": "a127ab939699942301ed363a836c58e37c4a8c68e508bf8aaaf00be1bfa71304"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-alignment.json",
+      "bytes": 3257,
+      "sha256": "6927d74e885958f89c42cdb06e6e74963314373ded76e68681430af323ed0408"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-channel-detail.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-channels.png",
+      "bytes": 132895,
+      "sha256": "01d847f356dd251e53b6f74406624bba51b9217d1af0c25ca27e3ba460c7319e"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-connection-dialog.png",
+      "bytes": 163438,
+      "sha256": "e69027beab4c88fab8b19bc50d4897de81f69bb8ce9b1771d380e289a6ee57c2"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-dark-high.png",
+      "bytes": 150173,
+      "sha256": "ec5cf817cc9afd30218b852bd380c37fad0f5a1997d0f6ffc1cdb335c7a2505a"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-dark-low.png",
+      "bytes": 159396,
+      "sha256": "0b05fbd86eb1870ec7f7e4656082b17bf9b8c9786d1c1f871fbb8578d6b9fa48"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-dark-mid.png",
+      "bytes": 158250,
+      "sha256": "bcedb838769c692bd51823365ee8fbad9114db8eb125e65bb2dd24724460355a"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-file-scope.png",
+      "bytes": 131853,
+      "sha256": "ee04aef2dfabdd707ab7ac41164ac6339674a0f6cc4d2569f71f761f9805f7cf"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-light-high.png",
+      "bytes": 146464,
+      "sha256": "7ad373b21751c5bf2421a3426d3bd3b08257350106cdb6a12fe52d4719cb883e"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-light-low.png",
+      "bytes": 153839,
+      "sha256": "89f15042f74ac597ecbbdfa02daff4be4d7bceb34144efd2b9fe5c32ad015e27"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-light-mid.png",
+      "bytes": 153818,
+      "sha256": "1a8839dea58f981bae54db2cf55961cce6799b6500a6f26eacb539bd9adcbfc7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-overview.png",
+      "bytes": 437378,
+      "sha256": "9789b09b8ce3a9020bf7fcdebdf5aa2a3846e546150ba2c7e573291f12a471d6"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-template-detail.png",
+      "bytes": 127332,
+      "sha256": "0f6826496e4eeb3b5de98170be34ceb6b9c1e5c8fe1fe43ad61e38fb75ac616d"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-template-zoom-100.png",
+      "bytes": 170012,
+      "sha256": "3bbdd09d7cea1d1f5009427a580fb3f85e75ee5aec578ec13db191fa6bcc8d32"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-template-zoom-150.png",
+      "bytes": 191578,
+      "sha256": "d6fa0834a2dd012373674f9c3a3a1bc123cc1f687908e38dd5b92bd67828acfd"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-template-zoom-200.png",
+      "bytes": 204962,
+      "sha256": "8b86120571195b1d96bf342015fec3d8e83e1ce70bee311345839631d11d0075"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-template-zoom-50.png",
+      "bytes": 105094,
+      "sha256": "d503690968ea2ea496ad36c8baeeb33f2e7acf755331bf5c43ea1d178bfb0150"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-templates.png",
+      "bytes": 179314,
+      "sha256": "7fe30b1c1c639f9a8c6941db40b99138cd034b142000fcfebc3ef517b403d32a"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/ui021-webdav-scope.png",
+      "bytes": 136623,
+      "sha256": "d197f097a7172cf4f77fbe6bda3b40917d489caebd6375d6e5451e9ac2124bf3"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-custom/verification/msi-startup/webview.json",
+      "bytes": 698,
+      "sha256": "2e797a45e4ade3173bb30d6fdc74043c11e4508403251fbd06d62c4cf98c7ef7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/assets/latest.json",
+      "bytes": 4913,
+      "sha256": "7e5161fa8824f8d01f75b9f4f4519007adcc49f6512d03d51d3de437cadc898a"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/existing-assets-verification.json",
+      "bytes": 587,
+      "sha256": "5a97cc209b14e91a60953e68c9186db2dee667d9323ae5231bfe5368647c382c"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/installer-verification.json",
+      "bytes": 703,
+      "sha256": "b336fd85474806bfd28132b1fe7b599804924852b77ef17a37ad1d5f08d840a7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/cdp-diagnostics.json",
+      "bytes": 1744,
+      "sha256": "c697f1b32565905e4175069e4a44066dda1c134e8d2c510acf6859d83349b077"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/main-window.png",
+      "bytes": 560970,
+      "sha256": "9bd65a5dde708d108c3090ac9496e321bfbdedb4837d1501eb7fcb4cd30bf047"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/model-editor-context-native.json",
+      "bytes": 277,
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/model-export-boundary.json",
+      "bytes": 472,
+      "sha256": "7becabdb1969aa9b7000dbea5f81a930350a5800501d693fd6db3efa56f6d48d"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/model-ipc-descriptor.json",
+      "bytes": 71,
+      "sha256": "78b7eb7d71df0db435ba38a648b1ae08591bb0ca8d5b15135e3d34699290de46"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/model-sort-native.json",
+      "bytes": 726,
+      "sha256": "fa6b5ef4b740c769a59cdefe2bc09309f67092eb5db0b02708182147cd4525ed"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/model-sort-pointer.json",
+      "bytes": 219,
+      "sha256": "42663ecff1e895d2ba4b8776c3f430764198b96ac4f0e0de690acae708494e83"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/model-template-native.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/model-transfer-native.json",
+      "bytes": 249,
+      "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/model-ui.json",
+      "bytes": 894,
+      "sha256": "401e378aee6352472161ac830d80d8f46af3e013db8eb7221fb162ce21266346"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/startup-diagnostics.json",
+      "bytes": 9077,
+      "sha256": "04c3d091a56f47c84fcbc6785113eb9221b2707d6effd8491aafa78c482502a5"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/startup.json",
+      "bytes": 1389,
+      "sha256": "10289283ab577445b4054a31f1f10f614ea3fd88a83373e3de0c563e4676a7c1"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-agent-settings.png",
+      "bytes": 106512,
+      "sha256": "bfcadbc6c64eac748ab5e340ef2b6a7c8af46a19001249aaefbf97fa95f46b01"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-alignment.json",
+      "bytes": 3257,
+      "sha256": "6927d74e885958f89c42cdb06e6e74963314373ded76e68681430af323ed0408"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-channel-detail.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-channels.png",
+      "bytes": 132895,
+      "sha256": "01d847f356dd251e53b6f74406624bba51b9217d1af0c25ca27e3ba460c7319e"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-connection-dialog.png",
+      "bytes": 163438,
+      "sha256": "e69027beab4c88fab8b19bc50d4897de81f69bb8ce9b1771d380e289a6ee57c2"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-dark-high.png",
+      "bytes": 150202,
+      "sha256": "8b323ad832c5a9b524333a5105faaef00c72d1b27e8e66137090365fa7f3bffc"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-dark-low.png",
+      "bytes": 157873,
+      "sha256": "70ec10d2fd16a33f3368127fca4309a492988ac9b393a2fd1a2543f3d8ceafcf"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-dark-mid.png",
+      "bytes": 157721,
+      "sha256": "7f1616b35f68711405111e142eba66d9d73dde693bff9c867b617740fc3a1fa9"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-file-scope.png",
+      "bytes": 131853,
+      "sha256": "ee04aef2dfabdd707ab7ac41164ac6339674a0f6cc4d2569f71f761f9805f7cf"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-light-high.png",
+      "bytes": 146013,
+      "sha256": "a0e8a32ea15162f7aff1c993c2c2998f566e28ed60af723b07d3689d3df3608e"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-light-low.png",
+      "bytes": 151074,
+      "sha256": "1f026f7e72d01af52f787f05608b822c54e1068d293aafe45570a30a84011081"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-light-mid.png",
+      "bytes": 154764,
+      "sha256": "ddd6043f7c25cf69f325360e8b087241be2538720118d26d0f35e7c820f78b4a"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-overview.png",
+      "bytes": 437076,
+      "sha256": "4ada642018a0d9c0d0b43c7fdaaaa5b3fb065843ba736ca120fbe87234e49d67"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-template-detail.png",
+      "bytes": 127376,
+      "sha256": "8c41de69d06f8c6cd3cd06ea859bed6fbfc17e82d935ef3ef2dc9a6b2cf356a2"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-template-zoom-100.png",
+      "bytes": 173799,
+      "sha256": "e4d0d50f0c2ff4c7239217361cdd61b8bc8e4deabc25628d1cede4b243a54e50"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-template-zoom-150.png",
+      "bytes": 191763,
+      "sha256": "50ac26568c6891897dbc34920057d615fd213ed61e4c195b1b0728501dec378c"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-template-zoom-200.png",
+      "bytes": 210980,
+      "sha256": "baf6a2ae2606be714c2cd201ab2658ccd558204020e84ce0557abd839dfefe73"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-template-zoom-50.png",
+      "bytes": 105060,
+      "sha256": "66328bb05ac82d7bf3d7d09d6e72f0e40f2a2048135e71e58650fe6b335d839b"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-templates.png",
+      "bytes": 179560,
+      "sha256": "74c33ea8b768dcf2253a14a451face74b31854f54500ed0b2e27f4e8085c5682"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/ui021-webdav-scope.png",
+      "bytes": 136623,
+      "sha256": "d197f097a7172cf4f77fbe6bda3b40917d489caebd6375d6e5451e9ac2124bf3"
+    },
+    {
+      "path": "release-installers/release-existing-installer-msi-default/verification/msi-default-startup/webview.json",
+      "bytes": 698,
+      "sha256": "2e797a45e4ade3173bb30d6fdc74043c11e4508403251fbd06d62c4cf98c7ef7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/assets/latest.json",
+      "bytes": 4913,
+      "sha256": "7e5161fa8824f8d01f75b9f4f4519007adcc49f6512d03d51d3de437cadc898a"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/existing-assets-verification.json",
+      "bytes": 587,
+      "sha256": "f48a5f7c4a6291e44e6559e5a6c15ad3f54d490337629d490af93ec42309cace"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/installer-verification.json",
+      "bytes": 1752,
+      "sha256": "398f5ffebb7a3ae28a9abc24d4e463b0a111e27322846504d9cb89dfa93a0d01"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/cdp-diagnostics.json",
+      "bytes": 1744,
+      "sha256": "5d9894b6c74ad25ddf659baf85a8e4516ef35c64fd54d8d9ad9fb82ac239a3e1"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/main-window.png",
+      "bytes": 529882,
+      "sha256": "820756f87cdd688434333a4cc421feb8b2a514992888babcbe0f9e807651d445"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/model-editor-context-native.json",
+      "bytes": 277,
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/model-export-boundary.json",
+      "bytes": 458,
+      "sha256": "b2b33a401e4d35d602df2a35c497c655f1ea39059eb84b5f43b3e4787571f9c2"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/model-ipc-descriptor.json",
+      "bytes": 71,
+      "sha256": "78b7eb7d71df0db435ba38a648b1ae08591bb0ca8d5b15135e3d34699290de46"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/model-sort-native.json",
+      "bytes": 726,
+      "sha256": "0bbe75119c1a115972952899d032ee5fd5e70accb77757b4b7a69c9aefc5c3f7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/model-sort-pointer.json",
+      "bytes": 219,
+      "sha256": "42663ecff1e895d2ba4b8776c3f430764198b96ac4f0e0de690acae708494e83"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/model-template-native.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/model-transfer-native.json",
+      "bytes": 249,
+      "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/model-ui.json",
+      "bytes": 894,
+      "sha256": "984e96864dca54f08f7d5c55b04aeb27ccf336b6f3fd4a688b68b47cc12988e7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/startup-diagnostics.json",
+      "bytes": 9128,
+      "sha256": "b6e60b5576a8519897592d2c5a382845a6be796e9507f671a076e3fbd212340c"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/startup.json",
+      "bytes": 1442,
+      "sha256": "77dafa826aff2b6925df27f4ca59ff0a99259ad7c888a8f6a6738a96b5a8014d"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-agent-settings.png",
+      "bytes": 105959,
+      "sha256": "2aff90ebbe023778c7421324c3ffe992fcc288389463e51513a25c58e48847c1"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-alignment.json",
+      "bytes": 3257,
+      "sha256": "6927d74e885958f89c42cdb06e6e74963314373ded76e68681430af323ed0408"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-channel-detail.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-channels.png",
+      "bytes": 132895,
+      "sha256": "01d847f356dd251e53b6f74406624bba51b9217d1af0c25ca27e3ba460c7319e"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-connection-dialog.png",
+      "bytes": 163438,
+      "sha256": "e69027beab4c88fab8b19bc50d4897de81f69bb8ce9b1771d380e289a6ee57c2"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-dark-high.png",
+      "bytes": 150202,
+      "sha256": "8b323ad832c5a9b524333a5105faaef00c72d1b27e8e66137090365fa7f3bffc"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-dark-low.png",
+      "bytes": 161151,
+      "sha256": "1aea50c160115caccac2d92df2451bc64e6915daeba636a8d16ba425a5ca2b40"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-dark-mid.png",
+      "bytes": 160134,
+      "sha256": "bfffc64a517f709dc539d5ff043c4c42e1af91c1339ee66d52fe1f1ff6bf6f2a"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-file-scope.png",
+      "bytes": 131853,
+      "sha256": "ee04aef2dfabdd707ab7ac41164ac6339674a0f6cc4d2569f71f761f9805f7cf"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-light-high.png",
+      "bytes": 146056,
+      "sha256": "f6d573ed87e3c00cd71b688fb5370e9fe82e31f15844b259e7e4244e94ef2ec2"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-light-low.png",
+      "bytes": 149013,
+      "sha256": "2137eaafcf8a1e42dd1974d235d12cad0e1542ad5c94b9db8bbe34b2dec01bac"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-light-mid.png",
+      "bytes": 153818,
+      "sha256": "1a8839dea58f981bae54db2cf55961cce6799b6500a6f26eacb539bd9adcbfc7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-overview.png",
+      "bytes": 437329,
+      "sha256": "96064a9e1693cfd95d63e7a6c405041d6cedfd9219abe9c267c13702b524402c"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-template-detail.png",
+      "bytes": 127268,
+      "sha256": "b50c88edf57a2cef60579420f88971c1e59a8de97eb698c2430a089a32a9120f"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-template-zoom-100.png",
+      "bytes": 172577,
+      "sha256": "31285cd0799a13fc23ebaddb9805d2778733ad332c7eaf8e8240e35817dd45a9"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-template-zoom-150.png",
+      "bytes": 191630,
+      "sha256": "2bbbf5941c2247854fe2c3bc83d3880d140c48cc9979e63fe51a63a032140148"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-template-zoom-200.png",
+      "bytes": 211808,
+      "sha256": "b9292bad4198defafb0e9601f3d2603e889d2f17cb090c010a9f1f02c6284557"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-template-zoom-50.png",
+      "bytes": 105133,
+      "sha256": "3cdd25b7ea3f95d5ab827bbf485fdb5539773db0f86151d2184b9c25cce69872"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-templates.png",
+      "bytes": 179395,
+      "sha256": "e3879495bf49067693f70626e6c7f5097363effe1029a65d275c5bef173fa687"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/ui021-webdav-scope.png",
+      "bytes": 136623,
+      "sha256": "d197f097a7172cf4f77fbe6bda3b40917d489caebd6375d6e5451e9ac2124bf3"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-custom/verification/nsis-startup/webview.json",
+      "bytes": 698,
+      "sha256": "2e797a45e4ade3173bb30d6fdc74043c11e4508403251fbd06d62c4cf98c7ef7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/assets/latest.json",
+      "bytes": 4913,
+      "sha256": "7e5161fa8824f8d01f75b9f4f4519007adcc49f6512d03d51d3de437cadc898a"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/existing-assets-verification.json",
+      "bytes": 588,
+      "sha256": "b188a60883fa5e217820e9503073eab587617aa705e34ffa047c534117b57934"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/installer-verification.json",
+      "bytes": 723,
+      "sha256": "60c1c1143699557b462c0997e4172a04912766f3df57c24398fe2b3c6800ee25"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/cdp-diagnostics.json",
+      "bytes": 1744,
+      "sha256": "7cf7a53b5e085235cec5b76c67cab6e52d8fd4806c4608b810b892ba50de2f94"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/main-window.png",
+      "bytes": 543919,
+      "sha256": "bce1a5d673409da37f88eea4c95da9835c748f9ae9db79b70ea4681d13b02e5f"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/model-editor-context-native.json",
+      "bytes": 277,
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/model-export-boundary.json",
+      "bytes": 474,
+      "sha256": "84f04fb03e505fcb7d351bdd2b8a59137b157b0634de377d2731367e05ef5079"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/model-ipc-descriptor.json",
+      "bytes": 71,
+      "sha256": "78b7eb7d71df0db435ba38a648b1ae08591bb0ca8d5b15135e3d34699290de46"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/model-sort-native.json",
+      "bytes": 726,
+      "sha256": "c0e23aba34458e1288a40320543df6a171645d8cb05c8b8e91e39fe41518f33d"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/model-sort-pointer.json",
+      "bytes": 219,
+      "sha256": "42663ecff1e895d2ba4b8776c3f430764198b96ac4f0e0de690acae708494e83"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/model-template-native.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/model-transfer-native.json",
+      "bytes": 249,
+      "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/model-ui.json",
+      "bytes": 894,
+      "sha256": "7665309aa1f0299a245c09dbce95a14f58883224a4d0784ef60815362e400091"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/startup-diagnostics.json",
+      "bytes": 9152,
+      "sha256": "6e06238bdf68a6e46f82295cffbab343a1ee895bdf3a939337ec9af9fe15474c"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/startup.json",
+      "bytes": 1432,
+      "sha256": "b44377a27f63a89341b711876943e4dd25277933add82103fd7f317944b80bb3"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-agent-settings.png",
+      "bytes": 106567,
+      "sha256": "a7a87d47aae3bd26dc8942bba82441abfbe5387601204e41ac54cf92a76d580f"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-alignment.json",
+      "bytes": 3257,
+      "sha256": "6927d74e885958f89c42cdb06e6e74963314373ded76e68681430af323ed0408"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-channel-detail.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-channels.png",
+      "bytes": 132895,
+      "sha256": "01d847f356dd251e53b6f74406624bba51b9217d1af0c25ca27e3ba460c7319e"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-connection-dialog.png",
+      "bytes": 163438,
+      "sha256": "e69027beab4c88fab8b19bc50d4897de81f69bb8ce9b1771d380e289a6ee57c2"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-dark-high.png",
+      "bytes": 150202,
+      "sha256": "8b323ad832c5a9b524333a5105faaef00c72d1b27e8e66137090365fa7f3bffc"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-dark-low.png",
+      "bytes": 157873,
+      "sha256": "70ec10d2fd16a33f3368127fca4309a492988ac9b393a2fd1a2543f3d8ceafcf"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-dark-mid.png",
+      "bytes": 157721,
+      "sha256": "7f1616b35f68711405111e142eba66d9d73dde693bff9c867b617740fc3a1fa9"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-file-scope.png",
+      "bytes": 131853,
+      "sha256": "ee04aef2dfabdd707ab7ac41164ac6339674a0f6cc4d2569f71f761f9805f7cf"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-light-high.png",
+      "bytes": 146008,
+      "sha256": "a786e76545c46645af32d78b9fa8693bcafcc5d97cff0d2e32fe0bc07144c613"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-light-low.png",
+      "bytes": 151074,
+      "sha256": "1f026f7e72d01af52f787f05608b822c54e1068d293aafe45570a30a84011081"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-light-mid.png",
+      "bytes": 149282,
+      "sha256": "8992bb03266467930bd627ba28736248348ffbacdd6679f42fa9148d0499eda3"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-overview.png",
+      "bytes": 436846,
+      "sha256": "231519ce1a78d833cf3392232a12709ffebdbd876e1e6ab93b19bf2b9ebea303"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-template-detail.png",
+      "bytes": 127306,
+      "sha256": "1fe40a7b259b0e2e04476b83d070789526010a8c81729affebc24ff4968c3305"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-template-zoom-100.png",
+      "bytes": 171040,
+      "sha256": "3ffac3de13944159141f351433d7fbf04087415dffe80a1cae79a35f0c89ddd5"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-template-zoom-150.png",
+      "bytes": 191496,
+      "sha256": "f8703cad9513b36e8d2d5c5ee59d05809b85664851a87eaee9f4020e68eed95d"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-template-zoom-200.png",
+      "bytes": 212500,
+      "sha256": "8304f3db91f03f8b12492f78661368b55eeecdb91bb8c78d50956dd7499d9681"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-template-zoom-50.png",
+      "bytes": 105193,
+      "sha256": "9dba354a115097c29a6175cdbc70284155100b1b4c29e510e1067d000777aebd"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-templates.png",
+      "bytes": 179461,
+      "sha256": "09246b22693a1fd1cbe52887ac5bb202149a456412de663128ceabd6a87abc78"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/ui021-webdav-scope.png",
+      "bytes": 136623,
+      "sha256": "d197f097a7172cf4f77fbe6bda3b40917d489caebd6375d6e5451e9ac2124bf3"
+    },
+    {
+      "path": "release-installers/release-existing-installer-nsis-default/verification/nsis-default-startup/webview.json",
+      "bytes": 698,
+      "sha256": "2e797a45e4ade3173bb30d6fdc74043c11e4508403251fbd06d62c4cf98c7ef7"
+    },
+    {
+      "path": "release-summary.json",
+      "bytes": 2886,
+      "sha256": "d3d82cc29a19e6ba703de7973e78e6d82a6d347ffa6e54616f38794ef7272ecd"
+    },
+    {
+      "path": "source-release-identity.json",
+      "bytes": 743,
+      "sha256": "d8f25f2c61eee570576854112174a49e2a58597985c3a63d1d2bdba809501fbe"
+    },
+    {
+      "path": "source-trees.json",
+      "bytes": 377,
+      "sha256": "4a5cb6b1c790045eee07e77c9649ce9139df557ff2a101d85d8bb611088a0d62"
+    },
+    {
+      "path": "tray-final-clippy.log",
+      "bytes": 207,
+      "sha256": "28e8a4c354b3abca92116691bb4a94a46df400f69f9e752210480741833feb91"
+    },
+    {
+      "path": "ui-build.log",
+      "bytes": 4218,
+      "sha256": "2b66f91166cb0b3cd5e82c5ae64edc0ad1d4058942dfdffaea370373076a7d6d"
+    },
+    {
+      "path": "ui-regression.log",
+      "bytes": 830,
+      "sha256": "afe0d8664223f2780eb1cf4dc77245d454f47aa16dd86d347ebe50973266bd2e"
+    },
+    {
+      "path": "ui-script-confirm-build.log",
+      "bytes": 4218,
+      "sha256": "5bc03ec2045aa41892e29ccec11a8f7c13a109674c8d79cfb04366d3dcc43aa4"
+    },
+    {
+      "path": "ui-script-confirm-regression.log",
+      "bytes": 830,
+      "sha256": "82ded1f0301050860c5840115b4b3df4ef6496f05fbe4d4b6f7a6f598556721a"
+    },
+    {
+      "path": "ui-script-typecheck.log",
+      "bytes": 61,
+      "sha256": "b2530908aa0d7d5b92225f671e1b9a6537c935ed8d9ee39bfda9a220f3be6678"
+    },
+    {
+      "path": "windows-native/out/windows-backend/environment.json",
+      "bytes": 282,
+      "sha256": "4b0109e709b3cdf9dc5aeda5d4d224d85f81ebafb0eb5822d4d9df9acc5715b6"
+    },
+    {
+      "path": "windows-native/out/windows-backend/managed-live.json",
+      "bytes": 319,
+      "sha256": "8b29e75817152c379bab548c6c4ba8f06c36ae4987d3383389658045f01c3cc9"
+    },
+    {
+      "path": "windows-native/out/windows-backend/test-executable-sha256.json",
+      "bytes": 255,
+      "sha256": "79ca93f08abbadb98c0e02418177e4b6adad6173768952c2350b52608652c147"
+    },
+    {
+      "path": "windows-native/out/windows-backend/webview2-registry.json",
+      "bytes": 299,
+      "sha256": "447dfc2b4f2d2f2b6d9eddd4ec5cf244c16e9c8807b2611a9df5ef4c17baf0a9"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/ordinary-input.json",
+      "bytes": 545,
+      "sha256": "73a5f9a1d84863229e4dde2f3524ee712b3b1444b3470b3c926a0b15c09b01a8"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/ordinary-known-folders.json",
+      "bytes": 262,
+      "sha256": "67cf7f5ac6b9987923aac3d29c099eac691309ce660b1397545e8b690b3c430f"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/ordinary-profile.json",
+      "bytes": 448,
+      "sha256": "7a31cac64eec396409f36b10bec10a075f6a145cfe3632dfeba4d90e184a81a9"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/ordinary-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/ordinary-stdout.log",
+      "bytes": 71,
+      "sha256": "bae6c2a6bb43e87697dcd469f1fbd863a97d66287e436aa7c6e8a3d7a6324a0f"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/ordinary-summary.json",
+      "bytes": 408,
+      "sha256": "7626fb2b6d486c93fc90c391b9e1670258d7d312d53a8021d297c9d39f9e99cb"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/cdp-diagnostics.json",
+      "bytes": 1744,
+      "sha256": "6ef14bf604a7f31e0b93474750b49158ee42b5e91b50219f6c5db22f4d9fbbd4"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/main-window.png",
+      "bytes": 523014,
+      "sha256": "7d192bd99b56856c37af6c768163cc324677023e2f2cf87a0779d2e149cbff1f"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/model-editor-context-native.json",
+      "bytes": 277,
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/model-export-boundary.json",
+      "bytes": 398,
+      "sha256": "6cf3f5c4a7df5c5e8da0b6a82ea5a25609e348d211e3056fa867d00759e1e918"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/model-ipc-descriptor.json",
+      "bytes": 71,
+      "sha256": "78b7eb7d71df0db435ba38a648b1ae08591bb0ca8d5b15135e3d34699290de46"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/model-sort-native.json",
+      "bytes": 726,
+      "sha256": "8fb85efb41ac20adbe1d041a2935c3263cd6434a009ed7199a75c10970e08e85"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/model-sort-pointer.json",
+      "bytes": 219,
+      "sha256": "42663ecff1e895d2ba4b8776c3f430764198b96ac4f0e0de690acae708494e83"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/model-template-native.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/model-transfer-native.json",
+      "bytes": 249,
+      "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/model-ui.json",
+      "bytes": 894,
+      "sha256": "946d6544b38b27b80aa68832e6da08085a295583f6ff9262dfc511b4a5e92c45"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/startup-diagnostics.json",
+      "bytes": 8959,
+      "sha256": "5a3dac7e877b017f4d8e80b83ea1c153e480aa01e83561512661ca43b3ecc122"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/startup-stderr.log",
+      "bytes": 1322,
+      "sha256": "4aae0ecfa99db10c6645633bb132e91109f51fbaa3c750654c7d221aee21e33b"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/startup.json",
+      "bytes": 1450,
+      "sha256": "f14f5c2311aaaa258f1615fb31f7b12490bbfb0cd53fd5d378b910a092d2bfc3"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-agent-settings.png",
+      "bytes": 106544,
+      "sha256": "887bd286b0cb5b3a521d6737b2b4b58f1db2b4aea84f78ded8f92936105fc882"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-alignment.json",
+      "bytes": 3257,
+      "sha256": "6927d74e885958f89c42cdb06e6e74963314373ded76e68681430af323ed0408"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-channel-detail.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-channels.png",
+      "bytes": 132895,
+      "sha256": "01d847f356dd251e53b6f74406624bba51b9217d1af0c25ca27e3ba460c7319e"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-connection-dialog.png",
+      "bytes": 163438,
+      "sha256": "e69027beab4c88fab8b19bc50d4897de81f69bb8ce9b1771d380e289a6ee57c2"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-dark-high.png",
+      "bytes": 150202,
+      "sha256": "8b323ad832c5a9b524333a5105faaef00c72d1b27e8e66137090365fa7f3bffc"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-dark-low.png",
+      "bytes": 157873,
+      "sha256": "70ec10d2fd16a33f3368127fca4309a492988ac9b393a2fd1a2543f3d8ceafcf"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-dark-mid.png",
+      "bytes": 161194,
+      "sha256": "96fd2075bf6178659dd25f4b7ced004d63ff4a876f693c7a9334ef9a46f9c6fb"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-file-scope.png",
+      "bytes": 131853,
+      "sha256": "ee04aef2dfabdd707ab7ac41164ac6339674a0f6cc4d2569f71f761f9805f7cf"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-light-high.png",
+      "bytes": 146008,
+      "sha256": "a786e76545c46645af32d78b9fa8693bcafcc5d97cff0d2e32fe0bc07144c613"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-light-low.png",
+      "bytes": 149013,
+      "sha256": "2137eaafcf8a1e42dd1974d235d12cad0e1542ad5c94b9db8bbe34b2dec01bac"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-light-mid.png",
+      "bytes": 149282,
+      "sha256": "8992bb03266467930bd627ba28736248348ffbacdd6679f42fa9148d0499eda3"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-overview.png",
+      "bytes": 437169,
+      "sha256": "b36aaea2c9cfdf699afc11b04d322dc81cd354c033722428b1420f4208353f3d"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-template-detail.png",
+      "bytes": 127537,
+      "sha256": "7c544fd4b1488de920a3b0bb0a437b2ae01b7d7023c2996ff439a1a043f50130"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-template-zoom-100.png",
+      "bytes": 173838,
+      "sha256": "ba9a8c14a146ec41471fbe23d6753798d985f30a96c37b6bfc53f9066e7c62ab"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-template-zoom-150.png",
+      "bytes": 191719,
+      "sha256": "3dafe6304435efcc638eec1583ade32c893dddd1a9d9c01139af83c711f2628d"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-template-zoom-200.png",
+      "bytes": 210356,
+      "sha256": "d6bca56dcd4ab18c4520286684bba7eea8b74ed6ffffa4e1b3f5c93854a13562"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-template-zoom-50.png",
+      "bytes": 104997,
+      "sha256": "266770dbbf538e302b8e6cbb36d46d02a6ae920de10432ce5d92bf55c68fa162"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-templates.png",
+      "bytes": 179395,
+      "sha256": "53e617a0e741ce6a07ec4e067d0bc62bb2025bfd727f369bb1b93e37b8703eb0"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/ui021-webdav-scope.png",
+      "bytes": 136623,
+      "sha256": "d197f097a7172cf4f77fbe6bda3b40917d489caebd6375d6e5451e9ac2124bf3"
+    },
+    {
+      "path": "windows-native/out/windows-ordinary/startup/webview.json",
+      "bytes": 698,
+      "sha256": "2e797a45e4ade3173bb30d6fdc74043c11e4508403251fbd06d62c4cf98c7ef7"
+    },
+    {
+      "path": "windows-native/out/windows-startup/cdp-diagnostics.json",
+      "bytes": 1744,
+      "sha256": "d08c51c94d62df5cf9574eaf5d1fc763194e6670d368aa32201b80408cd82b2f"
+    },
+    {
+      "path": "windows-native/out/windows-startup/main-window.png",
+      "bytes": 567780,
+      "sha256": "e0965669bced61d338698dbd4619f818b8ea91bc0a6cd86c69d157c223b1aede"
+    },
+    {
+      "path": "windows-native/out/windows-startup/model-editor-context-native.json",
+      "bytes": 277,
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "windows-native/out/windows-startup/model-export-boundary.json",
+      "bytes": 378,
+      "sha256": "6cf41663fd6d462f6af9ceedb1ba21e0ca3ce9bc2d76192373a3a87dbdccf0d6"
+    },
+    {
+      "path": "windows-native/out/windows-startup/model-ipc-descriptor.json",
+      "bytes": 71,
+      "sha256": "78b7eb7d71df0db435ba38a648b1ae08591bb0ca8d5b15135e3d34699290de46"
+    },
+    {
+      "path": "windows-native/out/windows-startup/model-sort-native.json",
+      "bytes": 726,
+      "sha256": "452e537c943d95a9b6155007d43e170e0ea367de699261241a6b8ed62de9064f"
+    },
+    {
+      "path": "windows-native/out/windows-startup/model-sort-pointer.json",
+      "bytes": 219,
+      "sha256": "42663ecff1e895d2ba4b8776c3f430764198b96ac4f0e0de690acae708494e83"
+    },
+    {
+      "path": "windows-native/out/windows-startup/model-template-native.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "windows-native/out/windows-startup/model-transfer-native.json",
+      "bytes": 249,
+      "sha256": "8213da91abcfc12307367053bf8f078edb9733e0a244cec17cfae478642f6f67"
+    },
+    {
+      "path": "windows-native/out/windows-startup/model-ui.json",
+      "bytes": 894,
+      "sha256": "49527a8ad338ac9e611cc2eeb21288008c431873af728255453c4f83440a15ea"
+    },
+    {
+      "path": "windows-native/out/windows-startup/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "d97406e9bd5e1341e7aca08746caba8019bab1edf3b17a13bde9990c3552ff2d"
+    },
+    {
+      "path": "windows-native/out/windows-startup/runtime-managed-ui-live.json",
+      "bytes": 252,
+      "sha256": "0b44b6f7e3abc56107823c7c1a6132474a92b3cc272eeffaf4e15ebda53566b4"
+    },
+    {
+      "path": "windows-native/out/windows-startup/startup-diagnostics.json",
+      "bytes": 10899,
+      "sha256": "10041119c48b8fddbad6132bad6736468146035e00364b6574e8477f9ecd4d71"
+    },
+    {
+      "path": "windows-native/out/windows-startup/startup-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "windows-native/out/windows-startup/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "windows-native/out/windows-startup/startup.json",
+      "bytes": 1434,
+      "sha256": "c1f13b72620aeec97f0e52ab56173c51bd68fdf143320801656b58d0e341eace"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-agent-settings.png",
+      "bytes": 107114,
+      "sha256": "334af8339b557a74896a8334e52956bf811c0c7947a302165bf6c65a8c027832"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-alignment.json",
+      "bytes": 3257,
+      "sha256": "6927d74e885958f89c42cdb06e6e74963314373ded76e68681430af323ed0408"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-channel-detail.png",
+      "bytes": 102918,
+      "sha256": "afde3d41e49483fd11533bfd2faf2df6b5bdd424a3e637c8e941b907590fd3e7"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-channels.png",
+      "bytes": 132895,
+      "sha256": "01d847f356dd251e53b6f74406624bba51b9217d1af0c25ca27e3ba460c7319e"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-connection-dialog.png",
+      "bytes": 163438,
+      "sha256": "e69027beab4c88fab8b19bc50d4897de81f69bb8ce9b1771d380e289a6ee57c2"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-dark-high.png",
+      "bytes": 152831,
+      "sha256": "5d1a0cd2acb429f848069e153d8ef2335b892e91dbf8156f6b6a5f3a365e9e9e"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-dark-low.png",
+      "bytes": 158945,
+      "sha256": "5fb65a33ee7eaf36794c5884eb5e72640abb358f54b655b6dfa8dc9254d58a2e"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-dark-mid.png",
+      "bytes": 159795,
+      "sha256": "9de122c3400d8347058c2b37a664524cbfb653443fd036549c10956e321110c2"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-file-scope.png",
+      "bytes": 131853,
+      "sha256": "ee04aef2dfabdd707ab7ac41164ac6339674a0f6cc4d2569f71f761f9805f7cf"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-light-high.png",
+      "bytes": 146203,
+      "sha256": "50971177edc525578b2861f6341df94fd11a9fe45b2a0dbdcb94cd0eb81e974c"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-light-low.png",
+      "bytes": 149013,
+      "sha256": "2137eaafcf8a1e42dd1974d235d12cad0e1542ad5c94b9db8bbe34b2dec01bac"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-light-mid.png",
+      "bytes": 149282,
+      "sha256": "8992bb03266467930bd627ba28736248348ffbacdd6679f42fa9148d0499eda3"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-overview.png",
+      "bytes": 442343,
+      "sha256": "d106036e37afeb43440b1f0535f9213d10b3d36e3540290e21d54d3dd918d705"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-template-detail.png",
+      "bytes": 127589,
+      "sha256": "a66166d0276e9035c14b317ee5126e2ab441a602090619e634bb99c6ab378f37"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-template-zoom-100.png",
+      "bytes": 172644,
+      "sha256": "8955d64743c974b5ee928efb686ceb0d6cc27bc4699c653bd6bdf3d4d5379412"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-template-zoom-150.png",
+      "bytes": 191862,
+      "sha256": "f0ce4ab3e615b49882af4042620515a191b8ea56f41dcf756b766e72ab53458c"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-template-zoom-200.png",
+      "bytes": 211043,
+      "sha256": "7d451340ccaec4c0277367c056898835dd9ee05443b2e4110e1856884faa201b"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-template-zoom-50.png",
+      "bytes": 105007,
+      "sha256": "7fad6afe7f54a0531857b96e67cf6782f0f9d27158a70c2a266d8ff3fbdd4140"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-templates.png",
+      "bytes": 179461,
+      "sha256": "09246b22693a1fd1cbe52887ac5bb202149a456412de663128ceabd6a87abc78"
+    },
+    {
+      "path": "windows-native/out/windows-startup/ui021-webdav-scope.png",
+      "bytes": 136623,
+      "sha256": "d197f097a7172cf4f77fbe6bda3b40917d489caebd6375d6e5451e9ac2124bf3"
+    },
+    {
+      "path": "windows-native/out/windows-startup/webview.json",
+      "bytes": 973,
+      "sha256": "27499857f4b0185145e3cac73fa4cbf969514bc558fc8681b6ca33a73322c01a"
+    }
+  ]
+}

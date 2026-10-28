@@ -1,54 +1,57 @@
 ---
 id: REL-OPENCODEX-DESKTOP-20
 object_kind: release
-state: in_progress
+state: verified
 title: 0.2.17 Windows托管安装可靠性发布
-summary: 发布准备中；本地完整门禁、Windows后端及真包安装证据已具备，普通账户及正式发布仍待最终回执。已打v0.2.17标签，正式构建中，未公开版本。
+summary: WP89～95受支持范围修复及原生验收完成；正式原包复验、三包签名、匿名stable与实际MSI/NSIS OTA通过。物理设备和企业网络矩阵保留明确未执行边界。
 source_refs:
   - https://github.com/gzers/opencodex-desktop/pull/26
-  - docs/03-开发实施/IMP-OPENCODEX-DESKTOP-26.md
+  - d7c7978f043278baae8f2fc8c2119315a4660f12
 ---
 
 # 0.2.17 Windows托管安装可靠性发布
 
-2026-10-28，Asia/Shanghai。用户已授权WP89～WP95文档治理、开发、测试与stable发布。当前正式构建中，未公开0.2.17。实施归[IMP26](IMP-OPENCODEX-DESKTOP-26.md)、验收归DMD AC-WIN-017-01～06，源清单为[0.2.16问题记录](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.16-bugs.md)。
+2026-10-28，Asia/Shanghai。[v0.2.17已公开并投递stable/Latest](https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.17)。用户授权至发布；范围/实施见[IMP26](IMP-OPENCODEX-DESKTOP-26.md)，问题沿[WP89～95](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.16-bugs.md)。无需清空配置。
 
-## 当前范围
+## 交付与真实身份
 
-Windows扩展路径与默认安装位置、受管目录归属及无副作用准入、包体/入口/来源记录失败补偿、真实有界版本探针、受控版本管理器发现、随包许可和仍禁用的CLI说明。补修真实安装链路发现的脚本授权重试与本地离线tgz参数，不引入新UI、保存核对或通知表面。
+修复默认/扩展Windows路径、目标归属及无副作用准入、包体/入口/来源记录失败补偿、零退出有界版本探针、受控工具发现、包内许可、CLI描述。真包链路补修脚本确认及离线tgz参数，普通账户启动补修可选托盘外观刷新失败不应中止setup。保留既有原型、模型文件事实源、详情局部保存和通知层级。
 
-本地后端1289、前端988通过，保留14既有忽略/10既有跳过；21项发布门禁全部通过。Windows真包2.90→2.91联网升级/热缓存离线重装及真实Vue向导完成安装已在隔离runner读回，具体身份见[证据矩阵](../../.adg/evidence/0.2.17/acceptance-matrix.json)。最终CI和普通账户、正式安装器仍待验，不能引用先前构建冒充最后提交通过。
+PR26 head f77327aa8，原生EXE内CI合并7fe03af7，tag/main发布提交d7c7978f0，三者树68486e2b完全一致。PR27合并a354b130b、PR28合并65581b589仅维护验收脚本/工作流；apps/desktop与正式tag完全一致，不重建/移动v0.2.17。
 
-## 尚待完成的发布回执
+## 回执
 
-PR26最后提交双平台CI；真实普通账户最终EXE；正式macOS/Windows构建；默认/自定义MSI/NSIS及许可资源/数据保留；同一tag三个更新包既有公钥验签；preserve-latest公开和stable投递；匿名8资产摘要/manifest；实际旧版OTA替换/重开/配置凭据保留；清单、RCP与完成审计。缺一不标发布闭环。
+| 阶段 | 实际结果 |
+| --- | --- |
+| 双平台CI | [40632048037](https://github.com/gzers/opencodex-desktop/actions/runs/40632048037)，五个必需job成功，真实npm/故障回滚/凭据与最终EXE通过 |
+| 普通账户 | 标准SID、elevated=false，真实WebView2及保存/Key/模版/同步界面业务通过，临时桌面DACL恢复成功 |
+| 本地门禁 | 前端988/后端1289通过，既有10跳过/14忽略明确保留；21发布门禁全通过，19协议回归及PowerShell语法通过 |
+| 正式构建 | [40636062852](https://github.com/gzers/opencodex-desktop/actions/runs/40636062852)生成macOS及Windows包和签名；macOSjob成功，Windowsjob因验收脚本引号解析失败，原失败保留 |
+| 原包复验 | [40647352613](https://github.com/gzers/opencodex-desktop/actions/runs/40647352613)，真正MSI/NSIS×default/custom四个独立首次安装全部通过；原始摘要/EXE标记严格匹配，不重建包 |
+| 公开 | [40647289835](https://github.com/gzers/opencodex-desktop/actions/runs/40647289835)，保留Latest=v0.2.16，三包验签通过 |
+| stable | [40647642314](https://github.com/gzers/opencodex-desktop/actions/runs/40647642314)，Latest=v0.2.17，三包再次验签 |
+| 匿名 | release非draft/非prerelease，latest manifest=0.2.17，8资产HTTP200/大小/SHA256匹配；原公钥三包独立验签 |
+| 实际OTA | [40648471564](https://github.com/gzers/opencodex-desktop/actions/runs/40648471564)，公开0.2.16 MSI/NSIS经生产stable入口下载/验签；普通退出保留旧版、明确重启真实替换、OS观察新版自动重开；新版隔离读回配置/合成凭据原字节不变、pendingRestart清除 |
 
-## 兼容与回退
+[证据矩阵](../../.adg/evidence/0.2.17/acceptance-matrix.json)、[安装器逐项回执](../../.adg/evidence/0.2.17/installers-final-summary.json)、[OTA回执](../../.adg/evidence/0.2.17/ota-summary.json)、[资产与签名](../../.adg/evidence/0.2.17/release-summary.json)。初次“绿灯四项”曾被报告审查发现实际均NSIS，未接受；修正种类变量后按实际MSI/NSIS报告收口。
 
-无需清空用户配置，不替换日常软件、不强制重启活跃Codex。托管安装非受管非空目录拒绝，失败保护旧包/入口/来源；进程内补偿不宣称突然断电跨文件原子。失败回滚材料保留，不移动已发布历史tag。stable回退沿显式发布流程执行，保留当前配置及备份。
+## 资产
 
-安装包继续未做OS代码签名/Apple公证的测试分发，自更新签名验证独立执行。普通账户验收限定临时Actions账户，其Profile由Windows服务创建；镜像Default User中LocalAppData错误指向runneradmin时，只对本次新建SID的用户目录注册项初始化自己的标准Local目录，再用新进程读回，并保留报告。临时SID的GUI测试还临时授予窗口站/桌面访问并在finally恢复原DACL，记录实际恢复字段；软件进程仍须普通令牌。不是用户日常账户操作，也不证明未调整镜像的所有账户组合。
+| 名称 | 字节 | SHA-256 |
+| --- | --- | --- |
+| latest.json | 4913 | 7e5161fa8824f8d01f75b9f4f4519007adcc49f6512d03d51d3de437cadc898a |
+| OpenCodeX.Desktop_0.2.17_aarch64.dmg | 6493171 | 2e0dff42d24710431fe020cfd3f32143ad9b155e0d50416dc20f3ead00c3d1c9 |
+| OpenCodeX.Desktop_0.2.17_x64-setup.exe | 4883438 | efa5254c27308c8e0b06aa0aff45ae4be674bf424bac52efcb79d9735e60526d |
+| OpenCodeX.Desktop_0.2.17_x64-setup.exe.sig | 452 | b8fbde659e033616c8470cb38ba54ebc4a3c7adcf0e72f7fbabfb3094eeddce9 |
+| OpenCodeX.Desktop_0.2.17_x64_en-US.msi | 6836224 | 2680d2e807f240f60c1447be43b524f67f6a16cba31e5c6b349733b34a056e5c |
+| OpenCodeX.Desktop_0.2.17_x64_en-US.msi.sig | 452 | 372eedd1212e442c01afe2b3bf7ad943fcaea32801f166f6bce7873a9d2af6b3 |
+| OpenCodeX.Desktop_aarch64.app.tar.gz | 6602236 | 294f13c58511ef28fff46c147c96973add55ce96b78c21da5a1ae3649eda8b77 |
+| OpenCodeX.Desktop_aarch64.app.tar.gz.sig | 440 | 23b0b395b505e6ff7f35018c5d9890172adb3008b2fd9caa2b8ecc0b932ecd29 |
 
-Win10/11物理设备、混合DPI、真实SMB/重定向企业账户、PAC/企业证书及私有服务保留未执行边界；不以单个Server runner结果宣布全域通过。
+## 边界与回退
 
-## CI及合并已验回执
+普通账户为准备后的临时Actions标准SID：Profile原生创建、仅该SID镜像错误LocalAppData修正、GUI权限临时授予并恢复。实际OTA自动重开与隔离读回是两份证据：安装器Shell重开丢弃测试CDP环境，因此自动新进程/版本由OS观察，随后用显式同一不可变沙箱重开更新EXE检查文件/IPC；不假称直接检查自动进程的CDP。
 
-CI40632048037五个必需job全部通过，PR26已合并为d7c7978f043278baae8f2fc8c2119315a4660f12，与验收head f77327aa8的源码树完全一致，v0.2.17标签指向此合并。
+物理Win10/11、混合DPI、真实SMB/企业重定向、PAC/企业证书、私有服务及全交互设备/登录矩阵未执行；各域范围在验收矩阵说明。原型列表截图的部分文字渲染缺口不作像素一致证明，结构/行为/几何/材质检查分别记录。OS代码签名/Apple公证仍未配置，更新签名独立验证。
 
-原生回执实际读回：ordinary-summary result=pass、applicationElevated=false、applicationModeMatched=true、desktopAclRestoredOnExit=true。真实Vue安装官方2.91.0、默认prefix、来源记录通过；官方2.90→2.91升级和热缓存离线重装通过。窗口/表格/排序/双渠道保存/Key/导入/模版的原生证据已归档windows-native，不用绿灯代替实际回执。
-
-正式构建、安装器和公开/stable、OTA仍待完成。
-
-## 正式包首轮与验收脚本复验
-
-Release40636062852的macOS构建成功；Windows MSI/NSIS及签名资产成功生成，但验收脚本在NSIS注册表InstallLocation带引号时Join-Path读成错误盘符，故整体job失败。MSI默认安装/真实界面已通过；原失败报告和日志保留，不把整轮误记成功。
-
-PR27仅修测试脚本和验收工作流：固定摘要下载既有未公开资产，MSI管理提取后只恢复Tauri标记并匹配首次构建EXE摘要610fb4cc…f5365776；安装包本体、签名及v0.2.17标签完全不变。验收使用ExpectedCommit=d7c7978f0，避免拿测试脚本提交冒充应用来源。Windows默认/自定义安装器复验继续执行。草稿三个更新包已独立使用原公钥验签及摘要匹配，macOS归档版本/标识/两份许可资源读回通过，仍未公开或晋升stable。
-
-## 正式安装器、公开与stable已验
-
-首次复验曾因脚本种类变量被目录循环覆盖而四项均运行NSIS，绿灯未直接接受；逐项回执审查捕获并保留限制，155bb6048修正后CI40647352613真正MSI/NSIS×default/custom四个独立首次安装runner均通过。报告逐项读回实际kind、源提交、原包摘要、首屏、默认/自定义路径与自定义默认卸载数据保留。原签名资产未重建，v0.2.17不移动。PR27测试接线已合并为a354b130b，后续仅验收脚本维护不改变发布应用。
-
-公开40647289835先保留Latest=v0.2.16，stable40647642314成功投递Latest=v0.2.17。匿名release非草稿/非预发布，latest manifest version=0.2.17，8资产HTTP200/大小/SHA256匹配；三个更新包使用原项目公钥独立验签通过。证据release-summary.json与installers-final-summary.json已读回。实际旧版OTA替换/重开仍待后验收，不据签名通过声称该项完成。
-
-实际OTA第一次下载/验签及pending_restart后端状态成功，但脚本直接读取Tauri Channel raw消息，未拆message封装导致进度断言失败；dbc367806仅修验收脚本，生产IPC不替换。CI40648079681重测普通退出保留旧版和明确重启替换。
+不改用户日常安装/配置、不强制重启活跃Codex、不进行付费生成。安装补偿是进程内恢复，不承诺突然断电跨文件原子；外部改动和恢复失败保留材料。回退前保留现配置与备份，stable回退走显式通道流程，不移动已公开tag。

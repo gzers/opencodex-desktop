@@ -9,7 +9,7 @@
 
 ## 实施计划入口
 
-- [0.2.17 Windows安装可靠性](IMP-OPENCODEX-DESKTOP-26.md)：WP89～95实施中，用户授权至stable发布；范围/验收沿DMD AC-WIN-017。
+- [0.2.17 Windows安装可靠性](IMP-OPENCODEX-DESKTOP-26.md)：已发布stable，WP89～95支持范围完成；真实普通用户/官方包安装、四正式安装器、实际OTA与匿名签名通过，环境边界见[REL20](REL-OPENCODEX-DESKTOP-20.md)。
 
 - [下一轮开发清单：渠道详情与保存交互](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.15-bugs.md)：0.2.16，WP-85～WP-88；开发、完整回归、双平台CI/原生安装器及原公钥验签已完成，PR25合并/tag d2c08dd7，v0.2.16已公开并晋升stable/Latest；[IMP-25](IMP-OPENCODEX-DESKTOP-25.md)、[发布记录](REL-OPENCODEX-DESKTOP-19.md)。
 

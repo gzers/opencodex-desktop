@@ -1,0 +1,89 @@
+{
+  "task": "TASK-OPENCODEX-0.2.17",
+  "result": "passed",
+  "version": "0.2.17",
+  "tag": "d7c7978f043278baae8f2fc8c2119315a4660f12",
+  "requirements": [
+    {
+      "id": "AC-WIN-017-01",
+      "requirement": "path identity, default/restore and reject invalid targets",
+      "result": "passed",
+      "check": "review:windows-path",
+      "evidence": [
+        ".adg/evidence/0.2.17/path-final.log",
+        ".adg/evidence/0.2.17/ci-final.json",
+        ".adg/evidence/0.2.17/windows-native/out/windows-startup/runtime-install-ui.json"
+      ]
+    },
+    {
+      "id": "AC-WIN-017-02",
+      "requirement": "target ownership and prewrite side effects, rollback exact prior bytes",
+      "result": "passed",
+      "check": "review:install-transaction",
+      "evidence": [
+        ".adg/evidence/0.2.17/backend-offline-final.log",
+        ".adg/evidence/0.2.17/ci-final-windows-summary.log",
+        ".adg/evidence/0.2.17/windows-native/out/windows-backend/managed-live.json"
+      ]
+    },
+    {
+      "id": "AC-WIN-017-03",
+      "requirement": "real version zero exit, package match, bounded output/deadline/family",
+      "result": "passed",
+      "check": "review:version-probe",
+      "evidence": [
+        ".adg/evidence/0.2.17/probe-postreview.log",
+        ".adg/evidence/0.2.17/ci-final-windows-summary.log",
+        ".adg/evidence/0.2.17/windows-native/out/windows-backend/managed-live.json"
+      ]
+    },
+    {
+      "id": "AC-WIN-017-04",
+      "requirement": "controlled discovery, bundle docs, disabled CLI description",
+      "result": "passed",
+      "check": "review:tool-discovery",
+      "evidence": [
+        ".adg/evidence/0.2.17/discovery-final.log",
+        ".adg/evidence/0.2.17/ci-final.json"
+      ]
+    },
+    {
+      "id": "AC-WIN-017-05",
+      "requirement": "actual Windows install/upgrade/offline/fault/ordinary and applicable full-chain, explicit unavailable environment boundaries",
+      "result": "passed",
+      "check": "review:native-windows",
+      "evidence": [
+        ".adg/evidence/0.2.17/windows-native/out/windows-ordinary/ordinary-summary.json",
+        ".adg/evidence/0.2.17/windows-native/out/windows-startup/runtime-managed-ui-live.json",
+        ".adg/evidence/0.2.17/installers-final-summary.json",
+        ".adg/evidence/0.2.17/ota-summary.json"
+      ]
+    },
+    {
+      "id": "AC-WIN-017-06",
+      "requirement": "full relevant regression, exact CI, signed original installers, public/stable and docs writeback",
+      "result": "passed",
+      "check": "review:regression-release",
+      "evidence": [
+        ".adg/evidence/0.2.17/gate-after-script-confirm.json",
+        ".adg/evidence/0.2.17/backend-offline-final-summary.json",
+        ".adg/evidence/0.2.17/ci-final.json",
+        ".adg/evidence/0.2.17/source-trees.json",
+        ".adg/evidence/0.2.17/release-summary.json",
+        ".adg/evidence/0.2.17/ota-summary.json"
+      ]
+    }
+  ],
+  "environmentBoundaries": [
+    "Windows runner is Server 2025 build26100, not a physical Win10/11 matrix; physical DPI/mixed monitors/high contrast and all accessibility device combinations not executed.",
+    "Real SMB/UNC server, AppData corporate redirection, all enterprise identities, PAC/custom enterprise certificates and private services not available; lexical/identity and system-path admission covered without claiming those deployments.",
+    "NVM/Volta/fnm/pnpm declarations and bounded layouts tested with filesystem fixtures and Windows discovery; not installation of every upstream version manager.",
+    "Ordinary acceptance uses a temporary standard SID, native Profile, correction of hosted-image Default User LocalAppData only in that SID and temporary GUI desktop access restored; it does not prove unprepared enterprise profiles.",
+    "Native directory picker, installer cancel/locked-running interactive UX, all shortcuts/tray system shell policies and each live panel login/network provider not exercised as a human device matrix; existing guards/regressions and supported native scenes are identified separately.",
+    "OTA verifies production signed stable download, ordinary exit protection, real replacement and OS-observed auto restart. Since Shell restart drops test-only environment variables, updated app is then relaunched with the same explicit immutable sandbox for file/Tauri readback; this is not a direct CDP observation of the automatic process.",
+    "No paid generation/private service requests or user daily app/config changes. OS code signing/Apple notarization remain unconfigured; updater signatures independently verified.",
+    "Prototype list screenshot has missing rendered text; DOM/header/action/order checks passed but not a pixel-perfect proof. Browser/geometry/material reports and no changed list/preview styles provide separate bounded evidence."
+  ],
+  "claim": "Completion of the authorized 0.2.17 release with declared supported-scope acceptance, not every OS/device/network combination.",
+  "goalReadyToCompleteAfterDocsPushAndFinalAudit": true
+}

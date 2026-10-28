@@ -1,0 +1,27 @@
+✔ accepts exact NSIS and MSI package bytes (0.795542ms)
+✔ rejects changed application payload (0.24925ms)
+✔ rejects wrong package marker or unchanged EXE (0.105125ms)
+✔ rejects missing or ambiguous original marker (0.126209ms)
+✔ rejects unsupported bundle kind (0.0625ms)
+✔ retries until the main page appears; ignores embedded or unrelated pages (43.872792ms)
+✔ HTTP errors are preserved instead of being swallowed (2002.183167ms)
+✔ malformed target JSON fails with parse evidence (2001.531167ms)
+✔ non-array responses and empty target lists never count as rendered UI (4004.645ms)
+✔ stalled responses are bounded by both request and discovery deadlines (153.538334ms)
+✔ connection refusal retains the underlying network error (2000.707083ms)
+✔ refuses non-loopback endpoints before making a request (0.215625ms)
+✔ overview accepts either complete cards or the real settled setup gate, never an empty or partial page (0.883667ms)
+✔ writes require the exact admitted immutable and saved sandbox, never a relative root or another account directory (0.456708ms)
+✔ invalid native roots are rejected before invoking any application command (0.510083ms)
+✔ native file writes require both saved and immutable model homes inside the admitted sandbox (0.366083ms)
+✔ export containment handles Windows canonical prefixes while rejecting siblings, root files and traversal (0.21575ms)
+✔ task preview JSON begins after the instruction section even when receipt instructions contain braces (0.355209ms)
+✔ native Save evidence requires changed file bytes and one exact backup without losing prior backups (5.770708ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10259.144417

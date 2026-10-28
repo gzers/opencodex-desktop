@@ -1,0 +1,20 @@
+{
+  "result": "pass",
+  "kind": "msi",
+  "from": "0.2.16",
+  "to": "0.2.17",
+  "baselinePackageSha256": "f3bbf281c9e018eb827e12e6cd22c1cbc5ca9000ca51a90e6806295c3cc8d8f2",
+  "installDirectory": "D:\\a\\_temp\\OpenCodeX OTA 中文 msi 520b7e727b864906a1dca9e56384c33e",
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-msi\\actual-sandbox",
+  "scope": "real public stable updater and published baseline; isolated production model file, synthetic credentials and prewrite backup; no user machine changes",
+  "ordinaryExitPreservedOldVersion": true,
+  "automaticRestartObserved": true,
+  "automaticRestartProcess": {
+    "pid": 5932,
+    "path": "D:\\a\\_temp\\OpenCodeX OTA 中文 msi 520b7e727b864906a1dca9e56384c33e\\opencodex-desktop.exe",
+    "creationDate": "2026-10-28T07:12:13.688363+00:00",
+    "version": "0.2.17"
+  },
+  "readbackMethod": "automatic new process observed by OS; exact updated EXE then relaunched with explicit isolated test environment for Tauri/file readback",
+  "installedExecutableSha256": "216c830166e03e6be28c593bec010634e4317db44086f3dca34f97392f5da0ac"
+}
