@@ -29,6 +29,18 @@ try{
  $c=Get-Content -LiteralPath $InputFile -Raw | ConvertFrom-Json
  $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
  if($identity.User.Value -cne $c.accountSid){throw 'Unexpected native acceptance account'}
+ $profileKey='HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList'+$identity.User.Value
+ $registered=[Environment]::ExpandEnvironmentVariables((Get-ItemProperty -LiteralPath $profileKey -Name ProfileImagePath).ProfileImagePath)
+ if(!$registered -or !(Test-Path -LiteralPath $registered -PathType Container) -or (Split-Path -Leaf $registered) -notlike 'ocxacc*'){throw 'Registered temporary Profile missing'}
+ # CreateProcessWithLogonW can retain the parent's environment block even with
+ # LoadUserProfile. Resolve the OS-registered identity before expanding the new
+ # account's Known Folder definitions; never create under runneradmin.
+ $env:USERPROFILE=$registered
+ $env:HOMEDRIVE=[IO.Path]::GetPathRoot($registered).TrimEnd('\')
+ $env:HOMEPATH=$registered.Substring($env:HOMEDRIVE.Length)
+ $env:APPDATA=Join-Path $registered 'AppData/Roaming'
+ $env:LOCALAPPDATA=Join-Path $registered 'AppData/Local'
+
  Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
