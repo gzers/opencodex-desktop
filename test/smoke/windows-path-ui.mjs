@@ -51,7 +51,9 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     const readClipboard="Promise.race([navigator.clipboard.readText(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('isolated clipboard permission deadline')),5000))])"
     try{clipboard=await evaluate(readClipboard)}catch{}
     await evaluate("document.querySelector('.data-root-table .cli-copy-btn').click()")
-    const copied=await evaluate(readClipboard)
+    // The Vue click handler awaits the native clipboard write. Observe its
+    // actual result instead of racing that promise with an immediate read.
+    const copied=await wait(`(async()=>{const text=await ${readClipboard};return text===${JSON.stringify(ordinary(config.currentDataRoot))}?text:false})()`)
     assert.equal(copied,ordinary(config.currentDataRoot))
     report.checks.push('real clipboard receives readable same-identity data root')
     await click('打开','.data-root-table tbody tr')

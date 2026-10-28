@@ -282,7 +282,7 @@ defineExpose({ check })
                 <p v-if="!officialBusy && session.officialSucceeded && runtime.installOutcome?.needsRestart" class="update-hint">面板更新已安装；请在运行操作中重启代理后生效。</p>
                 <p v-if="!officialBusy && session.officialSucceeded && runtime.installOutcome?.protectionReconciliationPending" class="update-hint" role="status">安装已完成；保护备份完整性核对未完成，备份仍保留。请查看诊断日志。</p>
               </div>
-              <p v-if="session.officialError || app.officialUpdateError" class="update-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
+              <p v-if="session.officialError || app.officialUpdateError" class="update-error update-query-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
               <div v-if="officialAvailable || session.officialError || app.officialUpdateError" class="update-object-actions">
                 <small v-if="app.upgradeLastBackup">最近备份 {{ app.upgradeLastBackup.backupId }}</small>
                 <UiButton variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy || !officialAvailable" :loading="officialBusy || session.checking" data-testid="install-official-update" @click="installOfficial">{{ officialBusy ? '更新中' : session.officialError || app.officialUpdateError ? '重试面板更新' : '备份并更新面板' }}</UiButton>
@@ -324,10 +324,10 @@ defineExpose({ check })
 .update-detail-head time { color: var(--muted); font-size: var(--text-caption); }
 .update-notes, .update-console { max-height: 180px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: var(--space-3) var(--space-4); background: var(--raised); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); font-size: var(--text-control); line-height: 1.7; }
 .update-notes { font-family: inherit; margin: 0 0 var(--space-3); }
-.update-console { max-height: 120px; margin: 0; }
+.update-console { max-height: 120px; margin: 0; font-family: var(--font-path); }
 .update-hint { color: var(--muted); font-size: var(--text-label); line-height: 1.7; margin: var(--space-2) 0; }
 .update-error { color: var(--red); font-size: var(--text-control); overflow-wrap: anywhere; margin: var(--space-2) 0; }
-.update-query-error { white-space: pre-wrap; }
+.update-query-error { white-space: pre-wrap; font-family: var(--font-path); }
 .update-confirm-scope { margin: var(--space-3) 0; }
 .update-object-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-3); }
 .update-backup { display: flex; gap: var(--space-2); align-items: center; font-size: var(--text-label); }

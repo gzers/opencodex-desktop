@@ -283,6 +283,9 @@ fn metadata_reads_both_pipes_concurrently_without_treating_stderr_as_failure() {
     assert_eq!(records[2]["complete"], true);
     assert_eq!(records[3]["exitCode"], 0);
     assert!(records[3]["reason"].is_null());
+    let (result, records) = script_query(Some(r#"process.stdout.write('"2.50.0"\n');"#));
+    assert_eq!(result.unwrap(), ("2.50.0".into(), None));
+    assert_eq!(records[3]["exitCode"], 0);
 }
 
 #[test]

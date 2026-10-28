@@ -40,7 +40,7 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     throw Error('query UI wait: '+expression)
   }
   async function click(text,selector='.route-section.active') {
-    assert(await evaluate(`(()=>{const b=[...document.querySelector(${JSON.stringify(selector)})?.querySelectorAll('button')??[]].find(e=>e.textContent.trim()===${JSON.stringify(text)}&&!e.disabled);if(!b)return false;b.click();return true})()`),'query UI action: '+text)
+    assert(await evaluate(`(()=>{const b=[...document.querySelector(${JSON.stringify(selector)})?.querySelectorAll('button')??[]].find(e=>(e.textContent.trim()===${JSON.stringify(text)}||e.getAttribute('aria-label')===${JSON.stringify(text)})&&!e.disabled);if(!b)return false;b.click();return true})()`),'query UI action: '+text)
   }
   async function screenshot(name) {
     const image=await call('Page.captureScreenshot',{format:'png'})
@@ -74,6 +74,9 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     const error=await wait("document.querySelector('[data-testid=official-query-error]')?.textContent")
     assert(error.includes('npm view')&&error.includes('退出码 1')&&error.includes('E404')&&error.includes('日志：'),error)
     assert(!error.includes('official metadata query failed'))
+    const typography=await evaluate("({font:getComputedStyle(document.querySelector('[data-testid=official-query-error]')).fontFamily,hasWon:document.querySelector('[data-testid=official-query-error]').textContent.includes(String.fromCharCode(0x20a9))})")
+    assert(typography.font.startsWith('Consolas')&&!typography.hasWon,JSON.stringify(typography))
+    report.typography=typography
     assert(report.requests.some(request=>request.url.includes('opencodex')),'real npm did not contact the local fixture registry')
     report.error=error
     await screenshot('query-failure-details')
@@ -143,6 +146,9 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
   } catch(error) { report.errorStack=error.stack; throw error }
   finally {
     await restoreNpmrc()
+    if(original!==undefined)assert.deepEqual(await readFile(npmrc),original)
+    else await assert.rejects(readFile(npmrc),{code:'ENOENT'})
+    report.sandboxNpmrcRestored=true
     await new Promise(resolve=>server.close(resolve))
     await writeFile(join(output,'native-query-recovery.json'),JSON.stringify(report,null,2)+'\n')
   }

@@ -101,6 +101,7 @@ try{
   const final=await source()
   assert.equal(final.version,'2.93.0');assert.equal(final.kind,'managed')
   await screenshot('recovered-upgraded-2.93.0')
+  await click('完成')
   await verifyWindowsQueryUi(call,output,sandbox)
   report.result='pass'
   report.checks.push('actual registry install 2.91.0','actual missing-version failure with readable details and retained console','old package/launcher/source preserved','failure history retains npm stage and log path','reopen and recover upgrade to 2.93.0')

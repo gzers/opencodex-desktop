@@ -96,7 +96,11 @@ const MAX_METADATA_BYTES: usize = 16 * 1024;
 const MAX_STDERR_BYTES: usize = 64 * 1024;
 
 fn parse_metadata(value: &serde_json::Value) -> Option<(String, Option<String>)> {
-    let version = value.get("version")?.as_str()?;
+    // npm returns a plain JSON string when version is the only requested field
+    // present (for example a registry without dist.integrity).
+    let version = value
+        .as_str()
+        .or_else(|| value.get("version").and_then(serde_json::Value::as_str))?;
     if !crate::modules::update::handoff::valid_version(version) {
         return None;
     }
@@ -381,12 +385,20 @@ mod tests {
     #[test]
     fn combined_metadata_accepts_flat_and_nested_shapes_and_rejects_bad_versions() {
         for raw in [
+            r#""2.50.0""#,
             r#"{"version":"2.50.0","dist.integrity":"sha512-abc"}"#,
             r#"{"version":"2.50.0","dist":{"integrity":"sha512-abc"}}"#,
         ] {
             assert_eq!(
                 parse_metadata(&serde_json::from_str(raw).unwrap()),
-                Some(("2.50.0".into(), Some("sha512-abc".into())))
+                Some((
+                    "2.50.0".into(),
+                    if raw.starts_with('"') {
+                        None
+                    } else {
+                        Some("sha512-abc".into())
+                    }
+                ))
             );
         }
         assert!(parse_metadata(&serde_json::json!({"version":""})).is_none());

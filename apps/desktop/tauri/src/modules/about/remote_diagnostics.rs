@@ -25,15 +25,7 @@ impl QueryLog {
                 .into_iter()
                 .flatten()
                 .filter_map(|value| reqwest::Url::parse(&value.to_string_lossy()).ok())
-                .flat_map(|url| {
-                    [
-                        Some(url.username().to_owned()),
-                        url.password().map(str::to_owned),
-                    ]
-                    .into_iter()
-                    .flatten()
-                    .collect::<Vec<_>>()
-                })
+                .filter_map(|url| url.password().map(str::to_owned))
                 .collect(),
         );
         let path = directory.join(format!("npm-view-{}.log", uuid::Uuid::new_v4()));
@@ -103,9 +95,10 @@ impl QueryLog {
     pub(super) fn error(&self, reason: &str, detail: &str) -> AppError {
         AppError::RemoteQuery {
             reason: reason.into(),
-            detail: self
-                .masker
-                .apply(&format!("{detail}\n日志：{}", self.path.display())),
+            detail: self.masker.apply(&format!(
+                "{detail}\n日志：{}",
+                dunce::simplified(&self.path).display()
+            )),
         }
     }
 
