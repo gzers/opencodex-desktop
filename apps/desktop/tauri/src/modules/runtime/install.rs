@@ -3423,7 +3423,7 @@ mod bounded_probe_tests {
         };
         for (case, text) in [
             ("oversized stdout", "console.log('2.77.0');process.stdout.write('x'.repeat(128*1024));"),
-            ("inherited stdout", "require('child_process').spawn(process.execPath,['-e','process.stdout.write(\"child\");setTimeout(()=>{},30000)'],{detached:true,stdio:['ignore','inherit','ignore']}).unref();console.log('2.77.0');setTimeout(()=>process.exit(0),500);"),
+            ("inherited stdout", "require('child_process').spawn(process.execPath,['-e','process.stdout.write(\"child\");setTimeout(()=>{},30000)'],{detached:process.platform==='win32',stdio:['ignore','inherit','ignore']}).unref();console.log('2.77.0');setTimeout(()=>process.exit(0),500);"),
         ] {
             std::fs::write(&script,text).unwrap();let started=Instant::now();
             let result = probe.probe(Some(&node),&script);
