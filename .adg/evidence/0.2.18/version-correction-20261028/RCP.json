@@ -1,0 +1,39 @@
+{
+  "id": "RCP-OPENCODEX-0.2.18-VERSION-CORRECTION",
+  "targetVersion": "0.2.18",
+  "affectedVersion": "0.2.17",
+  "sourceCommit": "9c525695d9fd9c6a5cb264b91b6ad67a608b7a33",
+  "result": "passed",
+  "checks": [
+    {
+      "name": "version:all-declarations",
+      "evidence": "validation.json",
+      "result": "passed"
+    },
+    {
+      "name": "version:locked-cargo-metadata",
+      "evidence": "validation.json",
+      "result": "passed"
+    },
+    {
+      "name": "version:published-changelog-preserved",
+      "evidence": "validation.json",
+      "result": "passed"
+    }
+  ],
+  "writeback": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.17-bugs.md",
+      "beforeGitBlob": "0f7920bc7fcd64aed18317798faf418557c80865",
+      "afterGitBlob": "670916ecf4284f13ca771149e083953978dbdd42"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-26.md",
+      "beforeGitBlob": "4dd791cd736154e60abce3b04a11d07829be1d87",
+      "afterGitBlob": "42cd8cc9e5a0d3a1e446673fa3150cff41806a61"
+    }
+  ],
+  "historicalEvidenceRewritten": false,
+  "newBinaryTested": false,
+  "releasePerformed": false
+}
