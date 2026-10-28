@@ -64,29 +64,29 @@ using System.Runtime.InteropServices;
 public static class OcxFirstLogonFolders {
  [DllImport("shell32.dll", ExactSpelling=true)] static extern int SHGetKnownFolderPath(ref Guid id, uint flags, IntPtr token, out IntPtr path);
  [DllImport("shell32.dll", CharSet=CharSet.Unicode, ExactSpelling=true)] static extern int SHSetKnownFolderPath(ref Guid id, uint flags, IntPtr token, string path);
- public static void InitializeLocal(string path) {
+ public static void InitializeLocal(string path, IntPtr token) {
   Guid id=new Guid("f1b32785-6fba-4fcf-9d55-7b8e7f157091");
-  Marshal.ThrowExceptionForHR(SHSetKnownFolderPath(ref id,0,IntPtr.Zero,path));
+  Marshal.ThrowExceptionForHR(SHSetKnownFolderPath(ref id,0,token,path));
  }
- public static string Read(string value) {
+ public static string Read(string value, IntPtr token) {
   Guid id=new Guid(value);IntPtr path=IntPtr.Zero;
-  try { Marshal.ThrowExceptionForHR(SHGetKnownFolderPath(ref id,0x4000,IntPtr.Zero,out path)); return Marshal.PtrToStringUni(path); }
+  try { Marshal.ThrowExceptionForHR(SHGetKnownFolderPath(ref id,0x4000,token,out path)); return Marshal.PtrToStringUni(path); }
   finally { if(path!=IntPtr.Zero) Marshal.FreeCoTaskMem(path); }
  }
 }
 "@
  $profile=$registered
- $roaming=[OcxFirstLogonFolders]::Read('3eb685db-65f9-4cf6-a03a-e3ef65729f3d')
- $local=[OcxFirstLogonFolders]::Read('f1b32785-6fba-4fcf-9d55-7b8e7f157091')
+ $roaming=[OcxFirstLogonFolders]::Read('3eb685db-65f9-4cf6-a03a-e3ef65729f3d',$identity.Token)
+ $local=[OcxFirstLogonFolders]::Read('f1b32785-6fba-4fcf-9d55-7b8e7f157091',$identity.Token)
  $imageLocalCorrected=$false
  if(!$local.StartsWith($registered+'\',[StringComparison]::OrdinalIgnoreCase)){
   # Some hosted images seed Default User's LocalAppData with runneradmin's
   # absolute directory. Initialize only the freshly-created current test SID's
   # standard Local folder; never change the runner/daily account or system ACL.
-  $ownLocal=Join-Path $registered 'AppData/Local'
+  $ownLocal=[IO.Path]::GetFullPath((Join-Path (Join-Path $registered 'AppData') 'Local'))
   New-Item -ItemType Directory -Force $ownLocal | Out-Null
-  [OcxFirstLogonFolders]::InitializeLocal($ownLocal)
-  $local=[OcxFirstLogonFolders]::Read('f1b32785-6fba-4fcf-9d55-7b8e7f157091')
+  [OcxFirstLogonFolders]::InitializeLocal($ownLocal,$identity.Token)
+  $local=[OcxFirstLogonFolders]::Read('f1b32785-6fba-4fcf-9d55-7b8e7f157091',$identity.Token)
   $imageLocalCorrected=$true
  }
 
