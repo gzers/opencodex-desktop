@@ -139,7 +139,7 @@ pub fn run() {
                 tauri::WebviewWindowBuilder::from_config(app, &config)?.build()?;
             }
             // 启动事件附构建来源：维护事故可把本机安装映射回提交（F-09）。
-            record_startup_event(&data_root, &app.package_info().version.to_string());
+            record_window_event(&data_root, &app.package_info().version.to_string());
             app.manage(std::sync::Mutex::new(
                 crate::modules::sync::SyncRun {
                     run_id: "sync-initial".to_string(),
@@ -313,7 +313,14 @@ pub fn run() {
             if let Some(tray) = app.tray_by_id(crate::modules::tray::TRAY_ID) {
                 // Windows notification-area artwork is independent of the app icon.
                 #[cfg(windows)]
-                crate::infrastructure::windows_tray_icon::install(app.handle())?;
+                if let Err(error) = crate::infrastructure::windows_tray_icon::install(app.handle()) {
+                    // Shell_NotifyIcon(NIM_MODIFY) may reject the first artwork
+                    // refresh while Explorer is starting or belongs to another
+                    // interactive account. Keep the configured initial icon and
+                    // retry on the next refresh; optional artwork cannot abort
+                    // the already-created window and all business services.
+                    record_window_event(&data_root, &format!("windows tray artwork refresh deferred: {error}"));
+                }
                 tray.set_menu(Some(tray_menu.clone()))?;
             }
             // Windows keeps one system caption row. Product actions stay in the
