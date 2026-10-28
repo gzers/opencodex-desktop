@@ -37,3 +37,9 @@ Windows增强回归暴露工具发现夹具受runner的真实工具声明影响�
 CI40614790973的Windows后端及原生凭据通过；真实官方2.90.0→2.91.0安装/升级断言完成后，热缓存离线重装返回ENOENT/-4058。不是随机环境通过，也没有跳过离线项。源码发现SystemNpmRunner始终把version拼为包名@version，而fill_offline传入的是绝对tgz路径，导致Windows扩展路径被拼进registry spec。b9fcc1b60把经过验证的本地归档作为独立npm参数，并对npm侧作安全路径简化；registry版本保持原有语义。
 
 Windows真实cmd参数回归补充本地tgz单参数检查；官方live增加阶段日志和失败分支的旧包sentinel、入口、来源原字节检查。共用runtime102项、clippy通过；最新Windows全链CI重新执行，未打tag、未公开0.2.17、未关闭WP95。证据见ci83-official-live-failure.log、ci83-native-progress.json及本轮RCP证据目录。
+
+## 发布前最终本地结果
+
+离线参数修复后的完整后端42套件1289通过、0失败、14既有忽略，证据backend-offline-final.log与summary；前端988通过、10既有跳过，21项门禁0失败/0跳过。最后e83ed669c仅把系统Node回退放到用户版本目录之后，发现专项6项通过，UI源码与已验门禁一致。
+
+CI40617557310的Windows后端完整回归和原生凭据通过，真实官方包联网/离线继续运行；最终e83ed669c对应CI40618515412仍在执行。尚未合并PR26、打tag或公开版本，不将运行中当作成功。必须保留最终EXE、普通账户、正式安装器、实际OTA和匿名stable的独立回执。

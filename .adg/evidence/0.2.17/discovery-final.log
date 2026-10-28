@@ -1,0 +1,14 @@
+   Compiling opencodex-desktop v0.2.17 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.86s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-afa6b7069e3656c7)
+
+running 6 tests
+test infrastructure::discovery_paths::tests::discovery_uses_controlled_user_tools_and_returns_missing_candidates ... ok
+test infrastructure::discovery_paths::tests::reads_npmrc_prefix_but_ignores_relative_or_commented_values ... ok
+test infrastructure::discovery_paths::tests::isolated_windows_candidates_cannot_select_a_daily_launcher ... ok
+test infrastructure::discovery_paths::tests::finds_tools_outside_the_default_global_prefix ... ok
+test infrastructure::discovery_paths::tests::windows_declared_managers_use_active_roots_and_bound_recognized_versions ... ok
+test infrastructure::discovery_paths::tests::nvm_versions_are_scanned_newest_first_with_a_cap ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1109 filtered out; finished in 0.00s
+
