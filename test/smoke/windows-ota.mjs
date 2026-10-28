@@ -36,11 +36,11 @@ try{
   }
   await invoke('set_update_channel',{channel:'stable'})
   const checked=await invoke('check_for_update',{trigger:'user'});assert.equal(checked.update.availableVersion,version)
-  await evaluate('window.__otaProgress=[];window.__otaChannel=window.__TAURI_INTERNALS__.transformCallback(m=>window.__otaProgress.push(m),false);true')
+  await evaluate('window.__otaProgress=[];window.__otaChannel=window.__TAURI_INTERNALS__.transformCallback(raw=>{if(raw.message)window.__otaProgress.push(raw.message)},false);true')
   const channel=await evaluate('window.__otaChannel')
   await invoke('install_update',{candidateVersion:version,channel:'stable',backup:true,progress:'__CHANNEL__:'+channel})
   const status=await invoke('get_update_status');assert.equal(status.signatureVerified,true);assert.equal(status.pendingRestart,version)
-  const progress=await evaluate('window.__otaProgress');assert(progress.some(p=>p.stage==='pending_restart'))
+  let progress=[];for(let n=0;n<40;n++){progress=await evaluate('window.__otaProgress');if(progress.some(p=>p.stage==='pending_restart'))break;await new Promise(resolve=>setTimeout(resolve,50))}assert(progress.some(p=>p.stage==='pending_restart'),'real channel never delivered pending_restart: '+JSON.stringify(progress))
   await writeFile(join(output,phase+'.json'),JSON.stringify({result:'pass',from:facts.about.version,to:version,signatureVerified:true,pendingRestart:status.pendingRestart,progress,productionStableEndpoint:true},null,2)+'\n')
   const action=phase==='prepare-exit'?"window.__TAURI_INTERNALS__.invoke('plugin:process|exit',{code:0})":"window.__TAURI_INTERNALS__.invoke('restart_after_update')"
   await evaluate('setTimeout(()=>{'+action+'},150);true')
