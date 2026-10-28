@@ -139,7 +139,7 @@ pub fn run() {
                 tauri::WebviewWindowBuilder::from_config(app, &config)?.build()?;
             }
             // 启动事件附构建来源：维护事故可把本机安装映射回提交（F-09）。
-            record_window_event(&data_root, &app.package_info().version.to_string());
+            record_startup_event(&data_root, &app.package_info().version.to_string());
             app.manage(std::sync::Mutex::new(
                 crate::modules::sync::SyncRun {
                     run_id: "sync-initial".to_string(),
