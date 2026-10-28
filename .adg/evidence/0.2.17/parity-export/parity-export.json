@@ -1,0 +1,59 @@
+{
+  "prototype": {
+    "dialogOpen": true,
+    "hasTree": true,
+    "treeText": "生成位置\n\n导出目录/\n└── 2026-10-23/\n    └── 备份包-14-30-12-8F3A/\n        ├── 本次所选配置…\n        ├── 模版与所选版本\n        └── manifest / 校验信息\n\n按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。",
+    "hasSummary": true,
+    "mentionsDate": true,
+    "mentionsPackage": true,
+    "mentionsCopy": true,
+    "hasOpenDir": false
+  },
+  "implementation": {
+    "dialogOpen": true,
+    "hasTree": true,
+    "treeText": "保存位置\n默认导出目录\n自定义目录",
+    "hasSummary": true,
+    "mentionsDate": true,
+    "mentionsPackage": true,
+    "mentionsCopy": true,
+    "hasOpenDir": false
+  },
+  "results": [
+    {
+      "n": "原型导出确认已打开",
+      "ok": true,
+      "d": ""
+    },
+    {
+      "n": "实现导出确认已打开",
+      "ok": true,
+      "d": ""
+    },
+    {
+      "n": "两侧都有日期/目录结构说明",
+      "ok": true,
+      "d": "proto=true impl=true"
+    },
+    {
+      "n": "两侧都提到备份包",
+      "ok": true,
+      "d": ""
+    },
+    {
+      "n": "两侧都说明可整体拷贝",
+      "ok": true,
+      "d": "proto=true impl=true"
+    },
+    {
+      "n": "原型有背包摘要",
+      "ok": true,
+      "d": ""
+    },
+    {
+      "n": "实现有背包摘要",
+      "ok": true,
+      "d": ""
+    }
+  ]
+}

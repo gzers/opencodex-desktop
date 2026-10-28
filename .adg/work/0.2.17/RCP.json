@@ -6,44 +6,63 @@
     {
       "name": "review:windows-path",
       "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "evidence": [
+        ".adg/evidence/0.2.17/ui-script-confirm-regression.log",
+        ".adg/evidence/0.2.17/backend-offline-final.log"
+      ],
+      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
     },
     {
       "name": "review:install-transaction",
       "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "evidence": [
+        ".adg/evidence/0.2.17/backend-offline-final.log",
+        ".adg/evidence/0.2.17/ci83-native-progress.json"
+      ],
+      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
     },
     {
       "name": "review:version-probe",
       "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "evidence": [
+        ".adg/evidence/0.2.17/probe-postreview.log",
+        ".adg/evidence/0.2.17/ci83-native-progress.json"
+      ],
+      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
     },
     {
       "name": "review:tool-discovery",
       "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "evidence": [
+        ".adg/evidence/0.2.17/discovery-final.log"
+      ],
+      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
     },
     {
       "name": "review:packaged-docs-cli",
       "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "evidence": [
+        ".adg/evidence/0.2.17/source-release-identity.json",
+        ".adg/evidence/0.2.17/ui-script-confirm-regression.log"
+      ],
+      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
     },
     {
       "name": "review:native-windows",
       "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "evidence": [
+        ".adg/evidence/0.2.17/ci83-official-live-failure.log"
+      ],
+      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
     },
     {
       "name": "review:regression-release",
       "status": "failed",
-      "evidence": [],
-      "scope": "implementation/verification pending"
+      "evidence": [
+        ".adg/evidence/0.2.17/backend-offline-final-summary.json",
+        ".adg/evidence/0.2.17/gate-after-script-confirm.json"
+      ],
+      "scope": "Local verification evidence available; final Windows/full release requirement is still pending. Failed here means incomplete required check, not a claim that recorded passing tests failed."
     }
   ]
 }

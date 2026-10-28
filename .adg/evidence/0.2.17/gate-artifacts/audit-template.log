@@ -1,0 +1,29 @@
+PASS template-1180x760-light 模版编辑器已打开
+PASS template-1180x760-light 侧栏含 Agent 自动填充
+PASS template-1180x760-light 侧栏含外部任务
+PASS template-1180x760-light 侧栏含复制模版
+PASS template-1180x760-light 侧栏不再有匹配预览
+PASS template-1180x760-light 匹配预览在匹配分区
+PASS template-1180x760-light 侧栏保留保存
+PASS template-1180x760-light 分区数量正确 | sections=5
+PASS template-1180x760-light 无横向溢出 | overflow=0
+PASS template-1180x760-light 无未捕获错误
+PASS template-1180x760-light 未修改时保存禁用
+PASS template-1180x760-light 未修改时还原禁用
+PASS template-1180x760-light 修改后保存可用
+PASS template-1180x760-light 修改后还原可用
+PASS template-900x600-dark 模版编辑器已打开
+PASS template-900x600-dark 侧栏含 Agent 自动填充
+PASS template-900x600-dark 侧栏含外部任务
+PASS template-900x600-dark 侧栏含复制模版
+PASS template-900x600-dark 侧栏不再有匹配预览
+PASS template-900x600-dark 匹配预览在匹配分区
+PASS template-900x600-dark 侧栏保留保存
+PASS template-900x600-dark 分区数量正确 | sections=5
+PASS template-900x600-dark 无横向溢出 | overflow=0
+PASS template-900x600-dark 无未捕获错误
+PASS template-900x600-dark 未修改时保存禁用
+PASS template-900x600-dark 未修改时还原禁用
+PASS template-900x600-dark 修改后保存可用
+PASS template-900x600-dark 修改后还原可用
+shots: /tmp/ocx-v17-gate-script/audit-template failed=0/28

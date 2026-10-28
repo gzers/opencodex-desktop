@@ -1,0 +1,33 @@
+PASS models-1180x760-light 渠道表存在 | tables=1
+PASS models-1180x760-light 无独立预览按钮 | preview=0
+PASS models-1180x760-light 保留读取现有渠道
+PASS models-1180x760-light 无横向溢出 | overflow=0
+PASS models-1180x760-light 无未捕获错误
+PASS models-1180x760-dark 渠道表存在 | tables=1
+PASS models-1180x760-dark 无独立预览按钮 | preview=0
+PASS models-1180x760-dark 保留读取现有渠道
+PASS models-1180x760-dark 无横向溢出 | overflow=0
+PASS models-1180x760-dark 无未捕获错误
+PASS models-1440x900-light 渠道表存在 | tables=1
+PASS models-1440x900-light 无独立预览按钮 | preview=0
+PASS models-1440x900-light 保留读取现有渠道
+PASS models-1440x900-light 无横向溢出 | overflow=0
+PASS models-1440x900-light 无未捕获错误
+PASS models-900x600-light 渠道表存在 | tables=1
+PASS models-900x600-light 无独立预览按钮 | preview=0
+PASS models-900x600-light 保留读取现有渠道
+PASS models-900x600-light 无横向溢出 | overflow=0
+PASS models-900x600-light 无未捕获错误
+PASS models-1440x900-scale150 渠道表存在 | tables=1
+PASS models-1440x900-scale150 无独立预览按钮 | preview=0
+PASS models-1440x900-scale150 保留读取现有渠道
+PASS models-1440x900-scale150 无横向溢出 | overflow=0
+PASS models-1440x900-scale150 缩放已生效 | ui-zoom=1.5 expect=1.5
+PASS models-1440x900-scale150 无未捕获错误
+PASS models-1440x900-scale200 渠道表存在 | tables=1
+PASS models-1440x900-scale200 无独立预览按钮 | preview=0
+PASS models-1440x900-scale200 保留读取现有渠道
+PASS models-1440x900-scale200 无横向溢出 | overflow=0
+PASS models-1440x900-scale200 缩放已生效 | ui-zoom=2 expect=2
+PASS models-1440x900-scale200 无未捕获错误
+shots: /tmp/ocx-v17-gate-script/audit-models  failed=0/32

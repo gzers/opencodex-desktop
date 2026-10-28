@@ -1,0 +1,11 @@
+PASS 原型预览已打开 | title=保存预览
+PASS 实现预览已打开 | title=保存预览
+PASS 两侧标题一致 | 保存预览 vs 保存预览
+PASS 两侧都有激活摘要
+PASS 两侧都有顺序列表
+PASS 两侧都没有预览来源
+PASS 两侧都没有按渠道查看数量
+PASS 两侧都有渠道分组 | proto=21 impl=24
+PASS 实现宽度不超原型上限 | proto=938 impl=980
+PASS 两侧列表都是独立滚动区 | proto={"client":461,"scroll":2059} impl={"client":477,"scroll":1366}
+shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-KGOu1Z failed=0/10
