@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-28",
+  "source": "human pasted npm debug log",
+  "logTimestampUtc": "2026-10-28T08:35:57.981Z",
+  "npm": "10.9.3",
+  "node": "22.20.0",
+  "os": "Windows_NT 10.0.26100",
+  "command": [
+    "view",
+    "@bitkyc08/opencodex@latest",
+    "version",
+    "dist.integrity",
+    "--json"
+  ],
+  "registryHttpStatus": 200,
+  "exitCode": 0,
+  "npmInfo": "ok",
+  "classification": "successful official metadata query, not failing pack/install evidence",
+  "confirmedSource": "modules/about/remote.rs query_remote_latest/run_npm_view_with_timeout; commands/runtime.rs and installation use the same active-root cache/npm directory",
+  "cannotConclude": [
+    "actual npm_failed exit1 root cause",
+    "all registry/dependency/script network paths work",
+    "the install succeeded"
+  ],
+  "nextEvidence": "most recent debug log containing verbose exit 1; inspect command and last error section",
+  "privacy": "only diagnosis-relevant fields retained; personal home/npmrc paths omitted"
+}
