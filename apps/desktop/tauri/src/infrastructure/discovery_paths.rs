@@ -430,7 +430,16 @@ prefix = relative/bin
         std::fs::write(node_dir.join("node.exe"), b"fixture").unwrap();
         std::fs::write(node_dir.join("npm.cmd"), b"fixture").unwrap();
         std::fs::write(npm_dir.join("ocx.cmd"), b"fixture").unwrap();
-        let paths = paths_for_home(root.path());
+        // The fixture supplies its own HOME and no manager declarations; the
+        // runner's active NVM_SYMLINK must not impersonate that fixture's tools.
+        // Real host declarations are covered by the injected-manager cases and
+        // the production default-path native acceptance.
+        let directories = windows_declared_candidates(root.path(), |_| None, None, None);
+        let paths = EnvironmentPaths::new(
+            select_tool(&directories, tool_names("node")),
+            select_tool(&directories, tool_names("npm")),
+            select_tool(&directories, tool_names("ocx")),
+        );
         assert_eq!(paths.node, node_dir.join("node.exe"));
         assert_eq!(paths.npm, node_dir.join("npm.cmd"));
         assert_eq!(paths.ocx, npm_dir.join("ocx.cmd"));
