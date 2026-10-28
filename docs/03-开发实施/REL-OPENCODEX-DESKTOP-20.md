@@ -3,7 +3,7 @@ id: REL-OPENCODEX-DESKTOP-20
 object_kind: release
 state: in_progress
 title: 0.2.17 Windows托管安装可靠性发布
-summary: 发布准备中；本地完整门禁、Windows后端及真包安装证据已具备，普通账户及正式发布仍待最终回执。未打tag或公开版本。
+summary: 发布准备中；本地完整门禁、Windows后端及真包安装证据已具备，普通账户及正式发布仍待最终回执。已打v0.2.17标签，正式构建中，未公开版本。
 source_refs:
   - https://github.com/gzers/opencodex-desktop/pull/26
   - docs/03-开发实施/IMP-OPENCODEX-DESKTOP-26.md
@@ -11,7 +11,7 @@ source_refs:
 
 # 0.2.17 Windows托管安装可靠性发布
 
-2026-10-28，Asia/Shanghai。用户已授权WP89～WP95文档治理、开发、测试与stable发布。当前状态仅发布准备，未公开0.2.17。实施归[IMP26](IMP-OPENCODEX-DESKTOP-26.md)、验收归DMD AC-WIN-017-01～06，源清单为[0.2.16问题记录](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.16-bugs.md)。
+2026-10-28，Asia/Shanghai。用户已授权WP89～WP95文档治理、开发、测试与stable发布。当前正式构建中，未公开0.2.17。实施归[IMP26](IMP-OPENCODEX-DESKTOP-26.md)、验收归DMD AC-WIN-017-01～06，源清单为[0.2.16问题记录](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.16-bugs.md)。
 
 ## 当前范围
 
@@ -30,3 +30,11 @@ PR26最后提交双平台CI；真实普通账户最终EXE；正式macOS/Windows�
 安装包继续未做OS代码签名/Apple公证的测试分发，自更新签名验证独立执行。普通账户验收限定临时Actions账户，其Profile由Windows服务创建；镜像Default User中LocalAppData错误指向runneradmin时，只对本次新建SID的用户目录注册项初始化自己的标准Local目录，再用新进程读回，并保留报告。临时SID的GUI测试还临时授予窗口站/桌面访问并在finally恢复原DACL，记录实际恢复字段；软件进程仍须普通令牌。不是用户日常账户操作，也不证明未调整镜像的所有账户组合。
 
 Win10/11物理设备、混合DPI、真实SMB/重定向企业账户、PAC/企业证书及私有服务保留未执行边界；不以单个Server runner结果宣布全域通过。
+
+## CI及合并已验回执
+
+CI40632048037五个必需job全部通过，PR26已合并为d7c7978f043278baae8f2fc8c2119315a4660f12，与验收head f77327aa8的源码树完全一致，v0.2.17标签指向此合并。
+
+原生回执实际读回：ordinary-summary result=pass、applicationElevated=false、applicationModeMatched=true、desktopAclRestoredOnExit=true。真实Vue安装官方2.91.0、默认prefix、来源记录通过；官方2.90→2.91升级和热缓存离线重装通过。窗口/表格/排序/双渠道保存/Key/导入/模版的原生证据已归档windows-native，不用绿灯代替实际回执。
+
+正式构建、安装器和公开/stable、OTA仍待完成。
