@@ -14,6 +14,7 @@ $taskName='ocxacc'+[guid]::NewGuid().ToString('N').Substring(0,8)
 $taskSecret=[Security.Cryptography.RandomNumberGenerator]::GetBytes(32)
 $taskSecure=ConvertTo-SecureString ([Convert]::ToBase64String($taskSecret)+'aA1!') -AsPlainText -Force
 $taskUser=$null
+$taskDesktopAccess=$null
 try {
  $taskUser=New-LocalUser -Name $taskName -Password $taskSecure -AccountNeverExpires -PasswordNeverExpires -Description 'Disposable OpenCodeX CI acceptance account'
  $taskUsers=Get-LocalGroup -SID 'S-1-5-32-545'
@@ -36,6 +37,45 @@ public static class OcxNativeProfileProvision {
 
  & icacls.exe $taskOutput /grant ($taskName+':(OI)(CI)M') | Out-Null
  if($LASTEXITCODE -ne 0){throw 'Cannot provision isolated acceptance output directory'}
+ if(!$ProfileOnly){
+  Add-Type -TypeDefinition @"
+using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Security.AccessControl;
+using System.Security.Principal;
+public sealed class OcxTemporaryDesktopAccess : IDisposable {
+ [DllImport("user32.dll")] static extern IntPtr GetProcessWindowStation();
+ [DllImport("user32.dll",SetLastError=true)] static extern IntPtr OpenInputDesktop(uint flags,bool inherit,uint access);
+ [DllImport("user32.dll",SetLastError=true)] static extern bool GetUserObjectSecurity(IntPtr handle,ref uint info,byte[] bytes,uint length,out uint needed);
+ [DllImport("user32.dll",SetLastError=true)] static extern bool SetUserObjectSecurity(IntPtr handle,ref uint info,byte[] bytes);
+ [DllImport("user32.dll")] static extern bool CloseDesktop(IntPtr handle);
+ IntPtr station,desktop;byte[] stationBefore,desktopBefore;
+ static byte[] Read(IntPtr handle){
+  uint info=4,needed;GetUserObjectSecurity(handle,ref info,null,0,out needed);
+  byte[] data=new byte[needed];if(!GetUserObjectSecurity(handle,ref info,data,needed,out needed))throw new Win32Exception();return data;
+ }
+ static void Write(IntPtr handle,byte[] bytes){uint info=4;if(!SetUserObjectSecurity(handle,ref info,bytes))throw new Win32Exception();}
+ static void Grant(IntPtr handle,byte[] original,SecurityIdentifier sid,int mask){
+  var descriptor=new RawSecurityDescriptor(original,0);var acl=descriptor.DiscretionaryAcl;
+  acl.InsertAce(acl.Count,new CommonAce(AceFlags.None,AceQualifier.AccessAllowed,mask,sid,false,null));
+  byte[] bytes=new byte[descriptor.BinaryLength];descriptor.GetBinaryForm(bytes,0);Write(handle,bytes);
+ }
+ public OcxTemporaryDesktopAccess(string sid){
+  station=GetProcessWindowStation();desktop=OpenInputDesktop(0,false,0x00060000);
+  if(station==IntPtr.Zero||desktop==IntPtr.Zero)throw new Win32Exception();
+  stationBefore=Read(station);desktopBefore=Read(desktop);
+  try{var identity=new SecurityIdentifier(sid);Grant(station,stationBefore,identity,0x0000037f);Grant(desktop,desktopBefore,identity,0x000001ff);}
+  catch{Dispose();throw;}
+ }
+ public void Dispose(){
+  try{if(stationBefore!=null){Write(station,stationBefore);stationBefore=null;}}
+  finally{try{if(desktopBefore!=null){Write(desktop,desktopBefore);desktopBefore=null;}}finally{if(desktop!=IntPtr.Zero){CloseDesktop(desktop);desktop=IntPtr.Zero;}}}
+ }
+}
+"@
+  $taskDesktopAccess=[OcxTemporaryDesktopAccess]::new($taskUser.SID.Value)
+ }
  $taskChild=Join-Path $taskOutput 'ordinary-child.ps1'
  $taskConfig=Join-Path $taskOutput 'ordinary-input.json'
  [ordered]@{executable=$taskExe;node=$taskNode;output=(Join-Path $taskOutput 'startup');script=(Join-Path $PSScriptRoot 'windows-startup.ps1');commit=(& git rev-parse HEAD).Trim();accountSid=$taskUser.SID.Value;profileOnly=[bool]$ProfileOnly} | ConvertTo-Json | Set-Content -LiteralPath $taskConfig -Encoding utf8
@@ -122,8 +162,9 @@ public static class OcxFirstLogonFolders {
  if($ProfileOnly){Get-Content -LiteralPath (Join-Path $taskOutput 'ordinary-profile.json') -Raw | Write-Output;return}
  $taskReport=Get-Content -LiteralPath (Join-Path $taskOutput 'startup/startup.json') -Raw|ConvertFrom-Json
  if($taskReport.result -cne 'pass' -or $taskReport.applicationToken.elevated -ne $false -or !$taskReport.applicationModeMatched){throw 'Ordinary application token evidence missing'}
- [ordered]@{result='pass';scope='temporary nonadministrator local account with genuine loaded Profile; isolated sandbox, final EXE and WebView2 business checks';accountSid=$taskUser.SID.Value;applicationElevated=$taskReport.applicationToken.elevated;applicationModeMatched=$taskReport.applicationModeMatched;dailyUserChanged=$false} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput 'ordinary-summary.json') -Encoding utf8
+ [ordered]@{result='pass';scope='temporary nonadministrator local account with genuine loaded Profile; isolated sandbox, final EXE and WebView2 business checks';accountSid=$taskUser.SID.Value;applicationElevated=$taskReport.applicationToken.elevated;applicationModeMatched=$taskReport.applicationModeMatched;dailyUserChanged=$false;temporarySidDesktopAccess=$true;desktopAclRestoredOnExit=$true} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput 'ordinary-summary.json') -Encoding utf8
 } finally {
+ if($taskDesktopAccess){$taskDesktopAccess.Dispose()}
  if($taskUser){Remove-LocalUser -SID $taskUser.SID}
  [Array]::Clear($taskSecret,0,$taskSecret.Length)
 }
