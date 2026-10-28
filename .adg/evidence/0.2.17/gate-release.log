@@ -1,0 +1,28 @@
+
+> opencodex-desktop-ui@0.2.17 gate:release
+> node qa/gate-release.mjs
+
+PASS typecheck ·  · 4022ms
+PASS unit · Tests  987 passed | 10 skipped (997) · 8047ms
+PASS build · ✓ built in 338ms · 623ms
+PASS audit:file-save · {"engine":"chromium","passed":45,"failed":0,"out":"/tmp/ocx-v17-gate-final/audit-file-save"} · 20110ms
+PASS audit:notification-feedback · {"engine":"chromium","passed":56,"failed":0,"outDir":"/tmp/ocx-v17-gate-final/audit-notification-feedback"} · 24779ms
+PASS audit:notification-parity · notification recipe parity failed=0/84 · 9580ms
+PASS audit:models · shots: /tmp/ocx-v17-gate-final/audit-models  failed=0/32 · 11505ms
+PASS audit:preview · shots: /tmp/ocx-v17-gate-final/audit-preview failed=0/30 · 9547ms
+PASS audit:geometry · failed=0/44 · 6440ms
+PASS audit:geometry:webkit · failed=0/40 · 16861ms
+PASS audit:webkit · shots: /tmp/ocx-v17-gate-final/audit-webkit  failed=0/32 · 55942ms
+PASS audit:template · shots: /tmp/ocx-v17-gate-final/audit-template failed=0/28 · 9111ms
+PASS audit:export · shots: /tmp/ocx-v17-gate-final/audit-export failed=0/18 · 10551ms
+PASS audit:update · shots: /tmp/ocx-v17-gate-final/audit-update failed=0/24 · 3997ms
+PASS audit:parity:list · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-MhosqD failed=0/8 · 6681ms
+PASS audit:parity · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-yZNZh6 failed=0/10 · 8736ms
+PASS audit:parity:export · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-export-ivfvgz failed=0/7 · 9328ms
+PASS audit:parity:template · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-template-hvhZ34 failed=0/11 · 9366ms
+PASS audit:parity:agent · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-agent-59rDEX failed=0/7 · 9296ms
+PASS audit:catalog-naming · CHECKED 50 routed rows; providers=26 · 30ms
+PASS audit:catalog-crossvalidate · PASS 清除友好名后的配置通过官方 config validate · 303ms
+
+门禁快照：21 通过 / 0 失败 / 0 跳过
+报告：/tmp/ocx-v17-gate-final/gate-report.json

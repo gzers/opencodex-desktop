@@ -1,0 +1,79 @@
+{
+  "version": "0.2.17",
+  "baseline": "d2c08dd7d62e2caada507f2eeb4d05804460b6a8",
+  "source_head": "22f34c820e9c9830a28a48a4119d8a3d15d57b7f",
+  "items": [
+    {
+      "id": "WP-89",
+      "scope": "default-install-path",
+      "status": "local-passed-windows-pending",
+      "evidence": [
+        "gate-report.json",
+        "ui-regression.log"
+      ],
+      "note": "Native host default/restore and extended filesystem path in current CI"
+    },
+    {
+      "id": "WP-90",
+      "scope": "transaction-and-ownership",
+      "status": "local-passed-windows-pending",
+      "evidence": [
+        "backend-regression.log"
+      ],
+      "note": "Reject nonowned target before writing; preserve package, launcher and source record on failed activation; Windows lock cases pending"
+    },
+    {
+      "id": "WP-91",
+      "scope": "real-probe",
+      "status": "local-passed-windows-pending",
+      "evidence": [
+        "backend-regression.log"
+      ],
+      "note": "Real Node nonzero/output/inherited pipe bound; official fixed-version execution pending"
+    },
+    {
+      "id": "WP-92",
+      "scope": "controlled-discovery",
+      "status": "local-passed-windows-pending",
+      "evidence": [
+        "backend-regression.log"
+      ],
+      "note": "Read-only Known Folders and explicit version-manager declarations; bounded recognized version layouts, no PATH/profile execution"
+    },
+    {
+      "id": "WP-93",
+      "scope": "packaged-documents",
+      "status": "unit-passed-bundle-pending",
+      "evidence": [
+        "backend-regression.log"
+      ],
+      "note": "Resource-root lookup and exact license notice; final installer resources pending"
+    },
+    {
+      "id": "WP-94",
+      "scope": "cli-description",
+      "status": "local-passed-ci-pending",
+      "evidence": [
+        "ui-regression.log",
+        "backend-regression.log"
+      ],
+      "note": "Windows public CLI stays disabled; accurate named-pipe implementation / unaccepted public feature description"
+    },
+    {
+      "id": "WP-95",
+      "scope": "native-and-release",
+      "status": "pending",
+      "evidence": [],
+      "note": "Final EXE default path, ordinary account, real npm, MSI/NSIS default/custom/retention, actual OTA, signatures and anonymous stable still required"
+    }
+  ],
+  "unperformed_environment_boundaries": [
+    "physical Windows10/11 device matrix",
+    "physical mixed-DPI/multi-monitor",
+    "real SMB/UNC server and redirected corporate profiles",
+    "enterprise PAC/custom trust roots and private services",
+    "paid generation requests"
+  ],
+  "daily_configuration_changed": false,
+  "release_complete": false
+}

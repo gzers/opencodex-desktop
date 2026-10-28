@@ -14,10 +14,12 @@ WP95以清单逐项审查原生覆盖：隔离Windows runner实际安装/故障�
 
 检查名固定为review:windows-path、review:install-transaction、review:version-probe、review:tool-discovery、review:packaged-docs-cli、review:native-windows、review:regression-release。完整本地门禁、双平台CI和实际安装器/签名/匿名stable完成并回写后关闭。
 
-## 实施启动记录
+## 实施与当前验证
 
-代码分支 codex/0.2.17-windows-install 已从 v0.2.16 合并点建立，首轮实现提交 57578f895。已落地：扩展盘符/UNC 前端路径身份、安装目标无副作用校验、受管 manifest 归属、入口激活失败回滚、非零版本探针拒绝、Windows 工具声明路径、包内许可资源和 CLI 能力文案。专项 runtime 99 项、安装设置前端 47 项、文档命令 8 项通过；Windows 原生新增测试待 CI 执行。
+首轮实现57578f895之后，dcc7c96b4补齐了来源登记、入口和包体同一安装事务，真实零退出/64KiB/超时与后代清理的版本探针、扩展路径分隔符、版本管理器有界发现、资源许可实际内容；22f34c82加入正式旧版MSI/NSIS经生产stable更新入口的OTA验收脚本。所有实现仅在代码分支；原型未新增样式与页面。
 
-当前提交只代表实施阶段，不能提前关闭 WP-89～WP-95；实际 Windows 原生、普通权限和发布证据仍是必要门槛。
+本地最终前端987通过、10既有跳过，clippy/typecheck/build通过；后端完整串行结果及21项原型/浏览器/真实文件门禁在证据目录，不将macOS结果当作Windows原生结果。第一轮Windows CI的扩展路径rename错误123已保留原日志，按真实原因修正混合分隔符；增强版CI继续执行，尚未确认正式包/OTA或stable。
 
-代码已完成首轮实现提交 57578f895，包含扩展路径、安装目标归属、激活失败回滚、零退出版本探针、资源文档、工具声明路径及 CLI 边界文案。专项 runtime 99 项、前端 987 项、文档资源命令 8 项、后端串行全量 1287 项、clippy 和前端 build 已通过；Windows 原生新增用例与双平台 CI 待收口。
+原生验收使用隔离临时目录、真实Node/npm与官方固定版本包，含联网升级、热缓存离线重装、实际Windows锁回滚、默认/恢复默认向导及普通账户令牌。OTA在0.2.17成为stable后执行真实旧版更新与重开，不以签名文件检查代替应用替换。发布后的验证失败须记录并处理，不能提前关闭目标。
+
+Windows 10/11物理设备、混合DPI、真实SMB/企业代理PAC、企业证书等保留环境边界；runner结果只声明实际执行的范围。历史审计与旧版通过结论不改写为本版全域通过。

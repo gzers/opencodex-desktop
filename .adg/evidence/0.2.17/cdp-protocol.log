@@ -1,0 +1,22 @@
+✔ retries until the main page appears; ignores embedded or unrelated pages (68.195541ms)
+✔ HTTP errors are preserved instead of being swallowed (2004.41275ms)
+✔ malformed target JSON fails with parse evidence (2002.147834ms)
+✔ non-array responses and empty target lists never count as rendered UI (4003.285083ms)
+✔ stalled responses are bounded by both request and discovery deadlines (153.519208ms)
+✔ connection refusal retains the underlying network error (2002.817875ms)
+✔ refuses non-loopback endpoints before making a request (0.214083ms)
+✔ overview accepts either complete cards or the real settled setup gate, never an empty or partial page (1.838875ms)
+✔ writes require the exact admitted immutable and saved sandbox, never a relative root or another account directory (1.416584ms)
+✔ invalid native roots are rejected before invoking any application command (1.44275ms)
+✔ native file writes require both saved and immutable model homes inside the admitted sandbox (0.644375ms)
+✔ export containment handles Windows canonical prefixes while rejecting siblings, root files and traversal (0.551375ms)
+✔ task preview JSON begins after the instruction section even when receipt instructions contain braces (0.784833ms)
+✔ native Save evidence requires changed file bytes and one exact backup without losing prior backups (13.875208ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10336.131209
