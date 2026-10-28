@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-28",
+  "timezone": "Asia/Shanghai",
+  "source": "human follow-up in this chat",
+  "windowsReadablePath": "D:\\Software\\Develop\\OpenCodeX Desktop",
+  "reportedError": "managed runtime operation failed: npm_failed; npm 安装以退出码 1 结束",
+  "actualFailureReported": true,
+  "specificNpmCause": "unknown; original stderr/npm error block unavailable",
+  "confirmedSourceDefect": "NpmFailed stores detail from masked npm output; message() ignores detail and uses the same generic installation wording for pack and install",
+  "relation": [
+    "WP-89 display follow-up",
+    "WP-95 failure diagnostics follow-up"
+  ],
+  "implementationThisTurn": false
+}
