@@ -1,7 +1,8 @@
 param(
  [Parameter(Mandatory=$true)][string]$Executable,
  [Parameter(Mandatory=$true)][string]$Node,
- [Parameter(Mandatory=$true)][string]$OutputDirectory
+ [Parameter(Mandatory=$true)][string]$OutputDirectory,
+ [switch]$ProfileOnly
 )
 $ErrorActionPreference='Stop'
 if(!$IsWindows -or $env:GITHUB_ACTIONS -ne 'true'){throw 'Restricted to an ephemeral Windows Actions runner'}
@@ -21,7 +22,7 @@ try {
  if($LASTEXITCODE -ne 0){throw 'Cannot provision isolated acceptance output directory'}
  $taskChild=Join-Path $taskOutput 'ordinary-child.ps1'
  $taskConfig=Join-Path $taskOutput 'ordinary-input.json'
- [ordered]@{executable=$taskExe;node=$taskNode;output=(Join-Path $taskOutput 'startup');script=(Join-Path $PSScriptRoot 'windows-startup.ps1');commit=(& git rev-parse HEAD).Trim();accountSid=$taskUser.SID.Value} | ConvertTo-Json | Set-Content -LiteralPath $taskConfig -Encoding utf8
+ [ordered]@{executable=$taskExe;node=$taskNode;output=(Join-Path $taskOutput 'startup');script=(Join-Path $PSScriptRoot 'windows-startup.ps1');commit=(& git rev-parse HEAD).Trim();accountSid=$taskUser.SID.Value;profileOnly=[bool]$ProfileOnly} | ConvertTo-Json | Set-Content -LiteralPath $taskConfig -Encoding utf8
  @'
 param([string]$InputFile)
 $ErrorActionPreference='Stop'
@@ -61,6 +62,7 @@ public static class OcxFirstLogonFolders {
  $env:TEMP=Join-Path $local 'Temp';$env:TMP=$env:TEMP
  New-Item -ItemType Directory -Force $env:TEMP | Out-Null
  [ordered]@{result='pass';method='Windows Known Folder API KF_FLAG_CREATE under current temporary account; no folder redirection';sid=$identity.User.Value;profile=$profile;roaming=$roaming;local=$local} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path (Split-Path -Parent $InputFile) 'ordinary-profile.json') -Encoding utf8
+ if($c.profileOnly){exit 0}
  & $c.script -Executable $c.executable -Node $c.node -OutputDirectory $c.output -Mode ordinary -ExpectedCommit $c.commit
  if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
  exit 0
@@ -76,6 +78,7 @@ public static class OcxFirstLogonFolders {
   }
   throw 'Ordinary native startup failed; see retained output'
  }
+ if($ProfileOnly){Get-Content -LiteralPath (Join-Path $taskOutput 'ordinary-profile.json') -Raw | Write-Output;return}
  $taskReport=Get-Content -LiteralPath (Join-Path $taskOutput 'startup/startup.json') -Raw|ConvertFrom-Json
  if($taskReport.result -cne 'pass' -or $taskReport.applicationToken.elevated -ne $false -or !$taskReport.applicationModeMatched){throw 'Ordinary application token evidence missing'}
  [ordered]@{result='pass';scope='temporary nonadministrator local account with genuine loaded Profile; isolated sandbox, final EXE and WebView2 business checks';accountSid=$taskUser.SID.Value;applicationElevated=$taskReport.applicationToken.elevated;applicationModeMatched=$taskReport.applicationModeMatched;dailyUserChanged=$false} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput 'ordinary-summary.json') -Encoding utf8
