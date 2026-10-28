@@ -21,12 +21,34 @@ try {
  if($LASTEXITCODE -ne 0){throw 'Cannot provision isolated acceptance output directory'}
  $taskChild=Join-Path $taskOutput 'ordinary-child.ps1'
  $taskConfig=Join-Path $taskOutput 'ordinary-input.json'
- [ordered]@{executable=$taskExe;node=$taskNode;output=(Join-Path $taskOutput 'startup');script=(Join-Path $PSScriptRoot 'windows-startup.ps1');commit=(& git rev-parse HEAD).Trim()} | ConvertTo-Json | Set-Content -LiteralPath $taskConfig -Encoding utf8
+ [ordered]@{executable=$taskExe;node=$taskNode;output=(Join-Path $taskOutput 'startup');script=(Join-Path $PSScriptRoot 'windows-startup.ps1');commit=(& git rev-parse HEAD).Trim();accountSid=$taskUser.SID.Value} | ConvertTo-Json | Set-Content -LiteralPath $taskConfig -Encoding utf8
  @'
 param([string]$InputFile)
 $ErrorActionPreference='Stop'
 try{
  $c=Get-Content -LiteralPath $InputFile -Raw | ConvertFrom-Json
+ $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
+ if($identity.User.Value -cne $c.accountSid){throw 'Unexpected native acceptance account'}
+ Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+public static class OcxFirstLogonFolders {
+ [DllImport("shell32.dll", ExactSpelling=true)] static extern int SHGetKnownFolderPath(ref Guid id, uint flags, IntPtr token, out IntPtr path);
+ public static string Create(string value) {
+  Guid id=new Guid(value);IntPtr path=IntPtr.Zero;
+  try { Marshal.ThrowExceptionForHR(SHGetKnownFolderPath(ref id,0x8000,IntPtr.Zero,out path)); return Marshal.PtrToStringUni(path); }
+  finally { if(path!=IntPtr.Zero) Marshal.FreeCoTaskMem(path); }
+ }
+}
+"@
+ $profile=[OcxFirstLogonFolders]::Create('5e6c858f-0e22-4760-9afe-ea3317b67173')
+ $roaming=[OcxFirstLogonFolders]::Create('3eb685db-65f9-4cf6-a03a-e3ef65729f3d')
+ $local=[OcxFirstLogonFolders]::Create('f1b32785-6fba-4fcf-9d55-7b8e7f157091')
+ if(!$profile -or !$roaming.StartsWith($profile+'\',[StringComparison]::OrdinalIgnoreCase) -or !$local.StartsWith($profile+'\',[StringComparison]::OrdinalIgnoreCase)){throw 'Known Folders escaped the temporary account Profile'}
+ $env:USERPROFILE=$profile;$env:APPDATA=$roaming;$env:LOCALAPPDATA=$local
+ $env:TEMP=Join-Path $local 'Temp';$env:TMP=$env:TEMP
+ New-Item -ItemType Directory -Force $env:TEMP | Out-Null
+ [ordered]@{result='pass';method='Windows Known Folder API KF_FLAG_CREATE under current temporary account; no folder redirection';sid=$identity.User.Value;profile=$profile;roaming=$roaming;local=$local} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path (Split-Path -Parent $InputFile) 'ordinary-profile.json') -Encoding utf8
  & $c.script -Executable $c.executable -Node $c.node -OutputDirectory $c.output -Mode ordinary -ExpectedCommit $c.commit
  if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
  exit 0
@@ -35,7 +57,13 @@ try{
  $taskCredential=[pscredential]::new(($env:COMPUTERNAME+'\'+$taskName),$taskSecure)
  $taskProcess=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $taskCredential -LoadUserProfile -WorkingDirectory $taskOutput -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+$taskChild+'"'),'-InputFile',('"'+$taskConfig+'"')) -RedirectStandardOutput (Join-Path $taskOutput 'ordinary-stdout.log') -RedirectStandardError (Join-Path $taskOutput 'ordinary-stderr.log') -PassThru
  if(!$taskProcess.WaitForExit(300000)){$taskProcess.Kill($true);throw 'Ordinary native startup deadline expired'}
- if($taskProcess.ExitCode -ne 0){throw 'Ordinary native startup failed; see retained output'}
+ if($taskProcess.ExitCode -ne 0){
+  foreach($name in @('ordinary-stderr.log','startup/startup-stderr.log')){
+   $path=Join-Path $taskOutput $name
+   if(Test-Path -LiteralPath $path){Get-Content -LiteralPath $path -Tail 20 | Write-Output}
+  }
+  throw 'Ordinary native startup failed; see retained output'
+ }
  $taskReport=Get-Content -LiteralPath (Join-Path $taskOutput 'startup/startup.json') -Raw|ConvertFrom-Json
  if($taskReport.result -cne 'pass' -or $taskReport.applicationToken.elevated -ne $false -or !$taskReport.applicationModeMatched){throw 'Ordinary application token evidence missing'}
  [ordered]@{result='pass';scope='temporary nonadministrator local account with genuine loaded Profile; isolated sandbox, final EXE and WebView2 business checks';accountSid=$taskUser.SID.Value;applicationElevated=$taskReport.applicationToken.elevated;applicationModeMatched=$taskReport.applicationModeMatched;dailyUserChanged=$false} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput 'ordinary-summary.json') -Encoding utf8

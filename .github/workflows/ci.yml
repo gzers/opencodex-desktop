@@ -236,6 +236,8 @@ jobs:
             test/out/windows-ordinary
             test/out/windows-query-etw
             test/runtime/ci-bd2-query-etw/capture
+            !test/out/windows-startup/**/sandbox-*/**
+            !test/out/windows-ordinary/**/sandbox-*/**
 
   build:
     if: github.ref == 'refs/heads/main'
