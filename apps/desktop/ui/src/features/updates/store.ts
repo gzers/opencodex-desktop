@@ -9,6 +9,7 @@ import {
   type OfficialRemoteLatestDto,
 } from '@/features/about/api'
 import { hasNewerVersion } from './version'
+import { remoteQueryErrorText } from './errors'
 import { createRestoreBackup, createUpgradeBackup, getRestoreRiskSummary } from './upgrade'
 import type { RestoreRiskSummary, UpgradeBackupResult } from './upgrade'
 
@@ -17,9 +18,10 @@ export const useUpdatesStore = defineStore('updates', {
     officialProject: null as OfficialProjectDto | null,
     officialProjectError: false,
     officialProjectLoading: false,
-    // U-03：只读远端查询结果；失败只标记错误，不改写本地事实。
+    // U-03：远端查询结果与脱敏失败详情，不改写本地版本事实。
     officialRemote: null as OfficialRemoteLatestDto | null,
     officialRemoteError: false,
+    officialRemoteErrorDetail: '',
     officialRemoteLoading: false,
     // U-04：代跑官方更新的进行态与错误。
     officialUpdateBusy: false,
@@ -50,15 +52,17 @@ export const useUpdatesStore = defineStore('updates', {
         this.officialProjectLoading = false
       }
     },
-    /** 只读远端最新版本查询（U-03）：不安装、不写盘，失败不覆盖已有的本地/上次结果。 */
+    /** 远端最新版本查询（U-03）：不安装，失败不覆盖已有的本地/上次结果。 */
     async loadRemoteLatest(trigger: UpdateCheckTrigger = 'user') {
       if (this.officialRemoteLoading) return
       this.officialRemoteLoading = true
       try {
         this.officialRemote = await getOfficialRemoteLatest(trigger)
         this.officialRemoteError = false
-      } catch {
+        this.officialRemoteErrorDetail = ''
+      } catch (error) {
         this.officialRemoteError = true
+        this.officialRemoteErrorDetail = remoteQueryErrorText(error)
       } finally {
         this.officialRemoteLoading = false
       }
@@ -73,8 +77,8 @@ export const useUpdatesStore = defineStore('updates', {
       this.officialUpdateBusy = true
       this.officialUpdateError = ''
     },
-    failOfficialUpdate() {
-      this.officialUpdateError = '官方更新安装失败；已保留当前版本。'
+    failOfficialUpdate(error?: unknown) {
+      this.officialUpdateError = remoteQueryErrorText(error, '官方更新安装失败；已保留当前版本。')
     },
     finishOfficialUpdate() {
       this.officialUpdateBusy = false

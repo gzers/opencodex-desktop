@@ -39,7 +39,8 @@ if (process.argv[2] === '--sleep') {
   const child = spawn(process.execPath, [__filename, '--sleep'], {
     windowsHide: true,
     detached: true,
-    stdio: ['ignore', mode === 'timeout' ? 'inherit' : 'ignore', 'ignore'],
+    stdio: ['ignore', mode === 'timeout' ? 'inherit' : 'ignore',
+      mode === 'stderr-timeout' ? 'inherit' : 'ignore'],
   });
   publishPid('child-pid', child.pid);
   publishPhase('after-child-spawn');
@@ -50,6 +51,8 @@ if (process.argv[2] === '--sleep') {
   }
   publishPhase('ownership-ready-seen');
   if (mode === 'overflow') process.stdout.write('x'.repeat(17000));
+  if (mode === 'stderr-overflow') process.stderr.write('error\n'.repeat(12000));
+  if (mode === 'stderr-timeout') process.stderr.write('before stderr deadline\n');
   if (mode === 'success') {
     process.stdout.write(fs.readFileSync(path.join(__dirname, 'success-output'), 'utf8'),
       () => process.exit(0));
@@ -331,7 +334,7 @@ pub(crate) fn process_case(
         "two-second query did not finish bounded cleanup: {query_elapsed:?}"
     );
     match mode {
-        "timeout" => assert_eq!(result, QueryOutcome::Timeout),
+        "timeout" | "stderr-timeout" => assert_eq!(result, QueryOutcome::Timeout),
         "success" => assert_eq!(result, QueryOutcome::Success),
         _ => assert_eq!(result, QueryOutcome::Failure),
     }

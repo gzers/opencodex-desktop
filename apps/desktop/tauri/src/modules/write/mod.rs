@@ -473,6 +473,9 @@ fn failure_text(error: &AppError) -> String {
             format!("runtime install failed: {code}; {detail}")
         }
         AppError::ConfigMigration { detail } => format!("config migration failed: {detail}"),
+        AppError::RemoteQuery { reason, detail } => {
+            format!("metadata query failed: {reason}; {detail}")
+        }
         AppError::Tauri(error) => format!("shell error: {error}"),
         AppError::Timeout => "request timed out".to_string(),
     }

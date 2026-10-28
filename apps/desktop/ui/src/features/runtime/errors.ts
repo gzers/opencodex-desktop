@@ -13,7 +13,7 @@ export function runtimeErrorReason(error: unknown): string {
 }
 
 export function runtimeErrorText(error: unknown): string {
-  const readable = (message: string) => message.replace(/^managed runtime operation failed: [a-z_]+;\s*/, '')
+  const readable = (message: string) => message.replace(/^(?:managed runtime operation|official metadata query) failed: [a-z_]+;\s*/, '')
   if (typeof error === "string" && error) return readable(error)
   if (error && typeof error === "object") {
     const payload = error as { message?: unknown; detail?: unknown; code?: unknown }

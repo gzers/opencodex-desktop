@@ -418,6 +418,10 @@ pub fn network_environment_for_app<R: tauri::Runtime>(
     use tauri::Manager;
     let mut environment = crate::modules::process::EnvironmentPolicy {
         home: Some(home.into_os_string()),
+        opencodex_home: app
+            .try_state::<crate::state::SharedProcessContext>()
+            .map(|context| context.opencodex_home.clone())
+            .unwrap_or_default(),
         ..Default::default()
     };
     if let Some(root) = app.try_state::<crate::state::SharedDataRoot>() {

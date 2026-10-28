@@ -1224,7 +1224,7 @@ fn spawn_line_reader<R: std::io::Read + Send + 'static>(
     });
 }
 
-fn decode_command_output(bytes: &[u8]) -> String {
+pub(crate) fn decode_command_output(bytes: &[u8]) -> String {
     if let Ok(text) = std::str::from_utf8(bytes) {
         return text.to_string();
     }

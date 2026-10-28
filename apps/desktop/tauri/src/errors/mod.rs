@@ -28,6 +28,9 @@ pub enum AppError {
     /// 托管安装 / 卸载失败；`code` 是稳定标识，`detail` 已脱敏（IMP `FZ-47` ~ `FZ-51`）。
     #[error("managed runtime operation failed: {code}; {detail}")]
     RuntimeManaged { code: String, detail: String },
+    /// 官方版本查询失败；detail 已脱敏并包含本次命令日志位置。
+    #[error("official metadata query failed: {reason}; {detail}")]
+    RemoteQuery { reason: String, detail: String },
     #[error("{entity} not found")]
     NotFound { entity: String },
     /// 配置文档迁移失败（识别、转换、备份或提交）；`detail` 已脱敏。
@@ -67,6 +70,8 @@ impl From<&AppError> for AppErrorPayload {
             AppError::PassphraseRequired => 13,
             AppError::RuntimeManaged { .. } => 14,
             AppError::ConfigMigration { .. } => 15,
+            AppError::RemoteQuery { reason, .. } if reason == "npm_view_timeout" => 7,
+            AppError::RemoteQuery { .. } => 16,
         };
         Self {
             code,
@@ -99,6 +104,10 @@ impl Clone for AppError {
             Self::PassphraseRequired => Self::PassphraseRequired,
             Self::RuntimeManaged { code, detail } => Self::RuntimeManaged {
                 code: code.clone(),
+                detail: detail.clone(),
+            },
+            Self::RemoteQuery { reason, detail } => Self::RemoteQuery {
+                reason: reason.clone(),
                 detail: detail.clone(),
             },
             Self::Timeout => Self::Timeout,
@@ -136,6 +145,10 @@ impl AppError {
             Self::NotFound { .. } => "not-found",
             Self::PassphraseRequired => "passphrase-required",
             Self::RuntimeManaged { .. } => "runtime-managed",
+            Self::RemoteQuery { reason, .. } if reason == "npm_view_timeout" => {
+                "target-lock-timeout"
+            }
+            Self::RemoteQuery { .. } => "remote-query",
             Self::ConfigMigration { .. } => "config-migration",
             Self::Tauri(_) => "tauri",
         }

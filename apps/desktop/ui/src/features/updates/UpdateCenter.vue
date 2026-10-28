@@ -4,7 +4,7 @@ import { reactive } from 'vue'
 const sessions = new WeakMap<object, ReturnType<typeof createSession>>()
 function createSession() {
   return reactive({ checking: false, managerInstalling: false, officialInstalling: false, officialBackingUp: false, officialSucceeded: false,
-    managerError: '', managerFailedOperation: '', officialError: '', managerCheckError: '',
+    managerError: '', managerFailedOperation: '', officialError: '', officialInstallRequested: false, officialFailureLines: [] as string[], managerCheckError: '',
     officialCandidate: '', managerCandidate: '', backup: true })
 }
 function sessionFor(app: object) {
@@ -42,9 +42,14 @@ const managerBusy = computed(() => session.managerInstalling || app.appUpdateBus
   && !['failed', 'pending_restart'].includes(progress.value.stage)
   && !(session.managerError && session.managerFailedOperation === progress.value.operationId)))
 const officialBusy = computed(() => session.officialInstalling || app.officialUpdateBusy)
+const officialFailed = computed(() => session.officialInstallRequested && !!(session.officialError || app.officialUpdateError))
+const officialOutput = computed(() => officialFailed.value ? session.officialFailureLines : runtime.installLines)
 const busy = computed(() => managerBusy.value || officialBusy.value || session.checking)
 const managerAvailable = computed(() => !session.managerCheckError && !status.value?.error && hasNewerVersion(status.value?.currentVersion ?? null, status.value?.availableVersion ?? null) === true)
 const officialAvailable = computed(() => !app.officialRemoteError && !app.officialProjectError && hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote?.version ?? null) === true)
+const officialQueryError = computed(() => app.officialRemoteError
+  ? app.officialRemoteErrorDetail || '版本查询失败，请检查网络或运行来源后重试。'
+  : app.officialProjectError ? '本地版本读取失败，请检查运行来源后重试。' : '')
 const managerResult = computed(() => {
   if (managerBusy.value) return '更新进行中'
   if (pendingRestart.value) return '更新已准备就绪'
@@ -127,6 +132,8 @@ async function installOfficial() {
   session.officialInstalling = true
   session.officialBackingUp = true
   session.officialSucceeded = false
+  session.officialInstallRequested = false
+  session.officialFailureLines = []
   session.officialCandidate = candidateVersion
   session.officialError = ''
   try {
@@ -134,10 +141,17 @@ async function installOfficial() {
     const backup = await useUpdatesStore().createUpgradeBackup()
     if (!backup) { session.officialError = app.upgradeBackupError || '升级前备份失败，尚未安装更新。'; return }
     session.officialBackingUp = false
+    session.officialInstallRequested = true
     const ok = await app.applyOfficialUpdate(candidateVersion)
     session.officialSucceeded = ok
-    if (!ok) session.officialError = app.officialUpdateError || '官方更新安装失败，请重试。'
-  } catch (error) { session.officialError = error instanceof Error ? error.message : '官方更新安装失败，请重试。' }
+    if (!ok) {
+      session.officialFailureLines = runtime.installing ? [] : [...runtime.installLines]
+      session.officialError = app.officialUpdateError || '官方更新安装失败，请重试。'
+    }
+  } catch (error) {
+    if (session.officialInstallRequested && !runtime.installing) session.officialFailureLines = [...runtime.installLines]
+    session.officialError = error instanceof Error ? error.message : '官方更新安装失败，请重试。'
+  }
   finally { session.officialInstalling = false; session.officialBackingUp = false }
 }
 const restarting = ref(false)
@@ -225,7 +239,7 @@ defineExpose({ check })
                 <p class="update-result-source">官方项目 · @bitkyc08/opencodex</p>
 
                 <p v-if="officialAvailable" class="update-result-summary">{{ summaryOf(officialNotes) }}</p>
-                <p v-if="app.officialRemoteError || app.officialProjectError" class="update-error" role="status">版本查询失败，请检查网络或运行来源后重试。</p>
+                <p v-if="officialQueryError" class="update-error" role="status">{{ officialQueryError.split('\n')[0] }}</p>
                 <p v-else-if="!officialAvailable" class="update-result-empty">{{ officialUnavailableText }}</p>
               </div>
               <div class="update-result-actions"><UiButton data-testid="official-update-detail" @click="selected = 'official'">查看详情</UiButton></div>
@@ -257,15 +271,16 @@ defineExpose({ check })
             </section>
             <section v-else class="update-object" data-testid="official-update-card">
               <div class="update-detail-head"><h4>OpenCodex 面板更新详情与确认</h4></div>
+              <p v-if="officialQueryError" class="update-error update-query-error" role="status" data-testid="official-query-error">{{ officialQueryError }}</p>
               <ReleaseNotes target="official" channel="official" :version="app.officialRemote?.version ?? null" />
               <p class="update-hint">面板升级前必须备份配置；备份成功后才会安装选定版本。更新完成后如需重启运行中的代理，将另行提示。</p>
-              <div v-if="officialBusy || session.officialSucceeded && runtime.installOutcome?.version === session.officialCandidate" class="update-progress" aria-live="polite">
-                <strong>{{ session.officialBackingUp || app.upgradeBackupBusy ? '正在备份配置' : officialBusy ? installPhaseLabel(runtime.install?.phase ?? 'preparing') : '面板更新已完成' }}</strong>
+              <div v-if="officialBusy || officialFailed || session.officialSucceeded && runtime.installOutcome?.version === session.officialCandidate" class="update-progress" aria-live="polite">
+                <strong>{{ session.officialBackingUp || app.upgradeBackupBusy ? '正在备份配置' : officialBusy ? installPhaseLabel(runtime.install?.phase ?? 'preparing') : officialFailed ? '面板更新失败' : '面板更新已完成' }}</strong>
                 <small>目标版本 {{ session.officialCandidate || app.officialRemote?.version }}</small>
                 <progress v-if="officialBusy" aria-label="面板更新进度"></progress>
-                <pre v-if="!session.officialBackingUp && runtime.installLines.length && session.officialCandidate" class="update-console" tabindex="0" aria-label="面板安装输出">{{ runtime.installLines.join('\n') }}</pre>
-                <p v-if="!officialBusy && runtime.installOutcome?.needsRestart" class="update-hint">面板更新已安装；请在运行操作中重启代理后生效。</p>
-                <p v-if="!officialBusy && runtime.installOutcome?.protectionReconciliationPending" class="update-hint" role="status">安装已完成；保护备份完整性核对未完成，备份仍保留。请查看诊断日志。</p>
+                <pre v-if="!session.officialBackingUp && session.officialInstallRequested && officialOutput.length && session.officialCandidate" class="update-console" tabindex="0" aria-label="面板安装输出">{{ officialOutput.join('\n') }}</pre>
+                <p v-if="!officialBusy && session.officialSucceeded && runtime.installOutcome?.needsRestart" class="update-hint">面板更新已安装；请在运行操作中重启代理后生效。</p>
+                <p v-if="!officialBusy && session.officialSucceeded && runtime.installOutcome?.protectionReconciliationPending" class="update-hint" role="status">安装已完成；保护备份完整性核对未完成，备份仍保留。请查看诊断日志。</p>
               </div>
               <p v-if="session.officialError || app.officialUpdateError" class="update-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
               <div v-if="officialAvailable || session.officialError || app.officialUpdateError" class="update-object-actions">
@@ -312,6 +327,7 @@ defineExpose({ check })
 .update-console { max-height: 120px; margin: 0; }
 .update-hint { color: var(--muted); font-size: var(--text-label); line-height: 1.7; margin: var(--space-2) 0; }
 .update-error { color: var(--red); font-size: var(--text-control); overflow-wrap: anywhere; margin: var(--space-2) 0; }
+.update-query-error { white-space: pre-wrap; }
 .update-confirm-scope { margin: var(--space-3) 0; }
 .update-object-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-3); }
 .update-backup { display: flex; gap: var(--space-2); align-items: center; font-size: var(--text-label); }

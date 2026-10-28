@@ -53,6 +53,38 @@ beforeEach(() => {
 afterEach(() => { wrappers.forEach(w => w.unmount()); wrappers = []; document.body.innerHTML = ''; vi.restoreAllMocks() })
 
 describe('shared production update center', () => {
+  it('retains remote query failure details through close/reopen and clears them after retry', async () => {
+    const updates = useUpdatesStore()
+    const previous = { ...updates.officialRemote! }
+    const base = mocks.invoke.getMockImplementation()!
+    mocks.invoke.mockImplementation(async (command, args) => {
+      if (command !== 'official_remote_latest') return base(command, args)
+      throw {
+        code: 16,
+        message: 'official metadata query failed: npm_view_exit; npm view 以退出码 1 结束。\nnpm error code EQUERYFIXTURE <script>\n日志：D:\\Query 中文 Spaces\\npm-view.log',
+      }
+    })
+    await updates.loadRemoteLatest()
+    expect(updates.officialRemote).toEqual(previous)
+    expect(updates.officialRemoteError).toBe(true)
+    const wrapper = render(); await flushPromises()
+    expect(wrapper.get('[data-testid="official-update-row"]').text()).toContain('npm view 以退出码 1')
+    await wrapper.get('[data-testid="official-update-detail"]').trigger('click')
+    const detail = wrapper.get('[data-testid="official-query-error"]')
+    expect(detail.text()).toContain('EQUERYFIXTURE <script>')
+    expect(detail.text()).toContain('D:\\Query 中文 Spaces\\npm-view.log')
+    expect(detail.text()).not.toContain('official metadata query failed')
+    expect(detail.find('script').exists()).toBe(false)
+    expect(wrapper.find('[data-testid="install-official-update"]').exists()).toBe(false)
+    await wrapper.setProps({ open: false }); await wrapper.setProps({ open: true, target: 'official' })
+    expect(wrapper.get('[data-testid="official-query-error"]').text()).toContain('EQUERYFIXTURE')
+    mocks.invoke.mockImplementation(async (command, args) => command === 'official_remote_latest' ? previous : base(command, args))
+    await updates.loadRemoteLatest(); await flushPromises()
+    expect(updates.officialRemoteErrorDetail).toBe('')
+    expect(updates.officialRemoteError).toBe(false)
+    expect(wrapper.find('[data-testid="official-query-error"]').exists()).toBe(false)
+    expect(wrapper.get('[data-testid="install-official-update"]').attributes('disabled')).toBeUndefined()
+  })
   it('opens without a network check, backup or installation and presents both objects', async () => {
     const wrapper = render(); await flushPromises()
     // 结果页每个对象只占一行，安装与备份留在各自的确认页。
@@ -157,6 +189,31 @@ describe('shared production update center', () => {
     const wrapper = render({ target: 'official' }); await flushPromises()
     expect(wrapper.get('progress[aria-label="面板更新进度"]').attributes('value')).toBeUndefined()
     expect(wrapper.text()).not.toContain('65%')
+  })
+  it('keeps this panel update output visible after failure and reopen, without stale output on backup failure', async () => {
+    const updates = useUpdatesStore(), runtime = useRuntimeStore()
+    const backup = vi.spyOn(updates, 'createUpgradeBackup').mockResolvedValue({ backupId: 'fresh', directory: '/backup', targetPath: '/config' })
+    vi.spyOn(useAppStore(), 'applyOfficialUpdate').mockImplementation(async () => {
+      runtime.beginInstall()
+      runtime.observeInstallProgress({ phase: 'downloading', percent: 0, line: 'npm error E404; 日志：D:\\Update 中文 Spaces\\npm.log' })
+      runtime.failInstall('本次更新失败')
+      updates.failOfficialUpdate()
+      runtime.finishInstall()
+      return false
+    })
+    const wrapper = render({ target: 'official' }); await flushPromises()
+    await wrapper.get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
+    expect(wrapper.get('pre[aria-label="面板安装输出"]').text()).toContain('npm error E404')
+    expect(wrapper.text()).toContain('面板更新失败')
+    runtime.beginInstall()
+    runtime.observeInstallProgress({ phase: 'downloading', percent: 0, line: 'another installation output' })
+    runtime.finishInstall()
+    await wrapper.setProps({ open: false }); await wrapper.setProps({ open: true })
+    expect(wrapper.get('pre[aria-label="面板安装输出"]').text()).toContain('D:\\Update 中文 Spaces\\npm.log')
+    expect(wrapper.text()).not.toContain('another installation output')
+    backup.mockResolvedValueOnce(null)
+    await wrapper.get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
+    expect(wrapper.find('pre[aria-label="面板安装输出"]').exists()).toBe(false)
   })
   it('traps keyboard focus and restores the opener when hidden', async () => {
     const opener = document.createElement('button'); document.body.append(opener); opener.focus()

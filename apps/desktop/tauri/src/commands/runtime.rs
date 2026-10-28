@@ -644,12 +644,14 @@ pub async fn install_official_update(
         crate::modules::preferences::network_environment_for_app(&app, home.0.clone());
     let working = home.0.clone();
     let cache = data_root.0.join("cache/npm");
+    let logs = data_root.0.join("logs/runtime-query");
     // npm view may write its cache; the blocking worker must own admission.
     let remote = super::run_blocking("official update metadata", move || {
         crate::modules::about::remote::query_remote_latest(
             &npm,
             &working,
             &cache,
+            &logs,
             &environment,
             "latest",
         )
