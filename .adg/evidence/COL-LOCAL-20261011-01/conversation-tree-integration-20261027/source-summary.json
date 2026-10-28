@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-27",
+  "branch": "docs/governance-main",
+  "scope": "Shared tree navigation adopted in conversation prototype; no production/runtime setting changes",
+  "source": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "sha256": "fad98418313007f52508d8ecf66977bcad6b18c17298ff9cbdb24ecb897c45d5"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-config.js",
+      "sha256": "04d1078a4ff2ef7ec3a9c7082d905d10839b3f751db5845a45b0d45a107fd8c5"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-config.css",
+      "sha256": "f6869f3ed03e9c574533ce65123288446eabb15fdfc89f776c30095ef3df1a80"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-tree.test.cjs",
+      "sha256": "548f6e0ce98be4df8b63519904fa0e14e6da9bf05370ea86d61e01b73acc40e9"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/tree-navigation.js",
+      "sha256": "64c08f7a1fc5968bca01bb66e675d3750f26f86938c8137255801aa89d5c8c63"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/tree-navigation.css",
+      "sha256": "e481161402ff4f9138e2b62ed47ad459a62737fa91f9faa90af9b2192c1ca661"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/tree-navigation-demo.js",
+      "sha256": "e82ac906b3209dacc5951daea805169777d68f8bf476a0c4a0d653664591777b"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/tree-navigation.test.cjs",
+      "sha256": "b1464b0c8280413cc8f6a949f4485600aef6d8d78c46262666f144bba6bf8478"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-catalog.js",
+      "sha256": "280e4a2ae13fa13b10c7167fadee8530218a66880aa6dfc20b9fbaf2b166f0c3"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/公共树形导航组件方案.md",
+      "sha256": "e2efb53148d6265703b9f5b69165d11d0844269ffd8b65e03a69ae706e096f72"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+      "sha256": "39945f6f59edfcfee79a63db04f9d1e005633aabd5470f3af11377616aa6643b"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/版本索引.md",
+      "sha256": "cd0971756f2484ea5a6015d489d01429ff7205b3efd345784c267e8cc0c1a3c4"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-11-Codex对话配置管理/README.md",
+      "sha256": "3556fc6dbcd6ce73aaac774517a77e0ead5da6ea18900ecc7b6763f585b35133"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-11-Codex对话配置管理/01-需求分析/05-原型/README.md",
+      "sha256": "3d965ef0721c65a5de91bb940b22c58c4203c58588b049f0a8d532b6c7645811"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-11-Codex对话配置管理/01-需求分析/01-原始输入/需求输入.md",
+      "sha256": "b2b0d8558ea5a90188de2c12422345cf00568895fca16498f8dd739d71ad11fa"
+    },
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "sha256": "e13aafd57bb6a0d30764b32f51b5e0597403ca76526711b7677b90c56ceb9c0d"
+    }
+  ],
+  "related_node_checks": {
+    "total": 45,
+    "pass": 45
+  },
+  "browser_checks": {
+    "total": 19,
+    "pass": 19
+  },
+  "links_checked": 303,
+  "missing_links": [],
+  "shared_policy": {
+    "revision": 3,
+    "digest": "ff3eb529f95ad960725e73002cfaa98c17edb55bb81ace464063638d4a42e528"
+  },
+  "regression_notes": [
+    "Configuration import clears stale clean buffer only; dirty target still refuses adoption",
+    "Old unrelated channel save/sync failures remain outside this related run"
+  ],
+  "tracked_state": "New docs files may match shared .gitignore; sources/evidence present on disk, no commit requested",
+  "test_timing_note": "Recovery test now waits for observed completion (bounded 10s) rather than a fixed 1700ms; final related run 45/45 passed. Prior parallel timing failure retained in node-tests-before-completion-wait.txt."
+}
