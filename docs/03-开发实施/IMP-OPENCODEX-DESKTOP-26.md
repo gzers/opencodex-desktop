@@ -51,3 +51,9 @@ CI40617557310完整后端、原生凭据、真实官方安装/升级/离线和�
 1347e2b7测试脚本在该临时账户下用Windows SHGetKnownFolderPath(KF_FLAG_CREATE)完成系统Profile/Roaming/Local目录创建，验证都在此账户Profile内，再沿实际返回值设置进程环境；不重定向Known Folders、不放宽系统ACL、不提权。之后重跑相同普通账户最终EXE/业务检查。原始失败与真包/向导通过回执在native-b9，最终提交CI继续执行。
 
 d61915ae另补Windows原生混合分隔符、点段/设备名/ADS拒绝回归：安装准入前规范Windows存储路径并先词法拒绝点段，保留系统路径与重解析点限制。共用路径7项及clippy通过；Windows实际结果由最终CI确认。
+
+## 最终CI普通账户反馈
+
+CI40621630300的后端、真实包安装/离线和最终EXE界面通过；普通账户Profile创建仍失败，脚本明确返回E_ACCESSDENIED，未声称普通权限通过。原因进一步定位为Start-Process -Credential可能加载了目标账户注册Profile，却仍继承runneradmin进程环境；新账户Known Folder里的环境展开先指向原用户目录。
+
+a305f8d8/d7abdc42仅修验收脚本：先按当前真实SID从Windows ProfileList只读取得注册Profile，检查为本次ocxacc临时账户且目录存在，再设置进程级USERPROFILE/HOMEDRIVE/HOMEPATH和AppData环境后调用Known Folder API。未改注册表、未重定向系统Known Folders、未放宽系统ACL。小型CI前置执行ProfileOnly验证，不把它当作实际应用通过；最终EXE普通账户业务验收继续独立执行。CI40625421002待完成，尚未合并/发布。

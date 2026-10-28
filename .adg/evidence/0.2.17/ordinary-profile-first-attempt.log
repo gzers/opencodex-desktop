@@ -1,0 +1,15 @@
+backend-windows	Windows ordinary-account final EXE smoke	﻿2026-10-28T03:11:06.2035293Z ##[group]Run & ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-ordinary
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:06.2036964Z ^[[36;1m& ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-ordinary^[[0m
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:06.2119078Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:06.2119542Z env:
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:06.2119820Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:06.2120192Z   CARGO_INCREMENTAL: 0
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:06.2120474Z   CARGO_TERM_COLOR: always
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:06.2120777Z ##[endgroup]
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:27.0107859Z Exception calling "Create" with "1" argument(s): "Access is denied. (0x80070005 (E_ACCESSDENIED))"
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:27.1601123Z ^[[31;1mException: ^[[0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-ordinary-startup.ps1:65^[[0m
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:27.1602694Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:27.1604005Z ^[[31;1m^[[0m^[[36;1m^[[36;1m  65 | ^[[0m   ^[[36;1mthrow 'Ordinary native startup failed; see retained output'^[[0m
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:27.1605518Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^[[0m
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:27.1606692Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mOrdinary native startup failed; see retained output^[[0m
+backend-windows	Windows ordinary-account final EXE smoke	2026-10-28T03:11:27.1933213Z ##[error]Process completed with exit code 1.
