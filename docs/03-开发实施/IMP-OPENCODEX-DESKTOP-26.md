@@ -43,3 +43,11 @@ Windows真实cmd参数回归补充本地tgz单参数检查；官方live增加阶
 离线参数修复后的完整后端42套件1289通过、0失败、14既有忽略，证据backend-offline-final.log与summary；前端988通过、10既有跳过，21项门禁0失败/0跳过。最后e83ed669c仅把系统Node回退放到用户版本目录之后，发现专项6项通过，UI源码与已验门禁一致。
 
 CI40617557310的Windows后端完整回归和原生凭据通过，真实官方包联网/离线继续运行；最终e83ed669c对应CI40618515412仍在执行。尚未合并PR26、打tag或公开版本，不将运行中当作成功。必须保留最终EXE、普通账户、正式安装器、实际OTA和匿名stable的独立回执。
+
+## 普通账户失败证据及测试环境修正
+
+CI40617557310完整后端、原生凭据、真实官方安装/升级/离线和最终EXE的真实Vue向导安装通过；普通账户失败，未当作发布通过。原始stderr显示Tauri setup在resolve app data directory返回unknown path，并非安装事务或模型保存错误。新建标准账户令牌为elevated=false/elevationType=1，但第一次Profile目录没有完成创建。
+
+1347e2b7测试脚本在该临时账户下用Windows SHGetKnownFolderPath(KF_FLAG_CREATE)完成系统Profile/Roaming/Local目录创建，验证都在此账户Profile内，再沿实际返回值设置进程环境；不重定向Known Folders、不放宽系统ACL、不提权。之后重跑相同普通账户最终EXE/业务检查。原始失败与真包/向导通过回执在native-b9，最终提交CI继续执行。
+
+d61915ae另补Windows原生混合分隔符、点段/设备名/ADS拒绝回归：安装准入前规范Windows存储路径并先词法拒绝点段，保留系统路径与重解析点限制。共用路径7项及clippy通过；Windows实际结果由最终CI确认。
