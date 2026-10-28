@@ -48,6 +48,16 @@ try{
  }while([datetimeoffset]::UtcNow -lt $deadline -and (!$newImage -or $newImage.VersionInfo.ProductVersion -cne $Version -or !$newApp.Count))
  if(!$newImage -or $newImage.VersionInfo.ProductVersion -cne $Version -or !$newApp.Count){throw 'OTA did not replace and automatically reopen the new application'}
  $taskApp=Get-Process -Id $newApp[0].ProcessId
+ $taskResult.automaticRestartObserved=$true
+ $taskResult.automaticRestartProcess=[ordered]@{pid=$newApp[0].ProcessId;path=$newApp[0].ExecutablePath;creationDate=$newApp[0].CreationDate;version=$newImage.VersionInfo.ProductVersion}
+ # The native installer reopens through the Windows Shell, whose environment
+ # does not carry the old application's test-only CDP/sandbox variables. The
+ # system process above proves automatic restart. Inspect the immutable fixture
+ # using one explicitly isolated relaunch, without changing the real updater.
+ $taskApp.Kill($true);[void]$taskApp.WaitForExit(10000)
+ $taskApp=Start-OwnedApp
+ $taskResult.readbackMethod='automatic new process observed by OS; exact updated EXE then relaunched with explicit isolated test environment for Tauri/file readback'
+
  & node (Join-Path $PSScriptRoot 'windows-ota.mjs') ('http://127.0.0.1:'+$taskPort) $taskOutput $taskSandbox 'verify' $Version
  if($LASTEXITCODE -ne 0){throw 'Reopened OTA result verification failed'}
  $taskResult.installedExecutableSha256=(Get-FileHash -LiteralPath $taskExe).Hash.ToLowerInvariant();$taskResult.result='pass'
