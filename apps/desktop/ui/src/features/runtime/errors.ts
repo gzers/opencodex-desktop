@@ -13,10 +13,11 @@ export function runtimeErrorReason(error: unknown): string {
 }
 
 export function runtimeErrorText(error: unknown): string {
-  if (typeof error === "string" && error) return error
+  const readable = (message: string) => message.replace(/^managed runtime operation failed: [a-z_]+;\s*/, '')
+  if (typeof error === "string" && error) return readable(error)
   if (error && typeof error === "object") {
     const payload = error as { message?: unknown; detail?: unknown; code?: unknown }
-    if (typeof payload.message === "string" && payload.message) return payload.message
+    if (typeof payload.message === "string" && payload.message) return readable(payload.message)
     if (typeof payload.detail === "string" && payload.detail) return payload.detail
     if (typeof payload.code === "string" && payload.code) return `操作失败（${payload.code}）`
   }

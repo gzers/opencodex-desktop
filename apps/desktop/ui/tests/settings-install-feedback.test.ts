@@ -34,7 +34,7 @@ beforeEach(() => {
 })
 afterEach(() => mounted.splice(0).forEach(wrapper => wrapper.unmount()))
 
-async function wizard() {
+async function wizard(sourceKind: 'registry' | 'offline' = 'registry') {
   const pinia = createPinia()
   setActivePinia(pinia)
   const runtime = useRuntimeStore()
@@ -47,6 +47,12 @@ async function wizard() {
   const modal = page.get('[data-testid="runtime-install-modal"]')
   const next = () => modal.findAll('button').find(button => button.text() === '下一步')!
   await next().trigger('click')
+  if (sourceKind === 'offline') {
+    await modal.get('input[value="offline"]').setValue(true)
+    runtime.offlinePreview = { ok: true, fileName: 'opencodex-2.51.0.tgz', fileSize: 1024,
+      version: '2.51.0', sha256Prefix: 'a'.repeat(16), rejectionCode: null, message: '离线包校验通过' }
+    await flushPromises()
+  }
   await next().trigger('click')
   await modal.findAll('input[type="checkbox"]').at(-1)!.setValue(true)
   let reject!: (reason: unknown) => void
@@ -80,19 +86,66 @@ describe('installation wizard factual progress', () => {
     expect(modal.get('[data-testid="wiz-status"]').text()).toContain('安装失败')
   })
 
+  it.each(['downloading', 'installing', 'verifying', 'activating'] as InstallPhase[])(
+    'keeps registry output and readable error after failure in %s without offline steps', async phase => {
+      const { modal, runtime, reject } = await wizard()
+      runtime.observeInstallProgress({ phase, percent: 40, line: 'stderr: native error; 日志：D:\\My App\\logs\\npm.log' })
+      reject({ code: 14, message: 'managed runtime operation failed: npm_failed; npm pack：系统找不到指定的路径；日志：D:\\My App\\logs\\npm.log' })
+      await flushPromises()
+      expect(modal.get('[data-testid="wiz-console"]').text()).toContain('stderr: native error')
+      expect(modal.get('[data-testid="wiz-error"]').text()).toContain('系统找不到指定的路径')
+      expect(modal.get('[data-testid="wiz-error"]').text()).not.toContain('managed runtime')
+      expect(modal.find('[data-testid="wiz-substeps"]').exists()).toBe(false)
+      expect(runtime.installLastPhase).toBe(phase)
+      expect(modal.get('[data-testid="wiz-allow-scripts"]').attributes('disabled')).toBeDefined()
+    },
+  )
+
+  it.each([
+    ['validating', ['failed', 'pending', 'pending']],
+    ['extracting', ['done', 'failed', 'pending']],
+    ['installing', ['done', 'failed', 'pending']],
+    ['verifying', ['done', 'done', 'failed']],
+    ['activating', ['done', 'done', 'failed']],
+  ] as const)('keeps offline reached steps and accessible output after %s fails', async (phase, states) => {
+    const { modal, runtime, reject } = await wizard('offline')
+    runtime.observeInstallProgress({ phase, percent: 40, line: 'offline stderr evidence' })
+    reject({ message: 'offline operation failed' })
+    await flushPromises()
+    expect(modal.get('[data-testid="wiz-substeps"]').findAll('li').map(row => row.classes()[0]))
+      .toEqual(states.map(state => `is-${state}`))
+    expect(modal.get('details summary').text()).toBe('安装输出')
+    expect(modal.get('[data-testid="wiz-console"]').text()).toContain('offline stderr evidence')
+  })
+
+  it('keeps completed offline steps with accessible retained output', async () => {
+    const { modal, runtime } = await wizard('offline')
+    runtime.observeInstallProgress({ phase: 'installing', percent: 40, line: 'offline install output' })
+    runtime.setInstallOutcome({ ...outcome, source: 'offline' })
+    runtime.markInstallDone()
+    runtime.finishInstall()
+    await flushPromises()
+    expect(modal.get('[data-testid="wiz-substeps"]').findAll('li').every(row => row.classes().includes('is-done'))).toBe(true)
+    expect(modal.get('[data-testid="wiz-console"]').text()).toContain('offline install output')
+  })
+
   it('shows completion only after a successful outcome and keeps restart/protection facts separate', async () => {
     const { modal, runtime } = await wizard()
     runtime.setInstallOutcome(outcome)
     runtime.markInstallDone()
     await flushPromises()
     expect(modal.get('[role="progressbar"]').attributes('aria-valuenow')).toBeUndefined()
+    expect(modal.get('[data-testid="wiz-finish"]').attributes('disabled')).toBeDefined()
     runtime.finishInstall()
     await flushPromises()
     expect(modal.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('100')
+    expect(modal.get('[data-testid="wiz-finish"]').attributes('disabled')).toBeUndefined()
     expect(modal.get('[data-testid="wiz-status"]').text()).toContain('安装完成')
     expect(modal.get('[data-testid="wiz-outcome"]').text()).toContain('重启后生效')
     expect(modal.get('[data-testid="wiz-outcome"]').text()).toContain('备份仍保留')
     expect(modal.get('[data-testid="wiz-status"]').text()).not.toMatch(/\d+%/)
+    expect(modal.find('[data-testid="wiz-console"]').exists()).toBe(true)
+    expect(modal.find('[data-testid="wiz-substeps"]').exists()).toBe(false)
   })
 
   it('keeps the stage readable while quality or window visibility pauses animation', async () => {

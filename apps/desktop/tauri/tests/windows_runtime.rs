@@ -294,7 +294,7 @@ if(argv[0]==='pack')fs.writeFileSync(p.join(target,'fixture.tgz'),'bounded fixtu
 fs.writeFileSync({},JSON.stringify({{argv,cache,cwd:process.cwd(),targetReal:fs.realpathSync(target),cacheReal:fs.realpathSync(cache)}}));"#,
         serde_json::to_string(&evidence.to_string_lossy()).unwrap()
     );
-    let npm = write_launcher(root.path(), &script);
+    let npm = write_launcher(root.path(), &script).canonicalize().unwrap();
     let cache = root.path().join("cache/npm");
     let prefix = root.path().join("安装 prefix");
     let download = root.path().join("下载");
@@ -376,6 +376,154 @@ fs.writeFileSync({},JSON.stringify({{argv,cache,cwd:process.cwd(),targetReal:fs.
 struct Sink;
 impl InstallProgressSink for Sink {
     fn emit(&self, _: InstallProgress) {}
+}
+
+#[test]
+#[ignore = "explicit local reproduction with discovered tools; installs only into its test root"]
+fn windows_local_discovered_tools_install_upgrade_and_failure_recovery() {
+    use opencodex_desktop_lib::modules::runtime::install::RecordingProgressSink;
+    use opencodex_desktop_lib::modules::runtime::{RuntimeStore, OFFICIAL_PACKAGE};
+    let paths = opencodex_desktop_lib::types::discovery_paths::default_paths().unwrap();
+    let home = platform::home_dir().unwrap();
+    let root = PathBuf::from(
+        std::env::var_os("OPENCODEX_LOCAL_INSTALL_EVIDENCE").expect("explicit test root"),
+    );
+    assert!(
+        root.is_absolute() && !root.exists(),
+        "fresh explicit test root required"
+    );
+    std::fs::create_dir_all(&root).unwrap();
+    let data = root.canonicalize().unwrap();
+    let prefix = data.join("runtime/opencodex");
+    let npm = SystemNpmRunner::new(Some(home.clone()), data.join("cache/npm"));
+    let probe = RealVersionProbe::default();
+    let sink = RecordingProgressSink::default();
+    let installer = RuntimeInstaller::new(
+        &data,
+        &npm,
+        Some(home),
+        &sink,
+        &probe,
+        Some(paths.node.clone()),
+    );
+    let run = |version: &str| {
+        installer.install(&InstallRequest {
+            prefix: prefix.clone(),
+            source: InstallSource::Registry {
+                version: version.into(),
+                proxy: None,
+            },
+            allow_scripts: false,
+            npm_path: Some(paths.npm.clone()),
+            node_path: Some(paths.node.clone()),
+        })
+    };
+    eprintln!("discovered node={:?} npm={:?}", paths.node, paths.npm);
+    let first = run("2.91.0").unwrap_or_else(|error| {
+        panic!(
+            "first install failed: {}; output={:?}",
+            error.message(),
+            sink.lines()
+        )
+    });
+    assert_eq!(first.package, OFFICIAL_PACKAGE);
+    assert_eq!(first.version, "2.91.0");
+    let store = RuntimeStore::new(&data);
+    let before_record = std::fs::read(store.path()).unwrap();
+    let before_entry = std::fs::read(&first.entry).unwrap();
+    let before_manifest = std::fs::read(prefix.join(".runtime-manifest.json")).unwrap();
+    let offline_archive = npm
+        .pack(
+            &NpmPackRequest {
+                npm_path: paths.npm.clone(),
+                node_dir: paths.node.parent().map(Path::to_path_buf),
+                version: "2.91.0".into(),
+                proxy: None,
+                work_dir: data.join("offline-download"),
+            },
+            &sink,
+            &CancelFlag::new(),
+        )
+        .unwrap();
+    let cold_npm = SystemNpmRunner::new(platform::home_dir(), data.join("cold-cache/npm"));
+    let offline_failure = RuntimeInstaller::new(
+        &data,
+        &cold_npm,
+        platform::home_dir(),
+        &sink,
+        &probe,
+        Some(paths.node.clone()),
+    )
+    .install(&InstallRequest {
+        prefix: prefix.clone(),
+        source: InstallSource::Offline {
+            archive: offline_archive,
+        },
+        allow_scripts: false,
+        npm_path: Some(paths.npm.clone()),
+        node_path: Some(paths.node.clone()),
+    })
+    .expect_err("empty offline dependency cache must fail without going online");
+    assert!(
+        offline_failure.message().contains("npm install"),
+        "{}",
+        offline_failure.message()
+    );
+    assert!(
+        offline_failure.message().contains("ENOTCACHED"),
+        "{}",
+        offline_failure.message()
+    );
+    assert_eq!(std::fs::read(store.path()).unwrap(), before_record);
+    assert_eq!(std::fs::read(&first.entry).unwrap(), before_entry);
+    assert_eq!(
+        std::fs::read(prefix.join(".runtime-manifest.json")).unwrap(),
+        before_manifest
+    );
+    let failed = run("0.0.0-ocx-missing-native-recovery").expect_err("missing version must fail");
+    assert!(
+        failed.message().contains("npm pack"),
+        "{}",
+        failed.message()
+    );
+    assert!(failed.message().contains("日志："), "{}", failed.message());
+    assert_eq!(std::fs::read(store.path()).unwrap(), before_record);
+    assert_eq!(std::fs::read(&first.entry).unwrap(), before_entry);
+    assert_eq!(
+        std::fs::read(prefix.join(".runtime-manifest.json")).unwrap(),
+        before_manifest
+    );
+    let upgraded = run("2.93.0").unwrap_or_else(|error| {
+        panic!(
+            "recovery upgrade failed: {}; output={:?}",
+            error.message(),
+            sink.lines()
+        )
+    });
+    assert_eq!(upgraded.version, "2.93.0");
+    assert_eq!(store.load().resolved_version.as_deref(), Some("2.93.0"));
+    assert_eq!(
+        probe
+            .probe(
+                Some(&paths.node),
+                &prefix.join("node_modules/@bitkyc08/opencodex/bin/ocx.mjs")
+            )
+            .as_deref(),
+        Some("2.93.0")
+    );
+    std::fs::write(
+        data.join("validation.json"),
+        serde_json::to_vec_pretty(&serde_json::json!({
+            "result":"pass", "node": paths.node, "npm": paths.npm,
+            "firstVersion":first.version,"upgradedVersion":upgraded.version,
+            "failure":failed.message(),"failedAttemptPreservedPackageEntrySource":true,
+            "offlineInstallFailure":offline_failure.message(),
+            "scriptsEnabled":upgraded.scripts_enabled,"sourceReadback":true,
+            "dailyConfigurationChanged":false
+        }))
+        .unwrap(),
+    )
+    .unwrap();
 }
 
 struct RuntimeFixtureNpm {

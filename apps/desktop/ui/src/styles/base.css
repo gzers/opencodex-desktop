@@ -972,6 +972,7 @@ html:not([data-effects="high"]) .topbar-refresh.is-busy svg { animation: none; }
 .wiz-substeps li::before { content: '○ '; color: var(--muted); }
 .wiz-substeps li.is-done::before { content: '● '; color: var(--green); }
 .wiz-substeps li.is-active::before { content: '◐ '; color: var(--accent); }
+.wiz-substeps li.is-failed::before { content: '● '; color: var(--red); }
 .wiz-foot { display: flex; justify-content: space-between; gap: 8px; margin-top: 14px; }
 .wiz-objects ul { margin: 4px 0 0; padding-left: 18px; font-size: var(--text-micro); }
 

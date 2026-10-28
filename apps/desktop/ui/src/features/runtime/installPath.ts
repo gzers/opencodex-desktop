@@ -57,3 +57,14 @@ export function prefixInsideDataRoot(root: string, prefix: string, platform?: st
   return parent.root === candidate.root && parent.parts.length <= candidate.parts.length
     && parent.parts.every((part, index) => part === candidate.parts[index])
 }
+
+/** Display only ordinary Windows directory identities; retain device/long-path semantics. */
+export function displayInstallPrefix(value: string, platform?: string): string {
+  if (platform?.toLowerCase() !== 'windows' || value !== value.trim() || !identity(value, platform)) return value
+  let path = value.replaceAll('/', '\\')
+  const ordinary = /^\\\\\?\\UNC\\/i.test(path) ? '\\\\' + path.slice(8)
+    : /^\\\\\?\\[a-z]:\\/i.test(path) ? path.slice(4) : path
+  // Keep an extended prefix when it may be needed by Win32 long-path consumers.
+  if (ordinary.length < 260) path = ordinary
+  return path
+}

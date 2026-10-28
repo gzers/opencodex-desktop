@@ -6,13 +6,15 @@ import { useRuntimeStore } from '@/features/runtime/store'
 import { useAboutStore } from '@/features/about/store'
 import { useDataRootStore } from '@/features/data-root/store'
 import { useRouteStore } from '@/stores/routes'
+import { displayInstallPrefix } from '@/features/runtime/installPath'
 
 const invoke = vi.fn()
+const selectDirectory = vi.hoisted(() => vi.fn(async (): Promise<string | null> => null))
 vi.mock('@tauri-apps/api/core', () => ({ invoke: (...args: unknown[]) => invoke(...args) }))
 vi.mock('@tauri-apps/api/event', () => ({ listen: async () => () => {} }))
-vi.mock('@tauri-apps/plugin-dialog', () => ({ open: async () => null }))
+vi.mock('@tauri-apps/plugin-dialog', () => ({ open: selectDirectory }))
 const pages: Array<ReturnType<typeof mount>> = []
-beforeEach(() => invoke.mockReset())
+beforeEach(() => { invoke.mockReset(); selectDirectory.mockReset(); selectDirectory.mockResolvedValue(null) })
 afterEach(() => pages.splice(0).forEach(page => page.unmount()))
 
 async function setup(platform: string, root: string, prefix: string) {
@@ -43,6 +45,33 @@ async function setup(platform: string, root: string, prefix: string) {
 }
 
 describe('installation prefix platform syntax and landing hint', () => {
+  it.each([
+    ['\\\\?\\D:\\Software\\OpenCodeX Desktop\\data/runtime/opencodex', 'D:\\Software\\OpenCodeX Desktop\\data\\runtime\\opencodex'],
+    ['\\\\?\\UNC\\server\\share\\OpenCodeX Desktop\\runtime', '\\\\server\\share\\OpenCodeX Desktop\\runtime'],
+  ])('displays the same readable identity on prefill and reset: %s', async (prefix, expected) => {
+    const { modal } = await setup('Windows', 'D:\\Software\\OpenCodeX Desktop\\data', prefix)
+    expect((modal.get('#wiz-prefix').element as HTMLInputElement).value).toBe(expected)
+    await modal.get('#wiz-prefix').setValue('relative')
+    await modal.findAll('button').find(button => button.text() === '恢复默认')!.trigger('click')
+    expect((modal.get('#wiz-prefix').element as HTMLInputElement).value).toBe(expected)
+  })
+
+  it('preserves spaces, device identities and extended long paths', () => {
+    for (const prefix of ['\\\\?\\GLOBALROOT\\Device\\HarddiskVolume1', '\\\\?\\D:\\trailing.\\runtime',
+      '\\\\?\\D:\\' + 'long directory\\'.repeat(25) + 'runtime', '\\\\?\\D:\\NUL\\runtime']) {
+      expect(displayInstallPrefix(prefix, 'Windows')).toBe(prefix)
+    }
+    expect(displayInstallPrefix('D:\\My App\\runtime', 'Windows')).toBe('D:\\My App\\runtime')
+    expect(displayInstallPrefix('/Users/My App/runtime', 'macOS')).toBe('/Users/My App/runtime')
+  })
+
+  it('uses the same readable conversion after selecting a directory', async () => {
+    const { modal } = await setup('Windows', 'D:\\data', 'D:\\data\\runtime')
+    selectDirectory.mockResolvedValue('\\\\?\\D:\\My App\\Selected Folder/runtime')
+    await modal.findAll('button').find(button => button.text() === '选择…')!.trigger('click')
+    await flushPromises()
+    expect((modal.get('#wiz-prefix').element as HTMLInputElement).value).toBe('D:\\My App\\Selected Folder\\runtime')
+  })
   it.each([
     ['C:\\Tools\\OpenCodeX\\data', 'C:\\Tools\\OpenCodeX\\data\\runtime\\opencodex'],
     ['F:\\Apps with spaces\\OpenCodeX\\data', 'F:\\Apps with spaces\\OpenCodeX\\data\\runtime\\opencodex'],

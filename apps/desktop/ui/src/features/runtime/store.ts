@@ -45,8 +45,9 @@ export const useRuntimeStore = defineStore('runtime', {
     protectionFeedback: '',
     protectionGeneration: 0,
     installing: false,
-    // 安装进度只存在内存里（后端也不落盘）；联网看命令行明细，离线看分包步骤。
+    // 进度只存在内存；命令日志另由后端保存。终态保留本次输出和最后到达阶段。
     install: null as RuntimeInstallProgress | null,
+    installLastPhase: 'preparing' as RuntimeInstallProgress['phase'],
     installLines: [] as string[],
     installOutcome: null as RuntimeInstallOutcomeDto | null,
     installError: '',
@@ -175,6 +176,7 @@ export const useRuntimeStore = defineStore('runtime', {
     beginInstall() {
       this.installing = true
       this.install = { phase: 'preparing', percent: 0, line: null }
+      this.installLastPhase = 'preparing'
       this.installLines = []
       this.installOutcome = null
       this.installError = ''
@@ -183,6 +185,7 @@ export const useRuntimeStore = defineStore('runtime', {
     observeInstallProgress(progress: RuntimeInstallProgress) {
       if (!this.installing) return
       this.install = progress
+      if (progress.phase !== 'failed' && progress.phase !== 'done') this.installLastPhase = progress.phase
       if (progress.line) this.installLines = [...this.installLines, progress.line].slice(-400)
     },
     setInstallOutcome(outcome: RuntimeInstallOutcomeDto) {

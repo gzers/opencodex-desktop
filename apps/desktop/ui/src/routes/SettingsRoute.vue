@@ -24,7 +24,7 @@ import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/
 import { useGlowRenderStore } from '@/app/appearance/glowRender'
 import { useEffectsStore } from '@/app/appearance/effects'
 import type { InstallSourceKind, ProxyScheme } from '@/features/runtime/api'
-import { installPrefixIssue, prefixInsideDataRoot } from '@/features/runtime/installPath'
+import { displayInstallPrefix, installPrefixIssue, prefixInsideDataRoot } from '@/features/runtime/installPath'
 import {
   installPhaseLabel,
   offlineSteps,
@@ -778,7 +778,7 @@ const installStatusLabel = computed(() => {
   if (installProgress.value?.phase === 'done' && !installCompleted.value) return '正在核对安装结果'
   return installPhaseLabel(installProgress.value?.phase ?? 'preparing')
 })
-const offlineStepList = computed(() => offlineSteps(app.runtimeInstall?.phase ?? 'preparing'))
+const offlineStepList = computed(() => offlineSteps(app.runtimeInstall?.phase ?? 'preparing', runtimeProtection.installLastPhase))
 const showInstallCommandLine = computed(() =>
   installSource.value === 'registry' && phaseShowsCommandLine(app.runtimeInstall?.phase ?? 'preparing'),
 )
@@ -828,12 +828,12 @@ function residueLabel(status: string) {
 
 function defaultInstallPrefix() {
   // 重装落在**登记过的**前缀上（自定义前缀安装后不要悄悄搬回默认位置）。
-  return app.runtimeSource?.managedPrefix ?? ''
+  return displayInstallPrefix(app.runtimeSource?.managedPrefix ?? '', app.aboutApp?.platform)
 }
 
 /** 「恢复默认」只认数据根默认落点，不受自定义前缀影响。 */
 function managedDefaultPrefix() {
-  return app.runtimeSource?.defaultPrefix ?? ''
+  return displayInstallPrefix(app.runtimeSource?.defaultPrefix ?? '', app.aboutApp?.platform)
 }
 
 function openInstallModal(source: InstallSourceKind, version?: string) {
@@ -868,7 +868,7 @@ async function chooseRuntimeSource() {
 
 async function chooseInstallPrefix() {
   const picked = await open({ directory: true, multiple: false, title: '选择 OpenCodex 托管安装位置' })
-  if (typeof picked === 'string') installPrefix.value = picked
+  if (typeof picked === 'string') installPrefix.value = displayInstallPrefix(picked, app.aboutApp?.platform)
 }
 
 function resetInstallPrefix() {
@@ -921,6 +921,7 @@ async function cancelInstall() {
 }
 
 function finishInstall() {
+  if (!installCompleted.value) return
   const version = app.runtimeInstallOutcome?.version
   installOpen.value = false
   if (version) app.showToast(`OpenCodex ${version} 已就绪。`)
@@ -1362,9 +1363,13 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
 
         </p>
         <pre v-if="showInstallCommandLine" class="wiz-console" data-testid="wiz-console">{{ app.runtimeInstallLines.join('\n') || '等待 npm 输出…' }}</pre>
-        <ul v-else class="wiz-substeps" data-testid="wiz-substeps">
+        <ul v-if="installSource === 'offline'" class="wiz-substeps" data-testid="wiz-substeps">
           <li v-for="step in offlineStepList" :key="step.label" :class="`is-${step.state}`">{{ step.label }}</li>
         </ul>
+        <details v-if="installSource === 'offline' && app.runtimeInstallLines.length && (app.runtimeInstallError || installCompleted)" class="wiz-more">
+          <summary>安装输出</summary>
+          <pre class="wiz-console" data-testid="wiz-console">{{ app.runtimeInstallLines.join('\n') }}</pre>
+        </details>
         <p v-if="app.runtimeInstallError" class="wiz-error" data-testid="wiz-error">{{ app.runtimeInstallError }}</p>
         <p v-if="app.runtimeInstallOutcome" class="wiz-hint" data-testid="wiz-outcome">
           入口 {{ app.runtimeInstallOutcome.entry }} · SHA-256 {{ app.runtimeInstallOutcome.tarballSha256.slice(0, 16) }}…
@@ -1380,7 +1385,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
           <UiButton class="btn primary" type="button" :disabled="!app.runtimeInstallScriptsRequired || app.runtimeInstalling" data-testid="wiz-allow-scripts" @click="installAllowScripts = true; runInstall()">允许安装脚本并重试</UiButton>
           <UiButton class="btn ghost" type="button" @click="closeInstallModal()">关闭</UiButton>
         </template>
-        <UiButton v-else class="btn primary" type="button" data-testid="wiz-finish" @click="finishInstall()">完成</UiButton>
+        <UiButton v-else class="btn primary" type="button" :disabled="!installCompleted" data-testid="wiz-finish" @click="finishInstall()">完成</UiButton>
       </div>
     </div>
   </div>
