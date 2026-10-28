@@ -15,7 +15,7 @@ test('组件专题：从真实总原型接线检查交互与隔离（内存DOM�
  const baseline=JSON.stringify(w.modelPrototype.state()),trayBaseline=w.eval('JSON.stringify({trayState,trayQuickSettings})');
  const errors=()=>assert.deepEqual(h.errors,[]);
  await t.test('目录、资源、非功能菜单、连续正文、深链接和搜索同源',async()=>{
-  errors();assert.deepEqual([...d.querySelectorAll('[aria-labelledby=launchNonFunctionalTitle] button')].map(b=>b.textContent.trim()),['组件与样式']);assert.equal(catalog.validate(),true);assert.equal(catalog.sections.length,20);
+  errors();assert.deepEqual([...d.querySelectorAll('[aria-labelledby=launchNonFunctionalTitle] button')].map(b=>b.textContent.trim()),['组件与样式']);assert.equal(catalog.validate(),true);assert.equal(catalog.sections.length,21);
   h.click('[data-launch=components]');await h.settle();assert.equal(d.documentElement.dataset.route,'components');assert.ok(d.body.classList.contains('component-topic-mode'));assert.equal(state().section,'brand');
   assert.equal(d.querySelectorAll('[data-ct-section-id]').length,catalog.sections.length);
   for(const s of catalog.sections){
@@ -26,7 +26,7 @@ test('组件专题：从真实总原型接线检查交互与隔离（内存DOM�
    assert.equal(guide.querySelectorAll('.ct-usage-source').length,4);assert.ok(!guide.closest('details'));
    for(const item of s.usage)assert.ok(guide.textContent.includes(item.text));
   }
-  h.input('#componentNavSearch','Fast');assert.ok($('#componentNavLinks').textContent.length);h.input('#componentNavSearch','不存在的控件');assert.match($('#componentNavLinks').textContent,/没有匹配/);assert.equal(d.querySelectorAll('[data-ct-section-id]').length,20);h.input('#componentNavSearch','');
+  h.input('#componentNavSearch','Fast');assert.ok($('#componentNavLinks').textContent.length);h.input('#componentNavSearch','不存在的控件');assert.match($('#componentNavLinks').textContent,/没有匹配/);assert.equal(d.querySelectorAll('[data-ct-section-id]').length,21);h.input('#componentNavSearch','');
   h.click('[data-ct-section=buttons]');assert.equal(state().section,'buttons');assert.match(w.location.hash,/components\?section=buttons/);assert.equal($('[data-ct-section=buttons]').getAttribute('aria-current'),'location');
   h.click('[data-ct=toggle-nav]');assert.ok(d.body.classList.contains('component-nav-collapsed'));h.click('[data-ct=toggle-nav]');
   assert.deepEqual(catalog.sections.slice(0,4).map(s=>s.id),['brand','app-icons','tray-icons','icons-spacing']);assert.equal(state().size,'fluid');assert.ok($('#ctNotificationMount #notificationBtn'));assert.equal($('.topbar #notificationBtn'),null);

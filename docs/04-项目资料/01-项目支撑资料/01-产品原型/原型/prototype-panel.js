@@ -17,7 +17,7 @@
     if (target && commonGroup.contains(target) && !commonGroup.open) commonGroup.open = true;
   }, true);
   const labels = {components:'组件与样式','model-picker':'公共渠道模型选择器', annotations:'注释卡片', overview:'概览', panel:'面板', models:'模型', conversations:'对话 · 版本未定', extensions:'拓展', sync:'同步', logs:'诊断', settings:'设置', tray:'托盘', notify:'通知与反馈', windows:'Windows 窗口'};
-  const tabs = {models:'Agent 配置', single:'单选打样', multiple:'多选打样', global:'全局设置', objects:'项目与对话', file:'文件同步', webdav:'WebDAV 同步', channels:'渠道模型', templates:'模型模版', doctor:'诊断检查', logs:'日志历史', notifications:'通知历史', skills:'Skills', mcp:'MCP', clients:'客户端'};
+  const tabs = {transport:'对话策略','dialog-policy':'对话策略', models:'Agent 配置', single:'单选打样', multiple:'多选打样', global:'全局设置', objects:'项目与对话', file:'文件同步', webdav:'WebDAV 同步', channels:'渠道模型', templates:'模型模版', doctor:'诊断检查', logs:'日志历史', notifications:'通知历史', skills:'Skills', mcp:'MCP', clients:'客户端'};
   function currentContext() {
     if (document.documentElement.dataset.route !== 'components' && document.documentElement.dataset.prototypeDialog === 'model-picker') return {page:'model-picker', tab:document.documentElement.dataset.prototypePickerMode || 'single'};
     if (document.body.classList.contains('windows-mode')) return {page:'windows', tab:''};
@@ -42,7 +42,8 @@
     $('#protoGroupMeta').textContent = name;
     $('#protoContextHint').textContent = '仅展示' + name + '的测试场景；全局评审条件在上方折叠区。';
     side.querySelectorAll('[data-proto-contexts]').forEach(card => {
-      card.hidden = card.id === 'conversationDemoCard' && window.conversationPrototype?.scope() !== 'conversations' || !card.dataset.protoContexts.split(/\s+/).some(value => value === context.page || value === key);
+      card.hidden = card.id === 'conversationDemoCard' && !['conversations','capabilities'].includes(window.conversationPrototype?.scope()) || !card.dataset.protoContexts.split(/\s+/).some(value => value === context.page || value === key);
+      if(context.page==='settings'&&context.tab==='dialog-policy'&&card.dataset.policyParts)card.hidden=card.hidden||!card.dataset.policyParts.split(/\s+/).includes(window.dialogPolicyPrototype?.state().part||'models');
       if (context.page === 'extensions') {
         const extended = window.extensionPrototype?.active();
         if (card.id === 'extensionManagerDemoCard') card.hidden = !extended;

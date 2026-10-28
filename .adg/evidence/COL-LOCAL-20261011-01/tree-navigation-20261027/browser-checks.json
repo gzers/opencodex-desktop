@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-27",
+  "scope": "shared tree navigation specimen only; conversation consumer unchanged",
+  "checks": [
+    {
+      "name": "global-catalog-tree-section",
+      "pass": true
+    },
+    {
+      "name": "collapse-retains-selection-with-locate",
+      "pass": true
+    },
+    {
+      "name": "locate-reveals-current-path",
+      "pass": true
+    },
+    {
+      "name": "search-keeps-project-conversation-agent-hierarchy",
+      "pass": true
+    },
+    {
+      "name": "no-result-preserves-current-object",
+      "pass": true
+    },
+    {
+      "name": "arrow-focus-not-selection",
+      "pass": true
+    },
+    {
+      "name": "enter-selects-focused-item",
+      "pass": true
+    },
+    {
+      "name": "filter-keeps-hidden-selection-visible-in-footer",
+      "pass": true
+    },
+    {
+      "name": "224-long-tree-scrolls-without-horizontal-overflow",
+      "pass": true
+    },
+    {
+      "name": "theme-and-density-retain-selection",
+      "pass": true
+    },
+    {
+      "name": "loading-retains-current-object",
+      "pass": true
+    },
+    {
+      "name": "failed-retry-restores-tree-with-current-selection",
+      "pass": true
+    },
+    {
+      "name": "empty-keeps-selection-reference",
+      "pass": true
+    },
+    {
+      "name": "deep-structure-keeps-five-levels",
+      "pass": true
+    },
+    {
+      "name": "tab-leaves-tree-without-trap",
+      "pass": true
+    },
+    {
+      "name": "disabled-row-cannot-be-activated",
+      "pass": true
+    },
+    {
+      "name": "refresh-keeps-selection-and-hierarchy",
+      "pass": true
+    },
+    {
+      "name": "keyboard-scroll-only-moves-tree-viewport",
+      "pass": true
+    },
+    {
+      "name": "density-matches-42-and-34-pixel-row-contract",
+      "pass": true
+    }
+  ],
+  "console": [],
+  "notes": [
+    "Keyboard scroll check used actual current-focus key input; locator.press can first scroll the target into view",
+    "224px long dark specimen and 42px/34px rows inspected",
+    "No real files/config/network reads or writes from the prototype"
+  ],
+  "limitations": [
+    "No native screen-reader verification",
+    "No production component or conversation migration"
+  ]
+}

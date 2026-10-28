@@ -1,0 +1,26 @@
+/* 使用现有设置与玻璃材质；新样式仅限定在连接专题及只读摘要。 */
+#transportContent{container-type:inline-size;min-width:0}
+.tp-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:relative}
+.tp-heading p,.tp-muted{font-size:var(--text-label,12px);color:var(--muted);line-height:1.55;margin:5px 0 0}
+.tp-heading .proto-annotation{position:absolute;right:0;top:-25px}
+.tp-list{display:grid;gap:12px;margin-top:18px}
+.tp-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,260px);gap:18px;align-items:center;padding-block:12px;border-bottom:1px solid var(--border)}
+.tp-row .input,.tp-row .select{max-width:100%;min-width:0}
+.tp-label{font-size:var(--text-body,13px);font-weight:550}
+.tp-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+.tp-status{font-size:var(--text-label,12px);color:var(--muted);margin-right:auto}
+.tp-status.pending{color:var(--warning,#a36b14)}
+.tp-error{color:var(--danger,#b93d3d);font-size:var(--text-label,12px);line-height:1.5;margin-top:10px}
+.tp-error:empty{display:none}
+.tp-section{margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}
+.tp-section h3,.tp-context h4{margin:0 0 8px;font-size:var(--text-body,13px);font-weight:600}
+.tp-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
+.tp-facts>div{min-width:0}
+.tp-facts dt{font-size:var(--text-caption,11px);color:var(--muted);margin-bottom:3px}
+.tp-facts dd{font-size:var(--text-label,12px);margin:0;overflow-wrap:anywhere;line-height:1.6}
+.tp-context{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);min-width:0}
+.tp-context .btn{margin-top:10px}
+.tp-details{margin-top:14px;font-size:var(--text-label,12px);color:var(--muted);line-height:1.6}
+.tp-details summary{cursor:pointer;color:var(--text)}
+.tp-config{white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0 0;font-size:11px}
+@container (max-width:520px){.tp-row{grid-template-columns:minmax(0,1fr);gap:8px}.tp-facts{grid-template-columns:minmax(0,1fr)}}

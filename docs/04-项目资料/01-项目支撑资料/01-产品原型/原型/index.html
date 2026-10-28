@@ -1691,13 +1691,16 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="action-menu.css?v=20261014-channel-actions">
 <link rel="stylesheet" href="model-config.css?v=20261027-0214">
 <link rel="stylesheet" href="sync-config.css?v=4">
-<link rel="stylesheet" href="conversation-config.css?v=20261015-prototype-version">
+<link rel="stylesheet" href="conversation-config.css?v=20261027-global-policy">
+<link rel="stylesheet" href="transport-config.css?v=20261027-dialog-policy">
+<link rel="stylesheet" href="dialog-policy.css?v=20261027">
 <link rel="stylesheet" href="extension-manager.css?v=20261014-col-extensions">
 <link rel="stylesheet" href="model-picker.css?v=20261015-note-layer">
 <link rel="stylesheet" href="windows-window.css">
 <link rel="stylesheet" href="annotation-cards.css?v=20261015-zero-flow">
 <link rel="stylesheet" href="maintenance-ui.css?v=2">
 <link rel="stylesheet" href="tree-table.css?v=1">
+<link rel="stylesheet" href="tree-navigation.css?v=20261027-shared-panel">
 <link rel="stylesheet" href="sticky-tabs.css?v=20261020-shared-material">
 <link rel="stylesheet" href="prototype-ui.css?v=20261015">
 <link rel="stylesheet" href="component-topic.css?v=20261015-note-layer">
@@ -2279,6 +2282,7 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
         <button type="button" data-settings-section="backup" data-anchor="backup" aria-label="数据与备份，查看锚点">数据与备份<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="extensions" data-anchor="extensions" aria-label="扩展管理，查看锚点">扩展管理<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="models" data-anchor="models">Agent 配置</button>
+        <button type="button" data-settings-section="dialog-policy" data-anchor="dialog-policy">对话策略</button>
         <button type="button" data-settings-section="cleanup" data-anchor="cleanup" aria-label="日志与通知，查看锚点">日志与通知<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="cli" data-anchor="cli" aria-label="CLI 控制面，查看锚点">CLI 控制面<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="upgrade" data-anchor="upgrade" aria-label="版本升级，查看锚点">版本升级<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
@@ -2802,6 +2806,13 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
       </section>
 
       <section class="settings-panel mp-page" id="settings-models"><article class="card" id="mpSettingsContent"></article></section>
+      <section class="settings-panel dp-page" id="settings-dialog-policy">
+        <div class="dp-page-heading"><h2>对话策略</h2><p>统一管理全局默认、上下文与连接方式。</p></div>
+        <nav class="dp-sections" aria-label="对话策略分组"><button type="button" class="active" data-dp-section="models" aria-current="page">模型与工具</button><button type="button" data-dp-section="context">上下文</button><button type="button" data-dp-section="connection">连接</button></nav>
+        <section class="dp-panel active" data-dp-panel="models"><article class="card cv-page" id="conversationGlobalPolicy"></article></section>
+        <section class="dp-panel" data-dp-panel="context"><article class="card" id="contextPolicyContent"></article></section>
+        <section class="dp-panel" data-dp-panel="connection"><article class="card" id="transportContent"></article></section>
+      </section>
       <section class="settings-panel" id="settings-cli">
         <div class="proto-annotation" id="ann-settings-cli" data-annotation-number="01" data-annotation-title="CLI 的委托边界" data-annotation-category="实现边界 · 设置 · CLI 控制面">
           <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：CLI 的委托边界"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
@@ -3705,7 +3716,7 @@ const routes={
   annotations:{title:'原型注释',subtitle:'组件打样 · 02　悬浮卡片与页内定位'},
   sync:{title:'同步',subtitle:'按范围导入、导出与同步 OpenCodex 配置；凭据和登录状态独立选择。'},
   models:{title:'模型配置',subtitle:'管理渠道模型、族模版与选择器顺序。'},
-  conversations:{title:'Codex 对话配置',subtitle:'全局命名模型；按项目或对话配置联网搜索与子 Agent。'},
+  conversations:{title:'Codex 对话配置',subtitle:'管理项目与对话的专属配置，沿用或覆盖全局对话策略。'},
   overview:{title:'概览',subtitle:'一行运行摘要、页内折叠的运行详情与常用动作入口；参数型配置保留在设置页。'},
   tray:{title:'托盘',subtitle:'系统托盘状态菜单的跨平台原型；控制动作走管理器自有域。'},
   panel:{title:'面板',subtitle:'窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。'},
@@ -5237,15 +5248,19 @@ window.openSettingsSection=openSettingsSection;
 function showSettingsSection(section){
   if(['migration','sync'].includes(section)){setRoute('sync?tab='+(section==='sync'?'webdav':'file'));return;}
 
-  const allowed=['general','installation','backup','extensions','models','cleanup','cli','upgrade','about'];
+  const allowed=['general','installation','backup','extensions','models','dialog-policy','transport','cleanup','cli','upgrade','about'];
   const requested=allowed.includes(section)?section:(section?undefined:hashParams?.get('section'))||parseRouteHash(location.hash).params.get('section')||'general';
-  const next=allowed.includes(requested)?requested:'general';
+  const next=requested==='transport'?'dialog-policy':allowed.includes(requested)?requested:'general';
   document.querySelectorAll('#settingsTabs button').forEach(button=>{
     button.classList.toggle('active',button.dataset.settingsSection===next);
   });
   document.querySelectorAll('.settings-panel').forEach(panel=>{
     panel.classList.toggle('active',panel.id===`settings-${next}`);
   });
+  if(next==='dialog-policy'){
+    window.conversationPrototype?.renderGlobal();
+    window.dialogPolicyPrototype?.show(requested==='transport'?'connection':parseRouteHash(location.hash).params.get('policy')||undefined);
+  }
 }
 
 // 「随 Codex 启动 OpenCodex」的写入进行态（原型先行）。
@@ -7726,19 +7741,24 @@ window.addEventListener('prototype:data-paths',event=>{
 <script src="../proto-controls.js"></script>
 <script src="select-component.js"></script>
 <script src="tree-table.js?v=1"></script>
+<script src="tree-navigation.js?v=20261027-consumer"></script>
 <script src="action-menu.js?v=20261014-channel-actions"></script>
 <script src="model-template-updates.js"></script>
 <script src="model-template-seeds.js"></script>
 <script src="model-template-summary.js?v=20261014-change-summary-v2"></script>
 <script src="component-views.js?v=20261015"></script>
 <script src="model-external-notification.js?v=20261015-external-single-dialog"></script>
-<script src="model-config.js?v=20261027-0214"></script>
-<script src="conversation-config.js?v=20261015-prototype-version"></script>
+<script src="transport-state.js?v=20261027"></script>
+<script src="model-config.js?v=20261027-transport-node-entry"></script>
+<script src="conversation-config.js?v=20261027-global-policy"></script>
 <script src="extension-manager.js?v=20261014-col-extensions"></script>
 <script src="sync-account-capabilities.js?v=20261020-multi-account-platform"></script>
 <script src="sync-config.js?v=20261020-multi-account-platform"></script>
 <script src="windows-window.js"></script>
-<script src="prototype-panel.js?v=20261014-extension-scope"></script>
+<script src="prototype-panel.js?v=20261027-dialog-policy"></script>
+<script src="transport-config.js?v=20261027-dialog-policy"></script>
+<script src="context-policy-state.js?v=20261027"></script>
+<script src="dialog-policy.js?v=20261027"></script>
 <script src="annotation-cards.js?v=20261015-zero-flow"></script>
 
 <script src="maintenance-state.js?v=2"></script>
@@ -7746,8 +7766,9 @@ window.addEventListener('prototype:data-paths',event=>{
 <script src="data-paths-ui.js"></script>
 <script src="model-picker.js?v=20261013-responsive-effort"></script>
 <script src="sticky-tabs.js?v=20261014-common-tabs"></script>
-<script src="component-catalog.js?v=20261015-usage-guide"></script>
+<script src="component-catalog.js?v=20261027-conversation-adopted"></script>
+<script src="tree-navigation-demo.js?v=20261027-conversation-adopted"></script>
 <script src="prototype-notification-publisher.js?v=20261015"></script>
-<script src="component-topic.js?v=20261015-usage-guide"></script>
+<script src="component-topic.js?v=20261027-tree-navigation"></script>
 </body>
 </html>

@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-27",
+  "scope": "Conversation project/thread prototype consumes shared tree; no real Codex read/write",
+  "checks": [
+    {
+      "name": "collapse-keeps-active-editor-and-shows-hidden-selection",
+      "pass": true
+    },
+    {
+      "name": "search-preserves-three-level-business-keys",
+      "pass": true
+    },
+    {
+      "name": "field-edit-updates-nav-dirty-state",
+      "pass": true
+    },
+    {
+      "name": "switch-object-keeps-unsaved-model-effort",
+      "pass": true
+    },
+    {
+      "name": "tab-roundtrip-retains-search-and-draft",
+      "pass": true
+    },
+    {
+      "name": "save-failure-leaves-existing-draft",
+      "pass": true
+    },
+    {
+      "name": "save-updates-current-object-without-nav-reset",
+      "pass": true
+    },
+    {
+      "name": "own-filter-keeps-current-subagent-outside-list",
+      "pass": true
+    },
+    {
+      "name": "arrow-only-moves-navigation-focus",
+      "pass": true
+    },
+    {
+      "name": "enter-activates-focused-business-object",
+      "pass": true
+    },
+    {
+      "name": "archive-clears-override-and-disables-saving",
+      "pass": true
+    },
+    {
+      "name": "unarchive-inherits-instead-of-restoring-old-override",
+      "pass": true
+    },
+    {
+      "name": "900-narrow-shows-selected-editor",
+      "pass": true
+    },
+    {
+      "name": "narrow-back-shows-same-selected-tree",
+      "pass": true
+    },
+    {
+      "name": "same-selected-row-reopens-narrow-editor",
+      "pass": true
+    },
+    {
+      "name": "narrow-dark-tree-no-horizontal-overflow",
+      "pass": true
+    },
+    {
+      "name": "rename-updates-tree-with-stable-selection",
+      "pass": true
+    },
+    {
+      "name": "empty-search-keeps-unchanged-editor",
+      "pass": true
+    },
+    {
+      "name": "selected-style-keeps-background-without-left-bar",
+      "pass": true
+    }
+  ],
+  "console": [],
+  "notes": [
+    "Shared navigation panel/root persists across editor redraw and tab changes",
+    "900×600 dark and default1180×760 checked using existing product preview controls",
+    "New configuration import check clears only clean stale draft buffers; dirty buffers still block adoption"
+  ],
+  "limitations": [
+    "No production component, real config persistence or native screen-reader acceptance",
+    "Related regressions only; unresolved channel save/sync old full-suite failures remain out of scope"
+  ]
+}
