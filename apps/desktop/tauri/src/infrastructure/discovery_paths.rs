@@ -87,6 +87,15 @@ pub fn candidate_dirs(home: &Path) -> Vec<PathBuf> {
                 directories.push(path.join("npm"));
             }
         }
+        for key in ["VOLTA_HOME", "FNM_DIR", "PNPM_HOME"] {
+            if let Some(path) = std::env::var_os(key)
+                .map(PathBuf::from)
+                .filter(|path| path.is_absolute())
+            {
+                directories.push(path.join("bin"));
+                directories.push(path.clone());
+            }
+        }
         if let Some(prefix) = npm_prefix_from_npmrc(home) {
             directories.push(prefix);
         }
@@ -243,6 +252,16 @@ mod tests {
             select_tool(&directories, vec!["ocx.cmd".into()]),
             isolated.join(".local/bin/ocx.cmd")
         );
+    }
+
+    #[test]
+    fn windows_candidate_roots_include_declared_version_manager_locations() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("home");
+        let candidates = windows_home_candidates(&home);
+        assert!(candidates.iter().all(|path| path.starts_with(&home)));
+        assert!(candidates.contains(&home.join("AppData/Roaming/npm")));
+        assert!(candidates.contains(&home.join("AppData/Local/Programs/nodejs")));
     }
 
     #[cfg(not(windows))]

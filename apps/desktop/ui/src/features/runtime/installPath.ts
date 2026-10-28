@@ -10,15 +10,24 @@ function identity(value: string, platform?: string): PathIdentity | null {
   let root: string, remaining: string
   if (windows) {
     const normalized = path.replaceAll('\\', '/')
+    const extendedDrive = /^\/\/\?\/([a-z]):\/(.*)$/i.exec(normalized)
+    const extendedShare = /^\/\/\?\/unc\/([^/]+)\/([^/]+)(?:\/(.*))?$/i.exec(normalized)
     const drive = /^([a-z]):\/(.*)$/i.exec(normalized)
     const share = /^\/\/([^/]+)\/([^/]+)(?:\/(.*))?$/.exec(normalized)
-    if (drive) {
+    if (extendedDrive) {
+      root = 'drive:' + extendedDrive[1]!.toLowerCase()
+      remaining = extendedDrive[2]!
+    } else if (extendedShare && !['.', '..', '?'].includes(extendedShare[1]!) && !['.', '..', '?'].includes(extendedShare[2]!)) {
+      root = 'unc:' + extendedShare[1]!.toLowerCase() + '/' + extendedShare[2]!.toLowerCase()
+      remaining = extendedShare[3] ?? ''
+    } else if (drive) {
       root = 'drive:' + drive[1]!.toLowerCase()
       remaining = drive[2]!
     } else if (share && !['.', '..', '?'].includes(share[1]!) && !['.', '..', '?'].includes(share[2]!)) {
       root = 'unc:' + share[1]!.toLowerCase() + '/' + share[2]!.toLowerCase()
       remaining = share[3] ?? ''
     } else return null
+    if (root.startsWith('drive:') && remaining.toLowerCase().startsWith('globalroot/')) return null
   } else {
     if (!path.startsWith('/')) return null
     root = 'posix'

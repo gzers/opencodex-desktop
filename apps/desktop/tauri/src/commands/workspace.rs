@@ -5,7 +5,7 @@
 
 use std::path::{Path, PathBuf};
 
-use tauri::State;
+use tauri::{Manager, State};
 
 use crate::errors::{AppError, AppResult};
 use crate::modules::extensions::ClientId;
@@ -38,8 +38,12 @@ pub fn open_external_link(url: String) -> AppResult<OpenResultDto> {
 }
 
 #[tauri::command]
-pub fn open_local_document(document_id: String) -> AppResult<OpenResultDto> {
-    open_local_document_with_id(&document_id)
+pub fn open_local_document(document_id: String, app: tauri::AppHandle) -> AppResult<OpenResultDto> {
+    let resource_root = app
+        .path()
+        .resource_dir()
+        .map_err(|_| AppError::NotConfigured)?;
+    open_local_document_from_root(&resource_root, &document_id)
 }
 
 pub fn managed_path_targets_with_roots(data_root: &Path, home: &Path) -> ManagedPathTargetsDto {
@@ -197,6 +201,29 @@ pub fn open_local_document_with_id(document_id: &str) -> AppResult<OpenResultDto
     if !target.exists() {
         return Ok(OpenResultDto { opened: false });
     }
+    open_path(&target).map(|_| OpenResultDto { opened: true })
+}
+
+pub fn open_local_document_from_root(
+    resource_root: &Path,
+    document_id: &str,
+) -> AppResult<OpenResultDto> {
+    let name = match document_id {
+        "license" => "LICENSE",
+        "third-party" => "THIRD-PARTY-NOTICES.txt",
+        _ => {
+            return Err(AppError::NotFound {
+                entity: "local document".to_string(),
+            })
+        }
+    };
+    let candidates = [
+        resource_root.join(name),
+        resource_root.join("resources").join(name),
+    ];
+    let Some(target) = candidates.into_iter().find(|path| path.is_file()) else {
+        return Ok(OpenResultDto { opened: false });
+    };
     open_path(&target).map(|_| OpenResultDto { opened: true })
 }
 
@@ -496,5 +523,19 @@ mod tests {
             assert!(!third_party.opened);
             assert_eq!(recorded_open_paths(), vec![project_document(&["LICENSE"])]);
         }
+    }
+
+    #[test]
+    fn packaged_local_documents_resolve_only_from_the_runtime_resource_root() {
+        let root = tempfile::tempdir().expect("resource root");
+        std::fs::write(root.path().join("LICENSE"), b"license").unwrap();
+        std::fs::write(root.path().join("THIRD-PARTY-NOTICES.txt"), b"notices").unwrap();
+        let license = open_local_document_from_root(root.path(), "license").expect("license");
+        let notices = open_local_document_from_root(root.path(), "third-party").expect("notices");
+        assert!(license.opened && notices.opened);
+        assert!(matches!(
+            open_local_document_from_root(root.path(), "unknown"),
+            Err(AppError::NotFound { .. })
+        ));
     }
 }

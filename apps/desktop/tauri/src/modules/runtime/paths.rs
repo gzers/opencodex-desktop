@@ -51,7 +51,7 @@ pub fn is_system_protected(path: &Path) -> bool {
         if path.is_absolute() && path.parent().is_none() {
             return true;
         }
-        let candidate = path.to_string_lossy().replace('/', "\\").to_lowercase();
+        let candidate = windows_compare_path(path);
         [
             "SystemRoot",
             "ProgramFiles",
@@ -60,12 +60,7 @@ pub fn is_system_protected(path: &Path) -> bool {
         ]
         .into_iter()
         .filter_map(std::env::var_os)
-        .map(|root| {
-            root.to_string_lossy()
-                .replace('/', "\\")
-                .trim_end_matches('\\')
-                .to_lowercase()
-        })
+        .map(|root| windows_compare_path(&PathBuf::from(root)))
         .any(|root| candidate == root || candidate.starts_with(&(root + "\\")))
     }
     #[cfg(not(windows))]
@@ -86,6 +81,24 @@ pub fn is_system_protected(path: &Path) -> bool {
                 .iter()
                 .any(|root| *root != "/" && path.starts_with(root))
     }
+}
+
+#[cfg(windows)]
+fn windows_compare_path(path: &Path) -> String {
+    let mut value = path.to_string_lossy().replace('/', "\\");
+    if let Some(rest) = value.strip_prefix("\\\\?\\UNC\\") {
+        value = format!("\\\\{rest}");
+    } else if let Some(rest) = value.strip_prefix("\\\\?\\") {
+        value = rest.to_string();
+    }
+    value.trim_end_matches('\\').to_lowercase()
+}
+
+#[cfg(windows)]
+fn windows_is_within(path: &Path, scope: &Path) -> bool {
+    let path = windows_compare_path(path);
+    let scope = windows_compare_path(scope);
+    path == scope || path.starts_with(&(scope + "\\"))
 }
 
 fn is_symlink(path: &Path) -> bool {
@@ -109,7 +122,16 @@ pub fn has_symlink_component(path: &Path, scope: Option<&Path>) -> bool {
             break;
         }
         let in_scope = scope
-            .map(|scope| candidate.starts_with(scope))
+            .map(|scope| {
+                #[cfg(windows)]
+                {
+                    windows_is_within(candidate, scope)
+                }
+                #[cfg(not(windows))]
+                {
+                    candidate.starts_with(scope)
+                }
+            })
             .unwrap_or(true);
         if in_scope && is_symlink(candidate) {
             return true;
@@ -233,9 +255,20 @@ pub fn validate_install_target(
         let _ = std::fs::remove_file(&probe);
         return Ok(path.to_path_buf());
     }
-    let parent = path.parent().ok_or(PathRejection::NotAbsolute)?;
-    if !parent.is_dir() {
-        return Err(PathRejection::Missing);
+    let mut ancestor = path.parent().ok_or(PathRejection::NotAbsolute)?;
+    loop {
+        match std::fs::symlink_metadata(ancestor) {
+            Ok(metadata) => {
+                if !metadata.is_dir() || is_symlink(ancestor) {
+                    return Err(PathRejection::SymlinkComponent);
+                }
+                break;
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                ancestor = ancestor.parent().ok_or(PathRejection::Missing)?;
+            }
+            Err(_) => return Err(PathRejection::Missing),
+        }
     }
     Ok(path.to_path_buf())
 }
@@ -372,5 +405,36 @@ mod tests {
             Path::new("/private/tmp/ocx-fixture"),
             Some(root.path())
         ));
+    }
+}
+
+#[cfg(all(test, windows))]
+mod windows_path_tests {
+    use super::*;
+
+    #[test]
+    fn extended_drive_and_unc_paths_share_the_same_protection_identity() {
+        let ordinary = Path::new(r"C:\Users\fixture\OpenCodeX\data\runtime\opencodex");
+        let extended = Path::new(r"\\?\C:\Users\fixture\OpenCodeX\data\runtime\opencodex");
+        assert_eq!(
+            windows_compare_path(ordinary),
+            windows_compare_path(extended)
+        );
+
+        let unc = Path::new(r"\\server\share\OpenCodeX\data\runtime\opencodex");
+        let extended_unc = Path::new(r"\\?\UNC\server\share\OpenCodeX\data\runtime\opencodex");
+        assert_eq!(
+            windows_compare_path(unc),
+            windows_compare_path(extended_unc)
+        );
+    }
+
+    #[test]
+    fn extended_system_paths_remain_protected() {
+        let system = std::env::var_os("SystemRoot").unwrap_or_else(|| "C:\\Windows".into());
+        let ordinary = PathBuf::from(system).join("System32");
+        let extended = PathBuf::from(format!(r"\\?\{}", ordinary.display()));
+        assert!(is_system_protected(&ordinary));
+        assert!(is_system_protected(&extended));
     }
 }

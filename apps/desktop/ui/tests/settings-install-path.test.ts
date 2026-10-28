@@ -68,7 +68,7 @@ describe('installation prefix platform syntax and landing hint', () => {
   })
 
   it.each(['C:relative', '\\runtime', 'runtime', 'C:\\', '\\\\server\\share', '\\\\server',
-    '\\\\?\\C:\\runtime', 'D:\\data\\..\\Windows', 'D:\\data\\.\\runtime'])
+    '\\\\?\\GLOBALROOT\\Device\\HarddiskVolume1', 'D:\\data\\..\\Windows', 'D:\\data\\.\\runtime'])
     ('keeps ambiguous, root or non-normal Windows path %s from advancing', async prefix => {
       const { next } = await setup('Windows', 'D:\\data', prefix)
       expect(next().attributes('disabled')).toBeDefined()
@@ -89,6 +89,14 @@ describe('installation prefix platform syntax and landing hint', () => {
     await flushPromises()
     expect(next().attributes('disabled')).toBeUndefined()
     expect((modal.get('#wiz-prefix').element as HTMLInputElement).value).toBe(prefix)
+  })
+
+  it.each([
+    ' \\\\?\\D:\\Applications\\OpenCodeX\\data\\runtime\\opencodex',
+    '\\\\?\\UNC\\server\\share\\OpenCodeX\\data\\runtime\\opencodex',
+  ])('accepts a Windows extended path returned by the host for %s', async prefix => {
+    const { next } = await setup('Windows', 'D:\\Applications\\OpenCodeX\\data', prefix.trim())
+    expect(next().attributes('disabled')).toBeUndefined()
   })
 
   it('passes the confirmed Windows path unchanged and displays a native permission rejection without retrying scripts', async () => {

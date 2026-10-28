@@ -48,7 +48,9 @@ pub async fn save_preferences(
     if cfg!(windows) && domain.cli_enabled {
         return Err(AppError::RuntimeManaged {
             code: "cli_not_supported".to_string(),
-            detail: "Windows 暂不支持 CLI 控制面；本机 IPC 未实现".to_string(),
+            detail:
+                "Windows 暂不开放 CLI 控制面；本机 IPC 传输已实现，但公开命令权限与验收尚未完成"
+                    .to_string(),
         });
     }
     let root = data_root.0.clone();

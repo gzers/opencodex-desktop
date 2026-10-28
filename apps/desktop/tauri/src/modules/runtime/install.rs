@@ -673,9 +673,9 @@ impl VersionProbe for RealVersionProbe {
             .stderr(Stdio::null());
         let mut child = command.spawn().ok()?;
         let started = Instant::now();
-        loop {
+        let exit_status = loop {
             match child.try_wait() {
-                Ok(Some(_)) => break,
+                Ok(Some(status)) => break status,
                 Ok(None) => {
                     if started.elapsed() >= self.timeout {
                         // 探针是短命的自有子进程，超时必须收口；这与 FZ-10 约束的
@@ -688,9 +688,20 @@ impl VersionProbe for RealVersionProbe {
                 }
                 Err(_) => return None,
             }
+        };
+        if !exit_status.success() {
+            return None;
         }
         let mut output = Vec::new();
-        child.stdout.take()?.read_to_end(&mut output).ok()?;
+        child
+            .stdout
+            .take()?
+            .take(64 * 1024 + 1)
+            .read_to_end(&mut output)
+            .ok()?;
+        if output.len() > 64 * 1024 {
+            return None;
+        }
         let text = String::from_utf8_lossy(&output);
         extract_semver(&text)
     }
@@ -1289,8 +1300,9 @@ impl<'a> RuntimeInstaller<'a> {
     pub fn install(&self, request: &InstallRequest) -> Result<InstallOutcome, InstallError> {
         self.emit(InstallPhase::Preparing, 2, None);
         self.check_cancel()?;
-        ensure_parent_directory(&request.prefix)?;
         let prefix = paths::validate_install_target(&request.prefix, self.home.as_deref())?;
+        validate_existing_prefix(&prefix)?;
+        ensure_parent_directory(&prefix)?;
         let _lock = TargetFileLock::lock(&prefix).map_err(InstallError::from)?;
 
         let temp = sibling_with_tag(&prefix, "new")?;
@@ -1331,41 +1343,64 @@ impl<'a> RuntimeInstaller<'a> {
         self.write_manifest(&temp, &manifest)?;
 
         self.emit(InstallPhase::Activating, 95, None);
-        atomic_replace_prefix(&temp, &prefix)?;
-        guard.disarm();
-
         // 入口必须指向**落位后**的最终路径：临时区名字里带随机后缀，
         // 若把临时路径写进启动器，替换之后入口就指向一个已经不存在的目录
         // （真实链路里表现为入口 `MODULE_NOT_FOUND`）。
         let entry = self.data_root.join(MANAGED_ENTRY_RELATIVE);
         let final_bin = prefix.join(PACKAGE_SUBPATH).join(&verified.bin_entry);
-        write_entry(
-            &entry,
-            request.node_path.as_deref().or(self.node()),
-            &final_bin,
-        )?;
-        // Only record activation after the verified package and final launcher land.
-        // A crash before this marker is inconclusive and keeps the backup protected.
-        if let Some(attempt_id) = &self.attempt_id {
-            manifest.activation = Some(
-                super::protection::activation_proof(
-                    self.data_root,
-                    &prefix,
-                    attempt_id,
-                    &verified.bin_entry,
-                )
-                .map_err(InstallError::from)?,
-            );
-            self.write_manifest(&prefix, &manifest)?;
-            crate::modules::backup::safety::sync_directories(
-                self.data_root,
-                entry.parent().expect("managed entry parent"),
-            )
-            .map_err(InstallError::from)?;
-            // Custom prefixes can be outside data_root; their directory is its own anchor.
-            crate::modules::backup::safety::sync_directories(&prefix, &prefix)
-                .map_err(InstallError::from)?;
+        if let Some(parent) = entry.parent() {
+            if parent.exists() && !parent.is_dir() {
+                return Err(InstallError::FileSystem {
+                    operation: "validate managed launcher parent".to_string(),
+                    detail: "托管入口父目录不是目录，未覆盖".to_string(),
+                });
+            }
         }
+        crate::modules::backup::safety::check_path(self.data_root, &entry, true)
+            .map_err(InstallError::from)?;
+        let previous_entry = read_entry_state(&entry)?;
+        let replacement = atomic_replace_prefix(&temp, &prefix)?;
+        let activation = (|| {
+            write_entry(
+                &entry,
+                request.node_path.as_deref().or(self.node()),
+                &final_bin,
+            )?;
+            // Only record activation after the verified package and final launcher land.
+            if let Some(attempt_id) = &self.attempt_id {
+                manifest.activation = Some(
+                    super::protection::activation_proof(
+                        self.data_root,
+                        &prefix,
+                        attempt_id,
+                        &verified.bin_entry,
+                    )
+                    .map_err(InstallError::from)?,
+                );
+                self.write_manifest(&prefix, &manifest)?;
+                crate::modules::backup::safety::sync_directories(
+                    self.data_root,
+                    entry.parent().expect("managed entry parent"),
+                )
+                .map_err(InstallError::from)?;
+                crate::modules::backup::safety::sync_directories(&prefix, &prefix)
+                    .map_err(InstallError::from)?;
+            }
+            Ok::<(), InstallError>(())
+        })();
+        if let Err(error) = activation {
+            let entry_restore = restore_entry_state(&entry, previous_entry.as_deref());
+            let prefix_restore = replacement.rollback();
+            if entry_restore.is_err() || prefix_restore.is_err() {
+                return Err(InstallError::FileSystem {
+                    operation: "rollback failed activation".to_string(),
+                    detail: format!("{}; install state retained for recovery", error.message()),
+                });
+            }
+            return Err(error);
+        }
+        replacement.commit();
+        guard.disarm();
 
         self.emit(InstallPhase::Done, 100, None);
         Ok(InstallOutcome {
@@ -1691,6 +1726,121 @@ fn is_executable_file(path: &Path) -> bool {
     }
 }
 
+fn validate_existing_prefix(prefix: &Path) -> Result<(), InstallError> {
+    if !prefix.exists() {
+        return Ok(());
+    }
+    let has_entries = std::fs::read_dir(prefix)
+        .map_err(|error| InstallError::FileSystem {
+            operation: "inspect existing install target".to_string(),
+            detail: error.to_string(),
+        })?
+        .next()
+        .is_some();
+    if !has_entries {
+        return Ok(());
+    }
+    let manifest_path = prefix.join(MANIFEST_FILENAME);
+    let manifest: RuntimeManifest =
+        serde_json::from_slice(&std::fs::read(&manifest_path).map_err(|_| {
+            InstallError::FileSystem {
+                operation: "validate existing install target".to_string(),
+                detail: "已有非空目录不是受管 OpenCodex 安装，未覆盖".to_string(),
+            }
+        })?)
+        .map_err(|_| InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "已有安装清单无效，未覆盖".to_string(),
+        })?;
+    if manifest.package != OFFICIAL_PACKAGE || manifest.version.is_empty() {
+        return Err(InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "已有目录不是受管 OpenCodex 安装，未覆盖".to_string(),
+        });
+    }
+    let package_json = prefix.join(PACKAGE_SUBPATH).join("package.json");
+    let package: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&package_json).map_err(|_| {
+            InstallError::FileSystem {
+                operation: "validate existing install target".to_string(),
+                detail: "受管安装缺少官方包清单，未覆盖".to_string(),
+            }
+        })?)
+        .map_err(|_| InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "受管安装包清单无效，未覆盖".to_string(),
+        })?;
+    if package.get("name").and_then(|value| value.as_str()) != Some(OFFICIAL_PACKAGE)
+        || package.get("version").and_then(|value| value.as_str())
+            != Some(manifest.version.as_str())
+    {
+        return Err(InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "受管安装包与清单不一致，未覆盖".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn read_entry_state(entry: &Path) -> Result<Option<Vec<u8>>, InstallError> {
+    match std::fs::symlink_metadata(entry) {
+        Ok(metadata) if metadata.file_type().is_symlink() || !metadata.is_file() => {
+            Err(InstallError::FileSystem {
+                operation: "inspect managed launcher".to_string(),
+                detail: "托管入口不是普通文件，未覆盖".to_string(),
+            })
+        }
+        Ok(_) => std::fs::read(entry)
+            .map(Some)
+            .map_err(|error| InstallError::FileSystem {
+                operation: "read managed launcher".to_string(),
+                detail: error.to_string(),
+            }),
+        Err(error)
+            if matches!(
+                error.kind(),
+                std::io::ErrorKind::NotFound | std::io::ErrorKind::NotADirectory
+            ) =>
+        {
+            Ok(None)
+        }
+        Err(error) => Err(InstallError::FileSystem {
+            operation: "inspect managed launcher".to_string(),
+            detail: error.to_string(),
+        }),
+    }
+}
+
+fn restore_entry_state(entry: &Path, previous: Option<&[u8]>) -> Result<(), InstallError> {
+    match previous {
+        Some(bytes) => atomic_write(entry, bytes, 0o600).map_err(InstallError::from),
+        None => match std::fs::symlink_metadata(entry) {
+            Err(error)
+                if matches!(
+                    error.kind(),
+                    std::io::ErrorKind::NotFound | std::io::ErrorKind::NotADirectory
+                ) =>
+            {
+                Ok(())
+            }
+            Ok(metadata) if metadata.file_type().is_symlink() || !metadata.is_file() => {
+                Err(InstallError::FileSystem {
+                    operation: "restore managed launcher".to_string(),
+                    detail: "入口回滚遇到非普通文件".to_string(),
+                })
+            }
+            Ok(_) => std::fs::remove_file(entry).map_err(|error| InstallError::FileSystem {
+                operation: "restore managed launcher".to_string(),
+                detail: error.to_string(),
+            }),
+            Err(error) => Err(InstallError::FileSystem {
+                operation: "restore managed launcher".to_string(),
+                detail: error.to_string(),
+            }),
+        },
+    }
+}
+
 /// 前缀根的私有项目 `package.json`：让前缀等价一个可重装的 npm 项目。
 fn write_project_package(prefix: &Path, version: &str) -> Result<(), InstallError> {
     let payload = serde_json::json!({
@@ -1754,13 +1904,48 @@ pub(super) fn entry_script(node: Option<&Path>, script: &Path) -> String {
 }
 
 /// 原子落位：现有前缀先改名让位，新前缀就位后再删旧；失败则把旧前缀改回来。
-fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<(), InstallError> {
+struct PrefixReplacement {
+    prefix: PathBuf,
+    retired: Option<PathBuf>,
+}
+
+impl PrefixReplacement {
+    fn commit(&self) {
+        if let Some(retired) = &self.retired {
+            let _ = std::fs::remove_dir_all(retired);
+        }
+    }
+
+    fn rollback(&self) -> Result<(), InstallError> {
+        if self.prefix.exists() {
+            std::fs::remove_dir_all(&self.prefix).map_err(|error| InstallError::FileSystem {
+                operation: "rollback new install prefix".to_string(),
+                detail: error.to_string(),
+            })?;
+        }
+        if let Some(retired) = &self.retired {
+            crate::infrastructure::platform::rename(retired, &self.prefix).map_err(|error| {
+                InstallError::FileSystem {
+                    operation: "restore previous install prefix".to_string(),
+                    detail: error.to_string(),
+                }
+            })?;
+        }
+        Ok(())
+    }
+}
+
+fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<PrefixReplacement, InstallError> {
     if !prefix.exists() {
-        return crate::infrastructure::platform::rename(temp, prefix).map_err(|error| {
+        crate::infrastructure::platform::rename(temp, prefix).map_err(|error| {
             InstallError::FileSystem {
                 operation: "activate temporary prefix".to_string(),
                 detail: error.to_string(),
             }
+        })?;
+        return Ok(PrefixReplacement {
+            prefix: prefix.to_path_buf(),
+            retired: None,
         });
     }
     let retired = sibling_with_tag(prefix, "old")?;
@@ -1771,10 +1956,10 @@ fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<(), InstallError>
         }
     })?;
     match crate::infrastructure::platform::rename(temp, prefix) {
-        Ok(()) => {
-            let _ = std::fs::remove_dir_all(&retired);
-            Ok(())
-        }
+        Ok(()) => Ok(PrefixReplacement {
+            prefix: prefix.to_path_buf(),
+            retired: Some(retired),
+        }),
         Err(error) => {
             // 回滚：旧前缀必须回到原位，否则用户会「装了个空的」。
             let _ = crate::infrastructure::platform::rename(&retired, prefix);
@@ -2324,9 +2509,21 @@ mod tests {
         let root = tempfile::tempdir().expect("temp");
         let data_root = root.path().join("data-root");
         let prefix = prefix_of(&data_root);
-        std::fs::create_dir_all(&prefix).expect("mkdir prefix");
+        let good = official_package(root.path(), "0.3.1");
+        let npm_path = root.path().join("npm-good");
+        write_executable(&npm_path);
+        installer(
+            &data_root,
+            &FakeNpm::new(good.clone()),
+            &NullProgressSink,
+            Some(root.path().to_path_buf()),
+            &FixedVersionProbe {
+                version: Some("0.3.1".to_string()),
+            },
+        )
+        .install(&offline_request(prefix.clone(), good, npm_path))
+        .expect("initial install");
         std::fs::write(prefix.join("sentinel.txt"), b"keep me").expect("sentinel");
-
         let bad = root.path().join("opencodex-0.3.1.tgz");
         std::fs::write(&bad, b"not a gzip stream").expect("write");
 
@@ -2352,7 +2549,7 @@ mod tests {
             prefix.join("sentinel.txt").is_file(),
             "失败不得改动现有前缀"
         );
-        assert!(!data_root
+        assert!(data_root
             .join(super::super::MANAGED_ENTRY_RELATIVE)
             .exists());
     }
@@ -2434,9 +2631,6 @@ mod tests {
         let root = tempfile::tempdir().expect("temp");
         let data_root = root.path().join("data-root");
         let prefix = prefix_of(&data_root);
-        std::fs::create_dir_all(&prefix).expect("mkdir prefix");
-        std::fs::write(prefix.join("stale.txt"), b"old").expect("stale");
-
         let archive = official_package(root.path(), "0.3.1");
         let sink = NullProgressSink;
         let npm = FakeNpm::new(archive.clone());
@@ -2453,13 +2647,117 @@ mod tests {
             &probe,
         )
         .install(&offline_request(prefix.clone(), archive, npm_path))
-        .expect("install");
+        .expect("initial install");
+
+        std::fs::write(prefix.join("stale.txt"), b"old").expect("stale");
+        let archive = official_package(root.path(), "0.3.1");
+        let npm_path = root.path().join("npm-second");
+        write_executable(&npm_path);
+        installer(
+            &data_root,
+            &npm,
+            &sink,
+            Some(root.path().to_path_buf()),
+            &probe,
+        )
+        .install(&offline_request(prefix.clone(), archive, npm_path))
+        .expect("reinstall");
 
         assert!(
             !prefix.join("stale.txt").exists(),
             "原子替换后旧前缀内容不应残留"
         );
         assert!(prefix.join(MANIFEST_FILENAME).is_file());
+    }
+
+    #[test]
+    fn rejects_nonempty_unmanaged_prefix_without_replacing_it() {
+        let root = tempfile::tempdir().expect("temp");
+        let data_root = root.path().join("data-root");
+        let prefix = prefix_of(&data_root);
+        std::fs::create_dir_all(&prefix).expect("mkdir prefix");
+        std::fs::write(prefix.join("user-file.txt"), b"keep").expect("user file");
+        let archive = official_package(root.path(), "0.3.1");
+        let npm_path = root.path().join("npm");
+        write_executable(&npm_path);
+        let error = installer(
+            &data_root,
+            &FakeNpm::new(archive.clone()),
+            &NullProgressSink,
+            Some(root.path().to_path_buf()),
+            &FixedVersionProbe {
+                version: Some("0.3.1".into()),
+            },
+        )
+        .install(&offline_request(prefix.clone(), archive, npm_path))
+        .expect_err("unmanaged non-empty prefix must be rejected");
+        assert_eq!(error.code(), "filesystem");
+        assert_eq!(
+            std::fs::read(prefix.join("user-file.txt")).unwrap(),
+            b"keep"
+        );
+    }
+
+    #[test]
+    fn failed_launcher_activation_restores_previous_managed_prefix() {
+        let root = tempfile::tempdir().expect("temp");
+        let data_root = root.path().join("data-root");
+        let prefix = prefix_of(&data_root);
+        let archive = official_package(root.path(), "0.3.1");
+        let npm_path = root.path().join("npm");
+        write_executable(&npm_path);
+        let sink = NullProgressSink;
+        let npm = FakeNpm::new(archive.clone());
+        let probe = FixedVersionProbe {
+            version: Some("0.3.1".into()),
+        };
+        installer(
+            &data_root,
+            &npm,
+            &sink,
+            Some(root.path().to_path_buf()),
+            &probe,
+        )
+        .install(&offline_request(
+            prefix.clone(),
+            archive.clone(),
+            npm_path.clone(),
+        ))
+        .expect("initial install");
+        std::fs::write(prefix.join("old-sentinel"), b"old").unwrap();
+        let entry_parent = data_root.join("runtime/bin");
+        let entry = entry_parent.join(if cfg!(windows) { "ocx.cmd" } else { "ocx" });
+        std::fs::remove_file(&entry).unwrap();
+        std::fs::remove_dir(&entry_parent).unwrap();
+        std::fs::write(&entry_parent, b"blocked launcher parent").unwrap();
+
+        let error = installer(
+            &data_root,
+            &npm,
+            &sink,
+            Some(root.path().to_path_buf()),
+            &probe,
+        )
+        .install(&offline_request(prefix.clone(), archive, npm_path))
+        .expect_err("launcher activation failure must fail");
+        assert_eq!(error.code(), "filesystem");
+        assert_eq!(std::fs::read(prefix.join("old-sentinel")).unwrap(), b"old");
+        assert!(prefix.join(MANIFEST_FILENAME).is_file());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn real_version_probe_rejects_nonzero_exit_even_when_stdout_has_version() {
+        let root = tempfile::tempdir().unwrap();
+        let script = root.path().join("probe.sh");
+        std::fs::write(&script, b"#!/bin/sh\necho 2.77.0\nexit 7\n").unwrap();
+        let mut mode = std::fs::metadata(&script).unwrap().permissions();
+        mode.set_mode(0o755);
+        std::fs::set_permissions(&script, mode).unwrap();
+        assert_eq!(
+            RealVersionProbe::default().probe(Some(Path::new("/bin/sh")), &script),
+            None
+        );
     }
 
     #[test]

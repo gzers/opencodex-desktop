@@ -1,0 +1,21 @@
+OpenCodeX Desktop — third-party notices
+
+This file is shipped inside the application bundle so the Settings → About
+link works after installation and does not depend on the source checkout.
+
+Direct runtime and UI dependencies used by this release include the following
+projects. Their copyright and license terms remain with their respective
+authors; the lockfiles in the source repository identify the complete resolved
+dependency graph for this build.
+
+- Tauri and Tauri plugins — MIT or Apache-2.0, https://tauri.app/
+- Vue — MIT, https://vuejs.org/
+- Pinia — MIT, https://pinia.vuejs.org/
+- Tokio — MIT or Apache-2.0, https://tokio.rs/
+- Reqwest — MIT or Apache-2.0, https://github.com/seanmonstar/reqwest
+- Serde — MIT or Apache-2.0, https://serde.rs/
+- Rustls — MIT or Apache-2.0, https://github.com/rustls/rustls
+
+For the exact transitive package versions and license metadata, consult the
+Cargo.lock and apps/desktop/ui/package-lock.json files in the corresponding
+source release.

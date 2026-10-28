@@ -10,9 +10,13 @@ use opencodex_desktop_lib::modules::{
     about::OfficialVersionSource,
     doctor::DoctorSource,
     process::{EnvironmentPolicy, LifecycleAction, LifecycleResult, ProcessCommand, ProcessRunner},
-    runtime::install::{
-        CancelFlag, InstallProgress, InstallProgressSink, NpmInstallRequest, NpmRunner,
-        RealVersionProbe, SystemNpmRunner, VersionProbe,
+    runtime::{
+        archive,
+        install::{
+            CancelFlag, InstallProgress, InstallProgressSink, InstallRequest, InstallSource,
+            NpmInstallRequest, NpmOutcome, NpmPackRequest, NpmRunner, RealVersionProbe,
+            RuntimeInstaller, SystemNpmRunner, VersionProbe,
+        },
     },
     status::StatusSource,
 };
@@ -372,6 +376,167 @@ fs.writeFileSync({},JSON.stringify({{argv,cache,cwd:process.cwd(),targetReal:fs.
 struct Sink;
 impl InstallProgressSink for Sink {
     fn emit(&self, _: InstallProgress) {}
+}
+
+struct RuntimeFixtureNpm {
+    archive: PathBuf,
+}
+
+impl NpmRunner for RuntimeFixtureNpm {
+    fn pack(
+        &self,
+        _request: &NpmPackRequest,
+        _sink: &dyn InstallProgressSink,
+        _cancel: &CancelFlag,
+    ) -> Result<PathBuf, opencodex_desktop_lib::modules::runtime::install::InstallError> {
+        Ok(self.archive.clone())
+    }
+
+    fn install_package(
+        &self,
+        request: &NpmInstallRequest,
+        _sink: &dyn InstallProgressSink,
+        _cancel: &CancelFlag,
+    ) -> Result<NpmOutcome, opencodex_desktop_lib::modules::runtime::install::InstallError> {
+        archive::extract(
+            &self.archive,
+            None,
+            &request.prefix.join("node_modules/@bitkyc08/opencodex"),
+        )?;
+        std::fs::write(request.prefix.join("package-lock.json"), b"{}").map_err(|error| {
+            opencodex_desktop_lib::modules::runtime::install::InstallError::FileSystem {
+                operation: "fixture package lock".into(),
+                detail: error.to_string(),
+            }
+        })?;
+        Ok(NpmOutcome { exit_code: 0 })
+    }
+}
+
+struct RuntimeFixtureProbe;
+impl VersionProbe for RuntimeFixtureProbe {
+    fn probe(&self, _node: Option<&Path>, _script: &Path) -> Option<String> {
+        Some("0.3.1".to_string())
+    }
+}
+
+fn runtime_fixture_archive(root: &Path) -> PathBuf {
+    use flate2::{write::GzEncoder, Compression};
+    let archive = root.join("opencodex-0.3.1.tgz");
+    let file = std::fs::File::create(&archive).unwrap();
+    let mut tar = tar::Builder::new(GzEncoder::new(file, Compression::fast()));
+    let package = br#"{"name":"@bitkyc08/opencodex","version":"0.3.1","bin":{"ocx":"bin/ocx.js"}}"#;
+    let script = b"console.log('0.3.1');";
+    for (path, bytes, mode) in [
+        ("package/package.json", package.as_slice(), 0o644),
+        ("package/bin/ocx.js", script.as_slice(), 0o755),
+    ] {
+        let mut header = tar::Header::new_gnu();
+        header.set_size(bytes.len() as u64);
+        header.set_mode(mode);
+        header.set_cksum();
+        tar.append_data(&mut header, path, bytes).unwrap();
+    }
+    tar.into_inner().unwrap().finish().unwrap();
+    archive
+}
+
+#[test]
+fn windows_managed_install_rejects_unowned_targets_and_restores_old_package_on_entry_failure() {
+    let root = tempfile::tempdir().unwrap();
+    let data_root = root.path().join("data root 中文");
+    let prefix = data_root.join("runtime/opencodex");
+    let archive = runtime_fixture_archive(root.path());
+    let npm = RuntimeFixtureNpm {
+        archive: archive.clone(),
+    };
+    let installer = |prefix: PathBuf| {
+        let request = InstallRequest {
+            prefix,
+            source: InstallSource::Offline {
+                archive: archive.clone(),
+            },
+            allow_scripts: false,
+            npm_path: Some(node()),
+            node_path: Some(node()),
+        };
+        RuntimeInstaller::new(
+            &data_root,
+            &npm,
+            Some(root.path().to_path_buf()),
+            &Sink,
+            &RuntimeFixtureProbe,
+            Some(node()),
+        )
+        .install(&request)
+    };
+    let first = installer(prefix.clone()).expect("initial managed install");
+    std::fs::write(prefix.join("old-sentinel"), b"old").unwrap();
+
+    use std::os::windows::fs::OpenOptionsExt;
+    let entry = data_root.join("runtime/bin/ocx.cmd");
+    let held_entry = std::fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .share_mode(0x1 | 0x2)
+        .open(&entry)
+        .expect("hold the launcher without delete sharing");
+    let error = installer(prefix.clone()).expect_err("launcher activation must fail");
+    assert_eq!(error.code(), "filesystem");
+    assert_eq!(std::fs::read(prefix.join("old-sentinel")).unwrap(), b"old");
+    assert!(first.target.join(".runtime-manifest.json").is_file());
+    drop(held_entry);
+
+    let unowned = data_root.join("runtime/unowned");
+    std::fs::create_dir_all(&unowned).unwrap();
+    std::fs::write(unowned.join("user-file"), b"keep").unwrap();
+    let error = installer(unowned.clone()).expect_err("unowned nonempty target must fail");
+    assert_eq!(error.code(), "filesystem");
+    assert_eq!(std::fs::read(unowned.join("user-file")).unwrap(), b"keep");
+}
+
+#[test]
+fn windows_managed_install_accepts_the_extended_form_of_a_local_prefix() {
+    let root = tempfile::tempdir().unwrap();
+    let data_root = root.path().join("data root 中文");
+    let ordinary = data_root.join("runtime/opencodex");
+    let extended = PathBuf::from(format!(r"\\?\{}", ordinary.display()));
+    let archive = runtime_fixture_archive(root.path());
+    let npm = RuntimeFixtureNpm {
+        archive: archive.clone(),
+    };
+    let request = InstallRequest {
+        prefix: extended.clone(),
+        source: InstallSource::Offline { archive },
+        allow_scripts: false,
+        npm_path: Some(node()),
+        node_path: Some(node()),
+    };
+    let outcome = RuntimeInstaller::new(
+        &data_root,
+        &npm,
+        Some(root.path().to_path_buf()),
+        &Sink,
+        &RuntimeFixtureProbe,
+        Some(node()),
+    )
+    .install(&request)
+    .expect("extended local path should retain its filesystem identity");
+    assert!(outcome.target.exists());
+    assert!(ordinary.join(".runtime-manifest.json").is_file());
+    assert!(data_root.join("runtime/bin/ocx.cmd").is_file());
+}
+
+#[test]
+fn windows_real_version_probe_requires_zero_exit() {
+    let root = tempfile::tempdir().unwrap();
+    let script = root.path().join("probe.js");
+    std::fs::write(&script, b"console.log('2.77.0'); process.exitCode=7;").unwrap();
+    assert_eq!(
+        RealVersionProbe::default().probe(Some(&node()), &script),
+        None,
+        "version output from a failed process must not be accepted"
+    );
 }
 
 #[test]
