@@ -58,6 +58,17 @@ try{
   [IO.File]::WriteAllText((Join-Path $taskOutput 'application-stdout.log'),$taskOut.GetAwaiter().GetResult())
   [IO.File]::WriteAllText((Join-Path $taskOutput 'application-stderr.log'),$taskErr.GetAwaiter().GetResult())
  }
+ $taskAppLog=Join-Path $taskSandbox 'logs/app.log'
+ if(Test-Path -LiteralPath $taskAppLog){
+  $taskStartup=Get-Content -LiteralPath $taskAppLog | Select-String 'startup version=([^ ]+) commit=([0-9a-f]+)' | Select-Object -First 1
+  if($taskStartup){
+   $taskRecord.startupVersion=$taskStartup.Matches[0].Groups[1].Value
+   $taskRecord.startupCommit=$taskStartup.Matches[0].Groups[2].Value
+   $taskRecord.applicationTree=(git rev-parse "$($taskRecord.startupCommit):apps").Trim()
+   $taskRecord.driverApplicationTree=(git rev-parse 'HEAD:apps').Trim()
+   $taskRecord.applicationSourceMatchesDriver=$taskRecord.applicationTree -eq $taskRecord.driverApplicationTree
+  }
+ }
  $taskRecord.endedAt=[DateTimeOffset]::Now.ToString('o')
  $taskRecord|ConvertTo-Json -Depth 4|Set-Content -LiteralPath (Join-Path $taskOutput 'launcher.json') -Encoding utf8
 }

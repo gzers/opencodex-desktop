@@ -125,10 +125,14 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     // The query and manager check share the center's checking state. Allow the
     // admitted check to finish before explicitly requesting recovery.
     await click('检查更新')
-    await wait("(()=>{const row=document.querySelector('[data-testid=official-update-row]');return row&&!row.textContent.includes('检查失败')&&!row.textContent.includes('正在检查')&&!row.textContent.includes('尚未检查')})()")
+    // A retained installation failure can legitimately take precedence in the
+    // row's status label. Require this query's durable cache to change back from
+    // the known fixture version before treating recovery as complete.
+    const after=await wait("(async()=>{const value=await window.__TAURI_INTERNALS__.invoke('official_remote_cache');return value&&value.version!=='999.0.0-ocx-native-failure'?value:false})()")
+    assert.equal(after.version,before.version,'recovered metadata did not return to the actual registry version')
+    await wait("(()=>{const row=document.querySelector('[data-testid=official-update-row]');return row&&!row.textContent.includes('999.0.0-ocx-native-failure')})()")
     await evaluate("document.querySelector('[data-testid=official-update-detail]').click()")
     assert(!await evaluate("!!document.querySelector('[data-testid=official-query-error]')"),'stale query failure remained after recovery')
-    const after=await evaluate("window.__TAURI_INTERNALS__.invoke('official_remote_cache')")
     assert(/^\d/.test(after.version))
     const sourceAfter=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')")
     assert.equal(sourceAfter.path,source.path)
