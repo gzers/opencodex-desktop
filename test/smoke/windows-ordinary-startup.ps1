@@ -37,7 +37,7 @@ public static class OcxNativeProfileProvision {
 
  & icacls.exe $taskOutput /grant ($taskName+':(OI)(CI)M') | Out-Null
  if($LASTEXITCODE -ne 0){throw 'Cannot provision isolated acceptance output directory'}
- {
+ if($true){
   Add-Type -TypeDefinition @"
 using System;
 using System.ComponentModel;
