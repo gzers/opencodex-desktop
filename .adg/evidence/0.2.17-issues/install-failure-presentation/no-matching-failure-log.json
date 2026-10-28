@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-28",
+  "timezone": "Asia/Shanghai",
+  "source": "human report of provided PowerShell filter result",
+  "result": "未找到退出码为 1 的日志",
+  "filterScope": "current active-root cache/npm/_logs *.log files, regex verbose exit 1 at line end",
+  "proves": "no matching currently available file under the supplied directory/filter",
+  "doesNotProve": [
+    "npm never started",
+    "network/path/node incompatibility is the root cause",
+    "no related logs exist elsewhere or in another form",
+    "prior user-visible failure was false"
+  ],
+  "sourceRecheck": {
+    "installProcess": "SystemNpmRunner runs npm executable/Windows wrapper; nonzero observed process status maps to NpmFailed",
+    "spawnFailure": "OS process spawn failure maps to FileSystem, not this NpmFailed text",
+    "queryWorkingDirectory": "user home",
+    "installWorkingDirectory": "private staging prefix/download directory",
+    "actualStderrHandling": "masked captured lines pushed to progress; last lines in NpmFailed.detail then omitted by message() and hidden by failed UI branch"
+  },
+  "nextActionBoundary": "record; avoid repeated installation or speculative environment changes; repair/preserve stdout-stderr and phase/executable/cwd diagnostics before claiming exact root cause",
+  "softwareModified": false
+}
