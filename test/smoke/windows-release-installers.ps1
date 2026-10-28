@@ -28,11 +28,14 @@ $taskOriginal=Join-Path $taskOutput 'original-built.exe'
 # Recover the original marker, then require the first release's frozen EXE hash.
 @'
 const fs=require('fs'),crypto=require('crypto');
-const [input,output]=process.argv.slice(2),b=fs.readFileSync(input),m=Buffer.from('__TAURI_BUNDLE_TYPE_VAR_MSI'),i=b.indexOf(m);
-if(i<0||b.indexOf(m,i+1)>=0)throw Error('exact MSI marker required');
-Buffer.from('__TAURI_BUNDLE_TYPE_VAR_UNK').copy(b,i);
-if(crypto.createHash('sha256').update(b).digest('hex')!=='610fb4ccbc3e2984d5a8a311aac90d1a498089deaeb3208ece9adc39f5365776')throw Error('original built identity differs');
-fs.writeFileSync(output,b);
+const [input,output]=process.argv.slice(2),b=fs.readFileSync(input),m=Buffer.from('__TAURI_BUNDLE_TYPE_VAR_MSI');
+const expected='610fb4ccbc3e2984d5a8a311aac90d1a498089deaeb3208ece9adc39f5365776',matches=[];
+for(let i=b.indexOf(m);i>=0;i=b.indexOf(m,i+1)){
+ const candidate=Buffer.from(b);Buffer.from('__TAURI_BUNDLE_TYPE_VAR_UNK').copy(candidate,i);
+ if(crypto.createHash('sha256').update(candidate).digest('hex')===expected)matches.push(candidate);
+}
+if(matches.length!==1)throw Error('one exact hash-matching original built image required, found '+matches.length);
+fs.writeFileSync(output,matches[0]);
 '@ | Set-Content -LiteralPath (Join-Path $taskOutput 'recover-identity.cjs') -Encoding utf8
 & node (Join-Path $taskOutput 'recover-identity.cjs') $taskImages[0].FullName $taskOriginal
 if($LASTEXITCODE -ne 0){throw 'Original release identity verification failed'}
