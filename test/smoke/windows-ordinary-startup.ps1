@@ -29,8 +29,8 @@ public static class OcxNativeProfileProvision {
 }
 "@
  }
- $taskProfilePath=[Text.StringBuilder]::new(32768)
- $taskProfileResult=[OcxNativeProfileProvision]::CreateProfile($taskUser.SID.Value,$taskName,$taskProfilePath,32768)
+ $taskProfilePath=[Text.StringBuilder]::new(260)
+ $taskProfileResult=[OcxNativeProfileProvision]::CreateProfile($taskUser.SID.Value,$taskName,$taskProfilePath,260)
  if($taskProfileResult -ne 0){[Runtime.InteropServices.Marshal]::ThrowExceptionForHR($taskProfileResult)}
  if(!(Test-Path -LiteralPath $taskProfilePath.ToString() -PathType Container)){throw 'Windows Profile service did not provision the temporary account'}
 
