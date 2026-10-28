@@ -31,3 +31,9 @@ Windows增强回归暴露工具发现夹具受runner的真实工具声明影响�
 复核WP95真实向导链路还发现“允许安装脚本并重试”恒禁用：之前按钮使用的allowScripts只在自身click里置true。8ba830d61改用后端稳定scripts_required原因允许明确点击，其余权限/文件等错误不获脚本授权；回归使用实际数字14错误封装。原型结构与样式未变，未自动执行脚本。
 
 原生startup新增可选ManagedInstall：只在临时Actions runner向沙箱home/.local/bin复制固定Node、写入指向已知npm-cli.js的包装入口；真实Vue向导以自身默认路径安装官方2.91.0，必要时明确点击脚本重试，最终读回来源和版本。其余普通账户/安装器smoke不重复联网安装。真实npm后端升级与离线重装继续独立验证。
+
+## 真实官方包离线重装反馈
+
+CI40614790973的Windows后端及原生凭据通过；真实官方2.90.0→2.91.0安装/升级断言完成后，热缓存离线重装返回ENOENT/-4058。不是随机环境通过，也没有跳过离线项。源码发现SystemNpmRunner始终把version拼为包名@version，而fill_offline传入的是绝对tgz路径，导致Windows扩展路径被拼进registry spec。b9fcc1b60把经过验证的本地归档作为独立npm参数，并对npm侧作安全路径简化；registry版本保持原有语义。
+
+Windows真实cmd参数回归补充本地tgz单参数检查；官方live增加阶段日志和失败分支的旧包sentinel、入口、来源原字节检查。共用runtime102项、clippy通过；最新Windows全链CI重新执行，未打tag、未公开0.2.17、未关闭WP95。证据见ci83-official-live-failure.log、ci83-native-progress.json及本轮RCP证据目录。

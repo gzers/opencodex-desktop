@@ -1,0 +1,35 @@
+backend-windows	Verify official managed install upgrade and offline reinstall	﻿2026-10-28T01:41:42.4639887Z ##[group]Run New-Item -ItemType Directory -Force ../../../test/out/windows-backend | Out-Null
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4640852Z ^[[36;1mNew-Item -ItemType Directory -Force ../../../test/out/windows-backend | Out-Null^[[0m
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4641428Z ^[[36;1m$env:OPENCODEX_MANAGED_LIVE = '1'^[[0m
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4641855Z ^[[36;1m$env:OPENCODEX_TEST_NODE = (Get-Command node).Source^[[0m
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4642359Z ^[[36;1m$env:OPENCODEX_TEST_NPM = (Get-Command npm.cmd).Source^[[0m
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4643109Z ^[[36;1m$env:OPENCODEX_MANAGED_LIVE_REPORT = [IO.Path]::GetFullPath('../../../test/out/windows-backend/managed-live.json')^[[0m
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4644259Z ^[[36;1mcargo test --locked --test windows_runtime windows_official_managed_registry_upgrade_and_offline_reinstall -- --ignored --exact --nocapture^[[0m
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4645135Z ^[[36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }^[[0m
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4721330Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4721817Z env:
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4722064Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4722874Z   CARGO_INCREMENTAL: 0
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4723142Z   CARGO_TERM_COLOR: always
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:42.4723417Z ##[endgroup]
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:41:44.0065898Z ^[[1m^[[92m   Compiling^[[0m opencodex-desktop v0.2.17 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:43:05.0970139Z ^[[1m^[[92m    Finished^[[0m `test` profile [unoptimized + debuginfo] target(s) in 1m 21s
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:43:05.1254842Z ^[[1m^[[92m     Running^[[0m tests\windows_runtime.rs (target\debug\deps\windows_runtime-ef3e94cc946ad516.exe)
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:43:05.1399293Z 
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:43:05.1399876Z running 1 test
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:44:05.1557490Z test windows_official_managed_registry_upgrade_and_offline_reinstall has been running for over 60 seconds
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:07.5637939Z 
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:07.5639056Z thread 'windows_official_managed_registry_upgrade_and_offline_reinstall' (9212) panicked at tests\windows_runtime.rs:679:6:
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:07.5640328Z actual npm offline reinstall from warmed isolated cache: NpmFailed { exit_code: -4058, detail: "npm error code ENOENT" }
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:07.5641134Z note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0170981Z test windows_official_managed_registry_upgrade_and_offline_reinstall ... FAILED
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0171378Z 
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0171468Z failures:
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0171602Z 
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0171712Z failures:
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0172033Z     windows_official_managed_registry_upgrade_and_offline_reinstall
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0172280Z 
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0172631Z test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 247.87s
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0172959Z 
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0221717Z ^[[1m^[[91merror^[[0m: test failed, to rerun pass `--test windows_runtime`
+backend-windows	Verify official managed install upgrade and offline reinstall	2026-10-28T01:47:13.0586781Z ##[error]Process completed with exit code 1.
