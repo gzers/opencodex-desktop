@@ -6,7 +6,7 @@ import { writeFile, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { describeError, discoverMainTarget } from './windows-cdp.mjs'
 import {verifyWindowsModelUi} from './windows-model-ui.mjs'
-const [endpoint, output, modelSandbox] = process.argv.slice(2)
+const [endpoint, output, modelSandbox, installMode] = process.argv.slice(2)
 assert(endpoint && output, 'Usage: node windows-webview.mjs <loopback CDP endpoint> <output directory>')
 assert.equal(new URL(endpoint).hostname, '127.0.0.1')
 const diagnostics = {}
@@ -99,7 +99,7 @@ try {
     sandboxDataRootInitialized: true,
   }, null, 2) + '\n')
   if(modelSandbox){diagnostics.phase='model-native-ui';await verifyWindowsModelUi(call,output,facts,modelSandbox)}
-  if(modelSandbox){diagnostics.phase='runtime-install-ui';await verifyWindowsInstallUi(call,output)}
+  if(modelSandbox){diagnostics.phase='runtime-install-ui';await verifyWindowsInstallUi(call,output,installMode==='managed-install')}
   diagnostics.result = 'pass'
   diagnostics.phase = 'complete'
   await saveDiagnostics(diagnostics)

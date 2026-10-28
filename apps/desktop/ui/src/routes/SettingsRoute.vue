@@ -1377,7 +1377,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
         <UiButton class="btn ghost" type="button" @click="cancelInstall()">{{ app.runtimeInstalling ? '取消安装' : '取消' }}</UiButton>
         <UiButton v-if="installStep < 4" class="btn primary" type="button" :disabled="!installCanAdvance" @click="advanceInstall()">下一步</UiButton>
         <template v-else-if="app.runtimeInstallError">
-          <UiButton class="btn primary" type="button" :disabled="!installAllowScripts" data-testid="wiz-allow-scripts" @click="installAllowScripts = true; runInstall()">允许安装脚本并重试</UiButton>
+          <UiButton class="btn primary" type="button" :disabled="!app.runtimeInstallScriptsRequired || app.runtimeInstalling" data-testid="wiz-allow-scripts" @click="installAllowScripts = true; runInstall()">允许安装脚本并重试</UiButton>
           <UiButton class="btn ghost" type="button" @click="closeInstallModal()">关闭</UiButton>
         </template>
         <UiButton v-else class="btn primary" type="button" data-testid="wiz-finish" @click="finishInstall()">完成</UiButton>

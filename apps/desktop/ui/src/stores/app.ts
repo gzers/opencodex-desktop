@@ -8,7 +8,7 @@ import {
   type RuntimeUninstallRequest,
 } from "@/features/runtime/api"
 import { useRuntimeStore } from "@/features/runtime/store"
-import { runtimeErrorText } from "@/features/runtime/errors"
+import { runtimeErrorText, runtimeErrorReason } from "@/features/runtime/errors"
 import { useNotificationsStore } from "@/features/notifications/store"
 import { useSyncStore } from "@/features/sync/store"
 import { usePreferencesStore } from "@/features/preferences/store"
@@ -152,6 +152,7 @@ export const useAppStore = defineStore("app", {
     runtimeInstallLines: () => useRuntimeStore().installLines,
     runtimeInstallOutcome: () => useRuntimeStore().installOutcome,
     runtimeInstallError: () => useRuntimeStore().installError,
+    runtimeInstallScriptsRequired: () => useRuntimeStore().installErrorReason === 'scripts_required',
     offlinePreview: () => useRuntimeStore().offlinePreview,
     offlinePreviewLoading: () => useRuntimeStore().offlinePreviewLoading,
     runtimeUninstallBusy: () => useRuntimeStore().uninstallBusy,
@@ -295,7 +296,7 @@ export const useAppStore = defineStore("app", {
         )
         return true
       } catch (error) {
-        runtime.failInstall(runtimeErrorText(error))
+        runtime.failInstall(runtimeErrorText(error), runtimeErrorReason(error))
         await this.loadRuntimeSource()
         return false
       } finally {

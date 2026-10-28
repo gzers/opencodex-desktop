@@ -594,7 +594,7 @@ fn windows_npm_cmd_runner_passes_paths_and_controlled_environment() {
 #[ignore = "explicit CI official registry install; no daily profile or generation"]
 fn windows_official_managed_registry_upgrade_and_offline_reinstall() {
     use opencodex_desktop_lib::modules::runtime::install::NullProgressSink;
-    use opencodex_desktop_lib::modules::runtime::{RuntimeStore, MANAGED_PREFIX_RELATIVE};
+    use opencodex_desktop_lib::modules::runtime::RuntimeStore;
     assert_eq!(std::env::var("OPENCODEX_MANAGED_LIVE").as_deref(), Ok("1"));
     let root = tempfile::Builder::new()
         .prefix("official managed 中文 ")
@@ -603,7 +603,7 @@ fn windows_official_managed_registry_upgrade_and_offline_reinstall() {
     let data = root.path().join("data");
     std::fs::create_dir_all(&data).unwrap();
     let data = data.canonicalize().unwrap();
-    let prefix = data.join(MANAGED_PREFIX_RELATIVE);
+    let prefix = data.join("runtime").join("opencodex");
     let npm =
         PathBuf::from(std::env::var_os("OPENCODEX_TEST_NPM").expect("explicit npm.cmd required"));
     assert!(npm.is_absolute() && npm.is_file());

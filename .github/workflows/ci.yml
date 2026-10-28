@@ -221,7 +221,7 @@ jobs:
       - name: Windows final EXE smoke
         shell: pwsh
         run: |
-          & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
+          & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup -ManagedInstall
       - name: Windows ordinary-account final EXE smoke
         shell: pwsh
         run: |

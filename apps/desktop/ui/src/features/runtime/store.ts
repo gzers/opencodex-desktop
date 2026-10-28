@@ -50,6 +50,7 @@ export const useRuntimeStore = defineStore('runtime', {
     installLines: [] as string[],
     installOutcome: null as RuntimeInstallOutcomeDto | null,
     installError: '',
+    installErrorReason: '',
     offlinePreview: null as OfflinePackagePreviewDto | null,
     offlinePreviewLoading: false,
     uninstallBusy: false,
@@ -177,6 +178,7 @@ export const useRuntimeStore = defineStore('runtime', {
       this.installLines = []
       this.installOutcome = null
       this.installError = ''
+      this.installErrorReason = ''
     },
     observeInstallProgress(progress: RuntimeInstallProgress) {
       if (!this.installing) return
@@ -186,8 +188,9 @@ export const useRuntimeStore = defineStore('runtime', {
     setInstallOutcome(outcome: RuntimeInstallOutcomeDto) {
       this.installOutcome = outcome
     },
-    failInstall(message: string) {
+    failInstall(message: string, reason = '') {
       this.installError = message
+      this.installErrorReason = reason
       this.install = { phase: 'failed', percent: 100, line: message }
     },
     markInstallDone() {

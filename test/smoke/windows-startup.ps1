@@ -4,7 +4,8 @@ param(
     [Parameter(Mandatory=$true)][string]$OutputDirectory,
     [ValidateRange(1,300)][int]$ObserveSeconds = 30,
     [string]$ExpectedCommit = '',
-    [ValidateSet('any','ordinary','administrator')][string]$Mode = 'any'
+    [ValidateSet('any','ordinary','administrator')][string]$Mode = 'any',
+    [switch]$ManagedInstall
 )
 $ErrorActionPreference = 'Stop'
 if (!$IsWindows) { throw 'This smoke requires Windows and PowerShell 7' }
@@ -42,6 +43,16 @@ function Get-SmokeDiagnostics([int]$RootProcessId, [int]$Port, [datetime]$Starte
 
 New-Item -ItemType Directory -Path $taskOutput -Force | Out-Null
 $taskSandbox = Join-Path $taskOutput ('sandbox-' + [guid]::NewGuid().ToString('N'))
+if ($ManagedInstall) {
+    if ($env:GITHUB_ACTIONS -cne 'true') { throw 'Real managed UI installation requires a disposable CI runner' }
+    $taskTools = Join-Path $taskSandbox 'home/.local/bin'
+    New-Item -ItemType Directory -Force $taskTools | Out-Null
+    Copy-Item -LiteralPath $taskNode -Destination (Join-Path $taskTools 'node.exe')
+    $taskNpmCli = Join-Path (Split-Path -Parent $taskNode) 'node_modules/npm/bin/npm-cli.js'
+    if (!(Test-Path -LiteralPath $taskNpmCli)) { throw 'Explicit official npm CLI missing beside test Node' }
+    $taskWrapper = '@echo off' + [Environment]::NewLine + '"%~dp0node.exe" "' + $taskNpmCli + '" %*' + [Environment]::NewLine
+    [IO.File]::WriteAllText((Join-Path $taskTools 'npm.cmd'), $taskWrapper, [Text.UTF8Encoding]::new($false))
+}
 $taskListener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
 $taskListener.Start()
 $taskPort = $taskListener.LocalEndpoint.Port
@@ -97,7 +108,7 @@ try {
     }
     $taskResult.sourceCommitMatched = $true
     if (!(Test-Path -LiteralPath (Join-Path $taskSandbox 'manager-state/data-root.json'))) { throw 'Sandbox data root not initialized' }
-    & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox
+    & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox $(if ($ManagedInstall) { 'managed-install' } else { 'no-managed-install' })
     if ($LASTEXITCODE -ne 0) { throw "WebView smoke failed: $LASTEXITCODE" }
     $taskResult.applicationToken = Get-WindowsProcessToken -Process $taskProcess -ExpectedExecutable $taskExe
     Assert-WindowsProcessMode -Observation $taskResult.applicationToken -Mode $Mode

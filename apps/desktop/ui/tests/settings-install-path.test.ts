@@ -119,5 +119,32 @@ describe('installation prefix platform syntax and landing hint', () => {
     expect(modal.get('[data-testid="wiz-error"]').text()).toContain('系统保护目录')
     expect(modal.get('[data-testid="wiz-status"]').text()).toContain('安装失败')
     expect(modal.find('[role="progressbar"]').exists()).toBe(false)
+    expect(modal.get('[data-testid="wiz-allow-scripts"]').attributes('disabled')).toBeDefined()
+  })
+
+  it('permits exactly the explicit scripts-required retry from the real numeric error envelope', async () => {
+    const { modal, next } = await setup('Windows', 'D:\\data', 'D:\\data\\runtime\\opencodex')
+    await next().trigger('click')
+    await next().trigger('click')
+    await modal.findAll('input[type="checkbox"]').at(-1)!.setValue(true)
+    const read = invoke.getMockImplementation()!
+    invoke.mockImplementation(async (command, ...args) => {
+      if (command === 'install_runtime') throw { code: 14, message: 'managed runtime operation failed: scripts_required; 该包需要执行安装脚本才能生成入口；需要你的二次确认' }
+      return read(command, ...args)
+    })
+    await next().trigger('click')
+    await flushPromises()
+    expect(invoke.mock.calls.filter(([name]) => name === 'install_runtime')).toHaveLength(1)
+    const retry = modal.get('[data-testid="wiz-allow-scripts"]')
+    expect(retry.attributes('disabled')).toBeUndefined()
+    await retry.trigger('click')
+    await flushPromises()
+    const writes = invoke.mock.calls.filter(([name]) => name === 'install_runtime')
+    expect(writes).toHaveLength(2)
+    expect(writes[0]![1].request.allowScripts).toBe(false)
+    expect(writes[1]![1].request.allowScripts).toBe(true)
+    await modal.findAll('button').find(b => b.text() === '关闭')!.trigger('click')
+    await pages.at(-1)!.get('[data-testid="runtime-install"]').trigger('click')
+    expect(useRuntimeStore().installing).toBe(false)
   })
 })
