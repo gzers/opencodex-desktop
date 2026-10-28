@@ -161,7 +161,9 @@ export function buildEnvironmentPresentation(
       ...base,
       state: 'missing_npm',
       title: 'Node.js 已发现，但 npm 不可用',
-      description: 'npm 通常随 Node.js 提供。建议重新安装 Node.js LTS，或检查 PATH 与 Node 安装完整性。',
+      description: platform === 'Windows'
+        ? 'npm 通常随 Node.js 提供。请检查 Node 安装目录和 NVM 等工具的路径声明，再重新检查；应用不搜索系统 PATH。'
+        : 'npm 通常随 Node.js 提供。请检查 Node 安装完整性及受支持的安装目录，再重新检查。',
       checks: [checkToPresentation('Node.js', report.node), checkToPresentation('npm', report.npm), notChecked('OpenCodex')],
       commands: [{ label: '安装后校验', command: platform === 'Windows' ? 'node -v; npm -v' : 'node -v && npm -v' }],
     }

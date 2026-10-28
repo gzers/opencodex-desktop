@@ -25,6 +25,7 @@ import { useGlowRenderStore } from '@/app/appearance/glowRender'
 import { useEffectsStore } from '@/app/appearance/effects'
 import type { InstallSourceKind, ProxyScheme } from '@/features/runtime/api'
 import { displayInstallPrefix, installPrefixIssue, prefixInsideDataRoot } from '@/features/runtime/installPath'
+import { displayPath, localPathExample } from '@/lib/paths'
 import {
   installPhaseLabel,
   offlineSteps,
@@ -193,7 +194,10 @@ watch(() => app.preferences, value => {
 // 界面缩放的 DOM 镜像跟随生效偏好（含加载、保存成功与还原默认值）。
 watch(() => routes.settingsSection, section => {
   if (section === 'general') void loadCodexShim()
-  if (section === 'installation') void app.loadDataRootConfig()
+  if (section === 'installation') {
+    void app.loadDataRootConfig()
+    void app.loadManagedPathTargets()
+  }
   if (section === 'extensions' || section === 'about') void app.loadManagedPathTargets()
   // 扩展管理分区需要统一配置里的源目录与分发方式；顺带刷新一次发现结果，
   // 避免用上一次进入时的陈旧投影。
@@ -245,7 +249,7 @@ async function saveDataRoot() {
 function confirmDataRootMigration() {
   const target = switchInput.value.trim()
   if (!target) { app.showToast('请输入显式数据目录路径。'); return }
-  const escaped = target.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!)
+  const escaped = displayPath(target).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!)
   app.openModal({
     title: '迁移数据目录',
     body: `<p>目标：<code>${escaped}</code></p><p>目标必须是尚不存在的新目录，父目录须已存在。将复制并校验管理器数据、备份及托管运行文件；外部 OPENCODEX_HOME 保持原位，不参与复制。</p><p>请先停止面板与安装任务。旧目录会保留；提交后暂停写入，重启管理器并核对新路径后生效。</p>`,
@@ -308,7 +312,7 @@ function installFormLabel(report: NonNullable<typeof app.environment>, source: t
 const installRows = computed(() => {
   const report = app.environment
   if (!report) return []
-  const text = (check: typeof report.node, fallback: string) => (check.found ? `${check.path ?? fallback}${check.version ? ` · ${check.version}` : ''}` : fallback)
+  const text = (check: typeof report.node, fallback: string) => (check.found ? `${displayPath(check.path) || fallback}${check.version ? ` · ${check.version}` : ''}` : fallback)
   // OpenCodex 不一定来自 npm 全局安装：托管安装、用户指定路径、自动发现同样可用。
   // 这一栏此前只看 npm 全局结果，导致已经能正常运行的托管安装被显示成“未发现”。
   const source = app.runtimeSource
@@ -319,7 +323,7 @@ const installRows = computed(() => {
   return [
     ['Node.js', text(report.node, '未发现'), report.node.found],
     ['npm', text(report.npm, '未发现'), report.npm.found],
-    ['可执行文件', ocxPath ? `${ocxPath}${ocxVersion ? ` · ${ocxVersion}` : ''}` : '未发现', available],
+    ['可执行文件', ocxPath ? `${displayPath(ocxPath)}${ocxVersion ? ` · ${ocxVersion}` : ''}` : '未发现', available],
     ['安装形态', available ? installFormLabel(report, source) : '未发现 OpenCodex 安装', available],
     ['版本', ocxVersion ?? '—', available],
     // 真实标签来自运行时观测；拿不到时写“未读取”，不能写死一个版本号冒充事实。
@@ -638,7 +642,7 @@ async function copyAgentPrompt() {
 
 async function copyPath(path: string) {
   try {
-    await navigator.clipboard.writeText(path)
+    await navigator.clipboard.writeText(displayPath(path))
     app.showToast('路径已复制。')
   } catch {
     app.showToast('复制失败；请手动复制路径。')
@@ -1050,7 +1054,7 @@ function restoreGeneralDefaults() {
       <article class="card"><div class="card-head"><div><h2>运行环境与安装发现</h2><p>只发现 / 展示 / 校验现有环境与安装。</p></div><UiButton class="btn ghost" :disabled="app.environmentLoading" @click="refreshEnvironment()">重新发现</UiButton></div>
         <div v-if="environment.blocked" class="empty" data-testid="install-blocked">已按前置条件暂停 OpenCodex 发现；请先处理概览中的环境门禁。</div>
         <div v-else-if="!installRows.length" class="empty">正在探测本机 OpenCodex 安装…</div>
-        <div v-else class="install-grid"><div v-for="row in installRows" :key="row[0]" class="install-row"><label>{{ row[0] }}</label><div :class="{ mono: row[0] === 'Node.js' || row[0] === 'npm' || row[0] === '可执行文件' }">{{ row[1] }}</div></div></div>
+        <div v-else class="install-grid"><div v-for="row in installRows" :key="row[0]" class="install-row"><label>{{ row[0] }}</label><div :class="{ 'mono local-path': row[0] === 'Node.js' || row[0] === 'npm' || row[0] === '可执行文件' }">{{ row[1] }}</div></div></div>
       </article>
       <article class="card" data-testid="runtime-source-card">
         <div class="card-head"><div><h2>OpenCodex 运行来源</h2><p>应用不读取 PATH；来源只来自这里的记录与候选目录，并与发现、启停、版本检查共用同一份结果。</p></div><UiButton class="btn ghost" :disabled="app.runtimeSourceLoading || runtimeProtection.protectionRetrying" @click="refreshRuntimeSource()">刷新</UiButton></div>
@@ -1071,7 +1075,7 @@ function restoreGeneralDefaults() {
         <template v-else>
           <div class="runtime-facts">
             <div class="runtime-fact"><label>来源类型</label><div>{{ runtimeSourceLabel }} <span class="tag">{{ sourceLandingLabel(app.runtimeSource.insideDataRoot) }}</span></div></div>
-            <div class="runtime-fact"><label>路径</label><div class="runtime-path">{{ app.runtimeSource.path ?? '未解析' }}</div></div>
+            <div class="runtime-fact"><label>路径</label><div class="runtime-path local-path">{{ displayPath(app.runtimeSource.path) || '未解析' }}</div></div>
             <div class="runtime-fact"><label>版本</label><div>{{ app.runtimeSource.version ?? '未知' }}</div></div>
           </div>
           <div class="runtime-actions">
@@ -1089,15 +1093,15 @@ function restoreGeneralDefaults() {
         <div v-if="app.dataRootConfigError" class="empty">数据目录配置读取失败；请重新进入安装配置。</div>
         <div v-else-if="!app.dataRootConfig" class="empty">正在读取数据目录配置…</div>
         <table v-else class="data-root-table"><thead><tr><th>路径</th><th>用途</th><th>操作</th></tr></thead><tbody>
-          <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.currentDataRoot)"><code>{{ app.dataRootConfig.currentDataRoot }}</code></button></td><td>数据目录 · 当前使用</td><td><UiButton size="sm" class="btn ghost" @click="openPath(app.dataRootConfig.currentDataRoot, '数据目录')">打开</UiButton></td></tr>
-          <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.currentOpencodexHome)"><code>{{ app.dataRootConfig.currentOpencodexHome }}</code></button></td><td>OPENCODEX_HOME · 当前使用</td><td><UiButton size="sm" class="btn ghost" @click="openPath(app.dataRootConfig.currentOpencodexHome, 'OPENCODEX_HOME')">打开</UiButton></td></tr>
-          <tr v-if="!app.dataRootConfig.runtimeActive && app.dataRootConfig.activeDataRoot !== app.dataRootConfig.currentDataRoot"><td><code>{{ app.dataRootConfig.activeDataRoot }}</code></td><td>数据目录 · 重启后生效</td><td>{{ app.dataRootReconciliationRequired ? '待核对' : '已保存' }}</td></tr>
-          <tr v-if="!app.dataRootConfig.runtimeActive && app.dataRootConfig.opencodexHome !== app.dataRootConfig.currentOpencodexHome"><td><code>{{ app.dataRootConfig.opencodexHome }}</code></td><td>OPENCODEX_HOME · 重启后生效</td><td>{{ app.dataRootReconciliationRequired ? '待核对' : '已保存' }}</td></tr>
+          <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.currentDataRoot)"><code class="local-path">{{ displayPath(app.dataRootConfig.currentDataRoot) }}</code></button></td><td>数据目录 · 当前使用</td><td><UiButton size="sm" class="btn ghost" @click="openPath(app.dataRootConfig.currentDataRoot, '数据目录')">打开</UiButton></td></tr>
+          <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.currentOpencodexHome)"><code class="local-path">{{ displayPath(app.dataRootConfig.currentOpencodexHome) }}</code></button></td><td>OPENCODEX_HOME · 当前使用</td><td><UiButton size="sm" class="btn ghost" @click="openPath(app.dataRootConfig.currentOpencodexHome, 'OPENCODEX_HOME')">打开</UiButton></td></tr>
+          <tr v-if="!app.dataRootConfig.runtimeActive && app.dataRootConfig.activeDataRoot !== app.dataRootConfig.currentDataRoot"><td><code class="local-path">{{ displayPath(app.dataRootConfig.activeDataRoot) }}</code></td><td>数据目录 · 重启后生效</td><td>{{ app.dataRootReconciliationRequired ? '待核对' : '已保存' }}</td></tr>
+          <tr v-if="!app.dataRootConfig.runtimeActive && app.dataRootConfig.opencodexHome !== app.dataRootConfig.currentOpencodexHome"><td><code class="local-path">{{ displayPath(app.dataRootConfig.opencodexHome) }}</code></td><td>OPENCODEX_HOME · 重启后生效</td><td>{{ app.dataRootReconciliationRequired ? '待核对' : '已保存' }}</td></tr>
         </tbody></table>
         <p v-if="app.dataRootReconciliationRequired" class="env-bound" role="alert">绑定替换可能已完成，但持久性核对未通过；上方新位置为预期目标。写入已暂停，请重启管理器核对实际路径。</p>
         <p v-else-if="app.dataRootPendingRestart || (app.dataRootConfig && !app.dataRootConfig.runtimeActive)" class="env-bound" role="status">已保存新位置，写入已暂停；当前服务仍使用上方当前路径，请重启管理器后回读确认。</p>
         <div class="field-grid">
-          <div class="field"><label for="external-home-input">外部 OPENCODEX_HOME</label><input id="external-home-input" v-model="externalHomeInput" class="input" placeholder="/absolute/path/to/OpenCodexHome" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+          <div class="field"><label for="external-home-input">外部 OPENCODEX_HOME</label><input id="external-home-input" v-model="externalHomeInput" class="input local-path" :placeholder="localPathExample('OpenCodexHome', app.aboutApp?.platform)" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
         </div>
         <div class="controls">
           <UiButton class="btn" :disabled="dataRootBindingDisabled" @click="applyOpencodexHome('external')">{{ app.dataRootHomeSaving ? '保存中…' : '使用外部路径' }}</UiButton>
@@ -1106,10 +1110,10 @@ function restoreGeneralDefaults() {
       </article>
       <article class="card"><div class="card-head"><div><h2>初始化或切换数据目录</h2><p>使用显式绝对路径；先校验结构，成功后才初始化冻结分区。</p></div></div>
         <div class="field-grid">
-          <div class="field"><label for="data-root-input">数据目录路径</label><input id="data-root-input" v-model="dataRootInput" class="input" placeholder="/absolute/path/to/OpenCodexData" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+          <div class="field"><label for="data-root-input">数据目录路径</label><input id="data-root-input" v-model="dataRootInput" class="input local-path" :placeholder="localPathExample('OpenCodexData', app.aboutApp?.platform)" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
         </div>
         <div class="field-grid">
-          <div class="field"><label for="switch-root-input">切换目标路径</label><input id="switch-root-input" v-model="switchInput" class="input" placeholder="/absolute/path/to/ExistingOpenCodexData" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+          <div class="field"><label for="switch-root-input">切换目标路径</label><input id="switch-root-input" v-model="switchInput" class="input local-path" :placeholder="localPathExample('ExistingOpenCodexData', app.aboutApp?.platform)" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
         </div>
         <div class="controls">
           <UiButton class="btn" :disabled="dataRootBindingDisabled" @click="saveDataRoot">{{ app.dataRootSaving ? '校验中…' : '校验并初始化' }}</UiButton>
@@ -1127,7 +1131,7 @@ function restoreGeneralDefaults() {
       <p v-if="app.dataRootError" class="env-bound" role="alert">{{ app.dataRootError }}</p>
       <article class="card"><div class="card-head"><div><h2>数据目录分区</h2><p>分区名已按 IMP 冻结；点击路径可复制，右侧可直接打开。</p></div></div>
         <table class="data-root-table"><thead><tr><th>路径</th><th>用途</th><th>操作</th></tr></thead><tbody>
-          <tr v-for="row in managedPartitions" :key="row.key"><td><button class="cli-copy-btn" @click="copyPath(row.path)"><code>{{ row.path }}</code></button></td><td>{{ row.label }}</td><td><UiButton size="sm" class="btn ghost" @click="openPath(row.path, row.label)">打开</UiButton></td></tr>
+          <tr v-for="row in managedPartitions" :key="row.key"><td><button class="cli-copy-btn" @click="copyPath(row.path)"><code class="local-path">{{ displayPath(row.path) }}</code></button></td><td>{{ row.label }}</td><td><UiButton size="sm" class="btn ghost" @click="openPath(row.path, row.label)">打开</UiButton></td></tr>
         </tbody></table>
       </article>
     </section>
@@ -1147,7 +1151,7 @@ function restoreGeneralDefaults() {
     <section v-else-if="section === 'extensions'" class="settings-panel active">
       <article class="card"><div class="card-head"><div><h2>Skills 管理</h2><p>控制源目录、同步与资产参与范围。</p></div><UiButton class="btn ghost" @click="routes.go('extensions', { tab: 'skills' })">打开 Skills 列表</UiButton></div>
         <div class="setting-list">
-          <div class="setting-row"><div><div class="setting-title">Skills 源目录</div><div class="setting-desc">默认目录；也可以自定义目录，管理器只读该目录。导入与恢复的 Skill 由管理器自行保存。</div></div><div class="controls"><UiButton class="btn ghost" @click="openPath(skillsSourcePath, 'Skills 源目录')">打开</UiButton><UiButton class="btn" @click="chooseSkillsSourceDir()">选择自定义目录</UiButton><UiButton v-if="skillsSourceIsCustom" class="btn ghost" @click="restoreDefaultSkillsSourceDir()">恢复默认</UiButton></div><button class="cli-copy-btn skills-source" title="复制 Skills 源目录" @click="copyPath(skillsSourcePath)"><code>{{ skillsSourcePath }}</code></button></div>
+          <div class="setting-row"><div><div class="setting-title">Skills 源目录</div><div class="setting-desc">默认目录；也可以自定义目录，管理器只读该目录。导入与恢复的 Skill 由管理器自行保存。</div></div><div class="controls"><UiButton class="btn ghost" @click="openPath(skillsSourcePath, 'Skills 源目录')">打开</UiButton><UiButton class="btn" @click="chooseSkillsSourceDir()">选择自定义目录</UiButton><UiButton v-if="skillsSourceIsCustom" class="btn ghost" @click="restoreDefaultSkillsSourceDir()">恢复默认</UiButton></div><button class="cli-copy-btn skills-source" title="复制 Skills 源目录" @click="copyPath(skillsSourcePath)"><code class="local-path">{{ displayPath(skillsSourcePath) }}</code></button></div>
           <div class="setting-row"><div><div class="setting-title">同步方式</div><div class="setting-desc">软链接优先：省空间、与源实时联动；创建失败或安全校验不通过时自动回退为复制。文件复制更稳定，适合迁移和备份快照。改动源目录或同步方式后，已落地的目标不会自动重做——用「检查并修正」对齐。</div></div><div class="controls"><UiButton class="btn ghost" @click="resyncSkills()" title="按当前源目录与同步方式，重新对齐已落地的客户端目标">检查并修正</UiButton><div class="select" :class="{ open: openSelect === 'skillsSyncMode' }"><button class="select-trigger" :aria-expanded="openSelect === 'skillsSyncMode' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="Skills 同步方式" @click="toggleSelect('skillsSyncMode')"><span class="select-value">{{ skillsSyncMethod === 'copy' ? '文件复制' : '软链接优先' }}</span></button><UiSelectMenu :open="openSelect === 'skillsSyncMode'" @close="openSelect = ''" role="listbox" aria-label="Skills 同步方式"><button class="select-option" :class="{ selected: skillsSyncMethod === 'symlink' }" type="button" role="option" :aria-selected="skillsSyncMethod === 'symlink' ? 'true' : 'false'" @click="chooseSkillsSyncMethod('symlink', '软链接优先')">软链接优先</button><button class="select-option" :class="{ selected: skillsSyncMethod === 'copy' }" type="button" role="option" :aria-selected="skillsSyncMethod === 'copy' ? 'true' : 'false'" @click="chooseSkillsSyncMethod('copy', '文件复制')">文件复制</button></UiSelectMenu></div></div></div>
           <div class="setting-row"><div><div class="setting-title">备份包含 Skills 目录</div><div class="setting-desc">当前备份是写入前的单文件备份，不含 Skills 目录快照；纳入扩展快照需先扩备份契约。</div></div><div class="controls"><span class="setting-readonly">不含</span></div></div>
           <div class="setting-row"><div><div class="setting-title">导出包含 Skills 目录</div><div class="setting-desc">配置迁移导出时纳入 Skills；导入前先生成可恢复快照。</div></div><div class="controls"><UiSwitch label="导出包含 Skills 目录" :model-value="preferences.exportIncludeSkills" @update:model-value="toggle('exportIncludeSkills', '导出包含 Skills 目录')" /></div></div>
@@ -1162,8 +1166,8 @@ function restoreGeneralDefaults() {
           <div class="setting-row"><div><div class="setting-title">导出包含 MCP 配置</div><div class="setting-desc">迁移导出纳入 MCP 定义；导入前先备份目标客户端配置。</div></div><div class="controls"><UiSwitch label="导出包含 MCP 配置" :model-value="preferences.exportIncludeMcp" @update:model-value="toggle('exportIncludeMcp', '导出包含 MCP 配置')" /></div></div>
         </div>
       </article>
-      <article class="card"><div class="card-head"><div><h2>Skills 路径</h2><p>集中查看并打开各客户端 Skills 目录。</p></div></div><div class="agent-path-list"><div v-for="row in skillsPaths" :key="row[1]" class="agent-path-row"><div class="agent-path-app"><span>{{ row[0] }}</span></div><button class="cli-copy-btn agent-path-copy" @click="copyPath(row[1])"><code>{{ row[1] }}</code></button><div class="agent-path-actions"><UiButton size="sm" class="btn ghost" @click="openPath(row[1], `${row[0]} Skills`)">打开目录</UiButton></div></div></div></article>
-      <article class="card"><div class="card-head"><div><h2>MCP 路径</h2><p>集中查看并打开各客户端 MCP 配置。</p></div></div><div class="agent-path-list"><div v-for="row in mcpPaths" :key="row[1]" class="agent-path-row"><div class="agent-path-app"><span>{{ row[0] }}</span></div><button class="cli-copy-btn agent-path-copy" @click="copyPath(row[1])"><code>{{ row[1] }}</code></button><div class="agent-path-actions"><UiButton size="sm" class="btn ghost" @click="openPath(row[1], `${row[0]} MCP 配置`)">打开配置</UiButton></div></div></div></article>
+      <article class="card"><div class="card-head"><div><h2>Skills 路径</h2><p>集中查看并打开各客户端 Skills 目录。</p></div></div><div class="agent-path-list"><div v-for="row in skillsPaths" :key="row[1]" class="agent-path-row"><div class="agent-path-app"><span>{{ row[0] }}</span></div><button class="cli-copy-btn agent-path-copy" @click="copyPath(row[1])"><code class="local-path">{{ displayPath(row[1]) }}</code></button><div class="agent-path-actions"><UiButton size="sm" class="btn ghost" @click="openPath(row[1], `${row[0]} Skills`)">打开目录</UiButton></div></div></div></article>
+      <article class="card"><div class="card-head"><div><h2>MCP 路径</h2><p>集中查看并打开各客户端 MCP 配置。</p></div></div><div class="agent-path-list"><div v-for="row in mcpPaths" :key="row[1]" class="agent-path-row"><div class="agent-path-app"><span>{{ row[0] }}</span></div><button class="cli-copy-btn agent-path-copy" @click="copyPath(row[1])"><code class="local-path">{{ displayPath(row[1]) }}</code></button><div class="agent-path-actions"><UiButton size="sm" class="btn ghost" @click="openPath(row[1], `${row[0]} MCP 配置`)">打开配置</UiButton></div></div></div></article>
     </section>
 
     <section v-else-if="section === 'cleanup'" class="settings-panel active">
@@ -1299,7 +1303,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
       </ol>
 
       <div v-if="installStep === 1" class="wiz-body">
-        <div class="field"><label for="wiz-prefix">安装位置</label><input id="wiz-prefix" v-model="installPrefix" class="input" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+        <div class="field"><label for="wiz-prefix">安装位置</label><input id="wiz-prefix" v-model="installPrefix" class="input local-path" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
         <p class="wiz-hint">{{ installLandingText }}</p>
         <p v-if="installPrefixError" class="wiz-error">{{ installPrefixError }}</p>
         <div class="wiz-actions">
@@ -1372,7 +1376,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
         </details>
         <p v-if="app.runtimeInstallError" class="wiz-error" data-testid="wiz-error">{{ app.runtimeInstallError }}</p>
         <p v-if="app.runtimeInstallOutcome" class="wiz-hint" data-testid="wiz-outcome">
-          入口 {{ app.runtimeInstallOutcome.entry }} · SHA-256 {{ app.runtimeInstallOutcome.tarballSha256.slice(0, 16) }}…
+          入口 <span class="local-path">{{ displayPath(app.runtimeInstallOutcome.entry) }}</span> · SHA-256 {{ app.runtimeInstallOutcome.tarballSha256.slice(0, 16) }}…
           <template v-if="app.runtimeInstallOutcome.needsRestart"> · 代理正在运行，重启后生效。</template>
           <template v-if="app.runtimeInstallOutcome.protectionReconciliationPending"> · 保护备份仍保留，完整性核对未完成。请查看诊断日志。</template>
         </p>
@@ -1395,7 +1399,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
       <h3 id="uninstall-title">卸载 OpenCodex</h3>
 
       <template v-if="!uninstallRunning && !uninstallDone">
-        <p class="wiz-hint">按当前运行来源 <code>{{ app.runtimeUninstallPlan?.sourcePath ?? '未解析' }}</code> 卸载；范围越大后果越重。</p>
+        <p class="wiz-hint">按当前运行来源 <code class="local-path">{{ displayPath(app.runtimeUninstallPlan?.sourcePath) || '未解析' }}</code> 卸载；范围越大后果越重。</p>
         <div class="wiz-choices">
           <label class="wiz-choice-block" :class="{ on: uninstallScope === 'full' }">
             <input v-model="uninstallScope" type="radio" value="full" data-testid="uninstall-scope-full">
@@ -1415,8 +1419,8 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
           <details class="wiz-more" data-testid="uninstall-plan-objects">
             <summary>将移除的对象：包体 · 入口{{ uninstallScope === 'full' ? ' · 运行态' : '' }}</summary>
             <ul class="wiz-objects">
-              <li v-for="item in app.runtimeUninstallPlan.removeObjects" :key="item"><code>{{ item }}</code></li>
-              <li v-for="item in (uninstallScope === 'full' ? app.runtimeUninstallPlan.runtimeObjects : [])" :key="item"><span>{{ item }}</span></li>
+              <li v-for="item in app.runtimeUninstallPlan.removeObjects" :key="item"><code class="local-path">{{ displayPath(item) }}</code></li>
+              <li v-for="item in (uninstallScope === 'full' ? app.runtimeUninstallPlan.runtimeObjects : [])" :key="item"><span class="local-path">{{ displayPath(item) }}</span></li>
             </ul>
             <p v-if="app.runtimeUninstallPlan.externalCommand" class="wiz-hint">将执行：<code>{{ app.runtimeUninstallPlan.externalCommand }}</code></p>
             <p v-if="uninstallScope === 'full' && app.runtimeUninstallPlan.officialCommand" class="wiz-hint">完整卸载将执行：<code>{{ app.runtimeUninstallPlan.officialCommand }}</code></p>
@@ -1458,9 +1462,9 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
         <div v-if="uninstallDone" class="residue-card" data-testid="uninstall-residue">
           <div class="residue-head"><span class="residue-badge" aria-hidden="true">{{ residueOk ? '✓' : '!' }}</span><b>残留核验</b><small>{{ residueOk ? '0 残留' : ((app.runtimeUninstallResult?.residue ?? []).length ? '有未清除项' : '缺少核验证据') }}</small></div>
           <ul class="residue-list">
-            <li v-for="item in (app.runtimeUninstallResult?.residue ?? [])" :key="item.path" :class="item.status"><code>{{ item.path }}</code><span>{{ residueLabel(item.status) }}</span></li>
+            <li v-for="item in (app.runtimeUninstallResult?.residue ?? [])" :key="item.path" :class="item.status"><code class="local-path">{{ displayPath(item.path) }}</code><span>{{ residueLabel(item.status) }}</span></li>
           </ul>
-          <p v-if="app.runtimeUninstallResult?.backupId" class="wiz-hint">备份 <code>{{ app.runtimeUninstallResult.backupId }}</code> · <button class="cli-copy-btn" type="button" @click="copyPath(app.runtimeUninstallResult?.backupDirectory ?? '')"><code>{{ app.runtimeUninstallResult?.backupDirectory }}</code></button></p>
+          <p v-if="app.runtimeUninstallResult?.backupId" class="wiz-hint">备份 <code>{{ app.runtimeUninstallResult.backupId }}</code> · <button class="cli-copy-btn" type="button" @click="copyPath(app.runtimeUninstallResult?.backupDirectory ?? '')"><code class="local-path">{{ displayPath(app.runtimeUninstallResult?.backupDirectory) }}</code></button></p>
         </div>
       </template>
 

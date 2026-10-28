@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { displayPath } from '@/lib/paths'
 import UiButton from '@/components/ui/UiButton.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, watch } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
@@ -471,7 +472,7 @@ function goServersPage(page: number) {
 
 // AC-11 / CAP-11.5：条目只读详情。列表不预读正文，打开时只读被打开的那一条。
 /** `wide` = 整行（原型 `.span-2`）；`scroll` = 取值区自带内部滚动（长环境变量名单）。 */
-interface DetailFact { label: string; value: string; wide?: boolean; scroll?: boolean }
+interface DetailFact { label: string; value: string; wide?: boolean; scroll?: boolean; localPath?: boolean }
 interface DetailAction { key: string; title: string; icon: 'refresh' | 'trash' | 'edit'; danger?: boolean }
 interface DetailState {
   kind: 'skill' | 'mcp'
@@ -524,10 +525,10 @@ async function openSkillDetail(skill: ExtensionSkillDto) {
       markdownTruncated: info.bodyTruncated,
       facts: [
         ...skillFacts(skill),
-        { label: '入口文件', value: info.entryFile },
+        { label: '入口文件', value: displayPath(info.entryFile), localPath: true },
         { label: '文件数', value: info.fileCount === null ? '未知' : `${info.fileCount} 个文件` },
         { label: '体量', value: formatBytes(info.totalBytes) },
-        { label: '源目录', value: info.sourcePath, wide: true },
+        { label: '源目录', value: displayPath(info.sourcePath), wide: true, localPath: true },
       ],
     }
   } catch {
@@ -578,7 +579,7 @@ async function openMcpDetail(server: ExtensionServerDto) {
         {
           label: '配置落点',
           value: present.length
-            ? present.map(landing => `${clientLabels[landing.client]}：${landing.configPath}`).join('；')
+            ? present.map(landing => `${clientLabels[landing.client]}：${displayPath(landing.configPath)}`).join('；')
             : '—',
           wide: true,
         },

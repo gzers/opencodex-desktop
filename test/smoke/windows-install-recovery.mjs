@@ -4,6 +4,7 @@ import {readFile, writeFile} from 'node:fs/promises'
 import {join, win32} from 'node:path'
 import {discoverMainTarget} from './windows-cdp.mjs'
 import {verifyWindowsInstallUi} from './windows-install-ui.mjs'
+import {verifyWindowsPathUi} from './windows-path-ui.mjs'
 
 const [endpoint, output, sandbox] = process.argv.slice(2)
 assert(output && win32.isAbsolute(sandbox), 'explicit isolated root required')
@@ -69,6 +70,7 @@ try{
   assert(equal(config.activeDataRoot,sandbox)&&equal(config.currentDataRoot,sandbox)&&config.runtimeActive,'immutable sandbox mismatch')
   report.about=await evaluate("window.__TAURI_INTERNALS__.invoke('app_about')")
   await verifyWindowsInstallUi(call,output,false)
+  await verifyWindowsPathUi(call,output,sandbox)
   report.checks.push('prefill/reset/readable native Windows path')
   const first=await install('2.91.0')
   assert(first.done&&!first.error,JSON.stringify(first))

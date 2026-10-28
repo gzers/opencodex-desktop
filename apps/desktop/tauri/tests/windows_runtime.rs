@@ -166,6 +166,12 @@ fn windows_user_environment_is_explicit_and_does_not_inherit_credentials() {
     assert_eq!(env["USERPROFILE"], root.path().to_string_lossy().as_ref());
     assert_eq!(env["HOME"], root.path().to_string_lossy().as_ref());
     assert!(env["SystemRoot"].is_string());
+    let comspec = env["COMSPEC"].as_str().unwrap();
+    assert!(
+        !comspec.contains('/'),
+        "version-manager wrappers interpret COMSPEC as a native command path"
+    );
+    assert!(Path::new(comspec).is_absolute() && Path::new(comspec).is_file());
     assert!(env["APPDATA"]
         .as_str()
         .unwrap()
@@ -192,6 +198,8 @@ default: process.exit(7);
 }
 "#,
     );
+    // Backend source records commonly contain canonical extended Windows paths.
+    let entry = entry.canonicalize().unwrap();
     let runtime = FixedRuntimeExecutable::resolved(&entry);
     let env = environment(root.path());
     let version = OfficialCliVersionSource::new(runtime.clone(), root.path(), env.clone())
@@ -213,6 +221,172 @@ default: process.exit(7);
         .unwrap();
     let status = runtime.block_on(async { source.fetch() }).unwrap();
     assert_eq!(status["status"], "stopped");
+}
+
+#[test]
+fn windows_model_commands_preserve_sandbox_home_and_controlled_tool_path() {
+    let root = tempfile::Builder::new()
+        .prefix("model 环境 spaces ")
+        .tempdir()
+        .unwrap();
+    let sandbox = root.path().join("sandbox");
+    let tools = sandbox.join("home/.local/bin");
+    let config = sandbox.join("opencodex-home");
+    std::fs::create_dir_all(&tools).unwrap();
+    std::fs::create_dir_all(&config).unwrap();
+    let entry = write_launcher(
+        root.path(),
+        r#"
+const fs=require('fs');
+const result={home:process.env.HOME,profile:process.env.USERPROFILE,path:process.env.PATH,opencodexHome:process.env.OPENCODEX_HOME};
+if(process.argv[2]==='sync-cache')fs.writeFileSync(require('path').join(process.env.OPENCODEX_HOME,'observed.json'),JSON.stringify(result));
+else console.log(JSON.stringify(result));
+"#,
+    );
+    let output = std::process::Command::new(std::env::current_exe().unwrap())
+        .args([
+            "--exact",
+            "windows_model_environment_child",
+            "--ignored",
+            "--nocapture",
+        ])
+        .env("OPENCODEX_SANDBOX", "1")
+        .env("OPENCODEX_SANDBOX_ROOT", &sandbox)
+        .env("HOME", root.path().join("daily-host-profile"))
+        .env("PATH", root.path().join("host-path-sentinel"))
+        .env("OCX_PATH_AUDIT_ENTRY", entry)
+        .env("OCX_PATH_AUDIT_ROOT", &sandbox)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "stdout={} stderr={}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+}
+
+#[test]
+#[ignore = "owned child only"]
+fn windows_model_environment_child() {
+    use opencodex_desktop_lib::modules::model_config::{cache_refresh, upstream};
+    let sandbox = PathBuf::from(std::env::var_os("OCX_PATH_AUDIT_ROOT").unwrap());
+    let entry = PathBuf::from(std::env::var_os("OCX_PATH_AUDIT_ENTRY").unwrap());
+    let context = opencodex_desktop_lib::state::ProcessContext {
+        runtime: FixedRuntimeExecutable::resolved(&entry),
+        working_directory: sandbox.clone(),
+        opencodex_home: sandbox.join("opencodex-home"),
+    };
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let observed = runtime
+        .block_on(upstream::read(
+            &context,
+            upstream::ReadOperation::ProviderSnapshot,
+        ))
+        .unwrap();
+    eprintln!("upstream actual allowed context: {observed}");
+    assert!(!observed["path"]
+        .as_str()
+        .unwrap()
+        .contains("host-path-sentinel"));
+    let refreshed = runtime
+        .block_on(cache_refresh::sync_cache(&context, false))
+        .unwrap();
+    assert!(refreshed.success);
+    let observed: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(context.opencodex_home.join("observed.json")).unwrap(),
+    )
+    .unwrap();
+    eprintln!("cache-refresh actual allowed context: {observed}");
+    assert_eq!(
+        PathBuf::from(observed["home"].as_str().unwrap()),
+        sandbox.join("home")
+    );
+    assert_eq!(
+        PathBuf::from(observed["profile"].as_str().unwrap()),
+        sandbox.join("home")
+    );
+    assert!(!observed["path"]
+        .as_str()
+        .unwrap()
+        .contains("host-path-sentinel"));
+}
+
+#[test]
+fn windows_environment_discovery_rejects_relative_and_noncommand_files() {
+    use opencodex_desktop_lib::modules::discovery::{
+        EnvironmentDiscovery, EnvironmentGate, EnvironmentPaths,
+    };
+    let root = tempfile::tempdir().unwrap();
+    let invalid_node = root.path().join("node.txt");
+    std::fs::write(&invalid_node, b"not a Windows command").unwrap();
+    let report =
+        EnvironmentDiscovery::new(EnvironmentPaths::new(invalid_node, node(), node())).discover();
+    assert_eq!(report.gate, EnvironmentGate::MissingNode);
+    let report = EnvironmentDiscovery::new(EnvironmentPaths::new(
+        PathBuf::from("Cargo.toml"),
+        node(),
+        node(),
+    ))
+    .discover();
+    assert_eq!(report.gate, EnvironmentGate::MissingNode);
+}
+
+#[test]
+fn windows_uninstall_commands_bind_the_selected_home_and_prefix() {
+    use opencodex_desktop_lib::modules::runtime::uninstall::{
+        SystemUninstallCommands, UninstallCommands,
+    };
+    let root = tempfile::Builder::new()
+        .prefix("uninstall 环境 spaces ")
+        .tempdir()
+        .unwrap();
+    let home = root.path().join("user");
+    let selected_home = root.path().join("selected panel home");
+    let selected_prefix = root.path().join("selected npm prefix");
+    for dir in [&home, &selected_home, &selected_prefix] {
+        std::fs::create_dir_all(dir).unwrap();
+    }
+    let entry = write_launcher(root.path(), "console.log(JSON.stringify({args:process.argv.slice(2),home:process.env.OPENCODEX_HOME,cwd:process.cwd()}));");
+    let commands = SystemUninstallCommands {
+        home: Some(home.clone()),
+    };
+    // The fixture only prints its allowed context; no real uninstaller is executed.
+    let ocx = commands.ocx_uninstall(&entry, &selected_home).unwrap();
+    let npm = commands
+        .npm_uninstall_global(&entry, &selected_prefix)
+        .unwrap();
+    eprintln!("official uninstall actual context: {}", ocx.stdout.trim());
+    eprintln!("npm uninstall actual arguments: {}", npm.stdout.trim());
+    let ocx: serde_json::Value = serde_json::from_str(&ocx.stdout).unwrap();
+    let npm: serde_json::Value = serde_json::from_str(&npm.stdout).unwrap();
+    assert_eq!(ocx["home"], selected_home.to_string_lossy().as_ref());
+    assert_eq!(PathBuf::from(ocx["cwd"].as_str().unwrap()), home);
+    let args: Vec<String> = serde_json::from_value(npm["args"].clone()).unwrap();
+    assert!(args
+        .windows(2)
+        .any(|v| v[0] == "--prefix" && Path::new(&v[1]) == selected_prefix));
+}
+
+#[test]
+fn windows_codex_shim_receives_the_same_native_user_environment() {
+    use opencodex_desktop_lib::infrastructure::codex_shim_source::OfficialCodexShimSource;
+    use opencodex_desktop_lib::modules::codex_shim::CodexShimSource;
+    let root = tempfile::Builder::new()
+        .prefix("shim 环境 spaces ")
+        .tempdir()
+        .unwrap();
+    let entry = write_launcher(root.path(), "if(!process.env.SystemRoot||process.env.USERPROFILE!==process.env.HOME)process.exit(9);console.log(JSON.stringify({profile:process.env.USERPROFILE,home:process.env.HOME,systemRoot:process.env.SystemRoot}));");
+    let source = OfficialCodexShimSource::new(
+        FixedRuntimeExecutable::resolved(&entry),
+        root.path(),
+        environment(root.path()),
+    );
+    let result = source
+        .status()
+        .expect("read-only official shim needs Windows HOME/USERPROFILE/SystemRoot");
+    let observed: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
+    assert_eq!(observed["profile"], root.path().to_string_lossy().as_ref());
 }
 
 #[test]

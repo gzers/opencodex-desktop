@@ -765,8 +765,16 @@ pub struct CommandOutcome {
 
 /// 外部命令执行面：真实实现走子进程，测试用桩（不触网、不执行真命令）。
 pub trait UninstallCommands {
-    fn ocx_uninstall(&self, ocx: &Path) -> Result<CommandOutcome, UninstallError>;
-    fn npm_uninstall_global(&self, npm: &Path) -> Result<CommandOutcome, UninstallError>;
+    fn ocx_uninstall(
+        &self,
+        ocx: &Path,
+        opencodex_home: &Path,
+    ) -> Result<CommandOutcome, UninstallError>;
+    fn npm_uninstall_global(
+        &self,
+        npm: &Path,
+        prefix: &Path,
+    ) -> Result<CommandOutcome, UninstallError>;
 }
 
 /// 真实命令执行：受控环境（`env_clear` + 最小 PATH + `HOME`），不继承凭据环境变量（`FZ-50`）。
@@ -776,10 +784,23 @@ pub struct SystemUninstallCommands {
 }
 
 impl SystemUninstallCommands {
-    fn harden(&self, command: &mut Command, bin_dir: Option<&Path>) {
+    fn harden(&self, command: &mut Command, bin_dir: Option<&Path>) -> Result<(), UninstallError> {
+        let home = self
+            .home
+            .as_deref()
+            .filter(|home| home.is_absolute() && home.is_dir())
+            .ok_or_else(|| UninstallError::FileSystem {
+                operation: "bind uninstall HOME".into(),
+                detail: "explicit user home is unavailable".into(),
+            })?;
         command.env_clear();
-        let path =
-            crate::infrastructure::platform::controlled_path(bin_dir.map(Path::to_path_buf), None);
+        command.current_dir(dunce::simplified(home));
+        let discovered = crate::infrastructure::discovery_paths::paths_for_home(home);
+        let tools = crate::infrastructure::discovery_paths::process_path(home, &discovered);
+        let path = crate::infrastructure::platform::controlled_path(
+            bin_dir.map(Path::to_path_buf),
+            Some(&tools),
+        );
         command.env("PATH", path);
         command.env("LANG", "C.UTF-8");
         command.env("LC_ALL", "C.UTF-8");
@@ -794,6 +815,7 @@ impl SystemUninstallCommands {
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .stdin(Stdio::null());
+        Ok(())
     }
 }
 
@@ -813,24 +835,47 @@ fn run_command(mut command: Command) -> Result<CommandOutcome, UninstallError> {
 }
 
 impl UninstallCommands for SystemUninstallCommands {
-    fn ocx_uninstall(&self, ocx: &Path) -> Result<CommandOutcome, UninstallError> {
+    fn ocx_uninstall(
+        &self,
+        ocx: &Path,
+        opencodex_home: &Path,
+    ) -> Result<CommandOutcome, UninstallError> {
+        if !opencodex_home.is_absolute() || !opencodex_home.is_dir() {
+            return Err(UninstallError::FileSystem {
+                operation: "bind uninstall OPENCODEX_HOME".into(),
+                detail: "selected configuration directory is unavailable".into(),
+            });
+        }
         let mut command = Command::new(ocx);
         command.arg("uninstall");
-        self.harden(&mut command, ocx.parent());
+        self.harden(&mut command, ocx.parent())?;
+        command.env("OPENCODEX_HOME", opencodex_home);
         run_command(command)
     }
 
-    fn npm_uninstall_global(&self, npm: &Path) -> Result<CommandOutcome, UninstallError> {
+    fn npm_uninstall_global(
+        &self,
+        npm: &Path,
+        prefix: &Path,
+    ) -> Result<CommandOutcome, UninstallError> {
+        if !prefix.is_absolute() || !prefix.is_dir() {
+            return Err(UninstallError::FileSystem {
+                operation: "bind npm uninstall prefix".into(),
+                detail: "verified package prefix is unavailable".into(),
+            });
+        }
         let mut command = Command::new(npm);
         command
             .arg("uninstall")
             .arg("-g")
+            .arg("--prefix")
+            .arg(dunce::simplified(prefix))
             .arg(REMOVABLE_PACKAGE)
             .arg("--no-audit")
             .arg("--no-fund")
             .arg("--loglevel")
             .arg("info");
-        self.harden(&mut command, npm.parent());
+        self.harden(&mut command, npm.parent())?;
         run_command(command)
     }
 }
@@ -1073,7 +1118,7 @@ pub fn execute_uninstall(
 
     if full {
         match ocx {
-            Some(path) => match commands.ocx_uninstall(path) {
+            Some(path) => match commands.ocx_uninstall(path, opencodex_home) {
                 Ok(outcome) => {
                     official_output = masked_lines(&outcome.stdout, &outcome.stderr);
                     if outcome.code == 0 {
@@ -1131,7 +1176,7 @@ pub fn execute_uninstall(
             )),
         },
         BodyOwner::External(ExternalRemoval::NpmGlobal { prefix, .. }) => match npm {
-            Some(npm_path) => match commands.npm_uninstall_global(npm_path) {
+            Some(npm_path) => match commands.npm_uninstall_global(npm_path, prefix) {
                 Ok(outcome) if outcome.code == 0 => steps.push(step(
                     "移除包体与入口",
                     StepStatus::Ok,
@@ -1519,7 +1564,11 @@ mod tests {
     }
 
     impl UninstallCommands for StubCommands {
-        fn ocx_uninstall(&self, ocx: &Path) -> Result<CommandOutcome, UninstallError> {
+        fn ocx_uninstall(
+            &self,
+            ocx: &Path,
+            _opencodex_home: &Path,
+        ) -> Result<CommandOutcome, UninstallError> {
             self.calls
                 .borrow_mut()
                 .push(format!("ocx {}", ocx.display()));
@@ -1530,7 +1579,11 @@ mod tests {
             })
         }
 
-        fn npm_uninstall_global(&self, npm: &Path) -> Result<CommandOutcome, UninstallError> {
+        fn npm_uninstall_global(
+            &self,
+            npm: &Path,
+            _prefix: &Path,
+        ) -> Result<CommandOutcome, UninstallError> {
             self.calls
                 .borrow_mut()
                 .push(format!("npm {}", npm.display()));

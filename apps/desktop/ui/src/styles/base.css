@@ -943,7 +943,8 @@ html:not([data-effects="high"]) .topbar-refresh.is-busy svg { animation: none; }
 .runtime-fact { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 10px; align-items: center; }
 .runtime-fact label { color: var(--muted); font-size: var(--text-label); }
 .runtime-fact > div { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.runtime-path { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: var(--text-micro); }
+.runtime-path { font-family: var(--font-code); font-size: var(--text-micro); }
+.local-path, code.local-path, .input.local-path, .install-grid .install-row div.local-path { font-family: var(--font-path); }
 .runtime-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 
 /* 说明文字不抢视线：向导内的小字必须带容器前缀，否则会被 `.modal p` 的正文规则盖掉。 */

@@ -14,6 +14,16 @@ function result() {
 }
 describe('actual backup file browser', () => {
   beforeEach(() => { query.mockReset(); query.mockResolvedValue(result()) })
+  it('displays a readable Windows root while opening the original node identity', async () => {
+    query.mockResolvedValue({ rootPath: '\\\\?\\D:\\OpenCodeX Desktop\\data/backups', nodes: [node('.', 'backups')] })
+    const wrapper = mount(BackupFiles)
+    await flushPromises()
+    expect(wrapper.get('.backup-root').text()).toBe('D:\\OpenCodeX Desktop\\data\\backups')
+    expect(wrapper.get('.backup-root').attributes('title')).toBe('D:\\OpenCodeX Desktop\\data\\backups')
+    await wrapper.get('[aria-label="打开目录 backups"]').trigger('click')
+    expect(wrapper.emitted('open')?.[0]?.[0]).toMatchObject({ id: '.', directory: true })
+    wrapper.unmount()
+  })
   it('always renders the section and initially stops at month', async () => {
     const wrapper = mount(BackupFiles)
     await flushPromises()

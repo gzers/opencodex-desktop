@@ -135,19 +135,21 @@ impl ProcessCommand {
     }
 
     pub fn validate(&self) -> Result<(), AppError> {
-        if !self.executable.is_file() {
+        if !self.executable.is_absolute() || !self.executable.is_file() {
             return Err(AppError::FileSystem {
                 operation: "validate process executable".to_string(),
                 detail: format!("{} is not a regular file", self.executable.display()),
             });
         }
-        if !self.working_directory.is_dir() {
+        if !self.working_directory.is_absolute() || !self.working_directory.is_dir() {
             return Err(AppError::FileSystem {
                 operation: "validate process working directory".to_string(),
                 detail: format!("{} is not a directory", self.working_directory.display()),
             });
         }
-        if !self.environment.opencodex_home.is_dir() {
+        if !self.environment.opencodex_home.is_absolute()
+            || !self.environment.opencodex_home.is_dir()
+        {
             return Err(AppError::FileSystem {
                 operation: "validate OPENCODEX_HOME".to_string(),
                 detail: "OPENCODEX_HOME must be an absolute directory".to_string(),

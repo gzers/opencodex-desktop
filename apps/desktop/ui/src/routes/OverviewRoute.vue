@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { displayPath } from '@/lib/paths'
 // 概览：运行 / 环境准备双形态（UI规范 §25）。
 //
 // - 环境就绪（ready / ready_via_source）：无框居中状态区；Logo → 主线状态 → 必要说明 → 当前操作；
@@ -163,8 +164,8 @@ const runtime = computed(() =>
 )
 const managerDataRoot = computed(() => app.dataRootConfig?.currentDataRoot || app.dataRootPath || '')
 const managerHome = computed(() => app.dataRootConfig?.currentOpencodexHome || '')
-const dataRoot = computed(() => managerDataRoot.value || app.statusSnapshot?.facts.data_root || '—')
-const home = computed(() => managerHome.value || app.statusSnapshot?.facts.opencodex_home || '—')
+const dataRoot = computed(() => displayPath(managerDataRoot.value || app.statusSnapshot?.facts.data_root) || '—')
+const home = computed(() => displayPath(managerHome.value || app.statusSnapshot?.facts.opencodex_home) || '—')
 
 // 环境结论（就绪态并入运行详情；准备态由准备卡承载）。
 const environment = computed(() =>
@@ -449,11 +450,11 @@ const mods = computed(() => [
             <dl class="motion-runtime-paths">
               <div>
                 <dt>数据目录</dt>
-                <dd><span class="motion-runtime-value" :title="dataRoot">{{ dataRoot }}</span><button class="motion-value-copy" type="button" aria-label="复制数据目录" @click="copyValue(dataRoot, $event)">复制</button></dd>
+                <dd><span class="motion-runtime-value local-path" :title="dataRoot">{{ dataRoot }}</span><button class="motion-value-copy" type="button" aria-label="复制数据目录" @click="copyValue(dataRoot, $event)">复制</button></dd>
               </div>
               <div>
                 <dt>OPENCODEX_HOME</dt>
-                <dd><span class="motion-runtime-value" :title="home">{{ home }}</span><button class="motion-value-copy" type="button" aria-label="复制 OPENCODEX_HOME" @click="copyValue(home, $event)">复制</button></dd>
+                <dd><span class="motion-runtime-value local-path" :title="home">{{ home }}</span><button class="motion-value-copy" type="button" aria-label="复制 OPENCODEX_HOME" @click="copyValue(home, $event)">复制</button></dd>
               </div>
             </dl>
           </section>

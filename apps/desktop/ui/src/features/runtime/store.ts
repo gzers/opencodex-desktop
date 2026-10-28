@@ -4,6 +4,7 @@
 // （版本事实重读、状态快照刷新、Toast 文案）仍由根壳负责，避免功能 store 反向依赖根 store。
 import { defineStore } from 'pinia'
 import { runtimeErrorText } from './errors'
+import { localFileName } from '@/lib/paths'
 import {
   cancelRuntimeInstall as cancelRuntimeInstallCommand,
   getOfficialUninstallObservation,
@@ -157,7 +158,7 @@ export const useRuntimeStore = defineStore('runtime', {
       } catch (error) {
         this.offlinePreview = {
           ok: false,
-          fileName: path.split('/').pop() ?? path,
+          fileName: localFileName(path),
           fileSize: 0,
           version: null,
           sha256Prefix: null,

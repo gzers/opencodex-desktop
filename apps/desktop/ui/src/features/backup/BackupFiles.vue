@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 import UiTreeTable from '@/components/ui/UiTreeTable.vue'
 import { initialTreeExpansion, type TreeTableNode } from '@/components/ui/treeTable'
 import { getBackupFiles, type BackupFileNode } from './api'
+import { displayPath } from '@/lib/paths'
 
 const emit = defineEmits<{ open: [node: BackupFileNode] }>()
 const nodes = ref<BackupFileNode[]>([])
@@ -42,7 +43,7 @@ onMounted(() => { void refresh() })
       <h3 id="backup-files-title">备份文件与目录</h3>
       <UiButton class="btn ghost" type="button" :aria-disabled="loading || undefined" :aria-busy="loading || undefined" @click="refresh">{{ loading ? '正在读取…' : '刷新' }}</UiButton>
     </div>
-    <p v-if="rootPath" class="backup-root">{{ rootPath }}</p>
+    <p v-if="rootPath" class="backup-root local-path" :title="displayPath(rootPath)">{{ displayPath(rootPath) }}</p>
     <UiTreeTable v-model:expanded-ids="expanded" :nodes="nodes" :loading="loading" :error="error" label="备份文件与目录" empty-label="尚无备份文件" :columns="[{ key: 'purpose', label: '用途' }, { key: 'action', label: '操作', kind: 'action' }]" @retry="refresh">
       <template #icon="{ node }">
         <svg v-if="file(node).directory" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 5h6l2 2h8v10H2Z" /></svg>

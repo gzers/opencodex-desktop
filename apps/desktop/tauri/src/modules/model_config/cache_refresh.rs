@@ -7,6 +7,7 @@
 use super::{management::Management, schema::*};
 use crate::{infrastructure::platform, state::ProcessContext};
 use serde::{Deserialize, Serialize};
+#[cfg(test)]
 use std::path::Path;
 use std::time::Duration;
 
@@ -204,7 +205,7 @@ pub async fn sync_cache(
 
 async fn refresh_cache_only(context: &ProcessContext) -> ModelResult<CacheRefresh> {
     let executable = context.executable()?;
-    let mut command = tokio::process::Command::new(executable);
+    let mut command = tokio::process::Command::new(&executable);
     command
         .arg("sync-cache")
         .current_dir(&context.working_directory)
@@ -214,11 +215,8 @@ async fn refresh_cache_only(context: &ProcessContext) -> ModelResult<CacheRefres
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .kill_on_drop(true);
-    platform::apply_user_environment(
-        command.as_std_mut(),
-        platform::home_dir().as_deref().map(Path::as_os_str),
-    );
-    for key in ["PATH", "LANG", "LC_ALL", "HOME"] {
+    platform::apply_runtime_environment(command.as_std_mut(), &executable);
+    for key in ["LANG", "LC_ALL"] {
         if let Some(value) = std::env::var_os(key) {
             command.env(key, value);
         }

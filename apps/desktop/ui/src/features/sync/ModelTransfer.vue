@@ -11,6 +11,7 @@ import {useAppStore} from '@/stores/app'
 import { errorText, versionLabel, type ChannelPolicy, type ModelPolicy } from '@/features/models/api'
 import { modelTransferApi, scopeFor,remoteScope, accountInformationLabel, accountInformationSupported, accountTransferLabel, accountPlatforms, type AccountCatalogEntry, type ChannelImportMapping, type DraftCandidate, type FamilyScope, type FilePlan, type IncomingPlan, type ManagerScope, type RemoteOptions, type TransferScope, type UploadPlan } from './modelTransfer'
 import {getSyncConfig} from './api'
+import { displayPath } from '@/lib/paths'
 const props = defineProps<{ remote?: boolean }>()
 const models = useModelsStore()
 const app=useAppStore()
@@ -32,7 +33,7 @@ const incomingSource=ref<IncomingPlan|null>(null)
 const receiveRefs=ref<string[]>([]);const receiveChannels=ref<string[]>([]);const receiveGlobal=ref(false);const receiveDirty=ref(false)
 /** 生成位置预览：与后端 exports/<日期>/<单次包>/ 结构一致，仅供确认，不参与写入。 */
 const exportTreeText = computed(() => {
-  const root = destinationMode.value === 'custom' ? (exportTargetDir.value || '自定义目录') : '默认导出目录'
+  const root = destinationMode.value === 'custom' ? (displayPath(exportTargetDir.value) || '自定义目录') : '默认导出目录'
   const today = new Date().toLocaleDateString('sv-SE')
   return [
     root + '/',
@@ -304,7 +305,7 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
     <p v-if="models.error && !models.snapshot" class="model-error" role="alert">{{ models.error }}</p>
     <p v-if="error && !preview" class="model-error" role="alert">{{ error }}</p>
 <p v-if="remote&&scopeSaved" role="status">本设备范围已保存，尚未上传；采用结果另行核对。</p>
-    <div v-if="exportedPath" class="model-transfer-path" role="status"><span>备份包</span><code>{{ exportedPath }}</code><UiButton size="sm" variant="ghost" @click="openExportParent">打开备份包目录</UiButton></div>
+    <div v-if="exportedPath" class="model-transfer-path" role="status"><span>备份包</span><code class="local-path">{{ displayPath(exportedPath) }}</code><UiButton size="sm" variant="ghost" @click="openExportParent">打开备份包目录</UiButton></div>
     <!-- 范围是页面主体的一部分，不再收进弹窗：原型里它是列表旁的常驻两栏工作区。 -->
     <!-- 原型结构：一条工具栏（范围预设 + 搜索 + 清空）+ 两栏；右栏是凭据清单，不是操作列。 -->
     <section class="sync-scope-workspace" aria-label="同步范围" data-testid="sync-scope-workspace">
@@ -349,7 +350,7 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
       <p v-if="error" class="model-error" role="alert">{{ error }}</p>
       <p v-if="preview?.payload.candidate" role="status">未提交草稿候选；采用后仍进入本机工作区，须另行预览并保存，不表示运行配置已写入。</p>
 
-      <div v-if="!incoming&&!remote" class="export-destination"><span>保存位置</span><div class="export-destination-choice" role="radiogroup" aria-label="保存位置"><label><input v-model="destinationMode" type="radio" value="default" :disabled="busy" />默认导出目录</label><label><input v-model="destinationMode" type="radio" value="custom" :disabled="busy" />自定义目录</label></div><div v-if="destinationMode==='custom'" class="export-destination-custom"><div class="export-destination-row"><input class="input" type="text" readonly :value="exportTargetDir" aria-label="自定义导出目录" placeholder="尚未选择目录"><UiButton size="sm" variant="ghost" :disabled="busy" @click="chooseExportDir">选择目录…</UiButton></div><p class="model-muted">未选择目录时按默认导出目录保存。</p></div></div>
+      <div v-if="!incoming&&!remote" class="export-destination"><span>保存位置</span><div class="export-destination-choice" role="radiogroup" aria-label="保存位置"><label><input v-model="destinationMode" type="radio" value="default" :disabled="busy" />默认导出目录</label><label><input v-model="destinationMode" type="radio" value="custom" :disabled="busy" />自定义目录</label></div><div v-if="destinationMode==='custom'" class="export-destination-custom"><div class="export-destination-row"><input class="input local-path" type="text" readonly :value="displayPath(exportTargetDir)" aria-label="自定义导出目录" placeholder="尚未选择目录"><UiButton size="sm" variant="ghost" :disabled="busy" @click="chooseExportDir">选择目录…</UiButton></div><p class="model-muted">未选择目录时按默认导出目录保存。</p></div></div>
       <div v-if="!incoming&&!remote" class="export-package-layout">
         <!-- 原型顺序：标题 → 导出目录 → 生成位置树 → 说明段 → 文件保护/携带凭据 → 口令 → 底部主按钮。 -->
         <div class="export-tree" aria-label="导出目录结构"><p class="export-tree-kicker">生成位置</p><pre>{{ exportTreeText }}</pre><p class="model-muted">按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。</p></div>

@@ -70,3 +70,5 @@ cargo test --locked --test windows_runtime windows_local_discovered_tools_instal
 ```
 
 Cargo 命令工作目录为 `apps/desktop/tauri`。报告只证明该次 Node/npm、源代码与测试目录组合；不能倒推历史退出码 1 的原因，也不覆盖真实 SMB、企业代理或所有 Windows 版本。
+
+同一原生驱动还执行 `windows-path-ui.mjs`：检查安装配置与备份页路径、客户端 Skills/MCP 路径、真实剪贴板及系统打开动作，保存路径字体和字符事实、截图与原始数据绑定读回。剪贴板测试仅在本次隔离 WebView 的 loopback CDP 中明确授予权限并模拟文档焦点，调用真实平台剪贴板 API，最后恢复原文本并撤回权限；不将其描述为物理焦点验收。新建沙箱先经正式偏好 API 保存默认值，再执行实际备份，避免把缺少源文件的预期拒绝误判为路径故障。命令环境回归使用打印允许字段的假 CLI，不执行用户安装的真实卸载或 shim 修改。

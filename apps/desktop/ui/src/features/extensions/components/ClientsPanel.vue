@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { displayPath } from '@/lib/paths'
 // 拓展 →「客户端」分区（N-EX-1）。结构、文案与列宽节奏对齐原型
 // extension-manager.js 的 renderClients() / renderClientDetail()。
 import UiButton from '@/components/ui/UiButton.vue'
@@ -189,8 +190,8 @@ function openConfig(entry: ClientDirectoryEntry) {
       </div>
       <dl class="ext-client-facts">
         <dt>范围</dt><dd>{{ selected.scope }}</dd>
-        <dt>Skills</dt><dd>{{ selected.skillsPath ?? '搜索目录待核实' }}</dd>
-        <dt>MCP</dt><dd>{{ selected.mcpPath ?? '配置节点待核实' }}</dd>
+        <dt>Skills</dt><dd class="local-path">{{ displayPath(selected.skillsPath) || '搜索目录待核实' }}</dd>
+        <dt>MCP</dt><dd class="local-path">{{ displayPath(selected.mcpPath) || '配置节点待核实' }}</dd>
         <dt>适配状态</dt><dd>{{ clientAdaptation(selected) }}</dd>
       </dl>
       <div class="ext-clients-actions">
