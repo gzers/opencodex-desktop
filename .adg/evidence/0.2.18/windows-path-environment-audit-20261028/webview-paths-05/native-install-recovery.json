@@ -1,0 +1,36 @@
+{
+  "result": "pass",
+  "screenshots": [
+    "installed-2.91.0.png",
+    "failure-retains-output.png",
+    "recovered-upgraded-2.93.0.png"
+  ],
+  "checks": [
+    "prefill/reset/readable native Windows path",
+    "actual registry install 2.91.0",
+    "actual missing-version failure with readable details and retained console",
+    "old package/launcher/source preserved",
+    "failure history retains npm stage and log path",
+    "reopen and recover upgrade to 2.93.0"
+  ],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.18",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "failure": {
+    "error": "npm 命令失败（退出码 1）：npm pack：npm error code ETARGET；日志：\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 05\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-f4f57adeb0ab.log",
+    "done": false,
+    "console": "命令：D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 05\\OpenCodeX Native 中文 Spaces\\home\\.local/bin\\npm.cmd [\"pack\", \"@bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery\", \"--pack-destination\", \"D:\\\\Users\\\\15119\\\\WorkSpace\\\\Code\\\\tools\\\\opencodex-desktop\\\\code\\\\test\\\\out\\\\windows-path-audit\\\\WebView Paths 05\\\\OpenCodeX Native 中文 Spaces\\\\runtime\\\\opencodex.new-476b88e2848b\\\\.downloads\", \"--loglevel\", \"info\"]\n工作目录：D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 05\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex.new-476b88e2848b\\.downloads\n日志：\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 05\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-f4f57adeb0ab.log\nnpm info using npm@10.9.0\nnpm info using node@v22.12.0\nnpm http fetch GET 200 https://registry.npmjs.org/@bitkyc08%2fopencodex 13ms (cache hit)\nnpm error code ETARGET\nnpm error notarget No matching version found for @bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery.\nnpm error notarget In most cases you or one of your dependencies are requesting\nnpm error notarget a package version that doesn't exist.\nnpm error A complete log of this run can be found in: D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 05\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-28T11_27_20_403Z-debug-0.log\n退出码：1；日志：\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 05\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-f4f57adeb0ab.log",
+    "offlineSteps": false,
+    "scriptsEnabled": false
+  },
+  "final": {
+    "kind": "managed",
+    "version": "2.93.0",
+    "managedPrefix": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 05\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex"
+  }
+}

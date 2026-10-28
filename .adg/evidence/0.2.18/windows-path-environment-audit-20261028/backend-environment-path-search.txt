@@ -1,0 +1,279 @@
+apps/desktop/tauri/src\types\discovery.rs:88:        assert!(paths.node.is_absolute());
+apps/desktop/tauri/src\types\discovery.rs:89:        assert!(paths.npm.is_absolute());
+apps/desktop/tauri/src\types\discovery.rs:90:        assert!(paths.ocx.is_absolute());
+apps/desktop/tauri/src\infrastructure\official_version_source.rs:86:        let mut process = Command::new(executable);
+apps/desktop/tauri/src\infrastructure\official_version_source.rs:89:            .current_dir(&self.working_directory)
+apps/desktop/tauri/src\infrastructure\official_version_source.rs:90:            .env_clear()
+apps/desktop/tauri/src\infrastructure\official_cli_source.rs:38:        let mut process = Command::new(executable);
+apps/desktop/tauri/src\infrastructure\official_cli_source.rs:41:            .current_dir(&self.working_directory)
+apps/desktop/tauri/src\infrastructure\official_cli_source.rs:42:            .env_clear()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:36:    if !path.is_absolute()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:125:        .canonicalize()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:154:        .canonicalize()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:269:            .canonicalize()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:532:        let platform = std::env::var_os("APPDATA")
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:534:            .filter(|path| path.is_absolute())
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:687:        let base = temp.path().canonicalize().unwrap();
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:696:        let base = temp.path().canonicalize().unwrap();
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:708:            anchor.canonicalize().unwrap()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:727:        let base = temp.path().canonicalize().unwrap();
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:754:            anchor.canonicalize().unwrap()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:777:        assert_eq!(resumed.anchor, anchor.canonicalize().unwrap());
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:780:            target.canonicalize().unwrap()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:798:        let platform = temp.path().canonicalize().unwrap().join("legacy");
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:820:        let platform = temp.path().canonicalize().unwrap().join("legacy");
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:838:        let base = temp.path().canonicalize().unwrap();
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:862:                assert_eq!(resolution.anchor, anchor.canonicalize().unwrap());
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:873:        let base = temp.path().canonicalize().unwrap();
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:908:            legacy.canonicalize().unwrap()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:912:            target.canonicalize().unwrap()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:924:        let legacy = temp.path().canonicalize().unwrap().join("legacy");
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:935:        assert_eq!(selected.anchor, target.canonicalize().unwrap());
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:1134:            target.canonicalize().unwrap()
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:1196:        let alias = temp.path().canonicalize().unwrap().join("alias");
+apps/desktop/tauri/src\infrastructure\windows_startup_root.rs:1206:        let outside = temp.path().canonicalize().unwrap().join("outside");
+apps/desktop/tauri/src\infrastructure\windows_smoke.rs:18:    let port = std::env::var_os(PORT_ENV);
+apps/desktop/tauri/src\infrastructure\windows_smoke.rs:28:        std::env::var_os("OPENCODEX_WINDOWS_SMOKE_SCALE").as_deref(),
+apps/desktop/tauri/src\infrastructure\windows_smoke.rs:71:        .filter(|root| sandbox_enabled && root.is_absolute())
+apps/desktop/tauri/src\infrastructure\windows_restart.rs:172:    let mut child = Command::new(system_powershell()?)
+apps/desktop/tauri/src\infrastructure\codex_shim_source.rs:59:        let mut process = Command::new(executable);
+apps/desktop/tauri/src\infrastructure\codex_shim_source.rs:62:            .current_dir(&self.working_directory)
+apps/desktop/tauri/src\infrastructure\codex_shim_source.rs:63:            .env_clear()
+apps/desktop/tauri/src\infrastructure\codex_shim_source.rs:91:            .map(|path| std::env::split_paths(path).collect())
+apps/desktop/tauri/src\infrastructure\codex_shim_source.rs:99:        std::env::join_paths(dirs).unwrap_or_default()
+apps/desktop/tauri/src\infrastructure\discovery_paths.rs:58:            |key| std::env::var_os(key).map(PathBuf::from),
+apps/desktop/tauri/src\infrastructure\discovery_paths.rs:134:        if path.is_absolute() {
+apps/desktop/tauri/src\infrastructure\discovery_paths.rs:180:        if path.is_absolute() && !result.contains(&path) {
+apps/desktop/tauri/src\infrastructure\discovery_paths.rs:199:        if let Some(path) = env(key).filter(|p| p.is_absolute()) {
+apps/desktop/tauri/src\infrastructure\discovery_paths.rs:216:        if !root.is_absolute() {
+apps/desktop/tauri/src\infrastructure\discovery_paths.rs:410:        assert!(paths.node.is_absolute());
+apps/desktop/tauri/src\infrastructure\discovery_paths.rs:411:        assert!(paths.npm.is_absolute());
+apps/desktop/tauri/src\infrastructure\discovery_paths.rs:412:        assert!(paths.ocx.is_absolute());
+apps/desktop/tauri/src\infrastructure\discovery_paths.rs:447:        let directories: Vec<_> = std::env::split_paths(&path).collect();
+apps/desktop/tauri/src\infrastructure\windows_query_fixture.rs:134:            std::fs::canonicalize(actual).unwrap(),
+apps/desktop/tauri/src\infrastructure\windows_query_fixture.rs:135:            std::fs::canonicalize(node).unwrap()
+apps/desktop/tauri/src\infrastructure\windows_query_fixture.rs:198:        PathBuf::from(std::env::var_os("OPENCODEX_TEST_NODE").expect("explicit test Node path"));
+apps/desktop/tauri/src\infrastructure\windows_query_fixture.rs:199:    assert!(node.is_absolute() && node.is_file());
+apps/desktop/tauri/src\infrastructure\windows_query_fixture.rs:223:        std::process::Command::new(control_command)
+apps/desktop/tauri/src\infrastructure\status_source.rs:59:        let mut process = Command::new(executable);
+apps/desktop/tauri/src\infrastructure\status_source.rs:63:            .current_dir(&self.working_directory)
+apps/desktop/tauri/src\infrastructure\status_source.rs:64:            .env_clear()
+apps/desktop/tauri/src\infrastructure\status_source.rs:95:            if !self.environment.opencodex_home.is_absolute() {
+apps/desktop/tauri/src\infrastructure\status_source.rs:307:        ProcessCommand::new(
+apps/desktop/tauri/src\infrastructure\status_source.rs:564:        let mut unrelated = std::process::Command::new("/bin/sleep")
+apps/desktop/tauri/src\infrastructure\process_runner.rs:131:        if !command.working_directory.is_absolute() {
+apps/desktop/tauri/src\infrastructure\process_runner.rs:137:        if !self_home_is_absolute(command) {
+apps/desktop/tauri/src\infrastructure\process_runner.rs:253:        let mut process = Command::new(&command.executable);
+apps/desktop/tauri/src\infrastructure\process_runner.rs:256:            .current_dir(&command.working_directory)
+apps/desktop/tauri/src\infrastructure\process_runner.rs:257:            .env_clear()
+apps/desktop/tauri/src\infrastructure\process_runner.rs:381:fn self_home_is_absolute(command: &ProcessCommand) -> bool {
+apps/desktop/tauri/src\infrastructure\process_runner.rs:386:        .map(|home| PathBuf::from(home).is_absolute())
+apps/desktop/tauri/src\infrastructure\process_runner.rs:466:        let command = ProcessCommand::new(action, executable.clone(), home.clone(), opencodex_home);
+apps/desktop/tauri/src\infrastructure\process_runner.rs:524:        let missing = ProcessCommand::new(
+apps/desktop/tauri/src\infrastructure\process_runner.rs:532:        let non_absolute_workdir = ProcessCommand::new(
+apps/desktop/tauri/src\infrastructure\process_runner.rs:560:        let invalid = ProcessCommand::new(
+apps/desktop/tauri/src\infrastructure\platform.rs:29:            .filter(|root| root.is_absolute())
+apps/desktop/tauri/src\infrastructure\platform.rs:32:    daily_home().filter(|path| path.is_absolute() && !path.as_os_str().is_empty())
+apps/desktop/tauri/src\infrastructure\platform.rs:90:        .chain(injected.into_iter().flat_map(std::env::split_paths))
+apps/desktop/tauri/src\infrastructure\platform.rs:93:        if path.is_absolute() && std::env::join_paths([&path]).is_ok() && !paths.contains(&path) {
+apps/desktop/tauri/src\infrastructure\platform.rs:97:    std::env::join_paths(paths).expect("validated controlled PATH components")
+apps/desktop/tauri/src\infrastructure\platform.rs:102:    std::env::var_os("SystemRoot")
+apps/desktop/tauri/src\infrastructure\platform.rs:104:        .filter(|path| path.is_absolute())
+apps/desktop/tauri/src\commands\data_root.rs:333:        path.canonicalize()
+apps/desktop/tauri/src\commands\data_root.rs:347:    if !paths.target.is_absolute()
+apps/desktop/tauri/src\commands\data_root.rs:455:        let canonical = root.canonicalize().unwrap();
+apps/desktop/tauri/src\commands\data_root.rs:468:        let external = external.canonicalize().unwrap();
+apps/desktop/tauri/src\commands\data_root.rs:523:                anchor: anchor.canonicalize().unwrap(),
+apps/desktop/tauri/src\commands\data_root.rs:527:                    .canonicalize()
+apps/desktop/tauri/src\commands\data_root.rs:611:            let boundary = f._temp.path().canonicalize().unwrap();
+apps/desktop/tauri/src\commands\model_transfer.rs:239:                    if !path.is_absolute() {
+apps/desktop/tauri/src\commands\model_transfer.rs:380:            if !path.is_absolute() {
+apps/desktop/tauri/src\commands\mod.rs:185:    let command = ProcessCommand::new(
+apps/desktop/tauri/src\commands\extensions.rs:668:    let home = home.canonicalize().map_err(|error| AppError::FileSystem {
+apps/desktop/tauri/src\commands\upgrade.rs:89:    if !data_root.is_absolute() {
+apps/desktop/tauri/src\commands\workspace.rs:243:    std::process::Command::new("/usr/bin/open")
+apps/desktop/tauri/src\commands\workspace.rs:255:    std::process::Command::new("explorer")
+apps/desktop/tauri/src\commands\workspace.rs:267:    std::process::Command::new("xdg-open")
+apps/desktop/tauri/src\commands\workspace.rs:288:    std::process::Command::new("/usr/bin/open")
+apps/desktop/tauri/src\commands\workspace.rs:300:    std::process::Command::new("cmd")
+apps/desktop/tauri/src\commands\workspace.rs:312:    std::process::Command::new("xdg-open")
+apps/desktop/tauri/src\modules\preferences\mod.rs:475:    if !path.is_absolute() {
+apps/desktop/tauri/src\modules\preferences\mod.rs:494:    if !path.is_absolute() {
+apps/desktop/tauri/src\modules\backup\safety.rs:37:    if !root.is_absolute() || !inspect(root)?.is_dir() {
+apps/desktop/tauri/src\modules\test_sandbox\mod.rs:21:    enabled_value(std::env::var("OPENCODEX_SANDBOX").ok().as_deref())
+apps/desktop/tauri/src\modules\test_sandbox\mod.rs:30:    root_value(enabled(), std::env::var_os(SANDBOX_ROOT_ENV))
+apps/desktop/tauri/src\modules\test_sandbox\mod.rs:42:    if !path.is_absolute() {
+apps/desktop/tauri/src\modules\test_sandbox\mod.rs:82:    let explicit = std::env::var_os(SANDBOX_BOUNDARY_ENV).map(PathBuf::from);
+apps/desktop/tauri/src\modules\test_sandbox\mod.rs:87:    if !path.is_absolute()
+apps/desktop/tauri/src\modules\test_sandbox\mod.rs:106:    let mut resolved = ancestor.canonicalize().map_err(|e| e.to_string())?;
+apps/desktop/tauri/src\modules\data_root\uninstall.rs:26:    if !path.is_absolute() || path.components().any(|part| part == Component::ParentDir) {
+apps/desktop/tauri/src\modules\data_root\uninstall.rs:42:    path.canonicalize()
+apps/desktop/tauri/src\modules\data_root\uninstall.rs:47:    if !path.is_absolute() || path.components().any(|part| part == Component::ParentDir) {
+apps/desktop/tauri/src\modules\data_root\uninstall.rs:234:        let base = temp.path().canonicalize().unwrap();
+apps/desktop/tauri/src\modules\data_root\uninstall.rs:341:        let base = temp.path().canonicalize().unwrap();
+apps/desktop/tauri/src\modules\data_root\uninstall.rs:397:        let active = temp.path().canonicalize().unwrap().join("new-choice");
+apps/desktop/tauri/src\modules\data_root\uninstall.rs:412:        let home = temp.path().canonicalize().unwrap().join("missing/home");
+apps/desktop/tauri/src\modules\data_root\uninstall.rs:434:        let outside = temp.path().canonicalize().unwrap().join("outside");
+apps/desktop/tauri/src\modules\about\remote.rs:130:    let mut command = tokio::process::Command::new(npm);
+apps/desktop/tauri/src\modules\about\remote.rs:136:        .current_dir(working_directory)
+apps/desktop/tauri/src\modules\about\remote.rs:137:        .env_clear()
+apps/desktop/tauri/src\modules\about\remote.rs:334:        let status = std::process::Command::new("/bin/ps")
+apps/desktop/tauri/src\modules\about\remote.rs:398:            path: std::env::var_os("PATH"),
+apps/desktop/tauri/src\modules\runtime\uninstall.rs:589:    let resolved = std::fs::canonicalize(entry).ok()?;
+apps/desktop/tauri/src\modules\runtime\uninstall.rs:780:        command.env_clear();
+apps/desktop/tauri/src\modules\runtime\uninstall.rs:817:        let mut command = Command::new(ocx);
+apps/desktop/tauri/src\modules\runtime\uninstall.rs:824:        let mut command = Command::new(npm);
+apps/desktop/tauri/src\modules\runtime\uninstall.rs:922:    let Ok(root) = std::fs::canonicalize(opencodex_home) else {
+apps/desktop/tauri/src\modules\runtime\uninstall.rs:949:            let Ok(canonical) = std::fs::canonicalize(&path) else {
+apps/desktop/tauri/src\modules\runtime\uninstall.rs:1247:        let inside = std::fs::canonicalize(entry)
+apps/desktop/tauri/src\modules\runtime\uninstall.rs:1567:            std::fs::canonicalize(&prefix).expect("canonical prefix"),
+apps/desktop/tauri/src\modules\runtime\uninstall.rs:1568:            std::fs::canonicalize(&entry).expect("canonical entry"),
+apps/desktop/tauri/src\modules\backup\manager.rs:909:        root.canonicalize().map_err(|e| fail(e.to_string()))?,
+apps/desktop/tauri/src\modules\update\storage.rs:33:    if !root.is_absolute() || !inspect(root)?.is_dir() {
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:53:        let anchor = anchor.canonicalize().map_err(io)?;
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:54:        if !anchor.is_absolute() || anchor == self.receipt.target {
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:191:    let root = root.canonicalize().map_err(io)?;
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:192:    if lock.lock_path().canonicalize().map_err(io)?
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:195:            .canonicalize()
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:234:                !path.is_absolute() || path.components().any(|c| matches!(c, Component::ParentDir))
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:250:    if marker.target != root.canonicalize().map_err(io)?
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:279:        let canonical = current.canonicalize().map_err(io)?;
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:288:        let next = config.active_data_root.canonicalize().map_err(io)?;
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:448:        assert_eq!(config.active_data_root, f.source.canonicalize().unwrap());
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:468:        assert_eq!(config.active_data_root, f.target.canonicalize().unwrap());
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:502:        assert_eq!(config.active_data_root, f.target.canonicalize().unwrap());
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:505:                .canonicalize()
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:508:                .canonicalize()
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:519:                .canonicalize()
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:521:            f.source.canonicalize().unwrap()
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:554:                f.target.canonicalize().unwrap()
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:578:            f.source.canonicalize().unwrap()
+apps/desktop/tauri/src\modules\data_root\migration\activation.rs:719:            f.source.canonicalize().unwrap()
+apps/desktop/tauri/src\modules\update\schedule.rs:204:        let powershell = std::path::PathBuf::from(std::env::var_os("SystemRoot").unwrap())
+apps/desktop/tauri/src\modules\update\schedule.rs:208:        let result = std::process::Command::new(powershell)
+apps/desktop/tauri/src\modules\data_root\mod.rs:203:    if !data_root.is_absolute() {
+apps/desktop/tauri/src\modules\data_root\mod.rs:248:    if !config.active_data_root.is_absolute() {
+apps/desktop/tauri/src\modules\data_root\mod.rs:257:            Some(ref path) if path.is_absolute() => Ok(config),
+apps/desktop/tauri/src\modules\data_root\mod.rs:270:    if !data_root.is_absolute() || !value.active_data_root.is_absolute() {
+apps/desktop/tauri/src\modules\data_root\mod.rs:277:            .is_some_and(|path| path.is_absolute())
+apps/desktop/tauri/src\modules\data_root\mod.rs:364:        .canonicalize()
+apps/desktop/tauri/src\modules\data_root\mod.rs:367:        .canonicalize()
+apps/desktop/tauri/src\modules\data_root\mod.rs:435:        || matches!((saved.canonicalize(), current.canonicalize()),
+apps/desktop/tauri/src\modules\data_root\mod.rs:440:    let left = left.canonicalize().unwrap_or_else(|_| left.to_path_buf());
+apps/desktop/tauri/src\modules\data_root\mod.rs:441:    let right = match right.canonicalize() {
+apps/desktop/tauri/src\modules\data_root\mod.rs:446:                .and_then(|parent| parent.canonicalize().ok())
+apps/desktop/tauri/src\modules\data_root\bootstrap.rs:63:        .filter(|parent| parent.is_absolute())
+apps/desktop/tauri/src\modules\data_root\bootstrap.rs:96:        .map(Path::canonicalize)
+apps/desktop/tauri/src\modules\data_root\bootstrap.rs:104:            .canonicalize()
+apps/desktop/tauri/src\modules\data_root\bootstrap.rs:123:                .canonicalize()
+apps/desktop/tauri/src\modules\data_root\bootstrap.rs:135:            .canonicalize()
+apps/desktop/tauri/src\modules\data_root\bootstrap.rs:251:        assert_eq!(config.active_data_root, b.canonicalize().unwrap());
+apps/desktop/tauri/src\modules\data_root\migration.rs:294:            let resolved = absolute.canonicalize().map_err(io)?;
+apps/desktop/tauri/src\modules\data_root\migration.rs:341:    if !target.is_absolute()
+apps/desktop/tauri/src\modules\data_root\migration.rs:348:    let source = config.active_data_root.canonicalize().map_err(io)?;
+apps/desktop/tauri/src\modules\data_root\migration.rs:356:        .canonicalize()
+apps/desktop/tauri/src\modules\data_root\migration.rs:472:    if !path.is_absolute() || path.components().any(|c| matches!(c, Component::ParentDir)) {
+apps/desktop/tauri/src\modules\data_root\migration.rs:481:    Ok(existing.canonicalize().map_err(io)?.join(
+apps/desktop/tauri/src\modules\data_root\migration.rs:619:            target.canonicalize().unwrap()
+apps/desktop/tauri/src\modules\data_root\migration.rs:866:                    .canonicalize()
+apps/desktop/tauri/src\modules\data_root\migration.rs:868:                target.join("runtime/bin/fixture").canonicalize().unwrap()
+apps/desktop/tauri/src\modules\skills\mod.rs:168:    let canonical_root = |root: &Path| root.canonicalize().ok();
+apps/desktop/tauri/src\modules\skills\mod.rs:183:    let Ok(path) = source.canonicalize() else {
+apps/desktop/tauri/src\modules\skills\mod.rs:192:        let target = if target.is_absolute() {
+apps/desktop/tauri/src\modules\skills\mod.rs:377:            link.canonicalize(),
+apps/desktop/tauri/src\modules\skills\mod.rs:378:            root.path().canonicalize()
+apps/desktop/tauri/src\modules\notifications\registry.rs:1242:    if !root.is_absolute() {
+apps/desktop/tauri/src\modules\notifications\registry.rs:1246:    let root = scope_io(root.canonicalize())?;
+apps/desktop/tauri/src\modules\notifications\registry.rs:1432:        let path = match path.canonicalize() {
+apps/desktop/tauri/src\modules\notifications\registry.rs:1434:            Err(error) if error.kind() == std::io::ErrorKind::NotFound && path.is_absolute() => {
+apps/desktop/tauri/src\modules\backup\browser.rs:201:    let canonical_root = root.canonicalize().map_err(|_| fail("无法读取备份目录"))?;
+apps/desktop/tauri/src\modules\backup\browser.rs:210:    let canonical = path.canonicalize().map_err(|_| fail("无法读取备份文件"))?;
+apps/desktop/tauri/src\modules\runtime\relocation.rs:43:    if !path.is_absolute() || path.components().any(|c| matches!(c, Component::ParentDir)) {
+apps/desktop/tauri/src\modules\runtime\relocation.rs:60:    Ok(ancestor.canonicalize().map_err(io)?.join(
+apps/desktop/tauri/src\modules\runtime\relocation.rs:168:    if !node.is_absolute() || content != install::entry_script(Some(&node), script) {
+apps/desktop/tauri/src\modules\runtime\relocation.rs:197:        || bin.is_absolute()
+apps/desktop/tauri/src\modules\runtime\relocation.rs:206:        .canonicalize()
+apps/desktop/tauri/src\modules\runtime\relocation.rs:208:        .starts_with(package_root.canonicalize().map_err(io)?)
+apps/desktop/tauri/src\modules\runtime\relocation.rs:245:        if resolved_path(Path::new(path))? != entry.canonicalize().map_err(io)? {
+apps/desktop/tauri/src\modules\runtime\relocation.rs:321:        let source = source.canonicalize().unwrap();
+apps/desktop/tauri/src\modules\runtime\relocation.rs:324:                .canonicalize()
+apps/desktop/tauri/src\modules\runtime\relocation.rs:332:                .canonicalize()
+apps/desktop/tauri/src\modules\runtime\relocation.rs:386:        let target = target.canonicalize().unwrap();
+apps/desktop/tauri/src\modules\runtime\relocation.rs:474:                .canonicalize()
+apps/desktop/tauri/src\modules\runtime\relocation.rs:582:            .canonicalize()
+apps/desktop/tauri/src\modules\runtime\relocation.rs:587:            .canonicalize()
+apps/desktop/tauri/src\modules\extensions\source_dir.rs:106:    if !candidate.is_absolute() {
+apps/desktop/tauri/src\modules\extensions\source_dir.rs:119:        .canonicalize()
+apps/desktop/tauri/src\modules\extensions\source_dir.rs:123:        let Ok(managed) = managed.canonicalize() else {
+apps/desktop/tauri/src\modules\extensions\source_dir.rs:207:        assert_eq!(resolved, custom.path().canonicalize().unwrap());
+apps/desktop/tauri/src\modules\migration\mod.rs:172:    if !data_root.is_absolute() {
+apps/desktop/tauri/src\modules\migration\mod.rs:909:    if !home.is_absolute() || !home.is_dir() {
+apps/desktop/tauri/src\modules\notifications\persistence.rs:58:    if !path.is_absolute() {
+apps/desktop/tauri/src\modules\notifications\persistence.rs:81:    if !path.is_absolute() {
+apps/desktop/tauri/src\modules\ipc\endpoint.rs:37:            .filter(|root| root.is_absolute())
+apps/desktop/tauri/src\modules\ipc\endpoint.rs:39:            .canonicalize()
+apps/desktop/tauri/src\modules\ipc\endpoint.rs:287:        let account = std::env::var_os("USERNAME")
+apps/desktop/tauri/src\modules\ipc\service.rs:521:            .or_else(|| std::env::var("OCXD_PASSPHRASE").ok());
+apps/desktop/tauri/src\modules\extensions\projection.rs:217:    if !data_root.is_absolute() || !data_root.is_dir() {
+apps/desktop/tauri/src\modules\extensions\projection.rs:869:        let Ok(canonical_root) = root.canonicalize() else {
+apps/desktop/tauri/src\modules\extensions\projection.rs:1348:        .canonicalize()
+apps/desktop/tauri/src\modules\extensions\projection.rs:1468:        .canonicalize()
+apps/desktop/tauri/src\modules\extensions\projection.rs:1874:    if targets.is_empty() || !home.is_absolute() {
+apps/desktop/tauri/src\modules\extensions\projection.rs:1883:            || !target.mcp_config_path.is_absolute()
+apps/desktop/tauri/src\modules\extensions\projection.rs:1884:            || !target.skills_dir.is_absolute()
+apps/desktop/tauri/src\modules\extensions\projection.rs:1913:            .canonicalize()
+apps/desktop/tauri/src\modules\runtime\protection.rs:58:    path.is_absolute()
+apps/desktop/tauri/src\modules\model_config\cache_refresh.rs:207:    let mut command = tokio::process::Command::new(executable);
+apps/desktop/tauri/src\modules\model_config\cache_refresh.rs:210:        .current_dir(&context.working_directory)
+apps/desktop/tauri/src\modules\model_config\cache_refresh.rs:211:        .env_clear()
+apps/desktop/tauri/src\modules\model_config\cache_refresh.rs:222:        if let Some(value) = std::env::var_os(key) {
+apps/desktop/tauri/src\modules\runtime\install.rs:656:                    let mut c = tokio::process::Command::new(node);
+apps/desktop/tauri/src\modules\runtime\install.rs:660:                None => tokio::process::Command::new(script),
+apps/desktop/tauri/src\modules\runtime\install.rs:662:            command.env_clear();
+apps/desktop/tauri/src\modules\runtime\install.rs:735:        let node = std::env::var_os("OPENCODEX_TEST_NODE")
+apps/desktop/tauri/src\modules\runtime\install.rs:746:        let output = Command::new(&entry)
+apps/desktop/tauri/src\modules\runtime\install.rs:828:        let mut command = Command::new(dunce::simplified(npm_path));
+apps/desktop/tauri/src\modules\runtime\install.rs:829:        command.env_clear();
+apps/desktop/tauri/src\modules\runtime\install.rs:902:            .current_dir(dunce::simplified(&request.work_dir))
+apps/desktop/tauri/src\modules\runtime\install.rs:951:        let spec = if request.offline && Path::new(&request.version).is_absolute() {
+apps/desktop/tauri/src\modules\runtime\install.rs:964:            .current_dir(dunce::simplified(&request.prefix))
+apps/desktop/tauri/src\modules\runtime\install.rs:3566:            let mut command = Command::new(
+apps/desktop/tauri/src\modules\runtime\install.rs:3567:                std::env::var_os("COMSPEC")
+apps/desktop/tauri/src\modules\runtime\install.rs:3579:            let mut command = Command::new("/bin/sh");
+apps/desktop/tauri/src\modules\runtime\install.rs:3587:            .env_clear()
+apps/desktop/tauri/src\modules\runtime\install.rs:3589:            .current_dir(root.path())
+apps/desktop/tauri/src\modules\runtime\install.rs:3619:        std::env::var_os("OPENCODEX_TEST_NODE")
+apps/desktop/tauri/src\modules\process\orchestration.rs:228:        match self.runner.execute(&super::ProcessCommand::new(
+apps/desktop/tauri/src\modules\runtime\paths.rs:51:        if path.is_absolute() && path.parent().is_none() {
+apps/desktop/tauri/src\modules\runtime\paths.rs:62:        .filter_map(std::env::var_os)
+apps/desktop/tauri/src\modules\runtime\paths.rs:200:        let system = std::env::var_os("SystemRoot").unwrap();
+apps/desktop/tauri/src\modules\runtime\paths.rs:218:    if !path.is_absolute() {
+apps/desktop/tauri/src\modules\runtime\paths.rs:256:    if !path.is_absolute()
+apps/desktop/tauri/src\modules\runtime\paths.rs:496:        let system = std::env::var_os("SystemRoot").unwrap_or_else(|| "C:\\Windows".into());
+apps/desktop/tauri/src\modules\process\mod.rs:283:        let command = ProcessCommand::new(
+apps/desktop/tauri/src\modules\process\mod.rs:344:        let missing = ProcessCommand::new(
+apps/desktop/tauri/src\modules\process\mod.rs:352:        let non_absolute_home = ProcessCommand::new(
+apps/desktop/tauri/src\modules\sync\portable_assets.rs:297:    let root = path.canonicalize()?;
+apps/desktop/tauri/src\modules\sync\portable_assets.rs:596:    if !home.is_absolute() || !home.is_dir() {
+apps/desktop/tauri/src\modules\sync\portable_assets.rs:824:    if !home.is_absolute() || !home.is_dir() {
+apps/desktop/tauri/src\modules\sync\portable_assets.rs:934:        || !plan.home.is_absolute()
+apps/desktop/tauri/src\modules\sync\portable_assets.rs:978:    let canonical = path.canonicalize()?;
+apps/desktop/tauri/src\modules\sync\portable_accounts.rs:412:    if !upstream.is_absolute() {
+apps/desktop/tauri/src\modules\model_config\config_file.rs:25:    if !home.is_absolute() {
+apps/desktop/tauri/src\modules\model_config\config_file.rs:717:        (std::env::var(name).unwrap_or_default(), "环境变量")
+apps/desktop/tauri/src\modules\model_config\config_file_scoped_tests.rs:831:    if std::env::var_os(CHILD).is_none() {
+apps/desktop/tauri/src\modules\model_config\config_file_scoped_tests.rs:832:        let status=std::process::Command::new(std::env::current_exe().unwrap())
+apps/desktop/tauri/src\modules\model_config\upstream.rs:51:    if !executable.is_absolute()
+apps/desktop/tauri/src\modules\model_config\upstream.rs:52:        || !context.opencodex_home.is_absolute()
+apps/desktop/tauri/src\modules\model_config\upstream.rs:76:    let mut command = tokio::process::Command::new(executable);
+apps/desktop/tauri/src\modules\model_config\upstream.rs:79:        .current_dir(working)
+apps/desktop/tauri/src\modules\model_config\upstream.rs:80:        .env_clear()
+apps/desktop/tauri/src\modules\model_config\upstream.rs:100:        if let Some(value) = std::env::var_os(key) {
+apps/desktop/tauri/src\modules\model_config\upstream.rs:261:    if !executable.is_absolute()
+apps/desktop/tauri/src\modules\model_config\upstream.rs:262:        || !context.opencodex_home.is_absolute()
+apps/desktop/tauri/src\modules\model_config\upstream.rs:313:    let mut command = tokio::process::Command::new(executable);
+apps/desktop/tauri/src\modules\model_config\upstream.rs:316:        .current_dir(&context.working_directory)
+apps/desktop/tauri/src\modules\model_config\upstream.rs:317:        .env_clear()
+apps/desktop/tauri/src\modules\model_config\upstream.rs:341:        if let Some(value) = std::env::var_os(key) {
+apps/desktop/tauri/src\modules\model_config\provider_auth.rs:436:            let value = std::env::var(name)
+apps/desktop/tauri/src\modules\model_config\provider_auth.rs:1467:        return std::env::var(name).map(Zeroizing::new).map_err(|_| {

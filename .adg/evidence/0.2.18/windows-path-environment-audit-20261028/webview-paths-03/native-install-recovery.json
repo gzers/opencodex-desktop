@@ -1,0 +1,14 @@
+{
+  "result": "fail",
+  "screenshots": [],
+  "checks": [],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.18",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "error": "Error: native path UI wait: !!document.querySelector('.backup-records li')\n    at wait (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:18:11)\n    at async verifyWindowsPathUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:64:5)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-install-recovery.mjs:73:3"
+}

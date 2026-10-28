@@ -1,0 +1,17 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"exceptionId":1,"text":"Uncaught (in promise)","lineNumber":0,"columnNumber":0,"exception":{"type":"object","subtype":"error","className":"DOMException","description":"NotAllowedError: Failed to execute 'readText' on 'Clipboard': Document is not focused.\n    at <anonymous>:1:21","objectId":"1577791119357380234.2.1","preview":{"type":"object","subtype":"error","description":"NotAllowedError: Failed to execute 'readText' on 'Clipboard': Document is not focused.\n    at <anonymous>:1:21","overflow":false,"properties":[{"name":"stack","type":"string","value":"NotAllowedError: Failed to execute 'readText' on '… Document is not focused.\n    at <anonymous>:1:21"},{"name":"code","type":"number","value":"0"},{"name":"name","type":"string","value":"NotAllowedError"},{"name":"message","type":"string","value":"Failed to execute 'readText' on 'Clipboard': Document is not focused."}]}}}
+    at evaluate (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:9:5)
+    at async verifyWindowsPathUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:44:18)
+    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-install-recovery.mjs:73:3 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

@@ -1,0 +1,14 @@
+   Compiling opencodex-desktop v0.2.18 (D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\apps\desktop\tauri)
+error: the borrowed expression implements the required traits
+  --> src\modules\model_config\upstream.rs:76:52
+   |
+76 |     let mut command = tokio::process::Command::new(&executable);
+   |                                                    ^^^^^^^^^^^ help: change this to: `executable`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_borrows_for_generic_args
+   = note: `-D clippy::needless-borrows-for-generic-args` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_borrows_for_generic_args)]`
+
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

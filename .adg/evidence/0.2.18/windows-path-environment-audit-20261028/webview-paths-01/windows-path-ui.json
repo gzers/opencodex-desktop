@@ -1,0 +1,8 @@
+{
+  "result": "fail",
+  "checks": [
+    "installation data root/home/native placeholder use readable ordinary paths"
+  ],
+  "rawDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 01\\OpenCodeX Native 中文 Spaces",
+  "error": "AssertionError [ERR_ASSERTION]: {\"exceptionId\":1,\"text\":\"Uncaught (in promise)\",\"lineNumber\":0,\"columnNumber\":0,\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"DOMException\",\"description\":\"NotAllowedError: Failed to execute 'readText' on 'Clipboard': Document is not focused.\\n    at <anonymous>:1:21\",\"objectId\":\"1577791119357380234.2.1\",\"preview\":{\"type\":\"object\",\"subtype\":\"error\",\"description\":\"NotAllowedError: Failed to execute 'readText' on 'Clipboard': Document is not focused.\\n    at <anonymous>:1:21\",\"overflow\":false,\"properties\":[{\"name\":\"stack\",\"type\":\"string\",\"value\":\"NotAllowedError: Failed to execute 'readText' on '… Document is not focused.\\n    at <anonymous>:1:21\"},{\"name\":\"code\",\"type\":\"number\",\"value\":\"0\"},{\"name\":\"name\",\"type\":\"string\",\"value\":\"NotAllowedError\"},{\"name\":\"message\",\"type\":\"string\",\"value\":\"Failed to execute 'readText' on 'Clipboard': Document is not focused.\"}]}}}\n    at evaluate (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:9:5)\n    at async verifyWindowsPathUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:44:18)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-install-recovery.mjs:73:3"
+}

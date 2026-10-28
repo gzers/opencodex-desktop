@@ -1,0 +1,581 @@
+apps/desktop/ui/src\platform\workspace.ts:4:export type ManagedPathKey = 'manager_state' | 'backups' | 'logs' | 'exports' | 'cache' | 'sync_state'
+apps/desktop/ui/src\platform\workspace.ts:6:export type AgentPathKind = 'skills-source' | 'skills' | 'mcp'
+apps/desktop/ui/src\platform\workspace.ts:8:export interface ManagedPathDto {
+apps/desktop/ui/src\platform\workspace.ts:9:  key: ManagedPathKey
+apps/desktop/ui/src\platform\workspace.ts:10:  path: string
+apps/desktop/ui/src\platform\workspace.ts:14:export interface AgentPathDto {
+apps/desktop/ui/src\platform\workspace.ts:15:  kind: AgentPathKind
+apps/desktop/ui/src\platform\workspace.ts:18:  path: string
+apps/desktop/ui/src\platform\workspace.ts:21:export interface ManagedPathTargetsDto {
+apps/desktop/ui/src\platform\workspace.ts:22:  managed: ManagedPathDto[]
+apps/desktop/ui/src\platform\workspace.ts:23:  agent: AgentPathDto[]
+apps/desktop/ui/src\platform\workspace.ts:35:export async function getManagedPathTargets(): Promise<ManagedPathTargetsDto> {
+apps/desktop/ui/src\platform\workspace.ts:37:  return invoke<ManagedPathTargetsDto>('get_managed_path_targets')
+apps/desktop/ui/src\platform\workspace.ts:40:export async function openManagedPath(path: string): Promise<OpenResultDto> {
+apps/desktop/ui/src\platform\workspace.ts:42:  return invoke<OpenResultDto>('open_managed_path', { path })
+apps/desktop/ui/src\routes\TrayRoute.vue:92:            <svg class="sys-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8.5A15 15 0 0 1 22 8.5"/><path d="M6 12a9.5 9.5 0 0 1 12 0"/><path d="M9.5 15.5a4.5 4.5 0 0 1 5 0"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
+apps/desktop/ui/src\routes\TrayRoute.vue:93:            <svg class="sys-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6"/><path d="M8 6v12"/><path d="M12 8v8"/><path d="M16 5v14"/><path d="M20 10v4"/></svg>
+apps/desktop/ui/src\routes\SettingsRoute.vue:27:import { displayInstallPrefix, installPrefixIssue, prefixInsideDataRoot } from '@/features/runtime/installPath'
+apps/desktop/ui/src\routes\SettingsRoute.vue:46:  || app.dataRootPendingRestart || app.dataRootReconciliationRequired)
+apps/desktop/ui/src\routes\SettingsRoute.vue:59:const dataRootInput = ref('')
+apps/desktop/ui/src\routes\SettingsRoute.vue:61:const externalHomeInput = ref('')
+apps/desktop/ui/src\routes\SettingsRoute.vue:62:const dataRootBindingDisabled = computed(() => protectionBlocked.value || app.dataRootSwitching || app.dataRootHomeSaving || app.dataRootSaving || app.dataRootPendingRestart || app.dataRootReconciliationRequired || app.dataRootConfig?.runtimeActive === false || !app.dataRootConfig)
+apps/desktop/ui/src\routes\SettingsRoute.vue:196:  if (section === 'installation') void app.loadDataRootConfig()
+apps/desktop/ui/src\routes\SettingsRoute.vue:197:  if (section === 'extensions' || section === 'about') void app.loadManagedPathTargets()
+apps/desktop/ui/src\routes\SettingsRoute.vue:240:async function saveDataRoot() {
+apps/desktop/ui/src\routes\SettingsRoute.vue:241:  const saved = await app.saveDataRoot(dataRootInput.value)
+apps/desktop/ui/src\routes\SettingsRoute.vue:243:  else app.showToast(app.dataRootError || '数据目录初始化失败。')
+apps/desktop/ui/src\routes\SettingsRoute.vue:245:function confirmDataRootMigration() {
+apps/desktop/ui/src\routes\SettingsRoute.vue:253:    onConfirm: () => { void applyDataRootSwitch(true, target) },
+apps/desktop/ui/src\routes\SettingsRoute.vue:256:async function applyDataRootSwitch(migrateData: boolean, target = switchInput.value) {
+apps/desktop/ui/src\routes\SettingsRoute.vue:257:  const saved = await app.switchDataRoot(target, migrateData)
+apps/desktop/ui/src\routes\SettingsRoute.vue:259:    app.showToast(app.dataRootReconciliationRequired
+apps/desktop/ui/src\routes\SettingsRoute.vue:263:  } else app.showToast(app.dataRootError || '数据目录切换失败。')
+apps/desktop/ui/src\routes\SettingsRoute.vue:265:async function applyOpencodexHome(mode: 'inside' | 'external') {
+apps/desktop/ui/src\routes\SettingsRoute.vue:266:  const saved = await app.saveOpencodexHome(
+apps/desktop/ui/src\routes\SettingsRoute.vue:268:    mode === 'external' ? externalHomeInput.value : undefined,
+apps/desktop/ui/src\routes\SettingsRoute.vue:272:    externalHomeInput.value = ''
+apps/desktop/ui/src\routes\SettingsRoute.vue:273:  } else app.showToast(app.dataRootError || 'OPENCODEX_HOME 保存失败。')
+apps/desktop/ui/src\routes\SettingsRoute.vue:296: * 非默认前缀（自定 prefix、Volta、fnm、pnpm、Homebrew、托管安装）都要如实标注。
+apps/desktop/ui/src\routes\SettingsRoute.vue:300:  const path = (report.ocx.path ?? '').replace(/\\/g, '/')
+apps/desktop/ui/src\routes\SettingsRoute.vue:301:  if (path.includes('/node_modules/@bitkyc08/opencodex/')) return 'npm 全局 · @bitkyc08/opencodex'
+apps/desktop/ui/src\routes\SettingsRoute.vue:302:  if (path.includes('/Volta/')) return 'Volta'
+apps/desktop/ui/src\routes\SettingsRoute.vue:303:  if (path.includes('/fnm') || path.includes('fnm_multishells')) return 'fnm'
+apps/desktop/ui/src\routes\SettingsRoute.vue:304:  if (path.includes('/pnpm') || path.includes('pnpm-global')) return 'pnpm'
+apps/desktop/ui/src\routes\SettingsRoute.vue:305:  if (path.includes('/opt/homebrew/') || path.includes('/usr/local/bin')) return 'Homebrew / 系统前缀'
+apps/desktop/ui/src\routes\SettingsRoute.vue:311:  const text = (check: typeof report.node, fallback: string) => (check.found ? `${check.path ?? fallback}${check.version ? ` · ${check.version}` : ''}` : fallback)
+apps/desktop/ui/src\routes\SettingsRoute.vue:316:  const ocxPath = (fromSource ? source!.path : report.ocx.path) ?? null
+apps/desktop/ui/src\routes\SettingsRoute.vue:322:    ['可执行文件', ocxPath ? `${ocxPath}${ocxVersion ? ` · ${ocxVersion}` : ''}` : '未发现', available],
+apps/desktop/ui/src\routes\SettingsRoute.vue:359:const managedPartitions = computed(() => (app.managedPathTargets ?? []).map(item => ({ key: item.key, path: item.path, label: item.label })))
+apps/desktop/ui/src\routes\SettingsRoute.vue:360:const skillsSourcePath = computed(() => app.agentPathTargets?.find(item => item.kind === 'skills-source')?.path ?? '—')
+apps/desktop/ui/src\routes\SettingsRoute.vue:364:const skillsPaths = computed(() => (app.agentPathTargets ?? []).filter(item => item.kind === 'skills').map(item => [item.label, item.path] as const))
+apps/desktop/ui/src\routes\SettingsRoute.vue:365:const mcpPaths = computed(() => (app.agentPathTargets ?? []).filter(item => item.kind === 'mcp').map(item => [item.label, item.path] as const))
+apps/desktop/ui/src\routes\SettingsRoute.vue:639:async function copyPath(path: string) {
+apps/desktop/ui/src\routes\SettingsRoute.vue:641:    await navigator.clipboard.writeText(path)
+apps/desktop/ui/src\routes\SettingsRoute.vue:648:function openPath(path: string | undefined, label: string) {
+apps/desktop/ui/src\routes\SettingsRoute.vue:649:  void app.openManagedPath(path).then(success => {
+apps/desktop/ui/src\routes\SettingsRoute.vue:661:      directory: true,
+apps/desktop/ui/src\routes\SettingsRoute.vue:664:      defaultPath: skillsSourcePath.value === '—' ? undefined : skillsSourcePath.value,
+apps/desktop/ui/src\routes\SettingsRoute.vue:733:const installPrefix = ref('')
+apps/desktop/ui/src\routes\SettingsRoute.vue:737:const installOfflinePath = ref('')
+apps/desktop/ui/src\routes\SettingsRoute.vue:753:const installPrefixError = computed(() => installPrefixIssue(installPrefix.value, app.aboutApp?.platform))
+apps/desktop/ui/src\routes\SettingsRoute.vue:755:  const inside = prefixInsideDataRoot(app.dataRootConfig?.currentDataRoot ?? '', installPrefix.value, app.aboutApp?.platform)
+apps/desktop/ui/src\routes\SettingsRoute.vue:764:  if (installStep.value === 1) return installPrefix.value.trim() !== '' && !installPrefixError.value
+apps/desktop/ui/src\routes\SettingsRoute.vue:829:function defaultInstallPrefix() {
+apps/desktop/ui/src\routes\SettingsRoute.vue:831:  return displayInstallPrefix(app.runtimeSource?.managedPrefix ?? '', app.aboutApp?.platform)
+apps/desktop/ui/src\routes\SettingsRoute.vue:835:function managedDefaultPrefix() {
+apps/desktop/ui/src\routes\SettingsRoute.vue:836:  return displayInstallPrefix(app.runtimeSource?.defaultPrefix ?? '', app.aboutApp?.platform)
+apps/desktop/ui/src\routes\SettingsRoute.vue:842:  installPrefix.value = defaultInstallPrefix()
+apps/desktop/ui/src\routes\SettingsRoute.vue:846:  installOfflinePath.value = ''
+apps/desktop/ui/src\routes\SettingsRoute.vue:866:  await app.setRuntimeSourcePath(picked)
+apps/desktop/ui/src\routes\SettingsRoute.vue:869:async function chooseInstallPrefix() {
+apps/desktop/ui/src\routes\SettingsRoute.vue:870:  const picked = await open({ directory: true, multiple: false, title: '选择 OpenCodex 托管安装位置' })
+apps/desktop/ui/src\routes\SettingsRoute.vue:871:  if (typeof picked === 'string') installPrefix.value = displayInstallPrefix(picked, app.aboutApp?.platform)
+apps/desktop/ui/src\routes\SettingsRoute.vue:874:function resetInstallPrefix() {
+apps/desktop/ui/src\routes\SettingsRoute.vue:875:  installPrefix.value = managedDefaultPrefix()
+apps/desktop/ui/src\routes\SettingsRoute.vue:885:  installOfflinePath.value = picked
+apps/desktop/ui/src\routes\SettingsRoute.vue:902:    prefix: installPrefix.value.trim() || null,
+apps/desktop/ui/src\routes\SettingsRoute.vue:905:    offlinePath: installSource.value === 'offline' ? installOfflinePath.value || null : null,
+apps/desktop/ui/src\routes\SettingsRoute.vue:1065:            <UiButton v-if="protectionBlocked" type="button" class="btn ghost" data-testid="runtime-protection-retry" :disabled="runtimeProtection.protectionRetrying || runtimeProtection.protectionLoading || app.runtimeInstalling || app.runtimeUninstallBusy || app.dataRootPendingRestart || app.dataRootReconciliationRequired" @click="runtimeProtection.retryProtection()">{{ runtimeProtection.protectionRetrying ? '核对中…' : '重试本地核对' }}</UiButton>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1073:            <div class="runtime-fact"><label>来源类型</label><div>{{ runtimeSourceLabel }} <span class="tag">{{ sourceLandingLabel(app.runtimeSource.insideDataRoot) }}</span></div></div>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1074:            <div class="runtime-fact"><label>路径</label><div class="runtime-path">{{ app.runtimeSource.path ?? '未解析' }}</div></div>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1081:            <UiButton class="btn ghost" type="button" data-testid="runtime-restore-source" :disabled="runtimeSourceBindingDisabled || !app.runtimeSource.explicitPath" @click="app.restoreDiscoveredRuntime()">恢复自动发现</UiButton>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1089:        <div v-if="app.dataRootConfigError" class="empty">数据目录配置读取失败；请重新进入安装配置。</div>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1090:        <div v-else-if="!app.dataRootConfig" class="empty">正在读取数据目录配置…</div>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1092:          <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.currentDataRoot)"><code>{{ app.dataRootConfig.currentDataRoot }}</code></button></td><td>数据目录 · 当前使用</td><td><UiButton size="sm" class="btn ghost" @click="openPath(app.dataRootConfig.currentDataRoot, '数据目录')">打开</UiButton></td></tr>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1093:          <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.currentOpencodexHome)"><code>{{ app.dataRootConfig.currentOpencodexHome }}</code></button></td><td>OPENCODEX_HOME · 当前使用</td><td><UiButton size="sm" class="btn ghost" @click="openPath(app.dataRootConfig.currentOpencodexHome, 'OPENCODEX_HOME')">打开</UiButton></td></tr>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1094:          <tr v-if="!app.dataRootConfig.runtimeActive && app.dataRootConfig.activeDataRoot !== app.dataRootConfig.currentDataRoot"><td><code>{{ app.dataRootConfig.activeDataRoot }}</code></td><td>数据目录 · 重启后生效</td><td>{{ app.dataRootReconciliationRequired ? '待核对' : '已保存' }}</td></tr>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1095:          <tr v-if="!app.dataRootConfig.runtimeActive && app.dataRootConfig.opencodexHome !== app.dataRootConfig.currentOpencodexHome"><td><code>{{ app.dataRootConfig.opencodexHome }}</code></td><td>OPENCODEX_HOME · 重启后生效</td><td>{{ app.dataRootReconciliationRequired ? '待核对' : '已保存' }}</td></tr>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1097:        <p v-if="app.dataRootReconciliationRequired" class="env-bound" role="alert">绑定替换可能已完成，但持久性核对未通过；上方新位置为预期目标。写入已暂停，请重启管理器核对实际路径。</p>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1098:        <p v-else-if="app.dataRootPendingRestart || (app.dataRootConfig && !app.dataRootConfig.runtimeActive)" class="env-bound" role="status">已保存新位置，写入已暂停；当前服务仍使用上方当前路径，请重启管理器后回读确认。</p>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1100:          <div class="field"><label for="external-home-input">外部 OPENCODEX_HOME</label><input id="external-home-input" v-model="externalHomeInput" class="input" placeholder="/absolute/path/to/OpenCodexHome" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1103:          <UiButton class="btn" :disabled="dataRootBindingDisabled" @click="applyOpencodexHome('external')">{{ app.dataRootHomeSaving ? '保存中…' : '使用外部路径' }}</UiButton>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1104:          <UiButton class="btn ghost" :disabled="dataRootBindingDisabled" @click="applyOpencodexHome('inside')">回到数据目录内</UiButton>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1109:          <div class="field"><label for="data-root-input">数据目录路径</label><input id="data-root-input" v-model="dataRootInput" class="input" placeholder="/absolute/path/to/OpenCodexData" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1112:          <div class="field"><label for="switch-root-input">切换目标路径</label><input id="switch-root-input" v-model="switchInput" class="input" placeholder="/absolute/path/to/ExistingOpenCodexData" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1115:          <UiButton class="btn" :disabled="dataRootBindingDisabled" @click="saveDataRoot">{{ app.dataRootSaving ? '校验中…' : '校验并初始化' }}</UiButton>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1116:          <UiButton class="btn ghost" :disabled="dataRootBindingDisabled" @click="applyDataRootSwitch(false)">{{ app.dataRootSwitching ? '切换中…' : '仅切换引用' }}</UiButton>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1117:          <UiButton class="btn ghost" data-testid="data-root-migrate" :disabled="dataRootBindingDisabled" @click="confirmDataRootMigration">迁移数据…</UiButton>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1118:          <span v-if="app.dataRootLastValidation === 'valid'" class="tag">结构有效</span>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1119:          <span v-else-if="app.dataRootLastValidation === 'uninitialized'" class="tag">尚未初始化</span>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1120:          <span v-else-if="app.dataRootLastValidation === 'future_version'" class="tag">版本过新</span>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1121:          <span v-else-if="app.dataRootLastValidation === 'corrupted'" class="tag">结构损坏</span>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1122:          <span v-if="app.dataRootError" class="tag">未完成</span>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1123:          <span v-else-if="app.dataRootLastResult" class="tag">{{ app.dataRootLastResult.created ? '已创建' : '已引用' }}</span>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1126:      <p v-if="app.dataRootSwitching" role="status" aria-live="polite" aria-busy="true" data-testid="data-root-progress" class="env-bound"><span class="btn-spinner" aria-hidden="true"></span>正在校验路径并执行复制 / 绑定核对，请等待；完成后需要重启。</p>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1127:      <p v-if="app.dataRootError" class="env-bound" role="alert">{{ app.dataRootError }}</p>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1130:          <tr v-for="row in managedPartitions" :key="row.key"><td><button class="cli-copy-btn" @click="copyPath(row.path)"><code>{{ row.path }}</code></button></td><td>{{ row.label }}</td><td><UiButton size="sm" class="btn ghost" @click="openPath(row.path, row.label)">打开</UiButton></td></tr>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1150:          <div class="setting-row"><div><div class="setting-title">Skills 源目录</div><div class="setting-desc">默认目录；也可以自定义目录，管理器只读该目录。导入与恢复的 Skill 由管理器自行保存。</div></div><div class="controls"><UiButton class="btn ghost" @click="openPath(skillsSourcePath, 'Skills 源目录')">打开</UiButton><UiButton class="btn" @click="chooseSkillsSourceDir()">选择自定义目录</UiButton><UiButton v-if="skillsSourceIsCustom" class="btn ghost" @click="restoreDefaultSkillsSourceDir()">恢复默认</UiButton></div><button class="cli-copy-btn skills-source" title="复制 Skills 源目录" @click="copyPath(skillsSourcePath)"><code>{{ skillsSourcePath }}</code></button></div>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1165:      <article class="card"><div class="card-head"><div><h2>Skills 路径</h2><p>集中查看并打开各客户端 Skills 目录。</p></div></div><div class="agent-path-list"><div v-for="row in skillsPaths" :key="row[1]" class="agent-path-row"><div class="agent-path-app"><span>{{ row[0] }}</span></div><button class="cli-copy-btn agent-path-copy" @click="copyPath(row[1])"><code>{{ row[1] }}</code></button><div class="agent-path-actions"><UiButton size="sm" class="btn ghost" @click="openPath(row[1], `${row[0]} Skills`)">打开目录</UiButton></div></div></div></article>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1166:      <article class="card"><div class="card-head"><div><h2>MCP 路径</h2><p>集中查看并打开各客户端 MCP 配置。</p></div></div><div class="agent-path-list"><div v-for="row in mcpPaths" :key="row[1]" class="agent-path-row"><div class="agent-path-app"><span>{{ row[0] }}</span></div><button class="cli-copy-btn agent-path-copy" @click="copyPath(row[1])"><code>{{ row[1] }}</code></button><div class="agent-path-actions"><UiButton size="sm" class="btn ghost" @click="openPath(row[1], `${row[0]} MCP 配置`)">打开配置</UiButton></div></div></div></article>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1201:ocxd data-root switch --target &lt;path&gt; [--migrate] --confirm --json
+apps/desktop/ui/src\routes\SettingsRoute.vue:1204:ocxd export --output &lt;path&gt; --password-stdin --confirm --json
+apps/desktop/ui/src\routes\SettingsRoute.vue:1205:ocxd import --input &lt;path&gt; --password-stdin --confirm --json
+apps/desktop/ui/src\routes\SettingsRoute.vue:1302:        <div class="field"><label for="wiz-prefix">安装位置</label><input id="wiz-prefix" v-model="installPrefix" class="input" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1304:        <p v-if="installPrefixError" class="wiz-error">{{ installPrefixError }}</p>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1306:          <UiButton class="btn ghost" type="button" @click="chooseInstallPrefix">选择…</UiButton>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1307:          <UiButton class="btn ghost" type="button" @click="resetInstallPrefix">恢复默认</UiButton>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1320:            {{ app.offlinePreview.ok ? `SHA-256 ${app.offlinePreview.sha256Prefix}…` : app.offlinePreview.message }}
+apps/desktop/ui/src\routes\SettingsRoute.vue:1398:        <p class="wiz-hint">按当前运行来源 <code>{{ app.runtimeUninstallPlan?.sourcePath ?? '未解析' }}</code> 卸载；范围越大后果越重。</p>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1461:            <li v-for="item in (app.runtimeUninstallResult?.residue ?? [])" :key="item.path" :class="item.status"><code>{{ item.path }}</code><span>{{ residueLabel(item.status) }}</span></li>
+apps/desktop/ui/src\routes\SettingsRoute.vue:1463:          <p v-if="app.runtimeUninstallResult?.backupId" class="wiz-hint">备份 <code>{{ app.runtimeUninstallResult.backupId }}</code> · <button class="cli-copy-btn" type="button" @click="copyPath(app.runtimeUninstallResult?.backupDirectory ?? '')"><code>{{ app.runtimeUninstallResult?.backupDirectory }}</code></button></p>
+apps/desktop/ui/src\contracts\runtimeStatus.ts:80:  dataRoot: string
+apps/desktop/ui/src\contracts\runtimeStatus.ts:81:  opencodexHome: string | null
+apps/desktop/ui/src\app\useLifecycleController.ts:118:<li>数据根目录：${facts.dataRoot ? `<code>${facts.dataRoot}</code>` : '未获取'}</li>
+apps/desktop/ui/src\app\useLifecycleController.ts:119:<li>OPENCODEX_HOME 配置目录：${summary.opencodexHome ? `<code>${summary.opencodexHome}</code>` : '未获取'}</li>
+apps/desktop/ui/src\app\useLifecycleController.ts:137:<li>备份目录：<code>${backup.directory}</code></li>
+apps/desktop/ui/src\app\useLifecycleController.ts:138:<li>备份来源：<code>${backup.targetPath}</code></li>
+apps/desktop/ui/src\app\useLifecycleController.ts:175:        void app.loadManagedPathTargets().then(loaded => {
+apps/desktop/ui/src\app\useLifecycleController.ts:180:          const target = app.managedPathTargets?.find(item => item.key === 'manager_state')
+apps/desktop/ui/src\app\useLifecycleController.ts:185:          void app.openManagedPath(target.path).then(opened => {
+apps/desktop/ui/src\routes\OverviewRoute.vue:164:const managerDataRoot = computed(() => app.dataRootConfig?.currentDataRoot || app.dataRootPath || '')
+apps/desktop/ui/src\routes\OverviewRoute.vue:165:const managerHome = computed(() => app.dataRootConfig?.currentOpencodexHome || '')
+apps/desktop/ui/src\routes\OverviewRoute.vue:166:const dataRoot = computed(() => managerDataRoot.value || app.statusSnapshot?.facts.data_root || '—')
+apps/desktop/ui/src\routes\OverviewRoute.vue:167:const home = computed(() => managerHome.value || app.statusSnapshot?.facts.opencodex_home || '—')
+apps/desktop/ui/src\routes\OverviewRoute.vue:319:            <svg v-if="!gateBlocked" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+apps/desktop/ui/src\routes\OverviewRoute.vue:449:            <dl class="motion-runtime-paths">
+apps/desktop/ui/src\routes\OverviewRoute.vue:452:                <dd><span class="motion-runtime-value" :title="dataRoot">{{ dataRoot }}</span><button class="motion-value-copy" type="button" aria-label="复制数据目录" @click="copyValue(dataRoot, $event)">复制</button></dd>
+apps/desktop/ui/src\routes\OverviewRoute.vue:462:          <UiButton class="btn ghost" type="button" @click="app.openOverviewDataRoot()">打开数据目录</UiButton>
+apps/desktop/ui/src\routes\OverviewRoute.vue:463:          <UiButton class="btn ghost" type="button" @click="app.openOverviewOpencodexHome()">打开 OPENCODEX_HOME</UiButton>
+apps/desktop/ui/src\routes\LogsRoute.vue:26:  const prefix = `${logCategoryLabel.value} · `
+apps/desktop/ui/src\routes\LogsRoute.vue:27:  if (controller.logsError.value) return `${prefix}读取失败 · 本地滚动截断 · 只读`
+apps/desktop/ui/src\routes\LogsRoute.vue:28:  if (controller.logsLoading.value) return `${prefix}读取中 · 本地滚动截断 · 只读`
+apps/desktop/ui/src\routes\LogsRoute.vue:29:  if (logsState.value?.fileMissing) return `${prefix}暂无日志文件 · 本地滚动截断 · 只读`
+apps/desktop/ui/src\routes\LogsRoute.vue:31:  if (fallback) return `${prefix}当前 ${logs.value.length} 行 · 显示 ${fallback}（请求的日志暂不存在） · 本地滚动截断 · 只读`
+apps/desktop/ui/src\routes\LogsRoute.vue:32:  return `${prefix}当前 ${logs.value.length} 行 · 本地滚动截断 · 只读`
+apps/desktop/ui/src\routes\LogsRoute.vue:45:function openLogsDirectory() {
+apps/desktop/ui/src\routes\LogsRoute.vue:46:  void app.loadManagedPathTargets().then(loaded => {
+apps/desktop/ui/src\routes\LogsRoute.vue:47:    const target = app.managedPathTargets?.find(item => item.key === 'logs')
+apps/desktop/ui/src\routes\LogsRoute.vue:52:    void app.openManagedPath(target.path).then(opened => {
+apps/desktop/ui/src\routes\LogsRoute.vue:146:            <UiButton class="btn" @click="openLogsDirectory()">打开日志目录</UiButton>
+apps/desktop/ui/src\routes\ModelsRoute.vue:78:const kinds = [{ value: 'prefix', label: '前缀' }, { value: 'exact', label: '精确' }, { value: 'glob', label: '通配符' }]
+apps/desktop/ui/src\routes\ModelsRoute.vue:186:       <UiButton class="model-editor-action" size="sm" aria-label="Agent自动填充" title="Agent自动填充" :disabled="models.busy" @click="openAgent" :aria-expanded="agentOpen" aria-controls="model-agent-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></svg><span v-if="!collapsed">Agent自动填充</span></UiButton>
+apps/desktop/ui/src\routes\ModelsRoute.vue:187:       <UiButton class="model-editor-action" size="sm" aria-label="外部任务" title="外部任务" :disabled="models.busy" @click="externalOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M21 3 10 14M10 5H4v15h15v-6"/></svg><span v-if="!collapsed">外部任务</span></UiButton>
+apps/desktop/ui/src\routes\ModelsRoute.vue:188:       <UiButton class="model-editor-action" size="sm" aria-label="复制模版" :title="models.hasNewTemplate?'先保存或放弃已有新建模版，再复制':'以当前编辑内容新建独立模版'" :disabled="models.hasNewTemplate||!draft.templateId||models.busy" @click="models.copyCurrentTemplate();models.view.templatePosition=models.draftSession"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></svg><span v-if="!collapsed">复制模版</span></UiButton>
+apps/desktop/ui/src\routes\ModelsRoute.vue:189:       <UiButton v-if="!draft.templateId" class="model-editor-action" size="sm" variant="ghost" aria-label="取消新建" title="放弃当前未保存的新建模版" :disabled="models.busy" @click="cancelNewTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg><span v-if="!collapsed">取消新建</span></UiButton>
+apps/desktop/ui/src\routes\ModelsRoute.vue:192:      <template #primary="{collapsed}"><UiButton class="model-editor-action" size="sm" variant="ghost" aria-label="还原修改" title="还原修改" :disabled="!models.dirty||models.busy" @click="restoreTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9a8 8 0 1 1 0 7M4 3v6h6"/></svg><span v-if="!collapsed">还原修改</span></UiButton><UiButton class="model-editor-action" size="sm" variant="primary" aria-label="保存" title="保存" :loading="models.busy" :disabled="!models.dirty&&!!draft.templateId" @click="models.save"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><span v-if="!collapsed">保存</span></UiButton></template>
+apps/desktop/ui/src\routes\ModelsRoute.vue:195:        <section id="model-matching" tabindex="-1"><div class="model-field-title"><h2>匹配规则</h2><UiButton size="sm" :disabled="models.busy" @click="previewOpen=true">匹配预览</UiButton></div><div v-for="kind in (['include','exclude'] as const)" :key="kind"><div class="model-field-title"><strong>{{ kind === 'include' ? '包含' : '排除' }}</strong><UiButton size="sm" :disabled="models.busy" @click="draft.content.matching[kind].push({ kind: 'prefix', value: '' })">添加规则</UiButton></div>
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:24:import { buildClientDirectory, isExtensionClientId } from '@/features/extensions/clients'
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:67:// 与原型一致：Tab 支持 ←/→/Home/End，切换后把焦点交给新分区。
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:70:  const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End']
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:74:  const next = event.key === 'Home'
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:349:function pathsByClient(kind: 'skills' | 'mcp') {
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:350:  const paths: Partial<Record<ExtensionClientId, string>> = {}
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:351:  for (const item of app.agentPathTargets ?? []) {
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:353:    paths[item.client] = item.path
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:355:  return paths
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:359:  buildClientDirectory({
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:362:    skillsPaths: pathsByClient('skills'),
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:363:    mcpPaths: pathsByClient('mcp'),
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:371:    app.loadManagedPathTargets(),
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:382:  if (!app.agentPathTargets) void app.loadManagedPathTargets()
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:530:        { label: '源目录', value: info.sourcePath, wide: true },
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:581:            ? present.map(landing => `${clientLabels[landing.client]}：${landing.configPath}`).join('；')
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:749:              <button class="icon-btn" title="检查 / 更新" @click="checkSkillUpdate(skill)"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.34 5.66"/><path d="M20 4v7h-7"/></svg></button>
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:750:              <button class="icon-btn danger" title="卸载" @click="uninstallSkill(skill)"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg></button>
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:829:              <button class="icon-btn" title="编辑" @click="editMcpDefinition(server)"><svg viewBox="0 0 24 24"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="m14 6 4 4"/></svg></button>
+apps/desktop/ui/src\routes\ExtensionsRoute.vue:830:              <button class="icon-btn danger" title="删除" @click="deleteMcpDefinition(server)"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg></button>
+apps/desktop/ui/src\app\paths\store.ts:5:  getManagedPathTargets,
+apps/desktop/ui/src\app\paths\store.ts:8:  openManagedPath as openManagedPathCommand,
+apps/desktop/ui/src\app\paths\store.ts:9:  type ManagedPathTargetsDto,
+apps/desktop/ui/src\app\paths\store.ts:12:export const usePathsStore = defineStore('paths', {
+apps/desktop/ui/src\app\paths\store.ts:14:    managed: null as ManagedPathTargetsDto['managed'] | null,
+apps/desktop/ui/src\app\paths\store.ts:15:    agent: null as ManagedPathTargetsDto['agent'] | null,
+apps/desktop/ui/src\app\paths\store.ts:20:        const result = await getManagedPathTargets()
+apps/desktop/ui/src\app\paths\store.ts:29:    async open(path?: string) {
+apps/desktop/ui/src\app\paths\store.ts:30:      if (!path) return false
+apps/desktop/ui/src\app\paths\store.ts:32:        const result = await openManagedPathCommand(path)
+apps/desktop/ui/src\stores\app.ts:21:import { usePathsStore } from "@/app/paths/store"
+apps/desktop/ui/src\stores\app.ts:34:import { useDataRootStore } from "@/features/data-root/store"
+apps/desktop/ui/src\stores\app.ts:85:    dataRootPath: () => useDataRootStore().path,
+apps/desktop/ui/src\stores\app.ts:86:    dataRootConfig: () => useDataRootStore().config,
+apps/desktop/ui/src\stores\app.ts:87:    dataRootConfigLoading: () => useDataRootStore().configLoading,
+apps/desktop/ui/src\stores\app.ts:88:    dataRootConfigError: () => useDataRootStore().configError,
+apps/desktop/ui/src\stores\app.ts:89:    dataRootSwitching: () => useDataRootStore().switching,
+apps/desktop/ui/src\stores\app.ts:90:    dataRootHomeSaving: () => useDataRootStore().homeSaving,
+apps/desktop/ui/src\stores\app.ts:91:    dataRootPendingRestart: () => useDataRootStore().pendingRestart,
+apps/desktop/ui/src\stores\app.ts:92:    dataRootReconciliationRequired: () => useDataRootStore().reconciliationRequired,
+apps/desktop/ui/src\stores\app.ts:93:    dataRootSaving: () => useDataRootStore().saving,
+apps/desktop/ui/src\stores\app.ts:94:    dataRootLastResult: () => useDataRootStore().lastResult,
+apps/desktop/ui/src\stores\app.ts:95:    dataRootLastValidation: () => useDataRootStore().lastValidation,
+apps/desktop/ui/src\stores\app.ts:96:    dataRootError: () => useDataRootStore().error,
+apps/desktop/ui/src\stores\app.ts:121:    managedPathTargets: () => usePathsStore().managed,
+apps/desktop/ui/src\stores\app.ts:122:    agentPathTargets: () => usePathsStore().agent,
+apps/desktop/ui/src\stores\app.ts:234:    async setRuntimeSourcePath(path: string | null) {
+apps/desktop/ui/src\stores\app.ts:236:      const result = await runtime.setSourcePath(path)
+apps/desktop/ui/src\stores\app.ts:241:      this.showToast(path ? "已切换为指定运行来源。" : "已恢复自动发现。")
+apps/desktop/ui/src\stores\app.ts:256:    async previewOfflinePackage(path: string) {
+apps/desktop/ui/src\stores\app.ts:257:      return useRuntimeStore().previewOffline(path)
+apps/desktop/ui/src\stores\app.ts:368:        return await usePathsStore().openExternal(panel.url)
+apps/desktop/ui/src\stores\app.ts:377:    async saveDataRoot(rootPath: string) {
+apps/desktop/ui/src\stores\app.ts:378:      return useDataRootStore().save(rootPath)
+apps/desktop/ui/src\stores\app.ts:380:    async loadDataRootConfig() {
+apps/desktop/ui/src\stores\app.ts:381:      return useDataRootStore().loadConfig()
+apps/desktop/ui/src\stores\app.ts:383:    async switchDataRoot(targetPath: string, migrateData: boolean) {
+apps/desktop/ui/src\stores\app.ts:384:      return useDataRootStore().switchTo(targetPath, migrateData)
+apps/desktop/ui/src\stores\app.ts:386:    async saveOpencodexHome(mode: "inside" | "external", externalPath?: string) {
+apps/desktop/ui/src\stores\app.ts:387:      return useDataRootStore().saveHome(mode, externalPath)
+apps/desktop/ui/src\stores\app.ts:463:    async openOverviewDataRoot() {
+apps/desktop/ui/src\stores\app.ts:464:      const loaded = await this.loadManagedPathTargets()
+apps/desktop/ui/src\stores\app.ts:469:      const target = this.managedPathTargets?.find(item => item.key === "manager_state")?.path.replace(
+apps/desktop/ui/src\stores\app.ts:477:      const opened = await this.openManagedPath(target)
+apps/desktop/ui/src\stores\app.ts:481:    async openOverviewOpencodexHome() {
+apps/desktop/ui/src\stores\app.ts:482:      const loaded = await this.loadManagedPathTargets()
+apps/desktop/ui/src\stores\app.ts:488:        this.dataRootConfig?.currentOpencodexHome ??
+apps/desktop/ui/src\stores\app.ts:494:      const opened = await this.openManagedPath(target)
+apps/desktop/ui/src\stores\app.ts:564:    // —— 受管路径投影（app/paths/store.ts）的动作委托 ——
+apps/desktop/ui/src\stores\app.ts:565:    async loadManagedPathTargets() {
+apps/desktop/ui/src\stores\app.ts:566:      return usePathsStore().load()
+apps/desktop/ui/src\stores\app.ts:568:    async openManagedPath(path?: string) {
+apps/desktop/ui/src\stores\app.ts:569:      return usePathsStore().open(path)
+apps/desktop/ui/src\stores\app.ts:572:      return usePathsStore().openExternal(url)
+apps/desktop/ui/src\stores\app.ts:575:      return usePathsStore().openDocument(documentId)
+apps/desktop/ui/src\stores\app.ts:577:    async openManagedPathByKey(key: string) {
+apps/desktop/ui/src\stores\app.ts:578:      if (!this.managedPathTargets) await this.loadManagedPathTargets()
+apps/desktop/ui/src\stores\app.ts:579:      const target = this.managedPathTargets?.find(item => item.key === key)
+apps/desktop/ui/src\stores\app.ts:584:      const opened = await this.openManagedPath(target.path)
+apps/desktop/ui/src\stores\app.ts:640:    async setExtensionSourceDir(path: string | null) {
+apps/desktop/ui/src\stores\app.ts:641:      return useExtensionsStore().setSourceDir(path)
+apps/desktop/ui/src\components\ui\UiTreeTable.vue:86:    case "Home": target = rows.value[0]?.node.id; break
+apps/desktop/ui/src\components\ui\UiTreeTable.vue:138:                  <svg v-if="row.node.children?.length" aria-hidden="true" viewBox="0 0 16 16" :class="{ expanded: expanded.has(row.node.id) }"><path d="m6 4 4 4-4 4" /></svg>
+apps/desktop/ui/src\app\bootstrap.ts:12:  void app.loadDataRootConfig()
+apps/desktop/ui/src\components\AppTopbar.vue:95:          <svg v-if="option.value === 'light'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+apps/desktop/ui/src\components\AppTopbar.vue:96:          <svg v-else-if="option.value === 'dark'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+apps/desktop/ui/src\components\AppTopbar.vue:97:          <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+apps/desktop/ui/src\components\AppTopbar.vue:111:        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M18.2 3.4v3.3h-3.3"/></svg>
+apps/desktop/ui/src\components\AppTopbar.vue:121:          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"/><path d="M10.3 20a2 2 0 0 0 3.4 0"/></svg>
+apps/desktop/ui/src\components\registry.ts:3: * Registration and existing source paths do not claim full visual/native acceptance.
+apps/desktop/ui/src\components\patterns\TaskProgressCard.vue:8:  <div class="process-progress-head"><span v-if="phase!=='running'" class="process-progress-result" :class="phase" aria-hidden="true">{{ phase==='error'?'!':'✓' }}</span><div><h3>{{ title }}</h3><p v-if="message">{{ message }}</p></div><UiIconButton v-if="showCollapse" class="notify-min" size="notification" :label="collapseLabel" @click="$emit('collapse')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="M14 10 20 4"/><path d="M10 14 4 20"/></svg></UiIconButton></div>
+apps/desktop/ui/src\components\BrandMark.vue:7:      <mask id="desktopBrandKnockout" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><svg x="7.5" y="7.5" width="9" height="9" viewBox="0 0 1024 1024" fill="#000" aria-hidden="true"><path d="M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z"/><path d="M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z"/><path d="M150 699c10 0 19.8.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z"/><path d="M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 0 0-300 0Z"/><path d="M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 93.7 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z"/></svg></mask>
+apps/desktop/ui/src\components\BrandMark.vue:9:    <path mask="url(#desktopBrandKnockout)" fill="url(#desktopBrandGradient)" d="M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z"/>
+apps/desktop/ui/src\components\AppSidebar.vue:36:        <svg v-else-if="item.icon === 'panel'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9.5 4v16"/></svg>
+apps/desktop/ui/src\components\AppSidebar.vue:37:        <svg v-else-if="item.icon === 'extensions'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.5a2.5 2.5 0 0 1 4 0V5h3A1.5 1.5 0 0 1 18.5 6.5V10h1.5a2.5 2.5 0 0 1 0 4h-1.5v3.5A1.5 1.5 0 0 1 17 19h-3v-1.5a2.5 2.5 0 0 0-5 0V19H6.5A1.5 1.5 0 0 1 5 17.5V14H3.5a2.5 2.5 0 0 1 0-4H5V6.5A1.5 1.5 0 0 1 6.5 5H10V3.5Z"/></svg>
+apps/desktop/ui/src\components\AppSidebar.vue:38:        <svg v-else-if="item.icon === 'sync'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 11.5-1L20 9M4 15l2.5 3A7 7 0 0 0 18 17"/></svg>
+apps/desktop/ui/src\components\AppSidebar.vue:39:        <svg v-else-if="item.icon === 'logs'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 12h6M9 16h6"/></svg>
+apps/desktop/ui/src\components\AppSidebar.vue:40:        <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+apps/desktop/ui/src\components\patterns\FeedbackToast.vue:6:<template><div class="toast show" role="status"><span class="toast-txt">{{ message }}</span><UiIconButton size="notification" class="notify-min" label="收起这条操作反馈到铃铛" @click="$emit('collapse')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"/><path d="M10.3 20a2 2 0 0 0 3.4 0"/></svg></UiIconButton></div></template>
+apps/desktop/ui/src\components\ui\UiSelectMenu.vue:66:  if (items.length && ['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+apps/desktop/ui/src\components\ui\UiSelectMenu.vue:68:    const next = event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1
+apps/desktop/ui/src\features\backup\api.ts:4:  directory: boolean
+apps/desktop/ui/src\features\backup\api.ts:9:export interface BackupFilesDto { rootPath: string; nodes: BackupFileNode[] }
+apps/desktop/ui/src\features\backup\api.ts:41:export const restoreBackup = (id: string) => call<{ backupId: string; protectionBackupId: string; targetPath: string; refreshRequired: boolean; protectionReconciliationPending: boolean }>('restore_preferences_backup', { id })
+apps/desktop/ui/src\features\backup\ModelSaveHistory.vue:6:import {errorText,modelApi,type ModelHistoryEntry,type ModelRecoveryPreview,type ModelSnapshot} from '@/features/models/api'
+apps/desktop/ui/src\features\backup\ModelSaveHistory.vue:10:const records=ref<ModelHistoryEntry[]>([]);const query=ref('');const error=ref('');const busy=ref(false)
+apps/desktop/ui/src\features\backup\ModelSaveHistory.vue:11:const selected=ref<ModelHistoryEntry|null>(null);const side=ref<'before'|'after'>('before');const scope=ref<'affected'|'all'>('affected');const restoreDefaults=ref(false)
+apps/desktop/ui/src\features\backup\ModelSaveHistory.vue:17:function choose(record:ModelHistoryEntry){selected.value=record;side.value='before';scope.value='affected';restoreDefaults.value=false;invalidate();error.value=''}
+apps/desktop/ui/src\features\backup\BackupManagement.vue:102:  app.openModal({ title: node.directory ? '打开备份目录' : '打开备份文件',
+apps/desktop/ui/src\features\backup\BackupFiles.vue:11:const rootPath = ref('')
+apps/desktop/ui/src\features\backup\BackupFiles.vue:22:    rootPath.value = result.rootPath
+apps/desktop/ui/src\features\backup\BackupFiles.vue:23:    // An empty backups directory still returns a root node. Wait for real
+apps/desktop/ui/src\features\backup\BackupFiles.vue:45:    <p v-if="rootPath" class="backup-root">{{ rootPath }}</p>
+apps/desktop/ui/src\features\backup\BackupFiles.vue:48:        <svg v-if="file(node).directory" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 5h6l2 2h8v10H2Z" /></svg>
+apps/desktop/ui/src\features\backup\BackupFiles.vue:49:        <svg v-else viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2h7l4 4v12H5Z M12 2v5h4" /></svg>
+apps/desktop/ui/src\features\backup\BackupFiles.vue:53:        <UiButton class="btn ghost backup-open" type="button" :disabled="!file(node).canOpen" :aria-label="(file(node).directory ? '打开目录 ' : '打开文件 ') + node.label" @click="emit('open', file(node))">{{ file(node).directory ? '打开目录' : '打开文件' }}</UiButton>
+apps/desktop/ui/src\features\extensions\store.ts:67:    async setSourceDir(path: string | null) {
+apps/desktop/ui/src\features\extensions\store.ts:68:      const result = await this.write({ kind: 'set_source_dir', path })
+apps/desktop/ui/src\components\ui\UiSegmented.vue:8: if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(event.key) || props.disabled) return
+apps/desktop/ui/src\components\ui\UiSegmented.vue:11: const next = event.key === 'Home' ? 0 : event.key === 'End' ? choices.length - 1 : (index + (['ArrowRight','ArrowDown'].includes(event.key) ? 1 : -1) + choices.length) % choices.length
+apps/desktop/ui/src\components\layout\DetailWorkspace.vue:74:    <UiButton size="sm" variant="ghost" class="detail-collapse" :aria-label="(collapsed?'展开':'收起')+label" :title="(collapsed?'展开':'收起')+label" :aria-expanded="!collapsed" @click="collapse"><svg class="detail-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span v-if="!collapsed">收起导航</span></UiButton>
+apps/desktop/ui/src\features\updates\useUpdateScheduler.ts:4:import { useDataRootStore } from '@/features/data-root/store'
+apps/desktop/ui/src\features\updates\useUpdateScheduler.ts:15:  const roots = useDataRootStore()
+apps/desktop/ui/src\features\data-root\api.ts:1:export type DataRootValidation = 'valid' | 'uninitialized' | 'future_version' | 'corrupted'
+apps/desktop/ui/src\features\data-root\api.ts:3:export interface DataRootInitialization {
+apps/desktop/ui/src\features\data-root\api.ts:8:export async function initializeDataRoot(rootPath: string): Promise<DataRootInitialization> {
+apps/desktop/ui/src\features\data-root\api.ts:10:  return invoke<DataRootInitialization>('initialize_data_root', { request: { rootPath } })
+apps/desktop/ui/src\features\data-root\api.ts:13:export async function validateDataRootStructure(rootPath: string): Promise<DataRootValidation> {
+apps/desktop/ui/src\features\data-root\api.ts:15:  return invoke<DataRootValidation>('validate_data_root_structure', { rootPath })
+apps/desktop/ui/src\features\data-root\api.ts:18:export type OpenCodexHomeMode = 'inside' | 'external'
+apps/desktop/ui/src\features\data-root\api.ts:19:export type DataRootSwitchMode = 'reference_only' | 'migrate_data'
+apps/desktop/ui/src\features\data-root\api.ts:20:export type DataRootSwitchStatus = 'applied' | 'restart_required' | 'blocked'
+apps/desktop/ui/src\features\data-root\api.ts:21:export type DataRootSwitchBlocked =
+apps/desktop/ui/src\features\data-root\api.ts:28:export interface DataRootConfig {
+apps/desktop/ui/src\features\data-root\api.ts:29:  activeDataRoot: string
+apps/desktop/ui/src\features\data-root\api.ts:30:  opencodexHomeMode: OpenCodexHomeMode
+apps/desktop/ui/src\features\data-root\api.ts:31:  opencodexHome: string
+apps/desktop/ui/src\features\data-root\api.ts:32:  currentDataRoot: string
+apps/desktop/ui/src\features\data-root\api.ts:33:  currentOpencodexHome: string
+apps/desktop/ui/src\features\data-root\api.ts:37:export interface DataRootSwitchResult {
+apps/desktop/ui/src\features\data-root\api.ts:38:  status: DataRootSwitchStatus
+apps/desktop/ui/src\features\data-root\api.ts:39:  blocked: DataRootSwitchBlocked | null
+apps/desktop/ui/src\features\data-root\api.ts:40:  config: DataRootConfig | null
+apps/desktop/ui/src\features\data-root\api.ts:44:export async function getDataRootConfig(): Promise<DataRootConfig> {
+apps/desktop/ui/src\features\data-root\api.ts:46:  return invoke<DataRootConfig>('get_data_root_config')
+apps/desktop/ui/src\features\data-root\api.ts:49:export async function switchDataRoot(
+apps/desktop/ui/src\features\data-root\api.ts:50:  targetPath: string,
+apps/desktop/ui/src\features\data-root\api.ts:51:  mode: DataRootSwitchMode,
+apps/desktop/ui/src\features\data-root\api.ts:52:): Promise<DataRootSwitchResult> {
+apps/desktop/ui/src\features\data-root\api.ts:54:  return invoke<DataRootSwitchResult>('switch_data_root', {
+apps/desktop/ui/src\features\data-root\api.ts:55:    request: { targetPath, mode },
+apps/desktop/ui/src\features\data-root\api.ts:59:export async function setOpencodexHome(
+apps/desktop/ui/src\features\data-root\api.ts:60:  mode: OpenCodexHomeMode,
+apps/desktop/ui/src\features\data-root\api.ts:61:  externalPath?: string,
+apps/desktop/ui/src\features\data-root\api.ts:62:): Promise<DataRootSwitchResult> {
+apps/desktop/ui/src\features\data-root\api.ts:64:  return invoke<DataRootSwitchResult>('set_opencodex_home_config', {
+apps/desktop/ui/src\features\data-root\api.ts:65:    request: { mode, externalPath },
+apps/desktop/ui/src\features\data-root\store.ts:2:// 根 store 通过 getter/委托保留 `app.dataRoot*` 读取与动作调用。
+apps/desktop/ui/src\features\data-root\store.ts:5:  getDataRootConfig,
+apps/desktop/ui/src\features\data-root\store.ts:6:  initializeDataRoot,
+apps/desktop/ui/src\features\data-root\store.ts:7:  setOpencodexHome,
+apps/desktop/ui/src\features\data-root\store.ts:8:  switchDataRoot as switchDataRootCommand,
+apps/desktop/ui/src\features\data-root\store.ts:9:  validateDataRootStructure,
+apps/desktop/ui/src\features\data-root\store.ts:10:  type DataRootConfig,
+apps/desktop/ui/src\features\data-root\store.ts:11:  type DataRootInitialization,
+apps/desktop/ui/src\features\data-root\store.ts:12:  type DataRootValidation,
+apps/desktop/ui/src\features\data-root\store.ts:15:export const useDataRootStore = defineStore('data-root', {
+apps/desktop/ui/src\features\data-root\store.ts:17:    path: '',
+apps/desktop/ui/src\features\data-root\store.ts:18:    config: null as DataRootConfig | null,
+apps/desktop/ui/src\features\data-root\store.ts:26:    lastResult: null as DataRootInitialization | null,
+apps/desktop/ui/src\features\data-root\store.ts:27:    lastValidation: null as DataRootValidation | null,
+apps/desktop/ui/src\features\data-root\store.ts:31:    async save(rootPath: string) {
+apps/desktop/ui/src\features\data-root\store.ts:33:      const path = rootPath.trim()
+apps/desktop/ui/src\features\data-root\store.ts:34:      if (!path) {
+apps/desktop/ui/src\features\data-root\store.ts:41:        this.lastValidation = await validateDataRootStructure(path)
+apps/desktop/ui/src\features\data-root\store.ts:46:        this.lastResult = await initializeDataRoot(path)
+apps/desktop/ui/src\features\data-root\store.ts:48:        this.path = path
+apps/desktop/ui/src\features\data-root\store.ts:61:        this.config = await getDataRootConfig()
+apps/desktop/ui/src\features\data-root\store.ts:70:    async switchTo(targetPath: string, migrateData: boolean) {
+apps/desktop/ui/src\features\data-root\store.ts:72:      const path = targetPath.trim()
+apps/desktop/ui/src\features\data-root\store.ts:73:      if (!path) {
+apps/desktop/ui/src\features\data-root\store.ts:80:        const result = await switchDataRootCommand(path, migrateData ? 'migrate_data' : 'reference_only')
+apps/desktop/ui/src\features\data-root\store.ts:102:    async saveHome(mode: 'inside' | 'external', externalPath?: string) {
+apps/desktop/ui/src\features\data-root\store.ts:104:      if (mode === 'external' && !externalPath?.trim()) {
+apps/desktop/ui/src\features\data-root\store.ts:111:        const result = await setOpencodexHome(mode, externalPath?.trim())
+apps/desktop/ui/src\features\migration\api.ts:7:  path: string
+apps/desktop/ui/src\components\ui\UiDiscreteSlider.vue:10:function key(event:KeyboardEvent){if(index.value>=0)return;if(['ArrowLeft','ArrowDown','ArrowRight','ArrowUp','Home','End'].includes(event.key)){event.preventDefault();const last=event.key==='End'||event.key==='ArrowLeft'||event.key==='ArrowDown';choose(props.values[last?props.values.length-1:0])}}
+apps/desktop/ui/src\features\updates\upgrade.ts:5:  directory: string
+apps/desktop/ui/src\features\updates\upgrade.ts:6:  targetPath: string
+apps/desktop/ui/src\features\updates\upgrade.ts:19:  opencodexHome: string | null
+apps/desktop/ui/src\features\extensions\errors.ts:18:  { match: /is not a regular directory|not a regular directory/i, reason: '目标不是常规目录（可能是符号链接），已拒绝。' },
+apps/desktop/ui/src\features\extensions\errors.ts:29:  { match: /escapes|path/i, reason: '路径越界，已拒绝。' },
+apps/desktop/ui/src\features\sync\WebDavConnection.vue:10:  remotePath: '',
+apps/desktop/ui/src\features\sync\WebDavConnection.vue:25:    remotePath: endpoint.remotePath,
+apps/desktop/ui/src\features\sync\WebDavConnection.vue:45:          <div class="field"><label for="sync-remotePath">远端目录</label><input id="sync-remotePath" v-model="syncEndpointInput.remotePath" class="input" placeholder="/desktop-sync/current" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+apps/desktop/ui/src\features\sync\WebDavConnection.vue:53:        <div v-if="app.syncConfig?.endpoint" class="setting-row"><div><div class="setting-title">已配置端点</div><div class="setting-desc">{{ app.syncConfig.endpoint.url }} · {{ app.syncConfig.endpoint.remotePath }} · 凭据引用 {{ app.syncConfig.endpoint.credentialRefId.slice(0, 12) }}</div></div><div class="controls"><UiButton class="btn danger" :disabled="app.syncSaving" @click="app.deleteSyncEndpoint(true)">删除端点</UiButton></div></div>
+apps/desktop/ui/src\features\extensions\clients.ts:12:export const clientDirectoryOrder: readonly ExtensionClientId[] = [
+apps/desktop/ui/src\features\extensions\clients.ts:34:export interface ClientDirectoryEntry {
+apps/desktop/ui/src\features\extensions\clients.ts:40:  skillsPath: string | null
+apps/desktop/ui/src\features\extensions\clients.ts:41:  mcpPath: string | null
+apps/desktop/ui/src\features\extensions\clients.ts:52:export interface ClientDirectorySource {
+apps/desktop/ui/src\features\extensions\clients.ts:55:  /** get_managed_path_targets 的 Skills 落点，按客户端索引。 */
+apps/desktop/ui/src\features\extensions\clients.ts:56:  skillsPaths?: Partial<Record<ExtensionClientId, string>>
+apps/desktop/ui/src\features\extensions\clients.ts:58:  mcpPaths?: Partial<Record<ExtensionClientId, string>>
+apps/desktop/ui/src\features\extensions\clients.ts:64:  return (clientDirectoryOrder as readonly string[]).includes(value)
+apps/desktop/ui/src\features\extensions\clients.ts:67:export function buildClientDirectory(source: ClientDirectorySource): ClientDirectoryEntry[] {
+apps/desktop/ui/src\features\extensions\clients.ts:68:  return clientDirectoryOrder.map(id => {
+apps/desktop/ui/src\features\extensions\clients.ts:70:    const skillsPath = source.skillsPaths?.[id] ?? null
+apps/desktop/ui/src\features\extensions\clients.ts:71:    const mcpPath = source.mcpPaths?.[id] ?? null
+apps/desktop/ui/src\features\extensions\clients.ts:72:    const skillsReady = skillsPath !== null
+apps/desktop/ui/src\features\extensions\clients.ts:73:    const mcpReady = mcpPath !== null
+apps/desktop/ui/src\features\extensions\clients.ts:103:      skillsPath,
+apps/desktop/ui/src\features\extensions\clients.ts:104:      mcpPath,
+apps/desktop/ui/src\features\extensions\clients.ts:118:export function clientStatusTag(entry: ClientDirectoryEntry): { label: string; tone: ClientTagTone } {
+apps/desktop/ui/src\features\extensions\clients.ts:128:export function clientAdaptation(entry: ClientDirectoryEntry): string {
+apps/desktop/ui/src\features\extensions\clients.ts:136:export function clientDiscoveryLabel(entry: ClientDirectoryEntry): string {
+apps/desktop/ui/src\features\extensions\clients.ts:146:  entries: readonly ClientDirectoryEntry[],
+apps/desktop/ui/src\features\extensions\clients.ts:149:): ClientDirectoryEntry[] {
+apps/desktop/ui/src\features\extensions\components\ClientIcon.vue:12:    <path
+apps/desktop/ui/src\features\extensions\components\ClientIcon.vue:13:      v-for="(path, index) in icon.paths"
+apps/desktop/ui/src\features\extensions\components\ClientIcon.vue:15:      :d="path.d"
+apps/desktop/ui/src\features\extensions\components\ClientIcon.vue:16:      :clip-rule="path.clipRule"
+apps/desktop/ui/src\features\extensions\components\ClientIcon.vue:17:      :fill-rule="path.fillRule"
+apps/desktop/ui/src\dev\modelFixtures.ts:12:    const content=emptyContent();content.matching.include=[{kind:'prefix',value:label.toLowerCase()+'-'}]
+apps/desktop/ui/src\dev\modelFixtures.ts:40:  modelApi.executionDirectory=async()=>({channels:snapshot.policy.channels.map(c=>({id:c.id,label:c.label,providerId:c.connection.providerId})),rows:snapshot.policy.channels.flatMap(c=>c.discovered.map(m=>({channelId:c.id,providerId:c.connection.providerId,modelId:m.id,label:(c.connection.providerId==='openai'?m.label:c.label+'/'+m.id),enabled:c.connection.enabled,selected:true,discovered:true,templateRef:null,rules:m.rules,source:{},connectionDigest:'visual-binding'})))})
+apps/desktop/ui/src\dev\modelFixtures.ts:77:  const accountFixtures:import('@/features/sync/modelTransfer').AccountCatalogEntry[]=[
+apps/desktop/ui/src\features\extensions\clientIcons.ts:7:export interface ClientIconPath {
+apps/desktop/ui/src\features\extensions\clientIcons.ts:15:  paths: ClientIconPath[]
+apps/desktop/ui/src\features\extensions\clientIcons.ts:21:    paths: [
+apps/desktop/ui/src\features\extensions\clientIcons.ts:27:    paths: [
+apps/desktop/ui/src\features\extensions\clientIcons.ts:33:    paths: [
+apps/desktop/ui/src\features\extensions\clientIcons.ts:39:    paths: [
+apps/desktop/ui/src\features\extensions\clientIcons.ts:45:    paths: [
+apps/desktop/ui/src\features\extensions\clientIcons.ts:51:    paths: [
+apps/desktop/ui/src\features\runtime\store.ts:130:    async setSourcePath(path: string | null): Promise<{ ok: boolean; error: string }> {
+apps/desktop/ui/src\features\runtime\store.ts:133:        this.source = await setRuntimeSourceCommand(path)
+apps/desktop/ui/src\features\runtime\store.ts:152:    async previewOffline(path: string) {
+apps/desktop/ui/src\features\runtime\store.ts:155:        this.offlinePreview = await previewOfflinePackageCommand(path)
+apps/desktop/ui/src\features\runtime\store.ts:160:          fileName: path.split('/').pop() ?? path,
+apps/desktop/ui/src\features\runtime\store.ts:163:          sha256Prefix: null,
+apps/desktop/ui/src\features\extensions\components\ExtensionDetailModal.vue:94:              <path v-for="(d, index) in actionIcon(action)" :key="index" :d="d" />
+apps/desktop/ui/src\features\notifications\components\NotificationItem.vue:36:          <path d="M4 7h16M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M6.5 7l.8 12a2 2 0 0 0 2 1.9h5.4a2 2 0 0 0 2-1.9L17.5 7"/>
+apps/desktop/ui/src\features\runtime\installPath.ts:2:// OS paths, permissions, links, actual containment and installation admission.
+apps/desktop/ui/src\features\runtime\installPath.ts:3:interface PathIdentity { root: string; parts: string[]; windows: boolean }
+apps/desktop/ui/src\features\runtime\installPath.ts:6:function identity(value: string, platform?: string): PathIdentity | null {
+apps/desktop/ui/src\features\runtime\installPath.ts:7:  const path = value.trim()
+apps/desktop/ui/src\features\runtime\installPath.ts:8:  if (!path || /[\u0000-\u001f]/.test(path)) return null
+apps/desktop/ui/src\features\runtime\installPath.ts:12:    const normalized = path.replaceAll('\\', '/')
+apps/desktop/ui/src\features\runtime\installPath.ts:31:    if (!path.startsWith('/')) return null
+apps/desktop/ui/src\features\runtime\installPath.ts:33:    remaining = path.slice(1)
+apps/desktop/ui/src\features\runtime\installPath.ts:41:export function installPrefixIssue(value: string, platform?: string): string {
+apps/desktop/ui/src\features\runtime\installPath.ts:54:export function prefixInsideDataRoot(root: string, prefix: string, platform?: string): boolean | null {
+apps/desktop/ui/src\features\runtime\installPath.ts:55:  const parent = identity(root, platform), candidate = identity(prefix, platform)
+apps/desktop/ui/src\features\runtime\installPath.ts:61:/** Display only ordinary Windows directory identities; retain device/long-path semantics. */
+apps/desktop/ui/src\features\runtime\installPath.ts:62:export function displayInstallPrefix(value: string, platform?: string): string {
+apps/desktop/ui/src\features\runtime\installPath.ts:64:  let path = value.replaceAll('/', '\\')
+apps/desktop/ui/src\features\runtime\installPath.ts:65:  const ordinary = /^\\\\\?\\UNC\\/i.test(path) ? '\\\\' + path.slice(8)
+apps/desktop/ui/src\features\runtime\installPath.ts:66:    : /^\\\\\?\\[a-z]:\\/i.test(path) ? path.slice(4) : path
+apps/desktop/ui/src\features\runtime\installPath.ts:67:  // Keep an extended prefix when it may be needed by Win32 long-path consumers.
+apps/desktop/ui/src\features\runtime\installPath.ts:68:  if (ordinary.length < 260) path = ordinary
+apps/desktop/ui/src\features\runtime\installPath.ts:69:  return path
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:6:import {modelApi,errorText,type AgentSettings,type ExecutionDirectory,type ModelProjection} from './api'
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:12:const candidate=ref<AgentSettings|null>(null);const directory=ref<ExecutionDirectory|null>(null)
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:18:const localDirectory=computed<ExecutionDirectory>(()=>{
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:27:const allRows=computed(()=>directory.value?.rows??localDirectory.value.rows)
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:28:const channels=computed(()=>directory.value?.channels??localDirectory.value.channels)
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:30:let directoryRequest=0
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:31:onBeforeUnmount(()=>{disposed=true;directoryRequest++})
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:38: directoryRequest++
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:39: directory.value=null
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:41: if(open.value)void refreshDirectory()
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:43:async function refreshDirectory(){
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:44: const request=++directoryRequest
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:45: directory.value=null
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:49:  const actual=await modelApi.executionDirectory()
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:50:  if(!disposed&&request===directoryRequest)directory.value=actual
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:52:  if(!disposed&&request===directoryRequest)error.value=errorText(cause)
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:53: }finally{if(!disposed&&request===directoryRequest)loading.value=false}
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:55:function browse(){if(busy.value)return;error.value='';open.value=true;void refreshDirectory()}
+apps/desktop/ui/src\features\models\AgentExecutionField.vue:56:function choose(picks:ModelChoice[]){if(loading.value||error.value)return;const pick=picks[0];if(!pick||pick.nativeModelId)return;const row=directory.value?.rows.find(r=>r.channelId===pick.channelId&&r.modelId===pick.modelId);if(!row||row.unavailableReason||!row.enabled||!row.connectionDigest)return;candidate.value={channelId:pick.channelId,connectionDigest:row.connectionDigest,providerId:row.providerId,modelId:pick.modelId!,reasoningEffort:pick.reasoningEffort??null,fast:pick.fast??null};open.value=false}
+apps/desktop/ui/src\features\extensions\components\ClientsPanel.vue:16:  type ClientDirectoryEntry,
+apps/desktop/ui/src\features\extensions\components\ClientsPanel.vue:21:  entries: ClientDirectoryEntry[]
+apps/desktop/ui/src\features\extensions\components\ClientsPanel.vue:65:function openClient(entry: ClientDirectoryEntry) {
+apps/desktop/ui/src\features\extensions\components\ClientsPanel.vue:96:function openConfig(entry: ClientDirectoryEntry) {
+apps/desktop/ui/src\features\extensions\components\ClientsPanel.vue:102:      '<dt>Skills</dt><dd>' + escapeHtml(entry.skillsPath ?? '待核实') + '</dd>' +
+apps/desktop/ui/src\features\extensions\components\ClientsPanel.vue:103:      '<dt>MCP</dt><dd>' + escapeHtml(entry.mcpPath ?? '待核实') + '</dd>' +
+apps/desktop/ui/src\features\extensions\components\ClientsPanel.vue:192:        <dt>Skills</dt><dd>{{ selected.skillsPath ?? '搜索目录待核实' }}</dd>
+apps/desktop/ui/src\features\extensions\components\ClientsPanel.vue:193:        <dt>MCP</dt><dd>{{ selected.mcpPath ?? '配置节点待核实' }}</dd>
+apps/desktop/ui/src\features\extensions\api.ts:56:  sourcePath: string
+apps/desktop/ui/src\features\extensions\api.ts:69:  configPath: string
+apps/desktop/ui/src\features\extensions\api.ts:134:  | { kind: 'set_source_dir'; path: string | null }
+apps/desktop/ui/src\features\notifications\components\NotificationCenter.vue:75:          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"/><path d="M10.3 20a2 2 0 0 0 3.4 0"/></svg>
+apps/desktop/ui/src\features\models\BatchAgentDialog.vue:29:  const captured=JSON.parse(JSON.stringify(props.snapshot)) as ModelSnapshot;captured.libraryDigest=pending.expectedLibrary;captured.library.templates=pending.targets.map(t=>({id:t.templateId,label:t.label,source:'user',defaultRevision:null,revisions:[t.revision]}));frozen.value=captured;result.value=pending.result;resultRun.value=pending.runId;review.value=null;saved.value=pending.reviewed;chosen.value={};report.value=new Date(pending.createdAt).toLocaleString('zh-CN')+' · '+(pending.reviewed?'该建议已另存保存版本':pending.result.report??'上次建议已恢复，尚未保存');for(const item of items.value)chosen.value[item.id]=item.fields.filter(f=>!f.locked&&!f.conflict).map(f=>f.path.join('.'))
+apps/desktop/ui/src\features\models\BatchAgentDialog.vue:39:  for(const item of items.value)chosen.value[item.id]=item.fields.filter(f=>!f.locked&&!f.conflict).map(f=>f.path.join('.'))
+apps/desktop/ui/src\features\models\BatchAgentDialog.vue:65:   <article v-for="item in items" :key="item.id" class="batch-agent-result"><h3>{{ item.proposal.label }}</h3><label v-for="field in item.fields" :key="field.path.join('.')"><input v-model="chosen[item.id]" type="checkbox" :value="field.path.join('.')" :disabled="field.locked||busy||!!review" />{{ field.label }}{{ field.locked?' · 人工锁':'' }}<details><summary>查看差异</summary><pre>{{ JSON.stringify(field.before,null,2) }}</pre><pre>{{ JSON.stringify(field.after,null,2) }}</pre></details></label><p v-if="!item.fields.length" class="model-muted">未提出内容变化</p></article>
+apps/desktop/ui/src\features\models\ChannelEditor.vue:124:    <template #header><span class="channel-detail-back"><UiButton size="sm" variant="ghost" aria-label="返回渠道列表" title="返回渠道列表" @click="emit('close')"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></UiButton></span><div class="channel-detail-heading"><strong class="channel-detail-name">{{ channel.label || '新渠道' }}</strong><div class="channel-detail-status" role="status"><UiStatus :tone="saveTone ?? 'muted'" :label="saveStatus" data-status-scope="current-channel" :hint="'当前渠道的保存状态'" /><UiStatus v-if="protectedChannel(channel)" tone="muted" label="官方管理" data-channel-managed /><template v-else><UiStatus :tone="channel.connection.enabled?'running':'muted'" :label="channel.connection.enabled?'已启用':'已停用'" :data-channel-enabled="channel.connection.enabled" /><UiStatus :tone="connectionState.tone" :label="connectionState.label" :data-channel-availability="connectionState.label" /></template><UiStatus v-if="discoveryState" :tone="discoveryState.tone" :label="discoveryState.label" /><span class="channel-detail-count">已选 {{ selectedCount }} / 发现 {{ channel.discovered.length }}</span></div></div><UiSelectField v-if="channels?.length" :model-value="channel.id" :options="channels.map(c=>({value:c.id,label:c.label||'未命名渠道'}))" label="切换渠道" :disabled="busy" @update:model-value="emit('switch',$event)" /></template>
+apps/desktop/ui/src\features\models\ChannelEditor.vue:125:    <template #primary="{collapsed}"><UiButton size="sm" variant="primary" :disabled="busy||saveDisabled||dirty===false" title="保存当前渠道，成功后返回渠道列表；其它渠道修改保留" data-save-scope="current-channel" aria-label="保存渠道草稿" @click="emit('save')"><svg v-if="collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><template v-else>保存</template></UiButton></template>
+apps/desktop/ui/src\features\models\ChannelEditor.vue:127:    <section id="channel-config" tabindex="-1"><h2>渠道配置</h2><div class="channel-config-grid"><label>渠道名称<input class="input" v-model="channel.label" maxlength="80" :disabled="busy" /></label><label>渠道标识<input class="input" :value="channel.connection.providerId" readonly aria-label="渠道标识" /><span class="model-muted">标识固定，名称可修改。</span></label><label>默认接口协议<UiSelectField :model-value="channel.connection.protocol" label="默认接口协议" :disabled="busy" :options="[{value:'openai-responses',label:'openai-responses'},{value:'openai-chat',label:'openai-chat'},{value:'anthropic',label:'anthropic'},{value:'ollama-native',label:'ollama-native'}]" @update:model-value="channel.connection.protocol=$event" /></label><label>认证方式<UiSelectField :model-value="authMode" label="认证方式" :options="authOptions" :disabled="busy" @update:model-value="authMode=$event as 'key'|'none'" /></label><label v-if="authMode==='key'" class="channel-key">API Key<span class="channel-key-input"><input class="input" :type="keyVisible?'text':'password'" autocomplete="off" v-model="apiKey" aria-label="API Key" :placeholder="keyLoading?'正在读取…':'API Key'" :disabled="busy||keyLoading||protectedChannel(channel)" @input="keyChanged" /><UiIconButton :label="keyVisible?'隐藏 API Key':'显示 API Key'" :disabled="keyLoading||!apiKey" :aria-pressed="keyVisible" @click="keyVisible=!keyVisible"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/><path v-if="keyVisible" d="M3 3l18 18"/></svg></UiIconButton><UiButton size="sm" :disabled="busy||keyLoading||protectedChannel(channel)" @click="clearKey">清空 Key</UiButton></span><span class="model-muted">{{ keyIntent }}</span><span v-if="keySource" class="model-muted">{{ keySource }}</span><span v-if="keyError" class="model-muted" role="status">{{ keyError }}</span></label></div>
+apps/desktop/ui/src\features\runtime\presentation.ts:20:export function sourceLandingLabel(insideDataRoot: boolean): string {
+apps/desktop/ui/src\features\runtime\presentation.ts:21:  return insideDataRoot ? '数据根内' : '数据根外'
+apps/desktop/ui/src\dev\component-gallery\FoundationExamples.vue:33: <UiCard id="typography"><UiCardHeader><h2>字体、富文本与图标区域</h2><p>正式字体栈、字号与等宽字体；受限Markdown继续通过唯一安全渲染组件。</p></UiCardHeader><p v-for="scale in ['caption','label','control','body','subtitle','title','display']" :key="scale" :class="'type-'+scale">OpenCodeX 管理工作空间 0123456789 · {{ scale }}</p><pre class="mono">/Users/example/Library/Application Support/OpenCodex/模型配置.json</pre><MarkdownContent class="ext-detail-md" :source="markdownSource" /><div class="foundation-inline"><UiIconButton label="刷新图标样例" @click="feedback='刷新动作样例'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M18 3v4h-4"/></svg></UiIconButton><UiIconButton label="危险图标样例" variant="danger"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M9 6V3h6v3M7 6l1 15h8l1-15"/></svg></UiIconButton><UiIconButton size="notification" label="通知图标样例"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14l-2-5V9a5 5 0 0 0-10 0v3Z"/></svg></UiIconButton><UiIconButton label="禁用图标样例" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/></svg></UiIconButton></div></UiCard>
+apps/desktop/ui/src\features\models\AgentPanel.vue:36:watch(fields, values => { chosen.value = chosen.value.filter(path => values.some(field => field.path.join('.') === path && !field.conflict && !field.locked)) })
+apps/desktop/ui/src\features\models\AgentPanel.vue:84:    chosen.value = proposalFields(captured, props.draft, suggestion).filter(f => !f.conflict && !f.locked).map(f => f.path.join('.'))
+apps/desktop/ui/src\features\models\AgentPanel.vue:93:  <aside id="model-agent-panel" ref="panel" class="model-agent-panel" role="dialog" aria-modal="false" :class="{'is-maximized':maximized}" aria-label="模版助手"><header><strong>模版助手</strong><div class="model-inline"><UiIconButton :label="maximized?'还原大小':'放大'" :title="maximized?'还原大小':'放大'" :aria-pressed="maximized" @click="maximized=!maximized"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path v-if="maximized" d="M9 3v6H3m18 0h-6V3M3 15h6v6m6 0v-6h6"/><path v-else d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></UiIconButton><UiIconButton label="收起" title="收起助手" @click="collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></UiIconButton></div></header>
+apps/desktop/ui/src\features\models\AgentPanel.vue:99:      <template v-if="result"><p v-if="!sameTarget" class="model-error">该建议属于先前编辑对象，未应用到当前表单。</p><article v-for="field in fields" :key="field.path.join('.')" class="model-agent-diff"><label><input v-model="chosen" type="checkbox" :value="field.path.join('.')" :disabled="field.locked" />{{ field.label }}{{ field.locked ? ' · 人工锁' : field.conflict ? ' · 生成期间有人工修改，默认保留' : '' }}</label><details><summary>查看前后内容</summary><pre>{{ JSON.stringify(field.current,null,2) }}</pre><pre>{{ JSON.stringify(field.after,null,2) }}</pre></details></article><UiButton :disabled="!sameTarget || !chosen.length" @click="accept">接受所选建议</UiButton></template>
+apps/desktop/ui/src\features\models\AgentPanel.vue:102:    <footer><div class="model-agent-context"><UiButton size="sm" variant="ghost" :aria-expanded="sourcesOpen" aria-controls="model-agent-sources" @click="toggleSources">{{ sourceSummary }}</UiButton><label title="保留本轮内部建议前已有的人工上下文窗口"><input v-model="lockContext" type="checkbox" :disabled="busy" />锁定上下文</label><UiIconButton label="导出上下文" title="导出上下文到外部任务" :disabled="busy" @click="external"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 14v6h16v-6"/></svg></UiIconButton></div><textarea ref="input" class="input" v-model="prompt" rows="2" placeholder="填写资料或继续纠偏" aria-label="制模要求" @select="captureView()" @keyup="captureView()" @blur="captureView()" /><div class="model-inline"><UiButton v-if="busy" @click="stop">停止</UiButton><UiButton v-else variant="primary" :disabled="!settings || researching" @click="generate">发送</UiButton></div></footer>
+apps/desktop/ui/src\dev\component-gallery\GalleryApp.vue:38:const longPath = computed(()=>long.value?'/Users/example/Library/Application Support/OpenCodex/较长的中文与 English 项目工作区及配置资料路径/data-root/logs/2026-09-27-application-very-long-name.log':'/Users/example/Library/Application Support/OpenCodex/data-root/logs/2026-09-27-application.log')
+apps/desktop/ui/src\dev\component-gallery\GalleryApp.vue:94:          <UiButton><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 3h13l3 3v18H4zM8 3v6h8V3"/></svg><span>图文按钮</span></UiButton><UiButton>默认</UiButton>
+apps/desktop/ui/src\dev\component-gallery\GalleryApp.vue:163:        <p class="mono gallery-path" :title="longPath">{{ longPath }}</p>
+apps/desktop/ui/src\dev\component-gallery\GalleryApp.vue:190:.gallery-path {
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:12:import { modelTransferApi, scopeFor,remoteScope, accountInformationLabel, accountInformationSupported, accountTransferLabel, accountPlatforms, type AccountCatalogEntry, type ChannelImportMapping, type DraftCandidate, type FamilyScope, type FilePlan, type IncomingPlan, type ManagerScope, type RemoteOptions, type TransferScope, type UploadPlan } from './modelTransfer'
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:46:const exportedPath = ref('')
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:48:const importPassword=ref('');const passwordOpen=ref(false);const importPath=ref('')
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:59:const accountPlatform=ref('all');const accountIds=ref<string[]>([]);const accountCatalog=ref<AccountCatalogEntry[]>([]);const accountError=ref('');const receiveAccounts=ref<string[]>([])
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:91:  ...(source.manager?.webdav??[]).map(e=>({id:scopeKey('endpoints',e.id),category:'endpoints',categoryLabel:'WebDAV连接',label:e.username+' · '+e.url,detail:e.remotePath+' · 采用后未启用'})),
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:209:      const selected = await open({ multiple: false, directory: false, filters: [{ name: '配置文件', extensions: ['ocxdconf','json'] }] })
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:211:      importPath.value=selected
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:224:async function unlockFile(){await perform(async()=>{incoming.value=remoteUnlock.value?await modelTransferApi.download(importPassword.value):recompareId.value?(openingOriginal.value?await modelTransferApi.openReceived(recompareId.value,importPassword.value):await modelTransferApi.recompare(recompareId.value,importPassword.value)):await modelTransferApi.receive(importPath.value,importPassword.value);unlockedPassword=importPassword.value;passwordOpen.value=false;importPassword.value='';filePlan.value=null;upload.value=null;if(!openingOriginal.value)selectIncoming(incoming.value)})}
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:247:  const path=exportedPath.value
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:248:  if(!path)return
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:249:  const parent=path.slice(0,path.lastIndexOf('/'))||path
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:250:  try{await app.openManagedPathByKey('exports')}catch{app.showToast('打开导出目录失败；可手动前往 '+parent)}
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:254:  const picked=await open({directory:true,multiple:false,title:'选择导出目录'})
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:267:  exportedPath.value=result.path;filePlan.value=null;preparedExport.value=null;plaintextConfirmOpen.value=false;exportPackagePassword.value='';exportPackagePasswordAgain.value=''
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:307:    <div v-if="exportedPath" class="model-transfer-path" role="status"><span>备份包</span><code>{{ exportedPath }}</code><UiButton size="sm" variant="ghost" @click="openExportParent">打开备份包目录</UiButton></div>
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:369:      <div v-if="(incoming??filePlan??upload)?.manager" class="model-transfer-manager"><strong>管理器配置</strong><p v-if="(incoming??filePlan??upload)?.manager?.preferences">桌面偏好</p><p v-if="(incoming??filePlan??upload)?.manager?.extensions">扩展设置 · Skill {{ (incoming??filePlan??upload)?.manager?.extensions?.skills.length }} · MCP {{ (incoming??filePlan??upload)?.manager?.extensions?.servers.length }}（资源与凭据按包内内容处理）</p><p v-for="endpoint in (incoming??filePlan??upload)?.manager?.webdav??[]" :key="endpoint.id">{{ endpoint.username }} · {{ endpoint.url }} / {{ endpoint.remotePath }}{{ incoming?' · 导入后未启用':'' }}</p></div>
+apps/desktop/ui/src\features\sync\ModelTransfer.vue:391:.model-transfer-path{display:grid;gap:8px;overflow-wrap:anywhere}
+apps/desktop/ui/src\features\models\api.ts:18:export interface Pattern { kind: 'exact' | 'prefix' | 'glob'; value: string }
+apps/desktop/ui/src\features\models\api.ts:68:export interface ModelHistoryEntry {id:string;createdAt:string;phase:string;channelLabels:string[];recoverable:boolean}
+apps/desktop/ui/src\features\models\api.ts:75:export interface ExecutionDirectory {channels:{id:string;label:string;providerId:string}[];rows:ModelProjection[]}
+apps/desktop/ui/src\features\models\api.ts:90:export const emptyContent = (): TemplateContent => ({ description: '', matching: { include: [{ kind: 'prefix', value: '' }], exclude: [], caseSensitive: false, channelMode: 'all', channels: [], priority: 0 }, rules: emptyRules(), variants: [], lockedFields: [], sources: [] })
+apps/desktop/ui/src\features\models\api.ts:113:  policyHistory:()=>invoke<ModelHistoryEntry[]>('model_policy_history'),
+apps/desktop/ui/src\features\models\api.ts:127:  executionDirectory:()=>invoke<ExecutionDirectory>('model_agent_directory'),
+apps/desktop/ui/src\dev\auditHarness.ts:26:  const found = { found: true, path: '/fixtures/bin', version: null }
+apps/desktop/ui/src\dev\auditHarness.ts:27:  const missing = { found: false, path: null, version: null }
+apps/desktop/ui/src\dev\auditHarness.ts:631:    path: '/home/.local/bin/ocx',
+apps/desktop/ui/src\dev\auditHarness.ts:634:    insideDataRoot: false,
+apps/desktop/ui/src\dev\auditHarness.ts:635:    managedEntry: '/data/runtime/bin/ocx',
+apps/desktop/ui/src\dev\auditHarness.ts:636:    managedPrefix: '/data/runtime/opencodex',
+apps/desktop/ui/src\dev\auditHarness.ts:637:    defaultPrefix: '/data/runtime/opencodex',
+apps/desktop/ui/src\dev\auditHarness.ts:638:    explicitPath: null,
+apps/desktop/ui/src\dev\auditHarness.ts:647:      sourcePath: '/home/.local/bin/ocx',
+apps/desktop/ui/src\dev\auditHarness.ts:667:      sourcePath: null,
+apps/desktop/ui/src\dev\auditHarness.ts:669:      backupDirectory: '/data/backups/2026/09/runtime-uninstall/bk_x',
+apps/desktop/ui/src\dev\auditHarness.ts:675:        { path: '/home/.local/bin/ocx', status: 'cleared' },
+apps/desktop/ui/src\dev\auditHarness.ts:676:        { path: '/home/Library/LaunchAgents/com.opencodex.proxy.plist', status: 'cleared' },
+apps/desktop/ui/src\features\runtime\api.ts:23:export interface InstallHistoryEntry {
+apps/desktop/ui/src\features\runtime\api.ts:35:  path: string | null
+apps/desktop/ui/src\features\runtime\api.ts:38:  insideDataRoot: boolean
+apps/desktop/ui/src\features\runtime\api.ts:39:  managedEntry: string | null
+apps/desktop/ui/src\features\runtime\api.ts:41:  managedPrefix: string
+apps/desktop/ui/src\features\runtime\api.ts:43:  defaultPrefix: string
+apps/desktop/ui/src\features\runtime\api.ts:44:  explicitPath: string | null
+apps/desktop/ui/src\features\runtime\api.ts:45:  history: InstallHistoryEntry[]
+apps/desktop/ui/src\features\runtime\api.ts:55:  prefix: string | null
+apps/desktop/ui/src\features\runtime\api.ts:58:  offlinePath: string | null
+apps/desktop/ui/src\features\runtime\api.ts:74:  npmPath: string
+apps/desktop/ui/src\features\runtime\api.ts:86:  sha256Prefix: string | null
+apps/desktop/ui/src\features\runtime\api.ts:106:  sourcePath: string | null
+apps/desktop/ui/src\features\runtime\api.ts:126:  path: string
+apps/desktop/ui/src\features\runtime\api.ts:133:  sourcePath: string | null
+apps/desktop/ui/src\features\runtime\api.ts:135:  backupDirectory: string | null
+apps/desktop/ui/src\features\runtime\api.ts:172:export async function setRuntimeSource(path: string | null): Promise<RuntimeSourceDto> {
+apps/desktop/ui/src\features\runtime\api.ts:173:  return invoke<RuntimeSourceDto>('set_runtime_source', { path })
+apps/desktop/ui/src\features\runtime\api.ts:180:export async function previewOfflinePackage(path: string): Promise<OfflinePackagePreviewDto> {
+apps/desktop/ui/src\features\runtime\api.ts:181:  return invoke<OfflinePackagePreviewDto>('preview_offline_package', { path })
+apps/desktop/ui/src\features\environment\components\EnvironmentGate.vue:119:            <svg v-if="check.tone === 'ok'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+apps/desktop/ui/src\features\models\useNodeMeasurements.ts:3:const nodeErrors:Record<string,string>={discovery_html:'服务返回了网页，没有模型清单',discovery_path:'未找到模型清单接口',discovery_json:'模型清单响应不是有效 JSON',discovery_dns:'地址解析失败',discovery_private:'请先确认允许可信私有网络',discovery_auth:'服务拒绝了这次请求；请核对 Key 是否有效',credential_unconfirmed:'该节点没有可确认的凭据',discovery_timeout:'请求超时',discovery_failed:'连接或清单请求失败',discovery_pagination:'分页未完整',discovery_shape:'服务未返回模型清单',discovery_limit:'响应超过上限',discovery_protocol:'该协议需专用连接',node_url:'节点地址无效',credential_store:'系统凭据不可用'}
+apps/desktop/ui/src\features\models\NewChannelDialog.vue:33: try{const parsed=new URL(url.value);if(!['http:','https:'].includes(parsed.protocol)||!parsed.hostname||parsed.username||parsed.password||parsed.search||parsed.hash||/\/(responses|chat\/completions|messages)\/?$/.test(parsed.pathname))return '填写不含凭据、参数或生成接口路径的HTTP/HTTPS服务基地址'}catch{return '请填写有效服务基地址'}
+apps/desktop/ui/src\features\sync\modelTransfer.ts:9:export interface AccountCatalogEntry {account:PortableAccount;loginTransfer:LoginTransfer;localSource:boolean;informationSupported:boolean}
+apps/desktop/ui/src\features\sync\modelTransfer.ts:31:export interface PortableEndpoint {id:string;url:string;remotePath:string;username:string;conflictPolicy:string}
+apps/desktop/ui/src\features\sync\modelTransfer.ts:42:export interface ExportedModels { path: string; digest: string; templates: number; channels: number }
+apps/desktop/ui/src\features\sync\modelTransfer.ts:48:  receive: (path: string,passphrase?:string) => invoke<IncomingPlan>('model_transfer_receive', { path,passphrase:passphrase??null }),
+apps/desktop/ui/src\features\sync\modelTransfer.ts:52:  accountCatalog:()=>invoke<AccountCatalogEntry[]>('portable_account_catalog'),
+apps/desktop/ui/src\features\environment\presentation.ts:142:        ? '检测到 Homebrew。可以先安装 Node.js LTS，安装完成后再回来重新检查。'
+apps/desktop/ui/src\features\environment\presentation.ts:143:        : '未检测到 Homebrew。请从 Node.js LTS 官方渠道安装；应用不会代装，也不会写入系统环境。',
+apps/desktop/ui/src\features\environment\api.ts:10:  path: string | null
+apps/desktop/ui/src\features\environment\api.ts:23:export interface DiscoveryPaths {
+apps/desktop/ui/src\features\environment\api.ts:24:  nodePath: string
+apps/desktop/ui/src\features\environment\api.ts:25:  npmPath: string
+apps/desktop/ui/src\features\environment\api.ts:26:  ocxPath: string
+apps/desktop/ui/src\features\environment\api.ts:29:export async function discoverEnvironment(paths?: DiscoveryPaths): Promise<EnvironmentReport> {
+apps/desktop/ui/src\features\environment\api.ts:31:  return invoke<EnvironmentReport>('discover_environment', { request: paths ?? null })
+apps/desktop/ui/src\features\models\ModelPicker.vue:94:function rowKey(event:KeyboardEvent,row:ModelProjection,index:number){if(event.target!==event.currentTarget)return;if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){event.preventDefault();focusRow(event.key==='Home'?0:event.key==='End'?rows.value.length-1:index+(event.key==='ArrowDown'?1:-1))}else if(event.key==='Enter'||event.key===' '){event.preventDefault();chooseRow(row)}}
+apps/desktop/ui/src\features\runtime\motion\scene.ts:50:  links: SVGPathElement[]
+apps/desktop/ui/src\features\runtime\motion\scene.ts:69:    el('path', { fill: 'none', stroke: 'black', 'stroke-width': '0.78', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }),
+apps/desktop/ui/src\features\runtime\motion\scene.ts:73:  LOGO_HOLES.forEach((d) => originalCore.append(el('path', { d, fill: 'black' })))
+apps/desktop/ui/src\features\runtime\motion\scene.ts:75:  const body = el('path', { d: LOGO_BODY, fill: `url(#${uid}-g)`, mask: `url(#${uid}-m)` })
+apps/desktop/ui/src\features\updates\ReleaseNotes.vue:14:const root = computed(() => app.dataRootConfig?.currentDataRoot ?? app.dataRootPath)
+apps/desktop/ui/src\features\updates\ReleaseNotes.vue:15:const frozen = computed(() => app.dataRootSwitching || app.dataRootSaving || app.dataRootPendingRestart)
+apps/desktop/ui/src\features\updates\ReleaseNotes.vue:23:      && !url.search && !url.hash && url.pathname.endsWith('/releases/tag/v' + props.version) ? url.href : null
+apps/desktop/ui/src\features\updates\ReleaseNotes.vue:35:  const target = props.target, channel = props.channel, version = props.version, currentRoot = root.value
+apps/desktop/ui/src\features\updates\ReleaseNotes.vue:43:    const result = await getReleaseDetails(target, channel, version, currentRoot, force)
+apps/desktop/ui/src\features\sync\ImportedConnections.vue:14: <article v-if="items.length||error" class="card imported-connections"><div class="card-head"><div><h2>导入的连接</h2><p>采用文件不会自动启用连接。启用后，后续同步使用所选服务器。</p></div><UiButton size="sm" :loading="busy" @click="load">刷新</UiButton></div><p v-if="error&&!selected" class="imported-error" role="alert">{{ error }}</p><div v-for="item in items" :key="item.id" class="imported-row"><div><strong>{{ item.endpoint.username }} · {{ item.endpoint.url }}</strong><small>{{ item.endpoint.remotePath }} · {{ item.hasPassword?'已携带密码':'未携带密码，请在连接表单补全' }}</small></div><UiButton :disabled="busy||!item.hasPassword" @click="selected=item">启用此连接</UiButton></div>
+apps/desktop/ui/src\features\sync\ImportedConnections.vue:15:  <UiDialog :open="!!selected" title="启用导入的WebDAV连接" :busy="busy" @close="selected=null"><template v-if="selected"><p>后续同步将使用以下服务器；本设备同步范围保持。</p><p>{{ selected.endpoint.url }} / {{ selected.endpoint.remotePath }}</p><p>账号：{{ selected.endpoint.username }}</p></template><p v-if="error" role="alert" class="imported-error">{{ error }}</p><template #actions><UiButton :disabled="busy" @click="selected=null">取消</UiButton><UiButton variant="primary" :loading="busy" @click="activate">确认启用</UiButton></template></UiDialog>
+apps/desktop/ui/src\features\models\ChannelsView.vue:33: * model_agent_directory 的 pickerVisible=false 行，不猜测、不补数。
+apps/desktop/ui/src\features\models\ChannelsView.vue:39:    const directory = await modelApi.executionDirectory()
+apps/desktop/ui/src\features\models\ChannelsView.vue:40:    systemRows.value = directory.rows
+apps/desktop/ui/src\features\sync\api.ts:16:  remotePath: string
+apps/desktop/ui/src\features\sync\api.ts:30:  remotePath: string
+apps/desktop/ui/src\features\sync\api.ts:68:export interface ImportedConnection {id:string;endpoint:{id:string;url:string;remotePath:string;username:string;conflictPolicy:string};hasPassword:boolean}
+apps/desktop/ui/src\features\updates\releaseDetails.ts:17:/** Root is a local ownership key only; backend resolves the actual admitted root. */
+apps/desktop/ui/src\features\models\proposals.ts:2:export interface ProposalField { path: string[]; label: string; before: unknown; current: unknown; after: unknown; conflict: boolean; locked: boolean }
+apps/desktop/ui/src\features\models\proposals.ts:3:function at(value: unknown, path: string[]): unknown { const result=path.reduce<unknown>((v,k) => Array.isArray(v) ? v.find(item => item && typeof item === 'object' && item.id === k) : typeof v === 'object' && v !== null ? (v as Record<string,unknown>)[k] : undefined, value);return result===undefined&&['pinnedEffort','effortMap','noReasoning','reasoningAuthoritative','fastWire'].includes(path.at(-1)??'')?{mode:'inherit'}:result }
+apps/desktop/ui/src\features\models\proposals.ts:20:    const path = key!.split('.'); const before = at(base,path); const now = at(current,path); const after = at(proposal,path)
+apps/desktop/ui/src\features\models\proposals.ts:21:    const lockPath = path.slice(1).join('.')
+apps/desktop/ui/src\features\models\proposals.ts:22:    const variant = path[1] === 'variants' ? [...base.content.variants,...current.content.variants].filter(v => v.id === path[2]) : []
+apps/desktop/ui/src\features\models\proposals.ts:23:    const locked = path[0] === 'content' && [...base.content.lockedFields, ...current.content.lockedFields].some(lock => lockPath === lock || lockPath.startsWith(lock+'.')) || variant.some(v => path.length === 3 ? v.lockedFields.length > 0 : path[3] === 'rules' && v.lockedFields.includes(path[4]!))
+apps/desktop/ui/src\features\models\proposals.ts:24:    return { path,label:label!,before,current:now,after,conflict:JSON.stringify(before)!==JSON.stringify(now),locked }
+apps/desktop/ui/src\features\models\proposals.ts:30:    if (field.locked || !selected.includes(field.path.join('.'))) continue
+apps/desktop/ui/src\features\models\proposals.ts:33:    for (const key of field.path.slice(0,-1)) {
+apps/desktop/ui/src\features\models\proposals.ts:39:    const key = field.path[field.path.length-1]!
+apps/desktop/ui/src\features\models\ChannelModelTable.vue:89:const batchOpen=ref(false),batchIds=ref<string[]>([]),batchBaseline=ref(''),batchMode=ref('keep'),batchNaming=ref('keep'),batchPrefix=ref('model-'),batchRules=ref(emptyRules()),batchFields=reactive<Record<string,string>>({})
+apps/desktop/ui/src\features\models\ChannelModelTable.vue:100:  if(batchNaming.value==='clear')fields.naming.alias='';if(batchNaming.value==='generate')fields.naming.alias=batchPrefix.value+(index+1)
+apps/desktop/ui/src\features\models\ChannelModelTable.vue:126: <UiDialog :open="batchOpen" title="确认批量型号修改" wide :busy="validating" @close="batchOpen=false"><p>{{ channel.label }} · {{ batchIds.length }} 项</p><details><summary>完整型号范围</summary><ul><li v-for="id in batchIds" :key="id" class="model-raw-id">{{ id }}</li></ul></details><UiSelectField v-model="batchMode" label="批量启停" :disabled="validating||disabled" :options="[{value:'keep',label:'保持启停'},{value:'enable',label:'启用'},{value:'disable',label:'停用'}]" /><UiSelectField v-model="batchNaming" label="批量别名" :disabled="validating||disabled" :options="[{value:'keep',label:'保持别名'},{value:'clear',label:'清空自定义别名'},{value:'generate',label:'规则生成：前缀＋序号'}]" /><label v-if="batchNaming==='generate'">别名前缀<input v-model="batchPrefix" class="input" :disabled="validating||disabled" /></label><div class="model-batch-fields"><label v-for="(name,key) in fieldNames" :key="key">{{ name }}<UiSelectField v-model="batchFields[key]" :label="'批量'+name+'处理'" :disabled="validating||disabled" :options="[{value:'keep',label:'不修改'},{value:'inherit',label:'恢复继承'},{value:'custom',label:'使用自定义值'}]" /></label></div><ModelRuleFields v-if="Object.values(batchFields).includes('custom')" v-model="batchRules" :disabled="disabled||validating" /><p>任一冲突整批不改；启停改变将使用明确白名单，原始ID和顺序保持。</p><p v-if="error" role="alert" class="model-error">{{ error }}</p><template #actions><UiButton :disabled="validating" @click="batchOpen=false">取消</UiButton><UiButton variant="primary" :disabled="disabled" :loading="validating" @click="applyBatch">整批加入草稿</UiButton></template></UiDialog>
+apps/desktop/ui/src\features\models\SelectorPreviewDialog.vue:143:      <span class="preview-eye" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+apps/desktop/ui/src\features\models\SelectorPreviewDialog.vue:147:      <span class="preview-eye" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+apps/desktop/ui/src\features\models\SelectorPreviewDialog.vue:165:     <h3 class="preview-group-title is-locked"><span class="preview-eye" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span><strong>系统占用</strong><small>只读</small></h3>
+apps/desktop/ui/src\features\models\store.ts:28:function mergeTransferValue(base:MergeValue,local:MergeValue,incoming:MergeValue,key='',path:string[]=[]):MergeValue {
+apps/desktop/ui/src\features\models\store.ts:31:  if (path.length===4&&path[0]==='channels'&&path[2]==='connection'&&key==='sourceReadId') return copyTransfer(incoming??local)
+apps/desktop/ui/src\features\models\store.ts:40:        const value=mergeTransferValue(before.get(id),ours.get(id),theirs.get(id),'',[...path,id])
+apps/desktop/ui/src\features\models\store.ts:69:  const receipt=path.length===4&&path[0]==='channels'&&path[2]==='connection'&&key==='importedConfig'
+apps/desktop/ui/src\features\models\store.ts:78:      const value=mergeTransferValue(transferField(previous,name),transferField(local,name),transferField(incoming,name),name,[...path,name])
+apps/desktop/ui/src\features\models\store.ts:438:    // edits never query latestPolicy, reconcile old plans or enter this path.

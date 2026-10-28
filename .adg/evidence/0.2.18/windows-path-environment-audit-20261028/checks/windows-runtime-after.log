@@ -1,0 +1,376 @@
+   Compiling opencodex-desktop v0.2.18 (D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\code\apps\desktop\tauri)
+warning: unused import: `std::path::Path`
+  --> src\modules\model_config\cache_refresh.rs:10:5
+   |
+10 | use std::path::Path;
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: linker stderr: lld-link: Cannot use debug info for 'libcmt.lib(new_scalar_nothrow.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(delete_scalar_size.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(std_type_info_static.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(new_array.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(delete_array.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(std_nothrow.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(thread_safe_statics.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(guard_support.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(gs_cookie.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(fltused.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(tlssup.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(utility.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(throw.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(risctrnsctrl.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(purevirt.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(wcsrchr.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(new_scalar.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(delete_scalar.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(gs_report.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(initialization.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(cpu_disp.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(argv_mode.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(ucrt_detection.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(utility_desktop.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(riscchandler.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(per_thread_data.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(ehstate.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(frame.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(gshandler.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(purevirt_data.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(throw_bad_alloc.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(locks.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(ehhelpers.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(pesect.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(jbcxrval.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(winapi_downlevel.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(std_exception.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(std_type_info.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(gshandlerseh.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(undname.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(dll_dllmain.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(loadcfg.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(gs_support.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(dll_dllmain_stub.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(tncleanup.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(default_local_stdio_options.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(dyn_tls_init.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(initsect.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(initializers.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(softmemtag.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(ucrt_stubs.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `opencodex-desktop` (lib) generated 2 warnings (run `cargo fix --lib -p opencodex-desktop` to apply 1 suggestion)
+warning: linker stderr: lld-link: Cannot use debug info for 'libcmt.lib(new_scalar_nothrow.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(delete_scalar_size.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(std_type_info_static.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(new_array.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(delete_array.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(std_nothrow.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(thread_safe_statics.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(guard_support.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(gs_cookie.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(fltused.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(tlssup.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(utility.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(throw.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(risctrnsctrl.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(purevirt.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(wcsrchr.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(new_scalar.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(delete_scalar.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(gs_report.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(initialization.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(cpu_disp.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(argv_mode.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(ucrt_detection.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(utility_desktop.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(riscchandler.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(per_thread_data.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(ehstate.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(frame.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(gshandler.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(purevirt_data.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(throw_bad_alloc.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(locks.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(ehhelpers.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(pesect.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(jbcxrval.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(winapi_downlevel.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(std_exception.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(std_type_info.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(gshandlerseh.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(undname.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(exe_main.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(loadcfg.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(gs_support.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(matherr.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(commit_mode.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(file_mode.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(new_mode.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(thread_locale.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(tncleanup.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(env_mode.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(invalid_parameter_handler.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(denormal_control.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(default_local_stdio_options.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(matherr_detection.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(dyn_tls_init.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(dyn_tls_dtor.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(initsect.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(initializers.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libvcruntime.lib(softmemtag.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libvcruntime.amd64.pdb': no such file or directory␍
+         ␍
+         lld-link: Cannot use debug info for 'libcmt.lib(ucrt_stubs.obj)' [LNK4099]␍
+         >>> failed to load reference 'D:\a\_work\1\s\binaries\amd64ret\lib\amd64\libcmt.amd64.pdb': no such file or directory
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `opencodex-desktop` (bin "ocxd") generated 1 warning
+warning: `opencodex-desktop` (bin "opencodex-desktop") generated 1 warning (1 duplicate)
+warning: `opencodex-desktop` (test "windows_runtime") generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 46.89s
+     Running tests\windows_runtime.rs (target\debug\deps\windows_runtime-a2d61228472a9f59.exe)
+
+running 19 tests
+test windows_explicit_sandbox_child ... ignored, child entry explicitly executed by the isolated-environment parent
+test windows_local_discovered_tools_install_upgrade_and_failure_recovery ... ignored, explicit local reproduction with discovered tools; installs only into its test root
+test windows_model_environment_child ... ignored, owned child only
+test windows_official_managed_registry_upgrade_and_offline_reinstall ... ignored, explicit CI official registry install; no daily profile or generation
+test windows_install_admission_rejects_mixed_verbatim_traversal_before_creating_directories ... ok
+test windows_environment_discovery_rejects_relative_and_noncommand_files ... ok
+test windows_managed_install_accepts_the_extended_form_of_a_local_prefix ... ok
+test windows_managed_install_rejects_unowned_targets_and_restores_old_package_on_entry_failure ... ok
+test windows_user_environment_is_explicit_and_does_not_inherit_credentials ... ok
+test windows_source_registration_failure_rolls_back_package_and_entry_then_retries ... ok
+test windows_activation_waits_for_a_short_lived_directory_handle ... ok
+test windows_sandbox_home_discovery_and_pipe_use_the_same_explicit_identity ... ok
+test windows_stop_observes_actual_zero_and_nonzero_exit_codes ... ok
+test windows_npm_receives_safe_paths_without_retargeting_validated_storage ... ok
+test windows_npm_cmd_runner_passes_paths_and_controlled_environment ... ok
+test windows_model_commands_preserve_sandbox_home_and_controlled_tool_path ... ok
+test windows_version_probe_executes_node_script_in_a_spaced_path ... ok
+test windows_real_version_probe_requires_zero_exit ... ok
+test windows_cmd_sources_support_spaces_unicode_and_official_output ... ok
+
+test result: ok. 15 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 0.78s
+

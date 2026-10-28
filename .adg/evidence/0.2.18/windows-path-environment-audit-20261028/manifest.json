@@ -1,0 +1,1205 @@
+{
+  "schemaVersion": 1,
+  "targetVersion": "0.2.18",
+  "date": "2026-10-28",
+  "timezone": "Asia/Shanghai",
+  "sourceBranch": "feature/0.2.18-windows-install-diagnostics",
+  "sourceCommit": "98022b83503b6e2853069e6df4005fa220ac1852",
+  "applicationTree": "9a0f30c6aaafb0bdffead2de80825989f84a3464",
+  "uiSourceFilesSearched": 189,
+  "rustSourceFilesSearched": 191,
+  "subsystemDomains": 18,
+  "confirmedFixGroups": 9,
+  "currentExeSha256": "5c24eca1f8befbcff42acf99090fcccfede76204f8e6b15c8e699bce578f70cd",
+  "currentExeMatchesActualRun": true,
+  "checks": [
+    {
+      "name": "review:all-path-surfaces",
+      "result": "passed",
+      "evidence": "coverage-inventory.json; ui-path-search.txt; backend-environment-path-search.txt",
+      "scope": "189 UI + 191 Rust src files and 18 subsystem domains; auxiliary build/installer files reviewed"
+    },
+    {
+      "name": "review:original-identities",
+      "result": "passed",
+      "evidence": "webview-committed-node22/windows-path-ui.json; webview-committed-node24/windows-path-ui.json; daily-files-final.json",
+      "scope": "display/copy/open do not rewrite data-root or runtime source; original user files unchanged"
+    },
+    {
+      "name": "review:controlled-environment",
+      "result": "passed",
+      "evidence": "checks/model-environment-before.log; checks/shim-environment-before.log; checks/discovery-before.log; checks/windows-runtime-final.log; checks/backend-workspace-jobs2.log; checks/nvmd-boundary-comparison.log"
+    },
+    {
+      "name": "review:uninstall-targets",
+      "result": "passed",
+      "evidence": "checks/uninstall-context-before.log; checks/windows-runtime-final.log",
+      "scope": "real subprocess fixture prints selected OPENCODEX_HOME/prefix/cwd; no daily uninstaller executed"
+    },
+    {
+      "name": "test:frontend-full",
+      "result": "passed",
+      "passed": 1034,
+      "evidence": "checks/ui-verified-final.log",
+      "skipped": 10
+    },
+    {
+      "scope": "reported Rust outcomes; not a claim that all opt-in live providers ran",
+      "result": "passed",
+      "ignored": 16,
+      "suites": 40,
+      "evidence": "checks/backend-workspace-jobs2.log; checks/backend-workspace-summary.json",
+      "name": "test:windows-workspace",
+      "passed": 1001
+    },
+    {
+      "name": "test:native-tools",
+      "result": "passed",
+      "evidence": "nvmd-native-final/validation.json; checks/nvmd-committed-install.log; nvmd-command-stage-summary.json; checks/nvmd-boundary-summary.json",
+      "scope": "actual NVMD official package install/offline failure/rollback/upgrade; controlled CLI environment fixtures; COMSPEC A/B"
+    },
+    {
+      "name": "test:webview-node22",
+      "result": "passed",
+      "evidence": "webview-committed-node22/windows-path-ui.json; webview-committed-node22/native-install-recovery.json; webview-committed-node22/app.log",
+      "scope": "Node22.12.0/npm10.9.0; six managed paths/thirteen Agent paths; real clipboard with explicit test focus/permission"
+    },
+    {
+      "name": "test:webview-node24",
+      "result": "passed",
+      "evidence": "webview-committed-node24/windows-path-ui.json; webview-committed-node24/native-install-recovery.json; webview-final-artifact/native-install-recovery.json; final-artifact-provenance.json",
+      "scope": "Node24.22.1/npm11.21.0; current EXE bytes revalidated"
+    },
+    {
+      "name": "test:fmt-clippy-build",
+      "result": "passed",
+      "evidence": "checks/fmt-source-final.log; checks/clippy-committed.log; checks/typecheck-verified-final.log; checks/ui-verified-final-build.log; checks/native-build-committed.log; checks/native-final-artifact.log"
+    }
+  ],
+  "unclosed": [
+    "historical npm exit1 root cause remains unknown",
+    "npm view failure stderr/diagnostic contract remains incomplete",
+    "unexecuted SMB/enterprise/OS/Node/DPI/installer/OTA matrices"
+  ],
+  "bytePolicy": "scoped .gitattributes -text; raw stdout/stderr and failed run evidence preserved",
+  "intermediateRuns": "webview-paths-* are explicitly pre-final dirty working-tree builds or early driver iterations; only committed and final-artifact runs bind final-source validation",
+  "releasePerformed": false,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "gitBlob": "fa1385d99a319b43c06f5309d1aae9fdd3adea46"
+    },
+    {
+      "path": "backend-environment-path-search.txt",
+      "bytes": 30826,
+      "sha256": "6b7cd60a7b23606ffe95da3f89b38a7f656df8a2381c616ebe5053f323f4f4bb",
+      "gitBlob": "4ee58fd823c27ae851e08512039cc13cb35c1ba5"
+    },
+    {
+      "path": "coverage-inventory.json",
+      "bytes": 18951,
+      "sha256": "382ac21a9a38fd0c806df7e8cdc1ee40ed57cc8a41c79b7fe9be5f26462b9684",
+      "gitBlob": "fe8754129abb687ba0bba7a26bbda5feae1cf274"
+    },
+    {
+      "path": "daily-files-final.json",
+      "bytes": 375,
+      "sha256": "cebe832f01c737c3680def0b08036ef5a0161366aaac6f15a7ba3fe144cd7ec2",
+      "gitBlob": "5a2a26e2137083db8085a792e64865599fa399f7"
+    },
+    {
+      "path": "final-artifact-provenance.json",
+      "bytes": 463,
+      "sha256": "5e7a600e24068c0b62d6a5d291bdbfdd9d518de5b39dac1d3e9b9d6f0991fdb4",
+      "gitBlob": "0f443d6892ded65d35ab074c2799f4bede1d17c6"
+    },
+    {
+      "path": "native-matrix-summary.json",
+      "bytes": 1317,
+      "sha256": "77ac9bbed37aee20a4f5e7f4b0a91160f79832f1e247930ec374969df005698c",
+      "gitBlob": "c93989c6d42d7e1ec9367aee9861886c3129e324"
+    },
+    {
+      "path": "nvmd-command-stage-summary.json",
+      "bytes": 5517,
+      "sha256": "1005e40021415c980f2f8fd8c5cc408e981fec77868af25573641ce6d7634295",
+      "gitBlob": "654ee2964c7e62ff65f9ac81f9a0ae8473921037"
+    },
+    {
+      "path": "RCP.json",
+      "bytes": 5072,
+      "sha256": "4fbef270808f678990d326d7d6fec7b4754c318d4c4a73ee3f58604fde68fcef",
+      "gitBlob": "8e132b0bc26226c7c301b2ddaa3327484f153803"
+    },
+    {
+      "path": "TASK.json",
+      "bytes": 988,
+      "sha256": "f1247e900901ae38bad80b9b7b406110a308754261a3dab559e85acc4e96a3d5",
+      "gitBlob": "9bb49937f8594d67cce931191db65a051399e4ca"
+    },
+    {
+      "path": "ui-path-search.txt",
+      "bytes": 102349,
+      "sha256": "fa3bac7fb01249a11ed2dd0efe9b480084977cf0e189db671cf06b228cb2bb6d",
+      "gitBlob": "99284b56ea60bd0aca10508b5d2cfc5398969e59"
+    },
+    {
+      "path": "writeback.json",
+      "bytes": 905,
+      "sha256": "8aec457fb9f4fe9dcdcbae2ce1d0c9f0b2cf609cd194cdcb5ae39ae0c35fcaa6",
+      "gitBlob": "71767eabc8324aa9ff5c11333a8b7d689fc63261"
+    },
+    {
+      "path": "checks/backend-full.log",
+      "bytes": 129856,
+      "sha256": "fca19b8191b49ebe3c4a4ac6356e1d1cd7e104f2e05a08861712481671ac347a",
+      "gitBlob": "cd86891b7bee727c510f9dd42f150bbe1803f905"
+    },
+    {
+      "path": "checks/backend-workspace-final.log",
+      "bytes": 42514,
+      "sha256": "3bd72661b6b11ff5fd40802b41d74da80ade6d13f0f6b336b7f204d8b479c57b",
+      "gitBlob": "1bf4372c43eb2f53d8c6fd21b05cf74b7f387dfd"
+    },
+    {
+      "path": "checks/backend-workspace-jobs2.log",
+      "bytes": 172188,
+      "sha256": "f49ed421408914d605ff0fe26a531a438fca63ceb4647be279c17cca460eb4f5",
+      "gitBlob": "06649bf5f8fae23595e7486e2b8aa19f927a7ce9"
+    },
+    {
+      "path": "checks/backend-workspace-summary.json",
+      "bytes": 8010,
+      "sha256": "e13e597fbc10cbb597d0f798ad3f21b2afc84bb1f30a459f01b2c4f305ac93f9",
+      "gitBlob": "c957b513475c8244caa026df74cb2ec65c1f6c5c"
+    },
+    {
+      "path": "checks/build-resource-boundary.json",
+      "bytes": 535,
+      "sha256": "1e8ae21facce5a8061b95784896885d137e72ba6b6981e7cc8b5271803fcc683",
+      "gitBlob": "aff7225c60f056e0721cf5b420e1410fbde6a18a"
+    },
+    {
+      "path": "checks/canonical-command-before.log",
+      "bytes": 27329,
+      "sha256": "337ed3ab3cecaf3eb811ccc59f26e275e63714be12119b4f9c5f0e2bf721e4ab",
+      "gitBlob": "b04bf164a1e21578d55f08f14929cb83fc551986"
+    },
+    {
+      "path": "checks/clippy-committed.log",
+      "bytes": 194,
+      "sha256": "f94bc5ff0cd0ed3893eee7a6d69dd7eff0b7a2292c104f968f6ce6c4c80f2fcd",
+      "gitBlob": "2e622d6f1f8e9684ffd105ae57cdb611a8173e03"
+    },
+    {
+      "path": "checks/clippy-final.log",
+      "bytes": 194,
+      "sha256": "8986226caadd4890e6a477f9dd2f0dd211d2afd7fb2a5617d26138c5ab12bc23",
+      "gitBlob": "6bcf6149d7fac1f13668ef60658d89e5f1e6a650"
+    },
+    {
+      "path": "checks/clippy.log",
+      "bytes": 958,
+      "sha256": "b7f88425ac6c8c59428d0abb241a5338f97edd4c8ac0e987f8b1ebb6e4582008",
+      "gitBlob": "c94e098ff7e5840ddeec44e3167232314985fac8"
+    },
+    {
+      "path": "checks/daily-files-unchanged.json",
+      "bytes": 624,
+      "sha256": "b0f16e2a5fa495d897fbeab99b29bfad9af9edd4af744c3c534c62d6b770be5a",
+      "gitBlob": "a29dda8583bb326c18421606c7594df8ac84252d"
+    },
+    {
+      "path": "checks/discovery-before.log",
+      "bytes": 27662,
+      "sha256": "7415e19a61c45b2cc65a5dd47f864ef2d005c17b5f651e11d61be9c4d727c7ec",
+      "gitBlob": "dec3de70962a79fcc7e18b817ccad546aa49e6dc"
+    },
+    {
+      "path": "checks/final-exe-identity.json",
+      "bytes": 327,
+      "sha256": "cc7bf2bc5c3467e2b2c104ad458ab67217a7b5517004a08fa8debae0bcfe6acc",
+      "gitBlob": "73494194daeb6b574541631b72d38f5bf8c3064f"
+    },
+    {
+      "path": "checks/fmt-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "checks/fmt-source-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "checks/harness-token.json",
+      "bytes": 356,
+      "sha256": "3cda4f8cabca64eb2745f36ebc7498961ee99037f59d46534b137d6a4bf695fb",
+      "gitBlob": "968cb4a98702b4231ee4891afa6372c895dac4bf"
+    },
+    {
+      "path": "checks/model-environment-before.log",
+      "bytes": 28657,
+      "sha256": "772b5d9b4aa32f9efcadec0bdc369b12fb555f175eabf29efbc250718090cae4",
+      "gitBlob": "de6d6058893eb11f893c35fa003667142045d737"
+    },
+    {
+      "path": "checks/native-build-committed.log",
+      "bytes": 26949,
+      "sha256": "315875e703bc29c292d4ea6010ca289dfe165558c1a6e59ff1b614a0b349a453",
+      "gitBlob": "b4abab5d532c490ee360f9ebf67f3ca8a03db25b"
+    },
+    {
+      "path": "checks/native-build.log",
+      "bytes": 26949,
+      "sha256": "6211c544f0cad31a415698183e39f193d631f7e7410de6a48687e98d0ecf8b0a",
+      "gitBlob": "c8ceeb4272838650baf15184182ae3716f2f9bcf"
+    },
+    {
+      "path": "checks/native-final-artifact.log",
+      "bytes": 26949,
+      "sha256": "47075f2f58c2fca805a97b3cff13ec87d930d9aa86287d0d3d1105a2844e6085",
+      "gitBlob": "319d3e8744aeb7196b185241e299fc49143b3a18"
+    },
+    {
+      "path": "checks/nvmd-boundary-comparison.log",
+      "bytes": 1067,
+      "sha256": "f0eef55364d0f917c40e95a709254dce3ea6e52ac2fa1322087ec3fae463e6bf",
+      "gitBlob": "2e73e5d88fd07ed000798bc655fddc48634404b7"
+    },
+    {
+      "path": "checks/nvmd-boundary-summary.json",
+      "bytes": 209,
+      "sha256": "2bc9065ff8f5e606bcc1e52d3e1ec65e445eb7471e4cc5b4a77dd34b4ccf1565",
+      "gitBlob": "0d0d3e0eab69f2923d34c8e06bcd6be1bb01addb"
+    },
+    {
+      "path": "checks/nvmd-boundary.rs",
+      "bytes": 1465,
+      "sha256": "322410e7cf878e795a0f2ea20d49e071ad35173ca99136f573157537a31610c5",
+      "gitBlob": "b587943fcac808347fc9b9ddcc9247080f327cc7"
+    },
+    {
+      "path": "checks/nvmd-committed-install.log",
+      "bytes": 27435,
+      "sha256": "e5a945100a7e5926e0298a9541fc2208e046f375e50ebbbd0c90f870ada71965",
+      "gitBlob": "68453b6774eee4d5fe87af04f2a584467b202017"
+    },
+    {
+      "path": "checks/nvmd-mixed-both-stderr.bin",
+      "bytes": 41,
+      "sha256": "6bf64187472dcd64b7055e5ee036702be3e6b457f7461defd9dc473d481b11ab",
+      "gitBlob": "740b75674565635916b974ca15073872be3923b0"
+    },
+    {
+      "path": "checks/nvmd-mixed-both-stdout.bin",
+      "bytes": 7,
+      "sha256": "b4a3dfddc038552a4141075dfdf5c44d0bff0b0e8b44d2329a232768a1dcbb50",
+      "gitBlob": "fe6d2ac749502e54bc9914ee5d12a54b96124bab"
+    },
+    {
+      "path": "checks/nvmd-mixed-comspec-stderr.bin",
+      "bytes": 41,
+      "sha256": "6bf64187472dcd64b7055e5ee036702be3e6b457f7461defd9dc473d481b11ab",
+      "gitBlob": "740b75674565635916b974ca15073872be3923b0"
+    },
+    {
+      "path": "checks/nvmd-mixed-comspec-stdout.bin",
+      "bytes": 7,
+      "sha256": "b4a3dfddc038552a4141075dfdf5c44d0bff0b0e8b44d2329a232768a1dcbb50",
+      "gitBlob": "fe6d2ac749502e54bc9914ee5d12a54b96124bab"
+    },
+    {
+      "path": "checks/nvmd-mixed-entry-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "checks/nvmd-mixed-entry-stdout.bin",
+      "bytes": 7,
+      "sha256": "b4a3dfddc038552a4141075dfdf5c44d0bff0b0e8b44d2329a232768a1dcbb50",
+      "gitBlob": "fe6d2ac749502e54bc9914ee5d12a54b96124bab"
+    },
+    {
+      "path": "checks/nvmd-native-both-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "checks/nvmd-native-both-stdout.bin",
+      "bytes": 7,
+      "sha256": "b4a3dfddc038552a4141075dfdf5c44d0bff0b0e8b44d2329a232768a1dcbb50",
+      "gitBlob": "fe6d2ac749502e54bc9914ee5d12a54b96124bab"
+    },
+    {
+      "path": "checks/observed-app-token.json",
+      "bytes": 374,
+      "sha256": "054a1d444072704a6d559c231e2bd49ebe4ed9e16b3225d0016fd9ab8b5c178c",
+      "gitBlob": "83fb84f232e316448867be9a45cac115cc938116"
+    },
+    {
+      "path": "checks/opened-owned-shell-targets.json",
+      "bytes": 3259,
+      "sha256": "d9efb75ff8fecc198a893109933ca21b251e5a94e89fa9f6e7dbd21f8d019d02",
+      "gitBlob": "d97fe0e405c7dbfe3edaef7e1fd92d5a84abb1a6"
+    },
+    {
+      "path": "checks/shim-environment-before.log",
+      "bytes": 27767,
+      "sha256": "e864b72d0a6d93e9416f584c5baa9edad3528c618c5565bcc81013a83bcc2238",
+      "gitBlob": "9dc6bfd0002838b07d079260fa129b0d1a074579"
+    },
+    {
+      "path": "checks/typecheck-after.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "checks/typecheck-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "checks/typecheck-initial.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "checks/typecheck-verified-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "checks/typecheck-verified.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "checks/ui-build.log",
+      "bytes": 4060,
+      "sha256": "ddff4df19bb6653ce7031d1999319c9ee51b6460f3aa133bcea0bc05a515a109",
+      "gitBlob": "7259bd4bde117016d7b34d65d10b378b5277cd70"
+    },
+    {
+      "path": "checks/ui-final.log",
+      "bytes": 782,
+      "sha256": "3cedd55b0d660fd0c1284bd26b1d6960f30be2a8836735c42e23458f96df7f81",
+      "gitBlob": "70729c9347c24c6f85c4de926a01a871346f65c8"
+    },
+    {
+      "path": "checks/ui-full.log",
+      "bytes": 782,
+      "sha256": "b59d3ee3d1dc49ca5b54478a3bd1fc9cdbca17df6a455b9562d27dcc67498724",
+      "gitBlob": "f7998d7cc1254183dd86656068a8151516632b62"
+    },
+    {
+      "path": "checks/ui-targeted.log",
+      "bytes": 510,
+      "sha256": "32c597f40c0c4c6194707e19cf3cbe7edd7c0443690625148c1acbc1f54195a9",
+      "gitBlob": "d219c89ab0d7517db61790d371b87c8230d0cee2"
+    },
+    {
+      "path": "checks/ui-verified-build.log",
+      "bytes": 4060,
+      "sha256": "8f3a9179b6047397df0fbce6da35dffa2a7b6a75e4ac8ffab201833504c06ead",
+      "gitBlob": "9d0ec8e1b4b82f1d073ebbd4f2f2617b8df455fb"
+    },
+    {
+      "path": "checks/ui-verified-final-build.log",
+      "bytes": 4060,
+      "sha256": "017c88afbc529c11a4e5b896691f670010b0a48c862d8429c202ce9a685f4a71",
+      "gitBlob": "25a4a35522f9961a7b78e6338ba05e5f26a824bf"
+    },
+    {
+      "path": "checks/ui-verified-final.log",
+      "bytes": 782,
+      "sha256": "eebcf955c869e7bfd08d5fe3fb41e981023ff933503f98201bebb718f11fa884",
+      "gitBlob": "90720a39ef82c85374854cb28fd13657137755e5"
+    },
+    {
+      "path": "checks/uninstall-context-before.log",
+      "bytes": 28221,
+      "sha256": "9789a30ab669cb858798bf2771e4c2dee7eec1819553eeb8ecfdb0c49cbca985",
+      "gitBlob": "0f0c4b49a710c6311cf3f7f5abb1e38c34ee06aa"
+    },
+    {
+      "path": "checks/windows-runtime-after.log",
+      "bytes": 29292,
+      "sha256": "4db0108a9e3479d2416e73ec8fb0bf783f5d612661ce7fb918a3d45db2330071",
+      "gitBlob": "f3b12e8725e59ee5b0f0186f2b701bb9d6222252"
+    },
+    {
+      "path": "checks/windows-runtime-final.log",
+      "bytes": 29691,
+      "sha256": "d87060980c097df47d52c0edf70624d169fe39836cf11ef3c6222a74bf0cb0a2",
+      "gitBlob": "753f3323e25a355f96145fef9c03e3261707caee"
+    },
+    {
+      "path": "nvmd-native-final/validation.json",
+      "bytes": 917,
+      "sha256": "6b18f893afc1525faae1d2e751e8dfbe4c23a0fb153ade240f6bd3cce91647fa",
+      "gitBlob": "26d03eccdce3a94e3b73f70831e0c2dda8ac13f0"
+    },
+    {
+      "path": "nvmd-native-final/commands/npm-downloading-9a5fe9804a57.log",
+      "bytes": 138198,
+      "sha256": "0190adda6bc1f2e290f43b8ada77c2de8d0271f0440fd728178a55b2577a8891",
+      "gitBlob": "f72db9a4f290b6d51c68d11586684f082bb33cfd"
+    },
+    {
+      "path": "nvmd-native-final/commands/npm-downloading-b3cb4681ca21.log",
+      "bytes": 2117,
+      "sha256": "7f25818339718a7a7a864dcc93d818dbe6a4ae6222bc51d4fa04b5ad25834ac2",
+      "gitBlob": "9622b98a2e242ae294084d51ff4c607d85ed5193"
+    },
+    {
+      "path": "nvmd-native-final/commands/npm-downloading-d90a5bde0af9.log",
+      "bytes": 140688,
+      "sha256": "65b9a1db94d8b41b2e98bc14340545ba39412792162e2dc0967cee6d8161f8e8",
+      "gitBlob": "32b3e3419cc16812b4384f6984742e1396dea784"
+    },
+    {
+      "path": "nvmd-native-final/commands/npm-downloading-e626d5327e03.log",
+      "bytes": 137974,
+      "sha256": "bc6b5153887c8a9540ad86af15f9eba246f552b7db5e58a627cae89fa7eb0d7c",
+      "gitBlob": "bdf47c86e325ed18e4d9aeac7b7fcbd0e02478f0"
+    },
+    {
+      "path": "nvmd-native-final/commands/npm-installing-887fc23b43c6.log",
+      "bytes": 21260,
+      "sha256": "47be185d22e09a4815937da6ff2fa546854600f4d00caa54571477e0adad0fec",
+      "gitBlob": "c02992c2e5fd199ad8929ec5846c60f8a9421cbd"
+    },
+    {
+      "path": "nvmd-native-final/commands/npm-installing-b7abd0a8422a.log",
+      "bytes": 36251,
+      "sha256": "8fb6ea0f95b573953e1b45053a6aa945d3593b9481efab7f04175d26485396d6",
+      "gitBlob": "222e44bc7461ddb0bfc098f3ec7d2e55e6fa1f77"
+    },
+    {
+      "path": "nvmd-native-final/commands/npm-installing-dd50d3ae052e.log",
+      "bytes": 2059,
+      "sha256": "94da4e0b8191af93d26d31b1d3d052ccdd0823ee5c726894a097c4ea61b54345",
+      "gitBlob": "d739fa423027467941ae7e26f71b0dcd8831abd2"
+    },
+    {
+      "path": "webview-committed-node22/app.log",
+      "bytes": 402,
+      "sha256": "53a2f47c9a8a3d3d1bd18f86f13cc9902fc3ff6aa38c8ef820485dc3fdc14eef",
+      "gitBlob": "089b7e60f1265cf1211f8ebd65f3ad6c5040e20b"
+    },
+    {
+      "path": "webview-committed-node22/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-committed-node22/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-committed-node22/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-committed-node22/failure-retains-output.png",
+      "bytes": 504276,
+      "sha256": "a7c108e4e9ee8aa7193e216879159347781ebad4128aa312056ec41f85868aea",
+      "gitBlob": "3a7c95bafea8bb0bacaef97a41f0b86379ac01af"
+    },
+    {
+      "path": "webview-committed-node22/installed-2.91.0.png",
+      "bytes": 430373,
+      "sha256": "bb61c62f763bd2ee87c9ffa7373f846201d0d1f80006c81e8881a5f1bf34576c",
+      "gitBlob": "d4f9b61448b8d5bb093e59317f4aedec4292120c"
+    },
+    {
+      "path": "webview-committed-node22/launcher.json",
+      "bytes": 908,
+      "sha256": "718ab82680f9221e58141d5c940206274a521c6fb9428d6df558e3677cd2df10",
+      "gitBlob": "24a2c674e2758c516a626db6acbb5eb8c134609c"
+    },
+    {
+      "path": "webview-committed-node22/native-install-recovery.json",
+      "bytes": 3303,
+      "sha256": "eee38d7da26fc2e95a1e235be00e613a07f7e2ef25679b97f2915a0ed660f34e",
+      "gitBlob": "ab323f234f56bf31e4546df148ffcd0fbe7df2d2"
+    },
+    {
+      "path": "webview-committed-node22/paths-backup-before.png",
+      "bytes": 306127,
+      "sha256": "f18776e9c1b1b4d08d13281b25ef8ec732a2823ef27f9f9eaa9cf5a120f9a485",
+      "gitBlob": "dfc4ff018ab1a0cf3a21b64c7c39456abd4b890d"
+    },
+    {
+      "path": "webview-committed-node22/paths-backup-created.png",
+      "bytes": 306208,
+      "sha256": "d65b88936fe83154d57b8c51461bdd36311088ea7093c080f14be1adb94f8579",
+      "gitBlob": "b85a253ec3da2d34a5c0f9ed96432303d3baa687"
+    },
+    {
+      "path": "webview-committed-node22/paths-extension-directories.png",
+      "bytes": 333179,
+      "sha256": "50d34f20f7c0c54b6d251859f75bc6224e03f638a1181d9ec32f9470f5366f61",
+      "gitBlob": "c4ccb3da6dc1441534b74dae5dbdfaab581a3c73"
+    },
+    {
+      "path": "webview-committed-node22/recovered-upgraded-2.93.0.png",
+      "bytes": 448212,
+      "sha256": "ae5185e15c2ded1f728efdae85be1fe9fc8ad35fe16dee01d504ee1b04787427",
+      "gitBlob": "1a81fa63180134a19c65bd49103344f3e00e17f3"
+    },
+    {
+      "path": "webview-committed-node22/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288",
+      "gitBlob": "3592e04e87dd843c2832b448d2812d52f4c93704"
+    },
+    {
+      "path": "webview-committed-node22/runtime.json",
+      "bytes": 1776,
+      "sha256": "ea3410f090ddb532361f7f9261b1df4724e51f581fab38a0f00c1fb29f6a08ef",
+      "gitBlob": "dca7980af49f6865aac6829d72d2815c7e90a0e3"
+    },
+    {
+      "path": "webview-committed-node22/windows-path-ui.json",
+      "bytes": 1394,
+      "sha256": "6d0d7a54ff5e2fe9cf2722200fda50f8cd7ed1c14897d87794e39803e21c7f74",
+      "gitBlob": "b0bace5369b325ff09f0a5b6adc182f51d429a30"
+    },
+    {
+      "path": "webview-committed-node22/commands/npm-downloading-2ce4a57dd557.log",
+      "bytes": 139016,
+      "sha256": "88e5bd8b52d0df35f6eb4dec2faa66ac6435f8a8b467172bf5fff18637e96f62",
+      "gitBlob": "fc37e841ddcd5fea519ed99c9579af669c51eb6e"
+    },
+    {
+      "path": "webview-committed-node22/commands/npm-downloading-4cc2061c04fc.log",
+      "bytes": 3048,
+      "sha256": "becf1adf36849c72d72de0e6caa73115ef55f9e53e9f3bd78813a2c08020205b",
+      "gitBlob": "082e326462f16f561ef76297ba0b14089b217887"
+    },
+    {
+      "path": "webview-committed-node22/commands/npm-downloading-575437396295.log",
+      "bytes": 141500,
+      "sha256": "913ac25b7d691f39c0294a3cbbca908d8b03112bea8c3e34521e1f2aead563da",
+      "gitBlob": "6d229338976335cbbdaef59f159cdb389785fb32"
+    },
+    {
+      "path": "webview-committed-node22/commands/npm-installing-cf25da6c5391.log",
+      "bytes": 14482,
+      "sha256": "fac9eaee74dd3ecaa71c4e18fca3fcfc42b81699a94f1a50dbbcbd6f134e33d9",
+      "gitBlob": "e5b0e777aa895fdf8f1cdebf155c4adb2062c646"
+    },
+    {
+      "path": "webview-committed-node22/commands/npm-installing-e33929ff84bb.log",
+      "bytes": 26674,
+      "sha256": "2dcb01b679e138d214781b8027476949568d3ddcfb29918c27f0ae377f63dc0f",
+      "gitBlob": "577d925e9b891a3ddf4bf01353f3a6232b723290"
+    },
+    {
+      "path": "webview-committed-node24/app.log",
+      "bytes": 257,
+      "sha256": "9a0f0cb841947ddcaa842e0157399112a1aabebb0e99b514c51cba23814d8d84",
+      "gitBlob": "85405c79b9d3ea41a55c4501476d2263ac771e19"
+    },
+    {
+      "path": "webview-committed-node24/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-committed-node24/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-committed-node24/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-committed-node24/failure-retains-output.png",
+      "bytes": 506190,
+      "sha256": "5f891fd5eb7ce55062ab04bc68f8e0c89c8b69f4a7e889546d6bcfaf583c7bcb",
+      "gitBlob": "727c84da073ac7da43b82952dab101fbe0d18ba4"
+    },
+    {
+      "path": "webview-committed-node24/installed-2.91.0.png",
+      "bytes": 427964,
+      "sha256": "a9256faf4f9d1e949ae735f5204afda975827b35c2f324368b7f59e7d9990ceb",
+      "gitBlob": "1d92db7513a68f31b7820c5cae85569abda58653"
+    },
+    {
+      "path": "webview-committed-node24/launcher.json",
+      "bytes": 954,
+      "sha256": "a8dfa3572457f775e9b9e2f5f7b3cb7b63c107b74f2ba61febb25a623891f491",
+      "gitBlob": "6865efee39fd4fae9a987ff9c658908d99d80a6f"
+    },
+    {
+      "path": "webview-committed-node24/native-install-recovery.json",
+      "bytes": 3293,
+      "sha256": "c0b04053153861172b9f75a76622ecc6b2b6fe11ec9dba02bd7d1c2c3bf86bd7",
+      "gitBlob": "24f3c1d35c4e8d35e9296569bc3214019cfacea8"
+    },
+    {
+      "path": "webview-committed-node24/paths-backup-before.png",
+      "bytes": 306239,
+      "sha256": "acca473d26f47943de14bffd2527bccd2e51a4b1b0266b0649dbe124fda73df0",
+      "gitBlob": "5444dcfe30dba95ada78b63177b7109609467be0"
+    },
+    {
+      "path": "webview-committed-node24/paths-backup-created.png",
+      "bytes": 306319,
+      "sha256": "31c76c3659f2bfee51060e91404ba55eb2bf841630682217e96d25db923a3df9",
+      "gitBlob": "390df45171082c44af06d736272160f793828988"
+    },
+    {
+      "path": "webview-committed-node24/paths-extension-directories.png",
+      "bytes": 332925,
+      "sha256": "a8c6089e0f7627fed3ea5daf6f2dde7a2f85e451d867b8173dadb6c87ce91980",
+      "gitBlob": "a989595d15902bcc941dc22f38e44462a4bf0aff"
+    },
+    {
+      "path": "webview-committed-node24/recovered-upgraded-2.93.0.png",
+      "bytes": 430904,
+      "sha256": "07195f2cbaeacba1d44d6d0b2d9e31fcc491b7d1c24a742a677d17b3e5c0e4ce",
+      "gitBlob": "f58a545e5e5fcc737c6f2e80c3525c54c2b94f7e"
+    },
+    {
+      "path": "webview-committed-node24/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288",
+      "gitBlob": "3592e04e87dd843c2832b448d2812d52f4c93704"
+    },
+    {
+      "path": "webview-committed-node24/runtime.json",
+      "bytes": 1776,
+      "sha256": "14bfc2940efe8dc746a299af079b8f71c3a4b5f8fa81c5ede5cae3942b70df20",
+      "gitBlob": "a432cf8bfeb47986d66230b0b40e8719781395a4"
+    },
+    {
+      "path": "webview-committed-node24/windows-path-ui.json",
+      "bytes": 1394,
+      "sha256": "02442e868cc996aa81a83de4e4e68abcbc3e4950aec9233dbd95174dffaf5f55",
+      "gitBlob": "b90c564f8b4cd55b9233d3ed1a107572a859192f"
+    },
+    {
+      "path": "webview-committed-node24/commands/npm-downloading-3b3de38d3666.log",
+      "bytes": 3030,
+      "sha256": "67f1461c211e22ebe28014db73bc2eaab50223594c604bb52de079defe38aafb",
+      "gitBlob": "7a19cd15e0c6a841de4f73a27f74e7e9098e502d"
+    },
+    {
+      "path": "webview-committed-node24/commands/npm-downloading-5e678268e67c.log",
+      "bytes": 139026,
+      "sha256": "caef1283cdfa77f2c8141ed5c71d82258ce78faa277f6b41866fc7e39121b098",
+      "gitBlob": "9f1b535869e01dfeb21f02b6113c41c1b06295a5"
+    },
+    {
+      "path": "webview-committed-node24/commands/npm-downloading-b759d48dbb5b.log",
+      "bytes": 141520,
+      "sha256": "73781129357778ddf111a2ac767d9e7443440d9edf3aef2c5cde8f3b6f751c99",
+      "gitBlob": "b1d71e10aa893339733508477977731cbc6e2e63"
+    },
+    {
+      "path": "webview-committed-node24/commands/npm-installing-4c1033abefb5.log",
+      "bytes": 38242,
+      "sha256": "e35f1c3cd824b5c149b683144752787d63e585b9e0b4d21727b3888f3b75d94c",
+      "gitBlob": "c0bc5bf29f7ff3e182ba91e2062dda2c373db643"
+    },
+    {
+      "path": "webview-committed-node24/commands/npm-installing-8c9d5e2edc9d.log",
+      "bytes": 25047,
+      "sha256": "2af5a7a1f296080487c743cad857ae0f232e07525e35e6cc009a794d5f622999",
+      "gitBlob": "839075636ac5810b51d14c8b96bdac62d53d13c0"
+    },
+    {
+      "path": "webview-final-artifact/app.log",
+      "bytes": 257,
+      "sha256": "ed6deb76924f4e1b2ca5b3c882559af5d28deeff14b54f0a89276b106e6ea68b",
+      "gitBlob": "613c9c5fd894b8771760f804850664e96099856e"
+    },
+    {
+      "path": "webview-final-artifact/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-final-artifact/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-final-artifact/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-final-artifact/failure-retains-output.png",
+      "bytes": 492382,
+      "sha256": "ee7eb2e469162ea4d60a4719753312c4a1ba295e0b5a8a61f681a0eae3ba653a",
+      "gitBlob": "5785106dfd97adb577ebe695f548b02cc450894d"
+    },
+    {
+      "path": "webview-final-artifact/installed-2.91.0.png",
+      "bytes": 425542,
+      "sha256": "abf539017c84b3a91307b65928ad3562ab4970d22066cebaa03da9282503f19a",
+      "gitBlob": "159dd413b7564c84fa2430294d45131a91949e98"
+    },
+    {
+      "path": "webview-final-artifact/launcher.json",
+      "bytes": 953,
+      "sha256": "aeca2a88b969b10ef21ec64f689f4cb51193fc48f194e4787525e6afe3383988",
+      "gitBlob": "d8eeeb8bb750d03468c09ad0b8681a87f31dfde4"
+    },
+    {
+      "path": "webview-final-artifact/native-install-recovery.json",
+      "bytes": 3381,
+      "sha256": "273253b146f0368d86e15a8e5538ccc7abe42acc52a0510d3130ab19e90af800",
+      "gitBlob": "009a44cbaecd7302835c6832b0be7be40e9f81c2"
+    },
+    {
+      "path": "webview-final-artifact/paths-backup-before.png",
+      "bytes": 305856,
+      "sha256": "13b1c5c324ff1101ba261f4436542fcd9f54a297485f7f415841d7880603d120",
+      "gitBlob": "05a50984dbff448a44e4c85c4890a30cf3314fa0"
+    },
+    {
+      "path": "webview-final-artifact/paths-backup-created.png",
+      "bytes": 305938,
+      "sha256": "1b226278fe8ef22595d076d6350a2794c7b747d59696c443e49d853629b75665",
+      "gitBlob": "dfa734b3ddbb6330aa1f10c0eda88589ba371188"
+    },
+    {
+      "path": "webview-final-artifact/paths-extension-directories.png",
+      "bytes": 332742,
+      "sha256": "892b4c4271302ff2f175736291e7fd4acb012703083dd88e5d0885845d04a67f",
+      "gitBlob": "e9ca5bcfbf2e72466215541690ba110a58bbbabd"
+    },
+    {
+      "path": "webview-final-artifact/recovered-upgraded-2.93.0.png",
+      "bytes": 428752,
+      "sha256": "eadd48d4d3ae58cd948aac4117578b28220c76058f819b31898a475e7e273f69",
+      "gitBlob": "e4243623b64bf781090eecdd6fd893f6ded5875b"
+    },
+    {
+      "path": "webview-final-artifact/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288",
+      "gitBlob": "3592e04e87dd843c2832b448d2812d52f4c93704"
+    },
+    {
+      "path": "webview-final-artifact/runtime.json",
+      "bytes": 1766,
+      "sha256": "c37a1e85900ce20cee40c0449a694b63dd50118869f22eb4e16bffb7c3072c38",
+      "gitBlob": "1146f44bae0ac1b67ebf12c41dd7b1e82b7ddac3"
+    },
+    {
+      "path": "webview-final-artifact/windows-path-ui.json",
+      "bytes": 1388,
+      "sha256": "de7cff18e7977e97b3a4e1b2b8bac5e827c580fdb91ce71acfc602722c2cdce0",
+      "gitBlob": "93e400c5c8711a2816dc5054e5c55188c2463ebd"
+    },
+    {
+      "path": "webview-final-artifact/commands/npm-downloading-3a560b1e9d56.log",
+      "bytes": 141502,
+      "sha256": "8cf0db10f055667e8874eff6cd776f97048598d21228173071c4b91de2f992ec",
+      "gitBlob": "832562770cc29b04993f125496cde8e6cd931309"
+    },
+    {
+      "path": "webview-final-artifact/commands/npm-downloading-bbd79fe8fdf7.log",
+      "bytes": 139008,
+      "sha256": "68b93d71c208cf99895221d7f24d3a652e98c8d17ac697e4b149c8e671ae2ae9",
+      "gitBlob": "9cbaf7b1f5e0203b271b8decc861e1db5d407519"
+    },
+    {
+      "path": "webview-final-artifact/commands/npm-downloading-eb914e29f1fd.log",
+      "bytes": 3122,
+      "sha256": "4d4141f9453f12fc82fb5619c36649c297e88afdefe190c2eb76789c2577b542",
+      "gitBlob": "d9659f3acd593e8b194767e69c048ec73527745d"
+    },
+    {
+      "path": "webview-final-artifact/commands/npm-installing-6c8c3cb66235.log",
+      "bytes": 38236,
+      "sha256": "9326477f2d4285cddbc1ccc7570a8946f0676226b7e36b924e670fc89c29238d",
+      "gitBlob": "54e14477e4672379685dd4430bd807f5c0c2dc05"
+    },
+    {
+      "path": "webview-final-artifact/commands/npm-installing-e8bff7b6a220.log",
+      "bytes": 25029,
+      "sha256": "b67f331be8a551906201b158f3d48ad1b04e159ac4ae8b77ba1f0f38b7205ade",
+      "gitBlob": "b61076aa3a815cab754fabe5a88a740a98ad6ca3"
+    },
+    {
+      "path": "webview-paths-01/app.log",
+      "bytes": 251,
+      "sha256": "bbcd90bf09f89d952c062a45dd4cd7e44f3af90932e90738746ecf4f761845ed",
+      "gitBlob": "fc2a0e6f3ff65970831d8d53158bd4bf498c03fe"
+    },
+    {
+      "path": "webview-paths-01/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-01/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-01/execution.log",
+      "bytes": 1540,
+      "sha256": "90955a66960bb234e07972bf002b20e03f59cc3b0383c024219cfebc658a2bdc",
+      "gitBlob": "ad0e5044d032aa91070f742b3548287b81437c6d"
+    },
+    {
+      "path": "webview-paths-01/launcher.json",
+      "bytes": 900,
+      "sha256": "6bb71ee56b50e207936e8aca097c2297ddff1123f6c0c6fa685a9abe0b04cb3e",
+      "gitBlob": "38a66e9023bb62a17efc58eee3c88502a8be23ba"
+    },
+    {
+      "path": "webview-paths-01/native-install-recovery.json",
+      "bytes": 1695,
+      "sha256": "25c593e3cb3a016c6c6d213382830d87e60809b2cf9c693e172251f76c86ba85",
+      "gitBlob": "028813dcbeb32df7d8bd7a5c4951fb4ca8cf7bec"
+    },
+    {
+      "path": "webview-paths-01/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288",
+      "gitBlob": "3592e04e87dd843c2832b448d2812d52f4c93704"
+    },
+    {
+      "path": "webview-paths-01/runtime.json",
+      "bytes": 153,
+      "sha256": "e85da6be4a78192bb716b1c2b298e4001a4e78e00bb808860f09209096ac2767",
+      "gitBlob": "c00376894b8aa2c53d95b128f4ddd17725632018"
+    },
+    {
+      "path": "webview-paths-01/windows-path-ui.json",
+      "bytes": 1722,
+      "sha256": "cf505aa260adab92049af9b1476d5d5e3b4841e7dfda5cefa0e75fc0e397c8e5",
+      "gitBlob": "05bd96a462e506f1c59786eddae7673df8439fab"
+    },
+    {
+      "path": "webview-paths-02/app.log",
+      "bytes": 251,
+      "sha256": "0856f4ea11be496afc181479e91062d77583d2781eb06d97daea2cd11370fa02",
+      "gitBlob": "001ceab111a56f8cbf2ea84966614f6184d56833"
+    },
+    {
+      "path": "webview-paths-02/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-02/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-02/execution.log",
+      "bytes": 387,
+      "sha256": "32c70dea9c912aa98cfa160a55aa41cc663351f716405dc13d382118021745cc",
+      "gitBlob": "399de5a454d0fae3ec94428d3d6d6b751e73b983"
+    },
+    {
+      "path": "webview-paths-02/launcher.json",
+      "bytes": 900,
+      "sha256": "68698ac56055a8632965415d69b627a6465544d21eef05c0ff05054331481536",
+      "gitBlob": "5878c57841a797ab3c3ec1dde8891a4798c91886"
+    },
+    {
+      "path": "webview-paths-02/native-install-recovery.json",
+      "bytes": 574,
+      "sha256": "61f46579d79cc0c41f25759c63fbd65129560ac189c58cdd954b5f95e4f97fe2",
+      "gitBlob": "7a594b574a69986d63caa0a792deae6badd570b0"
+    },
+    {
+      "path": "webview-paths-02/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288",
+      "gitBlob": "3592e04e87dd843c2832b448d2812d52f4c93704"
+    },
+    {
+      "path": "webview-paths-02/runtime.json",
+      "bytes": 153,
+      "sha256": "b38d937237682f051d70a464ae0ee0d35c8434c4035591b0d0ad7c684c3782c8",
+      "gitBlob": "b036187740eca95d6311bb515c21986f2633b011"
+    },
+    {
+      "path": "webview-paths-02/windows-path-ui.json",
+      "bytes": 634,
+      "sha256": "6884bb8382eb7f0dd79623a25d39420ac70419bf98eafeddfe119d4e84bb5013",
+      "gitBlob": "2c02d35a0b527bd80be05f3e3f7a4fdf07772631"
+    },
+    {
+      "path": "webview-paths-03/app.log",
+      "bytes": 402,
+      "sha256": "a98c09bd350ed0d530a4bd4b418bc1f8855829afe20da8b48a2ddd20d68774d7",
+      "gitBlob": "804d5f2247b1483cc77d4981d8e3c906d70089cf"
+    },
+    {
+      "path": "webview-paths-03/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-03/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-03/execution.log",
+      "bytes": 556,
+      "sha256": "255226b8de047f41a85870215ecf754dd4e4d4dd99dd02d9cedd8cd03b3ff7a3",
+      "gitBlob": "371999ed2255fd2da172c45e46cd6737dd881414"
+    },
+    {
+      "path": "webview-paths-03/launcher.json",
+      "bytes": 900,
+      "sha256": "e242d6083df21d49ed7e6cb050669b30929107912e1e1284f8c4fd187dc62eec",
+      "gitBlob": "0af4ba175b76c7eaacd8cef91be6e2ba596a6997"
+    },
+    {
+      "path": "webview-paths-03/native-install-recovery.json",
+      "bytes": 743,
+      "sha256": "0382569135fdf9df59b8b509e72947a2522361bc4e9a9224cb6179ad7a5e52ba",
+      "gitBlob": "573a4b8caa77ebabbcd780a1800b446a67babd2b"
+    },
+    {
+      "path": "webview-paths-03/paths-backup-before.png",
+      "bytes": 312135,
+      "sha256": "f99ed9f918fd098a98cb3d1c692f69a52b90e29897f503381842eb809dc3fce1",
+      "gitBlob": "43c939cfc1f05bc0d9a9ec42b9fea34cc4e7e7a7"
+    },
+    {
+      "path": "webview-paths-03/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288",
+      "gitBlob": "3592e04e87dd843c2832b448d2812d52f4c93704"
+    },
+    {
+      "path": "webview-paths-03/runtime.json",
+      "bytes": 153,
+      "sha256": "0cc7dffde62c6ccc97c2558617dbf292b7e8c4be2ecaee6e973ced7c6e8157cd",
+      "gitBlob": "60a4a967e7e4e1ed194cedf574a1a949a0f99d1b"
+    },
+    {
+      "path": "webview-paths-03/windows-path-ui.json",
+      "bytes": 1295,
+      "sha256": "74b0da6283fd18365597eb4e1aa572eed1eeb2cdcc3680e063a16dc6e969cd25",
+      "gitBlob": "e2f364b37823a33418bde72aef54c7a3b2e7aaa3"
+    },
+    {
+      "path": "webview-paths-04/app.log",
+      "bytes": 257,
+      "sha256": "333f4b3877b3a75a03df3405ba2de42230863a094307fb5e42107cebe0a546ed",
+      "gitBlob": "f0e71b7d8d3399805b9e6c9c970cba2891c6ed1a"
+    },
+    {
+      "path": "webview-paths-04/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-04/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-04/execution.log",
+      "bytes": 687,
+      "sha256": "5513ed2a0ddccf42c275243b34744aa2d56465bfdbf407c557a6a06c8ebc9d6f",
+      "gitBlob": "ff239990e89d0e418775eb66000034931759303a"
+    },
+    {
+      "path": "webview-paths-04/launcher.json",
+      "bytes": 900,
+      "sha256": "0f1c30162c646316fe664ffbbec1acd9b21529694f63076a4f0322fa7f728ed8",
+      "gitBlob": "b2b04b1e5ccce56fdb0151e48a429d568d62b260"
+    },
+    {
+      "path": "webview-paths-04/native-install-recovery.json",
+      "bytes": 741,
+      "sha256": "a2f7a1175ab5ef21ec9d49a07eb29df24eeb011391a2729dd52dae81ad15eb95",
+      "gitBlob": "3a59e924579aab3dc94ef47f3db9ae3205754cfc"
+    },
+    {
+      "path": "webview-paths-04/paths-backup-before.png",
+      "bytes": 312061,
+      "sha256": "49ebbe66e24694984c6d58d5c0c475f66a44f3846a7dab5a01ed2468a786c282",
+      "gitBlob": "923dfc681ca48a583d1f3b62db72a5d64e634d63"
+    },
+    {
+      "path": "webview-paths-04/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288",
+      "gitBlob": "3592e04e87dd843c2832b448d2812d52f4c93704"
+    },
+    {
+      "path": "webview-paths-04/runtime.json",
+      "bytes": 153,
+      "sha256": "81f38c44a1ffe94a45e6b0a41cfed81e4df01456475603ce9a93755e992e99b9",
+      "gitBlob": "353977cd37a2f0500bb3b3533939e29f905c256a"
+    },
+    {
+      "path": "webview-paths-04/windows-path-ui.json",
+      "bytes": 1346,
+      "sha256": "1c4c3de2f44e968169bb551a4c6072d5d14839f677886b351f359ea7a5477736",
+      "gitBlob": "d39aed12c7560dcb26b28e79890e9670366efb8e"
+    },
+    {
+      "path": "webview-paths-05/app.log",
+      "bytes": 257,
+      "sha256": "1b5ba2bd3bb451498db5024bd484f6827642092e5ae4b8daefc3394297d963c8",
+      "gitBlob": "7e747d801938ea08dd8f5f6225f7bb975e882bce"
+    },
+    {
+      "path": "webview-paths-05/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-05/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-05/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "webview-paths-05/failure-retains-output.png",
+      "bytes": 498815,
+      "sha256": "9678db09331783edbebaea9851cf8908fee6d453cb019e8f6f43c99e248f764f",
+      "gitBlob": "1fef6bc33370f798d7da40a6a7e89ce70f30fd3f"
+    },
+    {
+      "path": "webview-paths-05/installed-2.91.0.png",
+      "bytes": 431354,
+      "sha256": "b8b222d162b9cc9ca3934309cfd3aa5055b86bfc309d942550f497d2d5b68973",
+      "gitBlob": "924f56298e8427635203d040a99c48132fb116ca"
+    },
+    {
+      "path": "webview-paths-05/launcher.json",
+      "bytes": 900,
+      "sha256": "bfaa80cf6314d6ae565fd0e2150128e807880e956d8a28adeddf5d8962c62f7f",
+      "gitBlob": "a079db0f76bab9167b340e998bfba1c5da1fddc6"
+    },
+    {
+      "path": "webview-paths-05/native-install-recovery.json",
+      "bytes": 3239,
+      "sha256": "ee1ec674d18d0e4ed7ec70e9ce6bb619ae1084a521128cb770369caaa9a893e3",
+      "gitBlob": "06c86ef76b1600277e5cc6bef4faf717091f4006"
+    },
+    {
+      "path": "webview-paths-05/paths-backup-before.png",
+      "bytes": 312058,
+      "sha256": "8c6b2e4096920873b496baffa80a29b4a893107ca4fefc4d77f2c3c4a4f17bb9",
+      "gitBlob": "e7ed37ccb8b01771a0ecbb0488e49990eab0883d"
+    },
+    {
+      "path": "webview-paths-05/paths-backup-created.png",
+      "bytes": 312385,
+      "sha256": "628619fb89d248e10b1873fdbda527e60c91b49647fe04fb8fc9551df5456724",
+      "gitBlob": "bebc8a9a2b17b8a85f7c866d11bd17aa975e7ba4"
+    },
+    {
+      "path": "webview-paths-05/paths-extension-directories.png",
+      "bytes": 332961,
+      "sha256": "e62a8db5d77daf489c7b8b1d3b8982dd6073538d7a9132ad8ee50224514d41c7",
+      "gitBlob": "3ddb7d219667cab0d69168a68e01d3eba561d7ad"
+    },
+    {
+      "path": "webview-paths-05/recovered-upgraded-2.93.0.png",
+      "bytes": 447531,
+      "sha256": "3da51d91b61e33a6fbb62cb95eb42e98a6e5d410382a63f0db6e549e0b3880e5",
+      "gitBlob": "338a64eb3f2436d3960136749f8584b4cbec2406"
+    },
+    {
+      "path": "webview-paths-05/runtime-install-ui.json",
+      "bytes": 382,
+      "sha256": "3410b981ad43ee1aa82798981f035700d095e9097db2e475f1def08688616288",
+      "gitBlob": "3592e04e87dd843c2832b448d2812d52f4c93704"
+    },
+    {
+      "path": "webview-paths-05/runtime.json",
+      "bytes": 1736,
+      "sha256": "716e2d9d6a0ee4fdec35511452caebda4dbf191ccdcddd1275b25ae23a4a4d31",
+      "gitBlob": "3a259fa488ea5f0f8fdfc615c0dc39ebe6455c45"
+    },
+    {
+      "path": "webview-paths-05/windows-path-ui.json",
+      "bytes": 1342,
+      "sha256": "e22d9f1c19120293cf8f1acb020900097d9e5045198b8b3b27a4552f90c16f10",
+      "gitBlob": "fca0e2d0356d82ad423c6dc81c54e3cbaaee9236"
+    },
+    {
+      "path": "webview-paths-05/commands/npm-downloading-3f5a78ce9037.log",
+      "bytes": 141427,
+      "sha256": "6d032a0e098a7d6dd52d1fa46d89e2c76489489ee573daf37ec7bbec2508fca1",
+      "gitBlob": "1032c7bc0c73c8e87919dd4925d5890c4f5eb0b7"
+    },
+    {
+      "path": "webview-paths-05/commands/npm-downloading-f4f57adeb0ab.log",
+      "bytes": 2967,
+      "sha256": "8988b90d064aac55888a4b242bbdb5459521a0439a02a7083158fc227414f739",
+      "gitBlob": "279b080e812675e2dcadbaed1b10e83d70f6f76c"
+    },
+    {
+      "path": "webview-paths-05/commands/npm-downloading-fd73bc673f7f.log",
+      "bytes": 138943,
+      "sha256": "443d31dc4c84becc8915400ae2f127d0407c758a9708b1a72ff80ef88da8e366",
+      "gitBlob": "54a6af0f605696a753d558543021244a1825da67"
+    },
+    {
+      "path": "webview-paths-05/commands/npm-installing-072c450523f6.log",
+      "bytes": 26682,
+      "sha256": "6a835c68cc1c209de7b9ee039d036d000a2cd2ccd5afbb34039a121d0c91b6c6",
+      "gitBlob": "54832d9b195b06613cdd8ca53ab8a877288ec18e"
+    },
+    {
+      "path": "webview-paths-05/commands/npm-installing-c95c9a4db569.log",
+      "bytes": 14410,
+      "sha256": "214e0a01a7d934ff27135695be62492dbaef30ddcc5954871188bc7b8078fb19",
+      "gitBlob": "573b9410fb774bed73d9351f121bd21f9ab28e0e"
+    }
+  ]
+}

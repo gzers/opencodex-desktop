@@ -1,0 +1,20 @@
+{
+  "result": "fail",
+  "checks": [
+    "installation data root/home/native placeholder use readable ordinary paths",
+    "real clipboard receives readable same-identity data root"
+  ],
+  "rawDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 03\\OpenCodeX Native 中文 Spaces",
+  "documentFocusEmulated": true,
+  "isolatedClipboardPermissionGranted": true,
+  "openedTargets": [
+    "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 03\\OpenCodeX Native 中文 Spaces"
+  ],
+  "typography": {
+    "font": "Consolas, \"Cascadia Code\", SFMono-Regular, Menlo, \"Microsoft YaHei\", monospace",
+    "hasBackslash": true,
+    "hasWon": false
+  },
+  "error": "Error: native path UI wait: !!document.querySelector('.backup-records li')\n    at wait (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:18:11)\n    at async verifyWindowsPathUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:64:5)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-install-recovery.mjs:73:3",
+  "clipboardRestored": true
+}

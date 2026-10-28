@@ -1,0 +1,12 @@
+{
+  "failure": "Windows error 1455 while compiling integration test metadata; page file/commit limit",
+  "originalCommand": "cargo test --locked --workspace --features integration-test",
+  "originalLog": "backend-workspace-final.log",
+  "retryCommand": "cargo test --locked --workspace --features integration-test --jobs 2",
+  "compileJobs": 2,
+  "testThreadsChanged": false,
+  "deadlinesChanged": false,
+  "systemPageFileChanged": false,
+  "logicalProcessors": 20,
+  "source": "98022b83503b6e2853069e6df4005fa220ac1852"
+}

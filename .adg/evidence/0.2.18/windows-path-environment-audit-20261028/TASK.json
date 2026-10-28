@@ -1,0 +1,28 @@
+{
+  "id": "TASK-OPENCODEX-0.2.18-WINDOWS-PATH-ENV",
+  "source": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.18-bugs.md",
+  "targetVersion": "0.2.18",
+  "sourceCommit": "98022b83503b6e2853069e6df4005fa220ac1852",
+  "sourceBranch": "feature/0.2.18-windows-install-diagnostics",
+  "scope": "18-domain Windows path/environment audit, confirmed fixes and issue writeback",
+  "authority": "user 2026-10-28",
+  "status": "complete_for_audit_and_confirmed_fixes",
+  "required_checks": [
+    "review:all-path-surfaces",
+    "review:original-identities",
+    "review:controlled-environment",
+    "review:uninstall-targets",
+    "test:frontend-full",
+    "test:windows-workspace",
+    "test:native-tools",
+    "test:webview-node22",
+    "test:webview-node24",
+    "test:fmt-clippy-build"
+  ],
+  "excluded": [
+    "release",
+    "daily uninstall or config reset",
+    "system page-file changes",
+    "historical-exit1 attribution without output"
+  ]
+}

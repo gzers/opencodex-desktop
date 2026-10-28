@@ -1,0 +1,292 @@
+{
+  "sourceCommit": "98022b83503b6e2853069e6df4005fa220ac1852",
+  "command": "cargo test --locked --workspace --features integration-test --jobs 2",
+  "compileJobs": 2,
+  "testThreads": "unchanged default",
+  "suiteCount": 40,
+  "passed": 1001,
+  "failed": 0,
+  "ignored": 16,
+  "suites": [
+    {
+      "name": "unittests src\\lib.rs (target\\debug\\deps\\opencodex_desktop_lib-39c8a11aec5d97de.exe)",
+      "result": "ok",
+      "passed": 885,
+      "failed": 0,
+      "ignored": 3
+    },
+    {
+      "name": "unittests src\\bin\\ocxd.rs (target\\debug\\deps\\ocxd-8b4c6f55b9c6eeb4.exe)",
+      "result": "ok",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "unittests src\\main.rs (target\\debug\\deps\\opencodex_desktop-eafa0b3c24e38798.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\about.rs (target\\debug\\deps\\about-95108f1eb9311d8b.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\app_icon.rs (target\\debug\\deps\\app_icon-46b224cc069d2a61.exe)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\app_startup_wiring.rs (target\\debug\\deps\\app_startup_wiring-22cdf11d11866961.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\app_status.rs (target\\debug\\deps\\app_status-223343685910e4ac.exe)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\backup_process_lock.rs (target\\debug\\deps\\backup_process_lock-b6888b662007cac7.exe)",
+      "result": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "name": "tests\\cli_ipc.rs (target\\debug\\deps\\cli_ipc-04c932328f743eed.exe)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\codex_shim.rs (target\\debug\\deps\\codex_shim-f98214c4678df77d.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\config_sync_webdav_real.rs (target\\debug\\deps\\config_sync_webdav_real-d902bd1c41d53c5e.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 2
+    },
+    {
+      "name": "tests\\doctor.rs (target\\debug\\deps\\doctor-1dbe06561276b9ba.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\event_registry.rs (target\\debug\\deps\\event_registry-26b3a4de037e130e.exe)",
+      "result": "ok",
+      "passed": 40,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\extensions.rs (target\\debug\\deps\\extensions-e4bf002757f9e38c.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\layer_boundaries.rs (target\\debug\\deps\\layer_boundaries-1b0e55a84246faa0.exe)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\logs.rs (target\\debug\\deps\\logs-8e4c95fb154ed3b6.exe)",
+      "result": "ok",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\model_config_official_real.rs (target\\debug\\deps\\model_config_official_real-7405417ef27c7e3d.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\model_file_browser.rs (target\\debug\\deps\\model_file_browser-1e4775db19dd58cd.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "name": "tests\\model_file_live.rs (target\\debug\\deps\\model_file_live-4a46b9b52cb2e8de.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 2
+    },
+    {
+      "name": "tests\\model_research_real.rs (target\\debug\\deps\\model_research_real-8052f9e52cad1e96.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "name": "tests\\notifications.rs (target\\debug\\deps\\notifications-44977d2dc7b1590b.exe)",
+      "result": "ok",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\official_status_source.rs (target\\debug\\deps\\official_status_source-66203ff3807b8456.exe)",
+      "result": "ok",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\preferences.rs (target\\debug\\deps\\preferences-c4ea1e21db2ef10c.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\process_action.rs (target\\debug\\deps\\process_action-b40ea2d97cf728af.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\provider_auth_native.rs (target\\debug\\deps\\provider_auth_native-af2a21f6993b50f0.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "name": "tests\\runtime_managed_real.rs (target\\debug\\deps\\runtime_managed_real-2993f04f11751bb5.exe)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\sandbox_isolation.rs (target\\debug\\deps\\sandbox_isolation-d1945065e0192b0b.exe)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\status_matrix.rs (target\\debug\\deps\\status_matrix-a8f22acb688cb8c0.exe)",
+      "result": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\status_snapshot.rs (target\\debug\\deps\\status_snapshot-747c67ddd47fe32a.exe)",
+      "result": "ok",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "name": "tests\\sync_plaintext.rs (target\\debug\\deps\\sync_plaintext-0c5d563cb20cd34b.exe)",
+      "result": "ok",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\tray.rs (target\\debug\\deps\\tray-3aaffa958055f8e6.exe)",
+      "result": "ok",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\tray_icon.rs (target\\debug\\deps\\tray_icon-a5516b92a235291c.exe)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\tray_left_click.rs (target\\debug\\deps\\tray_left_click-a6e988e18281e98d.exe)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\webdav_legacy_real.rs (target\\debug\\deps\\webdav_legacy_real-345b21a0293ff858.exe)",
+      "result": "ok",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\webdav_real.rs (target\\debug\\deps\\webdav_real-58565672942103ab.exe)",
+      "result": "ok",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\webdav_sync_real.rs (target\\debug\\deps\\webdav_sync_real-2da8e3418a6b3005.exe)",
+      "result": "ok",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\webdav_tls.rs (target\\debug\\deps\\webdav_tls-3ca912e740793aa3.exe)",
+      "result": "ok",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\window_close.rs (target\\debug\\deps\\window_close-2ef1b3e79062cde2.exe)",
+      "result": "ok",
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "name": "tests\\windows_runtime.rs (target\\debug\\deps\\windows_runtime-0ee3c6e9b8565671.exe)",
+      "result": "ok",
+      "passed": 17,
+      "failed": 0,
+      "ignored": 4
+    },
+    {
+      "name": "tests\\windows_tray_icon.rs (target\\debug\\deps\\windows_tray_icon-ffc3270a484a38da.exe)",
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    }
+  ]
+}

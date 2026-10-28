@@ -1,0 +1,105 @@
+{
+  "id": "RCP-OPENCODEX-0.2.18-WINDOWS-PATH-ENV",
+  "task": "TASK-OPENCODEX-0.2.18-WINDOWS-PATH-ENV",
+  "sourceCommit": "98022b83503b6e2853069e6df4005fa220ac1852",
+  "applicationTree": "9a0f30c6aaafb0bdffead2de80825989f84a3464",
+  "targetVersion": "0.2.18",
+  "result": "passed_for_audit_and_repaired_scope",
+  "checks": [
+    {
+      "name": "review:all-path-surfaces",
+      "result": "passed",
+      "evidence": "coverage-inventory.json; ui-path-search.txt; backend-environment-path-search.txt",
+      "scope": "189 UI + 191 Rust src files and 18 subsystem domains; auxiliary build/installer files reviewed"
+    },
+    {
+      "name": "review:original-identities",
+      "result": "passed",
+      "evidence": "webview-committed-node22/windows-path-ui.json; webview-committed-node24/windows-path-ui.json; daily-files-final.json",
+      "scope": "display/copy/open do not rewrite data-root or runtime source; original user files unchanged"
+    },
+    {
+      "name": "review:controlled-environment",
+      "result": "passed",
+      "evidence": "checks/model-environment-before.log; checks/shim-environment-before.log; checks/discovery-before.log; checks/windows-runtime-final.log; checks/backend-workspace-jobs2.log; checks/nvmd-boundary-comparison.log"
+    },
+    {
+      "name": "review:uninstall-targets",
+      "result": "passed",
+      "evidence": "checks/uninstall-context-before.log; checks/windows-runtime-final.log",
+      "scope": "real subprocess fixture prints selected OPENCODEX_HOME/prefix/cwd; no daily uninstaller executed"
+    },
+    {
+      "name": "test:frontend-full",
+      "result": "passed",
+      "passed": 1034,
+      "evidence": "checks/ui-verified-final.log",
+      "skipped": 10
+    },
+    {
+      "scope": "reported Rust outcomes; not a claim that all opt-in live providers ran",
+      "result": "passed",
+      "ignored": 16,
+      "suites": 40,
+      "evidence": "checks/backend-workspace-jobs2.log; checks/backend-workspace-summary.json",
+      "name": "test:windows-workspace",
+      "passed": 1001
+    },
+    {
+      "name": "test:native-tools",
+      "result": "passed",
+      "evidence": "nvmd-native-final/validation.json; checks/nvmd-committed-install.log; nvmd-command-stage-summary.json; checks/nvmd-boundary-summary.json",
+      "scope": "actual NVMD official package install/offline failure/rollback/upgrade; controlled CLI environment fixtures; COMSPEC A/B"
+    },
+    {
+      "name": "test:webview-node22",
+      "result": "passed",
+      "evidence": "webview-committed-node22/windows-path-ui.json; webview-committed-node22/native-install-recovery.json; webview-committed-node22/app.log",
+      "scope": "Node22.12.0/npm10.9.0; six managed paths/thirteen Agent paths; real clipboard with explicit test focus/permission"
+    },
+    {
+      "name": "test:webview-node24",
+      "result": "passed",
+      "evidence": "webview-committed-node24/windows-path-ui.json; webview-committed-node24/native-install-recovery.json; webview-final-artifact/native-install-recovery.json; final-artifact-provenance.json",
+      "scope": "Node24.22.1/npm11.21.0; current EXE bytes revalidated"
+    },
+    {
+      "name": "test:fmt-clippy-build",
+      "result": "passed",
+      "evidence": "checks/fmt-source-final.log; checks/clippy-committed.log; checks/typecheck-verified-final.log; checks/ui-verified-final-build.log; checks/native-build-committed.log; checks/native-final-artifact.log"
+    }
+  ],
+  "writeback": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.18-bugs.md",
+      "beforeGitBlob": null,
+      "afterGitBlob": "77b0fddca9dd0c7578461b364b23923b2081bcae",
+      "workingSha256": "5953f0fff6d96b85b2967b5ea52ae9ba97b74f0dfefcb225dcde713fd266c827"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.17-bugs.md",
+      "beforeGitBlob": "670916ecf4284f13ca771149e083953978dbdd42",
+      "afterGitBlob": "43b11a09229db222dfb7b778dcf07bf62e62c639",
+      "workingSha256": "bc67f80314b1cd38e87b9d27f6c7a003122bee41322a57b76240b0bcd27ad65a"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-26.md",
+      "beforeGitBlob": "42cd8cc9e5a0d3a1e446673fa3150cff41806a61",
+      "afterGitBlob": "a3d1f92a83a0c06c27ecc5f6a6bcecd07d87a321",
+      "workingSha256": "9cd734c304ff682f8ee76c7cfe6ddfb33a9755517b5364ab92207fc21b5e2d05"
+    }
+  ],
+  "reviewKind": "assistant source review and actual local tests; no independent acceptance/release certificate claimed",
+  "openIssues": [
+    "historical npm exit1 root cause remains unknown",
+    "npm view failure stderr/diagnostic contract remains incomplete",
+    "unexecuted SMB/enterprise/OS/Node/DPI/installer/OTA matrices"
+  ],
+  "initialFailuresRetained": true,
+  "systemPageFileChanged": false,
+  "testDeadlinesOrThreadsRelaxed": false,
+  "dailyConfigurationReset": false,
+  "dailyUninstallOrShimModified": false,
+  "published": false,
+  "recordedAt": "2026-10-28T19:54:17.4130639+08:00"
+}

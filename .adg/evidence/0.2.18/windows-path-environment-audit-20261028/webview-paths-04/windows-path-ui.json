@@ -1,0 +1,21 @@
+{
+  "result": "fail",
+  "checks": [
+    "installation data root/home/native placeholder use readable ordinary paths",
+    "real clipboard receives readable same-identity data root"
+  ],
+  "rawDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 04\\OpenCodeX Native 中文 Spaces",
+  "documentFocusEmulated": true,
+  "isolatedClipboardPermissionGranted": true,
+  "openedTargets": [
+    "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\code\\test\\out\\windows-path-audit\\WebView Paths 04\\OpenCodeX Native 中文 Spaces"
+  ],
+  "typography": {
+    "font": "Consolas, \"Cascadia Code\", SFMono-Regular, Menlo, \"Microsoft YaHei\", monospace",
+    "hasBackslash": true,
+    "hasWon": false
+  },
+  "freshPreferencesSavedThroughProductionApi": true,
+  "error": "AssertionError [ERR_ASSERTION]: missing native path action: 继续打开\n    at click (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:21:5)\n    at async verifyWindowsPathUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-path-ui.mjs:71:5)\n    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/code/test/smoke/windows-install-recovery.mjs:73:3",
+  "clipboardRestored": true
+}
