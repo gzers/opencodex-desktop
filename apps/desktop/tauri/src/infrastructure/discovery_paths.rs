@@ -208,6 +208,10 @@ fn windows_declared_candidates(
         append(base.join("Programs/nodejs"));
         roots.push(base.join("fnm"));
     }
+    // Per-user conventional tools precede machine-wide fallback installations.
+    for path in windows_home_candidates(home) {
+        append(path);
+    }
     for key in ["ProgramFiles", "ProgramFiles(x86)"] {
         if let Some(path) = env(key) {
             append(path.join("nodejs"));
@@ -253,9 +257,6 @@ fn windows_declared_candidates(
                 append(path);
             }
         }
-    }
-    for path in windows_home_candidates(home) {
-        append(path);
     }
     result
 }

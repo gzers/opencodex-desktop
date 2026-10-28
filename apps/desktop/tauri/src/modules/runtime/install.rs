@@ -3421,12 +3421,13 @@ mod bounded_probe_tests {
         let probe = RealVersionProbe {
             timeout: Duration::from_secs(2),
         };
-        for text in [
-            "console.log('2.77.0');process.stdout.write('x'.repeat(128*1024));",
-            "require('child_process').spawn(process.execPath,['-e','setTimeout(()=>{},30000)'],{stdio:['ignore','inherit','ignore']}).unref();console.log('2.77.0');process.exit(0);",
+        for (case, text) in [
+            ("oversized stdout", "console.log('2.77.0');process.stdout.write('x'.repeat(128*1024));"),
+            ("inherited stdout", "require('child_process').spawn(process.execPath,['-e','process.stdout.write(\"child\");setTimeout(()=>{},30000)'],{detached:true,stdio:['ignore','inherit','ignore']}).unref();console.log('2.77.0');setTimeout(()=>process.exit(0),500);"),
         ] {
             std::fs::write(&script,text).unwrap();let started=Instant::now();
-            assert!(probe.probe(Some(&node),&script).is_none());assert!(started.elapsed()<Duration::from_secs(8));
+            let result = probe.probe(Some(&node),&script);
+            assert!(result.is_none(), "{case} returned {result:?}");assert!(started.elapsed()<Duration::from_secs(8), "{case} exceeded deadline");
         }
         std::fs::write(&script, "console.log('2.77.0')").unwrap();
         assert_eq!(probe.probe(Some(&node), &script).as_deref(), Some("2.77.0"));

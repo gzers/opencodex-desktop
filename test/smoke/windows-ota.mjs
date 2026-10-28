@@ -17,6 +17,9 @@ async function evaluate(expression){const r=await call('Runtime.evaluate',{expre
 const invoke=(name,args={})=>evaluate('window.__TAURI_INTERNALS__.invoke('+JSON.stringify(name)+','+JSON.stringify(args)+')')
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex')
 try{
+ let ready=false
+ for(let n=0;n<120;n++){ready=await evaluate("!!window.__TAURI_INTERNALS__?.invoke&&!!document.querySelector('#app')?.children.length&&document.body.innerText.length>30");if(ready)break;await new Promise(resolve=>setTimeout(resolve,250))}
+ assert(ready,'released application did not mount its actual UI and IPC bridge')
  const facts={about:await invoke('app_about'),dataRoot:await invoke('get_data_root_config')};assertModelSandbox(facts,sandbox)
  const config=modelConfigPath(facts,sandbox)
  if(phase==='verify'){
