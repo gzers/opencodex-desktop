@@ -28361,5 +28361,560 @@
     "clientRestartVerified": false,
     "inputChannelReference": "Input-1 -> Input-2; model set, effective parameters and visibility aligned",
     "historicalRetainedIdsDoNotProveAvailability": true
+  },
+  "feimaoClaudeIncrementalObservation": {
+    "capturedAt": "2026-10-16T13:11:24+08:00",
+    "scope": "FeiMao-Claude 局部增量；原 2026-10-13 全量快照及统计保留。",
+    "channel": "FeiMao-Claude",
+    "adapter": "openai-responses",
+    "defaultModel": "claude-sonnet-4-6",
+    "contextPolicy": "128000 为客户端保守策略，115200 为压缩阈值；非渠道实测能力。",
+    "catalogSha256": "a644d3d799eabc1ca9bceb5ec7a1dd5af058ef383c52f2ec17e79eb8a650f96f",
+    "models": [
+      {
+        "id": "claude-fable-5",
+        "contextWindow": 128000,
+        "autoCompactTokenLimit": 115200,
+        "declaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high"
+      },
+      {
+        "id": "claude-fable-5-1",
+        "contextWindow": 128000,
+        "autoCompactTokenLimit": 115200,
+        "declaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high"
+      },
+      {
+        "id": "claude-opus-4-6",
+        "contextWindow": 128000,
+        "autoCompactTokenLimit": 115200,
+        "declaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "max"
+        ],
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high"
+      },
+      {
+        "id": "claude-opus-4-7",
+        "contextWindow": 128000,
+        "autoCompactTokenLimit": 115200,
+        "declaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high"
+      },
+      {
+        "id": "claude-opus-4-8",
+        "contextWindow": 128000,
+        "autoCompactTokenLimit": 115200,
+        "declaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high"
+      },
+      {
+        "id": "claude-opus-5",
+        "contextWindow": 128000,
+        "autoCompactTokenLimit": 115200,
+        "declaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high"
+      },
+      {
+        "id": "claude-opus-5-5",
+        "contextWindow": 128000,
+        "autoCompactTokenLimit": 115200,
+        "declaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "medium"
+      },
+      {
+        "id": "claude-sonnet-4-6",
+        "contextWindow": 128000,
+        "autoCompactTokenLimit": 115200,
+        "declaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "max"
+        ],
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "medium"
+      },
+      {
+        "id": "claude-sonnet-5",
+        "contextWindow": 128000,
+        "autoCompactTokenLimit": 115200,
+        "declaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high"
+      },
+      {
+        "id": "claude-sonnet-5-5",
+        "contextWindow": 128000,
+        "autoCompactTokenLimit": 115200,
+        "declaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high"
+      }
+    ],
+    "verification": {
+      "catalogRows": 10,
+      "gptRows": 0,
+      "otherProviderConfigsUnchanged": true,
+      "generationTestPerformed": false,
+      "longContextTestPerformed": false,
+      "runningChatReloadVerified": false
+    },
+    "sources": [
+      "https://platform.claude.com/docs/en/build-with-claude/effort",
+      "https://platform.claude.com/docs/en/build-with-claude/context-windows",
+      "https://learn.chatgpt.com/docs/config-file/config-reference"
+    ],
+    "pickerOrder": [
+      "FeiMao-Claude/claude-fable-5",
+      "FeiMao-Claude/claude-opus-5-5",
+      "FeiMao-Claude/claude-sonnet-5-5"
+    ],
+    "pickerGroupOrder": [
+      "Krill-1",
+      "Krill-2",
+      "FeiMao",
+      "FeiMao-Claude",
+      "GZGG-NewApi",
+      "CodeKey",
+      "A6api",
+      "Input-1",
+      "Input-2",
+      "Ciii-1",
+      "Ciii-2",
+      "JustDoWoker-1",
+      "JustDoWoker-2",
+      "MDJK"
+    ],
+    "orderingPolicy": "FeiMao-Claude 紧接 FeiMao；其余可见模型相对顺序保留，清理排序清单中已不可见条目以通过接口校验，不改变模型可见性。"
+  },
+  "newApiGxlqLocalReasoningAssessment": {
+    "capturedAt": "2026-10-27T09:53:39+08:00",
+    "timezone": "Asia/Shanghai",
+    "scope": "GZGG-NewApi 三个 gxlq-local 别名的局部核对；2026-10-13 全量快照、统计和既有 FeiMao-Claude 增量保留。",
+    "classification": "当前配置及目录观测、用户确认映射、原厂资料与转换源码推导；建议未应用，非生成或渠道能力验收。",
+    "channel": "GZGG-NewApi",
+    "runtimeVersion": "2.84.0",
+    "newApiVersion": "v1.0.0-rc.45",
+    "adapter": "anthropic",
+    "modelMappingSource": "用户在本次对话明确提供三个别名至原始型号的映射；未独立验证 NewAPI 管理端模型映射。",
+    "models": [
+      {
+        "id": "gxlq-local-deepseek-flash",
+        "providerReasoningEfforts": [
+          "low",
+          "high",
+          "max"
+        ],
+        "providerDefaultReasoningEffort": "high",
+        "customModelReasoningEfforts": [
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "customModelDefaultReasoningEffort": null,
+        "publicApiReasoningEfforts": [
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "publicApiDefaultReasoningEffort": "high",
+        "catalogReasoningEfforts": [
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high",
+        "upstreamModel": "deepseek-v4.1-flash",
+        "nativeReasoningEfforts": [
+          "low",
+          "high",
+          "max"
+        ],
+        "nativeDefaultReasoningEffort": "high",
+        "nativeNumericReasoningEffortRange": [
+          1,
+          100
+        ],
+        "nativeStringToNumericEffort": {
+          "low": 50,
+          "high": 75,
+          "max": 100
+        },
+        "recommendedDefaultReasoningEffort": "high",
+        "sourceRef": "deepseek-v41-official-encoding",
+        "assessment": "渠道级 low/high/max 已匹配原厂；customModels 的 high/xhigh/max 覆盖目录声明，导致缺 low、多 xhigh，应同步修正自定义模型记录。",
+        "effectiveDeclaredReasoningEfforts": [
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "extraDeclaredReasoningEfforts": [
+          "xhigh"
+        ],
+        "missingNativeReasoningEfforts": [
+          "low"
+        ],
+        "recommendedReasoningEfforts": [
+          "low",
+          "high",
+          "max"
+        ]
+      },
+      {
+        "id": "gxlq-local-qwen-flash-next",
+        "providerReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "providerDefaultReasoningEffort": "high",
+        "customModelReasoningEfforts": null,
+        "customModelDefaultReasoningEffort": null,
+        "publicApiReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "publicApiDefaultReasoningEffort": "high",
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high",
+        "upstreamModel": "qwen3.8-flash-next",
+        "nativeReasoningEfforts": [
+          "low",
+          "medium",
+          "xhigh"
+        ],
+        "nativeDefaultReasoningEffort": "xhigh",
+        "recommendedDefaultReasoningEffort": "medium",
+        "qualityFirstDefaultReasoningEffort": "xhigh",
+        "sourceRef": "qwen38-official-model-card",
+        "assessment": "多 high；默认 high 不属于原厂档位。medium 为均衡建议，xhigh 为质量优先及原厂默认；不把关闭思考直接当作原生 reasoning_effort 档位。",
+        "effectiveDeclaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "extraDeclaredReasoningEfforts": [
+          "high"
+        ],
+        "missingNativeReasoningEfforts": [],
+        "recommendedReasoningEfforts": [
+          "low",
+          "medium",
+          "xhigh"
+        ]
+      },
+      {
+        "id": "gxlq-local-glm-flash",
+        "providerReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "providerDefaultReasoningEffort": "high",
+        "customModelReasoningEfforts": null,
+        "customModelDefaultReasoningEffort": null,
+        "publicApiReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "publicApiDefaultReasoningEffort": "high",
+        "catalogReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max",
+          "ultra"
+        ],
+        "catalogDefaultReasoningEffort": "high",
+        "upstreamModel": "glm-5.3-flash",
+        "nativeReasoningEfforts": [
+          "low",
+          "high",
+          "max"
+        ],
+        "nativeDefaultReasoningEffort": "max",
+        "recommendedDefaultReasoningEffort": "high",
+        "qualityFirstDefaultReasoningEffort": "max",
+        "sourceRef": "glm53-official-model-card",
+        "assessment": "多 medium、xhigh，缺 max；默认 high 可作为均衡策略，原厂默认 max。官方模板对其他值回退 max，实际服务框架也可能先校验拒绝，不能据此认为多余档位有效。",
+        "effectiveDeclaredReasoningEfforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "extraDeclaredReasoningEfforts": [
+          "medium",
+          "xhigh"
+        ],
+        "missingNativeReasoningEfforts": [
+          "max"
+        ],
+        "recommendedReasoningEfforts": [
+          "low",
+          "high",
+          "max"
+        ]
+      }
+    ],
+    "anthropicBudgetConversion": {
+      "evidenceKind": "source-derived-not-generation-tested",
+      "localAdapterSourceRef": "local-anthropic-adapter",
+      "gatewaySourceRef": "newapi-rc45-budget-conversion",
+      "conditions": "别名使用当前 Anthropic 手动预算分支；NewAPI 采用 rc.45 标准 Claude→OpenAI 换算，且未被渠道参数覆盖或其他上游方言改写。",
+      "newApiThresholds": {
+        "zero": "none",
+        "negative": "high",
+        "positiveUpTo1024": "low",
+        "positiveUpTo8192": "medium",
+        "above8192": "high"
+      },
+      "currentStandardBudgetExamples": [
+        {
+          "requestedEffort": "low",
+          "nominalBudgetTokens": 4096,
+          "outboundBudgetTokens": 4096,
+          "inferredNewApiEffort": "medium"
+        },
+        {
+          "requestedEffort": "medium",
+          "nominalBudgetTokens": 8192,
+          "outboundBudgetTokens": 8192,
+          "inferredNewApiEffort": "medium"
+        },
+        {
+          "requestedEffort": "high",
+          "nominalBudgetTokens": 16384,
+          "outboundBudgetTokens": 16384,
+          "inferredNewApiEffort": "high"
+        },
+        {
+          "requestedEffort": "xhigh",
+          "nominalBudgetTokens": 24576,
+          "outboundBudgetTokens": 24576,
+          "inferredNewApiEffort": "high"
+        },
+        {
+          "requestedEffort": "max",
+          "nominalBudgetTokens": 32000,
+          "outboundBudgetTokens": 27904,
+          "inferredNewApiEffort": "high"
+        }
+      ],
+      "maxBudgetNote": "当前别名分支总输出上限 32000，正文预留 4096，因此名义 max=32000 裁到 27904；这不是原厂推理强度的数字 1–100。",
+      "conclusion": "low/medium 可折叠为 medium，high/xhigh/max 可折叠为 high；仅改菜单不能恢复原生档位语义，需出站日志或生成请求进一步验证。"
+    },
+    "catalogProjection": {
+      "sourceRef": "local-catalog-effort",
+      "note": "OpenCodex 会为可推理路由条目补 max/ultra；目录派生项不等于原厂额外档位。"
+    },
+    "recommendations": {
+      "status": "not-applied",
+      "preferredTransport": "OpenAI Chat Completions /v1/chat/completions，直接表达原生 reasoning_effort；先确认具体型号路由，不能仅因本记录就改整条渠道。",
+      "steps": [
+        "先核对三个型号的转发协议与 NewAPI 出站参数，避免预算换算折叠。",
+        "按各型号推荐档位修正声明，并同步修正 DeepSeek customModels 覆盖。",
+        "Qwen 默认改 medium（均衡）或 xhigh（质量优先）；DeepSeek 与 GLM 可保留 high 作为均衡默认。",
+        "后续如应用建议，再分别核对公开模型列表、Codex 目录与真实出站参数。"
+      ]
+    },
+    "verification": {
+      "localConfigRead": true,
+      "localPublicModelListRead": true,
+      "codexCatalogRead": true,
+      "newApiVersionRead": true,
+      "officialSourcesReviewed": true,
+      "runtimeConfigModified": false,
+      "modelGenerationRequestsSent": false,
+      "newApiAdminModelMappingRead": false,
+      "channelParameterOverridesInspected": false,
+      "upstreamOutboundLogsInspected": false,
+      "runningChatReloadVerified": false
+    },
+    "sources": [
+      {
+        "id": "local-config",
+        "pathAlias": "Desktop OPENCODEX_HOME/config.json",
+        "sha256": "e6c4f6287761191a5d14b2309079b76468489e88d53c599c4d25a3b9be9b5c1d"
+      },
+      {
+        "id": "local-catalog",
+        "pathAlias": "Codex opencodex-catalog.json",
+        "sha256": "15cadf8eb3b380fa124f66484245fc58b0f11e1cbc578f7828b58f90b79477a6"
+      },
+      {
+        "id": "local-anthropic-adapter",
+        "pathAlias": "Installed OpenCodex 2.84.0 src/adapters/anthropic.ts",
+        "sha256": "29e3eb90967b7746b25070a7cdab79064198f6b7871a41e7ccd808a3cbf4117e"
+      },
+      {
+        "id": "local-catalog-effort",
+        "pathAlias": "Installed OpenCodex 2.84.0 src/codex/catalog/effort.ts",
+        "sha256": "a5c70bdf140a94577d27a4fe61cca6faedd96552b38d9eb87daa0f0a5fbe83e7"
+      },
+      {
+        "id": "deepseek-v41-official-encoding",
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/encoding/encoding.py",
+        "scope": "原厂字符串档位、数字 1–100 与默认 high；非本机服务能力实测。"
+      },
+      {
+        "id": "qwen38-official-model-card",
+        "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next/blob/main/README.md",
+        "scope": "原厂 low/medium/xhigh 档位及默认 xhigh；关闭思考为独立控制。"
+      },
+      {
+        "id": "glm53-official-model-card",
+        "url": "https://huggingface.co/zai-org/GLM-5.3-Flash/blob/main/README.md",
+        "scope": "原厂 low/high/max 档位及默认 max。"
+      },
+      {
+        "id": "newapi-rc45-budget-conversion",
+        "url": "https://github.com/QuantumNous/new-api/blob/v1.0.0-rc.45/relaykit/relayconvert/reasoning/intent.go#L654-L688",
+        "scope": "EffectiveEffort / EffortFromBudget 的标准预算换算；未核对渠道自定义参数覆盖。"
+      }
+    ]
   }
 }
