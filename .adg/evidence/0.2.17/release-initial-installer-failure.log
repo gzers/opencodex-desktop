@@ -1,0 +1,60 @@
+2026-10-28T05:15:36.1806555Z ##[group]Run & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/release-windows-installer
+2026-10-28T05:15:36.1807575Z [36;1m& ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/release-windows-installer[0m
+2026-10-28T05:15:36.1856140Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-28T05:15:36.1856401Z env:
+2026-10-28T05:15:36.1856564Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-28T05:15:36.1856768Z   CARGO_INCREMENTAL: 0
+2026-10-28T05:15:36.1856943Z   CARGO_TERM_COLOR: always
+2026-10-28T05:15:36.1857113Z ##[endgroup]
+2026-10-28T05:16:19.3959588Z PASS: Windows rendered, Tauri commands succeeded, sandbox initialized.
+2026-10-28T05:16:21.8921878Z [31;1mJoin-Path: [0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-installer.ps1:40[0m
+2026-10-28T05:16:21.8923881Z [31;1m[0m[36;1mLine |[0m
+2026-10-28T05:16:21.8924603Z [31;1m[0m[36;1m[36;1m  40 | [0m … ject {Test-Path -LiteralPath ([36;1mJoin-Path $_ 'opencodex-desktop.exe'[0m)})[0m
+2026-10-28T05:16:21.8925321Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-10-28T05:16:21.8925833Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mCannot find drive. A drive with the name '"C' does not exist.[0m
+2026-10-28T05:16:21.9249535Z ##[error]Process completed with exit code 1.
+2026-10-28T05:16:21.9392794Z ##[group]Run actions/upload-artifact@v4
+2026-10-28T05:16:21.9393040Z with:
+2026-10-28T05:16:21.9393221Z   name: release-windows-installer-evidence
+2026-10-28T05:16:21.9393457Z   path: test/out/release-windows-installer
+2026-10-28T05:16:21.9393656Z   if-no-files-found: warn
+2026-10-28T05:16:21.9393839Z   compression-level: 6
+2026-10-28T05:16:21.9394005Z   overwrite: false
+2026-10-28T05:16:21.9394172Z   include-hidden-files: false
+2026-10-28T05:16:21.9394342Z env:
+2026-10-28T05:16:21.9394519Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-28T05:16:21.9394719Z   CARGO_INCREMENTAL: 0
+2026-10-28T05:16:21.9394894Z   CARGO_TERM_COLOR: always
+2026-10-28T05:16:21.9395065Z ##[endgroup]
+2026-10-28T05:16:22.0899512Z (node:4456) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-28T05:16:22.0900024Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-28T05:16:22.1503561Z With the provided path, there will be 275 files uploaded
+2026-10-28T05:16:22.1507145Z Artifact name is valid!
+2026-10-28T05:16:22.1507968Z Root directory input is valid!
+2026-10-28T05:16:22.4673434Z Beginning upload of artifact content to blob storage
+2026-10-28T05:16:22.7405121Z (node:4456) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-28T05:16:23.4493673Z Uploaded bytes 4410696
+2026-10-28T05:16:23.4981966Z Finished uploading artifact content to blob storage!
+2026-10-28T05:16:23.4983309Z SHA256 digest of uploaded artifact zip is 79b987f36a5902120a4983bb24a5604c5e74e946cca2df41c485310d955a4b54
+2026-10-28T05:16:23.4984346Z Finalizing artifact upload
+2026-10-28T05:16:23.9589096Z Artifact release-windows-installer-evidence.zip successfully finalized. Artifact ID 12793733695
+2026-10-28T05:16:23.9590244Z Artifact release-windows-installer-evidence has been successfully uploaded! Final size is 4410696 bytes. Artifact ID is 12793733695
+2026-10-28T05:16:23.9598640Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/40636062852/artifacts/12793733695
+2026-10-28T05:16:23.9946568Z Post job cleanup.
+2026-10-28T05:16:24.1122298Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-28T05:16:24.1363276Z git version 2.56.0.windows.2
+2026-10-28T05:16:24.1409516Z Temporarily overriding HOME='D:\a\_temp\25a4394f-0b5a-4fc4-8216-259216d40a2a' before making global git config changes
+2026-10-28T05:16:24.1410404Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T05:16:24.1417365Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-10-28T05:16:24.1672915Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T05:16:24.1993108Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-28T05:16:24.6019541Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T05:16:24.6275996Z http.https://github.com/.extraheader
+2026-10-28T05:16:24.6305931Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-28T05:16:24.6589093Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-28T05:16:25.0483240Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T05:16:25.0722396Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-28T05:16:25.4665418Z Cleaning up orphan processes
+2026-10-28T05:16:25.4842469Z Terminate orphan process: pid (6100) (vctip)
+2026-10-28T05:16:25.5125288Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

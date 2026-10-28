@@ -38,3 +38,9 @@ CI40632048037五个必需job全部通过，PR26已合并为d7c7978f043278baae8f2
 原生回执实际读回：ordinary-summary result=pass、applicationElevated=false、applicationModeMatched=true、desktopAclRestoredOnExit=true。真实Vue安装官方2.91.0、默认prefix、来源记录通过；官方2.90→2.91升级和热缓存离线重装通过。窗口/表格/排序/双渠道保存/Key/导入/模版的原生证据已归档windows-native，不用绿灯代替实际回执。
 
 正式构建、安装器和公开/stable、OTA仍待完成。
+
+## 正式包首轮与验收脚本复验
+
+Release40636062852的macOS构建成功；Windows MSI/NSIS及签名资产成功生成，但验收脚本在NSIS注册表InstallLocation带引号时Join-Path读成错误盘符，故整体job失败。MSI默认安装/真实界面已通过；原失败报告和日志保留，不把整轮误记成功。
+
+PR27仅修测试脚本和验收工作流：固定摘要下载既有未公开资产，MSI管理提取后只恢复Tauri标记并匹配首次构建EXE摘要610fb4cc…f5365776；安装包本体、签名及v0.2.17标签完全不变。验收使用ExpectedCommit=d7c7978f0，避免拿测试脚本提交冒充应用来源。Windows默认/自定义安装器复验继续执行。草稿三个更新包已独立使用原公钥验签及摘要匹配，macOS归档版本/标识/两份许可资源读回通过，仍未公开或晋升stable。
