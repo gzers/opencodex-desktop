@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.2.17 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.89s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-afa6b7069e3656c7)
+
+running 7 tests
+test modules::runtime::paths::tests::executable_accepts_relative_rejection_for_non_absolute ... ok
+test modules::runtime::paths::tests::executable_rejects_missing_and_non_executable ... ok
+test modules::runtime::paths::tests::install_target_rejects_regular_file_and_non_absolute ... ok
+test modules::runtime::paths::tests::executable_follows_symlinks_and_allows_system_prefixes ... ok
+test modules::runtime::paths::tests::install_target_accepts_writable_directory_and_creatable_child ... ok
+test modules::runtime::paths::tests::symlink_component_detection_walks_in_scope_ancestors_only ... ok
+test modules::runtime::paths::tests::install_target_rejects_symlink_and_protected_dirs ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 1108 filtered out; finished in 0.00s
+
