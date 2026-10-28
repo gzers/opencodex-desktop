@@ -63,3 +63,7 @@ a305f8d8/d7abdc42仅修验收脚本：先按当前真实SID从Windows ProfileLis
 CI40627338213（7683c569a）前置windows-smoke-evidence已通过。原始日志ordinary-profile-preflight-passed.log明确记录Native Profile、current SID及Profile/Roaming/Local同属新账户，并记录imageLocalAppDataCorrected=true。
 
 最终验收准备方式以7683c569a为准，覆盖前文先前失败的脚本尝试：Windows Profile服务创建本次ocxacc临时账户Profile；若测试镜像Default User克隆的LocalAppData仍是runneradmin绝对路径，只在本次SID已加载的User Shell Folders/Shell Folders用户配置项初始化该账户自己的标准Local目录，再启动新的同账户进程用Windows Known Folder API读回。无全局注册表/日常账户/系统ACL更改，但这确实是临时测试Profile准备，不能表述为“完全未调整Known Folders”的机器环境验收。最终EXE普通账户仍待完整CI，不由前置通过替代。
+
+## 原型证据人工复核范围
+
+列表截图人工复核：实现表格间距、单行顶部状态与无修改保存禁用符合本轮保持原结构要求；file URL原型截图有部分文字未正常显示，但DOM列头/操作/排序入口检查通过。因此parity-list通过仅声明这些结构项，不将该截图当作像素完全一致的证明。本轮没有改列表/预览/通知布局，只改安装脚本确认按钮条件；完整浏览器行为和材质门禁另有独立报告。
