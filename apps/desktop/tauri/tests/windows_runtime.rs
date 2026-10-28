@@ -528,6 +528,28 @@ fn windows_managed_install_accepts_the_extended_form_of_a_local_prefix() {
 }
 
 #[test]
+fn windows_install_admission_rejects_mixed_verbatim_traversal_before_creating_directories() {
+    use opencodex_desktop_lib::modules::runtime::paths::{validate_install_target, PathRejection};
+    let root = tempfile::tempdir().unwrap();
+    let canonical = root.path().canonicalize().unwrap();
+    for suffix in [
+        "/new-parent/../escaped",
+        "/new-parent/./target",
+        "/new-parent/NUL/target",
+        "/new-parent/name:stream/target",
+    ] {
+        let path = PathBuf::from(format!("{}{suffix}", canonical.display()));
+        assert_eq!(
+            validate_install_target(&path, Some(&canonical)),
+            Err(PathRejection::NotAbsolute),
+            "{path:?}"
+        );
+        assert!(!canonical.join("new-parent").exists());
+        assert!(!canonical.join("escaped").exists());
+    }
+}
+
+#[test]
 fn windows_real_version_probe_requires_zero_exit() {
     let root = tempfile::tempdir().unwrap();
     let script = root.path().join("probe.js");

@@ -240,6 +240,19 @@ pub fn validate_install_target(
     path: &Path,
     scope: Option<&Path>,
 ) -> Result<PathBuf, PathRejection> {
+    // Windows verbatim paths treat forward slashes differently from ordinary
+    // paths. Normalize storage spelling before inspecting any component or
+    // ancestor, and reject dot segments lexically before OS normalization.
+    #[cfg(windows)]
+    if path
+        .to_string_lossy()
+        .split(['\\', '/'])
+        .any(|part| matches!(part, "." | ".."))
+    {
+        return Err(PathRejection::NotAbsolute);
+    }
+    let storage_path = install_storage_path(path);
+    let path = storage_path.as_path();
     if !path.is_absolute()
         || path.components().any(|p| {
             matches!(
