@@ -57,3 +57,9 @@ d61915ae另补Windows原生混合分隔符、点段/设备名/ADS拒绝回归：
 CI40621630300的后端、真实包安装/离线和最终EXE界面通过；普通账户Profile创建仍失败，脚本明确返回E_ACCESSDENIED，未声称普通权限通过。原因进一步定位为Start-Process -Credential可能加载了目标账户注册Profile，却仍继承runneradmin进程环境；新账户Known Folder里的环境展开先指向原用户目录。
 
 a305f8d8/d7abdc42仅修验收脚本：先按当前真实SID从Windows ProfileList只读取得注册Profile，检查为本次ocxacc临时账户且目录存在，再设置进程级USERPROFILE/HOMEDRIVE/HOMEPATH和AppData环境后调用Known Folder API。未改注册表、未重定向系统Known Folders、未放宽系统ACL。小型CI前置执行ProfileOnly验证，不把它当作实际应用通过；最终EXE普通账户业务验收继续独立执行。CI40625421002待完成，尚未合并/发布。
+
+## 普通账户前置环境通过
+
+CI40627338213（7683c569a）前置windows-smoke-evidence已通过。原始日志ordinary-profile-preflight-passed.log明确记录Native Profile、current SID及Profile/Roaming/Local同属新账户，并记录imageLocalAppDataCorrected=true。
+
+最终验收准备方式以7683c569a为准，覆盖前文先前失败的脚本尝试：Windows Profile服务创建本次ocxacc临时账户Profile；若测试镜像Default User克隆的LocalAppData仍是runneradmin绝对路径，只在本次SID已加载的User Shell Folders/Shell Folders用户配置项初始化该账户自己的标准Local目录，再启动新的同账户进程用Windows Known Folder API读回。无全局注册表/日常账户/系统ACL更改，但这确实是临时测试Profile准备，不能表述为“完全未调整Known Folders”的机器环境验收。最终EXE普通账户仍待完整CI，不由前置通过替代。

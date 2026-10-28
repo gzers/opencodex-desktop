@@ -27,6 +27,6 @@ PR26最后提交双平台CI；真实普通账户最终EXE；正式macOS/Windows�
 
 无需清空用户配置，不替换日常软件、不强制重启活跃Codex。托管安装非受管非空目录拒绝，失败保护旧包/入口/来源；进程内补偿不宣称突然断电跨文件原子。失败回滚材料保留，不移动已发布历史tag。stable回退沿显式发布流程执行，保留当前配置及备份。
 
-安装包继续未做OS代码签名/Apple公证的测试分发，自更新签名验证独立执行。普通账户验收限定临时Actions账户，其Profile由Windows服务创建；镜像Default User中LocalAppData错误指向runneradmin时，只对本次新建SID初始化自己的标准Local目录，并保留报告。不是用户日常账户操作，也不证明未调整镜像的所有账户组合。
+安装包继续未做OS代码签名/Apple公证的测试分发，自更新签名验证独立执行。普通账户验收限定临时Actions账户，其Profile由Windows服务创建；镜像Default User中LocalAppData错误指向runneradmin时，只对本次新建SID的用户目录注册项初始化自己的标准Local目录，再用新进程读回，并保留报告。不是用户日常账户操作，也不证明未调整镜像的所有账户组合。
 
 Win10/11物理设备、混合DPI、真实SMB/重定向企业账户、PAC/企业证书及私有服务保留未执行边界；不以单个Server runner结果宣布全域通过。
