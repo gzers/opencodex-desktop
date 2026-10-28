@@ -63,6 +63,11 @@ using System;
 using System.Runtime.InteropServices;
 public static class OcxFirstLogonFolders {
  [DllImport("shell32.dll", ExactSpelling=true)] static extern int SHGetKnownFolderPath(ref Guid id, uint flags, IntPtr token, out IntPtr path);
+ [DllImport("shell32.dll", CharSet=CharSet.Unicode, ExactSpelling=true)] static extern int SHSetKnownFolderPath(ref Guid id, uint flags, IntPtr token, string path);
+ public static void InitializeLocal(string path) {
+  Guid id=new Guid("f1b32785-6fba-4fcf-9d55-7b8e7f157091");
+  Marshal.ThrowExceptionForHR(SHSetKnownFolderPath(ref id,0,IntPtr.Zero,path));
+ }
  public static string Read(string value) {
   Guid id=new Guid(value);IntPtr path=IntPtr.Zero;
   try { Marshal.ThrowExceptionForHR(SHGetKnownFolderPath(ref id,0x4000,IntPtr.Zero,out path)); return Marshal.PtrToStringUni(path); }
@@ -73,13 +78,25 @@ public static class OcxFirstLogonFolders {
  $profile=$registered
  $roaming=[OcxFirstLogonFolders]::Read('3eb685db-65f9-4cf6-a03a-e3ef65729f3d')
  $local=[OcxFirstLogonFolders]::Read('f1b32785-6fba-4fcf-9d55-7b8e7f157091')
+ $imageLocalCorrected=$false
+ if(!$local.StartsWith($registered+'\',[StringComparison]::OrdinalIgnoreCase)){
+  # Some hosted images seed Default User's LocalAppData with runneradmin's
+  # absolute directory. Initialize only the freshly-created current test SID's
+  # standard Local folder; never change the runner/daily account or system ACL.
+  $ownLocal=Join-Path $registered 'AppData/Local'
+  New-Item -ItemType Directory -Force $ownLocal | Out-Null
+  [OcxFirstLogonFolders]::InitializeLocal($ownLocal)
+  $local=[OcxFirstLogonFolders]::Read('f1b32785-6fba-4fcf-9d55-7b8e7f157091')
+  $imageLocalCorrected=$true
+ }
+
  [ordered]@{registered=$registered;profile=$profile;roaming=$roaming;local=$local;processProfile=$env:USERPROFILE} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path (Split-Path -Parent $InputFile) 'ordinary-known-folders.json') -Encoding utf8
  if(!$profile -or !$roaming.StartsWith($profile+'\',[StringComparison]::OrdinalIgnoreCase) -or !$local.StartsWith($profile+'\',[StringComparison]::OrdinalIgnoreCase)){throw 'Known Folders escaped the temporary account Profile'}
  New-Item -ItemType Directory -Force $roaming,$local | Out-Null
  $env:USERPROFILE=$profile;$env:APPDATA=$roaming;$env:LOCALAPPDATA=$local
  $env:TEMP=Join-Path $local 'Temp';$env:TMP=$env:TEMP
  New-Item -ItemType Directory -Force $env:TEMP | Out-Null
- [ordered]@{result='pass';method='Windows Known Folder API read-only KF_FLAG_DONT_VERIFY; create only registered temporary account directories; no folder redirection';sid=$identity.User.Value;profile=$profile;roaming=$roaming;local=$local} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path (Split-Path -Parent $InputFile) 'ordinary-profile.json') -Encoding utf8
+ [ordered]@{result='pass';method='Native created temporary Profile; Known Folder readback; image-default LocalAppData initialized only for the new test SID if inherited outside';imageLocalAppDataCorrected=$imageLocalCorrected;sid=$identity.User.Value;profile=$profile;roaming=$roaming;local=$local} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path (Split-Path -Parent $InputFile) 'ordinary-profile.json') -Encoding utf8
  if($c.profileOnly){exit 0}
  & $c.script -Executable $c.executable -Node $c.node -OutputDirectory $c.output -Mode ordinary -ExpectedCommit $c.commit
  if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
