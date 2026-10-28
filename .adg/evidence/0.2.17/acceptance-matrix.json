@@ -1,7 +1,7 @@
 {
   "version": "0.2.17",
   "baseline": "d2c08dd7d62e2caada507f2eeb4d05804460b6a8",
-  "source_head": "22f34c820e9c9830a28a48a4119d8a3d15d57b7f",
+  "source_head": "18ffa4f6091faf1a362443c908292cf6802e1b6f",
   "items": [
     {
       "id": "WP-89",
@@ -75,5 +75,22 @@
     "paid generation requests"
   ],
   "daily_configuration_changed": false,
-  "release_complete": false
+  "release_complete": false,
+  "local_final": {
+    "frontend_passed": 988,
+    "frontend_existing_skips": 10,
+    "backend_passed": 1289,
+    "backend_existing_ignored": 14,
+    "gate_passed": 21,
+    "gate_failed": 0,
+    "gate_skipped": 0
+  },
+  "native_progress": {
+    "observed_run": 40614790973,
+    "source": "83ada43bcaae40e6ea36d515a2fbe4ac54ef221d",
+    "windows_backend_regression": "passed",
+    "native_credential_protection": "passed",
+    "official_managed_live": "not_yet_terminal_verified",
+    "final_head_ci": 40616205956
+  }
 }

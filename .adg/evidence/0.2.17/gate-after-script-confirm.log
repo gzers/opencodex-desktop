@@ -1,0 +1,28 @@
+
+> opencodex-desktop-ui@0.2.17 gate:release
+> node qa/gate-release.mjs
+
+PASS typecheck ·  · 3411ms
+PASS unit · Tests  988 passed | 10 skipped (998) · 6939ms
+PASS build · ✓ built in 292ms · 538ms
+PASS audit:file-save · {"engine":"chromium","passed":45,"failed":0,"out":"/tmp/ocx-v17-gate-script/audit-file-save"} · 12966ms
+PASS audit:notification-feedback · {"engine":"chromium","passed":56,"failed":0,"outDir":"/tmp/ocx-v17-gate-script/audit-notification-feedback"} · 25189ms
+PASS audit:notification-parity · notification recipe parity failed=0/84 · 9113ms
+PASS audit:models · shots: /tmp/ocx-v17-gate-script/audit-models  failed=0/32 · 11501ms
+PASS audit:preview · shots: /tmp/ocx-v17-gate-script/audit-preview failed=0/30 · 9687ms
+PASS audit:geometry · failed=0/44 · 6548ms
+PASS audit:geometry:webkit · failed=0/40 · 17003ms
+PASS audit:webkit · shots: /tmp/ocx-v17-gate-script/audit-webkit  failed=0/32 · 56404ms
+PASS audit:template · shots: /tmp/ocx-v17-gate-script/audit-template failed=0/28 · 9017ms
+PASS audit:export · shots: /tmp/ocx-v17-gate-script/audit-export failed=0/18 · 10546ms
+PASS audit:update · shots: /tmp/ocx-v17-gate-script/audit-update failed=0/24 · 3962ms
+PASS audit:parity:list · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-EmHcmi failed=0/8 · 6437ms
+PASS audit:parity · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-KGOu1Z failed=0/10 · 8466ms
+PASS audit:parity:export · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-export-YbNcME failed=0/7 · 9242ms
+PASS audit:parity:template · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-template-LVeIWz failed=0/11 · 9455ms
+PASS audit:parity:agent · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-agent-XDrdJj failed=0/7 · 9545ms
+PASS audit:catalog-naming · CHECKED 50 routed rows; providers=26 · 29ms
+PASS audit:catalog-crossvalidate · PASS 清除友好名后的配置通过官方 config validate · 321ms
+
+门禁快照：21 通过 / 0 失败 / 0 跳过
+报告：/tmp/ocx-v17-gate-script/gate-report.json
