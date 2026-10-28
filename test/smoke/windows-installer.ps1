@@ -2,7 +2,8 @@ param(
     [Parameter(Mandatory=$true)][string]$BundleDirectory,
     [Parameter(Mandatory=$true)][string]$BuiltExecutable,
     [Parameter(Mandatory=$true)][string]$Node,
-    [Parameter(Mandatory=$true)][string]$OutputDirectory
+    [Parameter(Mandatory=$true)][string]$OutputDirectory,
+    [string]$ExpectedCommit = ''
 )
 $ErrorActionPreference = 'Stop'
 if (!$IsWindows -or $env:GITHUB_ACTIONS -ne 'true') {
@@ -11,7 +12,7 @@ if (!$IsWindows -or $env:GITHUB_ACTIONS -ne 'true') {
 $taskBundle = (Resolve-Path -LiteralPath $BundleDirectory).Path
 $taskBuilt = (Resolve-Path -LiteralPath $BuiltExecutable).Path
 $taskOutput = [System.IO.Path]::GetFullPath($OutputDirectory)
-$taskSource = (& git rev-parse HEAD).Trim()
+$taskSource = if ($ExpectedCommit) { $ExpectedCommit } else { (& git rev-parse HEAD).Trim() }
 if ($LASTEXITCODE -ne 0 -or $taskSource -notmatch '^[0-9a-f]{40}$') { throw 'Source commit missing' }
 $taskHash = (Get-FileHash -LiteralPath $taskBuilt -Algorithm SHA256).Hash.ToLower()
 $taskVersion = (Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw | ConvertFrom-Json).version
@@ -33,11 +34,11 @@ function Find-DefaultInstalledDirectory {
     $entries=@(Get-ItemProperty -Path $roots -ErrorAction SilentlyContinue | Where-Object DisplayName -ceq 'OpenCodeX Desktop')
     $directories=@()
     foreach($item in $entries){
-        if($item.InstallLocation){$directories+=[string]$item.InstallLocation}
+        if($item.InstallLocation){$directories+=([string]$item.InstallLocation).Trim().Trim('"')}
         if($item.DisplayIcon -match '^"?([^"\r\n]+?\.exe)'){$directories+=Split-Path -Parent $Matches[1]}
         if($item.UninstallString -match '^"([^"\r\n]+uninstall\.exe)"'){$directories+=Split-Path -Parent $Matches[1]}
     }
-    $found=@($directories | Sort-Object -Unique | Where-Object {Test-Path -LiteralPath (Join-Path $_ 'opencodex-desktop.exe')})
+    $found=@($directories | Where-Object {![string]::IsNullOrWhiteSpace($_)} | ForEach-Object {$_.Trim().Trim('"')} | Sort-Object -Unique | Where-Object {Test-Path -LiteralPath (Join-Path $_ 'opencodex-desktop.exe')})
     if($found.Count -ne 1){throw 'Could not identify one product-owned default install directory'}
     return $found[0]
 }

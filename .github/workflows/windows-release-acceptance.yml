@@ -2,6 +2,11 @@ name: Windows published release acceptance
 on:
   workflow_dispatch:
     inputs:
+      phase:
+        type: choice
+        required: true
+        default: installers
+        options: [installers, ota]
       version:
         type: string
         required: true
@@ -9,7 +14,31 @@ on:
 permissions:
   contents: read
 jobs:
+  installers:
+    if: inputs.phase == 'installers'
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Verify exact existing signed release installers without rebuilding
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./test/smoke/windows-release-installers.ps1 -OutputDirectory test/out/release-existing-installers
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-existing-installer-evidence
+          path: |
+            test/out/release-existing-installers/**/*.json
+            test/out/release-existing-installers/**/*.log
+            test/out/release-existing-installers/**/*.png
+          if-no-files-found: error
   ota:
+    if: inputs.phase == 'ota'
     strategy:
       fail-fast: false
       matrix:
