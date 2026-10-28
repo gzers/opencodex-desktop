@@ -51,42 +51,14 @@ pub fn candidate_dirs(home: &Path) -> Vec<PathBuf> {
         if crate::modules::test_sandbox::enabled() {
             return directories;
         }
-        for key in ["NVM_SYMLINK", "NODE_HOME", "NVM_HOME"] {
-            if let Some(path) = std::env::var_os(key)
-                .map(PathBuf::from)
-                .filter(|path| path.is_absolute())
-            {
-                directories.push(path);
-            }
-        }
-        if super::platform::home_dir().as_deref() == Some(home) {
-            if let Some(path) = dirs::data_dir() {
-                directories.push(path.join("npm"));
-            }
-            if let Some(path) = dirs::data_local_dir() {
-                directories.push(path.join("Programs/nodejs"));
-            }
-        }
-        for key in ["ProgramFiles", "ProgramFiles(x86)"] {
-            if let Some(path) = std::env::var_os(key)
-                .map(PathBuf::from)
-                .filter(|path| path.is_absolute())
-            {
-                directories.push(path.join("nodejs"));
-            }
-        }
-        // 非默认安装位置：Volta / fnm / pnpm 与自定义 npm prefix。
-        for key in ["LOCALAPPDATA", "APPDATA"] {
-            if let Some(path) = std::env::var_os(key)
-                .map(PathBuf::from)
-                .filter(|path| path.is_absolute())
-            {
-                directories.push(path.join("Volta/bin"));
-                directories.push(path.join("fnm"));
-                directories.push(path.join("pnpm"));
-                directories.push(path.join("npm"));
-            }
-        }
+        let known_roaming = dirs::data_dir();
+        let known_local = dirs::data_local_dir();
+        directories = windows_declared_candidates(
+            home,
+            |key| std::env::var_os(key).map(PathBuf::from),
+            known_roaming.as_deref(),
+            known_local.as_deref(),
+        );
         if let Some(prefix) = npm_prefix_from_npmrc(home) {
             directories.push(prefix);
         }
@@ -195,6 +167,100 @@ fn windows_home_candidates(home: &Path) -> Vec<PathBuf> {
     ]
 }
 
+/// Explicit declarations precede defaults. Never execute shell profiles or scan PATH.
+#[cfg(any(windows, test))]
+fn windows_declared_candidates(
+    home: &Path,
+    env: impl Fn(&str) -> Option<PathBuf>,
+    roaming: Option<&Path>,
+    local: Option<&Path>,
+) -> Vec<PathBuf> {
+    let mut result = Vec::new();
+    let mut append = |path: PathBuf| {
+        if path.is_absolute() && !result.contains(&path) {
+            result.push(path);
+        }
+    };
+    for key in [
+        "NVM_SYMLINK",
+        "NODE_HOME",
+        "FNM_MULTISHELL_PATH",
+        "PNPM_HOME",
+    ] {
+        if let Some(path) = env(key) {
+            append(path);
+        }
+    }
+    if let Some(path) = env("VOLTA_HOME") {
+        append(path.join("bin"));
+    }
+    let mut roots = vec![home.join(".volta"), home.join(".fnm")];
+    for key in ["NVM_HOME", "FNM_DIR"] {
+        if let Some(path) = env(key).filter(|p| p.is_absolute()) {
+            append(path.clone());
+            roots.push(path);
+        }
+    }
+    for base in [roaming, local].into_iter().flatten() {
+        append(base.join("npm"));
+        append(base.join("pnpm"));
+        append(base.join("Volta/bin"));
+        append(base.join("Programs/nodejs"));
+        roots.push(base.join("fnm"));
+    }
+    // Per-user conventional tools precede machine-wide fallback installations.
+    for path in windows_home_candidates(home) {
+        append(path);
+    }
+    for root in roots {
+        if !root.is_absolute() {
+            continue;
+        }
+        append(root.join("bin"));
+        // Bounded, one-level recognized layouts only; active declarations above win.
+        for (directory, leaf) in [
+            (root.clone(), ""),
+            (root.join("node-versions"), "installation"),
+        ] {
+            let Ok(entries) = std::fs::read_dir(&directory) else {
+                continue;
+            };
+            let mut count = 0;
+            let mut versions = Vec::new();
+            for entry in entries {
+                count += 1;
+                if count > 128 {
+                    break;
+                }
+                let Ok(entry) = entry else {
+                    continue;
+                };
+                let name = entry.file_name().to_string_lossy().into_owned();
+                let version = name
+                    .trim_start_matches('v')
+                    .split('.')
+                    .map(str::parse::<u32>)
+                    .collect::<Result<Vec<_>, _>>();
+                if let Ok(version) = version {
+                    if version.len() == 3 && entry.path().is_dir() {
+                        versions.push((version, entry.path().join(leaf)));
+                    }
+                }
+            }
+            versions.sort_by(|a, b| b.0.cmp(&a.0));
+            for (_, path) in versions.into_iter().take(16) {
+                append(path);
+            }
+        }
+    }
+    for key in ["ProgramFiles", "ProgramFiles(x86)"] {
+        if let Some(path) = env(key) {
+            append(path.join("nodejs"));
+        }
+    }
+    result
+}
+
 pub fn runtime_candidates(home: &Path) -> Vec<PathBuf> {
     let mut candidates = candidate_dirs(home)
         .iter()
@@ -243,6 +309,35 @@ mod tests {
             select_tool(&directories, vec!["ocx.cmd".into()]),
             isolated.join(".local/bin/ocx.cmd")
         );
+    }
+
+    #[test]
+    fn windows_declared_managers_use_active_roots_and_bound_recognized_versions() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("home");
+        let active = root.path().join("active");
+        let volta = root.path().join("volta-custom");
+        let fnm = root.path().join("fnm-custom");
+        for version in ["v22.1.0", "v24.2.0"] {
+            std::fs::create_dir_all(fnm.join("node-versions").join(version).join("installation"))
+                .unwrap();
+        }
+        let values = windows_declared_candidates(
+            &home,
+            |key| match key {
+                "FNM_MULTISHELL_PATH" => Some(active.clone()),
+                "VOLTA_HOME" => Some(volta.clone()),
+                "FNM_DIR" => Some(fnm.clone()),
+                _ => None,
+            },
+            None,
+            None,
+        );
+        assert_eq!(values.first(), Some(&active));
+        assert!(values.contains(&volta.join("bin")));
+        assert!(values.contains(&fnm.join("node-versions/v24.2.0/installation")));
+        assert!(values.contains(&fnm.join("node-versions/v22.1.0/installation")));
+        assert!(!values.contains(&PathBuf::from("relative")));
     }
 
     #[cfg(not(windows))]
@@ -335,7 +430,16 @@ prefix = relative/bin
         std::fs::write(node_dir.join("node.exe"), b"fixture").unwrap();
         std::fs::write(node_dir.join("npm.cmd"), b"fixture").unwrap();
         std::fs::write(npm_dir.join("ocx.cmd"), b"fixture").unwrap();
-        let paths = paths_for_home(root.path());
+        // The fixture supplies its own HOME and no manager declarations; the
+        // runner's active NVM_SYMLINK must not impersonate that fixture's tools.
+        // Real host declarations are covered by the injected-manager cases and
+        // the production default-path native acceptance.
+        let directories = windows_declared_candidates(root.path(), |_| None, None, None);
+        let paths = EnvironmentPaths::new(
+            select_tool(&directories, tool_names("node")),
+            select_tool(&directories, tool_names("npm")),
+            select_tool(&directories, tool_names("ocx")),
+        );
         assert_eq!(paths.node, node_dir.join("node.exe"));
         assert_eq!(paths.npm, node_dir.join("npm.cmd"));
         assert_eq!(paths.ocx, npm_dir.join("ocx.cmd"));

@@ -375,7 +375,7 @@ fn observe_child_exit(child: ControlledChild) -> mpsc::Receiver<Option<i32>> {
 
 #[cfg(not(unix))]
 fn terminate(_pid: Option<u32>) {
-    // 当前正式目标只有 aarch64-apple-darwin；跨平台强制终止仍另行设计。
+    // Windows 官方生命周期只取消等待，不强制终止运行中的代理。
 }
 
 fn self_home_is_absolute(command: &ProcessCommand) -> bool {

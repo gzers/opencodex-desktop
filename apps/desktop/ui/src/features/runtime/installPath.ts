@@ -10,9 +10,17 @@ function identity(value: string, platform?: string): PathIdentity | null {
   let root: string, remaining: string
   if (windows) {
     const normalized = path.replaceAll('\\', '/')
+    const extendedDrive = /^\/\/\?\/([a-z]):\/(.*)$/i.exec(normalized)
+    const extendedShare = /^\/\/\?\/unc\/([^/]+)\/([^/]+)(?:\/(.*))?$/i.exec(normalized)
     const drive = /^([a-z]):\/(.*)$/i.exec(normalized)
     const share = /^\/\/([^/]+)\/([^/]+)(?:\/(.*))?$/.exec(normalized)
-    if (drive) {
+    if (extendedDrive) {
+      root = 'drive:' + extendedDrive[1]!.toLowerCase()
+      remaining = extendedDrive[2]!
+    } else if (extendedShare && !['.', '..', '?'].includes(extendedShare[1]!) && !['.', '..', '?'].includes(extendedShare[2]!)) {
+      root = 'unc:' + extendedShare[1]!.toLowerCase() + '/' + extendedShare[2]!.toLowerCase()
+      remaining = extendedShare[3] ?? ''
+    } else if (drive) {
       root = 'drive:' + drive[1]!.toLowerCase()
       remaining = drive[2]!
     } else if (share && !['.', '..', '?'].includes(share[1]!) && !['.', '..', '?'].includes(share[2]!)) {
@@ -26,6 +34,7 @@ function identity(value: string, platform?: string): PathIdentity | null {
   }
   const parts = remaining.split('/').filter(Boolean)
   if (parts.some(part => part === '.' || part === '..')) return null
+  if (windows && parts.some(part => /[:<>"|?*]/.test(part) || /[. ]$/.test(part) || /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part))) return null
   return { root, parts: windows ? parts.map(part => part.toLowerCase()) : parts, windows }
 }
 

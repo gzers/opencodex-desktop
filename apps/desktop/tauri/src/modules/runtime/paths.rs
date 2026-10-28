@@ -51,7 +51,7 @@ pub fn is_system_protected(path: &Path) -> bool {
         if path.is_absolute() && path.parent().is_none() {
             return true;
         }
-        let candidate = path.to_string_lossy().replace('/', "\\").to_lowercase();
+        let candidate = windows_compare_path(path);
         [
             "SystemRoot",
             "ProgramFiles",
@@ -60,12 +60,7 @@ pub fn is_system_protected(path: &Path) -> bool {
         ]
         .into_iter()
         .filter_map(std::env::var_os)
-        .map(|root| {
-            root.to_string_lossy()
-                .replace('/', "\\")
-                .trim_end_matches('\\')
-                .to_lowercase()
-        })
+        .map(|root| windows_compare_path(&PathBuf::from(root)))
         .any(|root| candidate == root || candidate.starts_with(&(root + "\\")))
     }
     #[cfg(not(windows))]
@@ -88,9 +83,37 @@ pub fn is_system_protected(path: &Path) -> bool {
     }
 }
 
+#[cfg(windows)]
+fn windows_compare_path(path: &Path) -> String {
+    let mut value = path.to_string_lossy().replace('/', "\\");
+    if let Some(rest) = value.strip_prefix("\\\\?\\UNC\\") {
+        value = format!("\\\\{rest}");
+    } else if let Some(rest) = value.strip_prefix("\\\\?\\") {
+        value = rest.to_string();
+    }
+    value.trim_end_matches('\\').to_lowercase()
+}
+
+#[cfg(windows)]
+fn windows_is_within(path: &Path, scope: &Path) -> bool {
+    let path = windows_compare_path(path);
+    let scope = windows_compare_path(scope);
+    path == scope || path.starts_with(&(scope + "\\"))
+}
+
 fn is_symlink(path: &Path) -> bool {
     std::fs::symlink_metadata(path)
-        .map(|meta| meta.file_type().is_symlink())
+        .map(|meta| {
+            #[cfg(windows)]
+            {
+                use std::os::windows::fs::MetadataExt;
+                meta.file_attributes() & 0x400 != 0
+            }
+            #[cfg(not(windows))]
+            {
+                meta.file_type().is_symlink()
+            }
+        })
         .unwrap_or(false)
 }
 
@@ -109,9 +132,18 @@ pub fn has_symlink_component(path: &Path, scope: Option<&Path>) -> bool {
             break;
         }
         let in_scope = scope
-            .map(|scope| candidate.starts_with(scope))
+            .map(|scope| {
+                #[cfg(windows)]
+                {
+                    windows_is_within(candidate, scope)
+                }
+                #[cfg(not(windows))]
+                {
+                    candidate.starts_with(scope)
+                }
+            })
             .unwrap_or(true);
-        if in_scope && is_symlink(candidate) {
+        if (in_scope || cfg!(windows)) && is_symlink(candidate) {
             return true;
         }
         current = candidate.parent().filter(|parent| *parent != candidate);
@@ -208,7 +240,50 @@ pub fn validate_install_target(
     path: &Path,
     scope: Option<&Path>,
 ) -> Result<PathBuf, PathRejection> {
-    if !path.is_absolute() {
+    // Windows verbatim paths treat forward slashes differently from ordinary
+    // paths. Normalize storage spelling before inspecting any component or
+    // ancestor, and reject dot segments lexically before OS normalization.
+    #[cfg(windows)]
+    if path
+        .to_string_lossy()
+        .split(['\\', '/'])
+        .any(|part| matches!(part, "." | ".."))
+    {
+        return Err(PathRejection::NotAbsolute);
+    }
+    let storage_path = install_storage_path(path);
+    let path = storage_path.as_path();
+    if !path.is_absolute()
+        || path.components().any(|p| {
+            matches!(
+                p,
+                std::path::Component::ParentDir | std::path::Component::CurDir
+            )
+        })
+        || path.to_string_lossy().chars().any(char::is_control)
+    {
+        return Err(PathRejection::NotAbsolute);
+    }
+    #[cfg(windows)]
+    if !matches!(path.components().next(), Some(std::path::Component::Prefix(prefix)) if matches!(prefix.kind(), std::path::Prefix::Disk(_) | std::path::Prefix::VerbatimDisk(_) | std::path::Prefix::UNC(_, _) | std::path::Prefix::VerbatimUNC(_, _)))
+    {
+        return Err(PathRejection::NotAbsolute);
+    }
+    #[cfg(windows)]
+    if path.components().any(|part| {
+        let std::path::Component::Normal(name) = part else {
+            return false;
+        };
+        let text = name.to_string_lossy();
+        let stem = text.split('.').next().unwrap_or("").to_ascii_lowercase();
+        text.ends_with(['.', ' '])
+            || text.contains([':', '<', '>', '|', '?', '*', '\"'])
+            || ["con", "prn", "aux", "nul"].contains(&stem.as_str())
+            || stem
+                .strip_prefix("com")
+                .or_else(|| stem.strip_prefix("lpt"))
+                .is_some_and(|n| matches!(n, "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"))
+    }) {
         return Err(PathRejection::NotAbsolute);
     }
     if has_symlink_component(path, scope) {
@@ -221,23 +296,43 @@ pub fn validate_install_target(
         if !path.is_dir() {
             return Err(PathRejection::NotDirectory);
         }
-        let probe = path.join(".opencodex-write-probe");
-        if std::fs::OpenOptions::new()
-            .create_new(true)
-            .write(true)
-            .open(&probe)
-            .is_err()
-        {
-            return Err(PathRejection::NotWritable);
+        // Read-only admission: actual private staging creation proves write access.
+        // A rejected non-owned directory must not receive even a temporary probe.
+        return Ok(install_storage_path(path));
+    }
+    let mut ancestor = path.parent().ok_or(PathRejection::NotAbsolute)?;
+    loop {
+        match std::fs::symlink_metadata(ancestor) {
+            Ok(metadata) => {
+                if !metadata.is_dir() || is_symlink(ancestor) {
+                    return Err(PathRejection::SymlinkComponent);
+                }
+                break;
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                ancestor = ancestor.parent().ok_or(PathRejection::Missing)?;
+            }
+            Err(_) => return Err(PathRejection::Missing),
         }
-        let _ = std::fs::remove_file(&probe);
-        return Ok(path.to_path_buf());
     }
-    let parent = path.parent().ok_or(PathRejection::NotAbsolute)?;
-    if !parent.is_dir() {
-        return Err(PathRejection::Missing);
+    Ok(install_storage_path(path))
+}
+
+fn install_storage_path(path: &Path) -> PathBuf {
+    #[cfg(windows)]
+    {
+        use std::os::windows::ffi::{OsStrExt, OsStringExt};
+        let units = path
+            .as_os_str()
+            .encode_wide()
+            .map(|c| if c == 47 { 92 } else { c })
+            .collect::<Vec<_>>();
+        PathBuf::from(std::ffi::OsString::from_wide(&units))
     }
-    Ok(path.to_path_buf())
+    #[cfg(not(windows))]
+    {
+        path.to_path_buf()
+    }
 }
 
 #[cfg(all(test, unix))]
@@ -372,5 +467,36 @@ mod tests {
             Path::new("/private/tmp/ocx-fixture"),
             Some(root.path())
         ));
+    }
+}
+
+#[cfg(all(test, windows))]
+mod windows_path_tests {
+    use super::*;
+
+    #[test]
+    fn extended_drive_and_unc_paths_share_the_same_protection_identity() {
+        let ordinary = Path::new(r"C:\Users\fixture\OpenCodeX\data\runtime\opencodex");
+        let extended = Path::new(r"\\?\C:\Users\fixture\OpenCodeX\data\runtime\opencodex");
+        assert_eq!(
+            windows_compare_path(ordinary),
+            windows_compare_path(extended)
+        );
+
+        let unc = Path::new(r"\\server\share\OpenCodeX\data\runtime\opencodex");
+        let extended_unc = Path::new(r"\\?\UNC\server\share\OpenCodeX\data\runtime\opencodex");
+        assert_eq!(
+            windows_compare_path(unc),
+            windows_compare_path(extended_unc)
+        );
+    }
+
+    #[test]
+    fn extended_system_paths_remain_protected() {
+        let system = std::env::var_os("SystemRoot").unwrap_or_else(|| "C:\\Windows".into());
+        let ordinary = PathBuf::from(system).join("System32");
+        let extended = PathBuf::from(format!(r"\\?\{}", ordinary.display()));
+        assert!(is_system_protected(&ordinary));
+        assert!(is_system_protected(&extended));
     }
 }

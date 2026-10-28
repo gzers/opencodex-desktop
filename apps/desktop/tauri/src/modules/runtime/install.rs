@@ -14,7 +14,7 @@
 //! 本模块不读 PATH、不读 `~/.npmrc`、不写系统代理、不落盘任何凭据；
 //! 含凭据的代理只写临时 `--userconfig`（`0600`，用完即删）。
 
-use std::io::{BufRead, BufReader, Read};
+use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -587,7 +587,7 @@ pub struct NpmInstallRequest {
     pub npm_path: PathBuf,
     pub node_dir: Option<PathBuf>,
     pub prefix: PathBuf,
-    /// 精确版本（不是 `latest`），保证前缀内容与校验过的 tarball 一致。
+    /// Registry version/tag, or the absolute validated tarball when offline.
     pub version: String,
     pub proxy: Option<ProxyConfig>,
     /// 为真时**不**传 `--ignore-scripts`（会执行包内代码）。
@@ -645,54 +645,80 @@ impl Default for RealVersionProbe {
 
 impl VersionProbe for RealVersionProbe {
     fn probe(&self, node: Option<&Path>, script: &Path) -> Option<String> {
-        let mut command = match node {
-            Some(node) => {
-                let mut command = Command::new(node);
-                command.arg(script);
-                command
-            }
-            None => Command::new(script),
-        };
-        command.env_clear();
-        let home = crate::infrastructure::platform::home_dir();
-        crate::infrastructure::platform::apply_user_environment(
-            &mut command,
-            home.as_ref().map(|home| home.as_os_str()),
-        );
-        command.env(
-            "PATH",
-            crate::infrastructure::platform::controlled_path(
-                node.and_then(Path::parent).map(Path::to_path_buf),
-                None,
-            ),
-        );
-        command
-            .arg("--version")
-            .stdin(Stdio::null())
-            .stdout(Stdio::piped())
-            .stderr(Stdio::null());
-        let mut child = command.spawn().ok()?;
-        let started = Instant::now();
-        loop {
-            match child.try_wait() {
-                Ok(Some(_)) => break,
-                Ok(None) => {
-                    if started.elapsed() >= self.timeout {
-                        // 探针是短命的自有子进程，超时必须收口；这与 FZ-10 约束的
-                        // 官方生命周期子进程（只发 SIGTERM、不 SIGKILL）不是同一类。
-                        let _ = child.kill();
-                        let _ = child.wait();
-                        return None;
-                    }
-                    std::thread::sleep(Duration::from_millis(50));
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .ok()?;
+        runtime.block_on(async {
+            use tokio::io::AsyncReadExt;
+            let mut command = match node {
+                Some(node) => {
+                    let mut c = tokio::process::Command::new(node);
+                    c.arg(script);
+                    c
                 }
-                Err(_) => return None,
+                None => tokio::process::Command::new(script),
+            };
+            command.env_clear();
+            let home = crate::infrastructure::platform::home_dir();
+            crate::infrastructure::platform::apply_user_environment(
+                command.as_std_mut(),
+                home.as_ref().map(|p| p.as_os_str()),
+            );
+            command.env(
+                "PATH",
+                crate::infrastructure::platform::controlled_path(
+                    node.and_then(Path::parent).map(Path::to_path_buf),
+                    None,
+                ),
+            );
+            command
+                .arg("--version")
+                .stdin(Stdio::null())
+                .stdout(Stdio::piped())
+                .stderr(Stdio::null())
+                .kill_on_drop(true);
+            #[cfg(unix)]
+            {
+                command.process_group(0);
             }
-        }
-        let mut output = Vec::new();
-        child.stdout.take()?.read_to_end(&mut output).ok()?;
-        let text = String::from_utf8_lossy(&output);
-        extract_semver(&text)
+            #[cfg(windows)]
+            let job =
+                crate::infrastructure::windows_query_job::OwnedQueryJob::new(&mut command).ok()?;
+            let mut child = command.spawn().ok()?;
+            #[cfg(windows)]
+            if job.assign_and_resume(&child).is_err() {
+                let _ = child.kill().await;
+                return None;
+            }
+            #[cfg(unix)]
+            let pid = child.id();
+            let mut stdout = child.stdout.take()?.take(64 * 1024 + 1);
+            let mut output = Vec::new();
+            // One deadline covers root exit, bounded output and inherited pipes.
+            let observed = tokio::time::timeout(self.timeout, async {
+                let (status, read) =
+                    tokio::try_join!(child.wait(), stdout.read_to_end(&mut output))?;
+                let _ = read;
+                Ok::<_, std::io::Error>(status)
+            })
+            .await;
+            #[cfg(windows)]
+            let _ = job.terminate();
+            #[cfg(unix)]
+            if let Some(pid) = pid {
+                unsafe {
+                    libc::kill(-(pid as i32), libc::SIGKILL);
+                }
+            }
+            let _ = child.kill().await;
+            let _ = child.wait().await;
+            let status = observed.ok()?.ok()?;
+            if !status.success() || output.len() > 64 * 1024 {
+                return None;
+            }
+            extract_semver(&String::from_utf8_lossy(&output))
+        })
     }
 }
 
@@ -910,7 +936,16 @@ impl NpmRunner for SystemNpmRunner {
             None => (Vec::new(), None),
         };
         let masker = masker_for(request.proxy.as_ref());
-        let spec = format!("{OFFICIAL_PACKAGE}@{}", request.version);
+        let spec = if request.offline && Path::new(&request.version).is_absolute() {
+            // A validated local tarball is an npm source in its own right.
+            // Prefixing it with the registry package name produces an invalid
+            // extended Windows path and fails with ENOENT.
+            dunce::simplified(Path::new(&request.version))
+                .as_os_str()
+                .to_os_string()
+        } else {
+            std::ffi::OsString::from(format!("{OFFICIAL_PACKAGE}@{}", request.version))
+        };
 
         let mut command = self.base_command(&request.npm_path, request.node_dir.as_deref());
         command
@@ -1289,9 +1324,34 @@ impl<'a> RuntimeInstaller<'a> {
     pub fn install(&self, request: &InstallRequest) -> Result<InstallOutcome, InstallError> {
         self.emit(InstallPhase::Preparing, 2, None);
         self.check_cancel()?;
-        ensure_parent_directory(&request.prefix)?;
         let prefix = paths::validate_install_target(&request.prefix, self.home.as_deref())?;
+        validate_existing_prefix(&prefix)?;
+        ensure_parent_directory(&prefix)?;
         let _lock = TargetFileLock::lock(&prefix).map_err(InstallError::from)?;
+        let record_path = super::RuntimeStore::new(self.data_root)
+            .path()
+            .to_path_buf();
+        crate::modules::backup::safety::check_path(self.data_root, &record_path, true)
+            .map_err(InstallError::from)?;
+        let _record_lock = TargetFileLock::lock(&record_path).map_err(InstallError::from)?;
+        let record_before = read_entry_state(&record_path)?;
+        let mut source_record =
+            match record_before.as_deref() {
+                None => super::RuntimeSourceRecord::default(),
+                Some(bytes) => serde_json::from_slice::<super::RuntimeSourceRecord>(bytes)
+                    .map_err(|_| InstallError::FileSystem {
+                        operation: "read runtime record".into(),
+                        detail: "运行来源记录无效，未覆盖".into(),
+                    })?,
+            };
+        if source_record.schema_version != super::RUNTIME_SCHEMA_VERSION {
+            return Err(InstallError::FileSystem {
+                operation: "read runtime record".into(),
+                detail: "运行来源记录版本不受支持，未覆盖".into(),
+            });
+        }
+        paths::validate_install_target(&prefix, self.home.as_deref())?;
+        validate_existing_prefix(&prefix)?;
 
         let temp = sibling_with_tag(&prefix, "new")?;
         let mut guard = TempPrefixGuard::new(temp.clone());
@@ -1331,58 +1391,146 @@ impl<'a> RuntimeInstaller<'a> {
         self.write_manifest(&temp, &manifest)?;
 
         self.emit(InstallPhase::Activating, 95, None);
-        atomic_replace_prefix(&temp, &prefix)?;
-        guard.disarm();
-
         // 入口必须指向**落位后**的最终路径：临时区名字里带随机后缀，
         // 若把临时路径写进启动器，替换之后入口就指向一个已经不存在的目录
         // （真实链路里表现为入口 `MODULE_NOT_FOUND`）。
         let entry = self.data_root.join(MANAGED_ENTRY_RELATIVE);
         let final_bin = prefix.join(PACKAGE_SUBPATH).join(&verified.bin_entry);
-        write_entry(
-            &entry,
-            request.node_path.as_deref().or(self.node()),
-            &final_bin,
-        )?;
-        // Only record activation after the verified package and final launcher land.
-        // A crash before this marker is inconclusive and keeps the backup protected.
-        if let Some(attempt_id) = &self.attempt_id {
-            manifest.activation = Some(
-                super::protection::activation_proof(
-                    self.data_root,
-                    &prefix,
-                    attempt_id,
-                    &verified.bin_entry,
-                )
-                .map_err(InstallError::from)?,
-            );
-            self.write_manifest(&prefix, &manifest)?;
-            crate::modules::backup::safety::sync_directories(
-                self.data_root,
-                entry.parent().expect("managed entry parent"),
-            )
-            .map_err(InstallError::from)?;
-            // Custom prefixes can be outside data_root; their directory is its own anchor.
-            crate::modules::backup::safety::sync_directories(&prefix, &prefix)
-                .map_err(InstallError::from)?;
+        if let Some(parent) = entry.parent() {
+            if parent.exists() && !parent.is_dir() {
+                return Err(InstallError::FileSystem {
+                    operation: "validate managed launcher parent".to_string(),
+                    detail: "托管入口父目录不是目录，未覆盖".to_string(),
+                });
+            }
         }
-
-        self.emit(InstallPhase::Done, 100, None);
-        Ok(InstallOutcome {
+        crate::modules::backup::safety::check_path(self.data_root, &entry, true)
+            .map_err(InstallError::from)?;
+        let _entry_lock = TargetFileLock::lock(&entry).map_err(InstallError::from)?;
+        let previous_entry = read_entry_state(&entry)?;
+        // Freeze exact files before activation; failed commits retain all prior bytes.
+        let outcome = InstallOutcome {
             package: OFFICIAL_PACKAGE.to_string(),
-            version: verified.version,
-            target: prefix,
-            entry,
-            tarball_sha256: filled.tarball_sha256,
+            version: verified.version.clone(),
+            target: prefix.clone(),
+            entry: entry.clone(),
+            tarball_sha256: filled.tarball_sha256.clone(),
             source: filled.source,
             scripts_enabled: filled.scripts_enabled,
-            npm_path: filled.npm_path,
+            npm_path: filled.npm_path.clone(),
             installed_at,
             proxy_used: matches!(
                 &request.source,
                 InstallSource::Registry { proxy: Some(_), .. }
             ),
-        })
+        };
+        if source_record.source != super::RuntimeSourceKind::Explicit {
+            source_record.source = super::RuntimeSourceKind::Managed;
+            source_record.path = Some(entry.to_string_lossy().into_owned());
+            source_record.resolved_version = Some(outcome.version.clone());
+            source_record.resolved_at = Some(now_rfc3339());
+        }
+        source_record.push_history(outcome.history_entry("succeeded", None));
+        let record_bytes =
+            serde_json::to_vec_pretty(&source_record).map_err(|e| InstallError::FileSystem {
+                operation: "serialize runtime record".into(),
+                detail: e.to_string(),
+            })?;
+        let mut record_written = false;
+        let mut replacement = atomic_replace_prefix(&temp, &prefix)?;
+        let activation = (|| {
+            write_entry(
+                &entry,
+                request.node_path.as_deref().or(self.node()),
+                &final_bin,
+            )?;
+            // Only record activation after the verified package and final launcher land.
+            if let Some(attempt_id) = &self.attempt_id {
+                manifest.activation = Some(
+                    super::protection::activation_proof(
+                        self.data_root,
+                        &prefix,
+                        attempt_id,
+                        &verified.bin_entry,
+                    )
+                    .map_err(InstallError::from)?,
+                );
+                self.write_manifest(&prefix, &manifest)?;
+                replacement
+                    .expected_manifests
+                    .push(serde_json::to_vec_pretty(&manifest).map_err(|e| {
+                        InstallError::FileSystem {
+                            operation: "capture activation manifest".into(),
+                            detail: e.to_string(),
+                        }
+                    })?);
+                crate::modules::backup::safety::sync_directories(
+                    self.data_root,
+                    entry.parent().expect("managed entry parent"),
+                )
+                .map_err(InstallError::from)?;
+                crate::modules::backup::safety::sync_directories(&prefix, &prefix)
+                    .map_err(InstallError::from)?;
+            }
+            verify_package(&prefix, Some(&verified.version), self.probe, self.node())?;
+            if read_entry_state(&record_path)? != record_before {
+                return Err(InstallError::FileSystem {
+                    operation: "commit runtime record".into(),
+                    detail: "运行来源记录已被外部修改，未覆盖".into(),
+                });
+            }
+            atomic_write(&record_path, &record_bytes, 0o600).map_err(InstallError::from)?;
+            record_written = true;
+            if std::fs::read(&record_path).ok().as_deref() != Some(record_bytes.as_slice()) {
+                return Err(InstallError::FileSystem {
+                    operation: "read back runtime record".into(),
+                    detail: "运行来源记录写后读回不同".into(),
+                });
+            }
+            Ok::<(), InstallError>(())
+        })();
+        if let Err(error) = activation {
+            let source_restore = if record_written {
+                if read_entry_state(&record_path).ok().flatten().as_deref()
+                    == Some(record_bytes.as_slice())
+                {
+                    restore_entry_state(&record_path, record_before.as_deref(), 0o600)
+                } else {
+                    Err(InstallError::FileSystem {
+                        operation: "rollback source record".into(),
+                        detail: "来源记录已被外部修改，未覆盖".into(),
+                    })
+                }
+            } else {
+                Ok(())
+            };
+            let expected_entry =
+                entry_script(request.node_path.as_deref().or(self.node()), &final_bin);
+            let current_entry = read_entry_state(&entry);
+            let entry_restore = match current_entry {
+                Ok(ref current) if current.as_deref() == Some(expected_entry.as_bytes()) => {
+                    restore_entry_state(&entry, previous_entry.as_deref(), 0o755)
+                }
+                Ok(ref current) if current == &previous_entry => Ok(()),
+                _ => Err(InstallError::FileSystem {
+                    operation: "restore managed launcher".into(),
+                    detail: "入口已被外部修改，未覆盖".into(),
+                }),
+            };
+            let prefix_restore = replacement.rollback();
+            if source_restore.is_err() || entry_restore.is_err() || prefix_restore.is_err() {
+                return Err(InstallError::FileSystem {
+                    operation: "rollback failed activation".to_string(),
+                    detail: format!("{}; install state retained for recovery", error.message()),
+                });
+            }
+            return Err(error);
+        }
+        replacement.commit();
+        guard.disarm();
+
+        self.emit(InstallPhase::Done, 100, None);
+        Ok(outcome)
     }
 
     fn fill_offline(
@@ -1649,13 +1797,11 @@ fn verify_package(
     let Some(probed) = probed else {
         return Err(InstallError::ScriptsRequired);
     };
-    if let Some(expected) = expected {
-        if probed != expected {
-            return Err(InstallError::VersionMismatch {
-                expected: expected.to_string(),
-                found: probed,
-            });
-        }
+    if probed != version {
+        return Err(InstallError::VersionMismatch {
+            expected: version,
+            found: probed,
+        });
     }
 
     Ok(VerifiedPackage {
@@ -1688,6 +1834,125 @@ fn is_executable_file(path: &Path) -> bool {
         std::fs::metadata(path)
             .map(|metadata| metadata.is_file())
             .unwrap_or(false)
+    }
+}
+
+fn validate_existing_prefix(prefix: &Path) -> Result<(), InstallError> {
+    if !prefix.exists() {
+        return Ok(());
+    }
+    let has_entries = std::fs::read_dir(prefix)
+        .map_err(|error| InstallError::FileSystem {
+            operation: "inspect existing install target".to_string(),
+            detail: error.to_string(),
+        })?
+        .next()
+        .is_some();
+    if !has_entries {
+        return Ok(());
+    }
+    let manifest_path = prefix.join(MANIFEST_FILENAME);
+    let manifest: RuntimeManifest =
+        serde_json::from_slice(&std::fs::read(&manifest_path).map_err(|_| {
+            InstallError::FileSystem {
+                operation: "validate existing install target".to_string(),
+                detail: "已有非空目录不是受管 OpenCodex 安装，未覆盖".to_string(),
+            }
+        })?)
+        .map_err(|_| InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "已有安装清单无效，未覆盖".to_string(),
+        })?;
+    if manifest.package != OFFICIAL_PACKAGE || manifest.version.is_empty() {
+        return Err(InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "已有目录不是受管 OpenCodex 安装，未覆盖".to_string(),
+        });
+    }
+    let package_json = prefix.join(PACKAGE_SUBPATH).join("package.json");
+    let package: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&package_json).map_err(|_| {
+            InstallError::FileSystem {
+                operation: "validate existing install target".to_string(),
+                detail: "受管安装缺少官方包清单，未覆盖".to_string(),
+            }
+        })?)
+        .map_err(|_| InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "受管安装包清单无效，未覆盖".to_string(),
+        })?;
+    if package.get("name").and_then(|value| value.as_str()) != Some(OFFICIAL_PACKAGE)
+        || package.get("version").and_then(|value| value.as_str())
+            != Some(manifest.version.as_str())
+    {
+        return Err(InstallError::FileSystem {
+            operation: "validate existing install target".to_string(),
+            detail: "受管安装包与清单不一致，未覆盖".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn read_entry_state(entry: &Path) -> Result<Option<Vec<u8>>, InstallError> {
+    match std::fs::symlink_metadata(entry) {
+        Ok(metadata) if metadata.file_type().is_symlink() || !metadata.is_file() => {
+            Err(InstallError::FileSystem {
+                operation: "inspect managed launcher".to_string(),
+                detail: "托管入口不是普通文件，未覆盖".to_string(),
+            })
+        }
+        Ok(_) => std::fs::read(entry)
+            .map(Some)
+            .map_err(|error| InstallError::FileSystem {
+                operation: "read managed launcher".to_string(),
+                detail: error.to_string(),
+            }),
+        Err(error)
+            if matches!(
+                error.kind(),
+                std::io::ErrorKind::NotFound | std::io::ErrorKind::NotADirectory
+            ) =>
+        {
+            Ok(None)
+        }
+        Err(error) => Err(InstallError::FileSystem {
+            operation: "inspect managed launcher".to_string(),
+            detail: error.to_string(),
+        }),
+    }
+}
+
+fn restore_entry_state(
+    entry: &Path,
+    previous: Option<&[u8]>,
+    mode: u32,
+) -> Result<(), InstallError> {
+    match previous {
+        Some(bytes) => atomic_write(entry, bytes, mode).map_err(InstallError::from),
+        None => match std::fs::symlink_metadata(entry) {
+            Err(error)
+                if matches!(
+                    error.kind(),
+                    std::io::ErrorKind::NotFound | std::io::ErrorKind::NotADirectory
+                ) =>
+            {
+                Ok(())
+            }
+            Ok(metadata) if metadata.file_type().is_symlink() || !metadata.is_file() => {
+                Err(InstallError::FileSystem {
+                    operation: "restore managed launcher".to_string(),
+                    detail: "入口回滚遇到非普通文件".to_string(),
+                })
+            }
+            Ok(_) => std::fs::remove_file(entry).map_err(|error| InstallError::FileSystem {
+                operation: "restore managed launcher".to_string(),
+                detail: error.to_string(),
+            }),
+            Err(error) => Err(InstallError::FileSystem {
+                operation: "restore managed launcher".to_string(),
+                detail: error.to_string(),
+            }),
+        },
     }
 }
 
@@ -1754,13 +2019,70 @@ pub(super) fn entry_script(node: Option<&Path>, script: &Path) -> String {
 }
 
 /// 原子落位：现有前缀先改名让位，新前缀就位后再删旧；失败则把旧前缀改回来。
-fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<(), InstallError> {
+struct PrefixReplacement {
+    prefix: PathBuf,
+    retired: Option<PathBuf>,
+    expected_manifests: Vec<Vec<u8>>,
+}
+
+impl PrefixReplacement {
+    fn commit(&self) {
+        if let Some(retired) = &self.retired {
+            let _ = std::fs::remove_dir_all(retired);
+        }
+    }
+
+    fn rollback(&self) -> Result<(), InstallError> {
+        if self.prefix.exists() {
+            let current = std::fs::read(self.prefix.join(MANIFEST_FILENAME)).map_err(|e| {
+                InstallError::FileSystem {
+                    operation: "inspect rollback prefix".into(),
+                    detail: e.to_string(),
+                }
+            })?;
+            if !self.expected_manifests.contains(&current)
+                || crate::modules::backup::safety::inspect(&self.prefix).is_err()
+            {
+                return Err(InstallError::FileSystem {
+                    operation: "rollback new install prefix".into(),
+                    detail: "新前缀已被外部修改，保留原件与旧包".into(),
+                });
+            }
+            std::fs::remove_dir_all(&self.prefix).map_err(|error| InstallError::FileSystem {
+                operation: "rollback new install prefix".to_string(),
+                detail: error.to_string(),
+            })?;
+        }
+        if let Some(retired) = &self.retired {
+            crate::infrastructure::platform::rename(retired, &self.prefix).map_err(|error| {
+                InstallError::FileSystem {
+                    operation: "restore previous install prefix".to_string(),
+                    detail: error.to_string(),
+                }
+            })?;
+        }
+        Ok(())
+    }
+}
+
+fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<PrefixReplacement, InstallError> {
+    let expected_manifests = vec![std::fs::read(temp.join(MANIFEST_FILENAME)).map_err(|e| {
+        InstallError::FileSystem {
+            operation: "capture new manifest".into(),
+            detail: e.to_string(),
+        }
+    })?];
     if !prefix.exists() {
-        return crate::infrastructure::platform::rename(temp, prefix).map_err(|error| {
+        crate::infrastructure::platform::rename(temp, prefix).map_err(|error| {
             InstallError::FileSystem {
                 operation: "activate temporary prefix".to_string(),
                 detail: error.to_string(),
             }
+        })?;
+        return Ok(PrefixReplacement {
+            prefix: prefix.to_path_buf(),
+            retired: None,
+            expected_manifests,
         });
     }
     let retired = sibling_with_tag(prefix, "old")?;
@@ -1771,13 +2093,19 @@ fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<(), InstallError>
         }
     })?;
     match crate::infrastructure::platform::rename(temp, prefix) {
-        Ok(()) => {
-            let _ = std::fs::remove_dir_all(&retired);
-            Ok(())
-        }
+        Ok(()) => Ok(PrefixReplacement {
+            prefix: prefix.to_path_buf(),
+            retired: Some(retired),
+            expected_manifests,
+        }),
         Err(error) => {
             // 回滚：旧前缀必须回到原位，否则用户会「装了个空的」。
-            let _ = crate::infrastructure::platform::rename(&retired, prefix);
+            if let Err(restore_error) = crate::infrastructure::platform::rename(&retired, prefix) {
+                return Err(InstallError::FileSystem {
+                    operation: "restore previous install prefix".into(),
+                    detail: format!("activation: {error}; restore: {restore_error}; previous package retained at {}", retired.display()),
+                });
+            }
             Err(InstallError::FileSystem {
                 operation: "activate temporary prefix".to_string(),
                 detail: error.to_string(),
@@ -2324,9 +2652,21 @@ mod tests {
         let root = tempfile::tempdir().expect("temp");
         let data_root = root.path().join("data-root");
         let prefix = prefix_of(&data_root);
-        std::fs::create_dir_all(&prefix).expect("mkdir prefix");
+        let good = official_package(root.path(), "0.3.1");
+        let npm_path = root.path().join("npm-good");
+        write_executable(&npm_path);
+        installer(
+            &data_root,
+            &FakeNpm::new(good.clone()),
+            &NullProgressSink,
+            Some(root.path().to_path_buf()),
+            &FixedVersionProbe {
+                version: Some("0.3.1".to_string()),
+            },
+        )
+        .install(&offline_request(prefix.clone(), good, npm_path))
+        .expect("initial install");
         std::fs::write(prefix.join("sentinel.txt"), b"keep me").expect("sentinel");
-
         let bad = root.path().join("opencodex-0.3.1.tgz");
         std::fs::write(&bad, b"not a gzip stream").expect("write");
 
@@ -2352,7 +2692,7 @@ mod tests {
             prefix.join("sentinel.txt").is_file(),
             "失败不得改动现有前缀"
         );
-        assert!(!data_root
+        assert!(data_root
             .join(super::super::MANAGED_ENTRY_RELATIVE)
             .exists());
     }
@@ -2434,9 +2774,6 @@ mod tests {
         let root = tempfile::tempdir().expect("temp");
         let data_root = root.path().join("data-root");
         let prefix = prefix_of(&data_root);
-        std::fs::create_dir_all(&prefix).expect("mkdir prefix");
-        std::fs::write(prefix.join("stale.txt"), b"old").expect("stale");
-
         let archive = official_package(root.path(), "0.3.1");
         let sink = NullProgressSink;
         let npm = FakeNpm::new(archive.clone());
@@ -2453,13 +2790,209 @@ mod tests {
             &probe,
         )
         .install(&offline_request(prefix.clone(), archive, npm_path))
-        .expect("install");
+        .expect("initial install");
+
+        std::fs::write(prefix.join("stale.txt"), b"old").expect("stale");
+        let archive = official_package(root.path(), "0.3.1");
+        let npm_path = root.path().join("npm-second");
+        write_executable(&npm_path);
+        installer(
+            &data_root,
+            &npm,
+            &sink,
+            Some(root.path().to_path_buf()),
+            &probe,
+        )
+        .install(&offline_request(prefix.clone(), archive, npm_path))
+        .expect("reinstall");
 
         assert!(
             !prefix.join("stale.txt").exists(),
             "原子替换后旧前缀内容不应残留"
         );
         assert!(prefix.join(MANIFEST_FILENAME).is_file());
+    }
+
+    #[test]
+    fn rejects_nonempty_unmanaged_prefix_without_replacing_it() {
+        let root = tempfile::tempdir().expect("temp");
+        let data_root = root.path().join("data-root");
+        let prefix = prefix_of(&data_root);
+        std::fs::create_dir_all(&prefix).expect("mkdir prefix");
+        std::fs::write(prefix.join("user-file.txt"), b"keep").expect("user file");
+        let archive = official_package(root.path(), "0.3.1");
+        let npm_path = root.path().join("npm");
+        write_executable(&npm_path);
+        let error = installer(
+            &data_root,
+            &FakeNpm::new(archive.clone()),
+            &NullProgressSink,
+            Some(root.path().to_path_buf()),
+            &FixedVersionProbe {
+                version: Some("0.3.1".into()),
+            },
+        )
+        .install(&offline_request(prefix.clone(), archive, npm_path))
+        .expect_err("unmanaged non-empty prefix must be rejected");
+        assert_eq!(error.code(), "filesystem");
+        assert_eq!(
+            std::fs::read(prefix.join("user-file.txt")).unwrap(),
+            b"keep"
+        );
+    }
+
+    #[test]
+    fn failed_launcher_activation_restores_previous_managed_prefix() {
+        let root = tempfile::tempdir().expect("temp");
+        let data_root = root.path().join("data-root");
+        let prefix = prefix_of(&data_root);
+        let archive = official_package(root.path(), "0.3.1");
+        let npm_path = root.path().join("npm");
+        write_executable(&npm_path);
+        let sink = NullProgressSink;
+        let npm = FakeNpm::new(archive.clone());
+        let probe = FixedVersionProbe {
+            version: Some("0.3.1".into()),
+        };
+        installer(
+            &data_root,
+            &npm,
+            &sink,
+            Some(root.path().to_path_buf()),
+            &probe,
+        )
+        .install(&offline_request(
+            prefix.clone(),
+            archive.clone(),
+            npm_path.clone(),
+        ))
+        .expect("initial install");
+        std::fs::write(prefix.join("old-sentinel"), b"old").unwrap();
+        let entry_parent = data_root.join("runtime/bin");
+        let entry = entry_parent.join(if cfg!(windows) { "ocx.cmd" } else { "ocx" });
+        std::fs::remove_file(&entry).unwrap();
+        std::fs::remove_file(crate::infrastructure::locking::lock_path_for(&entry)).unwrap();
+        std::fs::remove_dir(&entry_parent).unwrap();
+        std::fs::write(&entry_parent, b"blocked launcher parent").unwrap();
+
+        let error = installer(
+            &data_root,
+            &npm,
+            &sink,
+            Some(root.path().to_path_buf()),
+            &probe,
+        )
+        .install(&offline_request(prefix.clone(), archive, npm_path))
+        .expect_err("launcher activation failure must fail");
+        assert_eq!(error.code(), "filesystem");
+        assert_eq!(std::fs::read(prefix.join("old-sentinel")).unwrap(), b"old");
+        assert!(prefix.join(MANIFEST_FILENAME).is_file());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn real_version_probe_rejects_nonzero_exit_even_when_stdout_has_version() {
+        let root = tempfile::tempdir().unwrap();
+        let script = root.path().join("probe.sh");
+        std::fs::write(&script, b"#!/bin/sh\necho 2.77.0\nexit 7\n").unwrap();
+        let mut mode = std::fs::metadata(&script).unwrap().permissions();
+        mode.set_mode(0o755);
+        std::fs::set_permissions(&script, mode).unwrap();
+        assert_eq!(
+            RealVersionProbe::default().probe(Some(Path::new("/bin/sh")), &script),
+            None
+        );
+    }
+
+    #[test]
+    fn source_record_failure_restores_exact_package_launcher_and_record() {
+        let root = tempfile::tempdir().unwrap();
+        let data = root.path().join("data");
+        let archive = official_package(root.path(), "0.3.1");
+        let npm = FakeNpm::new(archive.clone());
+        let npm_path = root.path().join("npm");
+        write_executable(&npm_path);
+        let probe = FixedVersionProbe {
+            version: Some("0.3.1".into()),
+        };
+        let request = offline_request(prefix_of(&data), archive, npm_path);
+        let first = installer(
+            &data,
+            &npm,
+            &NullProgressSink,
+            Some(root.path().to_path_buf()),
+            &probe,
+        )
+        .install(&request)
+        .unwrap();
+        std::fs::write(first.target.join("old-sentinel"), b"old").unwrap();
+        let entry_before = std::fs::read(&first.entry).unwrap();
+        let record = super::super::RuntimeStore::new(&data);
+        let before = std::fs::read(record.path()).unwrap();
+        let dir = record.path().parent().unwrap();
+        let permissions = std::fs::metadata(dir).unwrap().permissions();
+        std::fs::set_permissions(dir, std::fs::Permissions::from_mode(0o500)).unwrap();
+        // Prove the filesystem fault is active, not a mocked success response.
+        assert!(atomic_write(&dir.join("probe"), b"denied", 0o600).is_err());
+        let result = installer(
+            &data,
+            &npm,
+            &NullProgressSink,
+            Some(root.path().to_path_buf()),
+            &probe,
+        )
+        .install(&request);
+        std::fs::set_permissions(dir, permissions).unwrap();
+        assert!(result.is_err());
+        assert_eq!(
+            std::fs::read(first.target.join("old-sentinel")).unwrap(),
+            b"old"
+        );
+        assert_eq!(std::fs::read(&first.entry).unwrap(), entry_before);
+        assert_eq!(std::fs::read(record.path()).unwrap(), before);
+        let success = installer(
+            &data,
+            &npm,
+            &NullProgressSink,
+            Some(root.path().to_path_buf()),
+            &probe,
+        )
+        .install(&request)
+        .unwrap();
+        assert_eq!(
+            super::super::RuntimeStore::new(&data)
+                .load()
+                .installed_prefix(&data),
+            success.target
+        );
+    }
+
+    #[test]
+    fn rejected_link_target_creates_no_parent_directories() {
+        let root = tempfile::tempdir().unwrap();
+        let external = root.path().join("outside");
+        std::fs::create_dir(&external).unwrap();
+        let link = root.path().join("alias");
+        std::os::unix::fs::symlink(&external, &link).unwrap();
+        let archive = official_package(root.path(), "0.3.1");
+        let npm = FakeNpm::new(archive.clone());
+        let request = offline_request(
+            link.join("new-parent/target"),
+            archive,
+            root.path().join("npm"),
+        );
+        let result = installer(
+            &root.path().join("data"),
+            &npm,
+            &NullProgressSink,
+            Some(root.path().to_path_buf()),
+            &FixedVersionProbe {
+                version: Some("0.3.1".into()),
+            },
+        )
+        .install(&request);
+        assert!(result.is_err());
+        assert!(!external.join("new-parent").exists());
     }
 
     #[test]
@@ -2876,5 +3409,36 @@ mod tests {
         }
         std::fs::write(path, b"#!/bin/sh\nexit 0\n").expect("write fixture");
         std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).expect("chmod");
+    }
+}
+
+#[cfg(test)]
+mod bounded_probe_tests {
+    use super::*;
+    fn node() -> PathBuf {
+        std::env::var_os("OPENCODEX_TEST_NODE")
+            .map(PathBuf::from)
+            .or_else(|| crate::infrastructure::discovery_paths::default_paths().map(|p| p.node))
+            .filter(|p| p.is_file())
+            .expect("native probe regression requires an installed Node")
+    }
+    #[test]
+    fn real_probe_bounds_large_output_and_inherited_pipes() {
+        let root = tempfile::tempdir().unwrap();
+        let script = root.path().join("probe.cjs");
+        let node = node();
+        let probe = RealVersionProbe {
+            timeout: Duration::from_secs(2),
+        };
+        for (case, text) in [
+            ("oversized stdout", "console.log('2.77.0');process.stdout.write('x'.repeat(128*1024));"),
+            ("inherited stdout", "require('child_process').spawn(process.execPath,['-e','process.stdout.write(\"child\");setTimeout(()=>{},30000)'],{detached:process.platform==='win32',stdio:['ignore','inherit','ignore']}).unref();console.log('2.77.0');setTimeout(()=>process.exit(0),500);"),
+        ] {
+            std::fs::write(&script,text).unwrap();let started=Instant::now();
+            let result = probe.probe(Some(&node),&script);
+            assert!(result.is_none(), "{case} returned {result:?}");assert!(started.elapsed()<Duration::from_secs(8), "{case} exceeded deadline");
+        }
+        std::fs::write(&script, "console.log('2.77.0')").unwrap();
+        assert_eq!(probe.probe(Some(&node), &script).as_deref(), Some("2.77.0"));
     }
 }

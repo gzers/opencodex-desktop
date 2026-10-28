@@ -1180,7 +1180,7 @@ function restoreGeneralDefaults() {
     <section v-else-if="section === 'cli'" class="settings-panel active">
       <article class="card"><div class="card-head"><div><h2>CLI 控制面</h2><p>让终端、脚本或 AI 代理控制本应用的自有域；不提供改写 OpenCodex 配置的通道。</p></div></div>
         <div class="setting-list">
-          <div class="setting-row"><div><div class="setting-title">启用 CLI 控制面</div><div class="setting-desc">{{ cliSupported ? '默认关闭；开启后注册本机命令入口。CLI 仅作为运行中实例的客户端，经本地 IPC 委托执行。' : 'Windows 暂不支持 CLI 控制面；本机 IPC 未实现。' }}</div></div><div class="controls"><UiSwitch label="启用 CLI 控制面" :disabled="!cliSupported" :model-value="cliSupported && preferences.cliEnabled" @update:model-value="toggleCli()" /></div></div>
+          <div class="setting-row"><div><div class="setting-title">启用 CLI 控制面</div><div class="setting-desc">{{ cliSupported ? '默认关闭；开启后注册本机命令入口。CLI 仅作为运行中实例的客户端，经本地 IPC 委托执行。' : 'Windows 暂不开放公开 CLI 控制面；本机 IPC 传输已实现，但公开命令权限与验收尚未完成。' }}</div></div><div class="controls"><UiSwitch label="启用 CLI 控制面" :disabled="!cliSupported" :model-value="cliSupported && preferences.cliEnabled" @update:model-value="toggleCli()" /></div></div>
           <template v-if="cliSupported && preferences.cliEnabled">
             <div class="setting-row"><div><div class="setting-title">本机 IPC 端点</div><div class="setting-desc"><code>~/Library/Caches/OpenCodex Desktop/ipc/opencodex.ipc</code>；目录 0700，socket 0600，仅限当前用户 UID。</div></div><div class="controls"><span class="cli-badge ok">在线</span></div></div>
             <div class="setting-row"><div><div class="setting-title">PATH 注册</div><div class="setting-desc">默认关闭；注册为指向应用内 <code>ocxd</code> 的 symlink，不会覆盖他人目标。</div></div><div class="controls"><span class="cli-badge">未注册</span></div></div>
@@ -1377,7 +1377,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
         <UiButton class="btn ghost" type="button" @click="cancelInstall()">{{ app.runtimeInstalling ? '取消安装' : '取消' }}</UiButton>
         <UiButton v-if="installStep < 4" class="btn primary" type="button" :disabled="!installCanAdvance" @click="advanceInstall()">下一步</UiButton>
         <template v-else-if="app.runtimeInstallError">
-          <UiButton class="btn primary" type="button" :disabled="!installAllowScripts" data-testid="wiz-allow-scripts" @click="installAllowScripts = true; runInstall()">允许安装脚本并重试</UiButton>
+          <UiButton class="btn primary" type="button" :disabled="!app.runtimeInstallScriptsRequired || app.runtimeInstalling" data-testid="wiz-allow-scripts" @click="installAllowScripts = true; runInstall()">允许安装脚本并重试</UiButton>
           <UiButton class="btn ghost" type="button" @click="closeInstallModal()">关闭</UiButton>
         </template>
         <UiButton v-else class="btn primary" type="button" data-testid="wiz-finish" @click="finishInstall()">完成</UiButton>

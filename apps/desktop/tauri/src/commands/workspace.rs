@@ -5,7 +5,7 @@
 
 use std::path::{Path, PathBuf};
 
-use tauri::State;
+use tauri::{Manager, State};
 
 use crate::errors::{AppError, AppResult};
 use crate::modules::extensions::ClientId;
@@ -38,8 +38,12 @@ pub fn open_external_link(url: String) -> AppResult<OpenResultDto> {
 }
 
 #[tauri::command]
-pub fn open_local_document(document_id: String) -> AppResult<OpenResultDto> {
-    open_local_document_with_id(&document_id)
+pub fn open_local_document(document_id: String, app: tauri::AppHandle) -> AppResult<OpenResultDto> {
+    let resource_root = app
+        .path()
+        .resource_dir()
+        .map_err(|_| AppError::NotConfigured)?;
+    open_local_document_from_root(&resource_root, &document_id)
 }
 
 pub fn managed_path_targets_with_roots(data_root: &Path, home: &Path) -> ManagedPathTargetsDto {
@@ -182,37 +186,27 @@ fn is_local_panel_url(url: &str) -> bool {
     }
 }
 
-pub fn open_local_document_with_id(document_id: &str) -> AppResult<OpenResultDto> {
-    let target = match document_id {
-        "license" => project_document(&["LICENSE"]),
-        "third-party" => {
-            project_document(&["docs/04-项目资料/04-品牌与图标素材/01-原始素材/LICENSE"])
-        }
+pub fn open_local_document_from_root(
+    resource_root: &Path,
+    document_id: &str,
+) -> AppResult<OpenResultDto> {
+    let name = match document_id {
+        "license" => "LICENSE",
+        "third-party" => "THIRD-PARTY-NOTICES.txt",
         _ => {
             return Err(AppError::NotFound {
                 entity: "local document".to_string(),
             })
         }
     };
-    if !target.exists() {
+    let candidates = [
+        resource_root.join(name),
+        resource_root.join("resources").join(name),
+    ];
+    let Some(target) = candidates.into_iter().find(|path| path.is_file()) else {
         return Ok(OpenResultDto { opened: false });
-    }
+    };
     open_path(&target).map(|_| OpenResultDto { opened: true })
-}
-
-fn project_document(relative: &[&str]) -> PathBuf {
-    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    // 目录布局为 `<repo>/apps/desktop/tauri`，仓库根在清单目录之上 3 层
-    // （`ancestors()` 第 0 项是清单目录本身，见 IMP-03 目录迁移）。
-    let project_root = manifest_dir
-        .ancestors()
-        .nth(3)
-        .expect("cargo manifest lives at apps/desktop/tauri inside the project root");
-    let mut path = project_root.to_path_buf();
-    for segment in relative {
-        path.push(segment);
-    }
-    path
 }
 
 thread_local! {
@@ -473,28 +467,16 @@ mod tests {
     }
 
     #[test]
-    fn local_documents_are_frozen() {
+    fn packaged_local_documents_resolve_only_from_the_runtime_resource_root() {
+        let root = tempfile::tempdir().expect("resource root");
+        std::fs::write(root.path().join("LICENSE"), b"license").unwrap();
+        std::fs::write(root.path().join("THIRD-PARTY-NOTICES.txt"), b"notices").unwrap();
+        let license = open_local_document_from_root(root.path(), "license").expect("license");
+        let notices = open_local_document_from_root(root.path(), "third-party").expect("notices");
+        assert!(license.opened && notices.opened);
         assert!(matches!(
-            open_local_document_with_id("unknown"),
-            Err(AppError::NotFound { entity }) if entity == "local document"
+            open_local_document_from_root(root.path(), "unknown"),
+            Err(AppError::NotFound { .. })
         ));
-        let license = open_local_document_with_id("license").expect("license");
-        assert!(license.opened);
-
-        // 「第三方许可」指向 docs 分支里的官方素材 LICENSE。在只含代码的 `main` 检出里
-        // 该文件不存在，此时必须显式返回 opened=false，而不是当作错误。
-        let third_party_path =
-            project_document(&["docs/04-项目资料/04-品牌与图标素材/01-原始素材/LICENSE"]);
-        let third_party = open_local_document_with_id("third-party").expect("third-party");
-        if third_party_path.exists() {
-            assert!(third_party.opened);
-            assert_eq!(
-                recorded_open_paths(),
-                vec![project_document(&["LICENSE"]), third_party_path]
-            );
-        } else {
-            assert!(!third_party.opened);
-            assert_eq!(recorded_open_paths(), vec![project_document(&["LICENSE"])]);
-        }
     }
 }

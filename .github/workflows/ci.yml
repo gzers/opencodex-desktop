@@ -17,6 +17,11 @@ jobs:
       - name: Verify isolated acceptance Profile admission
         shell: pwsh
         run: ./test/smoke/windows-acceptance-profile.test.ps1 -OutputDirectory test/out/windows-process-token/profile
+      - name: Verify ordinary-account first-logon Profile before long builds
+        shell: pwsh
+        run: |
+          $taskPwsh = (Get-Process -Id $PID).Path
+          ./test/smoke/windows-ordinary-startup.ps1 -Executable $taskPwsh -Node $taskPwsh -OutputDirectory test/out/windows-process-token/ordinary-profile -ProfileOnly
       - name: Verify recovery restart waits for the old process exit
         shell: pwsh
         run: ./test/smoke/windows-restart-handoff.test.ps1 -OutputDirectory test/out/windows-process-token/restart-handoff
@@ -145,6 +150,17 @@ jobs:
           cargo test --locked --test provider_auth_native -- --ignored --test-threads=1 --nocapture
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+      - name: Verify official managed install upgrade and offline reinstall
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force ../../../test/out/windows-backend | Out-Null
+          $env:OPENCODEX_MANAGED_LIVE = '1'
+          $env:OPENCODEX_TEST_NODE = (Get-Command node).Source
+          $env:OPENCODEX_TEST_NPM = (Get-Command npm.cmd).Source
+          $env:OPENCODEX_MANAGED_LIVE_REPORT = [IO.Path]::GetFullPath('../../../test/out/windows-backend/managed-live.json')
+          cargo test --locked --test windows_runtime windows_official_managed_registry_upgrade_and_offline_reinstall -- --ignored --exact --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: Collect Windows native dependency diagnostics
         if: always()
         shell: pwsh
@@ -210,7 +226,11 @@ jobs:
       - name: Windows final EXE smoke
         shell: pwsh
         run: |
-          & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
+          & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup -ManagedInstall
+      - name: Windows ordinary-account final EXE smoke
+        shell: pwsh
+        run: |
+          & ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-ordinary
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -218,8 +238,11 @@ jobs:
           path: |
             test/out/windows-startup
             test/out/windows-backend
+            test/out/windows-ordinary
             test/out/windows-query-etw
             test/runtime/ci-bd2-query-etw/capture
+            !test/out/windows-startup/**/sandbox-*/**
+            !test/out/windows-ordinary/**/sandbox-*/**
 
   build:
     if: github.ref == 'refs/heads/main'

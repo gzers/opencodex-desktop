@@ -10,9 +10,13 @@ use opencodex_desktop_lib::modules::{
     about::OfficialVersionSource,
     doctor::DoctorSource,
     process::{EnvironmentPolicy, LifecycleAction, LifecycleResult, ProcessCommand, ProcessRunner},
-    runtime::install::{
-        CancelFlag, InstallProgress, InstallProgressSink, NpmInstallRequest, NpmRunner,
-        RealVersionProbe, SystemNpmRunner, VersionProbe,
+    runtime::{
+        archive,
+        install::{
+            CancelFlag, InstallProgress, InstallProgressSink, InstallRequest, InstallSource,
+            NpmInstallRequest, NpmOutcome, NpmPackRequest, NpmRunner, RealVersionProbe,
+            RuntimeInstaller, SystemNpmRunner, VersionProbe,
+        },
     },
     status::StatusSource,
 };
@@ -374,6 +378,189 @@ impl InstallProgressSink for Sink {
     fn emit(&self, _: InstallProgress) {}
 }
 
+struct RuntimeFixtureNpm {
+    archive: PathBuf,
+}
+
+impl NpmRunner for RuntimeFixtureNpm {
+    fn pack(
+        &self,
+        _request: &NpmPackRequest,
+        _sink: &dyn InstallProgressSink,
+        _cancel: &CancelFlag,
+    ) -> Result<PathBuf, opencodex_desktop_lib::modules::runtime::install::InstallError> {
+        Ok(self.archive.clone())
+    }
+
+    fn install_package(
+        &self,
+        request: &NpmInstallRequest,
+        _sink: &dyn InstallProgressSink,
+        _cancel: &CancelFlag,
+    ) -> Result<NpmOutcome, opencodex_desktop_lib::modules::runtime::install::InstallError> {
+        archive::extract(
+            &self.archive,
+            None,
+            &request.prefix.join("node_modules/@bitkyc08/opencodex"),
+        )?;
+        std::fs::write(request.prefix.join("package-lock.json"), b"{}").map_err(|error| {
+            opencodex_desktop_lib::modules::runtime::install::InstallError::FileSystem {
+                operation: "fixture package lock".into(),
+                detail: error.to_string(),
+            }
+        })?;
+        Ok(NpmOutcome { exit_code: 0 })
+    }
+}
+
+struct RuntimeFixtureProbe;
+impl VersionProbe for RuntimeFixtureProbe {
+    fn probe(&self, _node: Option<&Path>, _script: &Path) -> Option<String> {
+        Some("0.3.1".to_string())
+    }
+}
+
+fn runtime_fixture_archive(root: &Path) -> PathBuf {
+    use flate2::{write::GzEncoder, Compression};
+    let archive = root.join("opencodex-0.3.1.tgz");
+    let file = std::fs::File::create(&archive).unwrap();
+    let mut tar = tar::Builder::new(GzEncoder::new(file, Compression::fast()));
+    let package = br#"{"name":"@bitkyc08/opencodex","version":"0.3.1","bin":{"ocx":"bin/ocx.js"}}"#;
+    let script = b"console.log('0.3.1');";
+    for (path, bytes, mode) in [
+        ("package/package.json", package.as_slice(), 0o644),
+        ("package/bin/ocx.js", script.as_slice(), 0o755),
+    ] {
+        let mut header = tar::Header::new_gnu();
+        header.set_size(bytes.len() as u64);
+        header.set_mode(mode);
+        header.set_cksum();
+        tar.append_data(&mut header, path, bytes).unwrap();
+    }
+    tar.into_inner().unwrap().finish().unwrap();
+    archive
+}
+
+#[test]
+fn windows_managed_install_rejects_unowned_targets_and_restores_old_package_on_entry_failure() {
+    let root = tempfile::tempdir().unwrap();
+    let data_root = root.path().join("data root 中文");
+    let prefix = data_root.join("runtime/opencodex");
+    let archive = runtime_fixture_archive(root.path());
+    let npm = RuntimeFixtureNpm {
+        archive: archive.clone(),
+    };
+    let installer = |prefix: PathBuf| {
+        let request = InstallRequest {
+            prefix,
+            source: InstallSource::Offline {
+                archive: archive.clone(),
+            },
+            allow_scripts: false,
+            npm_path: Some(node()),
+            node_path: Some(node()),
+        };
+        RuntimeInstaller::new(
+            &data_root,
+            &npm,
+            Some(root.path().to_path_buf()),
+            &Sink,
+            &RuntimeFixtureProbe,
+            Some(node()),
+        )
+        .install(&request)
+    };
+    let first = installer(prefix.clone()).expect("initial managed install");
+    std::fs::write(prefix.join("old-sentinel"), b"old").unwrap();
+
+    use std::os::windows::fs::OpenOptionsExt;
+    let entry = data_root.join("runtime/bin/ocx.cmd");
+    let held_entry = std::fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .share_mode(0x1 | 0x2)
+        .open(&entry)
+        .expect("hold the launcher without delete sharing");
+    let error = installer(prefix.clone()).expect_err("launcher activation must fail");
+    assert_eq!(error.code(), "filesystem");
+    assert_eq!(std::fs::read(prefix.join("old-sentinel")).unwrap(), b"old");
+    assert!(first.target.join(".runtime-manifest.json").is_file());
+    drop(held_entry);
+
+    let unowned = data_root.join("runtime/unowned");
+    std::fs::create_dir_all(&unowned).unwrap();
+    std::fs::write(unowned.join("user-file"), b"keep").unwrap();
+    let error = installer(unowned.clone()).expect_err("unowned nonempty target must fail");
+    assert_eq!(error.code(), "filesystem");
+    assert_eq!(std::fs::read(unowned.join("user-file")).unwrap(), b"keep");
+}
+
+#[test]
+fn windows_managed_install_accepts_the_extended_form_of_a_local_prefix() {
+    let root = tempfile::tempdir().unwrap();
+    let data_root = root.path().join("data root 中文");
+    let ordinary = data_root.join("runtime/opencodex");
+    let extended = PathBuf::from(format!(r"\\?\{}", ordinary.display()));
+    let archive = runtime_fixture_archive(root.path());
+    let npm = RuntimeFixtureNpm {
+        archive: archive.clone(),
+    };
+    let request = InstallRequest {
+        prefix: extended.clone(),
+        source: InstallSource::Offline { archive },
+        allow_scripts: false,
+        npm_path: Some(node()),
+        node_path: Some(node()),
+    };
+    let outcome = RuntimeInstaller::new(
+        &data_root,
+        &npm,
+        Some(root.path().to_path_buf()),
+        &Sink,
+        &RuntimeFixtureProbe,
+        Some(node()),
+    )
+    .install(&request)
+    .expect("extended local path should retain its filesystem identity");
+    assert!(outcome.target.exists());
+    assert!(ordinary.join(".runtime-manifest.json").is_file());
+    assert!(data_root.join("runtime/bin/ocx.cmd").is_file());
+}
+
+#[test]
+fn windows_install_admission_rejects_mixed_verbatim_traversal_before_creating_directories() {
+    use opencodex_desktop_lib::modules::runtime::paths::{validate_install_target, PathRejection};
+    let root = tempfile::tempdir().unwrap();
+    let canonical = root.path().canonicalize().unwrap();
+    for suffix in [
+        "/new-parent/../escaped",
+        "/new-parent/./target",
+        "/new-parent/NUL/target",
+        "/new-parent/name:stream/target",
+    ] {
+        let path = PathBuf::from(format!("{}{suffix}", canonical.display()));
+        assert_eq!(
+            validate_install_target(&path, Some(&canonical)),
+            Err(PathRejection::NotAbsolute),
+            "{path:?}"
+        );
+        assert!(!canonical.join("new-parent").exists());
+        assert!(!canonical.join("escaped").exists());
+    }
+}
+
+#[test]
+fn windows_real_version_probe_requires_zero_exit() {
+    let root = tempfile::tempdir().unwrap();
+    let script = root.path().join("probe.js");
+    std::fs::write(&script, b"console.log('2.77.0'); process.exitCode=7;").unwrap();
+    assert_eq!(
+        RealVersionProbe::default().probe(Some(&node()), &script),
+        None,
+        "version output from a failed process must not be accepted"
+    );
+}
+
 #[test]
 fn windows_npm_cmd_runner_passes_paths_and_controlled_environment() {
     let root = tempfile::Builder::new()
@@ -390,7 +577,7 @@ fn windows_npm_cmd_runner_passes_paths_and_controlled_environment() {
     runner
         .install_package(
             &NpmInstallRequest {
-                npm_path: npm,
+                npm_path: npm.clone(),
                 node_dir: node().parent().map(Path::to_path_buf),
                 prefix: root.path().join("安装 prefix"),
                 version: "2.77.0".to_owned(),
@@ -422,5 +609,223 @@ fn windows_npm_cmd_runner_passes_paths_and_controlled_environment() {
     assert!(
         std::env::split_paths(std::ffi::OsStr::new(evidence["path"].as_str().unwrap()))
             .any(|path| Some(path.as_path()) == node().parent())
+    );
+    let archive = root.path().join("离线 package.tgz");
+    std::fs::write(&archive, b"adapter fixture only").unwrap();
+    let archive = archive.canonicalize().unwrap();
+    runner
+        .install_package(
+            &NpmInstallRequest {
+                npm_path: npm,
+                node_dir: node().parent().map(Path::to_path_buf),
+                prefix: root.path().join("offline prefix"),
+                version: archive.to_string_lossy().into_owned(),
+                proxy: None,
+                scripts_enabled: false,
+                offline: true,
+            },
+            &Sink,
+            &CancelFlag::new(),
+        )
+        .unwrap();
+    let actual: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(root.path().join("arguments.json")).unwrap())
+            .unwrap();
+    let args: Vec<String> = serde_json::from_value(actual["argv"].clone()).unwrap();
+    assert!(
+        args.contains(&dunce::simplified(&archive).to_string_lossy().into_owned()),
+        "npm must receive the local tarball as one absolute source argument: {args:?}"
+    );
+    assert!(!args
+        .iter()
+        .any(|arg| arg.starts_with("@bitkyc08/opencodex@") && arg.contains(".tgz")));
+}
+
+#[test]
+#[ignore = "explicit CI official registry install; no daily profile or generation"]
+fn windows_official_managed_registry_upgrade_and_offline_reinstall() {
+    struct LiveProgress;
+    impl InstallProgressSink for LiveProgress {
+        fn emit(&self, progress: InstallProgress) {
+            if let Some(line) = progress.line {
+                eprintln!("managed-live {:?}: {}", progress.phase, line);
+            }
+        }
+    }
+    use opencodex_desktop_lib::modules::runtime::RuntimeStore;
+    assert_eq!(std::env::var("OPENCODEX_MANAGED_LIVE").as_deref(), Ok("1"));
+    let root = tempfile::Builder::new()
+        .prefix("official managed 中文 ")
+        .tempdir()
+        .unwrap();
+    let data = root.path().join("data");
+    std::fs::create_dir_all(&data).unwrap();
+    let data = data.canonicalize().unwrap();
+    let prefix = data.join("runtime").join("opencodex");
+    let npm =
+        PathBuf::from(std::env::var_os("OPENCODEX_TEST_NPM").expect("explicit npm.cmd required"));
+    assert!(npm.is_absolute() && npm.is_file());
+    let runner = SystemNpmRunner::new(Some(root.path().to_path_buf()), data.join("cache/npm"));
+    let probe = RealVersionProbe::default();
+    let mut verified = Vec::new();
+    for version in ["2.90.0", "2.91.0"] {
+        let request = InstallRequest {
+            prefix: prefix.clone(),
+            source: InstallSource::Registry {
+                version: version.into(),
+                proxy: None,
+            },
+            allow_scripts: true,
+            npm_path: Some(npm.clone()),
+            node_path: Some(node()),
+        };
+        let outcome = RuntimeInstaller::new(
+            &data,
+            &runner,
+            Some(root.path().to_path_buf()),
+            &LiveProgress,
+            &probe,
+            Some(node()),
+        )
+        .install(&request)
+        .expect("actual official managed registry install");
+        assert_eq!(outcome.version, version);
+        assert!(outcome.entry.is_file());
+        assert_eq!(
+            probe
+                .probe(
+                    Some(&node()),
+                    &prefix.join("node_modules/@bitkyc08/opencodex/bin/ocx.mjs")
+                )
+                .as_deref(),
+            Some(version)
+        );
+        let record = RuntimeStore::new(&data).load();
+        assert_eq!(record.installed_prefix(&data), prefix);
+        assert_eq!(record.resolved_version.as_deref(), Some(version));
+        verified.push(version.to_string());
+    }
+    let archive = runner
+        .pack(
+            &NpmPackRequest {
+                npm_path: npm.clone(),
+                node_dir: node().parent().map(Path::to_path_buf),
+                version: "2.91.0".into(),
+                proxy: None,
+                work_dir: data.join("download"),
+            },
+            &LiveProgress,
+            &CancelFlag::new(),
+        )
+        .unwrap();
+    let record_before = std::fs::read(RuntimeStore::new(&data).path()).unwrap();
+    let entry_before = std::fs::read(data.join("runtime/bin/ocx.cmd")).unwrap();
+    std::fs::write(prefix.join("offline-retain"), b"verified old package").unwrap();
+    let request = InstallRequest {
+        prefix: prefix.clone(),
+        source: InstallSource::Offline { archive },
+        allow_scripts: true,
+        npm_path: Some(npm),
+        node_path: Some(node()),
+    };
+    let outcome = RuntimeInstaller::new(
+        &data,
+        &runner,
+        Some(root.path().to_path_buf()),
+        &LiveProgress,
+        &probe,
+        Some(node()),
+    )
+    .install(&request);
+    let outcome = match outcome {
+        Ok(outcome) => outcome,
+        Err(error) => {
+            assert_eq!(
+                std::fs::read(prefix.join("offline-retain")).unwrap(),
+                b"verified old package"
+            );
+            assert_eq!(
+                std::fs::read(data.join("runtime/bin/ocx.cmd")).unwrap(),
+                entry_before
+            );
+            assert_eq!(
+                std::fs::read(RuntimeStore::new(&data).path()).unwrap(),
+                record_before
+            );
+            panic!("actual npm offline reinstall failed; prior package/entry/source bytes retained: {error:?}");
+        }
+    };
+    assert!(!prefix.join("offline-retain").exists());
+    assert_eq!(outcome.version, "2.91.0");
+    assert_eq!(
+        RuntimeStore::new(&data)
+            .load()
+            .history
+            .iter()
+            .filter(|e| e.action == "install" && e.result == "succeeded")
+            .count(),
+        3
+    );
+    if let Some(path) = std::env::var_os("OPENCODEX_MANAGED_LIVE_REPORT") {
+        std::fs::write(path,serde_json::to_vec_pretty(&serde_json::json!({"result":"pass","packages":verified,"officialRegistry":true,"realNpm":true,"realVersionProbe":true,"extendedCanonicalDataRoot":true,"upgrade":true,"offlineReinstall":true,"sourceRecordReadback":true,"dailyConfigTouched":false,"generationRequests":0})).unwrap()).unwrap();
+    }
+}
+
+#[test]
+fn windows_source_registration_failure_rolls_back_package_and_entry_then_retries() {
+    use opencodex_desktop_lib::modules::runtime::RuntimeStore;
+    use std::os::windows::fs::OpenOptionsExt;
+    let root = tempfile::tempdir().unwrap();
+    let data = root.path().join("data");
+    let archive = runtime_fixture_archive(root.path());
+    let npm = RuntimeFixtureNpm {
+        archive: archive.clone(),
+    };
+    let request = InstallRequest {
+        prefix: data.join("runtime/opencodex"),
+        source: InstallSource::Offline { archive },
+        allow_scripts: false,
+        npm_path: Some(node()),
+        node_path: Some(node()),
+    };
+    let run = || {
+        RuntimeInstaller::new(
+            &data,
+            &npm,
+            Some(root.path().to_path_buf()),
+            &Sink,
+            &RuntimeFixtureProbe,
+            Some(node()),
+        )
+        .install(&request)
+    };
+    let first = run().unwrap();
+    std::fs::write(first.target.join("keep-old"), b"old").unwrap();
+    let entry = std::fs::read(&first.entry).unwrap();
+    let store = RuntimeStore::new(&data);
+    let record = std::fs::read(store.path()).unwrap();
+    let held = std::fs::OpenOptions::new()
+        .read(true)
+        .share_mode(0x1 | 0x2)
+        .open(store.path())
+        .unwrap();
+    assert!(run().is_err());
+    assert_eq!(
+        std::fs::read(first.target.join("keep-old")).unwrap(),
+        b"old"
+    );
+    assert_eq!(std::fs::read(&first.entry).unwrap(), entry);
+    assert_eq!(std::fs::read(store.path()).unwrap(), record);
+    drop(held);
+    let next = run().unwrap();
+    assert!(!next.target.join("keep-old").exists());
+    assert_eq!(
+        store
+            .load()
+            .history
+            .iter()
+            .filter(|e| e.result == "succeeded")
+            .count(),
+        2
     );
 }

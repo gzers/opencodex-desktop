@@ -23,7 +23,8 @@ it('Windows explains unsupported IPC and cannot claim the CLI is online', async 
   try {
     await flushPromises()
     const row = wrapper.findAll('.setting-row').find(row => row.text().includes('启用 CLI 控制面'))!
-    expect(row.text()).toContain('Windows 暂不支持 CLI 控制面')
+    expect(row.text()).toContain('Windows 暂不开放公开 CLI 控制面')
+    expect(row.text()).toContain('本机 IPC 传输已实现')
     expect(row.find('button.toggle').attributes('disabled')).toBeDefined()
     await row.find('button.toggle').trigger('click')
     expect(invoke.mock.calls.some(([command]) => command === 'save_preferences')).toBe(false)
