@@ -1,0 +1,48 @@
+{
+  "atUtc": "2026-10-27T23:14:55.742466+00:00",
+  "route": "http://127.0.0.1:10100/v1/responses",
+  "requestedModel": "FeiMao/gpt-6.1-sol",
+  "scenario": "search",
+  "syntheticInputOnly": true,
+  "credentialsRead": false,
+  "dailyConfigModified": false,
+  "maxOutputTokens": 512,
+  "scriptSha256": "e47a7ff3bba2516e4cf770679ceb141698c957e65cafc00356cb237a4a167b9a",
+  "actualClientRequests": 1,
+  "checks": [
+    {
+      "id": "real_search_response",
+      "status": "passed",
+      "scope": "requested route and synthetic task only; catalog presence is not proof of service availability"
+    }
+  ],
+  "proxyIdentity": {
+    "service": "opencodex",
+    "version": "2.84.0",
+    "pid": 1930
+  },
+  "httpStatus": 200,
+  "responseStatus": "completed",
+  "servedModel": "gpt-6.1-sol",
+  "syntheticOutput": "I’ll open the public example.com page.Example Domain  \nhttps://example.com/",
+  "usage": {
+    "input_tokens": 8851,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 8448
+    },
+    "output_tokens": 55,
+    "output_tokens_details": {
+      "reasoning_tokens": 29
+    },
+    "total_tokens": 8906
+  },
+  "outputKinds": [
+    "message",
+    "web_search_call",
+    "message"
+  ],
+  "serviceTier": "default",
+  "status": "passed",
+  "elapsedSeconds": 19.093
+}

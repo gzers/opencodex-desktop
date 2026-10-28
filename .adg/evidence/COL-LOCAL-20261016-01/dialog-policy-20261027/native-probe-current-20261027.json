@@ -1,0 +1,125 @@
+{
+  "tested_at_utc": "2026-10-27T15:09:20.503420+00:00",
+  "probe_sha256": "ebcaf55aa832dd0bc8b9b68fa80bae4ef9c779b63649aec4eb38d1a67bffa098",
+  "codex_version": "codex-cli 0.164.0-alpha.11.1",
+  "experimental_api": true,
+  "isolated_home": true,
+  "provider": "loopback Responses stub",
+  "checks": [
+    {
+      "name": "projects_and_pagination",
+      "status": "passed",
+      "observed": "Two projects enumerated; rename preserves native project ID."
+    },
+    {
+      "name": "thread_project_and_title",
+      "status": "passed",
+      "observed": "Persistent thread is project-filterable; name/set is readable after one local turn."
+    },
+    {
+      "name": "settings_hot_update",
+      "status": "passed",
+      "observed": "Same running app-server/thread sends mini + high on the next turn."
+    },
+    {
+      "name": "turn_override_is_sticky",
+      "status": "passed",
+      "observed": "turn/start model + effort persists when the following turn omits both fields."
+    },
+    {
+      "name": "config_write_vs_loaded_thread",
+      "status": "passed",
+      "observed": "Updated file reads back; new thread uses new default; loaded thread retains its model."
+    },
+    {
+      "name": "restore_inheritance_explicitly",
+      "status": "passed",
+      "observed": "Null model does not restore the new global default; explicit resolved model does."
+    },
+    {
+      "name": "second_server_is_not_live_attachment",
+      "status": "passed",
+      "observed": {
+        "metadata_readable": true,
+        "settings_update_error": "thread not found: <threadId>",
+        "original_server_model_unchanged": true
+      }
+    },
+    {
+      "name": "archived_is_not_deleted",
+      "status": "passed",
+      "observed": "Archived thread retains its project ID and is returned by the separate archived query."
+    }
+  ],
+  "limitations": [
+    "Fresh app-server only; does not attach to an existing desktop session.",
+    "No OpenCodex sidecar, real search, child-agent spawn, or title generation inference tested."
+  ],
+  "status": "passed",
+  "local_requests": [
+    {
+      "model": "gpt-5.4",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "service_tier": null
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "reasoning": {
+        "effort": "high",
+        "summary": "auto"
+      },
+      "service_tier": null
+    },
+    {
+      "model": "gpt-5.4",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "service_tier": null
+    },
+    {
+      "model": "gpt-5.4",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "service_tier": null
+    },
+    {
+      "model": "gpt-5.4",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "service_tier": null
+    },
+    {
+      "model": "gpt-5.4",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "service_tier": null
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "service_tier": null
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "service_tier": null
+    }
+  ]
+}

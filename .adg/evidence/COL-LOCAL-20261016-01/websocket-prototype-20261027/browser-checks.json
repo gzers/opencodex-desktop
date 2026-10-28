@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-27",
+  "scope": "OpenCodex Desktop shared prototype only; global provider transport and read-only channel/dialog contexts",
+  "checks": [
+    {
+      "name": "policy-edit-only-draft",
+      "pass": true
+    },
+    {
+      "name": "provider-draft-isolated",
+      "pass": true
+    },
+    {
+      "name": "return-provider-keeps-draft",
+      "pass": true
+    },
+    {
+      "name": "save-pending-restart",
+      "pass": true
+    },
+    {
+      "name": "pending-probe-no-adoption",
+      "pass": true
+    },
+    {
+      "name": "probe-only-not-request-proof",
+      "pass": true
+    },
+    {
+      "name": "dialog-unknown-observation-no-switch",
+      "pass": true
+    },
+    {
+      "name": "dialog-separate-two-transport-legs",
+      "pass": true
+    },
+    {
+      "name": "other-dialog-not-inherit-transport-observation",
+      "pass": true
+    },
+    {
+      "name": "dialog-shortcut-opens-global-transport",
+      "pass": true
+    },
+    {
+      "name": "invalid-timeout-preserves-input-and-shows-error",
+      "pass": true
+    },
+    {
+      "name": "save-failure-keeps-unsaved-draft",
+      "pass": true
+    },
+    {
+      "name": "timeout-save-pending-restart",
+      "pass": true
+    },
+    {
+      "name": "link-refuses-ws-handshake",
+      "pass": true
+    },
+    {
+      "name": "channel-readonly-third-party-limit",
+      "pass": true
+    },
+    {
+      "name": "channel-shortcut-global-with-pending-preserved",
+      "pass": true
+    },
+    {
+      "name": "900-dark-form-no-horizontal-overflow",
+      "pass": true
+    },
+    {
+      "name": "annotation-layout-audit",
+      "pass": true
+    },
+    {
+      "name": "final-advanced-input-remains-open-after-save",
+      "pass": true
+    },
+    {
+      "name": "draft-config-preview-updates-with-policy",
+      "pass": true
+    }
+  ],
+  "limitations": [
+    "No real configuration writes, restarts, websocket handshakes, model requests or fee measurements",
+    "900×600 dark and default 1180×760 product frames checked using existing prototype controls",
+    "Original preview tab had an expired localhost connection; restored port and used a new preview tab"
+  ]
+}

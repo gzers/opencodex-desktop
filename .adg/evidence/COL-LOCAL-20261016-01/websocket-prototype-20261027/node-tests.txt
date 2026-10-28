@@ -1,0 +1,838 @@
+✔ 按钮下方弹出无遮罩菜单，低处向上展开并约束软件窗口；菜单项转义 (6.6575ms)
+✔ 菜单跳过禁用项，方向键循环、首尾定位、Esc关闭并归还焦点 (3.103083ms)
+✔ 执行一项只调用一次，外部点击关闭不执行；同触发再次点击关闭 (0.973875ms)
+✔ 危险操作与常规动作分隔，禁用的危险项不可执行 (0.619833ms)
+✔ 设置页只承载 Agent 配置，文件与行为说明在隐藏注释，按钮前后一致 (43.338583ms)
+✔ 弹窗交互说明不再占正文，传给共用原型注释，模型选择和保存仍可达 (26.205542ms)
+✔ Agent 快速状态随组合与能力显示，支持能力不等于已开启，取消不更新摘要 (71.329125ms)
+✔ 高级 Fast 入口已移除，旧事件无效，Agent 选择不改既有运行策略与兼容目录 (60.279916ms)
+✔ 共用弹窗原型注释自定义标题和内容安全转义，其他弹窗默认说明仍保留 (7.655084ms)
+✔ 使用建议覆盖全部登记组件，规范/方案/建议可区分，来源文件和章节存在 (31.505708ms)
+▶ 组件专题：从真实总原型接线检查交互与隔离（内存DOM，非实屏）
+  ✔ 目录、资源、非功能菜单、连续正文、深链接和搜索同源 (1169.939ms)
+  ✔ 亮暗×高中低、四缩放×双窗口不丢输入/选择/滚动，不写偏好 (6713.230417ms)
+  ✔ 字段校验/Tab键/树表/长表格与动作菜单 (301.07975ms)
+  ✔ 共享表单弹窗：错误就地、Select同层、Esc与返回焦点 (2464.774416ms)
+  ✔ 同一模型选择器页内/弹窗：确认、取消、推理与Fast，未改业务目录 (3504.230959ms)
+  ✔ 模型fixture单多选/长表/空/失败重试/加载完成/失效引用 (951.81975ms)
+  ✔ 节点选择与检测分离、停止/晚回失效、弹层键盘与逐项/一键 (2362.709208ms)
+  ✔ 平台样例：关闭仅影响子窗口；托盘共享模板及禁用原因，不改业务状态 (43.6545ms)
+  ✔ 通知只经登记事件与原宿主；去重、多任务、收起恢复、读/解决/删除/重置隔离 (1203.487541ms)
+  ✔ 离开还原评审环境，功能草稿未变，旧入口继续可用 (5263.516709ms)
+✔ 组件专题：从真实总原型接线检查交互与隔离（内存DOM，非实屏） (28823.630875ms)
+✔ 组件专题深链接刷新：章节/环境恢复，实际浏览布局仍须实屏检查 (4295.62025ms)
+✔ 切换平台与情景后，目录展示、托管入口和卸载记录使用同一模型 (8.628958ms)
+✔ 外观平台变化可同步路径，其他 body 样式变化不重置手动评审平台和独立安装草稿 (1.270708ms)
+✔ 修改预览展示保护范围，确认和取消不改变目录 (5.77025ms)
+✔ Windows 按实际安装位置派生，支持不同盘符、中文和空格 (0.632209ms)
+✔ macOS 数据位置不随应用移动，默认 HOME 与入口同根 (0.641583ms)
+✔ 两平台保留自定义根、外置 HOME 与自定义托管前缀 (0.111625ms)
+✔ 受保护安装目录不静默改回 AppData，系统凭据不落在数据分区 (0.3515ms)
+✔ 保留数量或天数满足其一即保留，固定项不占数量 (1.45725ms)
+✔ 时间边界恰好等于保留天数不删除 (0.091125ms)
+✔ 清理确认重新计算固定与策略保护 (0.990166ms)
+✔ 自动轮换仅在创建成功后，固定项始终保留 (0.430417ms)
+✔ 校验失败阻止恢复；恢复创建固定的当前偏好保护备份 (0.245125ms)
+✔ 策略非法值不修改状态 (0.0835ms)
+✔ 更新并发互斥，取消后迟到响应不能改写版本 (0.364666ms)
+✔ 查询不改变版本；只有确认应用成功才改变版本 (0.142958ms)
+✔ 应用失败保留当前版本并允许重新检查 (0.635542ms)
+✔ 重复失败去重、按冷却再次投递，恢复与已读独立 (0.227959ms)
+✔ 全量候选事件字段完整，未注册事件拒绝投递 (0.419209ms)
+✔ 每次创建独立内存，刷新重新创建不沿用策略或版本 (0.121125ms)
+✔ 注册配置的触发源、任务与解除引用有效，未注册来源被拒绝 (0.244875ms)
+✔ 启动延迟、多来源合并与成功缓存；不发生自动安装 (0.1165ms)
+✔ 手动检查跳过缓存；beta 的面板周期不随管理器缩短 (0.132667ms)
+✔ 手动策略禁止全部自动源；只取消管理器旧结果，面板在途检查继续 (0.081375ms)
+✔ 失败按5m、30m、2h退避，耗尽后回到正常周期；网络恢复不绕过退避 (0.090083ms)
+✔ 恢复后只执行一次到期检查，不补跑错过周期 (0.044292ms)
+✔ 后台已最新静默，手动检查有toast；可用更新按版本与通道去重 (0.102167ms)
+✔ 检查成功只解除检查失败，不误解应用失败；完成更新解除可用版本通知 (0.072792ms)
+✔ 备份是更新确认选项；取消勾选不创建，失败阻断，过期确认无副作用 (0.106708ms)
+✔ 一次性不同事务分别投递；冻结配置不可写，未知任务没有副作用 (0.054458ms)
+✔ 进度按事务版本保护，拒绝倒退与非法百分比；写入阶段不能取消 (0.075917ms)
+✔ 管理器安装就绪不改运行版本；待重启不重复查装，重启回读才完成并解除提醒 (0.087583ms)
+✔ 坏恢复源不会因手动备份或其他源恢复成功解除；缺失源单独登记 (0.095917ms)
+✔ 备份创建失败按确认事务隔离；只有同一确认重试成功解除 (0.081084ms)
+✔ 缺少解除上下文不能消除异常；错误动作和阶段不视为恢复 (0.101833ms)
+✔ 检查与完成只解除对应通道；完成还须匹配候选版本 (0.082167ms)
+✔ 切通道保留面板成功缓存、已有确认和失败退避；策略触发仅查管理器 (0.471125ms)
+✔ 选择当前通道无副作用；管理器写入与待重启阻止切换 (0.435167ms)
+✔ 退出手动模式保留面板原到期时间，不绕过退避或补跑 (0.157208ms)
+✔ 目录模型切换后备份页与生成确认同步保存位置，原有备份记录保持 (43.3585ms)
+✔ 备份树表显示两文件用途与操作；区域始终显示且路径安全转义 (3.577875ms)
+✔ 树表逐级折叠；父级展开保留子级折叠，叶节点与未知对象无操作 (1.522875ms)
+✔ 两平台文件和目录打开均先警告，取消或确认不改变备份状态 (2.086917ms)
+✔ 确认前目录变化阻止旧目标打开，路径 HTML 转义 (0.701708ms)
+✔ 概览只有检查按钮，管理器 / 面板状态行可按对象查看；手动检查进入结果步骤 (1.367291ms)
+✔ 确认弹窗读取当前备份选项；失败不关闭，取消勾选后只更新选定对象 (1.512166ms)
+✔ 结果每对象一行只给摘要，完整说明与安全链接放进单对象详情 (2.534125ms)
+✔ 说明失败与缺失独立于检查结果；重试不检查或安装，说明文本转义 (2.621583ms)
+✔ 取消阻止后续进度；校验失败不进入应用阶段，当前版本保留 (1.676917ms)
+✔ 离开概览或已有弹窗时，检查结果不抢弹窗；注册表展示多来源及接入状态 (1.709042ms)
+✔ 切换管理器通道保留面板下载事务，设置进度继续直到完成 (1.460875ms)
+✔ 管理器检查中切通道只替换管理器请求；面板原检查按时完成 (0.9925ms)
+✔ 同通道不重查；被阻止的策略切换恢复选择值 (1.141917ms)
+✔ 备份失败确认重试成功解除对应事务；略过备份不会标记已恢复 (1.924625ms)
+✔ 执行设置替换旧三个下拉，采用公共单选推理弹窗；选择前后都不直接保存 (70.146792ms)
+✔ 取消公共选择器与取消设置均保留原值和编辑；选择原档返回不固化显示默认 (39.167666ms)
+✔ 自动填充、单个与全部更新共享同一设置；已有任务冻结设置，新任务取新值 (52.670208ms)
+✔ 选择器使用已保存的有效规则，草稿能力不提前影响执行选择 (98.3755ms)
+✔ 无额度和原生无绑定记录不可选；保存时再次验证目录和推理，禁用不支持 Fast (29.222209ms)
+✔ 首先请求全部更新，经公共选择器配置后继续原范围；取消不启动 (28.57075ms)
+✔ 公共选择器连续编辑同时带回推理与Fast，设置保存前不写共用偏好 (36.505208ms)
+✔ 快速模式从选择器带回保存，重开保留，显式关闭不会被旧值覆盖 (30.865167ms)
+✔ 选择器和设置取消保留已启用快速模式，换型号不继承旧型号的 Fast (41.8465ms)
+✔ 选择后 Fast 能力变化时保存拒绝，任务快照继续保留启动时快速模式 (95.19175ms)
+✖ 详情状态在标题，保存只显示保存；列表移除历史和更多，直接提供还原 (55.998541ms)
+✔ 顶部还原无修改时禁用，修改后预览确认；旧历史和更多事件不再打开窗口 (86.428417ms)
+✖ 跨渠道草稿保留，返回不写入；旧撤销重做事件没有动作，保存差异仍列全部渠道 (57.20675ms)
+✖ 待确认的连接编辑实时更新标题并阻止保存；还原恢复状态，返回不写入也不丢输入 (38.568125ms)
+✖ 丢弃确认列全渠道改动与未确认连接，取消保留；确认回成功基线，Agent和模版保留 (93.52025ms)
+✔ 丢弃预览后发生新修改时拒绝旧确认，不清空更新内容 (65.617958ms)
+✖ 仅有未确认连接也能丢弃，纯新建编辑缓冲不误伤模版对象 (78.466666ms)
+✔ 保存中还原禁用，成功保存成为新还原基准；不留待重启且底层记录保留 (205.676792ms)
+✔ 传入的既有 Fast 策略草稿仍能核对与丢弃，历史不复活待重启且候选保留 (137.791875ms)
+✔ 启停与连接状态独立显示，停用不清选择；官方渠道沿用同一标题 (41.619209ms)
+✖ 备份与原子写入失败保留草稿，可直接重试；预算超限阻止保存 (27.811208ms)
+✔ 清单获取中与失败使用独立状态，不以获取失败冒充保存失败 (47.736542ms)
+✔ 模版复制当前未保存内容，首版独立，不复制历史 / 默认 / 采用关系 (100.116458ms)
+✔ 已有未保存新模版时复制按钮禁用，旧事件不能替换已有缓冲 (29.194708ms)
+✖ 渠道复制入口与确认可取消，源有未确认编辑或原生来源不能复制 (41.4715ms)
+✖ 渠道复制保留独立节点 / 规则 / 模型顺序，默认停用且不复制Key，不写运行配置 (75.445459ms)
+✔ 明确复用Key只复制认证状态，无额度保留；默认生成不同身份，校验重复及过期确认 (67.5295ms)
+✔ 复制不带测速结果，保存中拒绝复制，丢弃草稿只删除副本而保留源 (118.161625ms)
+✔ 连接字段直接进入编辑，局部确认与还原消失，获取清单和节点检测保留 (91.024083ms)
+✔ 详情保存不打开完整预览，仅写当前渠道，成功回列表，其它渠道与Key编辑保留 (213.812375ms)
+✔ 详情保存后的列表预览只标记剩余修改，取消不撤销已保存渠道 (130.375792ms)
+✔ 其它渠道的未保存预算超限不阻止当前渠道的有效保存，列表仍保留超限编辑 (117.883ms)
+✔ 不能借用其它渠道尚未保存的停用来绕过本次实际提交的激活预算 (37.94ms)
+✔ 详情保存不顺带提交全局设置或渠道排序，后续全局保存才采用它们 (167.985333ms)
+✔ 详情保存新渠道只新增当前副本，其它待新增渠道和当前排序留在编辑中 (64.860042ms)
+✔ 备份失败、写入失败和超时留在详情，原saved与其它渠道输入均不变 (260.489625ms)
+✔ 停止和场景重置后的晚回都不能写入旧的详情保存 (56.886125ms)
+✔ 保存基准漂移时保留详情与全部输入，不把旧确认当作可写入 (33.763375ms)
+✔ 总原型接线：单入口创建/提交/回执，统一通知可回到同一任务且不带正文 (11084.991709ms)
+✔ 选范围/场景原位生成完整内容、一次复制；六场景与只检查不写入 (11173.571958ms)
+✔ 一步外部任务入口，完整内容一次复制，无队列/两份复制入口或全库资料 (77.870708ms)
+✔ 随附结果示例使用真实基准且可校验，回传资料的修改不影响任务契约 (47.233875ms)
+✔ 现代提交无需提供新版本号，保存回执与真实新增记录相符，默认/采用不变 (25.883833ms)
+✔ 同一提交重试返回原回执，不重复版本；改内容复用提交ID和完成后新提交拒绝 (38.68175ms)
+✔ 预检不写库，允许原内容同ID提交；预检后修改提交内容拒绝，取消后晚回无副作用 (40.464292ms)
+✔ 基准变化/越界/错误契约/伪造版本号和混合坏项均整批拒绝 (140.826708ms)
+✔ 新建限定范围并保护内置标记；修订任务不默认允许新增模版 (48.021958ms)
+✔ 多个任务结果不串目标，已完成任务可重开；无变化有核对回执但不增版本 (91.371542ms)
+✔ 人工与外部路径使用相同字段校验/摘要/时间版本，保存内容一致且均不自动采用 (76.926ms)
+✔ 场景切换生成预置指令；只检查在服务层拒绝写入，报告不改库 (34.477208ms)
+✔ 未复制的准备不注册提交，范围/场景冲突禁用复制，不能丢失已复制的旧基准 (46.519125ms)
+✔ 仅复制的外部任务不长期锁定历史版本，删除基准后旧提交拒绝 (32.635167ms)
+✔ 渠道列表名称与行空白不可进入，行内编辑按钮唯一进入原渠道编辑页 (96.628042ms)
+✔ 模版列表名称为文本，勾选不导航；唯一行内编辑直接加载完整表单，不入库 (33.430792ms)
+✔ 保存后仍留同一编辑页并展示来源与采用状态，再次编辑保存不改变旧版 (43.551584ms)
+✔ 未修改时可在同一编辑器浏览旧版本，改旧版只另存新版本 (33.260958ms)
+✔ 有修改时禁用版本切换和采用，旧事件也无法绕过；保存后恢复可用 (42.191291ms)
+✔ 清洁编辑仍允许版本管理和用户确认，未使用版本可删除后加载另一个编辑基准 (35.1785ms)
+✔ Agent 更新与外部候选保存都回到统一编辑器，无变化返回不创建额外版本 (76.827333ms)
+✔ 官方原生来源使用同一渠道页面，仅按实际能力禁用编辑，不增加查看页面 (29.173959ms)
+✔ 列表具有独立节点列，仅单行触发器，无行下检测按钮与结果区 (30.939834ms)
+✔ 选择与检测分离，单测更新同一浮层和焦点，随后选节点只改草稿 (83.442083ms)
+✔ 集成一键检测和停止，保持浮层并同步列表摘要，关闭不取消在途检测 (36.025417ms)
+✔ Esc回到触发器，方向键只移焦点，外部点击和焦点离开关闭不选择 (25.013584ms)
+✖ 单实例、未确认认证和保存锁继续有效，返回详情和重绘关闭悬空浮层 (53.488833ms)
+✔ 列表节点选择与测速可直接操作，不点击行进入详情；选择仍先入草稿 (111.908ms)
+✔ 单节点测速不会改变选择、清单、连接状态或保存差异；只显示接口耗时 (85.794542ms)
+✔ 一键覆盖当前渠道全部节点，最多两项并行；完成不自动选择或保存 (78.255292ms)
+✔ 部分失败与超时分别展示，失败不携带伪造耗时或改变渠道认证 / 额度 (88.04275ms)
+✔ 停止与重新测速使旧回调无效，测速场景切换保留草稿 (66.546542ms)
+✔ 测速晚回绑定节点地址，编辑URL后结果失效；重测只采用新地址 (61.689292ms)
+✖ 未确认认证阻止测速；测速更新不重建未保存的连接输入或中断弹窗 (35.748875ms)
+✔ 共用Key更换后旧测速失效；一键结果不写入渠道JSON或保存记录 (52.604459ms)
+✔ 部分完成后停止保留已完成结果，未完成项不计为完成，也不会被晚回覆盖 (60.4545ms)
+✔ 删除后重建同ID同URL渠道也不复用旧认证的测速结果或晚回 (21.522667ms)
+✔ 根 / 版本 / 完整清单 / 自定义前缀共用自动补齐，测速与获取清单保持同一结果且不改基址 (446.168042ms)
+✔ HTML 与路径不存在有限同源回退，保留代理前缀；只得到有效清单才有耗时 (86.622334ms)
+✔ 认证 / DNS / TLS / 超时 / 无效清单不重试路径且不伪造耗时 (62.596125ms)
+✔ 业务调用使用同一弹窗不跳打样页；返回默认不写显式档位，不污染专题选择 (33.13875ms)
+✔ 当前显式推理档位保留返回，显式 none 与沿用默认分别表示 (2.27275ms)
+✔ 取消只回调取消，离开业务页标记 routeChanged；专题推理开关与场景恢复 (1.1515ms)
+✔ 业务传入无额度、未绑定和原生限制，不可选记录仍显示原因 (1.279625ms)
+✔ 选中时重新核对动态目录，期间模型停用或档位失效阻止回调 (1.065083ms)
+✔ 业务选择后可以立即打开调用方设置弹窗，关闭钩子不会再触发取消 (0.89725ms)
+✔ 连续修改推理与Fast和失焦均不返回，确认只回调一次带回组合值 (1.798875ms)
+✔ 连续编辑Esc撤回本次档位与Fast，取消主窗不返回草稿 (1.443458ms)
+✔ Fast能力未知不能开启，恢复推理默认保持浮层且不固化显示值 (1.496ms)
+✔ 多选失焦只收浮层，仍待统一确认 (1.945667ms)
+✔ 不启用推理或Fast的普通单选也须确认，连续点模型只替换一个待选项 (2.638583ms)
+✔ 无有效单选项时禁用确认，确认无回调；主窗取消丢弃全部待选修改 (1.344125ms)
+✔ 长表格连续选择、调档和Fast不重建表格或渠道；焦点锚点保持 (7.302708ms)
+✔ 首次悬停短延迟，浮层打开后跨表格行立即切换，取消后不延迟复活 (2.284875ms)
+✔ 按档位排序时编辑不移动锚点行，浮层收起后才复排且不重建表格 (1.365958ms)
+✔ 读取中渲染骨架与状态条，已选项不判缺失且不可确认 (5.733583ms)
+✔ 读取中再次打开保留已选模型，芯片显示渠道与型号且不报缺失 (3.3655ms)
+✔ 确认保存后弹窗立即关闭并开始写入，不再停留在弹窗里看进度 (55.298334ms)
+✔ 没有可写入修改时确认仍可点，点了关闭并登记“模型配置未保存”通知 (43.872666ms)
+✖ 待确认编辑被拦下时关闭弹窗、保留草稿，并给出具体原因 (62.471375ms)
+✔ 超出激活预算时同样关闭并登记通知，不写入运行配置 (64.035084ms)
+✔ 在预览里先启停再确认，第一次就能保存且写入的就是刚才那次改动 (120.297541ms)
+✔ 打开后改回原样再确认，按没有未保存修改拦下 (113.592459ms)
+✔ 弹窗正文不再含内联错误块，失败原因只走通知 (31.924875ms)
+✖ 只改Key直接点保存：离线不重新选模型，冻结凭据引用且明文不进入预览或记录 (28.619834ms)
+✖ 空输入保持原值；明确清空可直接保存，重开为空，不需要清单接口成功 (48.3545ms)
+✖ Key草稿在失败时不改已保存值，还原修改与还原连接均回到原Key (27.399916ms)
+✔ 新渠道加入时Key仅进入内存草稿，页级保存前不改已保存快照，丢弃可全部还原 (103.654333ms)
+✔ 模型保存事件注册到共享任务与通知中心 (0.83725ms)
+✔ 保存确认被拦下登记独立通知，且不接收业务内容 (1.734667ms)
+✔ 模型页移除独立进度卡，保存状态只经通知宿主桥接 (1.754458ms)
+✔ 文件保存仅备份与原子写入，不调用真实网络/CLI/文件，不读取旧计划准入或提供保存后核对动作 (2.377375ms)
+✔ 共享任务卡支持收起到铃铛和模型保存动作 (1.107625ms)
+✔ 确认保存后仅原 notifHost 一次已写入反馈，默认焦点立即重启；稍后清掉字符串通知ID与计时器 (8167.047917ms)
+✔ 收起仅入现有铃铛，打开铃铛不铺开任务，点对应通知才恢复；重启复用共享确认弹窗 (8617.191625ms)
+✔ 旧 success / confirmed / pending 仅保留完成历史，不产生提示；清理沿用 openModal 并清除任务 (7810.777334ms)
+✔ 终态8秒自动收起后仅从铃铛查看，重渲染不重复提示 (13952.303625ms)
+✖ Key 默认掩码 / 眼睛 / 离线只改Key保存 / 重开 / 空输入保持 / 明确清空；明文不进公开状态或记录 (6456.442833ms)
+✔ 保存是唯一入口：先打开保存预览，列表与详情都不再有独立预览按钮 (74.472958ms)
+✔ 预览固定当前草稿，展示全部可选型号与不随启停变化的 Fast 文字标记 (73.207375ms)
+✔ 点击渠道停用隐藏整组模型并保留恢复入口，再次点击恢复原选择和顺序 (108.880042ms)
+✔ 点击型号启停进入当前草稿，停用标签保留恢复；关闭弹窗不丢失，保存失败仍保留草稿 (156.514291ms)
+✔ 原生渠道与系统占用只读，快速启停不绕过保存门禁 (103.237459ms)
+✔ 历史成功不恢复待重启提示，预览不改草稿 (59.234875ms)
+✔ 服务节点取代协议端点，模型无地址选择，所有协议共用同一节点 (70.529667ms)
+✔ 新增节点只有名称与URL，取消不写，加入草稿不复制认证或模型 (68.752209ms)
+✖ 手动切换进入草稿，保存前Agent仍用原配置；差异列出地址且保存后保留节点列表 (65.488416ms)
+✔ 编辑当前节点URL保留身份、认证、选择和规则，过期节点编辑拒绝覆盖 (79.757375ms)
+✔ 节点URL拒绝重复、带凭据和生成接口；名称与地址错误不改变配置 (52.051958ms)
+✔ 当前节点与最后一条不可删除，非当前删除可取消；旧删除确认失效 (57.465791ms)
+✖ 未确认认证与保存中锁定节点修改，晚到的清单结果不会覆盖已切节点 (33.544167ms)
+✖ 返回不保存，全部草稿丢弃还原节点，保存记录恢复先生成旧节点草稿 (146.886709ms)
+✔ 新增渠道的BaseURL只创建一条默认节点，后续认证编辑不重复创建或改节点 (40.523417ms)
+✔ 同Key无额度状态不会因新增或切换URL节点被解除 (46.715875ms)
+✔ 列表共用Tab固定栏，测量顶部内距并随高度变化，不改变草稿 / 保存状态 (38.194333ms)
+✔ 模版锚点同时避让Tab和详情标题；窄窗换行 / 导航收起 / 重绘保留编辑 (29.39275ms)
+✔ 渠道详情使用同一两层偏移，侧栏可用高度随Tab换行更新且未确认输入保持 (39.820458ms)
+✔ 列表状态进入Tab右侧，核心控件按状态/还原/保存排列，预览不再单独占位 (21.071042ms)
+✔ 有修改时列表保存主色强调，超限保持强调提示但禁止写入 (77.585166ms)
+✖ 待确认编辑在顶部显示，历史成功不生成待重启，未确认输入禁用保存，详情仍用侧栏 (35.032ms)
+✔ 七种状态有样式示例标签，保存中显示进行中状态且固定栏更新不改变冻结快照 (77.319416ms)
+✔ 复制模版直接显示，点击以当前内容建立独立新模版缓冲，不保留单项更多菜单 (35.090208ms)
+✔ 版本与历史可比较编辑内容，变更版本动作禁用；比较基准可切且不改草稿 (19.126292ms)
+✔ 无变化返回直接清除编辑缓冲，已保存版本与采用配置保持 (31.447166ms)
+✔ 有修改返回可继续编辑或一轮差异确认保存并返回，保存不自动采用 (28.390458ms)
+✔ 放弃只撤销当前未保存编辑，新建放弃不入库，已保存的新版本仍保留 (32.935583ms)
+✔ 返回确认打开后又编辑使旧保存与放弃过期，不丢新输入 (20.999375ms)
+✔ 放弃正在生成的编辑后，晚返回不复活缓冲或创建版本 (26.344ms)
+✔ 兼容回传保留缺关联校验，不能跳任务创建或写入 (14.99375ms)
+✔ 首次导入可关联任务包，校验与比较后仅新增候选；无效或过期关联不替换原任务 (39.964333ms)
+✔ 同一弹窗内完整任务一次复制，不变更候选/采用，不显示会话任务队列 (22.678416ms)
+✔ 单一版本列与直接管理/匹配入口；选择不导航、不改变库/默认/已采用策略 (49.488375ms)
+✔ 列表复制使用所选保存版本，源编辑缓冲不串入副本且原库不变 (27.221375ms)
+✔ 匹配与使用严格按所选版本，区分已保存引用与未保存草稿，匹配不等于采用 (36.668375ms)
+✔ 合并预览只读，不修改库/策略且不跳详情 (39.365291ms)
+✔ 版本管理只提供三类动作，查看/编辑与设默认分别改变编辑对象和默认指针 (47.460333ms)
+✔ 管理删除只移除未引用单版，返回管理；旧确认遇到新编辑拒绝 (30.123291ms)
+✔ 已有未保存编辑时锁定版本，管理不丢草稿且变更动作禁用 (30.672417ms)
+✔ 所选版本匹配规则与摘要一致，零命中新版不误用默认规则 (43.148125ms)
+✔ 自建最后一版可明确删除，删除后模版退出且不影响其他模版 (41.157375ms)
+✔ 来源明确区分内置和自建，系统初始基线无论换默认仍始终保护 (51.296208ms)
+✔ 修改默认内置版本只产生用户新版本，原正文/默认/采用不变；复制不继承基线保护 (56.351709ms)
+✔ 同模型族可以独立共存，保存复制不覆盖内置或采用；重叠采用仍阻止运行保存 (84.894208ms)
+✔ 内置与自建模版全部展示，菜单无隐藏和恢复，内置不可整条删除 (52.289958ms)
+✔ 下拉最近5加当前/默认，管理查看版本打开编辑但不改默认/策略 (44.734667ms)
+✔ 很多版本仍不自动删除，保存和Agent更新保留历史且不展示独立清理 (61.985333ms)
+✔ 批量删除只处理明确勾选版本，取消保持，确认整个名单后返回管理 (90.076417ms)
+✔ 旧保留/归档/清理事件失效，自动保护不靠手动标记 (25.612875ms)
+✔ 全选只勾可删除版本，已采用/草稿/恢复/默认版本自动跳过 (88.260208ms)
+✔ 自建最后一批无引用版本可删除，默认和外部引用仍阻止 (34.313166ms)
+✔ 删除后不复用内部版本序号，同秒完整版本身份仍独立 (27.354792ms)
+✔ 搜索不丢搜索外勾选；旧删除确认遇到依赖变化整批拒绝 (59.937166ms)
+✔ 外部新建始终是自建来源，不能借导入字段伪造内置基线保护 (27.244666ms)
+✔ 新建按钮只有保存，不再重复状态；标题列出新建状态并提供8种状态注释 (24.287041ms)
+✔ 进入编辑但无变化为未修改；输入、还原和非法字段即时刷新标题状态 (21.290083ms)
+✔ 新模版先未保存，提交非法内容后红色提示；修正后回到可保存的新建状态 (16.913042ms)
+✔ 保存生成独立版本但不采用，状态蓝色；候选与旧规则均保留 (20.128959ms)
+✔ 已采用待确认橙色，用户实际确认后绿色，换用其他版后历史确认中性保留 (95.908708ms)
+✔ 示例版本摘要来自实际相邻差异，选版本同步摘要且不再假装候选状态 (27.144084ms)
+✔ 字段摘要区分设置/调整/恢复继承，保留字段前后事实和来源身份 (0.614042ms)
+✔ 对象键/集合排列变化不虚构修改，渠道范围all的非参与清单也不产生变化 (0.118916ms)
+✔ 型号按稳定ID比较增删/字段/顺序，摘要数量基于实际差异，不是建议条数 (0.338125ms)
+✔ 首次/复制/内置基线按事实说明，来源缺失不猜候选或初始，无变化为明确空差异 (0.202375ms)
+✔ 人工保存冻结具体摘要，多项简短展示和完整记录一致，换默认与查看版本不改摘要 (38.319458ms)
+✔ Agent更新摘要比较最终内容与已保存基准，计入原人工编辑和实际接受的型号 (29.853166ms)
+✔ 外部修订生成实际变化摘要，无变化结果不新增版本，也不相信调用方摘要字段 (60.433083ms)
+✔ 复制首版有复制来源与实际改动事实，删掉普通来源后新摘要仍可解释 (32.791417ms)
+✔ 同秒版本有不同完整 ID 与短标识；北京时间固定，短标识冲突扩展 (1.88775ms)
+✔ 更新新增型号默认可选，人工默认值不被静默替换；接受后原输入不变 (0.23075ms)
+✔ 恢复按稳定模型 ID 合并：撤回引用，保留后续别名、其他模型和草稿冲突 (0.265458ms)
+✔ 总原型按依赖顺序加载两个模块；17 族初始版本使用时间标签 (23.5985ms)
+✔ 无需勾选即可在列表点击检查全部更新，自动检查17族并打开差异，旧配置不变 (48.923375ms)
+✔ 首次全部更新先配置执行模型，保存设置后自动继续；取消不会后来偷偷启动 (35.332125ms)
+✔ 列表所选入口一次点击只检查勾选项，不跳走或扩大为全部 (22.604417ms)
+✔ 当前更新经差异确认保存新版本；不改主指针与渠道引用；保留旧版内容 (41.95025ms)
+✔ 再次检查当前已更新版本，无变化不会新增；取消差异不保存 (28.778917ms)
+✔ 检查期间人工编辑使保存过期，旧结果不覆盖当前缓冲 (18.079584ms)
+✔ 检索失败、停止和场景切换使晚回无效，库与引用保留 (33.454917ms)
+✔ 批量每模版独立版本并登记同一批次，主指针不切换 (26.406375ms)
+✔ 采用新版本再保存，恢复到旧引用；后续人工别名与新版记录保留 (149.8825ms)
+✔ 确认可用要求实际采用及核对；确认快照可找回，受依赖保护不能删除 (32.371791ms)
+✔ 批量所选中的第二个模版校验失败时，第一个有效模版也不保存 (28.656541ms)
+✔ 差异组仅选择非冲突项；人工字段需单独明确勾选才替换 (33.769833ms)
+✔ 更新详情为只读第二层，关闭后保留选择和父差异页 (18.531042ms)
+✔ 人工保存与外部 Agent 保存也生成时间版本，主指针不自动变更 (32.45375ms)
+✔ 恢复预览后编辑导致确认过期，不覆盖新草稿 (70.610042ms)
+✔ 列表工具栏与软件一致：读取现有渠道在新增渠道之前，详情不重复出现 (43.13575ms)
+✔ 读取中禁用入口并提示，读取完成后显示来源但不动草稿与已选 (72.82525ms)
+✔ 读取不建立未保存修改，仍可直接打开保存核对且确认禁用 (40.264542ms)
+✔ 读取失败 / 无权限 / 无接口只提示，不写来源也不改草稿 (124.261375ms)
+✔ 保存弹窗不再出现操作说明句，说明只留在原型标签 (46.215833ms)
+✔ 保存前直接标在渠道与型号上：渠道“改”标记、型号新增 / 停用标记，不再单列变更清单 (46.872792ms)
+✔ 共享弹窗不再向正文添加原型脚注或注释占位，说明只走共享注释参数 (2.638625ms)
+✔ 所有原型CSS禁止标记改回static/relative，专用宿主不参与布局 (5.384584ms)
+✖ 原型版本使用版本+协作包名，导航排其后，切换范围保持原行为 (4464.659583ms)
+✔ 选项名称对应真实协作包标题，原生控件和增强外层共用满宽配方 (5.160458ms)
+✔ 六类页面主Tab注册，概览面板排除；背景边缘补偿和高度偏移不改其他状态 (2.121958ms)
+✔ 动态重绘替换Tab、隐藏页重新进入和窗口变化均更新，不保留离线节点 (11.04325ms)
+✔ 同步保留内部滚动，不改主容器；对话导航消费同一Tab高度与顶部偏移 (0.640375ms)
+✔ 未到顶不铺底色，到达吸附线才标记吸顶，回滚后取消 (0.57175ms)
+✔ 吸顶材质过渡用跟手时长，不再沿用常规 180ms (1.062917ms)
+✔ 普通导出冻结当前已保存渠道文件内容，未保存修改不混入；只有保存确认更新基准 (9149.874625ms)
+✔ 只有显式 draft 来源导出内存渠道；预览后继续编辑不改冻结内容，下一次普通导出仍用 saved (4184.384542ms)
+✔ 仅存在草稿的新渠道可显式导出，普通已保存来源不把它列为可导出对象 (5646.539042ms)
+✔ 文件保护可选：带渠道凭据的明文导出保留选择，既有确认后完成，不弹第二次确认 (4015.067667ms)
+✔ 选用文件加密时仍校验口令，两次一致才完成；口令不进入导出状态 (3583.007ms)
+✔ 取消导出不保存渠道，也不替换上一份导出快照 (4056.648625ms)
+✔ 模版导出只取已保存版本；模版缓冲、保存新版本与渠道草稿/文件保存相互独立 (4931.026167ms)
+✔ keyless 实际导入 → 当前内存草稿 → 原保存预览确认 → mock 已保存文件 (11520.654208ms)
+✔ encrypted 实际导入 → 当前内存草稿 → 原保存预览确认 → mock 已保存文件 (12570.197208ms)
+✔ WebDAV 采用远端渠道真实进入当前草稿，保存确认前不改文件；保留本机/跳过不采用 (10593.025375ms)
+✖ connection 未确认输入受到保护，采用失败不改草稿/文件/模版；处理输入后可重新采用 (5387.391417ms)
+✔ row 未确认输入受到保护，采用失败不改草稿/文件/模版；处理输入后可重新采用 (7431.881292ms)
+✔ alias 未确认输入受到保护，采用失败不改草稿/文件/模版；处理输入后可重新采用 (6675.381ms)
+✔ 已加入草稿的重叠字段保留，比较期间的新修改使旧应用过期 (5063.954209ms)
+✔ 未确认的无关渠道输入及草稿保留；模版单独接纳不自动采用渠道 (7028.882084ms)
+✔ 身份映射 new 新增渠道只进入草稿，不复用本机 Key (4676.463667ms)
+✔ 身份映射 rebind 新增渠道只进入草稿，不复用本机 Key (3341.125708ms)
+✔ backup-fail 应用失败不先暂存渠道或模版版本，保留原内存与文件 (3219.28ms)
+✔ partial 应用失败不先暂存渠道或模版版本，保留原内存与文件 (2752.198416ms)
+✔ 保存失败保留已导入草稿与原文件，可通过原保存确认重试 (7006.596542ms)
+✔ 桥接只接受固定 fixture；未知渠道、重复身份、缺精确依赖及保存忙碌态均不写状态 (3348.874542ms)
+✔ 重复接纳模版不重复新增版本，人工模版缓冲保留且不触发渠道采用 (5718.608167ms)
+✔ 非渠道范围仍可比较应用；未选择或损坏文件不创建渠道候选，不影响模型状态 (3664.276083ms)
+✔ 同步原型保持 mock 边界，不增加系统确认、真实网络、文件或宿主命令调用 (0.641ms)
+✔ 按用户级 provider 隔离草稿与保存，保存后仍待重启 (0.873833ms)
+✔ 重启只采用已保存配置，不提交其它草稿，不生成实际传输观察 (0.314583ms)
+✔ 保存失败与还原保留既有保存态，超时只接受非负整数或空值 (1.060833ms)
+✔ 本地偏好统一编译两个字段，直连不改代理入口，跟随默认清除显式覆盖 (0.189708ms)
+✔ 握手与保存重启不冒充请求观察，未知默认不猜成开启 (0.193208ms)
+✔ 观察区分入口与上游，严格绑定对话，清空与重启不沿用旧结果 (0.105958ms)
+✔ Link 即使偏好 WebSocket 也只声明 HTTP，开启状态不推导实际上游 (0.157709ms)
+✔ 仅HTTP阻止WebSocket示例，快照修改不污染内部已保存配置 (0.100125ms)
+✔ 父级折叠隐藏所有后代；再次展开保留孙级独立状态 (0.653042ms)
+✔ 损坏目录关系明确拒绝，不无限遍历或静默重复 (0.392125ms)
+✔ 名称与展开标签转义；表格和网格共用选择、箭头、图标、文字结构 (0.503416ms)
+ℹ tests 329
+ℹ suites 0
+ℹ pass 308
+ℹ fail 21
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 136420.166833
+
+✖ failing tests:
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:8:1
+✖ 详情状态在标题，保存只显示保存；列表移除历史和更多，直接提供还原 (55.998541ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /data-save-scope="all-channels"/. Input:
+  
+  '<div id="mpTabsBar" class="mp-toolbar mp-tabs-bar" data-page-tabs><div class="settings-tabs" role="tablist" aria-label="模型配置分区"><button role="tab" aria-selected="true" class="active" data-mp="tab" data-tab="channels">渠道模型</button><button role="tab" aria-selected="false" class="" data-mp="tab" data-tab="templates">模型模版</button></div><div class="proto-annotation" id="ann-mp-01" data-annotation-number="01" data-annotation-title="渠道与模版均为内存演示" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：渠道与模版均为内存演示"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>Tab 栏滚至主内容区顶部后固定，详情标题固定在其下，分区锚点避让两层高度。模版名称表达模型族或自定义用途，不自动附协议；渠道列表和标题只展示名称、节点、数量和状态，不用渠道默认协议概括全部模型。协议在配置字段及具体模型解析中查看，模版通用或具体型号可定义、单模型可覆盖。渠道顺序、白名单与模版策略全部是内存示例；保存、生成与同步仅演示状态与提示，重启与写入真实配置不在原型内发生。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div></div><header id="mpChannelHeader" class="mp-editor-head"><button class="icon-btn" data-mp="back-channels" title="返回渠道列表" aria-label="返回渠道列表" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><div class="mp-editor-heading"><h2>NewApi</h2><div class="mp-template-heading-meta"><div id="mpChannelHeadingStatus" class="mp-template-heading-status" role="status"><span class="mp-template-state neutral" data-channel-state="clean" data-status-scope="current-channel" title="当前渠道的保存状态" >未修改</span><span class="mp-template-state success" data-channel-enabled="true">已启用</span><span class="mp-template-state neutral" data-channel-availability="unknown">未验证</span><span class="mp-template-state-context">已选 17 / 发现 30</span></div><div class="proto-annotation" id="ann-mp-05" data-annotation-number="05" data-annotation-title="渠道状态与保存范围" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 05：渠道状态与保存范围"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">05</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>标题分开显示当前渠道保存状态、当前渠道启停、连接状态和清单获取状态，沿用模版详情的彩色标记。<br>保存状态：未修改（中性）；未保存修改 / 有待确认编辑（橙色）；超出激活预算 / 保存失败（红色）；正在保存（蓝色）；保存已取消（中性）。成功保存不留下待重启状态。<br>启用与连接检查通过为绿色，停用 / 未验证 / 官方管理为中性，无额度为橙色，认证或连接失败为红色。连接检查通过不等于客户端已加载。<br>详情保存只提交当前渠道，成功返回列表，不弹完整预览；其它渠道编辑、全局顺序与全局采用保留未保存。只有本渠道的未确认型号编辑和实际提交后的预算 / 校验错误会阻止本次保存。列表保存继续预览全部剩余修改。返回只退出详情，不写入配置，内存编辑保留。撤销 / 重做入口已移除；需要还原草稿时返回渠道列表，点击顶部“还原修改”并确认全部范围。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div></div></div><select class="mp-select" data-current aria-label="当前渠道"><option value="newapi" selected>NewApi</option><option value="a6api" >A6api</option><option value="aimami" >Aimami</option><option value="native" >官方 / 原生</option><option value="scroll-demo-01" >示例渠道 01</option><option value="scroll-demo-02" >示例渠道 02</option><option value="scroll-demo-03" >示例渠道 03</option><option value="scroll-demo-04" >示例渠道 04</option><option value="scroll-demo-05" >示例渠道 05</option><option value="scroll-demo-06" >示例渠道 06</option><option value="scroll-demo-07" >示例渠道 07</option><option value="scroll-demo-08" >示例渠道 08</option><option value="scroll-demo-09" >示例渠道 09</option><option value="scroll-demo-10" >示例渠道 10</option><option value="scroll-demo-11" >示例渠道 11</option><option value="scroll-demo-12" >示例渠道 12</option><option value="scroll-demo-13" >示例渠道 13</option><option value="scroll-demo-14" >示例渠道 14</option><option value="scroll-demo-15" >示例渠道 15</option><option value="scroll-demo-16" >示例渠道 16</option></select></header><div id="mpChannelWorkspace" class="mp-channel-workspace "><nav class="mp-template-nav mp-channel-nav" aria-label="渠道管理分区"><button class="btn ghost" data-mp="toggle-channel-nav" id="mpChannelNavToggle" title="收起渠道导航" aria-label="收起渠道导航" aria-expanded="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><button class="mp-nav-item" data-mp="channel-section" data-id="connection" title="渠道配置" aria-controls="mpChannelSection-connection" aria-current="location"><span>01</span><span class="mp-nav-label">渠道配置</span></button><button class="mp-nav-item" data-mp="channel-section" data-id="nodes" title="服务节点" aria-controls="mpChannelSection-nodes" aria-current="false"><span>02</span><span class="mp-nav-label">服务节点</span></button><button class="mp-nav-item" data-mp="channel-section" data-id="defaults" title="模型默认" aria-controls="mpChannelSection-defaults" aria-current="false"><span>03</span><span class="mp-nav-label">模型默认</span></button><button class="mp-nav-item" data-mp="channel-section" data-id="models" title="模型列表" aria-controls="mpChannelSection-models" aria-current="false"><span>04</span><span class="mp-nav-label">模型列表</span></button><div id="mpPolicyStatus" class="mp-channel-status"><div class="mp-channel-save-controls"><button id="mpPolicySave" class="btn primary mp-nav-action mp-template-save" data-mp="save" title="保存当前渠道，成功后返回渠道列表；其它渠道修改保留" aria-label="保存" data-save-scope="current-channel" data-save-gated="true" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M5 3h12l4 4v14H3V3h2ZM7 3v6h10V3M7 21v-7h10v7"/></svg><span class="mp-nav-action-label">保存</span></button></div></div></nav><div class="mp-channel-content"><section id="mpChannelSection-connection" class="mp-template-section" data-channel-section="connection" aria-label="渠道配置"><h3>渠道配置</h3><div class="mp-channel-form"><label>渠道名称<input id="mpChannelInline-name" class="input" data-channel-config="name" value="NewApi" maxlength="80" ></label><label>渠道标识<input class="input" value="newapi" readonly aria-label="渠道标识"><span class="mp-muted">标识固定，名称可修改。</span></label><label>默认接口协议<select id="mpChannelInline-protocol" class="mp-select" data-channel-config="protocol" ><option value="Responses" selected>openai-responses</option><option value="Chat" >openai-chat</option><option value="Anthropic" >anthropic</option><option value="Google" >google</option><option value="Ollama" >ollama-native</option><optgroup label="专用适配器 · 需专用连接配置"><option disabled>codebuddy · 专用连接待接入</option><option disabled>command-code · 专用连接待接入</option><option disabled>kiro · 专用连接待接入</option><option disabled>azure · 专用连接待接入</option><option disabled>azure-openai · 专用连接待接入</option><option disabled>cursor · 专用连接待接入</option><option disabled>devin · 专用连接待接入</option><option disabled>mimo-free · 专用连接待接入</option><option disabled>qoder · 专用连接待接入</option><option disabled>claude-cli · 专用连接待接入</option></optgroup></select></label><label>认证方式<select id="mpChannelInline-auth" class="mp-select" data-channel-config="auth" ><option value="apikey" selected>API Key</option><option value="none" >无需认证</option></select></label><div class="mp-channel-key"><label for="mpChannelInline-key">API Key</label><div class="mp-key-input"><input id="mpChannelInline-key" class="input" data-channel-config="key" type="password" autocomplete="off" spellcheck="false" aria-label="API Key" value="demo-newapi-key" ><button class="icon-btn" data-mp="toggle-channel-key" title="显示 Key" aria-label="显示 Key" aria-controls="mpChannelInline-key" aria-pressed="false" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="btn ghost" data-mp="clear-channel-key" >清空 Key</button></div><span id="mpChannelKeyStatus" class="mp-muted">保持原 Key</span></div></div><p class="mp-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。</p><div class="proto-annotation" id="ann-mp-09" data-annotation-number="09" data-annotation-title="连接编辑与当前渠道保存" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 09：连接编辑与当前渠道保存"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">09</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>名称、协议、认证与 Key 直接进入当前内存编辑；不再另点确认连接或加入草稿，获取模型列表在模型列表，连接检测在服务节点。详情保存只模拟写入当前渠道，成功返回列表，不弹完整保存预览；其它渠道修改保留。列表保存仍预览全部剩余修改。已有 Key 默认掩码，眼睛仅切换当前编辑器；空输入保留原值，明确清空才删除。全部为私有内存 mock，不读写真实文件、设置或网络。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div><div data-transport-context="channel" data-transport-channel="newapi"></div></section><section id="mpChannelSection-nodes" class="mp-template-section" data-channel-section="nodes" aria-label="服务节点"><div class="mp-toolbar"><h3>服务节点</h3><div class="mp-actions"><button class="btn ghost" data-mp="node-speed-all" data-channel="newapi" data-speed-control="all" aria-label="NewApi · 全部节点测速" >一键测速</button><button class="btn ghost" data-mp="add-node" >新增节点</button></div></div><p class="mp-muted">所有节点共用渠道认证与 API Key；模型统一使用当前节点。</p><div id="mpNodeSpeedSummary-newapi" role="status"></div><div class="mp-service-node-row"><div><strong>默认节点 <span class="mp-template-state info">当前使用</span></strong><small>https://newapi.example.com/v1</small><div id="mpNodeSpeed-newapi-primary" role="status"><span class="mp-node-speed neutral" data-speed-status="untested" title="接口响应耗时">未测速</span></div></div><div class="mp-actions"><button class="btn ghost" data-mp="node-speed-one" data-channel="newapi" data-id="primary" data-speed-control="one" aria-label="NewApi · 默认节点测速" >测速</button><button class="btn ghost" data-mp="edit-node" data-id="primary" >编辑</button><button class="btn danger" data-mp="delete-node" data-id="primary" disabled>删除</butt'... 52362 more characters
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:10:265)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<div id="mpTabsBar" class="mp-toolbar mp-tabs-bar" data-page-tabs><div class="settings-tabs" role="tablist" aria-label="模型配置分区"><button role="tab" aria-selected="true" class="active" data-mp="tab" data-tab="channels">渠道模型</button><button role="tab" aria-selected="false" class="" data-mp="tab" data-tab="templates">模型模版</button></div><div class="proto-annotation" id="ann-mp-01" data-annotation-number="01" data-annotation-title="渠道与模版均为内存演示" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：渠道与模版均为内存演示"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>Tab 栏滚至主内容区顶部后固定，详情标题固定在其下，分区锚点避让两层高度。模版名称表达模型族或自定义用途，不自动附协议；渠道列表和标题只展示名称、节点、数量和状态，不用渠道默认协议概括全部模型。协议在配置字段及具体模型解析中查看，模版通用或具体型号可定义、单模型可覆盖。渠道顺序、白名单与模版策略全部是内存示例；保存、生成与同步仅演示状态与提示，重启与写入真实配置不在原型内发生。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div></div><header id="mpChannelHeader" class="mp-editor-head"><button class="icon-btn" data-mp="back-channels" title="返回渠道列表" aria-label="返回渠道列表" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><div class="mp-editor-heading"><h2>NewApi</h2><div class="mp-template-heading-meta"><div id="mpChannelHeadingStatus" class="mp-template-heading-status" role="status"><span class="mp-template-state neutral" data-channel-state="clean" data-status-scope="current-channel" title="当前渠道的保存状态" >未修改</span><span class="mp-template-state success" data-channel-enabled="true">已启用</span><span class="mp-template-state neutral" data-channel-availability="unknown">未验证</span><span class="mp-template-state-context">已选 17 / 发现 30</span></div><div class="proto-annotation" id="ann-mp-05" data-annotation-number="05" data-annotation-title="渠道状态与保存范围" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 05：渠道状态与保存范围"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">05</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>标题分开显示当前渠道保存状态、当前渠道启停、连接状态和清单获取状态，沿用模版详情的彩色标记。<br>保存状态：未修改（中性）；未保存修改 / 有待确认编辑（橙色）；超出激活预算 / 保存失败（红色）；正在保存（蓝色）；保存已取消（中性）。成功保存不留下待重启状态。<br>启用与连接检查通过为绿色，停用 / 未验证 / 官方管理为中性，无额度为橙色，认证或连接失败为红色。连接检查通过不等于客户端已加载。<br>详情保存只提交当前渠道，成功返回列表，不弹完整预览；其它渠道编辑、全局顺序与全局采用保留未保存。只有本渠道的未确认型号编辑和实际提交后的预算 / 校验错误会阻止本次保存。列表保存继续预览全部剩余修改。返回只退出详情，不写入配置，内存编辑保留。撤销 / 重做入口已移除；需要还原草稿时返回渠道列表，点击顶部“还原修改”并确认全部范围。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div></div></div><select class="mp-select" data-current aria-label="当前渠道"><option value="newapi" selected>NewApi</option><option value="a6api" >A6api</option><option value="aimami" >Aimami</option><option value="native" >官方 / 原生</option><option value="scroll-demo-01" >示例渠道 01</option><option value="scroll-demo-02" >示例渠道 02</option><option value="scroll-demo-03" >示例渠道 03</option><option value="scroll-demo-04" >示例渠道 04</option><option value="scroll-demo-05" >示例渠道 05</option><option value="scroll-demo-06" >示例渠道 06</option><option value="scroll-demo-07" >示例渠道 07</option><option value="scroll-demo-08" >示例渠道 08</option><option value="scroll-demo-09" >示例渠道 09</option><option value="scroll-demo-10" >示例渠道 10</option><option value="scroll-demo-11" >示例渠道 11</option><option value="scroll-demo-12" >示例渠道 12</option><option value="scroll-demo-13" >示例渠道 13</option><option value="scroll-demo-14" >示例渠道 14</option><option value="scroll-demo-15" >示例渠道 15</option><option value="scroll-demo-16" >示例渠道 16</option></select></header><div id="mpChannelWorkspace" class="mp-channel-workspace "><nav class="mp-template-nav mp-channel-nav" aria-label="渠道管理分区"><button class="btn ghost" data-mp="toggle-channel-nav" id="mpChannelNavToggle" title="收起渠道导航" aria-label="收起渠道导航" aria-expanded="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><button class="mp-nav-item" data-mp="channel-section" data-id="connection" title="渠道配置" aria-controls="mpChannelSection-connection" aria-current="location"><span>01</span><span class="mp-nav-label">渠道配置</span></button><button class="mp-nav-item" data-mp="channel-section" data-id="nodes" title="服务节点" aria-controls="mpChannelSection-nodes" aria-current="false"><span>02</span><span class="mp-nav-label">服务节点</span></button><button class="mp-nav-item" data-mp="channel-section" data-id="defaults" title="模型默认" aria-controls="mpChannelSection-defaults" aria-current="false"><span>03</span><span class="mp-nav-label">模型默认</span></button><button class="mp-nav-item" data-mp="channel-section" data-id="models" title="模型列表" aria-controls="mpChannelSection-models" aria-current="false"><span>04</span><span class="mp-nav-label">模型列表</span></button><div id="mpPolicyStatus" class="mp-channel-status"><div class="mp-channel-save-controls"><button id="mpPolicySave" class="btn primary mp-nav-action mp-template-save" data-mp="save" title="保存当前渠道，成功后返回渠道列表；其它渠道修改保留" aria-label="保存" data-save-scope="current-channel" data-save-gated="true" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M5 3h12l4 4v14H3V3h2ZM7 3v6h10V3M7 21v-7h10v7"/></svg><span class="mp-nav-action-label">保存</span></button></div></div></nav><div class="mp-channel-content"><section id="mpChannelSection-connection" class="mp-template-section" data-channel-section="connection" aria-label="渠道配置"><h3>渠道配置</h3><div class="mp-channel-form"><label>渠道名称<input id="mpChannelInline-name" class="input" data-channel-config="name" value="NewApi" maxlength="80" ></label><label>渠道标识<input class="input" value="newapi" readonly aria-label="渠道标识"><span class="mp-muted">标识固定，名称可修改。</span></label><label>默认接口协议<select id="mpChannelInline-protocol" class="mp-select" data-channel-config="protocol" ><option value="Responses" selected>openai-responses</option><option value="Chat" >openai-chat</option><option value="Anthropic" >anthropic</option><option value="Google" >google</option><option value="Ollama" >ollama-native</option><optgroup label="专用适配器 · 需专用连接配置"><option disabled>codebuddy · 专用连接待接入</option><option disabled>command-code · 专用连接待接入</option><option disabled>kiro · 专用连接待接入</option><option disabled>azure · 专用连接待接入</option><option disabled>azure-openai · 专用连接待接入</option><option disabled>cursor · 专用连接待接入</option><option disabled>devin · 专用连接待接入</option><option disabled>mimo-free · 专用连接待接入</option><option disabled>qoder · 专用连接待接入</option><option disabled>claude-cli · 专用连接待接入</option></optgroup></select></label><label>认证方式<select id="mpChannelInline-auth" class="mp-select" data-channel-config="auth" ><option value="apikey" selected>API Key</option><option value="none" >无需认证</option></select></label><div class="mp-channel-key"><label for="mpChannelInline-key">API Key</label><div class="mp-key-input"><input id="mpChannelInline-key" class="input" data-channel-config="key" type="password" autocomplete="off" spellcheck="false" aria-label="API Key" value="demo-newapi-key" ><button class="icon-btn" data-mp="toggle-channel-key" title="显示 Key" aria-label="显示 Key" aria-controls="mpChannelInline-key" aria-pressed="false" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="btn ghost" data-mp="clear-channel-key" >清空 Key</button></div><span id="mpChannelKeyStatus" class="mp-muted">保持原 Key</span></div></div><p class="mp-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。</p><div class="proto-annotation" id="ann-mp-09" data-annotation-number="09" data-annotation-title="连接编辑与当前渠道保存" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 09：连接编辑与当前渠道保存"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">09</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>名称、协议、认证与 Key 直接进入当前内存编辑；不再另点确认连接或加入草稿，获取模型列表在模型列表，连接检测在服务节点。详情保存只模拟写入当前渠道，成功返回列表，不弹完整保存预览；其它渠道修改保留。列表保存仍预览全部剩余修改。已有 Key 默认掩码，眼睛仅切换当前编辑器；空输入保留原值，明确清空才删除。全部为私有内存 mock，不读写真实文件、设置或网络。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div><div data-transport-context="channel" data-transport-channel="newapi"></div></section><section id="mpChannelSection-nodes" class="mp-template-section" data-channel-section="nodes" aria-label="服务节点"><div class="mp-toolbar"><h3>服务节点</h3><div class="mp-actions"><button class="btn ghost" data-mp="node-speed-all" data-channel="newapi" data-speed-control="all" aria-label="NewApi · 全部节点测速" >一键测速</button><button class="btn ghost" data-mp="add-node" >新增节点</button></div></div><p class="mp-muted">所有节点共用渠道认证与 API Key；模型统一使用当前节点。</p><div id="mpNodeSpeedSummary-newapi" role="status"></div><div class="mp-service-node-row"><div><strong>默认节点 <span class="mp-template-state info">当前使用</span></strong><small>https://newapi.example.com/v1</small><div id="mpNodeSpeed-newapi-primary" role="status"><span class="mp-node-speed neutral" data-speed-status="untested" title="接口响应耗时">未测速</span></div></div><div class="mp-actions"><button class="btn ghost" data-mp="node-speed-one" data-channel="newapi" data-id="primary" data-speed-control="one" aria-label="NewApi · 默认节点测速" >测速</button><button class="btn ghost" data-mp="edit-node" data-id="primary" >编辑</button><button class="btn danger" data-mp="delete-node" data-id="primary" disabled>删除</butt'... 52362 more characters,
+    expected: /data-save-scope="all-channels"/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:17:1
+✖ 跨渠道草稿保留，返回不写入；旧撤销重做事件没有动作，保存差异仍列全部渠道 (57.20675ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /data-status-scope="all-channels"/. Input:
+  
+  '<header id="mpChannelHeader" class="mp-editor-head"><button class="icon-btn" data-mp="back-channels" title="返回渠道列表" aria-label="返回渠道列表" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><div class="mp-editor-heading"><h2>NewApi</h2><div class="mp-template-heading-meta"><div id="mpChannelHeadingStatus" class="mp-template-heading-status" role="status"><span class="mp-template-state warning" data-channel-state="dirty" data-status-scope="current-channel" title="当前渠道的保存状态" >未保存修改</span><span class="mp-template-state success" data-channel-enabled="true">已启用</span><span class="mp-template-state neutral" data-channel-availability="unknown">未验证</span><span class="mp-template-state-context">已选 16 / 发现 30</span></div><div class="proto-annotation" id="ann-mp-05" data-annotation-number="05" data-annotation-title="渠道状态与保存范围" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 05：渠道状态与保存范围"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">05</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>标题分开显示当前渠道保存状态、当前渠道启停、连接状态和清单获取状态，沿用模版详情的彩色标记。<br>保存状态：未修改（中性）；未保存修改 / 有待确认编辑（橙色）；超出激活预算 / 保存失败（红色）；正在保存（蓝色）；保存已取消（中性）。成功保存不留下待重启状态。<br>启用与连接检查通过为绿色，停用 / 未验证 / 官方管理为中性，无额度为橙色，认证或连接失败为红色。连接检查通过不等于客户端已加载。<br>详情保存只提交当前渠道，成功返回列表，不弹完整预览；其它渠道编辑、全局顺序与全局采用保留未保存。只有本渠道的未确认型号编辑和实际提交后的预算 / 校验错误会阻止本次保存。列表保存继续预览全部剩余修改。返回只退出详情，不写入配置，内存编辑保留。撤销 / 重做入口已移除；需要还原草稿时返回渠道列表，点击顶部“还原修改”并确认全部范围。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div></div></div><select class="mp-select" data-current aria-label="当前渠道"><option value="newapi" selected>NewApi</option><option value="a6api" >A6api</option><option value="aimami" >Aimami</option><option value="native" >官方 / 原生</option><option value="scroll-demo-01" >示例渠道 01</option><option value="scroll-demo-02" >示例渠道 02</option><option value="scroll-demo-03" >示例渠道 03</option><option value="scroll-demo-04" >示例渠道 04</option><option value="scroll-demo-05" >示例渠道 05</option><option value="scroll-demo-06" >示例渠道 06</option><option value="scroll-demo-07" >示例渠道 07</option><option value="scroll-demo-08" >示例渠道 08</option><option value="scroll-demo-09" >示例渠道 09</option><option value="scroll-demo-10" >示例渠道 10</option><option value="scroll-demo-11" >示例渠道 11</option><option value="scroll-demo-12" >示例渠道 12</option><option value="scroll-demo-13" >示例渠道 13</option><option value="scroll-demo-14" >示例渠道 14</option><option value="scroll-demo-15" >示例渠道 15</option><option value="scroll-demo-16" >示例渠道 16</option></select></header>'
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:19:72)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<header id="mpChannelHeader" class="mp-editor-head"><button class="icon-btn" data-mp="back-channels" title="返回渠道列表" aria-label="返回渠道列表" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><div class="mp-editor-heading"><h2>NewApi</h2><div class="mp-template-heading-meta"><div id="mpChannelHeadingStatus" class="mp-template-heading-status" role="status"><span class="mp-template-state warning" data-channel-state="dirty" data-status-scope="current-channel" title="当前渠道的保存状态" >未保存修改</span><span class="mp-template-state success" data-channel-enabled="true">已启用</span><span class="mp-template-state neutral" data-channel-availability="unknown">未验证</span><span class="mp-template-state-context">已选 16 / 发现 30</span></div><div class="proto-annotation" id="ann-mp-05" data-annotation-number="05" data-annotation-title="渠道状态与保存范围" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 05：渠道状态与保存范围"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">05</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>标题分开显示当前渠道保存状态、当前渠道启停、连接状态和清单获取状态，沿用模版详情的彩色标记。<br>保存状态：未修改（中性）；未保存修改 / 有待确认编辑（橙色）；超出激活预算 / 保存失败（红色）；正在保存（蓝色）；保存已取消（中性）。成功保存不留下待重启状态。<br>启用与连接检查通过为绿色，停用 / 未验证 / 官方管理为中性，无额度为橙色，认证或连接失败为红色。连接检查通过不等于客户端已加载。<br>详情保存只提交当前渠道，成功返回列表，不弹完整预览；其它渠道编辑、全局顺序与全局采用保留未保存。只有本渠道的未确认型号编辑和实际提交后的预算 / 校验错误会阻止本次保存。列表保存继续预览全部剩余修改。返回只退出详情，不写入配置，内存编辑保留。撤销 / 重做入口已移除；需要还原草稿时返回渠道列表，点击顶部“还原修改”并确认全部范围。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div></div></div><select class="mp-select" data-current aria-label="当前渠道"><option value="newapi" selected>NewApi</option><option value="a6api" >A6api</option><option value="aimami" >Aimami</option><option value="native" >官方 / 原生</option><option value="scroll-demo-01" >示例渠道 01</option><option value="scroll-demo-02" >示例渠道 02</option><option value="scroll-demo-03" >示例渠道 03</option><option value="scroll-demo-04" >示例渠道 04</option><option value="scroll-demo-05" >示例渠道 05</option><option value="scroll-demo-06" >示例渠道 06</option><option value="scroll-demo-07" >示例渠道 07</option><option value="scroll-demo-08" >示例渠道 08</option><option value="scroll-demo-09" >示例渠道 09</option><option value="scroll-demo-10" >示例渠道 10</option><option value="scroll-demo-11" >示例渠道 11</option><option value="scroll-demo-12" >示例渠道 12</option><option value="scroll-demo-13" >示例渠道 13</option><option value="scroll-demo-14" >示例渠道 14</option><option value="scroll-demo-15" >示例渠道 15</option><option value="scroll-demo-16" >示例渠道 16</option></select></header>',
+    expected: /data-status-scope="all-channels"/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:22:1
+✖ 待确认的连接编辑实时更新标题并阻止保存；还原恢复状态，返回不写入也不丢输入 (38.568125ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /warning" data-channel-state="staged"/. Input:
+  
+  '<span class="mp-template-state warning" data-channel-state="dirty" data-status-scope="current-channel" title="当前渠道的保存状态" >未保存修改</span><span class="mp-template-state success" data-channel-enabled="true">已启用</span><span class="mp-template-state neutral" data-channel-availability="unknown">未验证</span><span class="mp-template-state-context">已选 16 / 发现 30</span>'
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:24:156)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<span class="mp-template-state warning" data-channel-state="dirty" data-status-scope="current-channel" title="当前渠道的保存状态" >未保存修改</span><span class="mp-template-state success" data-channel-enabled="true">已启用</span><span class="mp-template-state neutral" data-channel-availability="unknown">未验证</span><span class="mp-template-state-context">已选 16 / 发现 30</span>',
+    expected: /warning" data-channel-state="staged"/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:27:1
+✖ 丢弃确认列全渠道改动与未确认连接，取消保留；确认回成功基线，Agent和模版保留 (93.52025ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /未确认的连接编辑/. Input:
+  
+  '<div class="mp-dialog"><p>将还原全部渠道的未保存修改和未确认编辑，回到最近成功保存的配置。</p><p><strong>受影响范围：</strong>NewApi · newapi；待确认连接名 · aimami</p><div class="mp-changes"><details class="mp-details mp-draft-group" open><summary><div class="proto-tree-cell " style="--tree-level:0"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">NewApi · newapi<span class="mp-badge">2 项变化</span></div></div></summary><div class="mp-change-head"><span>配置项</span><span>已保存</span><span>当前草稿</span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">白名单 / 有效选择</div></div><span><small>已保存</small><details class="mp-change-values"><summary>17 项 · 展开查看</summary><div>1. gpt-5.4\n' +
+    '2. gpt-5.4-mini\n' +
+    '3. gpt-5.3-codex\n' +
+    '4. gpt-5.2\n' +
+    '5. gpt-5.2-codex\n' +
+    '6. gpt-5-mini\n' +
+    '7. claude-opus-4-6\n' +
+    '8. claude-sonnet-4-6\n' +
+    '9. claude-haiku-4-5\n' +
+    '10. gemini-3.1-pro-preview\n' +
+    '11. gemini-3-flash-preview\n' +
+    '12. qwen3-coder\n' +
+    '13. qwen3-max\n' +
+    '14. deepseek-v3.2\n' +
+    '15. deepseek-r1\n' +
+    '16. grok-4\n' +
+    '17. grok-4-fast</div></details></span><span><small>当前草稿</small><details class="mp-change-values"><summary>16 项 · 展开查看</summary><div>1. gpt-5.4-mini\n' +
+    '2. gpt-5.3-codex\n' +
+    '3. gpt-5.2\n' +
+    '4. gpt-5.2-codex\n' +
+    '5. gpt-5-mini\n' +
+    '6. claude-opus-4-6\n' +
+    '7. claude-sonnet-4-6\n' +
+    '8. claude-haiku-4-5\n' +
+    '9. gemini-3.1-pro-preview\n' +
+    '10. gemini-3-flash-preview\n' +
+    '11. qwen3-coder\n' +
+    '12. qwen3-max\n' +
+    '13. deepseek-v3.2\n' +
+    '14. deepseek-r1\n' +
+    '15. grok-4\n' +
+    '16. grok-4-fast</div></details></span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">gpt-5.4 · 启停</div></div><span><small>已保存</small>启用</span><span><small>当前草稿</small>停用</span></div></details><details class="mp-details mp-draft-group" open><summary><div class="proto-tree-cell " style="--tree-level:0"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">待确认连接名 · aimami<span class="mp-badge">3 项变化</span></div></div></summary><div class="mp-change-head"><span>配置项</span><span>已保存</span><span>当前草稿</span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">名称</div></div><span><small>已保存</small>Aimami</span><span><small>当前草稿</small>待确认连接名</span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">白名单 / 有效选择</div></div><span><small>已保存</small><details class="mp-change-values"><summary>8 项 · 展开查看</summary><div>1. gpt-5.4\n' +
+    '2. gpt-5.4-mini\n' +
+    '3. gpt-5.3-codex\n' +
+    '4. gpt-5.2\n' +
+    '5. gpt-5.2-codex\n' +
+    '6. gpt-5-mini\n' +
+    '7. claude-opus-4-6\n' +
+    '8. claude-sonnet-4-6</div></details></span><span><small>当前草稿</small><details class="mp-change-values"><summary>7 项 · 展开查看</summary><div>1. gpt-5.4-mini\n' +
+    '2. gpt-5.3-codex\n' +
+    '3. gpt-5.2\n' +
+    '4. gpt-5.2-codex\n' +
+    '5. gpt-5-mini\n' +
+    '6. claude-opus-4-6\n' +
+    '7. claude-sonnet-4-6</div></details></span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">gpt-5.4 · 启停</div></div><span><small>已保存</small>启用</span><span><small>当前草稿</small>停用</span></div></details></div><p class="mp-muted">已保存配置、模版版本、Agent 执行设置和收到的待审候选保留。</p><div id="mpDiscardError" class="mp-alert" role="alert"></div></div>'
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:29:230)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<div class="mp-dialog"><p>将还原全部渠道的未保存修改和未确认编辑，回到最近成功保存的配置。</p><p><strong>受影响范围：</strong>NewApi · newapi；待确认连接名 · aimami</p><div class="mp-changes"><details class="mp-details mp-draft-group" open><summary><div class="proto-tree-cell " style="--tree-level:0"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">NewApi · newapi<span class="mp-badge">2 项变化</span></div></div></summary><div class="mp-change-head"><span>配置项</span><span>已保存</span><span>当前草稿</span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">白名单 / 有效选择</div></div><span><small>已保存</small><details class="mp-change-values"><summary>17 项 · 展开查看</summary><div>1. gpt-5.4\n2. gpt-5.4-mini\n3. gpt-5.3-codex\n4. gpt-5.2\n5. gpt-5.2-codex\n6. gpt-5-mini\n7. claude-opus-4-6\n8. claude-sonnet-4-6\n9. claude-haiku-4-5\n10. gemini-3.1-pro-preview\n11. gemini-3-flash-preview\n12. qwen3-coder\n13. qwen3-max\n14. deepseek-v3.2\n15. deepseek-r1\n16. grok-4\n17. grok-4-fast</div></details></span><span><small>当前草稿</small><details class="mp-change-values"><summary>16 项 · 展开查看</summary><div>1. gpt-5.4-mini\n2. gpt-5.3-codex\n3. gpt-5.2\n4. gpt-5.2-codex\n5. gpt-5-mini\n6. claude-opus-4-6\n7. claude-sonnet-4-6\n8. claude-haiku-4-5\n9. gemini-3.1-pro-preview\n10. gemini-3-flash-preview\n11. qwen3-coder\n12. qwen3-max\n13. deepseek-v3.2\n14. deepseek-r1\n15. grok-4\n16. grok-4-fast</div></details></span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">gpt-5.4 · 启停</div></div><span><small>已保存</small>启用</span><span><small>当前草稿</small>停用</span></div></details><details class="mp-details mp-draft-group" open><summary><div class="proto-tree-cell " style="--tree-level:0"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">待确认连接名 · aimami<span class="mp-badge">3 项变化</span></div></div></summary><div class="mp-change-head"><span>配置项</span><span>已保存</span><span>当前草稿</span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">名称</div></div><span><small>已保存</small>Aimami</span><span><small>当前草稿</small>待确认连接名</span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">白名单 / 有效选择</div></div><span><small>已保存</small><details class="mp-change-values"><summary>8 项 · 展开查看</summary><div>1. gpt-5.4\n2. gpt-5.4-mini\n3. gpt-5.3-codex\n4. gpt-5.2\n5. gpt-5.2-codex\n6. gpt-5-mini\n7. claude-opus-4-6\n8. claude-sonnet-4-6</div></details></span><span><small>当前草稿</small><details class="mp-change-values"><summary>7 项 · 展开查看</summary><div>1. gpt-5.4-mini\n2. gpt-5.3-codex\n3. gpt-5.2\n4. gpt-5.2-codex\n5. gpt-5-mini\n6. claude-opus-4-6\n7. claude-sonnet-4-6</div></details></span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">gpt-5.4 · 启停</div></div><span><small>已保存</small>启用</span><span><small>当前草稿</small>停用</span></div></details></div><p class="mp-muted">已保存配置、模版版本、Agent 执行设置和收到的待审候选保留。</p><div id="mpDiscardError" class="mp-alert" role="alert"></div></div>',
+    expected: /未确认的连接编辑/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:35:1
+✖ 仅有未确认连接也能丢弃，纯新建编辑缓冲不误伤模版对象 (78.466666ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /未确认的连接编辑/. Input:
+  
+  '<div class="mp-dialog"><p>将还原全部渠道的未保存修改和未确认编辑，回到最近成功保存的配置。</p><p><strong>受影响范围：</strong>只改未确认连接 · newapi</p><div class="mp-changes"><details class="mp-details mp-draft-group" open><summary><div class="proto-tree-cell " style="--tree-level:0"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">只改未确认连接 · newapi<span class="mp-badge">1 项变化</span></div></div></summary><div class="mp-change-head"><span>配置项</span><span>已保存</span><span>当前草稿</span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">名称</div></div><span><small>已保存</small>NewApi</span><span><small>当前草稿</small>只改未确认连接</span></div></details></div><p class="mp-muted">已保存配置、模版版本、Agent 执行设置和收到的待审候选保留。</p><div id="mpDiscardError" class="mp-alert" role="alert"></div></div>'
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:37:28)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<div class="mp-dialog"><p>将还原全部渠道的未保存修改和未确认编辑，回到最近成功保存的配置。</p><p><strong>受影响范围：</strong>只改未确认连接 · newapi</p><div class="mp-changes"><details class="mp-details mp-draft-group" open><summary><div class="proto-tree-cell " style="--tree-level:0"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">只改未确认连接 · newapi<span class="mp-badge">1 项变化</span></div></div></summary><div class="mp-change-head"><span>配置项</span><span>已保存</span><span>当前草稿</span></div><div class="proto-tree-row mp-change-row" ><div class="proto-tree-cell " style="--tree-level:1"><span class="proto-tree-spacer" aria-hidden="true"></span><div class="proto-tree-text">名称</div></div><span><small>已保存</small>NewApi</span><span><small>当前草稿</small>只改未确认连接</span></div></details></div><p class="mp-muted">已保存配置、模版版本、Agent 执行设置和收到的待审候选保留。</p><div id="mpDiscardError" class="mp-alert" role="alert"></div></div>',
+    expected: /未确认的连接编辑/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:53:1
+✖ 备份与原子写入失败保留草稿，可直接重试；预算超限阻止保存 (27.811208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'object'
+  - 'function'
+  
+      at Object.runConfirm (evalmachine.<anonymous>:52:47)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-channel-actions.test.cjs:55:140)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'object',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-copy.test.cjs:13:1
+✖ 渠道复制入口与确认可取消，源有未确认编辑或原生来源不能复制 (41.4715ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to:
+  
+  'flex'
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-copy.test.cjs:15:159)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'flex',
+    expected: 'flex',
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-copy.test.cjs:17:1
+✖ 渠道复制保留独立节点 / 规则 / 模型顺序，默认停用且不复制Key，不写运行配置 (75.445459ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /newapi-copy/. Input:
+  
+  '<div class="mp-dialog"><div class="mp-agent-form"><label>节点名称<input id="mpServiceNodeName" class="input" maxlength="80" value="默认节点" placeholder="例如：备用节点"></label><label>URL<input id="mpServiceNodeURL" class="input" type="url" value="https://newapi.example.com/v1" placeholder="https://gateway.example.com/v1"></label></div><p class="mp-muted">共用渠道的认证与 API Key；新增节点后可手动设为当前。</p><div id="mpServiceNodeError" class="mp-alert" role="alert"></div></div>'
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-copy.test.cjs:20:413)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<div class="mp-dialog"><div class="mp-agent-form"><label>节点名称<input id="mpServiceNodeName" class="input" maxlength="80" value="默认节点" placeholder="例如：备用节点"></label><label>URL<input id="mpServiceNodeURL" class="input" type="url" value="https://newapi.example.com/v1" placeholder="https://gateway.example.com/v1"></label></div><p class="mp-muted">共用渠道的认证与 API Key；新增节点后可手动设为当前。</p><div id="mpServiceNodeError" class="mp-alert" role="alert"></div></div>',
+    expected: /newapi-copy/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-picker.test.cjs:23:1
+✖ 单实例、未确认认证和保存锁继续有效，返回详情和重绘关闭悬空浮层 (53.488833ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'newapi' !== null
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-picker.test.cjs:24:488)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'newapi',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-speed.test.cjs:34:1
+✖ 未确认认证阻止测速；测速更新不重建未保存的连接输入或中断弹窗 (35.748875ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + {
+  +   id: 1,
+  +   items: [
+  +     {
+  +       fingerprint: '["https://newapi.example.com/v1","Responses",{"auth":"apikey","keyConfigured":true,"credentialRef":"mock-key:1"},0]',
+  +       nodeId: 'primary',
+  +       status: 'running',
+  +       url: 'https://newapi.example.com/v1'
+  +     },
+  +     {
+  +       fingerprint: '["https://backup.newapi.example.com/v1","Responses",{"auth":"apikey","keyConfigured":true,"credentialRef":"mock-key:1"},0]',
+  +       nodeId: 'backup',
+  +       status: 'running',
+  +       url: 'https://backup.newapi.example.com/v1'
+  +     }
+  +   ],
+  +   scene: 'normal',
+  +   status: 'running'
+  + }
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-speed.test.cjs:35:180)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { id: 1, status: 'running', scene: 'normal', items: [ [Object], [Object] ] },
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-confirm.test.cjs:30:1
+✖ 待确认编辑被拦下时关闭弹窗、保留草稿，并给出具体原因 (62.471375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-confirm.test.cjs:39:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-confirm.test.cjs:90:1
+✖ 只改Key直接点保存：离线不重新选模型，冻结凭据引用且明文不进入预览或记录 (28.619834ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /替换 Key/. Input:
+  
+  ''
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-confirm.test.cjs:92:51)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: /替换 Key/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-confirm.test.cjs:97:1
+✖ 空输入保持原值；明确清空可直接保存，重开为空，不需要清单接口成功 (48.3545ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'object'
+  - 'function'
+  
+      at Object.runConfirm (evalmachine.<anonymous>:52:47)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-confirm.test.cjs:98:123)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'object',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-confirm.test.cjs:102:1
+✖ Key草稿在失败时不改已保存值，还原修改与还原连接均回到原Key (27.399916ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'object'
+  - 'function'
+  
+      at Object.runConfirm (evalmachine.<anonymous>:52:47)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-confirm.test.cjs:103:157)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'object',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-notification.test.cjs:123:1
+✖ Key 默认掩码 / 眼睛 / 离线只改Key保存 / 重开 / 空输入保持 / 明确清空；明文不进公开状态或记录 (6456.442833ms)
+  Error: 缺少控件 [data-mp=apply-channel-connection]
+      at Object.click (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic-harness.cjs:40:84)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-notification.test.cjs:131:4)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-service-nodes.test.cjs:17:1
+✖ 手动切换进入草稿，保存前Agent仍用原配置；差异列出地址且保存后保留节点列表 (65.488416ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /当前节点 URL/. Input:
+  
+  '<div class="mp-dialog"><p>本机共用设置：自动填充、单个更新、所选更新和全部更新均使用这里的模型。</p><label class="mp-agent-choice-label">执行模型</label><button type="button" id="mpAgentModelChoice" class="btn mp-agent-choice" data-mp="agent-pick-model" aria-haspopup="dialog"><span><strong>NewApi / gpt-5.4</strong><small>NewApi / gpt-5.4 · 中（模型默认） · 快速已关闭</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="mpAgentSettingsError" class="mp-alert" role="alert"></div></div>'
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-service-nodes.test.cjs:20:25)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<div class="mp-dialog"><p>本机共用设置：自动填充、单个更新、所选更新和全部更新均使用这里的模型。</p><label class="mp-agent-choice-label">执行模型</label><button type="button" id="mpAgentModelChoice" class="btn mp-agent-choice" data-mp="agent-pick-model" aria-haspopup="dialog"><span><strong>NewApi / gpt-5.4</strong><small>NewApi / gpt-5.4 · 中（模型默认） · 快速已关闭</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="mpAgentSettingsError" class="mp-alert" role="alert"></div></div>',
+    expected: /当前节点 URL/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-service-nodes.test.cjs:37:1
+✖ 未确认认证与保存中锁定节点修改，晚到的清单结果不会覆盖已切节点 (33.544167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'backup'
+  - 'primary'
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-service-nodes.test.cjs:38:169)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'backup',
+    expected: 'primary',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-service-nodes.test.cjs:41:1
+✖ 返回不保存，全部草稿丢弃还原节点，保存记录恢复先生成旧节点草稿 (146.886709ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'object'
+  - 'function'
+  
+      at Object.runConfirm (evalmachine.<anonymous>:52:47)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-service-nodes.test.cjs:43:93)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'object',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-tab-policy.test.cjs:13:1
+✖ 待确认编辑在顶部显示，历史成功不生成待重启，未确认输入禁用保存，详情仍用侧栏 (35.032ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /mp-policy-chip warning" data-channel-state="staged"/. Input:
+  
+  '<div id="mpTabsBar" class="mp-toolbar mp-tabs-bar" data-page-tabs><div class="settings-tabs" role="tablist" aria-label="模型配置分区"><button role="tab" aria-selected="true" class="active" data-mp="tab" data-tab="channels">渠道模型</button><button role="tab" aria-selected="false" class="" data-mp="tab" data-tab="templates">模型模版</button></div><div id="mpPolicyStatus" class="mp-policy-status"><div class="mp-top-policy-controls"><span class="mp-template-state mp-policy-chip warning" data-channel-state="dirty" data-status-scope="all-channels" title="全部渠道配置的保存状态" role="status" aria-live="polite" aria-busy="false">未保存修改</span><div class="mp-channel-save-controls"><button id="mpPolicyReset" class="btn ghost mp-nav-action mp-top-policy-reset" data-mp="discard" title="还原全部渠道的修改，回到最近成功保存的配置" aria-label="还原修改" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 4v6h6M3 10a9 9 0 1 1 2 8"/></svg><span class="mp-nav-action-label">还原修改</span></button><button id="mpPolicySave" class="btn primary mp-nav-action mp-template-save mp-top-policy-save is-changed" data-mp="save" title="保存 · 先查看全部剩余修改的保存预览，确认后写入" aria-label="保存" data-save-scope="all-channels" data-save-gated="false" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M5 3h12l4 4v14H3V3h2ZM7 3v6h10V3M7 21v-7h10v7"/></svg><span class="mp-nav-action-label">保存</span></button></div></div><div class="proto-annotation" id="ann-mp-08" data-annotation-number="08" data-annotation-title="渠道列表的七种状态与保存样式" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 08：渠道列表的七种状态与保存样式"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">08</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip neutral" data-policy-example="clean">未修改</span><span>灰色描边 · 保存弱化并禁用</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip warning" data-policy-example="dirty">未保存修改</span><span>橙色状态框 · 可提交时保存主色强调</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip warning" data-policy-example="staged">有待确认编辑</span><span>橙色状态框 · 先处理型号行编辑</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip danger" data-policy-example="over-budget">超出激活预算</span><span>红色状态框与激活数 · 保存禁用</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip info" data-policy-example="saving">正在保存</span><span>蓝色状态框与转动环 · 保存禁用</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip danger" data-policy-example="failed">保存失败</span><span>红色状态框 · 草稿保留，可重试保存</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip neutral" data-policy-example="stopped">保存已取消</span><span>灰色状态框 · 草稿保留，可继续保存</span></span><br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。成功保存只在既有通知宿主提示一次，默认聚焦立即重启；稍后即结束，历史成功状态不生成待重启或客户端核对入口。待确认型号编辑和实际提交超限仍阻止保存。列表保存先预览全部剩余修改；详情保存只提交当前渠道，成功返回列表，不另弹完整预览。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div></div><div class="proto-annotation" id="ann-mp-01" data-annotation-number="01" data-annotation-title="渠道与模版均为内存演示" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：渠道与模版均为内存演示"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>Tab 栏滚至主内容区顶部后固定，详情标题固定在其下，分区锚点避让两层高度。模版名称表达模型族或自定义用途，不自动附协议；渠道列表和标题只展示名称、节点、数量和状态，不用渠道默认协议概括全部模型。协议在配置字段及具体模型解析中查看，模版通用或具体型号可定义、单模型可覆盖。渠道顺序、白名单与模版策略全部是内存示例；保存、生成与同步仅演示状态与提示，重启与写入真实配置不在原型内发生。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div></div><div class="mp-list-toolbar"><input class="input" data-channel-search aria-label="搜索渠道" placeholder="搜索渠道" value=""><div class="mp-actions"><button class="btn ghost" data-mp="read-upstream" aria-busy="false" >读取现有渠道</button><button class="btn primary" data-mp="new-channel" >新增渠道</button></div></div><div class="mp-provider-table" role="table" aria-label="渠道列表"><div class="mp-provider-heading" role="row"><div class="mp-row"><input type="checkbox" data-scope-all aria-label="全选当前结果中的自定义渠道" title="全选当前搜索结果；保留搜索外已选渠道，官方 / 原生除外" aria-checked="false" ></div><span>渠道</span><span>服务节点</span><span>模型</span><span>启用</span><span>操作</span></div><div class="mp-provider" role="row" data-provider="newapi" draggable="true"><div class="mp-row"><input type="checkbox" data-scope="newapi" aria-label="将 待确认名字 加入配置范围"  ><span class="mp-grip" title="拖动渠道排序">⠿</span></div><div class="mp-provider-name"><strong>待确认名字</strong><small>2 节点 · 未验证</small></div><div class="mp-provider-node-cell"><button id="mpChannelNode-newapi" class="mp-node-picker-trigger" data-mp="node-picker-open" data-channel="newapi" aria-haspopup="dialog" aria-expanded="false" aria-label="待确认名字 服务节点选择与检测" title="默认节点 · https://newapi.example.com/v1" ><span class="mp-node-picker-value">默认节点</span><span id="mpNodeSpeedCurrent-newapi" class="mp-node-picker-current-speed"><span class="mp-node-speed neutral" data-speed-status="untested" title="接口响应耗时">未检测</span></span><span class="mp-node-picker-chevron" aria-hidden="true">▾</span></button></div><div class="mp-cell">17 / 30<small>已选 / 发现</small></div><div class="mp-channel-state"><div class="mp-channel-toggle"><button class="toggle" type="button" role="switch" aria-checked="true" aria-label="待确认名字 启用状态" data-mp="toggle-provider" data-id="newapi" title="切换只加入草稿，保存后提示重启；停用保留白名单与顺序" ></button><span>启用</span></div></div><div class="mp-row mp-provider-actions"><button class="btn ghost" data-mp="edit-provider" data-id="newapi" aria-label="编辑 待确认名字 渠道与模型">编辑</button><button class="btn ghost" data-mp="copy-provider" data-id="newapi" aria-label="复制 待确认名字 为新渠道" >复制</button><button class="btn danger" data-mp="delete-provider" data-id="newapi" aria-label="删除 待确认名字 渠道" >删除</button><div class="mp-mini-pair"><button class="mp-mini" data-mp="move-provider" data-id="newapi" data-direction="-1" aria-label="上移 待确认名字" disabled>↑</button><button class="mp-mini" data-mp="move-provider" data-id="newapi" data-direction="1" aria-label="下移 待确认名字" >↓</button></div></div></div><div class="mp-provider" role="row" data-provider="a6api" draggable="true"><div class="mp-row"><input type="checkbox" data-scope="a6api" aria-label="将 A6api 加入配置范围"  ><span class="mp-grip" title="拖动渠道排序">⠿</span></div><div class="mp-provider-name"><strong>A6api</strong><small>1 节点 · 无额度（手工）</small></div><div class="mp-provider-node-cell"><button id="mpChannelNode-a6api" class="mp-node-picker-trigger" data-mp="node-picker-open" data-channel="a6api" aria-haspopup="dialog" aria-expanded="false" aria-label="A6api 服务节点选择与检测" title="默认节点 · https://a6api.example.com/v1" ><span class="mp-node-picker-value">默认节点</span><span id="mpNodeSpeedCurrent-a6api" class="mp-node-picker-current-speed"><span class="mp-node-speed neutral" data-speed-status="untested" title="接口响应耗时">未检测</span></span><span class="mp-node-picker-chevron" aria-hidden="true">▾</span></button></div><div class="mp-cell">32 / 104<small>已选 / 发现</small></div><div class="mp-channel-state"><div class="mp-channel-toggle"><button class="toggle" type="button" role="switch" aria-checked="true" aria-label="A6api 启用状态" data-mp="toggle-provider" data-id="a6api" title="切换只加入草稿，保存后提示重启；停用保留白名单与顺序" ></button><span>启用</span></div></div><div class="mp-row mp-provider-actions"><button class="btn ghost" data-mp="edit-provider" data-id="a6api" aria-label="编辑 A6api 渠道与模型">编辑</button><button class="btn ghost" data-mp="copy-provider" data-id="a6api" aria-label="复制 A6api 为新渠道" >复制</button><button class="btn danger" data-mp="delete-provider" data-id="a6api" aria-label="删除 A6api 渠道" >删除</button><div class="mp-mini-pair"><button class="mp-mini" data-mp="move-provider" data-id="a6api" data-direction="-1" aria-label="上移 A6api" >↑</button><button class="mp-mini" data-mp="move-provider" data-id="a6api" data-direction="1" aria-label="下移 A6api" >↓</button></div></div></div><div class="mp-provider" role="row" data-provider="aimami" draggable="true"><div class="mp-row"><input type="checkbox" data-scope="aimami" aria-label="将 Aimami 加入配置范围"  ><span class="mp-grip" title="拖动渠道排序">⠿</span></div><div class="mp-provider-name"><strong>Aimami</strong><small>1 节点 · 未验证</small></div><div class="mp-provider-node-cell"><button id="mpChannelNode-aimami" class="mp-node-picker-trigger" data-mp="node-picker-open" data-channel="aimami" aria-haspopup="dialog" aria-expanded="false" aria-label="Aimami 服务节点选择与检测" title="默认节点 · https://aimami.example.com/v1" ><span class="mp-node-picker-value">默认节点</span><span id="mpNodeSpeedCurrent-aimami" class="mp-node-picker-current-speed"><span class="mp-node-speed neutral" data-speed-status="untested" title="接口响应耗时">未检测</span></span><span class="mp-node-picker-chevron" aria-hidden="true">▾</span></button></div><div class="mp-cell">8 / 12<small>已选 / 发现</small></div><div class="mp-channel-state"><div class="mp-channel-toggle"><button class="toggle" type="button" role="switch" aria-checked="true" aria-label="Aimami 启用状态" data-mp="toggle-provider" data-id="aimami" title="切换只加入草稿，保存后提示重启；停用保留白名单与顺序" ></button><span>启用</span></div></div><div class="mp-row mp-provider-actions"><button class="btn ghost" data-mp="edit'... 32749 more characters
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-tab-policy.test.cjs:14:262)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<div id="mpTabsBar" class="mp-toolbar mp-tabs-bar" data-page-tabs><div class="settings-tabs" role="tablist" aria-label="模型配置分区"><button role="tab" aria-selected="true" class="active" data-mp="tab" data-tab="channels">渠道模型</button><button role="tab" aria-selected="false" class="" data-mp="tab" data-tab="templates">模型模版</button></div><div id="mpPolicyStatus" class="mp-policy-status"><div class="mp-top-policy-controls"><span class="mp-template-state mp-policy-chip warning" data-channel-state="dirty" data-status-scope="all-channels" title="全部渠道配置的保存状态" role="status" aria-live="polite" aria-busy="false">未保存修改</span><div class="mp-channel-save-controls"><button id="mpPolicyReset" class="btn ghost mp-nav-action mp-top-policy-reset" data-mp="discard" title="还原全部渠道的修改，回到最近成功保存的配置" aria-label="还原修改" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 4v6h6M3 10a9 9 0 1 1 2 8"/></svg><span class="mp-nav-action-label">还原修改</span></button><button id="mpPolicySave" class="btn primary mp-nav-action mp-template-save mp-top-policy-save is-changed" data-mp="save" title="保存 · 先查看全部剩余修改的保存预览，确认后写入" aria-label="保存" data-save-scope="all-channels" data-save-gated="false" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M5 3h12l4 4v14H3V3h2ZM7 3v6h10V3M7 21v-7h10v7"/></svg><span class="mp-nav-action-label">保存</span></button></div></div><div class="proto-annotation" id="ann-mp-08" data-annotation-number="08" data-annotation-title="渠道列表的七种状态与保存样式" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 08：渠道列表的七种状态与保存样式"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">08</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip neutral" data-policy-example="clean">未修改</span><span>灰色描边 · 保存弱化并禁用</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip warning" data-policy-example="dirty">未保存修改</span><span>橙色状态框 · 可提交时保存主色强调</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip warning" data-policy-example="staged">有待确认编辑</span><span>橙色状态框 · 先处理型号行编辑</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip danger" data-policy-example="over-budget">超出激活预算</span><span>红色状态框与激活数 · 保存禁用</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip info" data-policy-example="saving">正在保存</span><span>蓝色状态框与转动环 · 保存禁用</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip danger" data-policy-example="failed">保存失败</span><span>红色状态框 · 草稿保留，可重试保存</span></span><br><span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip neutral" data-policy-example="stopped">保存已取消</span><span>灰色状态框 · 草稿保留，可继续保存</span></span><br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改、有待确认编辑或超出激活预算时可打开核对，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。成功保存只在既有通知宿主提示一次，默认聚焦立即重启；稍后即结束，历史成功状态不生成待重启或客户端核对入口。待确认型号编辑和实际提交超限仍阻止保存。列表保存先预览全部剩余修改；详情保存只提交当前渠道，成功返回列表，不另弹完整预览。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div></div><div class="proto-annotation" id="ann-mp-01" data-annotation-number="01" data-annotation-title="渠道与模版均为内存演示" data-annotation-category="实现边界 · 模型配置"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：渠道与模版均为内存演示"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>Tab 栏滚至主内容区顶部后固定，详情标题固定在其下，分区锚点避让两层高度。模版名称表达模型族或自定义用途，不自动附协议；渠道列表和标题只展示名称、节点、数量和状态，不用渠道默认协议概括全部模型。协议在配置字段及具体模型解析中查看，模版通用或具体型号可定义、单模型可覆盖。渠道顺序、白名单与模版策略全部是内存示例；保存、生成与同步仅演示状态与提示，重启与写入真实配置不在原型内发生。</p><div class="annotation-footer">实现边界 · 模型配置</div></div></div></div><div class="mp-list-toolbar"><input class="input" data-channel-search aria-label="搜索渠道" placeholder="搜索渠道" value=""><div class="mp-actions"><button class="btn ghost" data-mp="read-upstream" aria-busy="false" >读取现有渠道</button><button class="btn primary" data-mp="new-channel" >新增渠道</button></div></div><div class="mp-provider-table" role="table" aria-label="渠道列表"><div class="mp-provider-heading" role="row"><div class="mp-row"><input type="checkbox" data-scope-all aria-label="全选当前结果中的自定义渠道" title="全选当前搜索结果；保留搜索外已选渠道，官方 / 原生除外" aria-checked="false" ></div><span>渠道</span><span>服务节点</span><span>模型</span><span>启用</span><span>操作</span></div><div class="mp-provider" role="row" data-provider="newapi" draggable="true"><div class="mp-row"><input type="checkbox" data-scope="newapi" aria-label="将 待确认名字 加入配置范围"  ><span class="mp-grip" title="拖动渠道排序">⠿</span></div><div class="mp-provider-name"><strong>待确认名字</strong><small>2 节点 · 未验证</small></div><div class="mp-provider-node-cell"><button id="mpChannelNode-newapi" class="mp-node-picker-trigger" data-mp="node-picker-open" data-channel="newapi" aria-haspopup="dialog" aria-expanded="false" aria-label="待确认名字 服务节点选择与检测" title="默认节点 · https://newapi.example.com/v1" ><span class="mp-node-picker-value">默认节点</span><span id="mpNodeSpeedCurrent-newapi" class="mp-node-picker-current-speed"><span class="mp-node-speed neutral" data-speed-status="untested" title="接口响应耗时">未检测</span></span><span class="mp-node-picker-chevron" aria-hidden="true">▾</span></button></div><div class="mp-cell">17 / 30<small>已选 / 发现</small></div><div class="mp-channel-state"><div class="mp-channel-toggle"><button class="toggle" type="button" role="switch" aria-checked="true" aria-label="待确认名字 启用状态" data-mp="toggle-provider" data-id="newapi" title="切换只加入草稿，保存后提示重启；停用保留白名单与顺序" ></button><span>启用</span></div></div><div class="mp-row mp-provider-actions"><button class="btn ghost" data-mp="edit-provider" data-id="newapi" aria-label="编辑 待确认名字 渠道与模型">编辑</button><button class="btn ghost" data-mp="copy-provider" data-id="newapi" aria-label="复制 待确认名字 为新渠道" >复制</button><button class="btn danger" data-mp="delete-provider" data-id="newapi" aria-label="删除 待确认名字 渠道" >删除</button><div class="mp-mini-pair"><button class="mp-mini" data-mp="move-provider" data-id="newapi" data-direction="-1" aria-label="上移 待确认名字" disabled>↑</button><button class="mp-mini" data-mp="move-provider" data-id="newapi" data-direction="1" aria-label="下移 待确认名字" >↓</button></div></div></div><div class="mp-provider" role="row" data-provider="a6api" draggable="true"><div class="mp-row"><input type="checkbox" data-scope="a6api" aria-label="将 A6api 加入配置范围"  ><span class="mp-grip" title="拖动渠道排序">⠿</span></div><div class="mp-provider-name"><strong>A6api</strong><small>1 节点 · 无额度（手工）</small></div><div class="mp-provider-node-cell"><button id="mpChannelNode-a6api" class="mp-node-picker-trigger" data-mp="node-picker-open" data-channel="a6api" aria-haspopup="dialog" aria-expanded="false" aria-label="A6api 服务节点选择与检测" title="默认节点 · https://a6api.example.com/v1" ><span class="mp-node-picker-value">默认节点</span><span id="mpNodeSpeedCurrent-a6api" class="mp-node-picker-current-speed"><span class="mp-node-speed neutral" data-speed-status="untested" title="接口响应耗时">未检测</span></span><span class="mp-node-picker-chevron" aria-hidden="true">▾</span></button></div><div class="mp-cell">32 / 104<small>已选 / 发现</small></div><div class="mp-channel-state"><div class="mp-channel-toggle"><button class="toggle" type="button" role="switch" aria-checked="true" aria-label="A6api 启用状态" data-mp="toggle-provider" data-id="a6api" title="切换只加入草稿，保存后提示重启；停用保留白名单与顺序" ></button><span>启用</span></div></div><div class="mp-row mp-provider-actions"><button class="btn ghost" data-mp="edit-provider" data-id="a6api" aria-label="编辑 A6api 渠道与模型">编辑</button><button class="btn ghost" data-mp="copy-provider" data-id="a6api" aria-label="复制 A6api 为新渠道" >复制</button><button class="btn danger" data-mp="delete-provider" data-id="a6api" aria-label="删除 A6api 渠道" >删除</button><div class="mp-mini-pair"><button class="mp-mini" data-mp="move-provider" data-id="a6api" data-direction="-1" aria-label="上移 A6api" >↑</button><button class="mp-mini" data-mp="move-provider" data-id="a6api" data-direction="1" aria-label="下移 A6api" >↓</button></div></div></div><div class="mp-provider" role="row" data-provider="aimami" draggable="true"><div class="mp-row"><input type="checkbox" data-scope="aimami" aria-label="将 Aimami 加入配置范围"  ><span class="mp-grip" title="拖动渠道排序">⠿</span></div><div class="mp-provider-name"><strong>Aimami</strong><small>1 节点 · 未验证</small></div><div class="mp-provider-node-cell"><button id="mpChannelNode-aimami" class="mp-node-picker-trigger" data-mp="node-picker-open" data-channel="aimami" aria-haspopup="dialog" aria-expanded="false" aria-label="Aimami 服务节点选择与检测" title="默认节点 · https://aimami.example.com/v1" ><span class="mp-node-picker-value">默认节点</span><span id="mpNodeSpeedCurrent-aimami" class="mp-node-picker-current-speed"><span class="mp-node-speed neutral" data-speed-status="untested" title="接口响应耗时">未检测</span></span><span class="mp-node-picker-chevron" aria-hidden="true">▾</span></button></div><div class="mp-cell">8 / 12<small>已选 / 发现</small></div><div class="mp-channel-state"><div class="mp-channel-toggle"><button class="toggle" type="button" role="switch" aria-checked="true" aria-label="Aimami 启用状态" data-mp="toggle-provider" data-id="aimami" title="切换只加入草稿，保存后提示重启；停用保留白名单与顺序" ></button><span>启用</span></div></div><div class="mp-row mp-provider-actions"><button class="btn ghost" data-mp="edit'... 32749 more characters,
+    expected: /mp-policy-chip warning" data-channel-state="staged"/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-version-control.test.cjs:4:1
+✖ 原型版本使用版本+协作包名，导航排其后，切换范围保持原行为 (4464.659583ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      [
+        'models',
+        '0.2.0 · 模型配置管理与同步'
+      ],
+  ...
+      ],
+  +   [
+  +     'capabilities',
+  +     '待定版本 · 渠道特殊能力与代理兼容'
+  +   ]
+    ]
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-version-control.test.cjs:8:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 'models', '0.2.0 · 模型配置管理与同步' ], [ 'conversations', '待定版本 · Codex 对话配置管理' ], [ 'extensions', '待定版本 · 多 Agent 平台扩展管理' ], [ 'capabilities', '待定版本 · 渠道特殊能力与代理兼容' ] ],
+    expected: [ [ 'models', '0.2.0 · 模型配置管理与同步' ], [ 'conversations', '待定版本 · Codex 对话配置管理' ], [ 'extensions', '待定版本 · 多 Agent 平台扩展管理' ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:154:48
+✖ connection 未确认输入受到保护，采用失败不改草稿/文件/模版；处理输入后可重新采用 (5387.391417ms)
+  TypeError: Cannot read properties of null (reading 'textContent')
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:160:93)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

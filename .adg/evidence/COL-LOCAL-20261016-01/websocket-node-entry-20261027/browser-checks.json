@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-27",
+  "scope": "channel detail service-node transport shortcut; mock only",
+  "checks": [
+    {
+      "name": "no-inline-channel-transport-paragraph",
+      "pass": true
+    },
+    {
+      "name": "one-shortcut-in-service-node-heading",
+      "pass": true
+    },
+    {
+      "name": "adjacent-existing-node-actions",
+      "pass": true
+    },
+    {
+      "name": "shortcut-opens-global-settings",
+      "pass": true
+    },
+    {
+      "name": "return-keeps-channel-draft",
+      "pass": true
+    }
+  ],
+  "notes": [
+    "No live settings writes or network calls",
+    "Original tab interactions did not advance; verified in fresh preview tab"
+  ],
+  "limitations": [
+    "No full old channel regression rerun for this layout-only change"
+  ]
+}

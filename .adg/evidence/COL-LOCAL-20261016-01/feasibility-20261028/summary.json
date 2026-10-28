@@ -1,0 +1,259 @@
+{
+  "date": "2026-10-28",
+  "goalStatus": "active",
+  "phase": "feasibility_complete_with_scoped_real_confirmation",
+  "realModelCalls": 2,
+  "dailyConfigModified": false,
+  "results": {
+    "protocol-schema.json": {
+      "status": "passed",
+      "checks": [
+        "start_resume_support_config",
+        "loaded_settings_have_no_generic_config",
+        "native_project_identity_in_protocol",
+        "parse_default",
+        "parse_background",
+        "parse_history_notes",
+        "parse_invalid_background_type",
+        "parse_invalid_remote_enum",
+        "parse_remote_v2"
+      ],
+      "count": 9,
+      "sourceMatchesReport": true
+    },
+    "owner-connection.json": {
+      "status": "passed",
+      "checks": [
+        "two_clients_same_owner_read",
+        "second_client_controls_same_owner",
+        "management_client_disconnect"
+      ],
+      "count": 3,
+      "sourceMatchesReport": true
+    },
+    "opencodex-service.json": {
+      "status": "passed",
+      "checks": [
+        "original_cli_ready",
+        "real_plugin_loader_and_stream",
+        "key_mode_identity_not_forwarded",
+        "management_sidecar_persist",
+        "sidecar_readback_reasoning_gap",
+        "invalid_save_preserves_persisted_config",
+        "search_model_is_backend_scoped",
+        "shadow_call_is_not_title_specific",
+        "websocket_ingress_full_response",
+        "websocket_cancel_reaches_upstream",
+        "third_party_history_refused_before_egress",
+        "routed_compaction_is_proxy_summary",
+        "codex_integration_stays_off",
+        "native_engine_compact_then_continue",
+        "background_compaction_nonblocking_overlap",
+        "background_not_active_without_remote_v2",
+        "disable_plugin_keeps_original_route"
+      ],
+      "count": 17,
+      "sourceMatchesReport": true
+    },
+    "native-children.json": {
+      "status": "passed",
+      "checks": [
+        "same_project_thread_override",
+        "native_child_defaults_per_loaded_thread",
+        "siblings_preserve_distinct_identity",
+        "explicit_spawn_override",
+        "loaded_resume_child_default_semantics",
+        "new_thread_without_projection_uses_current_global",
+        "native_child_concurrency_limit"
+      ],
+      "count": 7,
+      "sourceMatchesReport": true
+    }
+  },
+  "checksPassed": 36,
+  "sourceContractChecks": 6,
+  "remaining": {
+    "V4_project_thread_search": "unsupported_missing_preplan_scope_contract",
+    "V4_loaded_child_defaults_hot_update": "unsupported_on_same_owner_loaded_resume_in_current_binary"
+  },
+  "currentAppAttachment": {
+    "status": "unsupported_current_launch",
+    "scope": "Observed app-server processes only; no named public endpoint found. No stdio interception or restart attempted."
+  },
+  "backgroundCompaction": {
+    "configured": true,
+    "syntheticUsageTokens": 70000,
+    "modelContextWindow": 100000,
+    "autoCompactThresholdTokens": 90000,
+    "backgroundThresholdTokens": 65000,
+    "backgroundPercent": 65,
+    "summaryRequestsObserved": 1,
+    "events": [
+      {
+        "method": "warning",
+        "eventType": null,
+        "detail": "Under-development features enabled: async_compaction. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /private/tmp/ocx-service-mp89e50u/native-e2e/home/.codex/config.toml.",
+        "tokenUsage": null
+      },
+      {
+        "method": "thread/tokenUsage/updated",
+        "eventType": null,
+        "detail": null,
+        "tokenUsage": {
+          "total": {
+            "totalTokens": 70001,
+            "inputTokens": 70000,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 1,
+            "reasoningOutputTokens": 0
+          },
+          "last": {
+            "totalTokens": 70001,
+            "inputTokens": 70000,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 1,
+            "reasoningOutputTokens": 0
+          },
+          "modelContextWindow": 95000
+        }
+      },
+      {
+        "method": "thread/tokenUsage/updated",
+        "eventType": null,
+        "detail": null,
+        "tokenUsage": {
+          "total": {
+            "totalTokens": 140002,
+            "inputTokens": 140000,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 2,
+            "reasoningOutputTokens": 0
+          },
+          "last": {
+            "totalTokens": 70001,
+            "inputTokens": 70000,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 1,
+            "reasoningOutputTokens": 0
+          },
+          "modelContextWindow": 95000
+        }
+      }
+    ],
+    "backgroundRequestStarted": true,
+    "foregroundCompletedBeforeRelease": true,
+    "status": "passed",
+    "reason": "Background checkpoint and foreground turn overlap observed with explicit context-window threshold."
+  },
+  "previousNativeChecks": {
+    "checks": 8,
+    "evidence": "../dialog-policy-20261027/native-probe-current-20261027.json",
+    "countedInThisBatch": false
+  },
+  "instructionProjection": {
+    "status": "passed",
+    "childRequestsWithMarker": 6,
+    "tested": 6,
+    "scope": "thread/start developerInstructions inheritance, not a separate subagent-only instruction API"
+  },
+  "nextRequiredInput": "None for stated minimum confirmation; broader channel/model matrix remains outside this run.",
+  "backgroundThresholdCorrection": {
+    "ratioOf": "full_model_context_window",
+    "schemaRef": "openai/codex@e3149ddb11e24edea64999030f218447336667ed",
+    "priorAssumption": "ratio of automatic compact limit",
+    "correctedInPrototype": true
+  },
+  "loadedResumeChildDefaults": {
+    "accepted": true,
+    "expectedNew": {
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    "actual": [
+      {
+        "threadId": "01a17f9b-2d5c-7e83-b2f8-a11077ffeebe",
+        "parent": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+        "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+        "subagent": "collab_spawn",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "rootMarker": "unknown",
+        "instructionMarkerPresent": true
+      },
+      {
+        "threadId": "01a17f9b-2d60-78d1-b8db-7f15ab84f730",
+        "parent": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+        "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+        "subagent": "collab_spawn",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "rootMarker": "unknown",
+        "instructionMarkerPresent": true
+      }
+    ],
+    "status": "unsupported_on_loaded_resume",
+    "scope": "same existing loaded parent, thread/resume config, no global mutation"
+  },
+  "prototypeContextRegression": {
+    "status": "passed",
+    "tests": 12,
+    "evidence": "prototype-context-regression.tap"
+  },
+  "realRoute": {
+    "real-basic.json": {
+      "status": "passed",
+      "model": "gpt-6.1-sol",
+      "scenario": "basic",
+      "httpStatus": 200,
+      "actualClientRequests": 1,
+      "dailyConfigModified": false,
+      "credentialsRead": false,
+      "syntheticOutput": "PROBE_OK",
+      "outputKinds": [
+        "message"
+      ],
+      "check": "real_basic_response"
+    },
+    "real-search.json": {
+      "status": "passed",
+      "model": "gpt-6.1-sol",
+      "scenario": "search",
+      "httpStatus": 200,
+      "actualClientRequests": 1,
+      "dailyConfigModified": false,
+      "credentialsRead": false,
+      "syntheticOutput": "I’ll open the public example.com page.Example Domain  \nhttps://example.com/",
+      "outputKinds": [
+        "message",
+        "web_search_call",
+        "message"
+      ],
+      "check": "real_search_response"
+    },
+    "probeSourceSha256": "e47a7ff3bba2516e4cf770679ceb141698c957e65cafc00356cb237a4a167b9a",
+    "status": "passed",
+    "scopedChecks": [
+      "real_basic_response",
+      "real_search_response"
+    ],
+    "limitations": [
+      "Existing proxy at 127.0.0.1:10100 only",
+      "FeiMao/gpt-6.1-sol only",
+      "Synthetic prompt and public example.com only"
+    ],
+    "actualRequestsTotal": 2,
+    "realModelCalls": "2 bounded requests through existing proxy"
+  },
+  "realRouteLimits": [
+    "One existing proxy endpoint and one selected model; not a channel-family benchmark.",
+    "Synthetic prompt and public example.com only; no user conversation, credentials or production config.",
+    "Search success proves this route/tool path, not every catalog model or provider."
+  ],
+  "prototypeRegressionTests": 41,
+  "completionAudit": "completion-audit.json",
+  "finalLinkCheck": "final-link-check.json"
+}

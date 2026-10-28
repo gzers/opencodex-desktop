@@ -1,0 +1,86 @@
+{
+  "atUtc": "2026-10-27T23:13:30.615749+00:00",
+  "route": "http://127.0.0.1:10100/v1/responses",
+  "requestedModel": "FeiMao/gpt-6.1-sol",
+  "scenario": "basic",
+  "syntheticInputOnly": true,
+  "credentialsRead": false,
+  "dailyConfigModified": false,
+  "maxOutputTokens": 512,
+  "scriptSha256": "e47a7ff3bba2516e4cf770679ceb141698c957e65cafc00356cb237a4a167b9a",
+  "actualClientRequests": 1,
+  "checks": [
+    {
+      "id": "real_basic_response",
+      "status": "passed",
+      "scope": "requested route and synthetic task only; catalog presence is not proof of service availability"
+    }
+  ],
+  "proxyIdentity": {
+    "service": "opencodex",
+    "version": "2.84.0",
+    "pid": 1930
+  },
+  "httpStatus": 200,
+  "responseStatus": "completed",
+  "servedModel": "gpt-6.1-sol",
+  "syntheticOutput": "PROBE_OK",
+  "usage": {
+    "input_tokens": 4239,
+    "input_tokens_details": {
+      "cached_tokens": 4096,
+      "cache_write_tokens": 0
+    },
+    "output_tokens": 7,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 4246,
+    "attribution": {
+      "items": {
+        "msg_0a6168fb9ec0b879016ae1301bee9481938de21b47755afec5": {
+          "input_tokens": 21,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "content": [
+            {
+              "input_tokens": 21,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0
+            }
+          ]
+        },
+        "msg_0a6168fb9ec0b879016ae1301ceb388193a54e20adb824d73a": {
+          "input_tokens": 2,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 7,
+          "content": [
+            {
+              "input_tokens": 2,
+              "cached_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 7
+            }
+          ]
+        }
+      },
+      "request_fields": {
+        "instructions": {
+          "input_tokens": 4216,
+          "cached_tokens": 4096,
+          "cache_write_tokens": 0,
+          "output_tokens": 0
+        }
+      }
+    }
+  },
+  "outputKinds": [
+    "message"
+  ],
+  "serviceTier": "default",
+  "status": "passed",
+  "elapsedSeconds": 3.229
+}

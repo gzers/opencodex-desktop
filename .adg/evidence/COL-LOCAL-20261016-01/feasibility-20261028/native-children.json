@@ -1,0 +1,613 @@
+{
+  "atUtc": "2026-10-27T23:03:58.392849+00:00",
+  "checks": [
+    {
+      "id": "same_project_thread_override",
+      "status": "passed",
+      "observed": "A and C share projectId but keep distinct per-thread child config."
+    },
+    {
+      "id": "native_child_defaults_per_loaded_thread",
+      "status": "passed",
+      "observed": "Three concurrent parent threads receive different child defaults without global config mutation."
+    },
+    {
+      "id": "siblings_preserve_distinct_identity",
+      "status": "passed"
+    },
+    {
+      "id": "explicit_spawn_override",
+      "status": "passed"
+    },
+    {
+      "id": "loaded_resume_child_default_semantics",
+      "status": "passed",
+      "observed": {
+        "accepted": true,
+        "expectedNew": {
+          "model": "gpt-6-astra",
+          "effort": "xhigh"
+        },
+        "actual": [
+          {
+            "threadId": "01a17f9b-2d5c-7e83-b2f8-a11077ffeebe",
+            "parent": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+            "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+            "subagent": "collab_spawn",
+            "model": "gpt-6.1-sol",
+            "effort": "high",
+            "rootMarker": "unknown",
+            "instructionMarkerPresent": true
+          },
+          {
+            "threadId": "01a17f9b-2d60-78d1-b8db-7f15ab84f730",
+            "parent": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+            "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+            "subagent": "collab_spawn",
+            "model": "gpt-6.1-sol",
+            "effort": "high",
+            "rootMarker": "unknown",
+            "instructionMarkerPresent": true
+          }
+        ],
+        "status": "unsupported_on_loaded_resume",
+        "scope": "same existing loaded parent, thread/resume config, no global mutation"
+      }
+    },
+    {
+      "id": "new_thread_without_projection_uses_current_global",
+      "status": "passed",
+      "observed": "New thread in project A, without local config projection, creates children from current global defaults."
+    },
+    {
+      "id": "native_child_concurrency_limit",
+      "status": "passed",
+      "observed": {
+        "configuredMaxThreads": 1,
+        "actualChildRequests": 1,
+        "limitErrorObserved": true,
+        "scope": "this parent tree, not a cross-project global scheduler"
+      }
+    }
+  ],
+  "realModelCalls": 0,
+  "status": "passed",
+  "requests": [
+    {
+      "threadId": "01a17f9b-2cfd-7fe0-8e5f-e2ba805ed62f",
+      "parent": null,
+      "sessionId": "01a17f9b-2cfd-7fe0-8e5f-e2ba805ed62f",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "B",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "parent": null,
+      "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "A",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "parent": null,
+      "sessionId": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "C",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d19-7b43-b4f6-5a09a92b19b6",
+      "parent": "01a17f9b-2cfd-7fe0-8e5f-e2ba805ed62f",
+      "sessionId": "01a17f9b-2cfd-7fe0-8e5f-e2ba805ed62f",
+      "subagent": "collab_spawn",
+      "model": "gpt-6-sol",
+      "effort": "low",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d1a-7eb3-ab18-d3ab2d43b807",
+      "parent": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "subagent": "collab_spawn",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d1e-7fb1-a999-cf4abd42b9d9",
+      "parent": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "subagent": "collab_spawn",
+      "model": "gpt-6-sol",
+      "effort": "low",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d20-7d73-9a54-0b1e6f207df2",
+      "parent": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "sessionId": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "subagent": "collab_spawn",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "parent": null,
+      "sessionId": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "C",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d1c-70c3-8daa-82cd43324ab0",
+      "parent": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "sessionId": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "subagent": "collab_spawn",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "parent": null,
+      "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "A",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2cfd-7fe0-8e5f-e2ba805ed62f",
+      "parent": null,
+      "sessionId": "01a17f9b-2cfd-7fe0-8e5f-e2ba805ed62f",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "B",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "parent": null,
+      "sessionId": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "C",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d34-7ec3-aca3-10049285d9af",
+      "parent": "01a17f9b-2cfd-7fe0-8e5f-e2ba805ed62f",
+      "sessionId": "01a17f9b-2cfd-7fe0-8e5f-e2ba805ed62f",
+      "subagent": "collab_spawn",
+      "model": "gpt-6-sol",
+      "effort": "low",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "parent": null,
+      "sessionId": "01a17f9b-2d00-70e2-bc9e-d839868dd786",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "C",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "parent": null,
+      "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "E",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "parent": null,
+      "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "E",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d5c-7e83-b2f8-a11077ffeebe",
+      "parent": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "subagent": "collab_spawn",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d60-78d1-b8db-7f15ab84f730",
+      "parent": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+      "subagent": "collab_spawn",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": true
+    },
+    {
+      "threadId": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "parent": null,
+      "sessionId": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "C",
+      "instructionMarkerPresent": false
+    },
+    {
+      "threadId": "01a17f9b-2d7e-7673-ae8a-87641a8184d4",
+      "parent": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "sessionId": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "subagent": "collab_spawn",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": false
+    },
+    {
+      "threadId": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "parent": null,
+      "sessionId": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "C",
+      "instructionMarkerPresent": false
+    },
+    {
+      "threadId": "01a17f9b-2d82-7a63-8991-9713c09d573d",
+      "parent": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "sessionId": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "subagent": "collab_spawn",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": false
+    },
+    {
+      "threadId": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "parent": null,
+      "sessionId": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "C",
+      "instructionMarkerPresent": false
+    },
+    {
+      "threadId": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "parent": null,
+      "sessionId": "01a17f9b-2d6f-7823-a5dc-3eba17777d5d",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "C",
+      "instructionMarkerPresent": false
+    },
+    {
+      "threadId": "01a17f9b-2d8f-7443-b7b1-0d36f6b4b111",
+      "parent": null,
+      "sessionId": "01a17f9b-2d8f-7443-b7b1-0d36f6b4b111",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "D",
+      "instructionMarkerPresent": false
+    },
+    {
+      "threadId": "01a17f9b-2d8f-7443-b7b1-0d36f6b4b111",
+      "parent": null,
+      "sessionId": "01a17f9b-2d8f-7443-b7b1-0d36f6b4b111",
+      "subagent": null,
+      "model": "gpt-5.4",
+      "effort": "low",
+      "rootMarker": "D",
+      "instructionMarkerPresent": false
+    },
+    {
+      "threadId": "01a17f9b-2d9d-7d83-bad2-3cd30edecd20",
+      "parent": "01a17f9b-2d8f-7443-b7b1-0d36f6b4b111",
+      "sessionId": "01a17f9b-2d8f-7443-b7b1-0d36f6b4b111",
+      "subagent": "collab_spawn",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "rootMarker": "unknown",
+      "instructionMarkerPresent": false
+    }
+  ],
+  "tools": [
+    {
+      "name": "send_input",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "interrupt": {
+            "type": "boolean",
+            "description": "True interrupts the current task and handles this message immediately; false or omitted queues it."
+          },
+          "items": {
+            "type": "array",
+            "description": "Structured input items. Use this to pass explicit mentions (for example app:// connector paths).",
+            "items": {
+              "type": "object",
+              "properties": {
+                "audio_url": {
+                  "type": "string",
+                  "description": "Audio data URL when type is audio."
+                },
+                "image_url": {
+                  "type": "string",
+                  "description": "Image URL when type is image."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Display name when type is skill or mention."
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path when type is local_image/local_audio/skill, or structured mention target such as app://<connector-id> or plugin://<plugin-name>@<marketplace-name> when type is mention."
+                },
+                "text": {
+                  "type": "string",
+                  "description": "Text content when type is text."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Input item type: text, image, local_image, audio, local_audio, skill, or mention."
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "message": {
+            "type": "string",
+            "description": "Legacy plain-text message to send to the agent. Use either message or items."
+          },
+          "target": {
+            "type": "string",
+            "description": "Agent id to message (from spawn_agent)."
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "spawn_agent",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "fork_context": {
+            "type": "boolean",
+            "description": "True forks the current thread history into the new agent; false or omitted starts with only the initial prompt."
+          },
+          "items": {
+            "type": "array",
+            "description": "Structured input items. Use this to pass explicit mentions (for example app:// connector paths).",
+            "items": {
+              "type": "object",
+              "properties": {
+                "audio_url": {
+                  "type": "string",
+                  "description": "Audio data URL when type is audio."
+                },
+                "image_url": {
+                  "type": "string",
+                  "description": "Image URL when type is image."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Display name when type is skill or mention."
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path when type is local_image/local_audio/skill, or structured mention target such as app://<connector-id> or plugin://<plugin-name>@<marketplace-name> when type is mention."
+                },
+                "text": {
+                  "type": "string",
+                  "description": "Text content when type is text."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Input item type: text, image, local_image, audio, local_audio, skill, or mention."
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "message": {
+            "type": "string",
+            "description": "Initial plain-text task for the new agent. Use either message or items."
+          },
+          "model": {
+            "type": "string",
+            "description": "Model override for the new agent. Omit unless an explicit override is needed."
+          },
+          "reasoning_effort": {
+            "type": "string",
+            "description": "Reasoning effort override for the new agent. Omit to inherit the parent effort."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "wait_agent",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "targets": {
+            "type": "array",
+            "description": "Agent ids to wait on. Pass multiple ids to wait for whichever finishes first.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timeout_ms": {
+            "type": "number",
+            "description": "Timeout in milliseconds. Defaults to 30000, min 10000, max 3600000. Prefer longer waits (minutes) to avoid busy polling."
+          }
+        },
+        "required": [
+          "targets"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "toolSurface": [
+    {
+      "type": "function",
+      "name": "exec_command",
+      "children": []
+    },
+    {
+      "type": "function",
+      "name": "write_stdin",
+      "children": []
+    },
+    {
+      "type": "function",
+      "name": "request_user_input",
+      "children": []
+    },
+    {
+      "type": "function",
+      "name": "view_image",
+      "children": []
+    },
+    {
+      "type": "namespace",
+      "name": "multi_agent_v1",
+      "children": [
+        "close_agent",
+        "resume_agent",
+        "send_input",
+        "spawn_agent",
+        "wait_agent"
+      ]
+    },
+    {
+      "type": "function",
+      "name": "get_goal",
+      "children": []
+    },
+    {
+      "type": "function",
+      "name": "create_goal",
+      "children": []
+    },
+    {
+      "type": "function",
+      "name": "update_goal",
+      "children": []
+    }
+  ],
+  "toolOutputs": [
+    "{\"agent_id\":\"01a17f9b-2d1c-70c3-8daa-82cd43324ab0\",\"nickname\":\"Nash\"}",
+    "{\"agent_id\":\"01a17f9b-2d20-7d73-9a54-0b1e6f207df2\",\"nickname\":\"Russell\"}",
+    "{\"agent_id\":\"01a17f9b-2d1a-7eb3-ab18-d3ab2d43b807\",\"nickname\":\"Mencius\"}",
+    "{\"agent_id\":\"01a17f9b-2d1e-7fb1-a999-cf4abd42b9d9\",\"nickname\":\"Aquinas\"}",
+    "{\"agent_id\":\"01a17f9b-2d19-7b43-b4f6-5a09a92b19b6\",\"nickname\":\"Huygens\"}",
+    "{\"agent_id\":\"01a17f9b-2d34-7ec3-aca3-10049285d9af\",\"nickname\":\"Popper\"}",
+    "{\"agent_id\":\"01a17f9b-2d1c-70c3-8daa-82cd43324ab0\",\"nickname\":\"Nash\"}",
+    "{\"agent_id\":\"01a17f9b-2d20-7d73-9a54-0b1e6f207df2\",\"nickname\":\"Russell\"}",
+    "{\"agent_id\":\"01a17f9b-2d1c-70c3-8daa-82cd43324ab0\",\"nickname\":\"Nash\"}",
+    "{\"agent_id\":\"01a17f9b-2d20-7d73-9a54-0b1e6f207df2\",\"nickname\":\"Russell\"}",
+    "{\"agent_id\":\"01a17f9b-2d1a-7eb3-ab18-d3ab2d43b807\",\"nickname\":\"Mencius\"}",
+    "{\"agent_id\":\"01a17f9b-2d1e-7fb1-a999-cf4abd42b9d9\",\"nickname\":\"Aquinas\"}",
+    "{\"agent_id\":\"01a17f9b-2d1a-7eb3-ab18-d3ab2d43b807\",\"nickname\":\"Mencius\"}",
+    "{\"agent_id\":\"01a17f9b-2d1e-7fb1-a999-cf4abd42b9d9\",\"nickname\":\"Aquinas\"}",
+    "{\"agent_id\":\"01a17f9b-2d5c-7e83-b2f8-a11077ffeebe\",\"nickname\":\"Hilbert\"}",
+    "{\"agent_id\":\"01a17f9b-2d60-78d1-b8db-7f15ab84f730\",\"nickname\":\"Erdos\"}",
+    "{\"agent_id\":\"01a17f9b-2d7e-7673-ae8a-87641a8184d4\",\"nickname\":\"Ohm\"}",
+    "{\"agent_id\":\"01a17f9b-2d82-7a63-8991-9713c09d573d\",\"nickname\":\"Galileo\"}",
+    "{\"agent_id\":\"01a17f9b-2d7e-7673-ae8a-87641a8184d4\",\"nickname\":\"Ohm\"}",
+    "{\"agent_id\":\"01a17f9b-2d82-7a63-8991-9713c09d573d\",\"nickname\":\"Galileo\"}",
+    "{\"agent_id\":\"01a17f9b-2d7e-7673-ae8a-87641a8184d4\",\"nickname\":\"Ohm\"}",
+    "{\"agent_id\":\"01a17f9b-2d82-7a63-8991-9713c09d573d\",\"nickname\":\"Galileo\"}",
+    "{\"agent_id\":\"01a17f9b-2d9d-7d83-bad2-3cd30edecd20\",\"nickname\":\"Newton\"}",
+    "collab spawn failed: agent thread limit reached"
+  ],
+  "threadIds": {
+    "A": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+    "B": "01a17f9b-2cfd-7fe0-8e5f-e2ba805ed62f",
+    "C": "01a17f9b-2d00-70e2-bc9e-d839868dd786"
+  },
+  "turnsCompleted": 3,
+  "childRequests": 11,
+  "rpcErrors": [],
+  "agentEventKinds": [
+    "item/agentMessage/delta"
+  ],
+  "instructionProjection": {
+    "status": "passed",
+    "childRequestsWithMarker": 6,
+    "tested": 6,
+    "scope": "thread/start developerInstructions inheritance, not a separate subagent-only instruction API"
+  },
+  "loadedResumeChildDefaults": {
+    "accepted": true,
+    "expectedNew": {
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    "actual": [
+      {
+        "threadId": "01a17f9b-2d5c-7e83-b2f8-a11077ffeebe",
+        "parent": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+        "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+        "subagent": "collab_spawn",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "rootMarker": "unknown",
+        "instructionMarkerPresent": true
+      },
+      {
+        "threadId": "01a17f9b-2d60-78d1-b8db-7f15ab84f730",
+        "parent": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+        "sessionId": "01a17f9b-2cf2-7f21-8c36-b249b23c282e",
+        "subagent": "collab_spawn",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "rootMarker": "unknown",
+        "instructionMarkerPresent": true
+      }
+    ],
+    "status": "unsupported_on_loaded_resume",
+    "scope": "same existing loaded parent, thread/resume config, no global mutation"
+  },
+  "outcome": "passed",
+  "scriptSha256": "14e968013f748a2ff02b50a3b54b97fcd39f5a048186b1f5ee0fe428ad3033b4"
+}

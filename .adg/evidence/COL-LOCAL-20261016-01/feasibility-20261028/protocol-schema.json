@@ -1,0 +1,268 @@
+{
+  "atUtc": "2026-10-27T19:15:09.681589+00:00",
+  "codexVersion": "codex-cli 0.164.0-alpha.11.1",
+  "checks": [
+    {
+      "id": "start_resume_support_config",
+      "status": "passed"
+    },
+    {
+      "id": "loaded_settings_have_no_generic_config",
+      "status": "passed"
+    },
+    {
+      "id": "native_project_identity_in_protocol",
+      "status": "passed"
+    },
+    {
+      "id": "parse_default",
+      "status": "passed"
+    },
+    {
+      "id": "parse_background",
+      "status": "passed"
+    },
+    {
+      "id": "parse_history_notes",
+      "status": "passed"
+    },
+    {
+      "id": "parse_invalid_background_type",
+      "status": "passed"
+    },
+    {
+      "id": "parse_invalid_remote_enum",
+      "status": "passed"
+    },
+    {
+      "id": "parse_remote_v2",
+      "status": "passed"
+    }
+  ],
+  "schemas": {
+    "TurnStartParams": {
+      "sha256": "f671d01c24995e99fcc110862ff3251c26d334fba212c7dc12857fb939506e47",
+      "fields": [
+        "additionalContext",
+        "approvalPolicy",
+        "approvalsReviewer",
+        "clientUserMessageId",
+        "collaborationMode",
+        "cwd",
+        "cyberAccessProgram",
+        "disabledPluginIds",
+        "effort",
+        "environments",
+        "input",
+        "model",
+        "multiAgentMode",
+        "outputSchema",
+        "parentTurnId",
+        "permissions",
+        "personality",
+        "responsesapiClientMetadata",
+        "responsesapiClientMetadataPatch",
+        "rootTurnId",
+        "runtimeWorkspaceRoots",
+        "sandboxPolicy",
+        "serviceTier",
+        "serviceTierForTurn",
+        "summary",
+        "threadId",
+        "toolOutput",
+        "turnTrigger"
+      ],
+      "config": null
+    },
+    "ThreadStartParams": {
+      "sha256": "80a40a7fac15b4bf70efb7f893fb353acc0a0d30c68f54aee4f01923deca85de",
+      "fields": [
+        "allowProviderModelFallback",
+        "approvalPolicy",
+        "approvalsReviewer",
+        "baseInstructions",
+        "config",
+        "cwd",
+        "daybreakEnabled",
+        "developerInstructions",
+        "dynamicTools",
+        "environments",
+        "ephemeral",
+        "experimentalRawEvents",
+        "historyMode",
+        "mockExperimentalField",
+        "model",
+        "modelProvider",
+        "multiAgentMode",
+        "permissions",
+        "personality",
+        "projectId",
+        "runtimeWorkspaceRoots",
+        "sandbox",
+        "selectedCapabilityRoots",
+        "serviceName",
+        "serviceTier",
+        "sessionStartSource",
+        "threadSource"
+      ],
+      "config": {
+        "additionalProperties": true,
+        "type": [
+          "object",
+          "null"
+        ]
+      }
+    },
+    "ThreadResumeParams": {
+      "sha256": "8152ea774ace4eb5623081abd64a1135f28cbff1e73ca641cfb80ac16f6eed32",
+      "fields": [
+        "approvalPolicy",
+        "approvalsReviewer",
+        "baseInstructions",
+        "config",
+        "cwd",
+        "developerInstructions",
+        "excludeTurns",
+        "history",
+        "initialTurnsPage",
+        "model",
+        "modelProvider",
+        "path",
+        "permissions",
+        "personality",
+        "runtimeWorkspaceRoots",
+        "sandbox",
+        "serviceTier",
+        "threadId"
+      ],
+      "config": {
+        "additionalProperties": true,
+        "type": [
+          "object",
+          "null"
+        ]
+      }
+    },
+    "ProjectListParams": {
+      "sha256": "852330150c7e62724842b5fe39cc880ccd98f89179d34ba51cb95699b60e8656",
+      "fields": [
+        "cursor",
+        "limit",
+        "sortDirection",
+        "sortKey"
+      ],
+      "config": null
+    },
+    "ThreadSettingsUpdateParams": {
+      "sha256": "749419634bb7ed66216d72bf9d8734ecf0e6efaa8cd46fe51a117d1b42ed9657",
+      "fields": [
+        "approvalPolicy",
+        "approvalsReviewer",
+        "collaborationMode",
+        "cwd",
+        "disabledPluginIds",
+        "effort",
+        "model",
+        "multiAgentMode",
+        "permissions",
+        "personality",
+        "sandboxPolicy",
+        "serviceTier",
+        "summary",
+        "threadId"
+      ],
+      "config": null
+    },
+    "ThreadListParams": {
+      "sha256": "158dc75c077662b181191dd258d2670d505505e84c40c62214bf20d3364a5520",
+      "fields": [
+        "ancestorThreadId",
+        "archived",
+        "cursor",
+        "cwd",
+        "excludedThreadIds",
+        "limit",
+        "modelProviders",
+        "originators",
+        "parentThreadId",
+        "projectId",
+        "searchTerm",
+        "sectionId",
+        "sortDirection",
+        "sortKey",
+        "sourceKinds",
+        "useStateDbOnly"
+      ],
+      "config": null
+    }
+  },
+  "featureCases": [
+    {
+      "case": "default",
+      "expectedAccepted": true,
+      "exit": 0,
+      "featureStates": [
+        "async_compaction                         under development  false",
+        "context_management                       under development  false",
+        "token_budget                             under development  false"
+      ],
+      "status": "passed",
+      "error": null
+    },
+    {
+      "case": "background",
+      "expectedAccepted": true,
+      "exit": 0,
+      "featureStates": [
+        "async_compaction                         under development  true",
+        "context_management                       under development  false",
+        "token_budget                             under development  false"
+      ],
+      "status": "passed",
+      "error": null
+    },
+    {
+      "case": "history_notes",
+      "expectedAccepted": true,
+      "exit": 0,
+      "featureStates": [
+        "async_compaction                         under development  false",
+        "context_management                       under development  true",
+        "token_budget                             under development  true"
+      ],
+      "status": "passed",
+      "error": null
+    },
+    {
+      "case": "invalid_background_type",
+      "expectedAccepted": false,
+      "exit": 1,
+      "featureStates": [],
+      "status": "passed",
+      "error": "Error: failed to load bootstrap configuration\n\nCaused by:\n    data did not match any variant of untagged enum FeatureToml\n    in `features.async_compaction`\n    \n"
+    },
+    {
+      "case": "invalid_remote_enum",
+      "expectedAccepted": false,
+      "exit": 1,
+      "featureStates": [],
+      "status": "passed",
+      "error": "Error: failed to load bootstrap configuration\n\nCaused by:\n    unknown variant `fixture_invalid`, expected `unsupported` or `v2`\n    in `model_providers.fixture.capabilities.remote_compaction`\n    \n"
+    },
+    {
+      "case": "remote_v2",
+      "expectedAccepted": true,
+      "exit": 0,
+      "featureStates": [
+        "async_compaction                         under development  false",
+        "context_management                       under development  false",
+        "token_budget                             under development  false"
+      ],
+      "status": "passed",
+      "error": null
+    }
+  ],
+  "realModelCalls": 0,
+  "status": "passed",
+  "scriptSha256": "8da345e2bee5797c1064aad0aede498690bb20beeeb1f71065cefab312cd46fa"
+}

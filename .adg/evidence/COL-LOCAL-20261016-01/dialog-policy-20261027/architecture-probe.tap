@@ -1,0 +1,18 @@
+(node:1310) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"probe":"source-contract-only","source":"/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/@bitkyc08/opencodex/src/plugins/upstream-hooks.ts","sha256":"0c6a2103f1e1a00d3c47c47a054c744846d5fbef0fd448b0111b5a5af39a4fcd","network":false,"configRead":false}
+[opencodex] plugin upstream rewriter disabled: plugin_exception
+✔ No plugin keeps the exact target and headers object (15.098625ms)
+✔ Documented hook exposes only destination, headers and chosen transport; source headers stay unchanged (0.716042ms)
+✔ Concurrent logical sends keep request headers separate; no shared global mutation needed (0.14125ms)
+✔ Thrown rewrite rolls back partial edits and is disabled for following sends (0.133042ms)
+✔ Loopback WS rewrite retains WS transport and removes remote proxy for the local hop (0.280834ms)
+✔ API-key caller-metadata allowlist does not prove stable thread or spawn identity at egress (0.264583ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19.200375

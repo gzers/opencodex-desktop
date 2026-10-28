@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-28",
+  "goal": "对话策略分层可行性验证",
+  "status": "complete",
+  "requirements": [
+    {
+      "id": "current-app-readonly-attachment",
+      "result": "unsupported_current_launch",
+      "evidence": "owner-connection.json currentAppAttachment",
+      "meaning": "当前进程仅stdio，无公开端点；未拦截或重启"
+    },
+    {
+      "id": "isolated-owning-engine",
+      "result": "passed",
+      "evidence": "owner-connection.json checks two_clients_same_owner_read, second_client_controls_same_owner, management_client_disconnect"
+    },
+    {
+      "id": "opencodex-isolated-management-plugin",
+      "result": "passed",
+      "evidence": "opencodex-service.json checks original_cli_ready, real_plugin_loader_and_stream, disable_plugin_keeps_original_route"
+    },
+    {
+      "id": "project-thread-scope",
+      "result": "unsupported_missing_preplan_scope_contract",
+      "evidence": "summary.remaining.V4_project_thread_search; key-mode identity absent at egress"
+    },
+    {
+      "id": "subagent-scope-create-and-overrides",
+      "result": "passed",
+      "evidence": "native-children.json checks same_project_thread_override, native_child_defaults_per_loaded_thread, explicit_spawn_override, native_child_concurrency_limit"
+    },
+    {
+      "id": "loaded-child-hot-update",
+      "result": "unsupported_on_same_owner_loaded_resume_in_current_binary",
+      "evidence": "native-children.json loadedResumeChildDefaults"
+    },
+    {
+      "id": "context-compression-and-transport",
+      "result": "passed_with_boundaries",
+      "evidence": "opencodex-service.json manual compaction continuation, background_compaction, websocket ingress, cancellation, third-party history refusal and proxy summary"
+    },
+    {
+      "id": "minimum-real-confirmation",
+      "result": "passed_scoped",
+      "evidence": "real-basic.json + real-search.json; 2 bounded requests via existing OpenCodex 2.84.0 route"
+    },
+    {
+      "id": "architecture-and-package-revision",
+      "result": "passed",
+      "evidence": "20261027-对话策略执行架构与OpenCodex扩展边界.md and 20261027-对话策略分层可行性验证计划.md"
+    }
+  ],
+  "safetyScope": "daily config unchanged; active app not restarted or intercepted; no credentials read by probes; real route used existing proxy and synthetic inputs only",
+  "finalEvidence": {
+    "isolatedExecutionChecks": 36,
+    "sourceContractChecks": 6,
+    "prototypeRegressionTests": 41,
+    "realRouteRequests": 2,
+    "realRouteModels": [
+      "FeiMao/gpt-6.1-sol"
+    ],
+    "regressionEvidence": "final-regression.tap",
+    "summary": "summary.json"
+  }
+}

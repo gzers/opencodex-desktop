@@ -1,0 +1,262 @@
+{
+  "atUtc": "2026-10-27T19:24:34.319702+00:00",
+  "opencodexVersion": "2.84.0",
+  "checks": [
+    {
+      "id": "original_cli_ready",
+      "status": "passed",
+      "observed": {
+        "service": "opencodex",
+        "ready": true,
+        "pidIsOwn": true
+      }
+    },
+    {
+      "id": "real_plugin_loader_and_stream",
+      "status": "passed",
+      "observed": {
+        "path": "/hooked/v1/responses",
+        "model": "gpt-5.4-mini",
+        "effort": null,
+        "plugin": "loaded",
+        "threadIdPresent": false,
+        "subagentPresent": false,
+        "compactionTriggerPresent": false,
+        "hasSummaryInstruction": false
+      }
+    },
+    {
+      "id": "key_mode_identity_not_forwarded",
+      "status": "passed",
+      "observed": {
+        "threadIdPresent": false,
+        "subagentPresent": false
+      }
+    },
+    {
+      "id": "management_sidecar_persist",
+      "status": "passed",
+      "observed": {
+        "http": 200,
+        "reasoningInOwnConfig": "high"
+      }
+    },
+    {
+      "id": "sidecar_readback_reasoning_gap",
+      "status": "passed",
+      "observed": {
+        "http": 200,
+        "reasoningPresent": false,
+        "modelCandidates": 0
+      }
+    },
+    {
+      "id": "search_model_is_backend_scoped",
+      "status": "passed",
+      "observed": {
+        "http": 400,
+        "configuredKeyChannelNotEligible": true,
+        "message": "{\"error\":\"webSearch.model: backend/model pair \\\"openai/probe/gpt-5.4-mini\\\" is not a web-search sidecar candidate — the model must be picker-visible and runnable by that executor-backed backend (or its auth-slot model)\",\"allowedModels\":[\"claude-haiku-4-5\",\"gpt-5.6-luna\"]}"
+      }
+    },
+    {
+      "id": "shadow_call_is_not_title_specific",
+      "status": "passed",
+      "observed": {
+        "titlePurposeModel": "gpt-5.4-mini",
+        "commitPurposeModel": "gpt-5.4-mini"
+      }
+    },
+    {
+      "id": "websocket_ingress_full_response",
+      "status": "passed",
+      "observed": {
+        "events": [
+          "response.created",
+          "response.output_item.added",
+          "response.output_text.delta",
+          "response.output_item.done",
+          "response.completed"
+        ],
+        "upstreamHttp": true,
+        "pluginLoadedAtHttpEgress": true
+      }
+    },
+    {
+      "id": "third_party_history_refused_before_egress",
+      "status": "passed",
+      "observed": {
+        "http": 400,
+        "message": "{\"error\":{\"message\":\"History and notes require the native ChatGPT forward provider\",\"type\":\"invalid_request_error\",\"code\":\"invalid_request_error\"}}",
+        "upstreamCalls": 0
+      }
+    },
+    {
+      "id": "routed_compaction_is_proxy_summary",
+      "status": "passed",
+      "observed": {
+        "http": 200,
+        "upstream": {
+          "path": "/hooked/v1/responses",
+          "model": "gpt-5.4-mini",
+          "effort": null,
+          "plugin": "loaded",
+          "threadIdPresent": false,
+          "subagentPresent": false,
+          "compactionTriggerPresent": false,
+          "hasSummaryInstruction": true
+        },
+        "responseTypes": [
+          "compaction"
+        ],
+        "error": null
+      }
+    },
+    {
+      "id": "codex_integration_stays_off",
+      "status": "passed",
+      "observed": {
+        "configContainsOnlyOwnTestFiles": true,
+        "dailyPathsNotUsed": true,
+        "codexConfigCreated": false
+      }
+    },
+    {
+      "id": "native_engine_compact_then_continue",
+      "status": "passed",
+      "observed": {
+        "manualCompactCompleted": true,
+        "upstreamCompactionTrigger": false,
+        "upstreamSummary": true,
+        "subsequentTurnCompleted": true,
+        "path": "real Codex -> real OpenCodex -> local fixture"
+      }
+    }
+  ],
+  "realModelCalls": 0,
+  "dailyConfigModified": false,
+  "historyRequest": {
+    "http": 400,
+    "message": "{\"error\":{\"message\":\"History and notes require the native ChatGPT forward provider\",\"type\":\"invalid_request_error\",\"code\":\"invalid_request_error\"}}",
+    "upstreamCalls": 0
+  },
+  "compactionRequest": {
+    "http": 200,
+    "upstream": {
+      "path": "/hooked/v1/responses",
+      "model": "gpt-5.4-mini",
+      "effort": null,
+      "plugin": "loaded",
+      "threadIdPresent": false,
+      "subagentPresent": false,
+      "compactionTriggerPresent": false,
+      "hasSummaryInstruction": true
+    },
+    "responseTypes": [
+      "compaction"
+    ],
+    "error": null
+  },
+  "status": "failed",
+  "error": "{'id': '01a17ed2-52f0-7cc1-9299-90d25ae7c9f7', 'rootTurnId': '01a17ed2-52f0-7cc1-9299-90d25ae7c9f7', 'items': [], 'itemsView': 'notLoaded', 'status': 'failed', 'error': {'message': 'unexpected status 404 Not Found: Model gpt-6.1-sol requires the canonical openai provider. Run: ocx provider add openai && ocx sync && ocx restart, url: http://127.0.0.1:50361/v1/responses', 'codexErrorInfo': {'httpConnectionFailed': {'httpStatusCode': 404}}, 'additionalDetails': None, 'misalignment': None}, 'startedAt': 1793129075, 'completedAt': 1793129075, 'durationMs': 9}",
+  "loaderMarker": true,
+  "serviceLogTail": "[plugin:feasibility-probe] fixture-ready\n🔌 Plugin loaded: feasibility-probe\n   outbound proxy: http://127.0.0.1:50360/\n🚀 opencodex proxy running on http://localhost:50361\n   POST /v1/responses → provider translation\n   POST /v1/chat/completions → OpenAI-compatible clients\n   GET  /healthz      → health check\n   GET  /api/*        → management API\n   GET  /             → GUI dashboard\n   Codex integration OFF; startup left Codex native.\nClient startup work complete.\n[opencodex] upstream failure code=invalid_request_error\n[opencodex] upstream failure code=invalid_request_error\n[opencodex] upstream failure code=invalid_request_error\n[opencodex] upstream failure code=invalid_request_error\n\n🛑 Shutting down opencodex proxy...\n",
+  "upstreamRequests": [
+    {
+      "path": "/hooked/v1/responses",
+      "model": "gpt-5.4-mini",
+      "effort": null,
+      "plugin": "loaded",
+      "threadIdPresent": false,
+      "subagentPresent": false,
+      "compactionTriggerPresent": false,
+      "hasSummaryInstruction": false
+    },
+    {
+      "path": "/hooked/v1/responses",
+      "model": "gpt-5.4-mini",
+      "effort": null,
+      "plugin": "loaded",
+      "threadIdPresent": false,
+      "subagentPresent": false,
+      "compactionTriggerPresent": false,
+      "hasSummaryInstruction": false
+    },
+    {
+      "path": "/hooked/v1/responses",
+      "model": "gpt-5.4-mini",
+      "effort": null,
+      "plugin": "loaded",
+      "threadIdPresent": false,
+      "subagentPresent": false,
+      "compactionTriggerPresent": false,
+      "hasSummaryInstruction": false
+    },
+    {
+      "path": "/hooked/v1/responses",
+      "model": "gpt-5.4-mini",
+      "effort": null,
+      "plugin": "loaded",
+      "threadIdPresent": false,
+      "subagentPresent": false,
+      "compactionTriggerPresent": false,
+      "hasSummaryInstruction": false
+    },
+    {
+      "path": "/hooked/v1/responses",
+      "model": "gpt-5.4-mini",
+      "effort": null,
+      "plugin": "loaded",
+      "threadIdPresent": false,
+      "subagentPresent": false,
+      "compactionTriggerPresent": false,
+      "hasSummaryInstruction": true
+    },
+    {
+      "path": "/hooked/v1/responses",
+      "model": "gpt-5.4-mini",
+      "effort": "low",
+      "plugin": "loaded",
+      "threadIdPresent": false,
+      "subagentPresent": false,
+      "compactionTriggerPresent": false,
+      "hasSummaryInstruction": false
+    },
+    {
+      "path": "/hooked/v1/responses",
+      "model": "gpt-5.4-mini",
+      "effort": "low",
+      "plugin": "loaded",
+      "threadIdPresent": false,
+      "subagentPresent": false,
+      "compactionTriggerPresent": false,
+      "hasSummaryInstruction": true
+    },
+    {
+      "path": "/hooked/v1/responses",
+      "model": "gpt-5.4-mini",
+      "effort": "low",
+      "plugin": "loaded",
+      "threadIdPresent": false,
+      "subagentPresent": false,
+      "compactionTriggerPresent": false,
+      "hasSummaryInstruction": true
+    }
+  ],
+  "blockedExternalAttempts": 0,
+  "isolatedRootManifest": [
+    "home/.opencodex/config.json.pre-openai-tiers-v2.bak",
+    "home/.opencodex/spend-ledger-owner.sqlite",
+    "home/.opencodex/thought-signature-replay.salt",
+    "home/.opencodex/config.json",
+    "home/.opencodex/spend-ledger.jsonl",
+    "home/.opencodex/codex-runtime.json",
+    "home/.opencodex/responses-state.json",
+    "home/.opencodex/serving-runtimes.json",
+    "home/.opencodex/spend-ledger.salt",
+    "home/.opencodex/config-mutation.sqlite",
+    "home/.opencodex/usage.jsonl",
+    "home/.opencodex/plugins/feasibility.mjs"
+  ],
+  "scriptSha256": "70afc7c546bd6b0e8163ae4327aaa25d23a4cf5d786a5b9b2510dd0b25acd5ca"
+}
