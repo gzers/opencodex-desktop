@@ -44,3 +44,11 @@ CI40632048037五个必需job全部通过，PR26已合并为d7c7978f043278baae8f2
 Release40636062852的macOS构建成功；Windows MSI/NSIS及签名资产成功生成，但验收脚本在NSIS注册表InstallLocation带引号时Join-Path读成错误盘符，故整体job失败。MSI默认安装/真实界面已通过；原失败报告和日志保留，不把整轮误记成功。
 
 PR27仅修测试脚本和验收工作流：固定摘要下载既有未公开资产，MSI管理提取后只恢复Tauri标记并匹配首次构建EXE摘要610fb4cc…f5365776；安装包本体、签名及v0.2.17标签完全不变。验收使用ExpectedCommit=d7c7978f0，避免拿测试脚本提交冒充应用来源。Windows默认/自定义安装器复验继续执行。草稿三个更新包已独立使用原公钥验签及摘要匹配，macOS归档版本/标识/两份许可资源读回通过，仍未公开或晋升stable。
+
+## 正式安装器、公开与stable已验
+
+首次复验曾因脚本种类变量被目录循环覆盖而四项均运行NSIS，绿灯未直接接受；逐项回执审查捕获并保留限制，155bb6048修正后CI40647352613真正MSI/NSIS×default/custom四个独立首次安装runner均通过。报告逐项读回实际kind、源提交、原包摘要、首屏、默认/自定义路径与自定义默认卸载数据保留。原签名资产未重建，v0.2.17不移动。PR27测试接线已合并为a354b130b，后续仅验收脚本维护不改变发布应用。
+
+公开40647289835先保留Latest=v0.2.16，stable40647642314成功投递Latest=v0.2.17。匿名release非草稿/非预发布，latest manifest version=0.2.17，8资产HTTP200/大小/SHA256匹配；三个更新包使用原项目公钥独立验签通过。证据release-summary.json与installers-final-summary.json已读回。实际旧版OTA替换/重开仍待后验收，不据签名通过声称该项完成。
+
+实际OTA第一次下载/验签及pending_restart后端状态成功，但脚本直接读取Tauri Channel raw消息，未拆message封装导致进度断言失败；dbc367806仅修验收脚本，生产IPC不替换。CI40648079681重测普通退出保留旧版和明确重启替换。

@@ -1,0 +1,109 @@
+{
+  "result": "pass",
+  "run": 40647352613,
+  "harnessHead": "155bb60482d1e3c31c42cba573f2b4905d3896bf",
+  "tagCommit": "d7c7978f043278baae8f2fc8c2119315a4660f12",
+  "originalSignedAssetsUnchanged": true,
+  "rows": [
+    {
+      "artifact": "release-existing-installer-nsis-default",
+      "source": "d7c7978f043278baae8f2fc8c2119315a4660f12",
+      "default": [
+        {
+          "kind": "nsis",
+          "installDirectory": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeX Desktop",
+          "boundary": "fresh isolated runner; no earlier installed product or directory override",
+          "pathOverride": false,
+          "result": "pass"
+        }
+      ],
+      "custom": []
+    },
+    {
+      "artifact": "release-existing-installer-msi-custom",
+      "source": "d7c7978f043278baae8f2fc8c2119315a4660f12",
+      "default": [],
+      "custom": [
+        {
+          "kind": "msi",
+          "name": "OpenCodeX.Desktop_0.2.17_x64_en-US.msi",
+          "bytes": 6836224,
+          "sha256": "2680d2e807f240f60c1447be43b524f67f6a16cba31e5c6b349733b34a056e5c",
+          "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-072d799bf4d64c9c9cc9504cc446288f",
+          "result": "pass",
+          "installExitCode": 0,
+          "installedExecutableSha256": "216c830166e03e6be28c593bec010634e4317db44086f3dca34f97392f5da0ac",
+          "expectedInstalledExecutableSha256": "216c830166e03e6be28c593bec010634e4317db44086f3dca34f97392f5da0ac",
+          "bundleMarker": "MSI",
+          "bundleMarkerOffset": 13119565,
+          "productVersion": "0.2.17",
+          "firstScreen": "pass",
+          "explicitCleanupHelper": {
+            "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+            "unconfirmedExitCode": 2,
+            "confirmedExitCode": 0,
+            "startupPointerRemoved": true,
+            "anchorAndActiveRootRemoved": true,
+            "externalHomeUnchanged": true,
+            "applicationRetained": true,
+            "applicationRootBindingTested": false,
+            "hostAcceptanceClaimed": false
+          },
+          "uninstallExitCode": 0,
+          "uninstallRemovedExecutable": true,
+          "defaultUninstallRetainedData": true
+        }
+      ]
+    },
+    {
+      "artifact": "release-existing-installer-msi-default",
+      "source": "d7c7978f043278baae8f2fc8c2119315a4660f12",
+      "default": [
+        {
+          "boundary": "fresh isolated runner; no earlier installed product or directory override",
+          "installDirectory": "C:\\Program Files\\OpenCodeX Desktop\\",
+          "pathOverride": false,
+          "result": "pass",
+          "kind": "msi"
+        }
+      ],
+      "custom": []
+    },
+    {
+      "artifact": "release-existing-installer-nsis-custom",
+      "source": "d7c7978f043278baae8f2fc8c2119315a4660f12",
+      "default": [],
+      "custom": [
+        {
+          "kind": "nsis",
+          "name": "OpenCodeX.Desktop_0.2.17_x64-setup.exe",
+          "bytes": 4883438,
+          "sha256": "efa5254c27308c8e0b06aa0aff45ae4be674bf424bac52efcb79d9735e60526d",
+          "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-5361f4162b5246c8a91ebc092cf32dfb",
+          "result": "pass",
+          "installExitCode": 0,
+          "installedExecutableSha256": "7b33847526602612d6828736e6926befcd1923473f213f76877c0af79b20f3c9",
+          "expectedInstalledExecutableSha256": "7b33847526602612d6828736e6926befcd1923473f213f76877c0af79b20f3c9",
+          "bundleMarker": "NSS",
+          "bundleMarkerOffset": 13119565,
+          "productVersion": "0.2.17",
+          "firstScreen": "pass",
+          "explicitCleanupHelper": {
+            "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+            "unconfirmedExitCode": 2,
+            "confirmedExitCode": 0,
+            "startupPointerRemoved": true,
+            "anchorAndActiveRootRemoved": true,
+            "externalHomeUnchanged": true,
+            "applicationRetained": true,
+            "applicationRootBindingTested": false,
+            "hostAcceptanceClaimed": false
+          },
+          "uninstallExitCode": 0,
+          "uninstallRemovedExecutable": true,
+          "defaultUninstallRetainedData": true
+        }
+      ]
+    }
+  ]
+}

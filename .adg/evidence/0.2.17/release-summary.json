@@ -1,0 +1,79 @@
+{
+  "verifiedAt": "2026-10-28T07:07:33.081158+00:00",
+  "tag": "v0.2.17",
+  "draft": false,
+  "prerelease": false,
+  "latest": "v0.2.17",
+  "manifestVersion": "0.2.17",
+  "manifestSha256": "7e5161fa8824f8d01f75b9f4f4519007adcc49f6512d03d51d3de437cadc898a",
+  "anonymousAssets": [
+    {
+      "name": "latest.json",
+      "bytes": 4913,
+      "sha256": "7e5161fa8824f8d01f75b9f4f4519007adcc49f6512d03d51d3de437cadc898a",
+      "anonymousHTTP": 200
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.17_aarch64.dmg",
+      "bytes": 6493171,
+      "sha256": "2e0dff42d24710431fe020cfd3f32143ad9b155e0d50416dc20f3ead00c3d1c9",
+      "anonymousHTTP": 200
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.17_x64-setup.exe",
+      "bytes": 4883438,
+      "sha256": "efa5254c27308c8e0b06aa0aff45ae4be674bf424bac52efcb79d9735e60526d",
+      "anonymousHTTP": 200
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.17_x64-setup.exe.sig",
+      "bytes": 452,
+      "sha256": "b8fbde659e033616c8470cb38ba54ebc4a3c7adcf0e72f7fbabfb3094eeddce9",
+      "anonymousHTTP": 200
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.17_x64_en-US.msi",
+      "bytes": 6836224,
+      "sha256": "2680d2e807f240f60c1447be43b524f67f6a16cba31e5c6b349733b34a056e5c",
+      "anonymousHTTP": 200
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.17_x64_en-US.msi.sig",
+      "bytes": 452,
+      "sha256": "372eedd1212e442c01afe2b3bf7ad943fcaea32801f166f6bce7873a9d2af6b3",
+      "anonymousHTTP": 200
+    },
+    {
+      "name": "OpenCodeX.Desktop_aarch64.app.tar.gz",
+      "bytes": 6602236,
+      "sha256": "294f13c58511ef28fff46c147c96973add55ce96b78c21da5a1ae3649eda8b77",
+      "anonymousHTTP": 200
+    },
+    {
+      "name": "OpenCodeX.Desktop_aarch64.app.tar.gz.sig",
+      "bytes": 440,
+      "sha256": "23b0b395b505e6ff7f35018c5d9890172adb3008b2fd9caa2b8ecc0b932ecd29",
+      "anonymousHTTP": 200
+    }
+  ],
+  "signatures": [
+    {
+      "platform": "darwin-aarch64",
+      "asset": "OpenCodeX.Desktop_aarch64.app.tar.gz",
+      "signature": "verified using original project public key",
+      "output": "Signature and comment signature verified\nTrusted comment: timestamp:1793164396\tfile:OpenCodeX Desktop.app.tar.gz\tversion:0.2.17"
+    },
+    {
+      "platform": "windows-x86_64",
+      "asset": "OpenCodeX.Desktop_0.2.17_x64_en-US.msi",
+      "signature": "verified using original project public key",
+      "output": "Signature and comment signature verified\nTrusted comment: timestamp:1793164529\tfile:OpenCodeX Desktop_0.2.17_x64_en-US.msi\tversion:0.2.17"
+    },
+    {
+      "platform": "windows-x86_64-nsis",
+      "asset": "OpenCodeX.Desktop_0.2.17_x64-setup.exe",
+      "signature": "verified using original project public key",
+      "output": "Signature and comment signature verified\nTrusted comment: timestamp:1793164529\tfile:OpenCodeX Desktop_0.2.17_x64-setup.exe\tversion:0.2.17"
+    }
+  ]
+}
