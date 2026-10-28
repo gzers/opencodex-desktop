@@ -186,24 +186,6 @@ fn is_local_panel_url(url: &str) -> bool {
     }
 }
 
-pub fn open_local_document_with_id(document_id: &str) -> AppResult<OpenResultDto> {
-    let target = match document_id {
-        "license" => project_document(&["LICENSE"]),
-        "third-party" => {
-            project_document(&["docs/04-项目资料/04-品牌与图标素材/01-原始素材/LICENSE"])
-        }
-        _ => {
-            return Err(AppError::NotFound {
-                entity: "local document".to_string(),
-            })
-        }
-    };
-    if !target.exists() {
-        return Ok(OpenResultDto { opened: false });
-    }
-    open_path(&target).map(|_| OpenResultDto { opened: true })
-}
-
 pub fn open_local_document_from_root(
     resource_root: &Path,
     document_id: &str,
@@ -225,21 +207,6 @@ pub fn open_local_document_from_root(
         return Ok(OpenResultDto { opened: false });
     };
     open_path(&target).map(|_| OpenResultDto { opened: true })
-}
-
-fn project_document(relative: &[&str]) -> PathBuf {
-    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    // 目录布局为 `<repo>/apps/desktop/tauri`，仓库根在清单目录之上 3 层
-    // （`ancestors()` 第 0 项是清单目录本身，见 IMP-03 目录迁移）。
-    let project_root = manifest_dir
-        .ancestors()
-        .nth(3)
-        .expect("cargo manifest lives at apps/desktop/tauri inside the project root");
-    let mut path = project_root.to_path_buf();
-    for segment in relative {
-        path.push(segment);
-    }
-    path
 }
 
 thread_local! {
@@ -496,32 +463,6 @@ mod tests {
             "http://127.0.0.1:10100?x=1",
         ] {
             assert!(!is_local_panel_url(url), "must reject {url}");
-        }
-    }
-
-    #[test]
-    fn local_documents_are_frozen() {
-        assert!(matches!(
-            open_local_document_with_id("unknown"),
-            Err(AppError::NotFound { entity }) if entity == "local document"
-        ));
-        let license = open_local_document_with_id("license").expect("license");
-        assert!(license.opened);
-
-        // 「第三方许可」指向 docs 分支里的官方素材 LICENSE。在只含代码的 `main` 检出里
-        // 该文件不存在，此时必须显式返回 opened=false，而不是当作错误。
-        let third_party_path =
-            project_document(&["docs/04-项目资料/04-品牌与图标素材/01-原始素材/LICENSE"]);
-        let third_party = open_local_document_with_id("third-party").expect("third-party");
-        if third_party_path.exists() {
-            assert!(third_party.opened);
-            assert_eq!(
-                recorded_open_paths(),
-                vec![project_document(&["LICENSE"]), third_party_path]
-            );
-        } else {
-            assert!(!third_party.opened);
-            assert_eq!(recorded_open_paths(), vec![project_document(&["LICENSE"])]);
         }
     }
 

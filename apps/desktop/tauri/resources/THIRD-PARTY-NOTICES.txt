@@ -1,21 +1,28 @@
-OpenCodeX Desktop — third-party notices
+OpenCodeX Desktop — OpenCodex branding and material notice
 
-This file is shipped inside the application bundle so the Settings → About
-link works after installation and does not depend on the source checkout.
+The application uses OpenCodex branding/material governed by the following
+upstream license. This is the notice linked by Settings → About.
+Source: https://github.com/lidge-jun/OpenCodex
+License source retained in the project documentation: docs/04-项目资料/04-品牌与图标素材/01-原始素材/LICENSE
 
-Direct runtime and UI dependencies used by this release include the following
-projects. Their copyright and license terms remain with their respective
-authors; the lockfiles in the source repository identify the complete resolved
-dependency graph for this build.
+MIT License
 
-- Tauri and Tauri plugins — MIT or Apache-2.0, https://tauri.app/
-- Vue — MIT, https://vuejs.org/
-- Pinia — MIT, https://pinia.vuejs.org/
-- Tokio — MIT or Apache-2.0, https://tokio.rs/
-- Reqwest — MIT or Apache-2.0, https://github.com/seanmonstar/reqwest
-- Serde — MIT or Apache-2.0, https://serde.rs/
-- Rustls — MIT or Apache-2.0, https://github.com/rustls/rustls
+Copyright (c) 2026 opencodex contributors
 
-For the exact transitive package versions and license metadata, consult the
-Cargo.lock and apps/desktop/ui/package-lock.json files in the corresponding
-source release.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -27,7 +27,6 @@ function identity(value: string, platform?: string): PathIdentity | null {
       root = 'unc:' + share[1]!.toLowerCase() + '/' + share[2]!.toLowerCase()
       remaining = share[3] ?? ''
     } else return null
-    if (root.startsWith('drive:') && remaining.toLowerCase().startsWith('globalroot/')) return null
   } else {
     if (!path.startsWith('/')) return null
     root = 'posix'
@@ -35,6 +34,7 @@ function identity(value: string, platform?: string): PathIdentity | null {
   }
   const parts = remaining.split('/').filter(Boolean)
   if (parts.some(part => part === '.' || part === '..')) return null
+  if (windows && parts.some(part => /[:<>"|?*]/.test(part) || /[. ]$/.test(part) || /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part))) return null
   return { root, parts: windows ? parts.map(part => part.toLowerCase()) : parts, windows }
 }
 

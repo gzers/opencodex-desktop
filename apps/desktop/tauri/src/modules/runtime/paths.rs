@@ -103,7 +103,17 @@ fn windows_is_within(path: &Path, scope: &Path) -> bool {
 
 fn is_symlink(path: &Path) -> bool {
     std::fs::symlink_metadata(path)
-        .map(|meta| meta.file_type().is_symlink())
+        .map(|meta| {
+            #[cfg(windows)]
+            {
+                use std::os::windows::fs::MetadataExt;
+                meta.file_attributes() & 0x400 != 0
+            }
+            #[cfg(not(windows))]
+            {
+                meta.file_type().is_symlink()
+            }
+        })
         .unwrap_or(false)
 }
 
@@ -133,7 +143,7 @@ pub fn has_symlink_component(path: &Path, scope: Option<&Path>) -> bool {
                 }
             })
             .unwrap_or(true);
-        if in_scope && is_symlink(candidate) {
+        if (in_scope || cfg!(windows)) && is_symlink(candidate) {
             return true;
         }
         current = candidate.parent().filter(|parent| *parent != candidate);
@@ -230,7 +240,37 @@ pub fn validate_install_target(
     path: &Path,
     scope: Option<&Path>,
 ) -> Result<PathBuf, PathRejection> {
-    if !path.is_absolute() {
+    if !path.is_absolute()
+        || path.components().any(|p| {
+            matches!(
+                p,
+                std::path::Component::ParentDir | std::path::Component::CurDir
+            )
+        })
+        || path.to_string_lossy().chars().any(char::is_control)
+    {
+        return Err(PathRejection::NotAbsolute);
+    }
+    #[cfg(windows)]
+    if !matches!(path.components().next(), Some(std::path::Component::Prefix(prefix)) if matches!(prefix.kind(), std::path::Prefix::Disk(_) | std::path::Prefix::VerbatimDisk(_) | std::path::Prefix::UNC(_, _) | std::path::Prefix::VerbatimUNC(_, _)))
+    {
+        return Err(PathRejection::NotAbsolute);
+    }
+    #[cfg(windows)]
+    if path.components().any(|part| {
+        let std::path::Component::Normal(name) = part else {
+            return false;
+        };
+        let text = name.to_string_lossy();
+        let stem = text.split('.').next().unwrap_or("").to_ascii_lowercase();
+        text.ends_with(['.', ' '])
+            || text.contains([':', '<', '>', '|', '?', '*', '\"'])
+            || ["con", "prn", "aux", "nul"].contains(&stem.as_str())
+            || stem
+                .strip_prefix("com")
+                .or_else(|| stem.strip_prefix("lpt"))
+                .is_some_and(|n| matches!(n, "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"))
+    }) {
         return Err(PathRejection::NotAbsolute);
     }
     if has_symlink_component(path, scope) {
@@ -243,17 +283,9 @@ pub fn validate_install_target(
         if !path.is_dir() {
             return Err(PathRejection::NotDirectory);
         }
-        let probe = path.join(".opencodex-write-probe");
-        if std::fs::OpenOptions::new()
-            .create_new(true)
-            .write(true)
-            .open(&probe)
-            .is_err()
-        {
-            return Err(PathRejection::NotWritable);
-        }
-        let _ = std::fs::remove_file(&probe);
-        return Ok(path.to_path_buf());
+        // Read-only admission: actual private staging creation proves write access.
+        // A rejected non-owned directory must not receive even a temporary probe.
+        return Ok(install_storage_path(path));
     }
     let mut ancestor = path.parent().ok_or(PathRejection::NotAbsolute)?;
     loop {
@@ -270,7 +302,24 @@ pub fn validate_install_target(
             Err(_) => return Err(PathRejection::Missing),
         }
     }
-    Ok(path.to_path_buf())
+    Ok(install_storage_path(path))
+}
+
+fn install_storage_path(path: &Path) -> PathBuf {
+    #[cfg(windows)]
+    {
+        use std::os::windows::ffi::{OsStrExt, OsStringExt};
+        let units = path
+            .as_os_str()
+            .encode_wide()
+            .map(|c| if c == 47 { 92 } else { c })
+            .collect::<Vec<_>>();
+        PathBuf::from(std::ffi::OsString::from_wide(&units))
+    }
+    #[cfg(not(windows))]
+    {
+        path.to_path_buf()
+    }
 }
 
 #[cfg(all(test, unix))]

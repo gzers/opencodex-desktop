@@ -28,7 +28,41 @@ function Invoke-Installer([string]$File, [string]$Arguments) {
     if ($process.ExitCode -notin @(0, 3010)) { throw "Installer failed with exit code $($process.ExitCode)" }
     return $process.ExitCode
 }
+function Find-DefaultInstalledDirectory {
+    $roots=@('HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*')
+    $entries=@(Get-ItemProperty -Path $roots -ErrorAction SilentlyContinue | Where-Object DisplayName -ceq 'OpenCodeX Desktop')
+    $directories=@()
+    foreach($item in $entries){
+        if($item.InstallLocation){$directories+=[string]$item.InstallLocation}
+        if($item.DisplayIcon -match '^"?([^"\r\n]+?\.exe)'){$directories+=Split-Path -Parent $Matches[1]}
+        if($item.UninstallString -match '^"([^"\r\n]+uninstall\.exe)"'){$directories+=Split-Path -Parent $Matches[1]}
+    }
+    $found=@($directories | Sort-Object -Unique | Where-Object {Test-Path -LiteralPath (Join-Path $_ 'opencodex-desktop.exe')})
+    if($found.Count -ne 1){throw 'Could not identify one product-owned default install directory'}
+    return $found[0]
+}
 try {
+    # No /D or INSTALLDIR override: exercise the installer's actual default/remembered path.
+    $taskResult.defaultInstallChecks=@()
+    foreach($kind in @('msi','nsis')){
+        $pattern=if($kind -eq 'nsis'){'*-setup.exe'}else{'*.msi'}
+        $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $kind) -Filter $pattern -File)
+        if($package.Count -ne 1){throw 'Exact default installer package missing'}
+        if($kind -eq 'nsis'){[void](Invoke-Installer $package[0].FullName '/S')}
+        else{[void](Invoke-Installer 'msiexec.exe' ('/i "'+$package[0].FullName+'" /qn /norestart'))}
+        $defaultRoot=Find-DefaultInstalledDirectory
+        try{
+            $defaultExe=Join-Path $defaultRoot 'opencodex-desktop.exe'
+            & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind+'-default-startup')) -ExpectedCommit $taskSource
+            $taskResult.defaultInstallChecks+=@{kind=$kind;result='pass';installDirectory=$defaultRoot;pathOverride=$false;boundary='MSI fresh first; NSIS may honor the existing product remembered directory'}
+            foreach($resource in @('LICENSE','THIRD-PARTY-NOTICES.txt')){
+                if(!(Test-Path -LiteralPath (Join-Path $defaultRoot ('resources/'+$resource)))){throw 'Installed local documentation resource missing'}
+            }
+        }finally{
+            if($kind -eq 'nsis'){[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}
+            else{[void](Invoke-Installer 'msiexec.exe' ('/x "'+$package[0].FullName+'" /qn /norestart'))}
+        }
+    }
     # MSI reads the shared remembered InstallDir even after NSIS uninstall.
     # Test MSI on the fresh runner first; NSIS /D explicitly chooses its own root.
     foreach ($kind in @('msi', 'nsis')) {

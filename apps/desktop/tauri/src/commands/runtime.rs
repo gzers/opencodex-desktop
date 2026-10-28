@@ -549,9 +549,8 @@ async fn install_managed_runtime(
                     handle_ref.refresh();
                     // 安装刚落地，版本是确定事实：回填到运行来源记录，卡片与
                     // `runtime.json` 的 `resolved_version` 才不会停在「未知」（`FZ-48`）。
-                    handle_ref.record_resolved_version(&outcome.version);
-                    let entry = outcome.history_entry("succeeded", None);
-                    let _ = handle_ref.record_history(entry);
+                    // Package, launcher and source history were committed by the installer.
+                    // Do not duplicate success history or acknowledge an ignored write failure.
                     let protection_pending = receipt.as_mut().is_some_and(|r|
                         r.reconcile(&data_root_path, &protection).is_err());
                     if protection_pending {

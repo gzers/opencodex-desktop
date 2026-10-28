@@ -1,3 +1,4 @@
+import {verifyWindowsInstallUi} from './windows-install-ui.mjs'
 // Smoke verification for the final Windows EXE, using WebView2's loopback CDP.
 // Requires Node >=24. No external browser/automation package is needed.
 import assert from 'node:assert/strict'
@@ -98,6 +99,7 @@ try {
     sandboxDataRootInitialized: true,
   }, null, 2) + '\n')
   if(modelSandbox){diagnostics.phase='model-native-ui';await verifyWindowsModelUi(call,output,facts,modelSandbox)}
+  if(modelSandbox){diagnostics.phase='runtime-install-ui';await verifyWindowsInstallUi(call,output)}
   diagnostics.result = 'pass'
   diagnostics.phase = 'complete'
   await saveDiagnostics(diagnostics)
