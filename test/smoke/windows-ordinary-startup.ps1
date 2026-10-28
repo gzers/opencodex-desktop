@@ -37,7 +37,7 @@ public static class OcxNativeProfileProvision {
 
  & icacls.exe $taskOutput /grant ($taskName+':(OI)(CI)M') | Out-Null
  if($LASTEXITCODE -ne 0){throw 'Cannot provision isolated acceptance output directory'}
- if(!$ProfileOnly){
+ {
   Add-Type -TypeDefinition @"
 using System;
 using System.ComponentModel;
@@ -162,9 +162,13 @@ public static class OcxFirstLogonFolders {
  if($ProfileOnly){Get-Content -LiteralPath (Join-Path $taskOutput 'ordinary-profile.json') -Raw | Write-Output;return}
  $taskReport=Get-Content -LiteralPath (Join-Path $taskOutput 'startup/startup.json') -Raw|ConvertFrom-Json
  if($taskReport.result -cne 'pass' -or $taskReport.applicationToken.elevated -ne $false -or !$taskReport.applicationModeMatched){throw 'Ordinary application token evidence missing'}
- [ordered]@{result='pass';scope='temporary nonadministrator local account with genuine loaded Profile; isolated sandbox, final EXE and WebView2 business checks';accountSid=$taskUser.SID.Value;applicationElevated=$taskReport.applicationToken.elevated;applicationModeMatched=$taskReport.applicationModeMatched;dailyUserChanged=$false;temporarySidDesktopAccess=$true;desktopAclRestoredOnExit=$true} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput 'ordinary-summary.json') -Encoding utf8
+ [ordered]@{result='pass';scope='temporary nonadministrator local account with genuine loaded Profile; isolated sandbox, final EXE and WebView2 business checks';accountSid=$taskUser.SID.Value;applicationElevated=$taskReport.applicationToken.elevated;applicationModeMatched=$taskReport.applicationModeMatched;dailyUserChanged=$false;temporarySidDesktopAccess=$true;desktopAclRestoredOnExit=$false} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskOutput 'ordinary-summary.json') -Encoding utf8
 } finally {
- if($taskDesktopAccess){$taskDesktopAccess.Dispose()}
+ if($taskDesktopAccess){
+  $taskDesktopAccess.Dispose()
+  $summary=Join-Path $taskOutput 'ordinary-summary.json'
+  if(Test-Path -LiteralPath $summary){$report=Get-Content -LiteralPath $summary -Raw|ConvertFrom-Json;$report.desktopAclRestoredOnExit=$true;$report|ConvertTo-Json|Set-Content -LiteralPath $summary -Encoding utf8}
+ }
  if($taskUser){Remove-LocalUser -SID $taskUser.SID}
  [Array]::Clear($taskSecret,0,$taskSecret.Length)
 }
