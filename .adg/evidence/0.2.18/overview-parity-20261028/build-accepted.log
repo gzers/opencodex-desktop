@@ -1,0 +1,41 @@
+
+> opencodex-desktop-ui@0.2.18 build
+> vue-tsc --noEmit && vite build
+
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 325 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                      1.08 kB │ gzip:   0.43 kB
+dist/assets/WebDavConnection-DcLXzHb8.css            0.12 kB │ gzip:   0.12 kB
+dist/assets/ImportedConnections-BUNCwXGY.css         0.38 kB │ gzip:   0.23 kB
+dist/assets/SyncRoute-DhieIivz.css                   0.87 kB │ gzip:   0.39 kB
+dist/assets/ModelSaveHistory-BaDMLQ8j.css            1.53 kB │ gzip:   0.49 kB
+dist/assets/ModelsRoute-BUGfh8aa.css                33.57 kB │ gzip:   6.00 kB
+dist/assets/index-C723kuyG.css                     133.81 kB │ gzip:  23.64 kB
+dist/assets/rolldown-runtime-DK3Fl9T5.js             0.15 kB │ gzip:   0.15 kB
+dist/assets/preload-helper-BZ1Pz5am.js               1.21 kB │ gzip:   0.69 kB
+dist/assets/ImportedConnections-DcZQdPgc.js          2.57 kB │ gzip:   1.29 kB
+dist/assets/core-DD5O7rXM.js                         2.86 kB │ gzip:   1.15 kB
+dist/assets/SyncRoute-9lMvrKMR.js                    3.43 kB │ gzip:   1.47 kB
+dist/assets/WebDavConnection-Cut23-BU.js             4.57 kB │ gzip:   1.92 kB
+dist/assets/pinia-Degfou_Q.js                        5.99 kB │ gzip:   2.83 kB
+dist/assets/ModelSaveHistory-DlFuTpn3.js             7.50 kB │ gzip:   3.31 kB
+dist/assets/_plugin-vue_export-helper-BbPee-T0.js   13.62 kB │ gzip:   5.60 kB
+dist/assets/webview-bQrK9-cx.js                     16.22 kB │ gzip:   3.46 kB
+dist/assets/reactivity.esm-bundler-CiLpcgQX.js      20.90 kB │ gzip:   7.86 kB
+dist/assets/store-D3n2gEtS.js                       21.44 kB │ gzip:   2.79 kB
+dist/assets/runtime-core.esm-bundler-BIovt1e_.js    42.99 kB │ gzip:  17.74 kB
+dist/assets/ModelsRoute-DOWdg4Vd.js                180.64 kB │ gzip:  53.33 kB
+dist/assets/index-5IQP1oqg.js                      495.59 kB │ gzip: 157.36 kB
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/features/updates/useUpdateScheduler.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/updates/update.ts is dynamically imported by src/features/updates/store.ts but also statically imported by src/features/backup/BackupManagement.vue?vue&type=script&setup=true&lang.ts, src/features/updates/UpdateCenter.vue?vue&type=script&setup=true&lang.ts, src/features/updates/useUpdateScheduler.ts, src/routes/OverviewRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/models/store.ts is dynamically imported by src/composables/useAppController.ts but also statically imported by src/features/backup/ModelSaveHistory.vue?vue&type=script&setup=true&lang.ts, src/features/models/AgentExecutionField.vue?vue&type=script&setup=true&lang.ts, src/features/models/BatchAgentDialog.vue?vue&type=script&setup=true&lang.ts, src/features/models/ChannelBatchDialog.vue?vue&type=script&setup=true&lang.ts, src/features/models/ChannelEditor.vue?vue&type=script&setup=true&lang.ts, ..., dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/event.js is dynamically imported by src/app/appearance/effects.ts, src/app/lifecycle/store.ts, src/components/TaskProgressHost.vue?vue&type=script&setup=true&lang.ts, src/features/notifications/store.ts, src/features/runtime/store.ts, ... but also statically imported by node_modules/@tauri-apps/api/webview.js, node_modules/@tauri-apps/api/window.js, src/app/appearance/nativeWindow.ts, dynamic import will not move module into another chunk.
+
+✓ built in 393ms

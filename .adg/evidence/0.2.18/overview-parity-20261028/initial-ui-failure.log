@@ -1,0 +1,496 @@
+
+> opencodex-desktop-ui@0.2.18 test
+> vitest --run tests/update-center.test.ts tests/settings-install-path.test.ts tests/settings-install-feedback.test.ts tests/environment-gate.test.ts tests/overview-mods.test.ts tests/model-transfer.test.ts tests/model-transfer-adoption.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/ui
+
+ ❯ tests/settings-install-feedback.test.ts (20 tests | 20 failed) 265ms
+   ❯ installation wizard factual progress (20)
+     × never presents a stage constant as completed work in preparing 53ms
+     × never presents a stage constant as completed work in downloading 15ms
+     × never presents a stage constant as completed work in installing 17ms
+     × never presents a stage constant as completed work in extracting 11ms
+     × never presents a stage constant as completed work in verifying 13ms
+     × never presents a stage constant as completed work in activating 12ms
+     × never presents a stage constant as completed work in done 10ms
+     × stops the busy indicator and keeps failure without a false 100 percent 11ms
+     × keeps registry output and readable error after failure in downloading without offline steps 10ms
+     × keeps registry output and readable error after failure in installing without offline steps 11ms
+     × keeps registry output and readable error after failure in verifying without offline steps 9ms
+     × keeps registry output and readable error after failure in activating without offline steps 8ms
+     × keeps offline reached steps and accessible output after validating fails 12ms
+     × keeps offline reached steps and accessible output after extracting fails 9ms
+     × keeps offline reached steps and accessible output after installing fails 13ms
+     × keeps offline reached steps and accessible output after verifying fails 15ms
+     × keeps offline reached steps and accessible output after activating fails 10ms
+     × keeps completed offline steps with accessible retained output 11ms
+     × shows completion only after a successful outcome and keeps restart/protection facts separate 8ms
+     × keeps the stage readable while quality or window visibility pauses animation 8ms
+ ❯ tests/settings-install-path.test.ts (29 tests | 12 failed) 315ms
+   ❯ installation prefix platform syntax and landing hint (29)
+     × displays the same readable identity on prefill and reset: \\?\D:\Software\OpenCodeX Desktop\data/runtime/opencodex 54ms
+     × displays the same readable identity on prefill and reset: \\?\UNC\server\share\OpenCodeX Desktop\runtime 25ms
+     × uses the same readable conversion after selecting a directory 11ms
+     × allows a fully qualified Windows prefix C:\Tools\OpenCodeX\data and only then advances 11ms
+     × allows a fully qualified Windows prefix F:\Apps with spaces\OpenCodeX\data and only then advances 11ms
+     × allows a fully qualified Windows prefix D:\Tools\data and only then advances 12ms
+     × allows a fully qualified Windows prefix \\server\share\OpenCodeX\data and only then advances 9ms
+     × updates the syntax check when the host platform fact arrives without changing the selected prefix 8ms
+     × accepts a Windows extended path returned by the host for  \\?\D:\Applications\OpenCodeX\data\runtime\opencodex 7ms
+     × accepts a Windows extended path returned by the host for \\?\UNC\server\share\OpenCodeX\data\runtime\opencodex 9ms
+     × passes the confirmed Windows path unchanged and displays a native permission rejection without retrying scripts 6ms
+     × permits exactly the explicit scripts-required retry from the real numeric error envelope 8ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 32 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > never presents a stage constant as completed work in preparing
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > never presents a stage constant as completed work in downloading
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > never presents a stage constant as completed work in installing
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > never presents a stage constant as completed work in extracting
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > never presents a stage constant as completed work in verifying
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > never presents a stage constant as completed work in activating
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > never presents a stage constant as completed work in done
+Error: Unable to get [role="progressbar"] within: <div data-v-a461122d="" class="modal-mask" data-testid="runtime-install-modal">
+  <div data-v-a461122d="" class="modal modal-wide wiz runtime-install-dialog" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="wiz-title">
+    <h3 data-v-a461122d="" id="wiz-title">安装 OpenCodex</h3>
+    <ol data-v-a461122d="" class="wiz-steps" aria-label="安装步骤">
+      <li data-v-a461122d="" class="active"><span data-v-a461122d="">1</span>安装位置</li>
+      <li data-v-a461122d="" class="active"><span data-v-a461122d="">2</span>安装源</li>
+      <li data-v-a461122d="" class=""><span data-v-a461122d="">3</span>确认</li>
+      <li data-v-a461122d="" class=""><span data-v-a461122d="">4</span>安装进度</li>
+    </ol>
+    <div data-v-a461122d="" class="wiz-body">
+      <div data-v-a461122d="" class="field"><label data-v-a461122d="" for="wiz-prefix">安装位置</label><input data-v-a461122d="" id="wiz-prefix" class="input local-path" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+      <p data-v-a461122d="" class="wiz-hint"></p>
+      <!--v-if-->
+      <div data-v-a461122d="" class="wiz-actions"><button data-v-a461122d="" class="btn btn ghost" type="button">
+          <!--v-if--><span class="btn-content">选择…</span>
+        </button><button data-v-a461122d="" class="btn btn ghost" type="button">
+          <!--v-if--><span class="btn-content">恢复默认</span>
+        </button></div>
+      <div data-v-a461122d="" class="wiz-block"><span data-v-a461122d="" class="wiz-label">安装源</span><label data-v-a461122d="" class="wiz-choice install-source-choice on"><input data-v-a461122d="" type="radio" value="registry"><span data-v-a461122d=""><b data-v-a461122d="">联网安装</b><small data-v-a461122d="">官方包 @bitkyc08/opencodex</small></span></label><label data-v-a461122d="" class="wiz-choice install-source-choice"><input data-v-a461122d="" type="radio" value="offline"><span data-v-a461122d=""><b data-v-a461122d="">导入离线包</b><small data-v-a461122d="">网络不通时用官方 .tgz</small></span></label>
+        <div data-v-a461122d="" class="wiz-proxy" data-testid="wiz-proxy">
+          <div data-v-a461122d="" class="field"><label data-v-a461122d="">代理（可选）</label>
+            <div data-v-a461122d="" class="wiz-inline"><select data-v-a461122d="" class="input">
+                <option data-v-a461122d="" value="http">HTTP</option>
+                <option data-v-a461122d="" value="socks5h">SOCKS5</option>
+              </select><input data-v-a461122d="" class="input" placeholder="host:port" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+          </div>
+          <details data-v-a461122d="" class="wiz-more">
+            <summary data-v-a461122d="">代理需要认证</summary>
+            <div data-v-a461122d="" class="wiz-inline"><input data-v-a461122d="" class="input" placeholder="用户名" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"><input data-v-a461122d="" class="input" placeholder="密码" type="password"></div>
+            <p data-v-a461122d="" class="wiz-hint">凭据只用于本次安装：写进临时配置文件（Unix 0600，用完即删），不进命令行参数、不写系统代理、不落盘。</p>
+          </details>
+          <p data-v-a461122d="" class="wiz-hint">留空直连；代理只作用于本次安装，不写系统代理与全局 npm 配置。</p>
+        </div>
+      </div>
+      <div data-v-a461122d="" class="wiz-block"><span data-v-a461122d="" class="wiz-label">版本</span><label data-v-a461122d="" class="wiz-choice"><input data-v-a461122d="" type="checkbox">指定版本</label>
+        <p data-v-a461122d="" class="wiz-hint">安装最新版（latest）。</p><label data-v-a461122d="" class="wiz-choice"><input data-v-a461122d="" type="checkbox">我已确认安装位置与安装源</label>
+        <details data-v-a461122d="" class="wiz-more">
+          <summary data-v-a461122d="">说明 / 安全边界</summary>
+          <p data-v-a461122d="" class="wiz-hint">默认以 <code data-v-a461122d="">--ignore-scripts</code> 安装；若包必须执行安装脚本才能生成入口，会先回来征求你的二次确认。</p>
+        </details>
+      </div>
+    </div>
+    <div data-v-a461122d="" class="wiz-foot"><button data-v-a461122d="" class="btn btn ghost" type="button">
+        <!--v-if--><span class="btn-content">取消</span>
+      </button><button data-v-a461122d="" class="btn btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">开始安装</span>
+      </button></div>
+  </div>
+</div>
+ ❯ DOMWrapper.get ../../../../ocx-020-model-config/apps/desktop/ui/node_modules/.pnpm/@vue+test-utils@2.5.0_@vue+compiler-dom@3.5.44_@vue+server-renderer@3.5.42_vue@3.5.42_typescript@5.9.3_/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/settings-install-feedback.test.ts:70:25
+     68|       runtime.observeInstallProgress({ phase, percent: 88, line: 'stag…
+     69|       await flushPromises()
+     70|       const bar = modal.get('[role="progressbar"]')
+       |                         ^
+     71|       expect(bar.attributes('aria-valuenow')).toBeUndefined()
+     72|       expect(bar.attributes('aria-valuetext')).toContain('等待实际完成')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/32]⎯
+
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > stops the busy indicator and keeps failure without a false 100 percent
+TypeError: reject is not a function
+ ❯ tests/settings-install-feedback.test.ts:79:5
+     77|   it('stops the busy indicator and keeps failure without a false 100 p…
+     78|     const { modal, reject } = await wizard()
+     79|     reject({ message: 'fixture installation rejected' })
+       |     ^
+     80|     await flushPromises()
+     81|     expect(modal.get('[data-testid="wiz-error"]').text()).toContain('f…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/32]⎯
+
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps registry output and readable error after failure in downloading without offline steps
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps registry output and readable error after failure in installing without offline steps
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps registry output and readable error after failure in verifying without offline steps
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps registry output and readable error after failure in activating without offline steps
+TypeError: reject is not a function
+ ❯ tests/settings-install-feedback.test.ts:91:7
+     89|       const { modal, runtime, reject } = await wizard()
+     90|       runtime.observeInstallProgress({ phase, percent: 40, line: 'stde…
+     91|       reject({ code: 14, message: 'managed runtime operation failed: n…
+       |       ^
+     92|       await flushPromises()
+     93|       expect(modal.get('[data-testid="wiz-console"]').text()).toContai…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/32]⎯
+
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps offline reached steps and accessible output after validating fails
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps offline reached steps and accessible output after extracting fails
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps offline reached steps and accessible output after installing fails
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps offline reached steps and accessible output after verifying fails
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps offline reached steps and accessible output after activating fails
+TypeError: reject is not a function
+ ❯ tests/settings-install-feedback.test.ts:111:5
+    109|     const { modal, runtime, reject } = await wizard('offline')
+    110|     runtime.observeInstallProgress({ phase, percent: 40, line: 'offlin…
+    111|     reject({ message: 'offline operation failed' })
+       |     ^
+    112|     await flushPromises()
+    113|     expect(modal.get('[data-testid="wiz-substeps"]').findAll('li').map…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/32]⎯
+
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps completed offline steps with accessible retained output
+Error: Unable to get [data-testid="wiz-substeps"] within: <div data-v-a461122d="" class="modal-mask" data-testid="runtime-install-modal">
+  <div data-v-a461122d="" class="modal modal-wide wiz runtime-install-dialog" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="wiz-title">
+    <h3 data-v-a461122d="" id="wiz-title">安装 OpenCodex</h3>
+    <ol data-v-a461122d="" class="wiz-steps" aria-label="安装步骤">
+      <li data-v-a461122d="" class="active"><span data-v-a461122d="">1</span>安装位置</li>
+      <li data-v-a461122d="" class="active"><span data-v-a461122d="">2</span>安装源</li>
+      <li data-v-a461122d="" class=""><span data-v-a461122d="">3</span>确认</li>
+      <li data-v-a461122d="" class=""><span data-v-a461122d="">4</span>安装进度</li>
+    </ol>
+    <div data-v-a461122d="" class="wiz-body">
+      <div data-v-a461122d="" class="field"><label data-v-a461122d="" for="wiz-prefix">安装位置</label><input data-v-a461122d="" id="wiz-prefix" class="input local-path" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+      <p data-v-a461122d="" class="wiz-hint"></p>
+      <!--v-if-->
+      <div data-v-a461122d="" class="wiz-actions"><button data-v-a461122d="" class="btn btn ghost" type="button">
+          <!--v-if--><span class="btn-content">选择…</span>
+        </button><button data-v-a461122d="" class="btn btn ghost" type="button">
+          <!--v-if--><span class="btn-content">恢复默认</span>
+        </button></div>
+      <div data-v-a461122d="" class="wiz-block"><span data-v-a461122d="" class="wiz-label">安装源</span><label data-v-a461122d="" class="wiz-choice install-source-choice on"><input data-v-a461122d="" type="radio" value="registry"><span data-v-a461122d=""><b data-v-a461122d="">联网安装</b><small data-v-a461122d="">官方包 @bitkyc08/opencodex</small></span></label><label data-v-a461122d="" class="wiz-choice install-source-choice"><input data-v-a461122d="" type="radio" value="offline"><span data-v-a461122d=""><b data-v-a461122d="">导入离线包</b><small data-v-a461122d="">网络不通时用官方 .tgz</small></span></label>
+        <div data-v-a461122d="" class="wiz-proxy" data-testid="wiz-proxy">
+          <div data-v-a461122d="" class="field"><label data-v-a461122d="">代理（可选）</label>
+            <div data-v-a461122d="" class="wiz-inline"><select data-v-a461122d="" class="input">
+                <option data-v-a461122d="" value="http">HTTP</option>
+                <option data-v-a461122d="" value="socks5h">SOCKS5</option>
+              </select><input data-v-a461122d="" class="input" placeholder="host:port" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+          </div>
+          <details data-v-a461122d="" class="wiz-more">
+            <summary data-v-a461122d="">代理需要认证</summary>
+            <div data-v-a461122d="" class="wiz-inline"><input data-v-a461122d="" class="input" placeholder="用户名" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"><input data-v-a461122d="" class="input" placeholder="密码" type="password"></div>
+            <p data-v-a461122d="" class="wiz-hint">凭据只用于本次安装：写进临时配置文件（Unix 0600，用完即删），不进命令行参数、不写系统代理、不落盘。</p>
+          </details>
+          <p data-v-a461122d="" class="wiz-hint">留空直连；代理只作用于本次安装，不写系统代理与全局 npm 配置。</p>
+        </div>
+      </div>
+      <div data-v-a461122d="" class="wiz-block"><span data-v-a461122d="" class="wiz-label">版本</span><label data-v-a461122d="" class="wiz-choice"><input data-v-a461122d="" type="checkbox">指定版本</label>
+        <p data-v-a461122d="" class="wiz-hint">安装最新版（latest）。</p><label data-v-a461122d="" class="wiz-choice"><input data-v-a461122d="" type="checkbox">我已确认安装位置与安装源</label>
+        <details data-v-a461122d="" class="wiz-more">
+          <summary data-v-a461122d="">说明 / 安全边界</summary>
+          <p data-v-a461122d="" class="wiz-hint">默认以 <code data-v-a461122d="">--ignore-scripts</code> 安装；若包必须执行安装脚本才能生成入口，会先回来征求你的二次确认。</p>
+        </details>
+      </div>
+    </div>
+    <div data-v-a461122d="" class="wiz-foot"><button data-v-a461122d="" class="btn btn ghost" type="button">
+        <!--v-if--><span class="btn-content">取消</span>
+      </button><button data-v-a461122d="" class="btn btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">开始安装</span>
+      </button></div>
+  </div>
+</div>
+ ❯ DOMWrapper.get ../../../../ocx-020-model-config/apps/desktop/ui/node_modules/.pnpm/@vue+test-utils@2.5.0_@vue+compiler-dom@3.5.44_@vue+server-renderer@3.5.42_vue@3.5.42_typescript@5.9.3_/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/settings-install-feedback.test.ts:126:18
+    124|     runtime.finishInstall()
+    125|     await flushPromises()
+    126|     expect(modal.get('[data-testid="wiz-substeps"]').findAll('li').eve…
+       |                  ^
+    127|     expect(modal.get('[data-testid="wiz-console"]').text()).toContain(…
+    128|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/32]⎯
+
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > shows completion only after a successful outcome and keeps restart/protection facts separate
+Error: Unable to get [role="progressbar"] within: <div data-v-a461122d="" class="modal-mask" data-testid="runtime-install-modal">
+  <div data-v-a461122d="" class="modal modal-wide wiz runtime-install-dialog" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="wiz-title">
+    <h3 data-v-a461122d="" id="wiz-title">安装 OpenCodex</h3>
+    <ol data-v-a461122d="" class="wiz-steps" aria-label="安装步骤">
+      <li data-v-a461122d="" class="active"><span data-v-a461122d="">1</span>安装位置</li>
+      <li data-v-a461122d="" class="active"><span data-v-a461122d="">2</span>安装源</li>
+      <li data-v-a461122d="" class=""><span data-v-a461122d="">3</span>确认</li>
+      <li data-v-a461122d="" class=""><span data-v-a461122d="">4</span>安装进度</li>
+    </ol>
+    <div data-v-a461122d="" class="wiz-body">
+      <div data-v-a461122d="" class="field"><label data-v-a461122d="" for="wiz-prefix">安装位置</label><input data-v-a461122d="" id="wiz-prefix" class="input local-path" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+      <p data-v-a461122d="" class="wiz-hint"></p>
+      <!--v-if-->
+      <div data-v-a461122d="" class="wiz-actions"><button data-v-a461122d="" class="btn btn ghost" type="button">
+          <!--v-if--><span class="btn-content">选择…</span>
+        </button><button data-v-a461122d="" class="btn btn ghost" type="button">
+          <!--v-if--><span class="btn-content">恢复默认</span>
+        </button></div>
+      <div data-v-a461122d="" class="wiz-block"><span data-v-a461122d="" class="wiz-label">安装源</span><label data-v-a461122d="" class="wiz-choice install-source-choice on"><input data-v-a461122d="" type="radio" value="registry"><span data-v-a461122d=""><b data-v-a461122d="">联网安装</b><small data-v-a461122d="">官方包 @bitkyc08/opencodex</small></span></label><label data-v-a461122d="" class="wiz-choice install-source-choice"><input data-v-a461122d="" type="radio" value="offline"><span data-v-a461122d=""><b data-v-a461122d="">导入离线包</b><small data-v-a461122d="">网络不通时用官方 .tgz</small></span></label>
+        <div data-v-a461122d="" class="wiz-proxy" data-testid="wiz-proxy">
+          <div data-v-a461122d="" class="field"><label data-v-a461122d="">代理（可选）</label>
+            <div data-v-a461122d="" class="wiz-inline"><select data-v-a461122d="" class="input">
+                <option data-v-a461122d="" value="http">HTTP</option>
+                <option data-v-a461122d="" value="socks5h">SOCKS5</option>
+              </select><input data-v-a461122d="" class="input" placeholder="host:port" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+          </div>
+          <details data-v-a461122d="" class="wiz-more">
+            <summary data-v-a461122d="">代理需要认证</summary>
+            <div data-v-a461122d="" class="wiz-inline"><input data-v-a461122d="" class="input" placeholder="用户名" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"><input data-v-a461122d="" class="input" placeholder="密码" type="password"></div>
+            <p data-v-a461122d="" class="wiz-hint">凭据只用于本次安装：写进临时配置文件（Unix 0600，用完即删），不进命令行参数、不写系统代理、不落盘。</p>
+          </details>
+          <p data-v-a461122d="" class="wiz-hint">留空直连；代理只作用于本次安装，不写系统代理与全局 npm 配置。</p>
+        </div>
+      </div>
+      <div data-v-a461122d="" class="wiz-block"><span data-v-a461122d="" class="wiz-label">版本</span><label data-v-a461122d="" class="wiz-choice"><input data-v-a461122d="" type="checkbox">指定版本</label>
+        <p data-v-a461122d="" class="wiz-hint">安装最新版（latest）。</p><label data-v-a461122d="" class="wiz-choice"><input data-v-a461122d="" type="checkbox">我已确认安装位置与安装源</label>
+        <details data-v-a461122d="" class="wiz-more">
+          <summary data-v-a461122d="">说明 / 安全边界</summary>
+          <p data-v-a461122d="" class="wiz-hint">默认以 <code data-v-a461122d="">--ignore-scripts</code> 安装；若包必须执行安装脚本才能生成入口，会先回来征求你的二次确认。</p>
+        </details>
+      </div>
+    </div>
+    <div data-v-a461122d="" class="wiz-foot"><button data-v-a461122d="" class="btn btn ghost" type="button">
+        <!--v-if--><span class="btn-content">取消</span>
+      </button><button data-v-a461122d="" class="btn btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">开始安装</span>
+      </button></div>
+  </div>
+</div>
+ ❯ DOMWrapper.get ../../../../ocx-020-model-config/apps/desktop/ui/node_modules/.pnpm/@vue+test-utils@2.5.0_@vue+compiler-dom@3.5.44_@vue+server-renderer@3.5.42_vue@3.5.42_typescript@5.9.3_/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/settings-install-feedback.test.ts:135:18
+    133|     runtime.markInstallDone()
+    134|     await flushPromises()
+    135|     expect(modal.get('[role="progressbar"]').attributes('aria-valuenow…
+       |                  ^
+    136|     expect(modal.get('[data-testid="wiz-finish"]').attributes('disable…
+    137|     runtime.finishInstall()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/32]⎯
+
+ FAIL  tests/settings-install-feedback.test.ts > installation wizard factual progress > keeps the stage readable while quality or window visibility pauses animation
+Error: Unable to get .wiz-progress-bar within: <div data-v-a461122d="" class="modal-mask" data-testid="runtime-install-modal">
+  <div data-v-a461122d="" class="modal modal-wide wiz runtime-install-dialog" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="wiz-title">
+    <h3 data-v-a461122d="" id="wiz-title">安装 OpenCodex</h3>
+    <ol data-v-a461122d="" class="wiz-steps" aria-label="安装步骤">
+      <li data-v-a461122d="" class="active"><span data-v-a461122d="">1</span>安装位置</li>
+      <li data-v-a461122d="" class="active"><span data-v-a461122d="">2</span>安装源</li>
+      <li data-v-a461122d="" class=""><span data-v-a461122d="">3</span>确认</li>
+      <li data-v-a461122d="" class=""><span data-v-a461122d="">4</span>安装进度</li>
+    </ol>
+    <div data-v-a461122d="" class="wiz-body">
+      <div data-v-a461122d="" class="field"><label data-v-a461122d="" for="wiz-prefix">安装位置</label><input data-v-a461122d="" id="wiz-prefix" class="input local-path" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+      <p data-v-a461122d="" class="wiz-hint"></p>
+      <!--v-if-->
+      <div data-v-a461122d="" class="wiz-actions"><button data-v-a461122d="" class="btn btn ghost" type="button">
+          <!--v-if--><span class="btn-content">选择…</span>
+        </button><button data-v-a461122d="" class="btn btn ghost" type="button">
+          <!--v-if--><span class="btn-content">恢复默认</span>
+        </button></div>
+      <div data-v-a461122d="" class="wiz-block"><span data-v-a461122d="" class="wiz-label">安装源</span><label data-v-a461122d="" class="wiz-choice install-source-choice on"><input data-v-a461122d="" type="radio" value="registry"><span data-v-a461122d=""><b data-v-a461122d="">联网安装</b><small data-v-a461122d="">官方包 @bitkyc08/opencodex</small></span></label><label data-v-a461122d="" class="wiz-choice install-source-choice"><input data-v-a461122d="" type="radio" value="offline"><span data-v-a461122d=""><b data-v-a461122d="">导入离线包</b><small data-v-a461122d="">网络不通时用官方 .tgz</small></span></label>
+        <div data-v-a461122d="" class="wiz-proxy" data-testid="wiz-proxy">
+          <div data-v-a461122d="" class="field"><label data-v-a461122d="">代理（可选）</label>
+            <div data-v-a461122d="" class="wiz-inline"><select data-v-a461122d="" class="input">
+                <option data-v-a461122d="" value="http">HTTP</option>
+                <option data-v-a461122d="" value="socks5h">SOCKS5</option>
+              </select><input data-v-a461122d="" class="input" placeholder="host:port" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+          </div>
+          <details data-v-a461122d="" class="wiz-more">
+            <summary data-v-a461122d="">代理需要认证</summary>
+            <div data-v-a461122d="" class="wiz-inline"><input data-v-a461122d="" class="input" placeholder="用户名" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"><input data-v-a461122d="" class="input" placeholder="密码" type="password"></div>
+            <p data-v-a461122d="" class="wiz-hint">凭据只用于本次安装：写进临时配置文件（Unix 0600，用完即删），不进命令行参数、不写系统代理、不落盘。</p>
+          </details>
+          <p data-v-a461122d="" class="wiz-hint">留空直连；代理只作用于本次安装，不写系统代理与全局 npm 配置。</p>
+        </div>
+      </div>
+      <div data-v-a461122d="" class="wiz-block"><span data-v-a461122d="" class="wiz-label">版本</span><label data-v-a461122d="" class="wiz-choice"><input data-v-a461122d="" type="checkbox">指定版本</label>
+        <p data-v-a461122d="" class="wiz-hint">安装最新版（latest）。</p><label data-v-a461122d="" class="wiz-choice"><input data-v-a461122d="" type="checkbox">我已确认安装位置与安装源</label>
+        <details data-v-a461122d="" class="wiz-more">
+          <summary data-v-a461122d="">说明 / 安全边界</summary>
+          <p data-v-a461122d="" class="wiz-hint">默认以 <code data-v-a461122d="">--ignore-scripts</code> 安装；若包必须执行安装脚本才能生成入口，会先回来征求你的二次确认。</p>
+        </details>
+      </div>
+    </div>
+    <div data-v-a461122d="" class="wiz-foot"><button data-v-a461122d="" class="btn btn ghost" type="button">
+        <!--v-if--><span class="btn-content">取消</span>
+      </button><button data-v-a461122d="" class="btn btn primary" type="button" disabled="">
+        <!--v-if--><span class="btn-content">开始安装</span>
+      </button></div>
+  </div>
+</div>
+ ❯ DOMWrapper.get ../../../../ocx-020-model-config/apps/desktop/ui/node_modules/.pnpm/@vue+test-utils@2.5.0_@vue+compiler-dom@3.5.44_@vue+server-renderer@3.5.42_vue@3.5.42_typescript@5.9.3_/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/settings-install-feedback.test.ts:156:20
+    154|       effects.setSetting(setting)
+    155|       await flushPromises()
+    156|       expect(modal.get('.wiz-progress-bar').classes().includes('is-ani…
+       |                    ^
+    157|       expect(modal.get('[role="progressbar"]').attributes('aria-valuen…
+    158|       expect(modal.get('[data-testid="wiz-status"]').text()).toContain…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/32]⎯
+
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > displays the same readable identity on prefill and reset: \\?\D:\Software\OpenCodeX Desktop\data/runtime/opencodex
+AssertionError: expected 'relative' to be 'D:\Software\OpenCodeX Desktop\data\ru…' // Object.is equality
+
+Expected: "D:\Software\OpenCodeX Desktop\data\runtime\opencodex"
+Received: "relative"
+
+ ❯ tests/settings-install-path.test.ts:57:74
+     55|     await modal.get('#wiz-prefix').setValue('relative')
+     56|     await modal.findAll('button').find(button => button.text() === '恢复…
+     57|     expect((modal.get('#wiz-prefix').element as HTMLInputElement).valu…
+       |                                                                          ^
+     58|   })
+     59|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/32]⎯
+
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > displays the same readable identity on prefill and reset: \\?\UNC\server\share\OpenCodeX Desktop\runtime
+AssertionError: expected 'relative' to be '\\server\share\OpenCodeX Desktop\runt…' // Object.is equality
+
+Expected: "\\server\share\OpenCodeX Desktop\runtime"
+Received: "relative"
+
+ ❯ tests/settings-install-path.test.ts:57:74
+     55|     await modal.get('#wiz-prefix').setValue('relative')
+     56|     await modal.findAll('button').find(button => button.text() === '恢复…
+     57|     expect((modal.get('#wiz-prefix').element as HTMLInputElement).valu…
+       |                                                                          ^
+     58|   })
+     59|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/32]⎯
+
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > uses the same readable conversion after selecting a directory
+AssertionError: expected 'D:\data\runtime' to be 'D:\My App\Selected Folder\runtime' // Object.is equality
+
+Expected: "D:\My App\Selected Folder\runtime"
+Received: "D:\data\runtime"
+
+ ❯ tests/settings-install-path.test.ts:74:74
+     72|     await modal.findAll('button').find(button => button.text() === '选择…
+     73|     await flushPromises()
+     74|     expect((modal.get('#wiz-prefix').element as HTMLInputElement).valu…
+       |                                                                          ^
+     75|   })
+     76|   it.each([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/32]⎯
+
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > allows a fully qualified Windows prefix C:\Tools\OpenCodeX\data and only then advances
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > allows a fully qualified Windows prefix F:\Apps with spaces\OpenCodeX\data and only then advances
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > allows a fully qualified Windows prefix D:\Tools\data and only then advances
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > allows a fully qualified Windows prefix \\server\share\OpenCodeX\data and only then advances
+AssertionError: expected '' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+""
+
+ ❯ tests/settings-install-path.test.ts:83:43
+     81|   ])('allows a fully qualified Windows prefix %s and only then advance…
+     82|     const { modal, next } = await setup('Windows', root, prefix)
+     83|     expect(next().attributes('disabled')).toBeUndefined()
+       |                                           ^
+     84|     expect(modal.text()).toContain('落点：数据根内')
+     85|     expect(invoke.mock.calls.map(call => call[0])).not.toContain('inst…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/32]⎯
+
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > updates the syntax check when the host platform fact arrives without changing the selected prefix
+AssertionError: expected '' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+""
+
+ ❯ tests/settings-install-path.test.ts:119:43
+    117|     useAboutStore().app!.platform = 'Windows'
+    118|     await flushPromises()
+    119|     expect(next().attributes('disabled')).toBeUndefined()
+       |                                           ^
+    120|     expect((modal.get('#wiz-prefix').element as HTMLInputElement).valu…
+    121|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/32]⎯
+
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > accepts a Windows extended path returned by the host for  \\?\D:\Applications\OpenCodeX\data\runtime\opencodex
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > accepts a Windows extended path returned by the host for \\?\UNC\server\share\OpenCodeX\data\runtime\opencodex
+AssertionError: expected '' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+""
+
+ ❯ tests/settings-install-path.test.ts:128:43
+    126|   ])('accepts a Windows extended path returned by the host for %s', as…
+    127|     const { next } = await setup('Windows', 'D:\\Applications\\OpenCod…
+    128|     expect(next().attributes('disabled')).toBeUndefined()
+       |                                           ^
+    129|   })
+    130|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/32]⎯
+
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > passes the confirmed Windows path unchanged and displays a native permission rejection without retrying scripts
+AssertionError: expected '' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+""
+
+ ❯ tests/settings-install-path.test.ts:134:43
+    132|     const prefix = 'E:\\Protected by host policy\\opencodex'
+    133|     const { modal, next } = await setup('Windows', 'D:\\OpenCodeX\\dat…
+    134|     expect(next().attributes('disabled')).toBeUndefined()
+       |                                           ^
+    135|     const read = invoke.getMockImplementation()!
+    136|     invoke.mockImplementation(async (command, ...args) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/32]⎯
+
+ FAIL  tests/settings-install-path.test.ts > installation prefix platform syntax and landing hint > permits exactly the explicit scripts-required retry from the real numeric error envelope
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/settings-install-path.test.ts:160:78
+    158|     await next().trigger('click')
+    159|     await flushPromises()
+    160|     expect(invoke.mock.calls.filter(([name]) => name === 'install_runt…
+       |                                                                              ^
+    161|     const retry = modal.get('[data-testid="wiz-allow-scripts"]')
+    162|     expect(retry.attributes('disabled')).toBeUndefined()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/32]⎯
+
+
+ Test Files  2 failed | 5 passed (7)
+      Tests  32 failed | 89 passed | 10 skipped (131)
+   Start at  00:44:12
+   Duration  1.51s (transform 47%, environment 29%, tests 16%, import 8%)
+
+  Transform  transforming modules took 3.97s · 47% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
