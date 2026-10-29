@@ -10,8 +10,9 @@ use windows_sys::Win32::System::Diagnostics::ToolHelp::{
     CreateToolhelp32Snapshot, Thread32First, Thread32Next, TH32CS_SNAPTHREAD, THREADENTRY32,
 };
 use windows_sys::Win32::System::JobObjects::{
-    AssignProcessToJobObject, CreateJobObjectW, JobObjectExtendedLimitInformation,
-    SetInformationJobObject, TerminateJobObject, JOBOBJECT_BASIC_LIMIT_INFORMATION,
+    AssignProcessToJobObject, CreateJobObjectW, JobObjectBasicAccountingInformation,
+    JobObjectExtendedLimitInformation, QueryInformationJobObject, SetInformationJobObject,
+    TerminateJobObject, JOBOBJECT_BASIC_ACCOUNTING_INFORMATION, JOBOBJECT_BASIC_LIMIT_INFORMATION,
     JOBOBJECT_EXTENDED_LIMIT_INFORMATION, JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE,
 };
 use windows_sys::Win32::System::Threading::{
@@ -82,6 +83,39 @@ impl OwnedQueryJob {
         }
         Ok(())
     }
+    /// Termination is asynchronous. Install activation must not race a probe's
+    /// owned descendants that are still releasing package files/directories.
+    pub(crate) async fn terminate_and_wait(&self) -> io::Result<()> {
+        self.terminate()?;
+        tokio::time::timeout(std::time::Duration::from_secs(2), async {
+            loop {
+                let mut account = JOBOBJECT_BASIC_ACCOUNTING_INFORMATION::default();
+                let ok = unsafe {
+                    QueryInformationJobObject(
+                        self.0.as_raw_handle(),
+                        JobObjectBasicAccountingInformation,
+                        (&mut account as *mut JOBOBJECT_BASIC_ACCOUNTING_INFORMATION).cast(),
+                        size_of::<JOBOBJECT_BASIC_ACCOUNTING_INFORMATION>() as u32,
+                        std::ptr::null_mut(),
+                    )
+                };
+                if ok == 0 {
+                    return Err(io::Error::last_os_error());
+                }
+                if account.ActiveProcesses == 0 {
+                    return Ok(());
+                }
+                tokio::time::sleep(std::time::Duration::from_millis(10)).await;
+            }
+        })
+        .await
+        .map_err(|_| {
+            io::Error::new(
+                io::ErrorKind::TimedOut,
+                "owned probe process family did not exit",
+            )
+        })?
+    }
     // OwnedHandle drops the only job handle. KILL_ON_JOB_CLOSE also covers
     // normal result return, output-reader failure, unwinding and cancellation.
 }
@@ -138,4 +172,33 @@ fn suspended_primary_thread(process: HANDLE, pid: u32) -> io::Result<OwnedHandle
         return Err(io::Error::other("query process/thread identity changed"));
     }
     Ok(thread)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn successful_root_does_not_return_before_its_owned_descendant_exits() {
+        use std::os::windows::io::AsRawHandle;
+        use windows_sys::Win32::Foundation::WAIT_OBJECT_0;
+        use windows_sys::Win32::System::Threading::{OpenProcess, PROCESS_SYNCHRONIZE};
+        let node = std::env::var_os("OPENCODEX_TEST_NODE")
+            .map(std::path::PathBuf::from)
+            .expect("explicit native Node required");
+        tokio::runtime::Builder::new_current_thread().enable_all().build().unwrap().block_on(async {
+            let mut command=tokio::process::Command::new(node);
+            command.args(["-e", "const c=require('child_process').spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:'ignore'});console.log(c.pid);c.unref();"])
+                .stdout(std::process::Stdio::piped()).stderr(std::process::Stdio::null());
+            let job=OwnedQueryJob::new(&mut command).unwrap();
+            let child=command.spawn().unwrap();job.assign_and_resume(&child).unwrap();
+            let output=tokio::time::timeout(std::time::Duration::from_secs(2),child.wait_with_output()).await.unwrap().unwrap();
+            assert!(output.status.success());
+            let pid=String::from_utf8(output.stdout).unwrap().trim().parse::<u32>().unwrap();
+            let raw=unsafe{OpenProcess(PROCESS_SYNCHRONIZE,0,pid)};assert!(!raw.is_null());
+            let process=unsafe{OwnedHandle::from_raw_handle(raw)};
+            assert_eq!(unsafe{WaitForSingleObject(process.as_raw_handle(),0)},WAIT_TIMEOUT,"fixture child must be alive before family cleanup");
+            job.terminate_and_wait().await.unwrap();
+            assert_eq!(unsafe{WaitForSingleObject(process.as_raw_handle(),0)},WAIT_OBJECT_0,"no owned child may retain a package directory at activation");
+        });
+    }
 }

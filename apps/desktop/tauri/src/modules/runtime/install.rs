@@ -704,7 +704,7 @@ impl VersionProbe for RealVersionProbe {
             })
             .await;
             #[cfg(windows)]
-            let _ = job.terminate();
+            let family_exited = job.terminate_and_wait().await.is_ok();
             #[cfg(unix)]
             if let Some(pid) = pid {
                 unsafe {
@@ -713,6 +713,10 @@ impl VersionProbe for RealVersionProbe {
             }
             let _ = child.kill().await;
             let _ = child.wait().await;
+            #[cfg(windows)]
+            if !family_exited {
+                return None;
+            }
             let status = observed.ok()?.ok()?;
             if !status.success() || output.len() > 64 * 1024 {
                 return None;
