@@ -225,7 +225,7 @@ function formatBytes(size: number) {
       <div class="wiz-block">
         <span class="wiz-label">版本</span>
         <div class="wiz-inline"><input v-model="installVersion" aria-label="版本" class="input" placeholder="latest 或具体版本号" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" :disabled="installSource === 'offline'"><span class="wiz-hint">{{ installSource === 'offline' ? '版本由离线包决定' : 'latest 或具体版本号' }}</span></div>
-        <label class="wiz-choice"><input v-model="installConfirmed" type="checkbox" data-testid="wiz-ack">我已确认安装位置与安装源</label>
+        <label class="wiz-choice"><input v-model="installConfirmed" type="checkbox" data-testid="wiz-ack">我了解：会写入上面的位置{{ installSource === 'registry' ? '并联网下载官方包' : '并从离线包展开' }}；不写系统目录与全局 npm 前缀；失败不改动现有运行来源。</label>
         <details class="wiz-more"><summary>说明 / 安全边界</summary>
           <p class="wiz-hint">默认以 <code>--ignore-scripts</code> 安装；若包必须执行安装脚本才能生成入口，会先回来征求你的二次确认。</p>
         </details>

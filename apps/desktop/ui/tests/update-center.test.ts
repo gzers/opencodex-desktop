@@ -215,6 +215,20 @@ describe('shared production update center', () => {
     await wrapper.get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
     expect(wrapper.find('pre[aria-label="面板安装输出"]').exists()).toBe(false)
   })
+  it('keeps the original version in completed panel progress after the live facts refresh', async () => {
+    const updates=useUpdatesStore()
+    vi.spyOn(updates,'createUpgradeBackup').mockResolvedValue({backupId:'this-update'} as never)
+    vi.spyOn(useAppStore(),'applyOfficialUpdate').mockImplementation(async () => {
+      updates.officialProject={displayName:'OpenCodex',version:'2.51.0',rawVersion:'2.51.0',truncated:false}
+      return true
+    })
+    const wrapper=render({target:'official'});await flushPromises()
+    await wrapper.get('[data-testid="install-official-update"]').trigger('click');await flushPromises()
+    expect(wrapper.get('.update-version-hero').text()).toContain('2.50.0')
+    expect(wrapper.get('.update-version-hero').text()).toContain('2.51.0')
+    expect(updates.officialProject?.version).toBe('2.51.0')
+    expect(wrapper.find('.release-notes').exists()).toBe(false)
+  })
   it('traps keyboard focus and restores the opener when hidden', async () => {
     const opener = document.createElement('button'); document.body.append(opener); opener.focus()
     const wrapper = render(); await flushPromises()

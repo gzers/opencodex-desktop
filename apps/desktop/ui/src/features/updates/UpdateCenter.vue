@@ -5,7 +5,7 @@ const sessions = new WeakMap<object, ReturnType<typeof createSession>>()
 function createSession() {
   return reactive({ checking: false, managerInstalling: false, officialInstalling: false, officialBackingUp: false, officialSucceeded: false,
     managerError: '', managerFailedOperation: '', officialError: '', officialInstallRequested: false, officialFailureLines: [] as string[], managerCheckError: '',
-    officialCandidate: '', managerCandidate: '', backup: true })
+    officialCandidate: '', managerCandidate: '', officialCurrent: '', managerCurrent: '', backup: true })
 }
 function sessionFor(app: object) {
   let session = sessions.get(app)
@@ -84,10 +84,10 @@ const showingProgress = computed(() => selected.value === 'manager'
   ? managerBusy.value || pendingRestart.value || !!session.managerError || progress.value?.stage === 'failed'
   : selected.value === 'official' && (!!session.officialCandidate || officialBusy.value || officialFailed.value))
 const selectedTitle = computed(() => (selected.value === 'manager' ? '桌面管理器' : 'OpenCodex 面板') + (showingProgress.value ? '更新进度' : '更新详情与确认'))
-const selectedCurrent = computed(() => selected.value === 'manager' ? status.value?.currentVersion ?? app.aboutApp?.version ?? '未知' : app.officialProject?.version ?? '未知')
+const selectedCurrent = computed(() => selected.value === 'manager' ? showingProgress.value && session.managerCurrent || status.value?.currentVersion || app.aboutApp?.version || '未知' : showingProgress.value && session.officialCurrent || app.officialProject?.version || '未知')
 const selectedCandidate = computed(() => selected.value === 'manager'
   ? showingProgress.value ? progress.value?.candidateVersion || status.value?.pendingRestart || session.managerCandidate || status.value?.availableVersion : status.value?.availableVersion
-  : session.officialCandidate || app.officialRemote?.version)
+  : showingProgress.value ? session.officialCandidate || app.officialRemote?.version : app.officialRemote?.version)
 
 const selectedSource = computed(() => selected.value === 'manager' ? 'OpenCodex Desktop · ' + (status.value?.channel === 'beta' ? '测试' : '稳定') + '通道' : '官方项目 · @bitkyc08/opencodex')
 const managerUnavailableText = computed(() => session.managerError || progress.value?.stage === 'failed' ? '上次安装未完成，可进入详情重试。' : status.value?.availableVersion && hasNewerVersion(status.value.currentVersion, status.value.availableVersion) === null ? '无法比较版本。' : pendingRestart.value ? '更新已准备就绪，请进入详情重启。' : status.value?.lastCheckedAt ? '当前没有待确认的更新。' : '尚未检查。')
@@ -126,6 +126,7 @@ async function installManager() {
   const backup = session.backup
   session.managerInstalling = true
   session.managerCandidate = candidateVersion
+  session.managerCurrent = snapshot.currentVersion
   session.managerError = ''
   try { await installUpdate({ candidateVersion, channel, backup }) }
   catch (error) {
@@ -143,6 +144,7 @@ async function installOfficial() {
   session.officialInstallRequested = false
   session.officialFailureLines = []
   session.officialCandidate = candidateVersion
+  session.officialCurrent = app.officialProject?.version ?? '未知'
   session.officialError = ''
   try {
     // 每次面板更新前备份，失败时阻断安装，不把旧备份冒充本次备份。
@@ -200,6 +202,7 @@ watch(selected, async () => {
 })
 watch(() => props.open, async open => {
   if (open) {
+    if (!officialBusy.value && session.officialSucceeded && session.officialCandidate !== app.officialRemote?.version) { session.officialCandidate = ''; session.officialSucceeded = false }
     selected.value = props.target
     restoreFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
     window.addEventListener('keydown', onKeydown, true)
@@ -260,13 +263,18 @@ defineExpose({ check })
               <p v-if="session.officialError || app.officialUpdateError" class="update-error update-query-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
             </template>
             <ol v-if="showingProgress" class="update-stage-list" aria-label="更新阶段"><li>准备</li><li>下载</li><li>校验</li><li>{{ selected === 'manager' ? '安装与重启' : '应用与核验' }}</li></ol>
+            <div v-if="showingProgress" class="update-progress-actions">
+              <UiButton v-if="selected === 'manager' && pendingRestart" variant="primary" :loading="restarting" @click="restart">重启并应用更新</UiButton>
+              <UiButton v-else-if="selected === 'manager' && managerAvailable && !managerBusy" variant="primary" :disabled="busy" data-testid="install-manager-update" @click="installManager">重试安装</UiButton>
+              <UiButton v-if="selected === 'official' && officialAvailable && !officialBusy && !session.officialSucceeded" variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy" data-testid="install-official-update" @click="installOfficial">重试面板更新</UiButton>
+            </div>
           </section>
         </div>
         <footer class="update-center-foot">
           <div class="update-object-actions">
             <UiButton variant="ghost" aria-label="关闭更新中心" @click="close">{{ !selected ? '关闭' : !showingProgress ? '取消' : '关闭窗口' }}</UiButton>
-            <template v-if="selected === 'manager'"><UiButton v-if="pendingRestart" variant="primary" :loading="restarting" @click="restart">重启并应用更新</UiButton><UiButton v-else-if="managerAvailable && !managerBusy" variant="primary" :disabled="busy" data-testid="install-manager-update" @click="installManager">{{ showingProgress ? '重试安装' : '确认更新' }}</UiButton></template>
-            <UiButton v-if="selected === 'official' && officialAvailable && !officialBusy && (!showingProgress || !session.officialSucceeded)" variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy" :loading="session.checking" data-testid="install-official-update" @click="installOfficial">{{ showingProgress ? '重试面板更新' : '备份并更新面板' }}</UiButton>
+            <UiButton v-if="selected === 'manager' && !showingProgress && managerAvailable" variant="primary" :disabled="busy" data-testid="install-manager-update" @click="installManager">确认更新</UiButton>
+            <UiButton v-if="selected === 'official' && !showingProgress && officialAvailable" variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy" :loading="session.checking" data-testid="install-official-update" @click="installOfficial">备份并更新面板</UiButton>
           </div>
         </footer>
       </div>
@@ -311,6 +319,7 @@ defineExpose({ check })
 .update-confirm-scope { border-top:1px solid var(--border); margin-top:20px; padding-top:16px; }
 .update-object-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-3); }
 .update-backup { display: flex; gap: var(--space-2); align-items: center; font-size: var(--text-label); }
+.update-progress-actions {display:flex;gap:var(--space-2);justify-content:flex-start;margin-bottom:8px}
 .update-stage-list {display:flex;flex-wrap:wrap;gap:8px 24px;margin:24px 0;padding-left:20px;color:var(--muted);font-size:var(--text-label)}
 .update-progress { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
 .update-progress progress { width: 100%; height: 6px; accent-color: var(--accent); }
