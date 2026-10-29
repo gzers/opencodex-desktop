@@ -2192,11 +2192,15 @@ fn activate_staged_prefix(temp: &Path, prefix: &Path, manifest: &[u8]) -> std::i
     {
         let deadline = Instant::now() + Duration::from_secs(10);
         loop {
-            if prefix.exists() {
-                return Err(std::io::Error::new(
-                    std::io::ErrorKind::AlreadyExists,
-                    "activation target appeared while waiting",
-                ));
+            match std::fs::symlink_metadata(prefix) {
+                Ok(_) => {
+                    return Err(std::io::Error::new(
+                        std::io::ErrorKind::AlreadyExists,
+                        "activation target appeared while waiting",
+                    ))
+                }
+                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+                Err(error) => return Err(error),
             }
             if std::fs::read(temp.join(MANIFEST_FILENAME))? != manifest
                 || crate::modules::backup::safety::inspect(temp).is_err()
