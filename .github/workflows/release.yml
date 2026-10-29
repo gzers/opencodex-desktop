@@ -106,6 +106,16 @@ jobs:
           prerelease: true
           args: --config tauri.updater.conf.json ${{ matrix.args }}
 
+      - name: Verify sealed macOS application bundle and packaged resources
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          app="apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app"
+          codesign --verify --deep --strict "$app"
+          codesign -dvv "$app" 2>&1
+          test -s "$app/Contents/Resources/resources/LICENSE"
+          test -s "$app/Contents/Resources/resources/THIRD-PARTY-NOTICES.txt"
       # Keep the release private until its actual installer bytes pass the existing
       # ephemeral-runner checks. This does not replace updater signature validation.
       - name: Verify Windows release installers on isolated runner
