@@ -1,5 +1,6 @@
 // Actual installed WebView2 route handlers; no DEV store or intercepted IPC.
 import assert from 'node:assert/strict'
+import {verifyWindowsOfflineDrop} from './windows-offline-drop.mjs'
 import {writeFile} from 'node:fs/promises'
 import {join,win32} from 'node:path'
 function readablePrefix(value){
@@ -49,7 +50,7 @@ export async function verifyWindowsInstallUi(call,output,install=false){
   let outcome,explicitScriptRetry=false
   const deadline=Date.now()+300000
   while(Date.now()<deadline){
-   outcome=await evaluate("(()=>{const d=document.querySelector('[data-testid=runtime-install-modal]');return {status:d?.querySelector('[data-testid=wiz-status]')?.textContent||'',error:d?.querySelector('[data-testid=wiz-error]')?.textContent||'',done:!!d?.querySelector('[data-testid=wiz-outcome]'),retryEnabled:!!d?.querySelector('[data-testid=wiz-allow-scripts]:not(:disabled)')}})()");
+   outcome=await evaluate("(()=>{const d=document.querySelector('[data-testid=runtime-install-modal]');return {status:d?.querySelector('[data-testid=wiz-status]')?.textContent||'',error:d?.querySelector('[data-testid=wiz-error]')?.textContent||'',done:!!d?.querySelector('[data-testid=wiz-outcome]')&&!!d?.querySelector('[data-testid=wiz-finish]:not(:disabled)'),retryEnabled:!!d?.querySelector('[data-testid=wiz-allow-scripts]:not(:disabled)')}})()");
    if(outcome.done)break
    if(outcome.error){assert(outcome.retryEnabled&&!explicitScriptRetry,'native install failed: '+JSON.stringify(outcome));explicitScriptRetry=true;await click('允许安装脚本并重试','[data-testid=runtime-install-modal]')}
    await new Promise(resolve=>setTimeout(resolve,500))
@@ -59,5 +60,7 @@ export async function verifyWindowsInstallUi(call,output,install=false){
   await writeFile(join(output,'runtime-managed-ui-live.json'),JSON.stringify({result:'pass',version:committed.version,source:committed.kind,realNpm:true,actualProductionVueHandlers:true,defaultPrefixUnchanged:true,explicitScriptRetry,sourceRecordReadback:true,generationRequests:0},null,2)+'\n')
   await click('完成','[data-testid=runtime-install-modal]');await wait("!document.querySelector('[data-testid=runtime-install-modal]')")
  }
+ const dataRoot=await evaluate("window.__TAURI_INTERNALS__.invoke('get_data_root_config')");
+ await verifyWindowsOfflineDrop(call,output,dataRoot.activeDataRoot);
  await writeFile(join(output,'runtime-install-ui.json'),JSON.stringify({result:'pass',hostDefaultValue:true,noManualCorrection:true,restoreDefault:true,invalidRelativeBlocked:true,configurationReady:true,cancelSourceUnchanged:true,overviewInstaller,installsExecuted:install?1:0,method:'real installed Vue handlers and unmodified Tauri IPC; live install when requested, additional backend upgrade/offline evidence in managed-live.json'},null,2)+'\n');
 }
