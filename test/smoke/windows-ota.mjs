@@ -5,7 +5,7 @@ import {join} from 'node:path'
 import {createHash} from 'node:crypto'
 import {discoverMainTarget} from './windows-cdp.mjs'
 import {verifyWindowsModelUi,modelConfigPath,assertModelSandbox} from './windows-model-ui.mjs'
-const [endpoint,output,sandbox,phase,version]=process.argv.slice(2)
+const [endpoint,output,sandbox,phase,version,fromVersion='0.2.17']=process.argv.slice(2)
 assert.equal(new URL(endpoint).hostname,'127.0.0.1')
 assert(['prepare-exit','prepare-restart','verify'].includes(phase))
 const target=await discoverMainTarget(endpoint)
@@ -29,7 +29,7 @@ try{
   const status=await invoke('get_update_status');assert.equal(status.currentVersion,version);assert.equal(status.pendingRestart,null)
   await writeFile(join(output,'ota-verified.json'),JSON.stringify({result:'pass',version,updatedApplicationReadback:true,automaticRestartEvidence:'ota-result.json OS process observation',configAndCredentialBytesUnchanged:true,immutableSandboxUnchanged:true,pendingRestartCleared:true},null,2)+'\n')
  }else{
-  assert.equal(facts.about.version,'0.2.16')
+  assert.equal(facts.about.version,fromVersion)
   if(phase==='prepare-exit'){
    await verifyWindowsModelUi(call,output,facts,sandbox)
    await writeFile(join(output,'ota-data-before.json'),JSON.stringify({configSha256:hash(await readFile(config)),fixture:'production file save and synthetic keys through released IPC; no daily configuration'},null,2)+'\n')

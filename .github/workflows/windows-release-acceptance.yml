@@ -10,7 +10,15 @@ on:
       version:
         type: string
         required: true
+        default: '0.2.18'
+      from_version:
+        type: string
+        required: true
         default: '0.2.17'
+      built_sha256:
+        description: Original Windows build SHA-256 from the release installer evidence
+        type: string
+        required: false
 permissions:
   contents: read
 jobs:
@@ -34,7 +42,7 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
-        run: ./test/smoke/windows-release-installers.ps1 -OutputDirectory test/out/release-existing-installers -Kind ${{ matrix.kind }} -Mode ${{ matrix.mode }}
+        run: ./test/smoke/windows-release-installers.ps1 -OutputDirectory test/out/release-existing-installers -Kind ${{ matrix.kind }} -Mode ${{ matrix.mode }} -Version '${{ inputs.version }}' -ExpectedBuiltSha256 '${{ inputs.built_sha256 }}'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -57,11 +65,12 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Published 0.2.16 to 0.2.17 actual signed updater and restart
+      - name: Published adjacent-release actual signed updater and restart
         shell: pwsh
         env:
+          OCX_BASELINE_VERSION: ${{ inputs.from_version }}
           OCX_ACCEPT_VERSION: ${{ inputs.version }}
-        run: ./test/smoke/windows-ota.ps1 -Kind '${{ matrix.kind }}' -OutputDirectory 'test/out/windows-ota-${{ matrix.kind }}' -Version $env:OCX_ACCEPT_VERSION
+        run: ./test/smoke/windows-ota.ps1 -Kind '${{ matrix.kind }}' -OutputDirectory 'test/out/windows-ota-${{ matrix.kind }}' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION
       - uses: actions/upload-artifact@v4
         if: always()
         with:
