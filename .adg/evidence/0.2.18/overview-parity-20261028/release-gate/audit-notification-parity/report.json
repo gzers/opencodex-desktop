@@ -1,0 +1,737 @@
+{
+  "method": "computed recipe plus paired screenshots; no product writes",
+  "results": [
+    {
+      "name": "light-high padding",
+      "ok": true,
+      "prototype": "14px",
+      "implementation": "14px"
+    },
+    {
+      "name": "light-high borderRadius",
+      "ok": true,
+      "prototype": "12px",
+      "implementation": "12px"
+    },
+    {
+      "name": "light-high titleFont",
+      "ok": true,
+      "prototype": "13px",
+      "implementation": "13px"
+    },
+    {
+      "name": "light-high titleWeight",
+      "ok": true,
+      "prototype": "700",
+      "implementation": "700"
+    },
+    {
+      "name": "light-high buttonHeight",
+      "ok": true,
+      "prototype": "24px",
+      "implementation": "24px"
+    },
+    {
+      "name": "light-high buttonFont",
+      "ok": true,
+      "prototype": "11px",
+      "implementation": "11px"
+    },
+    {
+      "name": "light-high buttonPadding",
+      "ok": true,
+      "prototype": "2px 9px",
+      "implementation": "2px 9px"
+    },
+    {
+      "name": "light-high buttonBackground",
+      "ok": true,
+      "prototype": "rgba(13, 13, 13, 0.06)",
+      "implementation": "rgba(13, 13, 13, 0.06)"
+    },
+    {
+      "name": "light-high actionsAlign",
+      "ok": true,
+      "prototype": "normal",
+      "implementation": "normal"
+    },
+    {
+      "name": "light-high backgroundColor",
+      "ok": true,
+      "prototype": "rgba(244, 245, 249, 0.52)",
+      "implementation": "rgba(244, 245, 249, 0.52)"
+    },
+    {
+      "name": "light-high backdropFilter",
+      "ok": true,
+      "prototype": "saturate(1.5) blur(8px)",
+      "implementation": "saturate(1.5) blur(8px)"
+    },
+    {
+      "name": "light-high original glass recipe",
+      "ok": true,
+      "prototype": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(13, 13, 13, 0.06)",
+        "actionsAlign": "normal",
+        "background": "linear-gradient(158deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 62%), linear-gradient(24deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 58%), none",
+        "backgroundColor": "rgba(244, 245, 249, 0.52)",
+        "backdropFilter": "saturate(1.5) blur(8px)",
+        "glassFill": "rgba(244,245,249,.52)"
+      },
+      "implementation": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(13, 13, 13, 0.06)",
+        "actionsAlign": "normal",
+        "background": "linear-gradient(158deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 62%), linear-gradient(24deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 58%), none",
+        "backgroundColor": "rgba(244, 245, 249, 0.52)",
+        "backdropFilter": "saturate(1.5) blur(8px)",
+        "glassFill": "rgba(244, 245, 249, .52)"
+      }
+    },
+    {
+      "name": "light-high prototype shared tokens loaded",
+      "ok": true
+    },
+    {
+      "name": "light-high shared dependencies HTTP 200",
+      "ok": true,
+      "dependencies": [
+        {
+          "name": "glass-tokens.css",
+          "status": 200
+        },
+        {
+          "name": "glass-components.css",
+          "status": 200
+        },
+        {
+          "name": "glass-effects.css",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "light-mid padding",
+      "ok": true,
+      "prototype": "14px",
+      "implementation": "14px"
+    },
+    {
+      "name": "light-mid borderRadius",
+      "ok": true,
+      "prototype": "12px",
+      "implementation": "12px"
+    },
+    {
+      "name": "light-mid titleFont",
+      "ok": true,
+      "prototype": "13px",
+      "implementation": "13px"
+    },
+    {
+      "name": "light-mid titleWeight",
+      "ok": true,
+      "prototype": "700",
+      "implementation": "700"
+    },
+    {
+      "name": "light-mid buttonHeight",
+      "ok": true,
+      "prototype": "24px",
+      "implementation": "24px"
+    },
+    {
+      "name": "light-mid buttonFont",
+      "ok": true,
+      "prototype": "11px",
+      "implementation": "11px"
+    },
+    {
+      "name": "light-mid buttonPadding",
+      "ok": true,
+      "prototype": "2px 9px",
+      "implementation": "2px 9px"
+    },
+    {
+      "name": "light-mid buttonBackground",
+      "ok": true,
+      "prototype": "rgba(13, 13, 13, 0.06)",
+      "implementation": "rgba(13, 13, 13, 0.06)"
+    },
+    {
+      "name": "light-mid actionsAlign",
+      "ok": true,
+      "prototype": "normal",
+      "implementation": "normal"
+    },
+    {
+      "name": "light-mid backgroundColor",
+      "ok": true,
+      "prototype": "rgba(244, 245, 249, 0.52)",
+      "implementation": "rgba(244, 245, 249, 0.52)"
+    },
+    {
+      "name": "light-mid backdropFilter",
+      "ok": true,
+      "prototype": "saturate(1.5) blur(8px)",
+      "implementation": "saturate(1.5) blur(8px)"
+    },
+    {
+      "name": "light-mid original glass recipe",
+      "ok": true,
+      "prototype": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(13, 13, 13, 0.06)",
+        "actionsAlign": "normal",
+        "background": "linear-gradient(158deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 62%), linear-gradient(24deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 58%), none",
+        "backgroundColor": "rgba(244, 245, 249, 0.52)",
+        "backdropFilter": "saturate(1.5) blur(8px)",
+        "glassFill": "rgba(244,245,249,.52)"
+      },
+      "implementation": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(13, 13, 13, 0.06)",
+        "actionsAlign": "normal",
+        "background": "linear-gradient(158deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 62%), linear-gradient(24deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 58%), none",
+        "backgroundColor": "rgba(244, 245, 249, 0.52)",
+        "backdropFilter": "saturate(1.5) blur(8px)",
+        "glassFill": "rgba(244, 245, 249, .52)"
+      }
+    },
+    {
+      "name": "light-mid prototype shared tokens loaded",
+      "ok": true
+    },
+    {
+      "name": "light-mid shared dependencies HTTP 200",
+      "ok": true,
+      "dependencies": [
+        {
+          "name": "glass-tokens.css",
+          "status": 200
+        },
+        {
+          "name": "glass-components.css",
+          "status": 200
+        },
+        {
+          "name": "glass-effects.css",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "light-low padding",
+      "ok": true,
+      "prototype": "14px",
+      "implementation": "14px"
+    },
+    {
+      "name": "light-low borderRadius",
+      "ok": true,
+      "prototype": "12px",
+      "implementation": "12px"
+    },
+    {
+      "name": "light-low titleFont",
+      "ok": true,
+      "prototype": "13px",
+      "implementation": "13px"
+    },
+    {
+      "name": "light-low titleWeight",
+      "ok": true,
+      "prototype": "700",
+      "implementation": "700"
+    },
+    {
+      "name": "light-low buttonHeight",
+      "ok": true,
+      "prototype": "24px",
+      "implementation": "24px"
+    },
+    {
+      "name": "light-low buttonFont",
+      "ok": true,
+      "prototype": "11px",
+      "implementation": "11px"
+    },
+    {
+      "name": "light-low buttonPadding",
+      "ok": true,
+      "prototype": "2px 9px",
+      "implementation": "2px 9px"
+    },
+    {
+      "name": "light-low buttonBackground",
+      "ok": true,
+      "prototype": "rgba(13, 13, 13, 0.06)",
+      "implementation": "rgba(13, 13, 13, 0.06)"
+    },
+    {
+      "name": "light-low actionsAlign",
+      "ok": true,
+      "prototype": "normal",
+      "implementation": "normal"
+    },
+    {
+      "name": "light-low backgroundColor",
+      "ok": true,
+      "prototype": "rgb(255, 255, 255)",
+      "implementation": "rgb(255, 255, 255)"
+    },
+    {
+      "name": "light-low backdropFilter",
+      "ok": true,
+      "prototype": "none",
+      "implementation": "none"
+    },
+    {
+      "name": "light-low original glass recipe",
+      "ok": true,
+      "prototype": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(13, 13, 13, 0.06)",
+        "actionsAlign": "normal",
+        "background": "none",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "backdropFilter": "none",
+        "glassFill": "#fff"
+      },
+      "implementation": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(13, 13, 13, 0.06)",
+        "actionsAlign": "normal",
+        "background": "none",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "backdropFilter": "none",
+        "glassFill": "#ffffff"
+      }
+    },
+    {
+      "name": "light-low prototype shared tokens loaded",
+      "ok": true
+    },
+    {
+      "name": "light-low shared dependencies HTTP 200",
+      "ok": true,
+      "dependencies": [
+        {
+          "name": "glass-tokens.css",
+          "status": 200
+        },
+        {
+          "name": "glass-components.css",
+          "status": 200
+        },
+        {
+          "name": "glass-effects.css",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "dark-high padding",
+      "ok": true,
+      "prototype": "14px",
+      "implementation": "14px"
+    },
+    {
+      "name": "dark-high borderRadius",
+      "ok": true,
+      "prototype": "12px",
+      "implementation": "12px"
+    },
+    {
+      "name": "dark-high titleFont",
+      "ok": true,
+      "prototype": "13px",
+      "implementation": "13px"
+    },
+    {
+      "name": "dark-high titleWeight",
+      "ok": true,
+      "prototype": "700",
+      "implementation": "700"
+    },
+    {
+      "name": "dark-high buttonHeight",
+      "ok": true,
+      "prototype": "24px",
+      "implementation": "24px"
+    },
+    {
+      "name": "dark-high buttonFont",
+      "ok": true,
+      "prototype": "11px",
+      "implementation": "11px"
+    },
+    {
+      "name": "dark-high buttonPadding",
+      "ok": true,
+      "prototype": "2px 9px",
+      "implementation": "2px 9px"
+    },
+    {
+      "name": "dark-high buttonBackground",
+      "ok": true,
+      "prototype": "rgba(255, 255, 255, 0.1)",
+      "implementation": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "name": "dark-high actionsAlign",
+      "ok": true,
+      "prototype": "normal",
+      "implementation": "normal"
+    },
+    {
+      "name": "dark-high backgroundColor",
+      "ok": true,
+      "prototype": "rgba(34, 36, 42, 0.56)",
+      "implementation": "rgba(34, 36, 42, 0.56)"
+    },
+    {
+      "name": "dark-high backdropFilter",
+      "ok": true,
+      "prototype": "saturate(1.5) blur(8px)",
+      "implementation": "saturate(1.5) blur(8px)"
+    },
+    {
+      "name": "dark-high original glass recipe",
+      "ok": true,
+      "prototype": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(255, 255, 255, 0.1)",
+        "actionsAlign": "normal",
+        "background": "linear-gradient(158deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 62%), linear-gradient(24deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 58%), none",
+        "backgroundColor": "rgba(34, 36, 42, 0.56)",
+        "backdropFilter": "saturate(1.5) blur(8px)",
+        "glassFill": "rgba(34,36,42,.56)"
+      },
+      "implementation": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(255, 255, 255, 0.1)",
+        "actionsAlign": "normal",
+        "background": "linear-gradient(158deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 62%), linear-gradient(24deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 58%), none",
+        "backgroundColor": "rgba(34, 36, 42, 0.56)",
+        "backdropFilter": "saturate(1.5) blur(8px)",
+        "glassFill": "rgba(34, 36, 42, .56)"
+      }
+    },
+    {
+      "name": "dark-high prototype shared tokens loaded",
+      "ok": true
+    },
+    {
+      "name": "dark-high shared dependencies HTTP 200",
+      "ok": true,
+      "dependencies": [
+        {
+          "name": "glass-tokens.css",
+          "status": 200
+        },
+        {
+          "name": "glass-components.css",
+          "status": 200
+        },
+        {
+          "name": "glass-effects.css",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "dark-mid padding",
+      "ok": true,
+      "prototype": "14px",
+      "implementation": "14px"
+    },
+    {
+      "name": "dark-mid borderRadius",
+      "ok": true,
+      "prototype": "12px",
+      "implementation": "12px"
+    },
+    {
+      "name": "dark-mid titleFont",
+      "ok": true,
+      "prototype": "13px",
+      "implementation": "13px"
+    },
+    {
+      "name": "dark-mid titleWeight",
+      "ok": true,
+      "prototype": "700",
+      "implementation": "700"
+    },
+    {
+      "name": "dark-mid buttonHeight",
+      "ok": true,
+      "prototype": "24px",
+      "implementation": "24px"
+    },
+    {
+      "name": "dark-mid buttonFont",
+      "ok": true,
+      "prototype": "11px",
+      "implementation": "11px"
+    },
+    {
+      "name": "dark-mid buttonPadding",
+      "ok": true,
+      "prototype": "2px 9px",
+      "implementation": "2px 9px"
+    },
+    {
+      "name": "dark-mid buttonBackground",
+      "ok": true,
+      "prototype": "rgba(255, 255, 255, 0.1)",
+      "implementation": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "name": "dark-mid actionsAlign",
+      "ok": true,
+      "prototype": "normal",
+      "implementation": "normal"
+    },
+    {
+      "name": "dark-mid backgroundColor",
+      "ok": true,
+      "prototype": "rgba(34, 36, 42, 0.56)",
+      "implementation": "rgba(34, 36, 42, 0.56)"
+    },
+    {
+      "name": "dark-mid backdropFilter",
+      "ok": true,
+      "prototype": "saturate(1.5) blur(8px)",
+      "implementation": "saturate(1.5) blur(8px)"
+    },
+    {
+      "name": "dark-mid original glass recipe",
+      "ok": true,
+      "prototype": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(255, 255, 255, 0.1)",
+        "actionsAlign": "normal",
+        "background": "linear-gradient(158deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 62%), linear-gradient(24deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 58%), none",
+        "backgroundColor": "rgba(34, 36, 42, 0.56)",
+        "backdropFilter": "saturate(1.5) blur(8px)",
+        "glassFill": "rgba(34,36,42,.56)"
+      },
+      "implementation": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(255, 255, 255, 0.1)",
+        "actionsAlign": "normal",
+        "background": "linear-gradient(158deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 62%), linear-gradient(24deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 58%), none",
+        "backgroundColor": "rgba(34, 36, 42, 0.56)",
+        "backdropFilter": "saturate(1.5) blur(8px)",
+        "glassFill": "rgba(34, 36, 42, .56)"
+      }
+    },
+    {
+      "name": "dark-mid prototype shared tokens loaded",
+      "ok": true
+    },
+    {
+      "name": "dark-mid shared dependencies HTTP 200",
+      "ok": true,
+      "dependencies": [
+        {
+          "name": "glass-tokens.css",
+          "status": 200
+        },
+        {
+          "name": "glass-effects.css",
+          "status": 200
+        },
+        {
+          "name": "glass-components.css",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "dark-low padding",
+      "ok": true,
+      "prototype": "14px",
+      "implementation": "14px"
+    },
+    {
+      "name": "dark-low borderRadius",
+      "ok": true,
+      "prototype": "12px",
+      "implementation": "12px"
+    },
+    {
+      "name": "dark-low titleFont",
+      "ok": true,
+      "prototype": "13px",
+      "implementation": "13px"
+    },
+    {
+      "name": "dark-low titleWeight",
+      "ok": true,
+      "prototype": "700",
+      "implementation": "700"
+    },
+    {
+      "name": "dark-low buttonHeight",
+      "ok": true,
+      "prototype": "24px",
+      "implementation": "24px"
+    },
+    {
+      "name": "dark-low buttonFont",
+      "ok": true,
+      "prototype": "11px",
+      "implementation": "11px"
+    },
+    {
+      "name": "dark-low buttonPadding",
+      "ok": true,
+      "prototype": "2px 9px",
+      "implementation": "2px 9px"
+    },
+    {
+      "name": "dark-low buttonBackground",
+      "ok": true,
+      "prototype": "rgba(255, 255, 255, 0.1)",
+      "implementation": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "name": "dark-low actionsAlign",
+      "ok": true,
+      "prototype": "normal",
+      "implementation": "normal"
+    },
+    {
+      "name": "dark-low backgroundColor",
+      "ok": true,
+      "prototype": "rgb(38, 38, 38)",
+      "implementation": "rgb(38, 38, 38)"
+    },
+    {
+      "name": "dark-low backdropFilter",
+      "ok": true,
+      "prototype": "none",
+      "implementation": "none"
+    },
+    {
+      "name": "dark-low original glass recipe",
+      "ok": true,
+      "prototype": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(255, 255, 255, 0.1)",
+        "actionsAlign": "normal",
+        "background": "none",
+        "backgroundColor": "rgb(38, 38, 38)",
+        "backdropFilter": "none",
+        "glassFill": "#262626"
+      },
+      "implementation": {
+        "padding": "14px",
+        "borderRadius": "12px",
+        "titleFont": "13px",
+        "titleWeight": "700",
+        "buttonHeight": "24px",
+        "buttonFont": "11px",
+        "buttonPadding": "2px 9px",
+        "buttonBackground": "rgba(255, 255, 255, 0.1)",
+        "actionsAlign": "normal",
+        "background": "none",
+        "backgroundColor": "rgb(38, 38, 38)",
+        "backdropFilter": "none",
+        "glassFill": "#262626"
+      }
+    },
+    {
+      "name": "dark-low prototype shared tokens loaded",
+      "ok": true
+    },
+    {
+      "name": "dark-low shared dependencies HTTP 200",
+      "ok": true,
+      "dependencies": [
+        {
+          "name": "glass-tokens.css",
+          "status": 200
+        },
+        {
+          "name": "glass-components.css",
+          "status": 200
+        },
+        {
+          "name": "glass-effects.css",
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

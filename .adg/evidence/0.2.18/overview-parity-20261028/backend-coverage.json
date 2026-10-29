@@ -1,0 +1,21 @@
+{
+  "source": "a08e67eab083c64a9e37abe4ecaab0b609235a60",
+  "execution_order": "unchanged 200ms query first; remaining workspace skips only that previously executed exact test; default test workers and assertions unchanged",
+  "checks": [
+    {
+      "log": "ocx018-query-first.log",
+      "suites": 1,
+      "passed": 1,
+      "ignored": 0,
+      "failed_summary_present": false
+    },
+    {
+      "log": "ocx018-workspace-after-query.log",
+      "suites": 42,
+      "passed": 1293,
+      "ignored": 14,
+      "failed_summary_present": false
+    }
+  ],
+  "earlier_full_runs_retained": true
+}
