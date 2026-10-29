@@ -55,7 +55,7 @@ export async function verifyWindowsInstallUi(call,output,install=false){
    await new Promise(resolve=>setTimeout(resolve,500))
   }
   assert(outcome?.done,'real native install did not finish: '+JSON.stringify(outcome))
-  const committed=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')");assert.equal(committed.kind,'managed');assert.equal(committed.version,'2.91.0');assert.equal(win32.normalize(committed.managedPrefix).toLowerCase(),win32.normalize(source.defaultPrefix).toLowerCase())
+  const committed=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')");assert.equal(committed.kind,'managed');assert.equal(committed.version,'2.91.0');assert.equal(readablePrefix(committed.managedPrefix).toLowerCase(),readablePrefix(source.defaultPrefix).toLowerCase())
   await writeFile(join(output,'runtime-managed-ui-live.json'),JSON.stringify({result:'pass',version:committed.version,source:committed.kind,realNpm:true,actualProductionVueHandlers:true,defaultPrefixUnchanged:true,explicitScriptRetry,sourceRecordReadback:true,generationRequests:0},null,2)+'\n')
   await click('完成','[data-testid=runtime-install-modal]');await wait("!document.querySelector('[data-testid=runtime-install-modal]')")
  }
