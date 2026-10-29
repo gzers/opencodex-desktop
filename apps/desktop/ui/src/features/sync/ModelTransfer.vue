@@ -358,7 +358,7 @@ function closePreview() { if (!busy.value) { emit('update:importOpen',false); in
       </aside>
     </section>
     </template>
-    <UiDialog panel-class="transfer-file-picker" hide-close :open="pickOpen" title="导入配置" :busy="busy" @close="closeImport"><div class="transfer-file-row" role="group" aria-label="配置文件"><span>配置文件</span><UiButton :disabled="busy" @click="chooseImportFile">选择文件</UiButton><span class="local-path" aria-live="polite">{{ displayPath(importPath) || '尚未选择文件' }}</span></div><p v-if="error" class="model-error" role="alert">{{ error }}</p><template #actions><UiButton :disabled="busy" @click="closeImport">取消</UiButton><UiButton variant="primary" :disabled="busy||!importPath" :loading="busy" @click="receive">读取并比较</UiButton></template></UiDialog>
+    <UiDialog panel-class="transfer-file-picker" hide-close :open="pickOpen" title="导入配置" :busy="busy" @close="closeImport"><div class="transfer-file-field"><span class="transfer-file-label">配置文件</span><div class="transfer-file-row" role="group" aria-label="配置文件"><UiButton :disabled="busy" @click="chooseImportFile">选择文件</UiButton><span class="local-path" aria-live="polite">{{ displayPath(importPath) || '尚未选择文件' }}</span></div></div><p v-if="error" class="model-error" role="alert">{{ error }}</p><template #actions><UiButton :disabled="busy" @click="closeImport">取消</UiButton><UiButton variant="primary" :disabled="busy||!importPath" :loading="busy" @click="receive">读取并比较</UiButton></template></UiDialog>
     <UiDialog panel-class="transfer-review" :open="!!preview" :title="incoming ? '比较配置文件' : remote ? '确认配置上传' : '确认导出'" :busy="busy" wide @close="closePreview">
       <p v-if="error" class="model-error" role="alert">{{ error }}</p>
       <p v-if="preview?.payload.candidate" role="status">未提交草稿候选；采用后仍进入本机工作区，须另行预览并保存，不表示运行配置已写入。</p>
@@ -397,10 +397,12 @@ function closePreview() { if (!busy.value) { emit('update:importOpen',false); in
   </article>
 </template>
 <style scoped>
-.transfer-file-row {display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}
-.transfer-file-row .local-path {min-width:0;overflow-wrap:anywhere}
+.transfer-file-field {display:grid;gap:6px;margin:14px 0}
+.transfer-file-label {color:var(--muted);font-size:12px}
+.transfer-file-row {display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px;border:1px solid var(--border);border-radius:8px}
+.transfer-file-row .local-path {min-width:0;overflow-wrap:anywhere;color:var(--muted);font-size:12px}
 
-:global(.transfer-file-picker.ui-dialog) {width:min(520px,calc(100vw / var(--ui-zoom) - 40px))}
+:global(.transfer-file-picker.ui-dialog) {width:min(720px,calc((100vw / var(--ui-zoom) - 40px) * .86))}
 :global(.transfer-file-picker.ui-dialog header) {border-bottom:0;padding:20px 20px 8px}
 :global(.transfer-file-picker.ui-dialog .ui-dialog-content) {padding:0 20px 14px}
 :global(.transfer-file-picker.ui-dialog footer) {padding:14px 20px 20px}

@@ -33,6 +33,9 @@ try{
   check(tag+' import initial disabled',ii.buttons.some(x=>x.text==='读取并比较'&&x.disabled))
   check(tag+' import file action accessible',await app.getByRole('button',{name:'选择文件',exact:true}).isEnabled())
   check(tag+' import title',pi.title===ii.title,{pi,ii})
+  check(tag+' import width matches',Math.abs(pi.width-ii.width)<=2,{prototype:pi.width,implementation:ii.width})
+  const fieldLayout=await app.locator('.transfer-file-field').count() ? await app.locator('.transfer-file-field').evaluate(n=>{const label=n.querySelector('.transfer-file-label'),picker=n.querySelector('.transfer-file-row');if(!label||!picker)return null;const a=label.getBoundingClientRect(),b=picker.getBoundingClientRect(),s=getComputedStyle(picker);return {labelBottom:a.bottom,pickerTop:b.top,border:s.borderTopWidth,padding:s.paddingTop,radius:s.borderTopLeftRadius}}) : null
+  check(tag+' import label above framed picker',fieldLayout&&fieldLayout.pickerTop>=fieldLayout.labelBottom+5&&fieldLayout.border==='1px'&&fieldLayout.padding==='12px'&&fieldLayout.radius==='8px',fieldLayout)
   check(tag+' import remains overview',await app.locator('.ov').isVisible())
   check(tag+' import within window',ii.top>=0&&ii.bottom<=c.h&&!ii.horizontal,ii)
   await proto.locator('#modal').screenshot({path:path.join(output,tag+'-prototype-import.png')});await app.locator('dialog[open]').screenshot({path:path.join(output,tag+'-implementation-import.png')})
@@ -75,6 +78,8 @@ try{
   check(tag+' install remains overview',await app.locator('.ov').isVisible())
   check(tag+' named steps',await app.locator('.wiz-steps li').count()===4)
   check(tag+' configuration same screen',await app.locator('#wiz-prefix').count()===1&&await app.locator('input[aria-label=版本]').count()===1&&await app.locator('[data-testid=wiz-ack]').count()===1)
+  check(tag+' proxy retains prototype group frame',await app.locator('.wiz-proxy').evaluate(n=>{const s=getComputedStyle(n);return s.borderTopWidth==='1px'&&s.paddingTop==='10px'&&s.paddingLeft==='12px'}))
+  check(tag+' source choices retain panel background',await app.locator('.install-source-choice:not(.on)').evaluate(n=>getComputedStyle(n).backgroundColor!=='rgba(0, 0, 0, 0)'))
   check(tag+' install requires ack',await app.getByRole('button',{name:'开始安装',exact:true}).isDisabled())
   check(tag+' install fits',iw.top>=0&&iw.bottom<=c.h&&!iw.horizontal,iw)
   await proto.locator('#modal').screenshot({path:path.join(output,tag+'-prototype-install.png')});await app.locator('.runtime-install-dialog').screenshot({path:path.join(output,tag+'-implementation-install.png')})
