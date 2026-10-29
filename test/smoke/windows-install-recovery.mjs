@@ -56,11 +56,11 @@ async function source(){return evaluate("window.__TAURI_INTERNALS__.invoke('runt
 async function install(version){
   await click('安装 OpenCodex','.route-section.active')
   await wait("!!document.querySelector('#wiz-prefix')")
-  await click('下一步');await click('下一步')
-  await evaluate("(()=>{const boxes=[...document.querySelectorAll('[data-testid=runtime-install-modal] input[type=checkbox]')];boxes[0].click();boxes.at(-1).click()})()")
-  await wait('!!document.querySelector(\'input[placeholder="例如 2.50.0"]\')')
-  await evaluate(`(()=>{const i=document.querySelector('input[placeholder="例如 2.50.0"]');i.value=${JSON.stringify(version)};i.dispatchEvent(new Event('input',{bubbles:true}))})()`)
-  await click('下一步')
+
+  await evaluate("(()=>{document.querySelector('[data-testid=wiz-ack]').click()})()")
+  await wait('!!document.querySelector(\'input[aria-label="版本"]\')')
+  await evaluate(`(()=>{const i=document.querySelector('input[aria-label="版本"]');i.value=${JSON.stringify(version)};i.dispatchEvent(new Event('input',{bubbles:true}))})()`)
+  await click('开始安装')
   return wait("(()=>{const d=document.querySelector('[data-testid=runtime-install-modal]');const error=d?.querySelector('[data-testid=wiz-error]')?.textContent;const done=d?.querySelector('[data-testid=wiz-status]')?.textContent.includes('安装完成')&&d?.querySelector('[data-testid=wiz-outcome]')?.textContent;if(!error&&!done)return false;return {error,done,console:d.querySelector('[data-testid=wiz-console]')?.textContent,offlineSteps:!!d.querySelector('[data-testid=wiz-substeps]'),scriptsEnabled:!d.querySelector('[data-testid=wiz-allow-scripts]')?.disabled}})()",300_000)
 }
 const report={result:'fail',screenshots:[],checks:[]}
