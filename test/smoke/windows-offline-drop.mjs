@@ -24,6 +24,7 @@ export async function verifyWindowsOfflineDrop(call,output,root){
  const sha=createHash('sha256').update(archive).digest('hex')
  const originalSource=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')")
  await click('导入离线包','.route-section.active');await wait("!!document.querySelector('[data-testid=wiz-offline]')")
+ assert.equal(await evaluate("!!document.querySelector('.ui-fault-modal')"),false,'a real UI fault must not be hidden or dismissed to pass file-drop acceptance')
  const box=await evaluate("(()=>{const b=document.querySelector('[data-testid=wiz-offline]').getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2}})()")
  await evaluate("(()=>{window.__offlineDropObservation=[];document.addEventListener('drop',e=>window.__offlineDropObservation.push({types:[...e.dataTransfer.types],files:[...e.dataTransfer.files].map(f=>({name:f.name,size:f.size,type:f.type}))}),{capture:true,once:true});return true})()")
  const slash=String.fromCharCode(92),extended=slash+slash+'?'+slash
