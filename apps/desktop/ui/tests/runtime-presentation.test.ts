@@ -33,13 +33,11 @@ describe('runtime presentation', () => {
     expect(installPhaseLabel('failed')).toBe('安装失败')
   })
 
-  it('only shows npm command lines for the networked phases', () => {
-    expect(phaseShowsCommandLine('downloading')).toBe(true)
-    expect(phaseShowsCommandLine('installing')).toBe(true)
-    // 离线是纯包体展开：不套用联网的 npm 日志，避免出现假命令行。
-    for (const phase of ['validating', 'extracting', 'verifying', 'activating', 'done', 'preparing'] as const) {
-      expect(phaseShowsCommandLine(phase)).toBe(false)
+  it('retains registry command output through verification and terminal phases', () => {
+    for (const phase of ['downloading', 'installing', 'verifying', 'activating', 'done', 'failed'] as const) {
+      expect(phaseShowsCommandLine(phase)).toBe(true)
     }
+    expect(phaseShowsCommandLine('preparing')).toBe(false)
   })
 
   it('keeps offline substeps at three items and never leaves them all pending mid-run', () => {
@@ -52,6 +50,8 @@ describe('runtime presentation', () => {
     // 失败不回填任何「已完成」。
     const failed = offlineSteps('failed')
     expect(failed.every(step => step.state === 'pending')).toBe(true)
+    expect(offlineSteps('failed', 'installing').map(step => step.state)).toEqual(['done', 'failed', 'pending'])
+    expect(offlineSteps('failed', 'verifying').map(step => step.state)).toEqual(['done', 'done', 'failed'])
   })
 
   it('masks the proxy and never renders credentials', () => {

@@ -69,7 +69,10 @@ jobs:
           components: rustfmt, clippy
       - run: cargo fmt --all -- --check
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
-      - run: cargo test --locked --workspace --features integration-test
+      - name: Verify bounded metadata process tree before the workspace workload
+        run: cargo test --locked --lib --features integration-test modules::about::remote::tests::metadata_query_rejects_oversize_and_kills_timed_out_process_group -- --exact
+      - name: Run remaining workspace regression without repeating the completed query fixture
+        run: cargo test --locked --workspace --features integration-test -- --skip modules::about::remote::tests::metadata_query_rejects_oversize_and_kills_timed_out_process_group
 
   # Windows 不仅编译：运行后端回归，并启动最终 EXE 检查无 HOME 环境、
   # 隔离数据初始化和 WebView 首屏。该 job 不生成安装器或发布制品。
@@ -227,6 +230,30 @@ jobs:
         shell: pwsh
         run: |
           & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup -ManagedInstall
+      - name: Record Node24 driver for native version matrix
+        id: native_driver
+        shell: pwsh
+        run: '"node=$((Get-Command node).Source)" >> $env:GITHUB_OUTPUT'
+      - name: Windows native installation failure, metadata recovery and path regression
+        shell: pwsh
+        run: |
+          $taskNativeNode = (Get-Command node).Source
+          $taskNativeNpm = Join-Path (Split-Path -Parent $taskNativeNode) 'node_modules/npm/bin/npm-cli.js'
+          & ../../../test/smoke/windows-install-recovery.ps1 -Executable target/release/opencodex-desktop.exe -Node $taskNativeNode -NpmCli $taskNativeNpm -OutputDirectory ../../../test/out/windows-native-018
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.20.0
+      - name: Windows original Node22.20 npm environment regression
+        shell: pwsh
+        run: |
+          $taskNativeNode = (Get-Command node).Source
+          $taskNativeNpm = Join-Path (Split-Path -Parent $taskNativeNode) 'node_modules/npm/bin/npm-cli.js'
+          & ../../../test/smoke/windows-install-recovery.ps1 -Executable target/release/opencodex-desktop.exe -Node $taskNativeNode -NpmCli $taskNativeNpm -DriverNode '${{ steps.native_driver.outputs.node }}' -OutputDirectory ../../../test/out/windows-native-018-node22
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
       - name: Windows ordinary-account final EXE smoke
         shell: pwsh
         run: |
@@ -238,9 +265,13 @@ jobs:
           path: |
             test/out/windows-startup
             test/out/windows-backend
+            test/out/windows-native-018
+            test/out/windows-native-018-node22
             test/out/windows-ordinary
             test/out/windows-query-etw
             test/runtime/ci-bd2-query-etw/capture
+            !test/out/windows-native-018/OpenCodeX Native*/**
+            !test/out/windows-native-018-node22/OpenCodeX Native*/**
             !test/out/windows-startup/**/sandbox-*/**
             !test/out/windows-ordinary/**/sandbox-*/**
 

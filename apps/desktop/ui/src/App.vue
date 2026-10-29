@@ -8,6 +8,7 @@ import {useShellLayout} from '@/components/layout/useShellLayout'
 import { useAppController } from '@/composables/useAppController'
 import TrayRoute from '@/routes/TrayRoute.vue'
 import AppModal from '@/components/AppModal.vue'
+import RuntimeInstallDialog from '@/features/runtime/components/RuntimeInstallDialog.vue'
 import ToastHost from '@/components/ToastHost.vue'
 import TaskProgressHost from '@/components/TaskProgressHost.vue'
 import NotificationCenter from '@/features/notifications/components/NotificationCenter.vue'
@@ -75,5 +76,6 @@ const component = computed(() => routes.current === 'tray' ? undefined : routes.
       <TaskProgressHost />
     </div>
     <AppModal />
+    <RuntimeInstallDialog />
   </div>
 </template>

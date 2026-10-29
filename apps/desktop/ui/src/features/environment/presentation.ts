@@ -134,7 +134,7 @@ export function buildEnvironmentPresentation(
   if (report.gate === 'missing_node') {
     return {
       ...base,
-      state: report.brewFound ? 'missing_node_brew' : 'missing_node_nobrew',
+      state: report.brewFound && platform !== 'Windows' ? 'missing_node_brew' : 'missing_node_nobrew',
       title: '缺少 Node.js，OpenCodex 发现已暂停',
       description: platform === 'Windows'
         ? '请安装 Windows 版 Node.js LTS（包含 npm），或使用受支持的 NVM 安装目录，完成后重新检查。'
@@ -150,7 +150,7 @@ export function buildEnvironmentPresentation(
         ...(report.brewFound && platform !== 'Windows' ? [{ label: '安装 Node.js', command: 'brew install node' }] : []),
         { label: '安装后校验', command: platform === 'Windows' ? 'node -v; npm -v' : 'node -v && npm -v' },
       ],
-      link: report.brewFound
+      link: report.brewFound && platform !== 'Windows'
         ? undefined
         : { text: 'Node.js LTS 官方安装渠道', note: '仅展示渠道；真实实现提供打开官网入口。' },
     }
@@ -161,7 +161,9 @@ export function buildEnvironmentPresentation(
       ...base,
       state: 'missing_npm',
       title: 'Node.js 已发现，但 npm 不可用',
-      description: 'npm 通常随 Node.js 提供。建议重新安装 Node.js LTS，或检查 PATH 与 Node 安装完整性。',
+      description: platform === 'Windows'
+        ? 'npm 通常随 Node.js 提供。请检查 Node 安装目录和 NVM 等工具的路径声明，再重新检查；应用不搜索系统 PATH。'
+        : 'npm 通常随 Node.js 提供。请检查 Node 安装完整性及受支持的安装目录，再重新检查。',
       checks: [checkToPresentation('Node.js', report.node), checkToPresentation('npm', report.npm), notChecked('OpenCodex')],
       commands: [{ label: '安装后校验', command: platform === 'Windows' ? 'node -v; npm -v' : 'node -v && npm -v' }],
     }

@@ -61,13 +61,16 @@ impl OfficialCodexShimSource {
             .args(args)
             .current_dir(&self.working_directory)
             .env_clear()
-            .env("HOME", self.environment.home.clone().unwrap_or_default())
             .env("OPENCODEX_HOME", &self.environment.opencodex_home)
             .env("PATH", self.child_path())
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .kill_on_drop(false);
+        crate::infrastructure::platform::apply_user_environment(
+            process.as_std_mut(),
+            self.environment.home.as_deref(),
+        );
         for (key, value) in [
             ("LANG", &self.environment.lang),
             ("LC_ALL", &self.environment.lc_all),
@@ -91,18 +94,28 @@ impl OfficialCodexShimSource {
             .map(|path| std::env::split_paths(path).collect())
             .unwrap_or_default();
         for candidate in self.codex_candidate_dirs() {
-            if !candidate.join("codex").is_file() || dirs.contains(&candidate) {
+            #[cfg(windows)]
+            let found = ["codex.exe", "codex.cmd", "codex.bat"]
+                .iter()
+                .any(|name| candidate.join(name).is_file());
+            #[cfg(not(windows))]
+            let found = candidate.join("codex").is_file();
+            if !found || dirs.contains(&candidate) {
                 continue;
             }
             dirs.push(candidate);
         }
-        std::env::join_paths(dirs).unwrap_or_default()
+        crate::infrastructure::platform::controlled_path(dirs, None)
     }
 
     fn codex_candidate_dirs(&self) -> Vec<PathBuf> {
         let mut dirs: Vec<PathBuf> = Vec::new();
         if let Some(home) = self.environment.home.as_ref() {
             dirs.push(PathBuf::from(home).join(".local/bin"));
+            #[cfg(windows)]
+            dirs.extend(crate::infrastructure::discovery_paths::candidate_dirs(
+                Path::new(home),
+            ));
         }
         dirs.extend(CODEX_EXECUTABLE_CANDIDATE_DIRS.iter().map(PathBuf::from));
         dirs
@@ -228,7 +241,11 @@ fn sanitize(text: &str, limit: usize) -> String {
 const CODEX_SHIM_DIAGNOSTIC_LIMIT: usize = 800;
 
 fn validate_paths(executable: &Path, working_directory: &Path) -> Result<(), CodexShimError> {
-    if !executable.is_file() || !working_directory.is_dir() {
+    if !executable.is_absolute()
+        || !executable.is_file()
+        || !working_directory.is_absolute()
+        || !working_directory.is_dir()
+    {
         return Err(CodexShimError::Unreachable);
     }
     Ok(())

@@ -11,10 +11,10 @@
 //!
 //! 任一步失败都会清理临时区并**保持现有前缀与运行来源不变**（`FZ-47`）。
 //!
-//! 本模块不读 PATH、不读 `~/.npmrc`、不写系统代理、不落盘任何凭据；
+//! 本模块不读 PATH、不自行解析 `~/.npmrc`、不写系统代理；npm 自身仍按其规则读取用户配置。
 //! 含凭据的代理只写临时 `--userconfig`（`0600`，用完即删）。
 
-use std::io::{BufRead, BufReader};
+use std::io::{BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -513,8 +513,8 @@ impl InstallError {
             InstallError::Archive(rejection) => {
                 format!("离线包校验未通过：{}", rejection.code())
             }
-            InstallError::NpmFailed { exit_code, .. } => {
-                format!("npm 安装以退出码 {exit_code} 结束")
+            InstallError::NpmFailed { exit_code, detail } => {
+                format!("npm 命令失败（退出码 {exit_code}）：{detail}")
             }
             InstallError::PackageNameMismatch { found } => {
                 format!("包名不是官方包 {OFFICIAL_PACKAGE}（实际 {found}）")
@@ -704,7 +704,7 @@ impl VersionProbe for RealVersionProbe {
             })
             .await;
             #[cfg(windows)]
-            let _ = job.terminate();
+            let family_exited = job.terminate_and_wait().await.is_ok();
             #[cfg(unix)]
             if let Some(pid) = pid {
                 unsafe {
@@ -713,6 +713,10 @@ impl VersionProbe for RealVersionProbe {
             }
             let _ = child.kill().await;
             let _ = child.wait().await;
+            #[cfg(windows)]
+            if !family_exited {
+                return None;
+            }
             let status = observed.ok()?.ok()?;
             if !status.success() || output.len() > 64 * 1024 {
                 return None;
@@ -814,15 +818,23 @@ impl SystemNpmRunner {
         Self { home, cache }
     }
 
+    fn log_directory(&self) -> PathBuf {
+        self.cache
+            .parent()
+            .and_then(Path::parent)
+            .unwrap_or(&self.cache)
+            .join("logs/runtime-install")
+    }
+
     /// 受控命令：清空继承环境，只给 node / npm 目录与系统最小 PATH；
     /// **不注入应用持有的任何凭据环境变量**，也不继承 `npm_config_*`（`FZ-50`）。
     fn base_command(&self, npm_path: &Path, node_dir: Option<&Path>) -> Command {
-        let mut command = Command::new(npm_path);
+        let mut command = Command::new(dunce::simplified(npm_path));
         command.env_clear();
         let directories = node_dir
             .into_iter()
             .chain(npm_path.parent())
-            .map(Path::to_path_buf);
+            .map(|path| dunce::simplified(path).to_path_buf());
         let path = crate::infrastructure::platform::controlled_path(directories, None);
         command.env("PATH", path);
         command.env("LANG", "C.UTF-8");
@@ -900,24 +912,28 @@ impl NpmRunner for SystemNpmRunner {
             .arg("info");
         command.args(&proxy_args);
 
-        let (exit_code, tail) = run_streaming(
+        let (exit_code, tail, log_path) = run_streaming(
             command,
             sink,
             cancel,
             InstallPhase::Downloading,
-            5,
-            20,
+            (5, 20),
             &masker,
+            &self.log_directory(),
         )?;
         if exit_code != 0 {
             return Err(InstallError::NpmFailed {
                 exit_code,
-                detail: npm_reason(&tail, "npm pack 未成功"),
+                detail: format!(
+                    "npm pack：{}；日志：{}",
+                    npm_reason(&tail, "未收到错误输出"),
+                    log_path.display()
+                ),
             });
         }
         newest_tarball(&request.work_dir).ok_or_else(|| InstallError::NpmFailed {
             exit_code,
-            detail: "npm pack 没有产出 tarball".to_string(),
+            detail: format!("npm pack 没有产出 tarball；日志：{}", log_path.display()),
         })
     }
 
@@ -967,19 +983,23 @@ impl NpmRunner for SystemNpmRunner {
         command.args(&proxy_args);
         command.arg(&spec);
 
-        let (exit_code, tail) = run_streaming(
+        let (exit_code, tail, log_path) = run_streaming(
             command,
             sink,
             cancel,
             InstallPhase::Installing,
-            45,
-            40,
+            (45, 40),
             &masker,
+            &self.log_directory(),
         )?;
         if exit_code != 0 {
             return Err(InstallError::NpmFailed {
                 exit_code,
-                detail: npm_reason(&tail, "npm install 未成功"),
+                detail: format!(
+                    "npm install：{}；日志：{}",
+                    npm_reason(&tail, "未收到错误输出"),
+                    log_path.display()
+                ),
             });
         }
         Ok(NpmOutcome { exit_code })
@@ -1056,27 +1076,64 @@ impl Drop for TempUserconfig {
 
 /// 跑一条子进程命令，逐行推送输出（已掩码），并按需响应取消与空闲提示。
 ///
-/// 返回 `(退出码, 末尾若干行)`：末尾行用于把 npm 的真实原因带进失败分类
-/// （例如离线导入时的 `ENOTCACHED`），而不是只报一个退出码。
+/// 返回退出码、脱敏末尾输出和完整命令日志位置；进度仍只在运行期推送。
 fn run_streaming(
     mut command: Command,
     sink: &dyn InstallProgressSink,
     cancel: &CancelFlag,
     phase: InstallPhase,
-    base_percent: u8,
-    span: u8,
+    progress_range: (u8, u8),
     masker: &Masker,
-) -> Result<(i32, Vec<String>), InstallError> {
+    log_directory: &Path,
+) -> Result<(i32, Vec<String>, PathBuf), InstallError> {
+    use crate::infrastructure::platform::OpenOptionsModeExt;
+    let (base_percent, span) = progress_range;
+    let log_error = |error: std::io::Error| InstallError::FileSystem {
+        operation: "write npm command log".into(),
+        detail: error.to_string(),
+    };
+    std::fs::create_dir_all(log_directory).map_err(log_error)?;
+    let log_path = log_directory.join(format!("npm-{}-{}.log", phase.as_str(), random_suffix()));
+    let mut log = std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .create_mode(0o600)
+        .open(&log_path)
+        .map_err(log_error)?;
+    let invocation = serde_json::json!({
+        "startedAt": now_rfc3339(),
+        "program": command.get_program().to_string_lossy(),
+        "arguments": command.get_args().map(|a| a.to_string_lossy()).collect::<Vec<_>>(),
+        "workingDirectory": command.get_current_dir().map(|p| p.to_string_lossy()),
+        // base_command clears inheritance; these are precisely the allowed variables.
+        "environment": command.get_envs().map(|(k, v)| (k.to_string_lossy(), v.map(|v| v.to_string_lossy()))).collect::<std::collections::BTreeMap<_, _>>(),
+    });
+    writeln!(log, "{}", masker.apply(&invocation.to_string())).map_err(log_error)?;
+    log.flush().map_err(log_error)?;
+    sink.emit(InstallProgress {
+        phase,
+        percent: base_percent,
+        line: Some(masker.apply(&format!(
+            "命令：{} {:?}\n工作目录：{}\n日志：{}",
+            command.get_program().to_string_lossy(),
+            command.get_args().collect::<Vec<_>>(),
+            command.get_current_dir().unwrap_or(Path::new("")).display(),
+            log_path.display(),
+        ))),
+    });
     let mut child = command.spawn().map_err(|error| InstallError::FileSystem {
         operation: "spawn npm".to_string(),
-        detail: error.to_string(),
+        detail: {
+            let _ = writeln!(log, "spawn failed: {error}");
+            format!("{error}；日志：{}", log_path.display())
+        },
     })?;
-    let (sender, receiver) = std::sync::mpsc::channel::<String>();
+    let (sender, receiver) = std::sync::mpsc::channel::<(&'static str, String)>();
     if let Some(stdout) = child.stdout.take() {
-        spawn_line_reader(stdout, sender.clone());
+        spawn_line_reader(stdout, "stdout", sender.clone());
     }
     if let Some(stderr) = child.stderr.take() {
-        spawn_line_reader(stderr, sender.clone());
+        spawn_line_reader(stderr, "stderr", sender.clone());
     }
     drop(sender);
 
@@ -1087,13 +1144,19 @@ fn run_streaming(
         if cancel.is_cancelled() {
             let _ = child.kill();
             let _ = child.wait();
+            let _ = writeln!(log, "cancelled");
             return Err(InstallError::Cancelled);
         }
         match receiver.recv_timeout(Duration::from_millis(150)) {
-            Ok(line) => {
+            Ok((stream, line)) => {
                 seen = seen.saturating_add(1);
                 last_output = Instant::now();
                 let masked = masker.apply(&line);
+                if let Err(error) = writeln!(log, "[{stream}] {masked}").and_then(|_| log.flush()) {
+                    let _ = child.kill();
+                    let _ = child.wait();
+                    return Err(log_error(error));
+                }
                 if !masked.trim().is_empty() {
                     tail.push(masked.clone());
                     if tail.len() > 12 {
@@ -1123,22 +1186,78 @@ fn run_streaming(
         operation: "wait for npm".to_string(),
         detail: error.to_string(),
     })?;
-    Ok((status.code().unwrap_or(-1), tail))
+    let exit_code = status.code().unwrap_or(-1);
+    writeln!(log, "exitCode={exit_code} endedAt={}", now_rfc3339()).map_err(log_error)?;
+    sink.emit(InstallProgress {
+        phase,
+        percent: base_percent,
+        line: Some(masker.apply(&format!(
+            "退出码：{exit_code}；日志：{}",
+            log_path.display()
+        ))),
+    });
+    Ok((exit_code, tail, log_path))
 }
 
-fn spawn_line_reader<R: std::io::Read + Send + 'static>(reader: R, sender: Sender<String>) {
+fn spawn_line_reader<R: std::io::Read + Send + 'static>(
+    reader: R,
+    stream: &'static str,
+    sender: Sender<(&'static str, String)>,
+) {
     std::thread::spawn(move || {
-        for line in BufReader::new(reader).lines() {
-            match line {
-                Ok(line) => {
-                    if sender.send(line).is_err() {
+        let mut reader = BufReader::new(reader);
+        let mut bytes = Vec::new();
+        loop {
+            bytes.clear();
+            match reader.read_until(b'\n', &mut bytes) {
+                Ok(0) => break,
+                Ok(_) => {
+                    let line = decode_command_output(&bytes)
+                        .trim_end_matches(['\r', '\n'])
+                        .to_string();
+                    if sender.send((stream, line)).is_err() {
                         break;
                     }
                 }
-                Err(_) => break,
+                Err(error) => {
+                    let _ = sender.send((stream, format!("读取输出失败：{error}")));
+                    break;
+                }
             }
         }
     });
+}
+
+pub(crate) fn decode_command_output(bytes: &[u8]) -> String {
+    if let Ok(text) = std::str::from_utf8(bytes) {
+        return text.to_string();
+    }
+    #[cfg(windows)]
+    {
+        use windows_sys::Win32::Globalization::{MultiByteToWideChar, CP_OEMCP};
+        if let Ok(length) = i32::try_from(bytes.len()) {
+            let size = unsafe {
+                MultiByteToWideChar(CP_OEMCP, 0, bytes.as_ptr(), length, std::ptr::null_mut(), 0)
+            };
+            if size > 0 {
+                let mut wide = vec![0u16; size as usize];
+                let written = unsafe {
+                    MultiByteToWideChar(
+                        CP_OEMCP,
+                        0,
+                        bytes.as_ptr(),
+                        length,
+                        wide.as_mut_ptr(),
+                        size,
+                    )
+                };
+                if written > 0 {
+                    return String::from_utf16_lossy(&wide[..written as usize]);
+                }
+            }
+        }
+    }
+    String::from_utf8_lossy(bytes).into_owned()
 }
 
 /// 把行号粗略映射进 `[base, base + span]`：行数越多越接近上限，
@@ -2065,6 +2184,49 @@ impl PrefixReplacement {
     }
 }
 
+/// Wait only at the owned staging boundary on Windows sharing/access errors.
+/// Never remove a target or overwrite a directory created while waiting; a
+/// changed manifest is rejected. Original backup/rollback ownership is retained.
+fn activate_staged_prefix(temp: &Path, prefix: &Path, manifest: &[u8]) -> std::io::Result<()> {
+    #[cfg(windows)]
+    {
+        let deadline = Instant::now() + Duration::from_secs(10);
+        loop {
+            match std::fs::symlink_metadata(prefix) {
+                Ok(_) => {
+                    return Err(std::io::Error::new(
+                        std::io::ErrorKind::AlreadyExists,
+                        "activation target appeared while waiting",
+                    ))
+                }
+                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+                Err(error) => return Err(error),
+            }
+            if std::fs::read(temp.join(MANIFEST_FILENAME))? != manifest
+                || crate::modules::backup::safety::inspect(temp).is_err()
+            {
+                return Err(std::io::Error::other(
+                    "verified staging identity changed while waiting",
+                ));
+            }
+            match std::fs::rename(temp, prefix) {
+                Err(error)
+                    if matches!(error.raw_os_error(), Some(5 | 32 | 33))
+                        && Instant::now() < deadline =>
+                {
+                    std::thread::sleep(Duration::from_millis(50));
+                }
+                result => return result,
+            }
+        }
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = manifest;
+        crate::infrastructure::platform::rename(temp, prefix)
+    }
+}
+
 fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<PrefixReplacement, InstallError> {
     let expected_manifests = vec![std::fs::read(temp.join(MANIFEST_FILENAME)).map_err(|e| {
         InstallError::FileSystem {
@@ -2073,7 +2235,7 @@ fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<PrefixReplacement
         }
     })?];
     if !prefix.exists() {
-        crate::infrastructure::platform::rename(temp, prefix).map_err(|error| {
+        activate_staged_prefix(temp, prefix, &expected_manifests[0]).map_err(|error| {
             InstallError::FileSystem {
                 operation: "activate temporary prefix".to_string(),
                 detail: error.to_string(),
@@ -2092,7 +2254,7 @@ fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<PrefixReplacement
             detail: error.to_string(),
         }
     })?;
-    match crate::infrastructure::platform::rename(temp, prefix) {
+    match activate_staged_prefix(temp, prefix, &expected_manifests[0]) {
         Ok(()) => Ok(PrefixReplacement {
             prefix: prefix.to_path_buf(),
             retired: Some(retired),
@@ -3413,6 +3575,91 @@ mod tests {
 }
 
 #[cfg(test)]
+mod diagnostics_tests {
+    use super::*;
+
+    #[test]
+    fn npm_failure_detail_survives_the_app_error_payload() {
+        let error = InstallError::NpmFailed {
+            exit_code: 1,
+            detail: "npm pack：native error；日志：D:\\My App\\npm.log".into(),
+        };
+        let payload = serde_json::to_value(AppError::from(error)).unwrap();
+        assert_eq!(payload["code"], 14);
+        let message = payload["message"].as_str().unwrap();
+        assert!(message.contains("npm pack：native error"));
+        assert!(message.contains("D:\\My App\\npm.log"));
+    }
+
+    #[test]
+    fn non_utf8_output_does_not_discard_the_rest_of_the_stream() {
+        let (sender, receiver) = std::sync::mpsc::channel();
+        spawn_line_reader(
+            std::io::Cursor::new(b"\xff native error\nnpm error code EPERM\n".to_vec()),
+            "stderr",
+            sender,
+        );
+        let lines = receiver.into_iter().collect::<Vec<_>>();
+        assert_eq!(lines.len(), 2);
+        assert!(lines[0].1.contains("native error"));
+        assert_eq!(lines[1], ("stderr", "npm error code EPERM".into()));
+    }
+
+    #[test]
+    fn command_log_preserves_both_streams_context_and_exit_while_masking_secrets() {
+        let root = tempfile::tempdir().unwrap();
+        #[cfg(windows)]
+        let mut command = {
+            let mut command = Command::new(
+                std::env::var_os("COMSPEC")
+                    .unwrap_or_else(|| "C:\\Windows\\System32\\cmd.exe".into()),
+            );
+            command.args([
+                "/d",
+                "/c",
+                "echo https://name:secret@proxy.test && echo npm error code EPERM 1>&2 & exit /b 7",
+            ]);
+            command
+        };
+        #[cfg(not(windows))]
+        let mut command = {
+            let mut command = Command::new("/bin/sh");
+            command.args([
+                "-c",
+                "echo https://name:secret@proxy.test; echo 'npm error code EPERM' >&2; exit 7",
+            ]);
+            command
+        };
+        command
+            .env_clear()
+            .env("INSTALL_FIXTURE", "allowed context")
+            .current_dir(root.path())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .stdin(Stdio::null());
+        let sink = RecordingProgressSink::default();
+        let (exit, tail, log) = run_streaming(
+            command,
+            &sink,
+            &CancelFlag::new(),
+            InstallPhase::Downloading,
+            (5, 20),
+            &Masker::new(vec!["secret".into()]),
+            root.path(),
+        )
+        .unwrap();
+        assert_eq!(exit, 7);
+        assert!(npm_reason(&tail, "").contains("EPERM"));
+        let saved = std::fs::read_to_string(log).unwrap();
+        assert!(saved.contains("[stdout] https://***@proxy.test"));
+        assert!(saved.contains("[stderr] npm error code EPERM"));
+        assert!(saved.contains("workingDirectory") && saved.contains("allowed context"));
+        assert!(saved.contains("exitCode=7"));
+        assert!(!saved.contains("secret") && !sink.lines().join("\n").contains("secret"));
+    }
+}
+
+#[cfg(test)]
 mod bounded_probe_tests {
     use super::*;
     fn node() -> PathBuf {
@@ -3440,5 +3687,63 @@ mod bounded_probe_tests {
         }
         std::fs::write(&script, "console.log('2.77.0')").unwrap();
         assert_eq!(probe.probe(Some(&node), &script).as_deref(), Some("2.77.0"));
+    }
+}
+
+#[cfg(all(test, windows))]
+mod activation_handle_tests {
+    use super::*;
+    use std::os::windows::fs::OpenOptionsExt;
+    #[test]
+    fn staging_activation_waits_for_a_longer_shared_handle_without_deleting_the_target() {
+        let root = tempfile::tempdir().unwrap();
+        let source = root.path().join("staged");
+        let target = root.path().join("installed");
+        std::fs::create_dir(&source).unwrap();
+        std::fs::write(source.join(MANIFEST_FILENAME), b"verified-manifest").unwrap();
+        std::fs::write(source.join("retained"), b"exact payload").unwrap();
+        let handle = std::fs::OpenOptions::new()
+            .read(true)
+            .custom_flags(0x0200_0000)
+            .share_mode(0x1 | 0x2)
+            .open(&source)
+            .unwrap();
+        let release = std::thread::spawn(move || {
+            std::thread::sleep(Duration::from_millis(2600));
+            drop(handle)
+        });
+        let started = Instant::now();
+        activate_staged_prefix(&source, &target, b"verified-manifest").unwrap();
+        release.join().unwrap();
+        assert!(started.elapsed() >= Duration::from_millis(2500));
+        assert!(!source.exists());
+        assert_eq!(
+            std::fs::read(target.join("retained")).unwrap(),
+            b"exact payload"
+        );
+    }
+    #[test]
+    fn staging_retry_rejects_a_changed_manifest_and_never_replaces_a_new_target() {
+        let root = tempfile::tempdir().unwrap();
+        let source = root.path().join("staged");
+        let target = root.path().join("installed");
+        std::fs::create_dir(&source).unwrap();
+        std::fs::write(source.join(MANIFEST_FILENAME), b"changed").unwrap();
+        assert!(activate_staged_prefix(&source, &target, b"verified").is_err());
+        assert!(!target.exists());
+        std::fs::write(source.join(MANIFEST_FILENAME), b"verified").unwrap();
+        std::fs::create_dir(&target).unwrap();
+        std::fs::write(target.join("external"), b"do not overwrite").unwrap();
+        assert_eq!(
+            activate_staged_prefix(&source, &target, b"verified")
+                .unwrap_err()
+                .kind(),
+            std::io::ErrorKind::AlreadyExists
+        );
+        assert_eq!(
+            std::fs::read(target.join("external")).unwrap(),
+            b"do not overwrite"
+        );
+        assert!(source.exists());
     }
 }

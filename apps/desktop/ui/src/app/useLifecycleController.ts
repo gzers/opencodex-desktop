@@ -6,6 +6,8 @@ import { actionLabels } from '@/features/runtime/scenarios'
 import { healthLabel, runtimeLabel } from '@/lib/labels'
 import type { TrayAction } from '@/features/tray/api'
 import type { RuntimeState } from '@/types/ui'
+import { displayPath } from '@/lib/paths'
+import { escapeHtml } from '@/lib/html'
 
 export function useLifecycleController(deps: { runDoctor: () => void | Promise<void>; loadLogs: () => void | Promise<void> }) {
   const app = useAppStore()
@@ -115,8 +117,8 @@ export function useLifecycleController(deps: { runDoctor: () => void | Promise<v
 <li>管理器偏好设置：${flag(summary.preferencesConfigured)}</li>
 <li>扩展配置：${flag(summary.extensionConfigured)}</li>
 <li>同步端点：${flag(summary.syncEndpointConfigured)}</li>
-<li>数据根目录：${facts.dataRoot ? `<code>${facts.dataRoot}</code>` : '未获取'}</li>
-<li>OPENCODEX_HOME 配置目录：${summary.opencodexHome ? `<code>${summary.opencodexHome}</code>` : '未获取'}</li>
+<li>数据根目录：${facts.dataRoot ? `<code class="local-path">${escapeHtml(displayPath(facts.dataRoot))}</code>` : '未获取'}</li>
+<li>OPENCODEX_HOME 配置目录：${summary.opencodexHome ? `<code class="local-path">${escapeHtml(displayPath(summary.opencodexHome))}</code>` : '未获取'}</li>
 </ul>
 <p>本应用不会修改外部配置，只会说明当前影响。你可以先生成备份，再按官方指引执行恢复命令；操作可随时取消。</p>`
     app.openModal({
@@ -134,8 +136,8 @@ export function useLifecycleController(deps: { runDoctor: () => void | Promise<v
             body: `<p class="modal-lead">备份已生成。请复制下方命令，在终端确认后执行。</p>
 <ul>
 <li>备份 ID：<code>${backup.backupId}</code></li>
-<li>备份目录：<code>${backup.directory}</code></li>
-<li>备份来源：<code>${backup.targetPath}</code></li>
+<li>备份目录：<code class="local-path">${escapeHtml(displayPath(backup.directory))}</code></li>
+<li>备份来源：<code class="local-path">${escapeHtml(displayPath(backup.targetPath))}</code></li>
 <li>当前摘要：<code>${summaryState}</code></li>
 </ul>
 <pre class="modal-code"><code>ocx restore</code></pre>

@@ -1,6 +1,6 @@
 [package]
 name = "opencodex-desktop"
-version = "0.2.17"
+version = "0.2.18"
 description = "OpenCodeX Desktop manager shell"
 license = "MIT"
 edition = "2021"
@@ -41,6 +41,7 @@ dirs = "6"
 # Canonical storage stays unchanged; only npm-facing paths use safe Windows simplification.
 dunce = "=1.0.5"
 rand = "0.9"
+tempfile = "3"
 uuid = { version = "1.26.1", features = ["v4"] }
 sha2 = "0.10"
 hmac = "0.12"
@@ -64,11 +65,10 @@ keyring = { version = "3", default-features = false, features = ["apple-native"]
 
 [target.'cfg(target_os = "windows")'.dependencies]
 keyring = { version = "3", default-features = false, features = ["windows-native"] }
-windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Graphics_Dwm", "Win32_Security", "Win32_Security_Cryptography", "Win32_Storage_FileSystem", "Win32_System_Diagnostics_ToolHelp", "Win32_System_JobObjects", "Win32_System_Registry", "Win32_System_Threading", "Win32_UI_Accessibility", "Win32_UI_Controls", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Globalization", "Win32_Graphics_Dwm", "Win32_Security", "Win32_Security_Cryptography", "Win32_Storage_FileSystem", "Win32_System_Diagnostics_ToolHelp", "Win32_System_JobObjects", "Win32_System_Registry", "Win32_System_Threading", "Win32_UI_Accessibility", "Win32_UI_Controls", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }
 
 [dev-dependencies]
 http = "1"
-tempfile = "3"
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls-native-roots"] }
 png = "0.17"
 

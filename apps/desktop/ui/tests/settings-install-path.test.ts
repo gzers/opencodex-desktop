@@ -1,18 +1,20 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import SettingsRoute from '@/routes/SettingsRoute.vue'
+import SettingsRoute from '@/features/runtime/components/RuntimeInstallDialog.vue'
 import { useRuntimeStore } from '@/features/runtime/store'
 import { useAboutStore } from '@/features/about/store'
 import { useDataRootStore } from '@/features/data-root/store'
 import { useRouteStore } from '@/stores/routes'
+import { displayInstallPrefix } from '@/features/runtime/installPath'
 
 const invoke = vi.fn()
+const selectDirectory = vi.hoisted(() => vi.fn(async (): Promise<string | null> => null))
 vi.mock('@tauri-apps/api/core', () => ({ invoke: (...args: unknown[]) => invoke(...args) }))
 vi.mock('@tauri-apps/api/event', () => ({ listen: async () => () => {} }))
-vi.mock('@tauri-apps/plugin-dialog', () => ({ open: async () => null }))
+vi.mock('@tauri-apps/plugin-dialog', () => ({ open: selectDirectory }))
 const pages: Array<ReturnType<typeof mount>> = []
-beforeEach(() => invoke.mockReset())
+beforeEach(() => { invoke.mockReset(); selectDirectory.mockReset(); selectDirectory.mockResolvedValue(null) })
 afterEach(() => pages.splice(0).forEach(page => page.unmount()))
 
 async function setup(platform: string, root: string, prefix: string) {
@@ -33,16 +35,44 @@ async function setup(platform: string, root: string, prefix: string) {
     return null
   })
   useRouteStore().go('settings', { section: 'installation' })
-  const page = mount(SettingsRoute, { global: { plugins: [pinia] } })
+  const page = mount(SettingsRoute, { global: { plugins: [pinia], stubs: { teleport: true } } })
   pages.push(page)
   await flushPromises()
-  await page.get('[data-testid="runtime-install"]').trigger('click')
+  runtime.requestInstallModal('registry'); await flushPromises()
   const modal = page.get('[data-testid="runtime-install-modal"]')
-  const next = () => modal.findAll('button').find(button => button.text() === '下一步')!
+  await modal.get('[data-testid="wiz-ack"]').setValue(true)
+  const next = () => modal.findAll('button').find(button => button.text() === '开始安装')!
   return { modal, next }
 }
 
 describe('installation prefix platform syntax and landing hint', () => {
+  it.each([
+    ['\\\\?\\D:\\Software\\OpenCodeX Desktop\\data/runtime/opencodex', 'D:\\Software\\OpenCodeX Desktop\\data\\runtime\\opencodex'],
+    ['\\\\?\\UNC\\server\\share\\OpenCodeX Desktop\\runtime', '\\\\server\\share\\OpenCodeX Desktop\\runtime'],
+  ])('displays the same readable identity on prefill and reset: %s', async (prefix, expected) => {
+    const { modal } = await setup('Windows', 'D:\\Software\\OpenCodeX Desktop\\data', prefix)
+    expect((modal.get('#wiz-prefix').element as HTMLInputElement).value).toBe(expected)
+    await modal.get('#wiz-prefix').setValue('relative')
+    await modal.findAll('button').find(button => button.text() === '恢复默认')!.trigger('click')
+    expect((modal.get('#wiz-prefix').element as HTMLInputElement).value).toBe(expected)
+  })
+
+  it('preserves spaces, device identities and extended long paths', () => {
+    for (const prefix of ['\\\\?\\GLOBALROOT\\Device\\HarddiskVolume1', '\\\\?\\D:\\trailing.\\runtime',
+      '\\\\?\\D:\\' + 'long directory\\'.repeat(25) + 'runtime', '\\\\?\\D:\\NUL\\runtime']) {
+      expect(displayInstallPrefix(prefix, 'Windows')).toBe(prefix)
+    }
+    expect(displayInstallPrefix('D:\\My App\\runtime', 'Windows')).toBe('D:\\My App\\runtime')
+    expect(displayInstallPrefix('/Users/My App/runtime', 'macOS')).toBe('/Users/My App/runtime')
+  })
+
+  it('uses the same readable conversion after selecting a directory', async () => {
+    const { modal } = await setup('Windows', 'D:\\data', 'D:\\data\\runtime')
+    selectDirectory.mockResolvedValue('\\\\?\\D:\\My App\\Selected Folder/runtime')
+    await modal.findAll('button').find(button => button.text() === '选择…')!.trigger('click')
+    await flushPromises()
+    expect((modal.get('#wiz-prefix').element as HTMLInputElement).value).toBe('D:\\My App\\Selected Folder\\runtime')
+  })
   it.each([
     ['C:\\Tools\\OpenCodeX\\data', 'C:\\Tools\\OpenCodeX\\data\\runtime\\opencodex'],
     ['F:\\Apps with spaces\\OpenCodeX\\data', 'F:\\Apps with spaces\\OpenCodeX\\data\\runtime\\opencodex'],
@@ -53,9 +83,8 @@ describe('installation prefix platform syntax and landing hint', () => {
     expect(next().attributes('disabled')).toBeUndefined()
     expect(modal.text()).toContain('落点：数据根内')
     expect(invoke.mock.calls.map(call => call[0])).not.toContain('install_runtime')
-    await next().trigger('click')
-    expect(modal.find('#wiz-prefix').exists()).toBe(false)
-    expect(modal.text()).toContain('联网安装')
+    await next().trigger('click'); await flushPromises()
+    expect(invoke.mock.calls.some(call => call[0] === 'install_runtime')).toBe(true)
   })
 
   it.each([
@@ -103,9 +132,6 @@ describe('installation prefix platform syntax and landing hint', () => {
     const prefix = 'E:\\Protected by host policy\\opencodex'
     const { modal, next } = await setup('Windows', 'D:\\OpenCodeX\\data', prefix)
     expect(next().attributes('disabled')).toBeUndefined()
-    await next().trigger('click')
-    await next().trigger('click')
-    await modal.findAll('input[type="checkbox"]').at(-1)!.setValue(true)
     const read = invoke.getMockImplementation()!
     invoke.mockImplementation(async (command, ...args) => {
       if (command === 'install_runtime') throw { message: '安装位置落在系统保护目录内，已拒绝' }
@@ -124,9 +150,6 @@ describe('installation prefix platform syntax and landing hint', () => {
 
   it('permits exactly the explicit scripts-required retry from the real numeric error envelope', async () => {
     const { modal, next } = await setup('Windows', 'D:\\data', 'D:\\data\\runtime\\opencodex')
-    await next().trigger('click')
-    await next().trigger('click')
-    await modal.findAll('input[type="checkbox"]').at(-1)!.setValue(true)
     const read = invoke.getMockImplementation()!
     invoke.mockImplementation(async (command, ...args) => {
       if (command === 'install_runtime') throw { code: 14, message: 'managed runtime operation failed: scripts_required; 该包需要执行安装脚本才能生成入口；需要你的二次确认' }
@@ -144,7 +167,7 @@ describe('installation prefix platform syntax and landing hint', () => {
     expect(writes[0]![1].request.allowScripts).toBe(false)
     expect(writes[1]![1].request.allowScripts).toBe(true)
     await modal.findAll('button').find(b => b.text() === '关闭')!.trigger('click')
-    await pages.at(-1)!.get('[data-testid="runtime-install"]').trigger('click')
+    useRuntimeStore().requestInstallModal('registry'); await flushPromises()
     expect(useRuntimeStore().installing).toBe(false)
   })
 })

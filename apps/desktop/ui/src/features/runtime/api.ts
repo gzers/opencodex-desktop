@@ -1,6 +1,7 @@
 // 运行来源、托管安装与卸载的前端契约（IMP Track B · B3 / B4 / B5）。
 //
 // 只做 invoke 包装与类型声明；掩码、校验与真实副作用都在后端。
+import type { InvokeArgs, InvokeOptions } from '@tauri-apps/api/core'
 import { invoke as invokeProtection } from '@tauri-apps/api/core'
 
 export type RuntimeSourceKind = 'explicit' | 'managed' | 'discovered' | 'unresolved'
@@ -148,9 +149,9 @@ export const RUNTIME_SOURCE_CHANGED_EVENT = 'runtime-source-changed'
 /** 运行来源记录损坏时后端返回的稳定错误码前缀。 */
 export const RUNTIME_ERROR_CODE_PREFIX = 'runtime-managed'
 
-async function invoke<T>(command: string, args?: Record<string, unknown>): Promise<T> {
+async function invoke<T>(command: string, args?: InvokeArgs, options?: InvokeOptions): Promise<T> {
   const core = await import('@tauri-apps/api/core')
-  return core.invoke<T>(command, args)
+  return options ? core.invoke<T>(command, args, options) : core.invoke<T>(command, args)
 }
 
 export async function getRuntimeSource(): Promise<RuntimeSourceDto> {
@@ -179,6 +180,27 @@ export async function restoreDiscoveredRuntime(): Promise<RuntimeSourceDto> {
 
 export async function previewOfflinePackage(path: string): Promise<OfflinePackagePreviewDto> {
   return invoke<OfflinePackagePreviewDto>('preview_offline_package', { path })
+}
+
+/** Copy only a user-supplied File in bounded binary chunks; never infer a native path. */
+export async function receiveOfflineDrop(file: File, lease: (id: string) => void, cancelled: () => boolean): Promise<{path:string|null;preview:OfflinePackagePreviewDto}> {
+  if (file.size <= 0 || file.size > 512 * 1024 * 1024) throw new Error('离线包为空或超过允许体积。')
+  const {id}=await invoke<{id:string}>('stage_offline_package',{action:'begin',name:file.name,length:file.size})
+  lease(id)
+  try {
+    for(let offset=0;offset<file.size;offset+=1024*1024){
+      if(cancelled())throw new Error('离线包读取已取消。')
+      const bytes=new Uint8Array(await file.slice(offset,offset+1024*1024).arrayBuffer())
+      await invoke('stage_offline_package',bytes,{headers:{'x-ocx-drop-id':id,'x-ocx-drop-offset':String(offset)}})
+    }
+    if(cancelled())throw new Error('离线包读取已取消。')
+    const result=await invoke<{path:string|null;preview:OfflinePackagePreviewDto}>('stage_offline_package',{action:'finish',id})
+    if(cancelled())throw new Error('离线包读取已取消。')
+    return result
+  } catch(error) { await releaseOfflineDrop(id).catch(()=>{});throw error }
+}
+export async function releaseOfflineDrop(id: string): Promise<void> {
+  await invoke('stage_offline_package',{action:'clear',id})
 }
 
 export async function installRuntime(request: RuntimeInstallRequest): Promise<RuntimeInstallOutcomeDto> {

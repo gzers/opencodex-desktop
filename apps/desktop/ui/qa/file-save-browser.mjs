@@ -140,9 +140,13 @@ try{
   window.__TAURI_INTERNALS__={...window.__TAURI_INTERNALS__,invoke:async(command,args)=>command==='plugin:dialog|open'?'/fixture-transfer.ocxdconf':previous?previous(command,args):Promise.reject('fixture command unavailable')}
   const models=(await import('/src/features/models/store.ts')).useModelsStore();models.view.channelEditor=''
   models.channelDraft.channels.find(c=>c.id===demo).label='Local unsaved label';models.editCredential(demo,'fixture-local-pending-key','')
-  ;(await import('/src/stores/routes.ts')).useRouteStore().go('sync')
+  ;(await import('/src/stores/routes.ts')).useRouteStore().go('overview')
  },demo)
  await page.getByRole('button',{name:'导入配置',exact:true}).click()
+ const picker=page.getByRole('dialog',{name:'导入配置',exact:true});await picker.waitFor()
+ check('overview import stays on overview and requires a selected file',await page.locator('.ov').isVisible()&&await picker.getByRole('button',{name:'读取并比较',exact:true}).isDisabled())
+ await picker.getByRole('button',{name:'选择文件',exact:true}).click()
+ await picker.getByRole('button',{name:'读取并比较',exact:true}).click()
  const comparison=page.getByRole('dialog',{name:'比较配置文件',exact:true});await comparison.waitFor()
  check('receiving and comparing leaves complete file unchanged',(await rpc('disk')).configText===beforeTransfer.configText)
  await comparison.getByRole('button',{name:'比较所选范围',exact:true}).click()

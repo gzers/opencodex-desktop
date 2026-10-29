@@ -32,7 +32,7 @@ describe('exact candidate release notes', () => {
     expect(wrapper.get('pre').attributes('tabindex')).toBe('0')
     expect(wrapper.get('pre').text()).toContain('<img src=x onerror=evil()>')
     const app = useAppStore(); const open = vi.spyOn(app, 'openExternalLink').mockResolvedValue(true)
-    await wrapper.get('button').trigger('click')
+    await wrapper.get('a').trigger('click')
     expect(open).toHaveBeenCalledWith('https://github.com/lidge-jun/opencodex/releases/tag/v2.84.0')
     expect(mocks.invoke).toHaveBeenCalledOnce()
     expect(mocks.invoke.mock.calls[0][0]).toBe('update_release_details')
@@ -53,7 +53,7 @@ describe('exact candidate release notes', () => {
     expect(wrapper.text()).toContain('尚未提供本版本更新说明')
     expect(wrapper.text()).not.toContain('获取失败')
     expect(wrapper.text()).not.toContain('重试说明')
-    expect(wrapper.get('button').text()).toContain('查看网页详情')
+    expect(wrapper.get('a').text()).toContain('查看官方包页面')
   })
   it('replacing the focused retry preserves focus inside the notes area', async () => {
     mocks.invoke.mockResolvedValueOnce(details({ notesState: 'failed', notes: null, releaseUrl: null }))

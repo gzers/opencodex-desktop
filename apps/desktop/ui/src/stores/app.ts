@@ -126,6 +126,7 @@ export const useAppStore = defineStore("app", {
     officialProjectLoading: () => useUpdatesStore().officialProjectLoading,
     officialRemote: () => useUpdatesStore().officialRemote,
     officialRemoteError: () => useUpdatesStore().officialRemoteError,
+    officialRemoteErrorDetail: () => useUpdatesStore().officialRemoteErrorDetail,
     officialRemoteLoading: () => useUpdatesStore().officialRemoteLoading,
     officialUpdateBusy: () => useUpdatesStore().officialUpdateBusy,
     officialUpdateError: () => useUpdatesStore().officialUpdateError,
@@ -428,7 +429,7 @@ export const useAppStore = defineStore("app", {
         return true
       } catch (error) {
         runtime.failInstall(runtimeErrorText(error))
-        updates.failOfficialUpdate()
+        updates.failOfficialUpdate(error)
         this.showToast('官方更新安装失败；已保留当前版本。')
         return false
       } finally {

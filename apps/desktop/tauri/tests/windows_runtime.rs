@@ -166,6 +166,12 @@ fn windows_user_environment_is_explicit_and_does_not_inherit_credentials() {
     assert_eq!(env["USERPROFILE"], root.path().to_string_lossy().as_ref());
     assert_eq!(env["HOME"], root.path().to_string_lossy().as_ref());
     assert!(env["SystemRoot"].is_string());
+    let comspec = env["COMSPEC"].as_str().unwrap();
+    assert!(
+        !comspec.contains('/'),
+        "version-manager wrappers interpret COMSPEC as a native command path"
+    );
+    assert!(Path::new(comspec).is_absolute() && Path::new(comspec).is_file());
     assert!(env["APPDATA"]
         .as_str()
         .unwrap()
@@ -192,6 +198,8 @@ default: process.exit(7);
 }
 "#,
     );
+    // Backend source records commonly contain canonical extended Windows paths.
+    let entry = entry.canonicalize().unwrap();
     let runtime = FixedRuntimeExecutable::resolved(&entry);
     let env = environment(root.path());
     let version = OfficialCliVersionSource::new(runtime.clone(), root.path(), env.clone())
@@ -213,6 +221,172 @@ default: process.exit(7);
         .unwrap();
     let status = runtime.block_on(async { source.fetch() }).unwrap();
     assert_eq!(status["status"], "stopped");
+}
+
+#[test]
+fn windows_model_commands_preserve_sandbox_home_and_controlled_tool_path() {
+    let root = tempfile::Builder::new()
+        .prefix("model 环境 spaces ")
+        .tempdir()
+        .unwrap();
+    let sandbox = root.path().join("sandbox");
+    let tools = sandbox.join("home/.local/bin");
+    let config = sandbox.join("opencodex-home");
+    std::fs::create_dir_all(&tools).unwrap();
+    std::fs::create_dir_all(&config).unwrap();
+    let entry = write_launcher(
+        root.path(),
+        r#"
+const fs=require('fs');
+const result={home:process.env.HOME,profile:process.env.USERPROFILE,path:process.env.PATH,opencodexHome:process.env.OPENCODEX_HOME};
+if(process.argv[2]==='sync-cache')fs.writeFileSync(require('path').join(process.env.OPENCODEX_HOME,'observed.json'),JSON.stringify(result));
+else console.log(JSON.stringify(result));
+"#,
+    );
+    let output = std::process::Command::new(std::env::current_exe().unwrap())
+        .args([
+            "--exact",
+            "windows_model_environment_child",
+            "--ignored",
+            "--nocapture",
+        ])
+        .env("OPENCODEX_SANDBOX", "1")
+        .env("OPENCODEX_SANDBOX_ROOT", &sandbox)
+        .env("HOME", root.path().join("daily-host-profile"))
+        .env("PATH", root.path().join("host-path-sentinel"))
+        .env("OCX_PATH_AUDIT_ENTRY", entry)
+        .env("OCX_PATH_AUDIT_ROOT", &sandbox)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "stdout={} stderr={}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+}
+
+#[test]
+#[ignore = "owned child only"]
+fn windows_model_environment_child() {
+    use opencodex_desktop_lib::modules::model_config::{cache_refresh, upstream};
+    let sandbox = PathBuf::from(std::env::var_os("OCX_PATH_AUDIT_ROOT").unwrap());
+    let entry = PathBuf::from(std::env::var_os("OCX_PATH_AUDIT_ENTRY").unwrap());
+    let context = opencodex_desktop_lib::state::ProcessContext {
+        runtime: FixedRuntimeExecutable::resolved(&entry),
+        working_directory: sandbox.clone(),
+        opencodex_home: sandbox.join("opencodex-home"),
+    };
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let observed = runtime
+        .block_on(upstream::read(
+            &context,
+            upstream::ReadOperation::ProviderSnapshot,
+        ))
+        .unwrap();
+    eprintln!("upstream actual allowed context: {observed}");
+    assert!(!observed["path"]
+        .as_str()
+        .unwrap()
+        .contains("host-path-sentinel"));
+    let refreshed = runtime
+        .block_on(cache_refresh::sync_cache(&context, false))
+        .unwrap();
+    assert!(refreshed.success);
+    let observed: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(context.opencodex_home.join("observed.json")).unwrap(),
+    )
+    .unwrap();
+    eprintln!("cache-refresh actual allowed context: {observed}");
+    assert_eq!(
+        PathBuf::from(observed["home"].as_str().unwrap()),
+        sandbox.join("home")
+    );
+    assert_eq!(
+        PathBuf::from(observed["profile"].as_str().unwrap()),
+        sandbox.join("home")
+    );
+    assert!(!observed["path"]
+        .as_str()
+        .unwrap()
+        .contains("host-path-sentinel"));
+}
+
+#[test]
+fn windows_environment_discovery_rejects_relative_and_noncommand_files() {
+    use opencodex_desktop_lib::modules::discovery::{
+        EnvironmentDiscovery, EnvironmentGate, EnvironmentPaths,
+    };
+    let root = tempfile::tempdir().unwrap();
+    let invalid_node = root.path().join("node.txt");
+    std::fs::write(&invalid_node, b"not a Windows command").unwrap();
+    let report =
+        EnvironmentDiscovery::new(EnvironmentPaths::new(invalid_node, node(), node())).discover();
+    assert_eq!(report.gate, EnvironmentGate::MissingNode);
+    let report = EnvironmentDiscovery::new(EnvironmentPaths::new(
+        PathBuf::from("Cargo.toml"),
+        node(),
+        node(),
+    ))
+    .discover();
+    assert_eq!(report.gate, EnvironmentGate::MissingNode);
+}
+
+#[test]
+fn windows_uninstall_commands_bind_the_selected_home_and_prefix() {
+    use opencodex_desktop_lib::modules::runtime::uninstall::{
+        SystemUninstallCommands, UninstallCommands,
+    };
+    let root = tempfile::Builder::new()
+        .prefix("uninstall 环境 spaces ")
+        .tempdir()
+        .unwrap();
+    let home = root.path().join("user");
+    let selected_home = root.path().join("selected panel home");
+    let selected_prefix = root.path().join("selected npm prefix");
+    for dir in [&home, &selected_home, &selected_prefix] {
+        std::fs::create_dir_all(dir).unwrap();
+    }
+    let entry = write_launcher(root.path(), "console.log(JSON.stringify({args:process.argv.slice(2),home:process.env.OPENCODEX_HOME,cwd:process.cwd()}));");
+    let commands = SystemUninstallCommands {
+        home: Some(home.clone()),
+    };
+    // The fixture only prints its allowed context; no real uninstaller is executed.
+    let ocx = commands.ocx_uninstall(&entry, &selected_home).unwrap();
+    let npm = commands
+        .npm_uninstall_global(&entry, &selected_prefix)
+        .unwrap();
+    eprintln!("official uninstall actual context: {}", ocx.stdout.trim());
+    eprintln!("npm uninstall actual arguments: {}", npm.stdout.trim());
+    let ocx: serde_json::Value = serde_json::from_str(&ocx.stdout).unwrap();
+    let npm: serde_json::Value = serde_json::from_str(&npm.stdout).unwrap();
+    assert_eq!(ocx["home"], selected_home.to_string_lossy().as_ref());
+    assert_eq!(PathBuf::from(ocx["cwd"].as_str().unwrap()), home);
+    let args: Vec<String> = serde_json::from_value(npm["args"].clone()).unwrap();
+    assert!(args
+        .windows(2)
+        .any(|v| v[0] == "--prefix" && Path::new(&v[1]) == selected_prefix));
+}
+
+#[test]
+fn windows_codex_shim_receives_the_same_native_user_environment() {
+    use opencodex_desktop_lib::infrastructure::codex_shim_source::OfficialCodexShimSource;
+    use opencodex_desktop_lib::modules::codex_shim::CodexShimSource;
+    let root = tempfile::Builder::new()
+        .prefix("shim 环境 spaces ")
+        .tempdir()
+        .unwrap();
+    let entry = write_launcher(root.path(), "if(!process.env.SystemRoot||process.env.USERPROFILE!==process.env.HOME)process.exit(9);console.log(JSON.stringify({profile:process.env.USERPROFILE,home:process.env.HOME,systemRoot:process.env.SystemRoot}));");
+    let source = OfficialCodexShimSource::new(
+        FixedRuntimeExecutable::resolved(&entry),
+        root.path(),
+        environment(root.path()),
+    );
+    let result = source
+        .status()
+        .expect("read-only official shim needs Windows HOME/USERPROFILE/SystemRoot");
+    let observed: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
+    assert_eq!(observed["profile"], root.path().to_string_lossy().as_ref());
 }
 
 #[test]
@@ -294,7 +468,7 @@ if(argv[0]==='pack')fs.writeFileSync(p.join(target,'fixture.tgz'),'bounded fixtu
 fs.writeFileSync({},JSON.stringify({{argv,cache,cwd:process.cwd(),targetReal:fs.realpathSync(target),cacheReal:fs.realpathSync(cache)}}));"#,
         serde_json::to_string(&evidence.to_string_lossy()).unwrap()
     );
-    let npm = write_launcher(root.path(), &script);
+    let npm = write_launcher(root.path(), &script).canonicalize().unwrap();
     let cache = root.path().join("cache/npm");
     let prefix = root.path().join("安装 prefix");
     let download = root.path().join("下载");
@@ -376,6 +550,154 @@ fs.writeFileSync({},JSON.stringify({{argv,cache,cwd:process.cwd(),targetReal:fs.
 struct Sink;
 impl InstallProgressSink for Sink {
     fn emit(&self, _: InstallProgress) {}
+}
+
+#[test]
+#[ignore = "explicit local reproduction with discovered tools; installs only into its test root"]
+fn windows_local_discovered_tools_install_upgrade_and_failure_recovery() {
+    use opencodex_desktop_lib::modules::runtime::install::RecordingProgressSink;
+    use opencodex_desktop_lib::modules::runtime::{RuntimeStore, OFFICIAL_PACKAGE};
+    let paths = opencodex_desktop_lib::types::discovery_paths::default_paths().unwrap();
+    let home = platform::home_dir().unwrap();
+    let root = PathBuf::from(
+        std::env::var_os("OPENCODEX_LOCAL_INSTALL_EVIDENCE").expect("explicit test root"),
+    );
+    assert!(
+        root.is_absolute() && !root.exists(),
+        "fresh explicit test root required"
+    );
+    std::fs::create_dir_all(&root).unwrap();
+    let data = root.canonicalize().unwrap();
+    let prefix = data.join("runtime/opencodex");
+    let npm = SystemNpmRunner::new(Some(home.clone()), data.join("cache/npm"));
+    let probe = RealVersionProbe::default();
+    let sink = RecordingProgressSink::default();
+    let installer = RuntimeInstaller::new(
+        &data,
+        &npm,
+        Some(home),
+        &sink,
+        &probe,
+        Some(paths.node.clone()),
+    );
+    let run = |version: &str| {
+        installer.install(&InstallRequest {
+            prefix: prefix.clone(),
+            source: InstallSource::Registry {
+                version: version.into(),
+                proxy: None,
+            },
+            allow_scripts: false,
+            npm_path: Some(paths.npm.clone()),
+            node_path: Some(paths.node.clone()),
+        })
+    };
+    eprintln!("discovered node={:?} npm={:?}", paths.node, paths.npm);
+    let first = run("2.91.0").unwrap_or_else(|error| {
+        panic!(
+            "first install failed: {}; output={:?}",
+            error.message(),
+            sink.lines()
+        )
+    });
+    assert_eq!(first.package, OFFICIAL_PACKAGE);
+    assert_eq!(first.version, "2.91.0");
+    let store = RuntimeStore::new(&data);
+    let before_record = std::fs::read(store.path()).unwrap();
+    let before_entry = std::fs::read(&first.entry).unwrap();
+    let before_manifest = std::fs::read(prefix.join(".runtime-manifest.json")).unwrap();
+    let offline_archive = npm
+        .pack(
+            &NpmPackRequest {
+                npm_path: paths.npm.clone(),
+                node_dir: paths.node.parent().map(Path::to_path_buf),
+                version: "2.91.0".into(),
+                proxy: None,
+                work_dir: data.join("offline-download"),
+            },
+            &sink,
+            &CancelFlag::new(),
+        )
+        .unwrap();
+    let cold_npm = SystemNpmRunner::new(platform::home_dir(), data.join("cold-cache/npm"));
+    let offline_failure = RuntimeInstaller::new(
+        &data,
+        &cold_npm,
+        platform::home_dir(),
+        &sink,
+        &probe,
+        Some(paths.node.clone()),
+    )
+    .install(&InstallRequest {
+        prefix: prefix.clone(),
+        source: InstallSource::Offline {
+            archive: offline_archive,
+        },
+        allow_scripts: false,
+        npm_path: Some(paths.npm.clone()),
+        node_path: Some(paths.node.clone()),
+    })
+    .expect_err("empty offline dependency cache must fail without going online");
+    assert!(
+        offline_failure.message().contains("npm install"),
+        "{}",
+        offline_failure.message()
+    );
+    assert!(
+        offline_failure.message().contains("ENOTCACHED"),
+        "{}",
+        offline_failure.message()
+    );
+    assert_eq!(std::fs::read(store.path()).unwrap(), before_record);
+    assert_eq!(std::fs::read(&first.entry).unwrap(), before_entry);
+    assert_eq!(
+        std::fs::read(prefix.join(".runtime-manifest.json")).unwrap(),
+        before_manifest
+    );
+    let failed = run("0.0.0-ocx-missing-native-recovery").expect_err("missing version must fail");
+    assert!(
+        failed.message().contains("npm pack"),
+        "{}",
+        failed.message()
+    );
+    assert!(failed.message().contains("日志："), "{}", failed.message());
+    assert_eq!(std::fs::read(store.path()).unwrap(), before_record);
+    assert_eq!(std::fs::read(&first.entry).unwrap(), before_entry);
+    assert_eq!(
+        std::fs::read(prefix.join(".runtime-manifest.json")).unwrap(),
+        before_manifest
+    );
+    let upgraded = run("2.93.0").unwrap_or_else(|error| {
+        panic!(
+            "recovery upgrade failed: {}; output={:?}",
+            error.message(),
+            sink.lines()
+        )
+    });
+    assert_eq!(upgraded.version, "2.93.0");
+    assert_eq!(store.load().resolved_version.as_deref(), Some("2.93.0"));
+    assert_eq!(
+        probe
+            .probe(
+                Some(&paths.node),
+                &prefix.join("node_modules/@bitkyc08/opencodex/bin/ocx.mjs")
+            )
+            .as_deref(),
+        Some("2.93.0")
+    );
+    std::fs::write(
+        data.join("validation.json"),
+        serde_json::to_vec_pretty(&serde_json::json!({
+            "result":"pass", "node": paths.node, "npm": paths.npm,
+            "firstVersion":first.version,"upgradedVersion":upgraded.version,
+            "failure":failed.message(),"failedAttemptPreservedPackageEntrySource":true,
+            "offlineInstallFailure":offline_failure.message(),
+            "scriptsEnabled":upgraded.scripts_enabled,"sourceReadback":true,
+            "dailyConfigurationChanged":false
+        }))
+        .unwrap(),
+    )
+    .unwrap();
 }
 
 struct RuntimeFixtureNpm {

@@ -155,7 +155,8 @@ impl EnvironmentDiscovery {
     }
 
     fn is_executable_file(&self, path: &Path) -> bool {
-        path.is_file()
+        path.is_absolute()
+            && crate::modules::runtime::paths::validate_executable(path).is_ok()
             && std::fs::metadata(path)
                 .map(|meta| is_executable(&meta))
                 .unwrap_or(false)

@@ -334,7 +334,7 @@ input, textarea, select, [contenteditable="true"], pre, code, .ui-table td, .mod
 
 /* 全局通知层：通知中心 + Toast + 任务卡在同一列顺次排布，天然避让、不互相压盖。 */
 .notif-layer { position: fixed; top: 56px; right: 20px; z-index: 80; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; width: min(400px, calc(100vw / var(--ui-zoom) - 48px)); max-height: calc(100vh / var(--ui-zoom) - 72px); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; pointer-events: none; }
-.notif-layer.under-modal { z-index: calc(var(--z-modal) - 1); }
+.notif-layer.under-modal, body:has(.modal-mask) .notif-layer { z-index: calc(var(--z-modal) - 1); }
 .notif-layer > * { pointer-events: auto; flex-shrink: 0; }
 .app-window.panel-route .notif-layer { top: 6px; }
 .notif-host { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; width: 100%; pointer-events: none; }
@@ -943,7 +943,8 @@ html:not([data-effects="high"]) .topbar-refresh.is-busy svg { animation: none; }
 .runtime-fact { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 10px; align-items: center; }
 .runtime-fact label { color: var(--muted); font-size: var(--text-label); }
 .runtime-fact > div { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.runtime-path { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: var(--text-micro); }
+.runtime-path { font-family: var(--font-code); font-size: var(--text-micro); }
+.local-path, code.local-path, .input.local-path, .install-grid .install-row div.local-path { font-family: var(--font-path); }
 .runtime-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 
 /* 说明文字不抢视线：向导内的小字必须带容器前缀，否则会被 `.modal p` 的正文规则盖掉。 */
@@ -972,6 +973,7 @@ html:not([data-effects="high"]) .topbar-refresh.is-busy svg { animation: none; }
 .wiz-substeps li::before { content: '○ '; color: var(--muted); }
 .wiz-substeps li.is-done::before { content: '● '; color: var(--green); }
 .wiz-substeps li.is-active::before { content: '◐ '; color: var(--accent); }
+.wiz-substeps li.is-failed::before { content: '● '; color: var(--red); }
 .wiz-foot { display: flex; justify-content: space-between; gap: 8px; margin-top: 14px; }
 .wiz-objects ul { margin: 4px 0 0; padding-left: 18px; font-size: var(--text-micro); }
 

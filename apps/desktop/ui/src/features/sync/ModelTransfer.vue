@@ -11,7 +11,10 @@ import {useAppStore} from '@/stores/app'
 import { errorText, versionLabel, type ChannelPolicy, type ModelPolicy } from '@/features/models/api'
 import { modelTransferApi, scopeFor,remoteScope, accountInformationLabel, accountInformationSupported, accountTransferLabel, accountPlatforms, type AccountCatalogEntry, type ChannelImportMapping, type DraftCandidate, type FamilyScope, type FilePlan, type IncomingPlan, type ManagerScope, type RemoteOptions, type TransferScope, type UploadPlan } from './modelTransfer'
 import {getSyncConfig} from './api'
-const props = defineProps<{ remote?: boolean }>()
+import { displayPath } from '@/lib/paths'
+const props = defineProps<{ remote?: boolean; importOnly?: boolean; importOpen?: boolean }>()
+const emit = defineEmits<{ 'update:importOpen': [value: boolean] }>()
+const pickOpen = ref(false)
 const models = useModelsStore()
 const app=useAppStore()
 const busy = ref(false)
@@ -32,7 +35,7 @@ const incomingSource=ref<IncomingPlan|null>(null)
 const receiveRefs=ref<string[]>([]);const receiveChannels=ref<string[]>([]);const receiveGlobal=ref(false);const receiveDirty=ref(false)
 /** 生成位置预览：与后端 exports/<日期>/<单次包>/ 结构一致，仅供确认，不参与写入。 */
 const exportTreeText = computed(() => {
-  const root = destinationMode.value === 'custom' ? (exportTargetDir.value || '自定义目录') : '默认导出目录'
+  const root = destinationMode.value === 'custom' ? (displayPath(exportTargetDir.value) || '自定义目录') : '默认导出目录'
   const today = new Date().toLocaleDateString('sv-SE')
   return [
     root + '/',
@@ -158,7 +161,7 @@ function applyScopePreset(value:string){
  allTemplates.value=false;allChannels.value=false;allSkills.value=false;allMcps.value=false;exportKeys.value=value==='move';extensionCredentials.value=value==='move';assetsReviewed.value=false;
 }
 
-onMounted(async () => { try{if (!models.snapshot) await models.load();if(!props.remote)await getSyncConfig().then(config=>{activeWebdav.value=!!config.endpoint}).catch(()=>{});else await loadScope()}finally{catalogueLoading.value=false;await begin()} })
+onMounted(async () => { if(props.importOnly)return; try{if (!models.snapshot) await models.load();if(!props.remote)await getSyncConfig().then(config=>{activeWebdav.value=!!config.endpoint}).catch(()=>{});else await loadScope()}finally{catalogueLoading.value=false;await begin()} })
 async function loadAssets(){try{const catalog=await modelTransferApi.extensionCatalog();if(!catalog||!Array.isArray(catalog.skills)||!Array.isArray(catalog.mcps)||![...catalog.skills,...catalog.mcps].every(name=>typeof name==='string'))throw {message:'扩展目录返回结构无效，请重新读取；未扩大配置范围'};assetCatalog.value=catalog;assetError.value=''}catch(cause){assetError.value=errorText(cause)}}
 function assetScope(){return hasAssets.value?{skillNames:skillNames.value,mcpNames:mcpNames.value,extensionCredentials:extensionCredentials.value,assetsReviewed:assetsReviewed.value}:{}}
 function remoteOptions(){return {...(accountIds.value.length?{accountIds:accountIds.value}:{}),preferences:managerPreferences.value,extensions:managerExtensions.value,includeKeys:exportKeys.value,...assetScope(),...(allTemplates.value||allChannels.value||allSkills.value||allMcps.value?{allTemplates:allTemplates.value,allChannels:allChannels.value,allSkills:allSkills.value,allMcps:allMcps.value}:{}),passphrase:remotePassword.value||undefined}}
@@ -202,21 +205,29 @@ async function prepare() {
 }
 /** 用户在确认弹窗选择加密后，按同一冻结范围重新生成受口令保护的计划；未勾选则沿用已预览计划。 */
 async function preparedWithPassphrase(passphrase?:string){const prepared=preparedExport.value;if(!prepared)throw {message:'导出范围已失效，请重新选择范围并导出。'};if(prepared.kind==='remote'){const options:RemoteOptions={...(prepared.options??remoteOptions()),passphrase};prepared.options=options;return await modelTransferApi.prepareUpload(prepared.scope,options)}if(prepared.draft)return await modelTransferApi.prepareDraft(prepared.scope,prepared.draft,passphrase,prepared.policy);return await modelTransferApi.prepare(prepared.scope,passphrase,prepared.includeKeys,prepared.managerScope)}
+function openImport() { if (!busy.value) { importPath.value=''; error.value=''; pickOpen.value=true } }
+async function chooseImportFile() {
+  try {
+    const selected = await open({ multiple:false, directory:false, filters:[{ name:'配置文件', extensions:['ocxdconf','json'] }] })
+    if (typeof selected === 'string') importPath.value=selected
+  } catch(cause) { error.value=errorText(cause) }
+}
 async function receive() {
+  if (!props.remote && !importPath.value) return
   await perform(async () => {
+    if(!models.snapshot) await models.load()
     if (props.remote){try{incoming.value = await modelTransferApi.download()}catch(cause){if(typeof cause==='object'&&cause!==null&&'code' in cause&&cause.code==='passphrase_required'){remoteUnlock.value=true;passwordOpen.value=true;importPassword.value='';return}throw cause}}
     else {
-      const selected = await open({ multiple: false, directory: false, filters: [{ name: '配置文件', extensions: ['ocxdconf','json'] }] })
-      if (!selected || Array.isArray(selected)) return
-      importPath.value=selected
-      recompareId.value='';openingOriginal.value=false
-      remoteUnlock.value=false
-      try{incoming.value = await modelTransferApi.receive(selected)}catch(cause){if(typeof cause==='object'&&cause!==null&&'code' in cause&&cause.code==='passphrase_required'){passwordOpen.value=true;importPassword.value='';return}throw cause}
+      recompareId.value='';openingOriginal.value=false;remoteUnlock.value=false
+      try{incoming.value=await modelTransferApi.receive(importPath.value)}catch(cause){if(typeof cause==='object'&&cause!==null&&'code' in cause&&cause.code==='passphrase_required'){pickOpen.value=false;passwordOpen.value=true;importPassword.value='';return}throw cause}
     }
-    filePlan.value = null; upload.value = null;preparedExport.value=null;plaintextConfirmOpen.value=false;exportPackagePassword.value='';exportPackagePasswordAgain.value=''
+    pickOpen.value=false
+    filePlan.value=null;upload.value=null;preparedExport.value=null;plaintextConfirmOpen.value=false;exportPackagePassword.value='';exportPackagePasswordAgain.value=''
     adoptKeys.value=false;unlockedPassword='';if(incoming.value)selectIncoming(incoming.value)
   })
 }
+watch(() => props.importOpen, value => { if(value)openImport() }, { immediate:true })
+function closeImport() { if(!busy.value){pickOpen.value=false;emit('update:importOpen',false)} }
 function selectIncoming(plan:IncomingPlan){
  receiveChannelModels.value={};
  receiveSkillTargets.value=Object.fromEntries((plan.assets?.skills??[]).map(s=>[s.name,plan.assetMappings?.skills[s.name]??s.name]));receiveMcpTargets.value=Object.fromEntries((plan.assets?.mcps??[]).map(m=>[m.name,plan.assetMappings?.mcps[m.name]??m.name]));receiveMappings.value=Object.fromEntries(Object.entries(plan.channelBindings??{}).map(([id,b])=>[id,b.keepLocalConnection?'local:'+b.targetId:'new']));receiveNewLabels.value=Object.fromEntries((plan.package.payload.policy?.channels??[]).map(c=>[c.id,plan.channelBindings?.[c.id]?.label??c.label+'（导入）']));receiveAccounts.value=plan.manager?.accounts?.filter(accountInformationSupported).map(a=>a.id)??[];incomingSource.value=plan;receiveRefs.value=plan.package.payload.templates.flatMap(t=>t.revisions.map(r=>JSON.stringify([t.id,r.id])));receiveChannels.value=plan.package.payload.policy?.channels.map(c=>c.id)??[];receiveGlobal.value=!!(plan.package.payload.policy?.templateRefs||plan.package.payload.policy?.channelOrder||plan.package.payload.policy?.defaultChannelId);receivePreferences.value=!!plan.manager?.preferences;receiveExtensions.value=!!plan.manager?.extensions;receiveEndpoints.value=plan.manager?.webdav.map(e=>e.id)??[];receiveSkills.value=plan.assets?.skills.map(skill=>skill.name)??[];receiveMcps.value=plan.assets?.mcps.map(mcp=>mcp.name)??[];adoptExtensionCredentials.value=plan.adoption?.extensionCredentials??false;adoptKeys.value=plan.adoption?.keys??false;adoptWebdavPasswords.value=plan.adoption?.webdav??true;receiveDirty.value=false
@@ -234,7 +245,7 @@ async function confirm() {
       await models.adoptTransfer(plan,async()=>{
         try{return adoptKeys.value||includeDav||adoptExtensionCredentials.value||plan.protected&&!!(plan.assets?.skills.length||plan.assets?.mcps.length)?await modelTransferApi.accept(plan.id,{adoptKeys:adoptKeys.value,...(includeDav?{adoptWebdavPasswords:true}:{}),...(adoptExtensionCredentials.value?{adoptExtensionCredentials:true}:{}),passphrase:unlockedPassword}):await modelTransferApi.accept(plan.id)}catch(cause){try{const latest=await modelTransferApi.latestIncoming();if(latest?.id===plan.id&&latest.adoption)plan.adoption=latest.adoption}catch{}throw cause}
       })
-      const updatePreferences=!!plan.manager?.preferences; incoming.value = null;incomingSource.value=null;unlockedPassword='';if(updatePreferences)await app.loadPreferences()
+      const updatePreferences=!!plan.manager?.preferences; emit('update:importOpen',false); app.showToast('配置已接收。'); incoming.value = null;incomingSource.value=null;unlockedPassword='';if(updatePreferences)await app.loadPreferences()
     } else if (upload.value) {
       if(preparedExport.value?.kind==='remote'&&remotePassword.value){const options:RemoteOptions={...(preparedExport.value.options??remoteOptions()),passphrase:remotePassword.value};upload.value=await modelTransferApi.prepareUpload(preparedExport.value.scope,options)}
       upload.value = await modelTransferApi.publish(upload.value.id)
@@ -296,15 +307,16 @@ function channelMappingScope(){
 }
 async function compareReceived(){if(!incomingSource.value)return;await perform(async()=>{const scope={...(Object.keys(receiveChannelModels.value).length?{channelModels:Object.fromEntries(Object.entries(receiveChannelModels.value).filter(([id])=>receiveChannels.value.includes(id)))}:{}),...assetMappingScope(),...channelMappingScope(),templateRefs:receiveRefs.value.map(value=>{const [templateId,revisionId]=JSON.parse(value) as [string,string];return {templateId,revisionId}}),channelIds:receiveChannels.value,includeGlobal:receiveGlobal.value,...(incomingSource.value!.manager?{accountIds:receiveAccounts.value,preferences:receivePreferences.value,extensions:receiveExtensions.value,endpointIds:receiveEndpoints.value}:{}),...(incomingSource.value!.assets?{skillNames:receiveSkills.value,mcpNames:receiveMcps.value}:{})};incoming.value=unlockedPassword?await modelTransferApi.select(incomingSource.value!.id,scope,unlockedPassword):await modelTransferApi.select(incomingSource.value!.id,scope);if(!incoming.value.availableKeys?.length)adoptKeys.value=false;if(!incoming.value.availableExtensionCredentials)adoptExtensionCredentials.value=false;receiveDirty.value=false})}
 
-function closePreview() { if (!busy.value) { incoming.value = null;incomingSource.value=null; filePlan.value = null; upload.value = null;preparedExport.value=null;plaintextConfirmOpen.value=false;exportPackagePassword.value='';exportPackagePasswordAgain.value='';remotePassword.value='';unlockedPassword='' } }
+function closePreview() { if (!busy.value) { emit('update:importOpen',false); incoming.value = null;incomingSource.value=null; filePlan.value = null; upload.value = null;preparedExport.value=null;plaintextConfirmOpen.value=false;exportPackagePassword.value='';exportPackagePasswordAgain.value='';remotePassword.value='';unlockedPassword='' } }
 </script>
 <template>
-  <article class="card model-transfer">
-    <div class="card-head"><div><h2>{{ remote ? '设备间同步' : '导入与导出' }}</h2><p>{{ remote ? '本机范围同时用于上传与接收；下载的变化先预览，再应用。' : '把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。' }}</p></div><div class="sync-head-actions"><template v-if="remote"><UiButton variant="primary" :disabled="remoteActionsDisabled" @click="saveRemoteScope">保存本机范围</UiButton><UiButton :disabled="remoteActionsDisabled" @click="prepare">同步配置</UiButton></template><template v-else><UiButton :disabled="busy||catalogueLoading||!models.snapshot" @click="receive">导入配置</UiButton><UiButton variant="primary" :disabled="busy||!models.snapshot||catalogueLoading||!hasScope||!familyScopesValid||(exportSource==='draft'&&!channelIds.length)||(hasAssets&&!assetsReviewed)" @click="prepare">导出配置</UiButton></template></div></div>
+  <article class="model-transfer" :class="{ card: !importOnly }">
+    <template v-if="!importOnly">
+    <div class="card-head"><div><h2>{{ remote ? '设备间同步' : '导入与导出' }}</h2><p>{{ remote ? '本机范围同时用于上传与接收；下载的变化先预览，再应用。' : '把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。' }}</p></div><div class="sync-head-actions"><template v-if="remote"><UiButton variant="primary" :disabled="remoteActionsDisabled" @click="saveRemoteScope">保存本机范围</UiButton><UiButton :disabled="remoteActionsDisabled" @click="prepare">同步配置</UiButton></template><template v-else><UiButton :disabled="busy||catalogueLoading||!models.snapshot" @click="openImport">导入配置</UiButton><UiButton variant="primary" :disabled="busy||!models.snapshot||catalogueLoading||!hasScope||!familyScopesValid||(exportSource==='draft'&&!channelIds.length)||(hasAssets&&!assetsReviewed)" @click="prepare">导出配置</UiButton></template></div></div>
     <p v-if="models.error && !models.snapshot" class="model-error" role="alert">{{ models.error }}</p>
     <p v-if="error && !preview" class="model-error" role="alert">{{ error }}</p>
 <p v-if="remote&&scopeSaved" role="status">本设备范围已保存，尚未上传；采用结果另行核对。</p>
-    <div v-if="exportedPath" class="model-transfer-path" role="status"><span>备份包</span><code>{{ exportedPath }}</code><UiButton size="sm" variant="ghost" @click="openExportParent">打开备份包目录</UiButton></div>
+    <div v-if="exportedPath" class="model-transfer-path" role="status"><span>备份包</span><code class="local-path">{{ displayPath(exportedPath) }}</code><UiButton size="sm" variant="ghost" @click="openExportParent">打开备份包目录</UiButton></div>
     <!-- 范围是页面主体的一部分，不再收进弹窗：原型里它是列表旁的常驻两栏工作区。 -->
     <!-- 原型结构：一条工具栏（范围预设 + 搜索 + 清空）+ 两栏；右栏是凭据清单，不是操作列。 -->
     <section class="sync-scope-workspace" aria-label="同步范围" data-testid="sync-scope-workspace">
@@ -345,11 +357,13 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
         <p class="sync-credentials-note">{{ selectedCredentialKinds.length ? '所选凭据将随文件传输；加密口令在确认弹窗内填写，可选。' : '当前不携带凭据' }}</p>
       </aside>
     </section>
-    <UiDialog class="transfer-review" :open="!!preview" :title="incoming ? '比较配置文件' : remote ? '确认配置上传' : '确认导出'" :busy="busy" wide @close="closePreview">
+    </template>
+    <UiDialog panel-class="transfer-file-picker" hide-close :open="pickOpen" title="导入配置" :busy="busy" @close="closeImport"><div class="transfer-file-row" role="group" aria-label="配置文件"><span>配置文件</span><UiButton :disabled="busy" @click="chooseImportFile">选择文件</UiButton><span class="local-path" aria-live="polite">{{ displayPath(importPath) || '尚未选择文件' }}</span></div><p v-if="error" class="model-error" role="alert">{{ error }}</p><template #actions><UiButton :disabled="busy" @click="closeImport">取消</UiButton><UiButton variant="primary" :disabled="busy||!importPath" :loading="busy" @click="receive">读取并比较</UiButton></template></UiDialog>
+    <UiDialog panel-class="transfer-review" :open="!!preview" :title="incoming ? '比较配置文件' : remote ? '确认配置上传' : '确认导出'" :busy="busy" wide @close="closePreview">
       <p v-if="error" class="model-error" role="alert">{{ error }}</p>
       <p v-if="preview?.payload.candidate" role="status">未提交草稿候选；采用后仍进入本机工作区，须另行预览并保存，不表示运行配置已写入。</p>
 
-      <div v-if="!incoming&&!remote" class="export-destination"><span>保存位置</span><div class="export-destination-choice" role="radiogroup" aria-label="保存位置"><label><input v-model="destinationMode" type="radio" value="default" :disabled="busy" />默认导出目录</label><label><input v-model="destinationMode" type="radio" value="custom" :disabled="busy" />自定义目录</label></div><div v-if="destinationMode==='custom'" class="export-destination-custom"><div class="export-destination-row"><input class="input" type="text" readonly :value="exportTargetDir" aria-label="自定义导出目录" placeholder="尚未选择目录"><UiButton size="sm" variant="ghost" :disabled="busy" @click="chooseExportDir">选择目录…</UiButton></div><p class="model-muted">未选择目录时按默认导出目录保存。</p></div></div>
+      <div v-if="!incoming&&!remote" class="export-destination"><span>保存位置</span><div class="export-destination-choice" role="radiogroup" aria-label="保存位置"><label><input v-model="destinationMode" type="radio" value="default" :disabled="busy" />默认导出目录</label><label><input v-model="destinationMode" type="radio" value="custom" :disabled="busy" />自定义目录</label></div><div v-if="destinationMode==='custom'" class="export-destination-custom"><div class="export-destination-row"><input class="input local-path" type="text" readonly :value="displayPath(exportTargetDir)" aria-label="自定义导出目录" placeholder="尚未选择目录"><UiButton size="sm" variant="ghost" :disabled="busy" @click="chooseExportDir">选择目录…</UiButton></div><p class="model-muted">未选择目录时按默认导出目录保存。</p></div></div>
       <div v-if="!incoming&&!remote" class="export-package-layout">
         <!-- 原型顺序：标题 → 导出目录 → 生成位置树 → 说明段 → 文件保护/携带凭据 → 口令 → 底部主按钮。 -->
         <div class="export-tree" aria-label="导出目录结构"><p class="export-tree-kicker">生成位置</p><pre>{{ exportTreeText }}</pre><p class="model-muted">按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。</p></div>
@@ -373,16 +387,24 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
         <p v-for="(binding,sourceId) in incoming?.channelBindings??{}" :key="sourceId">{{ preview.payload.policy?.channels.find(c=>c.id===sourceId)?.label }} → {{ binding.keepLocalConnection?localChannels.find(c=>c.id===binding.targetId)?.label:binding.label }} · {{ binding.keepLocalConnection?'保留本机连接和Key':'独立停用草稿' }}</p><p v-for="notice in incoming?.notices ?? []" :key="notice">{{ notice }}</p><code class="model-transfer-digest">{{ preview.digest }}</code></details>
       <template #actions><UiButton v-if="upload?.phase === 'published'||incoming?.adoption?.completed" variant="primary" @click="closePreview">完成</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="!!incoming&&(receiveDirty||!!incoming.previewError)" @click="confirm">{{ incoming ? incoming.adoption?'核对原导入':'采用到本机' : remote ? (upload?.phase === 'prepared' ? '确认上传' : '核对原上传') : '生成配置包' }}</UiButton></template>
     </UiDialog>
-    <UiDialog class="transfer-plaintext" :open="plaintextConfirmOpen" title="凭据将以明文写入" :busy="busy" @close="plaintextConfirmOpen=false">
+    <UiDialog panel-class="transfer-plaintext" :open="plaintextConfirmOpen" title="凭据将以明文写入" :busy="busy" @close="plaintextConfirmOpen=false">
       <p>当前范围含 {{ exportCredentialCount }} 项凭据，不加密将以明文写入该文件，任何能读取文件的人都能看到这些凭据。继续？</p><p v-if="error" class="model-error" role="alert">{{ error }}</p>
       <template #actions><UiButton :disabled="busy" @click="plaintextConfirmOpen=false">返回设置口令</UiButton><UiButton variant="primary" :loading="busy" @click="acceptPlaintextExport">仍以明文导出</UiButton></template>
     </UiDialog>
-    <UiDialog class="transfer-password" :open="passwordOpen" :title="remoteUnlock?'读取受保护同步快照':'打开受保护配置文件'" :busy="busy" @close="passwordOpen=false;importPassword=''">
+    <UiDialog panel-class="transfer-password" :open="passwordOpen" :title="remoteUnlock?'读取受保护同步快照':'打开受保护配置文件'" :busy="busy" @close="passwordOpen=false;importPassword='';emit('update:importOpen',false)">
       <p>未加密的文件无需口令，直接继续即可；加密文件才需要填写原口令。</p><label>文件保护口令（可选）<input v-model="importPassword" aria-label="导入解密口令" class="input" type="password" autocomplete="off" :disabled="busy" /></label><p v-if="error" class="model-error" role="alert">{{ error }}</p><template #actions><UiButton variant="primary" :loading="busy" @click="unlockFile">{{ importPassword ? '解密并比较' : '直接读取并比较' }}</UiButton></template>
     </UiDialog>
   </article>
 </template>
 <style scoped>
+.transfer-file-row {display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}
+.transfer-file-row .local-path {min-width:0;overflow-wrap:anywhere}
+
+:global(.transfer-file-picker.ui-dialog) {width:min(520px,calc(100vw / var(--ui-zoom) - 40px))}
+:global(.transfer-file-picker.ui-dialog header) {border-bottom:0;padding:20px 20px 8px}
+:global(.transfer-file-picker.ui-dialog .ui-dialog-content) {padding:0 20px 14px}
+:global(.transfer-file-picker.ui-dialog footer) {padding:14px 20px 20px}
+
 fieldset{border:1px solid var(--border);border-radius:var(--radius);margin:0 0 18px;padding:14px;display:grid;gap:12px;min-width:0}
 .model-transfer-account span,.model-transfer-account-summary{display:grid;gap:4px;min-width:0}.model-transfer-account-summary{margin:12px 0;overflow-wrap:anywhere}.model-transfer-account small{color:var(--muted)}
 label{display:flex;align-items:center;gap:8px}

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { layoutObserver } from '@/lib/layoutObserver'
+import { displayPath } from '@/lib/paths'
 // 概览：运行 / 环境准备双形态（UI规范 §25）。
 //
 // - 环境就绪（ready / ready_via_source）：无框居中状态区；Logo → 主线状态 → 必要说明 → 当前操作；
@@ -15,6 +17,7 @@ import UiButton from '@/components/ui/UiButton.vue'
 import InformationRow from '@/components/patterns/InformationRow.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
+import ModelTransfer from '@/features/sync/ModelTransfer.vue'
 import { managerInstallProgress, managerUpdateStatus } from '@/features/updates/update'
 import { hasNewerVersion } from '@/features/updates/version'
 import RuntimeMotionMark from '@/features/runtime/components/RuntimeMotionMark.vue'
@@ -36,6 +39,7 @@ function openUpdates(target: 'manager' | 'official' | null = null, check = false
   updateOpen.value = true
   if (check) void updateCenter.value?.check()
 }
+const importOpen = ref(false)
 const detailOpen = ref(false)
 const envOpen = ref(false)
 const copiedCommand = ref<string | null>(null)
@@ -57,7 +61,7 @@ function onKeydown(event: KeyboardEvent) {
   }
 }
 
-let sizeObserver: ResizeObserver | null = null
+let sizeObserver: ReturnType<typeof layoutObserver> = undefined
 function updateSize() {
   const win = document.querySelector('.app-window')
   const measured = win?.getBoundingClientRect().height ?? window.innerHeight
@@ -65,7 +69,8 @@ function updateSize() {
   const logical = measured / zoom
   const next = logical < 680
   if (next !== compact.value) compact.value = next
-  document.documentElement.setAttribute('data-overview-size', next ? 'compact' : 'standard')
+  const value=next ? 'compact' : 'standard'
+  if(document.documentElement.getAttribute('data-overview-size')!==value) document.documentElement.setAttribute('data-overview-size',value)
 }
 
 onMounted(() => {
@@ -75,7 +80,7 @@ onMounted(() => {
   if (typeof ResizeObserver !== 'undefined') {
     const win = document.querySelector('.app-window')
     if (win) {
-      sizeObserver = new ResizeObserver(updateSize)
+      sizeObserver = layoutObserver(updateSize)!
       sizeObserver.observe(win)
     }
   }
@@ -84,7 +89,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', onVisibilityChange)
   window.removeEventListener('keydown', onKeydown)
   sizeObserver?.disconnect()
-  sizeObserver = null
+  sizeObserver = undefined
   document.documentElement.removeAttribute('data-overview-size')
 })
 
@@ -163,8 +168,8 @@ const runtime = computed(() =>
 )
 const managerDataRoot = computed(() => app.dataRootConfig?.currentDataRoot || app.dataRootPath || '')
 const managerHome = computed(() => app.dataRootConfig?.currentOpencodexHome || '')
-const dataRoot = computed(() => managerDataRoot.value || app.statusSnapshot?.facts.data_root || '—')
-const home = computed(() => managerHome.value || app.statusSnapshot?.facts.opencodex_home || '—')
+const dataRoot = computed(() => displayPath(managerDataRoot.value || app.statusSnapshot?.facts.data_root) || '—')
+const home = computed(() => displayPath(managerHome.value || app.statusSnapshot?.facts.opencodex_home) || '—')
 
 // 环境结论（就绪态并入运行详情；准备态由准备卡承载）。
 const environment = computed(() =>
@@ -258,7 +263,6 @@ async function copyCommand(command: string) {
 function installManaged(source: 'registry' | 'offline') {
   app.requestInstallModal(source)
   envOpen.value = false
-  routes.go('settings', { section: 'installation' })
 }
 
 function guide() {
@@ -288,7 +292,7 @@ const mods = computed(() => [
     rows: [['导出范围', '可选对象'], ['凭据', '独立选择']],
     // 原型 index.html:1881/:1900-1901 的入口是「导入配置 / 选择同步范围」。
     actions: [
-      { label: '导入配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) },
+      { label: '导入配置', cls: 'btn', run: () => { importOpen.value = true } },
       { label: '选择同步范围', cls: 'btn ghost', run: () => routes.go('settings',{section:'migration'}) },
     ],
   },
@@ -297,6 +301,7 @@ const mods = computed(() => [
 </script>
 
 <template>
+  <ModelTransfer import-only v-model:import-open="importOpen" />
   <UpdateCenter ref="updateCenter" v-model:open="updateOpen" :target="updateTarget" />
   <section class="route-section active ov" :data-mode="mode">
     <AppTopbar :subtitle-override="pageSubtitle" />
@@ -449,11 +454,11 @@ const mods = computed(() => [
             <dl class="motion-runtime-paths">
               <div>
                 <dt>数据目录</dt>
-                <dd><span class="motion-runtime-value" :title="dataRoot">{{ dataRoot }}</span><button class="motion-value-copy" type="button" aria-label="复制数据目录" @click="copyValue(dataRoot, $event)">复制</button></dd>
+                <dd><span class="motion-runtime-value local-path" :title="dataRoot">{{ dataRoot }}</span><button class="motion-value-copy" type="button" aria-label="复制数据目录" @click="copyValue(dataRoot, $event)">复制</button></dd>
               </div>
               <div>
                 <dt>OPENCODEX_HOME</dt>
-                <dd><span class="motion-runtime-value" :title="home">{{ home }}</span><button class="motion-value-copy" type="button" aria-label="复制 OPENCODEX_HOME" @click="copyValue(home, $event)">复制</button></dd>
+                <dd><span class="motion-runtime-value local-path" :title="home">{{ home }}</span><button class="motion-value-copy" type="button" aria-label="复制 OPENCODEX_HOME" @click="copyValue(home, $event)">复制</button></dd>
               </div>
             </dl>
           </section>

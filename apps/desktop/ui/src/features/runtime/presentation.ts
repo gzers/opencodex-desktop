@@ -44,31 +44,24 @@ export function installPhaseLabel(phase: InstallPhase): string {
   }
 }
 
-/** 联网安装才显示命令行明细；离线只显示分包步骤（UI规范 §18.2 / §18.3）。 */
+/** 联网向导在执行后保留命令行明细，包括核验与终态。来源由调用方判断。 */
 export function phaseShowsCommandLine(phase: InstallPhase): boolean {
-  return phase === 'downloading' || phase === 'installing'
+  return phase !== 'preparing'
 }
 
 /** 离线分包进度列表（三步固定文案，与冻结契约一致）。 */
-export function offlineSteps(phase: InstallPhase): Array<{ label: string; state: 'done' | 'active' | 'pending' }> {
-  const order: InstallPhase[] = ['validating', 'extracting', 'verifying', 'activating', 'done']
+export function offlineSteps(phase: InstallPhase, lastPhase: InstallPhase = 'preparing'): Array<{ label: string; state: 'done' | 'active' | 'pending' | 'failed' }> {
   const labels = ['校验离线包', '展开到私有前缀并链接 bin', '校验并切换运行来源']
-  const reached = (index: number) => {
-    const target = order[index]
-    const currentIndex = order.indexOf(phase)
-    if (phase === 'failed') return 'pending'
-    return currentIndex >= order.indexOf(target) ? 'done' : 'pending'
-  }
-  const states = labels.map((label, index) => {
-    const state = reached(index)
-    return { label, state: state as 'done' | 'active' | 'pending' }
+  const reached = phase === 'failed' ? lastPhase : phase
+  const current = reached === 'validating' ? 0
+    : reached === 'extracting' || reached === 'installing' ? 1
+      : reached === 'verifying' || reached === 'activating' ? 2
+        : reached === 'done' ? 3 : -1
+  return labels.map((label, index) => {
+    const state = index < current ? 'done'
+      : index === current ? (phase === 'failed' ? 'failed' : 'active') : 'pending'
+    return { label, state }
   })
-  // 当前阶段所在的那一步标为 active（未完成）。
-  const currentIndex = order.indexOf(phase)
-  const stepIndex = currentIndex >= 0 ? Math.min(labels.length - 1, Math.floor(currentIndex * labels.length / order.length)) : -1
-  if (stepIndex >= 0 && states[stepIndex].state === 'pending') states[stepIndex].state = 'active'
-  else if (stepIndex >= 0 && states[stepIndex].state === 'done' && phase !== 'done') states[stepIndex].state = 'active'
-  return states
 }
 
 /** 代理展示一律走掩码；前端不接触明文凭据。 */

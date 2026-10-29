@@ -83,20 +83,8 @@ pub async fn read_command(
         .stdout(Stdio::piped())
         .stderr(Stdio::null())
         .kill_on_drop(true);
-    crate::infrastructure::platform::apply_user_environment(
-        command.as_std_mut(),
-        crate::infrastructure::platform::home_dir()
-            .as_deref()
-            .map(Path::as_os_str),
-    );
-    for key in [
-        "PATH",
-        "LANG",
-        "LC_ALL",
-        "HTTP_PROXY",
-        "HTTPS_PROXY",
-        "NO_PROXY",
-    ] {
+    crate::infrastructure::platform::apply_runtime_environment(command.as_std_mut(), executable);
+    for key in ["LANG", "LC_ALL", "HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY"] {
         if let Some(value) = std::env::var_os(key) {
             command.env(key, value);
         }
@@ -310,7 +298,7 @@ pub async fn write(
             unreachable!("visibility restore uses the authenticated live management API")
         }
     };
-    let mut command = tokio::process::Command::new(executable);
+    let mut command = tokio::process::Command::new(&executable);
     command
         .args(args)
         .current_dir(&context.working_directory)
@@ -324,20 +312,8 @@ pub async fn write(
         .stdout(Stdio::piped())
         .stderr(Stdio::null())
         .kill_on_drop(true);
-    crate::infrastructure::platform::apply_user_environment(
-        command.as_std_mut(),
-        crate::infrastructure::platform::home_dir()
-            .as_deref()
-            .map(Path::as_os_str),
-    );
-    for key in [
-        "PATH",
-        "LANG",
-        "LC_ALL",
-        "HTTP_PROXY",
-        "HTTPS_PROXY",
-        "NO_PROXY",
-    ] {
+    crate::infrastructure::platform::apply_runtime_environment(command.as_std_mut(), &executable);
+    for key in ["LANG", "LC_ALL", "HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY"] {
         if let Some(value) = std::env::var_os(key) {
             command.env(key, value);
         }

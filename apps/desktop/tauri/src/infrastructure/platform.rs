@@ -116,7 +116,7 @@ pub fn apply_user_environment(command: &mut std::process::Command, home: Option<
         command.creation_flags(0x0800_0000); // CREATE_NO_WINDOW：后台 CLI 不闪控制台。
         let root = windows_root();
         command.env("SystemRoot", &root).env("WINDIR", &root);
-        command.env("COMSPEC", root.join("System32/cmd.exe"));
+        command.env("COMSPEC", root.join("System32").join("cmd.exe"));
         let temp = std::env::temp_dir();
         command.env("TEMP", &temp).env("TMP", &temp);
         if let Some(home) = home.map(PathBuf::from) {
@@ -135,6 +135,52 @@ pub fn apply_user_environment(command: &mut std::process::Command, home: Option<
             command.env("APPDATA", roaming).env("LOCALAPPDATA", local);
         }
     }
+}
+
+/// Official model commands share the same HOME and controlled tool discovery as
+/// lifecycle/status commands. In particular, a sandbox must never re-add host HOME/PATH.
+pub fn apply_runtime_environment(command: &mut std::process::Command, executable: &Path) {
+    let home = home_dir();
+    apply_user_environment(command, home.as_deref().map(Path::as_os_str));
+    let discovered = home.as_deref().map(|home| {
+        super::discovery_paths::process_path(home, &super::discovery_paths::paths_for_home(home))
+    });
+    command.env(
+        "PATH",
+        controlled_path(
+            executable.parent().map(Path::to_path_buf),
+            discovered.as_deref(),
+        ),
+    );
+}
+
+/// Invoke the Windows Shell with a Unicode object name, without command
+/// interpretation or executable lookup through the application's working directory.
+#[cfg(windows)]
+pub fn shell_open(target: &std::ffi::OsStr) -> crate::errors::AppResult<()> {
+    use std::os::windows::ffi::OsStrExt;
+    let mut value = target.encode_wide().collect::<Vec<_>>();
+    if value.contains(&0) {
+        return Err(crate::errors::AppError::NotConfigured);
+    }
+    value.push(0);
+    let result = unsafe {
+        windows_sys::Win32::UI::Shell::ShellExecuteW(
+            std::ptr::null_mut(),
+            std::ptr::null(),
+            value.as_ptr(),
+            std::ptr::null(),
+            std::ptr::null(),
+            1,
+        )
+    } as isize;
+    if result <= 32 {
+        return Err(crate::errors::AppError::FileSystem {
+            operation: "open Windows shell target".into(),
+            detail: format!("Windows Shell rejected target (code {result})"),
+        });
+    }
+    Ok(())
 }
 
 /// `OpenOptions` 创建文件时的 Unix 权限位；Windows 上为 no-op。

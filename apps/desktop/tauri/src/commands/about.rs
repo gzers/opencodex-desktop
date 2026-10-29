@@ -175,11 +175,16 @@ async fn query_panel_metadata(
         .state::<crate::state::SharedDataRoot>()
         .0
         .join("cache/npm");
+    let logs = app
+        .state::<crate::state::SharedDataRoot>()
+        .0
+        .join("logs/runtime-query");
     crate::commands::run_blocking("query panel metadata", move || {
         crate::modules::about::remote::query_remote_latest(
             &npm,
             &working,
             &cache,
+            &logs,
             &environment,
             "latest",
         )

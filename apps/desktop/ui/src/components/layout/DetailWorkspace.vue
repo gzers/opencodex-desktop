@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { layoutObserver } from '@/lib/layoutObserver'
 import {nextTick,onBeforeUnmount,onMounted,ref,watch} from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 const props=withDefaults(defineProps<{label:string;sections:{id:string;label:string}[];collapsed?:boolean;activeId?:string}>(),{collapsed:false,activeId:''})
 const emit=defineEmits<{'update:collapsed':[boolean];'update:activeId':[string]}>()
 const root=ref<HTMLElement|null>(null),head=ref<HTMLElement|null>(null)
-let main:HTMLElement|null=null,observer:ResizeObserver|undefined,frame=0,reflow=false,disposed=false
+let main:HTMLElement|null=null,observer:ReturnType<typeof layoutObserver>,frame=0,reflow=false,disposed=false
 function targets(){return props.sections.flatMap(item=>{const element=[...root.value?.querySelectorAll<HTMLElement>('[id]')??[]].find(e=>e.id===item.id);return element?[{...item,element}]:[]})}
 function scale(){return main&&main.offsetHeight?main.getBoundingClientRect().height/main.offsetHeight:1}
 function offset(){if(!root.value)return 12;const style=getComputedStyle(root.value);return (Number.parseFloat(style.getPropertyValue('--page-tabs-height'))||0)+(head.value?.offsetHeight??0)+12+(main?.clientTop??0)+(main?Number.parseFloat(getComputedStyle(main).paddingTop)||0:0)-(Number.parseFloat(style.getPropertyValue('--page-tabs-inset-top'))||0)}
@@ -21,7 +22,8 @@ function fitNavigation(){
  const stickyTop=Number.parseFloat(getComputedStyle(navigation).top)||0
  const lift=Math.min(minimum-available,(position.top-viewport.top)/zoom-stickyTop,main.scrollHeight-main.clientHeight-main.scrollTop)
  if(lift>1){main.scrollTop+=lift;schedule();return}
- root.value.style.setProperty('--detail-navigation-height',Math.max(0,available)+'px')
+ const height=Math.max(0,available)+'px'
+ if(root.value.style.getPropertyValue('--detail-navigation-height')!==height)root.value.style.setProperty('--detail-navigation-height',height)
 }
 function updateActive(){
  frame=0;fitNavigation();if(reflow||!main||!root.value?.getClientRects().length)return
@@ -32,8 +34,9 @@ function updateActive(){
 function schedule(){if(!frame)frame=requestAnimationFrame(updateActive)}
 function measure(){
  if(!root.value||!main)return
- root.value.style.setProperty('--detail-header-height',String(head.value?.offsetHeight??0)+'px')
- root.value.style.setProperty('--detail-viewport-height',String(main.clientHeight)+'px')
+ const set=(key:string,value:string)=>{if(root.value!.style.getPropertyValue(key)!==value)root.value!.style.setProperty(key,value)}
+ set('--detail-header-height',String(head.value?.offsetHeight??0)+'px')
+ set('--detail-viewport-height',String(main.clientHeight)+'px')
  fitNavigation();schedule()
 }
 function go(id:string,focus=true){
@@ -60,7 +63,7 @@ async function collapse(){
 }
 onMounted(()=>{
  main=root.value?.closest<HTMLElement>('.main')??root.value?.parentElement??null
- if(typeof ResizeObserver!=='undefined'){observer=new ResizeObserver(measure);if(main)observer.observe(main);if(head.value)observer.observe(head.value)}
+ if(typeof ResizeObserver!=='undefined'){observer=layoutObserver(measure)!;if(main)observer.observe(main);if(head.value)observer.observe(head.value)}
  main?.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',measure);measure()
 })
 watch(()=>props.sections.map(s=>s.id).join('\0'),()=>void nextTick().then(measure))

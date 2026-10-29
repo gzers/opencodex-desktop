@@ -252,14 +252,7 @@ pub(crate) fn open_path(path: &Path) -> AppResult<()> {
 
 #[cfg(all(target_os = "windows", not(test)))]
 pub(crate) fn open_path(path: &Path) -> AppResult<()> {
-    std::process::Command::new("explorer")
-        .arg(path)
-        .spawn()
-        .map(|_| ())
-        .map_err(|error| AppError::FileSystem {
-            operation: "open managed path".to_string(),
-            detail: error.to_string(),
-        })
+    crate::infrastructure::platform::shell_open(dunce::simplified(path).as_os_str())
 }
 
 #[cfg(all(unix, not(target_os = "macos"), not(target_os = "windows"), not(test)))]
@@ -297,14 +290,7 @@ fn open_url(url: &str) -> AppResult<()> {
 
 #[cfg(all(target_os = "windows", not(test)))]
 fn open_url(url: &str) -> AppResult<()> {
-    std::process::Command::new("cmd")
-        .args(["/C", "start", "", url])
-        .spawn()
-        .map(|_| ())
-        .map_err(|error| AppError::FileSystem {
-            operation: "open external link".to_string(),
-            detail: error.to_string(),
-        })
+    crate::infrastructure::platform::shell_open(std::ffi::OsStr::new(url))
 }
 
 #[cfg(all(unix, not(target_os = "macos"), not(target_os = "windows"), not(test)))]

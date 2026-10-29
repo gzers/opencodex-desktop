@@ -57,3 +57,6 @@ export function prefixInsideDataRoot(root: string, prefix: string, platform?: st
   return parent.root === candidate.root && parent.parts.length <= candidate.parts.length
     && parent.parts.every((part, index) => part === candidate.parts[index])
 }
+
+/** Display only ordinary Windows directory identities; retain device/long-path semantics. */
+export { displayPath as displayInstallPrefix } from '@/lib/paths'

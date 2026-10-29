@@ -13,6 +13,7 @@ interface DetailFact {
   wide?: boolean
   /** 取值区自带内部滚动（长名单，例如 MCP 环境变量键名）。 */
   scroll?: boolean
+  localPath?: boolean
 }
 
 interface DetailAction {
@@ -105,7 +106,7 @@ onMounted(() => dialog.value?.focus())
         <dl class="ext-detail-facts">
           <div v-for="fact in facts" :key="fact.label" :class="{ 'span-2': fact.wide }">
             <dt>{{ fact.label }}</dt>
-            <dd :class="{ 'is-scrollable': fact.scroll }">{{ fact.value }}</dd>
+            <dd :class="{ 'is-scrollable': fact.scroll, 'local-path': fact.localPath }">{{ fact.value }}</dd>
           </div>
         </dl>
         <ul class="ext-detail-targets">

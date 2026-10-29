@@ -308,36 +308,113 @@ async fn change_runtime_source(
 #[tauri::command]
 pub async fn preview_offline_package(path: String) -> AppResult<OfflinePackagePreviewDto> {
     crate::commands::run_readonly("preview offline package", move || {
-        let archive_path = PathBuf::from(&path);
-        let file_name = archive_path
-            .file_name()
-            .map(|value| value.to_string_lossy().into_owned())
-            .unwrap_or_else(|| path.clone());
-        let file_size = std::fs::metadata(&archive_path)
-            .map(|metadata| metadata.len())
-            .unwrap_or(0);
-        match archive::inspect(&archive_path, None) {
-            Ok(inspection) => Ok(OfflinePackagePreviewDto {
-                ok: true,
-                file_name,
-                file_size,
-                version: Some(inspection.version),
-                sha256_prefix: Some(inspection.sha256[..16].to_string()),
-                rejection_code: None,
-                message: "离线包校验通过".to_string(),
-            }),
-            Err(rejection) => Ok(OfflinePackagePreviewDto {
-                ok: false,
-                file_name,
-                file_size,
-                version: None,
-                sha256_prefix: None,
-                rejection_code: Some(rejection.code().to_string()),
-                message: describe_rejection(&rejection),
-            }),
-        }
+        offline_package_preview(&path)
     })
     .await
+}
+fn offline_package_preview(path: &str) -> AppResult<OfflinePackagePreviewDto> {
+    let archive_path = PathBuf::from(path);
+    let file_name = archive_path
+        .file_name()
+        .map(|value| value.to_string_lossy().into_owned())
+        .unwrap_or_else(|| archive_path.display().to_string());
+    let file_size = std::fs::metadata(&archive_path)
+        .map(|metadata| metadata.len())
+        .unwrap_or(0);
+    match archive::inspect(&archive_path, None) {
+        Ok(inspection) => Ok(OfflinePackagePreviewDto {
+            ok: true,
+            file_name,
+            file_size,
+            version: Some(inspection.version),
+            sha256_prefix: Some(inspection.sha256[..16].to_string()),
+            rejection_code: None,
+            message: "离线包校验通过".to_string(),
+        }),
+        Err(rejection) => Ok(OfflinePackagePreviewDto {
+            ok: false,
+            file_name,
+            file_size,
+            version: None,
+            sha256_prefix: None,
+            rejection_code: Some(rejection.code().to_string()),
+            message: describe_rejection(&rejection),
+        }),
+    }
+}
+
+#[tauri::command]
+pub async fn stage_offline_package(
+    request: tauri::ipc::Request<'_>,
+    root: tauri::State<'_, SharedDataRoot>,
+    upload: tauri::State<'_, crate::modules::runtime::offline_drop::SharedOfflineDrop>,
+    runtime: tauri::State<'_, SharedRuntimeInstall>,
+) -> AppResult<serde_json::Value> {
+    #[derive(serde::Deserialize)]
+    #[serde(tag = "action", rename_all = "snake_case")]
+    enum Action {
+        Begin { name: String, length: u64 },
+        Finish { id: String },
+        Clear { id: String },
+    }
+    enum Input {
+        Action(Action),
+        Chunk {
+            id: String,
+            offset: u64,
+            bytes: Vec<u8>,
+        },
+    }
+    let invalid = || AppError::FileSystem {
+        operation: "receive offline package".into(),
+        detail: "离线包读取请求无效。".into(),
+    };
+    let chunk = |bytes: Vec<u8>| -> AppResult<Input> {
+        if bytes.is_empty() || bytes.len() > crate::modules::runtime::offline_drop::CHUNK_BYTES {
+            return Err(invalid());
+        }
+        let id = request
+            .headers()
+            .get("x-ocx-drop-id")
+            .and_then(|v| v.to_str().ok())
+            .ok_or_else(invalid)?
+            .to_owned();
+        let offset = request
+            .headers()
+            .get("x-ocx-drop-offset")
+            .and_then(|v| v.to_str().ok())
+            .and_then(|v| v.parse().ok())
+            .ok_or_else(invalid)?;
+        Ok(Input::Chunk { id, offset, bytes })
+    };
+    let input = match request.body() {
+        tauri::ipc::InvokeBody::Json(value) if value.is_array() => chunk(
+            crate::modules::runtime::offline_drop::fallback_bytes(value)?,
+        )?,
+        tauri::ipc::InvokeBody::Json(value) => {
+            Input::Action(serde_json::from_value(value.clone()).map_err(|_| invalid())?)
+        }
+        tauri::ipc::InvokeBody::Raw(bytes) => chunk(bytes.clone())?,
+    };
+    let root = root.0.clone();
+    let upload = upload.inner().clone();
+    let runtime = runtime.inner().clone();
+    crate::commands::run_blocking("receive offline package", move || {
+        let _storage = crate::infrastructure::storage_writers::global().admit()?;
+        let _lease = runtime.acquire().ok_or(AppError::NotConfigured)?;
+        let mut buffer = upload.0.lock().map_err(|_| AppError::NotConfigured)?;
+        match input {
+            Input::Action(Action::Begin { name, length }) => Ok(serde_json::json!({"id": buffer.begin(&root, &name, length)?})),
+            Input::Chunk { id, offset, bytes } => Ok(serde_json::json!({"received": buffer.append(&id, offset, &bytes)?})),
+            Input::Action(Action::Finish { id }) => {
+                let path = buffer.finish(&id)?;
+                let preview = offline_package_preview(&path.to_string_lossy())?;
+                if !preview.ok { buffer.clear(&id); }
+                Ok(serde_json::json!({"path": preview.ok.then(|| path.to_string_lossy().into_owned()), "preview": preview}))
+            }
+            Input::Action(Action::Clear { id }) => { buffer.clear(&id); Ok(serde_json::json!({})) }
+        }
+    }).await
 }
 
 fn describe_rejection(rejection: &ArchiveRejection) -> String {
@@ -644,12 +721,14 @@ pub async fn install_official_update(
         crate::modules::preferences::network_environment_for_app(&app, home.0.clone());
     let working = home.0.clone();
     let cache = data_root.0.join("cache/npm");
+    let logs = data_root.0.join("logs/runtime-query");
     // npm view may write its cache; the blocking worker must own admission.
     let remote = super::run_blocking("official update metadata", move || {
         crate::modules::about::remote::query_remote_latest(
             &npm,
             &working,
             &cache,
+            &logs,
             &environment,
             "latest",
         )

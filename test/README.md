@@ -57,3 +57,18 @@ test/smoke/sect.py "WebDAV 同步" test/out/sync.png
 windows-startup.ps1向windows-webview.mjs传入其本次新建的显式sandbox根时，附加执行windows-model-ui.mjs。先比对immutable currentDataRoot/activeDataRoot及runtimeActive，拒绝相对路径/其他目录，再通过真实Tauri服务建立专属模版，使用正式DOM编辑/保存和版本默认确认，检查旧版本不可变与渠道策略不变；仅模版文件导出/接收/采用沿同一IPC，不接运行服务或生成。生成model-ui.json和截图归当前Windows启动证据。未提供精确根的旧appearance/native调用继续原首屏流程，不自动执行写测试。脚本单测只证明准入边界与CDP读取合同，真实Windows结果必须等对应CI/制品实际运行后登记。
 
 Windows普通CI将具有2秒生产截止的official_version_source三项冷进程检查先运行，再执行排除该已完成分组的其余workspace回归；每项仍执行一次，保持默认Rust工作线程、原2秒截止、4秒清理边界及子进程/无关控制句柄断言，无预热、重试或放行失败。首组失败立即返回失败。原ETW诊断分支仍保留完整首次回归，不以重放替代。该调度调整的实际有效性由新源Windows结果确认。
+
+### Windows 本机托管安装与失败恢复
+
+`smoke/windows-install-recovery.ps1` 接受 `-Executable`、`-Node`、`-NpmCli` 和一个尚不存在的 `-OutputDirectory`；协议驱动需要 Node 24，可通过 `-DriverNode` 与被测 Node 分开指定。脚本创建专属沙箱与带中文、空格的工具和数据目录，使用真实 WebView2、正式 Vue 事件处理和生产 Tauri IPC，执行官方 2.91.0 安装、缺失版本失败、旧包/入口/来源读回及 2.93.0 恢复升级。输出截图、命令日志和机器回执，结束时只终止本次启动的应用进程树，不替换日常安装。
+
+`windows_runtime` 中显式忽略的 `windows_local_discovered_tools_install_upgrade_and_failure_recovery` 用本机实际发现的 Node/npm 和用户环境，安装写入尚不存在的绝对路径 `OPENCODEX_LOCAL_INSTALL_EVIDENCE`。它额外用冷缓存验证离线 npm install 的 ENOTCACHED 失败保持旧状态。仅在明确需要联网真包验证时运行：
+
+```powershell
+$env:OPENCODEX_LOCAL_INSTALL_EVIDENCE='D:\OpenCodeX Tests\Native New Root'
+cargo test --locked --test windows_runtime windows_local_discovered_tools_install_upgrade_and_failure_recovery -- --exact --ignored --nocapture
+```
+
+Cargo 命令工作目录为 `apps/desktop/tauri`。报告只证明该次 Node/npm、源代码与测试目录组合；不能倒推历史退出码 1 的原因，也不覆盖真实 SMB、企业代理或所有 Windows 版本。
+
+同一原生驱动还执行 `windows-path-ui.mjs`：检查安装配置与备份页路径、客户端 Skills/MCP 路径、真实剪贴板及系统打开动作，保存路径字体和字符事实、截图与原始数据绑定读回。剪贴板测试仅在本次隔离 WebView 的 loopback CDP 中明确授予权限并模拟文档焦点，调用真实平台剪贴板 API，最后恢复原文本并撤回权限；不将其描述为物理焦点验收。新建沙箱先经正式偏好 API 保存默认值，再执行实际备份，避免把缺少源文件的预期拒绝误判为路径故障。命令环境回归使用打印允许字段的假 CLI，不执行用户安装的真实卸载或 shim 修改。
