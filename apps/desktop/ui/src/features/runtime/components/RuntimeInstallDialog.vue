@@ -275,12 +275,12 @@ function formatBytes(size: number) {
 
 <style scoped>
 .runtime-install-dialog { width:min(520px,calc(100% - 40px)); max-height:min(calc(88vh / var(--ui-zoom)),calc(100% - 40px)); display:flex; flex-direction:column; overflow:hidden; }
-.wiz-body { overflow:auto; min-height:0; padding-right:4px; gap:14px; }
-.wiz-steps { flex-wrap:wrap; flex:none; gap:6px; }
+.wiz-body { overflow:auto; min-height:0; padding-right:4px; gap:14px; margin:0; }
+.wiz-steps { flex-wrap:wrap; flex:none; gap:6px; margin:0 0 14px; }
 .wiz-steps li {padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius-pill);font-size:var(--text-caption)}
 .wiz-steps li.active {border-color:var(--accent);color:var(--text);background:color-mix(in srgb,var(--accent) 8%,var(--panel))}
 .wiz-steps li span {width:16px;height:16px;background:var(--raised);font-size:10px;border:0;}
-.wiz-foot { flex:none; }
+.wiz-foot { flex:none; justify-content:flex-end; margin:14px -20px -20px; padding:14px 20px 20px; border-top:1px solid var(--border); }
 .wiz-block { display:grid; gap:8px; }
 .wiz-label { color:var(--muted); font-size:var(--text-label); }
 .install-source-choice { border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; }
