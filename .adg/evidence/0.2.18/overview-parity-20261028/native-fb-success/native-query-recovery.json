@@ -1,0 +1,110 @@
+{
+  "result": "pass",
+  "checks": [
+    "real npm E404 from isolated loopback registry; actual argv/cwd/selected HOME/cache/native COMSPEC and both streams recorded",
+    "close/reopen retains query stderr and command log reference",
+    "real npm pack tarball failure after production backup; failed update retains console through close/reopen",
+    "actual registry metadata recovery clears failure; installed runtime source unchanged"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    },
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    },
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    },
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    },
+    {
+      "method": "GET",
+      "url": "/@bitkyc08%2fopencodex"
+    },
+    {
+      "method": "GET",
+      "url": "/blocked.tgz"
+    }
+  ],
+  "before": {
+    "tag": "latest",
+    "version": "2.94.0",
+    "integrity": "sha512-TJ8TgaxC8jhHZcEB6a3WLpQgv2AbTeNcPNvs8s6od7wJ+zBgB8CDz+ZDtpuTDotwzxLGs9col0JJHgUQ9SAAcw=="
+  },
+  "failureRegistry": "http://127.0.0.1:63774/",
+  "typography": {
+    "font": "Consolas, \"Cascadia Code\", SFMono-Regular, Menlo, \"Microsoft YaHei\", monospace",
+    "hasWon": false
+  },
+  "error": "npm view 以退出码 1 结束。\nnpm error code E404\nnpm error 404 Not Found - GET http://127.0.0.1:63774/@bitkyc08%2fopencodex - E404\nnpm error 404\nnpm error 404  The requested resource '@bitkyc08/opencodex@latest' could not be found or you do not have permission to access it.\nnpm error 404\nnpm error 404 Note that you can also install from a\nnpm error 404 tarball, folder, http url, or git url.\nnpm error A complete log of this run can be found in: D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-29T05_47_45_427Z-debug-0.log\n日志：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\logs\\runtime-query\\npm-view-bee4fdb0-7ec9-4ded-9cdf-426760bcdd3c.log",
+  "failureLog": {
+    "name": "npm-view-bee4fdb0-7ec9-4ded-9cdf-426760bcdd3c.log",
+    "records": [
+      {
+        "arguments": [
+          "view",
+          "@bitkyc08/opencodex@latest",
+          "version",
+          "dist.integrity",
+          "--json"
+        ],
+        "environment": {
+          "APPDATA": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home\\AppData/Roaming",
+          "COMSPEC": "C:\\Windows\\System32\\cmd.exe",
+          "HOME": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home",
+          "LOCALAPPDATA": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home\\AppData/Local",
+          "OPENCODEX_HOME": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\opencodex-home",
+          "PATH": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home\\.local/bin;C:\\Windows\\System32;C:\\Windows",
+          "SystemRoot": "C:\\Windows",
+          "TEMP": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\",
+          "TMP": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\",
+          "USERPROFILE": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home",
+          "WINDIR": "C:\\Windows",
+          "npm_config_cache": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\cache\\npm",
+          "npm_config_update_notifier": "false"
+        },
+        "environmentCleared": true,
+        "program": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home\\.local/bin\\npm.cmd",
+        "startedAt": "2026-10-29T05:47:45.193073800+00:00",
+        "workingDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home"
+      },
+      {
+        "capturedBytes": 339,
+        "complete": true,
+        "partialRecordOmitted": false,
+        "stream": "stdout",
+        "text": "{\n  \"error\": {\n    \"code\": \"E404\",\n    \"summary\": \"Not Found - GET http://127.0.0.1:63774/@bitkyc08%2fopencodex - E404\",\n    \"detail\": \"The requested resource '@bitkyc08/opencodex@latest' could not be found or you do not have permission to access it.\\n\\nNote that you can also install from a\\ntarball, folder, http url, or git url.\"\n  }\n}\n"
+      },
+      {
+        "capturedBytes": 582,
+        "complete": true,
+        "partialRecordOmitted": false,
+        "stream": "stderr",
+        "text": "npm error code E404\nnpm error 404 Not Found - GET http://127.0.0.1:63774/@bitkyc08%2fopencodex - E404\nnpm error 404\nnpm error 404  The requested resource '@bitkyc08/opencodex@latest' could not be found or you do not have permission to access it.\nnpm error 404\nnpm error 404 Note that you can also install from a\nnpm error 404 tarball, folder, http url, or git url.\nnpm error A complete log of this run can be found in: D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-29T05_47_45_427Z-debug-0.log\n"
+      },
+      {
+        "detail": "npm view 以退出码 1 结束。",
+        "endedAt": "2026-10-29T05:47:45.957684800+00:00",
+        "exitCode": 1,
+        "reason": "npm_view_exit"
+      }
+    ]
+  },
+  "failedUpdate": {
+    "error": "npm 命令失败（退出码 1）：npm pack：npm error code E404；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-d87fe8a81e78.log",
+    "console": "命令：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home\\.local/bin\\npm.cmd [\"pack\", \"@bitkyc08/opencodex@999.0.0-ocx-native-failure\", \"--pack-destination\", \"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\runtime\\\\opencodex.new-e1515980e737\\\\.downloads\", \"--loglevel\", \"info\"]\n工作目录：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex.new-e1515980e737\\.downloads\n日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-d87fe8a81e78.log\nnpm info using npm@11.19.1\nnpm info using node@v24.22.1\nnpm http fetch GET 200 http://127.0.0.1:63774/@bitkyc08%2fopencodex 25ms (cache miss)\nnpm http fetch GET 200 http://127.0.0.1:63774/@bitkyc08%2fopencodex 9ms (cache updated)\nnpm http fetch GET 404 http://127.0.0.1:63774/blocked.tgz 2ms (cache skip)\nnpm error code E404\nnpm error 404 Not Found - GET http://127.0.0.1:63774/blocked.tgz - E404\nnpm error 404\nnpm error 404  The requested resource 'http://127.0.0.1:63774/blocked.tgz' could not be found or you do not have permission to access it.\nnpm error 404 This package name is not valid, because \nnpm error 404  1. name can only contain URL-friendly characters\nnpm error 404\nnpm error 404 Note that you can also install from a\nnpm error 404 tarball, folder, http url, or git url.\nnpm error A complete log of this run can be found in: D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-29T05_47_48_523Z-debug-0.log\n退出码：1；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-d87fe8a81e78.log",
+    "text": "2.93.0→999.0.0-ocx-native-failure官方项目 · @bitkyc08/opencodex面板更新失败命令：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\home\\.local/bin\\npm.cmd [\"pack\", \"@bitkyc08/opencodex@999.0.0-ocx-native-failure\", \"--pack-destination\", \"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-ui-diagnostic\\\\OpenCodeX Native 中文 Spaces\\\\runtime\\\\opencodex.new-e1515980e737\\\\.downloads\", \"--loglevel\", \"info\"]\n工作目录：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex.new-e1515980e737\\.downloads\n日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-d87fe8a81e78.log\nnpm info using npm@11.19.1\nnpm info using node@v24.22.1\nnpm http fetch GET 200 http://127.0.0.1:63774/@bitkyc08%2fopencodex 25ms (cache miss)\nnpm http fetch GET 200 http://127.0.0.1:63774/@bitkyc08%2fopencodex 9ms (cache updated)\nnpm http fetch GET 404 http://127.0.0.1:63774/blocked.tgz 2ms (cache skip)\nnpm error code E404\nnpm error 404 Not Found - GET http://127.0.0.1:63774/blocked.tgz - E404\nnpm error 404\nnpm error 404  The requested resource 'http://127.0.0.1:63774/blocked.tgz' could not be found or you do not have permission to access it.\nnpm error 404 This package name is not valid, because \nnpm error 404  1. name can only contain URL-friendly characters\nnpm error 404\nnpm error 404 Note that you can also install from a\nnpm error 404 tarball, folder, http url, or git url.\nnpm error A complete log of this run can be found in: D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-29T05_47_48_523Z-debug-0.log\n退出码：1；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-d87fe8a81e78.lognpm 命令失败（退出码 1）：npm pack：npm error code E404；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-ui-diagnostic\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-d87fe8a81e78.log准备下载校验应用与核验重试面板更新"
+  },
+  "after": {
+    "tag": "latest",
+    "version": "2.94.0",
+    "integrity": "sha512-TJ8TgaxC8jhHZcEB6a3WLpQgv2AbTeNcPNvs8s6od7wJ+zBgB8CDz+ZDtpuTDotwzxLGs9col0JJHgUQ9SAAcw=="
+  },
+  "sandboxNpmrcRestored": true
+}

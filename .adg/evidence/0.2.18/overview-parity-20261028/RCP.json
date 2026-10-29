@@ -1,6 +1,6 @@
 {
   "task": "TASK-UI018-20261028",
-  "code": "9e7a8c08fd0a7f6910e114bceef3d465feccaa3d",
+  "code": "6569227de87208fefb391d2bb6fe1930cfeacaa6",
   "checks": [
     {
       "name": "review:prototype-parity",
@@ -28,10 +28,10 @@
     "passed": 21,
     "failed": 0,
     "skipped": 0,
-    "evidence": "release-gate-e2/gate-report.json",
+    "evidence": "release-gate-fb/gate-report.json",
     "prototype_basis": "8136cf707",
-    "full_source": "e2a2726ca02cb4c71bf1903b659d2eec3f13b678",
-    "later_delta": "422 environment explanatory row removed, focused environmental flow tests/typecheck passed; final CI pending"
+    "full_source": "fb84938e70a99e1e4990b01e85c89d31ec962336",
+    "later_delta": "6569227d script-only draft-ID resolution, app tree unchanged"
   },
   "unit": {
     "passed": 1044,
@@ -46,16 +46,16 @@
   "native_pending": true,
   "historical_npm_exit1": "unknown; not attributed",
   "previous_candidate": "422b6fdb996d0ea902d9f3c6be8c43cc12647d86",
-  "application_tree": "676038c95e8689b22732899b681b3d5ee940444e",
+  "application_tree": "397cefb1173eadd0c03df0ec204afd425bc8137a",
   "offline_drop": {
     "boundary_tests": 5,
     "frontend_transport_tests": 3,
     "production_windows_drag_test": "pending; exact final EXE must execute real File/drop/chunk/inspect/cancel, no mocked IPC",
     "reads_original_file_only": true
   },
-  "native_run": 40823526669,
+  "native_run": 40825198427,
   "macos_sealed_candidate": "macos-sealed-candidate/sealed-package.json",
-  "native_debug_run": 40823584607,
+  "native_debug_run": 40824604135,
   "windows_previous_pass": {
     "run": 40814548792,
     "source": "f3f34fbe6c72363df8e49c1450523fc23e113085",
@@ -64,7 +64,22 @@
   },
   "conflicting_failure_retained": [
     40814553371,
-    40822761138
+    40822761138,
+    40823584607
   ],
-  "owned_family_drain_review": "2s bounded cleanup with actual child handle exit test, root version read deadline unchanged; final Windows run pending"
+  "owned_family_drain_review": "2s bounded cleanup with actual child handle exit test, root version read deadline unchanged; final Windows run pending",
+  "staging_activation": "only verified owned staging; Windows5/32/33;10s bounded; no target overwrite; original rollback unchanged; native verification pending",
+  "native_debug_success": [
+    {
+      "run": 40824604135,
+      "source": "40b222d5ad7caa817ccc343480a5c8a4701bc6db",
+      "evidence": "native-40-success/launcher.json"
+    },
+    {
+      "run": 40825078806,
+      "source": "fb84938e70a99e1e4990b01e85c89d31ec962336",
+      "evidence": "native-fb-success/launcher.json"
+    }
+  ],
+  "final_release_native_pending": true
 }

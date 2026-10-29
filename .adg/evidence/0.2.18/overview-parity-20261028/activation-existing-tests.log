@@ -1,0 +1,40 @@
+   Compiling opencodex-desktop v0.2.18 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 39.62s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-c0e31a6c3b3f046b)
+
+running 32 tests
+test modules::runtime::install::tests::entry_script_falls_back_to_env_node_without_recorded_node ... ok
+test modules::runtime::install::tests::normalize_bin_strips_prefix_and_rejects_escapes ... ok
+test modules::runtime::install::tests::proxy_validation_rejects_empty_and_credential_hosts ... ok
+test modules::runtime::install::tests::extract_semver_reads_the_first_version_token ... ok
+test modules::runtime::install::tests::proxy_forms_match_the_frozen_shape ... ok
+test modules::runtime::install::tests::outcome_history_entry_and_restart_flag ... ok
+test modules::runtime::install::tests::install_error_maps_to_stable_codes ... ok
+test modules::runtime::install::tests::npm_reason_prefers_the_error_line ... ok
+test modules::runtime::install::tests::masker_also_removes_known_secret ... ok
+test modules::runtime::install::tests::npm_cache_is_explicit_and_does_not_replace_user_home ... ok
+test modules::runtime::install::tests::strip_url_credentials_masks_userinfo_only ... ok
+test modules::runtime::install::tests::real_version_probe_rejects_nonzero_exit_even_when_stdout_has_version ... ok
+test modules::runtime::install::tests::cancel_before_start_leaves_no_trace ... ok
+test modules::runtime::install::tests::rejected_link_target_creates_no_parent_directories ... ok
+test modules::runtime::install::tests::install_target_rejections_surface_system_protection ... ok
+test modules::runtime::install::tests::rejects_nonempty_unmanaged_prefix_without_replacing_it ... ok
+test modules::runtime::install::tests::credential_proxy_never_reaches_the_command_line ... ok
+test modules::runtime::install::tests::temp_userconfig_is_0600_and_removed_on_drop ... ok
+test modules::runtime::install::tests::registry_install_requires_npm_path ... ok
+test modules::runtime::install::tests::offline_install_rejects_non_official_package_name ... ok
+test modules::runtime::install::tests::verify_package_rejects_name_and_version_and_missing_bin ... ok
+test modules::runtime::install::tests::registry_install_rejects_explicit_version_mismatch ... ok
+test modules::runtime::install::tests::registry_install_uses_npm_and_records_provenance ... ok
+test modules::runtime::install::tests::offline_install_lands_prefix_manifest_and_entry ... ok
+test modules::runtime::install::tests::stable_entry_points_at_the_final_prefix_not_the_temporary_one ... ok
+test modules::runtime::install::tests::offline_install_rejects_bad_archive_and_keeps_existing_prefix ... ok
+test modules::runtime::install::tests::scripts_required_then_retried_only_after_explicit_consent ... ok
+test modules::runtime::install::tests::failed_launcher_activation_restores_previous_managed_prefix ... ok
+test modules::runtime::install::tests::unrunnable_entry_requires_scripts_and_is_retried_after_consent ... ok
+test modules::runtime::install::tests::successful_install_replaces_previous_prefix ... ok
+test modules::runtime::install::tests::source_record_failure_restores_exact_package_launcher_and_record ... ok
+test modules::runtime::install::tests::protected_install_only_marks_and_reconciles_activation_after_successful_probe ... ok
+
+test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 1094 filtered out; finished in 0.36s
+
