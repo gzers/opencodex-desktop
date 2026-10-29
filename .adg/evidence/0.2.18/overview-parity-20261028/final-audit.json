@@ -1,0 +1,406 @@
+{
+  "result": "passed",
+  "requirements": [
+    {
+      "requirement": "双引擎原型配对/chromium",
+      "result": "passed",
+      "evidence": [
+        "import-framed-chromium/overview-report.json"
+      ],
+      "scope": "两窗口、亮暗、三档效果；含导入720宽与分组、安装、更新、六环境态；UI夹具不冒称原生"
+    },
+    {
+      "requirement": "双引擎原型配对/webkit",
+      "result": "passed",
+      "evidence": [
+        "import-framed-webkit/overview-report.json"
+      ],
+      "scope": "两窗口、亮暗、三档效果；含导入720宽与分组、安装、更新、六环境态；UI夹具不冒称原生"
+    },
+    {
+      "requirement": "完整本地发布门",
+      "result": "passed",
+      "evidence": [
+        "release-gate-framed/gate-report.json"
+      ],
+      "scope": "21门；真实文件保存链、几何、通知、导出/模版/Agent与官方配置校验"
+    },
+    {
+      "requirement": "windows-native-018/native-install-recovery.json",
+      "result": "passed",
+      "evidence": [
+        "ci-21-final/windows-native-018/native-install-recovery.json"
+      ],
+      "scope": "最终实际EXE、生产IPC；独立含中文空格沙箱，无日常配置操作"
+    },
+    {
+      "requirement": "windows-native-018/native-query-recovery.json",
+      "result": "passed",
+      "evidence": [
+        "ci-21-final/windows-native-018/native-query-recovery.json"
+      ],
+      "scope": "最终实际EXE、生产IPC；独立含中文空格沙箱，无日常配置操作"
+    },
+    {
+      "requirement": "windows-native-018/offline-drop.json",
+      "result": "passed",
+      "evidence": [
+        "ci-21-final/windows-native-018/offline-drop.json"
+      ],
+      "scope": "最终实际EXE、生产IPC；独立含中文空格沙箱，无日常配置操作"
+    },
+    {
+      "requirement": "windows-native-018/windows-path-ui.json",
+      "result": "passed",
+      "evidence": [
+        "ci-21-final/windows-native-018/windows-path-ui.json"
+      ],
+      "scope": "最终实际EXE、生产IPC；独立含中文空格沙箱，无日常配置操作"
+    },
+    {
+      "requirement": "windows-native-018-node22/native-install-recovery.json",
+      "result": "passed",
+      "evidence": [
+        "ci-21-final/windows-native-018-node22/native-install-recovery.json"
+      ],
+      "scope": "最终实际EXE、生产IPC；独立含中文空格沙箱，无日常配置操作"
+    },
+    {
+      "requirement": "windows-native-018-node22/native-query-recovery.json",
+      "result": "passed",
+      "evidence": [
+        "ci-21-final/windows-native-018-node22/native-query-recovery.json"
+      ],
+      "scope": "最终实际EXE、生产IPC；独立含中文空格沙箱，无日常配置操作"
+    },
+    {
+      "requirement": "windows-native-018-node22/offline-drop.json",
+      "result": "passed",
+      "evidence": [
+        "ci-21-final/windows-native-018-node22/offline-drop.json"
+      ],
+      "scope": "最终实际EXE、生产IPC；独立含中文空格沙箱，无日常配置操作"
+    },
+    {
+      "requirement": "windows-native-018-node22/windows-path-ui.json",
+      "result": "passed",
+      "evidence": [
+        "ci-21-final/windows-native-018-node22/windows-path-ui.json"
+      ],
+      "scope": "最终实际EXE、生产IPC；独立含中文空格沙箱，无日常配置操作"
+    },
+    {
+      "requirement": "ci-21-final/windows-ordinary/ordinary-summary.json",
+      "result": "passed",
+      "evidence": [
+        "ci-21-final/windows-ordinary/ordinary-summary.json"
+      ],
+      "scope": "依据原回执范围，不扩为全部企业/物理环境"
+    },
+    {
+      "requirement": "formal-release/macos-native/receipt.json",
+      "result": "passed",
+      "evidence": [
+        "formal-release/macos-native/receipt.json"
+      ],
+      "scope": "依据原回执范围，不扩为全部企业/物理环境"
+    },
+    {
+      "requirement": "formal-release/verification.json",
+      "result": "passed",
+      "evidence": [
+        "formal-release/verification.json"
+      ],
+      "scope": "依据原回执范围，不扩为全部企业/物理环境"
+    },
+    {
+      "requirement": "formal-release/anonymous-public.json",
+      "result": "passed",
+      "evidence": [
+        "formal-release/anonymous-public.json"
+      ],
+      "scope": "依据原回执范围，不扩为全部企业/物理环境"
+    },
+    {
+      "requirement": "formal-release/ota-summary.json",
+      "result": "passed",
+      "evidence": [
+        "formal-release/ota-summary.json"
+      ],
+      "scope": "依据原回执范围，不扩为全部企业/物理环境"
+    },
+    {
+      "requirement": "formal-release/test-only-provenance.json",
+      "result": "passed",
+      "evidence": [
+        "formal-release/test-only-provenance.json"
+      ],
+      "scope": "依据原回执范围，不扩为全部企业/物理环境"
+    },
+    {
+      "requirement": "正式四安装组合",
+      "result": "passed",
+      "evidence": [
+        "formal-release/four-installers"
+      ],
+      "scope": "四个独立首次runner；原签名包digest/原始构建EXE身份保持"
+    },
+    {
+      "requirement": "实际OTA/msi",
+      "result": "passed",
+      "evidence": [
+        "formal-release/ota/windows-ota-msi/ota-result.json",
+        "formal-release/ota/windows-ota-msi/ota-verified.json"
+      ],
+      "scope": "0.2.17→0.2.18生产stable；OS自动进程观察与隔离IPC读回分开"
+    },
+    {
+      "requirement": "实际OTA/nsis",
+      "result": "passed",
+      "evidence": [
+        "formal-release/ota/windows-ota-nsis/ota-result.json",
+        "formal-release/ota/windows-ota-nsis/ota-verified.json"
+      ],
+      "scope": "0.2.17→0.2.18生产stable；OS自动进程观察与隔离IPC读回分开"
+    },
+    {
+      "requirement": "原编号与治理绑定",
+      "result": "passed",
+      "evidence": [
+        "TASK.json",
+        "RCP.json",
+        "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-27.md"
+      ],
+      "scope": "W18-01～13和U18-01～05原编号保留，DMD/IMP/REL同一范围"
+    },
+    {
+      "requirement": "最终main六项CI及实际原生回执",
+      "result": "passed",
+      "evidence": [
+        "main-final/ci.json",
+        "main-final/windows.original.log",
+        "main-final/macos.original.log"
+      ],
+      "scope": "b7cd66343;1300macOS/1023Windows+native; originalignored separately recorded"
+    },
+    {
+      "requirement": "剩余清单逐项处置",
+      "result": "passed",
+      "evidence": [
+        "../windows-path-environment-audit-20261028/RCP.json",
+        "../npm-view-diagnostics-20261028/RCP.json",
+        "main-final/windows.original.log",
+        "formal-release/verification.json"
+      ],
+      "scope": "W18-01～13 implemented retained/retested and U18-01～05 fixed; historical missingoutput and explicitenterprise/physicalmatrix unexecuted preserved, no silent scope deletion"
+    }
+  ],
+  "numberedItems": [
+    "U18-01",
+    "U18-02",
+    "U18-03",
+    "U18-04",
+    "U18-05",
+    "W18-01",
+    "W18-02",
+    "W18-03",
+    "W18-04",
+    "W18-05",
+    "W18-06",
+    "W18-07",
+    "W18-08",
+    "W18-09",
+    "W18-10",
+    "W18-11",
+    "W18-12",
+    "W18-13"
+  ],
+  "historicalNpmExit1": "unknown; original stdout/stderr absent; no attribution",
+  "explicitUnexecutedBoundaries": [
+    "physical Windows10/11 matrix",
+    "all font/language/mixedDPI combinations",
+    "real SMB/enterprise redirected roots",
+    "PAC/private registries/enterprise certificate/account matrix"
+  ],
+  "mainBuild": {
+    "run": 40858818265,
+    "result": "passed",
+    "evidence": "main-final/ci.json"
+  },
+  "numberedRequirements": [
+    {
+      "id": "W18-01",
+      "result": "passed_with_stated_scope",
+      "scope": "显示/复制可读同一身份；raw执行持久化保持",
+      "evidence": [
+        "main-final/windows-native-018/windows-path-ui.json",
+        "main-final/windows-native-018-node22/windows-path-ui.json"
+      ]
+    },
+    {
+      "id": "W18-02",
+      "result": "passed_with_stated_scope",
+      "scope": "Consolas、U+005C且无U+20A9；未扩大物理语言字体矩阵",
+      "evidence": [
+        "main-final/windows-native-018/windows-path-ui.json",
+        "main-final/windows-native-018-node22/windows-path-ui.json"
+      ]
+    },
+    {
+      "id": "W18-03",
+      "result": "passed_with_stated_scope",
+      "scope": "六受管分区、十三Agent路径、Windows输入和离线包名",
+      "evidence": [
+        "main-final/windows-native-018/windows-path-ui.json",
+        "main-final/windows-native-018-node22/windows-path-ui.json",
+        "main-final/windows-native-018/native-install-recovery.json",
+        "main-final/windows-native-018-node22/native-install-recovery.json"
+      ]
+    },
+    {
+      "id": "W18-04",
+      "result": "passed_with_stated_scope",
+      "scope": "宿主PATH哨兵不泄漏；模型HOME/USERPROFILE保留",
+      "evidence": [
+        "main-final/windows.original.log"
+      ]
+    },
+    {
+      "id": "W18-05",
+      "result": "passed_with_stated_scope",
+      "scope": "官方shim真实子进程受控Windows用户环境",
+      "evidence": [
+        "main-final/windows.original.log"
+      ]
+    },
+    {
+      "id": "W18-06",
+      "result": "passed_with_stated_scope",
+      "scope": "普通非命令/相对路径拒绝及生命周期绝对路径",
+      "evidence": [
+        "main-final/windows.original.log"
+      ]
+    },
+    {
+      "id": "W18-07",
+      "result": "passed_with_stated_scope",
+      "scope": "UnicodeShell打开同一原始路径，无cwd/PATH选cmd/explorer",
+      "evidence": [
+        "main-final/windows-native-018/windows-path-ui.json",
+        "main-final/windows-native-018-node22/windows-path-ui.json",
+        "../windows-path-environment-audit-20261028/checks/opened-owned-shell-targets.json"
+      ]
+    },
+    {
+      "id": "W18-08",
+      "result": "passed_with_stated_scope",
+      "scope": "卸载假CLI实参绑定选中HOME/prefix/cwd；未卸载日常软件",
+      "evidence": [
+        "main-final/windows.original.log"
+      ]
+    },
+    {
+      "id": "W18-09",
+      "result": "passed_with_stated_scope",
+      "scope": "COMSPEC原生反斜杠实测；四组NVMD对照不解释历史exit1",
+      "evidence": [
+        "main-final/windows-native-018/native-query-recovery.json",
+        "main-final/windows-native-018-node22/native-query-recovery.json",
+        "../windows-path-environment-audit-20261028/nvmd-command-stage-summary.json"
+      ]
+    },
+    {
+      "id": "W18-10",
+      "result": "passed_with_stated_scope",
+      "scope": "真实npmview失败上下文/两路输出/退出1/重开保留",
+      "evidence": [
+        "main-final/windows-native-018/native-query-recovery.json",
+        "main-final/windows-native-018-node22/native-query-recovery.json"
+      ]
+    },
+    {
+      "id": "W18-11",
+      "result": "passed_with_stated_scope",
+      "scope": "真实受控HOME、OPENCODEX_HOME、cwd、cache绝对身份",
+      "evidence": [
+        "main-final/windows-native-018/native-query-recovery.json",
+        "main-final/windows-native-018-node22/native-query-recovery.json"
+      ]
+    },
+    {
+      "id": "W18-12",
+      "result": "passed_with_stated_scope",
+      "scope": "备份后tarball失败保留本次输出，关闭重开保留",
+      "evidence": [
+        "main-final/windows-native-018/native-query-recovery.json",
+        "main-final/windows-native-018-node22/native-query-recovery.json"
+      ]
+    },
+    {
+      "id": "W18-13",
+      "result": "passed_with_stated_scope",
+      "scope": "无integrity真实回环npm返回版本字符串仍可查询；类型/字体兼容",
+      "evidence": [
+        "main-final/windows-native-018/native-query-recovery.json",
+        "main-final/windows-native-018-node22/native-query-recovery.json",
+        "main-final/windows.original.log"
+      ]
+    },
+    {
+      "id": "U18-01",
+      "result": "passed_with_stated_scope",
+      "scope": "单项/全检查共享确认，单标题/版本/来源/内容/备份/焦点",
+      "evidence": [
+        "import-framed-chromium/overview-report.json",
+        "import-framed-webkit/overview-report.json"
+      ]
+    },
+    {
+      "id": "U18-02",
+      "result": "passed_with_stated_scope",
+      "scope": "确认替换进度，真实失败/重开和平台能力，不伪造取消/百分比",
+      "evidence": [
+        "import-framed-chromium/overview-report.json",
+        "import-framed-webkit/overview-report.json",
+        "main-final/windows-native-018/native-query-recovery.json",
+        "main-final/windows-native-018-node22/native-query-recovery.json",
+        "formal-release/ota-summary.json"
+      ]
+    },
+    {
+      "id": "U18-03",
+      "result": "passed_with_stated_scope",
+      "scope": "概览共享导入720框/字段分组、未选禁用、取消不跳页；真实读取采用保存",
+      "evidence": [
+        "import-framed-chromium/overview-report.json",
+        "import-framed-webkit/overview-report.json",
+        "main-final/windows-native-018/native-install-recovery.json",
+        "main-final/windows-native-018-node22/native-install-recovery.json",
+        "release-gate-framed/audit-file-save/report.json"
+      ]
+    },
+    {
+      "id": "U18-04",
+      "result": "passed_with_stated_scope",
+      "scope": "公共安装配置同页/命名四步；原生失败恢复和离线清除重拖",
+      "evidence": [
+        "import-framed-chromium/overview-report.json",
+        "import-framed-webkit/overview-report.json",
+        "main-final/windows-native-018/native-install-recovery.json",
+        "main-final/windows-native-018-node22/native-install-recovery.json",
+        "main-final/windows-native-018/offline-drop.json",
+        "formal-release/macos-native/receipt.json"
+      ]
+    },
+    {
+      "id": "U18-05",
+      "result": "passed_with_stated_scope",
+      "scope": "六环境态与Windows不显示brew；原型夹具和原生分层",
+      "evidence": [
+        "import-framed-chromium/overview-report.json",
+        "import-framed-webkit/overview-report.json",
+        "main-final/windows-startup/runtime-install-ui.json"
+      ]
+    }
+  ]
+}

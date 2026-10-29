@@ -1,79 +1,66 @@
-# 0.2.18 Windows 修复与概览原型还原发布
+---
+id: REL-OPENCODEX-DESKTOP-21
+object_kind: release
+state: verified
+title: 0.2.18 Windows修复与概览原型还原发布
+summary: 已公开stable；W18-01～13及U18-01～05修复，正式原包、四安装组合、三签名、匿名资产和两种实际OTA通过。最终main六项CI全部通过，历史npm根因未知。
+source_refs:
+  - https://github.com/gzers/opencodex-desktop/pull/29
+  - https://github.com/gzers/opencodex-desktop/pull/30
+  - https://github.com/gzers/opencodex-desktop/pull/31
+  - 2e709d09590493f73c9e4f31883f67f949c8e90c
+---
 
-2026-10-29，Asia/Shanghai。状态：待最终验收和实际发布。用户已授权文档、开发、测试、发布；执行由[IMP-27](IMP-OPENCODEX-DESKTOP-27.md)承接，单一范围为[0.2.18 清单](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.18-bugs.md)。本文件不代表已经发布。
+# 0.2.18 Windows修复与概览原型还原发布
 
-## 版本与范围
+2026-10-29，Asia/Shanghai。[v0.2.18已公开并投递stable/Latest](https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.18)，公开时间10:36:13Z（北京时间18:36:13）。用户授权文档、开发、测试至发布；范围沿[0.2.18单一清单](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.18-bugs.md)，执行由[IMP-27](IMP-OPENCODEX-DESKTOP-27.md)承接。
 
-目标0.2.18；既有stable仍为0.2.17。保留W18-01～13路径、受控环境、安装事务与查询诊断，修复U18-01～05概览更新/导入/安装/环境状态。唯一总原型维护交互以8136cf707冻结，待定全景概览/对话策略等并行原型排除。
+## 交付与源码身份
 
-PR29当前候选c7b4a1c9，应用树5bf925343dc3e180241c83813f4023b77b858f9b（含布局观察器、IPC回退、探针家族退出等待和已验证临时包有限落位等待）；应用树与最终制品摘要在合并后统一绑定。UI首版da9984c6之后补离线HTML文件接收、终态驱动和文件选择错误反馈；没有移动0.2.17历史tag。正式main、tag和制品摘要待实际流水线后补，不能把候选分支版本号当正式交付。
+W18-01～13保留并验证Windows可读路径、受控环境、官方shim/卸载目标、COMSPEC、npm view诊断及失败输出；U18-01～05按冻结8136cf707的0.2.0总原型还原概览更新确认/进度、公共导入、公共安装和环境六态。导入720px上限、独立标签/带框选择区，安装来源/代理分组和离线清除动作补齐。现有模型文件保存、通知入口、路径安全及安装失败补偿保持，未采用并行的全景概览/Logo/对话策略原型。
 
-## 发布门
+正式tag/main源码为2e709d09590493f73c9e4f31883f67f949c8e90c。最终PR引用14ca2c0e和21bfd436候选的应用树均为1c9a4a3d82c36a07afe510f381c06b6ba56ad70b。PR31合并main b7cd66343只修改cfg(test)握手夹具；生产模块前缀逐字节一致，原tag/签名包未重建或移动。正式Windows原始构建EXE SHA256为220b24a7825798fca445136b9a672f1a512602aa6dafea9c6122c7008673e1fb，安装后的MSI/NSIS bundle marker按真实格式分别校验。
 
-1. 本地前后端适用回归、双引擎三档配对、真实文件链和21项发布门：已取得记录；最终source与增量范围由RCP/manifest标识。
-2. 最终候选及main的五个必需CI检查，Windows Node24/22.20真实WebView2安装、失败/查询恢复、路径和概览入口：待最终回执。
-3. 正式tag触发原始签名包；Windows MSI/NSIS默认及自定义安装四组合、macOS包身份/可读性、三份更新签名：待执行。
-4. 不重建或改tag验证原包，再公开并验证匿名资产、原公钥签名及stable清单；真实0.2.17→0.2.18两种Windows OTA、普通退出不安装、显式重启和隔离文件/凭据读回：待执行。
-5. DMD/核心/IMP/问题清单/RCP与发布实际结果回写后关闭。本轮暂无最终证书或公开发布事实。
+## 验收回执
 
-发布驱动要求目标版本、tag解析的commit和原始构建SHA256共同绑定，安装器与API资产digest核对；不允许仍用固定0.2.17脚本为0.2.18出绿灯。所有实际安装/升级在一次性runner或独立沙箱执行，不替换日常安装或清空用户配置。
+| 阶段 | 实际结果 |
+| --- | --- |
+| 原型与本地 | 双引擎亮暗/高低三档/宽窄配对各241项通过；完整前端1044通过、10既有跳过，21发布门全通过，实际Rust文件链46项通过 |
+| 最终候选CI | [40839913190](https://github.com/gzers/opencodex-desktop/actions/runs/40839913190)五门全部通过；原生Node24.22.1及22.20.0/npm10.9.3安装2.91、失败保留、恢复2.93、查询恢复、路径和真实HTML File清除/重拖均通过 |
+| 普通账户 | 实际临时标准SID、原生Profile、elevated=false、WebView2及模型保存/Key/模版/传输检查通过，桌面DACL恢复 |
+| 退出边界 | 原源码Windows定向30次通过；活动列表遗漏将退出进程后，NEW_PROCESS通知保留经成员校验句柄，原2秒收尾/查询期限与真实signaled断言保持 |
+| 夹具修正 | [40848017469](https://github.com/gzers/opencodex-desktop/actions/runs/40848017469)握手原测试30次通过，[40848030517](https://github.com/gzers/opencodex-desktop/actions/runs/40848030517)五门全部通过；只修改cfg(test)，原main前置失败保留 |
+| 正式构建 | [40844799061](https://github.com/gzers/opencodex-desktop/actions/runs/40844799061)生成八资产；macOS签名资源成功，Windows串行all安装测试遇到先前记忆目录，原失败保留 |
+| 原包四安装 | [40847331072](https://github.com/gzers/opencodex-desktop/actions/runs/40847331072)四个独立首次runner真正MSI/NSIS×default/custom全通过，原资产digest和原始EXE严格匹配，未重建 |
+| macOS原包 | 正式归档大小/SHA、codesign --verify --deep --strict、资源封装及两份许可通过；原包WKWebView隔离启动/安装弹窗/取消实查，日常配置摘要不变 |
+| stable公开 | [40858820250](https://github.com/gzers/opencodex-desktop/actions/runs/40858820250)成功；非draft/非prerelease，Latest/stable=0.2.18 |
+| 匿名与签名 | 八资产匿名HTTP200、大小/SHA匹配，版本及stable清单一致；沿0.2.17原公钥三包minisign独立通过 |
+| 实际OTA | [40859489907](https://github.com/gzers/opencodex-desktop/actions/runs/40859489907)MSI/NSIS均通过：公开0.2.17→0.2.18，经生产stable下载验签；普通退出仍旧版、明确重启真实替换、OS观察自动新版进程；同一隔离配置/合成凭据原字节保持、pendingRestart清除 |
+| 最终main持续复验 | [40858818265](https://github.com/gzers/opencodex-desktop/actions/runs/40858818265)六job全部通过；macOS1300/14忽略，Windows1023/16忽略，嵌套自进程重复统计排除1项，真实两Node/普通账户/最终EXE和macOS集成构建通过 |
 
-## 恢复与边界
+原始证据与分层范围归[证据清单](../../.adg/evidence/0.2.18/overview-parity-20261028/manifest.json)、[RCP](../../.adg/evidence/0.2.18/overview-parity-20261028/RCP.json)、[原包核验](../../.adg/evidence/0.2.18/overview-parity-20261028/formal-release/verification.json)、[匿名资产](../../.adg/evidence/0.2.18/overview-parity-20261028/formal-release/anonymous-public.json)与[实际OTA](../../.adg/evidence/0.2.18/overview-parity-20261028/formal-release/ota-summary.json)。正式发布、最终main持续复验和逐项证据审计均完成；原失败与未执行环境保留。本轮按支持范围关闭。
 
-上一正式版本为[v0.2.17](https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.17)，原始资产与签名保留。安装/升级失败保留旧包、入口、来源与恢复材料；不能通过清空配置掩盖问题。若正式发布门失败，保留原始失败及tag/制品身份，继续修复或明确处置，不覆盖既有签名包来伪装原次成功。
+## 正式资产
 
-历史npm安装退出码1没有原始输出，具体根因仍未知。当前查询/安装诊断修复、COMSPEC对照及新安装成功均不能倒推该历史原因。SMB、企业证书/PAC、全部语言/DPI/权限等未执行矩阵继续保留；支持范围内验收不等于所有Windows环境已测。
+| 名称 | 字节 | SHA-256 |
+| --- | --- | --- |
+| latest.json | 5899 | a5061ff3b580cbd63fbb2424bc806bd37313f211a34c3bf1b770d670c5fb30aa |
+| OpenCodeX.Desktop_0.2.18_aarch64.dmg | 6536037 | db3516cc9169398500b34f0d239d184c1bf664073fc63d0fcb5202beeb2f4055 |
+| OpenCodeX.Desktop_0.2.18_x64-setup.exe | 4911057 | 4b70c63964353ce2b66ef54df45c8d728a1442a18f5bfa8a222df8d288652301 |
+| OpenCodeX.Desktop_0.2.18_x64-setup.exe.sig | 452 | a12f8a24e0cae97f4c52729d6948d79b675614c7d42cf8d42b802b60365f1ea6 |
+| OpenCodeX.Desktop_0.2.18_x64_en-US.msi | 6877184 | 3b581e1b5eaadf616f2d56757cbdf1a2efd53dd58bbd704b63d642c7af60ab8d |
+| OpenCodeX.Desktop_0.2.18_x64_en-US.msi.sig | 452 | 76fc4277aa15f80c25ef8e84db6382a41baa5c367a135b8b51db2a35667cdb98 |
+| OpenCodeX.Desktop_aarch64.app.tar.gz | 6643717 | 3f33539c9874db710e59fb5ca8c7c67531e8b657d8c1eaadec8054ca17e07585 |
+| OpenCodeX.Desktop_aarch64.app.tar.gz.sig | 440 | 617d3b74bbd88161997f8fa4539be3f0657b91695e232232f13e1f83d36e2434 |
 
+## 失败、范围与恢复
 
-### 完整Windows回归暴露进程计数与真实退出的差异
+原217项配对遗漏导入宽度/字段分组，新增断言在旧实现稳定12项失败，补齐后241项通过；不能把旧绿灯扩大成布局一致。实际拖入曾被ResizeObserver故障遮罩阻断，随后暴露postMessage字节回退；失败原文、修正和最终原生回执均保留。安装目录Access denied的具体持有者未证实，不归因为杀毒或权限；只在持锁、清单身份一致的受管临时包激活边界对Windows5/32/33有限等待10秒，新目标/清单变化拒绝。
 
-6569227d的最终PR CI40825198427失败：Windows库900通过/1失败/3忽略，新增owned-child测试读到ActiveProcesses归零后真实进程句柄仍为WAIT_TIMEOUT(258)。前端、macOS后端、发布脚本及Windows进程证据门通过不能抵销此失败；最终EXE后续阶段被跳过。原始完整job日志已留存ci-656-process-exit-failure，不把该结果归因为历史npm退出1。
+main第一次退出测试失败是尚未取得helper handle的前置竞态，握手先持有并确认存活再允许root退出；不是降低期限或删除真实退出断言。正式Windows流水线混合默认/自定义安装时保留前次记忆目录，四独立runner使用原包通过；原失败不得改记为成功。
 
-c7b4a1c9在终止前保留当前匿名job内进程的真实句柄，复查作业成员避免PID复用，收尾同时要求活动数归零及所持句柄signaled；保持原查询期限、独立2秒收尾期限与原断言。匹配Windows依赖的原源码cross-check和clippy通过，只是编译检查。最终PR CI40830577489正在执行，实际Windows结果、正式发布仍待验。
+实际OTA的OS自动重开观察与后续IPC文件读回分开：安装器Shell自动进程不继承测试CDP环境，观察自动PID/版本后，仅停止本次受控进程并用相同不可变沙箱显式重开更新EXE读回。未假称自动进程直接提供CDP。
 
+历史两次npm退出1缺原始输出，根因仍未知。物理Win10/11、企业PAC/证书/重定向、真实SMB、全部语言/混合DPI和完整设备权限矩阵未执行；本轮临时Actions账户和沙箱不代表全设备覆盖。无OS代码签名/Apple公证声明，更新包签名独立验收。不清空日常配置、不替换日常安装、不重启用户活跃Codex、不进行付费生成。
 
-### 最终候选Windows完整验收通过
-
-c7b4a1c9的PR CI40830577489与push CI40830571914五个必需job均通过，包含原owned-child退出断言。PR合并引用81f64241实际EXE的应用树5bf925343dc3e180241c83813f4023b77b858f9b与c7一致，SHA256 f372de8fda61d77b4dbd1354d30e4d142ed8aebc2cb10eed89ff6ced1ae46a07。两组实际Node24.22.1/npm11.19.1、22.20.0/npm10.9.3均完成2.91安装、失败保留旧包/入口/来源、恢复2.93、npm view失败详情和实际registry恢复；离线HTML File经生产IPC及检查器、字节一致、取消只清副本。普通非管理员实际Profile、令牌和WebView2检查通过。关键安装/导入/查询截图人工查看；完整原日志及回执归ci-c7-final。
-
-后端官方2.90→2.91及离线重装另有managed-live原始回执。上述证明最终候选适用范围，不能代替正式main/tag包、四安装组合、原公钥验签、匿名stable及实际MSI/NSIS OTA；这些继续验收，尚未发布。历史npm退出1不归因。
-
-
-### 最终实屏补漏：导入宽度与字段分组
-
-PR29已合并main99234664，但尚未创建0.2.18 tag或公开。回读配对报告及Windows实屏发现原217项检查只比较标题/动作/溢出，遗漏导入宽度和分组：原型720px、旧实现520px且标签/按钮同一行。不能把原绿灯扩写为这些布局已一致。增加断言后旧实现稳定12项失败，原报告及截图保留import-before。
-
-f8fbfa91恢复导入720px上限、标签单独一行及带框文件选择区；安装未选来源浅底、代理分组框沿原型恢复，离线包补原型清除动作。清除仅释放本次drop lease并清预览，不触及原包、运行来源或已安装文件；Windows驱动新增实际清除后禁用安装、原包保留及重拖验证。后端W18修复和安装/查询/安全策略未改。Chromium/WebKit各241项配对通过，修后关键截图已人工查看，typecheck/相关导入与传输/build通过；完整发布门和最终Windows继续。旧main集成CI40835291280已按后继候选取消，取消不计通过。
-
-
-### 再次保留Windows退出断言失败与定向诊断
-
-f8的PR40836700467及push40836637614均在同一owned-child句柄断言失败，后续EXE阶段跳过；旧c7成功不能抵销，尚未发布。2bcca0de仅补test构建日志和独立原源码诊断入口，40839271794原模块首次运行复现：终止前job活动列表已为0、保留句柄为空，但测试持有child仍WAIT_TIMEOUT。该现象证明清理时活动列表不足，不推断具体包或历史npm原因。
-
-596025fe/21bfd436在任何进程进入前关联本次匿名job的独占完成端口，收尾结合NEW_PROCESS通知和活动列表保留经作业成员校验的真实handle，等待其signaled；仍为独立2秒收尾，原查询期限/无关进程保护保持。Windows目标原源码check通过；首次clippy拒绝整数指针关联键，已改空键并通过严格clippy，未以忽略警告放行。定向原生40839929838与最终整库CI继续，正式包与发布仍未验。
-
-
-### 原始退出断言连续30次原生通过
-
-21bfd436定向40839929838实际Windows成功，原源码模块独立编译后同一测试连续30次通过；原失败40839271794保持。日志确认NEW_PROCESS通知保留member=1、退出前仍WAIT_TIMEOUT的真实helper handle；不是只等作业计数或sleep。支持初步修正结论，不代替最终应用整库与EXE。最终PR CI40839913190继续，正式包/发布未执行。
-
-
-### 最终补漏实屏通过，开始正式出包
-
-21bfd436最终PR CI40839913190五门全部成功，实际PR引用14ca2c0e EXE应用树1c9a4a3d82c36a07afe510f381c06b6ba56ad70b与候选/main完全一致，EXE SHA256 2d0efe8b6fa38c42d0acc2c38bb2166af1dc4b841432385f07a6036d277e9da1。两组Node原生安装/失败/查询恢复、导入720px与带框选择区、离线清除只删副本并禁用安装、重拖/取消/原件保留均通过；普通账户实测通过，关键新截图已查看。原失败保持。证据ci-21-final。
-
-PR30已合并main2e709d09590493f73c9e4f31883f67f949c8e90c，v0.2.18新tag绑定该提交；main集成CI与草稿正式构建并行，不意味着已公开。正式包/四安装组合/三签名/匿名stable/两OTA仍待实际回执，不关闭任务。
-
-
-### 正式原包验收与main测试夹具前置竞态
-
-Release40844799061生成八个草稿资产，macOS job通过严格资源签名/许可检查；Windows串行all安装验收默认MSI/NSIS实屏通过，随后自定义MSI落到先前记忆目录而未在预期目标找到EXE，原失败保持。原MSI日志显示INSTALLDIR被记忆目录覆盖，不能把这次混合环境说成新runner四组合失败。独立四runner40847331072对同一原包真正MSI/NSIS×default/custom全部通过，EXE原始构建SHA220b24a7严格匹配，资产digest保持且未重建。
-
-八资产大小/SHA、原0.2.17公钥三份更新签名和tag身份核对通过；正式macOS原归档实际WKWebView启动提交与tag匹配，隔离根/OPENCODEX_HOME正确，四步骤/安装配置/离线清除入口/取消原路由已实查；日常配置摘要不变，仅停止本次已核对PID。首个短会话退出及系统窗口恢复提示原日志保留，不把它称为持续验收；监督会话原包检查通过。无公证声称。
-
-main CI40844741713的Windows失败于测试OpenProcess前置条件（raw为空），尚未调用生产cleanup。原helper夹具让root自然退出后才持有handle，存在前置竞态。225a54b2/e2e8da96仅cfg(test)增加握手：持有/确认helper存活再让root成功退出，并明确detached stdio；原读取/收尾2秒与signaled断言不变。第一版漏标准Stdio导入被cross-check拦截，e2补齐并严格clippy通过。生产程序和已签名tag原包不变，正式公开前继续定向原生及完整main验收。历史npm退出1仍未知。
-
-
-### 公开stable完成，实际OTA继续
-
-测试补充e2e8da96完整PR CI40848030517五门全部成功，PR31合并main b7cd66343；相对正式tag仅cfg(test)握手，生产原包不变、未移动v0.2.18。发布40858820250成功，2026-10-29T10:36:13Z公开v0.2.18且Latest/stable=0.2.18。匿名版本及stable清单内容匹配，八资产HTTP200/大小/SHA256均匹配原草稿验收，三份原公钥签名通过。正式发布已发生，实际0.2.17→0.2.18 MSI/NSIS OTA40859489907继续，任务尚不关闭。
+保留上一正式[v0.2.17](https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.17)原始资产与签名。必要回退先保留现配置和备份，stable回退走显式通道流程，不移动公开tag；安装补偿维持原失败恢复边界，不承诺突然断电的多文件原子性。

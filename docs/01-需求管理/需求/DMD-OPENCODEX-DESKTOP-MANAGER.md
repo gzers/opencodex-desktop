@@ -321,3 +321,6 @@ OpenCodex 目前主要依赖命令行启动和观察。**OpenCodeX-Desktop** 的
 - AC-UI-018-05：环境 checking、缺Node有brew/无brew、缺npm、缺OpenCodex、ready逐态比对；Windows不显示brew指令，前置短路与通过后收起门禁按实际事实投影。
 
 配对截图与几何、深浅色/窄窗、真实 Windows 流程和适用安装器/OTA完成后验收。历史npm退出1根因仍未知，不因新修复成功倒推。
+
+
+0.2.18验收回写（2026-10-29）：AC-UI-018-01～05及本版复用的AC-WIN-017-01～06按受支持范围完成。v0.2.18已公开stable/Latest；唯一总原型维护基线8136cf707，双引擎241项配对、21发布门、最终main六项CI、Windows两Node/普通账户/安装失败恢复、正式MSI/NSIS默认及自定义四组合、原公钥三签名、匿名八资产和0.2.17→0.2.18实际两种OTA均通过。需求结果及范围由[REL21](../../03-开发实施/REL-OPENCODEX-DESKTOP-21.md)、[IMP27](../../03-开发实施/IMP-OPENCODEX-DESKTOP-27.md)和单一问题清单承接，原失败保留。历史npm退出1仍未知，企业PAC/证书、SMB、全部物理Win10/11/字体/DPI/权限矩阵不冒记通过。

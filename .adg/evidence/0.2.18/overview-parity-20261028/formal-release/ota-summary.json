@@ -1,0 +1,26 @@
+{
+  "result": "pass",
+  "run": 40859489907,
+  "checks": [
+    {
+      "kind": "msi",
+      "from": "0.2.17",
+      "to": "0.2.18",
+      "ordinaryExitPreservedOldVersion": true,
+      "automaticRestartObserved": true,
+      "configAndCredentialsUnchanged": true,
+      "receipt": "formal-release/ota/windows-ota-msi/ota-result.json",
+      "readback": "formal-release/ota/windows-ota-msi/ota-verified.json"
+    },
+    {
+      "kind": "nsis",
+      "from": "0.2.17",
+      "to": "0.2.18",
+      "ordinaryExitPreservedOldVersion": true,
+      "automaticRestartObserved": true,
+      "configAndCredentialsUnchanged": true,
+      "receipt": "formal-release/ota/windows-ota-nsis/ota-result.json",
+      "readback": "formal-release/ota/windows-ota-nsis/ota-verified.json"
+    }
+  ]
+}

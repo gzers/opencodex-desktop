@@ -1,0 +1,326 @@
+ota (msi)	Set up job	﻿2026-10-29T10:41:08.7144550Z Current runner version: '2.338.0'
+ota (msi)	Set up job	2026-10-29T10:41:08.7186651Z ##[group]Runner Image Provisioner
+ota (msi)	Set up job	2026-10-29T10:41:08.7187175Z Hosted Compute Agent
+ota (msi)	Set up job	2026-10-29T10:41:08.7187810Z Version: 20261021.618
+ota (msi)	Set up job	2026-10-29T10:41:08.7188154Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+ota (msi)	Set up job	2026-10-29T10:41:08.7188552Z Build Date: 2026-10-21T00:45:21Z
+ota (msi)	Set up job	2026-10-29T10:41:08.7188933Z Worker ID: {916f4647-1654-40cb-a4c8-2a9be806fe88}
+ota (msi)	Set up job	2026-10-29T10:41:08.7189320Z Region: centralus
+ota (msi)	Set up job	2026-10-29T10:41:08.7189614Z Cloud: Azure
+ota (msi)	Set up job	2026-10-29T10:41:08.7189914Z ##[endgroup]
+ota (msi)	Set up job	2026-10-29T10:41:08.7190671Z ##[group]Operating System
+ota (msi)	Set up job	2026-10-29T10:41:08.7191011Z Microsoft Windows Server 2025
+ota (msi)	Set up job	2026-10-29T10:41:08.7191347Z 10.0.26100
+ota (msi)	Set up job	2026-10-29T10:41:08.7191641Z Datacenter
+ota (msi)	Set up job	2026-10-29T10:41:08.7191998Z ##[endgroup]
+ota (msi)	Set up job	2026-10-29T10:41:08.7192293Z ##[group]Runner Image
+ota (msi)	Set up job	2026-10-29T10:41:08.7192616Z Image: windows-2025-vs2026
+ota (msi)	Set up job	2026-10-29T10:41:08.7192972Z Version: 20261021.278.1
+ota (msi)	Set up job	2026-10-29T10:41:08.7193592Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+ota (msi)	Set up job	2026-10-29T10:41:08.7194724Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+ota (msi)	Set up job	2026-10-29T10:41:08.7195254Z ##[endgroup]
+ota (msi)	Set up job	2026-10-29T10:41:08.7195882Z ##[group]GITHUB_TOKEN Permissions
+ota (msi)	Set up job	2026-10-29T10:41:08.7197134Z Contents: read
+ota (msi)	Set up job	2026-10-29T10:41:08.7197477Z Metadata: read
+ota (msi)	Set up job	2026-10-29T10:41:08.7197769Z ##[endgroup]
+ota (msi)	Set up job	2026-10-29T10:41:08.7199107Z Secret source: Actions
+ota (msi)	Set up job	2026-10-29T10:41:08.7199595Z Cache mode: write
+ota (msi)	Set up job	2026-10-29T10:41:08.7200005Z Prepare workflow directory
+ota (msi)	Set up job	2026-10-29T10:41:08.7457728Z Prepare all required actions
+ota (msi)	Set up job	2026-10-29T10:41:08.7496802Z Getting action download info
+ota (msi)	Set up job	2026-10-29T10:41:08.9905539Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+ota (msi)	Set up job	2026-10-29T10:41:09.1331626Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+ota (msi)	Set up job	2026-10-29T10:41:09.2796297Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+ota (msi)	Set up job	2026-10-29T10:41:09.5176316Z Complete job name: ota (msi)
+ota (msi)	Run actions/checkout@v5	﻿2026-10-29T10:41:09.6215842Z ##[group]Run actions/checkout@v5
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6216569Z with:
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6216801Z   repository: gzers/opencodex-desktop
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6219182Z   token: ***
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6219392Z   ssh-strict: true
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6219616Z   ssh-user: git
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6219843Z   persist-credentials: true
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6220258Z   clean: true
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6220483Z   sparse-checkout-cone-mode: true
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6220748Z   fetch-depth: 1
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6220965Z   fetch-tags: false
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6221188Z   show-progress: true
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6221409Z   lfs: false
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6221614Z   submodules: false
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6221841Z   set-safe-directory: true
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6222099Z   allow-unsafe-pr-checkout: false
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.6222479Z ##[endgroup]
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.7214867Z Syncing repository: gzers/opencodex-desktop
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.7215906Z ##[group]Getting Git version info
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.7216279Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:09.7685210Z [command]"C:\Program Files\Git\bin\git.exe" version
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.1341708Z git version 2.56.0.windows.2
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.1380236Z ##[endgroup]
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.1395170Z Temporarily overriding HOME='D:\a\_temp\60f265b8-8503-4acf-8752-143475bd022b' before making global git config changes
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.1395902Z Adding repository directory to the temporary git global config as a safe directory
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.1402434Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.2528296Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.2573369Z ##[group]Initializing the repository
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.2605278Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.3797592Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.3873343Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.4497701Z ##[endgroup]
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.4499313Z ##[group]Disabling automatic garbage collection
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.4503873Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.4776967Z ##[endgroup]
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.4778352Z ##[group]Setting up auth
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.4788206Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:10.5057134Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:11.9122899Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:11.9376122Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:12.3235936Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:12.3483539Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:12.7761437Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:12.8028238Z ##[endgroup]
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:12.8028752Z ##[group]Fetching the repository
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:12.8045569Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b7cd663438cf9f949280d337058333115ea5802a:refs/remotes/origin/main
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.2956073Z From https://github.com/gzers/opencodex-desktop
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.2956758Z  * [new ref]         b7cd663438cf9f949280d337058333115ea5802a -> origin/main
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.2983381Z ##[endgroup]
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.2983952Z ##[group]Determining the checkout info
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.2985420Z ##[endgroup]
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.2992902Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.3363088Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.3615876Z ##[group]Checking out the ref
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.3622994Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.5418357Z Switched to a new branch 'main'
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.5428511Z branch 'main' set up to track 'origin/main'.
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.5468260Z ##[endgroup]
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.5764683Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+ota (msi)	Run actions/checkout@v5	2026-10-29T10:41:14.6004689Z b7cd663438cf9f949280d337058333115ea5802a
+ota (msi)	Run actions/setup-node@v5	﻿2026-10-29T10:41:14.6408882Z ##[group]Run actions/setup-node@v5
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.6409366Z with:
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.6409493Z   node-version: 24
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.6409619Z   always-auth: false
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.6409822Z   check-latest: false
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.6411601Z   token: ***
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.6411725Z   package-manager-cache: true
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.6411865Z ##[endgroup]
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.7657983Z Found in cache @ C:\hostedtoolcache\windows\node\24.22.1\x64
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.7663640Z (node:2328) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.7664022Z (Use `node --trace-deprecation ...` to show where the warning was created)
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:14.7665811Z ##[group]Environment details
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:19.9562331Z node: v24.22.1
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:19.9562610Z npm: 11.19.1
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:19.9562727Z yarn: 1.22.22
+ota (msi)	Run actions/setup-node@v5	2026-10-29T10:41:19.9563156Z ##[endgroup]
+ota (msi)	Published adjacent-release actual signed updater and restart	﻿2026-10-29T10:41:19.9865306Z ##[group]Run ./test/smoke/windows-ota.ps1 -Kind 'msi' -OutputDirectory 'test/out/windows-ota-msi' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION
+ota (msi)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:19.9866059Z ^[[36;1m./test/smoke/windows-ota.ps1 -Kind 'msi' -OutputDirectory 'test/out/windows-ota-msi' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION^[[0m
+ota (msi)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:20.0488385Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ota (msi)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:20.0488661Z env:
+ota (msi)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:20.0488793Z   OCX_BASELINE_VERSION: 0.2.17
+ota (msi)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:20.0488930Z   OCX_ACCEPT_VERSION: 0.2.18
+ota (msi)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:20.0489059Z ##[endgroup]
+ota (msi)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:34.6236354Z [1029/104134.579:ERROR:ui\gfx\win\window_impl.cc:172] Failed to unregister class Chrome_WidgetWin_0. Error = 1412
+ota (msi)	Run actions/upload-artifact@v4	﻿2026-10-29T10:41:43.3498823Z ##[group]Run actions/upload-artifact@v4
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.3499050Z with:
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.3499159Z   name: windows-ota-msi
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.3499457Z   path: test/out/windows-ota-msi/*.json
+ota (msi)	Run actions/upload-artifact@v4	test/out/windows-ota-msi/*.png
+ota (msi)	Run actions/upload-artifact@v4	test/out/windows-ota-msi/actual-sandbox/logs/*.log
+ota (msi)	Run actions/upload-artifact@v4	
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.3499746Z   if-no-files-found: error
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.3499870Z   compression-level: 6
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.3499982Z   overwrite: false
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.3500093Z   include-hidden-files: false
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.3500221Z ##[endgroup]
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.4717417Z (node:8328) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.4717966Z (Use `node --trace-deprecation ...` to show where the warning was created)
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.4812083Z With the provided path, there will be 34 files uploaded
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.4815373Z Artifact name is valid!
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.4816086Z Root directory input is valid!
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.7858941Z Beginning upload of artifact content to blob storage
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.9072713Z (node:8328) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:44.4911076Z Uploaded bytes 3171050
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:44.5405638Z Finished uploading artifact content to blob storage!
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:44.5406590Z SHA256 digest of uploaded artifact zip is 429520d67199352f5bdc87c0897efa4d220398afe85abaab43fbcd71379abe3c
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:44.5409250Z Finalizing artifact upload
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:45.0233935Z Artifact windows-ota-msi.zip successfully finalized. Artifact ID 12890782381
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:45.0235028Z Artifact windows-ota-msi has been successfully uploaded! Final size is 3171050 bytes. Artifact ID is 12890782381
+ota (msi)	Run actions/upload-artifact@v4	2026-10-29T10:41:45.0244735Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/40859489907/artifacts/12890782381
+ota (msi)	Post Run actions/setup-node@v5	﻿2026-10-29T10:41:45.0568170Z Post job cleanup.
+ota (msi)	Post Run actions/setup-node@v5	2026-10-29T10:41:45.1637539Z (node:9064) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ota (msi)	Post Run actions/setup-node@v5	2026-10-29T10:41:45.1638310Z (Use `node --trace-deprecation ...` to show where the warning was created)
+ota (msi)	Post Run actions/checkout@v5	﻿2026-10-29T10:41:45.1919358Z Post job cleanup.
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:45.3165217Z [command]"C:\Program Files\Git\bin\git.exe" version
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:45.3483785Z git version 2.56.0.windows.2
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:45.3537927Z Temporarily overriding HOME='D:\a\_temp\e1b92f85-aea0-40fb-a030-188aa47230e6' before making global git config changes
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:45.3538729Z Adding repository directory to the temporary git global config as a safe directory
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:45.3545184Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:45.3867054Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:45.4217620Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:45.9511819Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:45.9794980Z http.https://github.com/.extraheader
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:45.9840113Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:46.0232689Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:46.4987344Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+ota (msi)	Post Run actions/checkout@v5	2026-10-29T10:41:46.5286232Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+ota (msi)	Complete job	﻿2026-10-29T10:41:47.0691417Z Cleaning up orphan processes
+ota (msi)	Complete job	2026-10-29T10:41:47.1163876Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+ota (nsis)	Set up job	﻿2026-10-29T10:41:09.3056593Z Current runner version: '2.338.0'
+ota (nsis)	Set up job	2026-10-29T10:41:09.3099578Z ##[group]Runner Image Provisioner
+ota (nsis)	Set up job	2026-10-29T10:41:09.3100248Z Hosted Compute Agent
+ota (nsis)	Set up job	2026-10-29T10:41:09.3100592Z Version: 20261021.618
+ota (nsis)	Set up job	2026-10-29T10:41:09.3101329Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+ota (nsis)	Set up job	2026-10-29T10:41:09.3101766Z Build Date: 2026-10-21T00:45:21Z
+ota (nsis)	Set up job	2026-10-29T10:41:09.3102162Z Worker ID: {09575f2e-e660-46ce-ac3b-7da70108aea7}
+ota (nsis)	Set up job	2026-10-29T10:41:09.3102605Z Region: centralus
+ota (nsis)	Set up job	2026-10-29T10:41:09.3103103Z Cloud: Azure
+ota (nsis)	Set up job	2026-10-29T10:41:09.3103636Z ##[endgroup]
+ota (nsis)	Set up job	2026-10-29T10:41:09.3104585Z ##[group]Operating System
+ota (nsis)	Set up job	2026-10-29T10:41:09.3104979Z Microsoft Windows Server 2025
+ota (nsis)	Set up job	2026-10-29T10:41:09.3105374Z 10.0.26100
+ota (nsis)	Set up job	2026-10-29T10:41:09.3105714Z Datacenter
+ota (nsis)	Set up job	2026-10-29T10:41:09.3106021Z ##[endgroup]
+ota (nsis)	Set up job	2026-10-29T10:41:09.3106348Z ##[group]Runner Image
+ota (nsis)	Set up job	2026-10-29T10:41:09.3106697Z Image: windows-2025-vs2026
+ota (nsis)	Set up job	2026-10-29T10:41:09.3107053Z Version: 20261021.278.1
+ota (nsis)	Set up job	2026-10-29T10:41:09.3107755Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+ota (nsis)	Set up job	2026-10-29T10:41:09.3109055Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+ota (nsis)	Set up job	2026-10-29T10:41:09.3109657Z ##[endgroup]
+ota (nsis)	Set up job	2026-10-29T10:41:09.3110367Z ##[group]GITHUB_TOKEN Permissions
+ota (nsis)	Set up job	2026-10-29T10:41:09.3111776Z Contents: read
+ota (nsis)	Set up job	2026-10-29T10:41:09.3112123Z Metadata: read
+ota (nsis)	Set up job	2026-10-29T10:41:09.3112451Z ##[endgroup]
+ota (nsis)	Set up job	2026-10-29T10:41:09.3114087Z Secret source: Actions
+ota (nsis)	Set up job	2026-10-29T10:41:09.3114696Z Cache mode: write
+ota (nsis)	Set up job	2026-10-29T10:41:09.3115156Z Prepare workflow directory
+ota (nsis)	Set up job	2026-10-29T10:41:09.3391774Z Prepare all required actions
+ota (nsis)	Set up job	2026-10-29T10:41:09.3429464Z Getting action download info
+ota (nsis)	Set up job	2026-10-29T10:41:09.6141499Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+ota (nsis)	Set up job	2026-10-29T10:41:09.6984182Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+ota (nsis)	Set up job	2026-10-29T10:41:09.8147512Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+ota (nsis)	Set up job	2026-10-29T10:41:10.0485820Z Complete job name: ota (nsis)
+ota (nsis)	Run actions/checkout@v5	﻿2026-10-29T10:41:10.1553674Z ##[group]Run actions/checkout@v5
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1554483Z with:
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1554737Z   repository: gzers/opencodex-desktop
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1556982Z   token: ***
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1557206Z   ssh-strict: true
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1557442Z   ssh-user: git
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1557679Z   persist-credentials: true
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1557950Z   clean: true
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1558191Z   sparse-checkout-cone-mode: true
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1558474Z   fetch-depth: 1
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1558705Z   fetch-tags: false
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1558943Z   show-progress: true
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1559180Z   lfs: false
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1559401Z   submodules: false
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1559644Z   set-safe-directory: true
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1559923Z   allow-unsafe-pr-checkout: false
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.1560333Z ##[endgroup]
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.2656826Z Syncing repository: gzers/opencodex-desktop
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.2658197Z ##[group]Getting Git version info
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.2658643Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.3142697Z [command]"C:\Program Files\Git\bin\git.exe" version
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.6154832Z git version 2.56.0.windows.2
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.6199015Z ##[endgroup]
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.6215240Z Temporarily overriding HOME='D:\a\_temp\333fb1e8-ed72-4548-954a-9c99ed8d16a0' before making global git config changes
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.6216088Z Adding repository directory to the temporary git global config as a safe directory
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.6223227Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.6775517Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.6780770Z ##[group]Initializing the repository
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.6787824Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.7671460Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.7717103Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.8331070Z ##[endgroup]
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.8331778Z ##[group]Disabling automatic garbage collection
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.8332375Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.8647904Z ##[endgroup]
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.8648569Z ##[group]Setting up auth
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.8659093Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:10.8994986Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:12.1707438Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:12.2014124Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:12.6799668Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:12.7198257Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:13.2423466Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:13.2736550Z ##[endgroup]
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:13.2737258Z ##[group]Fetching the repository
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:13.2752959Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b7cd663438cf9f949280d337058333115ea5802a:refs/remotes/origin/main
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:14.8134160Z From https://github.com/gzers/opencodex-desktop
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:14.8135862Z  * [new ref]         b7cd663438cf9f949280d337058333115ea5802a -> origin/main
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:14.8174344Z ##[endgroup]
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:14.8174913Z ##[group]Determining the checkout info
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:14.8176583Z ##[endgroup]
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:14.8186189Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:14.8604374Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:14.8899182Z ##[group]Checking out the ref
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:14.8906996Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:15.0774500Z Switched to a new branch 'main'
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:15.0790394Z branch 'main' set up to track 'origin/main'.
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:15.1207487Z ##[endgroup]
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:15.1213625Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+ota (nsis)	Run actions/checkout@v5	2026-10-29T10:41:15.1480485Z b7cd663438cf9f949280d337058333115ea5802a
+ota (nsis)	Run actions/setup-node@v5	﻿2026-10-29T10:41:15.1872571Z ##[group]Run actions/setup-node@v5
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.1929947Z with:
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.1930095Z   node-version: 24
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.1930251Z   always-auth: false
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.1930390Z   check-latest: false
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.1931794Z   token: ***
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.1931956Z   package-manager-cache: true
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.1932133Z ##[endgroup]
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.3244005Z Found in cache @ C:\hostedtoolcache\windows\node\24.22.1\x64
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.3249837Z (node:8840) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.3250282Z (Use `node --trace-deprecation ...` to show where the warning was created)
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:15.3252113Z ##[group]Environment details
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:19.6565836Z node: v24.22.1
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:19.6566261Z npm: 11.19.1
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:19.6566462Z yarn: 1.22.22
+ota (nsis)	Run actions/setup-node@v5	2026-10-29T10:41:19.6567424Z ##[endgroup]
+ota (nsis)	Published adjacent-release actual signed updater and restart	﻿2026-10-29T10:41:19.6850986Z ##[group]Run ./test/smoke/windows-ota.ps1 -Kind 'nsis' -OutputDirectory 'test/out/windows-ota-nsis' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION
+ota (nsis)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:19.6851757Z ^[[36;1m./test/smoke/windows-ota.ps1 -Kind 'nsis' -OutputDirectory 'test/out/windows-ota-nsis' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION^[[0m
+ota (nsis)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:19.7925931Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ota (nsis)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:19.7926225Z env:
+ota (nsis)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:19.7926362Z   OCX_BASELINE_VERSION: 0.2.17
+ota (nsis)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:19.7926509Z   OCX_ACCEPT_VERSION: 0.2.18
+ota (nsis)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:19.7926653Z ##[endgroup]
+ota (nsis)	Published adjacent-release actual signed updater and restart	2026-10-29T10:41:34.5979878Z [1029/104134.551:ERROR:ui\gfx\win\window_impl.cc:172] Failed to unregister class Chrome_WidgetWin_0. Error = 1412
+ota (nsis)	Run actions/upload-artifact@v4	﻿2026-10-29T10:41:43.5393084Z ##[group]Run actions/upload-artifact@v4
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.5393342Z with:
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.5393465Z   name: windows-ota-nsis
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.5393796Z   path: test/out/windows-ota-nsis/*.json
+ota (nsis)	Run actions/upload-artifact@v4	test/out/windows-ota-nsis/*.png
+ota (nsis)	Run actions/upload-artifact@v4	test/out/windows-ota-nsis/actual-sandbox/logs/*.log
+ota (nsis)	Run actions/upload-artifact@v4	
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.5394113Z   if-no-files-found: error
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.5394245Z   compression-level: 6
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.5394364Z   overwrite: false
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.5394486Z   include-hidden-files: false
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.5394625Z ##[endgroup]
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.6798828Z (node:6628) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.6799414Z (Use `node --trace-deprecation ...` to show where the warning was created)
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.6908252Z With the provided path, there will be 34 files uploaded
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.6911891Z Artifact name is valid!
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.6913337Z Root directory input is valid!
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:43.9819165Z Beginning upload of artifact content to blob storage
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:44.1024347Z (node:6628) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:44.7931128Z Uploaded bytes 3174112
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:44.8455529Z Finished uploading artifact content to blob storage!
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:44.8456685Z SHA256 digest of uploaded artifact zip is a23c96310735115e9c3851de0cf7ebb08c53198123b3cf1c565d9e2c51283807
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:44.8457230Z Finalizing artifact upload
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:45.3345764Z Artifact windows-ota-nsis.zip successfully finalized. Artifact ID 12890313429
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:45.3347357Z Artifact windows-ota-nsis has been successfully uploaded! Final size is 3174112 bytes. Artifact ID is 12890313429
+ota (nsis)	Run actions/upload-artifact@v4	2026-10-29T10:41:45.3356156Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/40859489907/artifacts/12890313429
+ota (nsis)	Post Run actions/setup-node@v5	﻿2026-10-29T10:41:45.3654615Z Post job cleanup.
+ota (nsis)	Post Run actions/setup-node@v5	2026-10-29T10:41:45.4775242Z (node:908) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ota (nsis)	Post Run actions/setup-node@v5	2026-10-29T10:41:45.4786815Z (Use `node --trace-deprecation ...` to show where the warning was created)
+ota (nsis)	Post Run actions/checkout@v5	﻿2026-10-29T10:41:45.5042333Z Post job cleanup.
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:45.6242315Z [command]"C:\Program Files\Git\bin\git.exe" version
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:45.6522006Z git version 2.56.0.windows.2
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:45.6587367Z Temporarily overriding HOME='D:\a\_temp\24f40a41-2529-46fd-aaaf-280166a5edac' before making global git config changes
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:45.6588199Z Adding repository directory to the temporary git global config as a safe directory
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:45.6596612Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:45.6919580Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:45.7234571Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:46.2062696Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:46.2325492Z http.https://github.com/.extraheader
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:46.2369774Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:46.2685402Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:46.7604238Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+ota (nsis)	Post Run actions/checkout@v5	2026-10-29T10:41:46.7923615Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+ota (nsis)	Complete job	﻿2026-10-29T10:41:47.2852692Z Cleaning up orphan processes
+ota (nsis)	Complete job	2026-10-29T10:41:47.3264860Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -16,19 +16,23 @@
       "name": "review:windows-preservation",
       "result": "passed",
       "evidence": [
-        "ci-21-final/ci.json",
-        "ci-21-final/windows-native-018/launcher.json",
-        "ci-21-final/windows-native-018-node22/launcher.json",
-        "ci-21-final/windows-ordinary/ordinary-summary.json",
-        "process-exit-diagnostic/fixed-30-native.original.log"
+        "main-final/ci.json",
+        "main-final/windows-native-018/launcher.json",
+        "main-final/windows-native-018-node22/launcher.json",
+        "main-final/windows-ordinary/ordinary-summary.json"
       ],
-      "scope": "40839913190 mandatory5 pass; final21bfd436 apps1c9a4a3d matches actualPR14ca2c0e EXE; bothNode and ordinary including newimport720/groupedframe and clear-disable-redrop-original-retain checks"
+      "scope": "final main b7cd66343 actual EXE/production IPC bothNodes, paths, install/queryfailure recovery, clear/redrop, ordinary account; tag production unchanged after cfg(test) followup"
     },
     {
       "name": "review:release-evidence",
-      "result": "pending",
-      "evidence": [],
-      "scope": "formal assets8, original key3 signatures, four real installer modes, strict macOS seal/native and anonymous stable passed; real MSI/NSIS adjacent OTA still in_progress"
+      "result": "passed",
+      "evidence": [
+        "formal-release/verification.json",
+        "formal-release/anonymous-public.json",
+        "formal-release/ota-summary.json",
+        "formal-release/publish-ci.json"
+      ],
+      "scope": "completed original signed release, tag provenance, sixmain CI jobs, four independent installer modes, original key3 signatures, anonymous public stable8 assets, formalmacOS strict seal/native and MSI/NSIS0.2.17→0.2.18 OTA"
     }
   ],
   "release_gate": {
@@ -45,9 +49,16 @@
     "unhandled_errors": 0
   },
   "backend": {
-    "passed": 1299,
+    "passed": 1300,
     "ignored": 14,
-    "order": "one exact query first, other workspace tests unchanged; prior unfiltered failures retained"
+    "windowsPassed": 1023,
+    "windowsIgnored": 16,
+    "nestedWindowsSummaryExcluded": 1,
+    "evidence": [
+      "main-final/macos.original.log",
+      "main-final/windows.original.log"
+    ],
+    "scope": "full workspace and explicitly executed native acceptance as shown; no ignored environment claimed"
   },
   "native_pending": false,
   "historical_npm_exit1": "unknown; not attributed",
@@ -56,7 +67,7 @@
   "offline_drop": {
     "boundary_tests": 5,
     "frontend_transport_tests": 3,
-    "production_windows_drag_test": "ci-c7-final/windows-native-018/offline-drop.json and windows-native-018-node22/offline-drop.json: actual production IPC, byte exact, cancel own copy only",
+    "production_windows_drag_test": "main-final/windows-native-018/offline-drop.json and windows-native-018-node22/offline-drop.json; production IPC byte exact, clear disables install, only own copy removed, redrop/cancel and original preservation passed",
     "reads_original_file_only": true
   },
   "native_run": 40839913190,
@@ -77,8 +88,8 @@
     40836637614,
     40839271794
   ],
-  "owned_family_drain_review": "30 actual Windows native original-module runs passed in40839929838; NEW_PROCESS retains membership-checked real handles missing from active list, wait original2s cleanup and actual handle signaled; final whole-workspace and release EXE pending",
-  "staging_activation": "only verified owned staging; Windows5/32/33;10s bounded; no target overwrite; original rollback unchanged; native verification pending",
+  "owned_family_drain_review": "completed: original notification correction30 native, handshake fixture30 native, finalmain full backend and EXE passed. Original query/read/cleanup deadlines maintained",
+  "staging_activation": "completed: verified owned staging only, Windows5/32/33 <=10s; original rollback, manifest identity and target admission retained; native file handle counterexamples and final installation recovery passed",
   "native_debug_success": [
     {
       "run": 40824604135,
@@ -91,8 +102,8 @@
       "evidence": "native-fb-success/launcher.json"
     }
   ],
-  "final_release_native_pending": true,
-  "native_ci_success": 40830577489,
+  "final_release_native_pending": false,
+  "native_ci_success": 40858818265,
   "process_exit_diagnostic_run": 40839929838,
   "tag": "v0.2.18",
   "main": "2e709d09590493f73c9e4f31883f67f949c8e90c",
@@ -112,9 +123,8 @@
     },
     "actualOta": {
       "run": 40859489907,
-      "status": "in_progress",
-      "from": "0.2.17",
-      "to": "0.2.18"
+      "result": "passed",
+      "evidence": "formal-release/ota-summary.json"
     }
   },
   "testOnlyFollowUp": {
@@ -125,6 +135,15 @@
     "fullCi": 40848030517,
     "fullCiStatus": "passed",
     "noProductionChange": true,
-    "mergedMain": "b7cd663438cf9f949280d337058333115ea5802a"
-  }
+    "mergedMain": "b7cd663438cf9f949280d337058333115ea5802a",
+    "fullMainCi": 40858818265
+  },
+  "mainIntegrationCi": {
+    "run": 40858818265,
+    "status": "completed",
+    "result": "passed",
+    "allJobs": 6,
+    "evidence": "main-final/ci.json"
+  },
+  "status": "passed"
 }
