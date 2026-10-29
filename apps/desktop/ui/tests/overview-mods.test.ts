@@ -1,14 +1,17 @@
 import { createPinia, setActivePinia } from 'pinia'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import App from '@/App.vue'
+import { useUpdatesStore } from '@/features/updates/store'
 import { useRouteStore } from '@/stores/routes'
 import { managerUpdateStatus } from '@/features/updates/update'
 
 const invoke = vi.fn()
 
+vi.mock('@/features/about/api', async original => ({...await original<typeof import('@/features/about/api')>(),getOfficialProjectFacts:async()=>({displayName:'OpenCodex',version:'2.50.0',rawVersion:'2.50.0',truncated:false})}))
+vi.mock('@tauri-apps/plugin-dialog', () => ({ open: async () => null }))
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: (...args: unknown[]) => invoke(...args),
 }))
@@ -32,7 +35,7 @@ async function settle(wrapper: ReturnType<typeof mount>) {
 }
 
 function mountOverview() {
-  const pinia = createPinia()
+  const pinia = createPinia(); setActivePinia(pinia)
   const wrapper = mount(App, { global: { plugins: [pinia] } })
   mounted.push(wrapper)
   useRouteStore(pinia).go('overview')
@@ -47,10 +50,11 @@ function readyEnvironment() {
 
 describe('overview module cards', () => {
   beforeEach(() => {
+    Object.assign(HTMLDialogElement.prototype,{showModal(this:HTMLDialogElement){this.setAttribute('open','')},close(this:HTMLDialogElement){this.removeAttribute('open')}})
     setActivePinia(createPinia())
     invoke.mockReset()
     invoke.mockImplementation((command: string) =>
-      command === 'discover_environment' ? Promise.resolve(readyEnvironment()) : Promise.resolve(undefined),
+      command === 'discover_environment' ? Promise.resolve(readyEnvironment()) : command === 'official_project_facts' ? Promise.resolve({displayName:'OpenCodex',version:'2.50.0',rawVersion:'2.50.0',truncated:false}) : command === 'official_remote_latest' ? Promise.resolve({tag:'latest',version:'2.51.0',integrity:null}) : Promise.resolve(undefined),
     )
   })
 
@@ -91,6 +95,22 @@ describe('overview module cards', () => {
     expect(routes.settingsSection).toBe('upgrade')
   })
 
+  it('opens import in the overview with a disabled read action before a file is selected', async () => {
+    const wrapper = mountOverview(); await settle(wrapper); await flushPromises()
+    const route=useRouteStore(wrapper.vm.$pinia)
+    const importer=wrapper.findAll('button').find(b=>b.text()==='导入配置')!
+    await importer.trigger('click'); await flushPromises()
+    expect(route.current).toBe('overview')
+    const modal=document.querySelector('dialog[open]')
+    expect(modal?.textContent).toContain('尚未选择文件')
+    const read=[...modal!.querySelectorAll('button')].find(b=>b.textContent==='读取并比较')!
+    expect(read.disabled).toBe(true)
+    const cancel=[...modal!.querySelectorAll('button')].find(b=>b.textContent==='取消')!
+    cancel.click();await flushPromises()
+    expect(route.current).toBe('overview')
+    expect(document.querySelector('dialog[open]')).toBeNull()
+  })
+
   // OV-4 / N-OV-2：版本行按原型「管理器 / 面板 + 版本 + 阶段 + ›」三段呈现（index.html:1877-1878）。
   it('renders each upgrade row as label, version, phase and chevron', async () => {
     managerUpdateStatus.value = {
@@ -100,12 +120,13 @@ describe('overview module cards', () => {
     try {
       const wrapper = mountOverview()
       await settle(wrapper)
+      await useUpdatesStore(wrapper.vm.$pinia).loadProject();await useUpdatesStore(wrapper.vm.$pinia).loadRemoteLatest();await flushPromises()
       const upgrade = wrapper.findAll('.mods .mod')[0]
       const rows = upgrade.findAll('.mnt-version-row')
-      expect(rows.map(row => Array.from(row.element.children).map(node => node.textContent?.trim()))).toEqual([
+      await vi.waitFor(() => expect(rows.map(row => Array.from(row.element.children).map(node => node.textContent?.trim()))).toEqual([
         ['管理器', '0.2.8', '有可用更新', '›'],
-        ['面板', '—', '尚未检查', '›'],
-      ])
+        ['面板', '2.50.0', '有可用更新', '›'],
+      ]))
       expect(rows[0].attributes('aria-label')).toBe('查看桌面管理器更新详情')
       expect(rows[1].attributes('aria-label')).toBe('查看 OpenCodex 面板更新详情')
     } finally {

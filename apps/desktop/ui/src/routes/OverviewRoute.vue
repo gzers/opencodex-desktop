@@ -16,6 +16,7 @@ import UiButton from '@/components/ui/UiButton.vue'
 import InformationRow from '@/components/patterns/InformationRow.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
+import ModelTransfer from '@/features/sync/ModelTransfer.vue'
 import { managerInstallProgress, managerUpdateStatus } from '@/features/updates/update'
 import { hasNewerVersion } from '@/features/updates/version'
 import RuntimeMotionMark from '@/features/runtime/components/RuntimeMotionMark.vue'
@@ -37,6 +38,7 @@ function openUpdates(target: 'manager' | 'official' | null = null, check = false
   updateOpen.value = true
   if (check) void updateCenter.value?.check()
 }
+const importOpen = ref(false)
 const detailOpen = ref(false)
 const envOpen = ref(false)
 const copiedCommand = ref<string | null>(null)
@@ -259,7 +261,6 @@ async function copyCommand(command: string) {
 function installManaged(source: 'registry' | 'offline') {
   app.requestInstallModal(source)
   envOpen.value = false
-  routes.go('settings', { section: 'installation' })
 }
 
 function guide() {
@@ -289,7 +290,7 @@ const mods = computed(() => [
     rows: [['导出范围', '可选对象'], ['凭据', '独立选择']],
     // 原型 index.html:1881/:1900-1901 的入口是「导入配置 / 选择同步范围」。
     actions: [
-      { label: '导入配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) },
+      { label: '导入配置', cls: 'btn', run: () => { importOpen.value = true } },
       { label: '选择同步范围', cls: 'btn ghost', run: () => routes.go('settings',{section:'migration'}) },
     ],
   },
@@ -298,6 +299,7 @@ const mods = computed(() => [
 </script>
 
 <template>
+  <ModelTransfer import-only v-model:import-open="importOpen" />
   <UpdateCenter ref="updateCenter" v-model:open="updateOpen" :target="updateTarget" />
   <section class="route-section active ov" :data-mode="mode">
     <AppTopbar :subtitle-override="pageSubtitle" />

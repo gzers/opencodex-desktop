@@ -22,15 +22,9 @@ import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
 import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/appearance/scale'
 import { useGlowRenderStore } from '@/app/appearance/glowRender'
-import { useEffectsStore } from '@/app/appearance/effects'
-import type { InstallSourceKind, ProxyScheme } from '@/features/runtime/api'
-import { displayInstallPrefix, installPrefixIssue, prefixInsideDataRoot } from '@/features/runtime/installPath'
+import type { InstallSourceKind } from '@/features/runtime/api'
 import { displayPath, localPathExample } from '@/lib/paths'
 import {
-  installPhaseLabel,
-  offlineSteps,
-  phaseShowsCommandLine,
-  proxyMaskLabel,
   sourceKindLabel,
   sourceLandingLabel,
 } from '@/features/runtime/presentation'
@@ -732,16 +726,7 @@ function openLocalDocument(documentId: 'license' | 'third-party') {
 }
 
 // ---- 运行来源 / 托管安装 / 卸载（IMP Track B · B5）----
-const installOpen = ref(false)
-const installStep = ref(1)
-const installPrefix = ref('')
-const installSource = ref<InstallSourceKind>('registry')
-const installVersion = ref('latest')
-const installUseSpecificVersion = ref(false)
-const installOfflinePath = ref('')
-const installConfirmed = ref(false)
-const installProxy = ref({ scheme: 'http' as ProxyScheme, host: '', username: '', secret: '' })
-const installAllowScripts = ref(false)
+function openInstallModal(source: InstallSourceKind) { app.requestInstallModal(source) }
 
 const uninstallOpen = ref(false)
 const uninstallScope = ref<'body' | 'full'>('full')
@@ -753,38 +738,6 @@ const uninstallDone = ref(false)
 
 const runtimeSourceLabel = computed(() =>
   app.runtimeSource ? sourceKindLabel(app.runtimeSource.kind) : '未解析',
-)
-const installPrefixError = computed(() => installPrefixIssue(installPrefix.value, app.aboutApp?.platform))
-const installLandingText = computed(() => {
-  const inside = prefixInsideDataRoot(app.dataRootConfig?.currentDataRoot ?? '', installPrefix.value, app.aboutApp?.platform)
-  return inside === null ? '' : inside ? '落点：数据根内' : '落点：数据根外'
-})
-const proxyHint = computed(() => {
-  const host = installProxy.value.host.trim()
-  if (!host) return '留空直连；代理只作用于本次安装，不写系统代理与全局 npm 配置。'
-  return `本次安装将通过 ${proxyMaskLabel(installProxy.value.scheme, host)}（SOCKS5 使用 socks5h://）。`
-})
-const installCanAdvance = computed(() => {
-  if (installStep.value === 1) return installPrefix.value.trim() !== '' && !installPrefixError.value
-  if (installStep.value === 2) {
-    if (installSource.value === 'offline') return app.offlinePreview?.ok === true
-    return true
-  }
-  if (installStep.value === 3) return installConfirmed.value
-  return true
-})
-const installProgress = computed(() => app.runtimeInstall)
-const installEffects = useEffectsStore()
-const installCompleted = computed(() => !app.runtimeInstalling && !app.runtimeInstallError
-  && !!app.runtimeInstallOutcome && installProgress.value?.phase === 'done')
-const installStatusLabel = computed(() => {
-  if (app.runtimeInstallError || installProgress.value?.phase === 'failed') return '安装失败'
-  if (installProgress.value?.phase === 'done' && !installCompleted.value) return '正在核对安装结果'
-  return installPhaseLabel(installProgress.value?.phase ?? 'preparing')
-})
-const offlineStepList = computed(() => offlineSteps(app.runtimeInstall?.phase ?? 'preparing', runtimeProtection.installLastPhase))
-const showInstallCommandLine = computed(() =>
-  installSource.value === 'registry' && phaseShowsCommandLine(app.runtimeInstall?.phase ?? 'preparing'),
 )
 const uninstallCanConfirm = computed(() => {
   if (uninstallRunning.value || app.runtimeUninstallBusy) return false
@@ -830,105 +783,11 @@ function residueLabel(status: string) {
   return '未知（未确认清除）'
 }
 
-function defaultInstallPrefix() {
-  // 重装落在**登记过的**前缀上（自定义前缀安装后不要悄悄搬回默认位置）。
-  return displayInstallPrefix(app.runtimeSource?.managedPrefix ?? '', app.aboutApp?.platform)
-}
-
-/** 「恢复默认」只认数据根默认落点，不受自定义前缀影响。 */
-function managedDefaultPrefix() {
-  return displayInstallPrefix(app.runtimeSource?.defaultPrefix ?? '', app.aboutApp?.platform)
-}
-
-function openInstallModal(source: InstallSourceKind, version?: string) {
-  installOpen.value = true
-  installStep.value = 1
-  installPrefix.value = defaultInstallPrefix()
-  installSource.value = source
-  installVersion.value = version ?? 'latest'
-  installUseSpecificVersion.value = Boolean(version && version !== 'latest')
-  installOfflinePath.value = ''
-  installConfirmed.value = false
-  installProofReset()
-  app.clearOfflinePreview()
-}
-
-function installProofReset() {
-  installProxy.value = { scheme: 'http', host: '', username: '', secret: '' }
-  installAllowScripts.value = false
-}
-
-function closeInstallModal() {
-  if (app.runtimeInstalling) return
-  installOpen.value = false
-}
-
 async function chooseRuntimeSource() {
   if (runtimeSourceBindingDisabled.value) return
   const picked = await open({ multiple: false, title: '选择 ocx 可执行文件' })
   if (typeof picked !== 'string' || runtimeSourceBindingDisabled.value) return
   await app.setRuntimeSourcePath(picked)
-}
-
-async function chooseInstallPrefix() {
-  const picked = await open({ directory: true, multiple: false, title: '选择 OpenCodex 托管安装位置' })
-  if (typeof picked === 'string') installPrefix.value = displayInstallPrefix(picked, app.aboutApp?.platform)
-}
-
-function resetInstallPrefix() {
-  installPrefix.value = managedDefaultPrefix()
-}
-
-async function chooseOfflinePackage() {
-  const picked = await open({
-    multiple: false,
-    title: '选择 OpenCodex 离线包',
-    filters: [{ name: '离线包', extensions: ['tgz', 'gz'] }],
-  })
-  if (typeof picked !== 'string') return
-  installOfflinePath.value = picked
-  await app.previewOfflinePackage(picked)
-}
-
-function advanceInstall() {
-  if (!installCanAdvance.value) return
-  if (installStep.value === 3) {
-    void runInstall()
-    return
-  }
-  installStep.value += 1
-}
-
-async function runInstall() {
-  installStep.value = 4
-  const useProxy = installSource.value === 'registry' && installProxy.value.host.trim() !== ''
-  await app.installRuntime({
-    prefix: installPrefix.value.trim() || null,
-    source: installSource.value,
-    version: installSource.value === 'registry' ? (installUseSpecificVersion.value ? installVersion.value.trim() || 'latest' : 'latest') : null,
-    offlinePath: installSource.value === 'offline' ? installOfflinePath.value || null : null,
-    proxyScheme: useProxy ? installProxy.value.scheme : null,
-    proxyHost: useProxy ? installProxy.value.host.trim() : null,
-    proxyUsername: useProxy && installProxy.value.username.trim() ? installProxy.value.username.trim() : null,
-    proxySecret: useProxy && installProxy.value.username.trim() ? installProxy.value.secret : null,
-    allowScripts: installAllowScripts.value,
-  })
-}
-
-async function cancelInstall() {
-  if (app.runtimeInstalling) {
-    const cancelled = await app.cancelRuntimeInstall()
-    app.showToast(cancelled ? '已请求取消安装。' : '当前没有可取消的安装。')
-    return
-  }
-  closeInstallModal()
-}
-
-function finishInstall() {
-  if (!installCompleted.value) return
-  const version = app.runtimeInstallOutcome?.version
-  installOpen.value = false
-  if (version) app.showToast(`OpenCodex ${version} 已就绪。`)
 }
 
 function openUninstall() {
@@ -967,19 +826,6 @@ async function confirmUninstall() {
   if (ok) uninstallDone.value = true
 }
 
-function formatBytes(size: number) {
-  if (!size) return '0 B'
-  if (size < 1024) return `${size} B`
-  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
-  return `${(size / 1024 / 1024).toFixed(1)} MB`
-}
-
-// 概览门禁的「安装 / 导入离线包」出口：置位后打开对应弹窗。
-watch(() => app.installModalRequest, value => {
-  if (!value) return
-  const source = app.consumeInstallModalRequest()
-  if (source) openInstallModal(source)
-})
 watch(() => routes.settingsSection, section => {
   if (section === 'installation') {
     if (!app.runtimeSource) void app.loadRuntimeSource()
@@ -1294,105 +1140,6 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
       </article>
     </section>
   </section>
-
-  <div v-if="installOpen" class="modal-mask" data-testid="runtime-install-modal">
-    <div class="modal modal-wide wiz" role="dialog" aria-modal="true" aria-labelledby="wiz-title">
-      <h3 id="wiz-title">安装 OpenCodex</h3>
-      <ol class="wiz-steps">
-        <li v-for="n in 4" :key="n" :class="{ active: installStep === n, done: installStep > n }"><span>{{ n }}</span></li>
-      </ol>
-
-      <div v-if="installStep === 1" class="wiz-body">
-        <div class="field"><label for="wiz-prefix">安装位置</label><input id="wiz-prefix" v-model="installPrefix" class="input local-path" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
-        <p class="wiz-hint">{{ installLandingText }}</p>
-        <p v-if="installPrefixError" class="wiz-error">{{ installPrefixError }}</p>
-        <div class="wiz-actions">
-          <UiButton class="btn ghost" type="button" @click="chooseInstallPrefix">选择…</UiButton>
-          <UiButton class="btn ghost" type="button" @click="resetInstallPrefix">恢复默认</UiButton>
-        </div>
-      </div>
-
-      <div v-else-if="installStep === 2" class="wiz-body">
-        <label class="wiz-choice"><input v-model="installSource" type="radio" value="registry">联网安装（官方包 @bitkyc08/opencodex）</label>
-        <label class="wiz-choice"><input v-model="installSource" type="radio" value="offline">导入离线包（file.tgz）</label>
-
-        <div v-if="installSource === 'offline'" class="wiz-drop" data-testid="wiz-offline">
-          <p>把 <code>opencodex-&lt;version&gt;.tgz</code> 拖到这里，或选择文件</p>
-          <div class="wiz-actions"><UiButton class="btn ghost" type="button" @click="chooseOfflinePackage">选择文件…</UiButton></div>
-          <p v-if="app.offlinePreview" class="wiz-hint" :class="{ 'wiz-error': !app.offlinePreview.ok }">
-            {{ app.offlinePreview.fileName }} · {{ formatBytes(app.offlinePreview.fileSize) }} ·
-            {{ app.offlinePreview.ok ? `SHA-256 ${app.offlinePreview.sha256Prefix}…` : app.offlinePreview.message }}
-          </p>
-          <p class="wiz-hint">离线包不联网，但仍会写入数据根内的私有前缀；不匹配时拒绝，不回退成「任意 tgz 都装」。</p>
-          <details class="wiz-more"><summary>下载地址</summary><p>npm 包页面：https://www.npmjs.com/package/@bitkyc08/opencodex</p></details>
-        </div>
-
-        <div v-else class="wiz-proxy" data-testid="wiz-proxy">
-          <div class="field"><label>代理（可选）</label>
-            <div class="wiz-inline">
-              <select v-model="installProxy.scheme" class="input"><option value="http">HTTP</option><option value="socks5h">SOCKS5</option></select>
-              <input v-model="installProxy.host" class="input" placeholder="host:port" type="text" autocapitalize="off" autocorrect="off" spellcheck="false">
-            </div>
-          </div>
-          <details class="wiz-more"><summary>代理需要认证</summary>
-            <div class="wiz-inline">
-              <input v-model="installProxy.username" class="input" placeholder="用户名" type="text" autocapitalize="off" autocorrect="off" spellcheck="false">
-              <input v-model="installProxy.secret" class="input" placeholder="密码" type="password">
-            </div>
-            <p class="wiz-hint">凭据只用于本次安装：写进临时配置文件（Unix 0600，用完即删），不进命令行参数、不写系统代理、不落盘。</p>
-          </details>
-          <p class="wiz-hint">{{ proxyHint }}</p>
-        </div>
-      </div>
-
-      <div v-else-if="installStep === 3" class="wiz-body">
-        <label class="wiz-choice"><input v-model="installUseSpecificVersion" type="checkbox">指定版本</label>
-        <div v-if="installUseSpecificVersion" class="field"><input v-model="installVersion" class="input" placeholder="例如 2.50.0" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
-        <p v-else class="wiz-hint">安装最新版（latest）。</p>
-        <label class="wiz-choice"><input v-model="installConfirmed" type="checkbox">我已确认安装位置与安装源</label>
-        <details class="wiz-more"><summary>说明 / 安全边界</summary>
-          <p class="wiz-hint">默认以 <code>--ignore-scripts</code> 安装；若包必须执行安装脚本才能生成入口，会先回来征求你的二次确认。</p>
-        </details>
-      </div>
-
-      <div v-else class="wiz-body">
-        <div v-if="!app.runtimeInstallError && installProgress?.phase !== 'failed'" class="wiz-progress" role="progressbar" aria-label="OpenCodex 安装进度"
-          :aria-valuenow="installCompleted ? 100 : undefined" :aria-valuemin="0" :aria-valuemax="100"
-          :aria-valuetext="installCompleted ? '安装已完成' : installStatusLabel + '，等待实际完成'">
-          <div class="wiz-progress-bar" :class="{ 'is-indeterminate': !installCompleted, 'is-animated': !installCompleted && installEffects.strategy.animated, 'is-complete': installCompleted }"></div>
-        </div>
-        <p class="wiz-status" data-testid="wiz-status">
-          {{ installStatusLabel }}
-          <template v-if="app.runtimeInstallOutcome"> · {{ app.runtimeInstallOutcome.version }} · {{ installSource === 'registry' ? '联网安装' : '离线导入' }}</template>
-
-        </p>
-        <pre v-if="showInstallCommandLine" class="wiz-console" data-testid="wiz-console">{{ app.runtimeInstallLines.join('\n') || '等待 npm 输出…' }}</pre>
-        <ul v-if="installSource === 'offline'" class="wiz-substeps" data-testid="wiz-substeps">
-          <li v-for="step in offlineStepList" :key="step.label" :class="`is-${step.state}`">{{ step.label }}</li>
-        </ul>
-        <details v-if="installSource === 'offline' && app.runtimeInstallLines.length && (app.runtimeInstallError || installCompleted)" class="wiz-more">
-          <summary>安装输出</summary>
-          <pre class="wiz-console" data-testid="wiz-console">{{ app.runtimeInstallLines.join('\n') }}</pre>
-        </details>
-        <p v-if="app.runtimeInstallError" class="wiz-error" data-testid="wiz-error">{{ app.runtimeInstallError }}</p>
-        <p v-if="app.runtimeInstallOutcome" class="wiz-hint" data-testid="wiz-outcome">
-          入口 <span class="local-path">{{ displayPath(app.runtimeInstallOutcome.entry) }}</span> · SHA-256 {{ app.runtimeInstallOutcome.tarballSha256.slice(0, 16) }}…
-          <template v-if="app.runtimeInstallOutcome.needsRestart"> · 代理正在运行，重启后生效。</template>
-          <template v-if="app.runtimeInstallOutcome.protectionReconciliationPending"> · 保护备份仍保留，完整性核对未完成。请查看诊断日志。</template>
-        </p>
-      </div>
-
-      <div class="wiz-foot">
-        <UiButton class="btn ghost" type="button" @click="cancelInstall()">{{ app.runtimeInstalling ? '取消安装' : '取消' }}</UiButton>
-        <UiButton v-if="installStep < 4" class="btn primary" type="button" :disabled="!installCanAdvance" @click="advanceInstall()">下一步</UiButton>
-        <template v-else-if="app.runtimeInstallError">
-          <UiButton class="btn primary" type="button" :disabled="!app.runtimeInstallScriptsRequired || app.runtimeInstalling" data-testid="wiz-allow-scripts" @click="installAllowScripts = true; runInstall()">允许安装脚本并重试</UiButton>
-          <UiButton class="btn ghost" type="button" @click="closeInstallModal()">关闭</UiButton>
-        </template>
-        <UiButton v-else class="btn primary" type="button" :disabled="!installCompleted" data-testid="wiz-finish" @click="finishInstall()">完成</UiButton>
-      </div>
-    </div>
-  </div>
 
   <div v-if="uninstallOpen" class="modal-mask" data-testid="runtime-uninstall-modal">
     <div class="modal wiz wiz-uninstall" role="dialog" aria-modal="true" aria-labelledby="uninstall-title">

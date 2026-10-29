@@ -51,12 +51,12 @@ const officialQueryError = computed(() => app.officialRemoteError
   ? app.officialRemoteErrorDetail || '版本查询失败，请检查网络或运行来源后重试。'
   : app.officialProjectError ? '本地版本读取失败，请检查运行来源后重试。' : '')
 const managerResult = computed(() => {
-  if (managerBusy.value) return '更新进行中'
+  if (managerBusy.value) return '更新中…'
   if (pendingRestart.value) return '更新已准备就绪'
   if (session.managerError || progress.value?.stage === 'failed') return '安装失败 · 可重试'
   if (session.managerCheckError || status.value?.error) return '检查失败'
   if (session.checking) return '正在检查'
-  if (managerAvailable.value) return '发现新版本'
+  if (managerAvailable.value) return '有可用更新'
   if (!status.value?.lastCheckedAt) return '尚未检查'
   return status.value.availableVersion && hasNewerVersion(status.value.currentVersion, status.value.availableVersion) === null ? '无法比较版本' : '已是最新版本'
 })
@@ -79,13 +79,21 @@ function summaryOf(text: string | null | undefined) {
   return first.length > 120 ? first.slice(0, 120) + '…' : first
 }
 /** 面板更新的说明来自远端版本详情；结果页只读已有事实，不额外请求。 */
-const officialNotes = computed<string | null>(() => null)
-const selectedTitle = computed(() => selected.value === 'manager' ? '桌面管理器更新' : 'OpenCodex 面板更新')
+const officialNotes = computed<string | null>(() => officialAvailable.value ? '查看本版本更新内容与范围，确认后开始更新。' : null)
+const showingProgress = computed(() => selected.value === 'manager'
+  ? managerBusy.value || pendingRestart.value || !!session.managerError || progress.value?.stage === 'failed'
+  : selected.value === 'official' && (!!session.officialCandidate || officialBusy.value || officialFailed.value))
+const selectedTitle = computed(() => (selected.value === 'manager' ? '桌面管理器' : 'OpenCodex 面板') + (showingProgress.value ? '更新进度' : '更新详情与确认'))
+const selectedCurrent = computed(() => selected.value === 'manager' ? status.value?.currentVersion ?? app.aboutApp?.version ?? '未知' : app.officialProject?.version ?? '未知')
+const selectedCandidate = computed(() => selected.value === 'manager'
+  ? showingProgress.value ? progress.value?.candidateVersion || status.value?.pendingRestart || session.managerCandidate || status.value?.availableVersion : status.value?.availableVersion
+  : session.officialCandidate || app.officialRemote?.version)
+
 const selectedSource = computed(() => selected.value === 'manager' ? 'OpenCodex Desktop · ' + (status.value?.channel === 'beta' ? '测试' : '稳定') + '通道' : '官方项目 · @bitkyc08/opencodex')
 const managerUnavailableText = computed(() => session.managerError || progress.value?.stage === 'failed' ? '上次安装未完成，可进入详情重试。' : status.value?.availableVersion && hasNewerVersion(status.value.currentVersion, status.value.availableVersion) === null ? '无法比较版本。' : pendingRestart.value ? '更新已准备就绪，请进入详情重启。' : status.value?.lastCheckedAt ? '当前没有待确认的更新。' : '尚未检查。')
 const officialUnavailableText = computed(() => session.officialError || app.officialUpdateError ? '上次安装未完成，可进入详情重试。' : officialAvailable.value ? '' : '当前没有待确认的更新。')
 const managerStage = computed(() => {
-  if (pendingRestart.value) return '更新已准备就绪；请确认重启并应用。'
+  if (pendingRestart.value) return '安装就绪，等待重启'
   const labels = { backup: '正在备份', checking: '正在检查更新包', downloading: '正在下载', installing: '正在安装', pending_restart: '更新已准备就绪', failed: '安装失败' }
   return progress.value ? labels[progress.value.stage] : '正在提交更新请求，等待更新器进度…'
 })
@@ -213,101 +221,70 @@ defineExpose({ check })
   <Teleport to="body">
     <div v-if="open" class="modal-mask update-center-mask" data-testid="update-center" @click.self="close">
       <div ref="dialog" class="modal modal-wide update-center" role="dialog" aria-modal="true" :aria-labelledby="titleId" tabindex="-1">
-        <header class="update-center-head">
-          <div><span class="update-kicker">软件更新</span><h3 :id="titleId">{{ selected ? selectedTitle : '检查更新结果' }}</h3><p v-if="!selected">分别查看更新内容与范围，确认后才会开始更新。</p><p v-else>{{ selectedSource }}</p></div>
-          <UiButton variant="ghost" aria-label="关闭更新中心" @click="close">关闭</UiButton>
-        </header>
+        <header class="update-center-head"><h3 :id="titleId">{{ selected ? selectedTitle : '检查更新结果' }}</h3></header>
         <div class="update-center-body">
-          <div v-if="!selected" class="update-result-rows" data-testid="update-result-rows">
-            <section class="update-result-row" data-testid="manager-update-row">
-              <div class="update-result-main">
-                <div class="update-result-title"><strong>桌面管理器</strong><span class="tag" :class="{ danger: managerResult.includes('失败'), ok: pendingRestart }">{{ managerResult }}</span></div>
-                <div class="update-result-version"><span>{{ status?.currentVersion ?? app.aboutApp?.version ?? '未知' }}</span><template v-if="managerAvailable"><span aria-hidden="true">→</span><b>{{ status?.availableVersion }}</b></template></div>
-                <p class="update-result-source">OpenCodex Desktop · {{ status?.channel === 'beta' ? '测试' : '稳定' }}通道</p>
-
-                <!-- §39.1 右列：一句说明摘要，最多两行；结果页不提供展开。 -->
-                <p v-if="managerAvailable && summaryOf(status?.notes)" class="update-result-summary">{{ summaryOf(status?.notes) }}</p>
-                <p v-if="session.managerCheckError || status?.error" class="update-error" role="status">{{ session.managerCheckError || status?.error }}</p>
-                <p v-else-if="!managerAvailable" class="update-result-empty">{{ managerUnavailableText }}</p>
-              </div>
-              <div class="update-result-actions"><UiButton data-testid="manager-update-detail" @click="selected = 'manager'">查看详情</UiButton></div>
-            </section>
-            <section class="update-result-row" data-testid="official-update-row">
-              <div class="update-result-main">
-                <div class="update-result-title"><strong>OpenCodex 面板</strong><span class="tag" :class="{ danger: officialResult.includes('失败') }">{{ officialResult }}</span></div>
-                <div class="update-result-version"><span>{{ app.officialProject?.version ?? '未知' }}</span><template v-if="officialAvailable"><span aria-hidden="true">→</span><b>{{ app.officialRemote?.version }}</b></template></div>
-                <p class="update-result-source">官方项目 · @bitkyc08/opencodex</p>
-
-                <p v-if="officialAvailable" class="update-result-summary">{{ summaryOf(officialNotes) }}</p>
-                <p v-if="officialQueryError" class="update-error" role="status">{{ officialQueryError.split('\n')[0] }}</p>
-                <p v-else-if="!officialAvailable" class="update-result-empty">{{ officialUnavailableText }}</p>
-              </div>
-              <div class="update-result-actions"><UiButton data-testid="official-update-detail" @click="selected = 'official'">查看详情</UiButton></div>
-            </section>
-          </div>
-          <template v-else>
-            <div class="update-back"><UiButton variant="ghost" @click="selected = null">← 全部更新</UiButton></div>
-            <section v-if="selected === 'manager'" class="update-object" data-testid="manager-update-card">
-              <div class="update-detail-head"><h4>桌面管理器更新详情与确认</h4><time v-if="status?.lastCheckedAt">{{ status.lastCheckedAt }}</time></div>
-              <ReleaseNotes target="manager" :channel="status?.channel ?? 'stable'" :version="status?.availableVersion ?? null" :updater-notes="status?.notes" />
-              <div v-if="managerAvailable" class="update-confirm-scope">
-                <label class="update-backup"><input v-model="session.backup" type="checkbox" :disabled="managerBusy">更新前备份配置（推荐）</label>
-                <p class="update-hint">保存到当前数据根的备份目录：包含管理器偏好、清单与完整性摘要；不含面板完整配置、会话、登录态或安装包。</p>
-              </div>
-              <div v-if="managerBusy || pendingRestart || progress?.stage === 'failed'" class="update-progress" aria-live="polite">
-                <strong>{{ managerStage }}</strong>
-                <small v-if="progress?.candidateVersion || session.managerCandidate">目标版本 {{ progress?.candidateVersion || session.managerCandidate }}</small>
-                <template v-if="managerBusy">
-                  <progress aria-label="管理器更新进度" :value="downloadPercent" max="100"></progress>
-                  <small v-if="progress?.stage === 'downloading'">{{ bytes(progress.downloadedBytes) }}<template v-if="progress.totalBytes !== null"> / {{ bytes(progress.totalBytes) }}</template><template v-if="downloadPercent !== undefined"> · {{ Math.floor(downloadPercent) }}%</template></small>
-                </template>
-                <p v-if="pendingRestart" class="update-hint">可先隐藏此窗口，稍后回来重启。</p>
-              </div>
-              <p v-if="session.managerError" class="update-error" role="alert">{{ session.managerError }}</p>
-              <div v-if="pendingRestart || managerAvailable" class="update-object-actions">
-                <UiButton v-if="pendingRestart" variant="primary" :loading="restarting" @click="restart">重启并应用更新</UiButton>
-                <UiButton v-else variant="primary" :disabled="busy || !managerAvailable" :loading="managerBusy || session.checking" data-testid="install-manager-update" @click="installManager">{{ managerBusy ? '更新中' : session.managerError || progress?.stage === 'failed' ? '重试安装' : '确认更新' }}</UiButton>
-              </div>
-            </section>
-            <section v-else class="update-object" data-testid="official-update-card">
-              <div class="update-detail-head"><h4>OpenCodex 面板更新详情与确认</h4></div>
-              <p v-if="officialQueryError" class="update-error update-query-error" role="status" data-testid="official-query-error">{{ officialQueryError }}</p>
-              <ReleaseNotes target="official" channel="official" :version="app.officialRemote?.version ?? null" />
-              <p class="update-hint">面板升级前必须备份配置；备份成功后才会安装选定版本。更新完成后如需重启运行中的代理，将另行提示。</p>
-              <div v-if="officialBusy || officialFailed || session.officialSucceeded && runtime.installOutcome?.version === session.officialCandidate" class="update-progress" aria-live="polite">
-                <strong>{{ session.officialBackingUp || app.upgradeBackupBusy ? '正在备份配置' : officialBusy ? installPhaseLabel(runtime.install?.phase ?? 'preparing') : officialFailed ? '面板更新失败' : '面板更新已完成' }}</strong>
-                <small>目标版本 {{ session.officialCandidate || app.officialRemote?.version }}</small>
-                <progress v-if="officialBusy" aria-label="面板更新进度"></progress>
-                <pre v-if="!session.officialBackingUp && session.officialInstallRequested && officialOutput.length && session.officialCandidate" class="update-console" tabindex="0" aria-label="面板安装输出">{{ officialOutput.join('\n') }}</pre>
-                <p v-if="!officialBusy && session.officialSucceeded && runtime.installOutcome?.needsRestart" class="update-hint">面板更新已安装；请在运行操作中重启代理后生效。</p>
-                <p v-if="!officialBusy && session.officialSucceeded && runtime.installOutcome?.protectionReconciliationPending" class="update-hint" role="status">安装已完成；保护备份完整性核对未完成，备份仍保留。请查看诊断日志。</p>
-              </div>
-              <p v-if="session.officialError || app.officialUpdateError" class="update-error update-query-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
-              <div v-if="officialAvailable || session.officialError || app.officialUpdateError" class="update-object-actions">
-                <small v-if="app.upgradeLastBackup">最近备份 {{ app.upgradeLastBackup.backupId }}</small>
-                <UiButton variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy || !officialAvailable" :loading="officialBusy || session.checking" data-testid="install-official-update" @click="installOfficial">{{ officialBusy ? '更新中' : session.officialError || app.officialUpdateError ? '重试面板更新' : '备份并更新面板' }}</UiButton>
-              </div>
-            </section>
+          <template v-if="!selected">
+            <p class="update-hint">分别查看更新内容与范围，确认后才会开始更新。</p>
+            <div class="update-result-rows" data-testid="update-result-rows">
+              <section v-for="target in (['manager','official'] as const)" :key="target" class="update-result-row" :data-testid="target + '-update-row'">
+                <div class="update-result-main">
+                  <div class="update-result-title"><strong>{{ target === 'manager' ? '桌面管理器' : 'OpenCodex 面板' }}</strong><span class="tag">{{ target === 'manager' ? managerResult : officialResult }}</span></div>
+                  <div class="update-result-version"><span>{{ target === 'manager' ? status?.currentVersion ?? app.aboutApp?.version ?? '未知' : app.officialProject?.version ?? '未知' }}</span><template v-if="target === 'manager' ? managerAvailable : officialAvailable"><span aria-hidden="true">→</span><b>{{ target === 'manager' ? status?.availableVersion : app.officialRemote?.version }}</b></template></div>
+                  <p class="update-result-source">{{ target === 'manager' ? 'OpenCodex Desktop · ' + (status?.channel ?? 'stable') : '官方项目 · @bitkyc08/opencodex' }}</p>
+                  <p v-if="target === 'manager' && managerAvailable && summaryOf(status?.notes)" class="update-result-summary">{{ summaryOf(status?.notes) }}</p>
+                  <p v-if="target === 'official' && officialAvailable" class="update-result-summary">{{ summaryOf(officialNotes) }}</p>
+                  <p v-if="target === 'manager' && (session.managerCheckError || status?.error)" class="update-error" role="status">{{ session.managerCheckError || status?.error }}</p>
+                  <p v-else-if="target === 'official' && officialQueryError" class="update-error" role="status">{{ officialQueryError.split('\n')[0] }}</p>
+                  <p v-else-if="target === 'manager' ? !managerAvailable : !officialAvailable" class="update-result-empty">{{ target === 'manager' ? managerUnavailableText : officialUnavailableText }}</p>
+                </div>
+                <div class="update-result-actions"><UiButton :data-testid="target + '-update-detail'" @click="selected = target">查看详情</UiButton></div>
+              </section>
+            </div>
           </template>
+          <section v-else class="update-object" :data-testid="selected + '-update-card'">
+            <div v-if="!showingProgress" class="update-result-heading"><span>版本升级</span><span class="tag">{{ selected === 'manager' ? managerResult : officialResult }}</span></div>
+            <div class="update-version-hero"><span>{{ selectedCurrent }}</span><template v-if="selectedCandidate"><span aria-hidden="true">→</span><strong>{{ selectedCandidate }}</strong></template></div>
+            <p class="update-hint">{{ selectedSource }}<template v-if="!showingProgress"> · {{ selected === 'manager' ? '安装后需重启管理器' : '更新已登记的面板包体' }}</template></p>
+              <p v-if="selected === 'official' && officialQueryError" class="update-error update-query-error" role="status" data-testid="official-query-error">{{ officialQueryError }}</p>
+            <template v-if="!showingProgress">
+              <ReleaseNotes :target="selected" :channel="selected === 'manager' ? status?.channel ?? 'stable' : 'official'" :version="selectedCandidate ?? null" :updater-notes="selected === 'manager' ? status?.notes : null" />
+              <div v-if="selected === 'manager' && managerAvailable" class="update-confirm-scope"><label class="update-backup"><input v-model="session.backup" type="checkbox" :disabled="managerBusy">更新前备份管理器偏好（建议）</label><p class="update-hint">保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。</p></div>
+              <p v-if="selected === 'official' && officialAvailable" class="update-hint">面板升级前先备份配置；备份成功后才会安装选定版本。</p>
+            </template>
+            <template v-else-if="selected === 'manager'">
+              <div class="update-progress" aria-live="polite" data-testid="manager-update-progress"><strong>{{ managerStage }}</strong><progress v-if="managerBusy" aria-label="管理器更新进度" :value="downloadPercent" max="100"></progress><small v-if="managerBusy && progress?.stage === 'downloading'">{{ bytes(progress.downloadedBytes) }}<template v-if="progress.totalBytes !== null"> / {{ bytes(progress.totalBytes) }}</template><template v-if="downloadPercent !== undefined"> · {{ Math.floor(downloadPercent) }}%</template></small><p v-if="pendingRestart" class="update-hint">当前仍为 {{ selectedCurrent }}。重启后核验 {{ selectedCandidate }} 是否生效。</p><p v-else-if="managerBusy" class="update-hint">可关闭此窗口，稍后从概览或设置继续查看。</p></div>
+              <p v-if="session.managerError" class="update-error" role="alert">{{ session.managerError }}</p>
+            </template>
+            <template v-else>
+              <div class="update-progress" aria-live="polite" data-testid="official-update-progress"><strong>{{ session.officialBackingUp || app.upgradeBackupBusy ? '正在备份配置' : officialBusy ? installPhaseLabel(runtime.install?.phase ?? 'preparing') : officialFailed || session.officialError ? '面板更新失败' : session.officialSucceeded ? '面板更新已完成' : '等待安装结果' }}</strong><progress v-if="officialBusy" aria-label="面板更新进度"></progress><pre v-if="!session.officialBackingUp && session.officialInstallRequested && officialOutput.length && session.officialCandidate" class="update-console" tabindex="0" aria-label="面板安装输出">{{ officialOutput.join('\n') }}</pre><p v-if="!officialBusy && session.officialSucceeded && runtime.installOutcome?.needsRestart" class="update-hint">面板更新已安装；请在运行操作中重启代理后生效。</p><p v-if="!officialBusy && session.officialSucceeded && runtime.installOutcome?.protectionReconciliationPending" class="update-hint" role="status">安装已完成；保护备份完整性核对未完成，备份仍保留。请查看诊断日志。</p></div>
+              <p v-if="session.officialError || app.officialUpdateError" class="update-error update-query-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
+            </template>
+            <ol v-if="showingProgress" class="update-stage-list" aria-label="更新阶段"><li>准备</li><li>下载</li><li>校验</li><li>{{ selected === 'manager' ? '安装与重启' : '应用与核验' }}</li></ol>
+          </section>
         </div>
-        <footer class="update-center-foot"><p>{{ managerBusy || officialBusy ? '隐藏窗口后更新继续，可重新打开查看进度。' : '更新准备完成后由你选择重启时机。' }}</p><div><UiButton variant="ghost" @click="close">{{ managerBusy || officialBusy ? '隐藏' : '关闭' }}</UiButton></div></footer>
+        <footer class="update-center-foot">
+          <div class="update-object-actions">
+            <UiButton variant="ghost" aria-label="关闭更新中心" @click="close">{{ !selected ? '关闭' : !showingProgress ? '取消' : '关闭窗口' }}</UiButton>
+            <template v-if="selected === 'manager'"><UiButton v-if="pendingRestart" variant="primary" :loading="restarting" @click="restart">重启并应用更新</UiButton><UiButton v-else-if="managerAvailable && !managerBusy" variant="primary" :disabled="busy" data-testid="install-manager-update" @click="installManager">{{ showingProgress ? '重试安装' : '确认更新' }}</UiButton></template>
+            <UiButton v-if="selected === 'official' && officialAvailable && !officialBusy && (!showingProgress || !session.officialSucceeded)" variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy" :loading="session.checking" data-testid="install-official-update" @click="installOfficial">{{ showingProgress ? '重试面板更新' : '备份并更新面板' }}</UiButton>
+          </div>
+        </footer>
       </div>
     </div>
   </Teleport>
 </template>
 
-
 <style scoped>
 /* §39：结果页每个对象一行、一屏看完；宽度 780px，正文不出现外层滚动套嵌套滚动。 */
-.update-center.modal { width: min(780px, 100%); max-height: calc(100% - 24px); padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+.update-center.modal { width: min(780px, 90%); max-height: calc(100% - 24px); padding: 0; display: flex; flex-direction: column; overflow: hidden; }
 .update-center-head, .update-center-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-5) var(--space-6); }
-.update-center-head { border-bottom: 1px solid var(--border); }
+.update-center-head { padding:24px 24px 12px; }
 .update-center-head h3 { margin: var(--space-1) 0; }
 .update-center-head p, .update-center-foot p { margin: 0; font-size: var(--text-label); color: var(--muted); }
 .update-kicker { color: var(--muted); font-size: var(--text-caption); }
-.update-center-body { overflow: auto; min-height: 0; padding: var(--space-4) var(--space-6); display: grid; gap: var(--space-3); }
+.update-center-body { overflow: auto; min-height: 0; padding:0 24px 18px; display: grid; gap: var(--space-3); }
 .update-result-rows { display: grid; gap: var(--space-2); }
-.update-result-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius); background: color-mix(in srgb, var(--raised) 62%, transparent); }
+.update-result-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border:0; border-bottom:1px solid var(--border); border-radius:0; background:transparent; }
 .update-result-main { display: grid; grid-template-columns: minmax(150px,1.1fr) minmax(150px,1fr); gap: var(--space-1) var(--space-4); min-width: 0; }
 .update-result-title { grid-column: 1; display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
 .update-result-title strong { overflow-wrap: anywhere; }
@@ -318,7 +295,10 @@ defineExpose({ check })
 .update-result-empty { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: var(--text-caption); }
 .update-result-actions { display: flex; justify-content: flex-end; flex: none; }
 .update-back { display: flex; }
-.update-object { min-width: 0; padding: var(--space-2) 0 var(--space-4); border-bottom: 1px solid var(--border-soft); }
+.update-object { min-width:0; }
+.update-result-heading {display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:var(--text-label)}
+.update-version-hero {display:flex;align-items:baseline;gap:14px;margin:12px 0 8px;font-size:var(--text-title);font-variant-numeric:tabular-nums}
+.update-version-hero>span {color:var(--muted)}
 .update-detail-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
 .update-detail-head h4 { margin: 0 0 var(--space-3); font-size: var(--text-control); }
 .update-detail-head time { color: var(--muted); font-size: var(--text-caption); }
@@ -328,13 +308,14 @@ defineExpose({ check })
 .update-hint { color: var(--muted); font-size: var(--text-label); line-height: 1.7; margin: var(--space-2) 0; }
 .update-error { color: var(--red); font-size: var(--text-control); overflow-wrap: anywhere; margin: var(--space-2) 0; }
 .update-query-error { white-space: pre-wrap; font-family: var(--font-path); }
-.update-confirm-scope { margin: var(--space-3) 0; }
+.update-confirm-scope { border-top:1px solid var(--border); margin-top:20px; padding-top:16px; }
 .update-object-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-3); }
 .update-backup { display: flex; gap: var(--space-2); align-items: center; font-size: var(--text-label); }
+.update-stage-list {display:flex;flex-wrap:wrap;gap:8px 24px;margin:24px 0;padding-left:20px;color:var(--muted);font-size:var(--text-label)}
 .update-progress { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
 .update-progress progress { width: 100%; height: 6px; accent-color: var(--accent); }
 .update-progress small, .update-object-actions small { color: var(--muted); overflow-wrap: anywhere; }
-.update-center-foot { border-top: 1px solid var(--border); }
+.update-center-foot { padding:16px 24px; justify-content:flex-end; }
 .update-center-foot > div { display: flex; gap: var(--space-2); flex: none; }
 @media (max-width: 600px) {
   .update-center-head, .update-center-foot { padding: var(--space-4); flex-wrap: wrap; }

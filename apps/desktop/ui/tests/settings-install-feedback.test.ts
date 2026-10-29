@@ -1,7 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import SettingsRoute from '@/routes/SettingsRoute.vue'
+import SettingsRoute from '@/features/runtime/components/RuntimeInstallDialog.vue'
 import { useRuntimeStore } from '@/features/runtime/store'
 import { useRouteStore } from '@/stores/routes'
 import type { InstallPhase, RuntimeInstallOutcomeDto, RuntimeSourceDto } from '@/features/runtime/api'
@@ -40,21 +40,19 @@ async function wizard(sourceKind: 'registry' | 'offline' = 'registry') {
   const runtime = useRuntimeStore()
   runtime.source = source
   useRouteStore().go('settings', { section: 'installation' })
-  const page = mount(SettingsRoute, { global: { plugins: [pinia] } })
+  const page = mount(SettingsRoute, { global: { plugins: [pinia], stubs: { teleport: true } } })
   mounted.push(page)
   await flushPromises()
-  await page.get('[data-testid="runtime-install"]').trigger('click')
+  runtime.requestInstallModal('registry'); await flushPromises()
   const modal = page.get('[data-testid="runtime-install-modal"]')
-  const next = () => modal.findAll('button').find(button => button.text() === '下一步')!
-  await next().trigger('click')
+  const next = () => modal.findAll('button').find(button => button.text() === '开始安装')!
   if (sourceKind === 'offline') {
     await modal.get('input[value="offline"]').setValue(true)
     runtime.offlinePreview = { ok: true, fileName: 'opencodex-2.51.0.tgz', fileSize: 1024,
       version: '2.51.0', sha256Prefix: 'a'.repeat(16), rejectionCode: null, message: '离线包校验通过' }
     await flushPromises()
   }
-  await next().trigger('click')
-  await modal.findAll('input[type="checkbox"]').at(-1)!.setValue(true)
+  await modal.get('[data-testid="wiz-ack"]').setValue(true)
   let reject!: (reason: unknown) => void
   invoke.mockImplementation(command => command === 'install_runtime'
     ? new Promise((_, fail) => { reject = fail }) : Promise.resolve(command === 'runtime_source' ? source : null))

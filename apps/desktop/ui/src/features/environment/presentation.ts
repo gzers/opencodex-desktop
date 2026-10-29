@@ -134,7 +134,7 @@ export function buildEnvironmentPresentation(
   if (report.gate === 'missing_node') {
     return {
       ...base,
-      state: report.brewFound ? 'missing_node_brew' : 'missing_node_nobrew',
+      state: report.brewFound && platform !== 'Windows' ? 'missing_node_brew' : 'missing_node_nobrew',
       title: '缺少 Node.js，OpenCodex 发现已暂停',
       description: platform === 'Windows'
         ? '请安装 Windows 版 Node.js LTS（包含 npm），或使用受支持的 NVM 安装目录，完成后重新检查。'
@@ -150,7 +150,7 @@ export function buildEnvironmentPresentation(
         ...(report.brewFound && platform !== 'Windows' ? [{ label: '安装 Node.js', command: 'brew install node' }] : []),
         { label: '安装后校验', command: platform === 'Windows' ? 'node -v; npm -v' : 'node -v && npm -v' },
       ],
-      link: report.brewFound
+      link: report.brewFound && platform !== 'Windows'
         ? undefined
         : { text: 'Node.js LTS 官方安装渠道', note: '仅展示渠道；真实实现提供打开官网入口。' },
     }

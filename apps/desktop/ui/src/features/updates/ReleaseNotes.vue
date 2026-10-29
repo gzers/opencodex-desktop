@@ -63,7 +63,7 @@ onBeforeUnmount(() => { disposed = true; epoch++ })
 </script>
 <template>
   <section ref="section" class="release-notes" tabindex="-1" :aria-busy="loading">
-    <div class="release-notes-head"><h4>更新说明</h4><time v-if="value?.publishedAt">{{ value.publishedAt }}</time></div>
+    <div class="release-notes-head"><h4>更新内容</h4><a v-if="link" :href="link" @click.prevent="open">{{ target === 'manager' ? '查看官方发布记录' : '查看官方包页面' }} ↗</a></div>
     <pre v-if="notes" class="release-notes-body" tabindex="0" :aria-label="ariaLabel">{{ notes }}</pre>
     <p v-if="loading" role="status">正在加载本版本更新说明…</p>
     <p v-else-if="frozen" role="status">数据目录变更待完成，请重启后查看说明。</p>
@@ -72,11 +72,11 @@ onBeforeUnmount(() => { disposed = true; epoch++ })
     <p v-else-if="!notes">发布者尚未提供本版本更新说明。</p>
     <div class="release-notes-actions">
       <UiButton v-if="failed" variant="ghost" @click="load(true)">重试说明</UiButton>
-      <UiButton v-if="link" variant="ghost" @click="open">查看网页详情 ↗</UiButton>
     </div>
   </section>
 </template>
 <style scoped>
+.release-notes-head a {color:var(--accent);font-size:var(--text-label);text-underline-offset:3px}
 .release-notes-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
 h4 { margin: 0 0 var(--space-3); font-size: var(--text-control); }
 time, p { color: var(--muted); font-size: var(--text-label); line-height: 1.6; }

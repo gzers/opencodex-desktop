@@ -113,13 +113,13 @@ describe('shared production update center', () => {
     // 完整说明只在单对象确认页出现；结果页不展开说明。
     expect(wrapper.find('img').exists()).toBe(false)
     expect(wrapper.get('.release-notes-body').text()).toContain('<img src=x onerror=alert(1)>')
-    await button(wrapper, '查看网页详情 ↗').trigger('click')
+    await wrapper.get('.release-notes-head a').trigger('click')
     expect(open).toHaveBeenCalledWith('https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10')
     for (const releaseUrl of ['javascript:alert(1)', 'http://example.com', 'https://user:secret@example.com', String.raw`https://example.com\evil`, 'file:///tmp/release', 'https://']) {
       managerUpdateStatus.value = { ...managerUpdateStatus.value!, releaseUrl }
       await flushPromises()
       // 旧元数据里的 URL 永不被读取；链接只来自独立核验过的说明。
-      expect(wrapper.text()).toContain('查看网页详情 ↗')
+      expect(wrapper.text()).toContain('查看官方发布记录 ↗')
     }
   })
   it('locks the confirmed manager candidate and backup choice, and observes byte progress after remount', async () => {
@@ -136,12 +136,12 @@ describe('shared production update center', () => {
     const reopened = render(); await flushPromises()
     await reopened.get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
     expect(reopened.get('progress[aria-label="管理器更新进度"]').attributes('value')).toBeUndefined()
-    expect(reopened.get('[data-testid="install-manager-update"]').attributes('disabled')).toBeDefined()
+    expect(reopened.find('[data-testid="install-manager-update"]').exists()).toBe(false)
     managerInstallProgress.value = progress({ totalBytes: 200 }); await reopened.vm.$nextTick()
     expect(reopened.get('progress[aria-label="管理器更新进度"]').attributes('value')).toBe('25')
     expect(reopened.text()).toContain('25%')
     managerInstallProgress.value = progress({ stage: 'pending_restart' }); finish(); await flushPromises()
-    expect(reopened.text()).toContain('更新已准备就绪；请确认重启并应用。')
+    expect(reopened.text()).toContain('安装就绪，等待重启')
     expect(reopened.text()).not.toContain('已安装')
     expect(mocks.restart).not.toHaveBeenCalled()
     await button(reopened, '重启并应用更新').trigger('click'); await flushPromises()
@@ -226,15 +226,14 @@ describe('shared production update center', () => {
     await wrapper.setProps({ open: false })
     expect(document.activeElement).toBe(opener)
   })
-  it.each(['manager', 'official'] as const)('keeps focus inside when returning from %s details to all updates', async target => {
-    const wrapper = render({ target }); await flushPromises()
-    const back = button(wrapper, '← 全部更新')
-    ;(back.element as HTMLButtonElement).focus()
-    expect(document.activeElement).toBe(back.element)
-    await back.trigger('click'); await flushPromises()
-    expect(wrapper.get('[role="dialog"]').attributes('aria-modal')).toBe('true')
+  it.each(['manager', 'official'] as const)('keeps focus inside when a %s detail opener is replaced', async target => {
+    const wrapper = render(); await flushPromises()
+    const opener=wrapper.get('[data-testid="'+target+'-update-detail"]')
+    ;(opener.element as HTMLButtonElement).focus()
+    await opener.trigger('click'); await flushPromises()
     expect(wrapper.get('[role="dialog"]').element.contains(document.activeElement)).toBe(true)
-    expect(mocks.check).not.toHaveBeenCalled()
+    expect(wrapper.findAll('h3')).toHaveLength(1)
+    expect(wrapper.find('.update-back').exists()).toBe(false)
     expect(mocks.install).not.toHaveBeenCalled()
   })
   it('preserves an existing dialog control focus when the selected target changes', async () => {

@@ -92,12 +92,11 @@ function guide() {
 }
 
 /**
- * 未安装引导的两个出口（UI规范 §18.5）：置位后由设置页消费并打开对应向导。
+ * 未安装引导的两个出口由应用公共安装宿主承接，不切换页面。
  * 概览不自己实现安装流程，避免与设置页出现两套口径。
  */
 function installManaged(source: InstallSourceKind) {
   app.requestInstallModal(source)
-  routes.go('settings', { section: 'installation' })
 }
 </script>
 
@@ -141,7 +140,7 @@ function installManaged(source: InstallSourceKind) {
             <UiButton class="btn ghost" type="button" @click="recheck">重新检查</UiButton>
           </template>
           <template v-else>
-            <UiButton v-if="presentation.state === 'missing_node_nobrew'" class="btn primary" type="button" @click="guide">安装指引</UiButton>
+            <UiButton v-if="presentation.state === 'missing_node_nobrew'" class="btn primary" type="button" @click="app.openExternalLink('https://nodejs.org/en/download')">Node.js 官方下载</UiButton>
             <UiButton class="btn" type="button" @click="recheck">重新检查</UiButton>
           </template>
         </div>
@@ -151,6 +150,7 @@ function installManaged(source: InstallSourceKind) {
       <p>{{ note }}</p>
       <button type="button" @click="guide">完整指引 ›</button>
     </div>
-    <p class="env-bound">应用不读取 PATH；不执行全局 npm 安装、不写系统目录与全局 npm 前缀，也不修改 OpenCodex 配置。托管安装只写自有数据根内的私有前缀。</p>
+
+    <p class="env-bound">应用不读取 PATH；托管安装只写自有数据根内的私有前缀，不执行全局 npm 安装、不写系统目录与全局 npm 前缀。</p>
   </section>
 </template>
