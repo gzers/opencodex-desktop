@@ -439,17 +439,20 @@ echo '{"version":"2.50.0","dist.integrity":"sha512-fixture"}'
     #[cfg(unix)]
     #[test]
     fn metadata_query_rejects_oversize_and_kills_timed_out_process_group() {
-        use std::os::unix::fs::PermissionsExt;
         let root = tempfile::tempdir().unwrap();
-        let npm = root.path().join("npm");
+        // The runner supplies "view" as argv[1], so the system interpreter
+        // can execute the fixture with a real child and unchanged deadlines.
+        // This avoids requiring host admission of a new executable script
+        // before the 200ms cleanup assertion can even create its child marker.
+        let npm = std::path::Path::new("/bin/sh");
+        let fixture = root.path().join("view");
         let environment = EnvironmentPolicy {
             opencodex_home: root.path().to_owned(),
             ..Default::default()
         };
-        std::fs::write(&npm, "#!/bin/sh\nhead -c 17000 /dev/zero\n").unwrap();
-        std::fs::set_permissions(&npm, std::fs::Permissions::from_mode(0o700)).unwrap();
+        std::fs::write(&fixture, "#!/bin/sh\nhead -c 17000 /dev/zero\n").unwrap();
         assert!(run_npm_view_with_timeout(
-            &npm,
+            npm,
             root.path(),
             &root.path().join("cache/npm"),
             &root.path().join("logs/runtime-query"),
@@ -459,11 +462,11 @@ echo '{"version":"2.50.0","dist.integrity":"sha512-fixture"}'
         )
         .is_err());
         // A descendant holding stdout must also be stopped at the total deadline.
-        std::fs::write(&npm, "#!/bin/sh\nsleep 30 &\necho $! > child-pid\nwait\n").unwrap();
+        std::fs::write(&fixture, "#!/bin/sh\nsleep 30 &\necho $! > child-pid\nwait\n").unwrap();
         let start = std::time::Instant::now();
         assert!(matches!(
             run_npm_view_with_timeout(
-                &npm,
+                npm,
                 root.path(),
                 &root.path().join("cache/npm"),
                 &root.path().join("logs/runtime-query"),
