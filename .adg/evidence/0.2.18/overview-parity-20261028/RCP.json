@@ -95,5 +95,25 @@
   "native_ci_success": 40830577489,
   "process_exit_diagnostic_run": 40839929838,
   "tag": "v0.2.18",
-  "main": "2e709d09590493f73c9e4f31883f67f949c8e90c"
+  "main": "2e709d09590493f73c9e4f31883f67f949c8e90c",
+  "formal_release": {
+    "tag": "v0.2.18",
+    "source": "2e709d09590493f73c9e4f31883f67f949c8e90c",
+    "releaseRun": 40844799061,
+    "fourInstallerRun": 40847331072,
+    "originalWindowsBuildSha256": "220b24a7825798fca445136b9a672f1a512602aa6dafea9c6122c7008673e1fb",
+    "packageVerification": "formal-release/verification.json",
+    "macosNative": "formal-release/macos-native/receipt.json",
+    "stablePublication": "pending",
+    "actualOta": "pending"
+  },
+  "testOnlyFollowUp": {
+    "head": "e2e8da96292141737de0a3714cfcc1a409ac7d0f",
+    "nativeOriginalFixtureRun": 40848017469,
+    "iterations": 30,
+    "result": "passed",
+    "fullCi": 40848030517,
+    "fullCiStatus": "in_progress",
+    "noProductionChange": true
+  }
 }
