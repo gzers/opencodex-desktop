@@ -347,20 +347,32 @@ mod tests {
         let node = std::env::var_os("OPENCODEX_TEST_NODE")
             .map(std::path::PathBuf::from)
             .expect("explicit native Node required");
-        tokio::runtime::Builder::new_current_thread().enable_all().build().unwrap().block_on(async {
-            let mut command=tokio::process::Command::new(node);
-            command.args(["-e", "const c=require('child_process').spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:'ignore'});console.log(c.pid);c.unref();"])
-                .stdout(std::process::Stdio::piped()).stderr(std::process::Stdio::null());
-            let job=OwnedQueryJob::new(&mut command).unwrap();
-            let child=command.spawn().unwrap();job.assign_and_resume(&child).unwrap();
-            let output=tokio::time::timeout(std::time::Duration::from_secs(2),child.wait_with_output()).await.unwrap().unwrap();
-            assert!(output.status.success());
-            let pid=String::from_utf8(output.stdout).unwrap().trim().parse::<u32>().unwrap();
-            let raw=unsafe{OpenProcess(PROCESS_SYNCHRONIZE,0,pid)};assert!(!raw.is_null());
-            let process=unsafe{OwnedHandle::from_raw_handle(raw)};
-            assert_eq!(unsafe{WaitForSingleObject(process.as_raw_handle(),0)},WAIT_TIMEOUT,"fixture child must be alive before family cleanup");
-            job.terminate_and_wait().await.unwrap();
-            assert_eq!(unsafe{WaitForSingleObject(process.as_raw_handle(),0)},WAIT_OBJECT_0,"no owned child may retain a package directory at activation");
-        });
+        use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
+        tokio::runtime::Builder::new_current_thread()
+            .enable_all().build().unwrap().block_on(async {
+                let mut command = tokio::process::Command::new(node);
+                // Keep the root alive until this fixture owns the helper handle.
+                // Detached stdio prevents Node's own child-job teardown from
+                // turning the intended live-descendant precondition into a race.
+                command.args(["-e", "const c=require('child_process').spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{detached:true,stdio:'ignore'});console.log(c.pid);c.unref();process.stdin.once('data',()=>process.exit(0));"])
+                    .stdin(Stdio::piped()).stdout(Stdio::piped()).stderr(Stdio::null());
+                let job = OwnedQueryJob::new(&mut command).unwrap();
+                let mut child = command.spawn().unwrap();
+                job.assign_and_resume(&child).unwrap();
+                let mut stdout = BufReader::new(child.stdout.take().unwrap());
+                let mut line = String::new();
+                tokio::time::timeout(std::time::Duration::from_secs(2), stdout.read_line(&mut line)).await.unwrap().unwrap();
+                let pid = line.trim().parse::<u32>().unwrap();
+                let raw = unsafe { OpenProcess(PROCESS_SYNCHRONIZE, 0, pid) };
+                assert!(!raw.is_null(), "retain helper handle before permitting root exit");
+                let process = unsafe { OwnedHandle::from_raw_handle(raw) };
+                assert_eq!(unsafe { WaitForSingleObject(process.as_raw_handle(), 0) }, WAIT_TIMEOUT);
+                child.stdin.take().unwrap().write_all(b"exit").await.unwrap();
+                let output = tokio::time::timeout(std::time::Duration::from_secs(2), child.wait_with_output()).await.unwrap().unwrap();
+                assert!(output.status.success());
+                assert_eq!(unsafe { WaitForSingleObject(process.as_raw_handle(), 0) }, WAIT_TIMEOUT, "fixture child must be alive before family cleanup");
+                job.terminate_and_wait().await.unwrap();
+                assert_eq!(unsafe { WaitForSingleObject(process.as_raw_handle(), 0) }, WAIT_OBJECT_0, "no owned child may retain a package directory at activation");
+            });
     }
 }
