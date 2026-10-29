@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch, onBeforeUnmount, onMounted, nextTick } from 'vue'
+import { computed, ref, watch, onBeforeUnmount, nextTick } from 'vue'
 import { open } from '@tauri-apps/plugin-dialog'
 import UiButton from '@/components/ui/UiButton.vue'
 import { useAppStore } from '@/stores/app'
 import { useRuntimeStore } from '@/features/runtime/store'
 import { useEffectsStore } from '@/app/appearance/effects'
-import type { InstallSourceKind, ProxyScheme } from '@/features/runtime/api'
+import { receiveOfflineDrop, releaseOfflineDrop, type InstallSourceKind, type ProxyScheme } from '@/features/runtime/api'
+import { runtimeErrorText } from '@/features/runtime/errors'
 import { displayInstallPrefix, installPrefixIssue, prefixInsideDataRoot } from '@/features/runtime/installPath'
 import { displayPath } from '@/lib/paths'
 import { installPhaseLabel, offlineSteps, phaseShowsCommandLine, proxyMaskLabel } from '@/features/runtime/presentation'
@@ -22,10 +23,12 @@ function onDialogKeydown(event: KeyboardEvent) {
     event.preventDefault(); (event.shiftKey ? last : first)?.focus()
   }
 }
+const offlineReading = ref(false)
+let dropLease = '', dropEpoch = 0
 const installOpen = ref(false)
 watch(installOpen, async value => {
   if (value) { origin = document.activeElement instanceof HTMLElement ? document.activeElement : null; await nextTick(); installDialog.value?.focus() }
-  else { origin?.focus(); origin = null; installProxy.value.secret = '' }
+  else { origin?.focus(); origin = null; installProxy.value.secret = ''; clearDrop() }
 })
 onBeforeUnmount(() => { origin?.focus(); installProxy.value.secret = '' })
 const installStep = ref(1)
@@ -47,7 +50,7 @@ const proxyHint = computed(() => {
   if (!host) return '留空直连；代理只作用于本次安装，不写系统代理与全局 npm 配置。'
   return `本次安装将通过 ${proxyMaskLabel(installProxy.value.scheme, host)}（SOCKS5 使用 socks5h://）。`
 })
-const installCanAdvance = computed(() => !!installPrefix.value.trim() && !installPrefixError.value
+const installCanAdvance = computed(() => !offlineReading.value && !!installPrefix.value.trim() && !installPrefixError.value
   && installConfirmed.value && (installSource.value === 'registry' || app.offlinePreview?.ok === true))
 const installProgress = computed(() => app.runtimeInstall)
 const installEffects = useEffectsStore()
@@ -107,21 +110,28 @@ function resetInstallPrefix() {
   installPrefix.value = managedDefaultPrefix()
 }
 
-let stopDrop: (() => void) | undefined
-onMounted(async () => {
-  if (!('__TAURI_INTERNALS__' in window)) return
+function clearDrop() {
+  dropEpoch += 1
+  offlineReading.value = false
+  const id=dropLease;dropLease=''
+  if(id)void releaseOfflineDrop(id).catch(()=>{})
+}
+async function dropOfflineFile(event: DragEvent) {
+  if(installSource.value!=='offline'||app.runtimeInstalling||offlineReading.value)return
+  const files=event.dataTransfer?.files
+  if(!files||files.length!==1)return
+  const file=files[0]!,epoch=++dropEpoch
+  offlineReading.value=true;app.clearOfflinePreview();installOfflinePath.value=''
   try {
-    const { getCurrentWebview } = await import('@tauri-apps/api/webview')
-    const stop = await getCurrentWebview().onDragDropEvent(event => {
-      if (installOpen.value && installStep.value < 4 && installSource.value === 'offline' && event.payload.type === 'drop' && event.payload.paths.length === 1) {
-        installOfflinePath.value = event.payload.paths[0]!
-        void app.previewOfflinePackage(installOfflinePath.value)
-      }
-    })
-    stopDrop = stop
-  } catch { /* 普通浏览器无原生拖放；选择文件入口始终可用。 */ }
-})
-onBeforeUnmount(() => stopDrop?.())
+    const result=await receiveOfflineDrop(file,id=>{dropLease=id},()=>dropEpoch!==epoch)
+    if(dropEpoch!==epoch)return
+    runtimeProtection.offlinePreview=result.preview
+    installOfflinePath.value=result.path??''
+  } catch(error) {
+    if(dropEpoch===epoch)runtimeProtection.offlinePreview={ok:false,fileName:file.name,fileSize:file.size,version:null,sha256Prefix:null,rejectionCode:'preview_failed',message:runtimeErrorText(error)}
+  } finally {if(dropEpoch===epoch)offlineReading.value=false}
+}
+onBeforeUnmount(clearDrop)
 async function chooseOfflinePackage() {
   const picked = await open({
     multiple: false,
@@ -129,6 +139,7 @@ async function chooseOfflinePackage() {
     filters: [{ name: '离线包', extensions: ['tgz', 'gz'] }],
   })
   if (typeof picked !== 'string') return
+  clearDrop()
   installOfflinePath.value = picked
   await app.previewOfflinePackage(picked)
 }
@@ -191,12 +202,13 @@ function formatBytes(size: number) {
         <div class="wiz-block"><label for="wiz-prefix" class="wiz-label">安装位置</label><div class="wiz-inline"><input id="wiz-prefix" v-model="installPrefix" class="input local-path" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"><UiButton class="btn ghost" type="button" @click="chooseInstallPrefix">选择…</UiButton><UiButton class="btn ghost" type="button" :disabled="installPrefix === managedDefaultPrefix()" @click="resetInstallPrefix">恢复默认</UiButton></div><p v-if="installPrefixError" class="wiz-error">{{ installPrefixError }}</p><p v-else class="wiz-hint">{{ installLandingText }}</p></div>
       <div class="wiz-block">
         <span class="wiz-label">安装源</span>
-        <label class="wiz-choice install-source-choice" :class="{ on: installSource === 'registry' }"><input v-model="installSource" type="radio" value="registry"><span><b>联网安装</b><small>官方包 @bitkyc08/opencodex</small></span></label>
-        <label class="wiz-choice install-source-choice" :class="{ on: installSource === 'offline' }"><input v-model="installSource" type="radio" value="offline"><span><b>导入离线包</b><small>网络不通时用官方 .tgz</small></span></label>
+        <label class="wiz-choice install-source-choice" :class="{ on: installSource === 'registry' }"><input v-model="installSource" :disabled="offlineReading" type="radio" value="registry"><span><b>联网安装</b><small>官方包 @bitkyc08/opencodex</small></span></label>
+        <label class="wiz-choice install-source-choice" :class="{ on: installSource === 'offline' }"><input v-model="installSource" :disabled="offlineReading" type="radio" value="offline"><span><b>导入离线包</b><small>网络不通时用官方 .tgz</small></span></label>
 
-        <div v-if="installSource === 'offline'" class="wiz-drop" data-testid="wiz-offline">
+        <div v-if="installSource === 'offline'" class="wiz-drop" data-testid="wiz-offline" @dragover.prevent @drop.prevent="dropOfflineFile">
           <p>把 <code>opencodex-&lt;version&gt;.tgz</code> 拖到这里，或选择文件</p>
-          <div class="wiz-actions"><UiButton class="btn ghost" type="button" @click="chooseOfflinePackage">选择文件…</UiButton></div>
+          <div class="wiz-actions"><UiButton class="btn ghost" type="button" :disabled="offlineReading" @click="chooseOfflinePackage">选择文件…</UiButton></div>
+          <p v-if="offlineReading" class="wiz-hint" role="status">正在读取离线包…</p>
           <p v-if="app.offlinePreview" class="wiz-hint" :class="{ 'wiz-error': !app.offlinePreview.ok }">
             {{ app.offlinePreview.fileName }} · {{ formatBytes(app.offlinePreview.fileSize) }} ·
             {{ app.offlinePreview.ok ? `SHA-256 ${app.offlinePreview.sha256Prefix}…` : app.offlinePreview.message }}

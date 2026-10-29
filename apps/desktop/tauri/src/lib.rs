@@ -225,6 +225,7 @@ pub fn run() {
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             let runtime_install = crate::state::SharedRuntimeInstall::new();
             app.manage(runtime_install.clone());
+            app.manage(crate::modules::runtime::offline_drop::SharedOfflineDrop::default());
             crate::commands::runtime::reconcile_startup(data_root.clone(), runtime_install);
             #[cfg(windows)]
             app.manage(crate::commands::update::SharedPendingUpdate::new(None));
@@ -680,6 +681,7 @@ pub fn run() {
             commands::runtime::set_runtime_source,
             commands::runtime::restore_discovered_runtime,
             commands::runtime::preview_offline_package,
+            commands::runtime::stage_offline_package,
             commands::runtime::install_runtime,
             commands::runtime::cancel_runtime_install,
             commands::runtime::install_official_update,

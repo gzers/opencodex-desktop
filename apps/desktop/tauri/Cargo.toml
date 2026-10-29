@@ -41,6 +41,7 @@ dirs = "6"
 # Canonical storage stays unchanged; only npm-facing paths use safe Windows simplification.
 dunce = "=1.0.5"
 rand = "0.9"
+tempfile = "3"
 uuid = { version = "1.26.1", features = ["v4"] }
 sha2 = "0.10"
 hmac = "0.12"
@@ -68,7 +69,6 @@ windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Globali
 
 [dev-dependencies]
 http = "1"
-tempfile = "3"
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls-native-roots"] }
 png = "0.17"
 
