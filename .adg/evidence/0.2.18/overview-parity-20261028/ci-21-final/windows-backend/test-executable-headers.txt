@@ -1,0 +1,170 @@
+Microsoft (R) COFF/PE Dumper Version 14.51.36260.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\debug\deps\opencodex_desktop_lib-0dbfd6161d00e905.exe
+
+PE signature found
+
+File Type: EXECUTABLE IMAGE
+
+FILE HEADER VALUES
+            8664 machine (x64)
+               6 number of sections
+        6AE30118 time date stamp Thu Oct 29 08:17:28 2026
+               0 file pointer to symbol table
+               0 number of symbols
+              F0 size of optional header
+              22 characteristics
+                   Executable
+                   Application can handle large (>2GB) addresses
+
+OPTIONAL HEADER VALUES
+             20B magic # (PE32+)
+           14.51 linker version
+         25E5000 size of code
+          B92E00 size of initialized data
+               0 size of uninitialized data
+         25DDCF0 entry point (00000001425DDCF0) mainCRTStartup
+            1000 base of code
+       140000000 image base (0000000140000000 to 000000014317AFFF)
+            1000 section alignment
+             200 file alignment
+            6.00 operating system version
+            0.00 image version
+            6.00 subsystem version
+               0 Win32 version
+         317B000 size of image
+             400 size of headers
+               0 checksum
+               3 subsystem (Windows CUI)
+            8160 DLL characteristics
+                   High Entropy Virtual Addresses
+                   Dynamic base
+                   NX compatible
+                   Terminal Server Aware
+          100000 size of stack reserve
+            1000 size of stack commit
+          100000 size of heap reserve
+            1000 size of heap commit
+               0 loader flags
+              10 number of directories
+               0 [       0] RVA [size] of Export Directory
+         2EBA6DC [     208] RVA [size] of Import Directory
+         3158000 [     2E0] RVA [size] of Resource Directory
+         2EC2000 [  295E30] RVA [size] of Exception Directory
+               0 [       0] RVA [size] of Certificates Directory
+         3159000 [   21774] RVA [size] of Base Relocation Directory
+         29B9FD0 [      54] RVA [size] of Debug Directory
+               0 [       0] RVA [size] of Architecture Directory
+               0 [       0] RVA [size] of Global Pointer Directory
+         29BA200 [      28] RVA [size] of Thread Storage Directory
+         29B9E90 [     140] RVA [size] of Load Configuration Directory
+               0 [       0] RVA [size] of Bound Import Directory
+         25E6000 [     C90] RVA [size] of Import Address Table Directory
+               0 [       0] RVA [size] of Delay Import Directory
+               0 [       0] RVA [size] of COM Descriptor Directory
+               0 [       0] RVA [size] of Reserved Directory
+
+
+SECTION HEADER #1
+   .text name
+ 25E4F40 virtual size
+    1000 virtual address (0000000140001000 to 00000001425E5F3F)
+ 25E5000 size of raw data
+     400 file pointer to raw data (00000400 to 025E53FF)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+60000020 flags
+         Code
+         Execute Read
+
+SECTION HEADER #2
+  .rdata name
+  8D7482 virtual size
+ 25E6000 virtual address (00000001425E6000 to 0000000142EBD481)
+  8D7600 size of raw data
+ 25E5400 file pointer to raw data (025E5400 to 02EBC9FF)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+40000040 flags
+         Initialized Data
+         Read Only
+
+  Debug Directories
+
+        Time Type        Size      RVA  Pointer
+    -------- ------- -------- -------- --------
+    6AE30118 cv            43 029BA500  29B9900    Format: RSDS, {C3E9EEEA-95A9-4B85-8703-BFAAC59173C0}, 2, opencodex_desktop_lib-0dbfd6161d00e905.pdb
+    6AE30118 feat          14 029BA544  29B9944    Counts: Pre-VC++ 11.00=731, C/C++=71, /GS=71, /sdl=0, guardN=59
+    6AE30118 coffgrp      3E4 029BA558  29B9958
+
+SECTION HEADER #3
+   .data name
+    3AA8 virtual size
+ 2EBE000 virtual address (0000000142EBE000 to 0000000142EC1AA7)
+    1600 size of raw data
+ 2EBCA00 file pointer to raw data (02EBCA00 to 02EBDFFF)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+C0000040 flags
+         Initialized Data
+         Read Write
+
+SECTION HEADER #4
+  .pdata name
+  295E30 virtual size
+ 2EC2000 virtual address (0000000142EC2000 to 0000000143157E2F)
+  296000 size of raw data
+ 2EBE000 file pointer to raw data (02EBE000 to 03153FFF)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+40000040 flags
+         Initialized Data
+         Read Only
+
+SECTION HEADER #5
+   .rsrc name
+     2E0 virtual size
+ 3158000 virtual address (0000000143158000 to 00000001431582DF)
+     400 size of raw data
+ 3154000 file pointer to raw data (03154000 to 031543FF)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+40000040 flags
+         Initialized Data
+         Read Only
+
+SECTION HEADER #6
+  .reloc name
+   21774 virtual size
+ 3159000 virtual address (0000000143159000 to 000000014317A773)
+   21800 size of raw data
+ 3154400 file pointer to raw data (03154400 to 03175BFF)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+42000040 flags
+         Initialized Data
+         Discardable
+         Read Only
+
+  Summary
+
+        4000 .data
+      296000 .pdata
+      8D8000 .rdata
+       22000 .reloc
+        1000 .rsrc
+     25E5000 .text

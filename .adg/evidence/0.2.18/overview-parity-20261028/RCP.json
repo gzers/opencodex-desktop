@@ -14,14 +14,15 @@
     },
     {
       "name": "review:windows-preservation",
-      "result": "pending",
+      "result": "passed",
       "evidence": [
-        "ci-c7-final/ci.json",
-        "ci-c7-final/windows-native-018/launcher.json",
-        "ci-c7-final/windows-native-018-node22/launcher.json",
-        "ci-c7-final/windows-ordinary/ordinary-summary.json"
+        "ci-21-final/ci.json",
+        "ci-21-final/windows-native-018/launcher.json",
+        "ci-21-final/windows-native-018-node22/launcher.json",
+        "ci-21-final/windows-ordinary/ordinary-summary.json",
+        "process-exit-diagnostic/fixed-30-native.original.log"
       ],
-      "scope": "final exact-source Windows regression pending; f8 both CI failed original owned-child handle signaled assertion; standalone original module confirms active job list already empty at cleanup; bounded job notification receipt correction under native test"
+      "scope": "40839913190 mandatory5 pass; final21bfd436 apps1c9a4a3d matches actualPR14ca2c0e EXE; bothNode and ordinary including newimport720/groupedframe and clear-disable-redrop-original-retain checks"
     },
     {
       "name": "review:release-evidence",
@@ -48,7 +49,7 @@
     "ignored": 14,
     "order": "one exact query first, other workspace tests unchanged; prior unfiltered failures retained"
   },
-  "native_pending": true,
+  "native_pending": false,
   "historical_npm_exit1": "unknown; not attributed",
   "previous_candidate": "c7b4a1c9b03b610973f45a197589aaf23787a3c4",
   "application_tree": "1c9a4a3d82c36a07afe510f381c06b6ba56ad70b",
@@ -92,5 +93,7 @@
   ],
   "final_release_native_pending": true,
   "native_ci_success": 40830577489,
-  "process_exit_diagnostic_run": 40839929838
+  "process_exit_diagnostic_run": 40839929838,
+  "tag": "v0.2.18",
+  "main": "2e709d09590493f73c9e4f31883f67f949c8e90c"
 }
