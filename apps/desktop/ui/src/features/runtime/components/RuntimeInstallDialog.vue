@@ -260,11 +260,10 @@ function formatBytes(size: number) {
       </div>
 
       <div class="wiz-foot">
-        <UiButton class="btn ghost" type="button" @click="cancelInstall()">{{ app.runtimeInstalling ? '取消安装' : '取消' }}</UiButton>
+        <UiButton class="btn ghost" type="button" @click="cancelInstall()">{{ app.runtimeInstalling ? '取消安装' : installStep < 4 ? '取消' : '关闭' }}</UiButton>
         <UiButton v-if="installStep < 4" class="btn primary" type="button" :disabled="!installCanAdvance" @click="advanceInstall()">开始安装</UiButton>
         <template v-else-if="app.runtimeInstallError">
           <UiButton class="btn primary" type="button" :disabled="!app.runtimeInstallScriptsRequired || app.runtimeInstalling" data-testid="wiz-allow-scripts" @click="installAllowScripts = true; runInstall()">允许安装脚本并重试</UiButton>
-          <UiButton class="btn ghost" type="button" @click="closeInstallModal()">关闭</UiButton>
         </template>
         <UiButton v-else class="btn primary" type="button" :disabled="!installCompleted" data-testid="wiz-finish" @click="finishInstall()">完成</UiButton>
       </div>
