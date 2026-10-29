@@ -462,7 +462,11 @@ echo '{"version":"2.50.0","dist.integrity":"sha512-fixture"}'
         )
         .is_err());
         // A descendant holding stdout must also be stopped at the total deadline.
-        std::fs::write(&fixture, "#!/bin/sh\nsleep 30 &\necho $! > child-pid\nwait\n").unwrap();
+        std::fs::write(
+            &fixture,
+            "#!/bin/sh\nsleep 30 &\necho $! > child-pid\nwait\n",
+        )
+        .unwrap();
         let start = std::time::Instant::now();
         assert!(matches!(
             run_npm_view_with_timeout(
