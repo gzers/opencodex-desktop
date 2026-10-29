@@ -369,32 +369,32 @@ pub async fn stage_offline_package(
         operation: "receive offline package".into(),
         detail: "离线包读取请求无效。".into(),
     };
+    let chunk = |bytes: Vec<u8>| -> AppResult<Input> {
+        if bytes.is_empty() || bytes.len() > crate::modules::runtime::offline_drop::CHUNK_BYTES {
+            return Err(invalid());
+        }
+        let id = request
+            .headers()
+            .get("x-ocx-drop-id")
+            .and_then(|v| v.to_str().ok())
+            .ok_or_else(invalid)?
+            .to_owned();
+        let offset = request
+            .headers()
+            .get("x-ocx-drop-offset")
+            .and_then(|v| v.to_str().ok())
+            .and_then(|v| v.parse().ok())
+            .ok_or_else(invalid)?;
+        Ok(Input::Chunk { id, offset, bytes })
+    };
     let input = match request.body() {
+        tauri::ipc::InvokeBody::Json(value) if value.is_array() => chunk(
+            crate::modules::runtime::offline_drop::fallback_bytes(value)?,
+        )?,
         tauri::ipc::InvokeBody::Json(value) => {
             Input::Action(serde_json::from_value(value.clone()).map_err(|_| invalid())?)
         }
-        tauri::ipc::InvokeBody::Raw(bytes) => {
-            if bytes.len() > crate::modules::runtime::offline_drop::CHUNK_BYTES {
-                return Err(invalid());
-            }
-            let id = request
-                .headers()
-                .get("x-ocx-drop-id")
-                .and_then(|v| v.to_str().ok())
-                .ok_or_else(invalid)?
-                .to_owned();
-            let offset = request
-                .headers()
-                .get("x-ocx-drop-offset")
-                .and_then(|v| v.to_str().ok())
-                .and_then(|v| v.parse().ok())
-                .ok_or_else(invalid)?;
-            Input::Chunk {
-                id,
-                offset,
-                bytes: bytes.clone(),
-            }
-        }
+        tauri::ipc::InvokeBody::Raw(bytes) => chunk(bytes.clone())?,
     };
     let root = root.0.clone();
     let upload = upload.inner().clone();

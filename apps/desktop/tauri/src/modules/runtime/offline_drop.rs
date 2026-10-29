@@ -29,6 +29,23 @@ fn error(detail: impl Into<String>) -> AppError {
         detail: detail.into(),
     }
 }
+/// Tauri's postMessage fallback transports raw bodies as a JSON byte array.
+/// The same chunk limit applies before allocation; floats/out-of-range values
+/// cannot be reinterpreted as package bytes.
+pub fn fallback_bytes(value: &serde_json::Value) -> AppResult<Vec<u8>> {
+    let array = value
+        .as_array()
+        .filter(|a| !a.is_empty() && a.len() <= CHUNK_BYTES)
+        .ok_or_else(|| error("离线包分块无效或超过允许大小。"))?;
+    array
+        .iter()
+        .map(|v| {
+            v.as_u64()
+                .and_then(|n| u8::try_from(n).ok())
+                .ok_or_else(|| error("离线包分块必须是完整字节。"))
+        })
+        .collect()
+}
 impl OfflineDrop {
     pub fn begin(&mut self, root: &Path, name: &str, length: u64) -> AppResult<String> {
         if name.len() > 240 || name.chars().any(char::is_control) {
@@ -117,6 +134,24 @@ impl OfflineDrop {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn postmessage_fallback_accepts_only_the_same_bounded_byte_sequence() {
+        assert_eq!(
+            fallback_bytes(&serde_json::json!([0, 31, 128, 255])).unwrap(),
+            vec![0, 31, 128, 255]
+        );
+        for value in [
+            serde_json::json!([]),
+            serde_json::json!([256]),
+            serde_json::json!([-1]),
+            serde_json::json!([1.5]),
+            serde_json::json!(["1"]),
+            serde_json::json!({"0":1}),
+        ] {
+            assert!(fallback_bytes(&value).is_err());
+        }
+        assert!(fallback_bytes(&serde_json::json!(vec![0; CHUNK_BYTES + 1])).is_err());
+    }
     #[test]
     fn rejects_names_and_sizes_before_creating_any_cache() {
         let root = tempfile::tempdir().unwrap();
