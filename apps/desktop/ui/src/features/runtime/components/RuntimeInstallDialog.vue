@@ -76,7 +76,10 @@ function managedDefaultPrefix() {
 }
 
 function openInstallModal(source: InstallSourceKind, version?: string) {
-  if (app.runtimeInstalling) { installOpen.value = true; return }
+  if (app.runtimeInstalling) {
+    if (installStep.value === 4) installOpen.value = true
+    return
+  }
   installOpen.value = true
   installStep.value = 1
   installPrefix.value = defaultInstallPrefix()

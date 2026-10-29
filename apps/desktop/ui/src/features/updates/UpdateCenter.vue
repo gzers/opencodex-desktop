@@ -250,6 +250,7 @@ defineExpose({ check })
             <div class="update-version-hero"><span>{{ selectedCurrent }}</span><template v-if="selectedCandidate"><span aria-hidden="true">→</span><strong>{{ selectedCandidate }}</strong></template></div>
             <p class="update-hint">{{ selectedSource }}<template v-if="!showingProgress"> · {{ selected === 'manager' ? '安装后需重启管理器' : '更新已登记的面板包体' }}</template></p>
               <p v-if="selected === 'official' && officialQueryError" class="update-error update-query-error" role="status" data-testid="official-query-error">{{ officialQueryError }}</p>
+            <p v-if="selected === 'manager' && (session.managerCheckError || status?.error)" class="update-error update-query-error" role="status">{{ session.managerCheckError || status?.error }}</p>
             <template v-if="!showingProgress">
               <ReleaseNotes :target="selected" :channel="selected === 'manager' ? status?.channel ?? 'stable' : 'official'" :version="selectedCandidate ?? null" :updater-notes="selected === 'manager' ? status?.notes : null" />
               <div v-if="selected === 'manager' && managerAvailable" class="update-confirm-scope"><label class="update-backup"><input v-model="session.backup" type="checkbox" :disabled="managerBusy">更新前备份管理器偏好（建议）</label><p class="update-hint">保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。</p></div>

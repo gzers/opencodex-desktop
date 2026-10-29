@@ -85,6 +85,13 @@ describe('shared production update center', () => {
     expect(wrapper.find('[data-testid="official-query-error"]').exists()).toBe(false)
     expect(wrapper.get('[data-testid="install-official-update"]').attributes('disabled')).toBeUndefined()
   })
+  it('keeps a manager check failure visible from the direct detail entry', async () => {
+    managerUpdateStatus.value={...managerUpdateStatus.value!,availableVersion:null,error:'signed update source unavailable'}
+    const wrapper=render({target:'manager'});await flushPromises()
+    expect(wrapper.get('[data-testid="manager-update-card"]').text()).toContain('signed update source unavailable')
+    expect(wrapper.find('[data-testid="install-manager-update"]').exists()).toBe(false)
+    expect(mocks.install).not.toHaveBeenCalled()
+  })
   it('opens without a network check, backup or installation and presents both objects', async () => {
     const wrapper = render(); await flushPromises()
     // 结果页每个对象只占一行，安装与备份留在各自的确认页。
