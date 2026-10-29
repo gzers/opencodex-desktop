@@ -58,7 +58,7 @@
     "production_windows_drag_test": "ci-c7-final/windows-native-018/offline-drop.json and windows-native-018-node22/offline-drop.json: actual production IPC, byte exact, cancel own copy only",
     "reads_original_file_only": true
   },
-  "native_run": 40836700467,
+  "native_run": 40839913190,
   "macos_sealed_candidate": "macos-sealed-candidate/sealed-package.json",
   "native_debug_run": 40824604135,
   "windows_previous_pass": {
@@ -76,7 +76,7 @@
     40836637614,
     40839271794
   ],
-  "owned_family_drain_review": "actual process handles retained before termination and checked signaled alongside job ActiveProcesses=0; original 2s cleanup budget preserved; Windows final CI pending",
+  "owned_family_drain_review": "30 actual Windows native original-module runs passed in40839929838; NEW_PROCESS retains membership-checked real handles missing from active list, wait original2s cleanup and actual handle signaled; final whole-workspace and release EXE pending",
   "staging_activation": "only verified owned staging; Windows5/32/33;10s bounded; no target overwrite; original rollback unchanged; native verification pending",
   "native_debug_success": [
     {
