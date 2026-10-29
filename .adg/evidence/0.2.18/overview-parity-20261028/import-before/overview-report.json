@@ -1,0 +1,2595 @@
+{
+  "engine": "chromium",
+  "prototype": "/tmp/ocx018-prototype-baseline-8136cf707/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+  "checks": [
+    {
+      "name": "1180-light-high import initial disabled",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high import file action accessible",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high import title",
+      "passed": true,
+      "detail": {
+        "pi": {
+          "width": 720,
+          "height": 278,
+          "top": 425,
+          "bottom": 703,
+          "viewHeight": 1128,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "ii": {
+          "width": 520,
+          "height": 177,
+          "top": 291.5,
+          "bottom": 468.5,
+          "viewHeight": 760,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-high import width matches",
+      "passed": false,
+      "detail": {
+        "prototype": 720,
+        "implementation": 520
+      }
+    },
+    {
+      "name": "1180-light-high import label above framed picker",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "1180-light-high import remains overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high import within window",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 177,
+        "top": 291.5,
+        "bottom": 468.5,
+        "viewHeight": 760,
+        "title": "导入配置",
+        "buttons": [
+          {
+            "text": "选择文件",
+            "disabled": false
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "读取并比较",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "1180-light-high notification layer stays behind update modal",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high update single title",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high update title matches",
+      "passed": true,
+      "detail": {
+        "pd": {
+          "width": 780,
+          "height": 613.59375,
+          "top": 257.203125,
+          "bottom": 870.796875,
+          "viewHeight": 1128,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "id": {
+          "width": 780,
+          "height": 508.5625,
+          "top": 125.71875,
+          "bottom": 634.28125,
+          "viewHeight": 760,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-high update width matches",
+      "passed": true,
+      "detail": {
+        "prototype": 780,
+        "implementation": 780
+      }
+    },
+    {
+      "name": "1180-light-high no repeated detail page",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high progress title matches",
+      "passed": true,
+      "detail": {
+        "pp": {
+          "width": 780,
+          "height": 402.59375,
+          "top": 362.703125,
+          "bottom": 765.296875,
+          "viewHeight": 1128,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并完成更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "ip": {
+          "width": 780,
+          "height": 427.78125,
+          "top": 166.109375,
+          "bottom": 593.890625,
+          "viewHeight": 760,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并应用更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-high confirmation replaced",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high pending restart still current",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high progress stage list",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high progress fits",
+      "passed": true,
+      "detail": {
+        "width": 780,
+        "height": 427.78125,
+        "top": 166.109375,
+        "bottom": 593.890625,
+        "viewHeight": 760,
+        "title": "桌面管理器更新进度",
+        "buttons": [
+          {
+            "text": "重启并应用更新",
+            "disabled": false
+          },
+          {
+            "text": "关闭窗口",
+            "disabled": false
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "1180-light-high checking gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high checking check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high missing_node_brew gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high missing_node_brew check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high missing_node_nobrew gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high missing_node_nobrew check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high missing_npm gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high missing_npm check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high missing_ocx gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high missing_ocx check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high ready gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high install width matches",
+      "passed": true,
+      "detail": {
+        "pw": {
+          "width": 520,
+          "height": 678,
+          "top": 225,
+          "bottom": 903,
+          "viewHeight": 1128,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "HTTP",
+              "disabled": false
+            },
+            {
+              "text": "https://www.npmjs.com/package/@bitkyc08/opencodex",
+              "disabled": false
+            },
+            {
+              "text": "https://lidge-jun.github.io/opencodex/",
+              "disabled": false
+            },
+            {
+              "text": "https://registry.npmjs.org/@bitkyc08/opencodex/-/opencodex-2.64.0.tgz",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "iw": {
+          "width": 520,
+          "height": 668.796875,
+          "top": 45.59375,
+          "bottom": 714.390625,
+          "viewHeight": 760,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-high notification layer stays behind installer",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high install remains overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high named steps",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high configuration same screen",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high install requires ack",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high install fits",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 668.796875,
+        "top": 45.59375,
+        "bottom": 714.390625,
+        "viewHeight": 760,
+        "title": "安装 OpenCodex",
+        "buttons": [
+          {
+            "text": "选择…",
+            "disabled": false
+          },
+          {
+            "text": "恢复默认",
+            "disabled": true
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "开始安装",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "1180-light-high valid ack enables",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high relative still blocked",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high cancel remains overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid import initial disabled",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid import file action accessible",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid import title",
+      "passed": true,
+      "detail": {
+        "pi": {
+          "width": 720,
+          "height": 278,
+          "top": 425,
+          "bottom": 703,
+          "viewHeight": 1128,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "ii": {
+          "width": 520,
+          "height": 177,
+          "top": 291.5,
+          "bottom": 468.5,
+          "viewHeight": 760,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid import width matches",
+      "passed": false,
+      "detail": {
+        "prototype": 720,
+        "implementation": 520
+      }
+    },
+    {
+      "name": "1180-light-mid import label above framed picker",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "1180-light-mid import remains overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid import within window",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 177,
+        "top": 291.5,
+        "bottom": 468.5,
+        "viewHeight": 760,
+        "title": "导入配置",
+        "buttons": [
+          {
+            "text": "选择文件",
+            "disabled": false
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "读取并比较",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "1180-light-mid notification layer stays behind update modal",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid update single title",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid update title matches",
+      "passed": true,
+      "detail": {
+        "pd": {
+          "width": 780,
+          "height": 613.59375,
+          "top": 257.203125,
+          "bottom": 870.796875,
+          "viewHeight": 1128,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "id": {
+          "width": 780,
+          "height": 508.5625,
+          "top": 125.71875,
+          "bottom": 634.28125,
+          "viewHeight": 760,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid update width matches",
+      "passed": true,
+      "detail": {
+        "prototype": 780,
+        "implementation": 780
+      }
+    },
+    {
+      "name": "1180-light-mid no repeated detail page",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid progress title matches",
+      "passed": true,
+      "detail": {
+        "pp": {
+          "width": 780,
+          "height": 402.59375,
+          "top": 362.703125,
+          "bottom": 765.296875,
+          "viewHeight": 1128,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并完成更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "ip": {
+          "width": 780,
+          "height": 427.78125,
+          "top": 166.109375,
+          "bottom": 593.890625,
+          "viewHeight": 760,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并应用更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid confirmation replaced",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid pending restart still current",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid progress stage list",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid progress fits",
+      "passed": true,
+      "detail": {
+        "width": 780,
+        "height": 427.78125,
+        "top": 166.109375,
+        "bottom": 593.890625,
+        "viewHeight": 760,
+        "title": "桌面管理器更新进度",
+        "buttons": [
+          {
+            "text": "重启并应用更新",
+            "disabled": false
+          },
+          {
+            "text": "关闭窗口",
+            "disabled": false
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "1180-light-mid checking gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid checking check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid missing_node_brew gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid missing_node_brew check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid missing_node_nobrew gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid missing_node_nobrew check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid missing_npm gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid missing_npm check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid missing_ocx gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid missing_ocx check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid ready gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid install width matches",
+      "passed": true,
+      "detail": {
+        "pw": {
+          "width": 520,
+          "height": 678,
+          "top": 225,
+          "bottom": 903,
+          "viewHeight": 1128,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "HTTP",
+              "disabled": false
+            },
+            {
+              "text": "https://www.npmjs.com/package/@bitkyc08/opencodex",
+              "disabled": false
+            },
+            {
+              "text": "https://lidge-jun.github.io/opencodex/",
+              "disabled": false
+            },
+            {
+              "text": "https://registry.npmjs.org/@bitkyc08/opencodex/-/opencodex-2.64.0.tgz",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "iw": {
+          "width": 520,
+          "height": 668.796875,
+          "top": 45.59375,
+          "bottom": 714.390625,
+          "viewHeight": 760,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid notification layer stays behind installer",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid install remains overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid named steps",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid configuration same screen",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid install requires ack",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid install fits",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 668.796875,
+        "top": 45.59375,
+        "bottom": 714.390625,
+        "viewHeight": 760,
+        "title": "安装 OpenCodex",
+        "buttons": [
+          {
+            "text": "选择…",
+            "disabled": false
+          },
+          {
+            "text": "恢复默认",
+            "disabled": true
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "开始安装",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "1180-light-mid valid ack enables",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid relative still blocked",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid cancel remains overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low import initial disabled",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low import file action accessible",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low import title",
+      "passed": true,
+      "detail": {
+        "pi": {
+          "width": 720,
+          "height": 278,
+          "top": 425,
+          "bottom": 703,
+          "viewHeight": 1128,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "ii": {
+          "width": 520,
+          "height": 177,
+          "top": 291.5,
+          "bottom": 468.5,
+          "viewHeight": 760,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-low import width matches",
+      "passed": false,
+      "detail": {
+        "prototype": 720,
+        "implementation": 520
+      }
+    },
+    {
+      "name": "1180-light-low import label above framed picker",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "1180-light-low import remains overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low import within window",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 177,
+        "top": 291.5,
+        "bottom": 468.5,
+        "viewHeight": 760,
+        "title": "导入配置",
+        "buttons": [
+          {
+            "text": "选择文件",
+            "disabled": false
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "读取并比较",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "1180-light-low notification layer stays behind update modal",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low update single title",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low update title matches",
+      "passed": true,
+      "detail": {
+        "pd": {
+          "width": 780,
+          "height": 613.59375,
+          "top": 257.203125,
+          "bottom": 870.796875,
+          "viewHeight": 1128,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "id": {
+          "width": 780,
+          "height": 508.5625,
+          "top": 125.71875,
+          "bottom": 634.28125,
+          "viewHeight": 760,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-low update width matches",
+      "passed": true,
+      "detail": {
+        "prototype": 780,
+        "implementation": 780
+      }
+    },
+    {
+      "name": "1180-light-low no repeated detail page",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low progress title matches",
+      "passed": true,
+      "detail": {
+        "pp": {
+          "width": 780,
+          "height": 402.59375,
+          "top": 362.703125,
+          "bottom": 765.296875,
+          "viewHeight": 1128,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并完成更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "ip": {
+          "width": 780,
+          "height": 427.78125,
+          "top": 166.109375,
+          "bottom": 593.890625,
+          "viewHeight": 760,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并应用更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-low confirmation replaced",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low pending restart still current",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low progress stage list",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low progress fits",
+      "passed": true,
+      "detail": {
+        "width": 780,
+        "height": 427.78125,
+        "top": 166.109375,
+        "bottom": 593.890625,
+        "viewHeight": 760,
+        "title": "桌面管理器更新进度",
+        "buttons": [
+          {
+            "text": "重启并应用更新",
+            "disabled": false
+          },
+          {
+            "text": "关闭窗口",
+            "disabled": false
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "1180-light-low checking gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low checking check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low missing_node_brew gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low missing_node_brew check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low missing_node_nobrew gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low missing_node_nobrew check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low missing_npm gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low missing_npm check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low missing_ocx gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low missing_ocx check order",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low ready gate",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low install width matches",
+      "passed": true,
+      "detail": {
+        "pw": {
+          "width": 520,
+          "height": 678,
+          "top": 225,
+          "bottom": 903,
+          "viewHeight": 1128,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "HTTP",
+              "disabled": false
+            },
+            {
+              "text": "https://www.npmjs.com/package/@bitkyc08/opencodex",
+              "disabled": false
+            },
+            {
+              "text": "https://lidge-jun.github.io/opencodex/",
+              "disabled": false
+            },
+            {
+              "text": "https://registry.npmjs.org/@bitkyc08/opencodex/-/opencodex-2.64.0.tgz",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "iw": {
+          "width": 520,
+          "height": 668.796875,
+          "top": 45.59375,
+          "bottom": 714.390625,
+          "viewHeight": 760,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "1180-light-low notification layer stays behind installer",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low install remains overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low named steps",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low configuration same screen",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low install requires ack",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low install fits",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 668.796875,
+        "top": 45.59375,
+        "bottom": 714.390625,
+        "viewHeight": 760,
+        "title": "安装 OpenCodex",
+        "buttons": [
+          {
+            "text": "选择…",
+            "disabled": false
+          },
+          {
+            "text": "恢复默认",
+            "disabled": true
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "开始安装",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "1180-light-low valid ack enables",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low relative still blocked",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low cancel remains overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high import initial disabled",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high import file action accessible",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high import title",
+      "passed": true,
+      "detail": {
+        "pi": {
+          "width": 720,
+          "height": 278,
+          "top": 161,
+          "bottom": 439,
+          "viewHeight": 968,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "ii": {
+          "width": 520,
+          "height": 177,
+          "top": 211.5,
+          "bottom": 388.5,
+          "viewHeight": 600,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-high import width matches",
+      "passed": false,
+      "detail": {
+        "prototype": 720,
+        "implementation": 520
+      }
+    },
+    {
+      "name": "900-dark-high import label above framed picker",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "900-dark-high import remains overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high import within window",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 177,
+        "top": 211.5,
+        "bottom": 388.5,
+        "viewHeight": 600,
+        "title": "导入配置",
+        "buttons": [
+          {
+            "text": "选择文件",
+            "disabled": false
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "读取并比较",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "900-dark-high notification layer stays behind update modal",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high update single title",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high update title matches",
+      "passed": true,
+      "detail": {
+        "pd": {
+          "width": 772.1875,
+          "height": 491.03125,
+          "top": 54.484375,
+          "bottom": 545.515625,
+          "viewHeight": 968,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "id": {
+          "width": 774,
+          "height": 508.5625,
+          "top": 45.71875,
+          "bottom": 554.28125,
+          "viewHeight": 600,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-high update width matches",
+      "passed": true,
+      "detail": {
+        "prototype": 772.1875,
+        "implementation": 774
+      }
+    },
+    {
+      "name": "900-dark-high no repeated detail page",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high progress title matches",
+      "passed": true,
+      "detail": {
+        "pp": {
+          "width": 772.1875,
+          "height": 402.59375,
+          "top": 98.703125,
+          "bottom": 501.296875,
+          "viewHeight": 968,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并完成更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "ip": {
+          "width": 774,
+          "height": 427.78125,
+          "top": 86.109375,
+          "bottom": 513.890625,
+          "viewHeight": 600,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并应用更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-high confirmation replaced",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high pending restart still current",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high progress stage list",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high progress fits",
+      "passed": true,
+      "detail": {
+        "width": 774,
+        "height": 427.78125,
+        "top": 86.109375,
+        "bottom": 513.890625,
+        "viewHeight": 600,
+        "title": "桌面管理器更新进度",
+        "buttons": [
+          {
+            "text": "重启并应用更新",
+            "disabled": false
+          },
+          {
+            "text": "关闭窗口",
+            "disabled": false
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "900-dark-high checking gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high checking check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high missing_node_brew gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high missing_node_brew check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high missing_node_nobrew gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high missing_node_nobrew check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high missing_npm gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high missing_npm check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high missing_ocx gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high missing_ocx check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high ready gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high install width matches",
+      "passed": true,
+      "detail": {
+        "pw": {
+          "width": 520,
+          "height": 518,
+          "top": 41,
+          "bottom": 559,
+          "viewHeight": 968,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "HTTP",
+              "disabled": false
+            },
+            {
+              "text": "https://www.npmjs.com/package/@bitkyc08/opencodex",
+              "disabled": false
+            },
+            {
+              "text": "https://lidge-jun.github.io/opencodex/",
+              "disabled": false
+            },
+            {
+              "text": "https://registry.npmjs.org/@bitkyc08/opencodex/-/opencodex-2.64.0.tgz",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "iw": {
+          "width": 520,
+          "height": 520,
+          "top": 40,
+          "bottom": 560,
+          "viewHeight": 600,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-high notification layer stays behind installer",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high install remains overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high named steps",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high configuration same screen",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high install requires ack",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high install fits",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 520,
+        "top": 40,
+        "bottom": 560,
+        "viewHeight": 600,
+        "title": "安装 OpenCodex",
+        "buttons": [
+          {
+            "text": "选择…",
+            "disabled": false
+          },
+          {
+            "text": "恢复默认",
+            "disabled": true
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "开始安装",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "900-dark-high valid ack enables",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high relative still blocked",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high cancel remains overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid import initial disabled",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid import file action accessible",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid import title",
+      "passed": true,
+      "detail": {
+        "pi": {
+          "width": 720,
+          "height": 278,
+          "top": 161,
+          "bottom": 439,
+          "viewHeight": 968,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "ii": {
+          "width": 520,
+          "height": 177,
+          "top": 211.5,
+          "bottom": 388.5,
+          "viewHeight": 600,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid import width matches",
+      "passed": false,
+      "detail": {
+        "prototype": 720,
+        "implementation": 520
+      }
+    },
+    {
+      "name": "900-dark-mid import label above framed picker",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "900-dark-mid import remains overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid import within window",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 177,
+        "top": 211.5,
+        "bottom": 388.5,
+        "viewHeight": 600,
+        "title": "导入配置",
+        "buttons": [
+          {
+            "text": "选择文件",
+            "disabled": false
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "读取并比较",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "900-dark-mid notification layer stays behind update modal",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid update single title",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid update title matches",
+      "passed": true,
+      "detail": {
+        "pd": {
+          "width": 772.1875,
+          "height": 491.03125,
+          "top": 54.484375,
+          "bottom": 545.515625,
+          "viewHeight": 968,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "id": {
+          "width": 774,
+          "height": 508.5625,
+          "top": 45.71875,
+          "bottom": 554.28125,
+          "viewHeight": 600,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid update width matches",
+      "passed": true,
+      "detail": {
+        "prototype": 772.1875,
+        "implementation": 774
+      }
+    },
+    {
+      "name": "900-dark-mid no repeated detail page",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid progress title matches",
+      "passed": true,
+      "detail": {
+        "pp": {
+          "width": 772.1875,
+          "height": 402.59375,
+          "top": 98.703125,
+          "bottom": 501.296875,
+          "viewHeight": 968,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并完成更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "ip": {
+          "width": 774,
+          "height": 427.78125,
+          "top": 86.109375,
+          "bottom": 513.890625,
+          "viewHeight": 600,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并应用更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid confirmation replaced",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid pending restart still current",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid progress stage list",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid progress fits",
+      "passed": true,
+      "detail": {
+        "width": 774,
+        "height": 427.78125,
+        "top": 86.109375,
+        "bottom": 513.890625,
+        "viewHeight": 600,
+        "title": "桌面管理器更新进度",
+        "buttons": [
+          {
+            "text": "重启并应用更新",
+            "disabled": false
+          },
+          {
+            "text": "关闭窗口",
+            "disabled": false
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "900-dark-mid checking gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid checking check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid missing_node_brew gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid missing_node_brew check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid missing_node_nobrew gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid missing_node_nobrew check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid missing_npm gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid missing_npm check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid missing_ocx gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid missing_ocx check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid ready gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid install width matches",
+      "passed": true,
+      "detail": {
+        "pw": {
+          "width": 520,
+          "height": 518,
+          "top": 41,
+          "bottom": 559,
+          "viewHeight": 968,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "HTTP",
+              "disabled": false
+            },
+            {
+              "text": "https://www.npmjs.com/package/@bitkyc08/opencodex",
+              "disabled": false
+            },
+            {
+              "text": "https://lidge-jun.github.io/opencodex/",
+              "disabled": false
+            },
+            {
+              "text": "https://registry.npmjs.org/@bitkyc08/opencodex/-/opencodex-2.64.0.tgz",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "iw": {
+          "width": 520,
+          "height": 520,
+          "top": 40,
+          "bottom": 560,
+          "viewHeight": 600,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid notification layer stays behind installer",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid install remains overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid named steps",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid configuration same screen",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid install requires ack",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid install fits",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 520,
+        "top": 40,
+        "bottom": 560,
+        "viewHeight": 600,
+        "title": "安装 OpenCodex",
+        "buttons": [
+          {
+            "text": "选择…",
+            "disabled": false
+          },
+          {
+            "text": "恢复默认",
+            "disabled": true
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "开始安装",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "900-dark-mid valid ack enables",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid relative still blocked",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid cancel remains overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low import initial disabled",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low import file action accessible",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low import title",
+      "passed": true,
+      "detail": {
+        "pi": {
+          "width": 720,
+          "height": 278,
+          "top": 161,
+          "bottom": 439,
+          "viewHeight": 968,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "ii": {
+          "width": 520,
+          "height": 177,
+          "top": 211.5,
+          "bottom": 388.5,
+          "viewHeight": 600,
+          "title": "导入配置",
+          "buttons": [
+            {
+              "text": "选择文件",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "读取并比较",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-low import width matches",
+      "passed": false,
+      "detail": {
+        "prototype": 720,
+        "implementation": 520
+      }
+    },
+    {
+      "name": "900-dark-low import label above framed picker",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "900-dark-low import remains overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low import within window",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 177,
+        "top": 211.5,
+        "bottom": 388.5,
+        "viewHeight": 600,
+        "title": "导入配置",
+        "buttons": [
+          {
+            "text": "选择文件",
+            "disabled": false
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "读取并比较",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "900-dark-low notification layer stays behind update modal",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low update single title",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low update title matches",
+      "passed": true,
+      "detail": {
+        "pd": {
+          "width": 772.1875,
+          "height": 491.03125,
+          "top": 54.484375,
+          "bottom": 545.515625,
+          "viewHeight": 968,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "id": {
+          "width": 774,
+          "height": 508.5625,
+          "top": 45.71875,
+          "bottom": 554.28125,
+          "viewHeight": 600,
+          "title": "桌面管理器更新详情与确认",
+          "buttons": [
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "确认更新",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-low update width matches",
+      "passed": true,
+      "detail": {
+        "prototype": 772.1875,
+        "implementation": 774
+      }
+    },
+    {
+      "name": "900-dark-low no repeated detail page",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low progress title matches",
+      "passed": true,
+      "detail": {
+        "pp": {
+          "width": 772.1875,
+          "height": 402.59375,
+          "top": 98.703125,
+          "bottom": 501.296875,
+          "viewHeight": 968,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并完成更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        },
+        "ip": {
+          "width": 774,
+          "height": 427.78125,
+          "top": 86.109375,
+          "bottom": 513.890625,
+          "viewHeight": 600,
+          "title": "桌面管理器更新进度",
+          "buttons": [
+            {
+              "text": "重启并应用更新",
+              "disabled": false
+            },
+            {
+              "text": "关闭窗口",
+              "disabled": false
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-low confirmation replaced",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low pending restart still current",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low progress stage list",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low progress fits",
+      "passed": true,
+      "detail": {
+        "width": 774,
+        "height": 427.78125,
+        "top": 86.109375,
+        "bottom": 513.890625,
+        "viewHeight": 600,
+        "title": "桌面管理器更新进度",
+        "buttons": [
+          {
+            "text": "重启并应用更新",
+            "disabled": false
+          },
+          {
+            "text": "关闭窗口",
+            "disabled": false
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "900-dark-low checking gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low checking check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low missing_node_brew gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low missing_node_brew check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low missing_node_nobrew gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low missing_node_nobrew check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low missing_npm gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low missing_npm check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low missing_ocx gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low missing_ocx check order",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low ready gate",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low install width matches",
+      "passed": true,
+      "detail": {
+        "pw": {
+          "width": 520,
+          "height": 518,
+          "top": 41,
+          "bottom": 559,
+          "viewHeight": 968,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "HTTP",
+              "disabled": false
+            },
+            {
+              "text": "https://www.npmjs.com/package/@bitkyc08/opencodex",
+              "disabled": false
+            },
+            {
+              "text": "https://lidge-jun.github.io/opencodex/",
+              "disabled": false
+            },
+            {
+              "text": "https://registry.npmjs.org/@bitkyc08/opencodex/-/opencodex-2.64.0.tgz",
+              "disabled": false
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        },
+        "iw": {
+          "width": 520,
+          "height": 520,
+          "top": 40,
+          "bottom": 560,
+          "viewHeight": 600,
+          "title": "安装 OpenCodex",
+          "buttons": [
+            {
+              "text": "选择…",
+              "disabled": false
+            },
+            {
+              "text": "恢复默认",
+              "disabled": true
+            },
+            {
+              "text": "取消",
+              "disabled": false
+            },
+            {
+              "text": "开始安装",
+              "disabled": true
+            }
+          ],
+          "horizontal": false
+        }
+      }
+    },
+    {
+      "name": "900-dark-low notification layer stays behind installer",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low install remains overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low named steps",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low configuration same screen",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low install requires ack",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low install fits",
+      "passed": true,
+      "detail": {
+        "width": 520,
+        "height": 520,
+        "top": 40,
+        "bottom": 560,
+        "viewHeight": 600,
+        "title": "安装 OpenCodex",
+        "buttons": [
+          {
+            "text": "选择…",
+            "disabled": false
+          },
+          {
+            "text": "恢复默认",
+            "disabled": true
+          },
+          {
+            "text": "取消",
+            "disabled": false
+          },
+          {
+            "text": "开始安装",
+            "disabled": true
+          }
+        ],
+        "horizontal": false
+      }
+    },
+    {
+      "name": "900-dark-low valid ack enables",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low relative still blocked",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low cancel remains overview",
+      "passed": true
+    },
+    {
+      "name": "no unhandled page errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "failed": 12,
+  "errors": [],
+  "viteOutput": "",
+  "scope": "UI fixture / paired screenshots; no native or real install claim"
+}

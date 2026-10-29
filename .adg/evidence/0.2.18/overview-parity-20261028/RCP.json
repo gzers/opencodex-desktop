@@ -1,26 +1,27 @@
 {
   "task": "TASK-UI018-20261028",
-  "code": "c7b4a1c9b03b610973f45a197589aaf23787a3c4",
+  "code": "f8fbfa917f328626b7115dcfd87ab2a2d1f47ccc",
   "checks": [
     {
       "name": "review:prototype-parity",
       "result": "passed",
       "evidence": [
-        "paired-current-chromium/overview-report.json",
-        "paired-current-webkit/overview-report.json"
+        "import-framed-chromium/overview-report.json",
+        "import-framed-webkit/overview-report.json",
+        "import-before/overview-report.json"
       ],
-      "scope": "217 checks per engine, paired maintained prototype at 8136cf707; 1180x760 light and 900x600 dark; three effects; UI fixture only"
+      "scope": "241 checks each engine incl actual import width/separate label/framed picker and source/proxy groups. Original217 omitted those assertions; new guard fails12 on old source. Full screenshot review after correction."
     },
     {
       "name": "review:windows-preservation",
-      "result": "passed",
+      "result": "pending",
       "evidence": [
         "ci-c7-final/ci.json",
         "ci-c7-final/windows-native-018/launcher.json",
         "ci-c7-final/windows-native-018-node22/launcher.json",
         "ci-c7-final/windows-ordinary/ordinary-summary.json"
       ],
-      "scope": "final c7 PR CI40830577489 all mandatory jobs succeeded; merge-ref EXE81f64241 apps tree5bf92534 equals feature; Node24.22.1 and22.20.0 install-failure-recovery/query/path/HTMLFile and ordinary nonadministrator; not formal installer or OTA"
+      "scope": "c7 native passes retained; f8 UI grouping/clear requires final native EXE"
     },
     {
       "name": "review:release-evidence",
@@ -48,10 +49,10 @@
     "ignored": 14,
     "order": "one exact query first, other workspace tests unchanged; prior unfiltered failures retained"
   },
-  "native_pending": false,
+  "native_pending": true,
   "historical_npm_exit1": "unknown; not attributed",
-  "previous_candidate": "422b6fdb996d0ea902d9f3c6be8c43cc12647d86",
-  "application_tree": "5bf925343dc3e180241c83813f4023b77b858f9b",
+  "previous_candidate": "c7b4a1c9b03b610973f45a197589aaf23787a3c4",
+  "application_tree": "ed8b742d526e3a3bd5a95024161c79c25c615578",
   "offline_drop": {
     "boundary_tests": 5,
     "frontend_transport_tests": 3,
