@@ -67,7 +67,7 @@ impl OwnedQueryJob {
         }
         let port = unsafe { OwnedHandle::from_raw_handle(port) };
         let association = JOBOBJECT_ASSOCIATE_COMPLETION_PORT {
-            CompletionKey: 1_usize as *mut _,
+            CompletionKey: std::ptr::null_mut(),
             CompletionPort: port.as_raw_handle(),
         };
         let ok = unsafe {
@@ -193,7 +193,7 @@ impl OwnedQueryJob {
                     Err(error)
                 };
             }
-            if key != 1 {
+            if key != 0 {
                 return Err(io::Error::other("unexpected owned job notification"));
             }
             if message == JOB_OBJECT_MSG_NEW_PROCESS {
