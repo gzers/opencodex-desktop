@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { layoutObserver } from '@/lib/layoutObserver'
 import { displayPath } from '@/lib/paths'
 // 概览：运行 / 环境准备双形态（UI规范 §25）。
 //
@@ -60,7 +61,7 @@ function onKeydown(event: KeyboardEvent) {
   }
 }
 
-let sizeObserver: ResizeObserver | null = null
+let sizeObserver: ReturnType<typeof layoutObserver> = undefined
 function updateSize() {
   const win = document.querySelector('.app-window')
   const measured = win?.getBoundingClientRect().height ?? window.innerHeight
@@ -68,7 +69,8 @@ function updateSize() {
   const logical = measured / zoom
   const next = logical < 680
   if (next !== compact.value) compact.value = next
-  document.documentElement.setAttribute('data-overview-size', next ? 'compact' : 'standard')
+  const value=next ? 'compact' : 'standard'
+  if(document.documentElement.getAttribute('data-overview-size')!==value) document.documentElement.setAttribute('data-overview-size',value)
 }
 
 onMounted(() => {
@@ -78,7 +80,7 @@ onMounted(() => {
   if (typeof ResizeObserver !== 'undefined') {
     const win = document.querySelector('.app-window')
     if (win) {
-      sizeObserver = new ResizeObserver(updateSize)
+      sizeObserver = layoutObserver(updateSize)!
       sizeObserver.observe(win)
     }
   }
@@ -87,7 +89,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', onVisibilityChange)
   window.removeEventListener('keydown', onKeydown)
   sizeObserver?.disconnect()
-  sizeObserver = null
+  sizeObserver = undefined
   document.documentElement.removeAttribute('data-overview-size')
 })
 

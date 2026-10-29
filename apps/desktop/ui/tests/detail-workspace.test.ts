@@ -69,9 +69,9 @@ describe('shared page tab geometry',()=>{
   const main=document.createElement('main');main.className='main';main.style.padding='20px 24px';document.body.append(main)
   const Sample=defineComponent({components:{StickyTabs},template:'<section><StickyTabs><div role="tablist">内容</div></StickyTabs></section>'})
   const wrapper=mount(Sample,{attachTo:main}),section=wrapper.element as HTMLElement,bar=wrapper.get('.sticky-page-tabs').element
-  Object.defineProperty(bar,'offsetHeight',{value:48,configurable:true});resize()
+  Object.defineProperty(bar,'offsetHeight',{value:48,configurable:true});resize();await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()))
   expect(section.style.getPropertyValue('--page-tabs-inset-top')).toBe('20px');expect(section.style.getPropertyValue('--page-tabs-inset-left')).toBe('24px');expect(section.style.getPropertyValue('--page-tabs-height')).toBe('48px')
-  Object.defineProperty(bar,'offsetHeight',{value:80});resize();expect(section.style.getPropertyValue('--page-tabs-height')).toBe('80px')
+  Object.defineProperty(bar,'offsetHeight',{value:80});resize();await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));expect(section.style.getPropertyValue('--page-tabs-height')).toBe('80px')
   wrapper.unmount();expect(section.style.getPropertyValue('--page-tabs-height')).toBe('');expect(section.style.getPropertyValue('--page-tabs-inset-left')).toBe('');expect(disconnect).toHaveBeenCalled()
  })
 })

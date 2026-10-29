@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { layoutObserver } from '@/lib/layoutObserver'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 const bar = ref<HTMLElement | null>(null)
-let observer: ResizeObserver | undefined
+let observer: ReturnType<typeof layoutObserver>
 let parent: HTMLElement | null = null
 let main: HTMLElement | null = null
 let stuck = false
@@ -22,10 +23,11 @@ function measure() {
   // Layout units stay independent of CSS zoom. Compensate the scrollport padding
   // while preserving the original alignment of the controls inside the full-width surface.
   const style = main ? getComputedStyle(main) : null
-  parent.style.setProperty('--page-tabs-inset-top', style?.paddingTop ?? '0px')
-  parent.style.setProperty('--page-tabs-inset-left', style?.paddingLeft ?? '0px')
-  parent.style.setProperty('--page-tabs-inset-right', style?.paddingRight ?? '0px')
-  parent.style.setProperty('--page-tabs-height', (bar.value.offsetHeight || 0) + 'px')
+  const set=(key:string,value:string)=>{if(parent!.style.getPropertyValue(key)!==value)parent!.style.setProperty(key,value)}
+  set('--page-tabs-inset-top', style?.paddingTop ?? '0px')
+  set('--page-tabs-inset-left', style?.paddingLeft ?? '0px')
+  set('--page-tabs-inset-right', style?.paddingRight ?? '0px')
+  set('--page-tabs-height', (bar.value.offsetHeight || 0) + 'px')
   syncStuck()
 }
 /**
@@ -53,7 +55,7 @@ function onScroll() { syncStuck() }
 onMounted(() => {
   parent = bar.value?.parentElement ?? null
   main = bar.value?.closest<HTMLElement>('.main') ?? null
-  if (typeof ResizeObserver !== 'undefined' && bar.value) { observer = new ResizeObserver(measure); observer.observe(bar.value); if(main)observer.observe(main) }
+  if (typeof ResizeObserver !== 'undefined' && bar.value) { observer = layoutObserver(measure)!; observer.observe(bar.value); if(main)observer.observe(main) }
   main?.addEventListener('scroll', onScroll, { passive: true })
   measure()
 })

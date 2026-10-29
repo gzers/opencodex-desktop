@@ -36,7 +36,7 @@ describe('model page public primitives', () => {
     const wrapper = mount(StickyTabs, { attachTo: document.body, slots: { default: '<div role=tablist>Tab</div>' } })
     const bar = wrapper.get('.sticky-page-tabs').element as HTMLElement
     Object.defineProperty(bar, 'offsetHeight', { configurable: true, value: 72 })
-    resize([], {} as ResizeObserver); expect(bar.parentElement!.style.getPropertyValue('--page-tabs-height')).toBe('72px')
+    resize([], {} as ResizeObserver); await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve())); expect(bar.parentElement!.style.getPropertyValue('--page-tabs-height')).toBe('72px')
     const parent = bar.parentElement!; wrapper.unmount()
     expect(parent.style.getPropertyValue('--page-tabs-height')).toBe(''); expect(disconnect).toHaveBeenCalled()
   })

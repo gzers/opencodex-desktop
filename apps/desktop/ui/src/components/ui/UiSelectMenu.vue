@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { layoutObserver } from '@/lib/layoutObserver'
 // 菜单移出父卡片的 backdrop root，真实模糊其背后的兄弟内容。
 // 仍挂在缩放后的主壳里，定位采用 CSS zoom 的逻辑坐标。
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -13,7 +14,7 @@ const position = ref({ left: '0px', top: '0px', minWidth: '0px', maxWidth: '320p
 const trigger = () => anchor.value?.closest('.select')?.querySelector<HTMLButtonElement>('.select-trigger')
 const options = () => [...(menu.value?.querySelectorAll<HTMLButtonElement>('[role="option"]:not(:disabled),[role="menuitem"]:not(:disabled),[role="menuitemradio"]:not(:disabled)') ?? [])]
 const visible = computed(() => props.open)
-let observer: ResizeObserver | undefined
+let observer: ReturnType<typeof layoutObserver>
 let disposed=false
 
 function place() {
@@ -94,7 +95,7 @@ watch(visible, async open => {
     button?.setAttribute('aria-controls', element.id)
     observer?.disconnect()
     if (typeof ResizeObserver !== 'undefined') {
-      observer = new ResizeObserver(place)
+      observer = layoutObserver(place)!
       if (button) observer.observe(button)
     }
   } else {
