@@ -1,0 +1,35 @@
+{
+  "pid": 70902,
+  "app": "/tmp/ocx018-formal-release/macos-app/OpenCodeX Desktop.app",
+  "executable": "/tmp/ocx018-formal-release/macos-app/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "source": "2e709d09590493f73c9e4f31883f67f949c8e90c",
+  "sha256": "f14b23a940415f59a28b8c3bf7f45d5a97989fd701f0bd27656fff15654bd390",
+  "sandbox": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/test/out/macos-formal-018/sandbox",
+  "dailyBefore": {
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/manager-state/preferences.json": "24813c03c343810ec2348c8b8ea414f9082361d659741f290986cf35beee27e6",
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/manager-state/runtime.json": "5383544da0779eb998309326b22cc3228b120b8743774c2042b6c33a8788714d",
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home/config.json": "34318d4128a0488f2bc300586a1c6d71d976fca5a4db14ad78a7e88053f1d9fb"
+  },
+  "actualReleaseArchiveSha256": "3f33539c9874db710e59fb5ca8c7c67531e8b657d8c1eaadec8054ca17e07585",
+  "strictSignatureVerified": true,
+  "status": "verified-native-original-package",
+  "persistentSupervisor": true,
+  "dailyUnchanged": {
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/manager-state/preferences.json": true,
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/manager-state/runtime.json": true,
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home/config.json": true
+  },
+  "ownedCandidateStopped": true,
+  "result": "pass",
+  "checks": [
+    "formal original archive digest and strict signature verified",
+    "real WKWebView package startup commit matches tag",
+    "sandbox data root and OPENCODEX_HOME observed",
+    "shared named install configuration opens",
+    "offline preview exposes choose/clear with unavailable clear disabled",
+    "cancel returns same settings route"
+  ],
+  "installsExecuted": 0,
+  "dailyInstallTouched": false,
+  "firstShortLivedRunRetained": true
+}

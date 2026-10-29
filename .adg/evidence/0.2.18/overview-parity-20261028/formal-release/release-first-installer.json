@@ -1,0 +1,39 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "2e709d09590493f73c9e4f31883f67f949c8e90c",
+  "builtExecutableSha256": "220b24a7825798fca445136b9a672f1a512602aa6dafea9c6122c7008673e1fb",
+  "version": "0.2.18",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "fail",
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.2.18_x64_en-US.msi",
+      "bytes": 6877184,
+      "sha256": "3b581e1b5eaadf616f2d56757cbdf1a2efd53dd58bbd704b63d642c7af60ab8d",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-b65bbdf2df204ddf9483d4fc61102194",
+      "result": "fail",
+      "installExitCode": 0,
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    }
+  ],
+  "defaultInstallChecks": [
+    {
+      "pathOverride": false,
+      "boundary": "fresh isolated runner; no earlier installed product or directory override",
+      "kind": "msi",
+      "installDirectory": "C:\\Program Files\\OpenCodeX Desktop\\",
+      "result": "pass"
+    },
+    {
+      "pathOverride": false,
+      "boundary": "fresh isolated runner; no earlier installed product or directory override",
+      "kind": "nsis",
+      "installDirectory": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeX Desktop",
+      "result": "pass"
+    }
+  ],
+  "error": "Installed main EXE missing"
+}

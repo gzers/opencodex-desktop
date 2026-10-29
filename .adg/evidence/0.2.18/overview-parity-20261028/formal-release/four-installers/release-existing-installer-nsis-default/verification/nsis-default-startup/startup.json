@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 2,
+  "mode": "any",
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 7124,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-10-29T09:09:04.0262187Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-10-29T09:09:18.7682255Z"
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 9684,
+    "executable": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-10-29T09:09:18.7732820Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-10-29T09:09:59.5413084Z"
+  },
+  "applicationTokenVerified": true,
+  "applicationModeMatched": false,
+  "result": "pass",
+  "executable": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeX Desktop\\opencodex-desktop.exe",
+  "sha256": "de25cfa6dd3eaabcdc93403ce1516b349080bb5691861c26f882684bc657cfb7",
+  "homeRemoved": true,
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\release-existing-installers\\verification\\nsis-default-startup\\sandbox-b318fafad5654f95af04db347fc7baef",
+  "observedSeconds": 30,
+  "cdpPort": 50030,
+  "expectedCommit": "2e709d09590493f73c9e4f31883f67f949c8e90c",
+  "sourceCommitMatched": true,
+  "mainWindowPresent": true,
+  "pid": 9684,
+  "responding": true
+}
