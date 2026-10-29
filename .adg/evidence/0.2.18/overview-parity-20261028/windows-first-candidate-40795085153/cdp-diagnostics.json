@@ -1,0 +1,46 @@
+{
+  "endpoint": "http://127.0.0.1:52641",
+  "startedAt": "2026-10-29T01:14:00.744Z",
+  "phase": "runtime-install-ui",
+  "attempts": [
+    {
+      "at": "2026-10-29T01:14:00.745Z",
+      "version": {
+        "status": 200
+      },
+      "list": {
+        "status": 200
+      }
+    }
+  ],
+  "lastVersion": {
+    "Browser": "Edg/155.0.4283.62",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+    "V8-Version": "15.5.9.7",
+    "WebKit-Version": "537.36 (@aa3a7406ba8c53a83536df539f07124d73c899bd)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:52641/devtools/browser/a293d0cf-410f-4705-b2d9-7858a3e99961"
+  },
+  "lastTargets": [
+    {
+      "description": "",
+      "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@aa3a7406ba8c53a83536df539f07124d73c899bd/inspector.html?ws=127.0.0.1:52641/devtools/page/22CB8BE59500C8519A149793F6893603",
+      "id": "22CB8BE59500C8519A149793F6893603",
+      "title": "OpenCodeX Desktop",
+      "type": "page",
+      "url": "http://tauri.localhost/#overview",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:52641/devtools/page/22CB8BE59500C8519A149793F6893603"
+    }
+  ],
+  "result": "fail",
+  "target": {
+    "description": "",
+    "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@aa3a7406ba8c53a83536df539f07124d73c899bd/inspector.html?ws=127.0.0.1:52641/devtools/page/22CB8BE59500C8519A149793F6893603",
+    "id": "22CB8BE59500C8519A149793F6893603",
+    "title": "OpenCodeX Desktop",
+    "type": "page",
+    "url": "http://tauri.localhost/#overview",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:52641/devtools/page/22CB8BE59500C8519A149793F6893603"
+  },
+  "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'd:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-startup\\\\sandbox-b1aa422d8d684d2ab46d54e67bfd7b26\\\\runtime\\\\opencodex'\n- '\\\\\\\\?\\\\d:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-startup\\\\sandbox-b1aa422d8d684d2ab46d54e67bfd7b26\\\\runtime\\\\opencodex'\n"
+}

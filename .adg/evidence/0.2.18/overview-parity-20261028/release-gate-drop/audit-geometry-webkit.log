@@ -1,0 +1,41 @@
+PASS WK 引擎为 WebKit | Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) 
+PASS WK 模型行已渲染 | rows=3
+PASS WK 行1 单元格垂直居中 | cells=middle,middle,middle,middle
+PASS WK 行1 勾选列与整行同轴 | delta=0
+PASS WK 行1 启停列与整行同轴 | delta=0
+PASS WK 行1 操作组与整行同轴 | delta=0
+PASS WK 行1 摘要分两行显示 | display=grid lines=2
+PASS WK 行2 单元格垂直居中 | cells=middle,middle,middle,middle
+PASS WK 行2 勾选列与整行同轴 | delta=0
+PASS WK 行2 启停列与整行同轴 | delta=0
+PASS WK 行2 操作组与整行同轴 | delta=0
+PASS WK 行2 摘要分两行显示 | display=grid lines=2
+PASS WK 行3 单元格垂直居中 | cells=middle,middle,middle,middle
+PASS WK 行3 勾选列与整行同轴 | delta=0
+PASS WK 行3 启停列与整行同轴 | delta=0
+PASS WK 行3 操作组与整行同轴 | delta=0
+PASS WK 行3 摘要分两行显示 | display=grid lines=2
+PASS WK 模型行高度未被摘要撑破 | rowH=104/104/104
+PASS WK 过滤区控件同高 | h=34
+PASS WK 过滤区控件同轴 | centers=257
+PASS WK 仅启用勾选框未被撑宽 | w=12
+PASS WK 搜索框吃剩余宽度 | w=340
+PASS WK 过滤区不高出单行 | barH=34
+PASS WK 无横向溢出 | overflow=0
+PASS WK 拖动源与落点在视口内
+PASS WK 拖拽用指针事件完成 | pointerup=1
+PASS WK 拖拽过程不框选文字 | selection=""
+PASS WK 拖拽结束后解除禁选
+PASS WK 拖动后顺序按落点改变 | NewApi/gpt-demo-0 → NewApi/gpt-demo-1|NewApi/gpt-demo-2|NewApi/gpt-demo-0|NewApi/gpt-demo-3
+PASS WK 被拖型号落到目标位置 | after[2]=NewApi/gpt-demo-0 expect=NewApi/gpt-demo-0
+PASS WK Esc 取消拖拽不改顺序 | NewApi/gpt-demo-1 vs NewApi/gpt-demo-1
+PASS WK Esc 后无残留拖拽状态
+PASS WK 无控制台错误
+PASS WK 拖到边缘自动滚动 | 1288 → 2265
+PASS WK 自动滚动后收尾干净
+PASS WK 渠道列表已返回 | rows=24
+PASS WK 渠道拖拽不框选文字 | selection=""
+PASS WK 渠道拖拽按落点换序 | NewApi → A6api|AiMaMi|NewApi|示例渠道 4
+PASS WK 触屏长按 500ms 出说明 | {"before":"true","after":"true","noteShown":1}
+PASS WK 长按抬手不改启停 | true -> true
+failed=0/40

@@ -1,0 +1,35 @@
+backend-windows	Windows final EXE smoke	﻿2026-10-29T01:13:25.7771515Z ##[group]Run & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup -ManagedInstall
+backend-windows	Windows final EXE smoke	2026-10-29T01:13:25.7773308Z ^[[36;1m& ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup -ManagedInstall^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:13:25.7855082Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	Windows final EXE smoke	2026-10-29T01:13:25.7855533Z env:
+backend-windows	Windows final EXE smoke	2026-10-29T01:13:25.7855791Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	Windows final EXE smoke	2026-10-29T01:13:25.7856121Z   CARGO_INCREMENTAL: 0
+backend-windows	Windows final EXE smoke	2026-10-29T01:13:25.7856390Z   CARGO_TERM_COLOR: always
+backend-windows	Windows final EXE smoke	2026-10-29T01:13:25.7856674Z ##[endgroup]
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6148041Z node:internal/modules/run_main:107
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6149332Z     triggerUncaughtException(
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6150154Z     ^
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6150495Z 
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6151118Z AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6152153Z + actual - expected
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6152517Z 
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6153955Z + 'd:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-b1aa422d8d684d2ab46d54e67bfd7b26\\runtime\\opencodex'
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6156421Z - '\\\\?\\d:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-b1aa422d8d684d2ab46d54e67bfd7b26\\runtime\\opencodex'
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6157510Z 
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6158433Z     at verifyWindowsInstallUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-ui.mjs:46:176)
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6160016Z     at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-webview.mjs:102:59 {
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6161010Z   generatedMessage: true,
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6161594Z   code: 'ERR_ASSERTION',
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6162896Z   actual: 'd:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-b1aa422d8d684d2ab46d54e67bfd7b26\\runtime\\opencodex',
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6164989Z   expected: '\\\\?\\d:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-b1aa422d8d684d2ab46d54e67bfd7b26\\runtime\\opencodex',
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6166330Z   operator: 'strictEqual',
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6166914Z   diff: 'simple'
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6167390Z }
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6167764Z 
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:28.6168023Z Node.js v24.22.1
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:30.5547795Z ^[[31;1mException: ^[[0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1:112^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:30.5549036Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:30.5549926Z ^[[31;1m^[[0m^[[36;1m^[[36;1m 112 | ^[[0m … ($LASTEXITCODE -ne 0) { ^[[36;1mthrow "WebView smoke failed: $LASTEXITCODE"^[[0m }^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:30.5550845Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:30.5551673Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mWebView smoke failed: 1^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:14:30.5938888Z ##[error]Process completed with exit code 1.

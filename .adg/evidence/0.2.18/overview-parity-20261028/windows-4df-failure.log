@@ -1,0 +1,31 @@
+backend-windows	Windows final EXE smoke	﻿2026-10-29T01:56:57.7517311Z ##[group]Run & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup -ManagedInstall
+backend-windows	Windows final EXE smoke	2026-10-29T01:56:57.7518944Z ^[[36;1m& ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup -ManagedInstall^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:56:57.7600849Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	Windows final EXE smoke	2026-10-29T01:56:57.7601301Z env:
+backend-windows	Windows final EXE smoke	2026-10-29T01:56:57.7601640Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	Windows final EXE smoke	2026-10-29T01:56:57.7601964Z   CARGO_INCREMENTAL: 0
+backend-windows	Windows final EXE smoke	2026-10-29T01:56:57.7602234Z   CARGO_TERM_COLOR: always
+backend-windows	Windows final EXE smoke	2026-10-29T01:56:57.7602524Z ##[endgroup]
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2703616Z node:internal/modules/run_main:107
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2708725Z     triggerUncaughtException(
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2726634Z     ^
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2727317Z 
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2736563Z AssertionError [ERR_ASSERTION]: native install action missing: 完成
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2738455Z     at click (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-ui.mjs:13:386)
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2743234Z     at async verifyWindowsInstallUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-ui.mjs:60:3)
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2748490Z     at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-webview.mjs:102:59 {
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2750074Z   generatedMessage: false,
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2750835Z   code: 'ERR_ASSERTION',
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2751493Z   actual: false,
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2752129Z   expected: true,
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2753093Z   operator: '==',
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2753794Z   diff: 'simple'
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2754421Z }
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2754677Z 
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:02.2755062Z Node.js v24.22.1
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:04.2211689Z ^[[31;1mException: ^[[0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1:112^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:04.2213038Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:04.2214027Z ^[[31;1m^[[0m^[[36;1m^[[36;1m 112 | ^[[0m … ($LASTEXITCODE -ne 0) { ^[[36;1mthrow "WebView smoke failed: $LASTEXITCODE"^[[0m }^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:04.2215197Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:04.2216659Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mWebView smoke failed: 1^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T01:58:04.2652989Z ##[error]Process completed with exit code 1.
