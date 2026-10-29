@@ -2184,6 +2184,45 @@ impl PrefixReplacement {
     }
 }
 
+/// Wait only at the owned staging boundary on Windows sharing/access errors.
+/// Never remove a target or overwrite a directory created while waiting; a
+/// changed manifest is rejected. Original backup/rollback ownership is retained.
+fn activate_staged_prefix(temp: &Path, prefix: &Path, manifest: &[u8]) -> std::io::Result<()> {
+    #[cfg(windows)]
+    {
+        let deadline = Instant::now() + Duration::from_secs(10);
+        loop {
+            if prefix.exists() {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::AlreadyExists,
+                    "activation target appeared while waiting",
+                ));
+            }
+            if std::fs::read(temp.join(MANIFEST_FILENAME))? != manifest
+                || crate::modules::backup::safety::inspect(temp).is_err()
+            {
+                return Err(std::io::Error::other(
+                    "verified staging identity changed while waiting",
+                ));
+            }
+            match std::fs::rename(temp, prefix) {
+                Err(error)
+                    if matches!(error.raw_os_error(), Some(5 | 32 | 33))
+                        && Instant::now() < deadline =>
+                {
+                    std::thread::sleep(Duration::from_millis(50));
+                }
+                result => return result,
+            }
+        }
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = manifest;
+        crate::infrastructure::platform::rename(temp, prefix)
+    }
+}
+
 fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<PrefixReplacement, InstallError> {
     let expected_manifests = vec![std::fs::read(temp.join(MANIFEST_FILENAME)).map_err(|e| {
         InstallError::FileSystem {
@@ -2192,7 +2231,7 @@ fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<PrefixReplacement
         }
     })?];
     if !prefix.exists() {
-        crate::infrastructure::platform::rename(temp, prefix).map_err(|error| {
+        activate_staged_prefix(temp, prefix, &expected_manifests[0]).map_err(|error| {
             InstallError::FileSystem {
                 operation: "activate temporary prefix".to_string(),
                 detail: error.to_string(),
@@ -2211,7 +2250,7 @@ fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<PrefixReplacement
             detail: error.to_string(),
         }
     })?;
-    match crate::infrastructure::platform::rename(temp, prefix) {
+    match activate_staged_prefix(temp, prefix, &expected_manifests[0]) {
         Ok(()) => Ok(PrefixReplacement {
             prefix: prefix.to_path_buf(),
             retired: Some(retired),
@@ -3644,5 +3683,63 @@ mod bounded_probe_tests {
         }
         std::fs::write(&script, "console.log('2.77.0')").unwrap();
         assert_eq!(probe.probe(Some(&node), &script).as_deref(), Some("2.77.0"));
+    }
+}
+
+#[cfg(all(test, windows))]
+mod activation_handle_tests {
+    use super::*;
+    use std::os::windows::fs::OpenOptionsExt;
+    #[test]
+    fn staging_activation_waits_for_a_longer_shared_handle_without_deleting_the_target() {
+        let root = tempfile::tempdir().unwrap();
+        let source = root.path().join("staged");
+        let target = root.path().join("installed");
+        std::fs::create_dir(&source).unwrap();
+        std::fs::write(source.join(MANIFEST_FILENAME), b"verified-manifest").unwrap();
+        std::fs::write(source.join("retained"), b"exact payload").unwrap();
+        let handle = std::fs::OpenOptions::new()
+            .read(true)
+            .custom_flags(0x0200_0000)
+            .share_mode(0x1 | 0x2)
+            .open(&source)
+            .unwrap();
+        let release = std::thread::spawn(move || {
+            std::thread::sleep(Duration::from_millis(2600));
+            drop(handle)
+        });
+        let started = Instant::now();
+        activate_staged_prefix(&source, &target, b"verified-manifest").unwrap();
+        release.join().unwrap();
+        assert!(started.elapsed() >= Duration::from_millis(2500));
+        assert!(!source.exists());
+        assert_eq!(
+            std::fs::read(target.join("retained")).unwrap(),
+            b"exact payload"
+        );
+    }
+    #[test]
+    fn staging_retry_rejects_a_changed_manifest_and_never_replaces_a_new_target() {
+        let root = tempfile::tempdir().unwrap();
+        let source = root.path().join("staged");
+        let target = root.path().join("installed");
+        std::fs::create_dir(&source).unwrap();
+        std::fs::write(source.join(MANIFEST_FILENAME), b"changed").unwrap();
+        assert!(activate_staged_prefix(&source, &target, b"verified").is_err());
+        assert!(!target.exists());
+        std::fs::write(source.join(MANIFEST_FILENAME), b"verified").unwrap();
+        std::fs::create_dir(&target).unwrap();
+        std::fs::write(target.join("external"), b"do not overwrite").unwrap();
+        assert_eq!(
+            activate_staged_prefix(&source, &target, b"verified")
+                .unwrap_err()
+                .kind(),
+            std::io::ErrorKind::AlreadyExists
+        );
+        assert_eq!(
+            std::fs::read(target.join("external")).unwrap(),
+            b"do not overwrite"
+        );
+        assert!(source.exists());
     }
 }
