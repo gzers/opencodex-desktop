@@ -25,9 +25,18 @@ export async function verifyWindowsOfflineDrop(call,output,root){
  const originalSource=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')")
  await click('导入离线包','.route-section.active');await wait("!!document.querySelector('[data-testid=wiz-offline]')")
  const box=await evaluate("(()=>{const b=document.querySelector('[data-testid=wiz-offline]').getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2}})()")
+ await evaluate("(()=>{window.__offlineDropObservation=[];document.addEventListener('drop',e=>window.__offlineDropObservation.push({types:[...e.dataTransfer.types],files:[...e.dataTransfer.files].map(f=>({name:f.name,size:f.size,type:f.type}))}),{capture:true,once:true});return true})()")
  const data={items:[],files:[source],dragOperationsMask:1}
  for(const type of ['dragEnter','dragOver','drop'])await call('Input.dispatchDragEvent',{type,x:box.x,y:box.y,data})
+ try {
  await wait("document.querySelector('[data-testid=wiz-offline]')?.textContent.includes("+JSON.stringify(sha.slice(0,16))+")")
+ } catch(error) {
+  const detail=await evaluate("({drop:window.__offlineDropObservation,body:document.querySelector('[data-testid=runtime-install-modal]')?.textContent})")
+  await writeFile(join(output,'offline-drop-failure.json'),JSON.stringify({error:error.message,...detail},null,2)+'\n')
+  const image=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'offline-drop-failure.png'),Buffer.from(image.data,'base64'))
+  throw error
+ }
+
  const cache=join(root,'cache','runtime-offline-drop'),dirs=await readdir(cache);assert.equal(dirs.length,1)
  const copy=join(cache,dirs[0],'opencodex-2.91.0.tgz');assert.deepEqual(await readFile(copy),archive)
  await evaluate("document.querySelector('[data-testid=wiz-ack]').click()")
