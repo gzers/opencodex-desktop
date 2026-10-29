@@ -43,6 +43,7 @@ try{
   if(!await proto.locator('#modal').innerText().then(t=>t.includes('更新详情与确认'))){await proto.evaluate(()=>{window.closeModal();document.querySelector('[data-maint-action=check-all]').click()});await proto.waitForTimeout(1100);await proto.evaluate(()=>document.querySelector('[data-maint-action=update-detail][data-target=manager]').click())}
   await app.waitForTimeout(100)
   const pd=await info(proto,'#modal'),id=await info(app,'.update-center')
+  check(tag+' notification layer stays behind update modal',await app.evaluate(()=>Number(getComputedStyle(document.querySelector('.notif-layer')).zIndex)<Number(getComputedStyle(document.querySelector('.modal-mask')).zIndex)))
   check(tag+' update single title',await app.locator('.update-center h3').count()===1)
   check(tag+' update title matches',pd.title===id.title,{pd,id})
   check(tag+' update width matches',Math.abs(pd.width-id.width)<=2,{prototype:pd.width,implementation:id.width})
@@ -70,6 +71,7 @@ try{
   await proto.evaluate(()=>{window.setEnv('missing_ocx');window.openRuntimeInstall('net')});await proto.waitForTimeout(100)
   const pw=await info(proto,'#modal'),iw=await info(app,'.runtime-install-dialog')
   check(tag+' install width matches',Math.abs(pw.width-iw.width)<=2,{pw,iw})
+  check(tag+' notification layer stays behind installer',await app.evaluate(()=>Number(getComputedStyle(document.querySelector('.notif-layer')).zIndex)<Number(getComputedStyle(document.querySelector('.modal-mask')).zIndex)))
   check(tag+' install remains overview',await app.locator('.ov').isVisible())
   check(tag+' named steps',await app.locator('.wiz-steps li').count()===4)
   check(tag+' configuration same screen',await app.locator('#wiz-prefix').count()===1&&await app.locator('input[aria-label=版本]').count()===1&&await app.locator('[data-testid=wiz-ack]').count()===1)
