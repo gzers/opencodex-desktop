@@ -1,0 +1,9 @@
+PASS 原型渠道表存在 | headers=["渠道","服务节点","模型","启用","操作"]
+PASS 实现渠道表存在 | headers=["渠道","服务节点","模型","启用","操作"]
+PASS 两侧列头一致 | ["渠道","服务节点","模型","启用","操作"] vs ["渠道","服务节点","模型","启用","操作"]
+PASS 两侧都无独立预览选择器
+PASS 两侧都无置顶按钮
+PASS 两侧都有排序入口 | proto=true impl=true
+PASS 两侧操作组都含编辑/复制/删除 | proto=["编辑","复制","删除","↑","↓"] impl=["编辑","复制","删除","↑","↓"]
+PASS 模型列都存在已选/发现小字 | proto=true impl=true
+shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-tregcR failed=0/8

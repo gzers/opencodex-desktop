@@ -1,0 +1,28 @@
+
+> opencodex-desktop-ui@0.2.18 gate:release
+> node qa/gate-release.mjs
+
+PASS typecheck ·  · 4026ms
+PASS unit · Tests  1044 passed | 10 skipped (1054) · 7531ms
+PASS build · ✓ built in 329ms · 591ms
+PASS audit:file-save · {"engine":"chromium","passed":46,"failed":0,"out":"/tmp/ocx018-framed-release-gate/audit-file-save"} · 21587ms
+PASS audit:notification-feedback · {"engine":"chromium","passed":56,"failed":0,"outDir":"/tmp/ocx018-framed-release-gate/audit-notification-feedback"} · 25247ms
+PASS audit:notification-parity · notification recipe parity failed=0/84 · 9435ms
+PASS audit:models · shots: /tmp/ocx018-framed-release-gate/audit-models  failed=0/32 · 11680ms
+PASS audit:preview · shots: /tmp/ocx018-framed-release-gate/audit-preview failed=0/30 · 9633ms
+PASS audit:geometry · failed=0/44 · 6700ms
+PASS audit:geometry:webkit · failed=0/40 · 17257ms
+PASS audit:webkit · shots: /tmp/ocx018-framed-release-gate/audit-webkit  failed=0/32 · 56720ms
+PASS audit:template · shots: /tmp/ocx018-framed-release-gate/audit-template failed=0/28 · 9155ms
+PASS audit:export · shots: /tmp/ocx018-framed-release-gate/audit-export failed=0/18 · 10642ms
+PASS audit:update · shots: /tmp/ocx018-framed-release-gate/audit-update failed=0/24 · 3987ms
+PASS audit:parity:list · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-tregcR failed=0/8 · 6512ms
+PASS audit:parity · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-Nx5Pqb failed=0/10 · 8736ms
+PASS audit:parity:export · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-export-1LAl8L failed=0/7 · 9351ms
+PASS audit:parity:template · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-template-CS62mF failed=0/11 · 9495ms
+PASS audit:parity:agent · shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-agent-AXbFPM failed=0/7 · 9479ms
+PASS audit:catalog-naming · CHECKED 51 routed rows; providers=26 · 37ms
+PASS audit:catalog-crossvalidate · PASS 清除友好名后的配置通过官方 config validate · 232ms
+
+门禁快照：21 通过 / 0 失败 / 0 跳过
+报告：/tmp/ocx018-framed-release-gate/gate-report.json
