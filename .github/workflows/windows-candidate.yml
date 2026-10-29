@@ -344,7 +344,7 @@ jobs:
           edition = "2021"
           [dependencies]
           tokio = { version = "=1.53.1", features = ["rt","time","process","io-util"] }
-          windows-sys = { version = "=0.61.2", features = ["Win32_Foundation","Win32_System_Diagnostics_ToolHelp","Win32_System_JobObjects","Win32_System_Threading","Win32_Security"] }
+          windows-sys = { version = "=0.61.2", features = ["Win32_Foundation","Win32_System_Diagnostics_ToolHelp","Win32_System_JobObjects","Win32_System_IO","Win32_System_SystemServices","Win32_System_Threading","Win32_Security"] }
           '@ | Set-Content (Join-Path $taskRoot 'Cargo.toml')
           ('#[path="'+$taskModule+'"] mod windows_query_job;') | Set-Content (Join-Path $taskRoot 'src/lib.rs')
           $env:OPENCODEX_TEST_NODE = (Get-Command node).Source
