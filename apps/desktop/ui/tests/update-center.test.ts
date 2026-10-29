@@ -156,6 +156,7 @@ describe('shared production update center', () => {
     await wrapper.get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
     await wrapper.get('[data-testid="install-manager-update"]').trigger('click'); await flushPromises()
     expect(wrapper.text()).toContain('download interrupted')
+    expect(wrapper.get('[data-testid="manager-update-progress"]').text()).toContain('更新失败，当前版本保留')
     expect(wrapper.find('progress[aria-label="管理器更新进度"]').exists()).toBe(false)
     expect(button(wrapper, '重试安装').attributes('disabled')).toBeUndefined()
     await button(wrapper, '重试安装').trigger('click'); await flushPromises()

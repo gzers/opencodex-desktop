@@ -94,6 +94,7 @@ const managerUnavailableText = computed(() => session.managerError || progress.v
 const officialUnavailableText = computed(() => session.officialError || app.officialUpdateError ? '上次安装未完成，可进入详情重试。' : officialAvailable.value ? '' : '当前没有待确认的更新。')
 const managerStage = computed(() => {
   if (pendingRestart.value) return '安装就绪，等待重启'
+  if (session.managerError || progress.value?.stage === 'failed') return '更新失败，当前版本保留'
   const labels = { backup: '正在备份', checking: '正在检查更新包', downloading: '正在下载', installing: '正在安装', pending_restart: '更新已准备就绪', failed: '安装失败' }
   return progress.value ? labels[progress.value.stage] : '正在提交更新请求，等待更新器进度…'
 })
