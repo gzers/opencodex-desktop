@@ -41,7 +41,7 @@ async function boot(){
  const app=useAppStore();app.setRuntimeState('stopped' as any)
  useThemeStore().apply((params.get('theme') || 'light') as any)
  document.documentElement.dataset.theme=params.get('theme') || 'light'
- document.documentElement.dataset.effects='low'
+ document.documentElement.dataset.effects=params.get('effects') || 'low'
  document.documentElement.style.setProperty('--ui-zoom','1')
  createApp({render:()=>h('div',{class:'app-window'},[h('div',{class:'desktop-stage'},h('div',{class:'app-shell'},[h(Sidebar),h('main',{class:'main'},h(Overview))])),h(Install)])}).use(pinia).mount('#harness')
 }

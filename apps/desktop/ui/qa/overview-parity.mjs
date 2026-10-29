@@ -19,18 +19,19 @@ const e=await pickEngine(),browser=await e.launch(),checks=[],errors=[]
 function check(name,passed,detail){checks.push({name,passed:!!passed,detail});if(!passed)console.log('FAIL',name,detail)}
 async function info(page,selector){return page.locator(selector).evaluate(n=>{const b=n.getBoundingClientRect();return {width:b.width,height:b.height,top:b.top,bottom:b.bottom,viewHeight:innerHeight,title:n.querySelector('h2,h3')?.textContent,buttons:[...n.querySelectorAll('button')].filter(x=>x.getClientRects().length).map(x=>({text:x.textContent.trim(),disabled:x.disabled})),horizontal:n.scrollWidth>n.clientWidth+1}})}
 try{
- for(const c of [{w:1180,h:760,theme:'light'},{w:900,h:600,theme:'dark'}]){
-  const tag=c.w+'-'+c.theme
+ for(const c of [{w:1180,h:760,theme:'light'},{w:900,h:600,theme:'dark'}].flatMap(c=>['high','mid','low'].map(effects=>({...c,effects})))){
+  const tag=c.w+'-'+c.theme+'-'+c.effects
   const proto=await browser.newPage({viewport:{width:c.w+520,height:c.h+368}}),app=await browser.newPage({viewport:{width:c.w,height:c.h}})
   app.on('pageerror',x=>errors.push(x.message));proto.on('pageerror',x=>errors.push('prototype: '+x.message))
   await proto.goto('file://'+encodeURI(prototype)+'#overview');await proto.waitForTimeout(500)
-  await proto.evaluate(({w,h,theme})=>{const win=document.querySelector('.window');win.style.width=w+'px';win.style.height=h+'px';win.style.flex='none';document.documentElement.dataset.theme=theme;document.documentElement.dataset.effects='low';if(window.applyTheme)window.applyTheme(theme)},c)
-  await app.goto('http://127.0.0.1:'+port+'/qa/overview-harness/index.html?theme='+c.theme);await app.waitForSelector('.mods')
+  await proto.evaluate(({w,h,theme,effects})=>{const win=document.querySelector('.window');win.style.width=w+'px';win.style.height=h+'px';win.style.flex='none';document.documentElement.dataset.theme=theme;document.documentElement.dataset.effects=effects;if(window.applyTheme)window.applyTheme(theme)},c)
+  await app.goto('http://127.0.0.1:'+port+'/qa/overview-harness/index.html?effects='+c.effects+'&theme='+c.theme);await app.waitForSelector('.mods')
   await app.getByRole('button',{name:'导入配置',exact:true}).click();await app.waitForSelector('dialog[open]')
   await proto.evaluate(()=>{window.setEnv('ready');document.querySelector('[data-prototype-action=import]').click()})
   await proto.waitForTimeout(200)
   const pi=await info(proto,'#modal'),ii=await info(app,'dialog[open]')
   check(tag+' import initial disabled',ii.buttons.some(x=>x.text==='读取并比较'&&x.disabled))
+  check(tag+' import file action accessible',await app.getByRole('button',{name:'选择文件',exact:true}).isEnabled())
   check(tag+' import title',pi.title===ii.title,{pi,ii})
   check(tag+' import remains overview',await app.locator('.ov').isVisible())
   check(tag+' import within window',ii.top>=0&&ii.bottom<=c.h&&!ii.horizontal,ii)
@@ -58,14 +59,14 @@ try{
   await app.getByRole('button',{name:'关闭更新中心',exact:true}).click();await proto.evaluate(()=>window.closeModal())
   for(const state of ['checking','missing_node_brew','missing_node_nobrew','missing_npm','missing_ocx','ready']){
    const gate=state.startsWith('missing_node')?'missing_node':state
-   await app.goto('http://127.0.0.1:'+port+'/qa/overview-harness/index.html?theme='+c.theme+'&env='+gate+'&brew='+(state==='missing_node_nobrew'?'0':'1'))
+   await app.goto('http://127.0.0.1:'+port+'/qa/overview-harness/index.html?effects='+c.effects+'&theme='+c.theme+'&env='+gate+'&brew='+(state==='missing_node_nobrew'?'0':'1'))
    await app.waitForSelector('.ov');await proto.evaluate(state=>window.setEnv(state),state);await app.waitForTimeout(100)
    const prep=state!=='ready'
    check(tag+' '+state+' gate',await app.locator('[data-testid=environment-gate]').count()===(prep?1:0))
    if(prep)check(tag+' '+state+' check order',await app.locator('.overview-checks b').allTextContents().then(x=>x.join(',')==='Node.js,npm,OpenCodex'))
    await proto.locator('.window').screenshot({path:path.join(output,tag+'-prototype-env-'+state+'.png')});await app.screenshot({path:path.join(output,tag+'-implementation-env-'+state+'.png')})
   }
-  await app.goto('http://127.0.0.1:'+port+'/qa/overview-harness/index.html?theme='+c.theme+'&env=missing_ocx');await app.waitForSelector('[data-testid=environment-gate]');await app.getByRole('button',{name:'安装 OpenCodex',exact:true}).click();await app.waitForSelector('#wiz-prefix')
+  await app.goto('http://127.0.0.1:'+port+'/qa/overview-harness/index.html?effects='+c.effects+'&theme='+c.theme+'&env=missing_ocx');await app.waitForSelector('[data-testid=environment-gate]');await app.getByRole('button',{name:'安装 OpenCodex',exact:true}).click();await app.waitForSelector('#wiz-prefix')
   await proto.evaluate(()=>{window.setEnv('missing_ocx');window.openRuntimeInstall('net')});await proto.waitForTimeout(100)
   const pw=await info(proto,'#modal'),iw=await info(app,'.runtime-install-dialog')
   check(tag+' install width matches',Math.abs(pw.width-iw.width)<=2,{pw,iw})
