@@ -1,6 +1,6 @@
 {
   "task": "TASK-UI018-20261028",
-  "code": "6569227de87208fefb391d2bb6fe1930cfeacaa6",
+  "code": "c7b4a1c9b03b610973f45a197589aaf23787a3c4",
   "checks": [
     {
       "name": "review:prototype-parity",
@@ -46,14 +46,14 @@
   "native_pending": true,
   "historical_npm_exit1": "unknown; not attributed",
   "previous_candidate": "422b6fdb996d0ea902d9f3c6be8c43cc12647d86",
-  "application_tree": "397cefb1173eadd0c03df0ec204afd425bc8137a",
+  "application_tree": "5bf925343dc3e180241c83813f4023b77b858f9b",
   "offline_drop": {
     "boundary_tests": 5,
     "frontend_transport_tests": 3,
     "production_windows_drag_test": "pending; exact final EXE must execute real File/drop/chunk/inspect/cancel, no mocked IPC",
     "reads_original_file_only": true
   },
-  "native_run": 40825198427,
+  "native_run": 40830577489,
   "macos_sealed_candidate": "macos-sealed-candidate/sealed-package.json",
   "native_debug_run": 40824604135,
   "windows_previous_pass": {
@@ -65,9 +65,10 @@
   "conflicting_failure_retained": [
     40814553371,
     40822761138,
-    40823584607
+    40823584607,
+    40825198427
   ],
-  "owned_family_drain_review": "2s bounded cleanup with actual child handle exit test, root version read deadline unchanged; final Windows run pending",
+  "owned_family_drain_review": "actual process handles retained before termination and checked signaled alongside job ActiveProcesses=0; original 2s cleanup budget preserved; Windows final CI pending",
   "staging_activation": "only verified owned staging; Windows5/32/33;10s bounded; no target overwrite; original rollback unchanged; native verification pending",
   "native_debug_success": [
     {

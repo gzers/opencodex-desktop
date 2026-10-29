@@ -101,3 +101,10 @@ f3f34fbe兼容Tauri postMessage回退将二进制变为JSON字节数组，先限
 40b222d5 debug40824604135与最终应用树fb84938e debug40825078806均成功：真实HTML File拖入、生产IPC及archive预检、取消副本清理/原件保留/来源不变；实际官方2.91安装、缺版本失败且旧包/入口/来源原字节保留、恢复升级2.93；查询失败详情/关闭重开/安装失败输出/实际registry恢复；概览公共导入选择前禁用与取消不跳转。两轮launcher均核对启动commit与driver应用树相同。是实际一次性Windows debug制品，不作为最终release EXE或安装器/OTA证据。
 
 最后6569227d只修正式草稿release身份读取，应用树397cefb1173eadd0c03df0ec204afd425bc8137a与fb相同；PR最终CI40825198427继续运行五个必需门。中间分支/pushCI按后继候选关系取消以让最终队列执行，取消不记通过。正式main集成及signed package/安装器/OTA仍待执行，不因为原生debug连续成功提前发布。
+
+
+### 完整Windows回归暴露进程计数与真实退出的差异
+
+6569227d的最终PR CI40825198427失败：Windows库900通过/1失败/3忽略，新增owned-child测试读到ActiveProcesses归零后真实进程句柄仍为WAIT_TIMEOUT(258)。前端、macOS后端、发布脚本及Windows进程证据门通过不能抵销此失败；最终EXE后续阶段被跳过。原始完整job日志已留存ci-656-process-exit-failure，不把该结果归因为历史npm退出1。
+
+c7b4a1c9在终止前保留当前匿名job内进程的真实句柄，复查作业成员避免PID复用，收尾同时要求活动数归零及所持句柄signaled；保持原查询期限、独立2秒收尾期限与原断言。匹配Windows依赖的原源码cross-check和clippy通过，只是编译检查。最终PR CI40830577489正在执行，实际Windows结果、正式发布仍待验。
