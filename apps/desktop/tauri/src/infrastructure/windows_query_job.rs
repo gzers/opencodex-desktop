@@ -4,20 +4,23 @@ use std::io;
 use std::mem::size_of;
 use std::os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle};
 use windows_sys::Win32::Foundation::{
-    GetLastError, ERROR_NO_MORE_FILES, HANDLE, INVALID_HANDLE_VALUE, WAIT_TIMEOUT,
+    GetLastError, ERROR_INVALID_PARAMETER, ERROR_NO_MORE_FILES, HANDLE, INVALID_HANDLE_VALUE,
+    WAIT_OBJECT_0, WAIT_TIMEOUT,
 };
 use windows_sys::Win32::System::Diagnostics::ToolHelp::{
     CreateToolhelp32Snapshot, Thread32First, Thread32Next, TH32CS_SNAPTHREAD, THREADENTRY32,
 };
 use windows_sys::Win32::System::JobObjects::{
-    AssignProcessToJobObject, CreateJobObjectW, JobObjectBasicAccountingInformation,
+    AssignProcessToJobObject, CreateJobObjectW, IsProcessInJob,
+    JobObjectBasicAccountingInformation, JobObjectBasicProcessIdList,
     JobObjectExtendedLimitInformation, QueryInformationJobObject, SetInformationJobObject,
     TerminateJobObject, JOBOBJECT_BASIC_ACCOUNTING_INFORMATION, JOBOBJECT_BASIC_LIMIT_INFORMATION,
     JOBOBJECT_EXTENDED_LIMIT_INFORMATION, JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE,
 };
 use windows_sys::Win32::System::Threading::{
-    GetProcessIdOfThread, OpenThread, ResumeThread, WaitForSingleObject, CREATE_NO_WINDOW,
-    CREATE_SUSPENDED, THREAD_QUERY_LIMITED_INFORMATION, THREAD_SUSPEND_RESUME,
+    GetProcessIdOfThread, OpenProcess, OpenThread, ResumeThread, WaitForSingleObject,
+    CREATE_NO_WINDOW, CREATE_SUSPENDED, PROCESS_QUERY_LIMITED_INFORMATION, PROCESS_SYNCHRONIZE,
+    THREAD_QUERY_LIMITED_INFORMATION, THREAD_SUSPEND_RESUME,
 };
 
 pub(crate) struct OwnedQueryJob(OwnedHandle);
@@ -86,9 +89,15 @@ impl OwnedQueryJob {
     /// Termination is asynchronous. Install activation must not race a probe's
     /// owned descendants that are still releasing package files/directories.
     pub(crate) async fn terminate_and_wait(&self) -> io::Result<()> {
+        // Accounting can reach zero before the last process handle is signaled.
+        // Retain real handles before termination so that this is an exit wait,
+        // rather than just a wait for removal from the job's active list.
+        let mut processes = Vec::new();
+        self.retain_active_processes(&mut processes)?;
         self.terminate()?;
         tokio::time::timeout(std::time::Duration::from_secs(2), async {
             loop {
+                self.retain_active_processes(&mut processes)?;
                 let mut account = JOBOBJECT_BASIC_ACCOUNTING_INFORMATION::default();
                 let ok = unsafe {
                     QueryInformationJobObject(
@@ -102,7 +111,15 @@ impl OwnedQueryJob {
                 if ok == 0 {
                     return Err(io::Error::last_os_error());
                 }
-                if account.ActiveProcesses == 0 {
+                let mut exited = true;
+                for (_, process) in &processes {
+                    match unsafe { WaitForSingleObject(process.as_raw_handle(), 0) } {
+                        WAIT_OBJECT_0 => {}
+                        WAIT_TIMEOUT => exited = false,
+                        _ => return Err(io::Error::last_os_error()),
+                    }
+                }
+                if account.ActiveProcesses == 0 && exited {
                     return Ok(());
                 }
                 tokio::time::sleep(std::time::Duration::from_millis(10)).await;
@@ -115,6 +132,68 @@ impl OwnedQueryJob {
                 "owned probe process family did not exit",
             )
         })?
+    }
+
+    fn retain_active_processes(&self, retained: &mut Vec<(u32, OwnedHandle)>) -> io::Result<()> {
+        // Native layout of JOBOBJECT_BASIC_PROCESS_ID_LIST with bounded trailing
+        // storage. An oversized or incomplete snapshot fails closed.
+        #[repr(C)]
+        struct ProcessIds {
+            assigned: u32,
+            listed: u32,
+            ids: [usize; 4096],
+        }
+        let mut list = Box::new(ProcessIds {
+            assigned: 0,
+            listed: 0,
+            ids: [0; 4096],
+        });
+        let ok = unsafe {
+            QueryInformationJobObject(
+                self.0.as_raw_handle(),
+                JobObjectBasicProcessIdList,
+                (&mut *list as *mut ProcessIds).cast(),
+                size_of::<ProcessIds>() as u32,
+                std::ptr::null_mut(),
+            )
+        };
+        if ok == 0 {
+            return Err(io::Error::last_os_error());
+        }
+        if list.assigned != list.listed || list.listed as usize > list.ids.len() {
+            return Err(io::Error::other("incomplete owned process snapshot"));
+        }
+        for &id in &list.ids[..list.listed as usize] {
+            let pid =
+                u32::try_from(id).map_err(|_| io::Error::other("invalid owned process ID"))?;
+            if retained.iter().any(|(existing, _)| *existing == pid) {
+                continue;
+            }
+            let raw = unsafe {
+                OpenProcess(
+                    PROCESS_SYNCHRONIZE | PROCESS_QUERY_LIMITED_INFORMATION,
+                    0,
+                    pid,
+                )
+            };
+            if raw.is_null() {
+                let error = io::Error::last_os_error();
+                if error.raw_os_error() == Some(ERROR_INVALID_PARAMETER as i32) {
+                    continue; // Already exited before the handle could be retained.
+                }
+                return Err(error);
+            }
+            let process = unsafe { OwnedHandle::from_raw_handle(raw) };
+            let mut member = 0;
+            if unsafe { IsProcessInJob(raw, self.0.as_raw_handle(), &mut member) } == 0 {
+                return Err(io::Error::last_os_error());
+            }
+            // A reused PID must never make us wait on an unrelated process.
+            if member != 0 {
+                retained.push((pid, process));
+            }
+        }
+        Ok(())
     }
     // OwnedHandle drops the only job handle. KILL_ON_JOB_CLOSE also covers
     // normal result return, output-reader failure, unwinding and cancellation.
