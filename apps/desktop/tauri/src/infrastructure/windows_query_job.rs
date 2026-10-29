@@ -94,6 +94,11 @@ impl OwnedQueryJob {
         // rather than just a wait for removal from the job's active list.
         let mut processes = Vec::new();
         self.retain_active_processes(&mut processes)?;
+        #[cfg(test)]
+        eprintln!(
+            "owned cleanup before terminate retained={:?}",
+            processes.iter().map(|(pid, _)| *pid).collect::<Vec<_>>()
+        );
         self.terminate()?;
         tokio::time::timeout(std::time::Duration::from_secs(2), async {
             loop {
@@ -163,6 +168,13 @@ impl OwnedQueryJob {
         if list.assigned != list.listed || list.listed as usize > list.ids.len() {
             return Err(io::Error::other("incomplete owned process snapshot"));
         }
+        #[cfg(test)]
+        eprintln!(
+            "owned snapshot assigned={} listed={} ids={:?}",
+            list.assigned,
+            list.listed,
+            &list.ids[..list.listed as usize]
+        );
         for &id in &list.ids[..list.listed as usize] {
             let pid =
                 u32::try_from(id).map_err(|_| io::Error::other("invalid owned process ID"))?;
@@ -188,6 +200,10 @@ impl OwnedQueryJob {
             if unsafe { IsProcessInJob(raw, self.0.as_raw_handle(), &mut member) } == 0 {
                 return Err(io::Error::last_os_error());
             }
+            #[cfg(test)]
+            eprintln!("owned snapshot pid={pid} member={member} wait={}", unsafe {
+                WaitForSingleObject(raw, 0)
+            });
             // A reused PID must never make us wait on an unrelated process.
             if member != 0 {
                 retained.push((pid, process));
