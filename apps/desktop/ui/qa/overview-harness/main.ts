@@ -43,6 +43,6 @@ async function boot(){
  document.documentElement.dataset.theme=params.get('theme') || 'light'
  document.documentElement.dataset.effects=params.get('effects') || 'low'
  document.documentElement.style.setProperty('--ui-zoom','1')
- createApp({render:()=>h('div',{class:'app-window'},[h('div',{class:'desktop-stage'},h('div',{class:'app-shell'},[h(Sidebar),h('main',{class:'main'},h(Overview))])),h(Install),h('div',{class:'notif-layer'})])}).use(pinia).mount('#harness')
+ createApp({render:()=>h('div',{class:'app-window'},[h('div',{class:'desktop-stage'},[h('header',{class:'titlebar'}),h('div',{class:'app-shell'},[h(Sidebar),h('main',{class:'main'},h(Overview))])]),h(Install),h('div',{class:'notif-layer'})])}).use(pinia).mount('#harness')
 }
 void boot()

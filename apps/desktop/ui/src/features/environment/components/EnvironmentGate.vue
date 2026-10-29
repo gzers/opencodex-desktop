@@ -151,6 +151,5 @@ function installManaged(source: InstallSourceKind) {
       <button type="button" @click="guide">完整指引 ›</button>
     </div>
 
-    <p class="env-bound">应用不读取 PATH；托管安装只写自有数据根内的私有前缀，不执行全局 npm 安装、不写系统目录与全局 npm 前缀。</p>
   </section>
 </template>
