@@ -8,7 +8,7 @@ on:
       purpose:
         description: Package a candidate, or run one bounded diagnostic without a desktop/package
         type: choice
-        options: [candidate, query-etw, installer-retention]
+        options: [candidate, query-etw, installer-retention, native-ui]
         default: candidate
       admission_run:
         description: Successful exact-head push CI run required for query-etw
@@ -276,3 +276,46 @@ jobs:
           retention-days: 14
           if-no-files-found: error
           path: test/out/windows-installer-retention
+
+  native-ui:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'native-ui'
+    runs-on: windows-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: apps/desktop/tauri
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-native-ui-018
+          cache-on-failure: true
+      - name: Build exact production frontend and isolated native debug image
+        run: |
+          npm --prefix ../ui ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm --prefix ../ui run build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo build --locked --features custom-protocol --bins --jobs 2
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Real WebView2 file drop and installation failure recovery
+        run: |
+          $taskNode = (Get-Command node).Source
+          $taskNpm = Join-Path (Split-Path -Parent $taskNode) 'node_modules/npm/bin/npm-cli.js'
+          & ../../../test/smoke/windows-install-recovery.ps1 -Executable target/debug/opencodex-desktop.exe -Node $taskNode -NpmCli $taskNpm -OutputDirectory ../../../test/out/windows-native-ui-diagnostic
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve native diagnostic including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-native-ui-diagnostic
+          if-no-files-found: error
+          path: |
+            test/out/windows-native-ui-diagnostic
+            !test/out/windows-native-ui-diagnostic/OpenCodeX Native*/**
