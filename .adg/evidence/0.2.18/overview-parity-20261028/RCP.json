@@ -28,7 +28,7 @@
       "name": "review:release-evidence",
       "result": "pending",
       "evidence": [],
-      "scope": "main/tag/actual installers/signatures/public stable/OTA not yet complete"
+      "scope": "formal assets8, original key3 signatures, four real installer modes, strict macOS seal/native and anonymous stable passed; real MSI/NSIS adjacent OTA still in_progress"
     }
   ],
   "release_gate": {
@@ -104,8 +104,18 @@
     "originalWindowsBuildSha256": "220b24a7825798fca445136b9a672f1a512602aa6dafea9c6122c7008673e1fb",
     "packageVerification": "formal-release/verification.json",
     "macosNative": "formal-release/macos-native/receipt.json",
-    "stablePublication": "pending",
-    "actualOta": "pending"
+    "stablePublication": {
+      "run": 40858820250,
+      "result": "passed",
+      "publishedAt": "2026-10-29T10:36:13Z",
+      "anonymousEvidence": "formal-release/anonymous-public.json"
+    },
+    "actualOta": {
+      "run": 40859489907,
+      "status": "in_progress",
+      "from": "0.2.17",
+      "to": "0.2.18"
+    }
   },
   "testOnlyFollowUp": {
     "head": "e2e8da96292141737de0a3714cfcc1a409ac7d0f",
@@ -113,7 +123,8 @@
     "iterations": 30,
     "result": "passed",
     "fullCi": 40848030517,
-    "fullCiStatus": "in_progress",
-    "noProductionChange": true
+    "fullCiStatus": "passed",
+    "noProductionChange": true,
+    "mergedMain": "b7cd663438cf9f949280d337058333115ea5802a"
   }
 }
