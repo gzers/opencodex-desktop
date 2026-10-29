@@ -103,6 +103,16 @@ try{
   await screenshot('recovered-upgraded-2.93.0')
   await click('完成')
   await verifyWindowsQueryUi(call,output,sandbox)
+  await click('概览','.side');await wait("!!document.querySelector('.ov .mods')")
+  await click('导入配置','.ov')
+  await wait("!!document.querySelector('dialog[open].transfer-file-picker')")
+  const picker=await evaluate("(()=>{const d=document.querySelector('dialog[open].transfer-file-picker');return {title:d.querySelector('h2').textContent,readDisabled:[...d.querySelectorAll('button')].find(b=>b.textContent.trim()==='读取并比较').disabled,hash:location.hash}})()")
+  assert.equal(picker.title,'导入配置');assert(picker.readDisabled&&picker.hash.startsWith('#overview'))
+  await screenshot('overview-import-dialog')
+  await click('取消','dialog[open].transfer-file-picker');await wait("!document.querySelector('dialog[open].transfer-file-picker')")
+  assert(await evaluate("location.hash.startsWith('#overview')"))
+  report.checks.push('overview shared import opens without navigation, requires file, cancels back to overview')
+
   report.result='pass'
   report.checks.push('actual registry install 2.91.0','actual missing-version failure with readable details and retained console','old package/launcher/source preserved','failure history retains npm stage and log path','reopen and recover upgrade to 2.93.0')
   report.screenshots=['installed-2.91.0.png','failure-retains-output.png','recovered-upgraded-2.93.0.png']

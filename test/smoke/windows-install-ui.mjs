@@ -11,6 +11,18 @@ export async function verifyWindowsInstallUi(call,output,install=false){
  async function evaluate(expression){const r=await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});assert(!r.exceptionDetails,JSON.stringify(r.exceptionDetails));return r.result.value}
  async function wait(expression){for(let n=0;n<100;n++){const r=await evaluate(expression);if(r)return r;await new Promise(resolve=>setTimeout(resolve,100))}throw Error('native install UI wait: '+expression)}
  async function click(text,selector){const ok=await evaluate("(()=>{const root=document.querySelector("+JSON.stringify(selector)+");const b=[...root?.querySelectorAll('button')??[]].find(e=>(e.textContent.trim()==="+JSON.stringify(text)+"||e.getAttribute('aria-label')==="+JSON.stringify(text)+")&&!e.disabled&&e.getClientRects().length);if(!b)return false;b.click();return true})()");assert(ok,'native install action missing: '+text)}
+ await click('概览','.side');await wait("!!document.querySelector('.ov')");
+ const prerequisites=await evaluate("window.__TAURI_INTERNALS__.invoke('discover_environment',{request:null})");
+ const initialSource=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')");
+ let overviewInstaller=false;
+ if(prerequisites.gate==='missing_ocx'&&initialSource.kind==='unresolved'){
+  await wait("!!document.querySelector('[data-testid=environment-gate] [data-testid=env-install-actions]')");
+  await click('安装 OpenCodex','[data-testid=environment-gate]');await wait("!!document.querySelector('#wiz-prefix')");
+  assert.equal(await evaluate("location.hash.startsWith('#overview')"),true,'overview install must not navigate to settings');
+  assert.equal(await evaluate("[...document.querySelectorAll('.wiz-steps li')].map(e=>e.textContent.trim()).every((v,i)=>v.includes(['安装位置','安装源','确认','安装进度'][i]))"),true);
+  await click('取消','[data-testid=runtime-install-modal]');await wait("!document.querySelector('[data-testid=runtime-install-modal]')");
+  assert.equal(await evaluate("location.hash.startsWith('#overview')"),true);overviewInstaller=true;
+ }
  await click('设置','.side');await wait("!!document.querySelector('.settings-tabs')");
  await click('安装配置','.route-section.active');await wait("!!document.querySelector('[data-testid=runtime-install]')");
  const source=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')");
@@ -47,5 +59,5 @@ export async function verifyWindowsInstallUi(call,output,install=false){
   await writeFile(join(output,'runtime-managed-ui-live.json'),JSON.stringify({result:'pass',version:committed.version,source:committed.kind,realNpm:true,actualProductionVueHandlers:true,defaultPrefixUnchanged:true,explicitScriptRetry,sourceRecordReadback:true,generationRequests:0},null,2)+'\n')
   await click('完成','[data-testid=runtime-install-modal]');await wait("!document.querySelector('[data-testid=runtime-install-modal]')")
  }
- await writeFile(join(output,'runtime-install-ui.json'),JSON.stringify({result:'pass',hostDefaultValue:true,noManualCorrection:true,restoreDefault:true,invalidRelativeBlocked:true,configurationReady:true,cancelSourceUnchanged:true,installsExecuted:install?1:0,method:'real installed Vue handlers and unmodified Tauri IPC; live install when requested, additional backend upgrade/offline evidence in managed-live.json'},null,2)+'\n');
+ await writeFile(join(output,'runtime-install-ui.json'),JSON.stringify({result:'pass',hostDefaultValue:true,noManualCorrection:true,restoreDefault:true,invalidRelativeBlocked:true,configurationReady:true,cancelSourceUnchanged:true,overviewInstaller,installsExecuted:install?1:0,method:'real installed Vue handlers and unmodified Tauri IPC; live install when requested, additional backend upgrade/offline evidence in managed-live.json'},null,2)+'\n');
 }
