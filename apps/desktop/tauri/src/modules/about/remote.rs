@@ -442,8 +442,8 @@ echo '{"version":"2.50.0","dist.integrity":"sha512-fixture"}'
         let root = tempfile::tempdir().unwrap();
         // The runner supplies "view" as argv[1], so the system interpreter
         // can execute the fixture with a real child and unchanged deadlines.
-        // This avoids requiring host admission of a new executable script
-        // before the 200ms cleanup assertion can even create its child marker.
+        // This keeps interpreter discovery out of the process-tree assertion;
+        // it does not identify the cause of any historical npm failure.
         let npm = std::path::Path::new("/bin/sh");
         let fixture = root.path().join("view");
         let environment = EnvironmentPolicy {

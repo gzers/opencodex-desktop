@@ -69,7 +69,10 @@ jobs:
           components: rustfmt, clippy
       - run: cargo fmt --all -- --check
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
-      - run: cargo test --locked --workspace --features integration-test
+      - name: Verify bounded metadata process tree before the workspace workload
+        run: cargo test --locked --lib --features integration-test modules::about::remote::tests::metadata_query_rejects_oversize_and_kills_timed_out_process_group -- --exact
+      - name: Run remaining workspace regression without repeating the completed query fixture
+        run: cargo test --locked --workspace --features integration-test -- --skip modules::about::remote::tests::metadata_query_rejects_oversize_and_kills_timed_out_process_group
 
   # Windows 不仅编译：运行后端回归，并启动最终 EXE 检查无 HOME 环境、
   # 隔离数据初始化和 WebView 首屏。该 job 不生成安装器或发布制品。
