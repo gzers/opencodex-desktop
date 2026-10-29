@@ -63,7 +63,7 @@ describe('shared continuous detail workspace',()=>{
 })
 
 describe('shared page tab geometry',()=>{
- it('measures scrollport insets and wrapping in layout units, then releases parent variables on removal',()=>{
+ it('measures scrollport insets and wrapping in layout units, then releases parent variables on removal',async()=>{
   let resize=()=>{};const disconnect=vi.fn()
   vi.stubGlobal('ResizeObserver',class {constructor(callback:()=>void){resize=callback}observe(){}disconnect=disconnect})
   const main=document.createElement('main');main.className='main';main.style.padding='20px 24px';document.body.append(main)
