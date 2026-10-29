@@ -339,6 +339,7 @@ fn suspended_primary_thread(process: HANDLE, pid: u32) -> io::Result<OwnedHandle
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::process::Stdio;
     #[test]
     fn successful_root_does_not_return_before_its_owned_descendant_exits() {
         use std::os::windows::io::AsRawHandle;
