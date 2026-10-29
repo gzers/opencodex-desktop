@@ -13,8 +13,10 @@ $taskCommit=(& git rev-parse ($taskTag+'^{commit}')).Trim()
 if($taskCommit -notmatch '^[0-9a-f]{40}$'){throw 'Target release source commit invalid'}
 $taskMsiName='OpenCodeX.Desktop_'+$Version+'_x64_en-US.msi'
 $taskNsisName='OpenCodeX.Desktop_'+$Version+'_x64-setup.exe'
-$taskRelease=(& gh api ('repos/gzers/opencodex-desktop/releases/tags/'+$taskTag))|ConvertFrom-Json
-if($LASTEXITCODE -ne 0){throw 'Could not read target release identity'}
+$taskReleaseView=(& gh release view $taskTag --repo gzers/opencodex-desktop --json apiUrl,tagName)|ConvertFrom-Json
+if($LASTEXITCODE -ne 0 -or $taskReleaseView.tagName -cne $taskTag -or $taskReleaseView.apiUrl -notmatch '^https://api[.]github[.]com/repos/gzers/opencodex-desktop/releases/[0-9]+$'){throw 'Could not resolve exact target draft release identity'}
+$taskRelease=(& gh api $taskReleaseView.apiUrl)|ConvertFrom-Json
+if($LASTEXITCODE -ne 0 -or $taskRelease.tag_name -cne $taskTag){throw 'Could not read target release identity'}
 & gh release download $taskTag --repo gzers/opencodex-desktop --dir $taskAssets
 if($LASTEXITCODE -ne 0){throw 'Could not read existing signed assets'}
 $taskExpected=@{}
