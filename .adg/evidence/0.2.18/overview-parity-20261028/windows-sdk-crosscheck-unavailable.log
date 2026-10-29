@@ -1,0 +1,115 @@
+   Compiling yoke v0.8.3
+   Compiling serde_with_macros v3.24.0
+   Compiling zerovec v0.11.8
+   Compiling zerotrie v0.2.5
+   Compiling web_atoms v0.2.6
+   Compiling tinystr v0.8.4
+   Compiling icu_locale_core v2.3.0
+   Compiling potential_utf v0.1.6
+   Compiling icu_provider v2.3.1
+   Compiling icu_collections v2.3.0
+   Compiling cssparser v0.37.0
+   Compiling icu_normalizer v2.3.0
+   Compiling icu_properties v2.3.0
+   Compiling idna_adapter v1.2.2
+   Compiling markup5ever v0.39.0
+   Compiling idna v1.1.0
+   Compiling swift-rs v1.0.8
+   Compiling url v2.5.8
+   Compiling indexmap v1.9.3
+   Compiling selectors v0.38.0
+   Compiling html5ever v0.39.0
+   Compiling jsonptr v0.7.1
+   Compiling cargo-platform v0.1.9
+   Compiling plist v1.10.1
+   Compiling cargo_metadata v0.19.2
+   Compiling schemars v0.8.22
+   Compiling dom_query v0.28.0
+   Compiling json-patch v4.2.0
+   Compiling urlpattern v0.6.0
+   Compiling serde_with v3.24.0
+   Compiling tauri-utils v2.10.1
+   Compiling cargo_toml v1.0.1
+   Compiling tauri-build v2.7.1
+   Compiling tauri-plugin v2.7.1
+    Checking windows-future v0.3.2
+    Checking windows-collections v0.3.2
+    Checking windows-numerics v0.3.1
+    Checking windows v0.62.2
+   Compiling tauri v2.12.1
+    Checking dpi v0.1.2
+   Compiling webview2-com-sys v0.39.1
+   Compiling ring v0.17.14
+warning: ring@0.17.14: In file included from /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/crypto/curve25519/curve25519.c:24:
+warning: ring@0.17.14: In file included from /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/crypto/curve25519/internal.h:20:
+warning: ring@0.17.14: In file included from /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/crypto/curve25519/../internal.h:20:
+warning: ring@0.17.14: /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/include/ring-core/check.h:27:11: fatal error: 'assert.h' file not found
+warning: ring@0.17.14:    27 | # include <assert.h>
+warning: ring@0.17.14:       |           ^~~~~~~~~~
+warning: ring@0.17.14: 1 error generated.
+error: failed to run custom build command for `ring v0.17.14`
+
+Caused by:
+  process didn't exit successfully: `/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/tauri/target/debug/build/ring-c279ff01fbf2f52c/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rerun-if-env-changed=CARGO_MANIFEST_DIR
+  cargo:rerun-if-env-changed=CARGO_PKG_NAME
+  cargo:rerun-if-env-changed=CARGO_PKG_VERSION_MAJOR
+  cargo:rerun-if-env-changed=CARGO_PKG_VERSION_MINOR
+  cargo:rerun-if-env-changed=CARGO_PKG_VERSION_PATCH
+  cargo:rerun-if-env-changed=CARGO_PKG_VERSION_PRE
+  cargo:rerun-if-env-changed=CARGO_MANIFEST_LINKS
+  cargo:rerun-if-env-changed=RING_PREGENERATE_ASM
+  cargo:rerun-if-env-changed=OUT_DIR
+  cargo:rerun-if-env-changed=CARGO_CFG_TARGET_ARCH
+  cargo:rerun-if-env-changed=CARGO_CFG_TARGET_OS
+  cargo:rerun-if-env-changed=CARGO_CFG_TARGET_ENV
+  cargo:rerun-if-env-changed=CARGO_CFG_TARGET_ENDIAN
+  cargo:rerun-if-env-changed=VCINSTALLDIR
+  VCINSTALLDIR = None
+  cargo:rerun-if-env-changed=CC_x86_64-pc-windows-msvc
+  CC_x86_64-pc-windows-msvc = None
+  cargo:rerun-if-env-changed=CC_x86_64_pc_windows_msvc
+  CC_x86_64_pc_windows_msvc = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_pc_windows_msvc
+  CFLAGS_x86_64_pc_windows_msvc = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-pc-windows-msvc
+  CFLAGS_x86_64-pc-windows-msvc = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64_pc_windows_msvc
+  CFLAGS_x86_64_pc_windows_msvc = None
+  cargo:rerun-if-env-changed=CFLAGS_x86_64-pc-windows-msvc
+  CFLAGS_x86_64-pc-windows-msvc = None
+  cargo:warning=In file included from /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/crypto/curve25519/curve25519.c:24:
+  cargo:warning=In file included from /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/crypto/curve25519/internal.h:20:
+  cargo:warning=In file included from /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/crypto/curve25519/../internal.h:20:
+  cargo:warning=/Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/include/ring-core/check.h:27:11: fatal error: 'assert.h' file not found
+  cargo:warning=   27 | # include <assert.h>
+  cargo:warning=      |           ^~~~~~~~~~
+  cargo:warning=1 error generated.
+
+  --- stderr
+
+
+  error occurred in cc-rs: command did not execute successfully (status code exit status: 1): "cc" "-O0" "-ffunction-sections" "-fdata-sections" "-g" "-fno-omit-frame-pointer" "-mno-omit-leaf-frame-pointer" "-m64" "--target=x86_64-pc-windows-msvc" "-I" "/Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/include" "-I" "/Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/pregenerated" "-Wall" "-Wextra" "-fvisibility=hidden" "-std=c1x" "-Wall" "-Wbad-function-cast" "-Wcast-align" "-Wcast-qual" "-Wconversion" "-Wmissing-field-initializers" "-Wmissing-include-dirs" "-Wnested-externs" "-Wredundant-decls" "-Wshadow" "-Wsign-compare" "-Wsign-conversion" "-Wstrict-prototypes" "-Wundef" "-Wuninitialized" "-g3" "-DNDEBUG" "-o" "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/tauri/target/x86_64-pc-windows-msvc/debug/build/ring-4b83fa47a6878262/out/25ac62e5b3c53843-curve25519.o" "-c" "/Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ring-0.17.14/crypto/curve25519/curve25519.c"
+
+
+warning: build failed, waiting for other jobs to finish...

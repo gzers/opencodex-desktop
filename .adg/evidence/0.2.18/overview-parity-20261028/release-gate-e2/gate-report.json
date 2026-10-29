@@ -1,0 +1,135 @@
+{
+  "generatedAt": "2026-10-29T02:49:02.833Z",
+  "total": 21,
+  "passed": 21,
+  "failed": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "id": "typecheck",
+      "status": "passed",
+      "ms": 4319,
+      "detail": ""
+    },
+    {
+      "id": "unit",
+      "status": "passed",
+      "ms": 8680,
+      "detail": "Tests  1042 passed | 10 skipped (1052)"
+    },
+    {
+      "id": "build",
+      "status": "passed",
+      "ms": 610,
+      "detail": "✓ built in 351ms"
+    },
+    {
+      "id": "audit:file-save",
+      "status": "passed",
+      "ms": 22249,
+      "detail": "{\"engine\":\"chromium\",\"passed\":46,\"failed\":0,\"out\":\"/tmp/ocx018-e2-release-gate/audit-file-save\"}"
+    },
+    {
+      "id": "audit:notification-feedback",
+      "status": "passed",
+      "ms": 25916,
+      "detail": "{\"engine\":\"chromium\",\"passed\":56,\"failed\":0,\"outDir\":\"/tmp/ocx018-e2-release-gate/audit-notification-feedback\"}"
+    },
+    {
+      "id": "audit:notification-parity",
+      "status": "passed",
+      "ms": 9602,
+      "detail": "notification recipe parity failed=0/84"
+    },
+    {
+      "id": "audit:models",
+      "status": "passed",
+      "ms": 11616,
+      "detail": "shots: /tmp/ocx018-e2-release-gate/audit-models  failed=0/32"
+    },
+    {
+      "id": "audit:preview",
+      "status": "passed",
+      "ms": 9740,
+      "detail": "shots: /tmp/ocx018-e2-release-gate/audit-preview failed=0/30"
+    },
+    {
+      "id": "audit:geometry",
+      "status": "passed",
+      "ms": 6617,
+      "detail": "failed=0/44"
+    },
+    {
+      "id": "audit:geometry:webkit",
+      "status": "passed",
+      "ms": 17201,
+      "detail": "failed=0/40"
+    },
+    {
+      "id": "audit:webkit",
+      "status": "passed",
+      "ms": 57691,
+      "detail": "shots: /tmp/ocx018-e2-release-gate/audit-webkit  failed=0/32"
+    },
+    {
+      "id": "audit:template",
+      "status": "passed",
+      "ms": 9225,
+      "detail": "shots: /tmp/ocx018-e2-release-gate/audit-template failed=0/28"
+    },
+    {
+      "id": "audit:export",
+      "status": "passed",
+      "ms": 10834,
+      "detail": "shots: /tmp/ocx018-e2-release-gate/audit-export failed=0/18"
+    },
+    {
+      "id": "audit:update",
+      "status": "passed",
+      "ms": 4014,
+      "detail": "shots: /tmp/ocx018-e2-release-gate/audit-update failed=0/24"
+    },
+    {
+      "id": "audit:parity:list",
+      "status": "passed",
+      "ms": 6763,
+      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-list-hnZAQd failed=0/8"
+    },
+    {
+      "id": "audit:parity",
+      "status": "passed",
+      "ms": 8663,
+      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-uagVky failed=0/10"
+    },
+    {
+      "id": "audit:parity:export",
+      "status": "passed",
+      "ms": 9417,
+      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-export-Zu0swa failed=0/7"
+    },
+    {
+      "id": "audit:parity:template",
+      "status": "passed",
+      "ms": 9562,
+      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-template-mGkHNM failed=0/11"
+    },
+    {
+      "id": "audit:parity:agent",
+      "status": "passed",
+      "ms": 9587,
+      "detail": "shots: /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-parity-agent-lCj1nT failed=0/7"
+    },
+    {
+      "id": "audit:catalog-naming",
+      "status": "passed",
+      "ms": 32,
+      "detail": "CHECKED 51 routed rows; providers=26"
+    },
+    {
+      "id": "audit:catalog-crossvalidate",
+      "status": "passed",
+      "ms": 245,
+      "detail": "PASS 清除友好名后的配置通过官方 config validate"
+    }
+  ]
+}

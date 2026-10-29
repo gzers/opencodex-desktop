@@ -1,0 +1,45 @@
+PASS WP40 narrow 渠道表已渲染
+PASS WP40 narrow 相邻列不重叠 | overlap=0
+PASS WP40 narrow 操作按钮不越出单元格 | overflow=0
+PASS WP40 narrow 行高未被撑破 | rowH=73
+PASS WP40 narrow 容器可横向滚动而非裁切 | tableW=609 container=609
+PASS WP40 narrow 无控制台错误
+PASS WP40 wide 渠道表已渲染
+PASS WP40 wide 相邻列不重叠 | overlap=0
+PASS WP40 wide 操作按钮不越出单元格 | overflow=0
+PASS WP40 wide 行高未被撑破 | rowH=73
+PASS WP40 wide 容器可横向滚动而非裁切 | tableW=889 container=889
+PASS WP40 wide 无控制台错误
+PASS WP41 节点触发器存在
+PASS WP41 名称与状态字号一致 | name=11 status=11
+PASS WP41 文字基线对齐 | delta=0
+PASS WP47 模型表已渲染
+PASS WP47 选择列 36px | th0=36
+PASS WP47 启停列 62px | th2=62
+PASS WP47 操作列 182px | th3=182
+PASS WP47 行内按钮不越出单元格 | overflow=0
+PASS WP58 模型行已渲染
+PASS WP58 行1 单元格垂直居中 | cells=middle,middle,middle,middle
+PASS WP58 行1 勾选列与整行同轴 | delta=0
+PASS WP58 行1 启停列与整行同轴 | delta=0
+PASS WP58 行1 操作组与整行同轴 | delta=0
+PASS WP58 行1 摘要分两行显示 | display=grid lines=2
+PASS WP58 行2 单元格垂直居中 | cells=middle,middle,middle,middle
+PASS WP58 行2 勾选列与整行同轴 | delta=0
+PASS WP58 行2 启停列与整行同轴 | delta=0
+PASS WP58 行2 操作组与整行同轴 | delta=0
+PASS WP58 行2 摘要分两行显示 | display=grid lines=2
+PASS WP58 行3 单元格垂直居中 | cells=middle,middle,middle,middle
+PASS WP58 行3 勾选列与整行同轴 | delta=0
+PASS WP58 行3 启停列与整行同轴 | delta=0
+PASS WP58 行3 操作组与整行同轴 | delta=0
+PASS WP58 行3 摘要分两行显示 | display=grid lines=2
+PASS WP58 模型行高度未被摘要撑破 | rowH=104/104/104
+PASS WP58 过滤区已渲染
+PASS WP58 过滤区控件同高 | h=34/34/34/34
+PASS WP58 过滤区控件同轴 | centers=1383
+PASS WP58 仅启用勾选框未被撑宽 | w=13
+PASS WP58 搜索框吃剩余宽度 | w=336
+PASS WP58 过滤区不高出单行 | barH=34
+PASS WP47 无控制台错误
+failed=0/44

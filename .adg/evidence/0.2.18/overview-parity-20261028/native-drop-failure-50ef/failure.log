@@ -1,0 +1,25 @@
+backend-windows	Windows final EXE smoke	﻿2026-10-29T03:33:18.9487016Z ##[group]Run & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup -ManagedInstall
+backend-windows	Windows final EXE smoke	2026-10-29T03:33:18.9488649Z ^[[36;1m& ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup -ManagedInstall^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T03:33:18.9569657Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	Windows final EXE smoke	2026-10-29T03:33:18.9570080Z env:
+backend-windows	Windows final EXE smoke	2026-10-29T03:33:18.9570344Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	Windows final EXE smoke	2026-10-29T03:33:18.9570672Z   CARGO_INCREMENTAL: 0
+backend-windows	Windows final EXE smoke	2026-10-29T03:33:18.9570943Z   CARGO_TERM_COLOR: always
+backend-windows	Windows final EXE smoke	2026-10-29T03:33:18.9571220Z ##[endgroup]
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3869473Z file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-offline-drop.mjs:17
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3872461Z  async function wait(expression){for(let n=0;n<100;n++){const v=await evaluate(expression);if(v)return v;await new Promise(r=>setTimeout(r,100))}throw Error('offline HTML drop timeout: '+expression)}
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3874446Z                                                                                                                                                        ^
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3874951Z 
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3875539Z Error: offline HTML drop timeout: document.querySelector('[data-testid=wiz-offline]')?.textContent.includes("4e1c657879fe0951")
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3876480Z     at wait (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-offline-drop.mjs:17:152)
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3877446Z     at async verifyWindowsOfflineDrop (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-offline-drop.mjs:32:2)
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3878926Z     at async verifyWindowsInstallUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-ui.mjs:64:2)
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3879830Z     at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-webview.mjs:102:59
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3880271Z 
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:35.3880378Z Node.js v24.22.1
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:36.7228355Z ^[[31;1mException: ^[[0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1:112^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:36.7229352Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:36.7230533Z ^[[31;1m^[[0m^[[36;1m^[[36;1m 112 | ^[[0m … ($LASTEXITCODE -ne 0) { ^[[36;1mthrow "WebView smoke failed: $LASTEXITCODE"^[[0m }^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:36.7231451Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:36.7232266Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mWebView smoke failed: 1^[[0m
+backend-windows	Windows final EXE smoke	2026-10-29T03:34:36.7606786Z ##[error]Process completed with exit code 1.

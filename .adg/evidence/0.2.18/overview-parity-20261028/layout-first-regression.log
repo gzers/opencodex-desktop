@@ -1,0 +1,55 @@
+
+> opencodex-desktop-ui@0.2.18 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/ui
+
+ ❯ tests/detail-workspace.test.ts (5 tests | 1 failed) 235ms
+   ❯ shared page tab geometry (1)
+     × measures scrollport insets and wrapping in layout units, then releases parent variables on removal 8ms
+ ❯ tests/model-components.test.ts (5 tests | 1 failed) 137ms
+   ❯ model page public primitives (5)
+     × sticky offsets follow wrapped height changes and are removed on unmount 10ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/detail-workspace.test.ts > shared page tab geometry > measures scrollport insets and wrapping in layout units, then releases parent variables on removal
+AssertionError: expected '0px' to be '48px' // Object.is equality
+
+Expected: "48px"
+Received: "0px"
+
+ ❯ tests/detail-workspace.test.ts:73:219
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/model-components.test.ts > model page public primitives > sticky offsets follow wrapped height changes and are removed on unmount
+AssertionError: expected '0px' to be '72px' // Object.is equality
+
+Expected: "72px"
+Received: "0px"
+
+ ❯ tests/model-components.test.ts:39:111
+     37|     const bar = wrapper.get('.sticky-page-tabs').element as HTMLElement
+     38|     Object.defineProperty(bar, 'offsetHeight', { configurable: true, v…
+     39|     resize([], {} as ResizeObserver); expect(bar.parentElement!.style.…
+       |                                                                                                               ^
+     40|     const parent = bar.parentElement!; wrapper.unmount()
+     41|     expect(parent.style.getPropertyValue('--page-tabs-height')).toBe('…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 170 passed (172)
+      Tests  2 failed | 1042 passed | 10 skipped (1054)
+   Start at  11:37:26
+   Duration  7.32s (environment 53%, tests 19%, transform 17%, import 11%, worker 1%)
+
+Environment  jsdom was created 172 times · 56.01s total, 53% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

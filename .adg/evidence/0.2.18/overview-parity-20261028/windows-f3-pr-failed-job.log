@@ -1,0 +1,17 @@
+backend-windows	Windows native installation failure, metadata recovery and path regression	﻿2026-10-29T04:31:32.1852007Z ##[group]Run $taskNativeNode = (Get-Command node).Source
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:31:32.1852640Z ^[[36;1m$taskNativeNode = (Get-Command node).Source^[[0m
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:31:32.1853258Z ^[[36;1m$taskNativeNpm = Join-Path (Split-Path -Parent $taskNativeNode) 'node_modules/npm/bin/npm-cli.js'^[[0m
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:31:32.1854461Z ^[[36;1m& ../../../test/smoke/windows-install-recovery.ps1 -Executable target/release/opencodex-desktop.exe -Node $taskNativeNode -NpmCli $taskNativeNpm -OutputDirectory ../../../test/out/windows-native-018^[[0m
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:31:32.1855436Z ^[[36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }^[[0m
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:31:32.1936066Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:31:32.1936798Z env:
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:31:32.1937074Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:31:32.1937409Z   CARGO_INCREMENTAL: 0
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:31:32.1937681Z   CARGO_TERM_COLOR: always
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:31:32.1937953Z ##[endgroup]
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:32:13.9544692Z ^[[31;1mException: ^[[0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-install-recovery.ps1:53^[[0m
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:32:13.9546567Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:32:13.9548136Z ^[[31;1m^[[0m^[[36;1m^[[36;1m  53 | ^[[0m … CODE -ne 0){^[[36;1mthrow 'Native WebView install/recovery assertions failed;^[[0m …^[[0m
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:32:13.9549377Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^[[0m
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:32:13.9550621Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mNative WebView install/recovery assertions failed; see execution.log^[[0m
+backend-windows	Windows native installation failure, metadata recovery and path regression	2026-10-29T04:32:13.9836039Z ##[error]Process completed with exit code 1.

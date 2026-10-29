@@ -1,0 +1,39 @@
+{
+  "pid": 78258,
+  "app": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+  "executableSha256": "c29ebe93a7b07490fd1b478b2353b7e61af25a834aef292a33c0eabbe3c617d5",
+  "source": "12519c5aed87ddaec64524af03e1fecbece143f4",
+  "sandbox": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/test/out/macos-native-018/sandbox",
+  "dailyBefore": {
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/manager-state/preferences.json": "24813c03c343810ec2348c8b8ea414f9082361d659741f290986cf35beee27e6",
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/manager-state/runtime.json": "5383544da0779eb998309326b22cc3228b120b8743774c2042b6c33a8788714d",
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home/config.json": "03d3eb11082e1a970b2da43907da3b0d6e6254e57600dd7d26c77a5e43ba23ee"
+  },
+  "nativeCandidateNotPublished": true,
+  "dailyUnchangedAfterFirstCandidate": {
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/manager-state/preferences.json": true,
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/manager-state/runtime.json": true,
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home/config.json": true
+  },
+  "initialSandboxPathRejected": "owned temporary directory lies under protected /private; no attempt executed; use explicit user workspace sandbox for admission check",
+  "previousSandbox": "/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx018-native-macos-sa1_7768",
+  "startupLogMatched": true,
+  "checks": [
+    "real WKWebView rendered",
+    "sandbox root displayed in native installation page",
+    "shared install modal has all named steps, prefix/source/version/ack",
+    "valid user-root prefix has no rejection",
+    "ack false disables start; ack true enables start",
+    "cancel returns to original settings route",
+    "no installation or model request executed"
+  ],
+  "result": "pass",
+  "installsExecuted": 0,
+  "dailyUnchanged": {
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/manager-state/preferences.json": true,
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/manager-state/runtime.json": true,
+    "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home/config.json": true
+  },
+  "ownedCandidateStopped": true,
+  "localAdhocSignatureVerified": false
+}

@@ -1,0 +1,21 @@
+
+> opencodex-desktop-ui@0.2.18 test
+> vitest --run tests/update-center.test.ts tests/settings-install-feedback.test.ts tests/settings-install-path.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/ui
+
+
+ Test Files  3 passed (3)
+      Tests  64 passed (64)
+   Start at  10:41:57
+   Duration  1.34s (transform 56%, environment 24%, tests 12%, import 8%)
+
+  Transform  transforming modules took 2.13s · 56% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+
+> opencodex-desktop-ui@0.2.18 typecheck
+> vue-tsc --noEmit
+

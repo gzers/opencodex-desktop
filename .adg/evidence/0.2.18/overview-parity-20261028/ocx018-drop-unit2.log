@@ -1,0 +1,13 @@
+   Compiling opencodex-desktop v0.2.18 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.14s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-5eca04d5cf8307cc)
+
+running 5 tests
+test modules::runtime::offline_drop::tests::rejects_names_and_sizes_before_creating_any_cache ... ok
+test modules::runtime::offline_drop::tests::rejects_symlinked_cache_without_writing_outside_the_active_root ... ok
+test modules::runtime::offline_drop::tests::incomplete_or_replayed_chunks_cannot_be_finished_and_clear_only_owns_the_copy ... ok
+test modules::runtime::offline_drop::tests::replacing_a_selection_invalidates_old_lease_and_drops_its_temporary_file ... ok
+test modules::runtime::offline_drop::valid_package_tests::received_archive_is_byte_identical_and_uses_the_same_official_inspector ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 0.04s
+

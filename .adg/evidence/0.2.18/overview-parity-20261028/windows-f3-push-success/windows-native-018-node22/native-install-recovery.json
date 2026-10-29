@@ -1,0 +1,37 @@
+{
+  "result": "pass",
+  "screenshots": [
+    "installed-2.91.0.png",
+    "failure-retains-output.png",
+    "recovered-upgraded-2.93.0.png"
+  ],
+  "checks": [
+    "prefill/reset/readable native Windows path",
+    "overview shared import opens without navigation, requires file, cancels back to overview",
+    "actual registry install 2.91.0",
+    "actual missing-version failure with readable details and retained console",
+    "old package/launcher/source preserved",
+    "failure history retains npm stage and log path",
+    "reopen and recover upgrade to 2.93.0"
+  ],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.18",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "failure": {
+    "error": "npm 命令失败（退出码 1）：npm pack：npm error code ETARGET；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-a5bc4ed97b16.log",
+    "done": false,
+    "console": "命令：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\home\\.local/bin\\npm.cmd [\"pack\", \"@bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery\", \"--pack-destination\", \"D:\\\\a\\\\opencodex-desktop\\\\opencodex-desktop\\\\test\\\\out\\\\windows-native-018-node22\\\\OpenCodeX Native 中文 Spaces\\\\runtime\\\\opencodex.new-fc3a2cf1e1e6\\\\.downloads\", \"--loglevel\", \"info\"]\n工作目录：D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex.new-fc3a2cf1e1e6\\.downloads\n日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-a5bc4ed97b16.log\nnpm info using npm@10.9.3\nnpm info using node@v22.20.0\nnpm http cache https://registry.npmjs.org/@bitkyc08%2fopencodex 13ms (cache hit)\nnpm error code ETARGET\nnpm error notarget No matching version found for @bitkyc08/opencodex@0.0.0-ocx-missing-native-recovery.\nnpm error notarget In most cases you or one of your dependencies are requesting\nnpm error notarget a package version that doesn't exist.\nnpm error A complete log of this run can be found in: D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\cache\\npm\\_logs\\2026-10-29T04_26_00_503Z-debug-0.log\n退出码：1；日志：\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\logs\\runtime-install\\npm-downloading-a5bc4ed97b16.log",
+    "offlineSteps": false,
+    "scriptsEnabled": false
+  },
+  "final": {
+    "kind": "managed",
+    "version": "2.93.0",
+    "managedPrefix": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-native-018-node22\\OpenCodeX Native 中文 Spaces\\runtime\\opencodex"
+  }
+}

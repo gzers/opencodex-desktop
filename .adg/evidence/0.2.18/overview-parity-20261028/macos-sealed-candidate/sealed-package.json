@@ -1,0 +1,14 @@
+{
+  "result": "pass",
+  "method": "codesign --verify --deep --strict",
+  "resourceSealPresent": true,
+  "executableSha256": "69185a638b5c9d5e92c63425d963dda201b963ddc73920573a562fb75988ae1c",
+  "updaterSignatures": "unchanged public key; formal updater archive verification still pending",
+  "licenseResourcesPresent": true,
+  "sourceBuild": "e2a2726ca02cb4c71bf1903b659d2eec3f13b678",
+  "notFormalRelease": true,
+  "embeddedCommitMatch": {
+    "e2a2726ca02cb4c71bf1903b659d2eec3f13b678": true,
+    "422b6fdb996d0ea902d9f3c6be8c43cc12647d86": false
+  }
+}
