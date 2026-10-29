@@ -207,8 +207,10 @@ async function prepare() {
 async function preparedWithPassphrase(passphrase?:string){const prepared=preparedExport.value;if(!prepared)throw {message:'导出范围已失效，请重新选择范围并导出。'};if(prepared.kind==='remote'){const options:RemoteOptions={...(prepared.options??remoteOptions()),passphrase};prepared.options=options;return await modelTransferApi.prepareUpload(prepared.scope,options)}if(prepared.draft)return await modelTransferApi.prepareDraft(prepared.scope,prepared.draft,passphrase,prepared.policy);return await modelTransferApi.prepare(prepared.scope,passphrase,prepared.includeKeys,prepared.managerScope)}
 function openImport() { if (!busy.value) { importPath.value=''; error.value=''; pickOpen.value=true } }
 async function chooseImportFile() {
-  const selected = await open({ multiple:false, directory:false, filters:[{ name:'配置文件', extensions:['ocxdconf','json'] }] })
-  if (typeof selected === 'string') importPath.value=selected
+  try {
+    const selected = await open({ multiple:false, directory:false, filters:[{ name:'配置文件', extensions:['ocxdconf','json'] }] })
+    if (typeof selected === 'string') importPath.value=selected
+  } catch(cause) { error.value=errorText(cause) }
 }
 async function receive() {
   if (!props.remote && !importPath.value) return
