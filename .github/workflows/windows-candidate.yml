@@ -8,7 +8,7 @@ on:
       purpose:
         description: Package a candidate, or run one bounded diagnostic without a desktop/package
         type: choice
-        options: [candidate, query-etw, installer-retention, native-ui]
+        options: [candidate, query-etw, installer-retention, native-ui, process-exit]
         default: candidate
       admission_run:
         description: Successful exact-head push CI run required for query-etw
@@ -319,3 +319,38 @@ jobs:
           path: |
             test/out/windows-native-ui-diagnostic
             !test/out/windows-native-ui-diagnostic/OpenCodeX Native*/**
+
+
+  process-exit:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'process-exit'
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Run original process ownership module with native Windows handles
+        shell: pwsh
+        run: |
+          $taskRoot = Join-Path $env:RUNNER_TEMP 'ocx-process-exit'
+          New-Item -ItemType Directory -Force (Join-Path $taskRoot 'src') | Out-Null
+          $taskModule = ((Resolve-Path apps/desktop/tauri/src/infrastructure/windows_query_job.rs).Path).Replace('\','/')
+          @'
+          [package]
+          name = "ocx-windows-process-exit-diagnostic"
+          version = "0.1.0"
+          edition = "2021"
+          [dependencies]
+          tokio = { version = "=1.53.1", features = ["rt","time","process","io-util"] }
+          windows-sys = { version = "=0.61.2", features = ["Win32_Foundation","Win32_System_Diagnostics_ToolHelp","Win32_System_JobObjects","Win32_System_IO","Win32_System_SystemServices","Win32_System_Threading","Win32_Security"] }
+          '@ | Set-Content (Join-Path $taskRoot 'Cargo.toml')
+          ('#[path="'+$taskModule+'"] mod windows_query_job;') | Set-Content (Join-Path $taskRoot 'src/lib.rs')
+          $env:OPENCODEX_TEST_NODE = (Get-Command node).Source
+          Set-Location $taskRoot
+          foreach($taskIteration in 1..30) {
+            Write-Output "Native original module iteration $taskIteration"
+            cargo test -- --nocapture
+            if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+          }

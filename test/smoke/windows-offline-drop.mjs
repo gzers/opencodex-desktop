@@ -48,10 +48,18 @@ export async function verifyWindowsOfflineDrop(call,output,root){
  await evaluate("document.querySelector('[data-testid=wiz-ack]').click()")
  await wait("![...document.querySelectorAll('[data-testid=runtime-install-modal] button')].find(b=>b.textContent.trim()==='开始安装').disabled")
  const shot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'offline-drop-preview.png'),Buffer.from(shot.data,'base64'))
+ await click('清除','[data-testid=runtime-install-modal]')
+ await wait("[...document.querySelectorAll('[data-testid=runtime-install-modal] button')].find(b=>b.textContent.trim()==='开始安装').disabled")
+ for(let n=0;n<100;n++){if((await readdir(cache)).length===0)break;await new Promise(r=>setTimeout(r,100))}
+ assert.equal((await readdir(cache)).length,0,'clear must remove only its owned staged copy')
+ assert.deepEqual(await readFile(source),archive,'clear must retain the original archive')
+ const clearedBox=await evaluate("(()=>{const b=document.querySelector('[data-testid=wiz-offline]').getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2}})()")
+ for(const type of ['dragEnter','dragOver','drop'])await call('Input.dispatchDragEvent',{type,x:clearedBox.x,y:clearedBox.y,data})
+ await wait("document.querySelector('[data-testid=wiz-offline]')?.textContent.includes("+JSON.stringify(sha.slice(0,16))+")")
  await click('取消','[data-testid=runtime-install-modal]');await wait("!document.querySelector('[data-testid=runtime-install-modal]')")
  for(let n=0;n<100;n++){if((await readdir(cache)).length===0)break;await new Promise(r=>setTimeout(r,100))}
  assert.equal((await readdir(cache)).length,0);assert.deepEqual(await readFile(source),archive)
  const after=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')")
  for(const key of ['kind','path','managedPrefix','version','history'])assert.deepEqual(after[key],originalSource[key])
- await writeFile(join(output,'offline-drop.json'),JSON.stringify({result:'pass',method:'CDP native HTML File drop; real chunk IPC and archive inspector; preview only',archiveSha256:sha,temporaryCopyExact:true,cancelRemovesOnlyCopy:true,originalRetained:true,runtimeSourceUnchanged:true,installsExecuted:0},null,2)+'\n')
+ await writeFile(join(output,'offline-drop.json'),JSON.stringify({result:'pass',method:'CDP native HTML File drop; real chunk IPC and archive inspector; preview only',archiveSha256:sha,temporaryCopyExact:true,clearRemovesOnlyCopy:true,clearDisablesInstall:true,redropAfterClear:true,cancelRemovesOnlyCopy:true,originalRetained:true,runtimeSourceUnchanged:true,installsExecuted:0},null,2)+'\n')
 }

@@ -12,18 +12,24 @@ use windows_sys::Win32::System::Diagnostics::ToolHelp::{
 };
 use windows_sys::Win32::System::JobObjects::{
     AssignProcessToJobObject, CreateJobObjectW, IsProcessInJob,
-    JobObjectBasicAccountingInformation, JobObjectBasicProcessIdList,
-    JobObjectExtendedLimitInformation, QueryInformationJobObject, SetInformationJobObject,
-    TerminateJobObject, JOBOBJECT_BASIC_ACCOUNTING_INFORMATION, JOBOBJECT_BASIC_LIMIT_INFORMATION,
+    JobObjectAssociateCompletionPortInformation, JobObjectBasicAccountingInformation,
+    JobObjectBasicProcessIdList, JobObjectExtendedLimitInformation, QueryInformationJobObject,
+    SetInformationJobObject, TerminateJobObject, JOBOBJECT_ASSOCIATE_COMPLETION_PORT,
+    JOBOBJECT_BASIC_ACCOUNTING_INFORMATION, JOBOBJECT_BASIC_LIMIT_INFORMATION,
     JOBOBJECT_EXTENDED_LIMIT_INFORMATION, JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE,
 };
+use windows_sys::Win32::System::SystemServices::JOB_OBJECT_MSG_NEW_PROCESS;
 use windows_sys::Win32::System::Threading::{
     GetProcessIdOfThread, OpenProcess, OpenThread, ResumeThread, WaitForSingleObject,
     CREATE_NO_WINDOW, CREATE_SUSPENDED, PROCESS_QUERY_LIMITED_INFORMATION, PROCESS_SYNCHRONIZE,
     THREAD_QUERY_LIMITED_INFORMATION, THREAD_SUSPEND_RESUME,
 };
+use windows_sys::Win32::System::IO::{CreateIoCompletionPort, GetQueuedCompletionStatus};
 
-pub(crate) struct OwnedQueryJob(OwnedHandle);
+pub(crate) struct OwnedQueryJob {
+    job: OwnedHandle,
+    port: OwnedHandle,
+}
 
 impl OwnedQueryJob {
     pub(crate) fn new(command: &mut tokio::process::Command) -> io::Result<Self> {
@@ -54,7 +60,28 @@ impl OwnedQueryJob {
         if ok == 0 {
             return Err(io::Error::last_os_error());
         }
-        Ok(Self(handle))
+        let port =
+            unsafe { CreateIoCompletionPort(INVALID_HANDLE_VALUE, std::ptr::null_mut(), 0, 1) };
+        if port.is_null() {
+            return Err(io::Error::last_os_error());
+        }
+        let port = unsafe { OwnedHandle::from_raw_handle(port) };
+        let association = JOBOBJECT_ASSOCIATE_COMPLETION_PORT {
+            CompletionKey: std::ptr::null_mut(),
+            CompletionPort: port.as_raw_handle(),
+        };
+        let ok = unsafe {
+            SetInformationJobObject(
+                raw,
+                JobObjectAssociateCompletionPortInformation,
+                (&association as *const JOBOBJECT_ASSOCIATE_COMPLETION_PORT).cast(),
+                size_of::<JOBOBJECT_ASSOCIATE_COMPLETION_PORT>() as u32,
+            )
+        };
+        if ok == 0 {
+            return Err(io::Error::last_os_error());
+        }
+        Ok(Self { job: handle, port })
     }
 
     pub(crate) fn assign_and_resume(&self, child: &tokio::process::Child) -> io::Result<()> {
@@ -64,7 +91,7 @@ impl OwnedQueryJob {
         let pid = child
             .id()
             .ok_or_else(|| io::Error::other("query process has no live ID"))?;
-        if unsafe { AssignProcessToJobObject(self.0.as_raw_handle(), process) } == 0 {
+        if unsafe { AssignProcessToJobObject(self.job.as_raw_handle(), process) } == 0 {
             return Err(io::Error::last_os_error());
         }
         // There is exactly one primary thread before CREATE_SUSPENDED is
@@ -81,7 +108,7 @@ impl OwnedQueryJob {
     }
 
     pub(crate) fn terminate(&self) -> io::Result<()> {
-        if unsafe { TerminateJobObject(self.0.as_raw_handle(), 1) } == 0 {
+        if unsafe { TerminateJobObject(self.job.as_raw_handle(), 1) } == 0 {
             return Err(io::Error::last_os_error());
         }
         Ok(())
@@ -93,15 +120,22 @@ impl OwnedQueryJob {
         // Retain real handles before termination so that this is an exit wait,
         // rather than just a wait for removal from the job's active list.
         let mut processes = Vec::new();
+        self.retain_notified_processes(&mut processes)?;
         self.retain_active_processes(&mut processes)?;
+        #[cfg(test)]
+        eprintln!(
+            "owned cleanup before terminate retained={:?}",
+            processes.iter().map(|(pid, _)| *pid).collect::<Vec<_>>()
+        );
         self.terminate()?;
         tokio::time::timeout(std::time::Duration::from_secs(2), async {
             loop {
+                self.retain_notified_processes(&mut processes)?;
                 self.retain_active_processes(&mut processes)?;
                 let mut account = JOBOBJECT_BASIC_ACCOUNTING_INFORMATION::default();
                 let ok = unsafe {
                     QueryInformationJobObject(
-                        self.0.as_raw_handle(),
+                        self.job.as_raw_handle(),
                         JobObjectBasicAccountingInformation,
                         (&mut account as *mut JOBOBJECT_BASIC_ACCOUNTING_INFORMATION).cast(),
                         size_of::<JOBOBJECT_BASIC_ACCOUNTING_INFORMATION>() as u32,
@@ -134,6 +168,41 @@ impl OwnedQueryJob {
         })?
     }
 
+    fn retain_notified_processes(&self, retained: &mut Vec<(u32, OwnedHandle)>) -> io::Result<()> {
+        // A library may already have started killing its helper before the root
+        // exits. Such a helper has left the active list but its NEW_PROCESS
+        // notification still identifies it until actual process teardown.
+        for _ in 0..8192 {
+            let mut message = 0;
+            let mut key = 0;
+            let mut identity = std::ptr::null_mut();
+            let ok = unsafe {
+                GetQueuedCompletionStatus(
+                    self.port.as_raw_handle(),
+                    &mut message,
+                    &mut key,
+                    &mut identity,
+                    0,
+                )
+            };
+            if ok == 0 {
+                let error = io::Error::last_os_error();
+                return if error.raw_os_error() == Some(WAIT_TIMEOUT as i32) {
+                    Ok(())
+                } else {
+                    Err(error)
+                };
+            }
+            if key != 0 {
+                return Err(io::Error::other("unexpected owned job notification"));
+            }
+            if message == JOB_OBJECT_MSG_NEW_PROCESS {
+                self.retain_process(identity as usize, retained)?;
+            }
+        }
+        Err(io::Error::other("owned job notification limit exceeded"))
+    }
+
     fn retain_active_processes(&self, retained: &mut Vec<(u32, OwnedHandle)>) -> io::Result<()> {
         // Native layout of JOBOBJECT_BASIC_PROCESS_ID_LIST with bounded trailing
         // storage. An oversized or incomplete snapshot fails closed.
@@ -150,7 +219,7 @@ impl OwnedQueryJob {
         });
         let ok = unsafe {
             QueryInformationJobObject(
-                self.0.as_raw_handle(),
+                self.job.as_raw_handle(),
                 JobObjectBasicProcessIdList,
                 (&mut *list as *mut ProcessIds).cast(),
                 size_of::<ProcessIds>() as u32,
@@ -163,35 +232,49 @@ impl OwnedQueryJob {
         if list.assigned != list.listed || list.listed as usize > list.ids.len() {
             return Err(io::Error::other("incomplete owned process snapshot"));
         }
+        #[cfg(test)]
+        eprintln!(
+            "owned snapshot assigned={} listed={} ids={:?}",
+            list.assigned,
+            list.listed,
+            &list.ids[..list.listed as usize]
+        );
         for &id in &list.ids[..list.listed as usize] {
-            let pid =
-                u32::try_from(id).map_err(|_| io::Error::other("invalid owned process ID"))?;
-            if retained.iter().any(|(existing, _)| *existing == pid) {
-                continue;
+            self.retain_process(id, retained)?;
+        }
+        Ok(())
+    }
+    fn retain_process(&self, id: usize, retained: &mut Vec<(u32, OwnedHandle)>) -> io::Result<()> {
+        let pid = u32::try_from(id).map_err(|_| io::Error::other("invalid owned process ID"))?;
+        if retained.iter().any(|(existing, _)| *existing == pid) {
+            return Ok(());
+        }
+        let raw = unsafe {
+            OpenProcess(
+                PROCESS_SYNCHRONIZE | PROCESS_QUERY_LIMITED_INFORMATION,
+                0,
+                pid,
+            )
+        };
+        if raw.is_null() {
+            let error = io::Error::last_os_error();
+            if error.raw_os_error() == Some(ERROR_INVALID_PARAMETER as i32) {
+                return Ok(()); // Already exited before the handle could be retained.
             }
-            let raw = unsafe {
-                OpenProcess(
-                    PROCESS_SYNCHRONIZE | PROCESS_QUERY_LIMITED_INFORMATION,
-                    0,
-                    pid,
-                )
-            };
-            if raw.is_null() {
-                let error = io::Error::last_os_error();
-                if error.raw_os_error() == Some(ERROR_INVALID_PARAMETER as i32) {
-                    continue; // Already exited before the handle could be retained.
-                }
-                return Err(error);
-            }
-            let process = unsafe { OwnedHandle::from_raw_handle(raw) };
-            let mut member = 0;
-            if unsafe { IsProcessInJob(raw, self.0.as_raw_handle(), &mut member) } == 0 {
-                return Err(io::Error::last_os_error());
-            }
-            // A reused PID must never make us wait on an unrelated process.
-            if member != 0 {
-                retained.push((pid, process));
-            }
+            return Err(error);
+        }
+        let process = unsafe { OwnedHandle::from_raw_handle(raw) };
+        let mut member = 0;
+        if unsafe { IsProcessInJob(raw, self.job.as_raw_handle(), &mut member) } == 0 {
+            return Err(io::Error::last_os_error());
+        }
+        #[cfg(test)]
+        eprintln!("owned snapshot pid={pid} member={member} wait={}", unsafe {
+            WaitForSingleObject(raw, 0)
+        });
+        // A reused PID must never make us wait on an unrelated process.
+        if member != 0 {
+            retained.push((pid, process));
         }
         Ok(())
     }

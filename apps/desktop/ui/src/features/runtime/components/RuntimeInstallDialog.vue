@@ -119,6 +119,11 @@ function clearDrop() {
   const id=dropLease;dropLease=''
   if(id)void releaseOfflineDrop(id).catch(()=>{})
 }
+function clearOfflinePackage() {
+  clearDrop()
+  installOfflinePath.value = ''
+  app.clearOfflinePreview()
+}
 async function dropOfflineFile(event: DragEvent) {
   if(installSource.value!=='offline'||app.runtimeInstalling||offlineReading.value)return
   const files=event.dataTransfer?.files
@@ -210,7 +215,6 @@ function formatBytes(size: number) {
 
         <div v-if="installSource === 'offline'" class="wiz-drop" data-testid="wiz-offline" @dragover.prevent @drop.prevent="dropOfflineFile">
           <p>把 <code>opencodex-&lt;version&gt;.tgz</code> 拖到这里，或选择文件</p>
-          <div class="wiz-actions"><UiButton class="btn ghost" type="button" :disabled="offlineReading" @click="chooseOfflinePackage">选择文件…</UiButton></div>
           <p v-if="offlineReading" class="wiz-hint" role="status">正在读取离线包…</p>
           <p v-if="app.offlinePreview" class="wiz-hint" :class="{ 'wiz-error': !app.offlinePreview.ok }">
             {{ app.offlinePreview.fileName }} · {{ formatBytes(app.offlinePreview.fileSize) }} ·
@@ -219,6 +223,7 @@ function formatBytes(size: number) {
           <p class="wiz-hint">离线包不联网，但仍会写入数据根内的私有前缀；不匹配时拒绝，不回退成「任意 tgz 都装」。</p>
           <details class="wiz-more"><summary>下载地址</summary><p>npm 包页面：https://www.npmjs.com/package/@bitkyc08/opencodex</p></details>
         </div>
+        <div v-if="installSource === 'offline'" class="wiz-actions"><UiButton class="btn ghost" type="button" :disabled="offlineReading" @click="chooseOfflinePackage">选择文件…</UiButton><UiButton class="btn ghost" type="button" :disabled="offlineReading || !app.offlinePreview" @click="clearOfflinePackage">清除</UiButton></div>
 
         <div v-else class="wiz-proxy" data-testid="wiz-proxy">
           <div class="field"><label>代理（可选）</label>
@@ -297,11 +302,13 @@ function formatBytes(size: number) {
 .wiz-foot { flex:none; justify-content:flex-end; margin:14px -20px -20px; padding:14px 20px 20px; border-top:1px solid var(--border); }
 .wiz-block { display:grid; gap:8px; }
 .wiz-label { color:var(--muted); font-size:var(--text-label); }
-.install-source-choice { border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; }
+.install-source-choice { border:1px solid var(--border); border-radius:var(--radius-sm); padding:11px 12px; background:var(--panel); }
 .install-source-choice.on { border-color:var(--accent); background:color-mix(in srgb,var(--accent) 8%,var(--panel)); }
 .install-source-choice span { display:grid; gap:4px; }
 .install-source-choice b {font-size:var(--text-label);font-weight:650;}
-.wiz-proxy .wiz-inline select {flex:none;width:105px;}
+.wiz-proxy {display:grid;gap:7px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail)}
+.wiz-proxy .wiz-inline select {flex:none;width:112px;}
+.wiz-actions {display:flex;gap:8px;align-items:center}
 .wiz-inline {align-items:center;}
 .install-source-choice small { color:var(--muted); font-size:var(--text-label); }
 .wiz-console { font-family:var(--font-path); flex:none; }
