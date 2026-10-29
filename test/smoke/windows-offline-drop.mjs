@@ -4,7 +4,7 @@ import assert from 'node:assert/strict'
 import {gzipSync} from 'node:zlib'
 import {createHash} from 'node:crypto'
 import {mkdir,readFile,readdir,writeFile} from 'node:fs/promises'
-import {join} from 'node:path'
+import {join,win32} from 'node:path'
 function tarFile(name,body){
  const header=Buffer.alloc(512),bytes=Buffer.from(body)
  header.write(name,0,100);header.write('0000644\0',100);header.write('0000000\0',108);header.write('0000000\0',116)
@@ -26,7 +26,12 @@ export async function verifyWindowsOfflineDrop(call,output,root){
  await click('导入离线包','.route-section.active');await wait("!!document.querySelector('[data-testid=wiz-offline]')")
  const box=await evaluate("(()=>{const b=document.querySelector('[data-testid=wiz-offline]').getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2}})()")
  await evaluate("(()=>{window.__offlineDropObservation=[];document.addEventListener('drop',e=>window.__offlineDropObservation.push({types:[...e.dataTransfer.types],files:[...e.dataTransfer.files].map(f=>({name:f.name,size:f.size,type:f.type}))}),{capture:true,once:true});return true})()")
- const data={items:[],files:[source],dragOperationsMask:1}
+ const slash=String.fromCharCode(92),extended=slash+slash+'?'+slash
+ const readable=value=>value.startsWith(extended+'UNC'+slash)?slash+slash+value.slice(8):value.startsWith(extended)?value.slice(4):value
+ const ordinarySource=readable(source)
+ const browserSource=ordinarySource.length<260?ordinarySource:source
+ assert.equal(win32.normalize(readable(browserSource)).toLowerCase(),win32.normalize(readable(source)).toLowerCase(),'CDP path must keep the exact file identity')
+ const data={items:[],files:[browserSource],dragOperationsMask:1}
  for(const type of ['dragEnter','dragOver','drop'])await call('Input.dispatchDragEvent',{type,x:box.x,y:box.y,data})
  try {
  await wait("document.querySelector('[data-testid=wiz-offline]')?.textContent.includes("+JSON.stringify(sha.slice(0,16))+")")
