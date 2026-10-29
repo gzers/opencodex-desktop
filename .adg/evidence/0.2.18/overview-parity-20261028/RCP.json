@@ -13,9 +13,14 @@
     },
     {
       "name": "review:windows-preservation",
-      "result": "pending",
-      "evidence": [],
-      "scope": "final Windows CI native Node24/22.20 and existing W18 regression pending"
+      "result": "passed",
+      "evidence": [
+        "ci-c7-final/ci.json",
+        "ci-c7-final/windows-native-018/launcher.json",
+        "ci-c7-final/windows-native-018-node22/launcher.json",
+        "ci-c7-final/windows-ordinary/ordinary-summary.json"
+      ],
+      "scope": "final c7 PR CI40830577489 all mandatory jobs succeeded; merge-ref EXE81f64241 apps tree5bf92534 equals feature; Node24.22.1 and22.20.0 install-failure-recovery/query/path/HTMLFile and ordinary nonadministrator; not formal installer or OTA"
     },
     {
       "name": "review:release-evidence",
@@ -43,14 +48,14 @@
     "ignored": 14,
     "order": "one exact query first, other workspace tests unchanged; prior unfiltered failures retained"
   },
-  "native_pending": true,
+  "native_pending": false,
   "historical_npm_exit1": "unknown; not attributed",
   "previous_candidate": "422b6fdb996d0ea902d9f3c6be8c43cc12647d86",
   "application_tree": "5bf925343dc3e180241c83813f4023b77b858f9b",
   "offline_drop": {
     "boundary_tests": 5,
     "frontend_transport_tests": 3,
-    "production_windows_drag_test": "pending; exact final EXE must execute real File/drop/chunk/inspect/cancel, no mocked IPC",
+    "production_windows_drag_test": "ci-c7-final/windows-native-018/offline-drop.json and windows-native-018-node22/offline-drop.json: actual production IPC, byte exact, cancel own copy only",
     "reads_original_file_only": true
   },
   "native_run": 40830577489,
@@ -82,5 +87,6 @@
       "evidence": "native-fb-success/launcher.json"
     }
   ],
-  "final_release_native_pending": true
+  "final_release_native_pending": true,
+  "native_ci_success": 40830577489
 }
