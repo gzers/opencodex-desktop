@@ -42,7 +42,9 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
-        run: ./test/smoke/windows-release-installers.ps1 -OutputDirectory test/out/release-existing-installers -Kind ${{ matrix.kind }} -Mode ${{ matrix.mode }} -Version '${{ inputs.version }}' -ExpectedBuiltSha256 '${{ inputs.built_sha256 }}'
+          OCX_ACCEPT_VERSION: ${{ inputs.version }}
+          OCX_BUILT_SHA256: ${{ inputs.built_sha256 }}
+        run: ./test/smoke/windows-release-installers.ps1 -OutputDirectory test/out/release-existing-installers -Kind ${{ matrix.kind }} -Mode ${{ matrix.mode }} -Version $env:OCX_ACCEPT_VERSION -ExpectedBuiltSha256 $env:OCX_BUILT_SHA256
       - uses: actions/upload-artifact@v4
         if: always()
         with:
