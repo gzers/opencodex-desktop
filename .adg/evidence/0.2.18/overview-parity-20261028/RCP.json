@@ -1,6 +1,6 @@
 {
   "task": "TASK-UI018-20261028",
-  "code": "f8fbfa917f328626b7115dcfd87ab2a2d1f47ccc",
+  "code": "21bfd436316c900bdd9730cfeee8d10ef2a82f25",
   "checks": [
     {
       "name": "review:prototype-parity",
@@ -21,7 +21,7 @@
         "ci-c7-final/windows-native-018-node22/launcher.json",
         "ci-c7-final/windows-ordinary/ordinary-summary.json"
       ],
-      "scope": "c7 native passes retained; f8 UI grouping/clear requires final native EXE"
+      "scope": "final exact-source Windows regression pending; f8 both CI failed original owned-child handle signaled assertion; standalone original module confirms active job list already empty at cleanup; bounded job notification receipt correction under native test"
     },
     {
       "name": "review:release-evidence",
@@ -51,7 +51,7 @@
   "native_pending": true,
   "historical_npm_exit1": "unknown; not attributed",
   "previous_candidate": "c7b4a1c9b03b610973f45a197589aaf23787a3c4",
-  "application_tree": "ed8b742d526e3a3bd5a95024161c79c25c615578",
+  "application_tree": "1c9a4a3d82c36a07afe510f381c06b6ba56ad70b",
   "offline_drop": {
     "boundary_tests": 5,
     "frontend_transport_tests": 3,
@@ -71,7 +71,10 @@
     40814553371,
     40822761138,
     40823584607,
-    40825198427
+    40825198427,
+    40836700467,
+    40836637614,
+    40839271794
   ],
   "owned_family_drain_review": "actual process handles retained before termination and checked signaled alongside job ActiveProcesses=0; original 2s cleanup budget preserved; Windows final CI pending",
   "staging_activation": "only verified owned staging; Windows5/32/33;10s bounded; no target overwrite; original rollback unchanged; native verification pending",
@@ -88,5 +91,6 @@
     }
   ],
   "final_release_native_pending": true,
-  "native_ci_success": 40830577489
+  "native_ci_success": 40830577489,
+  "process_exit_diagnostic_run": 40839929838
 }

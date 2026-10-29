@@ -1,0 +1,104 @@
+process-exit	Run original process ownership module with native Windows handles	﻿2026-10-29T08:02:39.8529679Z ##[group]Run $taskRoot = Join-Path $env:RUNNER_TEMP 'ocx-process-exit'
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8530321Z ^[[36;1m$taskRoot = Join-Path $env:RUNNER_TEMP 'ocx-process-exit'^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8530846Z ^[[36;1mNew-Item -ItemType Directory -Force (Join-Path $taskRoot 'src') | Out-Null^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8531766Z ^[[36;1m$taskModule = ((Resolve-Path apps/desktop/tauri/src/infrastructure/windows_query_job.rs).Path).Replace('\','/')^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8532307Z ^[[36;1m@'^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8532487Z ^[[36;1m[package]^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8532743Z ^[[36;1mname = "ocx-windows-process-exit-diagnostic"^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8533055Z ^[[36;1mversion = "0.1.0"^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8533273Z ^[[36;1medition = "2021"^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8533481Z ^[[36;1m[dependencies]^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8533811Z ^[[36;1mtokio = { version = "=1.53.1", features = ["rt","time","process","io-util"] }^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8535157Z ^[[36;1mwindows-sys = { version = "=0.61.2", features = ["Win32_Foundation","Win32_System_Diagnostics_ToolHelp","Win32_System_JobObjects","Win32_System_Threading","Win32_Security"] }^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8535984Z ^[[36;1m'@ | Set-Content (Join-Path $taskRoot 'Cargo.toml')^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8536500Z ^[[36;1m('#[path="'+$taskModule+'"] mod windows_query_job;') | Set-Content (Join-Path $taskRoot 'src/lib.rs')^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8537014Z ^[[36;1m$env:OPENCODEX_TEST_NODE = (Get-Command node).Source^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8537333Z ^[[36;1mSet-Location $taskRoot^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8537590Z ^[[36;1mforeach($taskIteration in 1..30) {^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8537970Z ^[[36;1m  Write-Output "Native original module iteration $taskIteration"^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8538351Z ^[[36;1m  cargo test -- --nocapture^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8538642Z ^[[36;1m  if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.8538923Z ^[[36;1m}^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.9313272Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.9313753Z env:
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.9314033Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.9314382Z   CARGO_INCREMENTAL: 0
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.9314648Z   CARGO_TERM_COLOR: always
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:39.9314927Z ##[endgroup]
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:40.4180800Z Native original module iteration 1
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:42.8414589Z ^[[1m^[[92m    Updating^[[0m crates.io index
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:43.5231878Z ^[[1m^[[92m     Locking^[[0m 10 packages to highest compatible versions
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:43.5411789Z ^[[1m^[[92m      Adding^[[0m tokio v1.53.1 ^[[1m^[[93m(available: v1.54.1)^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:43.5484328Z ^[[1m^[[92m Downloading^[[0m crates ...
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:43.6102893Z ^[[1m^[[92m  Downloaded^[[0m windows-link v0.2.1
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:43.6322063Z ^[[1m^[[92m  Downloaded^[[0m bytes v1.12.1
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:43.6722899Z ^[[1m^[[92m  Downloaded^[[0m pin-project-lite v0.2.17
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:43.7575379Z ^[[1m^[[92m  Downloaded^[[0m mio v1.2.4
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:43.8225953Z ^[[1m^[[92m  Downloaded^[[0m tokio v1.53.1
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:44.3395960Z ^[[1m^[[92m  Downloaded^[[0m windows-sys v0.61.2
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:45.2496472Z ^[[1m^[[92m   Compiling^[[0m windows-link v0.2.1
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:45.2497321Z ^[[1m^[[92m   Compiling^[[0m pin-project-lite v0.2.17
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:45.2497762Z ^[[1m^[[92m   Compiling^[[0m bytes v1.12.1
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:49.2119822Z ^[[1m^[[92m   Compiling^[[0m windows-sys v0.61.2
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:54.1848640Z ^[[1m^[[92m   Compiling^[[0m mio v1.2.4
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:55.9867749Z ^[[1m^[[92m   Compiling^[[0m tokio v1.53.1
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:58.9506818Z ^[[1m^[[92m   Compiling^[[0m ocx-windows-process-exit-diagnostic v0.1.0 (D:\a\_temp\ocx-process-exit)
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1438515Z ^[[1m^[[93mwarning^[[0m^[[1m^[[97m: struct `OwnedQueryJob` is never constructed^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1440658Z   ^[[1m^[[96m--> ^[[0mD:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\infrastructure\windows_query_job.rs:26:19
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1441950Z    ^[[1m^[[96m|^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1442871Z ^[[1m^[[96m26^[[0m ^[[1m^[[96m|^[[0m pub(crate) struct OwnedQueryJob(OwnedHandle);
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1447250Z    ^[[1m^[[96m|^[[0m                   ^[[1m^[[93m^^^^^^^^^^^^^^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1448548Z    ^[[1m^[[96m|^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1455743Z    ^[[1m^[[96m= ^[[0m^[[1m^[[97mnote^[[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1464730Z 
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1466397Z ^[[1m^[[93mwarning^[[0m^[[1m^[[97m: associated items `new`, `assign_and_resume`, `terminate`, `terminate_and_wait`, and `retain_active_processes` are never used^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1468488Z    ^[[1m^[[96m--> ^[[0mD:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\infrastructure\windows_query_job.rs:29:19
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1469794Z     ^[[1m^[[96m|^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1470598Z ^[[1m^[[96m 28^[[0m ^[[1m^[[96m|^[[0m impl OwnedQueryJob {
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1472352Z     ^[[1m^[[96m|^[[0m ^[[1m^[[96m------------------^[[0m ^[[1m^[[96massociated items in this implementation^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1474564Z ^[[1m^[[96m 29^[[0m ^[[1m^[[96m|^[[0m     pub(crate) fn new(command: &mut tokio::process::Command) -> io::Result<Self> {
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1475895Z     ^[[1m^[[96m|^[[0m                   ^[[1m^[[93m^^^^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1476663Z ^[[1m^[[96m...^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1478096Z ^[[1m^[[96m 60^[[0m ^[[1m^[[96m|^[[0m     pub(crate) fn assign_and_resume(&self, child: &tokio::process::Child) -> io::Result<()> {
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1479480Z     ^[[1m^[[96m|^[[0m                   ^[[1m^[[93m^^^^^^^^^^^^^^^^^^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1480265Z ^[[1m^[[96m...^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1481372Z ^[[1m^[[96m 83^[[0m ^[[1m^[[96m|^[[0m     pub(crate) fn terminate(&self) -> io::Result<()> {
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1482512Z     ^[[1m^[[96m|^[[0m                   ^[[1m^[[93m^^^^^^^^^^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1483333Z ^[[1m^[[96m...^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1484535Z ^[[1m^[[96m 91^[[0m ^[[1m^[[96m|^[[0m     pub(crate) async fn terminate_and_wait(&self) -> io::Result<()> {
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1485790Z     ^[[1m^[[96m|^[[0m                         ^[[1m^[[93m^^^^^^^^^^^^^^^^^^^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1486649Z ^[[1m^[[96m...^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1488143Z ^[[1m^[[96m142^[[0m ^[[1m^[[96m|^[[0m     fn retain_active_processes(&self, retained: &mut Vec<(u32, OwnedHandle)>) -> io::Result<()> {
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1490214Z     ^[[1m^[[96m|^[[0m        ^[[1m^[[93m^^^^^^^^^^^^^^^^^^^^^^^^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1490797Z 
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1491561Z ^[[1m^[[93mwarning^[[0m^[[1m^[[97m: function `suspended_primary_thread` is never used^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1493610Z    ^[[1m^[[96m--> ^[[0mD:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\infrastructure\windows_query_job.rs:218:4
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1494886Z     ^[[1m^[[96m|^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1496126Z ^[[1m^[[96m218^[[0m ^[[1m^[[96m|^[[0m fn suspended_primary_thread(process: HANDLE, pid: u32) -> io::Result<OwnedHandle> {
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1497067Z     ^[[1m^[[96m|^[[0m    ^[[1m^[[93m^^^^^^^^^^^^^^^^^^^^^^^^^[[0m
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.1497382Z 
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:02:59.2346810Z ^[[1m^[[93mwarning^[[0m: `ocx-windows-process-exit-diagnostic` (lib) generated 3 warnings
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.1534299Z ^[[1m^[[92m    Finished^[[0m `test` profile [unoptimized + debuginfo] target(s) in 21.79s
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.1755805Z ^[[1m^[[92m     Running^[[0m unittests src\lib.rs (target\debug\deps\ocx_windows_process_exit_diagnostic-1667abefe5558e90.exe)
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.1892973Z 
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.1893558Z running 1 test
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3698257Z owned snapshot assigned=0 listed=0 ids=[]
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3699148Z owned cleanup before terminate retained=[]
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3700096Z owned snapshot assigned=0 listed=0 ids=[]
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3700483Z 
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3702674Z thread 'windows_query_job::tests::successful_root_does_not_return_before_its_owned_descendant_exits' (2940) panicked at D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\infrastructure\windows_query_job.rs:296:13:
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3704945Z assertion `left == right` failed: no owned child may retain a package directory at activation
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3705752Z   left: 258
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3706049Z  right: 0
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3708892Z note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3712425Z test windows_query_job::tests::successful_root_does_not_return_before_its_owned_descendant_exits ... FAILED
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3713865Z 
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3715005Z failures:
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3715219Z 
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3715726Z failures:
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3716571Z     windows_query_job::tests::successful_root_does_not_return_before_its_owned_descendant_exits
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3717275Z 
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3718493Z test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3719159Z 
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.3738784Z ^[[1m^[[91merror^[[0m: test failed, to rerun pass `--lib`
+process-exit	Run original process ownership module with native Windows handles	2026-10-29T08:03:03.4414869Z ##[error]Process completed with exit code 1.
