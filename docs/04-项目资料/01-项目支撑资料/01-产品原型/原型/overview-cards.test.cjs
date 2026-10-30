@@ -34,6 +34,9 @@ test('WebDAV 卡片给连接状态、线上时间与方向色，主按钮统一�
   h.w.renderWebdav(state);
   assert.equal(h.document.querySelector('#syncDirectionText').textContent,text);
   assert.ok(h.document.querySelector('#syncDirection').classList.contains(cls),state);
+  // 方向与线上版本同一行，不再单独占一行。
+  assert.equal(h.document.querySelectorAll('#card-overview-sync .mod-status>span').length,2);
+  assert.ok(h.document.querySelector('#syncRemoteTime').closest('.ov-sync-side').contains(h.document.querySelector('#syncDirectionText')));
   assert.equal(h.document.querySelector('#syncActions').textContent.split('同步')[0],'');
   assert.notEqual(h.document.querySelector('#syncRemoteTime').textContent,'—');
   assert.match(h.document.querySelector('#card-overview-sync').textContent,/连接状态/);

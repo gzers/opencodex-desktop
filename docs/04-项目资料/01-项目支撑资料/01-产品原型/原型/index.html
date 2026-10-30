@@ -751,6 +751,17 @@ h4.cli-help-title.official{margin-top:18px}
 .mod-status b.warning{color:var(--amber)}
 .ov-sync-dir{display:inline-flex;align-items:center;gap:5px;color:var(--muted);white-space:nowrap}
 .ov-sync-dir i{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.ov-sync-side{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:0}
+ /* 概览卡片是窄卡：标签与数值都锁单行，宁可压缩字号也不折成两行。 */
+ #card-overview-sync .mod-status>span{white-space:nowrap;gap:8px}
+ #card-overview-sync .mod-status>span>span{white-space:nowrap}
+ @container (max-width:759px){#card-overview-sync .mod-status{font-size:11px}#card-overview-sync .mod-status>span{gap:6px}}
+.ov-sync-sep{color:var(--border)}
+.ov-sync-dir-text{font-weight:600;color:var(--text)}
+.ov-sync-dir.is-up~.ov-sync-dir-text{color:var(--green)}
+.ov-sync-dir.is-down~.ov-sync-dir-text,.ov-sync-dir.is-both~.ov-sync-dir-text{color:var(--blue)}
+.ov-sync-dir.is-partial~.ov-sync-dir-text{color:var(--amber)}
+.ov-sync-dir.is-idle~.ov-sync-dir-text{color:var(--muted)}
 .ov-sync-dir.is-up{color:var(--green)}
 .ov-sync-dir.is-down{color:var(--blue)}
 .ov-sync-dir.is-both{color:var(--blue)}
@@ -1930,8 +1941,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
           <div class="mod-status">
             <span>连接状态 <b id="syncConn">未配置</b></span>
-            <span>线上版本 <b id="syncRemoteTime">—</b></span>
-            <span>同步方向 <span class="ov-sync-dir is-idle" id="syncDirection"><i aria-hidden="true"></i><b id="syncDirectionText">未连接</b></span></span>
+            <span>线上版本 <span class="ov-sync-side"><span class="ov-sync-dir is-idle" id="syncDirection"><i aria-hidden="true"></i></span><b id="syncRemoteTime">—</b><span class="ov-sync-sep" aria-hidden="true">·</span><span id="syncDirectionText" class="ov-sync-dir-text">未连接</span></span></span>
           </div>
           <div class="mod-actions" id="syncActions"></div>
         </article>
@@ -6800,19 +6810,19 @@ const webdavStates={
     actions:[['配置 WebDAV','btn primary','open-sync-settings']]},
   disconnected:{tag:'未连接',conn:'未连接',remote:'—',dir:['idle','未连接'],
     actions:[['同步','btn primary','sync']]},
-  'pending-upload':{tag:'待上传',conn:'已连接',remote:'今天 10:24',dir:['up','待上传'],
+  'pending-upload':{tag:'待上传',conn:'已连接',remote:'10:24',dir:['up','待上传'],
     actions:[['同步','btn primary','sync']]},
-  'pending-download':{tag:'待下载',conn:'已连接',remote:'今天 11:02',dir:['down','待下载'],
+  'pending-download':{tag:'待下载',conn:'已连接',remote:'11:02',dir:['down','待下载'],
     actions:[['同步','btn primary','sync']]},
-  bidirectional:{tag:'双向更新',conn:'已连接',remote:'今天 11:02',dir:['both','双向更新'],
+  bidirectional:{tag:'双向更新',conn:'已连接',remote:'11:02',dir:['both','双向更新'],
     actions:[['同步','btn primary','sync']]},
-  syncing:{tag:'同步中',conn:'已连接',remote:'今天 11:02',dir:['both','同步中'],
+  syncing:{tag:'同步中',conn:'已连接',remote:'11:02',dir:['both','同步中'],
     actions:[['查看进度','btn','open-sync-settings']]},
-  synced:{tag:'已同步',conn:'已连接',remote:'今天 11:02',dir:['same','已一致'],
+  synced:{tag:'已同步',conn:'已连接',remote:'11:02',dir:['same','已一致'],
     actions:[['同步','btn primary','sync']]},
   error:{tag:'连接失败',conn:'连接失败',remote:'—',dir:['idle','未完成'],
     actions:[['重试连接','btn primary','test-webdav']]},
-  partial:{tag:'部分完成',conn:'已连接',remote:'今天 11:02',dir:['partial','未完成'],
+  partial:{tag:'部分完成',conn:'已连接',remote:'11:02',dir:['partial','未完成'],
     actions:[['同步','btn primary','sync'],['查看结果','btn ghost','open-sync-settings']]},
 };
 let webdavState='unconfigured';
@@ -6845,7 +6855,7 @@ document.addEventListener('prototype:sync-activity',event=>{
     // 同步完成后卡片直接回到「已一致」，线上版本时间用这次同步的时间。
     if(webdavState!=='unconfigured'&&webdavState!=='disconnected'&&webdavState!=='error') renderWebdav(detail.complete===false?'partial':'synced');
     const remote=document.getElementById('syncRemoteTime');
-    if(remote&&webdavState!=='unconfigured'&&webdavState!=='disconnected') remote.textContent='今天 '+detail.time;
+    if(remote&&webdavState!=='unconfigured'&&webdavState!=='disconnected') remote.textContent=detail.time;
     return;
   }
   const node=document.getElementById(detail.kind==='import'?'overviewImportActivity':detail.kind==='export'?'overviewExportActivity':'');

@@ -1,0 +1,1159 @@
+{
+  "engine": "chromium",
+  "checks": [
+    {
+      "name": "1180-light-high file card shows recent facts",
+      "passed": true,
+      "detail": "原型\n04\n＋\n文件同步\n最近导入\n尚未导入\n最近导出\n尚未导出\n导入\n导出"
+    },
+    {
+      "name": "1180-light-high import/export buttons",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high version rows unchecked dot",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high version row shows latest on right",
+      "passed": true,
+      "detail": [
+        {
+          "text": "管理器\n0.1.10\n›",
+          "pair": "0.1.10",
+          "dot": "mnt-dot is-update"
+        },
+        {
+          "text": "面板\n2.51.0\n›",
+          "pair": "2.51.0",
+          "dot": "mnt-dot is-update"
+        }
+      ]
+    },
+    {
+      "name": "1180-light-high version sits at right edge",
+      "passed": true,
+      "detail": [
+        {
+          "versionRight": 567,
+          "rowRight": 595,
+          "nameLeft": 339
+        },
+        {
+          "versionRight": 567,
+          "rowRight": 595,
+          "nameLeft": 339
+        }
+      ]
+    },
+    {
+      "name": "1180-light-high update dot uses green token",
+      "passed": true,
+      "detail": {
+        "dotColor": "rgb(10, 125, 92)",
+        "green": "#0a7d5c"
+      }
+    },
+    {
+      "name": "1180-light-high webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "text": "待上传",
+        "cls": "ov-sync-dir is-up",
+        "remote": "10:24",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-high webdav pending-upload colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(10, 125, 92)"
+      }
+    },
+    {
+      "name": "1180-light-high webdav pending-download",
+      "passed": true,
+      "detail": {
+        "text": "待下载",
+        "cls": "ov-sync-dir is-down",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-high webdav pending-download colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(29, 78, 216)"
+      }
+    },
+    {
+      "name": "1180-light-high webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "text": "双向更新",
+        "cls": "ov-sync-dir is-both",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-high webdav synced",
+      "passed": true,
+      "detail": {
+        "text": "已一致",
+        "cls": "ov-sync-dir is-same",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-high webdav synced colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(110, 110, 110)"
+      }
+    },
+    {
+      "name": "1180-light-high webdav partial",
+      "passed": true,
+      "detail": {
+        "text": "未完成",
+        "cls": "ov-sync-dir is-partial",
+        "remote": "11:02",
+        "actions": [
+          "同步",
+          "查看结果"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-high webdav card concise",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n双向更新\n同步"
+    },
+    {
+      "name": "1180-light-high cards fit window",
+      "passed": true,
+      "detail": {
+        "right": 1212,
+        "windowRight": 1235,
+        "cardsWidth": [
+          288,
+          288,
+          288
+        ]
+      }
+    },
+    {
+      "name": "1180-light-high cards equal width",
+      "passed": true,
+      "detail": [
+        288,
+        288,
+        288
+      ]
+    },
+    {
+      "name": "1180-light-high toolbar simplified",
+      "passed": true,
+      "detail": {
+        "preset": false,
+        "clear": false,
+        "search": true,
+        "all": true
+      }
+    },
+    {
+      "name": "1180-light-high sync page fits",
+      "passed": true,
+      "detail": {
+        "right": 1212,
+        "windowRight": 1235,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180-light-mid file card shows recent facts",
+      "passed": true,
+      "detail": "原型\n04\n＋\n文件同步\n最近导入\n尚未导入\n最近导出\n尚未导出\n导入\n导出"
+    },
+    {
+      "name": "1180-light-mid import/export buttons",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid version rows unchecked dot",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid version row shows latest on right",
+      "passed": true,
+      "detail": [
+        {
+          "text": "管理器\n0.1.10\n›",
+          "pair": "0.1.10",
+          "dot": "mnt-dot is-update"
+        },
+        {
+          "text": "面板\n2.51.0\n›",
+          "pair": "2.51.0",
+          "dot": "mnt-dot is-update"
+        }
+      ]
+    },
+    {
+      "name": "1180-light-mid version sits at right edge",
+      "passed": true,
+      "detail": [
+        {
+          "versionRight": 567,
+          "rowRight": 595,
+          "nameLeft": 339
+        },
+        {
+          "versionRight": 567,
+          "rowRight": 595,
+          "nameLeft": 339
+        }
+      ]
+    },
+    {
+      "name": "1180-light-mid update dot uses green token",
+      "passed": true,
+      "detail": {
+        "dotColor": "rgb(10, 125, 92)",
+        "green": "#0a7d5c"
+      }
+    },
+    {
+      "name": "1180-light-mid webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "text": "待上传",
+        "cls": "ov-sync-dir is-up",
+        "remote": "10:24",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-mid webdav pending-upload colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(10, 125, 92)"
+      }
+    },
+    {
+      "name": "1180-light-mid webdav pending-download",
+      "passed": true,
+      "detail": {
+        "text": "待下载",
+        "cls": "ov-sync-dir is-down",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-mid webdav pending-download colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(29, 78, 216)"
+      }
+    },
+    {
+      "name": "1180-light-mid webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "text": "双向更新",
+        "cls": "ov-sync-dir is-both",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-mid webdav synced",
+      "passed": true,
+      "detail": {
+        "text": "已一致",
+        "cls": "ov-sync-dir is-same",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-mid webdav synced colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(110, 110, 110)"
+      }
+    },
+    {
+      "name": "1180-light-mid webdav partial",
+      "passed": true,
+      "detail": {
+        "text": "未完成",
+        "cls": "ov-sync-dir is-partial",
+        "remote": "11:02",
+        "actions": [
+          "同步",
+          "查看结果"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-mid webdav card concise",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n双向更新\n同步"
+    },
+    {
+      "name": "1180-light-mid cards fit window",
+      "passed": true,
+      "detail": {
+        "right": 1212,
+        "windowRight": 1235,
+        "cardsWidth": [
+          288,
+          288,
+          288
+        ]
+      }
+    },
+    {
+      "name": "1180-light-mid cards equal width",
+      "passed": true,
+      "detail": [
+        288,
+        288,
+        288
+      ]
+    },
+    {
+      "name": "1180-light-mid toolbar simplified",
+      "passed": true,
+      "detail": {
+        "preset": false,
+        "clear": false,
+        "search": true,
+        "all": true
+      }
+    },
+    {
+      "name": "1180-light-mid sync page fits",
+      "passed": true,
+      "detail": {
+        "right": 1212,
+        "windowRight": 1235,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180-light-low file card shows recent facts",
+      "passed": true,
+      "detail": "原型\n04\n＋\n文件同步\n最近导入\n尚未导入\n最近导出\n尚未导出\n导入\n导出"
+    },
+    {
+      "name": "1180-light-low import/export buttons",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low version rows unchecked dot",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low version row shows latest on right",
+      "passed": true,
+      "detail": [
+        {
+          "text": "管理器\n0.1.10\n›",
+          "pair": "0.1.10",
+          "dot": "mnt-dot is-update"
+        },
+        {
+          "text": "面板\n2.51.0\n›",
+          "pair": "2.51.0",
+          "dot": "mnt-dot is-update"
+        }
+      ]
+    },
+    {
+      "name": "1180-light-low version sits at right edge",
+      "passed": true,
+      "detail": [
+        {
+          "versionRight": 567,
+          "rowRight": 595,
+          "nameLeft": 339
+        },
+        {
+          "versionRight": 567,
+          "rowRight": 595,
+          "nameLeft": 339
+        }
+      ]
+    },
+    {
+      "name": "1180-light-low update dot uses green token",
+      "passed": true,
+      "detail": {
+        "dotColor": "rgb(10, 125, 92)",
+        "green": "#0a7d5c"
+      }
+    },
+    {
+      "name": "1180-light-low webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "text": "待上传",
+        "cls": "ov-sync-dir is-up",
+        "remote": "10:24",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-low webdav pending-upload colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(10, 125, 92)"
+      }
+    },
+    {
+      "name": "1180-light-low webdav pending-download",
+      "passed": true,
+      "detail": {
+        "text": "待下载",
+        "cls": "ov-sync-dir is-down",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-low webdav pending-download colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(29, 78, 216)"
+      }
+    },
+    {
+      "name": "1180-light-low webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "text": "双向更新",
+        "cls": "ov-sync-dir is-both",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-low webdav synced",
+      "passed": true,
+      "detail": {
+        "text": "已一致",
+        "cls": "ov-sync-dir is-same",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-low webdav synced colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(110, 110, 110)"
+      }
+    },
+    {
+      "name": "1180-light-low webdav partial",
+      "passed": true,
+      "detail": {
+        "text": "未完成",
+        "cls": "ov-sync-dir is-partial",
+        "remote": "11:02",
+        "actions": [
+          "同步",
+          "查看结果"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "1180-light-low webdav card concise",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n双向更新\n同步"
+    },
+    {
+      "name": "1180-light-low cards fit window",
+      "passed": true,
+      "detail": {
+        "right": 1212,
+        "windowRight": 1235,
+        "cardsWidth": [
+          288,
+          288,
+          288
+        ]
+      }
+    },
+    {
+      "name": "1180-light-low cards equal width",
+      "passed": true,
+      "detail": [
+        288,
+        288,
+        288
+      ]
+    },
+    {
+      "name": "1180-light-low toolbar simplified",
+      "passed": true,
+      "detail": {
+        "preset": false,
+        "clear": false,
+        "search": true,
+        "all": true
+      }
+    },
+    {
+      "name": "1180-light-low sync page fits",
+      "passed": true,
+      "detail": {
+        "right": 1212,
+        "windowRight": 1235,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900-dark-high file card shows recent facts",
+      "passed": true,
+      "detail": "原型\n04\n＋\n文件同步\n最近导入\n尚未导入\n最近导出\n尚未导出\n导入\n导出"
+    },
+    {
+      "name": "900-dark-high import/export buttons",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high version rows unchecked dot",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high version row shows latest on right",
+      "passed": true,
+      "detail": [
+        {
+          "text": "管理器\n0.1.10\n›",
+          "pair": "0.1.10",
+          "dot": "mnt-dot is-update"
+        },
+        {
+          "text": "面板\n2.51.0\n›",
+          "pair": "2.51.0",
+          "dot": "mnt-dot is-update"
+        }
+      ]
+    },
+    {
+      "name": "900-dark-high version sits at right edge",
+      "passed": true,
+      "detail": [
+        {
+          "versionRight": 518,
+          "rowRight": 546,
+          "nameLeft": 372
+        },
+        {
+          "versionRight": 518,
+          "rowRight": 546,
+          "nameLeft": 372
+        }
+      ]
+    },
+    {
+      "name": "900-dark-high update dot uses green token",
+      "passed": true,
+      "detail": {
+        "dotColor": "rgb(78, 203, 157)",
+        "green": "#4ecb9d"
+      }
+    },
+    {
+      "name": "900-dark-high webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "text": "待上传",
+        "cls": "ov-sync-dir is-up",
+        "remote": "10:24",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-high webdav pending-upload colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(78, 203, 157)"
+      }
+    },
+    {
+      "name": "900-dark-high webdav pending-download",
+      "passed": true,
+      "detail": {
+        "text": "待下载",
+        "cls": "ov-sync-dir is-down",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-high webdav pending-download colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(122, 162, 255)"
+      }
+    },
+    {
+      "name": "900-dark-high webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "text": "双向更新",
+        "cls": "ov-sync-dir is-both",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-high webdav synced",
+      "passed": true,
+      "detail": {
+        "text": "已一致",
+        "cls": "ov-sync-dir is-same",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-high webdav synced colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(166, 166, 166)"
+      }
+    },
+    {
+      "name": "900-dark-high webdav partial",
+      "passed": true,
+      "detail": {
+        "text": "未完成",
+        "cls": "ov-sync-dir is-partial",
+        "remote": "11:02",
+        "actions": [
+          "同步",
+          "查看结果"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-high webdav card concise",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n双向更新\n同步"
+    },
+    {
+      "name": "900-dark-high cards fit window",
+      "passed": true,
+      "detail": {
+        "right": 975.984375,
+        "windowRight": 995,
+        "cardsWidth": [
+          200,
+          200,
+          200
+        ]
+      }
+    },
+    {
+      "name": "900-dark-high cards equal width",
+      "passed": true,
+      "detail": [
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "name": "900-dark-high toolbar simplified",
+      "passed": true,
+      "detail": {
+        "preset": false,
+        "clear": false,
+        "search": true,
+        "all": true
+      }
+    },
+    {
+      "name": "900-dark-high sync page fits",
+      "passed": true,
+      "detail": {
+        "right": 972,
+        "windowRight": 995,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900-dark-mid file card shows recent facts",
+      "passed": true,
+      "detail": "原型\n04\n＋\n文件同步\n最近导入\n尚未导入\n最近导出\n尚未导出\n导入\n导出"
+    },
+    {
+      "name": "900-dark-mid import/export buttons",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid version rows unchecked dot",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid version row shows latest on right",
+      "passed": true,
+      "detail": [
+        {
+          "text": "管理器\n0.1.10\n›",
+          "pair": "0.1.10",
+          "dot": "mnt-dot is-update"
+        },
+        {
+          "text": "面板\n2.51.0\n›",
+          "pair": "2.51.0",
+          "dot": "mnt-dot is-update"
+        }
+      ]
+    },
+    {
+      "name": "900-dark-mid version sits at right edge",
+      "passed": true,
+      "detail": [
+        {
+          "versionRight": 518,
+          "rowRight": 546,
+          "nameLeft": 372
+        },
+        {
+          "versionRight": 518,
+          "rowRight": 546,
+          "nameLeft": 372
+        }
+      ]
+    },
+    {
+      "name": "900-dark-mid update dot uses green token",
+      "passed": true,
+      "detail": {
+        "dotColor": "rgb(78, 203, 157)",
+        "green": "#4ecb9d"
+      }
+    },
+    {
+      "name": "900-dark-mid webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "text": "待上传",
+        "cls": "ov-sync-dir is-up",
+        "remote": "10:24",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-mid webdav pending-upload colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(78, 203, 157)"
+      }
+    },
+    {
+      "name": "900-dark-mid webdav pending-download",
+      "passed": true,
+      "detail": {
+        "text": "待下载",
+        "cls": "ov-sync-dir is-down",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-mid webdav pending-download colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(122, 162, 255)"
+      }
+    },
+    {
+      "name": "900-dark-mid webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "text": "双向更新",
+        "cls": "ov-sync-dir is-both",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-mid webdav synced",
+      "passed": true,
+      "detail": {
+        "text": "已一致",
+        "cls": "ov-sync-dir is-same",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-mid webdav synced colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(166, 166, 166)"
+      }
+    },
+    {
+      "name": "900-dark-mid webdav partial",
+      "passed": true,
+      "detail": {
+        "text": "未完成",
+        "cls": "ov-sync-dir is-partial",
+        "remote": "11:02",
+        "actions": [
+          "同步",
+          "查看结果"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-mid webdav card concise",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n双向更新\n同步"
+    },
+    {
+      "name": "900-dark-mid cards fit window",
+      "passed": true,
+      "detail": {
+        "right": 975.984375,
+        "windowRight": 995,
+        "cardsWidth": [
+          200,
+          200,
+          200
+        ]
+      }
+    },
+    {
+      "name": "900-dark-mid cards equal width",
+      "passed": true,
+      "detail": [
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "name": "900-dark-mid toolbar simplified",
+      "passed": true,
+      "detail": {
+        "preset": false,
+        "clear": false,
+        "search": true,
+        "all": true
+      }
+    },
+    {
+      "name": "900-dark-mid sync page fits",
+      "passed": true,
+      "detail": {
+        "right": 972,
+        "windowRight": 995,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900-dark-low file card shows recent facts",
+      "passed": true,
+      "detail": "原型\n04\n＋\n文件同步\n最近导入\n尚未导入\n最近导出\n尚未导出\n导入\n导出"
+    },
+    {
+      "name": "900-dark-low import/export buttons",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low version rows unchecked dot",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low version row shows latest on right",
+      "passed": true,
+      "detail": [
+        {
+          "text": "管理器\n0.1.10\n›",
+          "pair": "0.1.10",
+          "dot": "mnt-dot is-update"
+        },
+        {
+          "text": "面板\n2.51.0\n›",
+          "pair": "2.51.0",
+          "dot": "mnt-dot is-update"
+        }
+      ]
+    },
+    {
+      "name": "900-dark-low version sits at right edge",
+      "passed": true,
+      "detail": [
+        {
+          "versionRight": 518,
+          "rowRight": 546,
+          "nameLeft": 372
+        },
+        {
+          "versionRight": 518,
+          "rowRight": 546,
+          "nameLeft": 372
+        }
+      ]
+    },
+    {
+      "name": "900-dark-low update dot uses green token",
+      "passed": true,
+      "detail": {
+        "dotColor": "rgb(78, 203, 157)",
+        "green": "#4ecb9d"
+      }
+    },
+    {
+      "name": "900-dark-low webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "text": "待上传",
+        "cls": "ov-sync-dir is-up",
+        "remote": "10:24",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-low webdav pending-upload colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(78, 203, 157)"
+      }
+    },
+    {
+      "name": "900-dark-low webdav pending-download",
+      "passed": true,
+      "detail": {
+        "text": "待下载",
+        "cls": "ov-sync-dir is-down",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-low webdav pending-download colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(122, 162, 255)"
+      }
+    },
+    {
+      "name": "900-dark-low webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "text": "双向更新",
+        "cls": "ov-sync-dir is-both",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-low webdav synced",
+      "passed": true,
+      "detail": {
+        "text": "已一致",
+        "cls": "ov-sync-dir is-same",
+        "remote": "11:02",
+        "actions": [
+          "同步"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-low webdav synced colored dot",
+      "passed": true,
+      "detail": {
+        "color": "rgb(166, 166, 166)"
+      }
+    },
+    {
+      "name": "900-dark-low webdav partial",
+      "passed": true,
+      "detail": {
+        "text": "未完成",
+        "cls": "ov-sync-dir is-partial",
+        "remote": "11:02",
+        "actions": [
+          "同步",
+          "查看结果"
+        ],
+        "rows": 2,
+        "sameLine": true
+      }
+    },
+    {
+      "name": "900-dark-low webdav card concise",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n双向更新\n同步"
+    },
+    {
+      "name": "900-dark-low cards fit window",
+      "passed": true,
+      "detail": {
+        "right": 975.984375,
+        "windowRight": 995,
+        "cardsWidth": [
+          200,
+          200,
+          200
+        ]
+      }
+    },
+    {
+      "name": "900-dark-low cards equal width",
+      "passed": true,
+      "detail": [
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "name": "900-dark-low toolbar simplified",
+      "passed": true,
+      "detail": {
+        "preset": false,
+        "clear": false,
+        "search": true,
+        "all": true
+      }
+    },
+    {
+      "name": "900-dark-low sync page fits",
+      "passed": true,
+      "detail": {
+        "right": 972,
+        "windowRight": 995,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "no page errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "failed": 0,
+  "scope": "prototype overview cards, version rows and scope toolbar only"
+}

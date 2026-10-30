@@ -1,8 +1,10 @@
 /* 0.1.10 增量只布局维护内容，材质和按钮消费现有组件令牌。 */
 .mnt-status { margin-left:auto; font-size:var(--text-label); color:var(--muted); white-space:normal; }
-.mnt-version-row { display:flex; width:100%; gap:6px; flex-wrap:wrap; align-items:center; border:0; padding:4px 0; background:transparent; color:inherit; font:inherit; text-align:left; cursor:pointer; }
-.mnt-version-pair { display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
-.mnt-version-arrow { color:var(--muted); }
+.mnt-version-row { display:flex; width:100%; gap:10px; align-items:baseline; justify-content:space-between; border:0; padding:4px 0; background:transparent; color:inherit; font:inherit; text-align:left; cursor:pointer; }
+/* 右侧固定为「最新版本 + 状态点」，名称与版本数值按精确字宽对齐，不随文案长短跳动。 */
+.mnt-version-row .mnt-version-side { display:inline-flex; align-items:center; justify-content:flex-end; gap:6px; flex:none; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.mnt-version-latest { font-weight:600; color:var(--text); }
+.mnt-version-side .mnt-status { margin-left:0; }
 .mnt-dot { width:7px; height:7px; border-radius:50%; background:var(--muted); flex:none; }
 .mnt-dot.is-update { background:var(--green); }
 .mnt-dot.is-current { background:var(--muted); }
