@@ -122,10 +122,10 @@ test('概览只有检查按钮，管理器 / 面板状态行可按对象查看�
   assert.ok(h.node('#card-overview-upgrade .mod-status').innerHTML.includes('面板'));
   // 概览行右侧只给最新线上版本；未检查时是空心点，不写「有可用更新」这种空信息。
   assert.match(h.node('#card-overview-upgrade .mod-status').innerHTML,/尚未检查/);
-  assert.match(h.node('#card-overview-upgrade .mod-status').innerHTML,/mnt-dot is-unchecked/);
+  assert.doesNotMatch(h.node('#card-overview-upgrade .mod-status').innerHTML,/mnt-dot is-/);assert.match(h.node('#card-overview-upgrade .mod-status').innerHTML,/mnt-version-latest">—</);
   h.click('check-all');h.flush(850);
   const rows=h.node('#card-overview-upgrade .mod-status').innerHTML;
-  assert.match(rows,/0\.1\.10/);assert.doesNotMatch(rows,/0\.1\.9/);assert.doesNotMatch(rows,/→/);assert.doesNotMatch(rows,/>有可用更新</);assert.match(rows,/mnt-dot is-update/);
+  assert.match(rows,/0\.1\.10/);assert.doesNotMatch(rows,/0\.1\.9/);assert.doesNotMatch(rows,/→/);assert.doesNotMatch(rows,/>有可用更新</);assert.match(rows,/mnt-dot is-ok/);
   assert.equal((h.node('#card-overview-upgrade .mod-status').innerHTML.match(/mnt-version-latest/g)||[]).length,2);
   assert.equal(h.modal().title,'检查更新结果');
   assert.ok(h.modal().body.includes('data-target="runtime"'));

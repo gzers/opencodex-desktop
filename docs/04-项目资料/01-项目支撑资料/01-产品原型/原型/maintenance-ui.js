@@ -6,9 +6,10 @@
   const esc=value=>String(value).replace(/[&<>"']/g, char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const labels={idle:'尚未检查', checking:'检查中…', available:'有可用更新', latest:'已是最新', failed:'失败，可重试', applying:'更新中…', complete:'更新完成', 'restart-required':'等待重启'};
   // 概览行名与状态点：只区分「有更新 / 已一致 / 尚未检查」，其余阶段沿用现有标签。
-  const rowPhases={idle:'unchecked',checking:'busy',available:'update',latest:'current',complete:'current',failed:'failed',applying:'busy','restart-required':'busy'};
+  // 概览状态色按语义统一：ok=有新版本，info=进行中，warn=需处理，error=失败，idle=已一致。
+  const rowPhases={idle:'idle',checking:'info',available:'ok',latest:'idle',complete:'idle',failed:'error',applying:'info','restart-required':'info'};
   // 概览一行只给两段：左边对象名，右边最新线上版本 + 状态点；当前版本与完整说明留在结果与详情里。
-  const rowLabels={idle:'尚未检查',checking:'检查中',available:'',latest:'',failed:'失败',applying:'更新中',complete:'', 'restart-required':'待重启'};
+  const rowLabels={idle:'',checking:'检查中',available:'',latest:'',failed:'失败',applying:'更新中',complete:'', 'restart-required':'待重启'};
   const busy=u=>['checking','applying'].includes(u.phase);
   const btn=(action, text, target='', style='', disabled=false)=>'<button type="button" class="btn '+style+'" data-maint-action="'+action+'" data-target="'+target+'" '+(disabled?'disabled':'')+'>'+text+'</button>';
   const timers=new Map(), delivered=new Set();
@@ -96,7 +97,7 @@
         const showVersion=['available','applying','restart-required','latest','complete'].includes(u.phase);
         const shownVersion=u.phase==='available'||u.phase==='applying'||u.phase==='restart-required'?u.candidate:u.current;
         const phase=rowPhases[u.phase]||'unchecked';
-        return '<button type="button" class="mnt-version-row" data-maint-action="update-detail" data-target="'+key+'" data-phase="'+phase+'" '+(u.phase==='idle'||busy(u)?'disabled':'')+' aria-label="查看'+esc(u.label)+'更新详情（'+esc(labels[u.phase])+'）">'+esc(key==='manager'?'管理器':'面板')+'<span class="mnt-version-side"><b class="mnt-version-latest">'+(showVersion?esc(shownVersion):'—')+'</b><span class="mnt-dot is-'+phase+'" aria-hidden="true"></span><span class="mnt-status '+(u.phase==='failed'?'danger':'')+'">'+rowLabels[u.phase]+'</span><span aria-hidden="true">›</span></span></button>';
+        return '<button type="button" class="mnt-version-row" data-maint-action="update-detail" data-target="'+key+'" data-phase="'+phase+'" '+(u.phase==='idle'||busy(u)?'disabled':'')+' aria-label="查看'+esc(u.label)+'更新详情（'+esc(labels[u.phase])+'）">'+esc(key==='manager'?'管理器':'面板')+'<span class="mnt-version-side">'+(rowLabels[u.phase]?'<span class="mnt-status '+(u.phase==='failed'?'danger':'')+'">'+rowLabels[u.phase]+'</span>':'')+'<b class="mnt-version-latest">'+(showVersion?esc(shownVersion):'—')+'</b>'+(showVersion?'<span class="mnt-dot is-'+phase+'" aria-hidden="true"></span>':'')+'<span aria-hidden="true">›</span></span></button>';
       }).join('');
       const pending=Object.values(state.updates).some(busy);
       card.querySelector('.mod-actions').innerHTML=btn('check-all','检查更新','','primary',pending)+Object.entries(state.updates).filter(([,u])=>u.phase==='applying'||u.phase==='restart-required').map(([key])=>btn('progress','查看'+(key==='manager'?'管理器':'面板')+'进度',key)).join('');

@@ -746,28 +746,34 @@ h4.cli-help-title.official{margin-top:18px}
 }
 .mod-go svg{width:13px;height:13px;display:block}
 .mod-status{display:grid;gap:6px;font-size:var(--text-label);color:var(--muted)}
-.mod-status span{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+/* 只作用在卡片的状态行本身，不改内层图标尺寸（否则圆点会被 min-height 拉成竖条）。 */
+.mod-status>span{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:18px;line-height:18px}
 .mod-status b{color:var(--text);font-weight:600;white-space:nowrap}
 .mod-status b.warning{color:var(--amber)}
-.ov-sync-dir{display:inline-flex;align-items:center;gap:5px;color:var(--muted);white-space:nowrap}
-.ov-sync-dir i{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
-.ov-sync-side{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:0}
- /* 概览卡片是窄卡：标签与数值都锁单行，宁可压缩字号也不折成两行。 */
- #card-overview-sync .mod-status>span{white-space:nowrap;gap:8px}
- #card-overview-sync .mod-status>span>span{white-space:nowrap}
- @container (max-width:759px){#card-overview-sync .mod-status{font-size:11px}#card-overview-sync .mod-status>span{gap:6px}}
-.ov-sync-sep{color:var(--border)}
-.ov-sync-dir-text{font-weight:600;color:var(--text)}
-.ov-sync-dir.is-up~.ov-sync-dir-text{color:var(--green)}
-.ov-sync-dir.is-down~.ov-sync-dir-text,.ov-sync-dir.is-both~.ov-sync-dir-text{color:var(--blue)}
-.ov-sync-dir.is-partial~.ov-sync-dir-text{color:var(--amber)}
-.ov-sync-dir.is-idle~.ov-sync-dir-text{color:var(--muted)}
-.ov-sync-dir.is-up{color:var(--green)}
-.ov-sync-dir.is-down{color:var(--blue)}
-.ov-sync-dir.is-both{color:var(--blue)}
-.ov-sync-dir.is-same{color:var(--muted)}
-.ov-sync-dir.is-partial{color:var(--amber)}
-.ov-sync-dir.is-idle{color:var(--muted)}
+/* ── 概览状态色：唯一口径（一处定义，卡片/版本行/WebDAV 共用；勿在别处另写颜色）──
+   ok   绿  有更新、待上传
+   info 蓝  进行中、待下载、双向更新
+   warn 琥珀 部分失败、未完成
+   error 红  失败
+   idle 灰  已一致、未连接（无强调色）
+   未加载一律只显示「—」，不画点、不写状态词。 */
+.ov-state-dot{width:7px;height:7px;border-radius:50%;flex:none;background:var(--muted)}
+.ov-state-dot.is-ok{background:var(--green)}
+.ov-state-dot.is-info{background:var(--blue)}
+.ov-state-dot.is-warn{background:var(--amber)}
+.ov-state-dot.is-error{background:var(--red)}
+.ov-state-text{font-weight:600;color:var(--text);white-space:nowrap}
+.ov-state-text.is-ok{color:var(--green)}
+.ov-state-text.is-info{color:var(--blue)}
+.ov-state-text.is-warn{color:var(--amber)}
+.ov-state-text.is-error{color:var(--red)}
+.ov-state-text.is-idle{color:var(--muted)}
+.ov-state-side{display:inline-flex;align-items:center;justify-content:flex-end;gap:6px;flex:none;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ov-state-sep{color:var(--border)}
+/* 卡片是窄卡：整行锁单行，宁可压缩字号也不折行。 */
+#card-overview-sync .mod-status>span{white-space:nowrap;gap:8px}
+#card-overview-sync .mod-status>span>span{white-space:nowrap}
+@container (max-width:759px){#card-overview-sync .mod-status>span{gap:6px}}
 .mod-actions{
   display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px;
   margin-top:auto;padding-top:10px;border-top:1px solid var(--border-soft);
@@ -1941,7 +1947,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
           <div class="mod-status">
             <span>连接状态 <b id="syncConn">未配置</b></span>
-            <span>线上版本 <span class="ov-sync-side"><span class="ov-sync-dir is-idle" id="syncDirection"><i aria-hidden="true"></i></span><b id="syncRemoteTime">—</b><span class="ov-sync-sep" aria-hidden="true">·</span><span id="syncDirectionText" class="ov-sync-dir-text">未连接</span></span></span>
+            <span>线上版本 <span class="ov-state-side"><span class="ov-state-dot" id="syncDirection" hidden></span><b id="syncRemoteTime">—</b><span class="ov-state-sep" id="syncSep" hidden aria-hidden="true">·</span><span class="ov-state-text" id="syncDirectionText" hidden></span></span></span>
           </div>
           <div class="mod-actions" id="syncActions"></div>
         </article>
@@ -6804,25 +6810,26 @@ if(sizeDefault) sizeDefault.classList.add('active');
 updateSizeReadout();
 // ── WebDAV 卡片：按「配置 / 连接」状态渲染内容与动作（不渲染无解释的禁用态）──
 // 「未配置」是初始态：卡片主体说明未配置，动作区只留一颗「配置 WebDAV」主按钮，右上角 ⋯ 仍可进设置。
-// 卡片只回答两件事：连接是否可用、这次同步往哪个方向走。方向由所选对象的新旧决定，不额外确认。
+// 卡片只回答两件事：连接是否可用、这次往哪个方向走。方向由所选对象的新旧决定，不额外确认。
+// 未配置 / 未连接 / 连接失败：线上版本只写「—」，不画点、不写方向词。
 const webdavStates={
-  unconfigured:{tag:'未配置',conn:'未配置',remote:'—',dir:['idle','未连接'],
+  unconfigured:{tag:'未配置',conn:'未配置',remote:'—',dir:null,
     actions:[['配置 WebDAV','btn primary','open-sync-settings']]},
-  disconnected:{tag:'未连接',conn:'未连接',remote:'—',dir:['idle','未连接'],
+  disconnected:{tag:'未连接',conn:'未连接',remote:'—',dir:null,
     actions:[['同步','btn primary','sync']]},
-  'pending-upload':{tag:'待上传',conn:'已连接',remote:'10:24',dir:['up','待上传'],
+  'pending-upload':{tag:'待上传',conn:'已连接',remote:'10:24',dir:['ok','待上传'],
     actions:[['同步','btn primary','sync']]},
-  'pending-download':{tag:'待下载',conn:'已连接',remote:'11:02',dir:['down','待下载'],
+  'pending-download':{tag:'待下载',conn:'已连接',remote:'11:02',dir:['info','待下载'],
     actions:[['同步','btn primary','sync']]},
-  bidirectional:{tag:'双向更新',conn:'已连接',remote:'11:02',dir:['both','双向更新'],
+  bidirectional:{tag:'双向更新',conn:'已连接',remote:'11:02',dir:['info','双向更新'],
     actions:[['同步','btn primary','sync']]},
-  syncing:{tag:'同步中',conn:'已连接',remote:'11:02',dir:['both','同步中'],
+  syncing:{tag:'同步中',conn:'已连接',remote:'11:02',dir:['info','同步中'],
     actions:[['查看进度','btn','open-sync-settings']]},
-  synced:{tag:'已同步',conn:'已连接',remote:'11:02',dir:['same','已一致'],
+  synced:{tag:'已同步',conn:'已连接',remote:'11:02',dir:['idle','已一致'],
     actions:[['同步','btn primary','sync']]},
-  error:{tag:'连接失败',conn:'连接失败',remote:'—',dir:['idle','未完成'],
+  error:{tag:'连接失败',conn:'连接失败',remote:'—',dir:null,
     actions:[['重试连接','btn primary','test-webdav']]},
-  partial:{tag:'部分完成',conn:'已连接',remote:'11:02',dir:['partial','未完成'],
+  partial:{tag:'部分完成',conn:'已连接',remote:'11:02',dir:['warn','未完成'],
     actions:[['同步','btn primary','sync'],['查看结果','btn ghost','open-sync-settings']]},
 };
 let webdavState='unconfigured';
@@ -6836,9 +6843,15 @@ function renderWebdav(state){
   el('syncTag').textContent=cfg.tag;
   el('syncConn').textContent=cfg.conn;
   el('syncRemoteTime').textContent=cfg.remote;
-  const dir=el('syncDirection');
-  dir.className='ov-sync-dir is-'+cfg.dir[0];
-  el('syncDirectionText').textContent=cfg.dir[1];
+  const dot=el('syncDirection'),sep=el('syncSep'),text=el('syncDirectionText');
+  if(cfg.dir){
+    dot.hidden=false;sep.hidden=false;text.hidden=false;
+    dot.className='ov-state-dot is-'+cfg.dir[0];
+    text.className='ov-state-text is-'+cfg.dir[0];
+    text.textContent=cfg.dir[1];
+  }else{
+    dot.hidden=true;sep.hidden=true;text.hidden=true;text.textContent='';
+  }
   el('syncActions').innerHTML=cfg.actions.map(([label,cls,act])=>
     `<button class="${cls}" data-prototype-action="${act}">${label}</button>`).join('');
   document.querySelectorAll('#webdavStates button').forEach(b=>

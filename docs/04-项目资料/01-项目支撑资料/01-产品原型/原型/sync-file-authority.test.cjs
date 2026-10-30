@@ -193,12 +193,12 @@ test('通知专题导入复用共享窗口，普通同步不再提供覆盖确�
  h.w.eval('runNotifScenario(NOTIF_SCEN.findIndex(s=>s[1]==="配置导入"))');
  assert.equal(sync(h).dialogKind,'import');assert.ok(h.document.querySelector('[data-sx=choose-import-file]'));assert.equal(h.document.querySelector('#modalConfirm').textContent,'导入');h.click('#modalCancel');
  h.w.renderWebdav('synced');assert.doesNotMatch(h.document.querySelector('#card-overview-sync').textContent,/每次询问|冲突策略/);
- assert.equal(h.document.querySelector('#syncDirectionText').textContent,'已一致');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-same'));
- h.w.renderWebdav('pending-upload');assert.equal(h.document.querySelector('#syncDirectionText').textContent,'待上传');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-up'));
- h.w.renderWebdav('pending-download');assert.equal(h.document.querySelector('#syncDirectionText').textContent,'待下载');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-down'));
+ assert.equal(h.document.querySelector('#syncDirectionText').textContent,'已一致');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-idle'));
+ h.w.renderWebdav('pending-upload');assert.equal(h.document.querySelector('#syncDirectionText').textContent,'待上传');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-ok'));
+ h.w.renderWebdav('pending-download');assert.equal(h.document.querySelector('#syncDirectionText').textContent,'待下载');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-info'));
  h.w.renderWebdav('bidirectional');assert.equal(h.document.querySelector('#syncDirectionText').textContent,'双向更新');
  assert.equal(h.document.querySelector('#syncActions').textContent,'同步');
- h.w.renderWebdav('partial');assert.equal(h.document.querySelector('#syncTag').textContent,'部分完成');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-partial'));
+ h.w.renderWebdav('partial');assert.equal(h.document.querySelector('#syncTag').textContent,'部分完成');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-warn'));
  assert.doesNotMatch(h.document.querySelector('#card-overview-sync').textContent,/较新覆盖/);
 });
 

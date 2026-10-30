@@ -1,0 +1,917 @@
+{
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "1180-light-high no data shows dash only",
+      "passed": true,
+      "detail": {
+        "remote": "—",
+        "dotHidden": true,
+        "textHidden": true,
+        "version": "—",
+        "dots": 0,
+        "words": "管理器\n—\n›\n面板\n—\n›"
+      }
+    },
+    {
+      "name": "1180-light-high three cards share one size",
+      "passed": true,
+      "detail": [
+        "12px",
+        "12px",
+        "12px"
+      ]
+    },
+    {
+      "name": "1180-light-high version dot unified ok color",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 617,
+        "latestCy": 617,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(10, 125, 92)",
+        "size": "12px"
+      }
+    },
+    {
+      "name": "1180-light-high dot and version share baseline",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 617,
+        "latestCy": 617,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(10, 125, 92)",
+        "size": "12px"
+      }
+    },
+    {
+      "name": "1180-light-high status block hugs right edge",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 617,
+        "latestCy": 617,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(10, 125, 92)",
+        "size": "12px"
+      }
+    },
+    {
+      "name": "1180-light-high dot uses green token",
+      "passed": true,
+      "detail": {
+        "dot": "rgb(10, 125, 92)",
+        "green": "#0a7d5c"
+      }
+    },
+    {
+      "name": "1180-light-high webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-ok",
+        "text": "待上传",
+        "color": "rgb(10, 125, 92)",
+        "dot": "rgb(10, 125, 92)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-high webdav pending-upload uses token",
+      "passed": true,
+      "detail": {
+        "got": "rgb(10, 125, 92)",
+        "want": "#0a7d5c"
+      }
+    },
+    {
+      "name": "1180-light-high webdav pending-download",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "待下载",
+        "color": "rgb(29, 78, 216)",
+        "dot": "rgb(29, 78, 216)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-high webdav pending-download uses token",
+      "passed": true,
+      "detail": {
+        "got": "rgb(29, 78, 216)",
+        "want": "#1d4ed8"
+      }
+    },
+    {
+      "name": "1180-light-high webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "双向更新",
+        "color": "rgb(29, 78, 216)",
+        "dot": "rgb(29, 78, 216)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-high webdav bidirectional uses token",
+      "passed": true,
+      "detail": {
+        "got": "rgb(29, 78, 216)",
+        "want": "#1d4ed8"
+      }
+    },
+    {
+      "name": "1180-light-high webdav synced",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-idle",
+        "text": "已一致",
+        "color": "rgb(110, 110, 110)",
+        "dot": "rgb(110, 110, 110)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-high webdav synced uses token",
+      "passed": true,
+      "detail": {
+        "got": "rgb(110, 110, 110)",
+        "want": "#6e6e6e"
+      }
+    },
+    {
+      "name": "1180-light-high webdav partial",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-warn",
+        "text": "未完成",
+        "color": "rgb(154, 74, 8)",
+        "dot": "rgb(154, 74, 8)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-high webdav partial uses token",
+      "passed": true,
+      "detail": {
+        "got": "rgb(154, 74, 8)",
+        "want": "#9a4a08"
+      }
+    },
+    {
+      "name": "1180-light-mid no data shows dash only",
+      "passed": true,
+      "detail": {
+        "remote": "—",
+        "dotHidden": true,
+        "textHidden": true,
+        "version": "—",
+        "dots": 0,
+        "words": "管理器\n—\n›\n面板\n—\n›"
+      }
+    },
+    {
+      "name": "1180-light-mid three cards share one size",
+      "passed": true,
+      "detail": [
+        "12px",
+        "12px",
+        "12px"
+      ]
+    },
+    {
+      "name": "1180-light-mid version dot unified ok color",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 617,
+        "latestCy": 617,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(10, 125, 92)",
+        "size": "12px"
+      }
+    },
+    {
+      "name": "1180-light-mid dot and version share baseline",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 617,
+        "latestCy": 617,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(10, 125, 92)",
+        "size": "12px"
+      }
+    },
+    {
+      "name": "1180-light-mid status block hugs right edge",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 617,
+        "latestCy": 617,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(10, 125, 92)",
+        "size": "12px"
+      }
+    },
+    {
+      "name": "1180-light-mid dot uses green token",
+      "passed": true,
+      "detail": {
+        "dot": "rgb(10, 125, 92)",
+        "green": "#0a7d5c"
+      }
+    },
+    {
+      "name": "1180-light-mid webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-ok",
+        "text": "待上传",
+        "color": "rgb(10, 125, 92)",
+        "dot": "rgb(10, 125, 92)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-mid webdav pending-download",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "待下载",
+        "color": "rgb(29, 78, 216)",
+        "dot": "rgb(29, 78, 216)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-mid webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "双向更新",
+        "color": "rgb(29, 78, 216)",
+        "dot": "rgb(29, 78, 216)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-mid webdav synced",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-idle",
+        "text": "已一致",
+        "color": "rgb(110, 110, 110)",
+        "dot": "rgb(110, 110, 110)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-mid webdav partial",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-warn",
+        "text": "未完成",
+        "color": "rgb(154, 74, 8)",
+        "dot": "rgb(154, 74, 8)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-low no data shows dash only",
+      "passed": true,
+      "detail": {
+        "remote": "—",
+        "dotHidden": true,
+        "textHidden": true,
+        "version": "—",
+        "dots": 0,
+        "words": "管理器\n—\n›\n面板\n—\n›"
+      }
+    },
+    {
+      "name": "1180-light-low three cards share one size",
+      "passed": true,
+      "detail": [
+        "12px",
+        "12px",
+        "12px"
+      ]
+    },
+    {
+      "name": "1180-light-low version dot unified ok color",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 617,
+        "latestCy": 617,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(10, 125, 92)",
+        "size": "12px"
+      }
+    },
+    {
+      "name": "1180-light-low dot and version share baseline",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 617,
+        "latestCy": 617,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(10, 125, 92)",
+        "size": "12px"
+      }
+    },
+    {
+      "name": "1180-light-low status block hugs right edge",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 617,
+        "latestCy": 617,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(10, 125, 92)",
+        "size": "12px"
+      }
+    },
+    {
+      "name": "1180-light-low dot uses green token",
+      "passed": true,
+      "detail": {
+        "dot": "rgb(10, 125, 92)",
+        "green": "#0a7d5c"
+      }
+    },
+    {
+      "name": "1180-light-low webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-ok",
+        "text": "待上传",
+        "color": "rgb(10, 125, 92)",
+        "dot": "rgb(10, 125, 92)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-low webdav pending-download",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "待下载",
+        "color": "rgb(29, 78, 216)",
+        "dot": "rgb(29, 78, 216)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-low webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "双向更新",
+        "color": "rgb(29, 78, 216)",
+        "dot": "rgb(29, 78, 216)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-low webdav synced",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-idle",
+        "text": "已一致",
+        "color": "rgb(110, 110, 110)",
+        "dot": "rgb(110, 110, 110)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "1180-light-low webdav partial",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-warn",
+        "text": "未完成",
+        "color": "rgb(154, 74, 8)",
+        "dot": "rgb(154, 74, 8)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-high no data shows dash only",
+      "passed": true,
+      "detail": {
+        "remote": "—",
+        "dotHidden": true,
+        "textHidden": true,
+        "version": "—",
+        "dots": 0,
+        "words": "管理器\n—\n›\n面板\n—\n›"
+      }
+    },
+    {
+      "name": "900-dark-high three cards share one size",
+      "passed": true,
+      "detail": [
+        "12px",
+        "12px",
+        "12px"
+      ]
+    },
+    {
+      "name": "900-dark-high version dot unified ok color",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 410,
+        "latestCy": 410,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(78, 203, 157)",
+        "size": "11px"
+      }
+    },
+    {
+      "name": "900-dark-high dot and version share baseline",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 410,
+        "latestCy": 410,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(78, 203, 157)",
+        "size": "11px"
+      }
+    },
+    {
+      "name": "900-dark-high status block hugs right edge",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 410,
+        "latestCy": 410,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(78, 203, 157)",
+        "size": "11px"
+      }
+    },
+    {
+      "name": "900-dark-high dot uses green token",
+      "passed": true,
+      "detail": {
+        "dot": "rgb(78, 203, 157)",
+        "green": "#4ecb9d"
+      }
+    },
+    {
+      "name": "900-dark-high webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-ok",
+        "text": "待上传",
+        "color": "rgb(78, 203, 157)",
+        "dot": "rgb(78, 203, 157)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-high webdav pending-download",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "待下载",
+        "color": "rgb(122, 162, 255)",
+        "dot": "rgb(122, 162, 255)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-high webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "双向更新",
+        "color": "rgb(122, 162, 255)",
+        "dot": "rgb(122, 162, 255)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-high webdav synced",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-idle",
+        "text": "已一致",
+        "color": "rgb(166, 166, 166)",
+        "dot": "rgb(166, 166, 166)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-high webdav partial",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-warn",
+        "text": "未完成",
+        "color": "rgb(251, 191, 36)",
+        "dot": "rgb(251, 191, 36)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-mid no data shows dash only",
+      "passed": true,
+      "detail": {
+        "remote": "—",
+        "dotHidden": true,
+        "textHidden": true,
+        "version": "—",
+        "dots": 0,
+        "words": "管理器\n—\n›\n面板\n—\n›"
+      }
+    },
+    {
+      "name": "900-dark-mid three cards share one size",
+      "passed": true,
+      "detail": [
+        "12px",
+        "12px",
+        "12px"
+      ]
+    },
+    {
+      "name": "900-dark-mid version dot unified ok color",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 410,
+        "latestCy": 410,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(78, 203, 157)",
+        "size": "11px"
+      }
+    },
+    {
+      "name": "900-dark-mid dot and version share baseline",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 410,
+        "latestCy": 410,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(78, 203, 157)",
+        "size": "11px"
+      }
+    },
+    {
+      "name": "900-dark-mid status block hugs right edge",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 410,
+        "latestCy": 410,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(78, 203, 157)",
+        "size": "11px"
+      }
+    },
+    {
+      "name": "900-dark-mid dot uses green token",
+      "passed": true,
+      "detail": {
+        "dot": "rgb(78, 203, 157)",
+        "green": "#4ecb9d"
+      }
+    },
+    {
+      "name": "900-dark-mid webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-ok",
+        "text": "待上传",
+        "color": "rgb(78, 203, 157)",
+        "dot": "rgb(78, 203, 157)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-mid webdav pending-download",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "待下载",
+        "color": "rgb(122, 162, 255)",
+        "dot": "rgb(122, 162, 255)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-mid webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "双向更新",
+        "color": "rgb(122, 162, 255)",
+        "dot": "rgb(122, 162, 255)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-mid webdav synced",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-idle",
+        "text": "已一致",
+        "color": "rgb(166, 166, 166)",
+        "dot": "rgb(166, 166, 166)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-mid webdav partial",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-warn",
+        "text": "未完成",
+        "color": "rgb(251, 191, 36)",
+        "dot": "rgb(251, 191, 36)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-low no data shows dash only",
+      "passed": true,
+      "detail": {
+        "remote": "—",
+        "dotHidden": true,
+        "textHidden": true,
+        "version": "—",
+        "dots": 0,
+        "words": "管理器\n—\n›\n面板\n—\n›"
+      }
+    },
+    {
+      "name": "900-dark-low three cards share one size",
+      "passed": true,
+      "detail": [
+        "12px",
+        "12px",
+        "12px"
+      ]
+    },
+    {
+      "name": "900-dark-low version dot unified ok color",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 410,
+        "latestCy": 410,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(78, 203, 157)",
+        "size": "11px"
+      }
+    },
+    {
+      "name": "900-dark-low dot and version share baseline",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 410,
+        "latestCy": 410,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(78, 203, 157)",
+        "size": "11px"
+      }
+    },
+    {
+      "name": "900-dark-low status block hugs right edge",
+      "passed": true,
+      "detail": {
+        "dotCls": "mnt-dot is-ok",
+        "dotW": 7,
+        "dotH": 7,
+        "dotCy": 410,
+        "latestCy": 410,
+        "sideGap": 0,
+        "dotAfterVersion": true,
+        "kids": [
+          "mnt-version-latest",
+          "mnt-dot is-ok",
+          "SPAN"
+        ],
+        "dotColor": "rgb(78, 203, 157)",
+        "size": "11px"
+      }
+    },
+    {
+      "name": "900-dark-low dot uses green token",
+      "passed": true,
+      "detail": {
+        "dot": "rgb(78, 203, 157)",
+        "green": "#4ecb9d"
+      }
+    },
+    {
+      "name": "900-dark-low webdav pending-upload",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-ok",
+        "text": "待上传",
+        "color": "rgb(78, 203, 157)",
+        "dot": "rgb(78, 203, 157)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-low webdav pending-download",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "待下载",
+        "color": "rgb(122, 162, 255)",
+        "dot": "rgb(122, 162, 255)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-low webdav bidirectional",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-info",
+        "text": "双向更新",
+        "color": "rgb(122, 162, 255)",
+        "dot": "rgb(122, 162, 255)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-low webdav synced",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-idle",
+        "text": "已一致",
+        "color": "rgb(166, 166, 166)",
+        "dot": "rgb(166, 166, 166)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "900-dark-low webdav partial",
+      "passed": true,
+      "detail": {
+        "cls": "ov-state-dot is-warn",
+        "text": "未完成",
+        "color": "rgb(251, 191, 36)",
+        "dot": "rgb(251, 191, 36)",
+        "rows": 2
+      }
+    },
+    {
+      "name": "no page errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "failed": 0,
+  "scope": "overview status typography + unified semantic colors, prototype only"
+}
