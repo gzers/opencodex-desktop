@@ -1,0 +1,6 @@
+import {pickEngine} from '/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/ui/qa/engine.mjs';
+const e=await pickEngine(),b=await e.launch(),p=await b.newPage({viewport:{width:1650,height:980}});await p.route('http://**/*',r=>r.abort());await p.route('https://**/*',r=>r.abort());
+await p.goto('file://'+encodeURI('/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html')+'#sync?tab=file');await p.waitForFunction(()=>window.syncPrototype);
+await p.evaluate(()=>{const w=document.querySelector('.window');w.style.width='1180px';w.style.height='760px';w.style.flex='none';window.syncPrototype.open({tab:'file',scope:['skill:review']});});
+console.log(JSON.stringify(await p.locator('#syncContent').evaluate(n=>{const r=n.getBoundingClientRect();return {rect:r.toJSON(),win:document.querySelector('.window').getBoundingClientRect().toJSON(),overflow:n.scrollWidth-n.clientWidth,outside:[...n.querySelectorAll('*')].filter(el=>{const b=el.getBoundingClientRect();return b.width&&b.right>r.right+1}).map(el=>({id:el.id,class:el.className,tag:el.tagName,right:el.getBoundingClientRect().right,text:el.textContent.slice(0,60)}))};}),null,2));
+await p.locator('.window').screenshot({path:'/tmp/ocx-sync-followup-geometry.png'});await b.close();

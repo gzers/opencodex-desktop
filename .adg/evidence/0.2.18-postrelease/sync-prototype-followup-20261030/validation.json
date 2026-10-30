@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-30",
+  "project": "opencodex-desktop",
+  "phase": "prototype followup only",
+  "basis": "docs/governance-main 2194d41a8 plus existing unstaged panorama/Logo files; parallel changes excluded from this commit",
+  "sourceHashes": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "639edafcb2fac8cea32ae446b0e1fc602d7592b3a41aa0d0623ede8787c6ac64",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js": "f8429d91450959b7d17cd548f2cfb1d8b74b137cefa3a1961c042391ef1c4947",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs": "a213670e6263b59f7afa8a57fc70271e8c2bbe0957595a6d608f8dac399cebc8"
+  },
+  "stagedEntrySha256": "2a3df57acd6809a3bc67b8a88ed125200da0c6e22d5520db12bc009df0bdaaa4",
+  "sharedEntryDifference": "Working entry includes two pre-existing panorama resource-reference hunks; staged entry excludes those hunks, no parallel resource edits staged",
+  "checks": {
+    "syncDom": {
+      "passed": 30,
+      "failed": 0
+    },
+    "existingSaveNotificationAnnotationVersionFlows": {
+      "passed": 25,
+      "failed": 0
+    },
+    "chromium": {
+      "passed": 67,
+      "failed": 0,
+      "pageErrors": 0
+    },
+    "webkit": {
+      "passed": 67,
+      "failed": 0,
+      "pageErrors": 0
+    }
+  },
+  "retainedFailures": {
+    "before": "four added user-behavior checks failed against before source",
+    "initialGeometry": "Both engines initially treated tabs intentional 22px gutter as content overflow; diagnostic shows tab right1234 inside window right1235, corrected geometry checks actual window bounds; no product CSS changed"
+  },
+  "softwareChanged": false,
+  "windowsNativeClaimed": false,
+  "noRealFilesOrRequestsFromPrototype": true,
+  "remaining": "Content-version compatibility algorithm, unsaved editor reconciliation, MCP source/platform paths/Skill target and Windows real verification remain implementation requirements in S18-01..05"
+}

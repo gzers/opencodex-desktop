@@ -1912,7 +1912,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           <div class="mod-head">
             <div class="proto-annotation" id="ann-ov-sync" data-annotation-number="05" data-annotation-title="WebDAV 连接为演示数据" data-annotation-category="实现边界 · 概览">
               <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 05：WebDAV 连接为演示数据"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">05</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
-              <div class="annotation-source" hidden><p>连接配置、测试连接与冲突策略均为演示数据；卡片展示状态机与入口布局，真实网络请求不在原型内发起。</p><div class="annotation-footer">实现边界 · 概览</div></div>
+              <div class="annotation-source" hidden><p>连接配置、测试连接与同步结果均为演示数据；所选范围内较新的内容直接更新，独立失败项可重试，不再手选覆盖方向。真实网络请求不在原型内发起。</p><div class="annotation-footer">实现边界 · 概览</div></div>
             </div>
             <h3>WebDAV 同步</h3>
             <span class="tag" id="syncTag">未配置</span>
@@ -1920,7 +1920,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
           <div class="mod-status">
             <span>连接状态 <b id="syncConn">未配置</b></span>
-            <span>冲突策略 <b id="syncConflict">未设置</b></span>
+            <span>更新规则 <b id="syncUpdateRule">较新覆盖</b></span>
           </div>
           <div class="mod-actions" id="syncActions"></div>
         </article>
@@ -3284,6 +3284,7 @@ ocx update</code></pre>
       <label class="proto-mock-field"><span>选择文件时返回的示例包</span>
         <select id="sxImportSample" aria-label="导入示例包">
           <option value="encrypted">另一台设备 · 加密完整包</option>
+          <option value="plaintext">明文配置包 · 含渠道与扩展凭据</option>
           <option value="keyless">渠道与模版 · 不带 Key</option>
           <option value="config-only">WebDAV 配置 · 不含密码</option>
           <option value="legacy">旧版容器 · 偏好与扩展开关</option>
@@ -3332,14 +3333,14 @@ ocx update</code></pre>
           <button type="button" data-webdav="disconnected">未连接</button>
           <button type="button" data-webdav="error">连接失败</button>
         </div>
-        <div class="pctl-sub">同步支线 · 进度 / 结果（冲突归具体问题）</div>
+        <div class="pctl-sub">同步支线 · 进度 / 结果</div>
         <div class="pctl-grid">
           <button type="button" data-webdav="syncing">同步中</button>
           <button type="button" data-webdav="synced">已同步</button>
-          <button type="button" data-webdav="conflict">冲突待处理</button>
+          <button type="button" data-webdav="partial">部分完成</button>
         </div>
       </div>
-      <p class="pctl-hint">连接测试通过只证明可连接，不证明已同步；存在未处理冲突时<b>不写「已同步」</b>。未配置时卡片主体说明未配置，动作区只留一颗「配置 WebDAV」；只驱动 mock 投影。</p>
+      <p class="pctl-hint">连接测试通过只证明可连接，不证明已同步；有失败项时显示“部分完成”，可重试失败项。未配置时动作区只留“配置 WebDAV”；只驱动 mock 投影，不新增覆盖确认。</p>
     </div>
     <div class="proto-card" data-proto-contexts="overview settings:installation">
       <div class="proto-note-title">环境前置条件（mock 投影）</div>
@@ -5396,9 +5397,9 @@ const cliHelpHtml = `
       <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd stop --json" title="复制 ocxd stop --json"><code>ocxd stop --json</code></button></td><td>经运行中实例停止代理，不做旁路写入。</td></tr>
       <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd restart --json" title="复制 ocxd restart --json"><code>ocxd restart --json</code></button></td><td>经运行中实例重启代理，保留当前运行上下文。</td></tr>
       <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd backup create --json" title="复制 ocxd backup create --json"><code>ocxd backup create --json</code></button></td><td>生成数据目录备份，备份语义与 GUI 一致。</td></tr>
-      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd export --confirm --json" title="复制 ocxd export --confirm --json"><code>ocxd export --confirm --json</code></button></td><td>生成加密导出容器；确认标志用于降低误操作风险。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd export --confirm --json" title="复制 ocxd export --confirm --json"><code>ocxd export --confirm --json</code></button></td><td>生成所选范围的配置包，加密可选；确认标志表示执行本次导出。</td></tr>
       <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd import --confirm --json" title="复制 ocxd import --confirm --json"><code>ocxd import --confirm --json</code></button></td><td>导入前校验容器并自动备份；确认标志表示准备执行变更。</td></tr>
-      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd sync run --json" title="复制 ocxd sync run --json"><code>ocxd sync run --json</code></button></td><td>执行 WebDAV 同步；冲突和覆盖仍按现有规则确认。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd sync run --json" title="复制 ocxd sync run --json"><code>ocxd sync run --json</code></button></td><td>按所选范围执行 WebDAV 双向同步，较新内容直接更新；独立失败项可重试。</td></tr>
     </tbody>
   </table>
 
@@ -5956,7 +5957,7 @@ document.addEventListener('click',event=>{
     const labels={site:'OpenCodex 官网',repo:'OpenCodex GitHub 仓库',issues:'OpenCodex Issues','app-repo':'OpenCodeX-Desktop GitHub 仓库','app-issues':'OpenCodeX-Desktop Issues',license:'官方许可文件',notices:'第三方组件声明','app-license':'MIT 许可证'};
     toast('原型拦截：不会打开'+(labels[aboutTarget]||'外部链接')+'。');
   }else if(action==='open-sync-settings'){
-    setRoute('settings');showSettingsSection('sync');
+    window.syncPrototype?.open({tab:'webdav'});
   }else if(action==='check-update'){
     window.maintenancePrototype?.check('runtime');
   }else if(action==='preupdate-backup'){
@@ -6031,7 +6032,7 @@ document.addEventListener('click',event=>{
   }else if(action==='open-exports'){
     toast('原型拦截：不会打开真实目录。');
   }else if(action==='open-sync-history'){
-    toast('原型提示：会打开同步与冲突历史摘要。');
+    window.syncPrototype?.open({tab:'webdav'});
   }else if(action==='clear-logs'){
     openModal('清理日志','将清空「应用日志」当前视图；原始文件仍由管理器数据根的日志分区按保留策略管理。该清理只作用于管理器本地日志分区，不涉及官方请求数据或活跃数据根审计文件。','清理',()=>{logCache.app=null;logScenario='empty';renderLog();updateLogDemoButtons();toast('原型模拟：应用日志视图已清理。');});
   }else if(action==='clear-notifications'){
@@ -6068,8 +6069,8 @@ let notifications=[
   {id:'external-takeover',kind:'warning',cat:'run',title:'外部 provider 已接管 Codex 配置',detail:'外部应用托管了 ~/.codex/config.toml。该所有权边界属于 OpenCodex CLI 本身；桌面壳只解释影响，不会覆盖外部配置。',time:'10:24',action:'restore',target:'external_takeover',read:false,resolved:false,deleted:false,op:'op_7f3a',dedupe:'takeover:codex-config'},
   {id:'upgrade-available',kind:'warning',cat:'update',title:'OpenCodex 有可用更新',detail:'当前 2.50.0，最新 2.51.0。升级前会先生成备份，并只引导官方 ocx update。',time:'10:18',action:'upgrade',read:false,resolved:false,deleted:false,dedupe:'update:opencodex:2.51.0'},
   {id:'app-update-available',kind:'info',cat:'update',title:'桌面管理器有可用更新',detail:'当前 v0.1.0，最新 v0.1.1。下载校验后重启应用生效，不影响 OpenCodex 代理。',time:'10:16',action:'app-update',read:true,resolved:false,deleted:false,dedupe:'update:app:0.1.1'},
-  {id:'sync-connected',kind:'info',cat:'sync',title:'WebDAV 同步连接正常',detail:'最近同步在今天 10:24 完成，没有发现冲突。',time:'10:24',action:'sync',read:true,resolved:true,resolvedAt:'10:24',deleted:false,dedupe:'sync:ok'},
-  {id:'sync-conflict',kind:'danger',cat:'sync',title:'WebDAV 同步发现冲突',detail:'本地与远端在 providers 段不一致。已暂停覆盖，等待手动选择保留哪一侧。',time:'10:22',action:'sync',read:false,resolved:false,deleted:false,op:'op_5c11',dedupe:'sync:conflict:providers'},
+  {id:'sync-connected',kind:'info',cat:'sync',title:'WebDAV 同步连接正常',detail:'最近同步在今天 10:24 完成，所选对象已一致。',time:'10:24',action:'sync',read:true,resolved:true,resolvedAt:'10:24',deleted:false,dedupe:'sync:ok'},
+  {id:'sync-partial',kind:'warning',cat:'sync',title:'部分同步未完成',detail:'已更新 3 项，Docs MCP 写入失败；其余内容已完成，可仅重试失败项。',time:'10:22',action:'sync',read:false,resolved:false,deleted:false,op:'op_5c11',dedupe:'sync:failed:op_5c11'},
   {id:'start-failed',kind:'danger',cat:'run',title:'OpenCodex 启动失败',detail:'端口 10100 被占用。建议查看日志或重试启动；未自动重试。',time:'10:02',action:'logs',read:false,resolved:false,deleted:false,op:'op_2a90',dedupe:'start:port-in-use'},
   {id:'env-node-missing',kind:'warning',cat:'system',title:'未检测到 Node.js',detail:'OpenCodex 运行依赖 Node.js；请安装后重新探测。',time:'09:58',action:'settings-installation',read:false,resolved:false,deleted:false,dedupe:'env:node-missing'},
   {id:'auto-clean',kind:'info',cat:'system',title:'通知自动清理已保留 30 天',detail:'已读通知按保留期自动归档；未读与 danger 通知不会被自动删除。',time:'09:40',action:'settings-cleanup',read:true,resolved:true,resolvedAt:'09:40',deleted:false,dedupe:'policy:auto-clean'}
@@ -6773,18 +6774,18 @@ updateSizeReadout();
 // ── WebDAV 卡片：按「配置 / 连接」状态渲染内容与动作（不渲染无解释的禁用态）──
 // 「未配置」是初始态：卡片主体说明未配置，动作区只留一颗「配置 WebDAV」主按钮，右上角 ⋯ 仍可进设置。
 const webdavStates={
-  unconfigured:{tag:'未配置',conn:'未配置',conflict:'未设置',
+  unconfigured:{tag:'未配置',conn:'未配置',update:'较新覆盖',
     actions:[['配置 WebDAV','btn primary','open-sync-settings']]},
-  disconnected:{tag:'未连接',conn:'未连接',conflict:'每次询问',
-    actions:[['立即同步','btn primary','sync'],['测试连接','btn ghost','test-webdav']]},
-  syncing:{tag:'同步中',conn:'同步中…',conflict:'每次询问',
-    actions:[['取消同步','btn','sync'],['测试连接','btn ghost','test-webdav']]},
-  synced:{tag:'已同步',conn:'已同步',conflict:'每次询问',
-    actions:[['立即同步','btn primary','sync'],['测试连接','btn ghost','test-webdav']]},
-  error:{tag:'连接失败',conn:'连接失败',conflict:'每次询问',
-    actions:[['重试连接','btn primary','test-webdav'],['立即同步','btn ghost','sync']]},
-  conflict:{tag:'冲突待处理',conn:'有未处理冲突',conflict:'待处理',
-    actions:[['处理冲突','btn primary','open-sync-history'],['立即同步','btn ghost','sync']]},
+  disconnected:{tag:'未连接',conn:'未连接',update:'较新覆盖',
+    actions:[['同步','btn primary','sync'],['测试连接','btn ghost','test-webdav']]},
+  syncing:{tag:'同步中',conn:'已连接',update:'较新覆盖',
+    actions:[['查看进度','btn','open-sync-settings']]},
+  synced:{tag:'已同步',conn:'已连接',update:'较新覆盖',
+    actions:[['同步','btn primary','sync'],['测试连接','btn ghost','test-webdav']]},
+  error:{tag:'连接失败',conn:'连接失败',update:'较新覆盖',
+    actions:[['重试连接','btn primary','test-webdav'],['同步','btn ghost','sync']]},
+  partial:{tag:'部分完成',conn:'已连接',update:'较新覆盖',
+    actions:[['查看结果','btn primary','open-sync-settings']]},
 };
 let webdavState='unconfigured';
 function renderWebdav(state){
@@ -6796,7 +6797,7 @@ function renderWebdav(state){
   const cfg=webdavStates[webdavState];
   el('syncTag').textContent=cfg.tag;
   el('syncConn').textContent=cfg.conn;
-  el('syncConflict').textContent=cfg.conflict;
+  el('syncUpdateRule').textContent=cfg.update;
   el('syncActions').innerHTML=cfg.actions.map(([label,cls,act])=>
     `<button class="${cls}" data-prototype-action="${act}">${label}</button>`).join('');
   document.querySelectorAll('#webdavStates button').forEach(b=>
@@ -7457,7 +7458,7 @@ const demoExtraNotifications=[
   {id:'ext-changed',kind:'warning',cat:'system',title:'扩展写入发现外部文件变更',detail:'检测到客户端 MCP 配置在管理器之外被修改；未覆盖。',time:'10:08',read:false,resolved:false,deleted:false,dedupe:'ext:external-change'},
   {id:'app-update-failed',kind:'danger',cat:'update',title:'应用更新失败，已回滚',detail:'签名校验未通过，已保留上一版本 v0.1.0。',time:'10:05',action:'app-update',read:false,resolved:false,deleted:false,dedupe:'update:app:failed'},
   // 低风险成功事件按规划不占持久未读，默认已读且已解决。
-  {id:'sync-done',kind:'info',cat:'sync',title:'WebDAV 同步完成',detail:'今天 10:24 完成，未发现冲突。',time:'10:24',action:'sync',read:true,resolved:true,resolvedAt:'10:24',deleted:false,dedupe:'sync:ok'},
+  {id:'sync-done',kind:'info',cat:'sync',title:'WebDAV 同步完成',detail:'今天 10:24 完成，下载更新 3 项、上传 1 项。',time:'10:24',action:'sync',read:true,resolved:true,resolvedAt:'10:24',deleted:false,dedupe:'sync:ok'},
   {id:'policy',kind:'info',cat:'system',title:'通知保留策略已变更',detail:'已读通知保留期调整为 30 天。',time:'09:40',action:'settings-cleanup',read:true,resolved:true,resolvedAt:'09:40',deleted:false,dedupe:'policy:auto-clean'}
 ];
 function ensureDemoNotifications(){
@@ -7504,9 +7505,9 @@ const NOTIF_SCEN=[
 ['task','启动 OpenCodex','点启动','任务进度卡（阶段 / 状态）','日志','阻断 Modal / 持久通知','终态：成功 Toast；失败保留摘要','每业务域默认只允许一个活动任务。',{route:'overview',state:'starting',task:{title:'正在启动 OpenCodex',phase:'等待代理 ready',steps:[['下发起始指令','done'],['等待端口 10100','done'],['等待 ready','active']],acts:['后台运行','取消观察']}}],
 ['task','停止 OpenCodex','确认后执行','任务进度卡','日志','阻断 Modal','终态：Toast','停止前必须确认；请求可能中断。',{route:'overview',task:{title:'正在停止 OpenCodex',phase:'结束代理子进程',steps:[['发送停止','active'],['等待进程退出','pending']],acts:['后台运行']}}],
 ['task','重启 OpenCodex','确认后执行','任务进度卡','日志','阻断 Modal','终态：Toast','串行「停 → 启」，阶段对用户可见。',{route:'overview',task:{title:'正在重启 OpenCodex',phase:'步骤 1 / 2 · 停止',steps:[['停止代理','active'],['重新启动','pending']],acts:['后台运行']}}],
-['task','WebDAV 同步','点立即同步','任务进度卡（同步中）','日志','普通 Toast','成功→已同步；失败→操作性通知','连接状态与操作状态可并行表达。',{route:'overview',task:{title:'正在同步 WebDAV',phase:'上传 3 / 7 个文件',steps:[['比对清单','done'],['上传变更','active'],['写入同步状态','pending']],acts:['后台运行','取消同步']}}],
-['task','配置导出','点导出','任务进度卡','日志','通知中心','终态：成功 Toast','口令与目标目录先确认。',{route:'settings',section:'migration',task:{title:'正在导出配置',phase:'生成加密导出容器',steps:[['收集配置','done'],['校验口令','active'],['写入导出目录','pending']],acts:['后台运行']}}],
-['task','配置导入','确认后执行','任务进度卡（校验→备份→应用→回滚）','日志','通知中心（成功）','终态：Toast；失败→通知','校验失败一律中断，不部分写入。',{route:'settings',section:'migration',task:{title:'正在导入配置',phase:'已备份当前配置',steps:[['校验容器','done'],['备份当前配置','done'],['应用配置','active'],['失败回滚','pending']],acts:['后台运行']}}],
+['task','WebDAV 同步','点击同步','同步页现有进度','日志','覆盖确认弹窗','完成→Toast与铃铛；失败→可重试','同一入口自动决定上传/下载，不要求选择保留哪一侧。',{route:'sync',syncScenario:'normal',sync:{tab:'webdav',action:'check',scope:['channel:newapi','skill:review','mcp:docs']}}],
+['task','配置导出','点击导出','共享导出窗口','日志','第二次确认','完成→Toast','按导出范围生成；加密可选，口令只在选择加密时填写。',{route:'sync',sync:{tab:'file',action:'export'}}],
+['task','配置导入','选择文件与范围后导入','共享导入窗口','日志','比较/采用/再次保存','完成→Toast与铃铛；失败项可重试','包无法读取时不执行；独立对象写入失败不阻断其余对象。',{route:'sync',sync:{tab:'file',action:'import'}}],
 ['task','应用自更新','点下载并重启','任务进度卡（下载→校验→安装→重启）','日志','概览新增卡片','成功重启 / 校验失败保留上一版','明确「不停止 OpenCodex 代理」。',{route:'settings',section:'upgrade',task:{title:'正在更新 OpenCodeX-Desktop',phase:'校验签名',steps:[['下载 v0.1.1','done'],['校验签名','active'],['安装','pending'],['重启应用','pending']],acts:['后台运行']}}],
 ['task','数据目录迁移','确认「迁移」','任务进度卡（检查→备份→停→迁移→校验→恢复）','日志','通知中心','成功 / 回滚','失败回到原目录，备份可定位可恢复。',{route:'settings',section:'installation',task:{title:'正在迁移数据目录',phase:'步骤 4 / 5 · 执行迁移',steps:[['检查目录','done'],['运行前备份','done'],['停止代理','done'],['执行迁移','active'],['校验并恢复','pending']],acts:['后台运行']}}],
 ['task','官方 restore','确认后进入官方路径','任务进度卡','日志','通知中心','成功 / 失败 / 取消','一律走官方路径，桌面壳不做私有覆盖。',{route:'overview',state:'external_takeover',task:{title:'正在执行官方 restore',phase:'通过 ocx 官方路径',steps:[['生成备份','done'],['官方 restore','active'],['刷新状态','pending']],acts:['后台运行']}}],
@@ -7518,7 +7519,7 @@ const NOTIF_SCEN=[
 ['task','完整性校验','点校验','任务进度卡（校验中）','日志','通知中心','结果 Toast / 通知','校验结果决定是否放行后续动作。',{route:'settings',section:'backup',task:{title:'正在校验完整性',phase:'逐项比对摘要',steps:[['读取备份清单','done'],['比对哈希','active']],acts:['后台运行']}}],
  // 操作性通知
 ['attention','启动失败且可重试','任务进入失败终态','通知中心（danger）','错误 Toast + 日志','阻断 Modal','处理成功→已解决','同 operation_id 只留一条，避免堆叠。',{route:'overview',state:'starting_failed',notif:'start-failed',toast:{kind:'error',title:'启动失败',detail:'端口 10100 被占用。'}}],
-['attention','WebDAV 冲突','冲突判定成立','通知中心（danger）','日志','自动消失 Toast','处理成功→已解决','未处理前不自动删除，保留在中心。',{route:'overview',notif:'sync-conflict'}],
+['attention','同步部分失败','独立对象更新失败','铃铛通知','页面失败摘要 + 日志','覆盖方向选择','重试成功→已解决','已完成项保持，只重试失败项。',{route:'sync',notif:'sync-partial'}],
 ['attention','WebDAV 连接失败','连接失败','通知中心（warning）','页面内状态 + 日志','持续 Toast','恢复→已解决','与卡片状态互斥，不重复打扰。',{route:'overview',notif:'sync-failed'}],
 ['attention','检测到外部 provider 接管','状态探测命中','通知中心（warning）','页面内状态 + 日志','阻断 Modal','已读→已解决','桌面壳不改写外部配置，只解释影响。',{route:'overview',state:'external_takeover',notif:'external-takeover'}],
 ['attention','官方 status 报告 startup at-risk','状态探测命中','通知中心（warning）','页面内状态','阻断 Modal','已读→已解决','restore 需显式确认。',{route:'overview',state:'at_risk',notif:'at-risk'}],
@@ -7527,20 +7528,18 @@ const NOTIF_SCEN=[
 ['attention','数据目录切换需要重启','切换完成后','通知中心','日志','阻断 Modal','重启接管后→已解决','说明重启不停止代理。',{route:'settings',section:'installation',notif:'need-restart'}],
 ['attention','扩展写入发现外部文件变更','写入前比对命中','通知中心（warning）','日志','静默覆盖','处理后→已解决','冲突必须提示，不得静默覆盖。',{route:'extensions',tab:'mcp',notif:'ext-changed'}],
 ['attention','应用更新失败可回滚','更新链路失败','通知中心（danger）','任务卡错误摘要 + 日志','静默失败','回滚后→已解决','保留上一版本与失败原因。',{route:'settings',section:'upgrade',notif:'app-update-failed'}],
-['attention','同步完成（可选）','同步成功','通知中心 或 仅状态','日志','持续 Toast','已读','是否进中心待确认（OQ-2 相关）。',{route:'overview',notif:'sync-done'}],
+['attention','同步完成','同步成功','结果 Toast + 铃铛记录','日志','常驻成功状态行','Toast按统一时效收起','结果只读，不要求再次采用或确认。',{route:'sync',notif:'sync-done'}],
 ['attention','通知保留策略变更','策略切换','通知中心（info）','日志','—','已读 / 过期清理','仅低优先级、可过期类信息。',{route:'settings',section:'cleanup',notif:'policy'}],
  // 日志型记录
 ['log','start / stop / restart 指令开始、返回与终态','—','日志历史','—','Toast / 未读','按保留策略清理','事实记录，不可通过「已读」改变。',{route:'logs',tab:'logs'}],
 ['log','状态迁移 starting→pending→running / 失败','状态机推进','日志历史','—','通知未读','按保留策略清理','关联 operation_id，便于详情跳转。',{route:'logs',tab:'logs'}],
-['log','同步阶段、冲突判定、备份与恢复结果','—','日志历史','—','—','按保留策略清理','只追加，不参与用户提醒计数。',{route:'logs',tab:'logs'}],
+['log','同步阶段、对象更新、备份与恢复结果','—','日志历史','—','—','按保留策略清理','后台执行记录不增加用户确认步骤。',{route:'logs',tab:'logs'}],
 ['log','外部命令退出码、错误分类、日志 ID','—','日志历史','—','—','按保留策略清理','敏感字段统一脱敏。',{route:'logs',tab:'logs'}],
 ['log','通知生成时的关联事件','通知落库','日志历史','—','—','按保留策略清理','记录通知来源，支撑审计与追踪。',{route:'logs',tab:'logs'}],
 ['log','ocx doctor 只读摘要','环境诊断（诊断中心第一个 Tab）','诊断中心（日志路由）','—','—','只读','只展示只读摘要，不提供写入型修复参数。',{route:'logs',tab:'doctor',scroll:'card-diag-history'}],
  // 阻断式确认
 ['confirm','删除扩展（卸载 Skill / 删除 MCP）','点删除','居中 Modal（480px）','日志','直接执行','确认 / 取消后关闭','Escape 可取消；不可点空白确认。',{route:'extensions',tab:'skills',modal:{title:'卸载 Skill',warning:'将从已同步客户端移除，并在源目录先自动备份',body:'卸载 design-studio 会移除当前已选中的目标副本；备份保留最近 20 份，可用于恢复。',confirm:'卸载'}}],
 ['confirm','清理日志 / 全部通知 / 已读','点清理','居中 Modal（480px）','—','直接执行','确认 / 取消后关闭','说明清理范围与不可逆性。',{route:'settings',section:'cleanup',modal:{title:'清理全部通知',body:'将清空通知中心与通知历史；未确认的动作摘要不会删除。',confirm:'清理'}}],
-['confirm','导入配置','点导入','居中 Modal（680–720px）','—','直接执行','确认 / 取消后关闭','先展示容器校验与敏感值掩码摘要。',{route:'settings',section:'migration',modal:{title:'导入配置',wide:true,body:'导入前校验容器格式与完整性，自动备份当前配置。',facts:[['容器','ocx-export-2026-09-15.ocxenc'],['来源口令','••••••'],['将覆盖','provider / 路由 / 模型映射'],['自动备份','是']],confirm:'继续导入'}}],
-['confirm','覆盖同步','冲突时选覆盖','居中 Modal（680–720px）','—','静默覆盖','确认 / 取消后关闭','覆盖前必须生成可恢复备份。',{route:'overview',modal:{title:'覆盖同步',wide:true,warning:'覆盖前会生成可恢复备份；此操作不可撤销',body:'覆盖会丢弃本地该段的改动，保留远端版本。',facts:[['冲突项','providers 段'],['保留','远端版本'],['覆盖','本地版本'],['覆盖前备份','是']],confirm:'覆盖并同步'}}],
 ['confirm','restore 前确认','点继续','居中 Modal（680–720px）','—','直接 restore','确认 / 取消后关闭','展示影响摘要 + 前置备份说明。',{route:'overview',state:'external_takeover',modal:{title:'官方 restore 前置确认',wide:true,body:'桌面壳不直接改写配置；只有显式确认后才进入官方引导，可随时取消。',facts:[['触发','外部 provider 接管'],['影响','codex 配置所有权'],['执行方','官方 ocx restore'],['前置备份','是']],confirm:'进入官方引导'}}],
 ['confirm','数据目录切换 / 修改 OPENCODEX_HOME','点修改','居中 Modal','—','直接切换','确认 / 取消后关闭','运行中禁止，先停代理；两目录不可互相嵌套。',{route:'settings',section:'installation',modal:{title:'修改数据目录',warning:'变更前自动备份，失败可回滚；两个目录不允许互相嵌套',body:'运行中禁止直接切换；真实实现会先停止代理。目录检查后展示已有数据摘要，并选择「仅切换引用」或「迁移数据」。',confirm:'继续'}}],
 ['confirm','停止 / 重启确认','点停止 / 重启','居中 Modal（480px）','—','直接执行','确认 / 取消后关闭','说明正在执行的请求可能中断。',{route:'overview',state:'running',modal:{title:'确认停止 OpenCodex？',body:'停止会结束当前代理子进程。正在执行的请求可能中断。',confirm:'停止'}}],
@@ -7617,6 +7616,11 @@ function runNotifScenario(i){
     document.getElementById('modal').classList.toggle('modal-wide',!!run.modal.wide);
   }else{
     document.getElementById('modal').classList.remove('modal-wide');
+  }
+  // 同步专题沿实际共享窗口与内存流程，不另造比较或覆盖确认。
+  if(run.sync){
+    if(run.syncScenario) window.syncPrototype?.setScenario(run.syncScenario);
+    window.syncPrototype?.open(run.sync);
   }
   if(run.scroll){setTimeout(()=>{const el=document.getElementById(run.scroll);if(el)el.scrollIntoView({block:'center'});},30);}
   renderNotifLauncher();

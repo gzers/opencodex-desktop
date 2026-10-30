@@ -33,7 +33,8 @@
   ); return list.map(accountDefaults).concat(window.conversationPrototype?.syncObjects()||[]);
  }
  const importSamples={
-  encrypted:{file:'opencodex-device-config.ocx',encrypted:true},
+  encrypted:{file:'opencodex-device-config.ocx',encrypted:true,credentials:{keys:['channel:newapi'],extensions:['mcp:docs']}},
+  plaintext:{file:'opencodex-plaintext-config.ocx',encrypted:false,credentials:{keys:['channel:newapi'],extensions:['mcp:docs']}},
   keyless:{file:'opencodex-channels.ocx',encrypted:false},
   'config-only':{file:'opencodex-webdav-config.ocx',encrypted:false},
   legacy:{file:'opencodex-legacy-config.ocx',encrypted:false},
@@ -43,7 +44,7 @@
  function setImportSample(value){if(Object.hasOwn(importSamples,value)){importSample=value;const el=$('#sxImportSample');if(el)el.value=value;}}
  function chooseImportFile(){
   if(dialogKind!=='import')return;
-  importFile={kind:importSample,...importSamples[importSample]};
+  importFile={kind:importSample,...clone(importSamples[importSample])};
   refreshLocalVersions();importPlan.rows=directImportRows(importSample);
   const wanted=importPlan.context?new Set(importPlan.context):null;
   importPlan.selected=new Set(importPlan.rows.filter(x=>!wanted||wanted.has(x.id)).map(x=>x.id));
@@ -107,6 +108,7 @@
   return '<div class="proto-annotation" id="ann-sx-'+num+'" data-annotation-number="'+num+'" data-annotation-title="'+title+'" data-annotation-category="实现边界 · 同步"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 '+num+'：'+title+'"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">'+num+'</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>'+body+'</p><div class="annotation-footer">实现边界 · 同步</div></div></div>';
  }
  function scopeHTML(){
+  const scopeLabel=tab==='file'?'导出范围':'同步范围';
   const s=state(),{ids,deps}=closure(),visible=catalog.filter(x=>(tab==='file'||x.group!=='endpoints')&&(x.name+' '+x.summary).toLowerCase().includes(query.toLowerCase())&&(x.group!=='accounts'||accountPlatform==='all'||x.accountPlatform===accountPlatform));
   const rows=groups.map(([id,label])=>{
    const items=visible.filter(x=>x.group===id);if(!items.length)return '';
@@ -124,7 +126,7 @@
      toggleAttrs:'data-sx="expand" data-id="'+id+'"',expanded:open,
      cells:['<span class="sx-group-count">'+(selectable.length?count+' / '+selectable.length:id==='accounts'?'暂无可选能力':'本地恢复')+'</span>']})+(id==='accounts'&&open?'<label class="sx-account-filter">账户平台<select data-sx-account-platform aria-label="账户列表平台筛选"><option value="all">全部平台</option>'+Object.entries(accountCapabilities.platforms).map(([key,label])=>'<option value="'+key+'" '+(accountPlatform===key?'selected':'')+'>'+label+'</option>').join('')+'</select></label>':'')+children+'</div>';
   }).join('');
-  return '<div class="sx-toolbar"><select data-sx-preset aria-label="同步范围预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>默认配置范围</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.filter(eligible).length&&visible.filter(eligible).every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','同平台支持多个独立账户；账户平台与OpenCodex管理方、调用方分开，Google Antigravity、Kiro不归类为Codex。选择和比较绑定来源账户身份，不按邮箱或名称合并。账户能力按账户平台、管理方、授权来源和认证类型登记。当前正常流程仅账户信息；登录迁移未通过适配与证据门，不开放选择。0.2.0按已确认范围交付账户信息，不把此原型当免登录验证通过'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。默认导出当前已保存文件快照；仅显式指定 draft 来源才导出当前模型渠道内存草稿。模版只取已保存版本，不带模版编辑缓冲。搜索仅改变显示，隐藏勾选保留。范围与凭据选择自动记住，点击同步才执行。原型只记在当前文档内存，刷新后复位；不读写真实文件。');
+  return '<div class="sx-toolbar"><select data-sx-preset aria-label="'+scopeLabel+'预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>'+(tab==='file'?'默认导出范围':'默认同步范围')+'</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:tab==='file'?'导出范围':'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.filter(eligible).length&&visible.filter(eligible).every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','同平台支持多个独立账户；账户平台与OpenCodex管理方、调用方分开，Google Antigravity、Kiro不归类为Codex。更新对应来源账户身份，不按邮箱或名称合并。账户能力按账户平台、管理方、授权来源和认证类型登记。当前正常流程仅账户信息；登录迁移未通过适配与证据门，不开放选择。0.2.0按已确认范围交付账户信息，不把此原型当免登录验证通过'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。默认导出当前已保存文件快照；仅显式指定 draft 来源才导出当前模型渠道内存草稿。模版只取已保存版本，不带模版编辑缓冲。搜索仅改变显示，隐藏勾选保留。范围与凭据选择自动记住，点击同步才执行。原型只记在当前文档内存，刷新后复位；不读写真实文件。');
  }
  function credentialsHTML(){
   const s=state(),ids=closure().ids;
@@ -142,9 +144,9 @@
   if(resetList)scrolls[tab].list=0;
   const selected=closure().ids.size;
   host.innerHTML='<div class="sx-tabs" data-page-tabs data-tabs-scroll="inner" role="tablist" aria-label="同步方式">'+[['file','文件同步'],['webdav','WebDAV 同步']].map(([id,name])=>'<button type="button" role="tab" id="sxTab-'+id+'" aria-controls="sxPanel" aria-selected="'+(tab===id)+'" tabindex="'+(tab===id?'0':'-1')+'" data-sx="tab" data-id="'+id+'">'+name+'</button>').join('')+'</div>'+
-   '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'"><header class="sx-top"><div><h2>'+(tab==='file'?'导入与导出':'设备间同步')+'</h2><p class="sx-muted">'+(tab==='file'?'把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。':'按所选范围双向更新，较新的内容覆盖较旧的内容。')+'</p></div><div class="sx-actions">'+(tab==='file'?(result?.tab===tab&&result.items?.length&&!result.failed?.length?btn('查看结果','result-details'):'')+btn('导入配置','import')+btn('导出配置','export',selected?'':'disabled',true):(result?.tab===tab&&result.items?.length&&!result.failed?.length?btn('查看结果','result-details'):'')+btn(run?'同步中…':'同步','check',run||!selected?'disabled':'',true))+'</div></header>'+
+   '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'"><header class="sx-top"><div><h2>'+(tab==='file'?'导入与导出':'设备间同步')+'</h2><p class="sx-muted">'+(tab==='file'?'按下方范围导出配置；导入时在所选文件内选择范围。':'按所选范围双向更新，较新的内容覆盖较旧的内容。')+'</p></div><div class="sx-actions">'+(tab==='file'?(result?.tab===tab&&result.items?.length&&!result.failed?.length?btn('查看结果','result-details'):'')+btn('导入配置','import')+btn('导出配置','export',selected?'':'disabled',true):(result?.tab===tab&&result.items?.length&&!result.failed?.length?btn('查看结果','result-details'):'')+btn(run?'同步中…':'同步','check',run||!selected?'disabled':'',true))+'</div></header>'+
    (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>'+sxAnn('03','按版本直接更新 · 方案演示','S18-01/03/04/05：范围和凭据选择在当前文档自动记住，普通同步直接写mock文件，不再比较、采用或二次保存。Skill整体更新并移除本Skill旧文件；官方openai忽略。右侧结果场景可演示上传、下载、无变化和失败重试。首次无版本远端优先、整对象删除传播、设备专属字段与未保存编辑仍待确认；本轮不演示删除用户对象，也不把建议写为生产结论。'):'') +
-   '<div class="sx-layout"><section class="sx-scope" aria-label="同步范围">'+scopeHTML()+'</section>'+credentialsHTML()+'</div>' +
+   '<div class="sx-layout"><section class="sx-scope" aria-label="'+(tab==='file'?'导出范围':'同步范围')+'">'+scopeHTML()+'</section>'+credentialsHTML()+'</div>' +
    (run&&run.tab===tab?'<div class="sx-result" role="status" aria-live="polite"><strong>正在同步</strong><span>正在更新所选 '+run.ids.length+' 项内容…</span></div>':result&&result.tab===tab&&(result.failed?.length||result.packagePath||result.inputNeeded)?'<div class="sx-result" role="status"><strong>'+esc(result.title)+'</strong><span>'+esc(result.detail)+'</span>'+resultActions()+(result.packagePath?'<div class="sx-result-actions"><code>'+esc(result.packagePath)+'</code><button type="button" class="btn ghost" data-sx="open-export">打开导出目录</button></div>':'')+'</div>':'') +
    '</div>';
   if(window.conversationPrototype?.renderRecovery($('#sxPanel',host),tab)){renderedTab=tab;return;}
@@ -220,7 +222,17 @@
   const rows=importPlan.rows||[];
   return '<div class="sx-field"><span>配置文件</span><div class="sx-file-picker">'+btn('选择文件','choose-import-file')+'<span id="sxImportFileName" aria-live="polite">'+esc(importFile?.file||'尚未选择文件')+'</span></div></div>'+
    '<label class="sx-field" id="sxUnlockField" '+(!importFile?.encrypted?'hidden':'')+'><span>解密口令</span><input class="input" id="sxUnlock" type="password" autocomplete="off" placeholder="请输入配置包的加密口令"></label>'+
-   (rows.length?'<fieldset class="sx-import-scope"><legend>导入范围</legend>'+groups.map(([group,label])=>{const items=rows.filter(x=>x.group===group);return items.length?'<div class="sx-import-group"><strong>'+label+'</strong>'+items.map(x=>check('data-sx-import-object="'+esc(x.id)+'"',esc(x.name),importPlan.selected.has(x.id))).join('')+'</div>':'';}).join('')+'</fieldset>'+check('data-sx-import-keys','包含包内渠道 API Key',!!importFile?.encrypted&&importPlan.keys,!importFile?.encrypted)+check('data-sx-import-secrets','包含包内扩展凭据',!!importFile?.encrypted&&importPlan.extensions,!importFile?.encrypted):'');
+   (rows.length?'<fieldset class="sx-import-scope"><legend>导入范围</legend>'+groups.map(([group,label])=>{const items=rows.filter(x=>x.group===group);return items.length?'<div class="sx-import-group"><strong>'+label+'</strong>'+items.map(x=>check('data-sx-import-object="'+esc(x.id)+'"',esc(x.name),importPlan.selected.has(x.id))).join('')+'</div>':'';}).join('')+'</fieldset>'+check('data-sx-import-keys','包含包内渠道 API Key',importPlan.keys,!importSecretIds('keys').length)+check('data-sx-import-secrets','包含包内扩展凭据',importPlan.extensions,!importSecretIds('extensions').length):'');
+ }
+ function importSecretIds(kind){
+  return (importFile?.credentials?.[kind]||[]).filter(id=>importPlan.selected.has(id)&&importPlan.rows.some(x=>x.id===id));
+ }
+ function syncImportControls(){
+  for(const [kind,attr] of [['keys','keys'],['extensions','secrets']]){
+   const input=$('[data-sx-import-'+attr+']');if(!input)continue;
+   input.disabled=!importSecretIds(kind).length;input.checked=!input.disabled&&!!importPlan[kind];
+  }
+  $('#modalConfirm').disabled=!importFile||!importPlan.selected.size;
  }
  function renderImport(){
   showDialog('import','导入配置',importForm(),'导入',()=>{
@@ -229,10 +241,10 @@
    if(importFile.encrypted&&$('#sxUnlock').value!=='demo-sync'){setText('#sxError','解密口令不正确，请重新输入。');return;}
    if(!importPlan.selected.size)return;
    const rows=importPlan.rows.filter(x=>importPlan.selected.has(x.id));
-   const secrets={keys:importFile.encrypted&&importPlan.keys?rows.filter(x=>x.group==='channels').map(x=>x.id):[],extensions:importFile.encrypted&&importPlan.extensions?rows.filter(x=>x.group==='mcp').map(x=>x.id):[]};
+   const secrets={keys:importPlan.keys?importSecretIds('keys'):[],extensions:importPlan.extensions?importSecretIds('extensions'):[]};
    closeModal();startUpdate('file',rows,secrets);
-  },{annotationText:['S18方案演示：选择文件与范围 → 导入并直接更新；不会读取真实文件。加密示例口令 demo-sync。','官方openai不进入导入范围。同一渠道按固定身份原位更新，不创建导入副本。未勾选凭据表示保留本机已有值。','未保存编辑的处理仍待定，本轮示例更新mock已保存文件并保留原编辑缓冲；不把此建议当已确认生产规则。']});
-  $('#modalConfirm').disabled=!importFile||!importPlan.selected.size;
+  },{annotationText:['S18方案演示：选择文件与范围 → 导入并直接更新；不会读取真实文件。加密示例口令 demo-sync。','官方openai不进入导入范围。同一渠道按固定身份原位更新，不创建导入副本。凭据选项由包内实际内容与已选对象决定，与是否加密无关；未勾选凭据表示保留本机已有值。','未保存编辑的处理仍待定，本轮示例更新mock已保存文件并保留原编辑缓冲；不把此建议当已确认生产规则。']});
+  syncImportControls();
  }
  function importStart(context={}){importFile=null;importPlan={rows:[],selected:new Set(),keys:importCredentialPrefs.keys,extensions:importCredentialPrefs.extensions,context:context.scope||null};renderImport();}
  function startUpdate(mode,rows,secrets=secretIds(scopes.webdav)){
@@ -335,7 +347,7 @@
   else if(el.id==='sxEncrypt')$('#sxPassFields').hidden=!el.checked;
   else if(el.name==='sxDestination'){const box=$('#sxCustomDir');if(box)box.hidden=el.value!=='custom';if(el.value!=='custom'){const input=$('#sxDirPath');if(input)input.value='';}setText('#sxError','');}
   else if(el.matches('[data-sx-protect]')){protection.enabled=el.checked;redraw=true;}
-  else if(el.matches('[data-sx-import-object]')){el.checked?importPlan.selected.add(el.dataset.sxImportObject):importPlan.selected.delete(el.dataset.sxImportObject);$('#modalConfirm').disabled=!importPlan.selected.size;}
+  else if(el.matches('[data-sx-import-object]')){el.checked?importPlan.selected.add(el.dataset.sxImportObject):importPlan.selected.delete(el.dataset.sxImportObject);syncImportControls();}
   else if(el.matches('[data-sx-import-keys]'))importCredentialPrefs.keys=importPlan.keys=el.checked;
   else if(el.matches('[data-sx-import-secrets]'))importCredentialPrefs.extensions=importPlan.extensions=el.checked;
   if(redraw){rememberScope();for(const key of ['keys','accountInfoOnly','endpointConfigOnly','extensions'])for(const id of s[key])if(!closure().ids.has(id))s[key].delete(id);render();restoreFocus();}

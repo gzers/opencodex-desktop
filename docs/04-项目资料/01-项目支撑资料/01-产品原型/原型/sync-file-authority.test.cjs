@@ -157,3 +157,39 @@ test('旧包不会反向覆盖已保存的新内容，比较在后台完成',asy
  const h=await setup(t);chooseImport(h);h.click('#modalConfirm');await finished(h);patch(h,'newer-local-save');h.w.setRoute('models');h.click('#mpPolicySave');h.click('#modalConfirm');for(let i=0;i<120&&model(h).operation?.status==='running';i++)await h.wait(50);assert.equal(first(model(h).saved).naming.alias,'newer-local-save');
  chooseImport(h);h.click('#modalConfirm');const result=await finished(h);assert.equal(result.downloaded,0);assert.equal(result.skipped,1);assert.equal(first(model(h).saved).naming.alias,'newer-local-save');assert.equal(sync(h).dialogKind,'');
 });
+
+test('明文包含凭据也可导入，资格由所选包内对象决定，无解密或额外确认',async t=>{
+ const h=await setup(t);chooseImport(h,'plaintext',['channel:newapi','mcp:docs']);
+ assert.equal(sync(h).importFile.kind,'plaintext');assert.equal(h.document.querySelector('#sxUnlockField').hidden,true);
+ for(const selector of ['[data-sx-import-keys]','[data-sx-import-secrets]'])assert.equal(h.document.querySelector(selector).disabled,false);
+ h.change('[data-sx-import-keys]',true);h.change('[data-sx-import-secrets]',true);h.click('#modalConfirm');await finished(h);
+ assert.match(model(h).saved.providers.find(p=>p.id==='newapi').connection.credentialRef,/^mock-key:/);
+ assert.equal(sync(h).result.items.find(x=>x.id==='channel:newapi').credential,true);assert.equal(sync(h).dialogKind,'');
+});
+
+test('取消勾选包内对象即禁用其凭据选项，不误把其它渠道凭据带入；重选保留偏好',async t=>{
+ const h=await setup(t);chooseImport(h,'plaintext',['channel:newapi','channel:legacy','mcp:docs']);
+ h.change('[data-sx-import-keys]',true);h.change('[data-sx-import-secrets]',true);
+ h.change('[data-sx-import-object="channel:newapi"]',false);h.change('[data-sx-import-object="mcp:docs"]',false);
+ assert.equal(h.document.querySelector('[data-sx-import-keys]').disabled,true);assert.equal(h.document.querySelector('[data-sx-import-keys]').checked,false);
+ assert.equal(h.document.querySelector('[data-sx-import-secrets]').disabled,true);
+ h.change('[data-sx-import-object="channel:newapi"]',true);assert.equal(h.document.querySelector('[data-sx-import-keys]').checked,true);
+ h.click('#modalCancel');chooseImport(h,'keyless');assert.equal(h.document.querySelector('[data-sx-import-keys]').checked,false);assert.equal(h.document.querySelector('[data-sx-import-keys]').disabled,true);h.click('#modalCancel');
+});
+
+test('文件页明确导出范围，导入范围来自所选文件而非继承页面导出勾选',async t=>{
+ const h=await setup(t);h.w.syncPrototype.open({tab:'file',scope:['skill:review']});
+ assert.ok(h.document.querySelector('section[aria-label="导出范围"]'));assert.match(h.document.querySelector('.sx-table-head').textContent,/导出范围/);
+ assert.match(h.document.querySelector('.sx-top p').textContent,/导入.*文件.*选择范围/);
+ h.w.syncPrototype.setImportSample('keyless');h.click('[data-sx=import]');h.click('[data-sx=choose-import-file]');
+ assert.equal(h.document.querySelector('fieldset legend').textContent,'导入范围');assert.ok(h.document.querySelector('[data-sx-import-object="channel:newapi"]'));assert.equal(h.document.querySelector('[data-sx-import-object="skill:review"]'),null);h.click('#modalCancel');
+ assert.deepEqual([...sync(h).selected],['skill:review']);h.w.syncPrototype.open({tab:'webdav'});assert.ok(h.document.querySelector('section[aria-label="同步范围"]'));
+});
+
+test('通知专题导入复用共享窗口，普通同步不再提供覆盖确认或手选冲突侧',async t=>{
+ const h=await setup(t);assert.equal(h.w.eval('NOTIF_SCEN.some(s=>s[1]==="覆盖同步"||s[1]==="WebDAV 冲突")'),false);
+ h.w.eval('runNotifScenario(NOTIF_SCEN.findIndex(s=>s[1]==="配置导入"))');
+ assert.equal(sync(h).dialogKind,'import');assert.ok(h.document.querySelector('[data-sx=choose-import-file]'));assert.equal(h.document.querySelector('#modalConfirm').textContent,'导入');h.click('#modalCancel');
+ h.w.renderWebdav('synced');assert.doesNotMatch(h.document.querySelector('#card-overview-sync').textContent,/每次询问|冲突策略/);
+ assert.match(h.document.querySelector('#card-overview-sync').textContent,/较新覆盖/);h.w.renderWebdav('partial');assert.equal(h.document.querySelector('#syncTag').textContent,'部分完成');
+});

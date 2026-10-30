@@ -1,0 +1,20 @@
+{
+  "engine": "chromium",
+  "checks": [
+    {
+      "name": "1180-light-high explicit export range",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high file page fits",
+      "passed": false,
+      "detail": {
+        "overflow": 22,
+        "bodyOverflow": 0
+      }
+    }
+  ],
+  "errors": [],
+  "failed": 1,
+  "scope": "prototype only: fixed mock credentials/objects, no real files/network/Windows claims"
+}
