@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-30",
+  "project": "opencodex-desktop",
+  "phase": "maintained total prototype adoption only",
+  "basis": "docs/governance-main5de50483d plus pre-existing parallel panorama/Logo changes; all unrelated edits kept unstaged",
+  "entry": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html#sync?tab=file",
+  "sourceHashes": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "929899b6a451fd5cb89ee43202a8eb69bfc93a99bf4dc7cb31f297478994e866",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.js": "881699a465c36fa79006ee424763e9c5dcca4c485284e35fb5911f49bbec75cf",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.css": "11b06c685e9fd59d5eea4214de7b67b9e14863f6fad299255610793801ef6bcc",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.test.cjs": "4e12f560f470c356cc1d7a54eebf86a7d0ea36600e0a9569c01143dd9c448be1",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-notification.test.cjs": "e3c08e3f0764b9416562d00cfa7c6a5b2f42def1ee4d46f088e15ba7115e0b6a",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-catalog.js": "0d13443c50302bab66972e57d33792d1353787988c3b367896b901f53cce049e",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.js": "8bbff4ee2e0c3f37628e403a3e283e2b60d03731194e6cafdded851ed92ff101",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-notification-publisher.js": "37bc4910102760f608efba2ddb38694b5c7e77d3904711c85d909c7f768113a1"
+  },
+  "stagedEntrySha256": "684e2f68acd018443cb174015455dc9ac6825722741e4bf7af6384e912575b7f",
+  "entryDifference": "Staged entry excludes only two pre-existing connection-map resource-reference hunks; working entry otherwise matches tested source",
+  "checks": {
+    "sharedCountdownDom": {
+      "passed": 12,
+      "failed": 0
+    },
+    "syncNotificationDom": {
+      "passed": 42,
+      "failed": 0
+    },
+    "existingSaveNotificationAnnotationVersion": {
+      "passed": 25,
+      "failed": 0
+    },
+    "chromium": {
+      "passed": 92,
+      "failed": 0,
+      "pageErrors": 0
+    },
+    "webkit": {
+      "passed": 92,
+      "failed": 0,
+      "pageErrors": 0
+    }
+  },
+  "retainedFailure": "Original model-save test expected unconditional8s expiry even when restart button held focus. New shared behavior intentionally pauses on focus; assertion now verifies paused state, moves focus outside, then still waits full8150ms and requires removal. Original failure retained; no timeout or expiry duration shortened",
+  "adoptedStyle": "Success green/error red/warning amber/info blue; fixed semi-transparent, left clear/right fade, no blink or flow, no left accent bar",
+  "timing": "Shared surfaces own one clock; business published duration retained; timed terminal task8000ms, generic toast2200ms/error5200ms unless overridden; hover/focus/hidden pause",
+  "excluded": "Running tasks and bell/history/receipt views have no dismiss countdown; notification identities, records and operation actions retained",
+  "softwareChanged": false,
+  "noRealFilesNetworkCryptoStorageOrNativeWindows": true
+}

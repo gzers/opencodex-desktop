@@ -1,7 +1,7 @@
 /* 注册事件的公共原型适配器；只投影既有 Toast/Task/铃铛，无真实投递或存储。 */
 (() => {
  'use strict';
- const prefix='component-demo:',hidden=new Set(),countdowns=new Map();let countdownRevision=0;
+ const prefix='component-demo:',hidden=new Set();let countdownRevision=0;
  const definitions=new Map(window.MaintenanceEvents.events.filter(e=>e.scope==='prototype-only'&&e.id.startsWith('component.demo.')).map(e=>[e.id,e]));
  const syncDefinitions=new Map(window.MaintenanceEvents.events.filter(e=>e.id.startsWith('sync.')&&e.implemented==='prototype'&&e.consumer==='syncPrototype'&&e.publisher==='prototypeNotificationPublisher').map(e=>[e.id,e]));
  const syncDeliveries=[],syncRevisions=new Map();
@@ -31,7 +31,7 @@
    renderNotifications();
   }
   if(spec.delivery.includes('toast')){
-   toast(title,{kind:failed?'error':'success',detail,action:'查看结果',duration:spec.toastDurationMs});
+   toast(title,{kind:failed?(spec.severity==='danger'?'error':spec.severity):'success',detail,action:'查看结果',duration:spec.toastDurationMs});
    document.querySelector('#toastEl .toast-act').dataset.syncNotice=id;
   }
   return id;
@@ -46,20 +46,12 @@
  const states={running:['正在处理示例任务','info',false],success:['示例任务已完成','info',true],failed:['示例任务未完成','warning',false],stopped:['示例任务已停止','info',true]};
  let lastToast='';
  function renderCountdown(item){
-  countdowns.get(item.id)?.destroy();
   const variant=item.countdown.variant,duration=definitions.get(item.eventId).toastDurationMs;
-  let host;
   if(variant==='task'){
-   showTask({notificationId:item.id,title:item.title,phase:item.detail,running:false,kind:'info',steps:[],acts:[]});
-   clearTimeout(taskTimers.get(item.id));taskTimers.delete(item.id);
-   host=[...document.querySelectorAll('#taskHost .task-card')].find(el=>el.dataset.taskNotification===item.id);
+   showTask({notificationId:item.id,title:item.title,phase:item.detail,running:false,kind:'success',steps:[],acts:[]});
   }else{
    lastToast=item.title;toast(item.title,{kind:variant,detail:item.detail,duration});
-   clearTimeout(window.__toastTimer);host=document.getElementById('toastEl');
   }
-  const timer=window.NotificationCountdown.mount(host,{durationMs:duration,tone:variant==='task'?'success':variant,onElapsed:()=>{
-   countdowns.delete(item.id);hidden.add(item.id);if(variant==='task')clearTask(item.id);else{host.classList.remove('show');syncNotifHost();}
-  }});countdowns.set(item.id,timer);
  }
  function publishCountdown(options){
   if(Object.keys(options).some(k=>k!=='variant')||!['success','error','warning','info','task'].includes(options.variant||'success'))throw Error('倒计时演示仅允许已登记样式');
@@ -113,12 +105,11 @@
   publish(item.eventId,{taskId:item.demo.taskId,state,step:name==='retry'?0:step});
  }
  function reset(){
-  countdowns.forEach(timer=>timer.destroy());countdowns.clear();
   for(let i=notifications.length-1;i>=0;i--)if(definitions.has(notifications[i].eventId)){clearTask(notifications[i].id);notifications.splice(i,1);}
-  hidden.clear();const el=document.getElementById('toastEl');if(lastToast&&el.textContent.includes(lastToast)){clearTimeout(window.__toastTimer);el.classList.remove('show');}lastToast='';renderNotifications();
+  hidden.clear();const el=document.getElementById('toastEl');if(lastToast&&el.textContent.includes(lastToast)){window.NotificationCountdown.get(el)?.destroy();el.classList.remove('show');}lastToast='';renderNotifications();
  }
  // 删除不影响任务本体，只移除对应观察视图；业务通知不在此订阅范围内。
  new MutationObserver(()=>{for(const n of notifications)if(definitions.has(n.eventId)&&n.deleted)clearTask(n.id);}).observe(document.getElementById('notificationList'),{childList:true,subtree:true});
  document.getElementById('toastEl').addEventListener('click',event=>{const button=event.target.closest('[data-sync-notice]');if(!button)return;event.preventDefault();event.stopImmediatePropagation();openSync(button.dataset.syncNotice);},true);
- window.prototypeNotificationPublisher={publish,open,action,hide:id=>{hidden.add(id);countdowns.get(id)?.destroy();countdowns.delete(id);},reset,state:()=>notifications.filter(n=>definitions.has(n.eventId)).map(n=>({id:n.id,eventId:n.eventId,read:n.read,resolved:n.resolved,deleted:n.deleted,demo:{...n.demo}})),deliveries:()=>JSON.parse(JSON.stringify(syncDeliveries))};
+ window.prototypeNotificationPublisher={publish,open,action,hide:id=>{hidden.add(id);const host=[...document.querySelectorAll('#taskHost .task-card')].find(el=>el.dataset.taskNotification===id);if(host)window.NotificationCountdown.get(host)?.destroy();},reset,state:()=>notifications.filter(n=>definitions.has(n.eventId)).map(n=>({id:n.id,eventId:n.eventId,read:n.read,resolved:n.resolved,deleted:n.deleted,demo:{...n.demo}})),deliveries:()=>JSON.parse(JSON.stringify(syncDeliveries))};
 })();

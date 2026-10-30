@@ -1,4 +1,4 @@
-/* 固定半透明倒计时仅挂载组件示例；仅长度递减表示剩余停留时间。 */
+/* 公共通知宿主统一挂载固定半透明倒计时；仅长度递减表示剩余停留时间。 */
 .has-notification-countdown{position:relative}
 .notification-countdown{position:absolute;inset-inline:10px;bottom:2px;height:3px;border-radius:999px;overflow:hidden;background:transparent;pointer-events:none}
 .notification-countdown[data-tone=success]{--notification-countdown-color:var(--green)}

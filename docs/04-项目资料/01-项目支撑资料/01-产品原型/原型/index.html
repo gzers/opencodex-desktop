@@ -3700,6 +3700,7 @@ ocx update</code></pre>
 
 <script src="data-paths.js"></script>
 <script src="maintenance-events.js?v=20261015-external-task"></script>
+<script src="notification-countdown.js?v=20261030-component"></script>
 <script>
 const statePill=document.getElementById('statePill');
 const installArea=document.getElementById('installArea');
@@ -6406,6 +6407,7 @@ document.addEventListener('click',event=>{
   }else if(kind==='toast'){
     const el=document.getElementById('toastEl');
     clearTimeout(window.__toastTimer);
+    window.NotificationCountdown.get(el)?.destroy();
     collapseToBell(el,()=>{el.classList.remove('show')});
   }else if(kind==='task'){
     const task=btn.closest('.task-card'),id=task?.dataset.taskNotification||'';if(id.startsWith('component-demo:'))window.prototypeNotificationPublisher?.hide(id);else window.hideModelSaveNotification?.(id);
@@ -7161,10 +7163,14 @@ function openSkillsHealth(fixed){
   modal.classList.add('modal-wide');
 }
 
-// 默认保持「实底小提示」；传入 opts.kind 或在通知专题模式下改用卡片变体。
+// 公共通知宿主统一挂倒计时；业务页仍只发布已登记事件。
+function notificationTone(kind,fallback='info'){
+  return ({success:'success',error:'error',danger:'error',warning:'warning',warn:'warning',info:'info',neutral:'neutral'})[kind]||fallback;
+}
 function toast(msg,opts){
   opts=opts||{};
   const el=document.getElementById('toastEl');
+  window.NotificationCountdown.get(el)?.destroy();
   const useCard=!!opts.kind||document.body.classList.contains('notif-mode');
   if(useCard){
     const kind=opts.kind||'success';
@@ -7177,7 +7183,8 @@ function toast(msg,opts){
   el.classList.add('show');
   clearTimeout(window.__toastTimer);
   const duration=opts.duration||(opts.kind==='error'?5200:2200);
-  window.__toastTimer=setTimeout(()=>el.classList.remove('show'),duration);
+  window.__toastTimer=null;
+  window.NotificationCountdown.mount(el,{durationMs:duration,tone:notificationTone(opts.kind,'success'),onElapsed:()=>{el.classList.remove('show');syncNotifHost();}});
   syncNotifHost();
 }
 
@@ -7190,11 +7197,15 @@ function toast(msg,opts){
 const TASK_TERMINAL_TTL=8000, TASK_MAX_VISIBLE=3;
 const taskTimers=new Map();
 function taskKeyOf(cfg){return cfg.mergeKey||cfg.notificationId||'';}
-function scheduleTaskCollapse(card){
+function cancelTaskCountdown(key){taskTimers.get(key)?.destroy();taskTimers.delete(key);}
+function scheduleTaskCollapse(card,tone){
   const key=card.dataset.taskNotification||'';
-  if(!key) return;
-  clearTimeout(taskTimers.get(key));
-  taskTimers.set(key,setTimeout(()=>{taskTimers.delete(key);window.hideModelSaveNotification?.(key);card.remove();syncNotifHost();},TASK_TERMINAL_TTL));
+  if(key)cancelTaskCountdown(key);
+  const timer=window.NotificationCountdown.mount(card,{durationMs:TASK_TERMINAL_TTL,tone:notificationTone(tone),onElapsed:()=>{
+    if(key){taskTimers.delete(key);if(key.startsWith('component-demo:'))window.prototypeNotificationPublisher?.hide(key);else window.hideModelSaveNotification?.(key);}
+    card.remove();syncNotifHost();
+  }});
+  if(key)taskTimers.set(key,timer);
 }
 /* 超出同屏上限时先收起（移除）最老的已完成卡，运行中的不删。 */
 function pretaskBudget(host,keep){
@@ -7204,12 +7215,12 @@ function pretaskBudget(host,keep){
   let removed=0;
   for(const card of cards){
     if(removed>=surplus) break;
-    if(card.classList.contains('is-complete')){clearTimeout(taskTimers.get(card.dataset.taskNotification||''));card.remove();removed++;}
+    if(card.classList.contains('is-complete')){cancelTaskCountdown(card.dataset.taskNotification||'');window.NotificationCountdown.get(card)?.destroy();card.remove();removed++;}
   }
   /* 全都还在跑时按最老的收起（运行不受影响，只是不再占屏）。 */
   for(const card of [...host.querySelectorAll('.task-card')]){
     if(removed>=surplus) break;
-    clearTimeout(taskTimers.get(card.dataset.taskNotification||''));card.remove();removed++;
+    cancelTaskCountdown(card.dataset.taskNotification||'');window.NotificationCountdown.get(card)?.destroy();card.remove();removed++;
   }
 }
 function showTask(cfg){
@@ -7225,7 +7236,8 @@ function showTask(cfg){
   const mergeKey=taskKeyOf(cfg);
   const existing=[...host.querySelectorAll('.task-card')].find(card=>(card.dataset.taskNotification||'')===key);
   if(existing){
-    clearTimeout(taskTimers.get(key));
+    cancelTaskCountdown(key);
+    window.NotificationCountdown.get(existing)?.destroy();
     existing.outerHTML=markup;
   }else{
     /* 同类合并：把上一次已终止的同类卡并成「第 N 次」。 */
@@ -7234,14 +7246,14 @@ function showTask(cfg){
       const last=same[same.length-1];
       if(last&&last.classList.contains('is-complete')){
         const count=(Number(last.dataset.taskCount||'1')||1)+1;
-        same.forEach(card=>{clearTimeout(taskTimers.get(card.dataset.taskNotification||''));card.remove();});
+        same.forEach(card=>{cancelTaskCountdown(card.dataset.taskNotification||'');window.NotificationCountdown.get(card)?.destroy();card.remove();});
         pretaskBudget(host,1);
         host.insertAdjacentHTML('beforeend',markup);
         const created=host.lastElementChild;
         created.dataset.taskMergeKind=cfg.mergeKind;
         created.dataset.taskCount=String(count);
         if(count>1)created.insertAdjacentHTML('beforeend','<p class="tc-phase">第 '+count+' 次</p>');
-        if(cfg.running===false)scheduleTaskCollapse(created);
+        if(cfg.running===false)scheduleTaskCollapse(created,cfg.kind);
         if(!key)host.dataset.op=cfg.op||'';
         host.classList.toggle('stacked',document.getElementById('toastEl').classList.contains('show'));
         syncNotifHost();
@@ -7253,7 +7265,7 @@ function showTask(cfg){
     if(cfg.mergeKind)host.lastElementChild.dataset.taskMergeKind=cfg.mergeKind;
   }
   const card=(host.querySelector('[data-task-notification="'+key+'"]'))||host.lastElementChild;
-  if(card&&cfg.running===false)scheduleTaskCollapse(card);
+  if(card&&cfg.running===false)scheduleTaskCollapse(card,cfg.kind);
   if(card&&cfg.focusAction&&document.getElementById('modalMask')?.style.display!=='flex')card.querySelector('[data-task-act="'+cfg.focusAction+'"]')?.focus({preventScroll:true});
   if(!key)host.dataset.op=cfg.op||'';
   host.classList.toggle('stacked',document.getElementById('toastEl').classList.contains('show'));
@@ -7261,8 +7273,8 @@ function showTask(cfg){
 }
 function clearTask(notificationId=''){
   const host=document.getElementById('taskHost');
-  clearTimeout(taskTimers.get(notificationId));taskTimers.delete(notificationId);
-  if(host)[...host.querySelectorAll('.task-card')].filter(card=>(card.dataset.taskNotification||'')===notificationId).forEach(card=>card.remove());
+  cancelTaskCountdown(notificationId);
+  if(host)[...host.querySelectorAll('.task-card')].filter(card=>(card.dataset.taskNotification||'')===notificationId).forEach(card=>{window.NotificationCountdown.get(card)?.destroy();card.remove();});
   syncNotifHost();
 }
 // 模型保存注册到既有通知实体及壳层任务宿主；收起仅是视图状态，不取消任务或解决通知。
@@ -7783,7 +7795,6 @@ window.addEventListener('prototype:data-paths',event=>{
 <script src="sticky-tabs.js?v=20261014-common-tabs"></script>
 <script src="component-catalog.js?v=20261027-conversation-adopted"></script>
 <script src="tree-navigation-demo.js?v=20261027-conversation-adopted"></script>
-<script src="notification-countdown.js?v=20261030-component"></script>
 <script src="prototype-notification-publisher.js?v=20261015"></script>
 <script src="component-topic.js?v=20261027-tree-navigation"></script>
 </body>

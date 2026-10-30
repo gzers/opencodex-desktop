@@ -114,8 +114,10 @@ test('旧 success / confirmed / pending 仅保留完成历史，不产生提示�
  assert.equal(d.querySelector(selector),null);assert.equal(h.w.eval('liveNotifications().length'),0);h.w.modelPrototype.render();assert.equal(d.querySelector(selector),null);noEffects(h);
 });
 
-test('终态8秒自动收起后仅从铃铛查看，重渲染不重复提示',async t=>{
- const h=await make('#models');t.after(()=>h.dispose());await saved(h);await h.wait(8150);
+test('终态焦点停留时暂停，离开后8秒收起且仅从铃铛查看，重渲染不重复提示',async t=>{
+ const h=await make('#models');t.after(()=>h.dispose());await saved(h);
+ const card=h.document.querySelector(selector),timer=h.w.NotificationCountdown.get(card);assert.equal(timer.state().phase,'paused');
+ h.document.querySelector('#notificationBtn').focus();assert.equal(timer.state().phase,'running');await h.wait(8150);
  assert.equal(h.document.querySelector(selector),null);h.w.modelPrototype.render();assert.equal(h.document.querySelector(selector),null);
  h.click('#notificationBtn');assert.equal(h.document.querySelector(selector),null);assert.equal(h.document.querySelector('#taskReopenHint,.task-reopen'),null);noEffects(h);
 });

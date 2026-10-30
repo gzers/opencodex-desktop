@@ -1,0 +1,755 @@
+{
+  "engine": "chromium",
+  "checks": [
+    {
+      "name": "1180-light-high default unencrypted",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high registered export uses approved countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7916.399999976158,
+          "ratio": 0.9895499999970198,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 0%, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 44%, color(srgb 0.0392157 0.490196 0.360784 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "1180-light-high no left stripe or bottom result",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high countdown fits notification",
+      "passed": true,
+      "detail": {
+        "width": 392,
+        "barWidth": 370,
+        "bottom": 3,
+        "barHeight": 3
+      }
+    },
+    {
+      "name": "1180-light-high real time shortens countdown",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high business toast pauses on hover",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high collapse removes clock not registered record",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high bell opens export receipt",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high history and receipt no dismissal bars",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high failure color follows registry warning",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7987.200000047684,
+          "ratio": 0.9984000000059605,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "warning",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.603922 0.290196 0.0313726 / 0.7) 0%, color(srgb 0.603922 0.290196 0.0313726 / 0.7) 44%, color(srgb 0.603922 0.290196 0.0313726 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "1180-light-high retry replaces with green clock",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high running save no dismissal clock",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high saved task uses green8s countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7999.299999952316,
+          "ratio": 0.9999124999940395,
+          "phase": "paused",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 0%, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 44%, color(srgb 0.0392157 0.490196 0.360784 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "1180-light-high focused restart pauses so action stays reachable",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high later cleans task countdown",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high real8s auto collapse preserves bell",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid default unencrypted",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid registered export uses approved countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7975.800000071526,
+          "ratio": 0.9969750000089407,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 0%, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 44%, color(srgb 0.0392157 0.490196 0.360784 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid no left stripe or bottom result",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid countdown fits notification",
+      "passed": true,
+      "detail": {
+        "width": 392,
+        "barWidth": 370,
+        "bottom": 3,
+        "barHeight": 3
+      }
+    },
+    {
+      "name": "1180-light-mid real time shortens countdown",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid business toast pauses on hover",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid collapse removes clock not registered record",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid bell opens export receipt",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid history and receipt no dismissal bars",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid failure color follows registry warning",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7986,
+          "ratio": 0.99825,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "warning",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.603922 0.290196 0.0313726 / 0.7) 0%, color(srgb 0.603922 0.290196 0.0313726 / 0.7) 44%, color(srgb 0.603922 0.290196 0.0313726 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid retry replaces with green clock",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid running save no dismissal clock",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid saved task uses green8s countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7999.299999952316,
+          "ratio": 0.9999124999940395,
+          "phase": "paused",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 0%, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 44%, color(srgb 0.0392157 0.490196 0.360784 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid focused restart pauses so action stays reachable",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid later cleans task countdown",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low default unencrypted",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low registered export uses approved countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7984,
+          "ratio": 0.998,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 0%, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 44%, color(srgb 0.0392157 0.490196 0.360784 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "1180-light-low no left stripe or bottom result",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low countdown fits notification",
+      "passed": true,
+      "detail": {
+        "width": 392,
+        "barWidth": 370,
+        "bottom": 3,
+        "barHeight": 3
+      }
+    },
+    {
+      "name": "1180-light-low real time shortens countdown",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low business toast pauses on hover",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low collapse removes clock not registered record",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low bell opens export receipt",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low history and receipt no dismissal bars",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low failure color follows registry warning",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7992.200000047684,
+          "ratio": 0.9990250000059605,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "warning",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.603922 0.290196 0.0313726 / 0.7) 0%, color(srgb 0.603922 0.290196 0.0313726 / 0.7) 44%, color(srgb 0.603922 0.290196 0.0313726 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "1180-light-low retry replaces with green clock",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low running save no dismissal clock",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low saved task uses green8s countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7999.400000095367,
+          "ratio": 0.999925000011921,
+          "phase": "paused",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 0%, color(srgb 0.0392157 0.490196 0.360784 / 0.7) 44%, color(srgb 0.0392157 0.490196 0.360784 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "1180-light-low focused restart pauses so action stays reachable",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low later cleans task countdown",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high default unencrypted",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high registered export uses approved countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7971.600000023842,
+          "ratio": 0.9964500000029802,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.305882 0.796078 0.615686 / 0.7) 0%, color(srgb 0.305882 0.796078 0.615686 / 0.7) 44%, color(srgb 0.305882 0.796078 0.615686 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "900-dark-high no left stripe or bottom result",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high countdown fits notification",
+      "passed": true,
+      "detail": {
+        "width": 392,
+        "barWidth": 370,
+        "bottom": 3,
+        "barHeight": 3
+      }
+    },
+    {
+      "name": "900-dark-high real time shortens countdown",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high business toast pauses on hover",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high collapse removes clock not registered record",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high bell opens export receipt",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high history and receipt no dismissal bars",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high failure color follows registry warning",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7985.299999952316,
+          "ratio": 0.9981624999940395,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "warning",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.984314 0.74902 0.141176 / 0.7) 0%, color(srgb 0.984314 0.74902 0.141176 / 0.7) 44%, color(srgb 0.984314 0.74902 0.141176 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "900-dark-high retry replaces with green clock",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high running save no dismissal clock",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high saved task uses green8s countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7999.300000071526,
+          "ratio": 0.9999125000089407,
+          "phase": "paused",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.305882 0.796078 0.615686 / 0.7) 0%, color(srgb 0.305882 0.796078 0.615686 / 0.7) 44%, color(srgb 0.305882 0.796078 0.615686 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "900-dark-high focused restart pauses so action stays reachable",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high later cleans task countdown",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid default unencrypted",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid registered export uses approved countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7914.799999952316,
+          "ratio": 0.9893499999940395,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.305882 0.796078 0.615686 / 0.7) 0%, color(srgb 0.305882 0.796078 0.615686 / 0.7) 44%, color(srgb 0.305882 0.796078 0.615686 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid no left stripe or bottom result",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid countdown fits notification",
+      "passed": true,
+      "detail": {
+        "width": 392,
+        "barWidth": 370,
+        "bottom": 3,
+        "barHeight": 3
+      }
+    },
+    {
+      "name": "900-dark-mid real time shortens countdown",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid business toast pauses on hover",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid collapse removes clock not registered record",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid bell opens export receipt",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid history and receipt no dismissal bars",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid failure color follows registry warning",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7991.700000047684,
+          "ratio": 0.9989625000059604,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "warning",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.984314 0.74902 0.141176 / 0.7) 0%, color(srgb 0.984314 0.74902 0.141176 / 0.7) 44%, color(srgb 0.984314 0.74902 0.141176 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid retry replaces with green clock",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid running save no dismissal clock",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid saved task uses green8s countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7999.300000071526,
+          "ratio": 0.9999125000089407,
+          "phase": "paused",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.305882 0.796078 0.615686 / 0.7) 0%, color(srgb 0.305882 0.796078 0.615686 / 0.7) 44%, color(srgb 0.305882 0.796078 0.615686 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid focused restart pauses so action stays reachable",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid later cleans task countdown",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low default unencrypted",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low registered export uses approved countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7983.299999952316,
+          "ratio": 0.9979124999940395,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.305882 0.796078 0.615686 / 0.7) 0%, color(srgb 0.305882 0.796078 0.615686 / 0.7) 44%, color(srgb 0.305882 0.796078 0.615686 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "900-dark-low no left stripe or bottom result",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low countdown fits notification",
+      "passed": true,
+      "detail": {
+        "width": 392,
+        "barWidth": 370,
+        "bottom": 3,
+        "barHeight": 3
+      }
+    },
+    {
+      "name": "900-dark-low real time shortens countdown",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low business toast pauses on hover",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low collapse removes clock not registered record",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low bell opens export receipt",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low history and receipt no dismissal bars",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low failure color follows registry warning",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7981.299999952316,
+          "ratio": 0.9976624999940396,
+          "phase": "running",
+          "active": true
+        },
+        "tone": "warning",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.984314 0.74902 0.141176 / 0.7) 0%, color(srgb 0.984314 0.74902 0.141176 / 0.7) 44%, color(srgb 0.984314 0.74902 0.141176 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "900-dark-low retry replaces with green clock",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low running save no dismissal clock",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low saved task uses green8s countdown",
+      "passed": true,
+      "detail": {
+        "state": {
+          "durationMs": 8000,
+          "remainingMs": 7999.299999952316,
+          "ratio": 0.9999124999940395,
+          "phase": "paused",
+          "active": true
+        },
+        "tone": "success",
+        "animation": "none",
+        "opacity": "0.55",
+        "background": "linear-gradient(90deg, color(srgb 0.305882 0.796078 0.615686 / 0.7) 0%, color(srgb 0.305882 0.796078 0.615686 / 0.7) 44%, color(srgb 0.305882 0.796078 0.615686 / 0.4) 80%, rgba(0, 0, 0, 0) 100%)",
+        "geometry": {
+          "width": 392,
+          "barWidth": 370,
+          "bottom": 3,
+          "barHeight": 3
+        }
+      }
+    },
+    {
+      "name": "900-dark-low focused restart pauses so action stays reachable",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low later cleans task countdown",
+      "passed": true
+    },
+    {
+      "name": "no page errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "failed": 0,
+  "scope": "maintained total prototype: actual file export, WebDAV failure/retry, model save mock actions; shared countdown host only; no real files/network/crypto/native claims"
+}
