@@ -1,0 +1,97 @@
+{
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "1180-light-high controls present",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high success existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high success time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6167,
+        "ratio": 0.770875,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-high success slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 285.59375,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1068.59375,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-high success no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high success translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.344979,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "notificationCountdownFlow",
+        "position": "matrix(1, 0, 0, 1, 121.822502, 0)",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "1180-light-high success flow and opacity animate or respect reduced motion",
+      "passed": false,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.344979,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "notificationCountdownFlow",
+          "position": "matrix(1, 0, 0, 1, 121.822502, 0)",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.345926,
+          "position": "matrix(1, 0, 0, 1, 212.842499, 0)"
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "failed": 1,
+  "scope": "component-only prototype countdown; fixed registered demo notifications, actual visible-time checks; no production rollout"
+}

@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-30",
+  "project": "opencodex-desktop",
+  "phase": "component visual revision only",
+  "basis": "docs/governance-main70b1d3321 plus pre-existing parallel panorama/Logo changes excluded from commit",
+  "sourceHashes": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "81dbc65401b2391ff8596959f774877ae78d1fec00302389a335f805d7307a1c",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.css": "adc1cc469fb790c376c27eeb181bd65a72295e28f1b094b171bc1c92d3d6847f",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.js": "602696a48b39bd53339145389c13b090e474381e2547be9daba35cf432753b6e",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.js": "92c13e2ccafd6abcd7c2e7be8d8e01af76dc179e86cb38ad77d23996a5768671"
+  },
+  "checks": {
+    "componentDom": {
+      "passed": 9,
+      "failed": 0
+    },
+    "chromium": {
+      "passed": 183,
+      "failed": 0,
+      "pageErrors": []
+    },
+    "webkit": {
+      "passed": 183,
+      "failed": 0,
+      "pageErrors": []
+    }
+  },
+  "currentUserDirection": "No left accent strip and no lateral flow; translucent neutral progress shortens with mild opacity breathing",
+  "supersededCandidate": "First accepted direction included moving glint; later user explicitly removed flow. Prior candidate report retained as superseded, not counted as final QA. WebKit reports existing ResizeObserver loop there",
+  "testAdjustment": "Two opacity samples initially straddled symmetric trough and differed less than threshold; now three actual timestamps verify amplitude over period. Product pulse timing not changed to hide test failure",
+  "allBusinessCountdownRollout": false,
+  "softwareChanged": false,
+  "windowsNativeClaimed": false,
+  "noRealStorageNetworkCrypto": true,
+  "stagedEntrySha256": "6519ec398213b43f26c18bd9080b1fd15e3ed4d0768bf374d92fbe65ecdf16a4"
+}

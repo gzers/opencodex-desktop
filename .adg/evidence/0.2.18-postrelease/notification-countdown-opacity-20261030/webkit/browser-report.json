@@ -1,0 +1,2325 @@
+{
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "1180-light-high controls present",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high success existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high success time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6878,
+        "ratio": 0.85975,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-high success slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 318.061279296875,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1101.061279296875,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-high success no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high success translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.760601,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "1180-light-high success opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.760601,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.569007,
+          "position": "none"
+        },
+        "thirdOpacity": 0.361529
+      }
+    },
+    {
+      "name": "1180-light-high success hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6195,
+          "ratio": 0.774375,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6195,
+          "ratio": 0.774375,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-high success hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.350941",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.350941",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "1180-light-high success resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high error existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high error time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6881,
+        "ratio": 0.860125,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-high error slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 318.6624755859375,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1101.6624755859375,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-high error no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high error translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.764975,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "1180-light-high error opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.764975,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.586287,
+          "position": "none"
+        },
+        "thirdOpacity": 0.370967
+      }
+    },
+    {
+      "name": "1180-light-high error hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6208,
+          "ratio": 0.776,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6208,
+          "ratio": 0.776,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-high error hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.359125",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.359125",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "1180-light-high error resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high task existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high task time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6880,
+        "ratio": 0.86,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-high task slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 111.4375,
+          "width": 392,
+          "height": 78.5,
+          "top": 111.4375,
+          "right": 1164,
+          "bottom": 189.9375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 183.9375,
+          "width": 370,
+          "height": 3,
+          "top": 183.9375,
+          "right": 1153,
+          "bottom": 186.9375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 183.9375,
+          "width": 318.4775390625,
+          "height": 3,
+          "top": 183.9375,
+          "right": 1101.4775390625,
+          "bottom": 186.9375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-high task no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high task translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.764246,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "1180-light-high task opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.764246,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.583161,
+          "position": "none"
+        },
+        "thirdOpacity": 0.369178
+      }
+    },
+    {
+      "name": "1180-light-high task hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6191,
+          "ratio": 0.773875,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6191,
+          "ratio": 0.773875,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-high task hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.353438",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.353438",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "1180-light-high task resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high actual8s auto collapse",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high bell restores same example",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high reset cleans countdowns",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high history has no countdown",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid controls present",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid success existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid success time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6875,
+        "ratio": 0.859375,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-mid success slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 318.1075439453125,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1101.1075439453125,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid success no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid success translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.765215,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "1180-light-mid success opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.765215,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.583161,
+          "position": "none"
+        },
+        "thirdOpacity": 0.368736
+      }
+    },
+    {
+      "name": "1180-light-mid success hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6182,
+          "ratio": 0.77275,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6182,
+          "ratio": 0.77275,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid success hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.353075",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.353075",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid success resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid error existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid error time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6878,
+        "ratio": 0.85975,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-mid error slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 318.4775390625,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1101.4775390625,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid error no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid error translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.765215,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "1180-light-mid error opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.765215,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.583943,
+          "position": "none"
+        },
+        "thirdOpacity": 0.369622
+      }
+    },
+    {
+      "name": "1180-light-mid error hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6202,
+          "ratio": 0.77525,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6202,
+          "ratio": 0.77525,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid error hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.357564",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.357564",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid error resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid task existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid task time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6878,
+        "ratio": 0.85975,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-mid task slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 111.4375,
+          "width": 392,
+          "height": 78.5,
+          "top": 111.4375,
+          "right": 1164,
+          "bottom": 189.9375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 183.9375,
+          "width": 370,
+          "height": 3,
+          "top": 183.9375,
+          "right": 1153,
+          "bottom": 186.9375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 183.9375,
+          "width": 318.4312744140625,
+          "height": 3,
+          "top": 183.9375,
+          "right": 1101.4312744140625,
+          "bottom": 186.9375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid task no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid task translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.765215,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "1180-light-mid task opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.765215,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.584725,
+          "position": "none"
+        },
+        "thirdOpacity": 0.369622
+      }
+    },
+    {
+      "name": "1180-light-mid task hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6208,
+          "ratio": 0.776,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6208,
+          "ratio": 0.776,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid task hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.357951",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.357951",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid task resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid reset cleans countdowns",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid history has no countdown",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low controls present",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low success existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low success time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6883,
+        "ratio": 0.860375,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-low success slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 323.75,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1106.75,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-low success no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low success translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.55,
+        "pulse": "none",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "1180-light-low success opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.55,
+          "pulse": "none",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.55,
+          "position": "none"
+        },
+        "thirdOpacity": 0.55
+      }
+    },
+    {
+      "name": "1180-light-low success hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6216,
+          "ratio": 0.777,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6216,
+          "ratio": 0.777,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-low success hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "1180-light-low success resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low error existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low error time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6891,
+        "ratio": 0.861375,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-low error slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 323.75,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1106.75,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-low error no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low error translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.55,
+        "pulse": "none",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "1180-light-low error opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.55,
+          "pulse": "none",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.55,
+          "position": "none"
+        },
+        "thirdOpacity": 0.55
+      }
+    },
+    {
+      "name": "1180-light-low error hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6228,
+          "ratio": 0.7785,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6228,
+          "ratio": 0.7785,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-low error hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "1180-light-low error resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low task existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low task time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6886,
+        "ratio": 0.86075,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-low task slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 111.4375,
+          "width": 392,
+          "height": 78.5,
+          "top": 111.4375,
+          "right": 1164,
+          "bottom": 189.9375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 183.9375,
+          "width": 370,
+          "height": 3,
+          "top": 183.9375,
+          "right": 1153,
+          "bottom": 186.9375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 183.9375,
+          "width": 323.75,
+          "height": 3,
+          "top": 183.9375,
+          "right": 1106.75,
+          "bottom": 186.9375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-low task no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low task translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.55,
+        "pulse": "none",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "1180-light-low task opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.55,
+          "pulse": "none",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.55,
+          "position": "none"
+        },
+        "thirdOpacity": 0.55
+      }
+    },
+    {
+      "name": "1180-light-low task hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6210,
+          "ratio": 0.77625,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6210,
+          "ratio": 0.77625,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-low task hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "1180-light-low task resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low reset cleans countdowns",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low history has no countdown",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high controls present",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high success existing host",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high success time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6883,
+        "ratio": 0.860375,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "900-dark-high success slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 492,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 884,
+          "bottom": 101.4375,
+          "left": 492
+        },
+        "track": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 873,
+          "bottom": 98.4375,
+          "left": 503
+        },
+        "fill": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 318.29248046875,
+          "height": 3,
+          "top": 95.4375,
+          "right": 821.29248046875,
+          "bottom": 98.4375,
+          "left": 503
+        }
+      }
+    },
+    {
+      "name": "900-dark-high success no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high success translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.764975,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "900-dark-high success opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.764975,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.587067,
+          "position": "none"
+        },
+        "thirdOpacity": 0.368736
+      }
+    },
+    {
+      "name": "900-dark-high success hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6197,
+          "ratio": 0.774625,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6197,
+          "ratio": 0.774625,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "900-dark-high success hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.355657",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.355657",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "900-dark-high success resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high error existing host",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high error time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6877,
+        "ratio": 0.859625,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "900-dark-high error slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 492,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 884,
+          "bottom": 101.4375,
+          "left": 492
+        },
+        "track": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 873,
+          "bottom": 98.4375,
+          "left": 503
+        },
+        "fill": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 317.9224853515625,
+          "height": 3,
+          "top": 95.4375,
+          "right": 820.9224853515625,
+          "bottom": 98.4375,
+          "left": 503
+        }
+      }
+    },
+    {
+      "name": "900-dark-high error no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high error translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.762989,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "900-dark-high error opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.762989,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.581595,
+          "position": "none"
+        },
+        "thirdOpacity": 0.367421
+      }
+    },
+    {
+      "name": "900-dark-high error hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6190,
+          "ratio": 0.77375,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6190,
+          "ratio": 0.77375,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "900-dark-high error hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.353075",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.353075",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "900-dark-high error resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high task existing host",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high task time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6883,
+        "ratio": 0.860375,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "900-dark-high task slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 492,
+          "y": 111.4375,
+          "width": 392,
+          "height": 78.5,
+          "top": 111.4375,
+          "right": 884,
+          "bottom": 189.9375,
+          "left": 492
+        },
+        "track": {
+          "x": 503,
+          "y": 183.9375,
+          "width": 370,
+          "height": 3,
+          "top": 183.9375,
+          "right": 873,
+          "bottom": 186.9375,
+          "left": 503
+        },
+        "fill": {
+          "x": 503,
+          "y": 183.9375,
+          "width": 318.47747802734375,
+          "height": 3,
+          "top": 183.9375,
+          "right": 821.4774780273438,
+          "bottom": 186.9375,
+          "left": 503
+        }
+      }
+    },
+    {
+      "name": "900-dark-high task no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high task translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.765921,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "900-dark-high task opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.765921,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.590959,
+          "position": "none"
+        },
+        "thirdOpacity": 0.373711
+      }
+    },
+    {
+      "name": "900-dark-high task hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6202,
+          "ratio": 0.77525,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6202,
+          "ratio": 0.77525,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "900-dark-high task hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.357178",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.357178",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "900-dark-high task resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high reset cleans countdowns",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high history has no countdown",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid controls present",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid success existing host",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid success time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6881,
+        "ratio": 0.860125,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "900-dark-mid success slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 492,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 884,
+          "bottom": 101.4375,
+          "left": 492
+        },
+        "track": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 873,
+          "bottom": 98.4375,
+          "left": 503
+        },
+        "fill": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 318.61627197265625,
+          "height": 3,
+          "top": 95.4375,
+          "right": 821.6162719726562,
+          "bottom": 98.4375,
+          "left": 503
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid success no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid success translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.766152,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "900-dark-mid success opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.766152,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.590959,
+          "position": "none"
+        },
+        "thirdOpacity": 0.371873
+      }
+    },
+    {
+      "name": "900-dark-mid success hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6211,
+          "ratio": 0.776375,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6211,
+          "ratio": 0.776375,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid success hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.359125",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.359125",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid success resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid error existing host",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid error time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6893,
+        "ratio": 0.861625,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "900-dark-mid error slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 492,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 884,
+          "bottom": 101.4375,
+          "left": 492
+        },
+        "track": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 873,
+          "bottom": 98.4375,
+          "left": 503
+        },
+        "fill": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 318.94000244140625,
+          "height": 3,
+          "top": 95.4375,
+          "right": 821.9400024414062,
+          "bottom": 98.4375,
+          "left": 503
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid error no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid error translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.768774,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "900-dark-mid error opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.768774,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.601002,
+          "position": "none"
+        },
+        "thirdOpacity": 0.379414
+      }
+    },
+    {
+      "name": "900-dark-mid error hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6217,
+          "ratio": 0.777125,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6217,
+          "ratio": 0.777125,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid error hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.362346",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.362346",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid error resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid task existing host",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid task time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6887,
+        "ratio": 0.860875,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "900-dark-mid task slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 492,
+          "y": 111.4375,
+          "width": 392,
+          "height": 78.5,
+          "top": 111.4375,
+          "right": 884,
+          "bottom": 189.9375,
+          "left": 492
+        },
+        "track": {
+          "x": 503,
+          "y": 183.9375,
+          "width": 370,
+          "height": 3,
+          "top": 183.9375,
+          "right": 873,
+          "bottom": 186.9375,
+          "left": 503
+        },
+        "fill": {
+          "x": 503,
+          "y": 183.9375,
+          "width": 318.89373779296875,
+          "height": 3,
+          "top": 183.9375,
+          "right": 821.8937377929688,
+          "bottom": 186.9375,
+          "left": 503
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid task no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid task translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.767932,
+        "pulse": "notificationCountdownBreathe",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "900-dark-mid task opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.767932,
+          "pulse": "notificationCountdownBreathe",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.598695,
+          "position": "none"
+        },
+        "thirdOpacity": 0.378928
+      }
+    },
+    {
+      "name": "900-dark-mid task hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6219,
+          "ratio": 0.777375,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6219,
+          "ratio": 0.777375,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid task hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.362346",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.362346",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "900-dark-mid task resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid reset cleans countdowns",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid history has no countdown",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low controls present",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low success existing host",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low success time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6887,
+        "ratio": 0.860875,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "900-dark-low success slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 492,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 884,
+          "bottom": 101.4375,
+          "left": 492
+        },
+        "track": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 873,
+          "bottom": 98.4375,
+          "left": 503
+        },
+        "fill": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 323.75,
+          "height": 3,
+          "top": 95.4375,
+          "right": 826.75,
+          "bottom": 98.4375,
+          "left": 503
+        }
+      }
+    },
+    {
+      "name": "900-dark-low success no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low success translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.55,
+        "pulse": "none",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "900-dark-low success opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.55,
+          "pulse": "none",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.55,
+          "position": "none"
+        },
+        "thirdOpacity": 0.55
+      }
+    },
+    {
+      "name": "900-dark-low success hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6224,
+          "ratio": 0.778,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6224,
+          "ratio": 0.778,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "900-dark-low success hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "900-dark-low success resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low error existing host",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low error time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6892,
+        "ratio": 0.8615,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "900-dark-low error slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 492,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 884,
+          "bottom": 101.4375,
+          "left": 492
+        },
+        "track": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 873,
+          "bottom": 98.4375,
+          "left": 503
+        },
+        "fill": {
+          "x": 503,
+          "y": 95.4375,
+          "width": 323.75,
+          "height": 3,
+          "top": 95.4375,
+          "right": 826.75,
+          "bottom": 98.4375,
+          "left": 503
+        }
+      }
+    },
+    {
+      "name": "900-dark-low error no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low error translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.55,
+        "pulse": "none",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "900-dark-low error opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.55,
+          "pulse": "none",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.55,
+          "position": "none"
+        },
+        "thirdOpacity": 0.55
+      }
+    },
+    {
+      "name": "900-dark-low error hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6231,
+          "ratio": 0.778875,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6231,
+          "ratio": 0.778875,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "900-dark-low error hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "900-dark-low error resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low task existing host",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low task time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 6891,
+        "ratio": 0.861375,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "900-dark-low task slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 492,
+          "y": 111.4375,
+          "width": 392,
+          "height": 78.5,
+          "top": 111.4375,
+          "right": 884,
+          "bottom": 189.9375,
+          "left": 492
+        },
+        "track": {
+          "x": 503,
+          "y": 183.9375,
+          "width": 370,
+          "height": 3,
+          "top": 183.9375,
+          "right": 873,
+          "bottom": 186.9375,
+          "left": 503
+        },
+        "fill": {
+          "x": 503,
+          "y": 183.9375,
+          "width": 323.75,
+          "height": 3,
+          "top": 183.9375,
+          "right": 826.75,
+          "bottom": 186.9375,
+          "left": 503
+        }
+      }
+    },
+    {
+      "name": "900-dark-low task no left emphasis strip",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low task translucent gradient",
+      "passed": true,
+      "detail": {
+        "opacity": 0.55,
+        "pulse": "none",
+        "flow": "none",
+        "position": "none",
+        "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+        "track": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "name": "900-dark-low task opacity animates without lateral movement or respects reduced motion",
+      "passed": true,
+      "detail": {
+        "motionBefore": {
+          "opacity": 0.55,
+          "pulse": "none",
+          "flow": "none",
+          "position": "none",
+          "background": "linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.92549 0.92549 0.92549 / 0.2) 10%, color(srgb 0.92549 0.92549 0.92549 / 0.42) 44%, color(srgb 0.92549 0.92549 0.92549 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)",
+          "track": "rgba(0, 0, 0, 0)"
+        },
+        "motionAfter": {
+          "opacity": 0.55,
+          "position": "none"
+        },
+        "thirdOpacity": 0.55
+      }
+    },
+    {
+      "name": "900-dark-low task hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 6228,
+          "ratio": 0.7785,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 6228,
+          "ratio": 0.7785,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "900-dark-low task hover freezes opacity",
+      "passed": true,
+      "detail": {
+        "pausedVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        },
+        "heldVisual": {
+          "opacity": "0.55",
+          "position": "none"
+        }
+      }
+    },
+    {
+      "name": "900-dark-low task resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low reset cleans countdowns",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low history has no countdown",
+      "passed": true
+    },
+    {
+      "name": "no page errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "failed": 0,
+  "scope": "component-only prototype countdown; fixed registered demo notifications, actual visible-time checks; no production rollout"
+}

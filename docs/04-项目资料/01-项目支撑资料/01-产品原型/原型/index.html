@@ -380,9 +380,6 @@ button{font:inherit}
 .toast.show{opacity:1;transform:none}
 /* 通知与反馈专题（原型专用）：Toast 卡片变体 = 成功 / 失败 / 信息 + 轻量动作。 */
 .toast.k-card{display:flex;gap:10px;align-items:flex-start;background:var(--panel);color:var(--text);border:1px solid var(--border);padding:11px 13px}
-.toast.k-card .toast-bar{width:3px;align-self:stretch;border-radius:2px;background:var(--green);flex:none}
-.toast.k-card.k-error .toast-bar{background:var(--red)}
-.toast.k-card.k-info .toast-bar{background:var(--blue)}
 .toast.k-card .toast-txt{min-width:0;flex:1}
 .toast.k-card .toast-txt b{display:block;font-size:var(--text-control)}
 .toast.k-card .toast-txt span{display:block;color:var(--muted);font-size:var(--text-caption);margin-top:2px;line-height:1.45}
@@ -7172,7 +7169,7 @@ function toast(msg,opts){
   if(useCard){
     const kind=opts.kind||'success';
     el.className='toast k-card k-'+kind;
-    el.innerHTML='<span class="toast-bar"></span><div class="toast-txt"><b>'+(opts.title||msg)+'</b>'+(opts.detail?'<span>'+opts.detail+'</span>':'')+'</div>'+(opts.action?'<button type="button" class="toast-act">'+opts.action+'</button>':'')+'<button type="button" class="notify-min" data-collapse="toast" title="收起到铃铛" aria-label="收起到铃铛">'+MIN_ICON+'</button>';
+    el.innerHTML='<div class="toast-txt"><b>'+(opts.title||msg)+'</b>'+(opts.detail?'<span>'+opts.detail+'</span>':'')+'</div>'+(opts.action?'<button type="button" class="toast-act">'+opts.action+'</button>':'')+'<button type="button" class="notify-min" data-collapse="toast" title="收起到铃铛" aria-label="收起到铃铛">'+MIN_ICON+'</button>';
   }else{
     el.className='toast';
     el.textContent=msg;

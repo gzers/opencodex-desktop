@@ -1,8 +1,8 @@
-/* 只为明确挂载的组件示例附加倒计时，不重画通知材质或改变正文布局。 */
+/* 半透明明暗倒计时仅挂载组件示例；长度只表示剩余停留时间。 */
 .has-notification-countdown{position:relative}
-.notification-countdown{position:absolute;inset-inline:10px;bottom:2px;height:3px;border-radius:999px;overflow:hidden;background:color-mix(in srgb,var(--text) 10%,transparent);pointer-events:none}
-.notification-countdown-fill{display:block;width:100%;height:100%;border-radius:inherit;background:var(--notification-countdown-color,var(--green));transform-origin:left center;will-change:transform}
-.k-error .notification-countdown-fill{background:var(--red)}
-.notification-countdown[data-phase=paused] .notification-countdown-fill{opacity:.65}
+.notification-countdown{position:absolute;inset-inline:10px;bottom:2px;height:3px;border-radius:999px;overflow:hidden;background:transparent;pointer-events:none}
+.notification-countdown-fill{position:relative;display:block;width:100%;height:100%;overflow:hidden;border-radius:inherit;background:linear-gradient(90deg,transparent 0%,color-mix(in srgb,var(--text) 20%,transparent) 10%,color-mix(in srgb,var(--text) 42%,transparent) 44%,color-mix(in srgb,var(--text) 24%,transparent) 80%,transparent 100%);transform-origin:left center;opacity:.55;animation:notificationCountdownBreathe 2s ease-in-out infinite;will-change:transform,opacity}
+.notification-countdown[data-phase=paused] .notification-countdown-fill{animation-play-state:paused}
+@keyframes notificationCountdownBreathe{0%,100%{opacity:.32}50%{opacity:.78}}
 .notification-countdown-help{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;pointer-events:none}
-@media(prefers-reduced-motion:reduce){.notification-countdown-fill{will-change:auto}}
+@media(prefers-reduced-motion:reduce){.notification-countdown-fill{animation:none;opacity:.55;will-change:auto}}

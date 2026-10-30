@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 1180-light-high success flow and opacity animate or respect reduced motion {"motionBefore":{"opacity":0.344979,"pulse":"notificationCountdownBreathe","flow":"notificationCountdownFlow","position":"matrix(1, 0, 0, 1, 121.822502, 0)","background":"linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, color(srgb 0.05098 0.05098 0.05098 / 0.2) 10%, color(srgb 0.05098 0.05098 0.05098 / 0.42) 44%, color(srgb 0.05098 0.05098 0.05098 / 0.24) 80%, rgba(0, 0, 0, 0) 100%)","track":"rgba(0, 0, 0, 0)"},"motionAfter":{"opacity":0.345926,"position":"matrix(1, 0, 0, 1, 212.842499, 0)"}}
+    at check (file:///private/tmp/ocx-countdown-flow-browser.mjs:2:328)
+    at file:///private/tmp/ocx-countdown-flow-browser.mjs:18:3
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:541:9) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.8.1
