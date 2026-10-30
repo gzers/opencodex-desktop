@@ -56,6 +56,10 @@
       const state = window.syncPrototype?.state();
       $('#sxImportSample').value = state?.importSample || 'encrypted';
       $('#sxMockScenario').value = state?.scenario || 'normal';
+      side.querySelectorAll('[data-sx-protection-demo]').forEach(button=>{
+        const active=button.dataset.sxProtectionDemo===(state?.protection.enabled?'encrypted':'plaintext');
+        button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+      });
       $('#syncMockTitle').textContent = (tabs[context.tab] || '同步') + ' · 同步场景';
       $('#syncMockHint').textContent = context.tab === 'webdav'
         ? '选择范围后点击“同步”，直接查看上传、下载或失败重试结果。'
@@ -81,6 +85,7 @@
   side.addEventListener('click', event => {
     const button = event.target.closest?.('button');
     if (!button || !side.contains(button)) return;
+    if (button.dataset.sxProtectionDemo) {window.syncPrototype?.setProtectionDemo(button.dataset.sxProtectionDemo);return;}
     if (!button.closest('#protoStdCards')) return;
     const group = button.closest('.pctl-chips, .pctl-grid, .pctl-tiles');
     if (!group) return;

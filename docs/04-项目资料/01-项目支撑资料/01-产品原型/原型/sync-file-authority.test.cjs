@@ -193,3 +193,37 @@ test('通知专题导入复用共享窗口，普通同步不再提供覆盖确�
  h.w.renderWebdav('synced');assert.doesNotMatch(h.document.querySelector('#card-overview-sync').textContent,/每次询问|冲突策略/);
  assert.match(h.document.querySelector('#card-overview-sync').textContent,/较新覆盖/);h.w.renderWebdav('partial');assert.equal(h.document.querySelector('#syncTag').textContent,'部分完成');
 });
+
+test('初次WebDAV提供的可用范围默认全选，凭据跟随范围；分享预设仍不带凭据',async t=>{
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav'});
+ const all=[...h.document.querySelectorAll('[data-sx-group]:not([disabled])')];assert.ok(all.length>=5);assert.ok(all.every(el=>el.checked));assert.ok(sync(h).selected.length>all.length);
+ assert.equal(h.document.querySelector('[data-sx-secret=keys]').checked,true);assert.equal(h.document.querySelector('[data-sx-secret=extensions]').checked,true);
+ h.change('[data-sx-preset]','share');assert.equal(sync(h).secrets.keys.length,0);assert.equal(sync(h).secrets.extensions.length,0);
+ h.change('[data-sx-preset]','all');assert.ok(sync(h).secrets.keys.length);assert.ok(sync(h).secrets.extensions.length);
+});
+
+test('导入在所提供范围默认全选含包内可用凭据，显式入口只显示对应范围',async t=>{
+ const h=await setup(t);chooseImport(h,'plaintext',['channel:newapi','mcp:docs']);
+ const items=[...h.document.querySelectorAll('[data-sx-import-object]')];assert.deepEqual(items.map(el=>el.dataset.sxImportObject).sort(),['channel:newapi','mcp:docs']);assert.ok(items.every(el=>el.checked));
+ assert.equal(h.document.querySelector('[data-sx-import-keys]').checked,true);assert.equal(h.document.querySelector('[data-sx-import-secrets]').checked,true);h.click('#modalCancel');
+ h.w.syncPrototype.open({tab:'file',action:'import'});h.click('[data-sx=choose-import-file]');assert.ok([...h.document.querySelectorAll('[data-sx-import-object]')].every(el=>el.checked));assert.ok(h.document.querySelectorAll('[data-sx-import-object]').length>items.length);h.click('#modalCancel');
+});
+
+test('文件与WebDAV范围分别记住，跨页、导入和导出均不把本机操作偏好装入配置包',async t=>{
+ const h=await setup(t);h.w.syncPrototype.open({tab:'file',scope:['preferences:desktop']});const file=sync(h).savedScopes.file;
+ h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});h.change('[data-sx-secret=extensions]',false);const dav=sync(h).savedScopes.webdav;
+ h.w.setRoute('models');h.w.syncPrototype.open({tab:'file'});assert.equal(sync(h).savedScopes.file,file);assert.deepEqual([...sync(h).selected],['preferences:desktop']);
+ h.click('[data-sx=export]');h.change('#sxEncrypt',false);h.click('#modalConfirm');assert.doesNotMatch(json(sync(h).lastExport),/savedScopes|savedScope|passphrase|sync-demo|demo-sync/);
+ chooseImport(h,'config-only',['endpoint:personal']);h.click('#modalConfirm');await finished(h);assert.equal(sync(h).savedScopes.webdav,dav);
+ h.w.syncPrototype.open({tab:'webdav'});assert.deepEqual([...sync(h).selected],['skill:review','mcp:docs']);assert.equal(sync(h).secrets.extensions.length,0);
+ h.w.syncPrototype.open({tab:'file',scope:['preferences:desktop']});h.click('[data-sx=clear]');assert.deepEqual(JSON.parse(sync(h).savedScopes.file).ids,[]);assert.equal(sync(h).savedScopes.webdav,dav);
+});
+
+test('本页加密与不加密mock共用范围，运行中的保护选择被冻结并在结果中可见',async t=>{
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});const scope=sync(h).savedScopes.webdav;
+ h.click('[data-sx-protection-demo=encrypted]');assert.equal(sync(h).protection.enabled,true);assert.equal(sync(h).protection.configured,true);assert.equal(h.document.querySelector('[data-sx-protection-demo=encrypted]').getAttribute('aria-pressed'),'true');
+ h.click('[data-sx=check]');h.click('[data-sx-protection-demo=plaintext]');let result=await finished(h);assert.equal(result.protection.encrypted,true);assert.equal(sync(h).savedScopes.webdav,scope);
+ h.click('[data-sx=result-details]');assert.match(h.document.querySelector('.sx-dialog .sx-muted').textContent,/传输保护：加密/);h.click('#modalCancel');
+ h.click('[data-sx=check]');result=await finished(h);assert.equal(result.protection.encrypted,false);assert.equal(sync(h).savedScopes.webdav,scope);assert.doesNotMatch(json(sync(h)),/demo-sync/);
+ h.w.syncPrototype.setScenario('partial');h.click('[data-sx-protection-demo=encrypted]');h.click('[data-sx=check]');h.click('[data-sx-protection-demo=plaintext]');result=await finished(h);assert.equal(result.failed.length,1);h.click('[data-sx=retry]');result=await finished(h);assert.equal(result.failed.length,0);assert.equal(result.protection.encrypted,true);assert.equal(sync(h).savedScopes.webdav,scope);
+});

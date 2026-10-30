@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-30",
+  "project": "opencodex-desktop",
+  "phase": "prototype only",
+  "basis": "docs/governance-main f31c7e394 plus pre-existing parallel panorama/Logo files",
+  "sourceHashes": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "b8dc73ba6ecbdc2de70e966ff4ceaca597af818c97c6a058059da09fc4550db3",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js": "a45f1a9c8d0c8b3e5ace8516d5f278efde04a04f98c87304e5bc9a817dc79886",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-panel.js": "7e03fa789ac9c657acc05c24948b00d920c6471f2fde82baa97082b53342141e",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs": "4161a822e9627408e8ba8e0f7ae97f279ffd98d4ef4e1a37d4ab361a8663e6a2"
+  },
+  "checks": {
+    "syncDomDuringAdjustment": {
+      "passed": 34,
+      "failed": 0
+    },
+    "finalDefaultsProtectionTargeted": {
+      "passed": 4,
+      "failed": 0
+    },
+    "chromium": {
+      "passed": 115,
+      "failed": 0,
+      "pageErrors": 0
+    },
+    "webkit": {
+      "passed": 115,
+      "failed": 0,
+      "pageErrors": 0
+    }
+  },
+  "qaSequence": "Full 34 passed during adjustment; after final retry-protection freeze and placing protection above credential subpicks, targeted 4 passed again and both engines tested final source",
+  "noRealFileStorageCryptoOrWebdav": true,
+  "softwareChanged": false,
+  "windowsNativeClaimed": false,
+  "scopePolicy": "Initial provided selectable range selected, transferable credentials included; share preset excludes credentials; modified local ranges remembered separately",
+  "settingsTransferPolicy": "Local file/export and WebDAV selections/protection settings are not transferred; selected WebDAV connection object may be moved by file, imported inactive; protection passphrase excluded",
+  "memoryBoundary": "Prototype current document only; restart persistence required for future production implementation",
+  "stagedEntryDifference": "Two pre-existing panorama resource-reference hunks excluded from staged entry; parallel files not part of this patch",
+  "stagedEntrySha256": "a6165864d150f2ad420298911fe500628feb72f78c125fc1e94a57344c047355"
+}

@@ -3293,6 +3293,14 @@ ocx update</code></pre>
       </label>
       <p class="pctl-hint">在产品弹窗点击“选择文件”后载入此示例。加密包测试口令：<code>demo-sync</code>。此处只提供内存数据，不读取磁盘。</p>
     </div>
+    <div class="proto-card" id="syncProtectionDemoCard" data-proto-contexts="sync:webdav" hidden>
+      <div class="proto-note-title">WebDAV 同步 · 传输保护</div>
+      <div class="pctl-chips" role="group" aria-label="WebDAV加密模拟版本">
+        <button type="button" data-sx-protection-demo="plaintext" aria-pressed="true" class="active">不加密</button>
+        <button type="button" data-sx-protection-demo="encrypted" aria-pressed="false">加密</button>
+      </div>
+      <p class="pctl-hint">两种版本使用相同范围与更新规则。加密示例自动填写演示口令demo-sync，不改变勾选、不读写文件、不执行真实加密；产品右侧仍可自行切换保护选项。</p>
+    </div>
     <div class="proto-card" id="syncDemoCard" data-proto-contexts="sync" hidden>
       <div class="proto-note-title" id="syncMockTitle">同步 · 应用结果</div>
       <label class="proto-mock-field"><span>结果场景</span>

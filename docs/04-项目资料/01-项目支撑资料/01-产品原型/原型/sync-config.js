@@ -28,7 +28,7 @@
    {id:'account:opencode',group:'accounts',name:'OpenCode · 原生账户',accountPlatform:'opencode',owner:'platform-native',provider:'provider-specific',authKind:'oauth',source:'OpenCode原生凭据',files:'未接入平台适配器'},
    {id:'skill:review',group:'skills',name:'Code Review Skill',summary:'SKILL.md + 2 个资源文件',source:'本机扩展库',fields:'Skill 实际内容、资源、启用状态；此 fixture 不含凭据',files:'skills/code-review/**'},
    {id:'mcp:docs',group:'mcp',name:'Docs MCP',summary:'HTTP 服务器 · 完整定义',source:'本机扩展库',fields:'传输类型、地址、参数、启用状态；Authorization 需另选扩展凭据',extensionSecret:true,files:'MCP 完整定义 / extension-config.json'},
-   {id:'preferences:desktop',group:'preferences',name:'通用偏好',summary:'主题、语言与可移植显示偏好',source:'Desktop',fields:'排除机器绝对路径、窗口坐标、日志、缓存、执行绑定与未提交草稿',files:'preferences.json（字段白名单）'},
+   {id:'preferences:desktop',group:'preferences',name:'通用偏好',summary:'主题、语言与可移植显示偏好',source:'Desktop',fields:'排除机器绝对路径、窗口坐标、日志、缓存、执行绑定、未提交草稿及本机文件/WebDAV范围、凭据勾选、加密选项和口令',files:'preferences.json（字段白名单）'},
    {id:'endpoint:personal',group:'endpoints',name:'个人 WebDAV',summary:'文件同步默认包含 · 密码随配置同步',source:'Desktop WebDAV 配置',fields:'服务地址、目录、用户名与连接密码；导入为未启用连接，不改当前连接或本机同步范围；不包含同步加密口令',password:true,files:'sync_endpoints / 受保护凭据部分'}
   ); return list.map(accountDefaults).concat(window.conversationPrototype?.syncObjects()||[]);
  }
@@ -45,20 +45,22 @@
  function chooseImportFile(){
   if(dialogKind!=='import')return;
   importFile={kind:importSample,...clone(importSamples[importSample])};
-  refreshLocalVersions();importPlan.rows=directImportRows(importSample);
+  refreshLocalVersions();
   const wanted=importPlan.context?new Set(importPlan.context):null;
-  importPlan.selected=new Set(importPlan.rows.filter(x=>!wanted||wanted.has(x.id)).map(x=>x.id));
+  importPlan.rows=directImportRows(importSample).filter(x=>!wanted||wanted.has(x.id));
+  importPlan.selected=new Set(importPlan.rows.map(x=>x.id));
   renderImport();
   if(importFile.encrypted)$('#sxUnlock').focus();
  }
  let detailOpen=false,lastComparison=null;
  let catalog=collect(),tab='file',query='',accountPlatform='all',originFocus=null,dialogKind='',scenario='normal',serial=0,renderedTab=null;
  const expanded={file:new Set(),webdav:new Set()},searchCollapsed={file:new Set(),webdav:new Set()},scrolls={file:{list:0,secrets:0},webdav:{list:0,secrets:0}};
- const fresh=mode=>({selected:new Set(catalog.filter(x=>eligible(x)&&!x.defaultExcluded&&(mode==='file'||x.group!=='endpoints')).map(x=>x.id)),keys:new Set(),accountInfoOnly:new Set(),endpointConfigOnly:new Set(),extensions:new Set(),preset:'all'});
+ const fresh=mode=>{const items=catalog.filter(x=>eligible(x)&&!x.defaultExcluded&&(mode==='file'||x.group!=='endpoints'));return {selected:new Set(items.map(x=>x.id)),keys:new Set(mode==='webdav'?items.filter(x=>x.key).map(x=>x.id):[]),accountInfoOnly:new Set(),endpointConfigOnly:new Set(),extensions:new Set(mode==='webdav'?items.filter(x=>x.extensionSecret).map(x=>x.id):[]),preset:'all'};};
  const scopes={file:fresh('file'),webdav:fresh('webdav')};
+ const savedScopes={file:'',webdav:''};
  let connection={name:'个人 WebDAV',url:'https://dav.example.com',path:'/opencodex/config-sync/v1',user:'demo-user',connected:true},savedScope='',result=null,lastExport=null,importPlan=null,channelAdoption=null;
  let run=null,runSerial=0,lastRun=null,failedRun=null,lastNotificationId='';
- const localFingerprints={},versions={local:{},remote:{}},protection={enabled:false,passphrase:''},importCredentialPrefs={keys:false,extensions:false},demoObjects={};
+ const localFingerprints={},versions={local:{},remote:{}},protection={enabled:false,passphrase:''},importCredentialPrefs={keys:true,extensions:true},demoObjects={};
  const stamp=n=>'2026-10-30T'+String(9+Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')+':00+08:00';
  function seedVersions(scene='normal'){
   for(const x of catalog.filter(eligible)){
@@ -90,14 +92,14 @@
  }
  const secretCount=s=>Object.values(secretIds(s)).flat().length;
  const signature=s=>JSON.stringify({ids:[...s.selected].sort(),accountInfoOnly:[...s.accountInfoOnly].filter(id=>s.selected.has(id)).sort(),endpointConfigOnly:[...s.endpointConfigOnly].filter(id=>s.selected.has(id)).sort(),...Object.fromEntries(Object.entries(secretIds(s)).map(([k,v])=>[k,v.sort()]))});
- savedScope=signature(scopes.webdav);
+ rememberScope();
  function preset(value){
   const s=state();s.preset=value;
   if(value==='custom')return;
   s.keys.clear();s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions.clear();
   s.selected=new Set(catalog.filter(x=>eligible(x)&&!x.defaultExcluded&&(tab==='file'||x.group!=='endpoints')).map(x=>x.id));
   if(value==='share')for(const x of catalog){if(x.group==='accounts')s.accountInfoOnly.add(x.id);if(x.password)s.endpointConfigOnly.add(x.id);}
-  if(value==='device'){for(const x of catalog){if(x.key)s.keys.add(x.id);if(x.extensionSecret)s.extensions.add(x.id);}}
+  if(value==='device'||value==='all'&&tab==='webdav'){for(const x of catalog){if(x.key)s.keys.add(x.id);if(x.extensionSecret)s.extensions.add(x.id);}}
  }
  function selectObject(s,id,checked){
   if(find(id)&&!eligible(find(id)))return;
@@ -126,7 +128,7 @@
      toggleAttrs:'data-sx="expand" data-id="'+id+'"',expanded:open,
      cells:['<span class="sx-group-count">'+(selectable.length?count+' / '+selectable.length:id==='accounts'?'暂无可选能力':'本地恢复')+'</span>']})+(id==='accounts'&&open?'<label class="sx-account-filter">账户平台<select data-sx-account-platform aria-label="账户列表平台筛选"><option value="all">全部平台</option>'+Object.entries(accountCapabilities.platforms).map(([key,label])=>'<option value="'+key+'" '+(accountPlatform===key?'selected':'')+'>'+label+'</option>').join('')+'</select></label>':'')+children+'</div>';
   }).join('');
-  return '<div class="sx-toolbar"><select data-sx-preset aria-label="'+scopeLabel+'预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>'+(tab==='file'?'默认导出范围':'默认同步范围')+'</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:tab==='file'?'导出范围':'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.filter(eligible).length&&visible.filter(eligible).every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','同平台支持多个独立账户；账户平台与OpenCodex管理方、调用方分开，Google Antigravity、Kiro不归类为Codex。更新对应来源账户身份，不按邮箱或名称合并。账户能力按账户平台、管理方、授权来源和认证类型登记。当前正常流程仅账户信息；登录迁移未通过适配与证据门，不开放选择。0.2.0按已确认范围交付账户信息，不把此原型当免登录验证通过'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。默认导出当前已保存文件快照；仅显式指定 draft 来源才导出当前模型渠道内存草稿。模版只取已保存版本，不带模版编辑缓冲。搜索仅改变显示，隐藏勾选保留。范围与凭据选择自动记住，点击同步才执行。原型只记在当前文档内存，刷新后复位；不读写真实文件。');
+  return '<div class="sx-toolbar"><select data-sx-preset aria-label="'+scopeLabel+'预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>'+(tab==='file'?'默认导出范围':'默认同步范围')+'</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:tab==='file'?'导出范围':'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.filter(eligible).length&&visible.filter(eligible).every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','同平台支持多个独立账户；账户平台与OpenCodex管理方、调用方分开，Google Antigravity、Kiro不归类为Codex。更新对应来源账户身份，不按邮箱或名称合并。账户能力按账户平台、管理方、授权来源和认证类型登记。当前正常流程仅账户信息；登录迁移未通过适配与证据门，不开放选择。0.2.0按已确认范围交付账户信息，不把此原型当免登录验证通过'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。默认导出当前已保存文件快照；仅显式指定 draft 来源才导出当前模型渠道内存草稿。模版只取已保存版本，不带模版编辑缓冲。搜索仅改变显示，隐藏勾选保留。首次全选当前提供的可用范围，凭据随所选范围/包内能力选择；分享预设不带凭据。文件导出与WebDAV范围在本机分别自动记住，普通同步不传输这些操作偏好，也不切换另一台设备的当前连接。每次导入在包内提供范围默认全选，显式入口范围只列对应对象。点击同步才执行。原型只记在当前文档内存，刷新后复位；不读写真实文件。');
  }
  function credentialsHTML(){
   const s=state(),ids=closure().ids;
@@ -136,7 +138,7 @@
    const items=catalog.filter(x=>ids.has(x.id)&&match(x)),active=items.some(x=>s[key].has(x.id));
    return '<section class="sx-secret-block">'+check('data-sx-secret="'+key+'"',title,active,!items.length)+(key==='extensions'&&hasAssets?reviewed:'')+'<p class="sx-muted">'+note+'</p>'+(active?'<div class="sx-subpicks">'+items.map(x=>check('data-sx-secret-object="'+x.id+'" data-kind="'+key+'"',esc(x.name),s[key].has(x.id))).join('')+'</div>':'')+'</section>';
   }).join('');
-  return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户按平台能力提供可选范围；当前仅账户信息'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+blocks+'<p class="sx-note">'+(secretCount()?'所选凭据随范围同步':'当前不携带凭据')+'</p>'+ (tab==='webdav'?'<section class="sx-secret-block">'+check('data-sx-protect','加密同步内容',protection.enabled)+'<div '+(!protection.enabled?'hidden':'')+' id="sxProtectionFields"><label class="sx-field"><span>保护口令</span><input class="input" type="password" id="sxProtectionPass" autocomplete="off" placeholder="填写后记住本次选择" value="'+esc(protection.passphrase)+'"></label></div><p class="sx-muted">可选，与连接密码独立。</p></section>':'')+sxAnn('02','凭据选择与加密规则','加密口令独立于 WebDAV 密码，不随包或远端数据保存。导入同一身份时保留本机已有凭据，不用空值覆盖。文件保护可选；含凭据时建议加密，关闭后按既有导出确认中的明文说明处理，不增加确认步骤。WebDAV连接密码继续复用；普通同步不要求逐次复核。原型不读取真实密钥、不做真实加密。')+'</aside>';
+  return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户按平台能力提供可选范围；当前仅账户信息'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+ (tab==='webdav'?'<section class="sx-secret-block">'+check('data-sx-protect','加密同步内容',protection.enabled)+'<div '+(!protection.enabled?'hidden':'')+' id="sxProtectionFields"><label class="sx-field"><span>保护口令</span><input class="input" type="password" id="sxProtectionPass" autocomplete="off" placeholder="填写后记住本次选择" value="'+esc(protection.passphrase)+'"></label></div><p class="sx-muted">可选，与连接密码独立。</p></section>':'')+blocks+'<p class="sx-note">'+(secretCount()?'所选凭据随范围同步':'当前不携带凭据')+'</p>'+sxAnn('02','凭据选择与加密规则','加密口令独立于 WebDAV 密码，不随包或远端数据保存。导入同一身份时保留本机已有凭据，不用空值覆盖。文件保护可选；含凭据时建议加密，关闭后按既有导出确认中的明文说明处理，不增加确认步骤。WebDAV连接密码继续复用；普通同步不要求逐次复核。原型不读取真实密钥、不做真实加密。')+'</aside>';
  }
  function render(resetList=false){
   if(document.documentElement.dataset.route==='sync')host.closest('.main').scrollTop=0;
@@ -209,7 +211,7 @@
   return '<div class="sx-result-actions">'+(result.items?.length?btn('查看结果','result-details'):'')+(result.failed?.length?btn('重试失败项','retry'):'')+'</div>';
  }
  function updateRows(){return catalog.filter(eligible).map(x=>({id:x.id,name:x.name,group:x.group,direction:direction(x.id),local:clone(versions.local[x.id]),remote:clone(versions.remote[x.id])}));}
- function rememberScope(){savedScope=signature(scopes.webdav);}
+ function rememberScope(){savedScopes.file=signature(scopes.file);savedScope=savedScopes.webdav=signature(scopes.webdav);}
  function directImportRows(kind){
   const present=new Set(['template:gpt','channel:newapi','channel:legacy','skill:review','mcp:docs','preferences:desktop','endpoint:personal','account:chatgpt','account:chatgpt-work','account:antigravity','account:device']);
   const items=updateRows().filter(x=>present.has(x.id)).map(x=>({...x,direction:x.direction==='download'?'download':'skip'}));
@@ -247,11 +249,12 @@
   syncImportControls();
  }
  function importStart(context={}){importFile=null;importPlan={rows:[],selected:new Set(),keys:importCredentialPrefs.keys,extensions:importCredentialPrefs.extensions,context:context.scope||null};renderImport();}
- function startUpdate(mode,rows,secrets=secretIds(scopes.webdav)){
+ function startUpdate(mode,rows,secrets=secretIds(scopes.webdav),transferProtection){
   if(run)return;
-  if(mode==='webdav'&&protection.enabled&&!protection.passphrase){result={tab:mode,title:'请填写保护口令',detail:'在右侧填写后再同步。',inputNeeded:true};render();return;}
+  const encrypted=transferProtection?.encrypted??(mode==='webdav'?protection.enabled:!!importFile?.encrypted);
+  if(mode==='webdav'&&encrypted&&!protection.passphrase){result={tab:mode,title:'请填写保护口令',detail:'在右侧填写后再同步。',inputNeeded:true};render();return;}
   result=null;channelAdoption=null;
-  const operation={id:++runSerial,tab:mode,ids:rows.map(x=>x.id),rows:clone(rows),secrets:clone(secrets),scenario};run=operation;render();
+  const operation={id:++runSerial,tab:mode,ids:rows.map(x=>x.id),rows:clone(rows),secrets:clone(secrets),protection:{encrypted},scenario};run=operation;render();
   setTimeout(()=>completeUpdate(operation),650);
  }
  function completeUpdate(operation){
@@ -277,7 +280,7 @@
   const downloaded=done.filter(x=>x.direction==='download').length,uploaded=done.filter(x=>x.direction==='upload').length;
   const title=failed.length?(done.length?'部分同步完成':'同步未完成'):operation.tab==='file'?'导入完成':'同步完成';
   const detail=operation.tab==='file'?('更新 '+downloaded+' 项，跳过 '+skips.length+' 项'+(failed.length?'，'+failed.length+' 项失败':'')):'下载更新 '+downloaded+' 项，上传 '+uploaded+' 项，跳过 '+skips.length+' 项'+(failed.length?'，'+failed.length+' 项失败':'');
-  result={tab:operation.tab,title,detail:detail+'。',downloaded,uploaded,skipped:skips.length,failed,items:[...done,...skips,...failed]};lastRun=clone(result);failedRun=failed.length?{...operation,rows:failed.map(({status,reason,...x})=>x)}:null;
+  result={tab:operation.tab,title,detail:detail+'。',downloaded,uploaded,skipped:skips.length,failed,items:[...done,...skips,...failed],protection:clone(operation.protection)};lastRun=clone(result);failedRun=failed.length?{...operation,rows:failed.map(({status,reason,...x})=>x)}:null;
   lastComparison=null;render();
   notifyResult(operation,title,detail+'。',failed.length>0);
  }
@@ -292,8 +295,8 @@
   }
   window.toast?.(title,{kind:failed?'error':'success',detail});
  }
- function retryFailed(){if(!failedRun||run)return;const p=failedRun;startUpdate(p.tab,p.rows,p.secrets);if(run)run.scenario='normal';}
- function resultDetails(){if(!result?.items?.length)return;showDialog('result','同步结果','<ul class="sx-outcomes">'+result.items.map(x=>'<li><div><strong>'+esc(x.name)+'</strong><small>'+esc(x.reason||(x.direction==='download'?'已下载并更新':x.direction==='upload'?'已上传':'内容一致，无需更新'))+'</small></div><span class="sx-mark">'+(x.status==='failed'?'失败':x.status==='skipped'?'跳过':'完成')+'</span></li>').join('')+'</ul>','关闭',closeModal,{hideConfirm:true,cancelLabel:'关闭',annotationText:'结果为只读记录，不是新的应用/采用步骤。独立失败项可在页面重试；已完成项保留。'});}
+ function retryFailed(){if(!failedRun||run)return;const p=failedRun;startUpdate(p.tab,p.rows,p.secrets,p.protection);if(run)run.scenario='normal';}
+ function resultDetails(){if(!result?.items?.length)return;showDialog('result','同步结果','<p class="sx-muted">传输保护：'+(result.protection?.encrypted?'加密':'不加密')+'</p><ul class="sx-outcomes">'+result.items.map(x=>'<li><div><strong>'+esc(x.name)+'</strong><small>'+esc(x.reason||(x.direction==='download'?'已下载并更新':x.direction==='upload'?'已上传':'内容一致，无需更新'))+'</small></div><span class="sx-mark">'+(x.status==='failed'?'失败':x.status==='skipped'?'跳过':'完成')+'</span></li>').join('')+'</ul>','关闭',closeModal,{hideConfirm:true,cancelLabel:'关闭',annotationText:'结果为只读记录，不是新的应用/采用步骤。独立失败项可在页面重试；已完成项保留。'});}
  function syncCheck(){
   if(run)return;if(!connection.connected){connectionDialog();return;}
   refreshLocalVersions();const ids=closure(scopes.webdav).ids;
@@ -310,7 +313,7 @@
  }
  function open(options={}){
   catalog=collect(options.action==='export'&&options.source==='draft'?'draft':'saved');tab=options.tab==='webdav'?'webdav':'file';query='';channelAdoption=null;
-  if(options.scope){const s=state();s.selected=new Set(options.scope.filter(id=>find(id)&&eligible(find(id))&&(tab==='file'||find(id).group!=='endpoints')));s.preset='custom';s.keys.clear();s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions.clear();}
+  if(options.scope){const s=state();s.selected=new Set(options.scope.filter(id=>find(id)&&eligible(find(id))&&(tab==='file'||find(id).group!=='endpoints')));s.preset='custom';s.keys=new Set(tab==='webdav'?[...s.selected].filter(id=>find(id)?.key):[]);s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions=new Set(tab==='webdav'?[...s.selected].filter(id=>find(id)?.extensionSecret):[]);}
   rememberScope();
   const stayOnPage=options.action==='import'&&options.stayOnPage;
   if(!stayOnPage)setRoute('sync?tab='+tab);
@@ -332,7 +335,7 @@
   else if(a==='connection')connectionDialog();
   else if(a==='test-connection'&&validateConnection())setText('#sxConnectionTest','演示：连接和目录权限检查通过。未发起网络请求。');
   else if(a==='check')syncCheck();
-  else if(a==='clear'){const s=state();s.selected.clear();s.keys.clear();s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions.clear();s.preset='custom';render();}
+  else if(a==='clear'){const s=state();s.selected.clear();s.keys.clear();s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions.clear();s.preset='custom';rememberScope();render();}
  });
  document.addEventListener('change',e=>{
   const el=e.target,s=state(),focusAttrs=[...e.target.attributes].filter(a=>a.name.startsWith('data-sx-'));const restoreFocus=()=>{const match=$$('input',dialogKind?$('#modal'):host).find(x=>focusAttrs.length&&focusAttrs.every(a=>x.getAttribute(a.name)===a.value));match?.focus({preventScroll:true});};let redraw=false;
@@ -362,6 +365,11 @@
  const scenes=[['normal','双向更新 · 渠道/Skill下载，MCP上传'],['download','远端较新 · 下载并更新'],['upload','本机较新 · 上传'],['same','内容相同 · 无需更新'],['partial','一项失败 · 其余完成'],['network-error','连接中断 · 旧内容保留'],['backup-fail','本地写入失败 · 可重试']];
  const sceneSelect=$('#sxMockScenario');if(sceneSelect)sceneSelect.innerHTML=scenes.map(([id,label])=>'<option value="'+id+'">'+label+'</option>').join('');
  function setScenario(value){if(!scenes.some(([id])=>id===value))return;scenario=value;seedVersions(['download','upload','same'].includes(value)?value:'normal');if(sceneSelect)sceneSelect.value=value;result=null;render();}
- window.syncPrototype={open,refreshCatalog:()=>{if(dialogKind)closeModal();catalog=collect();render();},state:()=>({tab,accountPlatform,accountCapabilities:accountCapabilities.entries.map(x=>({...x})),selected:[...state().selected],effective:[...closure().ids],accountInfoOnly:[...state().accountInfoOnly],endpointConfigOnly:[...state().endpointConfigOnly],secrets:secretIds(),savedScope,dirty:false,lastExport:clone(lastExport),result:clone(result),channelAdoption:clone(channelAdoption),dialogKind,detailOpen,lastComparison:null,comparison:null,serial,scenario,importSample,importFile:clone(importFile),running:!!run,lastRun:clone(lastRun),versions:clone(versions),demoObjects:clone(demoObjects),protection:{enabled:protection.enabled,configured:!!protection.passphrase}}),setImportSample,setScenario,render};
+ function setProtectionDemo(mode){
+  if(!['plaintext','encrypted'].includes(mode))return;
+  protection.enabled=mode==='encrypted';if(protection.enabled&&!protection.passphrase)protection.passphrase='demo-sync';
+  render();window.prototypePanel?.refresh();
+ }
+ window.syncPrototype={open,refreshCatalog:()=>{if(dialogKind)closeModal();catalog=collect();render();},state:()=>({tab,accountPlatform,accountCapabilities:accountCapabilities.entries.map(x=>({...x})),selected:[...state().selected],effective:[...closure().ids],accountInfoOnly:[...state().accountInfoOnly],endpointConfigOnly:[...state().endpointConfigOnly],secrets:secretIds(),savedScope,savedScopes:clone(savedScopes),dirty:false,lastExport:clone(lastExport),result:clone(result),channelAdoption:clone(channelAdoption),dialogKind,detailOpen,lastComparison:null,comparison:null,serial,scenario,importSample,importFile:clone(importFile),running:!!run,lastRun:clone(lastRun),versions:clone(versions),demoObjects:clone(demoObjects),protection:{enabled:protection.enabled,configured:!!protection.passphrase}}),setImportSample,setScenario,setProtectionDemo,render};
  routeChanged();render();
 })();
