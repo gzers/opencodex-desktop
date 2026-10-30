@@ -1,6 +1,10 @@
-/* 固定半透明倒计时仅挂载组件示例；仅长度递减表示剩余停留时间。 */
+/* 组件效果预览：左端不渐隐，右端渐隐，明暗与流动不改变倒计时长度。 */
 .has-notification-countdown{position:relative}
 .notification-countdown{position:absolute;inset-inline:10px;bottom:2px;height:3px;border-radius:999px;overflow:hidden;background:transparent;pointer-events:none}
-.notification-countdown-fill{position:relative;display:block;width:100%;height:100%;overflow:hidden;border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,var(--text) 42%,transparent) 0%,color-mix(in srgb,var(--text) 42%,transparent) 44%,color-mix(in srgb,var(--text) 24%,transparent) 80%,transparent 100%);transform-origin:left center;opacity:.55;will-change:transform}
+.notification-countdown-fill{position:relative;display:block;width:100%;height:100%;overflow:hidden;border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,var(--text) 42%,transparent) 0%,color-mix(in srgb,var(--text) 42%,transparent) 44%,color-mix(in srgb,var(--text) 24%,transparent) 80%,transparent 100%);transform-origin:left center;opacity:.55;animation:notificationCountdownBreathe 2s ease-in-out infinite;will-change:transform,opacity}
+.notification-countdown-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 20%,color-mix(in srgb,var(--text) 60%,transparent) 50%,transparent 80%);opacity:.65;transform:translateX(-105%);animation:notificationCountdownFlow 2.8s linear infinite}
+.notification-countdown[data-phase=paused] .notification-countdown-fill,.notification-countdown[data-phase=paused] .notification-countdown-fill::after{animation-play-state:paused}
+@keyframes notificationCountdownBreathe{0%,100%{opacity:.32}50%{opacity:.78}}
+@keyframes notificationCountdownFlow{from{transform:translateX(-105%)}to{transform:translateX(105%)}}
 .notification-countdown-help{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;pointer-events:none}
-@media(prefers-reduced-motion:reduce){.notification-countdown-fill{will-change:auto}}
+@media(prefers-reduced-motion:reduce){.notification-countdown-fill{animation:none;opacity:.55;will-change:auto}.notification-countdown-fill::after{animation:none;display:none}}
