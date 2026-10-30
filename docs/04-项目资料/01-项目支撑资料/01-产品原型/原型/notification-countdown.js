@@ -8,12 +8,13 @@
   function sample(){const time=now();if(!stopped&&!pauses.size)remaining=Math.max(0,remaining-Math.max(0,time-last));last=time;return {durationMs,remainingMs:remaining,ratio:remaining/durationMs,phase:remaining===0?'elapsed':stopped?'stopped':pauses.size?'paused':'running'};}
   return {sample,pause(reason){sample();pauses.add(reason);return sample();},resume(reason){sample();pauses.delete(reason);return sample();},stop(){sample();stopped=true;return sample();}};
  }
- function mount(host,{durationMs=8000,onElapsed=()=>{}}={}){
+ function mount(host,{durationMs=8000,tone='info',onElapsed=()=>{}}={}){
   if(!host?.ownerDocument||typeof onElapsed!=='function')throw Error('倒计时挂载参数无效');
+  if(!['success','error','warning','info','neutral'].includes(tone))throw Error('倒计时通知类型无效');
   mounted.get(host)?.destroy();
   const doc=host.ownerDocument,win=doc.defaultView,time=clock(durationMs,()=>win.performance.now());
   const track=doc.createElement('div'),fill=doc.createElement('span'),help=doc.createElement('span');
-  track.className='notification-countdown';track.setAttribute('aria-hidden','true');fill.className='notification-countdown-fill';track.appendChild(fill);
+  track.className='notification-countdown';track.dataset.tone=tone;track.setAttribute('aria-hidden','true');fill.className='notification-countdown-fill';track.appendChild(fill);
   help.className='notification-countdown-help';help.id='notificationCountdownHelp-'+(++serial);help.textContent='本通知将在'+Math.round(durationMs/1000)+'秒后收起；鼠标悬停或键盘焦点停留时暂停。';
   const describedBy=host.getAttribute('aria-describedby')||'';host.setAttribute('aria-describedby',[describedBy,help.id].filter(Boolean).join(' '));
   host.classList.add('has-notification-countdown');host.append(track,help);

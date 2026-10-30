@@ -57,17 +57,18 @@
    lastToast=item.title;toast(item.title,{kind:variant,detail:item.detail,duration});
    clearTimeout(window.__toastTimer);host=document.getElementById('toastEl');
   }
-  const timer=window.NotificationCountdown.mount(host,{durationMs:duration,onElapsed:()=>{
+  const timer=window.NotificationCountdown.mount(host,{durationMs:duration,tone:variant==='task'?'success':variant,onElapsed:()=>{
    countdowns.delete(item.id);hidden.add(item.id);if(variant==='task')clearTask(item.id);else{host.classList.remove('show');syncNotifHost();}
   }});countdowns.set(item.id,timer);
  }
  function publishCountdown(options){
-  if(Object.keys(options).some(k=>k!=='variant')||!['success','error','task'].includes(options.variant||'success'))throw Error('倒计时演示仅允许已登记样式');
+  if(Object.keys(options).some(k=>k!=='variant')||!['success','error','warning','info','task'].includes(options.variant||'success'))throw Error('倒计时演示仅允许已登记样式');
   const variant=options.variant||'success',id=prefix+'countdown:'+variant;
   let item=notifications.find(n=>n.id===id);if(item?.deleted)return id;
-  const title=variant==='error'?'示例操作未完成':variant==='task'?'示例任务已完成':'示例操作已完成';
+  const title=variant==='error'?'示例操作未完成':variant==='warning'?'示例操作需要注意':variant==='info'?'示例信息通知':variant==='task'?'示例任务已完成':'示例操作已完成';
   if(!item){item={id,eventId:'component.demo.countdown',cat:'system',op:id,dedupe:id,deleted:false};notifications.unshift(item);}
-  Object.assign(item,{title,kind:variant==='error'?'warning':'info',detail:variant==='error'?'可在通知中心查看处理事项。':'结果已保留，可从铃铛查看。',time:clockLabel(),read:variant!=='error',resolved:variant!=='error',demo:{taskId:variant,state:variant==='error'?'failed':'success',step:3,revision:++countdownRevision},countdown:{variant}});
+  const attention=variant==='error'||variant==='warning';
+  Object.assign(item,{title,kind:variant==='error'?'danger':variant==='warning'?'warning':'info',detail:attention?'可在通知中心查看处理事项。':'结果已保留，可从铃铛查看。',time:clockLabel(),read:!attention,resolved:!attention,demo:{taskId:variant,state:attention?'failed':'success',step:3,revision:++countdownRevision},countdown:{variant}});
   if(item.resolved)item.resolvedAt=item.time;
   hidden.delete(id);renderNotifications();renderCountdown(item);return id;
  }
