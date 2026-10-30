@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 1180-light-high import registered undefined
+    at check (file:///private/tmp/ocx-sync-notice-browser.mjs:2:328)
+    at file:///private/tmp/ocx-sync-notice-browser.mjs:18:322 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.8.1

@@ -1,0 +1,228 @@
+{
+  "scope": "File import/export + WebDAV + current export directory action",
+  "events": [
+    {
+      "id": "sync.connection.saved",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "toast",
+        "center",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.export.directory.opened",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "toast",
+        "center",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.started",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "inline",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.import.started",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "inline",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.export.complete",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "toast",
+        "center",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.export.failed",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "toast",
+        "center",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.import.complete",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "toast",
+        "center",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [
+        "sync.import.failed"
+      ],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.import.failed",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "toast",
+        "center",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.connected",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "toast",
+        "center",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [
+        "sync.connection.failed"
+      ],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.connection.failed",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "toast",
+        "center",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.complete",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "toast",
+        "center",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [
+        "sync.failed"
+      ],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    },
+    {
+      "id": "sync.failed",
+      "owner": "configuration-sync",
+      "consumer": "syncPrototype",
+      "publisher": "prototypeNotificationPublisher",
+      "implemented": "prototype",
+      "scope": "prototype-only",
+      "delivery": [
+        "toast",
+        "center",
+        "log"
+      ],
+      "toastDurationMs": 8000,
+      "entry": "syncPrototype.openReceipt",
+      "dedupe": "eventId + operationId + terminal revision; 同一操作重试更新同一实体",
+      "recovery": [],
+      "redaction": "只允许数字操作ID、计数及固定错误枚举；路径/URL/凭据/口令/原始异常不进事件"
+    }
+  ],
+  "businessBypasses": [],
+  "fieldValidation": "contextual; not a new Notification",
+  "actualProductionOrWindowsClaims": false
+}

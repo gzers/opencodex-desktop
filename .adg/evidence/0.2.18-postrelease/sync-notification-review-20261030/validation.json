@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-30",
+  "project": "opencodex-desktop",
+  "phase": "prototype notification review only",
+  "basis": "docs/governance-main 2118f4ad5 with pre-existing parallel panorama/Logo changes kept unstaged",
+  "entry": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html#sync?tab=file",
+  "sourceHashes": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "d184ed5d9c9a3b9c13076affacef950fba0df2aee89241c00a3bb53e652dc40a",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js": "39f0eb2e039a0cf29751aa89835e8ed1517176edb811d4e726e9e9c1d8497331",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs": "9adc85fafc9cc2bd92d51be9ce531d591e59fe131f605d018fae79f206d37b98",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/maintenance-events.js": "53a7989a1512784c389c0256aa88bc0f13138501f280926fba21b9098be1ef8b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-notification-publisher.js": "662d674fb6f21f7345f187fc05f9baf1805e477c988938d19fae2978efee9da0"
+  },
+  "checks": {
+    "syncNotificationDom": {
+      "passed": 42,
+      "failed": 0
+    },
+    "eventRegistry": {
+      "passed": 31,
+      "failed": 0
+    },
+    "existingSaveNotificationAnnotationVersion": {
+      "passed": 25,
+      "failed": 0
+    },
+    "eventCallsiteAudit": {
+      "registeredActiveEvents": 12,
+      "unregisteredBusinessNotificationBypasses": 0
+    },
+    "chromium": {
+      "passed": 79,
+      "failed": 0,
+      "pageErrors": 0
+    },
+    "webkit": {
+      "passed": 79,
+      "failed": 0,
+      "pageErrors": 0
+    }
+  },
+  "retainedFailures": "First DOM suite and both browser scripts left the deliberately selected partial-failure mock active before asserting import success; explicit reset to normal added for that success check, original assertions preserved and failing logs retained; no product behavior altered to hide a failure",
+  "notificationPolicy": "Existing prototypeNotificationPublisher + existing global Toast/bell; terminal8s, read/resolved success, unresolved failures, same operation retry updates entity, deleted late result log-only; no sensitive payloads",
+  "defaultProtection": "File export default plaintext even with credentials; encryption manual, password fields conditional",
+  "softwareChanged": false,
+  "noRealFilesystemNetworkCredentialsCryptoOrNativeWindows": true,
+  "stagedEntrySha256": "55e7743d69074a757b2a1d78ed66c419c4df33883fbeaf293d2895a9d2dd4e91"
+}

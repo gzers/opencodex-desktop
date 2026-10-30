@@ -52,9 +52,8 @@ test('文件保护可选：带渠道凭据的明文导出保留选择，既有�
  const h=await setup(t);h.w.syncPrototype.open({tab:'file',scope:['channel:newapi']});
  h.change('[data-sx-secret=keys]',true);
  assert.match(h.document.querySelector('.sx-note').textContent,/随范围同步/);
- h.click('[data-sx=export]');assert.equal(h.document.querySelector('#sxEncrypt').checked,true);
- h.click('#modalConfirm');assert.match(h.document.querySelector('#sxError').textContent,/至少 8 位/);assert.equal(sync(h).lastExport,null);
- const file=finishExport(h);assert.equal(file.encryptionRequired,false);assert.equal(file.encrypted,false);
+ h.click('[data-sx=export]');assert.equal(h.document.querySelector('#sxEncrypt').checked,false);assert.equal(h.document.querySelector('#sxPassFields').hidden,true);
+ h.click('#modalConfirm');const file=sync(h).lastExport;assert.equal(file.encryptionRequired,false);assert.equal(file.encrypted,false);
  assert.equal(file.credentials.keys[0],'channel:newapi');assert.match(file.snapshot.modelChannels.providers[0].connection.credentialRef,/^mock-key:/);
  assert.doesNotMatch(json(file),/demo-newapi-key|demo-sync/);assert.equal(sync(h).dialogKind,'');
 });
@@ -226,4 +225,58 @@ test('本页加密与不加密mock共用范围，运行中的保护选择被冻�
  h.click('[data-sx=result-details]');assert.match(h.document.querySelector('.sx-dialog .sx-muted').textContent,/传输保护：加密/);h.click('#modalCancel');
  h.click('[data-sx=check]');result=await finished(h);assert.equal(result.protection.encrypted,false);assert.equal(sync(h).savedScopes.webdav,scope);assert.doesNotMatch(json(sync(h)),/demo-sync/);
  h.w.syncPrototype.setScenario('partial');h.click('[data-sx-protection-demo=encrypted]');h.click('[data-sx=check]');h.click('[data-sx-protection-demo=plaintext]');result=await finished(h);assert.equal(result.failed.length,1);h.click('[data-sx=retry]');result=await finished(h);assert.equal(result.failed.length,0);assert.equal(result.protection.encrypted,true);assert.equal(sync(h).savedScopes.webdav,scope);
+});
+
+test('导出默认不加密，成功只走注册Toast和铃铛；回执跨路由保留保存位置',async t=>{
+ const h=await setup(t);exportPreview(h);assert.equal(h.document.querySelector('#sxEncrypt').checked,false);assert.equal(h.document.querySelector('#sxPassFields').hidden,true);h.click('#modalConfirm');
+ assert.equal(sync(h).lastExport.encrypted,false);assert.equal(h.document.querySelector('#sxPanel>.sx-result'),null);assert.equal(sync(h).dialogKind,'');
+ const notices=h.w.eval('notifications.filter(n=>n.eventId==="sync.export.complete")');assert.equal(notices.length,1);assert.equal(notices[0].read,true);assert.equal(notices[0].resolved,true);
+ const records=h.w.prototypeNotificationPublisher.deliveries();assert.equal(records[0].eventId,'sync.export.complete');assert.deepEqual([...records[0].delivery],['toast','center','log']);assert.doesNotMatch(json(records),/默认导出目录|Users|credentialRef|demo-sync/);
+ h.w.setRoute('models');h.click('#notificationBtn');h.click('[data-notification="'+notices[0].id+'"]');assert.equal(h.document.querySelector('#modalTitle').textContent,'导出结果');assert.match(h.document.querySelector('.sx-dialog').textContent,/默认导出目录/);assert.equal(h.document.querySelector('[data-sx=open-export]')!==null,true);h.click('#modalCancel');
+});
+
+test('手动开启加密才显示并校验口令，再次导出仍默认不加密',async t=>{
+ const h=await setup(t);exportPreview(h);h.change('#sxEncrypt',true);assert.equal(h.document.querySelector('#sxPassFields').hidden,false);h.click('#modalConfirm');assert.match(h.document.querySelector('#sxError').textContent,/至少 8 位/);assert.equal(h.w.prototypeNotificationPublisher.deliveries().length,0);
+ h.input('#sxPass','fixture-export-pass');h.input('#sxPassAgain','fixture-export-pass');h.click('#modalConfirm');assert.equal(sync(h).lastExport.encrypted,true);assert.doesNotMatch(json(h.w.prototypeNotificationPublisher.deliveries()),/fixture-export-pass/);exportPreview(h);assert.equal(h.document.querySelector('#sxEncrypt').checked,false);h.click('#modalCancel');
+});
+
+test('导出失败有注册原因，保留上次成功包；其它成功不会误解决这次失败',async t=>{
+ const h=await setup(t);exportPreview(h);h.click('#modalConfirm');const before=json(sync(h).lastExport);h.w.syncPrototype.setScenario('backup-fail');exportPreview(h);h.click('#modalConfirm');
+ assert.equal(json(sync(h).lastExport),before);assert.equal(h.document.querySelector('#sxPanel>.sx-result'),null);const failed=h.w.eval('notifications.find(n=>n.eventId==="sync.export.failed")');assert.equal(failed.resolved,false);
+ h.w.syncPrototype.setScenario('normal');exportPreview(h);h.click('#modalConfirm');assert.equal(failed.resolved,false);assert.equal(h.w.prototypeNotificationPublisher.deliveries().some(e=>e.eventId==='sync.export.failed'),true);
+});
+
+test('公共发布器拒绝未知/计划事件和敏感自由文本，同一操作重复终态只投递一次',async t=>{
+ const h=await setup(t),p=h.w.prototypeNotificationPublisher;
+ assert.throws(()=>p.publish('sync.unknown',{operationId:'900'}));assert.throws(()=>p.publish('sync.conflict',{operationId:'900'}));assert.throws(()=>p.publish('sync.complete',{operationId:'900',detail:'secret'}));assert.throws(()=>p.publish('sync.complete',{operationId:'key-value'}));
+ p.publish('sync.complete',{operationId:'900',total:1});const count=p.deliveries().length;p.publish('sync.complete',{operationId:'900',total:1});assert.equal(p.deliveries().length,count);assert.equal(h.w.eval('notifications.filter(n=>n.id==="sync-demo:900").length'),1);
+});
+
+test('导入和WebDAV开始只记inline/log；失败重试更新同一条且不替换其它任务',async t=>{
+ const h=await setup(t);h.w.prototypeNotificationPublisher.publish('component.demo.task',{taskId:'a'});const task=h.document.querySelector('#taskHost').textContent;
+ h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});h.w.syncPrototype.setScenario('partial');h.click('[data-sx=check]');const start=h.w.prototypeNotificationPublisher.deliveries()[0];assert.equal(start.eventId,'sync.started');assert.deepEqual([...start.delivery],['inline','log']);
+ await finished(h);const fail=h.w.eval('notifications.find(n=>n.eventId==="sync.failed")');assert.equal(h.document.querySelector('#sxPanel>.sx-result'),null);assert.equal(fail.resolved,false);assert.equal(h.document.querySelector('#taskHost').textContent,task);
+ h.click('[data-sx=retry]');await finished(h);assert.equal(fail.resolved,true);assert.equal(fail.eventId,'sync.complete');assert.equal(h.w.eval('notifications.filter(n=>n.id==="'+fail.id+'").length'),1);assert.equal(h.document.querySelector('#taskHost').textContent,task);
+ h.w.syncPrototype.setScenario('normal');chooseImport(h);h.click('#modalConfirm');await finished(h);const events=h.w.prototypeNotificationPublisher.deliveries().map(x=>x.eventId);assert.ok(events.includes('sync.import.started'));assert.ok(events.includes('sync.import.complete'));
+});
+
+test('删除后的同操作重试不复活通知，新的明确同步仍能产生新回执',async t=>{
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review']});h.w.syncPrototype.setScenario('network-error');h.click('[data-sx=check]');await finished(h);const notice=h.w.eval('notifications.find(n=>n.eventId==="sync.failed")');notice.deleted=true;
+ h.click('[data-sx=retry]');await finished(h);assert.equal(notice.deleted,true);assert.equal(h.w.eval('notifications.filter(n=>n.id==="'+notice.id+'").length'),1);
+ h.w.syncPrototype.setScenario('normal');h.click('[data-sx=check]');await finished(h);assert.ok(h.w.eval('notifications.some(n=>n.eventId==="sync.complete"&&!n.deleted)'));
+});
+
+test('连接测试成功/失败及保存均有注册投递，字段错误不造通知或泄露连接凭据',async t=>{
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',action:'connection'});h.input('#sxDavURL','broken');h.click('[data-sx=test-connection]');assert.equal(h.w.prototypeNotificationPublisher.deliveries().length,0);
+ h.input('#sxDavURL','https://fixture.example.invalid');h.input('#sxDavPassword','fixture-sensitive-value');h.click('[data-sx=test-connection]');assert.equal(h.w.prototypeNotificationPublisher.deliveries()[0].eventId,'sync.connected');
+ h.w.syncPrototype.setScenario('network-error');h.click('[data-sx=test-connection]');assert.equal(h.w.prototypeNotificationPublisher.deliveries()[0].eventId,'sync.connection.failed');h.click('#modalConfirm');assert.equal(h.w.prototypeNotificationPublisher.deliveries()[0].eventId,'sync.connection.saved');
+ const failed=h.w.eval('notifications.find(n=>n.eventId==="sync.connection.failed")');assert.equal(failed.resolved,false);
+ h.w.syncPrototype.open({tab:'webdav',action:'connection'});h.w.syncPrototype.setScenario('normal');h.click('[data-sx=test-connection]');assert.equal(failed.eventId,'sync.connected');assert.equal(failed.resolved,true);h.click('#modalCancel');
+ assert.doesNotMatch(json(h.w.prototypeNotificationPublisher.deliveries()),/fixture.example|fixture-sensitive/);
+});
+
+test('本轮同步业务不直接写通知或调用底层Toast，启用事件均有owner与公共发布器',()=>{
+ const source=fs.readFileSync(path.join(__dirname,'sync-config.js'),'utf8');assert.doesNotMatch(source,/notifications\.(unshift|push)|renderNotifications\(|(?:window\.)?toast\??\.?(?:\(|call)|showTask\(/);
+ const config=require('./maintenance-events.js'),events=config.events.filter(e=>e.consumer==='syncPrototype');assert.equal(events.length,12);
+ for(const e of events){assert.equal(e.implemented,'prototype');assert.equal(e.publisher,'prototypeNotificationPublisher');assert.equal(e.owner,'configuration-sync');assert.equal(e.toastDurationMs,8000);assert.ok(e.entry);}
 });
