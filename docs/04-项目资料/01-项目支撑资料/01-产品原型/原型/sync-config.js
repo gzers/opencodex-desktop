@@ -249,7 +249,7 @@
    const rows=importPlan.rows.filter(x=>importPlan.selected.has(x.id));
    const secrets={keys:importPlan.keys?importSecretIds('keys'):[],extensions:importPlan.extensions?importSecretIds('extensions'):[]};
    closeModal();startUpdate('file',rows,secrets);
-  },{annotationText:['S18方案演示：选择文件与范围 → 导入并直接更新；不会读取真实文件。加密示例口令 demo-sync。','官方openai不进入导入范围。同一渠道按固定身份原位更新，不创建导入副本。凭据选项由包内实际内容与已选对象决定，与是否加密无关；未勾选凭据表示保留本机已有值。','未保存编辑的处理仍待定，本轮示例更新mock已保存文件并保留原编辑缓冲；不把此建议当已确认生产规则。']});
+  },{prototypeAnnotation:{title:'导入示例与测试口令',body:'加密示例包的解密口令：demo-sync。选择示例文件后，填入“解密口令”框即可；不加密的示例包无需口令。此口令仅供原型模拟，不是WebDAV连接密码，也不用于真实文件。'},annotationText:['S18方案演示：选择文件与范围 → 导入并直接更新；不会读取真实文件。','官方openai不进入导入范围。同一渠道按固定身份原位更新，不创建导入副本。凭据选项由包内实际内容与已选对象决定，与是否加密无关；未勾选凭据表示保留本机已有值。','未保存编辑的处理仍待定，本轮示例更新mock已保存文件并保留原编辑缓冲；不把此建议当已确认生产规则。']});
   syncImportControls();
  }
  function importStart(context={}){importFile=null;importPlan={rows:[],selected:new Set(),keys:importCredentialPrefs.keys,extensions:importCredentialPrefs.extensions,context:context.scope||null};renderImport();}
