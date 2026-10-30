@@ -56,10 +56,10 @@
       const state = window.syncPrototype?.state();
       $('#sxImportSample').value = state?.importSample || 'encrypted';
       $('#sxMockScenario').value = state?.scenario || 'normal';
-      $('#syncMockTitle').textContent = (tabs[context.tab] || '同步') + ' · 应用结果';
+      $('#syncMockTitle').textContent = (tabs[context.tab] || '同步') + ' · 同步场景';
       $('#syncMockHint').textContent = context.tab === 'webdav'
-        ? '在“检查变化”后核对差异并应用，查看此场景的结果。'
-        : '选择示例文件并读取后，确认应用导入内容，查看此场景的结果。';
+        ? '选择范围后点击“同步”，直接查看上传、下载或失败重试结果。'
+        : '在同一个导入窗口选择文件与范围后导入，直接更新示例对象。';
     }
   }
   let queued = false;
@@ -104,6 +104,31 @@
     if (button.dataset.settingsAgent) { window.modelPrototype?.applyAgentDemo(button.dataset.settingsAgent); return; }
     window.toast?.('原型模拟：' + (button.textContent || '').trim() + '；只切 mock 投影。');
   });
-  window.prototypePanel = {context:currentContext, refresh};
+  // S18-02: process health and embedded page loading are different mock facts.
+  const panelStates = $('#panelStates');
+  if (panelStates) {
+    const failed = document.createElement('button');
+    failed.type='button';failed.dataset.panelSrc='load-failed';failed.textContent='已运行 · 页面失败';panelStates.appendChild(failed);
+    const note=document.createElement('p');note.className='pctl-hint';note.textContent='S18-02反馈方案：页面失败不改为启动失败；重试只加载页面。这里只切换mock，Windows根因及实机验证待后续排查。';panelStates.parentElement.appendChild(note);
+  }
+  let panelScene='snapshot';
+  function showPanelScene(mode) {
+    panelScene=mode;
+    window.setRoute?.('panel');
+    const frame=$('#panelReal'),mock=$('#panelMock'),empty=$('#panelEmpty'),retry=$('#panelRetryBtn');
+    const unavailable=mode==='empty'||mode==='load-failed';
+    frame?.classList.toggle('show',mode==='snapshot');mock?.classList.toggle('show',mode==='mock');
+    if(empty){
+      empty.style.display=unavailable?'flex':'none';
+      empty.querySelector('strong').textContent=mode==='load-failed'?'官方面板加载失败':'OpenCodex 未运行';
+      empty.querySelector('span').textContent=mode==='load-failed'?'OpenCodex 正在运行，内嵌页面未能加载。':'请从概览启动 OpenCodex 后再打开面板。';
+      let browser=$('#panelErrorBrowser');if(!browser){browser=document.createElement('button');browser.id='panelErrorBrowser';browser.className='btn ghost';browser.textContent='浏览器打开';browser.addEventListener('click',()=>window.toast?.('原型：将通过浏览器打开面板；不访问真实服务。'));empty.appendChild(browser);}
+      browser.hidden=mode!=='load-failed';
+    }
+    if(retry){retry.textContent=mode==='load-failed'?'重试加载':'返回概览';retry.onclick=()=>{if(mode==='empty')window.setRoute?.('overview');else showPanelScene('snapshot');};}
+    if(mode==='load-failed'){window.setState?.('running');$('#toastEl')?.classList.remove('show');}
+  }
+  window.windowPanelMock=showPanelScene;
+  window.prototypePanel = {context:currentContext, refresh, panelScene:()=>panelScene};
   refresh();
 })();

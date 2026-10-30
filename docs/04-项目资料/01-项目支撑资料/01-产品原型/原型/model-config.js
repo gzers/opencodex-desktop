@@ -1857,67 +1857,33 @@
   return {contract:'prototype-sync-fixture/1',channels:[{id:'channel:newapi',base,provider:p,deletedModels:[removed]},{id:'channel:legacy',base:null,provider:legacy,deletedModels:[]}],templates:[{id:'gpt',version:v}]};
  }
  function syncFixture(){return clone({...syncMockPayload,channels:syncMockPayload.channels.map(({base,...item})=>item)});}
- function syncProviderCandidate(item,before){
-  if(!before)return clone(item.provider);
-  const next=clone(before),same=(a,b)=>JSON.stringify(a)===JSON.stringify(b),source=item.provider;
-  for(const key of ['name','protocol','enabled','mode','defaults','familyOverrides','refs','fastEnabled','nodes','activeNodeId'])if(!same(item.base[key],source[key]))next[key]=clone(source[key]);
-  next.models=next.models.filter(m=>!item.deletedModels.includes(m.id));
-  for(const m of source.models){const old=item.base.models.find(x=>x.id===m.id),target=next.models.find(x=>x.id===m.id);
-   if(!old){if(!target)next.models.push(clone(m));continue;}
-   if(!target)continue;
-   for(const key of ['selected','overrides','naming','templateRef'])if(!same(old[key],m[key])){if(m[key]===undefined)delete target[key];else target[key]=clone(m[key]);}
-  }
-  return next;
- }
- function stageSyncChannels(request){
-  const fail=message=>({ok:false,message}),same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
-  if(busy())return fail('正在保存，请完成后重新比较。');
-  if(!request||request.contract!==syncMockPayload.contract||!['file','webdav'].includes(request.source)||!Array.isArray(request.channels)||request.channels.length>2||!Array.isArray(request.templates)||request.templates.some(id=>id!=='gpt')||new Set(request.templates).size!==request.templates.length||!Array.isArray(request.baseline?.saved?.providers)||!Array.isArray(request.baseline?.draft?.providers))return fail('同步内容无效，请重新比较。');
-  if((request.channels.length||request.templates.length)&&$$('[data-model-alias]',host).some(el=>{const m=draft.providers.flatMap(p=>p.models).find(m=>m.key===el.dataset.modelAlias);return m&&el.value!==(m.naming?.alias||'');}))return fail('有未确认的模型别名输入，请先确认或还原后重新比较。');
-  const seen=new Set(),plans=[];
+ // 同步方案只更新mock已保存文件；不执行原型外的写盘或命令。
+ function applySyncUpdates(request){
+  const fail=message=>({ok:false,message});
+  if(!request||request.contract!==syncMockPayload.contract||!['file','webdav'].includes(request.source)||!Array.isArray(request.channels)||!Array.isArray(request.templates))return fail('同步对象无法读取');
+  if(busy())return fail('模型文件正在保存，稍后可重试');
+  const seen=new Set(),plans=[],additions=[];
   for(const choice of request.channels){
-   const item=syncMockPayload.channels.find(x=>x.id===choice?.id);
-   if(!item||seen.has(choice.id)||typeof choice.credential!=='boolean'||choice.id==='channel:legacy'&&(request.source!=='file'||!['new','rebind'].includes(choice.mapping)))return fail('渠道身份映射无效，请重新选择。');
-   seen.add(choice.id);const pid=choice.id==='channel:legacy'&&choice.mapping==='new'?'legacy-imported':item.provider.id;
-   const current=draft.providers.find(p=>p.id===pid),old=request.baseline.saved.providers.find(p=>p.id===pid),reviewed=request.baseline.draft.providers.find(p=>p.id===pid);
-   if(!same(saved.providers.find(p=>p.id===pid),old)||!same(current,reviewed))return fail('渠道已变化，请关闭并重新比较。');
-   if(stagedModelEdits().some(([key])=>current?.models.some(m=>m.key===key)))return fail('目标渠道有未确认输入，请先加入草稿或还原后重新比较。');
-   if((!item.base&&!same(current,old))||(choice.credential&&!same(current?.connection,old?.connection)))return fail('目标渠道有重叠草稿，请先处理后重新比较。');
-   let next=syncProviderCandidate(item,old);
-   next.id=pid;
-   if(!item.base){next.models.forEach((m,i)=>m.key=pid+'::'+i);next.connection={auth:'apikey',keyConfigured:false};}
-   else{
-    const merged=updates.restore(current,next,old);
-    if(merged.conflicts.length)return fail('目标渠道有重叠草稿，请先处理后重新比较。');
-    next=merged.value;
-   }
-   if(!next)return fail('目标渠道已移除，请重新比较。');
-   plans.push({id:pid,next,credential:choice.credential&&choice.id==='channel:newapi',current});
-  }
-  const additions=[];
-  for(const id of request.templates){
-   const incoming=syncMockPayload.templates.find(x=>x.id===id),t=templates.find(t=>t.id===id),existing=t?.versions.find(v=>v.n===incoming.version.n);
-   if(!t||existing&&!same(templateVersionSnapshot(t,existing),templateVersionSnapshot(t,incoming.version)))return fail('模版版本已变化，请重新比较。');
-   if(!existing)additions.push({t,v:clone(incoming.version)});
-  }
-  for(const {next} of plans){
+   if(choice?.id==='channel:native'||choice?.official===true)continue;
+   const item=syncMockPayload.channels.find(x=>x.id===choice?.id);if(!item||seen.has(choice.id)||typeof choice.credential!=='boolean')return fail('同步对象身份无效');seen.add(choice.id);
+   const before=saved.providers.find(p=>p.id===item.provider.id),editing=draft.providers.find(p=>p.id===item.provider.id),next=clone(item.provider);
+   if(before&&!choice.credential)next.connection=clone(before.connection);
+   if(choice.credential)next.connection={auth:'apikey',keyConfigured:true,credentialRef:mockCredential('demo-sync-newapi-key')};
    const refs=[...Object.values(next.refs||{}),...next.models.map(m=>m.templateRef).filter(Boolean)];
-   if(refs.some(ref=>{const [id,n]=ref.split(':');return !version(id,n)&&!additions.some(x=>x.t.id===id&&x.v.n===Number(n));}))return fail('请选择渠道所需的精确模版版本。');
-   const error=namingError(next);if(error)return fail(error);
-   if(draft.providers.some(p=>p.id!==next.id&&p.name.toLowerCase()===next.name.toLowerCase()))return fail('渠道名称已存在，请重新选择身份映射。');
+   for(const ref of refs){const [id,n]=ref.split(':');if(!version(id,n)&&syncMockPayload.templates.some(t=>t.id===id&&t.version.n===Number(n)))request.templates.push(id);}
+   plans.push({next,before,editing,preserve:JSON.stringify(before)!==JSON.stringify(editing)});
   }
-  // 所有检查先完成：模版仅新增保存版本；渠道只更新当前 draft，原保存流程独占 saved。
-  change(()=>{
-   for(const {t,v} of additions){t.versions.push(v);t.nextRevision=Math.max(t.nextRevision||1,v.n+1);}
-   for(const plan of plans){
-    if(plan.credential)plan.next.connection={auth:'apikey',keyConfigured:true,credentialRef:mockCredential('demo-sync-newapi-key')};
-    const at=draft.providers.findIndex(p=>p.id===plan.id);if(at<0)draft.providers.push(plan.next);else draft.providers[at]=plan.next;
-    delete channelConnections[plan.id];channelKeyInputs.delete(plan.id);
-    for(const [key] of Object.entries(modelEdits))if(plan.current?.models.some(m=>m.key===key))delete modelEdits[key];
-    nodeAuthRevision[plan.id]=(nodeAuthRevision[plan.id]||0)+1;
-   }
-  });
-  return {ok:true,status:'draft',channels:plans.map(x=>x.id),templates:additions.map(x=>x.t.id+':'+x.v.n)};
+  for(const id of new Set(request.templates)){
+   const item=syncMockPayload.templates.find(x=>x.id===id),t=templates.find(t=>t.id===id);if(!item||!t)return fail('模版内容无法读取');
+   if(!t.versions.some(v=>v.revisionId===item.version.revisionId))additions.push({t,v:clone(item.version)});
+  }
+  for(const {t,v} of additions){t.versions.push(v);t.nextRevision=Math.max(t.nextRevision||1,v.n+1);}
+  for(const {next,preserve} of plans){
+   const at=saved.providers.findIndex(p=>p.id===next.id);if(at<0)saved.providers.push(clone(next));else saved.providers[at]=clone(next);
+   if(!preserve){const target=draft.providers.findIndex(p=>p.id===next.id);if(target<0)draft.providers.push(clone(next));else draft.providers[target]=clone(next);}
+  }
+  render();
+  return {ok:true,status:'written',channels:plans.map(x=>x.next.id),templates:[...new Set(request.templates)],preservedDrafts:plans.filter(x=>x.preserve).map(x=>x.next.id)};
  }
  function syncEntry(action){
   const ids=tab==='templates'?(templateSelection.size?[...templateSelection]:templateDetail?[templateId]:templates.map(t=>t.id)).map(id=>'template:'+id):(scope.size?[...scope]:channelDetail?[current]:saved.providers.filter(p=>p.id!=='native').map(p=>p.id)).map(id=>'channel:'+id);
@@ -2151,7 +2117,7 @@
  document.addEventListener('dragleave',e=>{if(e.target===dragOver&&!dragOver?.contains(e.relatedTarget)){dragOver.classList.remove('drag-over');dragOver=null;}});
  document.addEventListener('drop',e=>{const el=e.target.closest('[draggable="true"]');if(!el||!drag)return;e.preventDefault();const target=drag.type==='provider'?el.dataset.provider:el.dataset.model;clearDragMarks();if(target){const list=drag.type==='provider'?draft.providers:provider().models,key=drag.type==='provider'?'id':'key';change(()=>{const from=list.findIndex(x=>x[key]===drag.id),to=list.findIndex(x=>x[key]===target);if(from>=0&&to>=0)list.splice(to,0,list.splice(from,1)[0]);});}drag=null;dragOver=null;});
  document.addEventListener('dragend',()=>{clearDragMarks();drag=null;dragOver=null;});
- window.modelPrototype={syncFixture,stageSyncChannels,applyAgentDemo,openExternalTask,receiveExternalSubmission,externalTaskPack,externalSample,externalCombinedText,updateExternalPreview,state:()=>clone({draft,saved,pending,client,operation,templates,scope:[...scope],buffers,proposal,incoming,records,scenario,agent,modelSelection:[...modelSelection],modelExpanded:[...modelExpanded],modelEdits,channelDetail,templateDetail,templateScratch,templateSelection:[...templateSelection],templateListVersions,templateHistoryView,externalTask,externalTasks:[...externalTasks.values()],externalBatch,editorSection,editorNavCollapsed,channelSection,channelNavCollapsed,channelConnections,assistantOpen,assistantMaximized,assistantInputs,conversation,assistantTask,updateScope,updateRun,updateBatches,confirmedConfigurations,restoration,nodePickerChannel:nodePicker?.pid||null,nodeSpeedResults,nodeSpeedRuns,nodeSpeedScene,discoveryResults}),templateHeadingState:()=>clone(templateHeadingState()),agentChoices,agentInfo:selection=>clone(agentInfo(selection)),versionText,refText,versionProtectionReasons,checkTemplateUpdates,reviewTemplateUpdates,openTemplateUpdate,templateRecovery,confirmTemplateUse,scene,setNodeSpeedScene,commitModelPatches,modelTargets:()=>modelTargets().map(m=>m.key),readQuick,stagedModelEdits,quickConfig,stagedChannelConnections,projection:()=>projection(),routePlan,resolveRoute:(pid,key,policy=draft)=>{const p=policy.providers.find(p=>p.id===pid);return resolveRoute(p,p.models.find(m=>m.key===key),policy);},resolve:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return resolve(p,p.models.find(m=>m.key===key));},templateMatches:(tid,modelId,pid='newapi',n)=>{const p=draft.providers.find(p=>p.id===pid);return templateMatches(templates.find(t=>t.id===tid),{id:modelId},p,n?version(tid,n):null);},templateResolution:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return templateResolution(p,p.models.find(m=>m.key===key));},render};
+ window.modelPrototype={syncFixture,applySyncUpdates,applyAgentDemo,openExternalTask,receiveExternalSubmission,externalTaskPack,externalSample,externalCombinedText,updateExternalPreview,state:()=>clone({draft,saved,pending,client,operation,templates,scope:[...scope],buffers,proposal,incoming,records,scenario,agent,modelSelection:[...modelSelection],modelExpanded:[...modelExpanded],modelEdits,channelDetail,templateDetail,templateScratch,templateSelection:[...templateSelection],templateListVersions,templateHistoryView,externalTask,externalTasks:[...externalTasks.values()],externalBatch,editorSection,editorNavCollapsed,channelSection,channelNavCollapsed,channelConnections,assistantOpen,assistantMaximized,assistantInputs,conversation,assistantTask,updateScope,updateRun,updateBatches,confirmedConfigurations,restoration,nodePickerChannel:nodePicker?.pid||null,nodeSpeedResults,nodeSpeedRuns,nodeSpeedScene,discoveryResults}),templateHeadingState:()=>clone(templateHeadingState()),agentChoices,agentInfo:selection=>clone(agentInfo(selection)),versionText,refText,versionProtectionReasons,checkTemplateUpdates,reviewTemplateUpdates,openTemplateUpdate,templateRecovery,confirmTemplateUse,scene,setNodeSpeedScene,commitModelPatches,modelTargets:()=>modelTargets().map(m=>m.key),readQuick,stagedModelEdits,quickConfig,stagedChannelConnections,projection:()=>projection(),routePlan,resolveRoute:(pid,key,policy=draft)=>{const p=policy.providers.find(p=>p.id===pid);return resolveRoute(p,p.models.find(m=>m.key===key),policy);},resolve:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return resolve(p,p.models.find(m=>m.key===key));},templateMatches:(tid,modelId,pid='newapi',n)=>{const p=draft.providers.find(p=>p.id===pid);return templateMatches(templates.find(t=>t.id===tid),{id:modelId},p,n?version(tid,n):null);},templateResolution:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return templateResolution(p,p.models.find(m=>m.key===key));},render};
  if(typeof MutationObserver!=='undefined'){new MutationObserver(()=>{const route=document.documentElement.dataset.route;if(route&&route!=='models'){closeNodePicker();for(const b of Object.values(channelConnections))b.keyVisible=false;const key=$('#mpChannelInline-key'),eye=$('[data-mp=toggle-channel-key]');if(key)key.type='password';if(eye){eye.setAttribute('aria-pressed','false');eye.setAttribute('aria-label','显示 Key');eye.title='显示 Key';}$('#mpAssistantHost').hidden=true;}else {$('#mpAssistantHost').hidden=false;syncDetailSection();renderAssistant();}}).observe(document.documentElement,{attributes:true,attributeFilter:['data-route','data-effects','data-theme']});}
  render();
 })();

@@ -1,0 +1,879 @@
+{
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "1180-light-high single sync action",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high no review checkbox",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high content fits window",
+      "passed": true,
+      "detail": {
+        "width": 889,
+        "height": 605,
+        "right": 1212,
+        "windowRight": 1235,
+        "overflow": 22,
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "name": "1180-light-high direct two-way",
+      "passed": true,
+      "detail": {
+        "tab": "webdav",
+        "title": "同步完成",
+        "detail": "下载更新 3 项，上传 1 项，跳过 0 项。",
+        "downloaded": 3,
+        "uploaded": 1,
+        "skipped": 0,
+        "failed": [],
+        "items": [
+          {
+            "id": "channel:newapi",
+            "name": "NewApi",
+            "group": "channels",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "channel:newapi:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "channel:newapi:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "template:gpt",
+            "name": "GPT",
+            "group": "templates",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "template:gpt:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "template:gpt:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "skill:review",
+            "name": "Code Review Skill",
+            "group": "skills",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "skill:review:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "skill:review:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "mcp:docs",
+            "name": "Docs MCP",
+            "group": "mcp",
+            "direction": "upload",
+            "local": {
+              "updatedAt": "2026-10-30T09:06:00+08:00",
+              "revision": 2,
+              "digest": "mcp:docs:local-v2"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "mcp:docs:v1"
+            },
+            "status": "completed",
+            "credential": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "1180-light-high model saved already updated",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high repeated sync no reapply",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high independent failure",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high retry failed only",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high import single dialog",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high import fits and actions visible",
+      "passed": true,
+      "detail": {
+        "top": 99.984375,
+        "bottom": 99.984375,
+        "buttonBottom": 120.984375,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180-light-high range remains selected",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high page fail is not start fail",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high retry loads panel",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid single sync action",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid no review checkbox",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid content fits window",
+      "passed": true,
+      "detail": {
+        "width": 889,
+        "height": 605,
+        "right": 1212,
+        "windowRight": 1235,
+        "overflow": 22,
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "name": "1180-light-mid direct two-way",
+      "passed": true,
+      "detail": {
+        "tab": "webdav",
+        "title": "同步完成",
+        "detail": "下载更新 3 项，上传 1 项，跳过 0 项。",
+        "downloaded": 3,
+        "uploaded": 1,
+        "skipped": 0,
+        "failed": [],
+        "items": [
+          {
+            "id": "channel:newapi",
+            "name": "NewApi",
+            "group": "channels",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "channel:newapi:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "channel:newapi:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "template:gpt",
+            "name": "GPT",
+            "group": "templates",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "template:gpt:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "template:gpt:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "skill:review",
+            "name": "Code Review Skill",
+            "group": "skills",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "skill:review:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "skill:review:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "mcp:docs",
+            "name": "Docs MCP",
+            "group": "mcp",
+            "direction": "upload",
+            "local": {
+              "updatedAt": "2026-10-30T09:06:00+08:00",
+              "revision": 2,
+              "digest": "mcp:docs:local-v2"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "mcp:docs:v1"
+            },
+            "status": "completed",
+            "credential": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "1180-light-mid model saved already updated",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid repeated sync no reapply",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid independent failure",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid retry failed only",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid import single dialog",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid import fits and actions visible",
+      "passed": true,
+      "detail": {
+        "top": 99.984375,
+        "bottom": 99.984375,
+        "buttonBottom": 120.984375,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180-light-mid range remains selected",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low single sync action",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low no review checkbox",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low content fits window",
+      "passed": true,
+      "detail": {
+        "width": 889,
+        "height": 605,
+        "right": 1212,
+        "windowRight": 1235,
+        "overflow": 22,
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "name": "1180-light-low direct two-way",
+      "passed": true,
+      "detail": {
+        "tab": "webdav",
+        "title": "同步完成",
+        "detail": "下载更新 3 项，上传 1 项，跳过 0 项。",
+        "downloaded": 3,
+        "uploaded": 1,
+        "skipped": 0,
+        "failed": [],
+        "items": [
+          {
+            "id": "channel:newapi",
+            "name": "NewApi",
+            "group": "channels",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "channel:newapi:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "channel:newapi:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "template:gpt",
+            "name": "GPT",
+            "group": "templates",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "template:gpt:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "template:gpt:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "skill:review",
+            "name": "Code Review Skill",
+            "group": "skills",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "skill:review:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "skill:review:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "mcp:docs",
+            "name": "Docs MCP",
+            "group": "mcp",
+            "direction": "upload",
+            "local": {
+              "updatedAt": "2026-10-30T09:06:00+08:00",
+              "revision": 2,
+              "digest": "mcp:docs:local-v2"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "mcp:docs:v1"
+            },
+            "status": "completed",
+            "credential": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "1180-light-low model saved already updated",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low repeated sync no reapply",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low independent failure",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low retry failed only",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low import single dialog",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low import fits and actions visible",
+      "passed": true,
+      "detail": {
+        "top": 99.984375,
+        "bottom": 99.984375,
+        "buttonBottom": 120.984375,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180-light-low range remains selected",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high single sync action",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high no review checkbox",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high content fits window",
+      "passed": true,
+      "detail": {
+        "width": 609,
+        "height": 477,
+        "right": 972,
+        "windowRight": 995,
+        "overflow": 22,
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "name": "900-dark-high direct two-way",
+      "passed": true,
+      "detail": {
+        "tab": "webdav",
+        "title": "同步完成",
+        "detail": "下载更新 3 项，上传 1 项，跳过 0 项。",
+        "downloaded": 3,
+        "uploaded": 1,
+        "skipped": 0,
+        "failed": [],
+        "items": [
+          {
+            "id": "channel:newapi",
+            "name": "NewApi",
+            "group": "channels",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "channel:newapi:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "channel:newapi:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "template:gpt",
+            "name": "GPT",
+            "group": "templates",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "template:gpt:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "template:gpt:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "skill:review",
+            "name": "Code Review Skill",
+            "group": "skills",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "skill:review:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "skill:review:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "mcp:docs",
+            "name": "Docs MCP",
+            "group": "mcp",
+            "direction": "upload",
+            "local": {
+              "updatedAt": "2026-10-30T09:06:00+08:00",
+              "revision": 2,
+              "digest": "mcp:docs:local-v2"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "mcp:docs:v1"
+            },
+            "status": "completed",
+            "credential": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "900-dark-high model saved already updated",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high repeated sync no reapply",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high independent failure",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high retry failed only",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high import single dialog",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high import fits and actions visible",
+      "passed": true,
+      "detail": {
+        "top": 82.375,
+        "bottom": 82.390625,
+        "buttonBottom": 103.390625,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900-dark-high range remains selected",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high page fail is not start fail",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high retry loads panel",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid single sync action",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid no review checkbox",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid content fits window",
+      "passed": true,
+      "detail": {
+        "width": 609,
+        "height": 477,
+        "right": 972,
+        "windowRight": 995,
+        "overflow": 22,
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "name": "900-dark-mid direct two-way",
+      "passed": true,
+      "detail": {
+        "tab": "webdav",
+        "title": "同步完成",
+        "detail": "下载更新 3 项，上传 1 项，跳过 0 项。",
+        "downloaded": 3,
+        "uploaded": 1,
+        "skipped": 0,
+        "failed": [],
+        "items": [
+          {
+            "id": "channel:newapi",
+            "name": "NewApi",
+            "group": "channels",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "channel:newapi:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "channel:newapi:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "template:gpt",
+            "name": "GPT",
+            "group": "templates",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "template:gpt:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "template:gpt:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "skill:review",
+            "name": "Code Review Skill",
+            "group": "skills",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "skill:review:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "skill:review:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "mcp:docs",
+            "name": "Docs MCP",
+            "group": "mcp",
+            "direction": "upload",
+            "local": {
+              "updatedAt": "2026-10-30T09:06:00+08:00",
+              "revision": 2,
+              "digest": "mcp:docs:local-v2"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "mcp:docs:v1"
+            },
+            "status": "completed",
+            "credential": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "900-dark-mid model saved already updated",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid repeated sync no reapply",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid independent failure",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid retry failed only",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid import single dialog",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid import fits and actions visible",
+      "passed": true,
+      "detail": {
+        "top": 82.375,
+        "bottom": 82.390625,
+        "buttonBottom": 103.390625,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900-dark-mid range remains selected",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low single sync action",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low no review checkbox",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low content fits window",
+      "passed": true,
+      "detail": {
+        "width": 609,
+        "height": 477,
+        "right": 972,
+        "windowRight": 995,
+        "overflow": 22,
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "name": "900-dark-low direct two-way",
+      "passed": true,
+      "detail": {
+        "tab": "webdav",
+        "title": "同步完成",
+        "detail": "下载更新 3 项，上传 1 项，跳过 0 项。",
+        "downloaded": 3,
+        "uploaded": 1,
+        "skipped": 0,
+        "failed": [],
+        "items": [
+          {
+            "id": "channel:newapi",
+            "name": "NewApi",
+            "group": "channels",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "channel:newapi:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "channel:newapi:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "template:gpt",
+            "name": "GPT",
+            "group": "templates",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "template:gpt:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "template:gpt:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "skill:review",
+            "name": "Code Review Skill",
+            "group": "skills",
+            "direction": "download",
+            "local": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "skill:review:v1"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:05:00+08:00",
+              "revision": 2,
+              "digest": "skill:review:v2"
+            },
+            "status": "completed",
+            "credential": false
+          },
+          {
+            "id": "mcp:docs",
+            "name": "Docs MCP",
+            "group": "mcp",
+            "direction": "upload",
+            "local": {
+              "updatedAt": "2026-10-30T09:06:00+08:00",
+              "revision": 2,
+              "digest": "mcp:docs:local-v2"
+            },
+            "remote": {
+              "updatedAt": "2026-10-30T09:00:00+08:00",
+              "revision": 1,
+              "digest": "mcp:docs:v1"
+            },
+            "status": "completed",
+            "credential": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "900-dark-low model saved already updated",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low repeated sync no reapply",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low independent failure",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low retry failed only",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low import single dialog",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low import fits and actions visible",
+      "passed": true,
+      "detail": {
+        "top": 82.375,
+        "bottom": 82.390625,
+        "buttonBottom": 103.390625,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900-dark-low range remains selected",
+      "passed": true
+    },
+    {
+      "name": "no page errors",
+      "passed": false,
+      "detail": [
+        "ResizeObserver loop completed with undelivered notifications."
+      ]
+    }
+  ],
+  "errors": [
+    "ResizeObserver loop completed with undelivered notifications."
+  ],
+  "failed": 1,
+  "scope": "prototype only: fixed in-memory data, no filesystem or WebDAV operations"
+}

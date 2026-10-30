@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-30",
+  "project": "opencodex-desktop",
+  "phase": "prototype review only",
+  "basis": "docs/governance-main 8df2a8104 plus pre-existing panorama/logo edits; sharedindex left untouched",
+  "entry": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html#sync?tab=webdav",
+  "sourceHashes": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js": "c27e8f27aa27fd8da96989419d930d68b33814c610a50810b5ee56c0519c9741",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.css": "d7f2a4e05c8ccb4af18955b6bafc23fdbc1a292905e731f80e5e29ea3fca9635",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js": "45b7b4bede30f6433f58abe1f5c0695bc15b455bf3da51e1b244ffa953ffe8c3",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-panel.js": "0da54db84cac227fa55ff23b7b2e9dd1d4f0de4496b45932a774172466fa4896",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/maintenance-events.js": "bb4ff73a428d7f24d79d1480a6b31304a5b1277ef531cd2052de2e84aa0ed32e",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs": "45bf67d895030a223163f28428537fa8f4fe0f5a4773d00fe68247be377a3e61"
+  },
+  "sharedIndexUnchangedSinceStart": true,
+  "checks": {
+    "syncDom": {
+      "passed": 26,
+      "failed": 0
+    },
+    "existingSaveNotificationAnnotationVersionFlows": {
+      "passed": 25,
+      "failed": 0
+    },
+    "chromium": {
+      "passed": 71,
+      "failed": 0,
+      "pageErrors": 0
+    },
+    "webkit": {
+      "passed": 71,
+      "failed": 0,
+      "pageErrors": 0
+    }
+  },
+  "retainedFailures": {
+    "oldSyncExpectations": "retired mandatory comparison/draft/save assertions replaced by direct update tests; original log preserved",
+    "resultEntry": "file import success initially lacked optional result action, corrected and checked",
+    "componentTopic": "unrelated nonfunctionalmenu/event assertions fail also in copied before source; temporary before copy additionally lacks one test-side usagefile path, not treated as new productfinding",
+    "earlyWebkit": "one ResizeObserver loop reported in earlier fullprototype iteration; no error filter or sharedobserver patch used; final bothengine runs zero pageerrors"
+  },
+  "noRealFileReadsWritesFromPrototype": true,
+  "noWebdavRequests": true,
+  "windowsNativeClaimed": false,
+  "softwareChanged": false,
+  "userSimulationAndPendingPolicies": "awaiting review; firstlegacy fallback/fullobjectdeletion/multiMCP/devicefields/drafts not approved"
+}

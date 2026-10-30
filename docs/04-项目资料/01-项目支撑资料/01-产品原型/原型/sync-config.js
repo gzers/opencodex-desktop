@@ -44,17 +44,36 @@
  function chooseImportFile(){
   if(dialogKind!=='import')return;
   importFile={kind:importSample,...importSamples[importSample]};
-  setText('#sxImportFileName',importFile.file);
-  $('#sxUnlockField').hidden=!importFile.encrypted;
-  $('#sxUnlock').value='';setText('#sxError','');$('#modalConfirm').disabled=false;
+  refreshLocalVersions();importPlan.rows=directImportRows(importSample);
+  const wanted=importPlan.context?new Set(importPlan.context):null;
+  importPlan.selected=new Set(importPlan.rows.filter(x=>!wanted||wanted.has(x.id)).map(x=>x.id));
+  renderImport();
   if(importFile.encrypted)$('#sxUnlock').focus();
  }
- let detailReturnFocus=null,detailOpen=false,lastComparison=null;
+ let detailOpen=false,lastComparison=null;
  let catalog=collect(),tab='file',query='',accountPlatform='all',originFocus=null,dialogKind='',scenario='normal',serial=0,renderedTab=null;
  const expanded={file:new Set(),webdav:new Set()},searchCollapsed={file:new Set(),webdav:new Set()},scrolls={file:{list:0,secrets:0},webdav:{list:0,secrets:0}};
  const fresh=mode=>({selected:new Set(catalog.filter(x=>eligible(x)&&!x.defaultExcluded&&(mode==='file'||x.group!=='endpoints')).map(x=>x.id)),keys:new Set(),accountInfoOnly:new Set(),endpointConfigOnly:new Set(),extensions:new Set(),preset:'all'});
  const scopes={file:fresh('file'),webdav:fresh('webdav')};
- let connection={name:'个人 WebDAV',url:'https://dav.example.com',path:'/opencodex/config-sync/v1',user:'demo-user',connected:true},savedScope='',result=null,lastExport=null,importPlan=null,diffPlan=null,channelAdoption=null;
+ let connection={name:'个人 WebDAV',url:'https://dav.example.com',path:'/opencodex/config-sync/v1',user:'demo-user',connected:true},savedScope='',result=null,lastExport=null,importPlan=null,channelAdoption=null;
+ let run=null,runSerial=0,lastRun=null,failedRun=null,lastNotificationId='';
+ const localFingerprints={},versions={local:{},remote:{}},protection={enabled:false,passphrase:''},importCredentialPrefs={keys:false,extensions:false},demoObjects={};
+ const stamp=n=>'2026-10-30T'+String(9+Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')+':00+08:00';
+ function seedVersions(scene='normal'){
+  for(const x of catalog.filter(eligible)){
+   const local={updatedAt:stamp(0),revision:1,digest:x.id+':v1'};let remote=clone(local);
+   if(scene==='download'||scene==='normal'&&['channel:newapi','template:gpt','skill:review','preferences:desktop'].includes(x.id))remote={updatedAt:stamp(5),revision:2,digest:x.id+':v2'};
+   if(scene==='upload'||scene==='normal'&&x.id==='mcp:docs')Object.assign(local,{updatedAt:stamp(6),revision:2,digest:x.id+':local-v2'});
+   versions.local[x.id]=local;versions.remote[x.id]=remote;
+   demoObjects[x.id]={revision:1,files:x.group==='skills'?['SKILL.md','scripts/review.js','scripts/legacy.js']:null};
+  }
+ }
+ seedVersions();
+ function fingerprint(id){const model=window.modelPrototype?.state();if(id.startsWith('channel:'))return JSON.stringify(model?.saved.providers.find(p=>p.id===id.slice(8)));if(id.startsWith('template:'))return JSON.stringify(model?.templates.find(t=>t.id===id.slice(9)));return null;}
+ function refreshLocalVersions(){for(const x of catalog){const value=fingerprint(x.id);if(value===null)continue;if(localFingerprints[x.id]!==undefined&&localFingerprints[x.id]!==value){const revision=(versions.local[x.id]?.revision||1)+1;versions.local[x.id]={updatedAt:stamp(10+revision),revision,digest:x.id+':local-edit-'+revision};}localFingerprints[x.id]=value;}}
+ refreshLocalVersions();
+ function direction(id){const a=versions.local[id],b=versions.remote[id];if(!a)return 'download';if(!b)return 'upload';if(a.digest===b.digest)return 'skip';return Date.parse(a.updatedAt)>=Date.parse(b.updatedAt)?'upload':'download';}
+ function versionMark(id){const value=direction(id);return value==='download'?'远端较新':value==='upload'?'本机较新':'已一致';}
  const state=()=>scopes[tab], find=id=>catalog.find(x=>x.id===id);
  const setText=(selector,value)=>{const el=$(selector);if(el)el.textContent=value;};
  const btn=(text,action,attrs='',primary=false)=>'<button type="button" class="btn '+(primary?'primary':'ghost')+'" data-sx="'+action+'" '+attrs+'>'+text+'</button>';
@@ -94,7 +113,7 @@
    const selectable=items.filter(eligible),all=selectable.length>0&&selectable.every(x=>ids.has(x.id)),count=items.filter(x=>ids.has(x.id)).length,open=query?!searchCollapsed[tab].has(id):expanded[tab].has(id);
    const children=window.PrototypeTreeTable.rows(open?items:[],x=>{
     const dependent=deps.has(x.id)&&!s.selected.has(x.id),included=Object.values(secretIds(s)).some(items=>items.includes(x.id));
-    let mark=x.history?'本地恢复包中选择':dependent?'依赖补齐':x.group==='accounts'?(x.selectable===false?'暂不支持':x.login&&!s.accountInfoOnly.has(x.id)?'含登录状态':'仅账户信息'):x.password?(included?'含密码':'仅配置'):included?'含凭据':x.key?'不带 Key':'配置';
+    let mark=tab==='webdav'&&eligible(x)?versionMark(x.id):x.history?'本地恢复包中选择':dependent?'依赖补齐':x.group==='accounts'?(x.selectable===false?'暂不支持':x.login&&!s.accountInfoOnly.has(x.id)?'含登录状态':'仅账户信息'):x.password?(included?'含密码':'仅配置'):included?'含凭据':x.key?'不带 Key':'配置';
     return {className:'sx-object',depth:1,label:x.name,
       selection:'<input type="checkbox" data-sx-object="'+esc(x.id)+'" aria-label="选择 '+esc(x.name)+'" '+(ids.has(x.id)?'checked':'')+(x.selectable===false?' disabled title="'+esc(x.capability?.reason||'未支持')+'"':x.history?' disabled title="使用本地重装恢复流程；当前未接入远端历史交换"':dependent?' disabled title="所选渠道需要此精确版本"':'')+'>',
       nameHtml:'<button class="sx-object-name" data-sx="detail" data-id="'+esc(x.id)+'">'+esc(x.name)+'</button><small>'+esc(dependent?'仅精确版本 v'+[...deps.get(x.id)].join(' / v'):x.password?(s.endpointConfigOnly.has(x.id)?'仅配置 · 不含连接密码':'密码随配置同步 · 导入后待启用'):x.summary)+'</small>',
@@ -105,28 +124,28 @@
      toggleAttrs:'data-sx="expand" data-id="'+id+'"',expanded:open,
      cells:['<span class="sx-group-count">'+(selectable.length?count+' / '+selectable.length:id==='accounts'?'暂无可选能力':'本地恢复')+'</span>']})+(id==='accounts'&&open?'<label class="sx-account-filter">账户平台<select data-sx-account-platform aria-label="账户列表平台筛选"><option value="all">全部平台</option>'+Object.entries(accountCapabilities.platforms).map(([key,label])=>'<option value="'+key+'" '+(accountPlatform===key?'selected':'')+'>'+label+'</option>').join('')+'</select></label>':'')+children+'</div>';
   }).join('');
-  return '<div class="sx-toolbar"><select data-sx-preset aria-label="同步范围预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>默认配置范围</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.filter(eligible).length&&visible.filter(eligible).every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','同平台支持多个独立账户；账户平台与OpenCodex管理方、调用方分开，Google Antigravity、Kiro不归类为Codex。选择和比较绑定来源账户身份，不按邮箱或名称合并。账户能力按账户平台、管理方、授权来源和认证类型登记。当前正常流程仅账户信息；登录迁移未通过适配与证据门，不开放选择。0.2.0按已确认范围交付账户信息，不把此原型当免登录验证通过'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。默认导出当前已保存文件快照；仅显式指定 draft 来源才导出当前模型渠道内存草稿。模版只取已保存版本，不带模版编辑缓冲。搜索仅改变显示，隐藏勾选保留。范围预设、勾选与搜索均为内存演示；导入 / 导出走确认流程，不读写真实文件。');
+  return '<div class="sx-toolbar"><select data-sx-preset aria-label="同步范围预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>默认配置范围</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.filter(eligible).length&&visible.filter(eligible).every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','同平台支持多个独立账户；账户平台与OpenCodex管理方、调用方分开，Google Antigravity、Kiro不归类为Codex。选择和比较绑定来源账户身份，不按邮箱或名称合并。账户能力按账户平台、管理方、授权来源和认证类型登记。当前正常流程仅账户信息；登录迁移未通过适配与证据门，不开放选择。0.2.0按已确认范围交付账户信息，不把此原型当免登录验证通过'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。默认导出当前已保存文件快照；仅显式指定 draft 来源才导出当前模型渠道内存草稿。模版只取已保存版本，不带模版编辑缓冲。搜索仅改变显示，隐藏勾选保留。范围与凭据选择自动记住，点击同步才执行。原型只记在当前文档内存，刷新后复位；不读写真实文件。');
  }
  function credentialsHTML(){
   const s=state(),ids=closure().ids;
-  const reviewed=check('data-sx-reviewed','已复核所选资源')+'<p class="sx-muted">确认所选 Skills / MCP 资源清单与落点无误。</p>';
+  const reviewed='';
   const hasAssets=[...ids].some(id=>['skills','mcp'].includes(find(id)?.group));
   const blocks=[['keys','渠道 API Key','包含所选渠道的 Key','渠道可单独分享，接收方自行填 Key。',x=>x.key],['extensions','扩展凭据','包含所选扩展的凭据','例如 MCP 的 Authorization / 环境变量。',x=>x.extensionSecret]].map(([key,title,label,note,match])=>{
    const items=catalog.filter(x=>ids.has(x.id)&&match(x)),active=items.some(x=>s[key].has(x.id));
    return '<section class="sx-secret-block">'+check('data-sx-secret="'+key+'"',title,active,!items.length)+(key==='extensions'&&hasAssets?reviewed:'')+'<p class="sx-muted">'+note+'</p>'+(active?'<div class="sx-subpicks">'+items.map(x=>check('data-sx-secret-object="'+x.id+'" data-kind="'+key+'"',esc(x.name),s[key].has(x.id))).join('')+'</div>':'')+'</section>';
   }).join('');
-  return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户按平台能力提供可选范围；当前仅账户信息'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+blocks+'<p class="sx-note">'+(secretCount()?(tab==='file'?'所选凭据可加密':'所选范围含凭据'):'当前不携带凭据')+'</p>'+sxAnn('02','凭据选择与加密规则','加密口令独立于 WebDAV 密码，不随包或远端数据保存。导入同一身份时保留本机已有凭据，不用空值覆盖。文件保护可选；含凭据时建议加密，关闭后按既有导出确认中的明文说明处理，不增加确认步骤。WebDAV 口令规则独立。原型不读取真实密钥、不做真实加密。')+'</aside>';
+  return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户按平台能力提供可选范围；当前仅账户信息'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+blocks+'<p class="sx-note">'+(secretCount()?'所选凭据随范围同步':'当前不携带凭据')+'</p>'+ (tab==='webdav'?'<section class="sx-secret-block">'+check('data-sx-protect','加密同步内容',protection.enabled)+'<div '+(!protection.enabled?'hidden':'')+' id="sxProtectionFields"><label class="sx-field"><span>保护口令</span><input class="input" type="password" id="sxProtectionPass" autocomplete="off" placeholder="填写后记住本次选择" value="'+esc(protection.passphrase)+'"></label></div><p class="sx-muted">可选，与连接密码独立。</p></section>':'')+sxAnn('02','凭据选择与加密规则','加密口令独立于 WebDAV 密码，不随包或远端数据保存。导入同一身份时保留本机已有凭据，不用空值覆盖。文件保护可选；含凭据时建议加密，关闭后按既有导出确认中的明文说明处理，不增加确认步骤。WebDAV连接密码继续复用；普通同步不要求逐次复核。原型不读取真实密钥、不做真实加密。')+'</aside>';
  }
  function render(resetList=false){
   if(document.documentElement.dataset.route==='sync')host.closest('.main').scrollTop=0;
   if(renderedTab){scrolls[renderedTab].list=$('.sx-table',host)?.scrollTop||0;scrolls[renderedTab].secrets=$('.sx-secrets',host)?.scrollTop||0;}
   if(resetList)scrolls[tab].list=0;
-  const selected=closure().ids.size,dirty=signature(scopes.webdav)!==savedScope;
+  const selected=closure().ids.size;
   host.innerHTML='<div class="sx-tabs" data-page-tabs data-tabs-scroll="inner" role="tablist" aria-label="同步方式">'+[['file','文件同步'],['webdav','WebDAV 同步']].map(([id,name])=>'<button type="button" role="tab" id="sxTab-'+id+'" aria-controls="sxPanel" aria-selected="'+(tab===id)+'" tabindex="'+(tab===id?'0':'-1')+'" data-sx="tab" data-id="'+id+'">'+name+'</button>').join('')+'</div>'+
-   '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'"><header class="sx-top"><div><h2>'+(tab==='file'?'导入与导出':'设备间同步')+'</h2><p class="sx-muted">'+(tab==='file'?'把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。':'本机范围同时用于上传与接收；下载的变化先预览，再应用。')+'</p></div><div class="sx-actions">'+(tab==='file'?btn('导入配置','import')+btn('导出配置','export',selected?'':'disabled',true):btn('保存本机范围','save-scope',dirty?'':'disabled')+btn('同步配置','check',dirty?'disabled title="请先保存本机范围"':'',true))+'</div></header>'+
-   (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>'+sxAnn('03','连接信息为演示数据','此处为演示连接，连接名称、地址与状态均为演示数据；测试连接、保存与同步仅切换演示状态，不发起真实网络请求。'):'') +
+   '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'"><header class="sx-top"><div><h2>'+(tab==='file'?'导入与导出':'设备间同步')+'</h2><p class="sx-muted">'+(tab==='file'?'把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。':'按所选范围双向更新，较新的内容覆盖较旧的内容。')+'</p></div><div class="sx-actions">'+(tab==='file'?(result?.tab===tab&&result.items?.length&&!result.failed?.length?btn('查看结果','result-details'):'')+btn('导入配置','import')+btn('导出配置','export',selected?'':'disabled',true):(result?.tab===tab&&result.items?.length&&!result.failed?.length?btn('查看结果','result-details'):'')+btn(run?'同步中…':'同步','check',run||!selected?'disabled':'',true))+'</div></header>'+
+   (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>'+sxAnn('03','按版本直接更新 · 方案演示','S18-01/03/04/05：范围和凭据选择在当前文档自动记住，普通同步直接写mock文件，不再比较、采用或二次保存。Skill整体更新并移除本Skill旧文件；官方openai忽略。右侧结果场景可演示上传、下载、无变化和失败重试。首次无版本远端优先、整对象删除传播、设备专属字段与未保存编辑仍待确认；本轮不演示删除用户对象，也不把建议写为生产结论。'):'') +
    '<div class="sx-layout"><section class="sx-scope" aria-label="同步范围">'+scopeHTML()+'</section>'+credentialsHTML()+'</div>' +
-   (result&&result.tab===tab?'<div class="sx-result" role="status"><strong>'+esc(result.title)+'</strong><span>'+esc(result.detail)+'</span>'+(result.packagePath?'<div class="sx-result-actions"><code>'+esc(result.packagePath)+'</code><button type="button" class="btn ghost" data-sx="open-export">打开导出目录</button></div>':'')+'</div>':'') +
+   (run&&run.tab===tab?'<div class="sx-result" role="status" aria-live="polite"><strong>正在同步</strong><span>正在更新所选 '+run.ids.length+' 项内容…</span></div>':result&&result.tab===tab&&(result.failed?.length||result.packagePath||result.inputNeeded)?'<div class="sx-result" role="status"><strong>'+esc(result.title)+'</strong><span>'+esc(result.detail)+'</span>'+resultActions()+(result.packagePath?'<div class="sx-result-actions"><code>'+esc(result.packagePath)+'</code><button type="button" class="btn ghost" data-sx="open-export">打开导出目录</button></div>':'')+'</div>':'') +
    '</div>';
   if(window.conversationPrototype?.renderRecovery($('#sxPanel',host),tab)){renderedTab=tab;return;}
   if(tab==='file'&&window.conversationPrototype?.scope()==='conversations')$('.sx-layout',host).insertAdjacentHTML('beforebegin',window.conversationPrototype.recoveryEntry());
@@ -144,7 +163,7 @@
    const paragraph=document.createElement('p');paragraph.textContent=text;annotation.querySelector('.annotation-footer').before(paragraph);
   }
   $('#modal').classList.remove('sx-comparison');$('#modal').classList.add('modal-wide');$('#modalConfirm').disabled=false;
-  window.__modalOnClose=()=>{for(const el of [$('.modal-head'),$('.modal-actions')])if(el)el.inert=false;detailOpen=false;detailReturnFocus=null;$('#modal').classList.remove('sx-comparison');dialogKind='';$('#modalBody').innerHTML='';$('#modalConfirm').disabled=false;if(originFocus?.isConnected)originFocus.focus();originFocus=null;};
+  window.__modalOnClose=()=>{for(const el of [$('.modal-head'),$('.modal-actions')])if(el)el.inert=false;detailOpen=false;$('#modal').classList.remove('sx-comparison');dialogKind='';$('#modalBody').innerHTML='';$('#modalConfirm').disabled=false;if(originFocus?.isConnected)originFocus.focus();originFocus=null;};
  }
  function detail(id){
   const x=find(id);if(!x)return;
@@ -154,7 +173,7 @@
    showDialog('detail',x.name,'<dl class="sx-detail-list"><dt>邮箱 / 标签</dt><dd>'+esc(x.email||x.name)+'</dd><dt>来源账户</dt><dd>'+esc(x.sourceAccountId||x.id)+'</dd><dt>账户平台</dt><dd>'+esc(accountCapabilities.platforms[x.accountPlatform]||x.accountPlatform)+'</dd><dt>管理方</dt><dd>'+esc(x.source)+'</dd><dt>授权来源 / 认证</dt><dd>'+esc(x.provider+' / '+x.authKind)+'</dd><dt>可选范围</dt><dd>'+esc(x.selectable===false?'暂不支持选择':'仅账户身份与显示信息')+'</dd></dl>'+accountOptions,'关闭',closeModal,{cancelLabel:'关闭',hideConfirm:true,annotationText:'账户平台与能力门已获本轮原型确认。对象、状态均为固定原型资料；不读取真实账户或登录材料。生产按已确认的适配器与真实证据登记，不能由原型成功状态晋升支持。'});return;
   }
   const endpointOptions=x.password?'<details class="sx-account-options"><summary>同步选项</summary>'+check('data-sx-endpoint-config="'+esc(id)+'"','仅同步配置，不含密码',state().endpointConfigOnly.has(id),!state().selected.has(id))+'<p class="sx-muted">默认随配置同步连接密码；导入后需另行启用连接。同步加密口令始终不进入配置包。</p></details>':'';
-  showDialog('detail',x.name,'<p class="sx-muted">配置对象详情 · 敏感值不展示</p><dl class="sx-detail-list"><dt>归属</dt><dd>'+esc(x.source)+'</dd>'+(x.group==='accounts'?'<dt>账户平台</dt><dd>'+esc(accountCapabilities.platforms[x.accountPlatform]||x.accountPlatform)+'</dd><dt>授权来源 / 认证</dt><dd>'+esc(x.provider+' / '+x.authKind)+'</dd><dt>登录迁移</dt><dd>'+esc(x.capability.reason)+'</dd>':'')+'<dt>包含字段</dt><dd>'+esc(x.fields)+'</dd><dt>配置来源</dt><dd>'+esc(x.files)+'</dd>'+(x.endpoint?'<dt>当前连接地址</dt><dd>'+esc(x.endpoint)+'</dd>':'')+(x.nodes?.length?'<dt>服务节点</dt><dd>'+x.nodes.map(n=>esc(n.name)+(n.current?' · 当前':'')+'：'+esc(n.url||'待配置')).join('<br>')+'</dd>':'')+'<dt>依赖</dt><dd>'+esc(x.deps?.length?x.deps.join('、'):'无额外模版依赖')+'</dd>'+(x.models?.length?'<dt>已选模型</dt><dd>'+x.models.map(esc).join('、')+'</dd>':'')+'<dt>凭据</dt><dd>'+esc(x.key?'API Key 单独选择；不显示或复制掩码值':x.login?'登录状态默认随账户同步，接收端自动恢复并检查':x.group==='accounts'?'当前只同步已支持的账户信息；本机已有登录保持，新设备需登录':x.extensionSecret?'授权头 / 环境变量单独选择':x.password?'连接密码默认随配置同步，可选仅配置；不包含同步加密口令':'不携带凭据')+'</dd></dl>'+accountOptions+endpointOptions+(['accounts','endpoints','dialog-policies'].includes(x.group)?'':'<p class="sx-note">Desktop 策略和 OpenCodex 字段属于同一渠道时合为一个应用计划，不重复创建；外部漂移先比较。</p>'),'关闭',closeModal,{cancelLabel:'关闭',hideConfirm:true});
+  showDialog('detail',x.name,'<p class="sx-muted">配置对象详情 · 敏感值不展示</p><dl class="sx-detail-list"><dt>归属</dt><dd>'+esc(x.source)+'</dd>'+(x.group==='accounts'?'<dt>账户平台</dt><dd>'+esc(accountCapabilities.platforms[x.accountPlatform]||x.accountPlatform)+'</dd><dt>授权来源 / 认证</dt><dd>'+esc(x.provider+' / '+x.authKind)+'</dd><dt>登录迁移</dt><dd>'+esc(x.capability.reason)+'</dd>':'')+'<dt>包含字段</dt><dd>'+esc(x.fields)+'</dd><dt>配置来源</dt><dd>'+esc(x.files)+'</dd>'+(x.endpoint?'<dt>当前连接地址</dt><dd>'+esc(x.endpoint)+'</dd>':'')+(x.nodes?.length?'<dt>服务节点</dt><dd>'+x.nodes.map(n=>esc(n.name)+(n.current?' · 当前':'')+'：'+esc(n.url||'待配置')).join('<br>')+'</dd>':'')+(versions.local[id]?'<dt>内容版本</dt><dd>v'+versions.local[id].revision+' · '+esc(versions.local[id].updatedAt.replace('T',' ').replace('+08:00',''))+'</dd>':'')+(demoObjects[id]?.files?'<dt>当前文件</dt><dd>'+demoObjects[id].files.map(esc).join('<br>')+'</dd>':'')+'<dt>依赖</dt><dd>'+esc(x.deps?.length?x.deps.join('、'):'无额外模版依赖')+'</dd>'+(x.models?.length?'<dt>已选模型</dt><dd>'+x.models.map(esc).join('、')+'</dd>':'')+'<dt>凭据</dt><dd>'+esc(x.key?'API Key 单独选择；不显示或复制掩码值':x.login?'登录状态默认随账户同步，接收端自动恢复并检查':x.group==='accounts'?'当前只同步已支持的账户信息；本机已有登录保持，新设备需登录':x.extensionSecret?'授权头 / 环境变量单独选择':x.password?'连接密码默认随配置同步，可选仅配置；不包含同步加密口令':'不携带凭据')+'</dd></dl>'+accountOptions+endpointOptions+(['accounts','endpoints','dialog-policies'].includes(x.group)?'':'<p class="sx-note">同一渠道原位更新，官方 openai 保持本机自带能力。</p>'),'关闭',closeModal,{cancelLabel:'关闭',hideConfirm:true});
  }
  function exportSnapshot(source,cl,secrets){
   const m=window.modelPrototype?.state(),policy=m?.[source];
@@ -182,184 +201,91 @@
    const custom=$('[name=sxDestination]:checked')?.value==='custom';const dir=custom?($('#sxDirPath')?.value.trim()||''):'';if(custom&&!dir){setText('#sxError','请选择自定义目录，或改回默认导出目录。');return;}const exportRoot=dir||'默认导出目录',packagePathShown=exportRoot+'/2026-10-23/备份包-14-30-12-8F3A';lastExport={...manifest,encrypted,destination:dir||'default',packagePath:packagePathShown,simulated:true};result={tab:'file',title:'导出流程演示完成',detail:cl.ids.size+' 项配置已归入同一备份包 · '+packagePathShown+'。'+(encrypted?'加密步骤已演示，未生成真实文件。':'未生成真实文件。'),packagePath:packagePathShown};closeModal();render();
   },{annotationText:['选择范围 → 确认内容 → 生成配置包','未选择的凭据不进入包，也不会由模版依赖重新带入。']});
  }
- // 导入与 WebDAV 共用对象树、选择和凭据规则；详情层只读且不重建父弹窗。
- const comparisonGroup=x=>find(x.id)?.group||({channel:'channels',remap:'channels',template:'templates',account:'accounts',token:'accounts',skill:'skills',mcp:'mcp',extension:'mcp',preferences:'preferences',endpoint:'endpoints'}[x.kind])||'preferences';
- const changeLabels={add:'新增',update:'更新',delete:'删除'};
- function comparisonInit(p,mode){
-  p.mode=mode;p.expanded=new Set();p.scroll=0;p.pass='';p.backup=true;
-  const m=window.modelPrototype?.state();p.modelBaseline=clone({saved:m?.saved,draft:m?.draft});p.modelFixture=window.modelPrototype?.syncFixture();
-  p.rows=p.rows.map(x=>{const base={...x,group:comparisonGroup(x),changes:x.changes||{update:1}};return base.group==='accounts'?{...base,...(find(x.id)||{selectable:false,capability:{reason:'原包平台或账户适配未登记'},accountPlatform:'unknown'}),kind:'account',login:!!find(x.id)?.login}:base});
-  p.selected ||=new Set(p.rows.filter(x=>!x.removal&&eligible(x)).map(x=>x.id));for(const x of p.rows)if(!eligible(x))p.selected.delete(x.id);
-  p.accountInfoOnly ||=new Set();p.endpointConfigOnly ||=new Set();p.credentialOverrides={};
-  for(const x of p.rows)p.credentialOverrides[x.id]=credentialDefault(p,x);
-  return p;
+ // 普通导入与同步直接更新已选对象；比较仅在可选结果详情中查看。
+ function resultActions(){
+  if(!result)return '';
+  return '<div class="sx-result-actions">'+(result.items?.length?btn('查看结果','result-details'):'')+(result.failed?.length?btn('重试失败项','retry'):'')+'</div>';
  }
- function credentialType(p,x){
-  if(x.removal)return '';
-  if(p.mode==='import'&&p.source!=='encrypted')return '';
-  if(x.group==='channels'&&x.kind!=='remap'&&(p.mode==='import'||scopes.webdav.keys.has(x.id)))return 'Key';
-  if(x.group==='accounts'&&find(x.id)?.login&&accountCapabilities.canTransferLogin(find(x.id)))return '登录状态';
-  if(x.group==='mcp'&&x.kind!=='extension'&&(p.mode==='import'||scopes.webdav.extensions.has(x.id)))return '扩展凭据';
-  if(x.group==='endpoints'&&x.password)return '连接密码';
-  return '';
+ function updateRows(){return catalog.filter(eligible).map(x=>({id:x.id,name:x.name,group:x.group,direction:direction(x.id),local:clone(versions.local[x.id]),remote:clone(versions.remote[x.id])}));}
+ function rememberScope(){savedScope=signature(scopes.webdav);}
+ function directImportRows(kind){
+  const present=new Set(['template:gpt','channel:newapi','channel:legacy','skill:review','mcp:docs','preferences:desktop','endpoint:personal','account:chatgpt','account:chatgpt-work','account:antigravity','account:device']);
+  const items=updateRows().filter(x=>present.has(x.id)).map(x=>({...x,direction:x.direction==='download'?'download':'skip'}));
+  if(kind==='keyless')return items.filter(x=>['channels','templates'].includes(x.group));
+  if(kind==='config-only')return items.filter(x=>x.group==='endpoints');
+  if(kind==='legacy')return items.filter(x=>x.group==='preferences');
+  return items;
  }
- function credentialDefault(p,x){return ['登录状态','连接密码'].includes(credentialType(p,x));}
- function credentialValue(p,x){
-  const type=credentialType(p,x);
-  return type==='登录状态'?!p.accountInfoOnly.has(x.id):type==='连接密码'?!p.endpointConfigOnly.has(x.id):!!p.credentialOverrides[x.id];
+ function importForm(){
+  const rows=importPlan.rows||[];
+  return '<div class="sx-field"><span>配置文件</span><div class="sx-file-picker">'+btn('选择文件','choose-import-file')+'<span id="sxImportFileName" aria-live="polite">'+esc(importFile?.file||'尚未选择文件')+'</span></div></div>'+
+   '<label class="sx-field" id="sxUnlockField" '+(!importFile?.encrypted?'hidden':'')+'><span>解密口令</span><input class="input" id="sxUnlock" type="password" autocomplete="off" placeholder="请输入配置包的加密口令"></label>'+
+   (rows.length?'<fieldset class="sx-import-scope"><legend>导入范围</legend>'+groups.map(([group,label])=>{const items=rows.filter(x=>x.group===group);return items.length?'<div class="sx-import-group"><strong>'+label+'</strong>'+items.map(x=>check('data-sx-import-object="'+esc(x.id)+'"',esc(x.name),importPlan.selected.has(x.id))).join('')+'</div>':'';}).join('')+'</fieldset>'+check('data-sx-import-keys','包含包内渠道 API Key',!!importFile?.encrypted&&importPlan.keys,!importFile?.encrypted)+check('data-sx-import-secrets','包含包内扩展凭据',!!importFile?.encrypted&&importPlan.extensions,!importFile?.encrypted):'');
  }
- function setCredential(p,x,checked){
-  p.credentialOverrides[x.id]=checked;
-  if(x.group==='accounts')checked?p.accountInfoOnly.delete(x.id):p.accountInfoOnly.add(x.id);
-  if(x.group==='endpoints')checked?p.endpointConfigOnly.delete(x.id):p.endpointConfigOnly.add(x.id);
+ function renderImport(){
+  showDialog('import','导入配置',importForm(),'导入',()=>{
+   if(!importFile)return;
+   if(importFile.kind==='corrupt'){setText('#sxError','文件无法读取，请重新选择配置包。');return;}
+   if(importFile.encrypted&&$('#sxUnlock').value!=='demo-sync'){setText('#sxError','解密口令不正确，请重新输入。');return;}
+   if(!importPlan.selected.size)return;
+   const rows=importPlan.rows.filter(x=>importPlan.selected.has(x.id));
+   const secrets={keys:importFile.encrypted&&importPlan.keys?rows.filter(x=>x.group==='channels').map(x=>x.id):[],extensions:importFile.encrypted&&importPlan.extensions?rows.filter(x=>x.group==='mcp').map(x=>x.id):[]};
+   closeModal();startUpdate('file',rows,secrets);
+  },{annotationText:['S18方案演示：选择文件与范围 → 导入并直接更新；不会读取真实文件。加密示例口令 demo-sync。','官方openai不进入导入范围。同一渠道按固定身份原位更新，不创建导入副本。未勾选凭据表示保留本机已有值。','未保存编辑的处理仍待定，本轮示例更新mock已保存文件并保留原编辑缓冲；不把此建议当已确认生产规则。']});
+  $('#modalConfirm').disabled=!importFile||!importPlan.selected.size;
  }
- function comparisonPick(p,x,checked){
-  if(!eligible(x))return;
-  const was=p.selected.has(x.id);selectObject(p,x.id,checked);
-  if(!checked||!was&&checked){p.credentialOverrides[x.id]=credentialDefault(p,x);if(checked)setCredential(p,x,credentialDefault(p,x));}
+ function importStart(context={}){importFile=null;importPlan={rows:[],selected:new Set(),keys:importCredentialPrefs.keys,extensions:importCredentialPrefs.extensions,context:context.scope||null};renderImport();}
+ function startUpdate(mode,rows,secrets=secretIds(scopes.webdav)){
+  if(run)return;
+  if(mode==='webdav'&&protection.enabled&&!protection.passphrase){result={tab:mode,title:'请填写保护口令',detail:'在右侧填写后再同步。',inputNeeded:true};render();return;}
+  result=null;channelAdoption=null;
+  const operation={id:++runSerial,tab:mode,ids:rows.map(x=>x.id),rows:clone(rows),secrets:clone(secrets),scenario};run=operation;render();
+  setTimeout(()=>completeUpdate(operation),650);
  }
- function changeBadges(items){
-  return Object.entries(changeLabels).map(([key,label])=>{const n=items.reduce((sum,x)=>sum+(x.changes[key]||0),0);return n?'<span class="sx-change '+key+'">'+label+' '+n+'</span>':'';}).join('');
- }
- function ruleCheckbox(p,items,group){
-  const eligible=items.filter(x=>p.selected.has(x.id)&&credentialType(p,x));
-  if(!items.some(x=>credentialType(p,x)))return '';
-  const attr=group?'data-sx-compare-rule="'+group+'"':'data-sx-compare-rule="all"';
-  const label=p.mode==='diff'?'同步凭据':'采用来源凭据';
-  return check(attr+' aria-label="'+(group?groups.find(g=>g[0]===group)?.[1]:'全部对象')+label+'"',group?label:'统一'+label,eligible.length>0&&eligible.every(x=>credentialValue(p,x)),!eligible.length);
- }
- function comparisonOperations(p,x){
-  const selected=p.selected.has(x.id),type=credentialType(p,x),mode=p.mode;
-  let credential='';
-  if(type==='登录状态')credential=check('data-sx-'+(mode==='import'?'import-account-info':'diff-account-info')+'="'+esc(x.id)+'"','仅账户信息',p.accountInfoOnly.has(x.id),!selected);
-  else if(type==='连接密码')credential=check('data-sx-import-endpoint-config="'+esc(x.id)+'"','仅配置，不含密码',p.endpointConfigOnly.has(x.id),!selected);
-  else if(type)credential=check('data-sx-compare-credential="'+esc(x.id)+'"',(x.kind==='upload'?'同步':'覆盖')+type,credentialValue(p,x),!selected);
-  let mapping='';
-  if(x.kind==='remap')mapping='<select data-sx-import-choice="'+esc(x.id)+'" aria-label="'+esc(x.name)+'身份映射" '+(!selected?'disabled':'')+'><option value="">选择身份映射</option><option value="new" '+(p.choices[x.id]==='new'?'selected':'')+'>新建渠道</option><option value="rebind" '+(p.choices[x.id]==='rebind'?'selected':'')+'>重新绑定，待补 Key</option></select>';
-  if(mode==='diff'&&['conflict','token'].includes(x.kind))mapping='<select data-sx-diff-choice="'+esc(x.id)+'" aria-label="'+esc(x.name)+'同步方向" '+(!selected?'disabled':'')+'><option value="">选择同步方向</option><option value="local" '+(p.choices[x.id]==='local'?'selected':'')+'>保留本机</option><option value="remote" '+(p.choices[x.id]==='remote'?'selected':'')+'>采用远端</option><option value="skip" '+(p.choices[x.id]==='skip'?'selected':'')+'>暂不处理</option></select>';
-  return '<div class="sx-compare-ops">'+btn('查看详情','compare-detail','data-id="'+esc(x.id)+'"')+credential+mapping+'</div>';
- }
- function comparisonTree(p){
-  if(p.mode==='import'&&p.selected.has('channel:newapi'))p.selected.add('template:gpt');
-  const dependent=x=>p.mode==='import'&&x.id==='template:gpt'&&p.selected.has('channel:newapi');
-  const rows=groups.map(([id,label])=>{
-   const items=p.rows.filter(x=>x.group===id);if(!items.length)return '';
-   const open=p.expanded.has(id),count=items.filter(x=>p.selected.has(x.id)).length;
-   const children=window.PrototypeTreeTable.rows(items,x=>{
-     const note=x.group==='accounts'?(p.accountInfoOnly.has(x.id)?'仅账户信息 · 保留本机已有登录状态':x.login?'含登录状态 · 应用时自动恢复并检查':x.selectable===false?'当前平台未支持 · 不可选择':'仅账户信息 · 新设备需登录'):x.group==='endpoints'?(p.endpointConfigOnly.has(x.id)?'仅配置，不含密码 · 同身份保留本机密码':x.password?'含连接密码 · 导入后待启用':x.detail):x.detail;
-     return {className:'sx-compare-item',attrs:'data-sx-compare-item="'+esc(x.id)+'"',depth:1,label:x.name,
-       selection:'<input type="checkbox" data-sx-'+(p.mode==='import'?'import':'diff')+'-pick="'+esc(x.id)+'" aria-label="'+(p.mode==='import'?'导入':'同步')+' '+esc(x.name)+'" '+(p.selected.has(x.id)?'checked':'')+(x.selectable===false?' disabled title="'+esc(x.capability?.reason||'未支持')+'"':dependent(x)?' disabled title="NewApi 依赖此精确版本"':'')+'>',
-       nameHtml:'<strong>'+esc(x.name)+'</strong><small>'+esc(note)+'</small>'+(x.removal?'<small>明确删除记录 · 默认不选</small>':''),
-       cells:['<div class="sx-change-list">'+changeBadges([x])+'</div>',comparisonOperations(p,x)]};
-   });
-   return '<section class="sx-compare-group">'+window.PrototypeTreeTable.row({tag:'header',className:'sx-compare-group-head',label,
-     selection:'<input type="checkbox" data-sx-compare-group="'+id+'" aria-label="选择'+label+'变化" '+(count===items.length?'checked':'')+'>',
-     toggleAttrs:'data-sx="compare-expand" data-id="'+id+'"',expanded:open,
-     cells:['<div class="sx-change-list">'+changeBadges(items)+'</div>','<div class="sx-compare-ops">'+ruleCheckbox(p,items,id)+'</div>']})+'<div '+(!open?'hidden':'')+'>'+children+'</div></section>';
-  }).join('');
-  return '<div class="sx-compare-tree proto-tree" role="region" aria-label="配置变化树" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-compare-head',label:'配置对象',selection:'<input type="checkbox" data-sx-compare-all aria-label="选择全部变化" '+(p.rows.length&&p.rows.every(x=>p.selected.has(x.id))?'checked':'')+'>',cells:['<span>变化</span>','<div class="sx-compare-ops">'+ruleCheckbox(p,p.rows)+'<span class="sx-muted">操作与凭据</span></div>']})+''+(rows||'<div class="sx-empty">所选范围没有变化。</div>')+'</div>';
- }
- function rememberComparison(p){if($('#sxCompareMain')){p.scroll=$('.sx-compare-tree')?.scrollTop||0;if($('#sxSyncPass'))p.pass=$('#sxSyncPass').value;}}
- function mountComparison(p){
-  $('#modal').classList.add('sx-comparison');$('.sx-compare-tree').scrollTop=p.scroll;
-  if($('#sxSyncPass'))$('#sxSyncPass').value=p.pass;
-  for(const el of $$('[data-sx-compare-all],[data-sx-compare-group],[data-sx-compare-rule]')){
-   const items=p.rows.filter(x=>!el.dataset.sxCompareGroup||x.group===el.dataset.sxCompareGroup);
-   const eligible=el.dataset.sxCompareRule?items.filter(x=>p.selected.has(x.id)&&credentialType(p,x)&&(el.dataset.sxCompareRule==='all'||x.group===el.dataset.sxCompareRule)):items;
-   const n=eligible.filter(x=>el.dataset.sxCompareRule?credentialValue(p,x):p.selected.has(x.id)).length;
-   el.indeterminate=n>0&&n<eligible.length;
+ function completeUpdate(operation){
+  if(run!==operation)return;
+  const rows=operation.rows,failed=[],done=[],skips=[],issue=operation.scenario;
+  const partialId=rows.find(x=>x.group==='mcp')?.id||rows.find(x=>x.direction!=='skip')?.id;
+  for(const row of rows){
+   if(row.direction==='skip'){skips.push({...row,status:'skipped'});continue;}
+   if(issue==='network-error'||issue==='backup-fail'||issue==='partial'&&row.id===partialId){failed.push({...row,status:'failed',reason:issue==='network-error'?'连接中断，内容未更新':issue==='backup-fail'?'本地文件暂时无法写入，旧内容保留':'目标文件被占用，旧内容保留'});continue;}
+   if(row.direction==='download'&&['channels','templates'].includes(row.group)){
+    const model=window.modelPrototype;
+    const applied=model.applySyncUpdates({contract:model.syncFixture().contract,source:operation.tab==='file'?'file':'webdav',channels:row.group==='channels'?[{id:row.id,credential:operation.secrets.keys.includes(row.id)}]:[],templates:row.group==='templates'?[row.id.slice(9)]:[]});
+    if(!applied.ok){failed.push({...row,status:'failed',reason:applied.message});continue;}
+    if(row.group==='channels')channelAdoption={status:'written',target:'mock-current-channel-file',source:operation.tab,channels:applied.channels};
+   }
+   const version=clone(row.direction==='download'?row.remote:row.local)||{updatedAt:stamp(5),revision:2,digest:row.id+':v2'};
+   versions.local[row.id]=clone(version);versions.remote[row.id]=clone(version);
+   if(row.direction==='download')localFingerprints[row.id]=fingerprint(row.id);
+   if(row.direction==='download')demoObjects[row.id]={revision:version.revision,files:row.group==='skills'?['SKILL.md','scripts/review.js','references/checklist.md']:null};
+   done.push({...row,status:'completed',credential:operation.secrets.keys.includes(row.id)||operation.secrets.extensions.includes(row.id)});
   }
+  run=null;serial++;
+  const downloaded=done.filter(x=>x.direction==='download').length,uploaded=done.filter(x=>x.direction==='upload').length;
+  const title=failed.length?(done.length?'部分同步完成':'同步未完成'):operation.tab==='file'?'导入完成':'同步完成';
+  const detail=operation.tab==='file'?('更新 '+downloaded+' 项，跳过 '+skips.length+' 项'+(failed.length?'，'+failed.length+' 项失败':'')):'下载更新 '+downloaded+' 项，上传 '+uploaded+' 项，跳过 '+skips.length+' 项'+(failed.length?'，'+failed.length+' 项失败':'');
+  result={tab:operation.tab,title,detail:detail+'。',downloaded,uploaded,skipped:skips.length,failed,items:[...done,...skips,...failed]};lastRun=clone(result);failedRun=failed.length?{...operation,rows:failed.map(({status,reason,...x})=>x)}:null;
+  lastComparison=null;render();
+  notifyResult(operation,title,detail+'。',failed.length>0);
  }
- function comparisonBody(p,extra=''){
-  return '<div class="sx-compare-main" id="sxCompareMain">'+comparisonTree(p)+extra+(p.rows.length?'<div class="sx-apply-options">'+check('data-sx-backup','应用前备份当前配置',p.backup)+'</div>':'')+'</div><div class="sx-detail-layer" id="sxCompareDetail" hidden></div>';
- }
- const comparisonNote='只处理勾选项；未包含对象保持原样。删除只来自明确删除记录。渠道采用进入当前模型渠道内存草稿，沿用保存 → 预览 → 确认才更新 mock 已保存状态，不在同步应用时写入。目标渠道的未确认输入、重叠草稿或过期比较会停止应用并保留输入；无关草稿保持。模版只接纳所选已保存版本，不改变主版本或自动采用渠道。备份为可选项，默认勾选。全部为固定内存 fixture，不读写真实配置。';
- function comparisonFields(x,p){
-  const source=p.mode==='import'?'包内':'远端',endpoint=find(x.id)?.endpoint||'https://gateway.example.com/v1';
-  const f=(section,...rows)=>({section,rows});
-  if(x.group==='dialog-policies')return [f('对话配置与范围',['对象',x.id,x.id],['传输方向','本机已保存','上传当前覆盖'],['模型规则 / 历史','保持原样','不携带'],['本层覆盖',JSON.stringify(find(x.id)?.payload||{}),JSON.stringify(find(x.id)?.payload||{})])];
-  if(x.group==='channels'){
-   const item=p.modelFixture.channels.find(item=>item.id===x.id),local=p.modelBaseline.saved.providers.find(item=>'channel:'+item.id===x.id),incoming=item.provider,first=incoming.models[0],localFirst=local?.models.find(m=>m.id===first.id),added=incoming.models.filter(m=>!local?.models.some(old=>old.id===m.id));
-   return [f('连接与身份',['渠道 ID',local?.id||x.id,x.kind==='remap'?'待新建或重新绑定':incoming.id],['当前节点 URL',endpoint,incoming.nodes.find(n=>n.id===incoming.activeNodeId).url],['节点规则','同渠道共用认证与 Key','同渠道共用认证与 Key'],['协议',local?.protocol||'Responses',incoming.protocol],['API Key','本机已保存',credentialType(p,x)?source+'已携带 · 值隐藏':'未携带 · 保留同身份本机 Key']),f('模型与覆盖',['模型清单',(local?.models.filter(m=>m.selected).length||0)+' 个已选',incoming.models.filter(m=>m.selected).length+' 个已选'],['新增模型','—',added.map(m=>m.id).join('、')],['删除模型',item.deletedModels.join('、')||'—','—'],[first.id+' 别名',localFirst?.naming?.alias||'—',first.naming?.alias||'—'],['上下文大小',String(localFirst?.overrides?.context||128000),String(first.overrides.context||128000)],['启用状态',local?.enabled?'启用':'停用',incoming.enabled?'启用':'停用'],['推理等级','低 / 中 / 高 / 极高','低 / 中 / 高 / 极高'],['快速模式','支持','支持'],['选择顺序',local?.models.filter(m=>m.selected).slice(0,3).map(m=>m.id).join(' → ')||'—',incoming.models.filter(m=>m.selected).slice(0,3).map(m=>m.id).join(' → ')],['模版引用',Object.values(local?.refs||{}).join(' / ')||'—',Object.values(incoming.refs).join(' / ')||'—'])];
+ function notifyResult(operation,title,detail,failed){
+  const eventId=operation.tab==='file'?(failed?'sync.import.failed':'sync.import.complete'):(failed?'sync.failed':'sync.complete');
+  const definition=window.MaintenanceEvents?.events.find(x=>x.id===eventId);
+  if(definition&&typeof notifications!=='undefined'){
+   if(lastNotificationId&&!failed){const previous=notifications.find(x=>x.id===lastNotificationId);if(previous&&!previous.resolved){previous.resolved=true;previous.resolvedAt=clockLabel();}}
+   const id='sync-demo:'+operation.id;
+   notifications.unshift({id,eventId,cat:definition.category,op:id,dedupe:id,title,detail,time:clockLabel(),kind:failed?'warning':'info',read:false,resolved:!failed,deleted:false});
+   lastNotificationId=id;renderNotifications();
   }
-  if(x.group==='templates'){
-   const local=window.modelPrototype.state().templates.find(t=>'template:'+t.id===x.id),incoming=p.modelFixture.templates.find(t=>'template:'+t.id===x.id).version;
-   return [f('版本与匹配',['模版 ID',local.id,local.id],['已保存版本',local.versions.map(v=>'v'+v.n).join(' / '),'接纳 v'+incoming.n],['主版本','v'+local.main,'保持 v'+local.main],['匹配规则','gpt-*','gpt-*'],['模型协议','Responses',incoming.rules.protocol]),f('能力与来源',['上下文大小','继承',String(incoming.rules.context)],['推理等级','低 / 中 / 高 / 极高','低 / 中 / 高 / 极高'],['快速模式','支持','支持'],['版本 / 后缀覆盖',JSON.stringify(local.versions.at(-1).variants||[]),JSON.stringify(incoming.variants||[])],['来源','人工维护',incoming.source])];
-  }
-  if(x.group==='accounts'){const account=find(x.id),capability=account?.capability;return [f('账户身份',['账户 ID',x.id,x.id],['账户平台',accountCapabilities.platforms[account?.accountPlatform]||'未登记',accountCapabilities.platforms[account?.accountPlatform]||'未登记'],['管理方',account?.owner||'未知',account?.owner||'未知'],['来源账户身份',account?.sourceAccountId||x.id,account?.sourceAccountId||x.id],['授权主体',account?.subject||'未提供，保持独立',account?.subject||'未提供，保持独立'],['授权来源 / 认证',account?.provider+' / '+account?.authKind,account?.provider+' / '+account?.authKind]),f('登录材料',['支持范围','本机登录保持',account?.login?'有受支持载荷':'不采用登录材料'],['支持依据','当前本机适配',capability?.reason||'适配未登记'],['采用规则','保留当前登录',account?.login&&!p.accountInfoOnly.has(x.id)?'采用已支持登录态并检查':'仅账户信息，保留本机登录状态；新设备需登录'])];}
-
-  if(x.group==='skills')return [f('Skill 与资源',['Skill ID',x.id,x.removal?'删除记录':x.id],['启用状态','启用',x.removal?'—':'启用'],['SKILL.md','旧版审查步骤',x.removal?'—':'更新审查步骤与输出要求'],['资源文件','references/old-guide.md',x.removal?'—':'新增 references/checklist.md、scripts/report.js；删除 old-guide.md'],['内容校验','旧版摘要',x.removal?'明确删除':'更新版本 · 摘要已校验'])];
-  if(x.kind==='extension')return [f('旧版扩展开关',['对象范围','本机开关','仅启用状态 / 同步方式'],['实际内容','保留本机 Skill / MCP','未包含，不覆盖本机内容'])];
-  if(x.group==='mcp')return [f('服务器定义',['服务器 ID',x.id,x.id],['传输类型','HTTP','HTTP'],['地址','https://docs.example.com/mcp','https://docs.example.com/v2/mcp'],['命令 / 参数','HTTP 不适用','HTTP 不适用'],['启用状态','启用','启用']),f('环境与凭据',['环境变量','DOCS_LOCALE=zh-CN','DOCS_LOCALE=en-US'],['请求头','Authorization 已保存 · 值隐藏',credentialType(p,x)?'Authorization 已携带 · 值隐藏':'未携带，保留同身份本机值'],['本机执行绑定','保留当前绑定','不参与迁移'])];
-  if(x.group==='endpoints')return [f('WebDAV 配置',['配置 ID',x.id,x.id],['服务地址',connection.url,'https://dav.example.com'],['同步目录',connection.path,'/opencodex/config-sync/v1'],['用户名',connection.user,'demo-user'],['连接密码','本机已保存 · 值隐藏',x.password?'包内携带 · 值隐藏':'未携带，同身份保留本机值']),f('应用后状态',['连接启用','当前连接保持','导入连接待启用'],['本机同步范围 / 定时规则','保留本机','不参与迁移'],['同步加密口令','仅本机输入','不在配置包中'])];
-  return [f('桌面偏好',['主题','跟随系统','浅色'],['语言','简体中文','简体中文'],['显示密度','标准','紧凑'],['选择器显示','模型名称','别名优先']),f('本机专属字段',['绝对路径 / 窗口坐标','保留本机','不参与迁移'],['执行绑定 / 缓存 / 草稿','保留本机','不参与迁移'])];
+  window.toast?.(title,{kind:failed?'error':'success',detail});
  }
- function comparisonDetail(id){
-  const p=dialogKind==='diff'?diffPlan:importPlan,x=p?.rows.find(r=>r.id===id);if(!x)return;
-  detailReturnFocus=document.activeElement;detailOpen=true;
-  const layer=$('#sxCompareDetail');layer.innerHTML='<section class="sx-detail-card" role="dialog" aria-modal="true" aria-labelledby="sxCompareDetailTitle"><header><div><h3 id="sxCompareDetailTitle">'+esc(x.name)+' · 详情</h3><p class="sx-muted">只读比较 · 敏感值隐藏</p></div>'+btn('关闭','compare-detail-close','id="sxCompareDetailClose"')+'</header><div class="sx-detail-body">'+comparisonFields(x,p).map(section=>({...section,rows:x.kind==='upload'?section.rows.map(([label,local,incoming])=>[label,incoming,local]):section.rows})).map(section=>'<h4>'+esc(section.section)+'</h4><table class="sx-field-compare"><thead><tr><th scope="col">字段</th><th scope="col">本机</th><th scope="col">'+(p.mode==='import'?'配置包':'远端')+'</th></tr></thead><tbody>'+section.rows.map(([label,local,incoming])=>'<tr class="'+(local!==incoming?'changed':'')+'"><th scope="row">'+esc(label)+'</th><td>'+esc(local)+'</td><td>'+esc(incoming)+'</td></tr>').join('')+'</tbody></table>').join('')+'</div><footer class="sx-muted">关闭后返回比较列表，勾选与覆盖规则保持。</footer></section>';
-  layer.hidden=false;for(const el of [$('#sxCompareMain'),$('.modal-head'),$('.modal-actions')])if(el)el.inert=true;
-  $('#sxCompareDetailClose').focus();
- }
- function closeComparisonDetail(){
-  if(!detailOpen)return;detailOpen=false;$('#sxCompareDetail').hidden=true;
-  for(const el of [$('#sxCompareMain'),$('.modal-head'),$('.modal-actions')])if(el)el.inert=false;
-  detailReturnFocus?.focus({preventScroll:true});detailReturnFocus=null;
- }
- function comparisonResult(p,rows){lastComparison={mode:p.mode,backup:p.backup,items:rows.map(x=>({id:x.id,group:x.group,changes:x.changes,direction:p.choices[x.id]||(x.kind==='upload'?'upload':'incoming'),credential:!!credentialType(p,x)&&credentialValue(p,x)}))};}
- function stageChannels(p,rows){
-  const channels=rows.filter(x=>x.group==='channels'&&x.kind!=='upload'&&!['local','skip'].includes(p.choices[x.id]));
-  const templates=rows.filter(x=>x.group==='templates'&&x.kind!=='upload').map(x=>x.id.slice('template:'.length));
-  channelAdoption=null;if(!channels.length&&!templates.length)return true;
-  if(p.backup&&scenario==='backup-fail'||scenario==='partial')return true;
-  const items=channels.map(x=>({id:x.id,mapping:p.choices[x.id]||null,changes:clone(x.changes),credential:!!credentialType(p,x)&&credentialValue(p,x)}));
-  const staged=window.modelPrototype.stageSyncChannels({contract:p.modelFixture.contract,source:p.mode==='import'?'file':'webdav',baseline:p.modelBaseline,channels:items,templates});
-  if(!staged.ok){setText('#sxError',staged.message);return false;}
-  if(channels.length)channelAdoption={status:'draft',target:'model-channel-memory-draft',source:p.mode==='import'?'file':'webdav',items,channels:staged.channels};
-  return true;
- }
- const importRows=()=>[
-  {id:'template:gpt',name:'GPT · Responses / v4',detail:'新增已保存版本 v4 · 原主版本与引用保持',kind:'template',changes:{add:1}},
-  {id:'channel:newapi',name:'NewApi',detail:'同一渠道 · 模型新增 3 / 更新 2 / 删除 1',kind:'channel',changes:{add:3,update:2,delete:1}},
-  {id:'channel:legacy',name:'私有网关',detail:'同名但服务身份不同 · 必须确认身份，不复用原 Key',kind:'remap',conflict:true,changes:{add:1}},
-  {id:'account:chatgpt',name:'ChatGPT · 个人账户',detail:'独立账户信息更新',kind:'account',login:false,changes:{update:1}},
-  {id:'account:chatgpt-work',name:'ChatGPT · 工作账户',detail:'另一个独立账户信息更新',kind:'account',login:false,changes:{update:1}},
-  {id:'account:device',name:'Kiro · 设备账户',detail:'账户信息更新 · 新设备需重新登录',kind:'account',login:false,changes:{update:1}},
-  {id:'skill:review',name:'Code Review Skill',detail:'Skill 更新 · 新增 2 个资源 / 删除 1 个旧资源',kind:'skill',changes:{add:2,update:1,delete:1}},
-  {id:'skill:legacy-review',name:'旧版 Review Skill',detail:'来源显式标记删除',kind:'skill',removal:true,changes:{delete:1}},
-  {id:'mcp:docs',name:'Docs MCP',detail:'服务器地址与环境变量更新',kind:'mcp',changes:{update:1}},
-  {id:'preferences:desktop',name:'通用偏好',detail:'主题与显示偏好更新 · 保留本机路径',kind:'preferences',changes:{update:2}},
-  {id:'endpoint:personal',name:'个人 WebDAV',detail:'连接配置更新 · 导入后待启用',kind:'endpoint',password:true,changes:{update:1}}
- ];
- function importStart(context={}){
-  importFile=null;
-  importPlan={rows:importRows(),selected:new Set(importRows().map(x=>x.id)),choices:{},secrets:false,accountInfoOnly:new Set(),endpointConfigOnly:new Set(),source:'encrypted',modelScope:context.scope||null};
-  showDialog('import','导入配置','<div class="sx-field"><span>配置文件</span><div class="sx-file-picker">'+btn('选择文件','choose-import-file')+'<span id="sxImportFileName" aria-live="polite">尚未选择文件</span></div></div><label class="sx-field" id="sxUnlockField" hidden><span>解密口令</span><input class="input" id="sxUnlock" type="password" autocomplete="off" aria-describedby="sxError" placeholder="请输入配置包的加密口令"></label>','读取并比较',()=>{
-   if(!importFile){setText('#sxError','请先选择配置文件。');return;}
-   const kind=importFile.kind;if(kind==='corrupt'){setText('#sxError','容器完整性校验失败。未创建候选、未修改本机配置。');return;}
-   if(importFile.encrypted&&$('#sxUnlock').value!=='demo-sync'){setText('#sxError','解密口令不正确，尚未读取内容。');return;}
-   importPlan.source=kind;
-   if(kind==='keyless')importPlan.rows=importRows().filter(x=>['template','channel','remap'].includes(x.kind));
-   if(kind==='config-only')importPlan.rows=importRows().filter(x=>x.kind==='endpoint').map(x=>({...x,password:false,detail:'不含密码 · 同身份保留本机密码，新连接待补密码'}));
-   if(kind==='legacy')importPlan.rows=[{id:'preferences:desktop',name:'通用偏好',detail:'旧容器仅含该范围；未包含项不删除',kind:'preferences'},{id:'extension:legacy',name:'扩展开关',detail:'仅启用状态 / 同步方式，不冒充完整 Skill 或 MCP',kind:'extension'}];
-   importPlan.selected=new Set(importPlan.rows.filter(x=>!x.removal).map(x=>x.id));
-   if(context.scope?.length){const wanted=new Set(context.scope);importPlan.selected=new Set(importPlan.rows.filter(x=>wanted.has(x.id)||x.kind==='template'&&context.scope.some(id=>id.startsWith('channel:'))).map(x=>x.id));}
-   comparisonInit(importPlan,'import');importPreview();
-  },{annotationText:['读取配置包 → 选择与比较 → 应用结果','解密口令是导出配置包时设置的加密口令，与账户密码、WebDAV 连接密码相互独立。加密示例文件的测试口令为 demo-sync；非加密示例无需口令。读取后先比较配置，再确认应用。']});
-  $('#modalConfirm').disabled=true;
- }
- function importPreview(){
-  const p=importPlan,encrypted=p.source==='encrypted';rememberComparison(p);
-  const annotationText=['已读取'+(encrypted?'并解密':'')+'配置包 → 选择与比较 → 应用结果','勾选要应用的变化，展开分类查看对象。凭据采用规则可统一设置，也可逐项调整。',comparisonNote];
-  showDialog('import','选择导入内容',comparisonBody(p),'应用',()=>{
-   if(!p.selected.size){setText('#sxError','至少选择一项配置。');return;}
-   if(p.rows.some(x=>p.selected.has(x.id)&&x.kind==='remap'&&!p.choices[x.id])){setText('#sxError','请先确认同名不同服务渠道的身份映射。');return;}
-   const applied=p.rows.filter(x=>p.selected.has(x.id));
-   if(!stageChannels(p,applied))return;
-   const accounts=applied.filter(x=>x.kind==='account').map(x=>({id:x.id,login:encrypted&&x.login&&!p.accountInfoOnly.has(x.id),infoOnly:p.accountInfoOnly.has(x.id)||!find(x.id)?.login}));
-   const endpoints=applied.filter(x=>x.kind==='endpoint').map(x=>({id:x.id,password:encrypted&&x.password&&!p.endpointConfigOnly.has(x.id)}));
-   comparisonResult(p,applied);finishApply('file',applied.length,accounts,0,endpoints,p.backup);
-  },{annotationText});mountComparison(p);
+ function retryFailed(){if(!failedRun||run)return;const p=failedRun;startUpdate(p.tab,p.rows,p.secrets);if(run)run.scenario='normal';}
+ function resultDetails(){if(!result?.items?.length)return;showDialog('result','同步结果','<ul class="sx-outcomes">'+result.items.map(x=>'<li><div><strong>'+esc(x.name)+'</strong><small>'+esc(x.reason||(x.direction==='download'?'已下载并更新':x.direction==='upload'?'已上传':'内容一致，无需更新'))+'</small></div><span class="sx-mark">'+(x.status==='failed'?'失败':x.status==='skipped'?'跳过':'完成')+'</span></li>').join('')+'</ul>','关闭',closeModal,{hideConfirm:true,cancelLabel:'关闭',annotationText:'结果为只读记录，不是新的应用/采用步骤。独立失败项可在页面重试；已完成项保留。'});}
+ function syncCheck(){
+  if(run)return;if(!connection.connected){connectionDialog();return;}
+  refreshLocalVersions();const ids=closure(scopes.webdav).ids;
+  startUpdate('webdav',updateRows().filter(x=>ids.has(x.id)));
  }
  function connectionDialog(){
   showDialog('connection','WebDAV 连接','<label class="sx-field"><span>服务地址</span><input class="input" id="sxDavURL" value="'+esc(connection.url)+'"></label><label class="sx-field"><span>独立配置同步目录</span><input class="input" id="sxDavPath" value="'+esc(connection.path)+'"></label><div class="sx-grid"><label class="sx-field"><span>用户名</span><input class="input" id="sxDavUser" value="'+esc(connection.user)+'"></label><label class="sx-field"><span>连接密码</span><input class="input" id="sxDavPassword" type="password" placeholder="本机已保存 · 留空保留"></label></div><div class="sx-actions">'+btn('测试连接','test-connection')+'</div><p class="sx-muted" id="sxConnectionTest" role="status"></p>','保存连接',()=>{
@@ -370,56 +296,10 @@
  function validateConnection(){
   try{const u=new URL($('#sxDavURL').value.trim());if(u.protocol!=='https:'||u.username||u.password||u.search||u.hash)throw Error();if(!$('#sxDavPath').value.startsWith('/')||!$('#sxDavUser').value.trim())throw Error();return true;}catch{setText('#sxError','请填写不含内嵌凭据的 HTTPS 地址、以 / 开头的目录和用户名。');return false;}
  }
- function syncCheck(){
-  if(signature(scopes.webdav)!==savedScope)return;
-  if(!connection.connected){connectionDialog();return;}
-  const ids=closure(scopes.webdav).ids;if(!ids.size){result={tab:'webdav',title:'尚未选择同步对象',detail:'选择范围并保存后再同步配置。'};render();return;}
-  const rows=[];
-  if(ids.has('template:gpt'))rows.push({id:'template:gpt',name:'GPT · Responses / v4',detail:'远端新增已保存版本 → 本机；原主版本与引用保持',kind:'download',changes:{add:1}});
-  if(ids.has('channel:newapi'))rows.push({id:'channel:newapi',name:'NewApi',detail:'模型新增 3 / 更新 2 / 删除 1 · 两端修改，需选择方向',kind:'conflict',changes:{add:3,update:2,delete:1}});
-  if(ids.has('skill:review'))rows.push({id:'skill:review',name:'Code Review Skill',detail:'远端更新 → 本机 · 新增 2 个资源 / 删除 1 个旧资源',kind:'download',changes:{add:2,update:1,delete:1}});
-  if(ids.has('mcp:docs'))rows.push({id:'mcp:docs',name:'Docs MCP',detail:'本机已提交更新 → 远端',kind:'upload',changes:{update:1}});
-  if(ids.has('preferences:desktop'))rows.push({id:'preferences:desktop',name:'通用偏好',detail:'远端显示偏好更新 → 本机',kind:'download',changes:{update:2}});
-  for(const x of catalog.filter(x=>ids.has(x.id)&&x.group==='accounts'))rows.push(secretIds(scopes.webdav).accounts.includes(x.id)?{id:x.id,name:x.name,detail:scenario==='login-invalid'?'远端登录状态已失效':'两端登录状态不同 · 已自动检查，需选择方向',kind:'token',login:true}:{id:x.id,name:x.name,detail:'仅同步账户信息',kind:'account',login:false});
-  for(const x of catalog.filter(x=>ids.has(x.id)&&x.group==='dialog-policies'))rows.push({id:x.id,name:x.name,detail:'本机已保存作用域覆盖 → 远端；不携带对话历史',kind:'upload',changes:{update:1}});
-  diffPlan=comparisonInit({rows,choices:{},verified:scenario!=='login-invalid',scope:signature(scopes.webdav),secretCount:secretCount(scopes.webdav),accountInfoOnly:new Set(scopes.webdav.accountInfoOnly)},'diff');
-  syncPreview();
- }
- function syncPreview(){
-  const p=diffPlan;rememberComparison(p);
-  const hasToken=p.rows.some(x=>x.kind==='token');
-  const annotationText=['比较变化 → 应用 → 核对结果','只处理本机所选范围。展开分类查看变化，按对象选择采用方向与凭据。'];
-  if(hasToken&&p.verified)annotationText.push('已自动检查登录身份与状态；采用后自动恢复并检查可用性。');
-  annotationText.push(comparisonNote);
-  const extra=(hasToken&&!p.verified?'<p id="sxTokenCheck" class="sx-muted" role="status">自动检查未通过：远端登录状态已失效，可保留本机或仅同步账户信息。</p>':'')+(p.secretCount?'<label class="sx-field"><span>同步加密口令</span><input type="password" id="sxSyncPass" class="input" autocomplete="off"></label>':'');
-  showDialog('diff','WebDAV · 同步配置',comparisonBody(p,extra),p.rows.length?'应用':'关闭',()=>{
-   if(!p.rows.length){closeModal();return;}
-   if(p.scope!==signature(scopes.webdav)){setText('#sxError','范围已变化，请保存后重新比较。');return;}
-   const selected=p.rows.filter(x=>p.selected.has(x.id));
-   if(!selected.length){setText('#sxError','至少选择一项变化。');return;}
-   if(selected.some(x=>['conflict','token'].includes(x.kind)&&!p.choices[x.id])){setText('#sxError','请处理冲突，或取消勾选该对象。');return;}
-   if(selected.some(x=>x.kind==='token'&&p.choices[x.id]==='remote'&&!p.accountInfoOnly.has(x.id))&&!p.verified){setText('#sxError','远端登录状态已失效，请保留本机或仅同步账户信息。');return;}
-   if(p.secretCount&&$('#sxSyncPass').value!=='demo-sync'){setText('#sxError','同步口令不正确。连接密码不能代替同步口令。');return;}
-   const adopted=selected.filter(x=>!['local','skip'].includes(p.choices[x.id]));
-   if(!stageChannels(p,adopted))return;
-   const accounts=adopted.filter(x=>x.group==='accounts').map(x=>({id:x.id,login:x.kind==='token'&&!p.accountInfoOnly.has(x.id),infoOnly:p.accountInfoOnly.has(x.id)||!find(x.id)?.login}));
-   comparisonResult(p,adopted);finishApply('webdav',adopted.length,accounts,p.rows.length-adopted.length,[],p.backup);
-  },{annotationText});mountComparison(p);
- }
- function finishApply(mode,count,accounts=[],skipped=0,endpoints=[],backup=true){
-  let title='应用流程演示完成',detail=count+' 项已按计划处理'+(skipped?'，'+skipped+' 项本次保留 / 跳过':'')+'。'+(channelAdoption?'渠道已加入草稿，保存后生效。':'');
-  if(backup&&scenario==='backup-fail'){title='备份失败 · 未应用';detail='未开始写入；原配置和凭据保持，待审内容可重试。';accounts=[];endpoints=[];}
-  else if(scenario==='partial'){title='部分完成 · 需要核对';detail='演示部分步骤失败：已完成与待恢复项分开记录，不能报告整体同步成功。';accounts=[];endpoints=[];}
-  const accountResults=accounts.map(x=>({id:x.id,status:x.infoOnly?'info-only':!x.login||scenario==='login-invalid'?'needs-login':'restored',name:find(x.id)?.name||x.id}));
-  for(const x of accountResults)detail+=' '+x.name+'：'+(x.status==='restored'?'登录状态已恢复，自动检查通过（模拟）。':x.status==='info-only'?'仅账户信息；保留本机已有登录状态，新设备需登录。':'需重新登录（'+(scenario==='login-invalid'?'登录状态已失效':'设备绑定的登录状态无法迁移')+'）。');
-  const endpointResults=endpoints.map(x=>({id:x.id,status:x.password?'password-imported':'config-only',enabled:false}));
-  for(const x of endpointResults)detail+=' '+(find(x.id)?.name||x.id)+'：'+(x.status==='password-imported'?'配置与连接密码已导入（模拟），连接待启用。':'仅配置；同身份保留本机密码，新连接待补密码，连接待启用。');
-  result={tab:mode,title,detail,backup:backup?(scenario==='backup-fail'?'failed':'completed'):'skipped',accounts:accountResults,endpoints:endpointResults,canVerify:false};serial++;closeModal();render();
-  if(document.documentElement.dataset.route==='overview')toast(title);
- }
  function open(options={}){
   catalog=collect(options.action==='export'&&options.source==='draft'?'draft':'saved');tab=options.tab==='webdav'?'webdav':'file';query='';channelAdoption=null;
   if(options.scope){const s=state();s.selected=new Set(options.scope.filter(id=>find(id)&&eligible(find(id))&&(tab==='file'||find(id).group!=='endpoints')));s.preset='custom';s.keys.clear();s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions.clear();}
+  rememberScope();
   const stayOnPage=options.action==='import'&&options.stayOnPage;
   if(!stayOnPage)setRoute('sync?tab='+tab);
   render(true);if(!stayOnPage)host.closest('.main').scrollTop=0;
@@ -427,10 +307,8 @@
  }
  document.addEventListener('click',e=>{
   const el=e.target.closest('[data-sx]');if(!el||el.disabled)return;const a=el.dataset.sx,id=el.dataset.id;
-  if(a==='compare-detail-close')closeComparisonDetail();
-  else if(detailOpen)return;
-  else if(a==='compare-detail')comparisonDetail(id);
-  else if(a==='compare-expand'){const p=dialogKind==='diff'?diffPlan:importPlan;p.expanded.has(id)?p.expanded.delete(id):p.expanded.add(id);p.mode==='diff'?syncPreview():importPreview();const restore=()=>$('[data-sx="compare-expand"][data-id="'+id+'"]')?.focus({preventScroll:true});restore();requestAnimationFrame(restore);}
+  if(a==='result-details')resultDetails();
+  else if(a==='retry')retryFailed();
   else if(a==='tab'){tab=id;query='';history.replaceState(null,'','#sync?tab='+tab);render();$('#sxTab-'+tab).focus();}
   else if(a==='expand'){const folds=query?searchCollapsed[tab]:expanded[tab];folds.has(id)?folds.delete(id):folds.add(id);render();$('[data-sx="expand"][data-id="'+id+'"]',host)?.focus({preventScroll:true});}
   else if(a==='detail')detail(id);
@@ -441,7 +319,6 @@
   else if(a==='open-export'){window.toast?.('原型：将打开导出包所在目录；未访问本机文件。',{kind:'info'});}
   else if(a==='connection')connectionDialog();
   else if(a==='test-connection'&&validateConnection())setText('#sxConnectionTest','演示：连接和目录权限检查通过。未发起网络请求。');
-  else if(a==='save-scope'){savedScope=signature(scopes.webdav);result={tab:'webdav',title:'本机范围已保存（演示）',detail:'上传与接收使用这份范围。已选账户按当前选项同步登录状态；后续新增敏感类别不会自动加入，未选远端对象保留；关闭凭据不会清除历史快照。'};render();}
   else if(a==='check')syncCheck();
   else if(a==='clear'){const s=state();s.selected.clear();s.keys.clear();s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions.clear();s.preset='custom';render();}
  });
@@ -457,33 +334,22 @@
   else if(el.matches('[data-sx-secret-object]')){el.checked?s[el.dataset.kind].add(el.dataset.sxSecretObject):s[el.dataset.kind].delete(el.dataset.sxSecretObject);redraw=true;}
   else if(el.id==='sxEncrypt')$('#sxPassFields').hidden=!el.checked;
   else if(el.name==='sxDestination'){const box=$('#sxCustomDir');if(box)box.hidden=el.value!=='custom';if(el.value!=='custom'){const input=$('#sxDirPath');if(input)input.value='';}setText('#sxError','');}
-  else if(el.matches('[data-sx-backup]')){const p=dialogKind==='diff'?diffPlan:importPlan;if(p?.mode)p.backup=el.checked;}
-  else if(el.matches('[data-sx-import-pick],[data-sx-diff-pick],[data-sx-compare-all],[data-sx-compare-group],[data-sx-compare-rule],[data-sx-compare-credential],[data-sx-import-account-info],[data-sx-diff-account-info],[data-sx-import-endpoint-config]')){
-   const p=dialogKind==='diff'?diffPlan:importPlan;
-   if(el.matches('[data-sx-compare-rule]'))for(const x of p.rows.filter(x=>p.selected.has(x.id)&&credentialType(p,x)&&(el.dataset.sxCompareRule==='all'||x.group===el.dataset.sxCompareRule)))setCredential(p,x,el.checked);
-   else if(el.matches('[data-sx-compare-credential]'))setCredential(p,p.rows.find(x=>x.id===el.dataset.sxCompareCredential),el.checked);
-   else if(el.matches('[data-sx-import-account-info],[data-sx-diff-account-info],[data-sx-import-endpoint-config]')){const id=el.dataset.sxImportAccountInfo||el.dataset.sxDiffAccountInfo||el.dataset.sxImportEndpointConfig;setCredential(p,p.rows.find(x=>x.id===id),!el.checked);}
-   else if(el.matches('[data-sx-compare-all],[data-sx-compare-group]'))for(const x of p.rows.filter(x=>!el.dataset.sxCompareGroup||x.group===el.dataset.sxCompareGroup))comparisonPick(p,x,el.checked);
-   else comparisonPick(p,p.rows.find(x=>x.id===(el.dataset.sxImportPick||el.dataset.sxDiffPick)),el.checked);
-   p.mode==='diff'?syncPreview():importPreview();restoreFocus();requestAnimationFrame(restoreFocus);
-  }
-  else if(el.matches('[data-sx-import-choice]')){importPlan.choices[el.dataset.sxImportChoice]=el.value;setText('#sxError','');}
-  else if(el.matches('[data-sx-diff-choice]')){diffPlan.choices[el.dataset.sxDiffChoice]=el.value;setText('#sxError','');}
-  if(redraw){for(const key of ['keys','accountInfoOnly','endpointConfigOnly','extensions'])for(const id of s[key])if(!closure().ids.has(id))s[key].delete(id);render();restoreFocus();}
+  else if(el.matches('[data-sx-protect]')){protection.enabled=el.checked;redraw=true;}
+  else if(el.matches('[data-sx-import-object]')){el.checked?importPlan.selected.add(el.dataset.sxImportObject):importPlan.selected.delete(el.dataset.sxImportObject);$('#modalConfirm').disabled=!importPlan.selected.size;}
+  else if(el.matches('[data-sx-import-keys]'))importCredentialPrefs.keys=importPlan.keys=el.checked;
+  else if(el.matches('[data-sx-import-secrets]'))importCredentialPrefs.extensions=importPlan.extensions=el.checked;
+  if(redraw){rememberScope();for(const key of ['keys','accountInfoOnly','endpointConfigOnly','extensions'])for(const id of s[key])if(!closure().ids.has(id))s[key].delete(id);render();restoreFocus();}
  });
  document.addEventListener('input',e=>{if(dialogKind&&e.target.closest('.sx-dialog')&&e.target.matches('input'))setText('#sxError','');});
- host.addEventListener('input',e=>{if(e.target.id!=='sxSearch')return;query=e.target.value;searchCollapsed[tab].clear();const pos=e.target.selectionStart;render(true);$('#sxSearch').focus({preventScroll:true});try{$('#sxSearch').setSelectionRange(pos,pos);}catch{}});
+ host.addEventListener('input',e=>{if(e.target.id==='sxProtectionPass'){protection.passphrase=e.target.value;return;}if(e.target.id!=='sxSearch')return;query=e.target.value;searchCollapsed[tab].clear();const pos=e.target.selectionStart;render(true);$('#sxSearch').focus({preventScroll:true});try{$('#sxSearch').setSelectionRange(pos,pos);}catch{}});
  host.addEventListener('keydown',e=>{if(e.target.getAttribute('role')==='tab'&&['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();tab=e.key==='Home'?'file':e.key==='End'?'webdav':tab==='file'?'webdav':'file';history.replaceState(null,'','#sync?tab='+tab);render();$('#sxTab-'+tab).focus();}});
  document.addEventListener('keydown',e=>{if(detailOpen||!dialogKind||e.key!=='Tab')return;const items=$$('button:not([disabled]),input:not([disabled]),select:not([disabled]),[tabindex="0"]',$('#modal')).filter(x=>x.getClientRects().length);if(!items.length)return;const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
- document.addEventListener('keydown',e=>{
-  if(!detailOpen)return;
-  if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();closeComparisonDetail();}
-  else if(e.key==='Tab'){e.preventDefault();e.stopImmediatePropagation();$('#sxCompareDetailClose').focus();}
- },true);
- document.addEventListener('click',e=>{if(detailOpen&&e.target.id==='sxCompareDetail')closeComparisonDetail();});
  function routeChanged(){if(document.documentElement.dataset.route!=='sync')return;const p=new URLSearchParams(location.hash.split('?')[1]||'');tab=p.get('tab')==='webdav'?'webdav':'file';catalog=collect();render();}
  new MutationObserver(routeChanged).observe(document.documentElement,{attributes:true,attributeFilter:['data-route']});
  window.addEventListener('hashchange',routeChanged);
- window.syncPrototype={open,refreshCatalog:()=>{if(dialogKind)closeModal();catalog=collect();render();},state:()=>({tab,accountPlatform,accountCapabilities:accountCapabilities.entries.map(x=>({...x})),selected:[...state().selected],effective:[...closure().ids],accountInfoOnly:[...state().accountInfoOnly],endpointConfigOnly:[...state().endpointConfigOnly],secrets:secretIds(),savedScope,dirty:signature(scopes.webdav)!==savedScope,lastExport:clone(lastExport),result,channelAdoption:clone(channelAdoption),dialogKind,detailOpen,lastComparison,comparison:dialogKind==='diff'&&diffPlan||dialogKind==='import'&&importPlan?.mode?(()=>{const p=dialogKind==='diff'?diffPlan:importPlan;return {mode:p.mode,selected:[...p.selected],expanded:[...p.expanded],rules:Object.fromEntries(p.rows.filter(x=>credentialType(p,x)).map(x=>[x.id,credentialValue(p,x)]))};})():null,serial,scenario,importSample,importFile}),setImportSample,setScenario:v=>{if(['normal','login-invalid','backup-fail','partial'].includes(v)){scenario=v;const el=$('#sxMockScenario');if(el)el.value=v;}},render};
+ const scenes=[['normal','双向更新 · 渠道/Skill下载，MCP上传'],['download','远端较新 · 下载并更新'],['upload','本机较新 · 上传'],['same','内容相同 · 无需更新'],['partial','一项失败 · 其余完成'],['network-error','连接中断 · 旧内容保留'],['backup-fail','本地写入失败 · 可重试']];
+ const sceneSelect=$('#sxMockScenario');if(sceneSelect)sceneSelect.innerHTML=scenes.map(([id,label])=>'<option value="'+id+'">'+label+'</option>').join('');
+ function setScenario(value){if(!scenes.some(([id])=>id===value))return;scenario=value;seedVersions(['download','upload','same'].includes(value)?value:'normal');if(sceneSelect)sceneSelect.value=value;result=null;render();}
+ window.syncPrototype={open,refreshCatalog:()=>{if(dialogKind)closeModal();catalog=collect();render();},state:()=>({tab,accountPlatform,accountCapabilities:accountCapabilities.entries.map(x=>({...x})),selected:[...state().selected],effective:[...closure().ids],accountInfoOnly:[...state().accountInfoOnly],endpointConfigOnly:[...state().endpointConfigOnly],secrets:secretIds(),savedScope,dirty:false,lastExport:clone(lastExport),result:clone(result),channelAdoption:clone(channelAdoption),dialogKind,detailOpen,lastComparison:null,comparison:null,serial,scenario,importSample,importFile:clone(importFile),running:!!run,lastRun:clone(lastRun),versions:clone(versions),demoObjects:clone(demoObjects),protection:{enabled:protection.enabled,configured:!!protection.passphrase}}),setImportSample,setScenario,render};
  routeChanged();render();
 })();

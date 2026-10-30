@@ -1,0 +1,230 @@
+✖ 使用建议覆盖全部登记组件，规范/方案/建议可区分，来源文件和章节存在 (0.928833ms)
+▶ 组件专题：从真实总原型接线检查交互与隔离（内存DOM，非实屏）
+  ✖ 目录、资源、非功能菜单、连续正文、深链接和搜索同源 (9.537167ms)
+  ✖ 亮暗×高中低、四缩放×双窗口不丢输入/选择/滚动，不写偏好 (5.591834ms)
+  ✖ 字段校验/Tab键/树表/长表格与动作菜单 (8.789542ms)
+  ✖ 共享表单弹窗：错误就地、Select同层、Esc与返回焦点 (369.099417ms)
+  ✖ 同一模型选择器页内/弹窗：确认、取消、推理与Fast，未改业务目录 (5.143667ms)
+  ✖ 模型fixture单多选/长表/空/失败重试/加载完成/失效引用 (7.495833ms)
+  ✖ 节点选择与检测分离、停止/晚回失效、弹层键盘与逐项/一键 (30.188375ms)
+  ✖ 平台样例：关闭仅影响子窗口；托盘共享模板及禁用原因，不改业务状态 (3.156292ms)
+  ✖ 通知只经登记事件与原宿主；去重、多任务、收起恢复、读/解决/删除/重置隔离 (20.952417ms)
+  ✔ 离开还原评审环境，功能草稿未变，旧入口继续可用 (3939.69225ms)
+✖ 组件专题：从真实总原型接线检查交互与隔离（内存DOM，非实屏） (7084.794875ms)
+✔ 组件专题深链接刷新：章节/环境恢复，实际浏览布局仍须实屏检查 (3547.055958ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 2
+ℹ fail 11
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10699.602583
+
+✖ failing tests:
+
+test at ../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:3:1
+✖ 使用建议覆盖全部登记组件，规范/方案/建议可区分，来源文件和章节存在 (0.928833ms)
+  AssertionError [ERR_ASSERTION]: ../../../04-品牌与图标素材/README.md
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:8:94)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at ../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:17:10
+✖ 目录、资源、非功能菜单、连续正文、深链接和搜索同源 (9.537167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      '组件与样式',
+  +   '全景概览'
+    ]
+  
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:18:19)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at TestContext.test (node:internal/test_runner/test:400:20)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:17:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ '组件与样式', '全景概览' ],
+    expected: [ '组件与样式' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:38:10
+✖ 亮暗×高中低、四缩放×双窗口不丢输入/选择/滚动，不写偏好 (5.591834ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'high' !== 'mid'
+  
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:43:63)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at TestContext.test (node:internal/test_runner/test:400:20)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:38:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'high',
+    expected: 'mid',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:50:10
+✖ 字段校验/Tab键/树表/长表格与动作菜单 (8.789542ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  null !== 'true'
+  
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:51:62)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at TestContext.test (node:internal/test_runner/test:400:20)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:50:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 'true',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:59:10
+✖ 共享表单弹窗：错误就地、Select同层、Esc与返回焦点 (369.099417ms)
+  TypeError: Cannot set properties of null (setting 'value')
+      at Object.input (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic-harness.cjs:42:85)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:60:68)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:59:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at ../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:64:10
+✖ 同一模型选择器页内/弹窗：确认、取消、推理与Fast，未改业务目录 (5.143667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:65:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at TestContext.test (node:internal/test_runner/test:400:20)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:64:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:73:10
+✖ 模型fixture单多选/长表/空/失败重试/加载完成/失效引用 (7.495833ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok($('#ctPickerInline #mpkSelectResults'))
+  
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:74:51)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at TestContext.test (node:internal/test_runner/test:400:20)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:73:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at ../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:80:10
+✖ 节点选择与检测分离、停止/晚回失效、弹层键盘与逐项/一键 (30.188375ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok($('.ct-node-popup'))
+  
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:81:91)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at TestContext.test (node:internal/test_runner/test:400:20)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:80:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at ../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:88:10
+✖ 平台样例：关闭仅影响子窗口；托盘共享模板及禁用原因，不改业务状态 (3.156292ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'visible' !== 'tray'
+  
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:89:60)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at TestContext.test (node:internal/test_runner/test:400:20)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:88:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'visible',
+    expected: 'tray',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../../../../private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:94:10
+✖ 通知只经登记事件与原宿主；去重、多任务、收起恢复、读/解决/删除/重置隔离 (20.952417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:96:104)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at TestContext.test (node:internal/test_runner/test:400:20)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-sync-shared-baseline2-r02x4542/component-topic.test.cjs:94:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

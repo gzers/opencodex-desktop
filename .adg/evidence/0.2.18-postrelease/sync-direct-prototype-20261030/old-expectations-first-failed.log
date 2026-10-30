@@ -1,0 +1,213 @@
+✔ 普通导出冻结当前已保存渠道文件内容，未保存修改不混入；只有保存确认更新基准 (5410.390834ms)
+✔ 只有显式 draft 来源导出内存渠道；预览后继续编辑不改冻结内容，下一次普通导出仍用 saved (2157.638792ms)
+✔ 仅存在草稿的新渠道可显式导出，普通已保存来源不把它列为可导出对象 (2689.822292ms)
+✖ 文件保护可选：带渠道凭据的明文导出保留选择，既有确认后完成，不弹第二次确认 (1392.034583ms)
+✔ 选用文件加密时仍校验口令，两次一致才完成；口令不进入导出状态 (2321.242625ms)
+✔ 取消导出不保存渠道，也不替换上一份导出快照 (2290.045459ms)
+✔ 模版导出只取已保存版本；模版缓冲、保存新版本与渠道草稿/文件保存相互独立 (3015.971ms)
+✖ keyless 实际导入 → 当前内存草稿 → 原保存预览确认 → mock 已保存文件 (2015.267ms)
+✖ encrypted 实际导入 → 当前内存草稿 → 原保存预览确认 → mock 已保存文件 (2071.958375ms)
+✖ WebDAV 采用远端渠道真实进入当前草稿，保存确认前不改文件；保留本机/跳过不采用 (1669.806375ms)
+✖ 连接字段直接进入编辑后，导入可合并独立名称，凭据重叠仍保留输入 (2715.207542ms)
+✖ row 未确认输入受到保护，采用失败不改草稿/文件/模版；处理输入后可重新采用 (2732.450084ms)
+✖ alias 未确认输入受到保护，采用失败不改草稿/文件/模版；处理输入后可重新采用 (2308.904625ms)
+✖ 已加入草稿的重叠字段保留，比较期间的新修改使旧应用过期 (2099.142333ms)
+✖ 未确认的无关渠道输入及草稿保留；模版单独接纳不自动采用渠道 (2589.488625ms)
+✖ 身份映射 new 新增渠道只进入草稿，不复用本机 Key (2325.731333ms)
+✖ 身份映射 rebind 新增渠道只进入草稿，不复用本机 Key (1923.994541ms)
+✖ backup-fail 应用失败不先暂存渠道或模版版本，保留原内存与文件 (1980.0745ms)
+✖ partial 应用失败不先暂存渠道或模版版本，保留原内存与文件 (1959.754458ms)
+✖ 保存失败保留已导入草稿与原文件，可通过原保存确认重试 (1992.09525ms)
+✖ 桥接只接受固定 fixture；未知渠道、重复身份、缺精确依赖及保存忙碌态均不写状态 (1342.372708ms)
+✖ 重复接纳模版不重复新增版本，人工模版缓冲保留且不触发渠道采用 (2417.55925ms)
+✖ 非渠道范围仍可比较应用；未选择或损坏文件不创建渠道候选，不影响模型状态 (2277.134083ms)
+✔ 同步原型保持 mock 边界，不增加系统确认、真实网络、文件或宿主命令调用 (0.50575ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 7
+ℹ fail 17
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 53808.53425
+
+✖ failing tests:
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:71:1
+✖ 文件保护可选：带渠道凭据的明文导出保留选择，既有确认后完成，不弹第二次确认 (1392.034583ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /可加密/. Input:
+  
+  '所选凭据随范围同步'
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:74:9)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '所选凭据随范围同步',
+    expected: /可加密/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:115:45
+✖ keyless 实际导入 → 当前内存草稿 → 原保存预览确认 → mock 已保存文件 (2015.267ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:118:2)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:115:45
+✖ encrypted 实际导入 → 当前内存草稿 → 原保存预览确认 → mock 已保存文件 (2071.958375ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:118:2)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:139:1
+✖ WebDAV 采用远端渠道真实进入当前草稿，保存确认前不改文件；保留本机/跳过不采用 (1669.806375ms)
+  Error: 缺少控件 [data-sx=save-scope]
+      at Object.click (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic-harness.cjs:40:84)
+      at webdavPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:29:4)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:141:2)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:154:1
+✖ 连接字段直接进入编辑后，导入可合并独立名称，凭据重叠仍保留输入 (2715.207542ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:156:2)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:161:35
+✖ row 未确认输入受到保护，采用失败不改草稿/文件/模版；处理输入后可重新采用 (2732.450084ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:166:2)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:161:35
+✖ alias 未确认输入受到保护，采用失败不改草稿/文件/模版；处理输入后可重新采用 (2308.904625ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:166:2)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:175:1
+✖ 已加入草稿的重叠字段保留，比较期间的新修改使旧应用过期 (2099.142333ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:177:2)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:183:1
+✖ 未确认的无关渠道输入及草稿保留；模版单独接纳不自动采用渠道 (2589.488625ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:185:54)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:191:39
+✖ 身份映射 new 新增渠道只进入草稿，不复用本机 Key (2325.731333ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:192:52)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:191:39
+✖ 身份映射 rebind 新增渠道只进入草稿，不复用本机 Key (1923.994541ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:192:52)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:196:46
+✖ backup-fail 应用失败不先暂存渠道或模版版本，保留原内存与文件 (1980.0745ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:197:151)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:196:46
+✖ partial 应用失败不先暂存渠道或模版版本，保留原内存与文件 (1959.754458ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:197:151)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:201:1
+✖ 保存失败保留已导入草稿与原文件，可通过原保存确认重试 (1992.09525ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:203:2)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:209:1
+✖ 桥接只接受固定 fixture；未知渠道、重复身份、缺精确依赖及保存忙碌态均不写状态 (1342.372708ms)
+  TypeError: h.w.modelPrototype.stageSyncChannels is not a function
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:213:35)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:221:1
+✖ 重复接纳模版不重复新增版本，人工模版缓冲保留且不触发渠道采用 (2417.55925ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:223:23)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:227:1
+✖ 非渠道范围仍可比较应用；未选择或损坏文件不创建渠道候选，不影响模型状态 (2277.134083ms)
+  TypeError: Cannot read properties of null (reading 'mode')
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:25:33)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs:229:2)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
