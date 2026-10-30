@@ -734,7 +734,11 @@ h4.cli-help-title.official{margin-top:18px}
 .mods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .mods>.card{margin-top:0}
 .mod{display:flex;flex-direction:column;gap:10px}
-.mod-head{display:flex;align-items:center;gap:10px}
+/* 右上角「原型」标记单独占一行高度，标题、状态与箭头不再被它压住；窄窗也不会挤成两行。 */
+.mod-head{display:flex;align-items:center;gap:10px;padding-top:12px}
+.mod-head h3{flex:0 0 auto;white-space:nowrap}
+/* 版本与 WebDAV 的状态已在卡片正文逐行给出（含方向色），头部不再重复一枚标签。 */
+#card-overview-upgrade .mod-head>.tag,#card-overview-sync .mod-head>.tag{display:none}
 .mod-head h3{margin:0 auto 0 0;font-size:var(--text-body);font-weight:650}
 .mod-go{
   display:flex;align-items:center;justify-content:center;width:20px;height:20px;
@@ -745,6 +749,14 @@ h4.cli-help-title.official{margin-top:18px}
 .mod-status span{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .mod-status b{color:var(--text);font-weight:600;white-space:nowrap}
 .mod-status b.warning{color:var(--amber)}
+.ov-sync-dir{display:inline-flex;align-items:center;gap:5px;color:var(--muted);white-space:nowrap}
+.ov-sync-dir i{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.ov-sync-dir.is-up{color:var(--green)}
+.ov-sync-dir.is-down{color:var(--blue)}
+.ov-sync-dir.is-both{color:var(--blue)}
+.ov-sync-dir.is-same{color:var(--muted)}
+.ov-sync-dir.is-partial{color:var(--amber)}
+.ov-sync-dir.is-idle{color:var(--muted)}
 .mod-actions{
   display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px;
   margin-top:auto;padding-top:10px;border-top:1px solid var(--border-soft);
@@ -1891,18 +1903,18 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           <div class="mod-head">
             <div class="proto-annotation" id="ann-ov-migration" data-annotation-number="04" data-annotation-title="文件同步为内存演示" data-annotation-category="实现边界 · 概览">
               <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 04：文件同步为内存演示"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">04</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
-              <div class="annotation-source" hidden><p><strong>加密示例包的解密口令：</strong><code>demo-sync</code>。打开“导入配置”并选择示例文件后，在“解密口令”框填写；不加密的示例包无需口令。</p><p>概览可直接打开导入弹窗，导入与取消后仍停留在概览；导出需进入同步菜单选择范围与凭据，再确认导出。全流程在内存里演示，不读写真实文件，真实写入方案待实现。</p><div class="annotation-footer">实现边界 · 概览</div></div>
+              <div class="annotation-source" hidden><p><strong>加密示例包的解密口令：</strong><code>demo-sync</code>。打开“导入”并选择示例文件后，在“解密口令”框填写；不加密的示例包无需口令。</p><p>卡片只显示最近一次导入 / 导出（时间 + 项数），首次为“尚未导入 / 尚未导出”。导入、导出都用上次记住的范围直接执行，导入与取消后停留在概览；不再在卡片正文写“导出范围 / 凭据”这类固定规则，规则见同步页“原型”标签。全流程在内存里演示，不读写真实文件。</p><div class="annotation-footer">实现边界 · 概览</div></div>
             </div>
             <h3>文件同步</h3>
             <span class="mod-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5.2" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.8" cy="12" r="1.7"/></svg></span>
           </div>
           <div class="mod-status">
-            <span>导出范围 <b>可选对象</b></span>
-            <span>凭据 <b>独立选择</b></span>
+            <span>最近导入 <b id="overviewImportActivity">尚未导入</b></span>
+            <span>最近导出 <b id="overviewExportActivity">尚未导出</b></span>
           </div>
           <div class="mod-actions">
-            <button class="btn" data-prototype-action="import">导入配置</button>
-            <button class="btn ghost" data-settings-section="migration">选择同步范围</button>
+            <button class="btn" data-prototype-action="import">导入</button>
+            <button class="btn" data-prototype-action="export">导出</button>
           </div>
         </article>
 
@@ -1910,7 +1922,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           <div class="mod-head">
             <div class="proto-annotation" id="ann-ov-sync" data-annotation-number="05" data-annotation-title="WebDAV 连接为演示数据" data-annotation-category="实现边界 · 概览">
               <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 05：WebDAV 连接为演示数据"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">05</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
-              <div class="annotation-source" hidden><p>连接配置、测试连接与同步结果均为演示数据；所选范围内较新的内容直接更新，独立失败项可重试，不再手选覆盖方向。真实网络请求不在原型内发起。</p><div class="annotation-footer">实现边界 · 概览</div></div>
+              <div class="annotation-source" hidden><p>卡片只回答两件事：连接是否可用、这次往哪个方向走。线上版本时间为远端快照时间；绿=待上传、蓝=待下载、灰=已一致、琥珀=未完成，方向由所选对象新旧自动决定，不额外确认。连接配置、测试连接与同步结果均为演示数据，真实网络请求不在原型内发起。</p><div class="annotation-footer">实现边界 · 概览</div></div>
             </div>
             <h3>WebDAV 同步</h3>
             <span class="tag" id="syncTag">未配置</span>
@@ -1918,7 +1930,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
           <div class="mod-status">
             <span>连接状态 <b id="syncConn">未配置</b></span>
-            <span>更新规则 <b id="syncUpdateRule">较新覆盖</b></span>
+            <span>线上版本 <b id="syncRemoteTime">—</b></span>
+            <span>同步方向 <span class="ov-sync-dir is-idle" id="syncDirection"><i aria-hidden="true"></i><b id="syncDirectionText">未连接</b></span></span>
           </div>
           <div class="mod-actions" id="syncActions"></div>
         </article>
@@ -3351,12 +3364,15 @@ ocx update</code></pre>
         </div>
         <div class="pctl-sub">同步支线 · 进度 / 结果</div>
         <div class="pctl-grid">
+          <button type="button" data-webdav="pending-upload">待上传</button>
+          <button type="button" data-webdav="pending-download">待下载</button>
+          <button type="button" data-webdav="bidirectional">双向更新</button>
           <button type="button" data-webdav="syncing">同步中</button>
           <button type="button" data-webdav="synced">已同步</button>
           <button type="button" data-webdav="partial">部分完成</button>
         </div>
       </div>
-      <p class="pctl-hint">连接测试通过只证明可连接，不证明已同步；有失败项时显示“部分完成”，可重试失败项。未配置时动作区只留“配置 WebDAV”；只驱动 mock 投影，不新增覆盖确认。</p>
+      <p class="pctl-hint">卡片只讲连接是否可用和这次的方向：绿=待上传、蓝=待下载、灰=已一致、琥珀=未完成；方向由所选对象新旧自动决定，不再手选。未配置时动作区只留“配置 WebDAV”；只驱动 mock 投影，不新增覆盖确认。</p>
     </div>
     <div class="proto-card" data-proto-contexts="overview settings:installation">
       <div class="proto-note-title">环境前置条件（mock 投影）</div>
@@ -6778,19 +6794,26 @@ if(sizeDefault) sizeDefault.classList.add('active');
 updateSizeReadout();
 // ── WebDAV 卡片：按「配置 / 连接」状态渲染内容与动作（不渲染无解释的禁用态）──
 // 「未配置」是初始态：卡片主体说明未配置，动作区只留一颗「配置 WebDAV」主按钮，右上角 ⋯ 仍可进设置。
+// 卡片只回答两件事：连接是否可用、这次同步往哪个方向走。方向由所选对象的新旧决定，不额外确认。
 const webdavStates={
-  unconfigured:{tag:'未配置',conn:'未配置',update:'较新覆盖',
+  unconfigured:{tag:'未配置',conn:'未配置',remote:'—',dir:['idle','未连接'],
     actions:[['配置 WebDAV','btn primary','open-sync-settings']]},
-  disconnected:{tag:'未连接',conn:'未连接',update:'较新覆盖',
-    actions:[['同步','btn primary','sync'],['测试连接','btn ghost','test-webdav']]},
-  syncing:{tag:'同步中',conn:'已连接',update:'较新覆盖',
+  disconnected:{tag:'未连接',conn:'未连接',remote:'—',dir:['idle','未连接'],
+    actions:[['同步','btn primary','sync']]},
+  'pending-upload':{tag:'待上传',conn:'已连接',remote:'今天 10:24',dir:['up','待上传'],
+    actions:[['同步','btn primary','sync']]},
+  'pending-download':{tag:'待下载',conn:'已连接',remote:'今天 11:02',dir:['down','待下载'],
+    actions:[['同步','btn primary','sync']]},
+  bidirectional:{tag:'双向更新',conn:'已连接',remote:'今天 11:02',dir:['both','双向更新'],
+    actions:[['同步','btn primary','sync']]},
+  syncing:{tag:'同步中',conn:'已连接',remote:'今天 11:02',dir:['both','同步中'],
     actions:[['查看进度','btn','open-sync-settings']]},
-  synced:{tag:'已同步',conn:'已连接',update:'较新覆盖',
-    actions:[['同步','btn primary','sync'],['测试连接','btn ghost','test-webdav']]},
-  error:{tag:'连接失败',conn:'连接失败',update:'较新覆盖',
-    actions:[['重试连接','btn primary','test-webdav'],['同步','btn ghost','sync']]},
-  partial:{tag:'部分完成',conn:'已连接',update:'较新覆盖',
-    actions:[['查看结果','btn primary','open-sync-settings']]},
+  synced:{tag:'已同步',conn:'已连接',remote:'今天 11:02',dir:['same','已一致'],
+    actions:[['同步','btn primary','sync']]},
+  error:{tag:'连接失败',conn:'连接失败',remote:'—',dir:['idle','未完成'],
+    actions:[['重试连接','btn primary','test-webdav']]},
+  partial:{tag:'部分完成',conn:'已连接',remote:'今天 11:02',dir:['partial','未完成'],
+    actions:[['同步','btn primary','sync'],['查看结果','btn ghost','open-sync-settings']]},
 };
 let webdavState='unconfigured';
 function renderWebdav(state){
@@ -6802,7 +6825,10 @@ function renderWebdav(state){
   const cfg=webdavStates[webdavState];
   el('syncTag').textContent=cfg.tag;
   el('syncConn').textContent=cfg.conn;
-  el('syncUpdateRule').textContent=cfg.update;
+  el('syncRemoteTime').textContent=cfg.remote;
+  const dir=el('syncDirection');
+  dir.className='ov-sync-dir is-'+cfg.dir[0];
+  el('syncDirectionText').textContent=cfg.dir[1];
   el('syncActions').innerHTML=cfg.actions.map(([label,cls,act])=>
     `<button class="${cls}" data-prototype-action="${act}">${label}</button>`).join('');
   document.querySelectorAll('#webdavStates button').forEach(b=>
@@ -6811,6 +6837,21 @@ function renderWebdav(state){
 window.renderWebdav=renderWebdav;
 document.querySelectorAll('#webdavStates button').forEach(button=>{
   button.addEventListener('click',()=>renderWebdav(button.dataset.webdav));
+});
+// ── 文件同步卡片：只显示最近一次导入 / 导出的事实（时间 + 项数）──
+document.addEventListener('prototype:sync-activity',event=>{
+  const detail=event.detail||{};
+  if(detail.kind==='sync'){
+    // 同步完成后卡片直接回到「已一致」，线上版本时间用这次同步的时间。
+    if(webdavState!=='unconfigured'&&webdavState!=='disconnected'&&webdavState!=='error') renderWebdav(detail.complete===false?'partial':'synced');
+    const remote=document.getElementById('syncRemoteTime');
+    if(remote&&webdavState!=='unconfigured'&&webdavState!=='disconnected') remote.textContent='今天 '+detail.time;
+    return;
+  }
+  const node=document.getElementById(detail.kind==='import'?'overviewImportActivity':detail.kind==='export'?'overviewExportActivity':'');
+  if(!node) return;
+  const count=Number(detail.count)||0;
+  node.textContent=detail.time+' · '+count+' 项'+(detail.complete===false?' · 未完成':'');
 });
 
 // ── 主题：外壳与内嵌面板共用同一个取值（localStorage 键 ocx-theme）──

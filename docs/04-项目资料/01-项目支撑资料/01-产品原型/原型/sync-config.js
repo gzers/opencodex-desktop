@@ -55,12 +55,19 @@
  let detailOpen=false,lastComparison=null;
  let catalog=collect(),tab='file',query='',accountPlatform='all',originFocus=null,dialogKind='',scenario='normal',serial=0,renderedTab=null;
  const expanded={file:new Set(),webdav:new Set()},searchCollapsed={file:new Set(),webdav:new Set()},scrolls={file:{list:0,secrets:0},webdav:{list:0,secrets:0}};
- const fresh=mode=>{const items=catalog.filter(x=>eligible(x)&&!x.defaultExcluded&&(mode==='file'||x.group!=='endpoints'));return {selected:new Set(items.map(x=>x.id)),keys:new Set(mode==='webdav'?items.filter(x=>x.key).map(x=>x.id):[]),accountInfoOnly:new Set(),endpointConfigOnly:new Set(),extensions:new Set(mode==='webdav'?items.filter(x=>x.extensionSecret).map(x=>x.id):[]),preset:'all'};};
+ const fresh=mode=>{const items=catalog.filter(x=>eligible(x)&&!x.defaultExcluded&&(mode==='file'||x.group!=='endpoints'));return {selected:new Set(items.map(x=>x.id)),keys:new Set(mode==='webdav'?items.filter(x=>x.key).map(x=>x.id):[]),accountInfoOnly:new Set(),endpointConfigOnly:new Set(),extensions:new Set(mode==='webdav'?items.filter(x=>x.extensionSecret).map(x=>x.id):[])};};
  const scopes={file:fresh('file'),webdav:fresh('webdav')};
  const savedScopes={file:'',webdav:''};
  let connection={name:'个人 WebDAV',url:'https://dav.example.com',path:'/opencodex/config-sync/v1',user:'demo-user',connected:true},savedScope='',result=null,lastExport=null,importPlan=null,channelAdoption=null;
  let run=null,runSerial=0,lastRun=null,failedRun=null,connectionTestId=null;
  const receipts=new Map();
+ // 概览只记最近一次导入 / 导出的事实：时间与项数，不写固定规则说明。
+ const recentActivity={import:null,export:null};
+ function activityTime(){const n=(14*60+30+runSerial*3)%(24*60);return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');}
+ function recordActivity(kind,count,complete=true,extra={}){
+  recentActivity[kind]={time:activityTime(),count,complete};
+  document.dispatchEvent(new CustomEvent('prototype:sync-activity',{detail:{kind,...recentActivity[kind],...extra}}));
+ }
  function publishReceipt(eventId,receipt){
   receipts.set(String(receipt.operationId),clone(receipt));
   window.prototypeNotificationPublisher.publish(eventId,{operationId:String(receipt.operationId),total:receipt.total??receipt.items?.length??0,downloaded:receipt.downloaded||0,uploaded:receipt.uploaded||0,skipped:receipt.skipped||0,failed:receipt.failed?.length||0,errorCode:receipt.errorCode||'none'});
@@ -98,14 +105,6 @@
  const secretCount=s=>Object.values(secretIds(s)).flat().length;
  const signature=s=>JSON.stringify({ids:[...s.selected].sort(),accountInfoOnly:[...s.accountInfoOnly].filter(id=>s.selected.has(id)).sort(),endpointConfigOnly:[...s.endpointConfigOnly].filter(id=>s.selected.has(id)).sort(),...Object.fromEntries(Object.entries(secretIds(s)).map(([k,v])=>[k,v.sort()]))});
  rememberScope();
- function preset(value){
-  const s=state();s.preset=value;
-  if(value==='custom')return;
-  s.keys.clear();s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions.clear();
-  s.selected=new Set(catalog.filter(x=>eligible(x)&&!x.defaultExcluded&&(tab==='file'||x.group!=='endpoints')).map(x=>x.id));
-  if(value==='share')for(const x of catalog){if(x.group==='accounts')s.accountInfoOnly.add(x.id);if(x.password)s.endpointConfigOnly.add(x.id);}
-  if(value==='device'||value==='all'&&tab==='webdav'){for(const x of catalog){if(x.key)s.keys.add(x.id);if(x.extensionSecret)s.extensions.add(x.id);}}
- }
  function selectObject(s,id,checked){
   if(find(id)&&!eligible(find(id)))return;
   if(checked){if(!s.selected.has(id)){s.accountInfoOnly.delete(id);s.endpointConfigOnly.delete(id);}s.selected.add(id);}
@@ -133,7 +132,7 @@
      toggleAttrs:'data-sx="expand" data-id="'+id+'"',expanded:open,
      cells:['<span class="sx-group-count">'+(selectable.length?count+' / '+selectable.length:id==='accounts'?'暂无可选能力':'本地恢复')+'</span>']})+(id==='accounts'&&open?'<label class="sx-account-filter">账户平台<select data-sx-account-platform aria-label="账户列表平台筛选"><option value="all">全部平台</option>'+Object.entries(accountCapabilities.platforms).map(([key,label])=>'<option value="'+key+'" '+(accountPlatform===key?'selected':'')+'>'+label+'</option>').join('')+'</select></label>':'')+children+'</div>';
   }).join('');
-  return '<div class="sx-toolbar"><select data-sx-preset aria-label="'+scopeLabel+'预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>'+(tab==='file'?'默认导出范围':'默认同步范围')+'</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:tab==='file'?'导出范围':'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.filter(eligible).length&&visible.filter(eligible).every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','同平台支持多个独立账户；账户平台与OpenCodex管理方、调用方分开，Google Antigravity、Kiro不归类为Codex。更新对应来源账户身份，不按邮箱或名称合并。账户能力按账户平台、管理方、授权来源和认证类型登记。当前正常流程仅账户信息；登录迁移未通过适配与证据门，不开放选择。0.2.0按已确认范围交付账户信息，不把此原型当免登录验证通过'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。默认导出当前已保存文件快照；仅显式指定 draft 来源才导出当前模型渠道内存草稿。模版只取已保存版本，不带模版编辑缓冲。搜索仅改变显示，隐藏勾选保留。首次全选当前提供的可用范围，凭据随所选范围/包内能力选择；分享预设不带凭据。文件导出与WebDAV范围在本机分别自动记住，普通同步不传输这些操作偏好，也不切换另一台设备的当前连接。每次导入在包内提供范围默认全选，显式入口范围只列对应对象。点击同步才执行。原型只记在当前文档内存，刷新后复位；不读写真实文件。');
+  return '<div class="sx-toolbar"><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'"></div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:tab==='file'?'导出范围':'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.filter(eligible).length&&visible.filter(eligible).every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','范围就是最后一次的勾选结果，文件导出与 WebDAV 各记一份，下次打开直接沿用；表头复选框可一键全选或取消当前搜索结果。同平台支持多个独立账户；账户平台与OpenCodex管理方、调用方分开，Google Antigravity、Kiro不归类为Codex。账户能力按账户平台、管理方、授权来源和认证类型登记；当前正常流程仅账户信息。默认导出当前已保存文件快照；仅显式指定 draft 来源才导出当前模型渠道内存草稿。模版只取已保存版本，不带模版编辑缓冲。搜索仅改变显示，隐藏勾选保留。凭据随所选范围/包内能力选择，默认不加密。普通同步不传输这些操作偏好，也不切换另一台设备的当前连接。每次导入在包内提供范围默认全选，显式入口范围只列对应对象。点击同步才执行。原型只记在当前文档内存，刷新后复位；不读写真实文件。');
  }
  function credentialsHTML(){
   const s=state(),ids=closure().ids;
@@ -210,7 +209,7 @@
    const custom=$('[name=sxDestination]:checked')?.value==='custom';const dir=custom?($('#sxDirPath')?.value.trim()||''):'';if(custom&&!dir){setText('#sxError','请选择自定义目录，或改回默认导出目录。');return;}const exportRoot=dir||'默认导出目录',packagePathShown=exportRoot+'/2026-10-23/备份包-14-30-12-8F3A',operationId=++runSerial;
    const failed=scenario==='backup-fail',receipt={tab:'file',kind:'export',operationId,total:cl.ids.size,packagePath:failed?null:packagePathShown,protection:{encrypted},failed:failed?[{id:'export',reason:'目标目录无法写入'}]:[],errorCode:failed?'write':'none'};
    if(!failed)lastExport={...manifest,encrypted,destination:dir||'default',packagePath:packagePathShown,simulated:true};
-   closeModal();render();publishReceipt(failed?'sync.export.failed':'sync.export.complete',receipt);
+   closeModal();render();recordActivity('export',cl.ids.size,!failed);publishReceipt(failed?'sync.export.failed':'sync.export.complete',receipt);
   },{annotationText:['选择范围 → 确认内容 → 生成配置包','未选择的凭据不进入包，也不会由模版依赖重新带入。']});
  }
  // 普通导入与同步直接更新已选对象；比较仅在可选结果详情中查看。
@@ -287,6 +286,7 @@
   const detail=operation.tab==='file'?('更新 '+downloaded+' 项，跳过 '+skips.length+' 项'+(failed.length?'，'+failed.length+' 项失败':'')):'下载更新 '+downloaded+' 项，上传 '+uploaded+' 项，跳过 '+skips.length+' 项'+(failed.length?'，'+failed.length+' 项失败':'');
   result={tab:operation.tab,operationId:operation.id,title,detail:detail+'。',downloaded,uploaded,skipped:skips.length,failed,items:[...done,...skips,...failed],protection:clone(operation.protection)};lastRun=clone(result);failedRun=failed.length?{...operation,rows:failed.map(({status,reason,...x})=>x)}:null;
   lastComparison=null;render();
+  recordActivity(operation.tab==='file'?'import':'sync',done.length+skips.length,failed.length===0,{uploaded,downloaded});
   const previous=receipts.get(String(operation.id)),items=new Map((previous?.items||[]).map(x=>[x.id,x]));
   for(const item of result.items)items.set(item.id,item);
   const all=[...items.values()],failedItems=all.filter(x=>x.status==='failed');
@@ -321,7 +321,7 @@
  }
  function open(options={}){
   catalog=collect(options.action==='export'&&options.source==='draft'?'draft':'saved');tab=options.tab==='webdav'?'webdav':'file';query='';channelAdoption=null;
-  if(options.scope){const s=state();s.selected=new Set(options.scope.filter(id=>find(id)&&eligible(find(id))&&(tab==='file'||find(id).group!=='endpoints')));s.preset='custom';s.keys=new Set(tab==='webdav'?[...s.selected].filter(id=>find(id)?.key):[]);s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions=new Set(tab==='webdav'?[...s.selected].filter(id=>find(id)?.extensionSecret):[]);}
+  if(options.scope){const s=state();s.selected=new Set(options.scope.filter(id=>find(id)&&eligible(find(id))&&(tab==='file'||find(id).group!=='endpoints')));s.keys=new Set(tab==='webdav'?[...s.selected].filter(id=>find(id)?.key):[]);s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions=new Set(tab==='webdav'?[...s.selected].filter(id=>find(id)?.extensionSecret):[]);}
   rememberScope();
   const stayOnPage=options.action==='import'&&options.stayOnPage;
   if(!stayOnPage)setRoute('sync?tab='+tab);
@@ -344,17 +344,15 @@
   else if(a==='connection')connectionDialog();
   else if(a==='test-connection'&&validateConnection()){const failed=scenario==='network-error',operationId=connectionTestId||++runSerial;connectionTestId=failed?operationId:null;connection.connected=!failed;publishReceipt(failed?'sync.connection.failed':'sync.connected',{operationId,kind:'connection',total:1,failed:failed?[{id:'connection'}]:[],errorCode:failed?'connection':'none'});}
   else if(a==='check')syncCheck();
-  else if(a==='clear'){const s=state();s.selected.clear();s.keys.clear();s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions.clear();s.preset='custom';rememberScope();render();}
  });
  document.addEventListener('change',e=>{
   const el=e.target,s=state(),focusAttrs=[...e.target.attributes].filter(a=>a.name.startsWith('data-sx-'));const restoreFocus=()=>{const match=$$('input',dialogKind?$('#modal'):host).find(x=>focusAttrs.length&&focusAttrs.every(a=>x.getAttribute(a.name)===a.value));match?.focus({preventScroll:true});};let redraw=false;
-  if(el.matches('[data-sx-preset]')){preset(el.value);redraw=true;}
-  else if(el.matches('[data-sx-object]')){selectObject(s,el.dataset.sxObject,el.checked);s.preset='custom';redraw=true;}
-  else if(el.matches('[data-sx-group],[data-sx-all]')){for(const x of catalog.filter(x=>(tab==='file'||x.group!=='endpoints')&&(!el.dataset.sxGroup||x.group===el.dataset.sxGroup)&&(x.name+' '+x.summary).toLowerCase().includes(query.toLowerCase())&&(x.group!=='accounts'||accountPlatform==='all'||x.accountPlatform===accountPlatform))){selectObject(s,x.id,el.checked);}s.preset='custom';redraw=true;}
+  if(el.matches('[data-sx-object]')){selectObject(s,el.dataset.sxObject,el.checked);redraw=true;}
+  else if(el.matches('[data-sx-group],[data-sx-all]')){for(const x of catalog.filter(x=>(tab==='file'||x.group!=='endpoints')&&(!el.dataset.sxGroup||x.group===el.dataset.sxGroup)&&(x.name+' '+x.summary).toLowerCase().includes(query.toLowerCase())&&(x.group!=='accounts'||accountPlatform==='all'||x.accountPlatform===accountPlatform))){selectObject(s,x.id,el.checked);}redraw=true;}
   else if(el.matches('[data-sx-account-platform]')){accountPlatform=el.value;redraw=true;}
-  else if(el.matches('[data-sx-account-info]')){el.checked?s.accountInfoOnly.add(el.dataset.sxAccountInfo):s.accountInfoOnly.delete(el.dataset.sxAccountInfo);s.preset='custom';redraw=true;}
-  else if(el.matches('[data-sx-endpoint-config]')){el.checked?s.endpointConfigOnly.add(el.dataset.sxEndpointConfig):s.endpointConfigOnly.delete(el.dataset.sxEndpointConfig);s.preset='custom';redraw=true;}
-  else if(el.matches('[data-sx-secret]')){const key=el.dataset.sxSecret,prop={keys:'key',extensions:'extensionSecret'}[key];s[key].clear();if(el.checked)for(const x of catalog.filter(x=>closure().ids.has(x.id)&&x[prop]))s[key].add(x.id);s.preset='custom';redraw=true;}
+  else if(el.matches('[data-sx-account-info]')){el.checked?s.accountInfoOnly.add(el.dataset.sxAccountInfo):s.accountInfoOnly.delete(el.dataset.sxAccountInfo);redraw=true;}
+  else if(el.matches('[data-sx-endpoint-config]')){el.checked?s.endpointConfigOnly.add(el.dataset.sxEndpointConfig):s.endpointConfigOnly.delete(el.dataset.sxEndpointConfig);redraw=true;}
+  else if(el.matches('[data-sx-secret]')){const key=el.dataset.sxSecret,prop={keys:'key',extensions:'extensionSecret'}[key];s[key].clear();if(el.checked)for(const x of catalog.filter(x=>closure().ids.has(x.id)&&x[prop]))s[key].add(x.id);redraw=true;}
   else if(el.matches('[data-sx-secret-object]')){el.checked?s[el.dataset.kind].add(el.dataset.sxSecretObject):s[el.dataset.kind].delete(el.dataset.sxSecretObject);redraw=true;}
   else if(el.id==='sxEncrypt')$('#sxPassFields').hidden=!el.checked;
   else if(el.name==='sxDestination'){const box=$('#sxCustomDir');if(box)box.hidden=el.value!=='custom';if(el.value!=='custom'){const input=$('#sxDirPath');if(input)input.value='';}setText('#sxError','');}
@@ -379,6 +377,6 @@
   protection.enabled=mode==='encrypted';if(protection.enabled&&!protection.passphrase)protection.passphrase='demo-sync';
   render();window.prototypePanel?.refresh();
  }
- window.syncPrototype={open,refreshCatalog:()=>{if(dialogKind)closeModal();catalog=collect();render();},state:()=>({tab,accountPlatform,accountCapabilities:accountCapabilities.entries.map(x=>({...x})),selected:[...state().selected],effective:[...closure().ids],accountInfoOnly:[...state().accountInfoOnly],endpointConfigOnly:[...state().endpointConfigOnly],secrets:secretIds(),savedScope,savedScopes:clone(savedScopes),dirty:false,lastExport:clone(lastExport),result:clone(result),channelAdoption:clone(channelAdoption),dialogKind,detailOpen,lastComparison:null,comparison:null,serial,scenario,importSample,importFile:clone(importFile),running:!!run,lastRun:clone(lastRun),versions:clone(versions),demoObjects:clone(demoObjects),protection:{enabled:protection.enabled,configured:!!protection.passphrase}}),setImportSample,setScenario,setProtectionDemo,openReceipt,render};
+ window.syncPrototype={open,refreshCatalog:()=>{if(dialogKind)closeModal();catalog=collect();render();},state:()=>({tab,accountPlatform,accountCapabilities:accountCapabilities.entries.map(x=>({...x})),selected:[...state().selected],effective:[...closure().ids],accountInfoOnly:[...state().accountInfoOnly],endpointConfigOnly:[...state().endpointConfigOnly],secrets:secretIds(),savedScope,savedScopes:clone(savedScopes),dirty:false,lastExport:clone(lastExport),recentActivity:clone(recentActivity),result:clone(result),channelAdoption:clone(channelAdoption),dialogKind,detailOpen,lastComparison:null,comparison:null,serial,scenario,importSample,importFile:clone(importFile),running:!!run,lastRun:clone(lastRun),versions:clone(versions),demoObjects:clone(demoObjects),protection:{enabled:protection.enabled,configured:!!protection.passphrase}}),setImportSample,setScenario,setProtectionDemo,openReceipt,render};
  routeChanged();render();
 })();

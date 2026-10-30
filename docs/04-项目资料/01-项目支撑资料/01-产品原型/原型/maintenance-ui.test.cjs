@@ -120,7 +120,12 @@ test('概览只有检查按钮，管理器 / 面板状态行可按对象查看�
   assert.equal((h.node('#card-overview-upgrade .mod-actions').innerHTML.match(/<button/g)||[]).length,1);
   assert.ok(!h.node('#card-overview-upgrade .mod-actions').innerHTML.includes('查看更新'));
   assert.ok(h.node('#card-overview-upgrade .mod-status').innerHTML.includes('面板'));
+  // 概览行直接给出当前 → 最新；未检查时是空心点，不写「有可用更新」这种空信息。
+  assert.match(h.node('#card-overview-upgrade .mod-status').innerHTML,/尚未检查/);
+  assert.match(h.node('#card-overview-upgrade .mod-status').innerHTML,/mnt-dot is-unchecked/);
   h.click('check-all');h.flush(850);
+  const rows=h.node('#card-overview-upgrade .mod-status').innerHTML;
+  assert.match(rows,/0\.1\.9/);assert.match(rows,/0\.1\.10/);assert.match(rows,/mnt-dot is-update/);
   assert.equal(h.modal().title,'检查更新结果');
   assert.ok(h.modal().body.includes('data-target="runtime"'));
   h.click('update-detail','runtime');

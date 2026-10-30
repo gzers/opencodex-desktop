@@ -105,7 +105,10 @@ test('一次同步可同时上传和下载，当前范围以外对象不改',asy
  h.click('[data-sx=check]');const result=await finished(h);assert.equal(result.downloaded,1);assert.equal(result.uploaded,1);assert.equal(json(sync(h).versions.local['channel:newapi']),before);
 });
 test('运行中更改范围只作用下一次，不要求重开旧计划',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});h.click('[data-sx=check]');h.click('[data-sx=clear]');const result=await finished(h);assert.equal(result.items.length,2);assert.equal(sync(h).selected.length,0);assert.equal(h.document.querySelector('[data-sx=check]').disabled,true);
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});h.click('[data-sx=check]');
+ // 表头复选框是唯一批量入口：先全选、再取消即得到空范围。
+ h.click('[data-sx-all]');h.click('[data-sx-all]');
+ const result=await finished(h);assert.equal(result.items.length,2);assert.equal(sync(h).selected.length,0);assert.equal(h.document.querySelector('[data-sx=check]').disabled,true);
 });
 test('独立失败不阻断其余对象；只重试失败项并清除旧错误',async t=>{
  const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});h.w.syncPrototype.setScenario('partial');h.click('[data-sx=check]');const result=await finished(h);assert.equal(result.downloaded,1);assert.equal(result.failed[0].id,'mcp:docs');const version=json(sync(h).versions.local['skill:review']);
@@ -190,15 +193,23 @@ test('通知专题导入复用共享窗口，普通同步不再提供覆盖确�
  h.w.eval('runNotifScenario(NOTIF_SCEN.findIndex(s=>s[1]==="配置导入"))');
  assert.equal(sync(h).dialogKind,'import');assert.ok(h.document.querySelector('[data-sx=choose-import-file]'));assert.equal(h.document.querySelector('#modalConfirm').textContent,'导入');h.click('#modalCancel');
  h.w.renderWebdav('synced');assert.doesNotMatch(h.document.querySelector('#card-overview-sync').textContent,/每次询问|冲突策略/);
- assert.match(h.document.querySelector('#card-overview-sync').textContent,/较新覆盖/);h.w.renderWebdav('partial');assert.equal(h.document.querySelector('#syncTag').textContent,'部分完成');
+ assert.equal(h.document.querySelector('#syncDirectionText').textContent,'已一致');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-same'));
+ h.w.renderWebdav('pending-upload');assert.equal(h.document.querySelector('#syncDirectionText').textContent,'待上传');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-up'));
+ h.w.renderWebdav('pending-download');assert.equal(h.document.querySelector('#syncDirectionText').textContent,'待下载');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-down'));
+ h.w.renderWebdav('bidirectional');assert.equal(h.document.querySelector('#syncDirectionText').textContent,'双向更新');
+ assert.equal(h.document.querySelector('#syncActions').textContent,'同步');
+ h.w.renderWebdav('partial');assert.equal(h.document.querySelector('#syncTag').textContent,'部分完成');assert.ok(h.document.querySelector('#syncDirection').classList.contains('is-partial'));
+ assert.doesNotMatch(h.document.querySelector('#card-overview-sync').textContent,/较新覆盖/);
 });
 
-test('初次WebDAV提供的可用范围默认全选，凭据跟随范围；分享预设仍不带凭据',async t=>{
+test('初次WebDAV提供的可用范围默认全选，凭据跟随范围；工具栏只留搜索与表头全选',async t=>{
  const h=await setup(t);h.w.syncPrototype.open({tab:'webdav'});
  const all=[...h.document.querySelectorAll('[data-sx-group]:not([disabled])')];assert.ok(all.length>=5);assert.ok(all.every(el=>el.checked));assert.ok(sync(h).selected.length>all.length);
  assert.equal(h.document.querySelector('[data-sx-secret=keys]').checked,true);assert.equal(h.document.querySelector('[data-sx-secret=extensions]').checked,true);
- h.change('[data-sx-preset]','share');assert.equal(sync(h).secrets.keys.length,0);assert.equal(sync(h).secrets.extensions.length,0);
- h.change('[data-sx-preset]','all');assert.ok(sync(h).secrets.keys.length);assert.ok(sync(h).secrets.extensions.length);
+ assert.equal(h.document.querySelector('[data-sx-preset]'),null);assert.equal(h.document.querySelector('[data-sx=clear]'),null);
+ assert.ok(h.document.querySelector('#sxSearch'));assert.ok(h.document.querySelector('[data-sx-all]'));
+ h.change('[data-sx-secret=keys]',false);h.change('[data-sx-secret=extensions]',false);assert.equal(sync(h).secrets.keys.length,0);assert.equal(sync(h).secrets.extensions.length,0);
+ h.change('[data-sx-secret=keys]',true);assert.ok(sync(h).secrets.keys.length);
 });
 
 test('导入在所提供范围默认全选含包内可用凭据，显式入口只显示对应范围',async t=>{
@@ -215,7 +226,7 @@ test('文件与WebDAV范围分别记住，跨页、导入和导出均不把本�
  h.click('[data-sx=export]');h.change('#sxEncrypt',false);h.click('#modalConfirm');assert.doesNotMatch(json(sync(h).lastExport),/savedScopes|savedScope|passphrase|sync-demo|demo-sync/);
  chooseImport(h,'config-only',['endpoint:personal']);h.click('#modalConfirm');await finished(h);assert.equal(sync(h).savedScopes.webdav,dav);
  h.w.syncPrototype.open({tab:'webdav'});assert.deepEqual([...sync(h).selected],['skill:review','mcp:docs']);assert.equal(sync(h).secrets.extensions.length,0);
- h.w.syncPrototype.open({tab:'file',scope:['preferences:desktop']});h.click('[data-sx=clear]');assert.deepEqual(JSON.parse(sync(h).savedScopes.file).ids,[]);assert.equal(sync(h).savedScopes.webdav,dav);
+ h.w.syncPrototype.open({tab:'file',scope:['preferences:desktop']});h.click('[data-sx-all]');h.click('[data-sx-all]');assert.deepEqual(JSON.parse(sync(h).savedScopes.file).ids,[]);assert.equal(sync(h).savedScopes.webdav,dav);
 });
 
 test('本页加密与不加密mock共用范围，运行中的保护选择被冻结并在结果中可见',async t=>{
