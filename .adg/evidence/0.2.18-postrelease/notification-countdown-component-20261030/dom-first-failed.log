@@ -1,0 +1,35 @@
+✔ 剩余停留时间由同一时钟计算，多种暂停原因必须全部解除 (0.419875ms)
+✔ 独立实例互不覆盖；停止和无效时长不能生成伪进度 (0.13475ms)
+✔ 线条和自动收起共用终点，悬停与焦点暂停，归零仅执行一次 (2965.032334ms)
+✔ 同一表面重新挂载会取消旧倒计时，旧回调不能收起新通知 (2225.169333ms)
+✖ 替换正文或手动收起后解除计时，保留原有无障碍关联 (2211.712083ms)
+✔ 减少动态使用按秒线条，保持相同8秒到期语义 (2167.622916ms)
+✔ 组件示例先注册发布，Toast和完成任务复用原宿主，铃铛记录不被到期删除 (2120.852291ms)
+✔ 新业务通知替换示例时旧线条退出，不提前收起其它通知，运行任务与历史列表不自动装条 (3649.027875ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15415.175458
+
+✖ failing tests:
+
+test at docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.test.cjs:20:1
+✖ 替换正文或手动收起后解除计时，保留原有无障碍关联 (2211.712083ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  5 !== 0
+  
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.test.cjs:23:169)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 5,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

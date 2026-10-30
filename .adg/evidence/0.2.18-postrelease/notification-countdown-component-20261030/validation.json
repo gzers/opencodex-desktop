@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-30",
+  "project": "opencodex-desktop",
+  "phase": "component prototype preview only",
+  "basis": "docs/governance-main 022f5a474 plus existing parallel panorama/Logo files",
+  "entry": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html#components?section=notifications",
+  "sourceHashes": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "2c48ef7881220c05977e7d8dd9db7bb7a33a7262920b2d885c42f570f1bcddcc",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.js": "602696a48b39bd53339145389c13b090e474381e2547be9daba35cf432753b6e",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.css": "a96c7116edfd1e93461ef99a0f38aeb4d4d8aa63b8e9b853ced52b504b3c8932",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.test.cjs": "287f8388deb2567b9a32758a450298258697f766d6b3c84969ae964d5c41f471",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-catalog.js": "fec25f4d2daa57b9063750d61a20b582036d3916aabb5f917b4b014401d06431",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.js": "5ea435a95ca6855998f7a598638984624448d9a268c9a09d1293b91334a02018",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/maintenance-events.js": "2900f37c00eba939906d217c4f6542d71f1ba087daa27d3ddb2338c39a977481",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-notification-publisher.js": "a1028afb6323f3c34ae7f378a577b76013cfd912fb0a0043f7f9df4e99ec6608"
+  },
+  "stagedEntrySha256": "cfa85a7edb5af5aaf9b339992e9731f187392cae88bc3c013ba9a0d2759de8a2",
+  "checks": {
+    "componentDom": {
+      "passed": 9,
+      "failed": 0
+    },
+    "existingNotifications": {
+      "passed": 6,
+      "failed": 0
+    },
+    "eventRegistry": {
+      "passed": 31,
+      "failed": 0
+    },
+    "chromium": {
+      "passed": 111,
+      "failed": 0,
+      "pageErrors": []
+    },
+    "webkit": {
+      "passed": 110,
+      "failed": 1,
+      "pageErrors": [
+        {
+          "case": "900-dark-mid",
+          "message": "ResizeObserver loop completed with undelivered notifications.",
+          "stack": ""
+        },
+        {
+          "case": "900-dark-low",
+          "message": "ResizeObserver loop completed with undelivered notifications.",
+          "stack": ""
+        }
+      ]
+    }
+  },
+  "retainedFailures": {
+    "dom": "Initial frame-count assertion included unrelated prototype rAF callbacks; corrected to verify only the countdown-owned request was cancelled, original log retained",
+    "reducedMotion": "Early browser geometry check expected shrink after550ms, but reduced motion deliberately updates per second; check observes after1800ms, no product timing or animation changed",
+    "webkit": "All110 functional assertions pass; overall pageerror assertion fails due two ResizeObserver loops, one before-edit actual-page run also reports loop in900darklow; no filtering or shared layout patch",
+    "baselineRouting": "First baseline route matched every index.html including child Logo iframe; corrected to exact prototype directory, invalid baseline reports retained separately"
+  },
+  "componentOnlyConsumers": [
+    "component.demo.countdown success",
+    "component.demo.countdown error",
+    "component.demo.countdown task"
+  ],
+  "businessWideRollout": false,
+  "softwareChanged": false,
+  "nativeWindowsClaimed": false,
+  "noFilesPreferencesApiOrCommandsFromPrototype": true
+}

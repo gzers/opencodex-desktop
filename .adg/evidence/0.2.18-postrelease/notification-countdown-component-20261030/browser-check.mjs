@@ -1,0 +1,27 @@
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {pickEngine} from '/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/ui/qa/engine.mjs';
+const entry='/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html',out=process.env.AUDIT_OUT_DIR;fs.mkdirSync(out,{recursive:true});const e=await pickEngine(),b=await e.launch(),checks=[],errors=[];const check=(name,ok,detail)=>{checks.push({name,passed:!!ok,detail});assert(ok,name+' '+JSON.stringify(detail));};
+try{
+for(const size of [{w:1180,h:760,theme:'light'},{w:900,h:600,theme:'dark'}])for(const effects of ['high','mid','low']){
+ const label=size.w+'-'+size.theme+'-'+effects,p=await b.newPage({viewport:{width:size.w+470,height:size.h+220},reducedMotion:effects==='low'?'reduce':'no-preference'});p.on('pageerror',x=>errors.push({case:label,message:x.message,stack:x.stack}));await p.route('http://**/*',r=>r.abort());await p.route('https://**/*',r=>r.abort());await p.goto('file://'+encodeURI(entry)+'#components?section=notifications');await p.waitForFunction(()=>window.NotificationCountdown&&window.componentTopicPrototype);
+ await p.evaluate(({size,effects})=>{const w=document.querySelector('.window');w.style.width=size.w+'px';w.style.height=size.h+'px';w.style.flex='none';window.componentTopicPrototype.setEnvironment('theme',size.theme);window.componentTopicPrototype.setEnvironment('effects',effects);window.componentTopicPrototype.navigate('notifications');},{size,effects});
+ check(label+' controls present',await p.locator('#ctNotificationCountdown [data-ct^=notify-countdown-]').count()===3);
+ for(const variant of ['success','error','task']){
+  await p.locator('[data-ct=notify-countdown-'+variant+']').click();const selector=variant==='task'?'#taskHost [data-task-notification="component-demo:countdown:task"]':'#toastEl';const surface=p.locator(selector);await surface.locator('.notification-countdown').waitFor();
+  check(label+' '+variant+' existing host',await surface.isVisible()&&await p.locator('.notification-countdown').count()<3);
+  await p.waitForTimeout(1800);const first=await surface.evaluate(n=>window.NotificationCountdown.get(n).state());check(label+' '+variant+' time advances',first.remainingMs>5000&&first.remainingMs<7900,first);
+  const geometry=await surface.evaluate(n=>{const card=n.getBoundingClientRect(),track=n.querySelector('.notification-countdown').getBoundingClientRect(),fill=n.querySelector('.notification-countdown-fill').getBoundingClientRect();return {card:card.toJSON(),track:track.toJSON(),fill:fill.toJSON()};});check(label+' '+variant+' slim bottom track',geometry.track.height===3&&geometry.card.bottom-geometry.track.bottom>=0&&geometry.card.bottom-geometry.track.bottom<5&&geometry.track.width>geometry.card.width*.8&&geometry.track.width>geometry.fill.width,geometry);
+  await surface.hover();const paused=await surface.evaluate(n=>window.NotificationCountdown.get(n).state());await p.waitForTimeout(400);const after=await surface.evaluate(n=>window.NotificationCountdown.get(n).state());check(label+' '+variant+' hover pauses',after.phase==='paused'&&Math.abs(after.remainingMs-paused.remainingMs)<15,{paused,after});
+  if(effects==='high')await surface.screenshot({path:path.join(out,label+'-'+variant+'-paused.png')});
+  await p.mouse.move(5,5);await p.waitForTimeout(250);const resumed=await surface.evaluate(n=>window.NotificationCountdown.get(n).state());check(label+' '+variant+' resumes remaining time',resumed.phase==='running'&&resumed.remainingMs<after.remainingMs-120);
+ }
+ await p.locator('[data-ct=notify-countdown-success]').click();await p.mouse.move(5,5);
+ const id='component-demo:countdown:success';
+ if(effects==='high'&&size.theme==='light'){
+  await p.waitForFunction(()=>!document.querySelector('#toastEl').classList.contains('show'),null,{timeout:12000});check(label+' actual8s auto collapse',await p.evaluate(id=>notifications.some(n=>n.id===id&&!n.deleted),id));
+  await p.locator('#notificationBtn').click();await p.locator('#notificationPanel [data-notification="'+id+'"]').click();check(label+' bell restores same example',await p.locator('#toastEl .notification-countdown').count()===1);await p.mouse.move(5,5);
+ }
+ await p.evaluate(()=>window.prototypeNotificationPublisher.reset());check(label+' reset cleans countdowns',await p.locator('.notification-countdown').count()===0);check(label+' history has no countdown',await p.locator('#notificationPanel .notification-countdown').count()===0);await p.close();
+}
+check('no page errors',errors.length===0,errors);
+}finally{await b.close();fs.writeFileSync(path.join(out,'browser-report.json'),JSON.stringify({engine:e.name,checks,errors,failed:checks.filter(x=>!x.passed).length,scope:'component-only prototype countdown; fixed registered demo notifications, actual visible-time checks; no production rollout'},null,2));}
+console.log(JSON.stringify({engine:e.name,checks:checks.length,errors}));

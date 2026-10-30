@@ -1,7 +1,7 @@
 /* 注册事件的公共原型适配器；只投影既有 Toast/Task/铃铛，无真实投递或存储。 */
 (() => {
  'use strict';
- const prefix='component-demo:',hidden=new Set();
+ const prefix='component-demo:',hidden=new Set(),countdowns=new Map();let countdownRevision=0;
  const definitions=new Map(window.MaintenanceEvents.events.filter(e=>e.scope==='prototype-only'&&e.id.startsWith('component.demo.')).map(e=>[e.id,e]));
  const syncDefinitions=new Map(window.MaintenanceEvents.events.filter(e=>e.id.startsWith('sync.')&&e.implemented==='prototype'&&e.consumer==='syncPrototype'&&e.publisher==='prototypeNotificationPublisher').map(e=>[e.id,e]));
  const syncDeliveries=[],syncRevisions=new Map();
@@ -45,6 +45,32 @@
  const phases=['准备样例','核对内容','完成'];
  const states={running:['正在处理示例任务','info',false],success:['示例任务已完成','info',true],failed:['示例任务未完成','warning',false],stopped:['示例任务已停止','info',true]};
  let lastToast='';
+ function renderCountdown(item){
+  countdowns.get(item.id)?.destroy();
+  const variant=item.countdown.variant,duration=definitions.get(item.eventId).toastDurationMs;
+  let host;
+  if(variant==='task'){
+   showTask({notificationId:item.id,title:item.title,phase:item.detail,running:false,kind:'info',steps:[],acts:[]});
+   clearTimeout(taskTimers.get(item.id));taskTimers.delete(item.id);
+   host=[...document.querySelectorAll('#taskHost .task-card')].find(el=>el.dataset.taskNotification===item.id);
+  }else{
+   lastToast=item.title;toast(item.title,{kind:variant,detail:item.detail,duration});
+   clearTimeout(window.__toastTimer);host=document.getElementById('toastEl');
+  }
+  const timer=window.NotificationCountdown.mount(host,{durationMs:duration,onElapsed:()=>{
+   countdowns.delete(item.id);hidden.add(item.id);if(variant==='task')clearTask(item.id);else{host.classList.remove('show');syncNotifHost();}
+  }});countdowns.set(item.id,timer);
+ }
+ function publishCountdown(options){
+  if(Object.keys(options).some(k=>k!=='variant')||!['success','error','task'].includes(options.variant||'success'))throw Error('倒计时演示仅允许已登记样式');
+  const variant=options.variant||'success',id=prefix+'countdown:'+variant;
+  let item=notifications.find(n=>n.id===id);if(item?.deleted)return id;
+  const title=variant==='error'?'示例操作未完成':variant==='task'?'示例任务已完成':'示例操作已完成';
+  if(!item){item={id,eventId:'component.demo.countdown',cat:'system',op:id,dedupe:id,deleted:false};notifications.unshift(item);}
+  Object.assign(item,{title,kind:variant==='error'?'warning':'info',detail:variant==='error'?'可在通知中心查看处理事项。':'结果已保留，可从铃铛查看。',time:clockLabel(),read:variant!=='error',resolved:variant!=='error',demo:{taskId:variant,state:variant==='error'?'failed':'success',step:3,revision:++countdownRevision},countdown:{variant}});
+  if(item.resolved)item.resolvedAt=item.time;
+  hidden.delete(id);renderNotifications();renderCountdown(item);return id;
+ }
  function task(item){
   if(item.deleted||hidden.has(item.id))return;
   const state=item.demo.state,step=item.demo.step;
@@ -53,6 +79,7 @@
  function publish(eventId,options={}){
   if(eventId.startsWith('sync.'))return publishSync(eventId,options);
   const definition=definitions.get(eventId);if(!definition)throw Error('未注册的组件演示通知');
+  if(eventId==='component.demo.countdown')return publishCountdown(options);
   const taskId=options.taskId||'a';if(!['a','b'].includes(taskId))throw Error('无效的演示任务ID');
   const state=options.state||'running',step=options.step??0;
   if(!states[state]||!Number.isInteger(step)||step<0||step>3)throw Error('无效的演示状态');
@@ -74,6 +101,7 @@
   const item=notifications.find(n=>n.id===id&&!n.deleted&&definitions.has(n.eventId));if(!item)return false;
   item.read=true;hidden.delete(id);closeNotificationPanel();renderNotifications();
   if(item.eventId==='component.demo.task')task(item);
+  else if(item.eventId==='component.demo.countdown')renderCountdown(item);
   else openModal(item.title,'<p>'+logEsc(item.detail)+'</p>','关闭',null,{hideConfirm:true,cancelLabel:'关闭',hideNote:true,onExtra:item.resolved?null:()=>resolveNotification(id),extraLabel:'标记已解决',onDelete:()=>deleteNotification(id)});
   return true;
  }
@@ -84,11 +112,12 @@
   publish(item.eventId,{taskId:item.demo.taskId,state,step:name==='retry'?0:step});
  }
  function reset(){
+  countdowns.forEach(timer=>timer.destroy());countdowns.clear();
   for(let i=notifications.length-1;i>=0;i--)if(definitions.has(notifications[i].eventId)){clearTask(notifications[i].id);notifications.splice(i,1);}
   hidden.clear();const el=document.getElementById('toastEl');if(lastToast&&el.textContent.includes(lastToast)){clearTimeout(window.__toastTimer);el.classList.remove('show');}lastToast='';renderNotifications();
  }
  // 删除不影响任务本体，只移除对应观察视图；业务通知不在此订阅范围内。
  new MutationObserver(()=>{for(const n of notifications)if(definitions.has(n.eventId)&&n.deleted)clearTask(n.id);}).observe(document.getElementById('notificationList'),{childList:true,subtree:true});
  document.getElementById('toastEl').addEventListener('click',event=>{const button=event.target.closest('[data-sync-notice]');if(!button)return;event.preventDefault();event.stopImmediatePropagation();openSync(button.dataset.syncNotice);},true);
- window.prototypeNotificationPublisher={publish,open,action,hide:id=>hidden.add(id),reset,state:()=>notifications.filter(n=>definitions.has(n.eventId)).map(n=>({id:n.id,eventId:n.eventId,read:n.read,resolved:n.resolved,deleted:n.deleted,demo:{...n.demo}})),deliveries:()=>JSON.parse(JSON.stringify(syncDeliveries))};
+ window.prototypeNotificationPublisher={publish,open,action,hide:id=>{hidden.add(id);countdowns.get(id)?.destroy();countdowns.delete(id);},reset,state:()=>notifications.filter(n=>definitions.has(n.eventId)).map(n=>({id:n.id,eventId:n.eventId,read:n.read,resolved:n.resolved,deleted:n.deleted,demo:{...n.demo}})),deliveries:()=>JSON.parse(JSON.stringify(syncDeliveries))};
 })();

@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 1180-light-low success slim bottom track {"card":{"x":772,"y":40,"width":392,"height":61.4375,"top":40,"right":1164,"bottom":101.4375,"left":772},"track":{"x":783,"y":95.4375,"width":370,"height":3,"top":95.4375,"right":1153,"bottom":98.4375,"left":783},"fill":{"x":783,"y":95.4375,"width":370,"height":3,"top":95.4375,"right":1153,"bottom":98.4375,"left":783}}
+    at check (file:///private/tmp/ocx-countdown-browser.mjs:2:328)
+    at file:///private/tmp/ocx-countdown-browser.mjs:12:303 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.8.1

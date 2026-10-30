@@ -1,0 +1,545 @@
+{
+  "engine": "chromium",
+  "checks": [
+    {
+      "name": "1180-light-high controls present",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high success existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high success time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 7407.299999952316,
+        "ratio": 0.9259124999940396,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-high success slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 342.65234375,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1125.65234375,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-high success hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 7358.399999976158,
+          "ratio": 0.9197999999970198,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 7358.399999976158,
+          "ratio": 0.9197999999970198,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-high success resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high error existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high error time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 7436.400000095367,
+        "ratio": 0.9295500000119209,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-high error slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 343.97509765625,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1126.97509765625,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-high error hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 7370.700000047684,
+          "ratio": 0.9213375000059605,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 7370.700000047684,
+          "ratio": 0.9213375000059605,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-high error resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high task existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high task time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 7439.399999976158,
+        "ratio": 0.9299249999970197,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-high task slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 111.4375,
+          "width": 392,
+          "height": 78.5,
+          "top": 111.4375,
+          "right": 1164,
+          "bottom": 189.9375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 183.9375,
+          "width": 370,
+          "height": 3,
+          "top": 183.9375,
+          "right": 1153,
+          "bottom": 186.9375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 183.9375,
+          "width": 343.979736328125,
+          "height": 3,
+          "top": 183.9375,
+          "right": 1126.979736328125,
+          "bottom": 186.9375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-high task hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 7389,
+          "ratio": 0.923625,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 7389,
+          "ratio": 0.923625,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-high task resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high actual8s auto collapse",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high bell restores same example",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high reset cleans countdowns",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high history has no countdown",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid controls present",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid success existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid success time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 7404,
+        "ratio": 0.9255,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-mid success slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 342.5321044921875,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1125.5321044921875,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid success hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 7356.299999952316,
+          "ratio": 0.9195374999940396,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 7356.299999952316,
+          "ratio": 0.9195374999940396,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid success resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid error existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid error time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 7439.399999976158,
+        "ratio": 0.9299249999970197,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-mid error slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 344.733642578125,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1127.733642578125,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid error hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 7386.799999952316,
+          "ratio": 0.9233499999940395,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 7386.799999952316,
+          "ratio": 0.9233499999940395,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid error resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid task existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid task time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 7439.899999976158,
+        "ratio": 0.9299874999970198,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-mid task slim bottom track",
+      "passed": true,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 111.4375,
+          "width": 392,
+          "height": 78.5,
+          "top": 111.4375,
+          "right": 1164,
+          "bottom": 189.9375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 183.9375,
+          "width": 370,
+          "height": 3,
+          "top": 183.9375,
+          "right": 1153,
+          "bottom": 186.9375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 183.9375,
+          "width": 344.7752685546875,
+          "height": 3,
+          "top": 183.9375,
+          "right": 1127.7752685546875,
+          "bottom": 186.9375,
+          "left": 783
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid task hover pauses",
+      "passed": true,
+      "detail": {
+        "paused": {
+          "durationMs": 8000,
+          "remainingMs": 7387.699999928474,
+          "ratio": 0.9234624999910593,
+          "phase": "paused",
+          "active": true
+        },
+        "after": {
+          "durationMs": 8000,
+          "remainingMs": 7387.699999928474,
+          "ratio": 0.9234624999910593,
+          "phase": "paused",
+          "active": true
+        }
+      }
+    },
+    {
+      "name": "1180-light-mid task resumes remaining time",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid reset cleans countdowns",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid history has no countdown",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low controls present",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low success existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low success time advances",
+      "passed": true,
+      "detail": {
+        "durationMs": 8000,
+        "remainingMs": 7437.200000047684,
+        "ratio": 0.9296500000059604,
+        "phase": "running",
+        "active": true
+      }
+    },
+    {
+      "name": "1180-light-low success slim bottom track",
+      "passed": false,
+      "detail": {
+        "card": {
+          "x": 772,
+          "y": 40,
+          "width": 392,
+          "height": 61.4375,
+          "top": 40,
+          "right": 1164,
+          "bottom": 101.4375,
+          "left": 772
+        },
+        "track": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        },
+        "fill": {
+          "x": 783,
+          "y": 95.4375,
+          "width": 370,
+          "height": 3,
+          "top": 95.4375,
+          "right": 1153,
+          "bottom": 98.4375,
+          "left": 783
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "failed": 1,
+  "scope": "component-only prototype countdown; fixed registered demo notifications, actual visible-time checks; no production rollout"
+}
