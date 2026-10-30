@@ -2,6 +2,35 @@
 (() => {
  'use strict';
  const prefix='component-demo:',hidden=new Set();let countdownRevision=0;
+ const overviewDefinition=window.MaintenanceEvents.events.find(e=>e.id==='overview.demo.notification'&&e.implemented==='prototype');
+ const overviewPrefix='component-demo:overview:',overviewTimers=new Set();let overviewGeneration=0;
+ const overviewSamples=[{title:'配置已导出',detail:'本次所选配置已导出。',kind:'success',resolved:true},{title:'同步部分完成',detail:'其余项已完成，1项可稍后重试。',kind:'warning',resolved:false},{title:'模型配置已写入',detail:'可从通知中心查看本次结果。',kind:'info',resolved:true}];
+ function clearOverviewViews(){
+  overviewGeneration++;overviewTimers.forEach(clearTimeout);overviewTimers.clear();
+  for(const n of notifications.filter(n=>n.eventId==='overview.demo.notification')){clearTask(n.id);hidden.add(n.id);}
+ }
+ function overview(options){
+  if(!overviewDefinition||Object.keys(options).some(k=>k!=='scene')||!overviewDefinition.variants.includes(options.scene))throw Error('概览通知场景未注册');
+  clearOverviewViews();
+  if(options.scene==='reset'){
+   for(let i=notifications.length-1;i>=0;i--)if(notifications[i].eventId==='overview.demo.notification')notifications.splice(i,1);
+   renderNotifications();return;
+  }
+  const generation=overviewGeneration;
+  function render(index){
+   if(generation!==overviewGeneration)return;
+   const sample=overviewSamples[index],id=overviewPrefix+index;
+   let item=notifications.find(n=>n.id===id);if(item?.deleted)return;
+   if(!item){item={id,eventId:overviewDefinition.id,cat:overviewDefinition.category,op:id,dedupe:id,deleted:false};notifications.unshift(item);}
+   Object.assign(item,{...sample,time:clockLabel(),read:sample.resolved,overview:{index,generation}});if(sample.resolved)item.resolvedAt=item.time;
+   hidden.delete(id);renderNotifications();showTask({notificationId:id,title:item.title,phase:item.detail,running:false,kind:item.kind,steps:[],acts:[]});
+  }
+  if(options.scene==='single'){render(0);return;}
+  overviewSamples.forEach((_,index)=>{
+   if(options.scene!=='staggered'||index===0){render(index);return;}
+   const timer=setTimeout(()=>{overviewTimers.delete(timer);render(index);},index*1100);overviewTimers.add(timer);
+  });
+ }
  const definitions=new Map(window.MaintenanceEvents.events.filter(e=>e.scope==='prototype-only'&&e.id.startsWith('component.demo.')).map(e=>[e.id,e]));
  const syncDefinitions=new Map(window.MaintenanceEvents.events.filter(e=>e.id.startsWith('sync.')&&e.implemented==='prototype'&&e.consumer==='syncPrototype'&&e.publisher==='prototypeNotificationPublisher').map(e=>[e.id,e]));
  const syncDeliveries=[],syncRevisions=new Map();
@@ -70,6 +99,7 @@
   showTask({notificationId:item.id,title:item.title,phase:item.detail,running:state==='running',kind:state==='stopped'?'neutral':item.kind,steps:phases.map((p,i)=>[p,i<step?'done':i===step&&state==='running'?'active':state==='failed'&&i===step?'failed':'pending']),acts:state==='running'?[['推进一步','component-demo-next'],['停止','component-demo-stop']]:state==='failed'?[['重试','component-demo-retry']]:[]});
  }
  function publish(eventId,options={}){
+  if(eventId==='overview.demo.notification')return overview(options);
   if(eventId.startsWith('sync.'))return publishSync(eventId,options);
   const definition=definitions.get(eventId);if(!definition)throw Error('未注册的组件演示通知');
   if(eventId==='component.demo.countdown')return publishCountdown(options);
@@ -90,6 +120,8 @@
   renderNotifications();if(eventId==='component.demo.task')task(item);return id;
  }
  function open(id){
+  const overviewItem=notifications.find(n=>n.id===id&&!n.deleted&&n.eventId==='overview.demo.notification');
+  if(overviewItem){overviewItem.read=true;hidden.delete(id);closeNotificationPanel();renderNotifications();showTask({notificationId:id,title:overviewItem.title,phase:overviewItem.detail,running:false,kind:overviewItem.kind,steps:[],acts:[]});return true;}
   if(notifications.some(n=>n.id===id&&syncDefinitions.has(n.eventId)))return openSync(id);
   const item=notifications.find(n=>n.id===id&&!n.deleted&&definitions.has(n.eventId));if(!item)return false;
   item.read=true;hidden.delete(id);closeNotificationPanel();renderNotifications();

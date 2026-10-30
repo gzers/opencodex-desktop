@@ -92,7 +92,7 @@ test('确认保存后仅原 notifHost 一次已写入反馈，默认焦点立即
 
 test('收起仅入现有铃铛，打开铃铛不铺开任务，点对应通知才恢复；重启复用共享确认弹窗',async t=>{
  const h=await make('#models');t.after(()=>h.dispose());const d=h.document,id=await saved(h),key='model-policy-save:'+id;
- h.click(selector+' [data-collapse=task]');await h.wait(260);assert.equal(d.querySelector(selector),null);assert.equal(d.querySelector('#taskReopenHint,.task-reopen'),null);
+ h.click(selector+' [data-collapse=task]');await h.wait(h.w.NotificationMotion.durationMs+40);assert.equal(d.querySelector(selector),null);assert.equal(d.querySelector('#taskReopenHint,.task-reopen'),null);
  h.w.modelPrototype.render();assert.equal(d.querySelector(selector),null);
  h.click('#notificationBtn');assert.ok(d.querySelector('#notificationPanel.show'));assert.equal(d.querySelector(selector),null);
  h.click('[data-notification="'+key+'"]');assert.equal(d.querySelectorAll(selector).length,1);
@@ -117,7 +117,7 @@ test('旧 success / confirmed / pending 仅保留完成历史，不产生提示�
 test('终态焦点停留时暂停，离开后8秒收起且仅从铃铛查看，重渲染不重复提示',async t=>{
  const h=await make('#models');t.after(()=>h.dispose());await saved(h);
  const card=h.document.querySelector(selector),timer=h.w.NotificationCountdown.get(card);assert.equal(timer.state().phase,'paused');
- h.document.querySelector('#notificationBtn').focus();assert.equal(timer.state().phase,'running');await h.wait(8150);
+ h.document.querySelector('#notificationBtn').focus();assert.equal(timer.state().phase,'running');await h.wait(8150+h.w.NotificationMotion.durationMs);
  assert.equal(h.document.querySelector(selector),null);h.w.modelPrototype.render();assert.equal(h.document.querySelector(selector),null);
  h.click('#notificationBtn');assert.equal(h.document.querySelector(selector),null);assert.equal(h.document.querySelector('#taskReopenHint,.task-reopen'),null);noEffects(h);
 });

@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 1180-light-mid next card smoothly moves upward {"matrix":"none","anim":[]}
+    at check (file:///private/tmp/ocx-bell-motion-browser.mjs:2:328)
+    at file:///private/tmp/ocx-bell-motion-browser.mjs:15:208
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:541:9) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.8.1

@@ -3277,6 +3277,16 @@ ocx update</code></pre>
         <button type="button" id="notifExit">返回原型菜单</button>
       </div>
     </div>
+    <div class="proto-card" id="overviewNotificationDemoCard" data-proto-contexts="overview" hidden>
+      <div class="proto-note-title">通知收起 · 铃铛动画</div>
+      <div class="pctl-grid" role="group" aria-label="概览通知动画模拟">
+        <button type="button" data-overview-notification="single">单条通知</button>
+        <button type="button" data-overview-notification="stack">三条通知</button>
+        <button type="button" data-overview-notification="staggered">依次自动收起</button>
+        <button type="button" data-overview-notification="reset">重置模拟</button>
+      </div>
+      <p class="pctl-hint">点击卡片右上角收起到铃铛；多条时后续通知平滑上移。“依次自动收起”分次出现，均停留8秒。固定内存示例，不执行导出、同步或保存；重置只清此组模拟。</p>
+    </div>
     <div class="proto-card" id="syncFileDemoCard" data-proto-contexts="sync:file" hidden>
       <div class="proto-note-title">文件同步 · 导入文件</div>
       <label class="proto-mock-field"><span>选择文件时返回的示例包</span>
@@ -3701,6 +3711,7 @@ ocx update</code></pre>
 <script src="data-paths.js"></script>
 <script src="maintenance-events.js?v=20261015-external-task"></script>
 <script src="notification-countdown.js?v=20261030-component"></script>
+<script src="notification-motion.js?v=20261030-bell"></script>
 <script>
 const statePill=document.getElementById('statePill');
 const installArea=document.getElementById('installArea');
@@ -6211,6 +6222,7 @@ function openNotificationDetail(id){
   const item=notifications.find(entry=>entry.id===id);
   if(!item) return;
   if(item.eventId?.startsWith('component.demo.')){window.prototypeNotificationPublisher?.open(item.id);return;}
+  if(item.eventId==='overview.demo.notification'){window.prototypeNotificationPublisher?.open(item.id);return;}
   if(item.eventId?.startsWith('sync.')){window.prototypeNotificationPublisher?.open(item.id);return;}
   if(item.eventId==='model.template.external'){window.openExternalTaskNotification?.(item.id);return;}
   if(item.eventId==='model.policy.save'){window.openModelSaveNotification(item.id);return;}
@@ -6361,28 +6373,12 @@ document.getElementById('notificationClear').onclick=()=>markAllNotificationsRea
 // 收起到铃铛：任何通知表面（通知中心 / Toast / 任务卡）右上角都走同一条路径。
 // 只做视觉收起，不改动已读 / 已解决 / 删除，也不取消后台任务；铃铛脉冲提示「内容在这儿」。
 function collapseToBell(el,onDone){
-  const bell=document.getElementById('notificationBtn');
-  const finish=()=>{
-    if(el){el.style.transformOrigin='';el.style.transition='';el.style.transform='';el.style.opacity='';}
-    if(onDone)onDone();
-    pulseBell();
-  };
-  if(!el||!bell){finish();return;}
-  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduce){finish();return;}
-  const r=el.getBoundingClientRect(), b=bell.getBoundingClientRect();
-  const dx=Math.round((b.left+b.width/2)-r.right);
-  const dy=Math.round((b.top+b.height/2)-r.top);
-  el.style.transformOrigin='top right';
-  el.style.transition='transform .22s cubic-bezier(.4,0,.2,1),opacity .22s ease';
-  el.style.transform='translate('+dx+'px,'+dy+'px) scale(.06)';
-  el.style.opacity='0';
-  clearTimeout(window.__collapseTimer);
-  window.__collapseTimer=setTimeout(finish,230);
+  return window.NotificationMotion.collapse(el,{onDone:()=>{if(onDone)onDone();pulseBell();}});
 }
 function resetPanelTransform(){
-  [notificationPanel,document.getElementById('toastEl'),document.querySelector('#taskHost .task-card')].forEach(el=>{
+  [notificationPanel].forEach(el=>{
     if(!el) return;
+    window.NotificationMotion.cancel(el);
     el.style.transformOrigin='';el.style.transition='';el.style.transform='';el.style.opacity='';
   });
 }
@@ -7170,6 +7166,7 @@ function notificationTone(kind,fallback='info'){
 function toast(msg,opts){
   opts=opts||{};
   const el=document.getElementById('toastEl');
+  window.NotificationMotion.cancel(el);
   window.NotificationCountdown.get(el)?.destroy();
   const useCard=!!opts.kind||document.body.classList.contains('notif-mode');
   if(useCard){
@@ -7184,7 +7181,7 @@ function toast(msg,opts){
   clearTimeout(window.__toastTimer);
   const duration=opts.duration||(opts.kind==='error'?5200:2200);
   window.__toastTimer=null;
-  window.NotificationCountdown.mount(el,{durationMs:duration,tone:notificationTone(opts.kind,'success'),onElapsed:()=>{el.classList.remove('show');syncNotifHost();}});
+  window.NotificationCountdown.mount(el,{durationMs:duration,tone:notificationTone(opts.kind,'success'),onElapsed:()=>collapseToBell(el,()=>{el.classList.remove('show');syncNotifHost();})});
   syncNotifHost();
 }
 
@@ -7203,7 +7200,7 @@ function scheduleTaskCollapse(card,tone){
   if(key)cancelTaskCountdown(key);
   const timer=window.NotificationCountdown.mount(card,{durationMs:TASK_TERMINAL_TTL,tone:notificationTone(tone),onElapsed:()=>{
     if(key){taskTimers.delete(key);if(key.startsWith('component-demo:'))window.prototypeNotificationPublisher?.hide(key);else window.hideModelSaveNotification?.(key);}
-    card.remove();syncNotifHost();
+    collapseToBell(card,()=>{card.remove();syncNotifHost();});
   }});
   if(key)taskTimers.set(key,timer);
 }
@@ -7236,6 +7233,7 @@ function showTask(cfg){
   const mergeKey=taskKeyOf(cfg);
   const existing=[...host.querySelectorAll('.task-card')].find(card=>(card.dataset.taskNotification||'')===key);
   if(existing){
+    window.NotificationMotion.cancel(existing);
     cancelTaskCountdown(key);
     window.NotificationCountdown.get(existing)?.destroy();
     existing.outerHTML=markup;
@@ -7274,7 +7272,7 @@ function showTask(cfg){
 function clearTask(notificationId=''){
   const host=document.getElementById('taskHost');
   cancelTaskCountdown(notificationId);
-  if(host)[...host.querySelectorAll('.task-card')].filter(card=>(card.dataset.taskNotification||'')===notificationId).forEach(card=>{window.NotificationCountdown.get(card)?.destroy();card.remove();});
+  if(host)window.NotificationMotion.reflow(()=>[...host.querySelectorAll('.task-card')].filter(card=>(card.dataset.taskNotification||'')===notificationId).forEach(card=>{window.NotificationMotion.cancel(card);window.NotificationCountdown.get(card)?.destroy();card.remove();}));
   syncNotifHost();
 }
 // 模型保存注册到既有通知实体及壳层任务宿主；收起仅是视图状态，不取消任务或解决通知。
@@ -7379,7 +7377,8 @@ function positionNotifHost(){
   s.left='auto';s.right='auto';s.top='auto';s.bottom='auto';s.removeProperty('--host-max');
   if(!win)return;
   const r=win.getBoundingClientRect();
-  let top=Math.max(gap,r.top+40);
+  const bell=document.getElementById('notificationBtn')?.getBoundingClientRect();
+  let top=Math.max(gap,r.top+40,bell?.height?bell.bottom+12:0);
   // 通知中心面板与 Toast / 任务卡都在窗口右上；面板展开时把浮层顺序下移，避免互相压盖。
   const panel=document.getElementById('notificationPanel');
   if(panel&&panel.classList.contains('show')&&host.offsetHeight>0){
@@ -7468,6 +7467,7 @@ function setGlowRender(mode){
 document.querySelectorAll('#glowRenderChips button,#glowRenderSeg button').forEach(b=>{b.onclick=()=>setGlowRender(b.dataset.glowRender);});
 setGlowRender(new URLSearchParams(location.search).get('glowRender')||GLOW_RENDER_DEFAULT);
 window.addEventListener('resize',syncNotifHost);
+window.addEventListener('scroll',syncNotifHost,true);
 try{new MutationObserver(syncNotifHost).observe(document.documentElement,{attributes:true,attributeFilter:['style']});}catch(e){}
 
 const demoExtraNotifications=[

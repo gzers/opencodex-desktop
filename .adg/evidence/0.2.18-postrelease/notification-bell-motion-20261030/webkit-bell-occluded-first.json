@@ -1,0 +1,89 @@
+{
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "1180-light-high overview mock options visible",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high3 registered cards same existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high countdown/type styles retained",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high taper travels into bell",
+      "passed": true,
+      "detail": {
+        "state": "collapsing",
+        "transform": "matrix(0.921138, 0, 0, 0.968455, 16.277201, -1.348547)",
+        "clip": "polygon(7.530529% 0px, 100% 0px, 94.979645% 100%, 0px 100%)",
+        "opacity": 0.960569,
+        "animations": [
+          {
+            "duration": 420,
+            "frames": [
+              {
+                "transform": "translate(0px) scale(1)",
+                "clipPath": "polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%)"
+              },
+              {
+                "transform": "translate(20.64px, -1.71px) scale(0.9, 0.96)",
+                "clipPath": "polygon(12% 0px, 100% 0px, 92% 100%, 0px 100%)"
+              },
+              {
+                "transform": "translate(120.4px, -9.2625px) scale(0.32, 0.55)",
+                "clipPath": "polygon(34% 0px, 100% 0px, 76% 100%, 0px 100%)"
+              },
+              {
+                "transform": "translate(172px, -14.25px) scale(0.036429, 0.18)",
+                "clipPath": "polygon(50% 0px, 100% 0px, 75% 100%, 25% 100%)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "1180-light-high source keeps slot during travel",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high next card smoothly moves upward",
+      "passed": true,
+      "detail": {
+        "matrix": "matrix(1, 0, 0, 1, 0, 19.085516)",
+        "anim": [
+          240
+        ]
+      }
+    },
+    {
+      "name": "1180-light-high next card occupies top slot",
+      "passed": true,
+      "detail": {
+        "initial": {
+          "x": 827,
+          "y": 150,
+          "width": 392,
+          "height": 78.5
+        },
+        "next": {
+          "x": 827,
+          "y": 150,
+          "width": 392,
+          "height": 78.5
+        }
+      }
+    },
+    {
+      "name": "1180-light-high flags unchanged by collapse",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "failed": 0,
+  "scope": "mock prototype notification flight + existing host restack; no real export/sync/save/native app"
+}

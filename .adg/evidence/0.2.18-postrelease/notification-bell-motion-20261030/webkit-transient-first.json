@@ -1,0 +1,174 @@
+{
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "1180-light-high overview mock options visible",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high3 registered cards same existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high countdown/type styles retained",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high taper travels into bell",
+      "passed": true,
+      "detail": {
+        "state": "collapsing",
+        "transform": "matrix(0.917292, 0, 0, 0.966917, 17.071012, -6.773818)",
+        "clip": "polygon(8.147228% 0px, 100% 0px, 94.568512% 100%, 0px 100%)",
+        "opacity": 0.958646,
+        "animations": [
+          {
+            "duration": 420,
+            "frames": [
+              {
+                "transform": "translate(0px) scale(1)",
+                "clipPath": "polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%)"
+              },
+              {
+                "transform": "translate(20.64px, -8.19px) scale(0.9, 0.96)",
+                "clipPath": "polygon(12% 0px, 100% 0px, 92% 100%, 0px 100%)"
+              },
+              {
+                "transform": "translate(120.4px, -44.3625px) scale(0.32, 0.55)",
+                "clipPath": "polygon(34% 0px, 100% 0px, 76% 100%, 0px 100%)"
+              },
+              {
+                "transform": "translate(172px, -68.25px) scale(0.036429, 0.18)",
+                "clipPath": "polygon(50% 0px, 100% 0px, 75% 100%, 25% 100%)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "1180-light-high source keeps slot during travel",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high next card smoothly moves upward",
+      "passed": true,
+      "detail": {
+        "matrix": "matrix(1, 0, 0, 1, 0, 67.632553)",
+        "anim": [
+          240
+        ]
+      }
+    },
+    {
+      "name": "1180-light-high next card occupies top slot",
+      "passed": true,
+      "detail": {
+        "initial": {
+          "x": 827,
+          "y": 204,
+          "width": 392,
+          "height": 78.5
+        },
+        "next": {
+          "x": 827,
+          "y": 204,
+          "width": 392,
+          "height": 78.5
+        }
+      }
+    },
+    {
+      "name": "1180-light-high flags unchanged by collapse",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high bell restores same card",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high concurrent independent collapse leaves third",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high new toast cancels old flight",
+      "passed": true
+    },
+    {
+      "name": "1180-light-highstaggered arrivals3",
+      "passed": true
+    },
+    {
+      "name": "1180-light-highfirst auto-shrinks before next",
+      "passed": true
+    },
+    {
+      "name": "1180-light-highall automatic records remain in bell",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high reduced motion immediate no flying card",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid overview mock options visible",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid3 registered cards same existing host",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid countdown/type styles retained",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid taper travels into bell",
+      "passed": true,
+      "detail": {
+        "state": "collapsing",
+        "transform": "matrix(0.919226, 0, 0, 0.96769, 16.671812, -6.615414)",
+        "clip": "polygon(8.359094% 0px, 100% 0px, 94.427269% 100%, 0px 100%)",
+        "opacity": 0.959613,
+        "animations": [
+          {
+            "duration": 420,
+            "frames": [
+              {
+                "transform": "translate(0px) scale(1)",
+                "clipPath": "polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%)"
+              },
+              {
+                "transform": "translate(20.64px, -8.19px) scale(0.9, 0.96)",
+                "clipPath": "polygon(12% 0px, 100% 0px, 92% 100%, 0px 100%)"
+              },
+              {
+                "transform": "translate(120.4px, -44.3625px) scale(0.32, 0.55)",
+                "clipPath": "polygon(34% 0px, 100% 0px, 76% 100%, 0px 100%)"
+              },
+              {
+                "transform": "translate(172px, -68.25px) scale(0.036429, 0.18)",
+                "clipPath": "polygon(50% 0px, 100% 0px, 75% 100%, 25% 100%)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "1180-light-mid source keeps slot during travel",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid next card smoothly moves upward",
+      "passed": false,
+      "detail": {
+        "matrix": "none",
+        "anim": []
+      }
+    }
+  ],
+  "errors": [],
+  "failed": 1,
+  "scope": "mock prototype notification flight + existing host restack; no real export/sync/save/native app"
+}

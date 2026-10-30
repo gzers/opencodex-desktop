@@ -85,6 +85,7 @@
   side.addEventListener('click', event => {
     const button = event.target.closest?.('button');
     if (!button || !side.contains(button)) return;
+    if (button.dataset.overviewNotification) {window.prototypeNotificationPublisher.publish('overview.demo.notification',{scene:button.dataset.overviewNotification});return;}
     if (button.dataset.sxProtectionDemo) {window.syncPrototype?.setProtectionDemo(button.dataset.sxProtectionDemo);return;}
     if (!button.closest('#protoStdCards')) return;
     const group = button.closest('.pctl-chips, .pctl-grid, .pctl-tiles');

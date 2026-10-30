@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-30",
+  "project": "opencodex-desktop",
+  "phase": "prototype motion and overview mock only",
+  "basis": "docs/governance-main a088da258 plus existing unrelated panorama/Logo edits excluded from commit",
+  "entry": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html#overview",
+  "sourceHashes": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "add2452c1753fdf6187ef447a45f5e2e63da230064b5bf284faee4e0bbe0de0b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-motion.js": "dd62db56a38d85aee1c378c43d343978106115f6e3b134f0269d75b94433ff18",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-motion.test.cjs": "69cf02ca4e1f79ac3dd5758b11b024cba702f917c71950109f54569cfa7ac81c",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-panel.js": "b6f0e4dae48ee667d5feee664d1e8754281104387bfa7bf87c1141c3ac40cd75",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-notification-publisher.js": "805bbad5e6a2a609968fa08e2aeac9d142015d53a33bc3bcf5002be0fb66295f",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/maintenance-events.js": "b517d6f917c3f9ccc27234af68bae27cd1bce98b8d79f8d6b06fc26148631ab6",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-catalog.js": "9e65279a92ce9f516fc2eb8ca59e3e71b97fdc20c414ccbd0528c7ed140dd528",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.test.cjs": "a23850bd6acd2c6c2d5709807195284afcb50c9ac45ac188cd42d0e4020a2b84",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-notification.test.cjs": "b2316f26eb3b31d860a0c75e3034659596a3ed5b98ef6ba8c9859f218c6ba37f"
+  },
+  "stagedEntrySha256": "aa0c889c9f342c7ac6a3ce894d9e1c80f01763f6cce09948640c38952d222891",
+  "checks": {
+    "motionCountdownDom": {
+      "passed": 22,
+      "failed": 0
+    },
+    "existingModelAnnotationVersionAndRegistry": {
+      "passed": 45,
+      "failed": 0
+    },
+    "syncNotificationTargeted": {
+      "passed": 6,
+      "failed": 0
+    },
+    "chromium": {
+      "passed": 76,
+      "failed": 0,
+      "pageErrors": 0
+    },
+    "webkit": {
+      "passed": 76,
+      "failed": 0,
+      "pageErrors": 0
+    }
+  },
+  "motion": {
+    "collapseMs": 420,
+    "restackMs": 240,
+    "autoDwellMs": 8000,
+    "staggerMs": 1100,
+    "reducedMotion": "immediate removal without flight or restack"
+  },
+  "retainedFailures": {
+    "bellOcclusion": "Initial native locator clicks blocked by original host covering bell; fixed host top to bell bottom+12 and verified ordinary clicks",
+    "transientSampling": "100ms wall sleep sampled animation before rendering in one engine and restack after finish in another; final QA pauses actual WAAPI flight at150ms and records actual keyframes, then resumes and verifies end; automatic stagger remains untouched",
+    "viewport": "Clicking low right tool panel scrolls outer review canvas, screenshot scrolls product back causing stale fixed-host top; added capture-scroll positioning and final script explicitly restores product in view before geometry comparison, no locator force or error filters"
+  },
+  "identity": "Mock overview.demo.notification registered before publishing, no duplicate notification host; collapse leaves read/resolved/deleted unchanged; reset clears overview namespace only",
+  "softwareChanged": false,
+  "nativeMacOsOrWindowsClaimed": false,
+  "realFilesNetworkCredentialsCommands": false
+}
