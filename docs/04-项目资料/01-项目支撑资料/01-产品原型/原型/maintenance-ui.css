@@ -1,9 +1,9 @@
 /* 0.1.10 增量只布局维护内容，材质和按钮消费现有组件令牌。 */
 .mnt-status { margin-left:auto; font-size:var(--text-label); color:var(--muted); white-space:normal; }
 /* 版本行：左名右值，两端同字号同字重；未检查右侧只写「—」，不画点、不写状态词。 */
-.mnt-version-row { display:flex; width:100%; gap:10px; align-items:center; justify-content:space-between; min-height:18px; border:0; padding:0; background:transparent; color:var(--muted); font:inherit; font-size:inherit; line-height:inherit; text-align:left; cursor:pointer; }
-.mnt-version-row .mnt-version-side { display:inline-flex; align-items:center; justify-content:flex-end; gap:6px; flex:none; white-space:nowrap; font-variant-numeric:tabular-nums; color:var(--text); font-weight:600; }
-.mnt-version-latest { font-weight:600; color:var(--text); }
+.mnt-version-row { display:flex; width:100%; gap:10px; align-items:center; justify-content:space-between; min-height:18px; border:0; padding:0; background:transparent; color:var(--text); font:inherit; font-size:inherit; font-weight:400; line-height:inherit; text-align:left; cursor:pointer; }
+.mnt-version-row .mnt-version-side { display:inline-flex; align-items:center; justify-content:flex-end; gap:6px; flex:none; white-space:nowrap; font-variant-numeric:tabular-nums; color:var(--text); font-weight:400; }
+.mnt-version-latest { font-weight:400; color:var(--text); }
 .mnt-version-side .mnt-status { margin-left:0; }
 /* 状态点复用概览统一状态色（见 index.html .ov-state-dot），此处不再自定义颜色。 */
 .mnt-dot { width:7px; height:7px; border-radius:50%; background:var(--muted); flex:none; }

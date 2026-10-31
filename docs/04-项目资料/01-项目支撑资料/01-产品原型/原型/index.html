@@ -747,8 +747,10 @@ h4.cli-help-title.official{margin-top:18px}
 .mod-go svg{width:13px;height:13px;display:block}
 .mod-status{display:grid;gap:6px;font-size:var(--text-label);color:var(--muted)}
 /* 只作用在卡片的状态行本身，不改内层图标尺寸（否则圆点会被 min-height 拉成竖条）。 */
-.mod-status>span{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:18px;line-height:18px}
-.mod-status b{color:var(--text);font-weight:600;white-space:nowrap}
+.mod-status>span{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:18px;line-height:18px;color:var(--text)}
+/* 概览状态区只有一种字号与字重：子元素继承行字号（12/紧凑 11），统一 400，只用颜色区分主次，避免中文加重后显大。 */
+.mod-status *{font-size:inherit;font-weight:400;letter-spacing:normal}
+.mod-status b{color:var(--text);white-space:nowrap}
 .mod-status b.warning{color:var(--amber)}
 /* ── 概览状态色：唯一口径（一处定义，卡片/版本行/WebDAV 共用；勿在别处另写颜色）──
    ok   绿  有更新、待上传
@@ -762,7 +764,7 @@ h4.cli-help-title.official{margin-top:18px}
 .ov-state-dot.is-info{background:var(--blue)}
 .ov-state-dot.is-warn{background:var(--amber)}
 .ov-state-dot.is-error{background:var(--red)}
-.ov-state-text{font-weight:600;color:var(--text);white-space:nowrap}
+.ov-state-text{font-weight:500;color:var(--text);white-space:nowrap}
 .ov-state-text.is-ok{color:var(--green)}
 .ov-state-text.is-info{color:var(--blue)}
 .ov-state-text.is-warn{color:var(--amber)}
