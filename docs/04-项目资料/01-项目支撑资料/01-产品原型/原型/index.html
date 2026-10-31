@@ -126,7 +126,9 @@ html[data-theme="dark"]{
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
-  font-family:"OpenAI Sans","Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  /* 汉字优先走简体中文字体：韩文字体（Apple SD Gothic Neo / Noto Sans KR）排在前面时，
+     不同汉字会拿到不同字宽（实测「概览」28px、「面板」24.2px），看起来字号不一致。 */
+  font-family:"OpenAI Sans","Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Noto Sans SC","Microsoft YaHei","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
   background:#ececf0;color:var(--text);font-size:var(--text-body);line-height:1.5;
 }
 html[data-theme="dark"] body{background:#111111}

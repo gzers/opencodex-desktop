@@ -151,6 +151,10 @@ macOS 用 `titleBarStyle: "Overlay"`（原生红黄绿压在网页内容上，�
 | 阴影 | `--shadow` / `--shadow-sm` / `--shadow-md` / `--shadow-card` |
 | 字体 | `--font-ui` / `--font-code` |
 
+**中文回退顺序（2026-10-31 实测，必须遵守）**：`--font-ui` 的汉字回退位必须排在韩文字体之前，顺序为 `"OpenAI Sans","Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Noto Sans SC","Microsoft YaHei","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif`。
+
+原因：本机未装 OpenAI Sans / Pretendard 时，若把 `Apple SD Gothic Neo` / `Noto Sans KR` 排在前面，汉字会由韩文字体渲染，同一套界面里不同汉字拿到不同字宽（实测 14px 下「概览」「诊断」28px，「面板」「模型」「拓展」「同步」24.2px），视觉上就是“有的字偏大”。换成简体中文字体后 7 项导航统一 28×17px。修改字体栈后需重跑 `nav-typography` 实屏断言（同一字号下行内所有中文标签字宽必须一致）。
+
 ### 2.5 状态语义色（唯一口径，2026-10-31 确认）
 
 概览卡片、版本行、渠道/模型状态、同步方向等所有“当前处于什么状态”的展示，只按本表取色。**只有语义，不按模块另设颜色**；同一语义在亮/暗主题下只换令牌值，不换语义。原型实现为 `#route-overview` 内的 `.ov-state-dot` / `.ov-state-text` / `.mnt-dot`，色值一律引用 §2.1 的 `--green` / `--blue` / `--amber` / `--red` / `--muted`。
