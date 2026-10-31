@@ -186,7 +186,8 @@ button{font:inherit}
   min-height:var(--control-lg);padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;text-align:left;transition:background var(--motion-fast),color var(--motion-fast);
 }
 .nav button:hover{background:var(--hover);color:var(--text)}
-.nav button.active{background:var(--accent-soft);color:var(--text);font-weight:600}
+/* 选中态只用底色与文字色区分：加粗会让中文在两字标签上明显变大，造成“字号不一致”的错觉。 */
+.nav button.active{background:var(--accent-soft);color:var(--text);font-weight:inherit}
 .nav .tag{margin-left:auto;font-size:var(--text-micro);padding:2px 6px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--panel);color:var(--muted)}
 .side-note{margin-top:auto;color:var(--muted);font-size:var(--text-caption);line-height:1.5}
 .theme-seg{display:inline-flex;gap:2px;padding:2px;border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--panel)}
@@ -734,8 +735,11 @@ h4.cli-help-title.official{margin-top:18px}
 .mods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .mods>.card{margin-top:0}
 .mod{display:flex;flex-direction:column;gap:10px}
-/* 右上角「原型」标记单独占一行高度，标题、状态与箭头不再被它压住；窄窗也不会挤成两行。 */
-.mod-head{display:flex;align-items:center;gap:10px;padding-top:12px}
+/* 「原型」标记是绝对定位覆盖层，不占文档流：卡片标题行保持原来的起始位置，不被顶下去。 */
+.mod-head{display:flex;align-items:center;gap:10px}
+/* 让标记相对整张卡片定位（而非标题行），浮在卡片上沿，既不顶下正文，也不压住右上角 ⋯。 */
+#mods .mod{position:relative}
+#mods .mod-head{position:static}
 .mod-head h3{flex:0 0 auto;white-space:nowrap}
 /* 版本与 WebDAV 的状态已在卡片正文逐行给出（含方向色），头部不再重复一枚标签。 */
 #card-overview-upgrade .mod-head>.tag,#card-overview-sync .mod-head>.tag{display:none}
