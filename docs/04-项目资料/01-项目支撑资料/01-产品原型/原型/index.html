@@ -759,8 +759,8 @@ h4.cli-help-title.official{margin-top:18px}
 .mod-status b{color:var(--text);white-space:nowrap}
 .mod-status b.warning{color:var(--amber)}
 /* ── 概览状态色：唯一口径（一处定义，卡片/版本行/WebDAV 共用；勿在别处另写颜色）──
-   ok   绿  有更新、待上传
-   info 蓝  进行中、待下载、双向更新
+   ok   绿  有更新、成功
+   info 蓝  进行中、版本更新
    warn 琥珀 部分失败、未完成
    error 红  失败
    idle 灰  已一致、未连接（无强调色）
@@ -1724,7 +1724,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="../proto-controls.css">
 <link rel="stylesheet" href="action-menu.css?v=20261014-channel-actions">
 <link rel="stylesheet" href="model-config.css?v=20261027-0214">
-<link rel="stylesheet" href="sync-config.css?v=4">
+<link rel="stylesheet" href="sync-config.css?v=20261031-snapshot-preview">
 <link rel="stylesheet" href="conversation-config.css?v=20261028-model-picker">
 <link rel="stylesheet" href="transport-config.css?v=20261027-dialog-policy">
 <link rel="stylesheet" href="dialog-policy.css?v=20261027">
@@ -1947,7 +1947,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           <div class="mod-head">
             <div class="proto-annotation" id="ann-ov-sync" data-annotation-number="05" data-annotation-title="WebDAV 连接为演示数据" data-annotation-category="实现边界 · 概览">
               <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 05：WebDAV 连接为演示数据"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">05</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
-              <div class="annotation-source" hidden><p>卡片只回答两件事：连接是否可用、这次往哪个方向走。线上版本时间为远端快照时间；绿=待上传、蓝=待下载、灰=已一致、琥珀=未完成，方向由所选对象新旧自动决定，不额外确认。连接配置、测试连接与同步结果均为演示数据，真实网络请求不在原型内发起。</p><div class="annotation-footer">实现边界 · 概览</div></div>
+              <div class="annotation-source" hidden><p>卡片只显示连接、云端版本时间与更新状态。点击同步在概览原位打开同步预览，来源按整份快照新旧确定；确认才更新，取消不写。下载与导入默认勾选更新前备份。连接配置、测试连接与同步结果均为演示数据，真实网络请求不在原型内发起。</p><div class="annotation-footer">实现边界 · 概览</div></div>
             </div>
             <h3>WebDAV 同步</h3>
             <span class="tag" id="syncTag">未配置</span>
@@ -3388,15 +3388,15 @@ ocx update</code></pre>
         </div>
         <div class="pctl-sub">同步支线 · 进度 / 结果</div>
         <div class="pctl-grid">
-          <button type="button" data-webdav="pending-upload">待上传</button>
-          <button type="button" data-webdav="pending-download">待下载</button>
-          <button type="button" data-webdav="bidirectional">双向更新</button>
+          <button type="button" data-webdav="local-newer">本机新版</button>
+          <button type="button" data-webdav="remote-newer">云端新版</button>
+          <button type="button" data-webdav="ready">有更新</button>
           <button type="button" data-webdav="syncing">同步中</button>
           <button type="button" data-webdav="synced">已同步</button>
           <button type="button" data-webdav="partial">部分完成</button>
         </div>
       </div>
-      <p class="pctl-hint">卡片只讲连接是否可用和这次的方向：绿=待上传、蓝=待下载、灰=已一致、琥珀=未完成；方向由所选对象新旧自动决定，不再手选。未配置时动作区只留“配置 WebDAV”；只驱动 mock 投影，不新增覆盖确认。</p>
+      <p class="pctl-hint">卡片显示连接与版本状态；本机新版/云端新版仅是工具板场景，软件不显示双向模式。点击同步先在原页预览变化，确认后才更新；下载默认勾选备份。所有数据与备份均为内存示例。</p>
     </div>
     <div class="proto-card" data-proto-contexts="overview settings:installation">
       <div class="proto-note-title">环境前置条件（mock 投影）</div>
@@ -5457,7 +5457,7 @@ const cliHelpHtml = `
       <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd backup create --json" title="复制 ocxd backup create --json"><code>ocxd backup create --json</code></button></td><td>生成数据目录备份，备份语义与 GUI 一致。</td></tr>
       <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd export --confirm --json" title="复制 ocxd export --confirm --json"><code>ocxd export --confirm --json</code></button></td><td>生成所选范围的配置包，加密可选；确认标志表示执行本次导出。</td></tr>
       <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd import --confirm --json" title="复制 ocxd import --confirm --json"><code>ocxd import --confirm --json</code></button></td><td>导入前校验容器并自动备份；确认标志表示准备执行变更。</td></tr>
-      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd sync run --json" title="复制 ocxd sync run --json"><code>ocxd sync run --json</code></button></td><td>按所选范围执行 WebDAV 双向同步，较新内容直接更新；独立失败项可重试。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd sync run --json" title="复制 ocxd sync run --json"><code>ocxd sync run --json</code></button></td><td>按配置快照版本覆盖所选范围；图形界面先预览并确认变化，独立失败项可重试。</td></tr>
     </tbody>
   </table>
 
@@ -6003,13 +6003,15 @@ document.addEventListener('click',event=>{
   }else if(action==='mcp-targets'){
     openModal('MCP 配置落点','<p class="modal-lead">不同客户端使用各自官方配置节点；写入前先校验结构和同名冲突。</p><ul class="about-list"><li><strong>Codex：</strong><code>$CODEX_HOME/config.toml → mcp_servers</code></li><li><strong>Claude Code：</strong><code>~/.claude.json</code> 或项目 <code>.mcp.json</code></li><li><strong>Gemini CLI：</strong><code>~/.gemini/settings.json → mcpServers</code></li><li><strong>Grok Build：</strong><code>$GROK_HOME/config.toml</code> 或 <code>~/.grok/config.toml</code></li><li><strong>OpenCode：</strong><code>~/.config/opencode/opencode.json</code></li><li><strong>Hermes Agent：</strong><code>$HERMES_HOME/config.yaml</code> 或 <code>~/.hermes/config.yaml</code></li></ul>','知道了',null);
   }else if(action==='export'){
-    window.syncPrototype?.open({tab:'file',action:'export'});
+    window.syncPrototype?.open({tab:'file',action:'export',stayOnPage:!!actionTarget.closest('#card-overview-migration')});
   }else if(action==='import'){
     window.syncPrototype?.open({tab:'file',action:'import',stayOnPage:!!actionTarget.closest('#card-overview-migration')});
   }else if(action==='sync'){
-    window.syncPrototype?.open({tab:'webdav',action:'check'});
+    window.syncPrototype?.open({tab:'webdav',action:'check',stayOnPage:!!actionTarget.closest('#card-overview-sync')});
+  }else if(action==='sync-result'){
+    window.syncPrototype?.open({tab:'webdav',action:'result',stayOnPage:!!actionTarget.closest('#card-overview-sync')});
   }else if(action==='test-webdav'){
-    window.syncPrototype?.open({tab:'webdav',action:'connection'});
+    window.syncPrototype?.open({tab:'webdav',action:'connection',stayOnPage:!!actionTarget.closest('#card-overview-sync')});
   }else if(action==='about-open' || actionTarget?.dataset?.aboutOpen){
     const aboutTarget=actionTarget.getAttribute('data-about-open')||actionTarget.dataset.aboutOpen;
     const labels={site:'OpenCodex 官网',repo:'OpenCodex GitHub 仓库',issues:'OpenCodex Issues','app-repo':'OpenCodeX-Desktop GitHub 仓库','app-issues':'OpenCodeX-Desktop Issues',license:'官方许可文件',notices:'第三方组件声明','app-license':'MIT 许可证'};
@@ -6818,30 +6820,31 @@ if(sizeDefault) sizeDefault.classList.add('active');
 updateSizeReadout();
 // ── WebDAV 卡片：按「配置 / 连接」状态渲染内容与动作（不渲染无解释的禁用态）──
 // 「未配置」是初始态：卡片主体说明未配置，动作区只留一颗「配置 WebDAV」主按钮，右上角 ⋯ 仍可进设置。
-// 卡片只回答两件事：连接是否可用、这次往哪个方向走。方向由所选对象的新旧决定，不额外确认。
+// 概览与同步页共用预览，单一新版快照来源在弹窗内说明。
 // 未配置 / 未连接 / 连接失败：线上版本只写「—」，不画点、不写方向词。
 const webdavStates={
   unconfigured:{tag:'未配置',conn:'未配置',remote:'—',dir:null,
-    actions:[['配置 WebDAV','btn primary','open-sync-settings']]},
+    actions:[['配置 WebDAV','btn primary','test-webdav']]},
   disconnected:{tag:'未连接',conn:'未连接',remote:'—',dir:null,
     actions:[['同步','btn primary','sync']]},
-  'pending-upload':{tag:'待上传',conn:'已连接',remote:'10:24',dir:['ok','待上传'],
+  'local-newer':{tag:'有更新',conn:'已连接',remote:'09:30',dir:['ok','有更新'],
     actions:[['同步','btn primary','sync']]},
-  'pending-download':{tag:'待下载',conn:'已连接',remote:'11:02',dir:['info','待下载'],
+  'remote-newer':{tag:'有更新',conn:'已连接',remote:'09:30',dir:['ok','有更新'],
     actions:[['同步','btn primary','sync']]},
-  bidirectional:{tag:'双向更新',conn:'已连接',remote:'11:02',dir:['info','双向更新'],
+  ready:{tag:'有更新',conn:'已连接',remote:'09:30',dir:['ok','有更新'],
     actions:[['同步','btn primary','sync']]},
   syncing:{tag:'同步中',conn:'已连接',remote:'11:02',dir:['info','同步中'],
-    actions:[['查看进度','btn','open-sync-settings']]},
+    actions:[['同步中…','btn primary','sync']]},
   synced:{tag:'已同步',conn:'已连接',remote:'11:02',dir:['idle','已一致'],
     actions:[['同步','btn primary','sync']]},
   error:{tag:'连接失败',conn:'连接失败',remote:'—',dir:null,
     actions:[['重试连接','btn primary','test-webdav']]},
   partial:{tag:'部分完成',conn:'已连接',remote:'11:02',dir:['warn','未完成'],
-    actions:[['同步','btn primary','sync'],['查看结果','btn ghost','open-sync-settings']]},
+    actions:[['同步','btn primary','sync'],['查看结果','btn ghost','sync-result']]},
 };
 let webdavState='unconfigured';
 function renderWebdav(state){
+  state=({'pending-upload':'local-newer','pending-download':'remote-newer',bidirectional:'ready'})[state]||state;
   webdavState=webdavStates[state]?state:'unconfigured';
   const el=id=>document.getElementById(id);
   // 概览 WebDAV 卡片的宿主是 #syncActions/#syncConn（历史 id #syncCard 已不存在）；
@@ -6864,11 +6867,13 @@ function renderWebdav(state){
     `<button class="${cls}" data-prototype-action="${act}">${label}</button>`).join('');
   document.querySelectorAll('#webdavStates button').forEach(b=>
     b.classList.toggle('active',b.dataset.webdav===webdavState));
+  el('syncActions').querySelectorAll('button').forEach(button=>button.disabled=webdavState==='syncing');
 }
 window.renderWebdav=renderWebdav;
 document.querySelectorAll('#webdavStates button').forEach(button=>{
-  button.addEventListener('click',()=>renderWebdav(button.dataset.webdav));
+  button.addEventListener('click',()=>{const state=button.dataset.webdav;window.syncPrototype?.setScenario(state==='local-newer'?'upload':state==='synced'?'same':state==='partial'?'partial':state==='error'?'network-error':'normal');renderWebdav(state);});
 });
+document.addEventListener('prototype:sync-started',event=>{if(event.detail?.mode==='webdav')renderWebdav('syncing');});
 // ── 文件同步卡片：只显示最近一次导入 / 导出的事实（时间 + 项数）──
 document.addEventListener('prototype:sync-activity',event=>{
   const detail=event.detail||{};
@@ -6876,7 +6881,7 @@ document.addEventListener('prototype:sync-activity',event=>{
     // 同步完成后卡片直接回到「已一致」，线上版本时间用这次同步的时间。
     if(webdavState!=='unconfigured'&&webdavState!=='disconnected'&&webdavState!=='error') renderWebdav(detail.complete===false?'partial':'synced');
     const remote=document.getElementById('syncRemoteTime');
-    if(remote&&webdavState!=='unconfigured'&&webdavState!=='disconnected') remote.textContent=detail.time;
+    if(remote&&webdavState!=='unconfigured'&&webdavState!=='disconnected') remote.textContent=detail.remoteTime?.slice(11,16)||detail.time;
     return;
   }
   const node=document.getElementById(detail.kind==='import'?'overviewImportActivity':detail.kind==='export'?'overviewExportActivity':'');
@@ -7549,7 +7554,7 @@ const demoExtraNotifications=[
   {id:'ext-changed',kind:'warning',cat:'system',title:'扩展写入发现外部文件变更',detail:'检测到客户端 MCP 配置在管理器之外被修改；未覆盖。',time:'10:08',read:false,resolved:false,deleted:false,dedupe:'ext:external-change'},
   {id:'app-update-failed',kind:'danger',cat:'update',title:'应用更新失败，已回滚',detail:'签名校验未通过，已保留上一版本 v0.1.0。',time:'10:05',action:'app-update',read:false,resolved:false,deleted:false,dedupe:'update:app:failed'},
   // 低风险成功事件按规划不占持久未读，默认已读且已解决。
-  {id:'sync-done',kind:'info',cat:'sync',title:'WebDAV 同步完成',detail:'今天 10:24 完成，下载更新 3 项、上传 1 项。',time:'10:24',action:'sync',read:true,resolved:true,resolvedAt:'10:24',deleted:false,dedupe:'sync:ok'},
+  {id:'sync-done',kind:'info',cat:'sync',title:'WebDAV 同步完成',detail:'今天 10:24 完成，已更新 4 项配置。',time:'10:24',action:'sync',read:true,resolved:true,resolvedAt:'10:24',deleted:false,dedupe:'sync:ok'},
   {id:'policy',kind:'info',cat:'system',title:'通知保留策略已变更',detail:'已读通知保留期调整为 30 天。',time:'09:40',action:'settings-cleanup',read:true,resolved:true,resolvedAt:'09:40',deleted:false,dedupe:'policy:auto-clean'}
 ];
 function ensureDemoNotifications(){
@@ -7596,7 +7601,7 @@ const NOTIF_SCEN=[
 ['task','启动 OpenCodex','点启动','任务进度卡（阶段 / 状态）','日志','阻断 Modal / 持久通知','终态：成功 Toast；失败保留摘要','每业务域默认只允许一个活动任务。',{route:'overview',state:'starting',task:{title:'正在启动 OpenCodex',phase:'等待代理 ready',steps:[['下发起始指令','done'],['等待端口 10100','done'],['等待 ready','active']],acts:['后台运行','取消观察']}}],
 ['task','停止 OpenCodex','确认后执行','任务进度卡','日志','阻断 Modal','终态：Toast','停止前必须确认；请求可能中断。',{route:'overview',task:{title:'正在停止 OpenCodex',phase:'结束代理子进程',steps:[['发送停止','active'],['等待进程退出','pending']],acts:['后台运行']}}],
 ['task','重启 OpenCodex','确认后执行','任务进度卡','日志','阻断 Modal','终态：Toast','串行「停 → 启」，阶段对用户可见。',{route:'overview',task:{title:'正在重启 OpenCodex',phase:'步骤 1 / 2 · 停止',steps:[['停止代理','active'],['重新启动','pending']],acts:['后台运行']}}],
-['task','WebDAV 同步','点击同步','同步页现有进度','日志','覆盖确认弹窗','完成→Toast与铃铛；失败→可重试','同一入口自动决定上传/下载，不要求选择保留哪一侧。',{route:'sync',syncScenario:'normal',sync:{tab:'webdav',action:'check',scope:['channel:newapi','skill:review','mcp:docs']}}],
+['task','WebDAV 同步','确认更新','同一同步预览窗口','日志','逐项采用 / 再次保存','完成→Toast与铃铛；失败→可重试','单一新版快照来源；先预览，取消不写入，确认才更新。',{route:'sync',syncScenario:'normal',sync:{tab:'webdav',action:'check',scope:['channel:newapi','skill:review','mcp:docs']}}],
 ['task','配置导出','点击导出','共享导出窗口','日志','第二次确认','完成→Toast','按导出范围生成；加密可选，口令只在选择加密时填写。',{route:'sync',sync:{tab:'file',action:'export'}}],
 ['task','配置导入','选择文件与范围后导入','共享导入窗口','日志','比较/采用/再次保存','完成→Toast与铃铛；失败项可重试','包无法读取时不执行；独立对象写入失败不阻断其余对象。',{route:'sync',sync:{tab:'file',action:'import'}}],
 ['task','应用自更新','点下载并重启','任务进度卡（下载→校验→安装→重启）','日志','概览新增卡片','成功重启 / 校验失败保留上一版','明确「不停止 OpenCodex 代理」。',{route:'settings',section:'upgrade',task:{title:'正在更新 OpenCodeX-Desktop',phase:'校验签名',steps:[['下载 v0.1.1','done'],['校验签名','active'],['安装','pending'],['重启应用','pending']],acts:['后台运行']}}],
@@ -7851,9 +7856,9 @@ window.addEventListener('prototype:data-paths',event=>{
 <script src="conversation-config.js?v=20261028-model-picker"></script>
 <script src="extension-manager.js?v=20261014-col-extensions"></script>
 <script src="sync-account-capabilities.js?v=20261020-multi-account-platform"></script>
-<script src="sync-config.js?v=20261020-multi-account-platform"></script>
+<script src="sync-config.js?v=20261031-snapshot-preview"></script>
 <script src="windows-window.js"></script>
-<script src="prototype-panel.js?v=20261028-connection-map"></script>
+<script src="prototype-panel.js?v=20261031-snapshot-preview"></script>
 <script src="transport-config.js?v=20261027-dialog-policy"></script>
 <script src="context-policy-state.js?v=20261027"></script>
 <script src="dialog-policy.js?v=20261027"></script>
@@ -7867,7 +7872,7 @@ window.addEventListener('prototype:data-paths',event=>{
 <script src="sticky-tabs.js?v=20261014-common-tabs"></script>
 <script src="component-catalog.js?v=20261027-conversation-adopted"></script>
 <script src="tree-navigation-demo.js?v=20261027-conversation-adopted"></script>
-<script src="prototype-notification-publisher.js?v=20261015"></script>
+<script src="prototype-notification-publisher.js?v=20261031-snapshot-preview"></script>
 <script src="component-topic.js?v=20261027-tree-navigation"></script>
 </body>
 </html>

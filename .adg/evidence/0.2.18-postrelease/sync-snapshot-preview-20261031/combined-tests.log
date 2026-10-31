@@ -1,0 +1,189 @@
+✔ 目录模型切换后备份页与生成确认同步保存位置，原有备份记录保持 (26.042458ms)
+✔ 备份树表显示两文件用途与操作；区域始终显示且路径安全转义 (0.823292ms)
+✔ 树表逐级折叠；父级展开保留子级折叠，叶节点与未知对象无操作 (0.969167ms)
+✔ 两平台文件和目录打开均先警告，取消或确认不改变备份状态 (1.589916ms)
+✔ 确认前目录变化阻止旧目标打开，路径 HTML 转义 (0.512292ms)
+✔ 概览只有检查按钮，管理器 / 面板状态行可按对象查看；手动检查进入结果步骤 (1.00925ms)
+✔ 确认弹窗读取当前备份选项；失败不关闭，取消勾选后只更新选定对象 (1.003417ms)
+✔ 结果每对象一行只给摘要，完整说明与安全链接放进单对象详情 (1.401333ms)
+✔ 说明失败与缺失独立于检查结果；重试不检查或安装，说明文本转义 (0.619291ms)
+✔ 取消阻止后续进度；校验失败不进入应用阶段，当前版本保留 (0.741416ms)
+✔ 离开概览或已有弹窗时，检查结果不抢弹窗；注册表展示多来源及接入状态 (0.999917ms)
+✔ 切换管理器通道保留面板下载事务，设置进度继续直到完成 (0.75225ms)
+✔ 管理器检查中切通道只替换管理器请求；面板原检查按时完成 (0.617208ms)
+✔ 同通道不重查；被阻止的策略切换恢复选择值 (0.889375ms)
+✔ 备份失败确认重试成功解除对应事务；略过备份不会标记已恢复 (1.012333ms)
+✔ 共享弹窗不再向正文添加原型脚注或注释占位，说明只走共享注释参数 (2.921834ms)
+✔ 所有原型CSS禁止标记改回static/relative，专用宿主不参与布局 (5.481167ms)
+✔ 同步与导入四种终态合并旧计数，Toast和铃铛共用摘要且payload保持兼容 (4.519ms)
+✔ 零更新显示配置已一致，单边旧字段和上限计数仍按下载加上传计算 (1.36325ms)
+✔ 备份失败使用固定原因，不混同写入错误，也不泄露来源或原始异常 (1.392334ms)
+✔ 只允许原有数字字段和固定错误枚举，拒绝自由文本与第二套通知字段且无副作用 (0.732333ms)
+✔ 重复终态去重，修订仍更新同一实体；同操作重试恢复不影响其它失败 (0.771917ms)
+✔ 已删除操作的晚回只记日志，不重新弹出或复活；新操作照常投递 (0.517ms)
+✔ 查看结果沿原Toast动作和铃铛回执入口，缺回执时复用共享弹窗 (0.456875ms)
+✔ 开始、连接和导出继续使用既有标题、摘要与注册投递 (2.058833ms)
+✔ 投递历史保留原上限，返回payload与通道副本不能修改内部通知或去重身份 (1.655125ms)
+✔ 概览同步预览：取消 不执行、不备份、不通知，保留路由与滚动 (5776.765083ms)
+✔ 概览同步预览：右上关闭 不执行、不备份、不通知，保留路由与滚动 (4720.60425ms)
+✔ 概览同步预览：Escape 不执行、不备份、不通知，保留路由与滚动 (4556.44775ms)
+✔ download：确认后整次只采用一个快照来源，范围外不变 (6175.492ms)
+✔ upload：确认后整次只采用一个快照来源，范围外不变 (4324.386375ms)
+✔ normal：确认后整次只采用一个快照来源，范围外不变 (4003.156666ms)
+✔ same：仍展示同步预览，禁用无需更新的确认且不产生执行或备份 (4031.333542ms)
+✔ 下载可取消备份选择，确认仍更新；再次预览没有重复变更 (5604.418834ms)
+✖ 导入读文件后取消 不备份、不写入、不通知 (2405.234125ms)
+✖ 导入读文件后右上关闭 不备份、不写入、不通知 (2428.204958ms)
+✖ 导入读文件后Escape 不备份、不写入、不通知 (3192.513792ms)
+✖ 导入确认：默认备份后写入，仅采用已选渠道 (2484.978916ms)
+✖ 导入确认：取消备份仍可写入，仅采用已选渠道 (2522.697292ms)
+✔ webdav 备份失败场景：阻止写入并保留原内容 (4749.287834ms)
+✔ webdav 备份失败场景：取消备份后允许执行 (3860.96675ms)
+✖ import 备份失败场景：阻止写入并保留原内容 (2402.578458ms)
+✖ import 备份失败场景：取消备份后允许执行 (2500.187041ms)
+✔ webdav write-fail 独立于备份：取消备份仍写入失败并保留原内容 (4317.757417ms)
+✖ import write-fail 独立于备份：取消备份仍写入失败并保留原内容 (2478.412625ms)
+ℹ tests 45
+ℹ suites 0
+ℹ pass 37
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72625.779375
+
+✖ failing tests:
+
+test at sync-snapshot-preview.test.cjs:234:44
+✖ 导入读文件后取消 不备份、不写入、不通知 (2405.234125ms)
+  AssertionError [ERR_ASSERTION]: 展示变更条目，而不只是文件名和范围
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:228:9)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:235:39)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '配置文件选择文件opencodex-channels.ocx文件版本：2026-10-30 09:30:00导入范围渠道与模型NewApi已选模型 17 → 19；应用来源中的模型选择、顺序与服务节点包含包内渠道 API Key包含包内扩展凭据',
+    expected: /变更|差异|更新|替换|新增/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at sync-snapshot-preview.test.cjs:234:44
+✖ 导入读文件后右上关闭 不备份、不写入、不通知 (2428.204958ms)
+  AssertionError [ERR_ASSERTION]: 展示变更条目，而不只是文件名和范围
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:228:9)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:235:39)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '配置文件选择文件opencodex-channels.ocx文件版本：2026-10-30 09:30:00导入范围渠道与模型NewApi已选模型 17 → 19；应用来源中的模型选择、顺序与服务节点包含包内渠道 API Key包含包内扩展凭据',
+    expected: /变更|差异|更新|替换|新增/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at sync-snapshot-preview.test.cjs:234:44
+✖ 导入读文件后Escape 不备份、不写入、不通知 (3192.513792ms)
+  AssertionError [ERR_ASSERTION]: 展示变更条目，而不只是文件名和范围
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:228:9)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:235:39)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '配置文件选择文件opencodex-channels.ocx文件版本：2026-10-30 09:30:00导入范围渠道与模型NewApi已选模型 17 → 19；应用来源中的模型选择、顺序与服务节点包含包内渠道 API Key包含包内扩展凭据',
+    expected: /变更|差异|更新|替换|新增/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at sync-snapshot-preview.test.cjs:241:34
+✖ 导入确认：默认备份后写入，仅采用已选渠道 (2484.978916ms)
+  AssertionError [ERR_ASSERTION]: 展示变更条目，而不只是文件名和范围
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:228:9)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:242:39)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '配置文件选择文件opencodex-channels.ocx文件版本：2026-10-30 09:30:00导入范围渠道与模型NewApi已选模型 17 → 19；应用来源中的模型选择、顺序与服务节点私有网关内容一致，保持当前配置包含包内渠道 API Key包含包内扩展凭据',
+    expected: /变更|差异|更新|替换|新增/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at sync-snapshot-preview.test.cjs:241:34
+✖ 导入确认：取消备份仍可写入，仅采用已选渠道 (2522.697292ms)
+  AssertionError [ERR_ASSERTION]: 展示变更条目，而不只是文件名和范围
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:228:9)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:242:39)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '配置文件选择文件opencodex-channels.ocx文件版本：2026-10-30 09:30:00导入范围渠道与模型NewApi已选模型 17 → 19；应用来源中的模型选择、顺序与服务节点私有网关内容一致，保持当前配置包含包内渠道 API Key包含包内扩展凭据',
+    expected: /变更|差异|更新|替换|新增/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at sync-snapshot-preview.test.cjs:264:72
+✖ import 备份失败场景：阻止写入并保留原内容 (2402.578458ms)
+  AssertionError [ERR_ASSERTION]: 展示变更条目，而不只是文件名和范围
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:228:9)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:268:111)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '配置文件选择文件opencodex-channels.ocx文件版本：2026-10-30 09:30:00导入范围渠道与模型NewApi已选模型 17 → 19；应用来源中的模型选择、顺序与服务节点包含包内渠道 API Key包含包内扩展凭据',
+    expected: /变更|差异|更新|替换|新增/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at sync-snapshot-preview.test.cjs:264:72
+✖ import 备份失败场景：取消备份后允许执行 (2500.187041ms)
+  AssertionError [ERR_ASSERTION]: 展示变更条目，而不只是文件名和范围
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:228:9)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:268:111)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '配置文件选择文件opencodex-channels.ocx文件版本：2026-10-30 09:30:00导入范围渠道与模型NewApi已选模型 17 → 19；应用来源中的模型选择、顺序与服务节点包含包内渠道 API Key包含包内扩展凭据',
+    expected: /变更|差异|更新|替换|新增/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at sync-snapshot-preview.test.cjs:291:39
+✖ import write-fail 独立于备份：取消备份仍写入失败并保留原内容 (2478.412625ms)
+  AssertionError [ERR_ASSERTION]: 展示变更条目，而不只是文件名和范围
+      at importPreview (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:228:9)
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs:294:109)
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processTimers (node:internal/timers:615:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '配置文件选择文件opencodex-channels.ocx文件版本：2026-10-30 09:30:00导入范围渠道与模型NewApi已选模型 17 → 19；应用来源中的模型选择、顺序与服务节点包含包内渠道 API Key包含包内扩展凭据',
+    expected: /变更|差异|更新|替换|新增/,
+    operator: 'match',
+    diff: 'simple'
+  }

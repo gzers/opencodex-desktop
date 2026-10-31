@@ -120,3 +120,8 @@ html[data-route=sync] .main>.topbar{flex:none}
 .sx-outcomes{list-style:none;margin:0;padding:0}
 .sx-outcomes li{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
 .sx-outcomes li>div{min-width:0;overflow-wrap:anywhere}.sx-outcomes small{display:block;color:var(--muted);margin-top:4px}
+.sx-preview-summary{display:flex;align-items:center;gap:12px;margin:16px 0 4px}
+.sx-snapshot-facts{margin:0 0 16px;gap:8px 14px}
+.sx-change-list{max-height:220px;overflow:auto;overscroll-behavior:contain;padding-right:6px}
+.sx-change-list li{padding:9px 0}
+.sx-import-change{display:block;color:var(--muted);font-weight:400;margin-top:3px;line-height:1.5}

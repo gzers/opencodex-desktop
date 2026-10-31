@@ -1,0 +1,58 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {pickEngine} from '/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-022-model-selector/apps/desktop/ui/qa/engine.mjs';
+const root='/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main';
+const entry=process.env.OCX_PROTOTYPE_ENTRY||root+'/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html';
+const out=process.env.AUDIT_OUT_DIR;fs.mkdirSync(out,{recursive:true});
+const engine=await pickEngine(),browser=await engine.launch(),checks=[],errors=[];
+const check=(name,ok,detail)=>{checks.push({name,passed:!!ok,detail});assert(ok,name+' '+JSON.stringify(detail));};
+const before=p=>p.evaluate(()=>JSON.stringify({versions:syncPrototype.state().versions,backups:syncPrototype.state().backups,saved:modelPrototype.state().saved,deliveries:prototypeNotificationPublisher.deliveries()}));
+try{
+ for(const cfg of [{w:1180,h:760,theme:'light'},{w:900,h:600,theme:'dark'}])for(const effects of ['high','mid','low']){
+  const label=cfg.w+'-'+cfg.theme+'-'+effects,p=await browser.newPage({viewport:{width:cfg.w+470,height:cfg.h+220}});
+  p.on('pageerror',e=>errors.push({label,message:e.message}));
+  await p.route('http://**/*',r=>r.abort());await p.route('https://**/*',r=>r.abort());
+  await p.goto('file://'+encodeURI(entry)+'#overview');await p.waitForFunction(()=>window.syncPrototype&&window.modelPrototype);
+  await p.evaluate(({cfg,effects})=>{const w=document.querySelector('.window');w.style.width=cfg.w+'px';w.style.height=cfg.h+'px';w.style.flex='none';applyTheme(cfg.theme);document.documentElement.dataset.effects=effects;syncPrototype.open({tab:'webdav',scope:['channel:newapi','skill:review','mcp:docs']});syncPrototype.setScenario('normal');setRoute('overview');renderWebdav('ready');},{cfg,effects});
+  await p.waitForTimeout(120);
+  const initial=await before(p),pos=await p.evaluate(()=>({hash:location.hash,scroll:document.querySelector('.main').scrollTop}));
+  await p.locator('#syncActions [data-prototype-action=sync]').click();
+  check(label+' overview opens preview',await p.locator('#modalTitle').innerText()==='同步预览');
+  check(label+' default backup',await p.locator('#sxPreviewBackup').isChecked());
+  check(label+' preview read only',await before(p)===initial);
+  const info=await p.evaluate(()=>({hash:location.hash,scroll:document.querySelector('.main').scrollTop,source:syncPrototype.state().preview.source,dirs:[...new Set(syncPrototype.state().preview.rows.filter(r=>r.direction!=='skip').map(r=>r.direction))]}));
+  check(label+' keeps overview and scroll',info.hash===pos.hash&&info.scroll===pos.scroll,info);
+  check(label+' one snapshot source',info.source==='remote'&&info.dirs.join()==='download',info);
+  const geometry=await p.locator('#modal').evaluate(el=>{const r=el.getBoundingClientRect(),w=document.querySelector('.window').getBoundingClientRect(),f=document.querySelector('#modalConfirm').getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,win:w.toJSON(),confirmBottom:f.bottom,overflow:el.scrollWidth-el.clientWidth};});
+  check(label+' dialog and footer fit',geometry.left>=geometry.win.left-1&&geometry.right<=geometry.win.right+1&&geometry.top>=geometry.win.top-1&&geometry.bottom<=geometry.win.bottom+1&&geometry.confirmBottom<=geometry.win.bottom+1&&geometry.overflow<=1,geometry);
+  if(effects==='high')await p.locator('.window').screenshot({path:path.join(out,label+'-overview-preview.png')});
+  await p.locator('[data-sx=preview-close]').click();
+  check(label+' close leaves data and overview',await before(p)===initial&&await p.evaluate(()=>location.hash)===pos.hash);
+  await p.locator('#syncActions [data-prototype-action=sync]').click();await p.keyboard.press('Escape');
+  check(label+' escape leaves data',await before(p)===initial);
+  await p.locator('#syncActions [data-prototype-action=sync]').click();await p.locator('#modalConfirm').click();
+  await p.waitForFunction(()=>!syncPrototype.state().running);
+  const completed=await p.evaluate(()=>({hash:location.hash,scroll:document.querySelector('.main').scrollTop,result:syncPrototype.state().result,backup:syncPrototype.state().backups.length,toast:document.querySelector('#toastEl').textContent}));
+  check(label+' confirm writes and backs up in place',completed.hash===pos.hash&&completed.scroll===pos.scroll&&completed.result.downloaded>0&&completed.result.uploaded===0&&completed.backup===1,completed);
+  check(label+' registered summary omits directions',/已更新/.test(completed.toast)&&!/下载更新|上传\s*\d/.test(completed.toast),completed.toast);
+  await p.evaluate(()=>{syncPrototype.setScenario('upload');renderWebdav('local-newer');});
+  await p.locator('#syncActions [data-prototype-action=sync]').click();
+  check(label+' local snapshot preview no backup',await p.evaluate(()=>syncPrototype.state().preview.source)==='local'&&await p.locator('#sxPreviewBackup').count()===0);
+  await p.locator('#modalCancel').click();
+  await p.evaluate(()=>{syncPrototype.setScenario('same');renderWebdav('synced');});await p.locator('#syncActions [data-prototype-action=sync]').click();
+  check(label+' unchanged has disabled confirm',await p.locator('#modalConfirm').isDisabled()&&/无需更新/.test(await p.locator('#modalBody').innerText()));await p.locator('#modalCancel').click();
+  await p.evaluate(()=>{syncPrototype.setScenario('download');syncPrototype.open({tab:'webdav'});});
+  await p.locator('[data-sx=check]').click();
+  check(label+' sync page same preview',await p.locator('#modalTitle').innerText()==='同步预览'&&await p.evaluate(()=>location.hash)==='#sync?tab=webdav');await p.locator('#modalCancel').click();
+  await p.evaluate(()=>{setRoute('overview');syncPrototype.setImportSample('plaintext');});
+  await p.locator('#card-overview-migration [data-prototype-action=import]').click();await p.locator('[data-sx=choose-import-file]').click();
+  check(label+' import preview has default backup and changes',await p.locator('#sxImportBackup').isChecked()&&await p.locator('.sx-import-change').count()>0&&await p.evaluate(()=>location.hash)==='#overview');
+  if(effects==='high')await p.locator('.window').screenshot({path:path.join(out,label+'-import-preview.png')});
+  await p.locator('#modalCancel').click();
+  const txt=await p.locator('#card-overview-sync').innerText();check(label+' overview no old direction modes',!/待上传|待下载|双向更新/.test(txt),txt);
+  await p.close();
+ }
+ check('no page errors',errors.length===0,errors);
+}finally{await browser.close();fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({engine:engine.name,checks,errors,failed:checks.filter(c=>!c.passed).length,scope:'prototype only; no external network or real file writes'},null,2));}
+console.log(JSON.stringify({engine:engine.name,checks:checks.length,errors}));

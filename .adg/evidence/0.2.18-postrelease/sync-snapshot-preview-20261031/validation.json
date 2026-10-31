@@ -1,0 +1,52 @@
+{
+  "project": "opencodex-desktop",
+  "started": "2026-10-31 Asia/Shanghai",
+  "completed": "2026-11-01 Asia/Shanghai",
+  "scope": "maintained prototype only; sync/import/export/connection/result entry points and registered notifications; not a full nine-route audit",
+  "baseline": "876ea8e69d0fa8d9fca7b91650d356e837348046",
+  "sourceHashes": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "fa66e05928163f8b12b517e109e4a65f9329e05424f6172c94609a4b324f9a18",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js": "c10f4c4334cc87e1bbdd99cfe7197a435067cf1dacb8628de8f75074f79705a5",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.css": "dce49384252e73862b8821f4b8e8fb93e32afc0ee16c374fca2041664c40a619",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-panel.js": "2dbfaeb245b3fcd7ce01b243ac859e6198c10f3dcc4f567976073d29a11c3166",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-notification-publisher.js": "c32267ec4286e2178c543daa23e5197a2ad7a3272c982d28a346daae64066293",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-snapshot-preview.test.cjs": "ab0173cc926986ba1c02be428ae50b8b7b5720ebffc2e91baed3439a2ac6d6fd",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-notification-snapshot.test.cjs": "4318ccc6422716b7aff943e749e5891d53fe588c53d121192a3bb763f35445b4",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-file-authority.test.cjs": "c453d106b41c192883a8baf17e09c34ac18c08644420cf61c1994403f37fd297",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/overview-cards.test.cjs": "0c5d594bb86181013d18dcd68c90bda194bd3a7be09711308ebddaa9ba8df04a"
+  },
+  "checks": {
+    "snapshotPreviewAndPublisherAndAnnotation": {
+      "passed": 30,
+      "failed": 0
+    },
+    "legacySyncAndOverview": {
+      "passed": 48,
+      "failed": 0
+    },
+    "maintenanceUnchangedFlow": {
+      "passed": 15,
+      "failed": 0
+    },
+    "chromium": {
+      "passed": 91,
+      "failed": 0,
+      "pageErrors": 0
+    },
+    "webkit": {
+      "passed": 91,
+      "failed": 0,
+      "pageErrors": 0
+    }
+  },
+  "candidateEntry": "staged index built by applying only owned edits onto HEAD; all unrelated extension/panorama/component changes excluded; candidate archive tested in both engines",
+  "memoryOnly": true,
+  "productionChanged": false,
+  "windowsNativeClaimed": false,
+  "initialFailures": "new-tests.log retained right-close missing; combined-tests.log retained text summary guard failure; corrected afterward, final candidate-tests.log all passed",
+  "notes": [
+    "Backups contain fixture pre-write data only, not real recoverable files",
+    "Same operation retry reuses original backup",
+    "Snapshots use explicit fixture timestamps; ambiguous/missing-version production rules remain pending"
+  ]
+}

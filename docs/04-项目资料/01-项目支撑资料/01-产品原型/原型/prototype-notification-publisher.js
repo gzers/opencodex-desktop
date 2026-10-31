@@ -41,13 +41,15 @@
   if(Object.keys(options).some(k=>!allowed.includes(k))||!/^[1-9][0-9]{0,8}$/.test(String(options.operationId)))throw Error('同步事件仅允许固定操作身份与计数');
   const payload={operationId:String(options.operationId)};
   for(const key of ['total','downloaded','uploaded','skipped','failed']){const n=options[key]??0;if(!Number.isSafeInteger(n)||n<0||n>100000)throw Error('同步事件计数无效');payload[key]=n;}
-  const errors={none:'',write:'目标文件无法写入，原内容保留。',connection:'连接未完成，请检查连接设置。',partial:'部分对象未完成，可仅重试失败项。'};
+  const errors={none:'',write:'目标文件无法写入，原内容保留。',backup:'更新前备份未完成，原内容保留。',connection:'连接未完成，请检查连接设置。',partial:'部分对象未完成，可仅重试失败项。'};
   payload.errorCode=options.errorCode||'none';if(!Object.hasOwn(errors,payload.errorCode))throw Error('同步事件错误类型未注册');
   const revision=eventId+':'+JSON.stringify(payload),key=eventId+':'+payload.operationId;
   if(syncRevisions.get(key)===revision)return 'sync-demo:'+payload.operationId;
   syncRevisions.set(key,revision);
-  const failed=eventId.endsWith('.failed'),title=['sync.failed','sync.import.failed'].includes(eventId)&&payload.failed&&payload.failed<payload.total?'部分'+(eventId.startsWith('sync.import.')?'导入':'同步')+'完成':syncTitles[eventId];
-  const detail=eventId==='sync.export.complete'?payload.total+' 项配置已导出，可查看保存位置。':eventId==='sync.connected'?'服务连接测试通过。':eventId==='sync.connection.saved'?'后续同步使用本机保存的连接配置。':eventId==='sync.export.directory.opened'?'当前导出包的保存位置已打开。':eventId.includes('started')?'正在处理所选 '+payload.total+' 项内容。':failed?errors[payload.errorCode]+' 已完成 '+(payload.downloaded+payload.uploaded)+' 项，失败 '+payload.failed+' 项。':'下载更新 '+payload.downloaded+' 项，上传 '+payload.uploaded+' 项，跳过 '+payload.skipped+' 项。';
+  const failed=eventId.endsWith('.failed'),updated=payload.downloaded+payload.uploaded,snapshotResult=['sync.complete','sync.failed','sync.import.complete','sync.import.failed'].includes(eventId);
+  const title=['sync.failed','sync.import.failed'].includes(eventId)&&payload.failed&&payload.failed<payload.total?'部分'+(eventId.startsWith('sync.import.')?'导入':'同步')+'完成':eventId==='sync.complete'&&updated===0?'配置已一致':syncTitles[eventId];
+  const summary='已更新 '+updated+' 项，未变化 '+payload.skipped+' 项'+(failed?'，失败 '+payload.failed+' 项。':'。');
+  const detail=snapshotResult?(failed?errors[payload.errorCode]+' ':'')+summary:eventId==='sync.export.complete'?payload.total+' 项配置已导出，可查看保存位置。':eventId==='sync.connected'?'服务连接测试通过。':eventId==='sync.connection.saved'?'后续同步使用本机保存的连接配置。':eventId==='sync.export.directory.opened'?'当前导出包的保存位置已打开。':eventId.includes('started')?'正在处理所选 '+payload.total+' 项内容。':failed?errors[payload.errorCode]+' 已完成 '+updated+' 项，失败 '+payload.failed+' 项。':summary;
   const id='sync-demo:'+payload.operationId;
   let item=notifications.find(n=>n.id===id);
   syncDeliveries.unshift({eventId,operationId:payload.operationId,delivery:item?.deleted?['log']:[...spec.delivery],...(item?.deleted?{suppressed:'deleted'}:{}),payload:{...payload}});

@@ -1,0 +1,1189 @@
+{
+  "engine": "chromium",
+  "checks": [
+    {
+      "name": "1180-light-high overview opens preview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high default backup",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high preview read only",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high keeps overview and scroll",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "1180-light-high one snapshot source",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "1180-light-high dialog and footer fit",
+      "passed": true,
+      "detail": {
+        "left": 285,
+        "right": 1005,
+        "top": 232.8125,
+        "bottom": 747.1875,
+        "win": {
+          "x": 55,
+          "y": 110,
+          "width": 1180,
+          "height": 760,
+          "top": 110,
+          "right": 1235,
+          "bottom": 870,
+          "left": 55
+        },
+        "confirmBottom": 726.1875,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180-light-high close leaves data and overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high escape leaves data",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high confirm writes and backs up in place",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "result": {
+          "tab": "webdav",
+          "operationId": 1,
+          "title": "同步完成",
+          "detail": "已更新 4 项，未变化 0 项。",
+          "downloaded": 4,
+          "uploaded": 0,
+          "skipped": 0,
+          "failed": [],
+          "items": [
+            {
+              "id": "channel:newapi",
+              "name": "NewApi",
+              "group": "channels",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "channel:newapi:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "channel:newapi:v2"
+              },
+              "status": "completed",
+              "credential": true
+            },
+            {
+              "id": "template:gpt",
+              "name": "GPT",
+              "group": "templates",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "template:gpt:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "template:gpt:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "skill:review",
+              "name": "Code Review Skill",
+              "group": "skills",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "skill:review:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "skill:review:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "mcp:docs",
+              "name": "Docs MCP",
+              "group": "mcp",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:21:00+08:00",
+                "revision": 3,
+                "digest": "mcp:docs:local-v3"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "mcp:docs:v2"
+              },
+              "status": "completed",
+              "credential": true
+            }
+          ],
+          "protection": {
+            "encrypted": false
+          },
+          "source": "remote",
+          "snapshot": {
+            "revision": 2,
+            "updatedAt": "2026-10-30T09:30:00+08:00",
+            "digest": "snapshot:remote-v2"
+          },
+          "backupId": "sync-backup-1"
+        },
+        "backup": 1,
+        "toast": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+      }
+    },
+    {
+      "name": "1180-light-high registered summary omits directions",
+      "passed": true,
+      "detail": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+    },
+    {
+      "name": "1180-light-high local snapshot preview no backup",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high unchanged has disabled confirm",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high sync page same preview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high import preview has default backup and changes",
+      "passed": true
+    },
+    {
+      "name": "1180-light-high overview no old direction modes",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n已一致\n同步"
+    },
+    {
+      "name": "1180-light-mid overview opens preview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid default backup",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid preview read only",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid keeps overview and scroll",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "1180-light-mid one snapshot source",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "1180-light-mid dialog and footer fit",
+      "passed": true,
+      "detail": {
+        "left": 285,
+        "right": 1005,
+        "top": 232.8125,
+        "bottom": 747.1875,
+        "win": {
+          "x": 55,
+          "y": 110,
+          "width": 1180,
+          "height": 760,
+          "top": 110,
+          "right": 1235,
+          "bottom": 870,
+          "left": 55
+        },
+        "confirmBottom": 726.1875,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180-light-mid close leaves data and overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid escape leaves data",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid confirm writes and backs up in place",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "result": {
+          "tab": "webdav",
+          "operationId": 1,
+          "title": "同步完成",
+          "detail": "已更新 4 项，未变化 0 项。",
+          "downloaded": 4,
+          "uploaded": 0,
+          "skipped": 0,
+          "failed": [],
+          "items": [
+            {
+              "id": "channel:newapi",
+              "name": "NewApi",
+              "group": "channels",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "channel:newapi:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "channel:newapi:v2"
+              },
+              "status": "completed",
+              "credential": true
+            },
+            {
+              "id": "template:gpt",
+              "name": "GPT",
+              "group": "templates",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "template:gpt:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "template:gpt:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "skill:review",
+              "name": "Code Review Skill",
+              "group": "skills",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "skill:review:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "skill:review:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "mcp:docs",
+              "name": "Docs MCP",
+              "group": "mcp",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:21:00+08:00",
+                "revision": 3,
+                "digest": "mcp:docs:local-v3"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "mcp:docs:v2"
+              },
+              "status": "completed",
+              "credential": true
+            }
+          ],
+          "protection": {
+            "encrypted": false
+          },
+          "source": "remote",
+          "snapshot": {
+            "revision": 2,
+            "updatedAt": "2026-10-30T09:30:00+08:00",
+            "digest": "snapshot:remote-v2"
+          },
+          "backupId": "sync-backup-1"
+        },
+        "backup": 1,
+        "toast": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+      }
+    },
+    {
+      "name": "1180-light-mid registered summary omits directions",
+      "passed": true,
+      "detail": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+    },
+    {
+      "name": "1180-light-mid local snapshot preview no backup",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid unchanged has disabled confirm",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid sync page same preview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid import preview has default backup and changes",
+      "passed": true
+    },
+    {
+      "name": "1180-light-mid overview no old direction modes",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n已一致\n同步"
+    },
+    {
+      "name": "1180-light-low overview opens preview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low default backup",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low preview read only",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low keeps overview and scroll",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "1180-light-low one snapshot source",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "1180-light-low dialog and footer fit",
+      "passed": true,
+      "detail": {
+        "left": 285,
+        "right": 1005,
+        "top": 232.8125,
+        "bottom": 747.1875,
+        "win": {
+          "x": 55,
+          "y": 110,
+          "width": 1180,
+          "height": 760,
+          "top": 110,
+          "right": 1235,
+          "bottom": 870,
+          "left": 55
+        },
+        "confirmBottom": 726.1875,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180-light-low close leaves data and overview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low escape leaves data",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low confirm writes and backs up in place",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "result": {
+          "tab": "webdav",
+          "operationId": 1,
+          "title": "同步完成",
+          "detail": "已更新 4 项，未变化 0 项。",
+          "downloaded": 4,
+          "uploaded": 0,
+          "skipped": 0,
+          "failed": [],
+          "items": [
+            {
+              "id": "channel:newapi",
+              "name": "NewApi",
+              "group": "channels",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "channel:newapi:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "channel:newapi:v2"
+              },
+              "status": "completed",
+              "credential": true
+            },
+            {
+              "id": "template:gpt",
+              "name": "GPT",
+              "group": "templates",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "template:gpt:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "template:gpt:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "skill:review",
+              "name": "Code Review Skill",
+              "group": "skills",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "skill:review:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "skill:review:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "mcp:docs",
+              "name": "Docs MCP",
+              "group": "mcp",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:21:00+08:00",
+                "revision": 3,
+                "digest": "mcp:docs:local-v3"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "mcp:docs:v2"
+              },
+              "status": "completed",
+              "credential": true
+            }
+          ],
+          "protection": {
+            "encrypted": false
+          },
+          "source": "remote",
+          "snapshot": {
+            "revision": 2,
+            "updatedAt": "2026-10-30T09:30:00+08:00",
+            "digest": "snapshot:remote-v2"
+          },
+          "backupId": "sync-backup-1"
+        },
+        "backup": 1,
+        "toast": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+      }
+    },
+    {
+      "name": "1180-light-low registered summary omits directions",
+      "passed": true,
+      "detail": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+    },
+    {
+      "name": "1180-light-low local snapshot preview no backup",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low unchanged has disabled confirm",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low sync page same preview",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low import preview has default backup and changes",
+      "passed": true
+    },
+    {
+      "name": "1180-light-low overview no old direction modes",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n已一致\n同步"
+    },
+    {
+      "name": "900-dark-high overview opens preview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high default backup",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high preview read only",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high keeps overview and scroll",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "900-dark-high one snapshot source",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "900-dark-high dialog and footer fit",
+      "passed": true,
+      "detail": {
+        "left": 185,
+        "right": 905,
+        "top": 82.375,
+        "bottom": 517.609375,
+        "win": {
+          "x": 95,
+          "y": 0,
+          "width": 900,
+          "height": 600,
+          "top": 0,
+          "right": 995,
+          "bottom": 600,
+          "left": 95
+        },
+        "confirmBottom": 496.609375,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900-dark-high close leaves data and overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high escape leaves data",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high confirm writes and backs up in place",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "result": {
+          "tab": "webdav",
+          "operationId": 1,
+          "title": "同步完成",
+          "detail": "已更新 4 项，未变化 0 项。",
+          "downloaded": 4,
+          "uploaded": 0,
+          "skipped": 0,
+          "failed": [],
+          "items": [
+            {
+              "id": "channel:newapi",
+              "name": "NewApi",
+              "group": "channels",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "channel:newapi:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "channel:newapi:v2"
+              },
+              "status": "completed",
+              "credential": true
+            },
+            {
+              "id": "template:gpt",
+              "name": "GPT",
+              "group": "templates",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "template:gpt:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "template:gpt:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "skill:review",
+              "name": "Code Review Skill",
+              "group": "skills",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "skill:review:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "skill:review:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "mcp:docs",
+              "name": "Docs MCP",
+              "group": "mcp",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:21:00+08:00",
+                "revision": 3,
+                "digest": "mcp:docs:local-v3"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "mcp:docs:v2"
+              },
+              "status": "completed",
+              "credential": true
+            }
+          ],
+          "protection": {
+            "encrypted": false
+          },
+          "source": "remote",
+          "snapshot": {
+            "revision": 2,
+            "updatedAt": "2026-10-30T09:30:00+08:00",
+            "digest": "snapshot:remote-v2"
+          },
+          "backupId": "sync-backup-1"
+        },
+        "backup": 1,
+        "toast": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+      }
+    },
+    {
+      "name": "900-dark-high registered summary omits directions",
+      "passed": true,
+      "detail": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+    },
+    {
+      "name": "900-dark-high local snapshot preview no backup",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high unchanged has disabled confirm",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high sync page same preview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high import preview has default backup and changes",
+      "passed": true
+    },
+    {
+      "name": "900-dark-high overview no old direction modes",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n已一致\n同步"
+    },
+    {
+      "name": "900-dark-mid overview opens preview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid default backup",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid preview read only",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid keeps overview and scroll",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "900-dark-mid one snapshot source",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "900-dark-mid dialog and footer fit",
+      "passed": true,
+      "detail": {
+        "left": 185,
+        "right": 905,
+        "top": 82.375,
+        "bottom": 517.609375,
+        "win": {
+          "x": 95,
+          "y": 0,
+          "width": 900,
+          "height": 600,
+          "top": 0,
+          "right": 995,
+          "bottom": 600,
+          "left": 95
+        },
+        "confirmBottom": 496.609375,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900-dark-mid close leaves data and overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid escape leaves data",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid confirm writes and backs up in place",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "result": {
+          "tab": "webdav",
+          "operationId": 1,
+          "title": "同步完成",
+          "detail": "已更新 4 项，未变化 0 项。",
+          "downloaded": 4,
+          "uploaded": 0,
+          "skipped": 0,
+          "failed": [],
+          "items": [
+            {
+              "id": "channel:newapi",
+              "name": "NewApi",
+              "group": "channels",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "channel:newapi:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "channel:newapi:v2"
+              },
+              "status": "completed",
+              "credential": true
+            },
+            {
+              "id": "template:gpt",
+              "name": "GPT",
+              "group": "templates",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "template:gpt:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "template:gpt:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "skill:review",
+              "name": "Code Review Skill",
+              "group": "skills",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "skill:review:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "skill:review:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "mcp:docs",
+              "name": "Docs MCP",
+              "group": "mcp",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:21:00+08:00",
+                "revision": 3,
+                "digest": "mcp:docs:local-v3"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "mcp:docs:v2"
+              },
+              "status": "completed",
+              "credential": true
+            }
+          ],
+          "protection": {
+            "encrypted": false
+          },
+          "source": "remote",
+          "snapshot": {
+            "revision": 2,
+            "updatedAt": "2026-10-30T09:30:00+08:00",
+            "digest": "snapshot:remote-v2"
+          },
+          "backupId": "sync-backup-1"
+        },
+        "backup": 1,
+        "toast": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+      }
+    },
+    {
+      "name": "900-dark-mid registered summary omits directions",
+      "passed": true,
+      "detail": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+    },
+    {
+      "name": "900-dark-mid local snapshot preview no backup",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid unchanged has disabled confirm",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid sync page same preview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid import preview has default backup and changes",
+      "passed": true
+    },
+    {
+      "name": "900-dark-mid overview no old direction modes",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n已一致\n同步"
+    },
+    {
+      "name": "900-dark-low overview opens preview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low default backup",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low preview read only",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low keeps overview and scroll",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "900-dark-low one snapshot source",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "source": "remote",
+        "dirs": [
+          "download"
+        ]
+      }
+    },
+    {
+      "name": "900-dark-low dialog and footer fit",
+      "passed": true,
+      "detail": {
+        "left": 185,
+        "right": 905,
+        "top": 82.375,
+        "bottom": 517.609375,
+        "win": {
+          "x": 95,
+          "y": 0,
+          "width": 900,
+          "height": 600,
+          "top": 0,
+          "right": 995,
+          "bottom": 600,
+          "left": 95
+        },
+        "confirmBottom": 496.609375,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900-dark-low close leaves data and overview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low escape leaves data",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low confirm writes and backs up in place",
+      "passed": true,
+      "detail": {
+        "hash": "#overview",
+        "scroll": 0,
+        "result": {
+          "tab": "webdav",
+          "operationId": 1,
+          "title": "同步完成",
+          "detail": "已更新 4 项，未变化 0 项。",
+          "downloaded": 4,
+          "uploaded": 0,
+          "skipped": 0,
+          "failed": [],
+          "items": [
+            {
+              "id": "channel:newapi",
+              "name": "NewApi",
+              "group": "channels",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "channel:newapi:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "channel:newapi:v2"
+              },
+              "status": "completed",
+              "credential": true
+            },
+            {
+              "id": "template:gpt",
+              "name": "GPT",
+              "group": "templates",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "template:gpt:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "template:gpt:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "skill:review",
+              "name": "Code Review Skill",
+              "group": "skills",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:00:00+08:00",
+                "revision": 1,
+                "digest": "skill:review:v1"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "skill:review:v2"
+              },
+              "status": "completed",
+              "credential": false
+            },
+            {
+              "id": "mcp:docs",
+              "name": "Docs MCP",
+              "group": "mcp",
+              "direction": "download",
+              "local": {
+                "updatedAt": "2026-10-30T09:21:00+08:00",
+                "revision": 3,
+                "digest": "mcp:docs:local-v3"
+              },
+              "remote": {
+                "updatedAt": "2026-10-30T09:05:00+08:00",
+                "revision": 2,
+                "digest": "mcp:docs:v2"
+              },
+              "status": "completed",
+              "credential": true
+            }
+          ],
+          "protection": {
+            "encrypted": false
+          },
+          "source": "remote",
+          "snapshot": {
+            "revision": 2,
+            "updatedAt": "2026-10-30T09:30:00+08:00",
+            "digest": "snapshot:remote-v2"
+          },
+          "backupId": "sync-backup-1"
+        },
+        "backup": 1,
+        "toast": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+      }
+    },
+    {
+      "name": "900-dark-low registered summary omits directions",
+      "passed": true,
+      "detail": "同步完成已更新 4 项，未变化 0 项。查看结果本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+    },
+    {
+      "name": "900-dark-low local snapshot preview no backup",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low unchanged has disabled confirm",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low sync page same preview",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low import preview has default backup and changes",
+      "passed": true
+    },
+    {
+      "name": "900-dark-low overview no old direction modes",
+      "passed": true,
+      "detail": "原型\n05\n＋\nWebDAV 同步\n连接状态\n已连接\n线上版本\n11:02\n·\n已一致\n同步"
+    },
+    {
+      "name": "no page errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "failed": 0,
+  "scope": "prototype only; no external network or real file writes"
+}
