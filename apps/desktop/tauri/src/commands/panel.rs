@@ -111,7 +111,11 @@ impl PanelBounds {
     fn validate(&self, width: f64, height: f64, zoom: f64, macos: bool) -> AppResult<()> {
         let sidebar = PANEL_SIDEBAR_WIDTH * zoom;
         // Windows 原生标题栏在客户区外；只有 macOS Overlay 在 WebView 内占 28px。
-        let titlebar = if macos { PANEL_MACOS_TITLEBAR_HEIGHT } else { 0.0 };
+        let titlebar = if macos {
+            PANEL_MACOS_TITLEBAR_HEIGHT
+        } else {
+            0.0
+        };
         if ![self.x, self.y, self.width, self.height]
             .iter()
             .all(|n| n.is_finite())
@@ -492,7 +496,10 @@ mod tests {
 
     #[test]
     fn show_rejection_reason_names_runtime_and_missing_port() {
-        assert_eq!(show_rejection_reason(RuntimeState::Running, Some(10100)), None);
+        assert_eq!(
+            show_rejection_reason(RuntimeState::Running, Some(10100)),
+            None
+        );
         assert_eq!(
             show_rejection_reason(RuntimeState::Running, None).as_deref(),
             Some("runtime=Running port=none")
@@ -632,10 +639,17 @@ mod tests {
     #[test]
     fn native_caption_panel_starts_at_client_top_without_covering_macos_overlay() {
         for zoom in [0.5, 0.98, 1.0, 1.5, 2.0] {
-            let bounds = PanelBounds { x: 64.0 * zoom, y: 1.0, width: 1180.0 - 64.0 * zoom, height: 759.0 };
+            let bounds = PanelBounds {
+                x: 64.0 * zoom,
+                y: 1.0,
+                width: 1180.0 - 64.0 * zoom,
+                height: 759.0,
+            };
             assert!(bounds.validate(1180., 760., zoom, false).is_ok());
             assert!(bounds.validate(1180., 760., zoom, true).is_err());
-            assert!(PanelBounds { y: -1.0, ..bounds }.validate(1180., 760., zoom, false).is_err());
+            assert!(PanelBounds { y: -1.0, ..bounds }
+                .validate(1180., 760., zoom, false)
+                .is_err());
         }
     }
     #[test]

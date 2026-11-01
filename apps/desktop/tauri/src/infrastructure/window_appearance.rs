@@ -176,7 +176,9 @@ mod native {
         let Some(window) = app.get_window("main") else {
             return;
         };
-        let Some(webview) = app.get_webview("main") else { return };
+        let Some(webview) = app.get_webview("main") else {
+            return;
+        };
         let Ok(handle) = window.hwnd() else { return };
         let hwnd = handle.0 as HWND;
         let preferences = app
@@ -313,8 +315,10 @@ mod native {
         } else {
             tauri::utils::config::Color(232, 237, 245, 255)
         };
-        if let Err(error) = window.set_background_color(Some(color))
-            .and_then(|_| webview.set_background_color(Some(color))) {
+        if let Err(error) = window
+            .set_background_color(Some(color))
+            .and_then(|_| webview.set_background_color(Some(color)))
+        {
             eprintln!("Native window background failed: {error}");
             state.material = "solid";
             state.reason = "webview-background-unavailable";
@@ -366,7 +370,10 @@ mod native {
             if let Some(app) = APP.get() {
                 // WM_ACTIVATE 到达时 GetForegroundWindow 仍可能是切换前的窗口。
                 // 使用消息自己的活动事实，避免失焦后残留透明 Mica 壳。
-                refresh_with_active(app, (msg == WM_ACTIVATE).then_some(wp & 0xffff != WA_INACTIVE as usize));
+                refresh_with_active(
+                    app,
+                    (msg == WM_ACTIVATE).then_some(wp & 0xffff != WA_INACTIVE as usize),
+                );
             }
         }
         result

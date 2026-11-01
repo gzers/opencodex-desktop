@@ -1828,22 +1828,39 @@ mod tests {
         let root = tempfile::tempdir().unwrap();
         let home = tempfile::tempdir().unwrap();
         std::fs::write(package.path().join("SKILL.md"), "# fixture\nincoming").unwrap();
-        let assets = Assets { skills: vec![snapshot_skill(package.path(), "fixture", false, true).unwrap()], mcps: vec![] };
+        let assets = Assets {
+            skills: vec![snapshot_skill(package.path(), "fixture", false, true).unwrap()],
+            mcps: vec![],
+        };
         let local = home.path().join(".agents/skills/fixture");
         std::fs::create_dir_all(&local).unwrap();
         std::fs::write(local.join("SKILL.md"), "# fixture\nlocal").unwrap();
-        std::fs::write(local.join("old.txt"), "remove only after replacement succeeds").unwrap();
+        std::fs::write(
+            local.join("old.txt"),
+            "remove only after replacement succeeds",
+        )
+        .unwrap();
         let id = uuid::Uuid::new_v4().to_string();
         prepare(root.path(), home.path(), &id, &assets).unwrap();
         // Windows 的目录句柄允许读写但不允许删除/重命名；不修改 ACL 或日常目录。
-        let handle = std::fs::OpenOptions::new().read(true).custom_flags(0x0200_0000)
-            .share_mode(0x1 | 0x2).open(&local).unwrap();
+        let handle = std::fs::OpenOptions::new()
+            .read(true)
+            .custom_flags(0x0200_0000)
+            .share_mode(0x1 | 0x2)
+            .open(&local)
+            .unwrap();
         assert!(apply_with(root.path(), &id, &assets, false, &Memory::default()).is_err());
-        assert_eq!(std::fs::read_to_string(local.join("SKILL.md")).unwrap(), "# fixture\nlocal");
+        assert_eq!(
+            std::fs::read_to_string(local.join("SKILL.md")).unwrap(),
+            "# fixture\nlocal"
+        );
         assert!(local.join("old.txt").is_file());
         drop(handle);
         apply_with(root.path(), &id, &assets, false, &Memory::default()).unwrap();
-        assert_eq!(std::fs::read_to_string(local.join("SKILL.md")).unwrap(), "# fixture\nincoming");
+        assert_eq!(
+            std::fs::read_to_string(local.join("SKILL.md")).unwrap(),
+            "# fixture\nincoming"
+        );
         assert!(!local.join("old.txt").exists());
         assert!(backup_count(root.path()) > 0);
     }
