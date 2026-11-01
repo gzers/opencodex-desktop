@@ -361,7 +361,7 @@ mod tests {
         assert_eq!(error, CollectError::Timeout);
         assert_eq!(
             collector.matrix().runtime,
-            crate::types::status::RuntimeState::NotFound
+            crate::types::status::RuntimeState::Loading
         );
         assert_eq!(collector.failure_count(), 1);
     }
@@ -389,7 +389,7 @@ mod tests {
         assert_eq!(error, CollectError::Parse);
         assert_eq!(
             collector.matrix().runtime,
-            crate::types::status::RuntimeState::NotFound
+            crate::types::status::RuntimeState::Loading
         );
     }
 

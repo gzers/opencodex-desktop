@@ -88,7 +88,8 @@ async function withinDeadline(promise: Promise<unknown>, ms: number): Promise<'d
 /**
  * 取到第一份「运行时已定档」的快照；超时则返回最后一次读到的快照（可能仍为 `null`）。
  *
- * 启动时状态采集是异步的：采集器初始为 `not_found`，必须等到首次真实采集落地才能
+ * 启动时状态采集是异步的：采集器初始为 `loading`（S18-02 起；冷启动首次采集可能超时，
+ * 不再先报 `not_found`），必须等到首次真实采集落地才能
  * 判断面板是否已启动，否则会把「运行中的面板」误判成概览。等待有上限，不阻塞启动。
  * 上限对**每次** refresh 生效，单次 refresh 挂起也不会无限阻塞（A04）。
  */

@@ -817,9 +817,9 @@ input.input:focus-visible, .select-trigger:focus-visible, .toggle:focus-visible 
 .panel-shell { display: none; height: 100%; background: var(--panel); overflow: hidden; }
 .panel-shell.show { display: grid; grid-template-rows: 1fr; }
 .panel-frame-iframe.ready { opacity: 1; }
-.panel-state { position: absolute; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; gap: 12px; padding: 24px; text-align: center; background: var(--panel); }
-.panel-state p { max-width: 520px; color: var(--muted); }
-.panel-state .btn + .btn { margin-left: 8px; }
+/* 面板空态：取原型 index.html `.panel-empty`（S18-02）。原型以 display 切换显隐，这里由 v-if 控制。 */
+.panel-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 24px; color: var(--muted); font-size: var(--text-control); }
+.panel-empty strong { color: var(--text); font-size: var(--text-subtitle); }
 .panel-mock.show { display: block; background: var(--panel); }
 .panel-frame { min-height: 0; position: relative; overflow: hidden; background: var(--panel); min-width: calc(960px / var(--ui-zoom)); }
 /* 面板页不保留软件顶栏（IMP-07 用户 2026-10-02 修订，推翻 IMP-06）：整块让给官方页面；

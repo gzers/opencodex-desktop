@@ -9,7 +9,7 @@ use tauri::Manager;
 
 pub const PANEL_VIEW_LABEL: &str = "official-panel-content";
 const PANEL_SIDEBAR_WIDTH: f64 = 64.0;
-const PANEL_TITLEBAR_HEIGHT: f64 = 28.0;
+const PANEL_MACOS_TITLEBAR_HEIGHT: f64 = 28.0;
 /// 面板内容页左上角圆角，与主壳 `.main` 的 `--radius`（12px）同源；按界面缩放折算成窗口坐标。
 const PANEL_CORNER_RADIUS: f64 = 12.0;
 const HUB_SCRIPT: &str = include_str!("../../assets/panel-hub.js");
@@ -108,9 +108,10 @@ impl PanelBounds {
     /// 侧栏 `--side-w`（面板路由 64px）不除以 zoom，缩放后的实际占位是 `64 * zoom`；
     /// 标题栏按 `calc(28px / zoom)` 反向补偿，缩放后恒为 28 物理像素。
     /// 此前这里按常量 64 判定，界面缩放一旦小于 100%（例如 98%）面板就会被误拒。
-    fn validate(&self, width: f64, height: f64, zoom: f64) -> AppResult<()> {
+    fn validate(&self, width: f64, height: f64, zoom: f64, macos: bool) -> AppResult<()> {
         let sidebar = PANEL_SIDEBAR_WIDTH * zoom;
-        let titlebar = PANEL_TITLEBAR_HEIGHT;
+        // Windows 原生标题栏在客户区外；只有 macOS Overlay 在 WebView 内占 28px。
+        let titlebar = if macos { PANEL_MACOS_TITLEBAR_HEIGHT } else { 0.0 };
         if ![self.x, self.y, self.width, self.height]
             .iter()
             .all(|n| n.is_finite())
@@ -297,6 +298,26 @@ fn navigation_allowed(url: &tauri::Url, origin: &tauri::Url) -> bool {
         && (url.path() == "/web" || url.path().starts_with("/web/"))
 }
 
+/// 面板嵌入的排障记录（S18-02）：进程状态、Show 请求与页面加载各记一行，
+/// 便于把「页面没加载」与「进程没启动」分开判断。只写来源（scheme://host:port），
+/// 不写路径、片段或查询；写日志失败不影响面板本身。
+fn panel_log<R: tauri::Runtime>(app: &tauri::AppHandle<R>, message: &str) {
+    if let Some(data_root) = app.try_state::<crate::state::SharedDataRoot>() {
+        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(&data_root.0)
+            .append_event(&format!("panel: {message}"));
+    }
+}
+
+fn show_rejection_reason(runtime: RuntimeState, port: Option<u16>) -> Option<String> {
+    if runtime != RuntimeState::Running {
+        return Some(format!("runtime={runtime:?}"));
+    }
+    if port.is_none() {
+        return Some("runtime=Running port=none".to_owned());
+    }
+    None
+}
+
 #[tauri::command]
 pub async fn sync_embedded_panel(
     app: tauri::AppHandle,
@@ -337,7 +358,9 @@ pub async fn sync_embedded_panel(
         if !scale.is_finite() || !(50.0..=200.0).contains(&scale) { return Err(AppError::NotConfigured); }
         let theme_setting = normalize_theme_setting(request.theme_setting.as_deref());
         let bounds = request.bounds.ok_or(AppError::NotConfigured)?;
-        bounds.validate(size.width, size.height, scale / 100.0)?;
+        bounds.validate(size.width, size.height, scale / 100.0, cfg!(target_os = "macos")).inspect_err(|_| {
+            panel_log(&app, &format!("request rejected; invalid bounds={bounds:?} client={}x{} scale={scale}", size.width, size.height));
+        })?;
         if request.action == PanelAction::Layout && app.get_webview(PANEL_VIEW_LABEL).is_none() {
             return Ok(PanelResult { visible: false, panel_url: None });
         }
@@ -349,8 +372,14 @@ pub async fn sync_embedded_panel(
         }
         let url = if request.action == PanelAction::Show {
             let guard = collector.lock().map_err(|_| AppError::NotConfigured)?;
-            if guard.matrix().runtime != RuntimeState::Running { return Err(AppError::NotConfigured); }
-            Some(validate_panel_url(&format!("http://127.0.0.1:{}/web", guard.port().ok_or(AppError::NotConfigured)?))?)
+            if let Some(reason) = show_rejection_reason(guard.matrix().runtime, guard.port()) {
+                panel_log(&app, &format!("show rejected; {reason}"));
+                return Err(AppError::NotConfigured);
+            }
+            let port = guard.port().ok_or(AppError::NotConfigured)?;
+            Some(validate_panel_url(&format!("http://127.0.0.1:{port}/web")).inspect_err(|_| {
+                panel_log(&app, &format!("show rejected; invalid panel url port={port}"));
+            })?)
         } else { None };
 
         if let Some(url) = url.as_ref() {
@@ -369,6 +398,7 @@ pub async fn sync_embedded_panel(
             let resume_scroll = if request.reload { 0.0 } else { idle.scroll };
             let restore_once = std::sync::atomic::AtomicBool::new(true);
             let origin = url.clone();
+            let origin_label = origin.origin().ascii_serialization();
             let navigation_app = app.clone();
             let load_app = app.clone();
             let builder = tauri::webview::WebviewBuilder::new(PANEL_VIEW_LABEL, tauri::WebviewUrl::External(url))
@@ -392,10 +422,14 @@ pub async fn sync_embedded_panel(
                         tauri::webview::PageLoadEvent::Started => "loading",
                         tauri::webview::PageLoadEvent::Finished => "ready",
                     };
+                    panel_log(&load_app, &format!("page {status}; origin={}", payload.url().origin().ascii_serialization()));
                     notify_main(&load_app, "load", status);
                 });
+            panel_log(&app, &format!("creating embedded view; origin={origin_label}"));
             window.add_child(builder, tauri::LogicalPosition::new(bounds.x, bounds.y),
-                tauri::LogicalSize::new(bounds.width, bounds.height))?
+                tauri::LogicalSize::new(bounds.width, bounds.height)).inspect_err(|error| {
+                    panel_log(&app, &format!("embedded view creation failed; {error}"));
+                })?
         };
         view.set_bounds(bounds.rect())?;
         view.set_zoom(scale / 100.0)?;
@@ -415,6 +449,7 @@ pub async fn sync_embedded_panel(
         if request.action == PanelAction::Show {
             if request.reload { view.reload()?; }
             view.show()?;
+            if request.reload { panel_log(&app, "show; reload requested"); }
         }
         Ok(PanelResult { visible: true, panel_url: url.map(|url| url.to_string()) })
     }).await.map_err(|_| AppError::NotConfigured)?
@@ -453,6 +488,19 @@ mod tests {
         assert!((corner_radius_for_scale(98.0) - 11.76).abs() < 1e-9);
         assert_eq!(corner_radius_for_scale(150.0), 18.0);
         assert_eq!(corner_radius_for_scale(0.0), 0.0);
+    }
+
+    #[test]
+    fn show_rejection_reason_names_runtime_and_missing_port() {
+        assert_eq!(show_rejection_reason(RuntimeState::Running, Some(10100)), None);
+        assert_eq!(
+            show_rejection_reason(RuntimeState::Running, None).as_deref(),
+            Some("runtime=Running port=none")
+        );
+        assert_eq!(
+            show_rejection_reason(RuntimeState::Loading, None).as_deref(),
+            Some("runtime=Loading")
+        );
     }
 
     #[test]
@@ -533,7 +581,7 @@ mod tests {
             width: 1115.,
             height: 715.,
         };
-        assert!(valid.validate(1180., 760., 1.0).is_ok());
+        assert!(valid.validate(1180., 760., 1.0, true).is_ok());
         for bad in [
             PanelBounds { x: 0., ..valid },
             PanelBounds { y: 27., ..valid },
@@ -550,7 +598,7 @@ mod tests {
                 ..valid
             },
         ] {
-            assert!(bad.validate(1180., 760., 1.0).is_err(), "{bad:?}");
+            assert!(bad.validate(1180., 760., 1.0, true).is_err(), "{bad:?}");
         }
     }
 
@@ -564,9 +612,9 @@ mod tests {
             width: 1117.28,
             height: 732.,
         };
-        assert!(at_98.validate(1180., 760., 0.98).is_ok());
+        assert!(at_98.validate(1180., 760., 0.98, true).is_ok());
         assert!(PanelBounds { x: 62., ..at_98 }
-            .validate(1180., 760., 0.98)
+            .validate(1180., 760., 0.98, true)
             .is_err());
 
         // 放大同样要跟着走：150% 时侧栏实际占 96 物理像素。
@@ -576,10 +624,19 @@ mod tests {
             width: 900.,
             height: 700.,
         };
-        assert!(at_150.validate(1180., 760., 1.5).is_ok());
+        assert!(at_150.validate(1180., 760., 1.5, true).is_ok());
         assert!(PanelBounds { x: 95., ..at_150 }
-            .validate(1180., 760., 1.5)
+            .validate(1180., 760., 1.5, true)
             .is_err());
+    }
+    #[test]
+    fn native_caption_panel_starts_at_client_top_without_covering_macos_overlay() {
+        for zoom in [0.5, 0.98, 1.0, 1.5, 2.0] {
+            let bounds = PanelBounds { x: 64.0 * zoom, y: 1.0, width: 1180.0 - 64.0 * zoom, height: 759.0 };
+            assert!(bounds.validate(1180., 760., zoom, false).is_ok());
+            assert!(bounds.validate(1180., 760., zoom, true).is_err());
+            assert!(PanelBounds { y: -1.0, ..bounds }.validate(1180., 760., zoom, false).is_err());
+        }
     }
     #[test]
     fn idle_reclaim_requires_same_generation_hidden_view_and_elapsed_deadline() {

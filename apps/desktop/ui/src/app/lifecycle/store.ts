@@ -184,7 +184,12 @@ export const useLifecycleStore = defineStore("lifecycle", {
             (action === "start" ||
               this.processProgressSawTransition ||
               (action === "restart" && pidChanged))
-      const failed = ["starting_failed", "unreachable"].includes(runtime)
+      // 只有官方明确报告的启动失败才立即判失败（S18-02）。启动/重启后代理端口
+      // 尚未监听时会短暂读到 `unreachable`，这是过渡观测而非启动结果：继续等待
+      // 运行态或超时，避免「已启动、网页能打开」却被报成未能进入可用状态。
+      const failed =
+        runtime === "starting_failed" ||
+        (action === "stop" && runtime === "unreachable")
       if (complete || failed) {
         if (failed) {
           this.processProgressError =
