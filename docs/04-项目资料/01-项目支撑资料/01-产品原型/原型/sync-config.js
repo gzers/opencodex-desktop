@@ -28,6 +28,8 @@
    {id:'account:opencode',group:'accounts',name:'OpenCode · 原生账户',accountPlatform:'opencode',owner:'platform-native',provider:'provider-specific',authKind:'oauth',source:'OpenCode原生凭据',files:'未接入平台适配器'},
    {id:'skill:review',group:'skills',name:'Code Review Skill',summary:'SKILL.md + 2 个资源文件',source:'本机扩展库',fields:'Skill 实际内容、资源、启用状态；此 fixture 不含凭据',files:'skills/code-review/**'},
    {id:'mcp:docs',group:'mcp',name:'Docs MCP',summary:'HTTP 服务器 · 完整定义',source:'本机扩展库',fields:'传输类型、地址、参数、启用状态；Authorization 需另选扩展凭据',extensionSecret:true,files:'MCP 完整定义 / extension-config.json'},
+   // 客户端应用自带的 MCP 含本机路径与应用版本，跨设备直接覆盖会失效：默认不同步，用户可手动勾选。
+   {id:'mcp:node_repl',group:'mcp',name:'node_repl',summary:'由客户端应用维护 · 含本机路径',source:'Codex 桌面应用',fields:'启动命令、本机路径与应用版本；默认不同步，可手动勾选',defaultExcluded:true,files:'客户端应用维护的 MCP 定义'},
    {id:'preferences:desktop',group:'preferences',name:'通用偏好',summary:'主题、语言与可移植显示偏好',source:'Desktop',fields:'排除机器绝对路径、窗口坐标、日志、缓存、执行绑定、未提交草稿及本机文件/WebDAV范围、凭据勾选、加密选项和口令',files:'preferences.json（字段白名单）'},
    {id:'endpoint:personal',group:'endpoints',name:'个人 WebDAV',summary:'文件同步默认包含 · 密码随配置同步',source:'Desktop WebDAV 配置',fields:'服务地址、目录、用户名与连接密码；导入为未启用连接，不改当前连接或本机同步范围；不包含同步加密口令',password:true,files:'sync_endpoints / 受保护凭据部分'}
   ); return list.map(accountDefaults).concat(window.conversationPrototype?.syncObjects()||[]);
@@ -74,16 +76,21 @@
   window.prototypeNotificationPublisher.publish(eventId,{operationId:String(receipt.operationId),total:receipt.total??receipt.items?.length??0,downloaded:receipt.downloaded||0,uploaded:receipt.uploaded||0,skipped:receipt.skipped||0,failed:receipt.failed?.length||0,errorCode:receipt.errorCode||'none'});
  }
  const localFingerprints={},versions={local:{},remote:{}},protection={enabled:false,passphrase:''},importCredentialPrefs={keys:true,extensions:true},demoObjects={};
+ // 同名 MCP 在各客户端定义不同时，只记客户端名与差异字段名，不记值；选定来源后记为受管定义，之后不再询问。
+ let mcpVariants={},managedMcp={};
+ const conflict=id=>managedMcp[id]?null:clone(mcpVariants[id]);
  const stamp=n=>'2026-10-30T'+String(9+Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')+':00+08:00';
  function seedVersions(scene='normal'){
   snapshots.local={revision:1,updatedAt:stamp(20),digest:'snapshot:local-v1'};
   snapshots.remote={revision:2,updatedAt:stamp(30),digest:'snapshot:remote-v2'};
   if(scene==='upload'){snapshots.local={revision:3,updatedAt:stamp(40),digest:'snapshot:local-v3'};}
   if(scene==='same')snapshots.remote=clone(snapshots.local);
+  if(scene==='mcp-source')snapshots.local={revision:3,updatedAt:stamp(40),digest:'snapshot:local-v3'};
   for(const x of catalog.filter(eligible)){
    const local={updatedAt:stamp(0),revision:1,digest:x.id+':v1'};let remote=clone(local);
    if(scene==='download'||scene==='normal'&&['channel:newapi','template:gpt','skill:review','preferences:desktop','mcp:docs'].includes(x.id))remote={updatedAt:stamp(5),revision:2,digest:x.id+':v2'};
    if(scene==='upload')Object.assign(local,{updatedAt:stamp(6),revision:2,digest:x.id+':local-v2'});
+   if(scene==='mcp-source'&&['skill:review','mcp:docs'].includes(x.id))Object.assign(local,{updatedAt:stamp(21),revision:2,digest:x.id+':local-v2'});
    // 此对象的本机内容时间虽更新，本次仍只服从整份快照来源，不逐对象换方向。
    if(scene==='normal'&&x.id==='mcp:docs')Object.assign(local,{updatedAt:stamp(21),revision:3,digest:x.id+':local-v3'});
    versions.local[x.id]=local;versions.remote[x.id]=remote;
@@ -158,7 +165,7 @@
   const selected=closure().ids.size,retry=result?.tab===tab&&result.failed?.length?btn('重试失败项','retry',run?'disabled':''):'';
   host.innerHTML='<div class="sx-tabs" data-page-tabs data-tabs-scroll="inner" role="tablist" aria-label="同步方式">'+[['file','文件同步'],['webdav','WebDAV 同步']].map(([id,name])=>'<button type="button" role="tab" id="sxTab-'+id+'" aria-controls="sxPanel" aria-selected="'+(tab===id)+'" tabindex="'+(tab===id?'0':'-1')+'" data-sx="tab" data-id="'+id+'">'+name+'</button>').join('')+'</div>'+
    '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'"><header class="sx-top"><div><h2>'+(tab==='file'?'导入与导出':'设备间同步')+'</h2><p class="sx-muted">'+(tab==='file'?'按下方范围导出配置；导入时在所选文件内选择范围。':'较新版本覆盖所选范围，确认前可查看变化。')+'</p></div><div class="sx-actions">'+(tab==='file'?(result?.tab===tab&&result.items?.length?btn('查看结果','result-details'):'')+retry+btn('导入配置','import')+btn('导出配置','export',selected?'':'disabled',true):(result?.tab===tab&&result.items?.length?btn('查看结果','result-details'):'')+retry+btn(run?'同步中…':'同步','check',run||!selected?'disabled':'',true))+'</div></header>'+
-   (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>'+sxAnn('03','新版覆盖与预览确认','S18-01/03/04/05：范围和凭据选择在当前文档自动记住，同步先按整份快照确定一个来源，展示变化；确认后写mock文件，取消不写。概览入口全程留在概览。Skill整体更新并移除本Skill旧文件；官方openai忽略。下载与导入默认勾选更新前备份，备份内容对应实际更新范围。右侧可演示本机新版、云端新版、无变化、备份失败及失败重试。首次无版本远端优先、整对象删除传播、设备专属字段与未保存编辑仍待确认；本轮不演示删除用户对象，也不把建议写为生产结论。'):'') +
+   (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>'+sxAnn('03','新版覆盖与预览确认','S18-01/03/04/05：范围和凭据选择在当前文档自动记住，同步先按整份快照确定一个来源，展示变化；确认后写mock文件，取消不写。概览入口全程留在概览。Skill整体更新并移除本Skill旧文件；官方openai忽略。下载与导入默认勾选更新前备份，备份内容对应实际更新范围。右侧可演示本机新版、云端新版、无变化、备份失败及失败重试。同名MCP在各客户端定义不同时，预览只列客户端名与差异字段名并要求选择来源；不选则本项本次不同步，其余对象照常更新；选定后记为受管定义，之后不再询问（右侧选“同名MCP定义不同”）。客户端应用维护、含本机路径的MCP（如node_repl）默认不同步，可手动勾选。首次无版本远端优先、整对象删除传播、设备专属字段与未保存编辑仍待确认；本轮不演示删除用户对象，也不把建议写为生产结论。'):'') +
    '<div class="sx-layout"><section class="sx-scope" aria-label="'+(tab==='file'?'导出范围':'同步范围')+'">'+scopeHTML()+'</section>'+credentialsHTML()+'</div>' +
    (run&&run.tab===tab?'<div class="sx-result" role="status" aria-live="polite"><strong>'+(run.tab==='file'?'正在导入':'正在同步')+'</strong><span>正在更新所选 '+run.ids.length+' 项内容…</span></div>':'') +
    '</div>';
@@ -189,7 +196,7 @@
    showDialog('detail',x.name,'<dl class="sx-detail-list"><dt>邮箱 / 标签</dt><dd>'+esc(x.email||x.name)+'</dd><dt>来源账户</dt><dd>'+esc(x.sourceAccountId||x.id)+'</dd><dt>账户平台</dt><dd>'+esc(accountCapabilities.platforms[x.accountPlatform]||x.accountPlatform)+'</dd><dt>管理方</dt><dd>'+esc(x.source)+'</dd><dt>授权来源 / 认证</dt><dd>'+esc(x.provider+' / '+x.authKind)+'</dd><dt>可选范围</dt><dd>'+esc(x.selectable===false?'暂不支持选择':'仅账户身份与显示信息')+'</dd></dl>'+accountOptions,'关闭',closeModal,{cancelLabel:'关闭',hideConfirm:true,annotationText:'账户平台与能力门已获本轮原型确认。对象、状态均为固定原型资料；不读取真实账户或登录材料。生产按已确认的适配器与真实证据登记，不能由原型成功状态晋升支持。'});return;
   }
   const endpointOptions=x.password?'<details class="sx-account-options"><summary>同步选项</summary>'+check('data-sx-endpoint-config="'+esc(id)+'"','仅同步配置，不含密码',state().endpointConfigOnly.has(id),!state().selected.has(id))+'<p class="sx-muted">默认随配置同步连接密码；导入后需另行启用连接。同步加密口令始终不进入配置包。</p></details>':'';
-  showDialog('detail',x.name,'<p class="sx-muted">配置对象详情 · 敏感值不展示</p><dl class="sx-detail-list"><dt>归属</dt><dd>'+esc(x.source)+'</dd>'+(x.group==='accounts'?'<dt>账户平台</dt><dd>'+esc(accountCapabilities.platforms[x.accountPlatform]||x.accountPlatform)+'</dd><dt>授权来源 / 认证</dt><dd>'+esc(x.provider+' / '+x.authKind)+'</dd><dt>登录迁移</dt><dd>'+esc(x.capability.reason)+'</dd>':'')+'<dt>包含字段</dt><dd>'+esc(x.fields)+'</dd><dt>配置来源</dt><dd>'+esc(x.files)+'</dd>'+(x.endpoint?'<dt>当前连接地址</dt><dd>'+esc(x.endpoint)+'</dd>':'')+(x.nodes?.length?'<dt>服务节点</dt><dd>'+x.nodes.map(n=>esc(n.name)+(n.current?' · 当前':'')+'：'+esc(n.url||'待配置')).join('<br>')+'</dd>':'')+(versions.local[id]?'<dt>内容版本</dt><dd>v'+versions.local[id].revision+' · '+esc(versions.local[id].updatedAt.replace('T',' ').replace('+08:00',''))+'</dd>':'')+(demoObjects[id]?.files?'<dt>当前文件</dt><dd>'+demoObjects[id].files.map(esc).join('<br>')+'</dd>':'')+'<dt>依赖</dt><dd>'+esc(x.deps?.length?x.deps.join('、'):'无额外模版依赖')+'</dd>'+(x.models?.length?'<dt>已选模型</dt><dd>'+x.models.map(esc).join('、')+'</dd>':'')+'<dt>凭据</dt><dd>'+esc(x.key?'API Key 单独选择；不显示或复制掩码值':x.login?'登录状态默认随账户同步，接收端自动恢复并检查':x.group==='accounts'?'当前只同步已支持的账户信息；本机已有登录保持，新设备需登录':x.extensionSecret?'授权头 / 环境变量单独选择':x.password?'连接密码默认随配置同步，可选仅配置；不包含同步加密口令':'不携带凭据')+'</dd></dl>'+accountOptions+endpointOptions+(['accounts','endpoints','dialog-policies'].includes(x.group)?'':'<p class="sx-note">同一渠道原位更新，官方 openai 保持本机自带能力。</p>'),'关闭',closeModal,{cancelLabel:'关闭',hideConfirm:true});
+  showDialog('detail',x.name,'<p class="sx-muted">配置对象详情 · 敏感值不展示</p><dl class="sx-detail-list"><dt>归属</dt><dd>'+esc(x.source)+'</dd>'+(x.group==='accounts'?'<dt>账户平台</dt><dd>'+esc(accountCapabilities.platforms[x.accountPlatform]||x.accountPlatform)+'</dd><dt>授权来源 / 认证</dt><dd>'+esc(x.provider+' / '+x.authKind)+'</dd><dt>登录迁移</dt><dd>'+esc(x.capability.reason)+'</dd>':'')+'<dt>包含字段</dt><dd>'+esc(x.fields)+'</dd>'+(x.group==='mcp'?'<dt>定义来源</dt><dd>'+esc(managedMcp[id]?'已采用 '+managedMcp[id].source+'（受管定义）':mcpVariants[id]?'各客户端定义不同：'+mcpVariants[id].clients.join('、')+'（差异字段：'+mcpVariants[id].fields.join('、')+'）；同步或导出时选择来源':x.defaultExcluded?'由客户端应用维护，默认不同步':'各客户端定义一致')+'</dd>':'')+'<dt>配置来源</dt><dd>'+esc(x.files)+'</dd>'+(x.endpoint?'<dt>当前连接地址</dt><dd>'+esc(x.endpoint)+'</dd>':'')+(x.nodes?.length?'<dt>服务节点</dt><dd>'+x.nodes.map(n=>esc(n.name)+(n.current?' · 当前':'')+'：'+esc(n.url||'待配置')).join('<br>')+'</dd>':'')+(versions.local[id]?'<dt>内容版本</dt><dd>v'+versions.local[id].revision+' · '+esc(versions.local[id].updatedAt.replace('T',' ').replace('+08:00',''))+'</dd>':'')+(demoObjects[id]?.files?'<dt>当前文件</dt><dd>'+demoObjects[id].files.map(esc).join('<br>')+'</dd>':'')+'<dt>依赖</dt><dd>'+esc(x.deps?.length?x.deps.join('、'):'无额外模版依赖')+'</dd>'+(x.models?.length?'<dt>已选模型</dt><dd>'+x.models.map(esc).join('、')+'</dd>':'')+'<dt>凭据</dt><dd>'+esc(x.key?'API Key 单独选择；不显示或复制掩码值':x.login?'登录状态默认随账户同步，接收端自动恢复并检查':x.group==='accounts'?'当前只同步已支持的账户信息；本机已有登录保持，新设备需登录':x.extensionSecret?'授权头 / 环境变量单独选择':x.password?'连接密码默认随配置同步，可选仅配置；不包含同步加密口令':'不携带凭据')+'</dd></dl>'+accountOptions+endpointOptions+(['accounts','endpoints','dialog-policies'].includes(x.group)?'':'<p class="sx-note">同一渠道原位更新，官方 openai 保持本机自带能力。</p>'),'关闭',closeModal,{cancelLabel:'关闭',hideConfirm:true});
  }
  function exportSnapshot(source,cl,secrets){
   const m=window.modelPrototype?.state(),policy=m?.[source];
@@ -209,22 +216,28 @@
   const cl=closure(),secrets=secretIds(),count=secretCount();
   const manifest={demo:true,kind:'configuration-sync',objects:[...cl.ids],dependencies:[...cl.deps].map(([id,versions])=>({id,revisions:[...versions]})),credentials:secrets,accounts:[...cl.ids].map(find).filter(x=>x?.group==='accounts').map(x=>({id:x.id,accountPlatform:x.accountPlatform,owner:x.owner,provider:x.provider,sourceAccountId:x.sourceAccountId,subject:x.subject||null,tenant:x.tenant||null,label:x.name,email:x.email||null})),source:source==='draft'?'draft':'committed',snapshotSource:source,encryptionRequired:false,snapshot:exportSnapshot(source,cl,secrets),modules:[...cl.ids].filter(id=>find(id)?.group==='dialog-policies').map(id=>({id,schemaVersion:1,content:clone(find(id).payload)}))};
   const destination='<div class="sx-field"><span>保存位置</span><div class="sx-destination" role="group" aria-label="保存位置"><label class="sx-check"><input type="radio" name="sxDestination" value="default" checked><span>默认导出目录</span></label><label class="sx-check"><input type="radio" name="sxDestination" value="custom"><span>自定义目录</span></label></div><div id="sxCustomDir" hidden><div class="sx-dir-row"><input id="sxDirPath" class="input" type="text" readonly placeholder="尚未选择目录"><button type="button" class="btn ghost" data-sx="choose-dir">选择目录…</button></div><p class="sx-muted">未选择目录时按默认导出目录保存。</p></div></div>';
+  const conflicts=[...cl.ids].filter(id=>find(id)?.group==='mcp'&&conflict(id));
+  const sourceBlock=conflicts.length?'<div class="sx-info sx-mcp-conflicts"><strong>同名 MCP 定义不同</strong><ul class="sx-outcomes">'+conflicts.map(id=>'<li><div><strong>'+esc(find(id).name)+'</strong><small>'+esc('在 '+mcpVariants[id].clients.join('、')+' 中不同（差异字段：'+mcpVariants[id].fields.join('、')+'）')+'</small>'+sourcePicker(id,'暂不导出')+'</div></li>').join('')+'</ul></div>':'';
   const scopesLabel=groups.filter(([id])=>[...cl.ids].some(key=>find(key)?.group===id)).map(([,label])=>label).join(' / ');
   const packagePath='<div class="sx-export-layout"><div class="sx-export-tree" aria-label="导出目录结构"><p class="sx-export-kicker">生成位置</p><code>导出目录/<br>└── 2026-10-23/<br>&nbsp;&nbsp;&nbsp;&nbsp;└── 备份包-14-30-12-8F3A/<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 本次所选配置…<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 模版与所选版本<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── manifest / 校验信息</code><p class="sx-muted">按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。</p></div><div class="sx-export-summary"><strong>'+cl.ids.size+' 项配置 · 同一备份包</strong><p class="sx-muted">'+(count?'含 '+count+' 项凭据；可选择加密，不加密则凭据以明文写入，文件可被直接读取。口令始终不写入包。':'不含凭据，可直接使用完整性校验。')+'复制整个备份包即可带到另一台设备。</p><p class="sx-muted">包内按 '+scopesLabel+' 分组，导入时仍按所选范围识别。</p></div></div>';
-  const body=destination+packagePath+'<div class="sx-info"><strong>'+cl.ids.size+' 项配置 · '+(count?'含 '+count+' 项凭据':'不含任何凭据')+'</strong><br>渠道 Key '+secrets.keys.length+' 项 / 账户登录态 '+secrets.accounts.length+' 项 / 扩展凭据 '+secrets.extensions.length+' 项 / WebDAV 密码 '+secrets.endpointPasswords.length+' 项</div>'+check('id="sxEncrypt"','加密配置包',false,false)+'<div id="sxPassFields" hidden><div class="sx-grid"><label class="sx-field"><span>加密口令（至少 8 位）</span><input id="sxPass" class="input" type="password" autocomplete="new-password"></label><label class="sx-field"><span>再次输入</span><input id="sxPassAgain" class="input" type="password" autocomplete="new-password"></label></div></div><details><summary>查看内容清单</summary><pre>'+esc(JSON.stringify(manifest,null,2))+'</pre></details>';
+  const body=destination+packagePath+sourceBlock+'<div class="sx-info"><strong>'+cl.ids.size+' 项配置 · '+(count?'含 '+count+' 项凭据':'不含任何凭据')+'</strong><br>渠道 Key '+secrets.keys.length+' 项 / 账户登录态 '+secrets.accounts.length+' 项 / 扩展凭据 '+secrets.extensions.length+' 项 / WebDAV 密码 '+secrets.endpointPasswords.length+' 项</div>'+check('id="sxEncrypt"','加密配置包',false,false)+'<div id="sxPassFields" hidden><div class="sx-grid"><label class="sx-field"><span>加密口令（至少 8 位）</span><input id="sxPass" class="input" type="password" autocomplete="new-password"></label><label class="sx-field"><span>再次输入</span><input id="sxPassAgain" class="input" type="password" autocomplete="new-password"></label></div></div><details><summary>查看内容清单</summary><pre>'+esc(JSON.stringify(manifest,null,2))+'</pre></details>';
   showDialog('export','确认导出',body,'生成配置包',()=>{
    const encrypted=$('#sxEncrypt').checked,p=$('#sxPass').value;if(encrypted&&(p.length<8||p!==$('#sxPassAgain').value)){setText('#sxError','请输入至少 8 位的加密口令，并保持两次一致。');return;}// 文件保护可选；明文说明已在当前确认中展示，不增加确认步骤。
-   const custom=$('[name=sxDestination]:checked')?.value==='custom';const dir=custom?($('#sxDirPath')?.value.trim()||''):'';if(custom&&!dir){setText('#sxError','请选择自定义目录，或改回默认导出目录。');return;}const exportRoot=dir||'默认导出目录',packagePathShown=exportRoot+'/2026-10-23/备份包-14-30-12-8F3A',operationId=++runSerial;
-   const failed=scenario==='backup-fail',receipt={tab:'file',kind:'export',operationId,total:cl.ids.size,packagePath:failed?null:packagePathShown,protection:{encrypted},failed:failed?[{id:'export',reason:'目标目录无法写入'}]:[],errorCode:failed?'write':'none'};
-   if(!failed)lastExport={...manifest,encrypted,destination:dir||'default',packagePath:packagePathShown,simulated:true};
-   closeModal();render();recordActivity('export',cl.ids.size,!failed);publishReceipt(failed?'sync.export.failed':'sync.export.complete',receipt);
+   const custom=$('[name=sxDestination]:checked')?.value==='custom';const dir=custom?($('#sxDirPath')?.value.trim()||''):'';if(custom&&!dir){setText('#sxError','请选择自定义目录，或改回默认导出目录。');return;}const picked=pickedSources(),deferredIds=conflicts.filter(id=>!picked[id]),ids=[...cl.ids].filter(id=>!deferredIds.includes(id));if(!ids.length){setText('#sxError','请为同名 MCP 选择来源，或调整导出范围。');return;}
+   const mcpSources=Object.fromEntries(conflicts.filter(id=>picked[id]).map(id=>[id,picked[id]])),kept=new Set(ids),exported={...manifest,objects:ids,credentials:Object.fromEntries(Object.entries(manifest.credentials).map(([k,v])=>[k,v.filter(id=>kept.has(id))])),mcpSources};
+   const exportRoot=dir||'默认导出目录',packagePathShown=exportRoot+'/2026-10-23/备份包-14-30-12-8F3A',operationId=++runSerial;
+   const failed=scenario==='backup-fail',receipt={tab:'file',kind:'export',operationId,total:ids.length,skipped:deferredIds.length,packagePath:failed?null:packagePathShown,protection:{encrypted},failed:failed?[{id:'export',reason:'目标目录无法写入'}]:[],errorCode:failed?'write':'none'};
+   if(!failed){for(const [id,source] of Object.entries(mcpSources))managedMcp[id]={source};}
+   if(!failed)lastExport={...exported,encrypted,destination:dir||'default',packagePath:packagePathShown,simulated:true};
+   closeModal();render();recordActivity('export',ids.length,!failed);publishReceipt(failed?'sync.export.failed':'sync.export.complete',receipt);
   },{annotationText:['选择范围 → 确认内容 → 生成配置包','未选择的凭据不进入包，也不会由模版依赖重新带入。']});
  }
  // 一次预览只使用一份来源快照，不把各对象分别拼成双向结果。
- function updateRows(source=snapshotSource()){return catalog.filter(eligible).map(x=>({id:x.id,name:x.name,group:x.group,direction:direction(x.id,source),local:clone(versions.local[x.id]),remote:clone(versions.remote[x.id])}));}
+ function updateRows(source=snapshotSource()){return catalog.filter(eligible).map(x=>({id:x.id,name:x.name,group:x.group,direction:direction(x.id,source),local:clone(versions.local[x.id]),remote:clone(versions.remote[x.id])})).map(x=>x.group==='mcp'&&x.direction==='upload'&&conflict(x.id)?{...x,conflict:conflict(x.id)}:x);}
  function rememberScope(){savedScopes.file=signature(scopes.file);savedScope=savedScopes.webdav=signature(scopes.webdav);}
  function changeSummary(row){
   if(row.direction==='skip')return '内容一致，保持当前配置';
+  if(row.conflict)return '同名定义在 '+row.conflict.clients.join('、')+' 中不同（差异字段：'+row.conflict.fields.join('、')+'），请选择来源';
   if(!row.local||!row.remote)return '新增配置';
   if(row.group==='channels'){
    const m=window.modelPrototype?.state(),incoming=window.modelPrototype?.syncFixture().channels.find(x=>x.id===row.id)?.provider,current=m?.saved.providers.find(x=>'channel:'+x.id===row.id);
@@ -234,9 +247,11 @@
   const summaries={channels:'更新服务节点、模型选择与顺序',templates:'更新已保存模版内容',accounts:'更新账户信息，保留本机登录',skills:'替换Skill内容；移除旧文件 scripts/legacy.js，新增 references/checklist.md',mcp:'替换MCP定义与所选凭据',preferences:'更新所选桌面偏好',endpoints:'导入连接配置，不切换当前连接'};
   return summaries[row.group]||'更新所选配置';
  }
+ function sourcePicker(id,empty){const c=conflict(id);if(!c)return '';return '<label class="sx-mcp-source"><span>采用来源</span><select data-sx-mcp-source="'+esc(id)+'" aria-label="'+esc(find(id)?.name||id)+' 采用来源"><option value="">'+empty+'</option>'+c.clients.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join('')+'</select></label>';}
+ function pickedSources(){return Object.fromEntries($$('[data-sx-mcp-source]').map(el=>[el.dataset.sxMcpSource,el.value]));}
  function changesHTML(rows){
   const changed=rows.filter(x=>x.direction!=='skip'),same=rows.length-changed.length;
-  return '<div class="sx-preview-summary"><strong>'+changed.length+' 项变化</strong><span class="sx-muted">'+same+' 项保持不变</span></div>'+(changed.length?'<ul class="sx-outcomes sx-change-list">'+changed.map(x=>'<li><div><strong>'+esc(x.name)+'</strong><small>'+esc(changeSummary(x))+'</small></div><span class="sx-mark">'+(!x.local||!x.remote?'新增':'更新')+'</span></li>').join('')+'</ul>':'<p class="sx-muted">所选内容已一致，无需更新。</p>');
+  return '<div class="sx-preview-summary"><strong>'+changed.length+' 项变化</strong><span class="sx-muted">'+same+' 项保持不变</span></div>'+(changed.length?'<ul class="sx-outcomes sx-change-list">'+changed.map(x=>'<li><div><strong>'+esc(x.name)+'</strong><small>'+esc(changeSummary(x))+'</small>'+(x.conflict?sourcePicker(x.id,'暂不同步'):'')+'</div><span class="sx-mark">'+(x.conflict?'选择来源':!x.local||!x.remote?'新增':'更新')+'</span></li>').join('')+'</ul>':'<p class="sx-muted">所选内容已一致，无需更新。</p>');
  }
  function syncPreview(){
   refreshLocalVersions();const source=snapshotSource(),ids=closure(scopes.webdav).ids;
@@ -247,8 +262,10 @@
    if(!changed)return;
    if(frozen.encrypted&&!$('#sxPreviewPass')?.value){setText('#sxError','请填写保护口令。');return;}
    if(frozen.encrypted)protection.passphrase=$('#sxPreviewPass').value;
-   const backup=!!$('#sxPreviewBackup')?.checked;
-   closeModal();startUpdate('webdav',frozen.rows,frozen.secrets,{encrypted:frozen.encrypted},undefined,{backup,source:frozen.source,snapshot:frozen.snapshot,scenario:frozen.scenario});
+   const backup=!!$('#sxPreviewBackup')?.checked,picked=pickedSources();
+   // 未选来源的同名 MCP 本次不同步，其余对象照常更新；不显示也不比较定义值。
+   const rows=frozen.rows.map(x=>!x.conflict?x:picked[x.id]?{...x,mcpSource:picked[x.id]}:{...x,direction:'skip',deferred:true,reason:'未选择来源，本次未同步'});
+   closeModal();startUpdate('webdav',rows,frozen.secrets,{encrypted:frozen.encrypted},undefined,{backup,source:frozen.source,snapshot:frozen.snapshot,scenario:frozen.scenario});
   },{cancelLabel:changed?'取消':'关闭',annotationText:'整份快照确定一个新版来源，只覆盖已选范围。此窗口不写文件；确认后先做已勾选备份再更新，取消不备份不写入。所有备份与变化均为内存示例，不连接服务器；同时间或无可靠版本规则仍待生产设计明确。'});
   preview=frozen;$('#modalConfirm').disabled=!changed;
  }
@@ -322,12 +339,13 @@
    versions.local[row.id]=clone(version);versions.remote[row.id]=clone(version);
    if(row.direction==='download')localFingerprints[row.id]=fingerprint(row.id);
    if(row.direction==='download')demoObjects[row.id]={revision:version.revision,files:row.group==='skills'?['SKILL.md','scripts/review.js','references/checklist.md']:null};
+   if(row.group==='mcp'){if(row.mcpSource)managedMcp[row.id]={source:row.mcpSource};else if(row.direction==='download'){managedMcp[row.id]={source:'云端定义'};delete mcpVariants[row.id];}}
    done.push({...row,status:'completed',credential:operation.secrets.keys.includes(row.id)||operation.secrets.extensions.includes(row.id)});
   }
   run=null;serial++;
   const downloaded=done.filter(x=>x.direction==='download').length,uploaded=done.filter(x=>x.direction==='upload').length;
   const title=failed.length?(done.length?'部分同步完成':'同步未完成'):operation.tab==='file'?'导入完成':'同步完成';
-  const detail='已更新 '+done.length+' 项，未变化 '+skips.length+' 项'+(failed.length?'，'+failed.length+' 项未完成':'');
+  const deferred=skips.filter(x=>x.deferred).length,detail='已更新 '+done.length+' 项，未变化 '+(skips.length-deferred)+' 项'+(deferred?'，待选来源 '+deferred+' 项':'')+(failed.length?'，'+failed.length+' 项未完成':'');
   result={tab:operation.tab,operationId:operation.id,title,detail:detail+'。',downloaded,uploaded,skipped:skips.length,failed,items:[...done,...skips,...failed],protection:clone(operation.protection),source:operation.source,snapshot:clone(operation.snapshot),backupId:operation.backupId||null};lastRun=clone(result);failedRun=failed.length?{...operation,rows:failed.map(({status,reason,...x})=>x)}:null;
   lastComparison=null;render();
   recordActivity(operation.tab==='file'?'import':'sync',done.length+skips.length,failed.length===0,{uploaded,downloaded,remoteTime:operation.snapshot?.updatedAt});
@@ -415,14 +433,14 @@
  function routeChanged(){if(document.documentElement.dataset.route!=='sync')return;const p=new URLSearchParams(location.hash.split('?')[1]||'');tab=p.get('tab')==='webdav'?'webdav':'file';catalog=collect();render();}
  new MutationObserver(routeChanged).observe(document.documentElement,{attributes:true,attributeFilter:['data-route']});
  window.addEventListener('hashchange',routeChanged);
- const scenes=[['normal','云端新版 · 预览后更新本机'],['download','云端新版 · 全范围有变化'],['upload','本机新版 · 预览后更新云端'],['same','内容相同 · 无需更新'],['partial','一项失败 · 其余完成'],['network-error','连接中断 · 旧内容保留'],['backup-fail','更新前备份失败'],['write-fail','本地写入失败 · 可重试']];
+ const scenes=[['normal','云端新版 · 预览后更新本机'],['download','云端新版 · 全范围有变化'],['upload','本机新版 · 预览后更新云端'],['same','内容相同 · 无需更新'],['partial','一项失败 · 其余完成'],['network-error','连接中断 · 旧内容保留'],['backup-fail','更新前备份失败'],['write-fail','本地写入失败 · 可重试'],['mcp-source','同名MCP定义不同 · 选择来源']];
  const sceneSelect=$('#sxMockScenario');if(sceneSelect)sceneSelect.innerHTML=scenes.map(([id,label])=>'<option value="'+id+'">'+label+'</option>').join('');
- function setScenario(value){if(!scenes.some(([id])=>id===value))return;scenario=value;seedVersions(['download','upload','same'].includes(value)?value:'normal');if(sceneSelect)sceneSelect.value=value;result=null;render();}
+ function setScenario(value){if(!scenes.some(([id])=>id===value))return;scenario=value;mcpVariants=value==='mcp-source'?{'mcp:docs':{clients:['Codex','Claude Code'],fields:['env','type']}}:{};managedMcp={};seedVersions(['download','upload','same','mcp-source'].includes(value)?value:'normal');if(sceneSelect)sceneSelect.value=value;result=null;render();}
  function setProtectionDemo(mode){
   if(!['plaintext','encrypted'].includes(mode))return;
   protection.enabled=mode==='encrypted';if(protection.enabled&&!protection.passphrase)protection.passphrase='demo-sync';
   render();window.prototypePanel?.refresh();
  }
- window.syncPrototype={open,refreshCatalog:()=>{if(dialogKind)closeModal();catalog=collect();render();},state:()=>({tab,accountPlatform,accountCapabilities:accountCapabilities.entries.map(x=>({...x})),selected:[...state().selected],effective:[...closure().ids],accountInfoOnly:[...state().accountInfoOnly],endpointConfigOnly:[...state().endpointConfigOnly],secrets:secretIds(),savedScope,savedScopes:clone(savedScopes),dirty:false,lastExport:clone(lastExport),recentActivity:clone(recentActivity),result:clone(result),channelAdoption:clone(channelAdoption),dialogKind,detailOpen,lastComparison:null,comparison:null,preview:clone(preview),snapshots:clone(snapshots),backups:clone(backups),serial,scenario,importSample,importFile:clone(importFile),running:!!run,lastRun:clone(lastRun),versions:clone(versions),demoObjects:clone(demoObjects),protection:{enabled:protection.enabled,configured:!!protection.passphrase}}),setImportSample,setScenario,setProtectionDemo,openReceipt,render};
+ window.syncPrototype={open,refreshCatalog:()=>{if(dialogKind)closeModal();catalog=collect();render();},state:()=>({tab,accountPlatform,accountCapabilities:accountCapabilities.entries.map(x=>({...x})),selected:[...state().selected],effective:[...closure().ids],accountInfoOnly:[...state().accountInfoOnly],endpointConfigOnly:[...state().endpointConfigOnly],secrets:secretIds(),savedScope,savedScopes:clone(savedScopes),dirty:false,lastExport:clone(lastExport),recentActivity:clone(recentActivity),result:clone(result),channelAdoption:clone(channelAdoption),dialogKind,detailOpen,lastComparison:null,comparison:null,preview:clone(preview),snapshots:clone(snapshots),backups:clone(backups),serial,scenario,importSample,importFile:clone(importFile),running:!!run,lastRun:clone(lastRun),versions:clone(versions),demoObjects:clone(demoObjects),managedMcp:clone(managedMcp),mcpVariants:clone(mcpVariants),protection:{enabled:protection.enabled,configured:!!protection.passphrase}}),setImportSample,setScenario,setProtectionDemo,openReceipt,render};
  routeChanged();render();
 })();

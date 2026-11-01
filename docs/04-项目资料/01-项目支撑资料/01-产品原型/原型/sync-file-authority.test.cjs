@@ -247,7 +247,10 @@ test('通知专题导入复用共享窗口，普通同步只预览新版来源�
 
 test('初次WebDAV提供的可用范围默认全选，凭据跟随范围；工具栏只留搜索与表头全选',async t=>{
  const h=await setup(t);h.w.syncPrototype.open({tab:'webdav'});
- const all=[...h.document.querySelectorAll('[data-sx-group]:not([disabled])')];assert.ok(all.length>=5);assert.ok(all.every(el=>el.checked));assert.ok(sync(h).selected.length>all.length);
+ const all=[...h.document.querySelectorAll('[data-sx-group]:not([disabled])')];assert.ok(all.length>=5);
+ // node_repl 由客户端应用维护且含本机路径，11-01确认默认不同步，因此 MCP 组为半选，其余组全选。
+ assert.ok(all.filter(el=>el.dataset.sxGroup!=='mcp').every(el=>el.checked));const mcp=all.find(el=>el.dataset.sxGroup==='mcp');assert.ok(mcp&&mcp.indeterminate);assert.ok(sync(h).selected.length>all.length);assert.equal(sync(h).selected.includes('mcp:node_repl'),false);
+ h.click('[data-sx=expand][data-id=mcp]');h.change('[data-sx-object="mcp:node_repl"]',true);assert.ok(sync(h).selected.includes('mcp:node_repl'),'可手动勾选');h.change('[data-sx-object="mcp:node_repl"]',false);
  assert.equal(h.document.querySelector('[data-sx-secret=keys]').checked,true);assert.equal(h.document.querySelector('[data-sx-secret=extensions]').checked,true);
  assert.equal(h.document.querySelector('[data-sx-preset]'),null);assert.equal(h.document.querySelector('[data-sx=clear]'),null);
  assert.ok(h.document.querySelector('#sxSearch'));assert.ok(h.document.querySelector('[data-sx-all]'));

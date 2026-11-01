@@ -125,3 +125,8 @@ html[data-route=sync] .main>.topbar{flex:none}
 .sx-change-list{max-height:220px;overflow:auto;overscroll-behavior:contain;padding-right:6px}
 .sx-change-list li{padding:9px 0}
 .sx-import-change{display:block;color:var(--muted);font-weight:400;margin-top:3px;line-height:1.5}
+/* 同名 MCP 选择来源：只列客户端名，不展示定义值。 */
+.sx-mcp-source{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px;color:var(--muted)}
+.sx-mcp-source select{min-width:140px;height:28px;font:inherit;color:var(--text)}
+.sx-mcp-conflicts ul{margin-top:6px}
+.sx-mcp-conflicts li{padding:8px 0}
