@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { events, jobs } from '../../../../tauri/config/event-registry.json'
+import { createCountdown, type Countdown, type CountdownTone } from './countdown'
+import { cancelLeave, leave } from './motion'
 export type ModelOperationKind = 'generation' | 'research' | 'external_submit' | 'policy_save' | 'transfer' | 'node_measurement'
 export type ModelOperationPhase = 'running' | 'review' | 'succeeded' | 'failed' | 'stopped'
 export interface OperationTask { id: string; kind: ModelOperationKind; phase: ModelOperationPhase; collapsed: boolean; count?: number }
@@ -35,8 +37,13 @@ export function operationPhaseText(task: OperationTask): string {
   return phaseDetail(task)+repeat
 }
 
-/** 收起计时器按任务 id 持有；不进 Pinia state，避免不可序列化的值混进快照。 */
-const collapseTimers = new Map<string, ReturnType<typeof setTimeout>>()
+/** 收起倒计时按任务 id 持有；不进 Pinia state，避免不可序列化的值混进快照。 */
+const collapseTimers = new Map<string, Countdown>()
+export function taskKey(id: string): string { return 'task:' + id }
+export function taskCountdown(id: string): Countdown | undefined { return collapseTimers.get(id) }
+function taskTone(phase: ModelOperationPhase): CountdownTone {
+  return phase === 'succeeded' ? 'success' : phase === 'failed' ? 'error' : 'neutral'
+}
 /** 已被合并/淘汰的旧 run 身份：它们的晚回事件必须丢弃，不能复活一张卡。 */
 const retired = new Set<string>()
 const RETIRED_LIMIT = 512
@@ -46,7 +53,8 @@ function retire(id: string) {
 }
 function clearCollapseTimer(id: string) {
   const timer = collapseTimers.get(id)
-  if (timer !== undefined) { clearTimeout(timer); collapseTimers.delete(id) }
+  if (timer !== undefined) { timer.cancel(); collapseTimers.delete(id) }
+  cancelLeave(taskKey(id))
 }
 
 export const useOperationTasks = defineStore('operation-tasks', {
@@ -99,19 +107,32 @@ export const useOperationTasks = defineStore('operation-tasks', {
       if(isTerminalPhase(phase))this.scheduleCollapse(created)
       this.settle()
     },
-    /** 普通成功不留历史任务；运行中和待处理结果不设 TTL。 */
+    /**
+     * 普通成功不留历史任务；运行中和待处理结果不设 TTL。
+     * 倒计时可被悬停 / 焦点 / 窗口隐藏暂停，到点后收起到铃铛（S18-09）。
+     */
     scheduleCollapse(task: OperationTask) {
       if (typeof setTimeout !== 'function') return
       clearCollapseTimer(task.id)
-      const timer = setTimeout(() => {
-        collapseTimers.delete(task.id)
-        const current = this.tasks.find(t => t.id === task.id)
-        if (current?.phase === 'succeeded') {
-          retire(current.id)
-          this.tasks.splice(this.tasks.indexOf(current), 1)
-        } else if (current && isTerminalPhase(current.phase)) current.collapsed = true
-      }, TERMINAL_TTL_MS)
-      collapseTimers.set(task.id, timer)
+      const id = task.id
+      const timer = createCountdown({
+        durationMs: TERMINAL_TTL_MS,
+        tone: taskTone(task.phase),
+        onElapsed: () => {
+          if (collapseTimers.get(id) !== timer) return
+          const current = this.tasks.find(t => t.id === id)
+          if (!current || !isTerminalPhase(current.phase)) { collapseTimers.delete(id); return }
+          leave(taskKey(id), () => {
+            if (collapseTimers.get(id) === timer) collapseTimers.delete(id)
+            const latest = this.tasks.find(t => t.id === id)
+            if (latest?.phase === 'succeeded') {
+              retire(latest.id)
+              this.tasks.splice(this.tasks.indexOf(latest), 1)
+            } else if (latest && isTerminalPhase(latest.phase)) latest.collapsed = true
+          })
+        },
+      })
+      collapseTimers.set(id, timer)
     },
     /** 两条约束：历史只淘汰终止态；同屏展开数不超过上限。 */
     settle() {
@@ -136,6 +157,12 @@ export const useOperationTasks = defineStore('operation-tasks', {
       }
     },
     collapse(id: string) { const task=this.tasks.find(t => t.id===id);if(task)task.collapsed=true },
+    /** 手动收起：停掉倒计时并走收起到铃铛动效；后台任务本身不受影响。 */
+    collapseWithMotion(id: string) {
+      collapseTimers.get(id)?.cancel()
+      collapseTimers.delete(id)
+      leave(taskKey(id), () => this.collapse(id))
+    },
     clearFinished() {
       for (const task of [...this.tasks]) if (task.phase !== 'running') {
         clearCollapseTimer(task.id);retire(task.id)

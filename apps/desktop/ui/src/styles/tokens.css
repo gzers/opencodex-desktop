@@ -142,7 +142,8 @@
   --notif-cancel-bd: rgba(185, 28, 28, .32);
   --notif-ctl-h: 24px;
   --notif-ctl-pad: 2px 9px;
-  --font-ui: "OpenAI Sans", "Pretendard Variable", Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  /* 回退顺序同原型（S18-09）：中文字体排在韩文字体前，避免中文落到韩文字形。 */
+  --font-ui: "OpenAI Sans", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
   --font-code: ui-monospace, "SFMono-Regular", "Cascadia Code", "JetBrains Mono", "Noto Sans Mono CJK KR", Menlo, Consolas, monospace;
   --font-path: Consolas, "Cascadia Code", "SFMono-Regular", Menlo, "Microsoft YaHei", monospace;
 

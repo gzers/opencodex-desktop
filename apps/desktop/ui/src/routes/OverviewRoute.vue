@@ -512,9 +512,10 @@ const mods = computed(() => [
 
 <style scoped>
 /* 原型 .mnt-version-row / .mnt-status：版本、阶段与箭头同一行垂直居中，窄卡也不拆行。 */
-.mnt-version-row { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; padding: 4px 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; white-space: nowrap; cursor: pointer; }
+/* S18-09：原型 maintenance-ui.css 版本行左名右值同字号同字重400、同 --text。 */
+.mnt-version-row { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; padding: 4px 0; border: 0; background: transparent; color: var(--text); font: inherit; font-weight: 400; text-align: left; white-space: nowrap; cursor: pointer; }
 .mnt-version-row > span:first-child { flex: none; }
-.mnt-version-row > b { flex: none; color: var(--text); font-weight: 600; white-space: nowrap; }
+.mnt-version-row > b { flex: none; color: var(--text); font-weight: 400; white-space: nowrap; }
 .mnt-version-row:hover { color: var(--accent); }
 .mnt-status { margin-inline-start: auto; min-width: 0; overflow: hidden; color: var(--muted); text-overflow: ellipsis; }
 .mnt-status.danger { color: var(--red); }

@@ -11,11 +11,13 @@ import { parse } from '@vue/compiler-sfc'
  * 已知例外（登记在 EXEMPT）：
  * - `overview-check-value` / `motion-check-value` 的 ok/bad/busy 是**检查判定**文字色，
  *   不是状态标签，语义域不同；它们由 base.css 自带变体，本轮不动。
+ * - `notification-countdown` 的 data-tone 是通知倒计时条的着色（原型 notification-countdown.js
+ *   以 dataset.tone 写入），跟随所属通知的类型，不是状态标签。
  */
 const ALLOWED_TONE_KEYS = new Set(['tone', 'data-tone'])
 
 /** 允许保留 data-tone 的既有检查判定类（非状态标签）。 */
-const EXEMPT_CLASSES = ['overview-check-value', 'motion-check-value']
+const EXEMPT_CLASSES = ['overview-check-value', 'motion-check-value', 'notification-countdown']
 
 /** 后端状态枚举里不允许直接出现在模板文本插值中的值。 */
 const RAW_ENUM = /\{\{\s*(?:[A-Za-z_$][\w$]*\.)+matrix\.(?:runtime|connection|operation)\b/g
