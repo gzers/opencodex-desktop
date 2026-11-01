@@ -1,0 +1,374 @@
+[
+  {
+    "name": "light-high-mica",
+    "theme": "light",
+    "tier": "high",
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "light",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgba(255, 255, 255, 0.4)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgba(244, 245, 249, 0.52)",
+      "blur": "saturate(1.5) blur(8px)"
+    },
+    "notification": {
+      "background": "rgba(244, 245, 249, 0.52)",
+      "blur": "saturate(1.5) blur(8px)"
+    }
+  },
+  {
+    "name": "light-high-solid",
+    "theme": "light",
+    "tier": "high",
+    "native": {
+      "platform": "Windows",
+      "material": "solid",
+      "reason": "inactive",
+      "theme": "light",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": false,
+      "nativeCaption": true,
+      "backdropAttribute": 1,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgba(255, 255, 255, 0.4)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgba(244, 245, 249, 0.52)",
+      "blur": "saturate(1.5) blur(8px)"
+    },
+    "notification": {
+      "background": "rgba(244, 245, 249, 0.52)",
+      "blur": "saturate(1.5) blur(8px)"
+    }
+  },
+  {
+    "name": "light-mid-mica",
+    "theme": "light",
+    "tier": "mid",
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "light",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgba(255, 255, 255, 0.4)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgba(244, 245, 249, 0.52)",
+      "blur": "saturate(1.5) blur(8px)"
+    },
+    "notification": {
+      "background": "rgba(244, 245, 249, 0.52)",
+      "blur": "saturate(1.5) blur(8px)"
+    }
+  },
+  {
+    "name": "light-mid-solid",
+    "theme": "light",
+    "tier": "mid",
+    "native": {
+      "platform": "Windows",
+      "material": "solid",
+      "reason": "inactive",
+      "theme": "light",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": false,
+      "nativeCaption": true,
+      "backdropAttribute": 1,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgba(255, 255, 255, 0.4)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgba(244, 245, 249, 0.52)",
+      "blur": "saturate(1.5) blur(8px)"
+    },
+    "notification": {
+      "background": "rgba(244, 245, 249, 0.52)",
+      "blur": "saturate(1.5) blur(8px)"
+    }
+  },
+  {
+    "name": "light-low-mica",
+    "theme": "light",
+    "tier": "low",
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "light",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgb(255, 255, 255)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgb(255, 255, 255)",
+      "blur": "none"
+    },
+    "notification": {
+      "background": "rgb(255, 255, 255)",
+      "blur": "none"
+    }
+  },
+  {
+    "name": "light-low-solid",
+    "theme": "light",
+    "tier": "low",
+    "native": {
+      "platform": "Windows",
+      "material": "solid",
+      "reason": "inactive",
+      "theme": "light",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": false,
+      "nativeCaption": true,
+      "backdropAttribute": 1,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgb(255, 255, 255)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgb(255, 255, 255)",
+      "blur": "none"
+    },
+    "notification": {
+      "background": "rgb(255, 255, 255)",
+      "blur": "none"
+    }
+  },
+  {
+    "name": "dark-high-mica",
+    "theme": "dark",
+    "tier": "high",
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgba(38, 38, 38, 0.4)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)"
+    },
+    "notification": {
+      "background": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)"
+    }
+  },
+  {
+    "name": "dark-high-solid",
+    "theme": "dark",
+    "tier": "high",
+    "native": {
+      "platform": "Windows",
+      "material": "solid",
+      "reason": "inactive",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": false,
+      "nativeCaption": true,
+      "backdropAttribute": 1,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgba(38, 38, 38, 0.4)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)"
+    },
+    "notification": {
+      "background": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)"
+    }
+  },
+  {
+    "name": "dark-mid-mica",
+    "theme": "dark",
+    "tier": "mid",
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgba(38, 38, 38, 0.4)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)"
+    },
+    "notification": {
+      "background": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)"
+    }
+  },
+  {
+    "name": "dark-mid-solid",
+    "theme": "dark",
+    "tier": "mid",
+    "native": {
+      "platform": "Windows",
+      "material": "solid",
+      "reason": "inactive",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": false,
+      "nativeCaption": true,
+      "backdropAttribute": 1,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgba(38, 38, 38, 0.4)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)"
+    },
+    "notification": {
+      "background": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)"
+    }
+  },
+  {
+    "name": "dark-low-mica",
+    "theme": "dark",
+    "tier": "low",
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgb(38, 38, 38)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgb(38, 38, 38)",
+      "blur": "none"
+    },
+    "notification": {
+      "background": "rgb(38, 38, 38)",
+      "blur": "none"
+    }
+  },
+  {
+    "name": "dark-low-solid",
+    "theme": "dark",
+    "tier": "low",
+    "native": {
+      "platform": "Windows",
+      "material": "solid",
+      "reason": "inactive",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": false,
+      "nativeCaption": true,
+      "backdropAttribute": 1,
+      "dwmResult": 0
+    },
+    "main": {
+      "background": "rgb(38, 38, 38)",
+      "blur": "none"
+    },
+    "card": {
+      "background": "rgb(38, 38, 38)",
+      "blur": "none"
+    },
+    "notification": {
+      "background": "rgb(38, 38, 38)",
+      "blur": "none"
+    }
+  }
+]
