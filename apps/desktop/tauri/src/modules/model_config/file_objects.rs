@@ -513,6 +513,18 @@ pub fn remote_summary(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<Rem
         assets,
     })
 }
+/// 两份配置文件内容是否一致（忽略包创建时间与包摘要）。
+pub fn same_content(a: &[u8], b: &[u8], passphrase: Option<&str>) -> ModelResult<bool> {
+    let value = |bytes: &[u8]| -> ModelResult<serde_json::Value> {
+        let mut value = serde_json::to_value(&remote_objects(bytes, passphrase)?.0)?;
+        if let Some(models) = value.get_mut("models").and_then(|m| m.as_object_mut()) {
+            models.remove("createdAt");
+            models.remove("digest");
+        }
+        Ok(value)
+    };
+    Ok(value(a)? == value(b)?)
+}
 pub fn merge_remote(
     remote_bytes: &[u8],
     local_bytes: &[u8],

@@ -234,6 +234,9 @@ pub struct IncomingPlan {
     pub asset_mappings: crate::modules::sync::portable_assets::NameMappings,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub extension_source: Option<crate::modules::extensions::ExtensionConfig>,
+    /// 设备间同步预览（S18-01），仅在同步下载时填写。
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sync: Option<super::sync_state::SyncPreview>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -1910,6 +1913,7 @@ fn receive_bound(
         channel_bindings: bindings,
         asset_mappings: Default::default(),
         extension_source: None,
+        sync: None,
     };
     let bytes = serde_json::to_vec_pretty(&plan)?;
     if bytes.len() > 64 * 1024 * 1024 {

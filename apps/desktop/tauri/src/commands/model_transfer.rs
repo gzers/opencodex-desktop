@@ -181,14 +181,15 @@ pub async fn config_sync_download(
         };
         let password = passphrase.or(stored).map(zeroize::Zeroizing::new);
         crate::modules::model_config::feedback::receive_transfer(&root, || {
-            remote_operation(&root, |transport, config, _, unchanged| {
-                tauri::async_runtime::block_on(config_remote::download_context_file(
+            remote_operation(&root, |transport, config, binding, unchanged| {
+                tauri::async_runtime::block_on(config_remote::download_sync(
                     &root,
                     transport,
                     config,
                     password.as_deref().map(|p| p.as_str()),
                     Some(&local_home),
                     &config_home,
+                    binding,
                     unchanged,
                 ))
             })
@@ -196,6 +197,22 @@ pub async fn config_sync_download(
     })
     .await
     .map_err(|_| invalid("transfer_worker", "统一配置下载中断，未采用"))?
+}
+/// 同步按钮：判断本次以本机还是云端为新版。
+#[tauri::command]
+pub async fn config_sync_check(
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::sync_state::Check> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        remote_operation(&root, |transport, config, binding, _| {
+            tauri::async_runtime::block_on(crate::modules::model_config::sync_state::check(
+                &root, transport, config, binding,
+            ))
+        })
+    })
+    .await
+    .map_err(|_| invalid("transfer_worker", "同步方向检查中断"))?
 }
 #[tauri::command]
 pub async fn config_sync_latest_upload(
@@ -412,14 +429,16 @@ pub async fn model_transfer_accept(
         require_file_plan(&root, &config_home, &incoming_id)?;
         crate::modules::model_config::feedback::transfer(&root, &incoming_id, false, || {
             let passphrase = passphrase.map(zeroize::Zeroizing::new);
-            crate::modules::model_config::file_objects::accept_extended(
+            let snapshot = crate::modules::model_config::file_objects::accept_extended(
                 &root,
                 &incoming_id,
                 adopt_keys.unwrap_or(false),
                 adopt_webdav_passwords.unwrap_or(false),
                 adopt_extension_credentials.unwrap_or(false),
                 passphrase.as_deref().map(|p| p.as_str()),
-            )
+            )?;
+            let _ = crate::modules::model_config::sync_state::promote_pending(&root, &incoming_id);
+            Ok(snapshot)
         })
     })
     .await

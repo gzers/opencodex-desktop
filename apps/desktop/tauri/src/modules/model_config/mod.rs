@@ -31,6 +31,7 @@ pub mod runtime;
 pub mod runtime_history;
 pub mod schema;
 pub mod store;
+pub mod sync_state;
 pub mod tasks;
 pub mod transfer;
 pub mod upstream;
