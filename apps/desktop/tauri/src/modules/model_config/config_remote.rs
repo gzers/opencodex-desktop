@@ -404,10 +404,14 @@ pub async fn prepare<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
             manager.skill_names = catalog.skills;
         }
         if scope.all_mcps {
+            // 「全部 MCP」只跳过默认不同步项（如 node_repl）；用户手动勾选的仍保留。
             manager.mcp_names = catalog
                 .mcps
                 .into_iter()
-                .filter(|name| crate::modules::sync::portable_assets::default_included_mcp(name))
+                .filter(|name| {
+                    crate::modules::sync::portable_assets::default_included_mcp(name)
+                        || scope.mcp_names.contains(name)
+                })
                 .collect();
         }
     }
@@ -625,7 +629,10 @@ async fn download_bound_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
             .assets
             .mcps
             .iter()
-            .filter(|mcp| crate::modules::sync::portable_assets::default_included_mcp(&mcp.name))
+            .filter(|mcp| {
+                crate::modules::sync::portable_assets::default_included_mcp(&mcp.name)
+                    || scope.mcp_names.contains(&mcp.name)
+            })
             .map(|mcp| mcp.name.clone())
             .collect();
     }

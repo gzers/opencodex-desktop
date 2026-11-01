@@ -9,8 +9,10 @@ import ChannelModelScope from './ChannelModelScope.vue'
 import { useModelsStore } from '@/features/models/store'
 import {useAppStore} from '@/stores/app'
 import { errorText, versionLabel, type ChannelPolicy, type ModelPolicy } from '@/features/models/api'
-import { modelTransferApi, scopeFor,remoteScope, accountInformationLabel, accountInformationSupported, accountTransferLabel, accountPlatforms, type AccountCatalogEntry, type ChannelImportMapping, type DraftCandidate, type FamilyScope, type FilePlan, type IncomingPlan, type ManagerScope, type RemoteOptions, type TransferScope, type UploadPlan } from './modelTransfer'
+import { modelTransferApi, scopeFor,remoteScope,defaultIncludedMcp,type McpConflict, accountInformationLabel, accountInformationSupported, accountTransferLabel, accountPlatforms, type AccountCatalogEntry, type ChannelImportMapping, type DraftCandidate, type FamilyScope, type FilePlan, type IncomingPlan, type ManagerScope, type RemoteOptions, type TransferScope, type UploadPlan } from './modelTransfer'
 import {getSyncConfig} from './api'
+import {clientLabels} from '@/features/extensions/presentation'
+import type {ExtensionClientId} from '@/features/extensions/api'
 import { displayPath } from '@/lib/paths'
 const props = defineProps<{ remote?: boolean; importOnly?: boolean; importOpen?: boolean }>()
 const emit = defineEmits<{ 'update:importOpen': [value: boolean] }>()
@@ -62,6 +64,11 @@ const receiveSkills=ref<string[]>([]);const receiveMcps=ref<string[]>([]);const 
 const accountPlatform=ref('all');const accountIds=ref<string[]>([]);const accountCatalog=ref<AccountCatalogEntry[]>([]);const accountError=ref('');const receiveAccounts=ref<string[]>([])
 function scopeAccounts(id:string){const value=accountCatalog.value.find(a=>a.account.id===JSON.parse(id)[1])?.account;return value?[value]:[]}
 const allTemplates=ref(false);const allChannels=ref(false);const allSkills=ref(false);const allMcps=ref(false)
+// S18-03：同名 MCP 在多个客户端定义不同时由用户选「采用来源」；未选的只跳过该 MCP。
+const mcpSources=ref<Record<string,string>>({});const mcpConflicts=ref<McpConflict[]>([])
+function selectedMcpSources(){return Object.fromEntries(Object.entries(mcpSources.value).filter(([name])=>mcpNames.value.includes(name)||allMcps.value&&defaultIncludedMcp(name)))}
+function noteConflicts(plan?:{assets?:{conflicts?:McpConflict[]}|null}|null){const merged=new Map(mcpConflicts.value.map(c=>[c.name,c]));for(const c of plan?.assets?.conflicts??[])merged.set(c.name,c);mcpConflicts.value=[...merged.values()]}
+const clientName=(c:string)=>clientLabels[c as ExtensionClientId]??c
 const hasAssets=computed(()=>skillNames.value.length>0||mcpNames.value.length>0||props.remote&&(allSkills.value||allMcps.value))
 const keyChannelIds=computed(()=>(allChannels.value?savedChannels.value.map(c=>c.id):channelIds.value).filter(id=>!channelFamilies.value[id]));
 watch(()=>keyChannelIds.value.length,length=>{if(!length)exportKeys.value=false})
@@ -78,13 +85,13 @@ const scopeObjects=computed<ScopeObject[]>(()=>[
  ...savedChannels.value.map(c=>({id:scopeKey('channels',c.id),category:'channels',categoryLabel:exportSource.value==='draft'?'渠道草稿':'渠道与模型',label:c.label,detail:exportSource.value==='draft'?'未提交草稿；精确模版依赖一并导出':'原设置、服务节点、模型规则及精确模版依赖',mark:exportKeys.value&&!channelFamilies.value[c.id]?'含凭据':'不带 Key',disabled:props.remote&&allChannels.value})),
  ...accountCatalog.value.filter(a=>accountPlatform.value==='all'||(a.account.origin?.accountPlatform??'legacy')===accountPlatform.value).map(a=>({id:scopeKey('accounts',a.account.id),category:'accounts',categoryLabel:'账户',label:a.account.label,detail:accountInformationLabel(a.account),mark:a.informationSupported?'仅账户信息':'暂不支持',disabled:!a.informationSupported})),
  ...assetCatalog.value.skills.map(name=>({id:scopeKey('skills',name),category:'skills',categoryLabel:'Skills',label:'Skill · '+name,detail:'实际SKILL.md与所需资源',mark:hasAssets.value&&extensionCredentials.value?'含凭据':'配置',disabled:props.remote&&allSkills.value})),
- ...assetCatalog.value.mcps.map(name=>({id:scopeKey('mcps',name),category:'mcps',categoryLabel:'MCP',label:'MCP · '+name,detail:'完整源定义；不自动执行',mark:hasAssets.value&&extensionCredentials.value?'含凭据':'配置',disabled:props.remote&&allMcps.value})),
+ ...assetCatalog.value.mcps.map(name=>({id:scopeKey('mcps',name),category:'mcps',categoryLabel:'MCP',label:'MCP · '+name,detail:defaultIncludedMcp(name)?'完整源定义；不自动执行':'由客户端应用维护 · 含本机路径',mark:hasAssets.value&&extensionCredentials.value?'含凭据':'配置',disabled:props.remote&&allMcps.value&&defaultIncludedMcp(name)})),
 ].filter(item=>exportSource.value!=='draft'||['templates','channels'].includes(item.category)))
 const scopeKeys=computed(()=>[
  ...(managerPreferences.value?[scopeKey('manager','preferences')]:[]),...(managerExtensions.value?[scopeKey('manager','extensions')]:[]),...(!props.remote&&managerWebdav.value&&activeWebdav.value?[scopeKey('manager','webdav')]:[]),
  ...(allTemplates.value?(models.snapshot?.library.templates??[]).map(t=>t.id):templateIds.value).map(id=>scopeKey('templates',id)),
  ...(allChannels.value?savedChannels.value.map(c=>c.id):channelIds.value).map(id=>scopeKey('channels',id)),...accountIds.value.map(id=>scopeKey('accounts',id)),
- ...(allSkills.value?assetCatalog.value.skills:skillNames.value).map(id=>scopeKey('skills',id)),...(allMcps.value?assetCatalog.value.mcps:mcpNames.value).map(id=>scopeKey('mcps',id)),
+ ...(allSkills.value?assetCatalog.value.skills:skillNames.value).map(id=>scopeKey('skills',id)),...(allMcps.value?assetCatalog.value.mcps.filter(n=>defaultIncludedMcp(n)||mcpNames.value.includes(n)):mcpNames.value).map(id=>scopeKey('mcps',id)),
 ])
 const receiveObjects=computed<ScopeObject[]>(()=>{
  const source=incomingSource.value;if(!source)return []
@@ -108,7 +115,7 @@ function updateReceiveKeys(keys:string[]){
  receivePreferences.value=ids('manager').includes('preferences');receiveExtensions.value=ids('manager').includes('extensions');receiveEndpoints.value=ids('endpoints');receiveAccounts.value=ids('accounts');receiveRefs.value=ids('templates');receiveChannels.value=ids('channels');receiveSkills.value=ids('skills');receiveMcps.value=ids('mcps');receiveDirty.value=true;
 }
 const selectedCredentialKinds=computed(()=>[...(exportKeys.value?['渠道认证（'+keyChannelIds.value.length+'个渠道）']:[]),...(hasAssets.value&&extensionCredentials.value?['所选扩展授权']:[]),...(!props.remote&&managerWebdav.value&&activeWebdav.value&&webdavPasswords.value?['WebDAV连接密码']:[])])
-watch(()=>JSON.stringify([templateIds.value,channelIds.value,channelModels.value,channelFamilies.value,includeGlobal.value,versions.value,accountIds.value,managerPreferences.value,managerExtensions.value,exportKeys.value,skillNames.value,mcpNames.value,extensionCredentials.value,allTemplates.value,allChannels.value,allSkills.value,allMcps.value]),()=>{scopeSaved.value=false},{flush:'sync'})
+watch(()=>JSON.stringify([templateIds.value,channelIds.value,channelModels.value,channelFamilies.value,includeGlobal.value,versions.value,accountIds.value,managerPreferences.value,managerExtensions.value,exportKeys.value,skillNames.value,mcpNames.value,extensionCredentials.value,allTemplates.value,allChannels.value,allSkills.value,allMcps.value,mcpSources.value]),()=>{scopeSaved.value=false},{flush:'sync'})
 // SY-2：范围首项与原型一致从「默认配置范围」开始；读取失败也保留 all，并就地报错。
 const scopePreset=ref('all');const catalogueLoading=ref(true);let fileScopeInitialized=false
 // 搜索与范围预设同处一条工具栏；对象树只消费这个值。
@@ -151,21 +158,21 @@ function updateScopeKeys(keys:string[]){
  if(changed.has('channels')){allChannels.value=false;channelIds.value=ids('channels');channelModels.value=Object.fromEntries(Object.entries(channelModels.value).filter(([id])=>channelIds.value.includes(id)));channelFamilies.value=Object.fromEntries(Object.entries(channelFamilies.value).filter(([id])=>channelIds.value.includes(id)))}
  if(changed.has('accounts'))accountIds.value=ids('accounts')
  if(changed.has('skills')){allSkills.value=false;skillNames.value=ids('skills')}
- if(changed.has('mcps')){allMcps.value=false;mcpNames.value=ids('mcps')}
+ if(changed.has('mcps')){const toggled=[...previous,...next].filter(k=>previous.has(k)!==next.has(k)).map(k=>JSON.parse(k) as [string,string]).filter(v=>v[0]==='mcps').map(v=>v[1]);if(toggled.some(defaultIncludedMcp))allMcps.value=false;mcpNames.value=ids('mcps')}
  scopePreset.value='custom'
 }
 function applyScopePreset(value:string){
  scopePreset.value=value;if(value==='custom')return;channelModels.value={};channelFamilies.value={};if(exportSource.value==='draft'){templateIds.value=[];channelIds.value=savedChannels.value.map(c=>c.id);includeGlobal.value=false;return}
  managerPreferences.value=true;managerExtensions.value=true;managerWebdav.value=!props.remote;webdavPasswords.value=value!=='share';
- templateIds.value=(models.snapshot?.library.templates??[]).map(t=>t.id);channelIds.value=savedChannels.value.map(c=>c.id);accountIds.value=accountCatalog.value.filter(a=>a.informationSupported).map(a=>a.account.id);skillNames.value=[...assetCatalog.value.skills];mcpNames.value=[...assetCatalog.value.mcps];includeGlobal.value=true;
+ templateIds.value=(models.snapshot?.library.templates??[]).map(t=>t.id);channelIds.value=savedChannels.value.map(c=>c.id);accountIds.value=accountCatalog.value.filter(a=>a.informationSupported).map(a=>a.account.id);skillNames.value=[...assetCatalog.value.skills];mcpNames.value=assetCatalog.value.mcps.filter(defaultIncludedMcp);includeGlobal.value=true;
  allTemplates.value=false;allChannels.value=false;allSkills.value=false;allMcps.value=false;exportKeys.value=value==='move';extensionCredentials.value=value==='move';assetsReviewed.value=false;
 }
 
 onMounted(async () => { if(props.importOnly)return; try{if (!models.snapshot) await models.load();if(!props.remote)await getSyncConfig().then(config=>{activeWebdav.value=!!config.endpoint}).catch(()=>{});else await loadScope()}finally{catalogueLoading.value=false;await begin()} })
 async function loadAssets(){try{const catalog=await modelTransferApi.extensionCatalog();if(!catalog||!Array.isArray(catalog.skills)||!Array.isArray(catalog.mcps)||![...catalog.skills,...catalog.mcps].every(name=>typeof name==='string'))throw {message:'扩展目录返回结构无效，请重新读取；未扩大配置范围'};assetCatalog.value=catalog;assetError.value=''}catch(cause){assetError.value=errorText(cause)}}
-function assetScope(){return hasAssets.value?{skillNames:skillNames.value,mcpNames:mcpNames.value,extensionCredentials:extensionCredentials.value,assetsReviewed:assetsReviewed.value}:{}}
+function assetScope(){return hasAssets.value?{skillNames:skillNames.value,mcpNames:mcpNames.value,extensionCredentials:extensionCredentials.value,assetsReviewed:assetsReviewed.value,...(Object.keys(selectedMcpSources()).length?{mcpSources:selectedMcpSources()}:{})}:{}}
 function remoteOptions(){return {...(accountIds.value.length?{accountIds:accountIds.value}:{}),preferences:managerPreferences.value,extensions:managerExtensions.value,includeKeys:exportKeys.value,...assetScope(),...(allTemplates.value||allChannels.value||allSkills.value||allMcps.value?{allTemplates:allTemplates.value,allChannels:allChannels.value,allSkills:allSkills.value,allMcps:allMcps.value}:{}),passphrase:remotePassword.value||undefined}}
-async function loadScope(){try{const scope=await modelTransferApi.loadRemoteScope();accountIds.value=scope.accountIds??[];templateIds.value=scope.templateIds;channelIds.value=scope.channelIds;channelModels.value=scope.channelModels??{};channelFamilies.value=scope.channelFamilies??{};includeGlobal.value=scope.includeGlobal;managerPreferences.value=scope.preferences;managerExtensions.value=scope.extensions;exportKeys.value=scope.includeKeys;skillNames.value=scope.skillNames??[];mcpNames.value=scope.mcpNames??[];extensionCredentials.value=scope.extensionCredentials??false;allTemplates.value=scope.allTemplates??false;allChannels.value=scope.allChannels??false;allSkills.value=scope.allSkills??false;allMcps.value=scope.allMcps??false;remoteScopeLoaded.value=true;scopeReadError.value=''}catch(cause){remoteScopeLoaded.value=false;scopeReadError.value=errorText(cause)}}
+async function loadScope(){try{const scope=await modelTransferApi.loadRemoteScope();accountIds.value=scope.accountIds??[];templateIds.value=scope.templateIds;channelIds.value=scope.channelIds;channelModels.value=scope.channelModels??{};channelFamilies.value=scope.channelFamilies??{};includeGlobal.value=scope.includeGlobal;managerPreferences.value=scope.preferences;managerExtensions.value=scope.extensions;exportKeys.value=scope.includeKeys;skillNames.value=scope.skillNames??[];mcpNames.value=scope.mcpNames??[];mcpSources.value=scope.mcpSources??{};extensionCredentials.value=scope.extensionCredentials??false;allTemplates.value=scope.allTemplates??false;allChannels.value=scope.allChannels??false;allSkills.value=scope.allSkills??false;allMcps.value=scope.allMcps??false;remoteScopeLoaded.value=true;scopeReadError.value=''}catch(cause){remoteScopeLoaded.value=false;scopeReadError.value=errorText(cause)}}
 function transferScope(){return scopeFor(models.snapshot!,templateIds.value,allChannels.value?savedChannels.value.map(c=>c.id):channelIds.value,includeGlobal.value,versions.value,channelModels.value,channelFamilies.value)}
 async function saveRemoteScope(){if(!models.snapshot||!remoteScopeLoaded.value||catalogueLoading.value)return;await perform(async()=>{await modelTransferApi.saveRemoteScope(remoteScope(transferScope(),remoteOptions()));scopeSaved.value=true;selectionOpen.value=false})}
 async function perform(action: () => Promise<void>) {
@@ -182,6 +189,7 @@ function managerScope():ManagerScope{return {...(accountIds.value.length?{accoun
 async function prepare() {
   if (props.remote&&!remoteScopeLoaded.value||!models.snapshot || !hasScope.value||!familyScopesValid.value||catalogueLoading.value) return
   await perform(async () => {
+    mcpConflicts.value=[]
     const scope = JSON.parse(JSON.stringify(transferScope())) as TransferScope
     if(exportSource.value==='draft'&&!props.remote){
       if(!models.snapshot||!models.channelDraft)throw {message:'工作区未读取'}
@@ -192,11 +200,13 @@ async function prepare() {
     }else if (props.remote){
       const options=remoteOptions()
       upload.value = await modelTransferApi.prepareUpload(scope,options)
+      noteConflicts(upload.value)
       preparedExport.value={kind:'remote',scope,includeKeys:exportKeys.value,managerScope:managerScope(),options}
       remotePassword.value=''
     }else{
       const manager=managerScope()
       filePlan.value = await modelTransferApi.prepare(scope,undefined,exportKeys.value,manager)
+      noteConflicts(filePlan.value)
       preparedExport.value={kind:'file',scope,includeKeys:exportKeys.value,managerScope:manager}
     }
     destinationMode.value='default';encryptExport.value=exportCredentialCount.value>0;exportPackagePassword.value='';exportPackagePasswordAgain.value=''
@@ -205,6 +215,17 @@ async function prepare() {
 }
 /** 用户在确认弹窗选择加密后，按同一冻结范围重新生成受口令保护的计划；未勾选则沿用已预览计划。 */
 async function preparedWithPassphrase(passphrase?:string){const prepared=preparedExport.value;if(!prepared)throw {message:'导出范围已失效，请重新选择范围并导出。'};if(prepared.kind==='remote'){const options:RemoteOptions={...(prepared.options??remoteOptions()),passphrase};prepared.options=options;return await modelTransferApi.prepareUpload(prepared.scope,options)}if(prepared.draft)return await modelTransferApi.prepareDraft(prepared.scope,prepared.draft,passphrase,prepared.policy);return await modelTransferApi.prepare(prepared.scope,passphrase,prepared.includeKeys,prepared.managerScope)}
+/** S18-03：选定来源后按同一冻结范围重算计划，选中的来源作为该 MCP 的定义；清空即本次不同步该 MCP。 */
+async function setMcpSource(name:string,value:string){
+ const next={...mcpSources.value};if(value)next[name]=value;else delete next[name];mcpSources.value=next
+ const prepared=preparedExport.value;if(!prepared||prepared.draft)return
+ await perform(async()=>{
+  if(prepared.kind==='remote'){const options:RemoteOptions={...(prepared.options??remoteOptions())};const sources=selectedMcpSources();if(Object.keys(sources).length)options.mcpSources=sources;else delete options.mcpSources;prepared.options=options;upload.value=await modelTransferApi.prepareUpload(prepared.scope,options);noteConflicts(upload.value)}
+  else{prepared.managerScope={...managerScope()};filePlan.value=await modelTransferApi.prepare(prepared.scope,undefined,prepared.includeKeys,prepared.managerScope);noteConflicts(filePlan.value)}
+ })
+}
+/** 所选范围只剩未选来源的同名 MCP 时不能继续：原型要求先选来源或调整范围。 */
+function onlyUnresolvedMcps(){const unresolved=mcpConflicts.value.map(c=>c.name).filter(name=>!mcpSources.value[name]);if(!unresolved.length)return false;const keys=new Set(unresolved.map(name=>scopeKey('mcps',name)));return scopeKeys.value.every(k=>keys.has(k))}
 function openImport() { if (!busy.value) { importPath.value=''; error.value=''; pickOpen.value=true } }
 async function chooseImportFile() {
   try {
@@ -246,6 +267,7 @@ async function confirm() {
         try{return adoptKeys.value||includeDav||adoptExtensionCredentials.value||plan.protected&&!!(plan.assets?.skills.length||plan.assets?.mcps.length)?await modelTransferApi.accept(plan.id,{adoptKeys:adoptKeys.value,...(includeDav?{adoptWebdavPasswords:true}:{}),...(adoptExtensionCredentials.value?{adoptExtensionCredentials:true}:{}),passphrase:unlockedPassword}):await modelTransferApi.accept(plan.id)}catch(cause){try{const latest=await modelTransferApi.latestIncoming();if(latest?.id===plan.id&&latest.adoption)plan.adoption=latest.adoption}catch{}throw cause}
       })
       const updatePreferences=!!plan.manager?.preferences; emit('update:importOpen',false); app.showToast('配置已接收。'); incoming.value = null;incomingSource.value=null;unlockedPassword='';if(updatePreferences)await app.loadPreferences()
+    } else if ((upload.value||filePlan.value)&&onlyUnresolvedMcps()) {error.value='请为同名 MCP 选择来源，或调整导出范围。';return
     } else if (upload.value) {
       if(preparedExport.value?.kind==='remote'&&remotePassword.value){const options:RemoteOptions={...(preparedExport.value.options??remoteOptions()),passphrase:remotePassword.value};upload.value=await modelTransferApi.prepareUpload(preparedExport.value.scope,options)}
       upload.value = await modelTransferApi.publish(upload.value.id)
@@ -369,6 +391,7 @@ function closePreview() { if (!busy.value) { emit('update:importOpen',false); in
         <div class="export-tree" aria-label="导出目录结构"><p class="export-tree-kicker">生成位置</p><pre>{{ exportTreeText }}</pre><p class="model-muted">按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。</p></div>
         <div class="export-summary"><strong>{{ scopeKeys.length }} 项配置 · 同一备份包</strong><p class="model-muted">{{ exportCredentialCount ? '含 '+exportCredentialCount+' 项凭据；可选择加密，不加密则凭据以明文写入，文件可被直接读取。口令始终不写入包。' : '不含凭据，可直接使用完整性校验。' }}每次导出生成一个独立备份包，按“日期 / 单次包”存放，可整体拷贝到其它设备再导入。</p><p class="model-muted">包内按 {{ exportGroupLabels || '所选范围' }} 分组，导入时仍按所选范围识别。</p></div>
       </div>
+      <div v-if="!incoming&&mcpConflicts.length" class="transfer-mcp-conflicts" role="group" aria-label="同名 MCP 定义不同"><strong>同名 MCP 定义不同</strong><ul><li v-for="c in mcpConflicts" :key="c.name"><strong>{{ c.name }}</strong><small>同名定义在 {{ c.clients.map(clientName).join('、') }} 中不同（差异字段：{{ c.fields.join('、') }}），请选择来源</small><label class="sx-mcp-source"><span>采用来源</span><UiSelectField size="sm" :label="c.name+' 采用来源'" :model-value="mcpSources[c.name]??''" :options="[{value:'',label:remote?'暂不同步':'暂不导出'},...c.clients.map(v=>({value:v,label:clientName(v)}))]" :disabled="busy" @update:model-value="setMcpSource(c.name,$event)"/></label></li></ul></div>
       <div v-if="!incoming&&!remote" class="export-info"><strong>{{ scopeKeys.length }} 项配置 · {{ exportCredentialCount?'含 '+exportCredentialCount+' 项凭据':'不含任何凭据' }}</strong><br><span v-for="([label,count],index) in exportCredentialSummary" :key="label">{{ index?' / ':'' }}{{ label }} {{ count }} 项</span></div>
       <label v-if="!incoming&&!remote" class="export-encrypt"><input v-model="encryptExport" type="checkbox" :disabled="busy" />{{ exportCredentialCount?'加密配置包（建议；不加密则凭据以明文写入）':'为配置包设置加密口令' }}</label>
       <div v-if="!incoming&&!remote&&(exportCredentialCount>0||encryptExport)" class="export-passphrase"><label>加密口令（可选，至少 8 位）<input v-model="exportPackagePassword" aria-label="加密口令" class="input" type="password" autocomplete="new-password" :disabled="busy||!encryptExport" :placeholder="encryptExport?'至少 8 位':'勾选加密后可填写'" /></label><label>再次输入<input v-model="exportPackagePasswordAgain" aria-label="再次输入加密口令" class="input" type="password" autocomplete="new-password" :disabled="busy||!encryptExport" :placeholder="encryptExport?'再次输入':'勾选加密后可填写'" /></label></div>
@@ -452,6 +475,11 @@ label{display:flex;align-items:center;gap:8px}
 .export-passphrase label{display:grid;align-items:stretch;gap:var(--space-1);margin-block:var(--space-3)}
 .export-plaintext-risk{margin-block:var(--space-2);color:var(--red);font-size:var(--text-label);line-height:1.6}
 .export-destination-row .input{min-width:0}
+.transfer-mcp-conflicts{padding:var(--space-3);background:var(--rail);border-radius:var(--radius-sm);margin-block:var(--space-3)}
+.transfer-mcp-conflicts ul{list-style:none;padding:0;margin:var(--space-2) 0 0;display:grid;gap:var(--space-2)}
+.transfer-mcp-conflicts small{display:block;color:var(--muted)}
+.sx-mcp-source{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px;color:var(--muted)}
+.sx-mcp-source :deep(.select){min-width:140px}
 .sync-head-actions{display:flex;gap:var(--space-2);flex-wrap:wrap;justify-content:flex-end}
 .sync-scope-workspace{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:var(--space-5);margin-top:var(--space-4);min-width:0}
 .sync-scope-main{display:grid;gap:var(--space-3);align-content:start;min-width:0}
