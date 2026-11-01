@@ -1,6 +1,6 @@
 // WebDAV 连接状态展示与动作文案，对齐 0.2.18 原型 index.html webdavStates。
 // 未配置 / 未连接 / 连接中 / 连接失败：线上版本只写「—」，不画点、不写方向词。
-// 原型的「有更新」需要先读取云端快照才能判断，概览不主动联网，见 0.2.18-bugs S18-01 偏差。
+// 原型的「有更新」需要先读取云端快照才能判断，概览不主动联网，见 0.2.19-bugs S18-01 偏差。
 import type { ConnectionState } from '@/types/ui'
 
 export type WebdavAction = 'sync' | 'connection'
