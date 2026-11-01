@@ -40,7 +40,7 @@ try{
   check(tag+' import within window',ii.top>=0&&ii.bottom<=c.h&&!ii.horizontal,ii)
   await proto.locator('#modal').screenshot({path:path.join(output,tag+'-prototype-import.png')});await app.locator('dialog[open]').screenshot({path:path.join(output,tag+'-implementation-import.png')})
   await app.getByRole('button',{name:'取消',exact:true}).click();await proto.evaluate(()=>window.closeModal())
-  await app.getByRole('button',{name:'查看桌面管理器更新详情',exact:true}).click();await app.waitForSelector('[data-testid=manager-update-card]')
+  await app.getByRole('button',{name:/^查看桌面管理器更新详情/}).click();await app.waitForSelector('[data-testid=manager-update-card]')
   await proto.evaluate(()=>{document.querySelector('[data-maint-action=update-detail][data-target=manager]').click()});await proto.waitForTimeout(250)
   // If the prototype is initially unchecked, the explicit check has no side effects.
   if(!await proto.locator('#modal').innerText().then(t=>t.includes('更新详情与确认'))){await proto.evaluate(()=>{window.closeModal();document.querySelector('[data-maint-action=check-all]').click()});await proto.waitForTimeout(1100);await proto.evaluate(()=>document.querySelector('[data-maint-action=update-detail][data-target=manager]').click())}

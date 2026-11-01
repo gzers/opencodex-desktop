@@ -168,8 +168,8 @@ describe('overview module cards', () => {
     localStorage.removeItem('ocx-sync-activity'); syncActivity.value = {}
   })
 
-  // OV-4 / N-OV-2：版本行按原型「管理器 / 面板 + 版本 + 阶段 + ›」三段呈现（index.html:1877-1878）。
-  it('renders each upgrade row as label, version, phase and chevron', async () => {
+  // S18-09：0.2.18 原型 maintenance-ui.js:95-101 版本行＝对象名 + 右侧（候选版本 + 状态点 + ›），有更新时不再写阶段长词。
+  it('renders each upgrade row as label plus candidate version, dot and chevron', async () => {
     managerUpdateStatus.value = {
       channel: 'stable', availableVersion: '0.2.9', currentVersion: '0.2.8', lastCheckedAt: '2026-10-25T00:00:00Z',
       signatureVerified: true, error: null,
@@ -180,12 +180,13 @@ describe('overview module cards', () => {
       await useUpdatesStore(wrapper.vm.$pinia).loadProject();await useUpdatesStore(wrapper.vm.$pinia).loadRemoteLatest();await flushPromises()
       const upgrade = wrapper.findAll('.mods .mod')[0]
       const rows = upgrade.findAll('.mnt-version-row')
-      await vi.waitFor(() => expect(rows.map(row => Array.from(row.element.children).map(node => node.textContent?.trim()))).toEqual([
-        ['管理器', '0.2.8', '有可用更新', '›'],
-        ['面板', '2.50.0', '有可用更新', '›'],
-      ]))
-      expect(rows[0].attributes('aria-label')).toBe('查看桌面管理器更新详情')
-      expect(rows[1].attributes('aria-label')).toBe('查看 OpenCodex 面板更新详情')
+      const side = (row: (typeof rows)[number]) => Array.from(row.find('.mnt-version-side').element.children).map(node => node.className || node.textContent?.trim())
+      await vi.waitFor(() => expect(rows.map(row => row.element.firstElementChild?.textContent)).toEqual(['管理器', '面板']))
+      expect(rows[0].find('.mnt-version-latest').text()).toBe('0.2.9')
+      expect(side(rows[0])).toEqual(['mnt-version-latest', 'mnt-dot is-ok', '›'])
+      expect(rows[0].find('.mnt-status').exists()).toBe(false)
+      expect(rows[0].attributes('aria-label')).toBe('查看桌面管理器更新详情（有可用更新）')
+      expect(rows[1].attributes('aria-label')).toMatch(/^查看 OpenCodex 面板更新详情（/)
     } finally {
       managerUpdateStatus.value = null
     }
@@ -208,7 +209,9 @@ describe('overview module cards', () => {
       const wrapper = mountOverview()
       await settle(wrapper)
       const row = wrapper.findAll('.mnt-version-row')[0]
-      expect(Array.from(row.element.children).map(node => node.textContent?.trim())).toEqual(['管理器', '0.2.8', '已是最新', '›'])
+      expect(row.text()).toBe('管理器0.2.8›')
+      expect(row.find('.mnt-dot').classes()).toContain('is-idle')
+      expect(row.attributes('disabled')).toBeUndefined()
     } finally {
       managerUpdateStatus.value = null
     }
