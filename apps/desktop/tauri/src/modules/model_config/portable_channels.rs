@@ -9,12 +9,44 @@ use super::{
 };
 use serde_json::Value;
 use std::{collections::BTreeSet, path::Path};
+/// Codex official/native providers stay on each machine's own configuration
+/// and are never transferred (S18-05). Identity is the provider id, never the
+/// display name, so a user channel labeled "openai" is still portable.
+fn native_ids<'a>(channels: impl IntoIterator<Item = &'a ChannelPolicy>) -> BTreeSet<String> {
+    channels
+        .into_iter()
+        .filter(|c| super::compiler::channel_is_native(&c.connection.provider_id))
+        .map(|c| c.id.clone())
+        .collect()
+}
+fn without_native(scope: &mut ExportScope, native: &BTreeSet<String>) {
+    scope.channel_ids.retain(|id| !native.contains(id));
+    scope.channel_models.retain(|id, _| !native.contains(id));
+    scope.channel_families.retain(|id, _| !native.contains(id));
+}
+fn drop_native_order(package: &mut ModelPackage, native: &BTreeSet<String>) {
+    if let Some(policy) = package.payload.policy.as_mut() {
+        policy.channels.retain(|c| !native.contains(&c.id));
+        if let Some(order) = policy.channel_order.as_mut() {
+            order.retain(|id| !native.contains(id));
+        }
+        if policy
+            .default_channel_id
+            .as_ref()
+            .is_some_and(|id| native.contains(id))
+        {
+            policy.default_channel_id = None;
+        }
+    }
+}
 /// The normal transfer inventory shares file identities, selection, ordering
 /// and layout adoptions with the models page. No CLI catalog is consulted.
 pub fn catalog_file(root: &Path, home: &Path) -> ModelResult<Vec<ChannelPolicy>> {
-    Ok(super::config_file::snapshot(root, home)?.policy.channels)
+    let mut channels = super::config_file::snapshot(root, home)?.policy.channels;
+    channels.retain(|c| !super::compiler::channel_is_native(&c.connection.provider_id));
+    Ok(channels)
 }
-pub fn export_file(root: &Path, home: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
+pub fn export_file(root: &Path, home: &Path, mut scope: ExportScope) -> ModelResult<ModelPackage> {
     let snapshot = super::config_file::snapshot(root, home)?;
     if scope
         .channel_ids
@@ -26,7 +58,10 @@ pub fn export_file(root: &Path, home: &Path, scope: ExportScope) -> ModelResult<
             "所选文件渠道已不存在，请重新读取范围",
         ));
     }
+    let native = native_ids(&snapshot.policy.channels);
+    without_native(&mut scope, &native);
     let mut package = transfer::export_snapshot(&snapshot, scope.clone())?;
+    drop_native_order(&mut package, &native);
     for channel in package
         .payload
         .policy
@@ -202,20 +237,26 @@ pub fn catalog(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Vec<Chan
 }
 pub fn export(
     root: &Path,
-    scope: ExportScope,
+    mut scope: ExportScope,
     snapshot: &UpstreamSnapshot,
 ) -> ModelResult<ModelPackage> {
+    let local = super::store::ModelStore::new(root).load()?;
+    let channels = catalog(root, snapshot)?;
+    let native = native_ids(channels.iter().chain(&local.policy.channels));
+    without_native(&mut scope, &native);
     let mut package = transfer::export(root, scope.clone())?;
+    drop_native_order(&mut package, &native);
     if !scope.include_global
         && scope
             .channel_ids
             .iter()
             .all(|id| scope.channel_families.contains_key(id))
     {
+        package.format_version = transfer::package_version(&package.payload);
+        package.digest = super::store::sha256(&serde_json::to_vec(&package.payload)?);
+        transfer::validate_package(&package)?;
         return Ok(package);
     }
-    let local = super::store::ModelStore::new(root).load()?;
-    let channels = catalog(root, snapshot)?;
     let scoped_channels = package
         .payload
         .policy
@@ -256,9 +297,16 @@ pub fn export(
         if scope.include_global {
             policy.default_channel_id = channels
                 .iter()
+                .filter(|c| !native.contains(&c.id))
                 .find(|c| snapshot.providers["defaultProvider"] == c.connection.provider_id)
                 .map(|c| c.id.clone());
-            policy.channel_order = Some(channels.iter().map(|c| c.id.clone()).collect());
+            policy.channel_order = Some(
+                channels
+                    .iter()
+                    .filter(|c| !native.contains(&c.id))
+                    .map(|c| c.id.clone())
+                    .collect(),
+            );
         }
     }
     transfer::complete_dependencies(&mut package, &local.library)?;
@@ -285,6 +333,91 @@ pub fn provider<'a>(package: &'a ModelPackage, id: &str) -> Option<&'a Value> {
 mod tests {
     use super::*;
     use serde_json::json;
+    #[test]
+    fn official_codex_channels_never_enter_the_scope_list_or_exported_packages() {
+        let official = json!({"adapter":"openai-responses","baseUrl":"https://api.openai.com/v1","models":["gpt-x"]});
+        let custom = json!({"adapter":"openai-chat","baseUrl":"https://source.example.test/v1","models":["model/a"],"selectedModels":["model/a"]});
+        // File mode: the scope list and the package both leave official out,
+        // even when a stale scope still names its id.
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        std::fs::write(
+            home.path().join("config.json"),
+            serde_json::to_vec(&json!({"providers":{"openai":official,"source":custom}})).unwrap(),
+        )
+        .unwrap();
+        let listed = catalog_file(root.path(), home.path()).unwrap();
+        assert_eq!(listed.len(), 1);
+        assert_eq!(listed[0].connection.provider_id, "source");
+        let all: Vec<_> = super::super::config_file::snapshot(root.path(), home.path())
+            .unwrap()
+            .policy
+            .channels
+            .iter()
+            .map(|c| c.id.clone())
+            .collect();
+        let package = export_file(
+            root.path(),
+            home.path(),
+            ExportScope {
+                channel_families: Default::default(),
+                channel_models: Default::default(),
+                include_policy: true,
+                channel_ids: all,
+                template_refs: vec![],
+                include_global: true,
+            },
+        )
+        .unwrap();
+        let policy = package.payload.policy.as_ref().unwrap();
+        assert_eq!(policy.channels.len(), 1);
+        assert_eq!(policy.channels[0].id, listed[0].id);
+        assert!(policy
+            .channel_order
+            .iter()
+            .flatten()
+            .all(|id| id == &listed[0].id));
+        transfer::validate_package(&package).unwrap();
+
+        // Manager mode with global order: official ids are dropped from the
+        // channels, the order and the default pointer.
+        let root = tempfile::tempdir().unwrap();
+        let snapshot = UpstreamSnapshot {
+            version: "2.84.0".into(),
+            providers: json!({"defaultProvider":"openai","providers":{"openai":official,"original":custom}}),
+            models: json!([{"provider":"openai","id":"gpt-x","namespaced":"gpt-x"},{"provider":"original","id":"model/a","namespaced":"original/model-a"}]),
+            order: json!({"pickerOrder":["gpt-x","original/model-a"]}),
+            catalog: json!({"models":[{"slug":"gpt-x"},{"slug":"original/model-a"}]}),
+        };
+        let inventory = catalog(root.path(), &snapshot).unwrap();
+        let custom_id = inventory
+            .iter()
+            .find(|c| c.connection.provider_id == "original")
+            .unwrap()
+            .id
+            .clone();
+        let package = export(
+            root.path(),
+            ExportScope {
+                channel_families: Default::default(),
+                channel_models: Default::default(),
+                include_policy: true,
+                channel_ids: inventory.iter().map(|c| c.id.clone()).collect(),
+                template_refs: vec![],
+                include_global: true,
+            },
+            &snapshot,
+        )
+        .unwrap();
+        let policy = package.payload.policy.as_ref().unwrap();
+        assert_eq!(policy.channels.len(), 1);
+        assert_eq!(policy.channels[0].id, custom_id);
+        assert_eq!(policy.channel_order, Some(vec![custom_id]));
+        assert_eq!(policy.default_channel_id, None);
+        assert!(!serde_json::to_string(&package)
+            .unwrap()
+            .contains("api.openai.com"));
+    }
     #[test]
     fn official_only_inventory_and_public_originals_enter_disabled_immutable_staging_and_old_readers_refuse(
     ) {
