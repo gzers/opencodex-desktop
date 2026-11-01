@@ -2,6 +2,8 @@
 
 代码 feature/0.2.19-fixes，最终提交 1fc19df6868dc3c069fb2c24f69a2f74919c7076；原型 cfbd90c4b；Windows 11 build 26100，官方运行时 2.94.0。制品 SHA-256 与检查计数见 summary.json。本目录属于 docs/governance-main，不包含发布制品。
 
+归档日志仅去掉行尾空白和多余末尾空行；本目录关闭Git行尾转换，以SHA256SUMS校验实际归档字节。
+
 ## S18-02
 
 先只读查看日常 app.log 和通知记录，未找到同次页面故障日志；日常代理未做启停复现。沙箱确认同类故障：旧边界要求 y≥28，而 Windows 原生标题栏之外的客户区面板实际 y=1，嵌入请求在创建 WebView 前被拒。修复后只有 macOS Overlay 保留标题栏占位。
