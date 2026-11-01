@@ -50,8 +50,11 @@ a { color: inherit; }
 }
 /* Windows uses the system-drawn caption and buttons: native hit testing, Snap,
    accessibility and close requests stay with User32. There is no second DOM row. */
-.app-window.is-windows { background: transparent; border: none; }
+.app-window.is-windows { background: #e8edf5; border: none; }
+html[data-theme="dark"] .app-window.is-windows { background: #20242c; }
 .app-window.is-windows::before, .app-window.is-windows::after { display: none; }
+/* S18-07：首帧、原生查询失败和回退均保留实底；只有 DWM 确认 Mica 后才透出原生底面。 */
+html[data-native-material="mica"] .app-window.is-windows { background: transparent; }
 html[data-native-material="mica"], html[data-native-material="mica"] body { background: transparent; }
 html[data-native-material="solid"] body { background: #e8edf5; }
 html[data-native-material="solid"][data-theme="dark"] body { background: #20242c; }
@@ -188,8 +191,8 @@ html[data-native-material="solid"][data-theme="dark"] body { background: #20242c
    这里**故意不用 backdrop-filter**：WKWebView 里它会去采样窗口背后的桌面（实测页面颜色会跟着窗口位置变），
    那就不是"软件自己的底"了；而背面那层环境光本来就被 `.app-window::before` 的 filter 柔化过，
    柔和感由它提供，再叠一层模糊既没用又会把桌面引进来。
-   外壳（.app-window / .side / .titlebar）保持不透明、不带模糊；卡片等子层保持实底，
-   所以正文与长表可读性不变，页面只在卡片之间的留白处透出底色。 */
+   Windows 外壳沿 §27 的真实 Mica / 实色回退；页面消费三档配方，高／中档 .40 填充，
+   低档实底。卡片等子层沿 §26，页面自身不叠第二层模糊。 */
 .main {
   height: 100%;
   min-height: 0;
@@ -197,7 +200,7 @@ html[data-native-material="solid"][data-theme="dark"] body { background: #20242c
   padding: 20px 22px 24px;
   width: 100%;
   container-type: inline-size;
-  background: var(--page-fill);
+  background: var(--surface-page-bg, var(--page-fill));
   border-top: 1px solid var(--border);
   border-left: 1px solid var(--border);
   border-top-left-radius: var(--radius);
