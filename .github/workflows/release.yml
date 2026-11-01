@@ -22,7 +22,7 @@ jobs:
       matrix:
         include:
           # macOS（Apple Silicon）
-          - platform: macos-14
+          - platform: macos-15
             rust_targets: aarch64-apple-darwin
             args: '--target aarch64-apple-darwin'
           # macOS（Intel）——需要时取消注释
