@@ -274,7 +274,10 @@ function scheduleLayout() {
   if (resizeFrame !== null) cancelAnimationFrame(resizeFrame)
   resizeFrame = requestAnimationFrame(() => {
     resizeFrame = null
-    void syncPanel('layout')
+    // 首次挂载可能尚无可用尺寸，Show 会在 getBounds 处延后；尺寸就绪后补 Show，
+    // 不能仅发 Layout（原生视图尚未创建时 Layout 不会创建它）。失败空态仍由用户重试。
+    const awaitingView = panelLoading.value && !panelNotice.value && !!app.panelUrl
+    void syncPanel(awaitingView ? 'show' : 'layout')
   })
 }
 

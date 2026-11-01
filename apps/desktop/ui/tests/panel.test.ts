@@ -145,6 +145,40 @@ describe('official panel embedding', () => {
     await wrapper.unmount()
   })
 
+  it('creates the view once an initially empty layout becomes measurable', async () => {
+    let resize: () => void = () => {}
+    vi.stubGlobal('ResizeObserver', class {
+      constructor(callback: () => void) { resize = callback }
+      observe() {}
+      disconnect() {}
+    })
+    const bounds = vi.mocked(HTMLElement.prototype.getBoundingClientRect)
+    const readyBounds = bounds.getMockImplementation()!
+    bounds.mockReturnValue({ width: 0, height: 0 } as DOMRect)
+    invoke.mockImplementation(async (command: string) => {
+      if (command === 'get_preferences') return preferences('embedded')
+      if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+      throw new Error(`unexpected command: ${command}`)
+    })
+    useLifecycleStore().statusSnapshot = snapshot
+    const pinia = (globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia
+    const wrapper = mount(PanelRoute, { global: { plugins: [pinia] } })
+    try {
+      await vi.waitFor(() => expect(useAppStore().panelUrl).toBe('http://127.0.0.1:10100/web'))
+      await nextTick()
+      expect(invoke).not.toHaveBeenCalledWith('sync_embedded_panel', expect.anything())
+      bounds.mockImplementation(readyBounds)
+      resize()
+      await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('sync_embedded_panel', expect.objectContaining({
+        request: expect.objectContaining({ action: 'show' }),
+      })))
+      expect(invoke).not.toHaveBeenCalledWith('process_action', expect.anything())
+    } finally {
+      wrapper.unmount()
+      vi.unstubAllGlobals()
+    }
+  })
+
   // 官方面板只在首屏前读自己的 `ocx-theme`，所以管理器改明暗设置时必须让面板重新进入首屏，
   // 并把新的设置（themeSetting）与浮层配色（theme）一并下发。
   it('reloads the panel with the new theme when the manager theme setting changes', async () => {
