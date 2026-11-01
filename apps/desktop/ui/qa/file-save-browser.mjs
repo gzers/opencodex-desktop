@@ -137,12 +137,12 @@ try{
   modelTransferApi.receive=()=>window.__fileRpc('receive');modelTransferApi.select=(id,scope)=>window.__fileRpc('select',{id,scope});modelTransferApi.accept=id=>window.__fileRpc('accept',{id})
   modelTransferApi.latestIncoming=async()=>null
   const previous=window.__TAURI_INTERNALS__?.invoke
-  window.__TAURI_INTERNALS__={...window.__TAURI_INTERNALS__,invoke:async(command,args)=>command==='plugin:dialog|open'?'/fixture-transfer.ocxdconf':previous?previous(command,args):Promise.reject('fixture command unavailable')}
+  window.__TAURI_INTERNALS__={...window.__TAURI_INTERNALS__,invoke:async(command,args)=>command==='plugin:dialog|open'?'/fixture-transfer.ocxdconf':command==='create_preferences_backup'?(window.__fixtureBackups=(window.__fixtureBackups||0)+1,{backup:{backupId:'fixture-backup'},removedIds:[],cleanupError:null}):previous?previous(command,args):Promise.reject('fixture command unavailable')}
   const models=(await import('/src/features/models/store.ts')).useModelsStore();models.view.channelEditor=''
   models.channelDraft.channels.find(c=>c.id===demo).label='Local unsaved label';models.editCredential(demo,'fixture-local-pending-key','')
   ;(await import('/src/stores/routes.ts')).useRouteStore().go('overview')
  },demo)
- await page.getByRole('button',{name:'导入配置',exact:true}).click()
+ await page.getByRole('button',{name:'导入',exact:true}).click()
  const picker=page.getByRole('dialog',{name:'导入配置',exact:true});await picker.waitFor()
  check('overview import stays on overview and requires a selected file',await page.locator('.ov').isVisible()&&await picker.getByRole('button',{name:'读取并比较',exact:true}).isDisabled())
  await picker.getByRole('button',{name:'选择文件',exact:true}).click()
@@ -151,6 +151,7 @@ try{
  check('receiving and comparing leaves complete file unchanged',(await rpc('disk')).configText===beforeTransfer.configText)
  await comparison.getByRole('button',{name:'比较所选范围',exact:true}).click()
  await comparison.getByRole('button',{name:'采用到本机',exact:true}).click();await comparison.waitFor({state:'hidden'})
+ check('import backs up before adopting by default',await page.evaluate(()=>window.__fixtureBackups===1))
  check('adopting imported channels leaves file unchanged',(await rpc('disk')).configText===beforeTransfer.configText)
  check('adoption retains independent channel and Key input',await page.evaluate(async demo=>{const s=(await import('/src/features/models/store.ts')).useModelsStore();return s.channelDraft.channels.find(c=>c.id===demo).label==='Local unsaved label'&&s.credentialEdits[demo]?.value==='fixture-local-pending-key'&&s.channelBaseline===s.snapshot.policyDigest},demo))
  await page.evaluate(async()=>{(await import('/src/stores/routes.ts')).useRouteStore().go('models')})

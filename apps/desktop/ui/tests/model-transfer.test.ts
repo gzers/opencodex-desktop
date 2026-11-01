@@ -9,7 +9,10 @@ import ObjectScopeTree from '@/features/sync/ObjectScopeTree.vue'
 import { useModelsStore } from '@/features/models/store'
 import { emptyContent, emptyRules, type ChannelPolicy, type ModelSnapshot } from '@/features/models/api'
 vi.mock('@tauri-apps/plugin-dialog', () => ({ open: vi.fn().mockResolvedValue('/fixture/models.json') }))
-vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), modelTransferApi: {prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()} }))
+vi.mock('@/features/backup/api', async original => ({ ...await original<typeof import('@/features/backup/api')>(), createBackup: vi.fn().mockResolvedValue({ id: 'backup-1' }) }))
+import { createBackup } from '@/features/backup/api'
+import { useSyncStore } from '@/features/sync/store'
+vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), modelTransferApi: {prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),checkSync:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()} }))
 function snapshot(): ModelSnapshot {
   return { library:{schemaVersion:1,templates:[{id:'family',label:'测试族',source:'user',defaultRevision:null,revisions:[{id:'revision-1',createdAt:'2026-10-18T00:00:00Z',savedLabel:'测试族',content:emptyContent(),digest:'digest',baseRevision:null,changes:[]}]}]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspace:null,workspaceDigest:'workspace' }
 }
@@ -39,7 +42,7 @@ describe('model transfer review', () => {
     const wrapper=render(true);await flushPromises()
     expect(wrapper.find('section[aria-label="同步范围"]').exists()).toBe(true)
     expect(wrapper.find('.sync-scope-credentials').exists()).toBe(true)
-    const save=()=>wrapper.findAll('button').find(b=>b.text()==='保存本机范围')!
+    const save=()=>wrapper.findAll('button').find(b=>b.text()==='同步')!
     expect(save().attributes('disabled')).toBeDefined()
     // SY-1：口令只在确认弹窗内，不占范围侧栏。
     expect(wrapper.find('input[aria-label="导出保护口令"]').exists()).toBe(false)
@@ -93,9 +96,11 @@ describe('model transfer review', () => {
     vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([c]);vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:['remote-channel'],channelFamilies:mask,includeGlobal:false,preferences:false,extensions:false,includeKeys:false})
     vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
     const wrapper=render(true);await flushPromises();await flushPromises();await flushPromises()
-    await wrapper.findAll('button').find(b=>b.text()==='保存本机范围')!.trigger('click');await flushPromises()
+    vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'local',hasRemote:false})
+    vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue({id:'up',phase:'prepared',package:pack(),sync:{source:'local',changes:[],unchanged:1,createdAt:'2026-11-01T10:00:00Z'}})
+    await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
     expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledWith(expect.objectContaining({channelIds:['remote-channel'],channelFamilies:mask,includeGlobal:false,includeKeys:false}))
-    expect(modelTransferApi.publish).not.toHaveBeenCalled();expect(wrapper.text()).toContain('尚未上传');wrapper.unmount()
+    expect(modelTransferApi.publish).not.toHaveBeenCalled();wrapper.unmount()
   })
   it('does not offer a received family fragment as whole model or independent channel material',async()=>{
     const source=pack();source.formatVersion=5;source.payload.policy={templateRefs:null,channelOrder:null,channels:[{id:'fragment',label:'族片段',familyScope:{templateIds:['family'],includeChannelDefaults:false},modelSubset:[],selection:{mode:'none'}}]}
@@ -272,7 +277,9 @@ describe('model transfer review', () => {
     await flushPromises()
     await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises();await flushPromises()
     expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(store.snapshot!.libraryDigest).toBe('library')
+    expect((wrapper.findAll('label').find(l=>l.text()==='更新前备份')!.get('input').element as HTMLInputElement).checked).toBe(true)
     await wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.trigger('click');await flushPromises()
+    expect(createBackup).toHaveBeenCalledOnce()
     expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('incoming');expect(store.snapshot!.libraryDigest).toBe('received')
     expect(store.draft!.label).toBe('人工输入');expect(store.dirty).toBe(true);wrapper.unmount()
   })
@@ -284,7 +291,7 @@ describe('model transfer review', () => {
     vi.mocked(modelTransferApi.receive).mockResolvedValue({id:'overlap',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',mergedPolicy:incoming,package:pack(),notices:[]})
     const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises()
     await wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(wrapper.text()).toContain('当前输入已保留')
+    expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(createBackup).not.toHaveBeenCalled();expect(wrapper.text()).toContain('当前输入已保留')
     expect(store.channelDraft!.channels[0]!.label).toBe('unsaved label');expect(store.credentialEdits.channel?.action).toBe('clear');wrapper.unmount()
   })
   it('exports the frozen in-memory draft policy and reuses it for optional passphrase preparation',async()=>{
@@ -357,10 +364,56 @@ describe('model transfer review', () => {
     await wrapper.findAll('button').find(b=>b.text()==='核对原导入')!.trigger('click');await wrapper.get('input[aria-label="导入解密口令"]').setValue('fixture-original-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='解密并比较'||b.text()==='直接读取并比较')!.trigger('click');await flushPromises()
     expect(modelTransferApi.openReceived).toHaveBeenCalledExactlyOnceWith('original-adoption','fixture-original-password');await wrapper.findAll('button').find(b=>b.text()==='核对原导入')!.trigger('click');await flushPromises();expect(modelTransferApi.accept).toHaveBeenCalledWith('original-adoption',{adoptKeys:true,passphrase:'fixture-original-password'});expect(modelTransferApi.recompare).not.toHaveBeenCalled();wrapper.unmount()
   })
-  it('saves a device scope without starting transport or applying remote objects',async()=>{
+  // S18-01：0.2.18 原型 sync-config.js syncPreview：一个「同步」按钮，按整份快照新旧定方向，确认前只预览。
+  it('saves the device scope on 同步, previews a newer local snapshot and publishes only after 确认更新',async()=>{
     vi.mocked(modelTransferApi.saveRemoteScope).mockResolvedValue({templateIds:['family'],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false})
-    const wrapper=render(true);await flushPromises();await flushPromises();await chooseExport(wrapper,'测试族');await wrapper.findAll('button').find(b=>b.text()==='保存本机范围')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledExactlyOnceWith({templateIds:['family'],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(modelTransferApi.publish).not.toHaveBeenCalled();expect(modelTransferApi.download).not.toHaveBeenCalled();expect(wrapper.text()).toContain('尚未上传');wrapper.unmount()
+    vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'local',hasRemote:true})
+    vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue({id:'up',phase:'prepared',package:pack(),sync:{source:'local',changes:[{kind:'template',id:'family',label:'测试族',mark:'update',before:1,after:2}],unchanged:3,createdAt:'2026-11-01T10:00:00Z'}})
+    vi.mocked(modelTransferApi.publish).mockResolvedValue({id:'up',phase:'published',package:pack()})
+    const wrapper=render(true);await flushPromises();await flushPromises();await chooseExport(wrapper,'测试族');await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledExactlyOnceWith({templateIds:['family'],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false})
+    expect(modelTransferApi.prepareUpload).toHaveBeenCalledOnce();expect(modelTransferApi.download).not.toHaveBeenCalled();expect(modelTransferApi.publish).not.toHaveBeenCalled()
+    expect(wrapper.text()).toContain('本机配置 → 云端');expect(wrapper.text()).toContain('1 项变化');expect(wrapper.text()).toContain('3 项保持不变');expect(wrapper.text()).toContain('测试族')
+    expect(wrapper.findAll('label').some(l=>l.text()==='更新前备份')).toBe(false)
+    await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.publish).toHaveBeenCalledExactlyOnceWith('up');expect(createBackup).not.toHaveBeenCalled();expect(useSyncStore().webdavState).toBe('synced');wrapper.unmount()
+  })
+  it('downloads a newer remote snapshot, backs up first when ticked, and never writes on cancel',async()=>{
+    vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
+    vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'remote',hasRemote:true})
+    const plan={id:'remote-in',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],sync:{source:'remote' as const,changes:[{kind:'template',id:'family',label:'测试族',mark:'update' as const,before:1,after:2}],unchanged:0,createdAt:'2026-11-01T11:02:00Z'}}
+    vi.mocked(modelTransferApi.download).mockResolvedValue(structuredClone(plan));vi.mocked(modelTransferApi.accept).mockResolvedValue(snapshot())
+    const wrapper=render(true);await flushPromises();await flushPromises();await chooseExport(wrapper,'测试族')
+    await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
+    expect(wrapper.text()).toContain('云端配置 → 本机')
+    const backup=wrapper.findAll('label').find(l=>l.text()==='更新前备份')!.get<HTMLInputElement>('input');expect(backup.element.checked).toBe(true)
+    await wrapper.findAll('button').find(b=>b.text()==='取消')!.trigger('click');await flushPromises()
+    expect(createBackup).not.toHaveBeenCalled();expect(modelTransferApi.accept).not.toHaveBeenCalled()
+    await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises()
+    expect(createBackup).toHaveBeenCalledOnce();expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('remote-in')
+    expect(vi.mocked(createBackup).mock.invocationCallOrder[0]).toBeLessThan(vi.mocked(modelTransferApi.accept).mock.invocationCallOrder[0]);wrapper.unmount()
+  })
+  it('disables 确认更新 and offers 关闭 when the selected range is already the same',async()=>{
+    vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
+    vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'remote',hasRemote:true})
+    vi.mocked(modelTransferApi.download).mockResolvedValue({id:'same',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],sync:{source:'remote',changes:[],unchanged:4,createdAt:'2026-11-01T11:02:00Z'}})
+    const wrapper=render(true);await flushPromises();await flushPromises();await chooseExport(wrapper,'测试族')
+    await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
+    expect(wrapper.text()).toContain('所选内容已一致，无需更新。');expect(wrapper.findAll('label').some(l=>l.text()==='更新前备份')).toBe(false)
+    expect(wrapper.findAll('button').find(b=>b.text()==='确认更新')!.attributes('disabled')).toBeDefined()
+    await wrapper.findAll('button').find(b=>b.text()==='关闭')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(useSyncStore().webdavState).toBe('synced');wrapper.unmount()
+  })
+  it('asks for the MCP source inside the sync preview and skips an unpicked conflict',async()=>{
+    vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
+    vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'local',hasRemote:true})
+    vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue({id:'up',phase:'prepared',package:pack(),sync:{source:'local',changes:[{kind:'mcp',id:'docs',label:'docs',mark:'conflict',clients:['codex','claude'],fields:['env','type']}],unchanged:2,createdAt:'2026-11-01T10:00:00Z'}})
+    const wrapper=render(true);await flushPromises();await flushPromises();await chooseExport(wrapper,'测试族')
+    await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
+    expect(wrapper.text()).toContain('差异字段：env、type');expect(wrapper.text()).toContain('选择来源')
+    const picker=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='docs 采用来源')!
+    expect(picker.props('modelValue')).toBe('');expect(picker.props('options')[0]).toEqual({value:'',label:'暂不同步'});wrapper.unmount()
   })
   it.skip('[0.2.5 待按新结构重写] uses the separate content password for a protected remote download and leaves adoption pending',async()=>{
     vi.mocked(modelTransferApi.download).mockRejectedValueOnce({code:'passphrase_required'}).mockResolvedValue({id:'remote-received',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[]})

@@ -35,10 +35,20 @@ export const useSyncStore = defineStore('sync', {
     saving: false,
     testing: false,
     running: false,
+    // S18-01：概览入口请求同步页执行的动作，由同步页挂载后消费一次。
+    pendingAction: null as null | 'sync' | 'export' | 'connection',
   }),
   actions: {
     setWebdavState(next: ConnectionState) {
       this.webdavState = next
+    },
+    requestAction(action: 'sync' | 'export' | 'connection') {
+      this.pendingAction = action
+    },
+    takeAction(action: 'sync' | 'export' | 'connection'): boolean {
+      if (this.pendingAction !== action) return false
+      this.pendingAction = null
+      return true
     },
     async loadConfig(): Promise<SyncConfigDto | null> {
       try {

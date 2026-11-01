@@ -26,7 +26,7 @@ try{
   await proto.goto('file://'+encodeURI(prototype)+'#overview');await proto.waitForTimeout(500)
   await proto.evaluate(({w,h,theme,effects})=>{const win=document.querySelector('.window');win.style.width=w+'px';win.style.height=h+'px';win.style.flex='none';document.documentElement.dataset.theme=theme;document.documentElement.dataset.effects=effects;if(window.applyTheme)window.applyTheme(theme)},c)
   await app.goto('http://127.0.0.1:'+port+'/qa/overview-harness/index.html?effects='+c.effects+'&theme='+c.theme);await app.waitForSelector('.mods')
-  await app.getByRole('button',{name:'导入配置',exact:true}).click();await app.waitForSelector('dialog[open]')
+  await app.getByRole('button',{name:'导入',exact:true}).click();await app.waitForSelector('dialog[open]')
   await proto.evaluate(()=>{window.setEnv('ready');document.querySelector('[data-prototype-action=import]').click()})
   await proto.waitForTimeout(200)
   const pi=await info(proto,'#modal'),ii=await info(app,'dialog[open]')

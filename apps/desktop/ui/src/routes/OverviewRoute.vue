@@ -23,6 +23,8 @@ import { hasNewerVersion } from '@/features/updates/version'
 import RuntimeMotionMark from '@/features/runtime/components/RuntimeMotionMark.vue'
 import EnvironmentGate from '@/features/environment/components/EnvironmentGate.vue'
 import { webdavStates } from '@/features/sync/states'
+import { useSyncStore } from '@/features/sync/store'
+import { clockText, syncActivity } from '@/features/sync/activity'
 import { runtimeSourceLabel } from '@/lib/labels'
 import { buildEnvironmentPresentation, environmentChecksOrdered } from '@/features/environment/presentation'
 import { projectMotion } from '@/features/runtime/motion/projection'
@@ -30,6 +32,7 @@ import { projectMotion } from '@/features/runtime/motion/projection'
 const routes = useRouteStore()
 const app = useAppStore()
 const controller = useAppController()
+const syncStore = useSyncStore()
 
 const updateCenter = ref<InstanceType<typeof UpdateCenter> | null>(null)
 const updateOpen = ref(false)
@@ -272,12 +275,19 @@ function guide() {
 
 // 顺序与文案对齐 0.2.0 原型 index.html:1866/1885/1905：版本升级 → 文件同步 → WebDAV 同步。
 // 「最近事件」在原型里排在模块区之前（index.html:1853），见模板顺序。
+function activityText(entry: { time: string; count: number } | undefined, empty: string) {
+  const time = clockText(entry?.time)
+  return entry && time ? time + ' · ' + entry.count + ' 项' : empty
+}
+// S18-01：WebDAV 卡片按 0.2.18 原型 webdavStates 渲染；线上版本时间来自本机最近一次同步记录。
+const webdavView = computed(() => webdavStates[app.webdavState])
+const remoteVersionTime = computed(() => webdavView.value.remote ? clockText(syncActivity.value.sync?.remoteTime) || '—' : '—')
 const mods = computed(() => [
   {
     key: 'upgrade',
     title: '版本升级',
-    // 原型 index.html:1873 用「可用」；连接/清单状态区分见 N-OV-1。
-    tag: '可用',
+    // 0.2.18 原型 index.html:747 隐藏版本卡与 WebDAV 卡头部标签：状态已在正文逐行给出。
+    tag: '',
     rows: [],
     actions: [
       { label: '检查更新', cls: 'btn primary', run: () => openUpdates(null, true) },
@@ -287,16 +297,16 @@ const mods = computed(() => [
     key: 'migration',
     // 原型 index.html:1891 标题是「文件同步」，不是「配置迁移」。
     title: '文件同步',
-    // 原型 index.html:1892 用「规划中」。
-    tag: '规划中',
-    rows: [['导出范围', '可选对象'], ['凭据', '独立选择']],
-    // 原型 index.html:1881/:1900-1901 的入口是「导入配置 / 选择同步范围」。
+    // S18-01：0.2.18 原型 index.html:1930-1946 无标签，只显示最近一次导入 / 导出（时间 + 项数）。
+    tag: '',
+    rows: [['最近导入', activityText(syncActivity.value.import, '尚未导入')], ['最近导出', activityText(syncActivity.value.export, '尚未导出')]],
+    // 导入在概览原位打开；导出进入文件同步页按记住的范围直接准备导出包。
     actions: [
-      { label: '导入配置', cls: 'btn', run: () => { importOpen.value = true } },
-      { label: '选择同步范围', cls: 'btn ghost', run: () => routes.go('settings',{section:'migration'}) },
+      { label: '导入', cls: 'btn', run: () => { importOpen.value = true } },
+      { label: '导出', cls: 'btn', run: () => { syncStore.requestAction('export'); routes.go('sync', { tab: 'file' }) } },
     ],
   },
-  { key: 'sync', title: 'WebDAV 同步', tag: webdavStates[app.webdavState].tag, rows: [['连接状态', webdavStates[app.webdavState].conn], ['冲突策略', webdavStates[app.webdavState].conflict]], actions: webdavStates[app.webdavState].actions.map(a => ({ label: a.label, cls: a.cls, run: () => routes.go('sync',{tab:'webdav'}) })) },
+  { key: 'sync', title: 'WebDAV 同步', tag: '', rows: [['连接状态', webdavView.value.conn]], actions: webdavView.value.actions.map(a => ({ label: a.label, cls: a.cls, disabled: !!a.disabled, run: () => { syncStore.requestAction(a.act); routes.go('sync', { tab: 'webdav' }) } })) },
 ])
 </script>
 
@@ -363,7 +373,7 @@ const mods = computed(() => [
       <UiCard v-for="mod in mods" :key="mod.key" class="mod">
         <div class="mod-head">
           <h3>{{ mod.title }}</h3>
-          <span class="tag">{{ mod.tag }}</span>
+          <span v-if="mod.tag" class="tag">{{ mod.tag }}</span>
           <button
             class="mod-go"
             type="button"
@@ -387,13 +397,21 @@ const mods = computed(() => [
             </button>
           </template>
           <template v-else><InformationRow v-for="row in mod.rows" :key="row[0]" :label="row[0]" :value="row[1]" /></template>
+          <div v-if="mod.key === 'sync'" class="info-row ov-remote-row" data-testid="overview-remote-version">
+            <span class="info-row-label">线上版本</span>
+            <span class="ov-state-side">
+              <span v-if="webdavView.remote" class="ov-state-dot" :class="'is-' + webdavView.remote.dot" aria-hidden="true"></span>
+              <b>{{ remoteVersionTime }}</b>
+              <template v-if="webdavView.remote"><span class="ov-state-sep" aria-hidden="true">·</span><span class="ov-state-text" :class="'is-' + webdavView.remote.dot">{{ webdavView.remote.text }}</span></template>
+            </span>
+          </div>
         </div>
         <div class="mod-actions">
           <UiButton
             v-for="action in mod.actions"
             :key="action.label"
-            :variant="action.cls.includes('primary') ? 'primary' : 'default'"
-            :disabled="mod.key === 'upgrade' && action.label === '检查更新' && app.officialProjectLoading"
+            :variant="action.cls.includes('primary') ? 'primary' : action.cls.includes('ghost') ? 'ghost' : 'default'"
+            :disabled="(mod.key === 'upgrade' && action.label === '检查更新' && app.officialProjectLoading) || ('disabled' in action && !!action.disabled)"
             @click="action.run?.()"
           >{{ action.label }}</UiButton>
         </div>
@@ -520,6 +538,22 @@ const mods = computed(() => [
 .mnt-status { margin-inline-start: auto; min-width: 0; overflow: hidden; color: var(--muted); text-overflow: ellipsis; }
 .mnt-status.danger { color: var(--red); }
 .mnt-chevron { flex: none; color: var(--muted); }
+/* S18-01：0.2.18 原型 index.html:768-780 线上版本状态点与方向词。 */
+.ov-remote-row .ov-state-side { margin-inline-start: auto; }
+.ov-remote-row b { color: var(--text); font-weight: var(--weight-semibold); }
+.ov-state-dot{width:7px;height:7px;border-radius:50%;flex:none;background:var(--muted)}
+.ov-state-dot.is-ok{background:var(--green)}
+.ov-state-dot.is-info{background:var(--blue)}
+.ov-state-dot.is-warn{background:var(--amber)}
+.ov-state-dot.is-error{background:var(--red)}
+.ov-state-text{font-weight:500;color:var(--text);white-space:nowrap}
+.ov-state-text.is-ok{color:var(--green)}
+.ov-state-text.is-info{color:var(--blue)}
+.ov-state-text.is-warn{color:var(--amber)}
+.ov-state-text.is-error{color:var(--red)}
+.ov-state-text.is-idle{color:var(--muted)}
+.ov-state-side{display:inline-flex;align-items:center;justify-content:flex-end;gap:6px;flex:none;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ov-state-sep{color:var(--border)}
 /* 最近事件是列表行：时间与消息同行垂直居中，消息换行时不把时间挤偏。 */
 .recent-events-list li { align-items: center; }
 </style>

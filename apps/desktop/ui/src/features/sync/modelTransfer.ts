@@ -37,8 +37,13 @@ export interface PortableEndpoint {id:string;url:string;remotePath:string;userna
 export interface ManagerSettings {preferences:Record<string,unknown>|null;extensions:{skills:string[];servers:string[];sync_method:string}|null;webdav:PortableEndpoint[];accounts?:PortableAccount[]}
 export interface ModelPackage { format: string; formatVersion: number; schemaVersion: number; createdAt: string; digest: string; payload: { candidate?:DraftCandidate; templates: Template[]; policy: { templateRefs: TemplateRef[] | null; channelOrder: string[] | null;defaultChannelId?:string|null; channels: (Pick<ChannelPolicy, 'id' | 'label' | 'selection' | 'naming'> & {familyScope?:FamilyScope;modelSubset?:string[]|null;discovered?:DiscoveredModel[];modelOrder?:string[];connection?:{nodes:{id:string;name:string;url:string}[];provider?:Record<string,unknown>|null}|null})[] } | null } }
 export interface FilePlan { id: string; package: ModelPackage;protected?:boolean;fileDigest?:string;credentialCount?:number;manager?:ManagerSettings|null;assets?:AssetSummary|null }
-export interface UploadPlan extends FilePlan { phase: string }
-export interface IncomingPlan extends FilePlan { expectedLibrary: string; expectedPolicy: string; expectedWorkspace: string; mergedPolicy?:ModelPolicy|null; notices: string[];previewError?:string|null;availableKeys?:string[];availableWebdavPasswords?:string[];availableExtensionCredentials?:boolean;assetMappings?:AssetNameMappings;channelBindings?:Record<string,{targetId:string;keepLocalConnection:boolean;label:string|null}>;adoption?:{keys:boolean;webdav:boolean;completed:boolean;extensionCredentials?:boolean}|null }
+/** S18-01：设备间同步方向。local 表示本机较新、上传；remote 表示云端较新、下载。 */
+export interface SyncCheck {source:'local'|'remote';hasRemote:boolean;lastSyncedAt?:string}
+export interface SyncChange {kind:string;id:string;label:string;mark:'new'|'update'|'conflict';version?:number;before?:number;after?:number;clients?:string[];fields?:string[]}
+/** changes 为 null 表示无法比较变化，仍允许确认。 */
+export interface SyncPreview {source:'local'|'remote';changes:SyncChange[]|null;unchanged:number;createdAt:string}
+export interface UploadPlan extends FilePlan { phase: string;sync?:SyncPreview|null }
+export interface IncomingPlan extends FilePlan { sync?:SyncPreview|null;expectedLibrary: string; expectedPolicy: string; expectedWorkspace: string; mergedPolicy?:ModelPolicy|null; notices: string[];previewError?:string|null;availableKeys?:string[];availableWebdavPasswords?:string[];availableExtensionCredentials?:boolean;assetMappings?:AssetNameMappings;channelBindings?:Record<string,{targetId:string;keepLocalConnection:boolean;label:string|null}>;adoption?:{keys:boolean;webdav:boolean;completed:boolean;extensionCredentials?:boolean}|null }
 export type ChannelImportMapping = {mode:'new';label:string}|{mode:'local';targetId:string}
 export interface ReceiveScope {channelModels?:Record<string,string[]>;assetMappings?:AssetNameMappings;channelMappings?:Record<string,ChannelImportMapping>;accountIds?:string[];templateRefs:TemplateRef[];channelIds:string[];includeGlobal:boolean;preferences?:boolean;extensions?:boolean;endpointIds?:string[];skillNames?:string[];mcpNames?:string[]}
 export interface RemoteScope {channelFamilies?:Record<string,FamilyScope>;channelModels?:Record<string,string[]>;accountIds?:string[];templateIds:string[];channelIds:string[];includeGlobal:boolean;preferences:boolean;extensions:boolean;includeKeys:boolean;skillNames?:string[];mcpNames?:string[];mcpSources?:Record<string,string>;extensionCredentials?:boolean;assetsReviewed?:boolean;allTemplates?:boolean;allChannels?:boolean;allSkills?:boolean;allMcps?:boolean}
@@ -65,6 +70,7 @@ export const modelTransferApi = {
   publish: (planId: string) => invoke<UploadPlan>('config_sync_publish', { planId }),
   download: (passphrase?:string) => invoke<IncomingPlan>('config_sync_download',{passphrase:passphrase??null}),
   latestUpload:()=>invoke<UploadPlan|null>('config_sync_latest_upload'),
+  checkSync:()=>invoke<SyncCheck>('config_sync_check'),
 }
 
 export function scopeFor(snapshot: ModelSnapshot, templateIds: string[], channelIds: string[], global: boolean, versions: Record<string,string>,channelModels:Record<string,string[]>={},channelFamilies:Record<string,FamilyScope>={}): TransferScope {
