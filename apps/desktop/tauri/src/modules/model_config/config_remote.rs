@@ -43,6 +43,8 @@ pub struct Scope {
     pub skill_names: Vec<String>,
     #[serde(default)]
     pub mcp_names: Vec<String>,
+    #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
+    pub mcp_sources: std::collections::BTreeMap<String, String>,
     #[serde(default)]
     pub extension_credentials: bool,
     #[serde(default)]
@@ -80,6 +82,7 @@ impl Default for Scope {
             include_keys: false,
             skill_names: vec![],
             mcp_names: vec![],
+            mcp_sources: Default::default(),
             extension_credentials: false,
             account_ids: vec![],
             account_identities: vec![],
@@ -168,6 +171,16 @@ impl Scope {
         {
             return Err(invalid("sync_scope", "扩展范围名称或数量无效"));
         }
+        if self.mcp_sources.len() > 1000
+            || self.mcp_sources.iter().any(|(name, client)| {
+                !crate::modules::extensions::discovery::is_safe_skill_name(name)
+                    || !crate::modules::extensions::CLIENT_IDS
+                        .iter()
+                        .any(|id| crate::modules::sync::portable_assets::client_key(*id) == *client)
+            })
+        {
+            return Err(invalid("sync_scope", "MCP采用来源无效"));
+        }
         Ok(())
     }
     fn manager(&self) -> ManagerScope {
@@ -178,6 +191,7 @@ impl Scope {
             webdav_passwords: false,
             skill_names: self.skill_names.clone(),
             mcp_names: self.mcp_names.clone(),
+            mcp_sources: self.mcp_sources.clone(),
             extension_credentials: self.extension_credentials,
             assets_reviewed: self.assets_reviewed,
             account_ids: self.account_ids.clone(),
@@ -390,7 +404,11 @@ pub async fn prepare<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
             manager.skill_names = catalog.skills;
         }
         if scope.all_mcps {
-            manager.mcp_names = catalog.mcps;
+            manager.mcp_names = catalog
+                .mcps
+                .into_iter()
+                .filter(|name| crate::modules::sync::portable_assets::default_included_mcp(name))
+                .collect();
         }
     }
     let local =
@@ -409,6 +427,12 @@ pub async fn prepare<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         None => local_bytes,
     };
     let summary = file_objects::remote_summary(&payload, passphrase)?;
+    let mut assets = summary.assets.clone();
+    assets.conflicts = local
+        .assets
+        .as_ref()
+        .map(|local| local.conflicts.clone())
+        .unwrap_or_default();
     let view = UploadView {
         id: id.clone(),
         phase: "prepared".into(),
@@ -416,7 +440,7 @@ pub async fn prepare<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         manager: summary.manager,
         credential_count: summary.credential_count,
         protected: summary.protected,
-        assets: summary.assets,
+        assets,
     };
     let plan = Plan {
         view: view.clone(),
@@ -601,6 +625,7 @@ async fn download_bound_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
             .assets
             .mcps
             .iter()
+            .filter(|mcp| crate::modules::sync::portable_assets::default_included_mcp(&mcp.name))
             .map(|mcp| mcp.name.clone())
             .collect();
     }

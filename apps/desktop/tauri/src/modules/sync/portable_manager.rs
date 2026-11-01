@@ -32,6 +32,10 @@ pub struct Scope {
     pub skill_names: Vec<String>,
     #[serde(default)]
     pub mcp_names: Vec<String>,
+    /// MCP name -> client id chosen in the sync preview when same-named
+    /// client definitions differ (S18-03). Unchosen conflicts are skipped.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub mcp_sources: BTreeMap<String, String>,
     #[serde(default)]
     pub extension_credentials: bool,
     #[serde(default)]
