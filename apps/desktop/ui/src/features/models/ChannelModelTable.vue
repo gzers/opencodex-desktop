@@ -127,8 +127,11 @@ async function applyBatch(){
 </section>
 </template>
 <style scoped>
-.channel-model-table> .model-table-scroll>table>thead>tr>th:first-child,.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:first-child{width:36px;min-width:36px;padding-inline:0;white-space:nowrap;text-align:center}
-.model-row-pick{display:flex;align-items:center;justify-content:center;gap:var(--space-1);flex-wrap:nowrap}
+/* S18-08：原型 .mp-table-head 与 .mp-model-row 的首列都从列起点排布，表头勾选框与行勾选框共用同一条竖线；
+   行内抓手固定 16px 跟在勾选框之后，不参与居中，也不被压缩。 */
+.channel-model-table> .model-table-scroll>table>thead>tr>th:first-child,.channel-model-table> .model-table-scroll>table>tbody>tr[data-model]>td:first-child{width:36px;min-width:36px;padding-inline:0;white-space:nowrap;text-align:start}
+.channel-model-table> .model-table-scroll>table>thead>tr>th:first-child>input[type=checkbox],.model-row-pick>input[type=checkbox]{margin:0;flex:none;vertical-align:middle}
+.model-row-pick{display:flex;align-items:center;justify-content:flex-start;gap:var(--space-1);flex-wrap:nowrap}
 .model-row-pick .model-grip{margin-inline-start:0}
 .channel-model-table{display:grid;gap:var(--space-3);min-width:0;container-type:inline-size}.model-raw-id{display:block;white-space:normal;overflow-wrap:anywhere;font-family:var(--font-mono,monospace)}
 /* WP-47：36 / 弹性 / 62 / 182；首行同轴，两行摘要留在下方。
@@ -163,7 +166,7 @@ async function applyBatch(){
 :global(html.ocx-pointer-drag),:global(html.ocx-pointer-drag *){-webkit-user-select:none!important;user-select:none!important}
 .model-row-pick .model-grip{cursor:grab}
 :global(html.ocx-pointer-drag) .model-grip{cursor:grabbing}
-.model-grip{display:inline-grid;place-items:center;width:16px;color:var(--muted);cursor:grab;font-size:var(--text-caption)}
+.model-grip{display:inline-grid;place-items:center;width:16px;flex:none;color:var(--muted);cursor:grab;font-size:var(--text-caption)}
 .channel-model-table :deep(.model-table tbody>tr.dragging){opacity:.45}
 .channel-model-table :deep(.model-table tbody>tr.drag-over){outline:2px solid var(--accent);outline-offset:-2px}
 .model-identity input,.model-row-summary,.model-display-name{-webkit-user-select:text;user-select:text}
