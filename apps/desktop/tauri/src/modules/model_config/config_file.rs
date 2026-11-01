@@ -13,8 +13,9 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::{
-    collections::BTreeSet,
+    collections::{BTreeSet, VecDeque},
     path::{Path, PathBuf},
+    sync::Mutex,
 };
 use zeroize::{Zeroize, Zeroizing};
 
@@ -92,14 +93,119 @@ fn snapshot_value(
     meta: &Policy,
 ) -> ModelResult<Snapshot> {
     let (library, library_digest) = ModelStore::new(root).library_only()?;
+    let policy_digest = sha256(bytes);
+    remember_manager_view(&policy_digest, value);
     Ok(Snapshot {
         library,
         library_digest,
         policy: current_policy(value, meta)?,
-        policy_digest: sha256(bytes),
+        policy_digest,
         workspace: None,
         workspace_digest: sha256(&[]),
     })
+}
+
+/// The bundled OpenCodex runtime persists its own bookkeeping into the same
+/// config.json (live-model baselines, recent arrivals and the Claude desktop
+/// applied marker) through its own mutation lock. Those fields are never shown
+/// or edited by the manager, so a rewrite that touches only them must not make
+/// the next save report an external edit.
+fn manager_view_digest(value: &Value) -> String {
+    let mut view = value.clone();
+    if let Some(root) = view.as_object_mut() {
+        let discovery_empty = root
+            .get_mut("modelDiscovery")
+            .and_then(Value::as_object_mut)
+            .map(|discovery| {
+                discovery.remove("knownModels");
+                discovery.remove("recentArrivals");
+                discovery.is_empty()
+            });
+        if discovery_empty == Some(true) {
+            root.remove("modelDiscovery");
+        }
+        let claude_empty = root
+            .get_mut("claudeCode")
+            .and_then(Value::as_object_mut)
+            .map(|claude| {
+                let profile_empty = claude
+                    .get_mut("desktopProfile")
+                    .and_then(Value::as_object_mut)
+                    .map(|profile| {
+                        profile.remove("appliedFingerprint");
+                        profile.remove("appliedAt");
+                        // The runtime creates this empty profile before its
+                        // first marker when none existed.
+                        Value::Object(profile.clone())
+                            == json!({"version":1,"assignments":{},"defaults":{"opus":null,"fable":null,"sonnet":null,"haiku":null}})
+                    });
+                if profile_empty == Some(true) {
+                    claude.remove("desktopProfile");
+                }
+                claude.is_empty()
+            });
+        if claude_empty == Some(true) {
+            root.remove("claudeCode");
+        }
+    }
+    let mut bytes = Zeroizing::new(Vec::new());
+    canonical(&view, &mut bytes);
+    sha256(&bytes)
+}
+fn canonical(value: &Value, out: &mut Vec<u8>) {
+    match value {
+        Value::Object(map) => {
+            let mut keys: Vec<_> = map.keys().collect();
+            keys.sort();
+            out.push(b'{');
+            for (index, key) in keys.into_iter().enumerate() {
+                if index > 0 {
+                    out.push(b',');
+                }
+                out.extend(serde_json::to_vec(key).unwrap_or_default());
+                out.push(b':');
+                canonical(&map[key], out);
+            }
+            out.push(b'}');
+        }
+        Value::Array(items) => {
+            out.push(b'[');
+            for (index, item) in items.iter().enumerate() {
+                if index > 0 {
+                    out.push(b',');
+                }
+                canonical(item, out);
+            }
+            out.push(b']');
+        }
+        other => out.extend(serde_json::to_vec(other).unwrap_or_default()),
+    }
+}
+/// File digests this process has handed to the UI, paired with the manager
+/// view at that moment. It is memory-only: after a restart the UI reloads and
+/// an unknown digest falls back to the strict whole-file comparison.
+static MANAGER_VIEWS: Mutex<VecDeque<(String, String)>> = Mutex::new(VecDeque::new());
+const MANAGER_VIEW_LIMIT: usize = 256;
+fn remember_manager_view(file_digest: &str, value: &Value) {
+    let view = manager_view_digest(value);
+    if let Ok(mut views) = MANAGER_VIEWS.lock() {
+        views.retain(|(file, _)| file != file_digest);
+        views.push_back((file_digest.to_string(), view));
+        while views.len() > MANAGER_VIEW_LIMIT {
+            views.pop_front();
+        }
+    }
+}
+fn runtime_only_change(expected_file: &str, current: &Value) -> bool {
+    let Some(base) = MANAGER_VIEWS.lock().ok().and_then(|views| {
+        views
+            .iter()
+            .find(|(file, _)| file == expected_file)
+            .map(|(_, view)| view.clone())
+    }) else {
+        return false;
+    };
+    base == manager_view_digest(current)
 }
 pub fn snapshot(root: &Path, home: &Path) -> ModelResult<Snapshot> {
     // Readers share the save lock order and cannot observe a half-published
@@ -495,7 +601,9 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
     let _lock = TargetFileLock::lock(&path)?;
     let before_existed = path.exists();
     let (mut config, before_bytes) = read(home)?;
-    if sha256(&before_bytes) != request.expected_file {
+    if sha256(&before_bytes) != request.expected_file
+        && !runtime_only_change(&request.expected_file, &config)
+    {
         return Err(invalid(
             "file_changed",
             "配置文件已在其它地方修改，请刷新后再保存；当前编辑已保留",
@@ -1028,6 +1136,80 @@ mod tests {
         .unwrap();
         assert_eq!(e.code, "file_changed");
         assert_eq!(read(&home).unwrap().0["external"], "later");
+    }
+    fn runtime_bookkeeping(home: &Path, stamp: &str) {
+        // Mirrors the bundled runtime: compact output, its own field order and
+        // only runtime-owned bookkeeping changes.
+        let (mut c, _) = read(home).unwrap();
+        c["modelDiscovery"]["knownModels"]["demo"] =
+            json!({"ids":["vendor/custom"],"updatedAt":stamp});
+        c["modelDiscovery"]["recentArrivals"]["demo"] = json!([{"id":"vendor/custom","at":stamp}]);
+        if c.get("claudeCode").is_none() {
+            c["claudeCode"]["desktopProfile"] = json!({"version":1,"assignments":{},"defaults":{"opus":null,"fable":null,"sonnet":null,"haiku":null}});
+        }
+        c["claudeCode"]["desktopProfile"]["appliedFingerprint"] = json!(format!("fp-{stamp}"));
+        c["claudeCode"]["desktopProfile"]["appliedAt"] = json!(stamp);
+        atomic_write(
+            &home.join("config.json"),
+            &serde_json::to_vec(&c).unwrap(),
+            0o600,
+        )
+        .unwrap();
+    }
+    fn toggle_save(root: &Path, home: &Path, base: Snapshot) -> ModelResult<SaveResult> {
+        let mut policy = base.policy;
+        policy.channels[0].connection.enabled = !policy.channels[0].connection.enabled;
+        save(
+            root,
+            home,
+            SaveRequest {
+                scope: None,
+                expected_file: base.policy_digest,
+                policy,
+                credentials: vec![],
+            },
+        )
+    }
+    #[test]
+    fn runtime_bookkeeping_rewrite_does_not_block_consecutive_saves() {
+        let (_t, root, home) = fixture();
+        let first = toggle_save(&root, &home, snapshot(&root, &home).unwrap()).unwrap();
+        runtime_bookkeeping(&home, "2026-11-01T00:00:00Z");
+        let second = toggle_save(&root, &home, first.snapshot).unwrap();
+        assert!(second.changed);
+        runtime_bookkeeping(&home, "2026-11-01T00:05:00Z");
+        let third = toggle_save(&root, &home, second.snapshot).unwrap();
+        assert!(third.changed);
+        let (c, _) = read(&home).unwrap();
+        assert_eq!(
+            c["modelDiscovery"]["knownModels"]["demo"]["updatedAt"],
+            "2026-11-01T00:05:00Z"
+        );
+        assert_eq!(
+            c["claudeCode"]["desktopProfile"]["appliedAt"],
+            "2026-11-01T00:05:00Z"
+        );
+        assert_eq!(c["providers"]["demo"]["futureField"]["keep"], 42);
+        assert!(c["providers"]["demo"]["disabled"].as_bool() == Some(true));
+    }
+    #[test]
+    fn real_external_edit_after_runtime_rewrite_still_blocks_save() {
+        for edit in ["baseUrl", "disabledModels", "unrelated"] {
+            let (_t, root, home) = fixture();
+            let first = toggle_save(&root, &home, snapshot(&root, &home).unwrap()).unwrap();
+            runtime_bookkeeping(&home, "2026-11-01T00:00:00Z");
+            let (mut c, _) = read(&home).unwrap();
+            match edit {
+                "baseUrl" => c["providers"]["demo"]["baseUrl"] = json!("https://other.test"),
+                "disabledModels" => c["disabledModels"] = json!(["demo/vendor/custom"]),
+                _ => c["unrelated"] = json!(false),
+            }
+            let external = serde_json::to_vec(&c).unwrap();
+            atomic_write(&home.join("config.json"), &external, 0o600).unwrap();
+            let e = toggle_save(&root, &home, first.snapshot).err().unwrap();
+            assert_eq!(e.code, "file_changed", "{edit}");
+            assert!(std::fs::read(home.join("config.json")).unwrap() == external);
+        }
     }
 }
 
