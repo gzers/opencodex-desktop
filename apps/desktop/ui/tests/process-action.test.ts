@@ -109,6 +109,40 @@ describe('process action integration', () => {
     expect(app.processProgressCompleted).toBe(false)
   })
 
+  // S18-02：启动后代理端口尚未监听时会短暂读到 unreachable；这是过渡观测，
+  // 不能当成启动失败，等到 running 再完成。
+  it('keeps start busy through a transient unreachable snapshot', async () => {
+    invoke.mockImplementation((command: string) =>
+      command === 'process_action'
+        ? Promise.resolve(backendResult('starting'))
+        : Promise.resolve(snapshot('starting')),
+    )
+    const app = useAppStore()
+    await app.requestProcessAction('start')
+    app.syncProcessProgress(snapshot('unreachable'))
+    expect(app.processActionBusy).toBe(true)
+    expect(app.processProgressError).toBe('')
+    expect(app.processProgressCompleted).toBe(false)
+
+    app.syncProcessProgress(snapshot('running'))
+    expect(app.processActionBusy).toBe(false)
+    expect(app.processProgressCompleted).toBe(true)
+    expect(app.processProgressError).toBe('')
+  })
+
+  it('still fails start immediately on an explicit starting_failed', async () => {
+    invoke.mockImplementation((command: string) =>
+      command === 'process_action'
+        ? Promise.resolve(backendResult('starting'))
+        : Promise.resolve(snapshot('starting')),
+    )
+    const app = useAppStore()
+    await app.requestProcessAction('start')
+    app.syncProcessProgress(snapshot('starting_failed'))
+    expect(app.processActionBusy).toBe(false)
+    expect(app.processProgressError).not.toBe('')
+  })
+
   it('projects backend lifecycle and status fields into the overview scenario without inventing data', () => {
     const result = backendResult('running')
     const base = runtimeScenarios.stopped

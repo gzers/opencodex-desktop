@@ -9,6 +9,7 @@ import { useFeedbackStore } from '@/app/feedback/store'
 import { useThemeStore } from '@/app/appearance/theme'
 import type { StatusSnapshot } from '@/contracts/runtimeStatus'
 import type { PreferencesDto } from '@/features/preferences/api'
+import { PANEL_LOAD_NOTICE_MS } from '@/config/runtimeDefaults'
 
 const invoke = vi.fn()
 
@@ -180,10 +181,12 @@ describe('official panel embedding', () => {
     await wrapper.unmount()
   })
 
-  it('shows offline state and only opens browser when runtime URL exists', async () => {
+  // 原型 `.panel-empty` 空态：进程没在运行时说明「OpenCodex 未运行」，引导回概览启动，不给浏览器入口。
+  it('shows the not-running empty state and returns to overview', async () => {
     invoke.mockImplementation(async (command: string) => {
       if (command === 'get_preferences') return preferences('embedded')
-      if (command === 'open_external_link') return { opened: true }
+      // 离开路由时收起子视图是允许的；断言只禁止 show。
+      if (command === 'sync_embedded_panel') return { visible: false, panelUrl: null }
       throw new Error(`unexpected command: ${command}`)
     })
     const app = useAppStore()
@@ -199,18 +202,18 @@ describe('official panel embedding', () => {
         plugins: [(globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia],
       },
     })
-    await vi.waitFor(() => expect(wrapper.find('.panel-state').text()).toContain('官方面板需要 OpenCodex 处于运行且健康可用状态'))
-    expect(wrapper.find('.panel-state').text()).toContain('官方面板需要 OpenCodex 处于运行且健康可用状态')
+    await vi.waitFor(() => expect(wrapper.find('.panel-empty strong').text()).toBe('OpenCodex 未运行'))
+    expect(wrapper.find('.panel-empty').text()).toContain('请从概览启动 OpenCodex 后再打开面板。')
+    const labels = wrapper.findAll('.panel-empty button').map(button => button.text())
+    expect(labels).toEqual(['返回概览'])
 
-    const retry = wrapper.findAll('.panel-state button').find(button => button.text() === '重试')
-    await retry?.trigger('click')
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('.panel-state').text()).toContain('官方面板需要 OpenCodex 处于运行且健康可用状态')
-
-    const browser = wrapper.findAll('.panel-state button').find(button => button.text() === '在浏览器打开')
-    await browser?.trigger('click')
-    await wrapper.vm.$nextTick()
-    expect(invoke).not.toHaveBeenCalledWith('open_external_link', { url: 'http://127.0.0.1:10100/web' })
+    await wrapper.find('.panel-empty button').trigger('click')
+    expect(window.location.hash).toBe('#overview')
+    expect(invoke).not.toHaveBeenCalledWith('process_action', expect.anything())
+    expect(invoke).not.toHaveBeenCalledWith('sync_embedded_panel', expect.objectContaining({
+      request: expect.objectContaining({ action: 'show' }),
+    }))
+    await wrapper.unmount()
   })
 
   // 冷启动可能先落到面板路由、首个状态快照还没到；此时不能给出「请先启动服务」，
@@ -250,8 +253,8 @@ describe('official panel embedding', () => {
         plugins: [(globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia],
       },
     })
-    await vi.waitFor(() => expect(wrapper.find('.panel-state').text()).toContain('浏览器兜底模式已启用'))
-    expect(wrapper.find('.panel-state').text()).toContain('浏览器兜底模式已启用')
+    await vi.waitFor(() => expect(wrapper.find('.panel-empty').text()).toContain('浏览器兜底模式已启用'))
+    expect(wrapper.findAll('.panel-empty button').map(button => button.text())).toEqual(['浏览器打开'])
   })
 
   it('reuses an already loaded panel instead of reporting a false load timeout', async () => {
@@ -282,7 +285,8 @@ describe('official panel embedding', () => {
     await second.unmount()
   })
 
-  it('reports an explicit failure when the native panel was not embedded', async () => {
+  // S18-02：进程在运行而页面没嵌入，是「已运行 · 页面失败」，不能改报启动失败。
+  it('reports a page load failure when the native panel was not embedded', async () => {
     invoke.mockImplementation(async (command: string) => {
       if (command === 'get_preferences') return preferences('embedded')
       if (command === 'sync_embedded_panel') return { visible: false, panelUrl: null }
@@ -291,9 +295,92 @@ describe('official panel embedding', () => {
     const pinia = (globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia
     useLifecycleStore().statusSnapshot = snapshot
     const wrapper = mount(PanelRoute, { global: { plugins: [pinia] } })
-    await vi.waitFor(() => expect(wrapper.text()).toContain('官方面板未能嵌入主窗口'))
+    await vi.waitFor(() => expect(wrapper.find('.panel-empty strong').text()).toBe('官方面板加载失败'))
+    expect(wrapper.find('.panel-empty').text()).toContain('OpenCodex 正在运行，内嵌页面未能加载。')
     // 不能同时停在「正在嵌入」的加载态。
     expect(wrapper.text()).not.toContain('正在将官方面板嵌入主窗口')
+    expect(wrapper.text()).not.toContain('启动失败')
+    expect(wrapper.findAll('.panel-empty button').map(button => button.text())).toEqual(['重试加载', '浏览器打开'])
+    await wrapper.unmount()
+  })
+
+  it('treats a rejected show while running as a page failure and retries only the page', async () => {
+    let showCalls = 0
+    invoke.mockImplementation(async (command: string) => {
+      if (command === 'get_preferences') return preferences('embedded')
+      if (command === 'sync_embedded_panel') {
+        showCalls += 1
+        if (showCalls === 1) throw new Error('embedded view creation failed')
+        return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+      }
+      throw new Error(`unexpected command: ${command}`)
+    })
+    const pinia = (globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia
+    useLifecycleStore().statusSnapshot = snapshot
+    const wrapper = mount(PanelRoute, { global: { plugins: [pinia] } })
+    await vi.waitFor(() => expect(wrapper.find('.panel-empty strong').text()).toBe('官方面板加载失败'))
+
+    invoke.mockClear()
+    const retry = wrapper.findAll('.panel-empty button').find(button => button.text() === '重试加载')
+    await retry?.trigger('click')
+    await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith(
+      'sync_embedded_panel',
+      expect.objectContaining({ request: expect.objectContaining({ action: 'show', reload: true }) }),
+    ))
+    // 重试只重载页面：不发起任何启停动作。
+    expect(invoke).not.toHaveBeenCalledWith('process_action', expect.anything())
+    await vi.waitFor(() => expect(wrapper.text()).toContain('正在将官方面板嵌入主窗口'))
+    window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready' } }))
+    await nextTick()
+    expect(wrapper.find('.panel-empty').exists()).toBe(false)
+    expect(wrapper.text()).toContain('官方面板已嵌入主窗口')
+    await wrapper.unmount()
+  })
+
+  it('turns a load timeout while running into a page failure without touching the process', async () => {
+    vi.useFakeTimers()
+    try {
+      invoke.mockImplementation(async (command: string) => {
+        if (command === 'get_preferences') return preferences('embedded')
+        if (command === 'sync_embedded_panel') return { visible: true, panelUrl: 'http://127.0.0.1:10100/web' }
+        throw new Error(`unexpected command: ${command}`)
+      })
+      const pinia = (globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia
+      useLifecycleStore().statusSnapshot = snapshot
+      const wrapper = mount(PanelRoute, { global: { plugins: [pinia] } })
+      await vi.waitFor(() => expect(wrapper.text()).toContain('正在将官方面板嵌入主窗口'))
+      await vi.advanceTimersByTimeAsync(PANEL_LOAD_NOTICE_MS + 10)
+      expect(wrapper.find('.panel-empty strong').text()).toBe('官方面板加载失败')
+      // 收起子视图让空态可见，但不重启服务。
+      expect(invoke).toHaveBeenCalledWith('sync_embedded_panel', { request: { action: 'hide' } })
+      expect(invoke).not.toHaveBeenCalledWith('process_action', expect.anything())
+
+      // 超时后页面仍加载完成：重新显示子视图，空态消失。
+      invoke.mockClear()
+      window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { kind: 'load', value: 'ready' } }))
+      await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith(
+        'sync_embedded_panel',
+        expect.objectContaining({ request: expect.objectContaining({ action: 'show' }) }),
+      ))
+      expect(wrapper.find('.panel-empty').exists()).toBe(false)
+      await wrapper.unmount()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('explains an unhealthy proxy without reporting a start failure', async () => {
+    invoke.mockImplementation(async (command: string) => {
+      if (command === 'get_preferences') return preferences('embedded')
+      if (command === 'sync_embedded_panel') return { visible: false, panelUrl: null }
+      throw new Error(`unexpected command: ${command}`)
+    })
+    const pinia = (globalThis as unknown as { __panelTestPinia: ReturnType<typeof createPinia> }).__panelTestPinia
+    useLifecycleStore().statusSnapshot = { ...snapshot, matrix: { ...snapshot.matrix, runtime: 'unreachable' } }
+    const wrapper = mount(PanelRoute, { global: { plugins: [pinia] } })
+    await vi.waitFor(() => expect(wrapper.find('.panel-empty strong').text()).toBe('面板不可用'))
+    expect(wrapper.text()).not.toContain('启动失败')
+    expect(wrapper.findAll('.panel-empty button').map(button => button.text())).toEqual(['重试加载'])
     await wrapper.unmount()
   })
 
