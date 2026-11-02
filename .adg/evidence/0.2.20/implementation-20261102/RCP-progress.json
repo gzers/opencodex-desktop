@@ -14,7 +14,7 @@
     },
     "credential-and-scope-boundaries": {
       "status": "in_progress",
-      "reason": "native macOS secure-store test and macOS CI backend regression passed; scope regressions passed locally; Windows backend regression passed and isolated Windows native credential protection is in progress",
+      "reason": "native macOS secure-store test and macOS CI backend regression passed; scope regressions passed locally; Windows backend regression and isolated Windows native credential protection passed; managed install/upgrade/offline reinstall is running",
       "evidence": "native-candidate-509cb996-build.json; code commit 777aa9c5; CI run 41403032342"
     },
     "all-entry-coverage": {
@@ -24,7 +24,7 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. CI macOS backend and Windows backend regression passed; Windows native credential check is running, with managed install/upgrade/offline reinstall steps pending",
+      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. CI macOS backend, Windows backend regression and Windows native credential protection passed; managed install/upgrade/offline reinstall is running",
       "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI run 41403032342"
     },
     "release-and-ota": {
@@ -44,6 +44,7 @@
     "run": 41403032342,
     "status": "in_progress",
     "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
-    "running_jobs": ["backend-windows: isolated native credential protection"]
+    "passed_windows_steps": ["Windows backend regression", "isolated native credential protection"],
+    "running_jobs": ["backend-windows: managed install upgrade and offline reinstall"]
   }
 }
