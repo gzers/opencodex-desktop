@@ -14,7 +14,7 @@
     },
     "credential-and-scope-boundaries": {
       "status": "in_progress",
-      "reason": "scope regressions passed locally; CI run 41420204361 passed Windows backend, native credential, managed-install and recovery coverage. PR #35 run 41434514282 later failed two fixture-only deadlines (Node startup/read at 2 seconds under full-suite load); the test-only waits are now 10 seconds while the dedicated production timeout assertion remains 2 seconds. The full Windows backend regression including both cases passed on 41439302028; native credential, managed-install/offline reinstall and later EXE steps are still running. The earlier 41439071945 run is being canceled as superseded by the integrated head.",
+      "reason": "scope regressions passed locally; CI run 41420204361 passed Windows backend/native credential/managed install coverage. PR #35 run 41434514282 exposed two fixture-only deadlines; test-only waits now allow Node startup under suite load while the dedicated production timeout stays 2 seconds. Integrated CI 41439302028 passed both fixtures plus all Windows backend/native credentials/managed install/offline reinstall/dependency diagnostics/release build/final EXE/Node24 and Node22.20 matrices/recovery/path/ordinary-account checks; macOS/backend/frontend/release tools also passed. PR #35 merged as f19e5e99210db8eea1500bd2d1b4daf1b3af3382.",
       "evidence": "native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028; code commit 490a4ce8"
     },
     "all-entry-coverage": {
@@ -24,18 +24,18 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "CI run 41420204361 fully passed on macOS and Windows, including native credentials, managed install/offline reinstall, release build, final EXE smoke, Node24/Node22.20 matrices, recovery/path regression and ordinary-account smoke. PR #35 run 41434514282 failed two test-fixture deadlines; both cases now passed in the Windows backend regression on 41439302028. Remaining Windows native credential, install/offline reinstall, release build, EXE and matrix steps are still running. Exact v0.2.20 macOS package signature/resources and updater signatures passed; isolated native macOS navigation and safe cancel paths were observed, but the QA copy stayed at missing-Node startup prerequisite and did not cover full dialog/business states. Formal installer matrix, OS signing-policy acceptance, OTA and consumer-by-consumer dialog closure remain open.",
-      "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439302028"
+      "reason": "CI 41420204361 and integrated PR #35 CI 41439302028 passed cross-platform backend/native credential/managed installation/release build/final EXE/version matrices/recovery/ordinary-account coverage. PR #35 merged as f19e5e99210db8eea1500bd2d1b4daf1b3af3382. Exact v0.2.20 macOS package signature/resources and updater signatures passed; isolated macOS QA observed navigation and safe cancel paths but stopped at missing-Node prerequisites, so remaining dialogs/business paths remain open.",
+      "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/native-candidate-509cb996-build.json; CI runs 41420204361, 41439302028"
     },
     "release-and-ota": {
       "status": "pending",
-      "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Release run 41429792658 failed its isolated installer matrix: default MSI/NSIS passed, custom MSI install/uninstall returned success but MSI AppSearch reused the remembered default path so the custom destination had no EXE. PR #35 contains the HKCU remembered-path isolation fix. Inspection also found its exact-package acceptance script excluded 0.2.20 (allowlist ended at 0.2.19); commit 97c5aedd adds 0.2.20 and its regression test passed in CI run 41439302028 release-tools. The integrated Windows backend fixture regression also passed; remaining Windows native job steps are running. Installer-only acceptance and OTA have not run yet. macOS uses ad-hoc codesign and Windows MSI/NSIS have no OS Authenticode certificate; Tauri updater signatures are a separate cryptographic check. Stable promotion remains pending.",
+      "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Release run 41429792658 failed its isolated installer matrix: default MSI/NSIS passed, custom MSI install/uninstall returned success but MSI AppSearch reused the remembered default path so the custom destination had no EXE. PR #35 merged as f19e5e99210db8eea1500bd2d1b4daf1b3af3382; it isolates the remembered HKCU path, adds v0.2.20 to exact-package acceptance, and extends only test-fixture startup waits. Full CI 41439302028 passed across Windows native build/EXE/install regression, macOS, frontend and release tools. The original-asset four-combination installer acceptance and actual 0.2.19→0.2.20 OTA are still pending. macOS uses ad-hoc codesign and Windows MSI/NSIS have no OS Authenticode certificate; Tauri updater signatures are separate and verified. Stable promotion remains pending.",
       "evidence": "/tmp/ocx020-release-414297-evidence/installer-verification.json; implementation-20261102/native-release-package-and-ui.md; CI run 41429792658; PR #35 commits 490a4ce8 and 97c5aedd; .github/workflows/windows-release-acceptance.yml; docs/03-开发实施/REL-OPENCODEX-DESKTOP-19.md §发布边界"
     }
   },
   "tests": {
     "ui_checkpoint": "509cb996 test fix local rerun: 177 files, 1090 passed; CI frontend pass in 41403032342",
-    "rust_checkpoint": "777aa9c5 full cargo test --locked --lib: 1159 passed, 0 failed, 4 ignored; CI run 41420204361 passed both backend jobs; PR #35 initial run 41434514282 had 937 passed, 2 fixture-deadline failures, 4 ignored; both failed test fixtures passed in the integrated Windows backend regression in 41439302028",
+    "rust_checkpoint": "777aa9c5 full cargo test --locked --lib: 1159 passed, 0 failed, 4 ignored; CI 41420204361 passed both backend jobs; initial PR #35 CI 41434514282 had 937 passed and two test-fixture deadline failures; integrated CI 41439302028 passed both affected tests and all Windows backend/native build/smoke matrices.",
     "native_credential": "OPENCODEX_SANDBOX=1 explicit macOS native test passed"
   },
   "daily_config_writes": false,
@@ -46,7 +46,7 @@
       "run": 41439302028,
       "workflow": "PR #35 v0.2.20 acceptance allowlist and Windows fixture startup tolerance",
       "head": "97c5aedd7f179dc06cd76e40fb888be997b7be18",
-      "status": "in_progress",
+      "status": "success",
       "passed_jobs": [
         "frontend",
         "release-tools",
@@ -57,18 +57,24 @@
         "fmt/clippy",
         "Windows backend regression: both fixture deadline cases pass"
       ],
-      "running_windows_steps": [
+      "passed_windows_steps_continued": [
         "isolated native credentials",
         "managed install/offline reinstall",
         "dependency diagnostics",
-        "release build/EXE smoke and remaining matrices"
-      ]
+        "release build/final EXE smoke",
+        "Node24/Node22.20 matrices",
+        "recovery/path regression",
+        "ordinary-account smoke"
+      ],
+      "pr_merged": true,
+      "merge_commit": "f19e5e99210db8eea1500bd2d1b4daf1b3af3382",
+      "conclusion": "success"
     },
     {
       "run": 41439071945,
       "workflow": "PR #35 Windows fixture startup tolerance",
       "head": "490a4ce8c564723d3ab411d14393795a12807668",
-      "status": "cancel_requested_superseded_by_41439302028"
+      "status": "cancelled_superseded"
     },
     {
       "run": 41434514282,
