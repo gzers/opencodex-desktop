@@ -1,0 +1,1032 @@
+{
+  "generatedAt": "2026-11-02T02:49:50.500Z",
+  "prototype": "/tmp/ocx0220-audit-baseline/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+  "routes": [
+    {
+      "id": "overview",
+      "nav": "概览",
+      "protoImpl": "both",
+      "prototype": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "概览"
+          },
+          {
+            "level": 2,
+            "text": "最近事件"
+          },
+          {
+            "level": 3,
+            "text": "版本升级"
+          },
+          {
+            "level": 3,
+            "text": "文件同步"
+          },
+          {
+            "level": 3,
+            "text": "WebDAV 同步"
+          }
+        ],
+        "tabs": [],
+        "buttons": [
+          "未运行",
+          "启动 OpenCodex",
+          "打开诊断中心",
+          "管理器 — ›",
+          "面板 — ›",
+          "检查更新",
+          "导入",
+          "导出",
+          "配置 WebDAV"
+        ],
+        "disabledButtons": [
+          "管理器 — ›",
+          "面板 — ›"
+        ],
+        "ariaDrivenCount": 4,
+        "tables": [],
+        "notes": [],
+        "sectionCount": 68,
+        "firstBlock": {
+          "w": 0,
+          "h": 0
+        },
+        "bodyTextLen": 2267
+      },
+      "prototypeErrors": [],
+      "implementation": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "概览"
+          },
+          {
+            "level": 3,
+            "text": "版本升级"
+          },
+          {
+            "level": 3,
+            "text": "文件同步"
+          },
+          {
+            "level": 3,
+            "text": "WebDAV 同步"
+          },
+          {
+            "level": 2,
+            "text": "最近事件"
+          }
+        ],
+        "tabs": [],
+        "buttons": [
+          "运行中",
+          "打开面板",
+          "停止",
+          "重启",
+          "查看日志",
+          "管理器 — ›",
+          "面板 失败 — ›",
+          "检查更新",
+          "导入",
+          "导出",
+          "配置 WebDAV",
+          "诊断中心"
+        ],
+        "disabledButtons": [
+          "管理器 — ›"
+        ],
+        "ariaDrivenCount": 8,
+        "tables": [],
+        "notes": [
+          "运行状态与常用操作；环境明细收进运行详情。"
+        ],
+        "sectionCount": 2,
+        "firstBlock": {
+          "w": 889,
+          "h": 0
+        },
+        "bodyTextLen": 2769
+      },
+      "implementationErrors": []
+    },
+    {
+      "id": "panel",
+      "nav": "面板",
+      "protoImpl": "both",
+      "prototype": {
+        "headings": [],
+        "tabs": [],
+        "buttons": [],
+        "disabledButtons": [],
+        "ariaDrivenCount": 0,
+        "tables": [],
+        "notes": [],
+        "sectionCount": 68,
+        "firstBlock": {
+          "w": 1113,
+          "h": 729
+        },
+        "bodyTextLen": 732
+      },
+      "prototypeErrors": [],
+      "implementation": {
+        "headings": [],
+        "tabs": [],
+        "buttons": [],
+        "disabledButtons": [],
+        "ariaDrivenCount": 1,
+        "tables": [],
+        "notes": [],
+        "sectionCount": 1,
+        "firstBlock": {
+          "w": 1113,
+          "h": 869
+        },
+        "bodyTextLen": 2533
+      },
+      "implementationErrors": []
+    },
+    {
+      "id": "models",
+      "nav": "模型",
+      "protoImpl": "both",
+      "prototype": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "模型配置"
+          }
+        ],
+        "tabs": [
+          "渠道模型",
+          "模型模版"
+        ],
+        "buttons": [
+          "渠道模型",
+          "模型模版",
+          "还原修改",
+          "保存",
+          "读取现有渠道",
+          "新增渠道",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "编辑",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "主节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "disabledButtons": [
+          "还原修改",
+          "保存",
+          "↑",
+          "↓"
+        ],
+        "ariaDrivenCount": 23,
+        "tables": [],
+        "notes": [
+          "启用开关修改草稿，保存后提示重启；停用保留已选模型与配置。拖动渠道调整整组顺序。"
+        ],
+        "sectionCount": 68,
+        "firstBlock": {
+          "w": 0,
+          "h": 0
+        },
+        "bodyTextLen": 1922
+      },
+      "prototypeErrors": [],
+      "implementation": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "模型配置"
+          }
+        ],
+        "tabs": [
+          "渠道模型",
+          "模型模版"
+        ],
+        "buttons": [
+          "渠道模型",
+          "模型模版",
+          "还原修改",
+          "保存",
+          "读取现有渠道",
+          "新增渠道",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓",
+          "默认节点 未检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "disabledButtons": [
+          "还原修改",
+          "保存",
+          "↑",
+          "↓"
+        ],
+        "ariaDrivenCount": 29,
+        "tables": [
+          {
+            "headers": [
+              "",
+              "渠道",
+              "服务节点",
+              "模型",
+              "启用",
+              "操作"
+            ],
+            "rowCount": 24,
+            "firstRowCells": [
+              "",
+              "NewApi 1 节点 · 启用",
+              "默认节点 未检测",
+              "12 / 12 已选 / 发现",
+              "启用",
+              "编辑 复制 删除 ↑ ↓"
+            ]
+          }
+        ],
+        "notes": [
+          "管理渠道模型、模版与选择器顺序。",
+          "启用开关修改当前编辑；停用保留已选模型与配置。拖动渠道调整整组顺序。"
+        ],
+        "sectionCount": 1,
+        "firstBlock": {
+          "w": 889,
+          "h": 2029
+        },
+        "bodyTextLen": 4338
+      },
+      "implementationErrors": []
+    },
+    {
+      "id": "extensions",
+      "nav": "拓展",
+      "protoImpl": "both",
+      "prototype": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "扩展管理"
+          },
+          {
+            "level": 2,
+            "text": "Skills 管理"
+          },
+          {
+            "level": 3,
+            "text": "design-studio"
+          },
+          {
+            "level": 3,
+            "text": "development-knowledge"
+          },
+          {
+            "level": 3,
+            "text": "hatch-pet"
+          },
+          {
+            "level": 3,
+            "text": "project-governance"
+          },
+          {
+            "level": 3,
+            "text": "project-management"
+          },
+          {
+            "level": 3,
+            "text": "skill-audit"
+          }
+        ],
+        "tabs": [],
+        "buttons": [
+          "Skills",
+          "MCP",
+          "检查更新",
+          "发现",
+          "仓库管理",
+          "恢复",
+          "ZIP",
+          "导入",
+          "设置",
+          "Grok Build 0",
+          "Hermes 0",
+          "design-studio 本地 v1.8.0 更新 2026-09-13 产品设计、UX 原型、应用界面草图、交互流程、结构化图表（架构图、流程图、ERD、UML、时序图）、设计 QA、视觉探索、静态画布、图标系统、创作表达与自然度校准（去 AI 味、说人话、自然一点、别像模板），以及有来源治理要求的设计 skill 更新时使用。按任务加载专门参考，避免把普通非设计代码重构、逐字翻译或事实校对误路由到本 skill。 跨项目、跨 agent 使用的全局设计 skill：入口保持轻量，先判定任务类型，再只加载匹配的参考文件。原型默认使用 mock 数据，不读真实文件、不调用真实 API、不写设置；稳定交互规则再回写产品规格。",
+          "development-knowledge 本地 v2.3.1 更新 2026-09-12 通用编程知识、语言和框架用法、库 / API / 工具链说明、技术选型、实现模式、性能 / 安全 / 可维护性权衡、项目结构判断与混合架构观念，以及需要核验当前框架版本的开发知识问答时使用。 覆盖普元 Primeton EOS / EOS8、NamedSQL、多数据源和运行态 SQL 排错等框架知识；不负责项目推进、项目治理、设计 QA、提交收口或宿主环境维护，也不把任何目录模板写成适用于所有平台的硬规则。",
+          "hatch-pet 本地 v0.4.2 更新 2026-09-10 Create, repair, validate, preview, and package Codex-compatible animated pets and pet spritesheets from character art, screenshots, generated images, or visual references. Use when a user wants to hatch a Codex pet, create a custom animated pet, or build a built-in pet asset with an 8x9 atlas, transparent unused cells, row-by-row animation prompts, QA contact sheets, preview videos, and pet.json packaging. This skill composes the installed $imagegen system skill and uses bundled scripts for deterministic spritesheet assembly.",
+          "project-governance 本地 v1.5.0 更新 2026-09-09 在已绑定或显式调用的轻量项目治理项目中，处理项目需求、长期事实、开发实施、资料、运行控制、有界查询、回写与关闭；不用于独立写作、翻译、摘要、排版、普通编码或不改变语义的机械编辑。 项目 ID 与中文名称由项目根 AGENTS.md 声明；人工长期事实写入 docs/，TASK、回执、证书与事务写入 .adg/。高风险迁移、发布、恢复和全局同步必须单独确认。",
+          "project-management 本地 v1.2.4 更新 2026-09-08 轻量项目执行编排、状态收口、阶段判断和多 skill 调度时使用。 适用于用户要求推进项目、整理当前状态、规划下一步、建立执行记录、串联文档 / 设计 / 实现 / 验证、提交代码、生成中文提交信息或完成发布 / 提交闭环；内置提交收口子流程，不替代项目治理、产品设计、开发知识或宿主原生工具。",
+          "skill-audit 本地 v1.1.3 更新 2026-09-07 Audit, simplify, rewrite, or measure an existing Codex skill or plugin skill.",
+          "«",
+          "‹",
+          "›",
+          "»",
+          "10 条"
+        ],
+        "disabledButtons": [],
+        "ariaDrivenCount": 40,
+        "tables": [],
+        "notes": [
+          "发现本机 Skills 库，并把同一个 Skill 按需同步到各客户端配置。",
+          "产品设计、UX 原型、应用界面草图、交互流程、结构化图表（架构图、流程图、ERD、UML、时序图）、设计 QA、视觉探索、静态画布、图标系统、创作表达与自然度校准（去 AI 味、说人话、自然一点、别像模板），以及有来源治理要求的设计 ski",
+          "通用编程知识、语言和框架用法、库 / API / 工具链说明、技术选型、实现模式、性能 / 安全 / 可维护性权衡、项目结构判断与混合架构观念，以及需要核验当前框架版本的开发知识问答时使用。 覆盖普元 Primeton EOS / EOS8",
+          "Create, repair, validate, preview, and package Codex-compatible animated pets and pet spritesheets from character art, s",
+          "在已绑定或显式调用的轻量项目治理项目中，处理项目需求、长期事实、开发实施、资料、运行控制、有界查询、回写与关闭；不用于独立写作、翻译、摘要、排版、普通编码或不改变语义的机械编辑。 项目 ID 与中文名称由项目根 AGENTS.md 声明；人",
+          "轻量项目执行编排、状态收口、阶段判断和多 skill 调度时使用。 适用于用户要求推进项目、整理当前状态、规划下一步、建立执行记录、串联文档 / 设计 / 实现 / 验证、提交代码、生成中文提交信息或完成发布 / 提交闭环；内置提交收口子流",
+          "Audit, simplify, rewrite, or measure an existing Codex skill or plugin skill."
+        ],
+        "sectionCount": 68,
+        "firstBlock": {
+          "w": 0,
+          "h": 0
+        },
+        "bodyTextLen": 2547
+      },
+      "prototypeErrors": [],
+      "implementation": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "扩展管理"
+          },
+          {
+            "level": 2,
+            "text": "Skills 管理"
+          }
+        ],
+        "tabs": [
+          "Skills",
+          "MCP",
+          "客户端"
+        ],
+        "buttons": [
+          "Skills",
+          "MCP",
+          "客户端",
+          "检查更新",
+          "发现",
+          "仓库管理",
+          "恢复",
+          "ZIP",
+          "导入",
+          "设置",
+          "Grok Build 0",
+          "Hermes 0",
+          "«",
+          "‹",
+          "›",
+          "»"
+        ],
+        "disabledButtons": [
+          "«",
+          "‹",
+          "›",
+          "»"
+        ],
+        "ariaDrivenCount": 5,
+        "tables": [],
+        "notes": [
+          "集中发现与同步本机 Skills 和 MCP 服务器；目标客户端按图标开关。",
+          "发现本机 Skills 库，并把同一个 Skill 按需同步到各客户端配置。"
+        ],
+        "sectionCount": 1,
+        "firstBlock": {
+          "w": 889,
+          "h": 490
+        },
+        "bodyTextLen": 2933
+      },
+      "implementationErrors": []
+    },
+    {
+      "id": "sync",
+      "nav": "同步",
+      "protoImpl": "both",
+      "prototype": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "同步"
+          },
+          {
+            "level": 2,
+            "text": "导入与导出"
+          },
+          {
+            "level": 3,
+            "text": "其他凭据"
+          }
+        ],
+        "tabs": [
+          "文件同步",
+          "WebDAV 同步"
+        ],
+        "buttons": [
+          "文件同步",
+          "WebDAV 同步",
+          "导入配置",
+          "导出配置"
+        ],
+        "disabledButtons": [],
+        "ariaDrivenCount": 11,
+        "tables": [],
+        "notes": [
+          "按下方范围导出配置；导入时在所选文件内选择范围。",
+          "账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。",
+          "渠道可单独分享，接收方自行填 Key。",
+          "例如 MCP 的 Authorization / 环境变量。",
+          "所选凭据随范围同步"
+        ],
+        "sectionCount": 68,
+        "firstBlock": {
+          "w": 0,
+          "h": 0
+        },
+        "bodyTextLen": 888
+      },
+      "prototypeErrors": [],
+      "implementation": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "同步"
+          },
+          {
+            "level": 2,
+            "text": "导入与导出"
+          },
+          {
+            "level": 3,
+            "text": "其他凭据"
+          }
+        ],
+        "tabs": [
+          "文件同步",
+          "WebDAV 同步"
+        ],
+        "buttons": [
+          "文件同步",
+          "WebDAV 同步",
+          "导入配置",
+          "导出配置",
+          "默认配置范围",
+          "清空选择"
+        ],
+        "disabledButtons": [
+          "导入配置",
+          "导出配置"
+        ],
+        "ariaDrivenCount": 6,
+        "tables": [
+          {
+            "headers": [
+              "配置对象",
+              "范围与凭据"
+            ],
+            "rowCount": 1,
+            "firstRowCells": [
+              "桌面偏好",
+              "2 个对象"
+            ]
+          }
+        ],
+        "notes": [
+          "按范围导入、导出与同步 OpenCodex 配置；凭据和登录状态独立选择。",
+          "把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。",
+          "Cannot read properties of undefined (reading 'invoke')",
+          "账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。",
+          "渠道可单独分享，接收方自行填 Key。",
+          "先在左栏选择含 Key 认证的渠道。",
+          "例如 MCP 的 Authorization / 环境变量。",
+          "先在左栏选择 Skills 或 MCP。"
+        ],
+        "sectionCount": 7,
+        "firstBlock": {
+          "w": 889,
+          "h": 650
+        },
+        "bodyTextLen": 3171
+      },
+      "implementationErrors": []
+    },
+    {
+      "id": "logs",
+      "nav": "诊断",
+      "protoImpl": "both",
+      "prototype": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "诊断中心"
+          },
+          {
+            "level": 2,
+            "text": "运行环境诊断"
+          },
+          {
+            "level": 3,
+            "text": "界面异常自检"
+          }
+        ],
+        "tabs": [],
+        "buttons": [
+          "环境诊断",
+          "日志历史",
+          "通知历史",
+          "环境诊断",
+          "界面诊断"
+        ],
+        "disabledButtons": [],
+        "ariaDrivenCount": 4,
+        "tables": [],
+        "notes": [
+          "调用官方 ocx doctor：默认只读，不修改配置、不设置代理、不改网络。",
+          "写入型修复（--reclaim-response-temps、--recover-zero-byte-coordinator --yes）需要先停止代理并显式确认，本原型只展示只读摘要。",
+          "主动触发一次界面异常，验证异常提示弹窗与恢复动作。仅本次会话生效，不改配置或数据。"
+        ],
+        "sectionCount": 68,
+        "firstBlock": {
+          "w": 0,
+          "h": 0
+        },
+        "bodyTextLen": 996
+      },
+      "prototypeErrors": [],
+      "implementation": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "诊断中心"
+          },
+          {
+            "level": 2,
+            "text": "运行环境诊断"
+          },
+          {
+            "level": 3,
+            "text": "界面异常自检"
+          }
+        ],
+        "tabs": [],
+        "buttons": [
+          "环境诊断",
+          "日志历史",
+          "通知历史",
+          "环境诊断",
+          "界面诊断"
+        ],
+        "disabledButtons": [],
+        "ariaDrivenCount": 5,
+        "tables": [],
+        "notes": [
+          "环境诊断、日志历史与通知历史分 Tab 管理；日志支持清理与自动保留策略。",
+          "调用官方 ocx doctor：默认只读，不修改配置、不设置代理、不改网络。",
+          "写入型修复（--reclaim-response-temps、--recover-zero-byte-coordinator --yes）需要先停止代理并显式确认，本应用只展示只读摘要。",
+          "主动触发一次界面异常，验证兜底条与恢复动作。仅本次会话生效，不改配置或数据。"
+        ],
+        "sectionCount": 1,
+        "firstBlock": {
+          "w": 889,
+          "h": 376
+        },
+        "bodyTextLen": 2867
+      },
+      "implementationErrors": []
+    },
+    {
+      "id": "settings",
+      "nav": "设置",
+      "protoImpl": "both",
+      "prototype": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "设置"
+          },
+          {
+            "level": 2,
+            "text": "桌面壳偏好"
+          },
+          {
+            "level": 2,
+            "text": "画质"
+          },
+          {
+            "level": 2,
+            "text": "网络"
+          },
+          {
+            "level": 2,
+            "text": "官方共享配置"
+          }
+        ],
+        "tabs": [],
+        "buttons": [
+          "通用",
+          "安装配置",
+          "数据与备份",
+          "扩展管理",
+          "Agent 配置",
+          "对话策略",
+          "日志与通知",
+          "CLI 控制面",
+          "版本升级",
+          "关于",
+          "内嵌优先",
+          "高",
+          "中",
+          "低",
+          "WEBGL",
+          "CSS",
+          "自动（系统代理）",
+          "检查连接",
+          "还原通用默认"
+        ],
+        "disabledButtons": [],
+        "ariaDrivenCount": 9,
+        "tables": [],
+        "notes": [
+          "管理器自有行为、面板承载与通知。",
+          "背景光与视觉效果的渲染方式；按设备能力自动降级。",
+          "应用自更新、官方版本查询与托管安装的出站请求代理；不含凭据，不写入系统代理设置。",
+          "与官方 OpenCodex 使用同一配置源；模型、路由与 provider 仍由官方面板或官方 CLI 管理。"
+        ],
+        "sectionCount": 68,
+        "firstBlock": {
+          "w": 0,
+          "h": 0
+        },
+        "bodyTextLen": 1490
+      },
+      "prototypeErrors": [],
+      "implementation": {
+        "headings": [
+          {
+            "level": 1,
+            "text": "设置"
+          },
+          {
+            "level": 2,
+            "text": "桌面壳偏好"
+          },
+          {
+            "level": 2,
+            "text": "画质"
+          },
+          {
+            "level": 2,
+            "text": "网络"
+          },
+          {
+            "level": 2,
+            "text": "官方共享配置"
+          }
+        ],
+        "tabs": [],
+        "buttons": [
+          "通用",
+          "安装配置",
+          "数据与备份",
+          "扩展管理",
+          "Agent 配置",
+          "日志与通知",
+          "CLI 控制面",
+          "版本升级",
+          "关于",
+          "内嵌优先",
+          "高",
+          "中",
+          "低",
+          "WEBGL",
+          "CSS",
+          "无代理",
+          "检查连接",
+          "还原通用默认"
+        ],
+        "disabledButtons": [],
+        "ariaDrivenCount": 9,
+        "tables": [],
+        "notes": [
+          "集中管理偏好、安装配置、备份、升级与官方归属。",
+          "管理器自有行为、面板承载与通知。",
+          "背景光与视觉效果的渲染方式；按设备能力自动降级。",
+          "应用自更新、官方版本查询与托管安装的出站请求代理；不含凭据，不写入系统代理设置。",
+          "与官方 OpenCodex 使用同一配置源；模型、路由与提供方仍由官方面板或官方 CLI 管理。"
+        ],
+        "sectionCount": 2,
+        "firstBlock": {
+          "w": 889,
+          "h": 1543
+        },
+        "bodyTextLen": 3546
+      },
+      "implementationErrors": []
+    },
+    {
+      "id": "tray",
+      "nav": "托盘",
+      "protoImpl": "both",
+      "prototype": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "托盘原型 · 状态菜单"
+          }
+        ],
+        "tabs": [],
+        "buttons": [
+          "macOS 菜单栏",
+          "Windows 通知区"
+        ],
+        "disabledButtons": [],
+        "ariaDrivenCount": 0,
+        "tables": [],
+        "notes": [
+          "展示 macOS 与 Windows 的样式差异；菜单动作全部由管理器自有域触发，不直接读写 OpenCodex 配置。"
+        ],
+        "sectionCount": 68,
+        "firstBlock": {
+          "w": 0,
+          "h": 0
+        },
+        "bodyTextLen": 591
+      },
+      "prototypeErrors": [],
+      "implementation": {
+        "headings": [
+          {
+            "level": 2,
+            "text": "托盘原型 · 状态菜单"
+          }
+        ],
+        "tabs": [],
+        "buttons": [
+          "macOS 菜单栏",
+          "Windows 通知区"
+        ],
+        "disabledButtons": [],
+        "ariaDrivenCount": 1,
+        "tables": [],
+        "notes": [
+          "展示 macOS 与 Windows 的样式差异；菜单动作全部由管理器自有域触发，不直接读写 OpenCodex 配置。"
+        ],
+        "sectionCount": 0,
+        "firstBlock": null,
+        "bodyTextLen": 2682
+      },
+      "implementationErrors": []
+    }
+  ]
+}

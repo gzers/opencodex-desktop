@@ -1,0 +1,1519 @@
+{
+  "scope": "UI memory fixture; no real IPC, files, credentials or WebDAV; DOM observations are not backend acceptance",
+  "baseline": "cfbd90c4b",
+  "code": "v0.2.19 cb4c9c9b7",
+  "records": [
+    {
+      "engine": "webkit",
+      "width": 1180,
+      "label": "file-sidebar",
+      "hash": "#sync?tab=file",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。扩展凭据已复核所选资源勾选 Skill 或 MCP 后需先复核资源内容，方可导出。例如 MCP 的 Authorization / 环境变量。全局采用及渠道组顺序当前不携带凭据",
+      "dialogs": [],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "导入配置",
+          "disabled": false
+        },
+        {
+          "label": "导出配置",
+          "disabled": true
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "width": 1180,
+      "label": "export-with-credentials",
+      "hash": "#sync?tab=file",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。扩展凭据已复核所选资源例如 MCP 的 Authorization / 环境变量。全局采用及渠道组顺序所选凭据将随文件传输；加密口令在确认弹窗内填写，可选。",
+      "dialogs": [
+        {
+          "title": "确认导出",
+          "text": "确认导出关闭保存位置默认导出目录自定义目录生成位置默认导出目录/\n└── 2026-11-02/\n    └── 备份包-时刻-短码/\n        ├── 本次所选配置\n        ├── 模版与所选版本\n        └── manifest / 校验信息按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。44 项配置 · 同一备份包含 25 项凭据；可选择加密，不加密则凭据以明文写入，文件可被直接读取。口令始终不写入包。每次导出生成一个独立备份包，按“日期 / 单次包”存放，可整体拷贝到其它设备再导入。包内按 桌面偏好 / 模型模版 / 渠道与模型 / 账户 / Skills / MCP 分组，导入时仍按所选范围识别。44 项配置 · 含 25 项凭据渠道 Key 25 项 / 账户登录态 0 项 / 扩展凭据 0 项 / WebDAV 密码 0 项加密配置包（建议；不加密则凭据以明文写入）加密口令（可选，至少 8 位）再次输入查看内容清单模版 12 · 渠道 25GPT1 个保存版本aa8e5749-ad07-46ed-a33e-c7b6837bdd53Claude1 个保存版本ec5c80bc-6bb1-4af8-b8e9-21663977f10cGemini1 个保存版本9afdf67a-71df-44af-b080-94654a58abf2Qwen1 个保存版本a330c702-f468-4a6e-b670-50c95844dac5DeepSeek1 个保存版本b4c18191-eb98-474e-b624-48c279a9f91bGrok1 个保存版本7efe07e9-027c-4a2f-b2cf-3f94ee5c4bcbGLM1 个保存版本2cf754e6-6497-412b-bbc7-a5b789c004e1HY / 混元1 个保存版本93938807-2696-43ca-bec4-1df76f2d5fc5Doubao1 个保存版本b92a0bde-9ac6-40a1-861e-16e0adbf49f6Kimi1 个保存版本11d65e69-fc8a-4049-8006-672d45809e52MiniMax1 个保存版本b97766e6-2375-4c66-82b6-f466f636de5aERNIE1 个保存版本897859b1-6278-4a7b-a272-70db25de3fa1NewApi全部模型fad8ebbe-b0c0-4507-a378-2a02f8bec7bb原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}A6api全部模型c1848f4f-e346-4456-9773-d126bd58cb5f原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}AiMaMi全部模型55a447ed-edfc-49ac-b7a5-fbf17912cf48原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}示例渠道 4全部模型1320a5ef-c768-44c7-a125-1b8304fff4af原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 5全部模型2a2acbfb-f868-4e17-bfe7-2041c5ab4160原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 6全部模型18f75f83-4af5-4761-bfcb-c597817daa32原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 7全部模型f2853582-8a96-4995-a214-a2bbff65b312原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 8全部模型0fbf4674-cda1-4c3c-b03b-fecd25cb77a7原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 9全部模型0dbf3d3f-23e9-4849-b616-d6e5b0587e50原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 10全部模型1f26a9ae-78ac-4078-86bc-aa8ed71ea98e原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 11全部模型e324f36d-8c91-4063-89f4-685620e72bb3原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 12全部模型bddaced0-58da-4799-a137-1dc05caf41f3原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 13全部模型b3c7c60a-d20a-471c-8d20-26c7b6f64d64原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 14全部模型7989e898-6f4d-4829-a989-dc017924fb92原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 15全部模型399fad30-b222-4f3a-aea4-fbe1aaceb509原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 16全部模型bab02397-27f7-4f9d-bb9c-97f9ba2c3d2e原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 17全部模型ce72dbd1-a0e4-42f0-ba43-51099d39072e原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 18全部模型f1742c11-b66f-490f-8327-13daac06485e原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 19全部模型a5814360-87ea-48c6-93d7-735d567b9c9c原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 20全部模型6fb887a5-a095-4c1e-be3b-a6cbb7e2fdd6原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 21全部模型841d4938-3b09-4a98-83f1-cf65ec9113f0原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 22全部模型73d17d70-dde1-4050-99da-bc8106981246原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 23全部模型f223b92a-d0f6-4631-ad67-45644c019ea4原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 24全部模型56e21ef6-5ce9-4ca0-b017-036e1407fb15原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}原有渠道 · 完整配置迁移样例指定模型f852fed7-7e2e-4f8a-8560-2261af646c68原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}explicit-dev-sample生成配置包"
+        }
+      ],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "导入配置",
+          "disabled": false
+        },
+        {
+          "label": "导出配置",
+          "disabled": false
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "关闭",
+          "disabled": false
+        },
+        {
+          "label": "生成配置包",
+          "disabled": false
+        }
+      ],
+      "encryptChecked": true
+    },
+    {
+      "engine": "webkit",
+      "width": 1180,
+      "label": "extra-plaintext-confirm",
+      "hash": "#sync?tab=file",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。扩展凭据已复核所选资源例如 MCP 的 Authorization / 环境变量。全局采用及渠道组顺序所选凭据将随文件传输；加密口令在确认弹窗内填写，可选。",
+      "dialogs": [
+        {
+          "title": "确认导出",
+          "text": "确认导出关闭保存位置默认导出目录自定义目录生成位置默认导出目录/\n└── 2026-11-02/\n    └── 备份包-时刻-短码/\n        ├── 本次所选配置\n        ├── 模版与所选版本\n        └── manifest / 校验信息按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。44 项配置 · 同一备份包含 25 项凭据；可选择加密，不加密则凭据以明文写入，文件可被直接读取。口令始终不写入包。每次导出生成一个独立备份包，按“日期 / 单次包”存放，可整体拷贝到其它设备再导入。包内按 桌面偏好 / 模型模版 / 渠道与模型 / 账户 / Skills / MCP 分组，导入时仍按所选范围识别。44 项配置 · 含 25 项凭据渠道 Key 25 项 / 账户登录态 0 项 / 扩展凭据 0 项 / WebDAV 密码 0 项加密配置包（建议；不加密则凭据以明文写入）加密口令（可选，至少 8 位）再次输入不加密时凭据以明文写入该文件，任何能读取文件的人都能看到这些凭据。查看内容清单模版 12 · 渠道 25GPT1 个保存版本aa8e5749-ad07-46ed-a33e-c7b6837bdd53Claude1 个保存版本ec5c80bc-6bb1-4af8-b8e9-21663977f10cGemini1 个保存版本9afdf67a-71df-44af-b080-94654a58abf2Qwen1 个保存版本a330c702-f468-4a6e-b670-50c95844dac5DeepSeek1 个保存版本b4c18191-eb98-474e-b624-48c279a9f91bGrok1 个保存版本7efe07e9-027c-4a2f-b2cf-3f94ee5c4bcbGLM1 个保存版本2cf754e6-6497-412b-bbc7-a5b789c004e1HY / 混元1 个保存版本93938807-2696-43ca-bec4-1df76f2d5fc5Doubao1 个保存版本b92a0bde-9ac6-40a1-861e-16e0adbf49f6Kimi1 个保存版本11d65e69-fc8a-4049-8006-672d45809e52MiniMax1 个保存版本b97766e6-2375-4c66-82b6-f466f636de5aERNIE1 个保存版本897859b1-6278-4a7b-a272-70db25de3fa1NewApi全部模型fad8ebbe-b0c0-4507-a378-2a02f8bec7bb原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}A6api全部模型c1848f4f-e346-4456-9773-d126bd58cb5f原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}AiMaMi全部模型55a447ed-edfc-49ac-b7a5-fbf17912cf48原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}示例渠道 4全部模型1320a5ef-c768-44c7-a125-1b8304fff4af原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 5全部模型2a2acbfb-f868-4e17-bfe7-2041c5ab4160原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 6全部模型18f75f83-4af5-4761-bfcb-c597817daa32原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 7全部模型f2853582-8a96-4995-a214-a2bbff65b312原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 8全部模型0fbf4674-cda1-4c3c-b03b-fecd25cb77a7原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 9全部模型0dbf3d3f-23e9-4849-b616-d6e5b0587e50原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 10全部模型1f26a9ae-78ac-4078-86bc-aa8ed71ea98e原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 11全部模型e324f36d-8c91-4063-89f4-685620e72bb3原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 12全部模型bddaced0-58da-4799-a137-1dc05caf41f3原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 13全部模型b3c7c60a-d20a-471c-8d20-26c7b6f64d64原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 14全部模型7989e898-6f4d-4829-a989-dc017924fb92原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 15全部模型399fad30-b222-4f3a-aea4-fbe1aaceb509原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 16全部模型bab02397-27f7-4f9d-bb9c-97f9ba2c3d2e原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 17全部模型ce72dbd1-a0e4-42f0-ba43-51099d39072e原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 18全部模型f1742c11-b66f-490f-8327-13daac06485e原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 19全部模型a5814360-87ea-48c6-93d7-735d567b9c9c原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 20全部模型6fb887a5-a095-4c1e-be3b-a6cbb7e2fdd6原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 21全部模型841d4938-3b09-4a98-83f1-cf65ec9113f0原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 22全部模型73d17d70-dde1-4050-99da-bc8106981246原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 23全部模型f223b92a-d0f6-4631-ad67-45644c019ea4原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 24全部模型56e21ef6-5ce9-4ca0-b017-036e1407fb15原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}原有渠道 · 完整配置迁移样例指定模型f852fed7-7e2e-4f8a-8560-2261af646c68原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}explicit-dev-sample生成配置包"
+        },
+        {
+          "title": "凭据将以明文写入",
+          "text": "凭据将以明文写入关闭当前范围含 25 项凭据，不加密将以明文写入该文件，任何能读取文件的人都能看到这些凭据。继续？返回设置口令仍以明文导出"
+        }
+      ],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "导入配置",
+          "disabled": false
+        },
+        {
+          "label": "导出配置",
+          "disabled": false
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "关闭",
+          "disabled": false
+        },
+        {
+          "label": "生成配置包",
+          "disabled": false
+        },
+        {
+          "label": "关闭",
+          "disabled": false
+        },
+        {
+          "label": "返回设置口令",
+          "disabled": false
+        },
+        {
+          "label": "仍以明文导出",
+          "disabled": false
+        }
+      ],
+      "encryptChecked": false
+    },
+    {
+      "engine": "webkit",
+      "width": 1180,
+      "label": "file-after-reload",
+      "hash": "#sync?tab=file",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。扩展凭据已复核所选资源勾选 Skill 或 MCP 后需先复核资源内容，方可导出。例如 MCP 的 Authorization / 环境变量。全局采用及渠道组顺序当前不携带凭据",
+      "dialogs": [],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "导入配置",
+          "disabled": false
+        },
+        {
+          "label": "导出配置",
+          "disabled": true
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "width": 1180,
+      "label": "webdav-sidebar",
+      "hash": "#sync?tab=webdav",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。先在左栏选择含 Key 认证的渠道。扩展凭据已复核所选资源勾选 Skill 或 MCP 后需先复核资源内容，方可导出。例如 MCP 的 Authorization / 环境变量。后续新增对象全部模版（含后续新增）全部已保存渠道（含后续新增）全部Skill（含后续新增）全部MCP（含后续新增）全局采用及渠道组顺序所选凭据将随文件传输；加密口令在确认弹窗内填写，可选。",
+      "dialogs": [],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "连接设置",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": true
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "width": 1180,
+      "label": "webdav-connection",
+      "hash": "#sync?tab=webdav",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。先在左栏选择含 Key 认证的渠道。扩展凭据已复核所选资源勾选 Skill 或 MCP 后需先复核资源内容，方可导出。例如 MCP 的 Authorization / 环境变量。后续新增对象全部模版（含后续新增）全部已保存渠道（含后续新增）全部Skill（含后续新增）全部MCP（含后续新增）全局采用及渠道组顺序所选凭据将随文件传输；加密口令在确认弹窗内填写，可选。",
+      "dialogs": [
+        {
+          "title": "WebDAV连接设置",
+          "text": "WebDAV连接设置关闭关闭"
+        }
+      ],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "连接设置",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": true
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "关闭",
+          "disabled": false
+        },
+        {
+          "label": "关闭",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "width": 1180,
+      "label": "prototype-export",
+      "encryptChecked": false
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "label": "file-sidebar",
+      "hash": "#sync?tab=file",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。扩展凭据已复核所选资源勾选 Skill 或 MCP 后需先复核资源内容，方可导出。例如 MCP 的 Authorization / 环境变量。全局采用及渠道组顺序当前不携带凭据",
+      "dialogs": [],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "导入配置",
+          "disabled": false
+        },
+        {
+          "label": "导出配置",
+          "disabled": true
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "label": "export-with-credentials",
+      "hash": "#sync?tab=file",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。扩展凭据已复核所选资源例如 MCP 的 Authorization / 环境变量。全局采用及渠道组顺序所选凭据将随文件传输；加密口令在确认弹窗内填写，可选。",
+      "dialogs": [
+        {
+          "title": "确认导出",
+          "text": "确认导出关闭保存位置默认导出目录自定义目录生成位置默认导出目录/\n└── 2026-11-02/\n    └── 备份包-时刻-短码/\n        ├── 本次所选配置\n        ├── 模版与所选版本\n        └── manifest / 校验信息按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。44 项配置 · 同一备份包含 25 项凭据；可选择加密，不加密则凭据以明文写入，文件可被直接读取。口令始终不写入包。每次导出生成一个独立备份包，按“日期 / 单次包”存放，可整体拷贝到其它设备再导入。包内按 桌面偏好 / 模型模版 / 渠道与模型 / 账户 / Skills / MCP 分组，导入时仍按所选范围识别。44 项配置 · 含 25 项凭据渠道 Key 25 项 / 账户登录态 0 项 / 扩展凭据 0 项 / WebDAV 密码 0 项加密配置包（建议；不加密则凭据以明文写入）加密口令（可选，至少 8 位）再次输入查看内容清单模版 12 · 渠道 25GPT1 个保存版本08fcd70e-8fd3-41fc-8f57-923ae060fb79Claude1 个保存版本09555641-fdc9-4b33-8141-6a66915e41b0Gemini1 个保存版本ae404733-02ca-493e-8c79-e10ef3ff2595Qwen1 个保存版本b703568c-d980-427c-aaac-38ae6dc8b9cfDeepSeek1 个保存版本df28dcf8-6247-4e8d-80ec-5b4a2faee3c7Grok1 个保存版本225687c6-c964-4755-82d6-ef964e6a392aGLM1 个保存版本05d72444-a7de-42fc-8cd6-12649875c876HY / 混元1 个保存版本9a8dc7fe-a14c-495b-b580-242aaa85058dDoubao1 个保存版本e19ab249-8e13-4d7c-afe2-a118c4f2dc13Kimi1 个保存版本4232507d-c9bd-4d0c-ad32-71903b4d949fMiniMax1 个保存版本29869270-7162-4934-b026-ffcb034a03f4ERNIE1 个保存版本0d7fbd56-45d8-40cd-a80a-011715188320NewApi全部模型1cb1712e-249f-4d85-9126-b61ab05f0546原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}A6api全部模型0a69cb62-c929-4da5-aafc-ddbfc1d404f4原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}AiMaMi全部模型3b2fe7f2-3e79-4a24-8878-169a1d6b0365原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}示例渠道 4全部模型169a9e35-fcfa-49d6-ae91-6cd69165531e原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 5全部模型fd231a57-0fae-4090-8648-a04a58fcee25原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 6全部模型d6107810-a4ba-4919-9b4f-c14b2c5fa6f4原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 7全部模型ad77c78e-1635-4278-9c09-66eaac22766b原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 8全部模型55636b83-77c5-4d6d-86e6-9b47eed1629f原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 9全部模型af8008ab-33e7-40df-8cc0-6051ddd97412原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 10全部模型356b25fa-51b3-45ed-8655-104ab741bc35原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 11全部模型878e9687-21a9-4bea-adcc-b6754c716150原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 12全部模型351ed703-6882-4db0-8b3a-9117adad84b2原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 13全部模型383e109a-1a7f-477f-8331-2f8b91bdc2ea原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 14全部模型906d88ef-607c-43a0-bc0d-8181cd33bad4原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 15全部模型42e3ed08-136e-4dd8-a057-b4796fa472b7原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 16全部模型83874140-745b-40e8-8306-05044f214ba7原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 17全部模型33bd164d-a785-432e-9784-8ab2e83598d9原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 18全部模型abf97d1c-96fe-4d2e-9a68-9156f9ddb75b原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 19全部模型8e03c732-dcd9-4c69-80cb-62eb4f2aff2c原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 20全部模型199cc304-d3dd-4dd5-9043-2aa4144d8068原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 21全部模型6f957a21-4ade-4fa4-8536-bd68f8ed69a0原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 22全部模型f5d676fb-337b-435f-a1d1-2cd291cdfba9原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 23全部模型62c53a1f-b94d-4f86-bf94-298bf7726610原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 24全部模型6271b961-233f-45b6-9cab-8a5eb3594e49原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}原有渠道 · 完整配置迁移样例指定模型d3406268-3868-4df5-b20a-260bd516b4d5原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}explicit-dev-sample生成配置包"
+        }
+      ],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "导入配置",
+          "disabled": false
+        },
+        {
+          "label": "导出配置",
+          "disabled": false
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "关闭",
+          "disabled": false
+        },
+        {
+          "label": "生成配置包",
+          "disabled": false
+        }
+      ],
+      "encryptChecked": true
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "label": "extra-plaintext-confirm",
+      "hash": "#sync?tab=file",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。扩展凭据已复核所选资源例如 MCP 的 Authorization / 环境变量。全局采用及渠道组顺序所选凭据将随文件传输；加密口令在确认弹窗内填写，可选。",
+      "dialogs": [
+        {
+          "title": "确认导出",
+          "text": "确认导出关闭保存位置默认导出目录自定义目录生成位置默认导出目录/\n└── 2026-11-02/\n    └── 备份包-时刻-短码/\n        ├── 本次所选配置\n        ├── 模版与所选版本\n        └── manifest / 校验信息按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。44 项配置 · 同一备份包含 25 项凭据；可选择加密，不加密则凭据以明文写入，文件可被直接读取。口令始终不写入包。每次导出生成一个独立备份包，按“日期 / 单次包”存放，可整体拷贝到其它设备再导入。包内按 桌面偏好 / 模型模版 / 渠道与模型 / 账户 / Skills / MCP 分组，导入时仍按所选范围识别。44 项配置 · 含 25 项凭据渠道 Key 25 项 / 账户登录态 0 项 / 扩展凭据 0 项 / WebDAV 密码 0 项加密配置包（建议；不加密则凭据以明文写入）加密口令（可选，至少 8 位）再次输入不加密时凭据以明文写入该文件，任何能读取文件的人都能看到这些凭据。查看内容清单模版 12 · 渠道 25GPT1 个保存版本08fcd70e-8fd3-41fc-8f57-923ae060fb79Claude1 个保存版本09555641-fdc9-4b33-8141-6a66915e41b0Gemini1 个保存版本ae404733-02ca-493e-8c79-e10ef3ff2595Qwen1 个保存版本b703568c-d980-427c-aaac-38ae6dc8b9cfDeepSeek1 个保存版本df28dcf8-6247-4e8d-80ec-5b4a2faee3c7Grok1 个保存版本225687c6-c964-4755-82d6-ef964e6a392aGLM1 个保存版本05d72444-a7de-42fc-8cd6-12649875c876HY / 混元1 个保存版本9a8dc7fe-a14c-495b-b580-242aaa85058dDoubao1 个保存版本e19ab249-8e13-4d7c-afe2-a118c4f2dc13Kimi1 个保存版本4232507d-c9bd-4d0c-ad32-71903b4d949fMiniMax1 个保存版本29869270-7162-4934-b026-ffcb034a03f4ERNIE1 个保存版本0d7fbd56-45d8-40cd-a80a-011715188320NewApi全部模型1cb1712e-249f-4d85-9126-b61ab05f0546原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}A6api全部模型0a69cb62-c929-4da5-aafc-ddbfc1d404f4原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}AiMaMi全部模型3b2fe7f2-3e79-4a24-8878-169a1d6b0365原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}示例渠道 4全部模型169a9e35-fcfa-49d6-ae91-6cd69165531e原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 5全部模型fd231a57-0fae-4090-8648-a04a58fcee25原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 6全部模型d6107810-a4ba-4919-9b4f-c14b2c5fa6f4原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 7全部模型ad77c78e-1635-4278-9c09-66eaac22766b原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 8全部模型55636b83-77c5-4d6d-86e6-9b47eed1629f原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 9全部模型af8008ab-33e7-40df-8cc0-6051ddd97412原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 10全部模型356b25fa-51b3-45ed-8655-104ab741bc35原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 11全部模型878e9687-21a9-4bea-adcc-b6754c716150原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 12全部模型351ed703-6882-4db0-8b3a-9117adad84b2原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 13全部模型383e109a-1a7f-477f-8331-2f8b91bdc2ea原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 14全部模型906d88ef-607c-43a0-bc0d-8181cd33bad4原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 15全部模型42e3ed08-136e-4dd8-a057-b4796fa472b7原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 16全部模型83874140-745b-40e8-8306-05044f214ba7原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 17全部模型33bd164d-a785-432e-9784-8ab2e83598d9原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 18全部模型abf97d1c-96fe-4d2e-9a68-9156f9ddb75b原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 19全部模型8e03c732-dcd9-4c69-80cb-62eb4f2aff2c原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 20全部模型199cc304-d3dd-4dd5-9043-2aa4144d8068原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 21全部模型6f957a21-4ade-4fa4-8536-bd68f8ed69a0原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 22全部模型f5d676fb-337b-435f-a1d1-2cd291cdfba9原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 23全部模型62c53a1f-b94d-4f86-bf94-298bf7726610原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}示例渠道 24全部模型6271b961-233f-45b6-9cab-8a5eb3594e49原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": true\n}原有渠道 · 完整配置迁移样例指定模型d3406268-3868-4df5-b20a-260bd516b4d5原渠道配置 · 8 个公开字段 · 认证 key默认节点 · https://example.test/v1渠道原设置{\n  \"adapter\": \"openai-responses\",\n  \"authMode\": \"key\",\n  \"baseUrl\": \"https://example.test/v1\",\n  \"modelAliases\": {\n    \"gpt-demo-0\": \"friendly-gpt\"\n  },\n  \"apiKeyPoolStrategy\": \"fill-first\",\n  \"modelDisplayNames\": {\n    \"gpt-demo-0\": \"GPT示例\"\n  },\n  \"defaultAliases\": false,\n  \"disabled\": false\n}explicit-dev-sample生成配置包"
+        },
+        {
+          "title": "凭据将以明文写入",
+          "text": "凭据将以明文写入关闭当前范围含 25 项凭据，不加密将以明文写入该文件，任何能读取文件的人都能看到这些凭据。继续？返回设置口令仍以明文导出"
+        }
+      ],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "导入配置",
+          "disabled": false
+        },
+        {
+          "label": "导出配置",
+          "disabled": false
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "关闭",
+          "disabled": false
+        },
+        {
+          "label": "生成配置包",
+          "disabled": false
+        },
+        {
+          "label": "关闭",
+          "disabled": false
+        },
+        {
+          "label": "返回设置口令",
+          "disabled": false
+        },
+        {
+          "label": "仍以明文导出",
+          "disabled": false
+        }
+      ],
+      "encryptChecked": false
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "label": "file-after-reload",
+      "hash": "#sync?tab=file",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。扩展凭据已复核所选资源勾选 Skill 或 MCP 后需先复核资源内容，方可导出。例如 MCP 的 Authorization / 环境变量。全局采用及渠道组顺序当前不携带凭据",
+      "dialogs": [],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "导入配置",
+          "disabled": false
+        },
+        {
+          "label": "导出配置",
+          "disabled": true
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "label": "webdav-sidebar",
+      "hash": "#sync?tab=webdav",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。先在左栏选择含 Key 认证的渠道。扩展凭据已复核所选资源勾选 Skill 或 MCP 后需先复核资源内容，方可导出。例如 MCP 的 Authorization / 环境变量。后续新增对象全部模版（含后续新增）全部已保存渠道（含后续新增）全部Skill（含后续新增）全部MCP（含后续新增）全局采用及渠道组顺序所选凭据将随文件传输；加密口令在确认弹窗内填写，可选。",
+      "dialogs": [],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "连接设置",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": true
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "label": "webdav-connection",
+      "hash": "#sync?tab=webdav",
+      "sidebar": "其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。先在左栏选择含 Key 认证的渠道。扩展凭据已复核所选资源勾选 Skill 或 MCP 后需先复核资源内容，方可导出。例如 MCP 的 Authorization / 环境变量。后续新增对象全部模版（含后续新增）全部已保存渠道（含后续新增）全部Skill（含后续新增）全部MCP（含后续新增）全局采用及渠道组顺序所选凭据将随文件传输；加密口令在确认弹窗内填写，可选。",
+      "dialogs": [
+        {
+          "title": "WebDAV连接设置",
+          "text": "WebDAV连接设置关闭连接设置维护当前活动服务器；配置传输与接收范围在上方选择。服务地址远端目录账号应用密码只改地址或目录时留空即可，不会覆盖已保存的密码。冲突策略配置保护与采用含凭据的快照使用独立口令保护，下载后比较并确认采用；采用前执行保护备份。已配置端点https://dav.example.test · /sync · 凭据引用 fixture-no-s删除端点保存端点测试连接关闭"
+        }
+      ],
+      "buttons": [
+        {
+          "label": "概览",
+          "disabled": false
+        },
+        {
+          "label": "面板",
+          "disabled": false
+        },
+        {
+          "label": "模型",
+          "disabled": false
+        },
+        {
+          "label": "拓展",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": false
+        },
+        {
+          "label": "诊断",
+          "disabled": false
+        },
+        {
+          "label": "设置",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "2",
+          "disabled": false
+        },
+        {
+          "label": "文件同步",
+          "disabled": false
+        },
+        {
+          "label": "WebDAV 同步",
+          "disabled": false
+        },
+        {
+          "label": "连接设置",
+          "disabled": false
+        },
+        {
+          "label": "同步",
+          "disabled": true
+        },
+        {
+          "label": "默认配置范围",
+          "disabled": false
+        },
+        {
+          "label": "清空选择",
+          "disabled": false
+        },
+        {
+          "label": "全部平台",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "",
+          "disabled": false
+        },
+        {
+          "label": "关闭",
+          "disabled": false
+        },
+        {
+          "label": "删除端点",
+          "disabled": false
+        },
+        {
+          "label": "保存端点",
+          "disabled": false
+        },
+        {
+          "label": "测试连接",
+          "disabled": false
+        },
+        {
+          "label": "关闭",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "width": 900,
+      "label": "prototype-export",
+      "encryptChecked": false
+    }
+  ],
+  "errors": [
+    {
+      "surface": "prototype",
+      "message": "ResizeObserver loop completed with undelivered notifications."
+    }
+  ]
+}

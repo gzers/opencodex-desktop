@@ -1,0 +1,306 @@
+{
+  "source": "v0.2.19 cb4c9c9b7",
+  "scope": "static component references, not a proof each state was rendered; dynamic app.openModal/notifications need separate runtime review",
+  "files": [
+    {
+      "file": "apps/desktop/ui/src/App.vue",
+      "dialogs": [
+        {
+          "component": "AppModal",
+          "line": 78,
+          "attributes": "/"
+        },
+        {
+          "component": "RuntimeInstallDialog",
+          "line": 79,
+          "attributes": "/"
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/AgentExecutionField.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 87,
+          "attributes": ":open=\"configuring\" title=\"Agent 配置\" :busy=\"busy\" @close=\"configuring=false\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ModelPicker.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 104,
+          "attributes": ":open=\"open\" :title=\"title??'选择模型'\" wide @close=\"emit('close')\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 130,
+          "attributes": ":open=\"open\" title=\"保存预览\" wide panel-class=\"save-preview-dialog\" :busy=\"saving\" @close=\"emit('close')\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 85,
+          "attributes": ":open=\"true\" :title=\"mode==='family'?'按族批量配置':'套用模版精确版本'\" wide :busy=\"busy\" @close=\"emit('close')\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 123,
+          "attributes": ":open=\"!!detailId\" title=\"模型编辑明细\" wide :busy=\"validating\" @close=\"detailId=''\""
+        },
+        {
+          "component": "UiDialog",
+          "line": 126,
+          "attributes": ":open=\"batchOpen\" title=\"确认批量型号修改\" wide :busy=\"validating\" @close=\"batchOpen=false\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 84,
+          "attributes": ":open=\"true\" wide :title=\"original?'编辑渠道连接':'新增渠道'\" :busy=\"busy\" @close=\"close\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 35,
+          "attributes": ":open=\"open\" title=\"外部任务\" wide :busy=\"copying\" @close=\"emit('close')\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 18,
+          "attributes": ":open=\"open\" title=\"与版本比较\" wide @close=\"$emit('close')\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "dialogs": [
+        {
+          "component": "ChannelBatchDialog",
+          "line": 266,
+          "attributes": "v-if=\"batchChannels\" :mode=\"batchChannels.mode\" :targets=\"batchChannels.ids\" @close=\"batchChannels=undefined\" /"
+        },
+        {
+          "component": "NewChannelDialog",
+          "line": 267,
+          "attributes": "v-if=\"newChannelOpen\" @close=\"newChannelOpen=false\" @added=\"editorId=$event\" /"
+        },
+        {
+          "component": "UiDialog",
+          "line": 268,
+          "attributes": ":open=\"!!copySource\" title=\"复制渠道\" :busy=\"copyBusy\" @close=\"copySource=null\""
+        },
+        {
+          "component": "SelectorPreviewDialog",
+          "line": 269,
+          "attributes": ":open=\"previewOpen\" :system-rows=\"systemRows\" :projection=\"previewProjection\" :saved=\"models.snapshot?.policy??null\" :other-changes=\"saveReviewChanges\" :channels=\"(models.channelDraft?.channels ?? []).map(c="
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 89,
+          "attributes": ":open=\"confirming\" title=\"重启 Codex\" :busy=\"busy\" @close=\"later\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 14,
+          "attributes": ":open=\"true\" title=\"匹配与使用\" wide :busy=\"busy\" @close=\"emit('close')\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 59,
+          "attributes": ":open=\"open\" title=\"检查模版更新\" :busy=\"saving\" wide @close=\"close\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 140,
+          "attributes": ":open=\"manualOpen\" title=\"手动添加精确型号\" :busy=\"busy\" @close=\"manualOpen=false\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ImportedConnections.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 15,
+          "attributes": ":open=\"!!selected\" title=\"启用导入的WebDAV连接\" :busy=\"busy\" @close=\"selected=null\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 435,
+          "attributes": "panel-class=\"transfer-file-picker\" hide-close :open=\"pickOpen\" title=\"导入配置\" :busy=\"busy\" @close=\"closeImport\""
+        },
+        {
+          "component": "UiDialog",
+          "line": 436,
+          "attributes": "panel-class=\"transfer-review\" :open=\"!!preview\" :title=\"syncPreview ? '同步预览' : incoming ? '比较配置文件' : remote ? '确认配置上传' : '确认导出'\" :busy=\"busy\" wide @close=\"closePreview\""
+        },
+        {
+          "component": "UiDialog",
+          "line": 479,
+          "attributes": "panel-class=\"transfer-plaintext\" :open=\"plaintextConfirmOpen\" title=\"凭据将以明文写入\" :busy=\"busy\" @close=\"plaintextConfirmOpen=false\""
+        },
+        {
+          "component": "UiDialog",
+          "line": 483,
+          "attributes": "panel-class=\"transfer-password\" :open=\"passwordOpen\" :title=\"remoteUnlock?'读取受保护同步快照':'打开受保护配置文件'\" :busy=\"busy\" @close=\"passwordOpen=false;importPassword='';emit('update:importOpen',false)\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 56,
+          "attributes": ":open=\"!!selected\" title=\"恢复模型配置到草稿\" :busy=\"busy\" wide @close=\"close\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 111,
+          "attributes": ":open=\"confirming\" title=\"清理全部通知\" @close=\"confirming = false\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 79,
+          "attributes": ":open=\"dialogOpen\" title=\"组件弹窗\" @close=\"dialogOpen = false\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/dev/component-gallery/NodeExamples.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 22,
+          "attributes": ":open=\"modal\" title=\"应用确认内容样例\" @close=\"modal=false\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "dialogs": [
+        {
+          "component": "TemplateUsageDialog",
+          "line": 208,
+          "attributes": "v-if=\"usage\" :template-id=\"usage.templateId\" :revision-id=\"usage.revisionId\" @close=\"usage=undefined\" /"
+        },
+        {
+          "component": "UiDialog",
+          "line": 209,
+          "attributes": ":open=\"!!manager\" :title=\"`版本管理 · ${manager?.label ?? ''}`\" :busy=\"models.busy\" wide @close=\"managerId = ''\""
+        },
+        {
+          "component": "UiDialog",
+          "line": 214,
+          "attributes": ":open=\"previewOpen\" title=\"匹配预览\" @close=\"previewOpen = false\""
+        },
+        {
+          "component": "UiDialog",
+          "line": 216,
+          "attributes": ":open=\"receiptOpen\" title=\"外部任务结果\" @close=\"receiptOpen = false\""
+        },
+        {
+          "component": "TemplateComparisonDialog",
+          "line": 217,
+          "attributes": ":open=\"compareOpen\" :template=\"compareTemplate\" :draft=\"draft\" :library-digest=\"models.snapshot?.libraryDigest??''\" @close=\"compareOpen=false\" /"
+        },
+        {
+          "component": "ExternalTaskDialog",
+          "line": 218,
+          "attributes": "v-if=\"models.snapshot\" :open=\"externalOpen\" :snapshot=\"models.snapshot\" :draft=\"externalDraft??models.draft\" :dirty=\"!!externalDraft||models.dirty\" :selected=\"selectedTemplates\" @close=\"externalOpen = false\" /"
+        },
+        {
+          "component": "BatchAgentDialog",
+          "line": 219,
+          "attributes": "v-if=\"models.snapshot\" :open=\"batchOpen\" :snapshot=\"models.snapshot\" :selected=\"selectedTemplates\" :versions=\"models.selected\" @close=\"batchOpen=false\" /"
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/SyncRoute.vue",
+      "dialogs": [
+        {
+          "component": "UiDialog",
+          "line": 21,
+          "attributes": "v-if=\"connectionOpen\" :open=\"connectionOpen\" title=\"WebDAV连接设置\" wide @close=\"connectionOpen=false\""
+        }
+      ]
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "dialogs": [
+        {
+          "component": "ExtensionDetailModal",
+          "line": 861,
+          "attributes": "v-if=\"detail\" :title=\"detail.title\" :markdown=\"detail.markdown\" :markdown-truncated=\"detail.markdownTruncated\" :facts=\"detail.facts\" :enabled-clients=\"detailEnabledClients\" :actions=\"detail.actions\" :busy=\"extensionBusy\" @close=\"closeDetail\" @toggle-client=\"detailToggleClient\" @action=\"detailAction\" /"
+        }
+      ]
+    }
+  ]
+}

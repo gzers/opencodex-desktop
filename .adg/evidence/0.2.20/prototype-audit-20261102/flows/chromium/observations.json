@@ -1,0 +1,193 @@
+{
+  "scope": "explicit in-memory API fixtures; no actual transfer or config writes; no confirmation executed",
+  "records": [
+    {
+      "label": "sync-local",
+      "hash": "#sync?tab=webdav",
+      "dialogs": [
+        {
+          "title": "同步预览",
+          "text": "同步预览关闭新版来源本机配置 → 云端版本时间2026-11-01 20:001 项变化2 项保持不变示例MCP同名定义在 Codex、Claude 中不同（差异字段：args），请选择来源采用来源暂不同步选择来源取消确认更新",
+          "buttons": [
+            {
+              "label": "关闭",
+              "disabled": false
+            },
+            {
+              "label": "暂不同步",
+              "disabled": false
+            },
+            {
+              "label": "取消",
+              "disabled": false
+            },
+            {
+              "label": "确认更新",
+              "disabled": false
+            }
+          ]
+        }
+      ],
+      "calls": [
+        "scope-saved"
+      ]
+    },
+    {
+      "label": "sync-remote",
+      "hash": "#sync?tab=webdav",
+      "dialogs": [
+        {
+          "title": "同步预览",
+          "text": "同步预览关闭新版来源云端配置 → 本机版本时间2026-11-01 20:00更新前备份1 项变化1 项保持不变示例模版更新模版内容至 v2，已有历史版本保留更新取消确认更新",
+          "buttons": [
+            {
+              "label": "关闭",
+              "disabled": false
+            },
+            {
+              "label": "取消",
+              "disabled": false
+            },
+            {
+              "label": "确认更新",
+              "disabled": false
+            }
+          ]
+        }
+      ],
+      "calls": [
+        "scope-saved",
+        "scope-saved"
+      ]
+    },
+    {
+      "label": "sync-encrypted",
+      "hash": "#sync?tab=webdav",
+      "dialogs": [
+        {
+          "title": "读取受保护同步快照",
+          "text": "读取受保护同步快照关闭未加密的文件无需口令，直接继续即可；加密文件才需要填写原口令。文件保护口令（可选）直接读取并比较",
+          "buttons": [
+            {
+              "label": "关闭",
+              "disabled": false
+            },
+            {
+              "label": "直接读取并比较",
+              "disabled": false
+            }
+          ]
+        }
+      ],
+      "calls": [
+        "scope-saved",
+        "scope-saved",
+        "scope-saved"
+      ]
+    },
+    {
+      "label": "sync-unknown",
+      "hash": "#sync?tab=webdav",
+      "dialogs": [
+        {
+          "title": "同步预览",
+          "text": "同步预览关闭新版来源云端配置 → 本机版本时间2026-11-01 20:00更新前备份无法比较变化取消确认更新",
+          "buttons": [
+            {
+              "label": "关闭",
+              "disabled": false
+            },
+            {
+              "label": "取消",
+              "disabled": false
+            },
+            {
+              "label": "确认更新",
+              "disabled": false
+            }
+          ]
+        }
+      ],
+      "calls": [
+        "scope-saved",
+        "scope-saved",
+        "scope-saved",
+        "scope-saved"
+      ]
+    },
+    {
+      "label": "overview-before",
+      "hash": "#overview",
+      "dialogs": [],
+      "calls": [
+        "scope-saved",
+        "scope-saved",
+        "scope-saved",
+        "scope-saved"
+      ]
+    },
+    {
+      "label": "overview-sync-route",
+      "hash": "#sync?tab=webdav",
+      "dialogs": [
+        {
+          "title": "同步预览",
+          "text": "同步预览关闭新版来源云端配置 → 本机版本时间2026-11-01 20:00更新前备份无法比较变化取消确认更新",
+          "buttons": [
+            {
+              "label": "关闭",
+              "disabled": false
+            },
+            {
+              "label": "取消",
+              "disabled": false
+            },
+            {
+              "label": "确认更新",
+              "disabled": false
+            }
+          ]
+        }
+      ],
+      "calls": [
+        "scope-saved",
+        "scope-saved",
+        "scope-saved",
+        "scope-saved",
+        "scope-saved"
+      ]
+    },
+    {
+      "label": "import-file-picker",
+      "hash": "#sync?tab=file",
+      "dialogs": [
+        {
+          "title": "导入配置",
+          "text": "导入配置配置文件选择文件尚未选择文件取消读取并比较",
+          "buttons": [
+            {
+              "label": "选择文件",
+              "disabled": false
+            },
+            {
+              "label": "取消",
+              "disabled": false
+            },
+            {
+              "label": "读取并比较",
+              "disabled": true
+            }
+          ]
+        }
+      ],
+      "calls": [
+        "scope-saved",
+        "scope-saved",
+        "scope-saved",
+        "scope-saved",
+        "scope-saved"
+      ]
+    }
+  ],
+  "errors": []
+}
