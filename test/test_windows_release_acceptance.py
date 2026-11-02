@@ -24,6 +24,21 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
         self.assertIn("sha256 = (Get-FileHash", script)
         self.assertNotIn("Get-Content -LiteralPath $file.FullName", script)
 
+    def test_each_msi_install_clears_the_product_remembered_install_directory(self):
+        script = (ROOT / "test/smoke/windows-installer.ps1").read_text(encoding="utf-8")
+        default_case = script.split("# No /D or INSTALLDIR override", 1)[1].split("# MSI reads", 1)[0]
+        custom_case = script.split("# MSI reads", 1)[1]
+        self.assertIn("Clear-ProductRememberedInstallDirectory", default_case)
+        self.assertIn("Clear-ProductRememberedInstallDirectory", custom_case)
+        self.assertLess(
+            default_case.index("Clear-ProductRememberedInstallDirectory"),
+            default_case.index("Invoke-Installer 'msiexec.exe'"),
+        )
+        self.assertLess(
+            custom_case.index("Clear-ProductRememberedInstallDirectory"),
+            custom_case.index("Invoke-Installer 'msiexec.exe'"),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
