@@ -29,7 +29,8 @@
     },
     "release-and-ota": {
       "status": "pending",
-      "reason": "PR #34 remains draft; formal signed packages, install/upgrade/OTA and stable publication have not been completed"
+      "reason": "PR #34 remains draft; final package/install/upgrade/OTA and stable publication are incomplete. Existing distribution policy uses macOS ad-hoc codesign and unsigned Windows MSI/NSIS test installers without configured OS signing certificates; Tauri updater package signatures are a separate required cryptographic check. Do not report updater signatures as Windows Authenticode signing.",
+      "evidence": "docs/03-开发实施/REL-OPENCODEX-DESKTOP-19.md §发布边界; .github/workflows/release.yml (ad-hoc macOS verification, updater signing secret, Windows installer smoke)"
     }
   },
   "tests": {
