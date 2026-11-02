@@ -1,0 +1,45 @@
+{
+  "disabledModels": [
+    "native-scope-a-fixture/fixture-scope-a",
+    "native-sort-fixture/fixture-alpha",
+    "native-sort-fixture/fixture-beta",
+    "native-sort-fixture/fixture-gamma"
+  ],
+  "modelPickerOrder": [
+    "native-scope-a-fixture/fixture-scope-a",
+    "native-sort-fixture/fixture-beta",
+    "native-sort-fixture/fixture-alpha",
+    "native-sort-fixture/fixture-gamma"
+  ],
+  "providers": {
+    "native-scope-a-fixture": {
+      "adapter": "openai-chat",
+      "apiKey": "native-scope-a-pending-key",
+      "authMode": "key",
+      "baseUrl": "https://a.example.test/v1",
+      "disabled": true,
+      "modelContextWindows": {
+        "fixture-scope-a": 96000
+      },
+      "models": [
+        "fixture-scope-a"
+      ],
+      "newModelPolicy": "off",
+      "selectedModels": []
+    },
+    "native-sort-fixture": {
+      "adapter": "openai-chat",
+      "apiKey": "native-sandbox-key",
+      "authMode": "key",
+      "baseUrl": "https://example.test/v1",
+      "disabled": true,
+      "models": [
+        "fixture-alpha",
+        "fixture-beta",
+        "fixture-gamma"
+      ],
+      "newModelPolicy": "off",
+      "selectedModels": []
+    }
+  }
+}

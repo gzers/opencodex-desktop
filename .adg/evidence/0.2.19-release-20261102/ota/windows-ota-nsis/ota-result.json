@@ -1,0 +1,20 @@
+{
+  "result": "pass",
+  "kind": "nsis",
+  "from": "0.2.18",
+  "to": "0.2.19",
+  "baselinePackageSha256": "4b70c63964353ce2b66ef54df45c8d728a1442a18f5bfa8a222df8d288652301",
+  "installDirectory": "D:\\a\\_temp\\OpenCodeX OTA 中文 nsis c5b291740d0444d6933c061eda5e1ec3",
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox",
+  "scope": "real public stable updater and published baseline; isolated production model file, synthetic credentials and prewrite backup; no user machine changes",
+  "ordinaryExitPreservedOldVersion": true,
+  "automaticRestartObserved": true,
+  "automaticRestartProcess": {
+    "pid": 7876,
+    "path": "D:\\a\\_temp\\OpenCodeX OTA 中文 nsis c5b291740d0444d6933c061eda5e1ec3\\opencodex-desktop.exe",
+    "creationDate": "2026-11-02T02:22:27.885535+00:00",
+    "version": "0.2.19"
+  },
+  "readbackMethod": "automatic new process observed by OS; exact updated EXE then relaunched with explicit isolated test environment for Tauri/file readback",
+  "installedExecutableSha256": "3b2036100b1a2e8726d374b8fb6d80400461d205d920ccb78a6e113fa6467532"
+}

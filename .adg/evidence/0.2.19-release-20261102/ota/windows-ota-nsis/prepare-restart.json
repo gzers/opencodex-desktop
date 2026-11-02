@@ -1,0 +1,65 @@
+{
+  "result": "pass",
+  "from": "0.2.18",
+  "to": "0.2.19",
+  "signatureVerified": true,
+  "pendingRestart": "0.2.19",
+  "progress": [
+    {
+      "operationId": "manager-2-17816588192101876786",
+      "target": "manager",
+      "channel": "stable",
+      "candidateVersion": "0.2.19",
+      "generation": 2,
+      "sequence": 1,
+      "stage": "backup",
+      "downloadedBytes": 0,
+      "totalBytes": null
+    },
+    {
+      "operationId": "manager-2-17816588192101876786",
+      "target": "manager",
+      "channel": "stable",
+      "candidateVersion": "0.2.19",
+      "generation": 2,
+      "sequence": 2,
+      "stage": "checking",
+      "downloadedBytes": 0,
+      "totalBytes": null
+    },
+    {
+      "operationId": "manager-2-17816588192101876786",
+      "target": "manager",
+      "channel": "stable",
+      "candidateVersion": "0.2.19",
+      "generation": 2,
+      "sequence": 3,
+      "stage": "downloading",
+      "downloadedBytes": 0,
+      "totalBytes": null
+    },
+    {
+      "operationId": "manager-2-17816588192101876786",
+      "target": "manager",
+      "channel": "stable",
+      "candidateVersion": "0.2.19",
+      "generation": 2,
+      "sequence": 4,
+      "stage": "downloading",
+      "downloadedBytes": 32768,
+      "totalBytes": 4967844
+    },
+    {
+      "operationId": "manager-2-17816588192101876786",
+      "target": "manager",
+      "channel": "stable",
+      "candidateVersion": "0.2.19",
+      "generation": 2,
+      "sequence": 5,
+      "stage": "pending_restart",
+      "downloadedBytes": 4967844,
+      "totalBytes": 4967844
+    }
+  ],
+  "productionStableEndpoint": true
+}

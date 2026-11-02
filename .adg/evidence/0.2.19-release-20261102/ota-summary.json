@@ -1,0 +1,66 @@
+[
+  {
+    "kind": "msi",
+    "result": {
+      "result": "pass",
+      "kind": "msi",
+      "from": "0.2.18",
+      "to": "0.2.19",
+      "baselinePackageSha256": "3b581e1b5eaadf616f2d56757cbdf1a2efd53dd58bbd704b63d642c7af60ab8d",
+      "installDirectory": "D:\\a\\_temp\\OpenCodeX OTA 中文 msi e1c177e53e4a4d0a92256c48fe199a36",
+      "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-msi\\actual-sandbox",
+      "scope": "real public stable updater and published baseline; isolated production model file, synthetic credentials and prewrite backup; no user machine changes",
+      "ordinaryExitPreservedOldVersion": true,
+      "automaticRestartObserved": true,
+      "automaticRestartProcess": {
+        "pid": 4500,
+        "path": "D:\\a\\_temp\\OpenCodeX OTA 中文 msi e1c177e53e4a4d0a92256c48fe199a36\\opencodex-desktop.exe",
+        "creationDate": "2026-11-02T02:22:30.573562+00:00",
+        "version": "0.2.19"
+      },
+      "readbackMethod": "automatic new process observed by OS; exact updated EXE then relaunched with explicit isolated test environment for Tauri/file readback",
+      "installedExecutableSha256": "268c9e32da4c88355bbd4a25c25f711512c534e7e76cc3c909a64eea6231f059"
+    },
+    "readback": {
+      "result": "pass",
+      "version": "0.2.19",
+      "updatedApplicationReadback": true,
+      "automaticRestartEvidence": "ota-result.json OS process observation",
+      "configAndCredentialBytesUnchanged": true,
+      "immutableSandboxUnchanged": true,
+      "pendingRestartCleared": true
+    }
+  },
+  {
+    "kind": "nsis",
+    "result": {
+      "result": "pass",
+      "kind": "nsis",
+      "from": "0.2.18",
+      "to": "0.2.19",
+      "baselinePackageSha256": "4b70c63964353ce2b66ef54df45c8d728a1442a18f5bfa8a222df8d288652301",
+      "installDirectory": "D:\\a\\_temp\\OpenCodeX OTA 中文 nsis c5b291740d0444d6933c061eda5e1ec3",
+      "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox",
+      "scope": "real public stable updater and published baseline; isolated production model file, synthetic credentials and prewrite backup; no user machine changes",
+      "ordinaryExitPreservedOldVersion": true,
+      "automaticRestartObserved": true,
+      "automaticRestartProcess": {
+        "pid": 7876,
+        "path": "D:\\a\\_temp\\OpenCodeX OTA 中文 nsis c5b291740d0444d6933c061eda5e1ec3\\opencodex-desktop.exe",
+        "creationDate": "2026-11-02T02:22:27.885535+00:00",
+        "version": "0.2.19"
+      },
+      "readbackMethod": "automatic new process observed by OS; exact updated EXE then relaunched with explicit isolated test environment for Tauri/file readback",
+      "installedExecutableSha256": "3b2036100b1a2e8726d374b8fb6d80400461d205d920ccb78a6e113fa6467532"
+    },
+    "readback": {
+      "result": "pass",
+      "version": "0.2.19",
+      "updatedApplicationReadback": true,
+      "automaticRestartEvidence": "ota-result.json OS process observation",
+      "configAndCredentialBytesUnchanged": true,
+      "immutableSandboxUnchanged": true,
+      "pendingRestartCleared": true
+    }
+  }
+]

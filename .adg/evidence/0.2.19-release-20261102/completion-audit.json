@@ -1,0 +1,57 @@
+[
+  {
+    "requirement": "source-tag-and-main",
+    "evidence": "PR33 merged; tag cb4c9c9b7; apps equal tested candidate",
+    "status": "passed"
+  },
+  {
+    "requirement": "changelog-and-admission",
+    "evidence": "CHANGELOG 0.2.19; installer19; OTA18→19",
+    "status": "passed"
+  },
+  {
+    "requirement": "main-ci",
+    "evidence": "main-ci-final.json and six successful jobs",
+    "status": "passed"
+  },
+  {
+    "requirement": "original-assets-and-signatures",
+    "evidence": "verification.json; 8 digests and 3 signatures; same IDs before/after publication",
+    "status": "passed"
+  },
+  {
+    "requirement": "four-installer-matrix",
+    "evidence": "installers-summary.json; 4/4 exact original assets",
+    "status": "passed"
+  },
+  {
+    "requirement": "macos-sealed-original",
+    "evidence": "codesign strict, license resources, DMG and sandbox native screenshots",
+    "status": "passed"
+  },
+  {
+    "requirement": "stable-published",
+    "evidence": "publish-run.json success; release-final.json public non-prerelease 02:19:48Z",
+    "status": "passed"
+  },
+  {
+    "requirement": "anonymous-distribution",
+    "evidence": "anonymous-public.json 8/8 assets and 2/2 manifests",
+    "status": "passed"
+  },
+  {
+    "requirement": "actual-ota",
+    "evidence": "ota-summary.json MSI/NSIS signatures, exit/restart, auto reopen, config/credential bytes and pending clear",
+    "status": "passed"
+  },
+  {
+    "requirement": "no-daily-config-or-real-sync",
+    "evidence": "explicit sandbox and disposable CI only",
+    "status": "passed"
+  },
+  {
+    "requirement": "durable-records",
+    "evidence": "REL-22 and original bugs list updated; evidence checksums",
+    "status": "passed"
+  }
+]
