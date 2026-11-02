@@ -883,10 +883,29 @@ pub async fn model_transfer_protect(
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         let passphrase = passphrase.map(zeroize::Zeroizing::new);
-        transfer::protect_file(&root, &plan_id, passphrase.as_deref().map(|p| p.as_str()))
+        crate::modules::model_config::file_exports::protect(
+            &root,
+            &plan_id,
+            passphrase.as_deref().map(|p| p.as_str()),
+        )
     })
     .await
     .map_err(|_| invalid("transfer_worker", "文件保护任务中断，未重新读取业务内容"))?
+}
+
+#[tauri::command]
+pub async fn model_transfer_discard_unattempted(
+    plan_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<bool> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::file_exports::discard_unattempted(&root, &plan_id)
+    })
+    .await
+    .map_err(|_| invalid("transfer_worker", "取消导出预览的冻结计划清理中断"))?
 }
 
 #[tauri::command]

@@ -181,6 +181,93 @@ pub fn receipt(root: &Path, id: &str) -> ModelResult<Option<Exported>> {
 pub fn attempted(root: &Path, id: &str) -> ModelResult<bool> {
     Ok(read(root, id)?.is_some())
 }
+/// Protect a plan under the same lock used by export/discard so cancellation
+/// cannot remove its frozen source while a protection transform is in flight.
+pub fn protect(
+    root: &Path,
+    id: &str,
+    passphrase: Option<&str>,
+) -> ModelResult<transfer::FileExportPlan> {
+    let state = path(root, id)?;
+    let _guard = TargetFileLock::lock(&state)?;
+    transfer::protect_file(root, id, passphrase)
+}
+/// A preview may be discarded only before any export attempt has been recorded.
+/// The attempt lock serializes this decision with destination creation and retries.
+pub fn discard_unattempted(root: &Path, id: &str) -> ModelResult<bool> {
+    let state = path(root, id)?;
+    let _guard = TargetFileLock::lock(&state)?;
+    if read(root, id)?.is_some() {
+        return Ok(false);
+    }
+    // The public operation receipt is persisted before the destination writer
+    // starts. Preserve the frozen bytes on a crash/failure in that interval too.
+    if super::transfer_results::read(root, Some(id))?.is_some() {
+        return Ok(false);
+    }
+    transfer::discard_prepared_file(root, id)
+}
+/// Remove abandoned preview-only snapshots after the owning app instance has
+/// exited. Export attempts are retained for retry; malformed and linked entries
+/// fail closed. Both directory enumeration and per-startup cleanup are bounded.
+pub fn discard_abandoned_previews(root: &Path) -> ModelResult<usize> {
+    const MAX_PLANS_PER_STARTUP: usize = 512;
+    const MAX_DIRECTORY_ENTRIES: usize = MAX_PLANS_PER_STARTUP * 3;
+    let directory = root.join("manager-state/model-file-exports");
+    safety::check_path(root, &directory, true)?;
+    if !directory.exists() {
+        return Ok(0);
+    }
+    let mut ids = std::collections::BTreeSet::new();
+    for entry in std::fs::read_dir(&directory)
+        .map_err(|error| invalid("export_discard", error.to_string()))?
+        .take(MAX_DIRECTORY_ENTRIES)
+    {
+        let entry = entry.map_err(|error| invalid("export_discard", error.to_string()))?;
+        let kind = entry
+            .file_type()
+            .map_err(|error| invalid("export_discard", error.to_string()))?;
+        if !kind.is_file() || kind.is_symlink() {
+            continue;
+        }
+        let name = entry.file_name();
+        let Some(name) = name.to_str() else { continue };
+        let id = name
+            .strip_suffix(".protection-source.json")
+            .or_else(|| name.strip_suffix(".ocxdconf"))
+            .or_else(|| name.strip_suffix(".json"));
+        let Some(id) = id else { continue };
+        if uuid::Uuid::parse_str(id).is_ok() {
+            ids.insert(id.to_string());
+        }
+    }
+    // Exclude durable attempts/results before spending the cleanup budget. If
+    // old attempted UUIDs sort before newer abandoned previews, slicing first
+    // would starve the latter on every restart. Mere receipt-file existence is
+    // enough to preserve data; a corrupt receipt must fail safe and not delete.
+    let mut abandoned = Vec::new();
+    for id in ids {
+        let attempt_path = root
+            .join("manager-state/transfer-exports")
+            .join(format!("{id}.json"));
+        let result_path = root
+            .join("manager-state/transfer-results")
+            .join(format!("{id}.json"));
+        safety::check_path(root, &attempt_path, true)?;
+        safety::check_path(root, &result_path, true)?;
+        if attempt_path.exists() || result_path.exists() {
+            continue;
+        }
+        abandoned.push(id);
+    }
+    let mut removed = 0;
+    for id in abandoned.into_iter().take(MAX_PLANS_PER_STARTUP) {
+        if discard_unattempted(root, &id)? {
+            removed += 1;
+        }
+    }
+    Ok(removed)
+}
 pub fn directory(root: &Path, id: &str) -> ModelResult<PathBuf> {
     let a = read(root, id)?
         .filter(|a| a.complete)
@@ -193,6 +280,26 @@ pub fn directory(root: &Path, id: &str) -> ModelResult<PathBuf> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn export_plan(root: &Path) -> transfer::FileExportPlan {
+        transfer::prepare_file_scope(
+            root,
+            transfer::ExportScope {
+                include_policy: false,
+                channel_ids: vec![],
+                template_refs: vec![],
+                include_global: false,
+                channel_models: Default::default(),
+                channel_families: Default::default(),
+            },
+            None,
+            false,
+            &crate::modules::sync::portable_manager::Scope {
+                preferences: true,
+                ..Default::default()
+            },
+        )
+        .unwrap()
+    }
     #[test]
     fn retry_reuses_the_custom_package_and_never_overwrites_later_content() {
         let root = tempfile::tempdir().unwrap();
@@ -228,5 +335,151 @@ mod tests {
             "export_target_changed"
         );
         assert_eq!(std::fs::read(&first.path).unwrap(), b"later edit");
+    }
+    #[test]
+    fn canceled_unattempted_preview_removes_only_the_frozen_plan_not_export_destination() {
+        let root = tempfile::tempdir().unwrap();
+        let plan = export_plan(root.path());
+        let metadata = root
+            .path()
+            .join("manager-state/model-file-exports")
+            .join(format!("{}.json", plan.id));
+        let package = metadata.with_extension("ocxdconf");
+        assert!(metadata.is_file() && package.is_file());
+        assert!(!root.path().join("exports").exists());
+
+        assert!(discard_unattempted(root.path(), &plan.id).unwrap());
+        assert!(!metadata.exists());
+        assert!(!package.exists());
+        assert!(!metadata.with_extension("protection-source.json").exists());
+        assert!(!root.path().join("exports").exists());
+        assert!(!discard_unattempted(root.path(), &plan.id).unwrap());
+    }
+
+    #[test]
+    fn canceling_a_protected_preview_removes_plaintext_source_and_protected_child() {
+        let root = tempfile::tempdir().unwrap();
+        let plain = export_plan(root.path());
+        let plain_path = root
+            .path()
+            .join("manager-state/model-file-exports")
+            .join(format!("{}.json", plain.id));
+        let protected = protect(root.path(), &plain.id, Some("fixture-passphrase")).unwrap();
+        assert!(protected.protected);
+        let protected_path = root
+            .path()
+            .join("manager-state/model-file-exports")
+            .join(format!("{}.json", protected.id));
+        assert!(plain_path.with_extension("ocxdconf").is_file());
+        assert!(protected_path.with_extension("ocxdconf").is_file());
+
+        assert!(discard_unattempted(root.path(), &plain.id).unwrap());
+        assert!(discard_unattempted(root.path(), &protected.id).unwrap());
+        assert!(!plain_path.exists());
+        assert!(!plain_path.with_extension("ocxdconf").exists());
+        assert!(!protected_path.exists());
+        assert!(!protected_path.with_extension("ocxdconf").exists());
+        assert!(!protected_path
+            .with_extension("protection-source.json")
+            .exists());
+    }
+
+    #[test]
+    fn export_attempt_keeps_frozen_package_for_original_operation_retry() {
+        let root = tempfile::tempdir().unwrap();
+        let plan = export_plan(root.path());
+        let metadata = root
+            .path()
+            .join("manager-state/model-file-exports")
+            .join(format!("{}.json", plan.id));
+        let package = metadata.with_extension("ocxdconf");
+        let receipt = export(root.path(), &plan.id, None).unwrap();
+
+        assert!(!discard_unattempted(root.path(), &plan.id).unwrap());
+        assert!(metadata.is_file());
+        assert!(package.is_file());
+        assert!(Path::new(&receipt.path).is_file());
+        assert_eq!(
+            directory(root.path(), &plan.id).unwrap(),
+            Path::new(&receipt.path).parent().unwrap()
+        );
+    }
+
+    #[test]
+    fn durable_failed_export_receipt_preserves_plan_even_before_destination_attempt_record() {
+        let root = tempfile::tempdir().unwrap();
+        let plan = export_plan(root.path());
+        let metadata = root
+            .path()
+            .join("manager-state/model-file-exports")
+            .join(format!("{}.json", plan.id));
+        let package = metadata.with_extension("ocxdconf");
+        let result: ModelResult<()> =
+            super::super::transfer_results::export(root.path(), &plan.id, || {
+                Err(invalid("fixture_before_destination", "fixture refusal"))
+            });
+        assert_eq!(result.unwrap_err().code, "fixture_before_destination");
+        assert!(!attempted(root.path(), &plan.id).unwrap());
+
+        assert!(!discard_unattempted(root.path(), &plan.id).unwrap());
+        assert!(metadata.is_file());
+        assert!(package.is_file());
+        assert_eq!(
+            super::super::transfer_results::read(root.path(), Some(&plan.id))
+                .unwrap()
+                .unwrap()
+                .phase,
+            "failed"
+        );
+    }
+
+    #[test]
+    fn startup_prunes_abandoned_preview_plans_but_retains_attempted_exports() {
+        let root = tempfile::tempdir().unwrap();
+        let abandoned = export_plan(root.path());
+        let attempted_plan = export_plan(root.path());
+        let attempted_metadata = root
+            .path()
+            .join("manager-state/model-file-exports")
+            .join(format!("{}.json", attempted_plan.id));
+        let attempted_payload = attempted_metadata.with_extension("ocxdconf");
+        export(root.path(), &attempted_plan.id, None).unwrap();
+
+        assert_eq!(discard_abandoned_previews(root.path()).unwrap(), 1);
+        assert!(!root
+            .path()
+            .join("manager-state/model-file-exports")
+            .join(format!("{}.json", abandoned.id))
+            .exists());
+        assert!(attempted_metadata.is_file());
+        assert!(attempted_payload.is_file());
+        assert!(receipt(root.path(), &attempted_plan.id).unwrap().is_some());
+    }
+
+    #[test]
+    fn startup_attempted_receipts_do_not_consume_the_abandoned_preview_budget() {
+        let root = tempfile::tempdir().unwrap();
+        let abandoned = export_plan(root.path());
+        let attempted_plan = export_plan(root.path());
+        let attempt_path = root
+            .path()
+            .join("manager-state/transfer-exports")
+            .join(format!("{}.json", attempted_plan.id));
+        std::fs::create_dir_all(attempt_path.parent().unwrap()).unwrap();
+        // Malformed is still a durable marker for preservation: startup cleanup
+        // must never remove the package merely because retry metadata is corrupt.
+        std::fs::write(&attempt_path, b"unreadable attempted operation").unwrap();
+        let attempted_package = root
+            .path()
+            .join("manager-state/model-file-exports")
+            .join(format!("{}.ocxdconf", attempted_plan.id));
+
+        assert_eq!(discard_abandoned_previews(root.path()).unwrap(), 1);
+        assert!(!root
+            .path()
+            .join("manager-state/model-file-exports")
+            .join(format!("{}.json", abandoned.id))
+            .exists());
+        assert!(attempted_package.is_file());
     }
 }
