@@ -4,8 +4,8 @@
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
-      "reason": "Correction: cited browser route audit artifact is 411 checks, 401 pass, 10 fail (not 428/428). The 10 retained failures include stale Settings structural selectors, blur-budget and mid/low animation assertions, quality-card interaction, disabled uninstall action, and notification cleanup. Prototype parity remains in progress until each failure is resolved/reclassified with a new report and the 35 production dialog callsites are covered.",
-      "evidence": "implementation-20261102/ocx020-all-route-audit/audit-report.json (411/401/10); implementation-20261102/dialog-callsite-ledger.md; prototype-audit-20261102/application-dialog-inventory.json"
+      "reason": "Evidence correction: the first retained report was an older run with 411 checks, 401 pass and 10 fail. Re-running the full audit against current code at 2026-11-02T13:18Z produced a new report with 428/428 pass and zero page errors. The earlier failed report remains preserved, not overwritten. The 35 production dialog callsites still lack complete per-callsite state acceptance, so this overall check stays in progress.",
+      "evidence": "implementation-20261102/ocx020-all-route-audit-rerun-20261102/audit-report.json (428/428, zero page errors); implementation-20261102/ocx020-all-route-audit/audit-report.json (earlier 411/401/10); implementation-20261102/dialog-callsite-ledger.md; prototype-audit-20261102/application-dialog-inventory.json"
     },
     "saved-file-and-backup": {
       "status": "in_progress",
@@ -19,8 +19,8 @@
     },
     "all-entry-coverage": {
       "status": "in_progress",
-      "reason": "Correction: route audit is 411/401/10, not 428/428. Static inventory has 35 production dialog callsites and 2 dev-gallery references. Native macOS saw bounded navigation/cancel states but remained at missing-Node startup; no production callsite has full state acceptance yet. Each callsite and applicable state must be mapped and evidenced; dynamic modals and native menus remain included.",
-      "evidence": "implementation-20261102/ocx020-all-route-audit/audit-report.json; implementation-20261102/dialog-callsite-ledger.md; prototype-audit-20261102/application-dialog-inventory.json; implementation-20261102/native-release-package-and-ui.md"
+      "reason": "Current full browser audit passes 428/428 with zero page errors; an earlier 411/401/10 report is retained as a superseded failed run. Static inventory has 35 production dialog callsites and 2 dev-gallery references. Native macOS saw bounded navigation/cancel states but remained at missing-Node startup; no production callsite has full state acceptance yet. Each callsite and applicable state must be mapped and evidenced; dynamic modals and native menus remain included.",
+      "evidence": "implementation-20261102/ocx020-all-route-audit-rerun-20261102/audit-report.json; implementation-20261102/ocx020-all-route-audit/audit-report.json (superseded failed run); implementation-20261102/dialog-callsite-ledger.md; prototype-audit-20261102/application-dialog-inventory.json; implementation-20261102/native-release-package-and-ui.md"
     },
     "macos-windows-native": {
       "status": "in_progress",
