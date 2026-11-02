@@ -1,6 +1,6 @@
 {
   "status": "active",
-  "source": "code branch codex/0.2.20-prototype-alignment at 8aa3d2aad; docs branch docs/governance-main at 4714f88ea; release not complete",
+  "source": "PR #34 merged to main at ca434f7dd; tag v0.2.20 pushed; docs branch docs/governance-main at 011440bde; release assets/OTA/closure pending",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
@@ -29,7 +29,7 @@
     },
     "release-and-ota": {
       "status": "pending",
-      "reason": "PR #34 remains draft; final package/install/upgrade/OTA and stable publication are incomplete. Existing distribution policy uses macOS ad-hoc codesign and unsigned Windows MSI/NSIS test installers without configured OS signing certificates; Tauri updater package signatures are a separate required cryptographic check. Do not report updater signatures as Windows Authenticode signing.",
+      "reason": "PR #34 merged at ca434f7dd and v0.2.20 tag pushed; Release workflow run 41429792658 is building candidate assets. Exact package/signature/install/OTA verification and stable promotion remain pending. Existing policy uses macOS ad-hoc codesign and unsigned Windows MSI/NSIS test installers without configured OS signing certificates; Tauri updater signatures are a separate cryptographic check.",
       "evidence": "docs/03-开发实施/REL-OPENCODEX-DESKTOP-19.md §发布边界; .github/workflows/release.yml (ad-hoc macOS verification, updater signing secret, Windows installer smoke)"
     }
   },
@@ -42,6 +42,13 @@
   "daily_real_sync": false,
   "published": false,
   "ci_runs": [
+    {
+      "run": 41429792658,
+      "workflow": "Release",
+      "tag": "v0.2.20",
+      "merge_commit": "ca434f7dd3490fbd900650fde626d524c7a9757c",
+      "status": "in_progress"
+    },
     {
       "run": 41403032342,
       "status": "failure",
