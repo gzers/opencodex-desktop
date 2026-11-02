@@ -2016,3 +2016,121 @@ fn configuration_import_is_user_only_and_does_not_activate_generic_migration() {
         .is_err());
     }
 }
+
+#[test]
+fn snapshot_successes_keep_readable_receipts_and_resolve_only_the_same_operation() {
+    for stem in [
+        "config-snapshot-export",
+        "config-snapshot-import",
+        "config-snapshot-sync",
+    ] {
+        let failed = format!("{stem}-failed");
+        let succeeded = format!("{stem}-succeeded");
+        let definition = lookup(&failed).unwrap();
+        let identity = EventIdentity {
+            object: definition.object,
+            object_id: opaque(9001),
+            action: definition.action,
+            phase: definition.phase,
+            channel: Channel::Local,
+            candidate: opaque(9001),
+        };
+        let mut store = NotificationStore::new();
+        let failure = terminal_delivery(
+            &failed,
+            Trigger::User,
+            identity.clone(),
+            Evidence::Failure,
+            at(100),
+        )
+        .unwrap();
+        deliver(&mut store, &failure, prefs()).unwrap();
+        let success = terminal_delivery(
+            &succeeded,
+            Trigger::User,
+            identity.clone(),
+            Evidence::Success {
+                candidate: identity.candidate.clone(),
+                verified: true,
+            },
+            at(110),
+        )
+        .unwrap();
+        let outcome = deliver(&mut store, &success, prefs()).unwrap();
+        assert_eq!(outcome.resolved, 1);
+        assert!(outcome.added);
+        let receipt = store
+            .all()
+            .iter()
+            .find(|n| n.notification_id.starts_with(&succeeded))
+            .unwrap();
+        assert!(receipt.resolved);
+        assert_eq!(receipt.level, NotificationLevel::Info);
+        assert_eq!(
+            serde_json::to_value(NotificationDto::from_domain(receipt)).unwrap()["action"],
+            "transfer_result"
+        );
+        let id = receipt.notification_id.clone();
+        store.delete(&id);
+        let mut repeated = success;
+        repeated.occurred_at = at(90000);
+        assert!(!deliver(&mut store, &repeated, prefs()).unwrap().added);
+        assert!(
+            store
+                .all()
+                .iter()
+                .find(|n| n.notification_id == id)
+                .unwrap()
+                .deleted
+        );
+    }
+}
+#[test]
+fn deleted_snapshot_failure_stays_deleted_after_restart_and_retry() {
+    let (root, store) = setup();
+    let definition = lookup("config-snapshot-import-failed").unwrap();
+    let identity = EventIdentity {
+        object: definition.object,
+        object_id: opaque(9101),
+        action: definition.action,
+        phase: definition.phase,
+        channel: Channel::Local,
+        candidate: opaque(9101),
+    };
+    let failure = terminal_delivery(
+        "config-snapshot-import-failed",
+        Trigger::User,
+        identity,
+        Evidence::Failure,
+        at(100),
+    )
+    .unwrap();
+    let publisher = NotificationPublisher {
+        store: &store,
+        data_root: root.path(),
+    };
+    publisher.publish_event(&failure).unwrap();
+    {
+        let mut guard = store.lock().unwrap();
+        let id = guard.all()[0].notification_id.clone();
+        guard.delete(&id);
+        opencodex_desktop_lib::modules::notifications::persistence::save_notifications(
+            &notifications_path(root.path()),
+            &guard,
+        )
+        .unwrap();
+    }
+    let restarted = Arc::new(Mutex::new(
+        load_notifications(&notifications_path(root.path())).unwrap(),
+    ));
+    let publisher = NotificationPublisher {
+        store: &restarted,
+        data_root: root.path(),
+    };
+    let mut retry = failure;
+    retry.occurred_at = at(200000);
+    assert!(!publisher.publish_event(&retry).unwrap().added);
+    let guard = restarted.lock().unwrap();
+    assert_eq!(guard.all().len(), 1);
+    assert!(guard.all()[0].deleted);
+}

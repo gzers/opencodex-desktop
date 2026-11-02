@@ -47,6 +47,10 @@ struct Last {
     binding: String,
     pointer: Pointer,
     synced_at: String,
+    #[serde(default)]
+    local_content: Option<String>,
+    #[serde(default)]
+    scope: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -65,6 +69,8 @@ pub struct Check {
     pub has_remote: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_synced_at: Option<String>,
+    #[serde(default)]
+    pub reason: String,
 }
 
 /// 同步预览中的一项变化。
@@ -85,6 +91,12 @@ pub struct Change {
     pub clients: Vec<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub fields: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub files_added: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub files_updated: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub files_removed: Vec<String>,
 }
 
 /// 同步预览：新版来源、变化列表与保持不变的数量。changes 为 None 表示无法比较。
@@ -106,6 +118,8 @@ pub(super) struct Fact {
     digest: String,
     version: Option<usize>,
     selected: Option<usize>,
+    files: BTreeMap<String, crate::modules::sync::portable_assets::SkillFileFact>,
+    output_id: Option<String>,
 }
 
 pub(super) type Facts = BTreeMap<(u8, String), Fact>;
@@ -135,6 +149,8 @@ pub(super) fn record_synced(root: &Path, binding: &str, pointer: &Pointer) -> Mo
             binding: binding.into(),
             pointer: pointer.clone(),
             synced_at: chrono::Utc::now().to_rfc3339(),
+            local_content: None,
+            scope: None,
         },
     )
 }
@@ -188,7 +204,126 @@ pub async fn check<T: WebDavTransport>(
         source: if local { "local" } else { "remote" }.into(),
         has_remote: head.is_some(),
         last_synced_at: last.map(|last| last.synced_at),
+        reason: if local {
+            "local_or_empty"
+        } else {
+            "remote_or_unknown"
+        }
+        .into(),
     })
+}
+pub(super) fn record_synced_content(
+    root: &Path,
+    binding: &str,
+    pointer: &Pointer,
+    local_content: &str,
+    scope: &str,
+) -> ModelResult<()> {
+    write_state(
+        root,
+        LAST,
+        &Last {
+            binding: binding.into(),
+            pointer: pointer.clone(),
+            synced_at: chrono::Utc::now().to_rfc3339(),
+            local_content: Some(local_content.into()),
+            scope: Some(scope.into()),
+        },
+    )
+}
+fn direction(
+    has_remote: bool,
+    has_common: bool,
+    remote_changed: bool,
+    local_changed: bool,
+) -> (&'static str, &'static str) {
+    match (has_remote, has_common, remote_changed, local_changed) {
+        (false, _, _, _) => ("local", "no_remote"),
+        (true, false, _, _) => ("remote", "no_common_baseline"),
+        (true, true, false, false) => ("local", "unchanged"),
+        (true, true, false, true) => ("local", "local_changed"),
+        (true, true, true, false) => ("remote", "remote_changed"),
+        (true, true, true, true) => ("remote", "both_changed_remote_commit"),
+    }
+}
+pub(super) async fn check_content<T: WebDavTransport>(
+    root: &Path,
+    transport: &T,
+    config: &WebDavConfig,
+    binding: &str,
+    local: &str,
+    scope: &str,
+) -> ModelResult<Check> {
+    let head = remote::pointer_for(remote::CONFIG, transport, config).await?;
+    let last = read_state::<Last>(root, LAST).filter(|last| last.binding == binding);
+    let common = last
+        .as_ref()
+        .is_some_and(|last| last.scope.as_deref() == Some(scope) && last.local_content.is_some());
+    let remote_changed = match (&head, &last) {
+        (Some(h), Some(l)) => h.pointer != l.pointer,
+        _ => true,
+    };
+    let local_changed = last.as_ref().and_then(|last| last.local_content.as_deref()) != Some(local);
+    let (source, reason) = direction(head.is_some(), common, remote_changed, local_changed);
+    Ok(Check {
+        source: source.into(),
+        reason: reason.into(),
+        has_remote: head.is_some(),
+        last_synced_at: last.map(|l| l.synced_at),
+    })
+}
+pub fn promote_pending_content(
+    root: &Path,
+    plan_id: &str,
+    binding: &str,
+    local: &str,
+    scope: &str,
+) -> ModelResult<bool> {
+    let Some(p) = read_state::<Pending>(root, PENDING) else {
+        return Ok(false);
+    };
+    if p.plan_id != plan_id {
+        return Ok(false);
+    }
+    if p.binding != binding {
+        return Err(invalid(
+            "endpoint_changed",
+            "配置已更新，但活动连接改变；未标记新连接为已同步",
+        ));
+    }
+    record_synced_content(root, &p.binding, &p.pointer, local, scope)?;
+    std::fs::remove_file(root.join(PENDING))?;
+    Ok(true)
+}
+pub(super) fn rebind_pending(root: &Path, original: &str, selected: &str) -> ModelResult<()> {
+    let mut p = read_state::<Pending>(root, PENDING)
+        .ok_or_else(|| invalid("sync_plan", "原下载指针缺失，请重新同步"))?;
+    if p.plan_id != original {
+        return Err(invalid("sync_plan", "原下载已被其它操作替换，请重新同步"));
+    }
+    p.plan_id = selected.into();
+    write_state(root, PENDING, &p)
+}
+pub async fn verify_pending<T: WebDavTransport>(
+    root: &Path,
+    id: &str,
+    binding: &str,
+    transport: &T,
+    config: &WebDavConfig,
+) -> ModelResult<()> {
+    let p = read_state::<Pending>(root, PENDING)
+        .ok_or_else(|| invalid("sync_plan", "原下载指针缺失，请重新同步"))?;
+    if p.plan_id != id || p.binding != binding {
+        return Err(invalid("sync_plan", "下载来源或范围已变化，请重新同步"));
+    }
+    let head = remote::pointer_for(remote::CONFIG, transport, config).await?;
+    if head.as_ref().map(|h| &h.pointer) != Some(&p.pointer) {
+        return Err(invalid(
+            "remote_changed",
+            "预览后云端已有后续版本，请重新同步；未覆盖本机配置",
+        ));
+    }
+    Ok(())
 }
 
 fn digest<T: Serialize>(value: &T, strip: &[&str]) -> String {
@@ -232,7 +367,7 @@ pub(super) fn facts(
             (0, id),
             Fact {
                 label: channel.label.clone(),
-                digest: digest(channel, &strip),
+                digest: digest(&json!({"configuration":digest(channel,&strip),"position":policy.and_then(|p|p.channel_order.as_ref()).and_then(|order|order.iter().position(|c|c==&channel.id))}), &[]),
                 selected: Some(selected),
                 ..Fact::default()
             },
@@ -246,8 +381,6 @@ pub(super) fn facts(
             .collect();
         revisions.sort();
         let content = json!({
-            "label": template.label,
-            "defaultRevision": template.default_revision,
             "revisions": revisions,
         });
         out.insert(
@@ -261,16 +394,18 @@ pub(super) fn facts(
         );
     }
     for account in &manager.accounts {
-        let key = match (&account.email, &account.subject) {
-            (Some(email), _) => format!("{}:{}", account.provider, email),
-            (None, Some(subject)) => format!("{}:{}", account.provider, subject),
-            _ => account.id.clone(),
-        };
+        let key = crate::modules::sync::portable_accounts::comparison_identity(account)
+            .unwrap_or_else(|_| account.id.clone());
         out.insert(
             (2, key),
             Fact {
                 label: account.label.clone(),
-                digest: digest(account, &["id", "origin"]),
+                digest: digest(
+                    &crate::modules::sync::portable_accounts::comparison_value(account)
+                        .unwrap_or(Value::Null),
+                    &[],
+                ),
+                output_id: Some(account.id.clone()),
                 ..Fact::default()
             },
         );
@@ -281,6 +416,11 @@ pub(super) fn facts(
             Fact {
                 label: skill.name.clone(),
                 digest: skill.digest.clone(),
+                files: skill
+                    .file_entries
+                    .iter()
+                    .map(|f| (f.path.clone(), f.clone()))
+                    .collect(),
                 ..Fact::default()
             },
         );
@@ -295,16 +435,26 @@ pub(super) fn facts(
             },
         );
     }
-    if let Some(preferences) = &manager.preferences {
+    if manager.preferences.is_some() || manager.extensions.is_some() {
+        let mut portable = serde_json::to_value(manager).unwrap_or(Value::Null);
+        let preferences = portable.get("preferences").cloned().unwrap_or(Value::Null);
+        let mut extensions = portable
+            .get_mut("extensions")
+            .cloned()
+            .unwrap_or(Value::Null);
+        if let Some(fields) = extensions.as_object_mut() {
+            fields.remove("revision");
+            fields.remove("source_store");
+        }
         out.insert(
             (5, "desktop".into()),
             Fact {
-                label: "桌面偏好".into(),
+                label: "通用偏好".into(),
                 digest: digest(
-                    preferences,
-                    &["revision", "source_store", "sourceStore", "schema_version"],
+                    &json!({"preferences":preferences,"extensions":extensions}),
+                    &[],
                 ),
-                ..Fact::default()
+                ..Default::default()
             },
         );
     }
@@ -335,16 +485,6 @@ pub(super) fn facts(
             );
         }
     }
-    if let Some(extensions) = &manager.extensions {
-        out.insert(
-            (6, "extensions".into()),
-            Fact {
-                label: "扩展设置".into(),
-                digest: digest(extensions, &["revision"]),
-                ..Fact::default()
-            },
-        );
-    }
     out
 }
 
@@ -356,13 +496,14 @@ pub(super) fn diff(source: &Facts, target: &Facts) -> (Vec<Change>, usize) {
         let kind = KINDS[usize::from(*rank).min(KINDS.len() - 1)];
         let base = Change {
             kind: kind.into(),
-            id: id.clone(),
+            id: fact.output_id.clone().unwrap_or_else(|| id.clone()),
             label: fact.label.clone(),
             ..Change::default()
         };
         match target.get(&(*rank, id.clone())) {
             None => changes.push(Change {
                 mark: "new".into(),
+                files_added: fact.files.keys().cloned().collect(),
                 ..base
             }),
             Some(old) if old.digest != fact.digest => changes.push(Change {
@@ -370,6 +511,24 @@ pub(super) fn diff(source: &Facts, target: &Facts) -> (Vec<Change>, usize) {
                 version: fact.version,
                 before: old.selected,
                 after: fact.selected,
+                files_added: fact
+                    .files
+                    .keys()
+                    .filter(|p| !old.files.contains_key(*p))
+                    .cloned()
+                    .collect(),
+                files_updated: fact
+                    .files
+                    .iter()
+                    .filter(|(p, f)| old.files.get(*p).is_some_and(|old| old != *f))
+                    .map(|(p, _)| p.clone())
+                    .collect(),
+                files_removed: old
+                    .files
+                    .iter()
+                    .filter(|(p, f)| !f.sensitive && !fact.files.contains_key(*p))
+                    .map(|(p, _)| p.clone())
+                    .collect(),
                 ..base
             }),
             Some(_) => unchanged += 1,
@@ -413,6 +572,25 @@ pub(super) fn upload_changes(
     all.extend(changes);
     (all, unchanged)
 }
+pub(super) fn include_credential_changes(
+    changes: &mut Vec<Change>,
+    unchanged: &mut usize,
+    secrets: Vec<Change>,
+) {
+    for secret in secrets {
+        if let Some(item) = changes
+            .iter_mut()
+            .find(|c| c.kind == secret.kind && c.id == secret.id)
+        {
+            if !item.fields.contains(&"credentials".into()) {
+                item.fields.push("credentials".into());
+            }
+        } else {
+            changes.push(secret);
+            *unchanged = unchanged.saturating_sub(1);
+        }
+    }
+}
 
 /// 下载后记录同步状态：没有变化时直接视为已同步，否则等待确认导入。
 pub(super) fn record_download(
@@ -422,10 +600,11 @@ pub(super) fn record_download(
     plan_id: &str,
     changes: Option<&[Change]>,
 ) -> ModelResult<()> {
-    match changes {
-        Some([]) => record_synced(root, binding, pointer),
-        _ => record_pending(root, binding, pointer, plan_id),
+    record_pending(root, binding, pointer, plan_id)?;
+    if matches!(changes, Some([])) {
+        record_synced(root, binding, pointer)?;
     }
+    Ok(())
 }
 
 /// 用于测试与预览：本机记录的上次同步时间。
@@ -434,4 +613,91 @@ pub(super) fn last_synced(root: &Path, binding: &str) -> Option<String> {
     read_state::<Last>(root, LAST)
         .filter(|last| last.binding == binding)
         .map(|last| last.synced_at)
+}
+
+#[cfg(test)]
+mod content_direction_tests {
+    use super::*;
+    #[test]
+    fn same_email_accounts_with_distinct_subjects_do_not_collapse_in_preview() {
+        use crate::modules::sync::portable_accounts::AccountInfo;
+        let account = |id: &str, subject: &str, slot: &str| {
+            serde_json::from_value::<AccountInfo>(serde_json::json!({"id":id,"provider":"chatgpt","subject":subject,"label":subject,"email":"same@example.test","origin":{"version":1,"accountPlatform":"chatgpt","owner":"opencodex","authKind":"oauth","sourceNamespace":"codex-account-pool","sourceAccountId":slot,"tenant":"shared"}})).unwrap()
+        };
+        let root = tempfile::tempdir().unwrap();
+        let package = super::super::transfer::export(
+            root.path(),
+            super::super::transfer::ExportScope {
+                include_policy: false,
+                channel_ids: vec![],
+                template_refs: vec![],
+                include_global: false,
+                channel_models: Default::default(),
+                channel_families: Default::default(),
+            },
+        )
+        .unwrap();
+        let a = uuid::Uuid::new_v4().to_string();
+        let b = uuid::Uuid::new_v4().to_string();
+        let source = Settings {
+            accounts: vec![
+                account(&a, "personal", "source-a"),
+                account(&b, "work", "source-b"),
+            ],
+            ..Default::default()
+        };
+        let target = Settings {
+            accounts: vec![
+                account(&uuid::Uuid::new_v4().to_string(), "personal", "target-a"),
+                account(&uuid::Uuid::new_v4().to_string(), "work", "target-b"),
+            ],
+            ..Default::default()
+        };
+        let mut source = facts(
+            &package,
+            &source,
+            &Summary::default(),
+            &Default::default(),
+            &Default::default(),
+        );
+        let mut target = facts(
+            &package,
+            &target,
+            &Summary::default(),
+            &Default::default(),
+            &Default::default(),
+        );
+        source.retain(|(rank,_),_|*rank==2);target.retain(|(rank,_),_|*rank==2);
+        assert_eq!(source.len(), 2);
+        assert_eq!(diff(&source, &target), (vec![], 2));
+        let (changes, _) = diff(&source, &Facts::new());
+        assert_eq!(
+            changes
+                .iter()
+                .map(|c| c.id.clone())
+                .collect::<BTreeSet<_>>(),
+            BTreeSet::from([a, b])
+        );
+    }
+    #[test]
+    fn baseline_decisions_are_clock_independent_and_converge() {
+        assert_eq!(direction(false, false, false, true), ("local", "no_remote"));
+        assert_eq!(
+            direction(true, false, true, true),
+            ("remote", "no_common_baseline")
+        );
+        assert_eq!(
+            direction(true, true, false, true),
+            ("local", "local_changed")
+        );
+        assert_eq!(
+            direction(true, true, true, false),
+            ("remote", "remote_changed")
+        );
+        assert_eq!(
+            direction(true, true, true, true),
+            ("remote", "both_changed_remote_commit")
+        );
+        assert_eq!(direction(true, true, false, false), ("local", "unchanged"));
+    }
 }

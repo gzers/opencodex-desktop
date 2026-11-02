@@ -19,7 +19,7 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, BTreeSet},
     path::{Path, PathBuf},
 };
 use zeroize::{Zeroize, Zeroizing};
@@ -339,6 +339,13 @@ fn seal_scope(
             if channel.family_scope.is_some() {
                 continue;
             }
+            if scope
+                .credential_ids
+                .as_ref()
+                .is_some_and(|ids| !ids.contains(&format!("channel:{}", channel.id)))
+            {
+                continue;
+            }
             if let Some(home) = scope.upstream_root.as_deref() {
                 let original = snapshot
                     .policy
@@ -408,9 +415,10 @@ fn seal_scope(
         webdav_passwords: Default::default(),
         assets: Assets::default(),
     };
+    objects.models = snapshot_package(&objects.models, true)?;
     let mut conflicts = vec![];
     if !scope.skill_names.is_empty() || !scope.mcp_names.is_empty() {
-        let (assets, skipped) = portable_assets::export_with_sources(
+        let (assets, skipped) = portable_assets::export_with_credential_scope(
             root,
             scope
                 .local_home
@@ -421,6 +429,7 @@ fn seal_scope(
             &scope.mcp_sources,
             scope.extension_credentials,
             scope.assets_reviewed,
+            scope.credential_ids.as_deref(),
         )?;
         objects.assets = assets;
         conflicts = skipped;
@@ -451,12 +460,18 @@ fn seal_scope(
     }
     objects.version = object_version(&objects);
     validate(&objects)?;
+    if objects.models.payload.candidate.is_none() {
+        let (digest, key) = object_content_identity(&objects)?;
+        let time = saved_source_time(root, scope, &objects)?;
+        objects.models.created_at =
+            super::content_versions::stamp(root, &key, &digest, &time, false)?;
+    }
     let count = secret_objects(&objects);
     let plaintext = Zeroizing::new(serde_json::to_vec(&objects)?);
     let bytes = portable_file::seal(
         portable_file::Manifest {
             id: id.into(),
-            created_at: package.created_at.clone(),
+            created_at: chrono::Utc::now().to_rfc3339(),
             sections: sections(&objects),
             secret_objects: count,
             document_digest: String::new(),
@@ -467,6 +482,324 @@ fn seal_scope(
     let mut summary = portable_assets::summarize(&objects.assets);
     summary.conflicts = conflicts;
     Ok((bytes, count, objects.manager, summary))
+}
+fn object_content_identity(objects: &Objects) -> ModelResult<(String, String)> {
+    let mut value = serde_json::to_value(objects)?;
+    if let Some(extension) = value
+        .pointer_mut("/manager/extensions")
+        .and_then(Value::as_object_mut)
+    {
+        extension.remove("revision");
+    }
+    value["models"] = serde_json::to_value(snapshot_package(&objects.models, false)?)?;
+    if let Some(models) = value.get_mut("models").and_then(|m| m.as_object_mut()) {
+        models.remove("createdAt");
+        models.remove("digest");
+        models.remove("formatVersion");
+    }
+    if let Some(templates) = value
+        .pointer_mut("/models/payload/templates")
+        .and_then(Value::as_array_mut)
+    {
+        for t in templates.iter_mut() {
+            if let Some(fields) = t.as_object_mut() {
+                for key in ["label", "source", "defaultRevision"] {
+                    fields.remove(key);
+                }
+                if let Some(revisions) = fields.get_mut("revisions").and_then(Value::as_array_mut) {
+                    revisions.sort_by_key(|r| r["id"].as_str().unwrap_or("").to_owned());
+                }
+            }
+        }
+        templates.sort_by_key(|t| t["id"].as_str().unwrap_or("").to_owned());
+    }
+    if let Some(accounts) = value
+        .pointer_mut("/manager/accounts")
+        .and_then(Value::as_array_mut)
+    {
+        *accounts = objects
+            .manager
+            .accounts
+            .iter()
+            .map(crate::modules::sync::portable_accounts::comparison_value)
+            .collect::<ModelResult<Vec<_>>>()?;
+        accounts.sort_by_key(|a| serde_json::to_string(a).unwrap_or_default());
+    }
+    if let Some(channels) = value
+        .pointer_mut("/models/payload/policy/channels")
+        .and_then(Value::as_array_mut)
+    {
+        channels.sort_by_key(|c| c["id"].as_str().unwrap_or("").to_owned());
+    }
+    let identity = serde_json::json!({"channels":objects.models.payload.policy.iter().flat_map(|p|&p.channels).map(|c|(&c.id,&c.model_subset,&c.family_scope)).collect::<Vec<_>>(),"global":objects.models.payload.policy.as_ref().is_some_and(|p|p.template_refs.is_some()),"templates":objects.models.payload.templates.iter().map(|t|&t.id).collect::<Vec<_>>(),"accounts":objects.manager.accounts.iter().map(|a|&a.id).collect::<Vec<_>>(),"preferences":objects.manager.preferences.is_some(),"extensions":objects.manager.extensions.is_some(),"webdav":objects.manager.webdav.iter().map(|e|&e.id).collect::<Vec<_>>(),"skills":objects.assets.skills.iter().map(|s|&s.name).collect::<Vec<_>>(),"mcps":objects.assets.mcps.iter().map(|m|&m.name).collect::<Vec<_>>()});
+    let digest = sha256(&serde_json::to_vec(&value)?);
+    super::provider_auth::erase_value(&mut value);
+    Ok((digest, super::content_versions::key(&identity)?))
+}
+fn saved_source_time(root: &Path, scope: &ManagerScope, objects: &Objects) -> ModelResult<String> {
+    let mut paths = vec![];
+    if objects.models.payload.policy.is_some() {
+        paths.push(root.join("manager-state/model-channel-layout.json"));
+        paths.push(
+            scope
+                .upstream_root
+                .as_ref()
+                .map(|h| h.join("config.json"))
+                .unwrap_or_else(|| root.join(POLICY_PATH)),
+        )
+    }
+    if !objects.models.payload.templates.is_empty() {
+        paths.push(root.join(LIBRARY_PATH))
+    }
+    if objects.manager.preferences.is_some() {
+        paths.push(root.join("manager-state/preferences.json"))
+    }
+    if objects.manager.extensions.is_some() {
+        paths.push(root.join("manager-state/extension-config.json"))
+    }
+    if !objects.manager.webdav.is_empty() {
+        paths.push(root.join(crate::modules::sync::config::SYNC_ENDPOINTS_RELATIVE_PATH))
+    }
+    if !objects.assets.skills.is_empty() || !objects.assets.mcps.is_empty() {
+        paths.extend(portable_assets::saved_source_paths(
+            root,
+            scope
+                .local_home
+                .as_deref()
+                .ok_or_else(|| invalid("asset_home", "资源保存版本未绑定本机来源"))?,
+            &objects
+                .assets
+                .skills
+                .iter()
+                .map(|s| s.name.clone())
+                .collect::<Vec<_>>(),
+            &objects
+                .assets
+                .mcps
+                .iter()
+                .map(|m| m.name.clone())
+                .collect::<Vec<_>>(),
+            &scope.mcp_sources,
+        )?)
+    }
+    fn modified(path: &Path, depth: usize) -> ModelResult<Option<std::time::SystemTime>> {
+        if depth > 32 {
+            return Err(invalid("content_version", "资源层级超过上限"));
+        }
+        let m = match std::fs::symlink_metadata(path) {
+            Ok(m) => m,
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+            Err(e) => return Err(e.into()),
+        };
+        if m.file_type().is_symlink() {
+            return Err(invalid("content_version", "保存版本不允许软链接来源"));
+        }
+        let mut time = m.modified().ok();
+        if m.is_dir() {
+            for child in std::fs::read_dir(path)? {
+                time = time.max(modified(&child?.path(), depth + 1)?);
+            }
+        }
+        Ok(time)
+    }
+    let mut time = None;
+    for path in paths {
+        time = time.max(modified(&path, 0)?)
+    }
+    Ok(time
+        .map(|t| chrono::DateTime::<chrono::Utc>::from(t).to_rfc3339())
+        .unwrap_or_default())
+}
+pub fn content_created_at(bytes: &[u8], password: Option<&str>) -> ModelResult<String> {
+    let opened = portable_file::open(bytes, password)?;
+    Ok(decode(&opened.document)?.models.created_at)
+}
+pub fn content_package(bytes: &[u8], password: Option<&str>) -> ModelResult<ModelPackage> {
+    let opened = portable_file::open(bytes, password)?;
+    Ok(decode(&opened.document)?.models)
+}
+pub fn content_view(
+    bytes: &[u8],
+    password: Option<&str>,
+) -> ModelResult<(ModelPackage, CredentialCounts)> {
+    let opened = portable_file::open(bytes, password)?;
+    let objects = decode(&opened.document)?;
+    let counts = counts_of(&objects);
+    Ok((objects.models, counts))
+}
+
+pub fn credential_ids(bytes: &[u8], password: Option<&str>) -> ModelResult<Vec<String>> {
+    let (objects, _) = remote_objects(bytes, password)?;
+    Ok(objects
+        .channel_keys
+        .0
+        .keys()
+        .chain(
+            objects
+                .channel_authorizations
+                .iter()
+                .filter(|(_, a)| a.has_secret_material())
+                .map(|(id, _)| id),
+        )
+        .map(|id| format!("channel:{id}"))
+        .chain(
+            objects
+                .assets
+                .skills
+                .iter()
+                .filter(|s| s.contains_secrets)
+                .map(|s| format!("skill:{}", s.name)),
+        )
+        .chain(
+            objects
+                .assets
+                .mcps
+                .iter()
+                .filter(|m| !m.secrets.0.is_empty())
+                .map(|m| format!("mcp:{}", m.name)),
+        )
+        .collect())
+}
+/// Compare secrets only inside the backend. Only object labels and a fixed
+/// field classification leave this function; no secret or secret digest does.
+pub fn credential_changes(
+    source: &[u8],
+    target: Option<&[u8]>,
+    source_password: Option<&str>,
+    target_password: Option<&str>,
+) -> ModelResult<Vec<super::sync_state::Change>> {
+    let (a, _) = remote_objects(source, source_password)?;
+    let b = target
+        .map(|bytes| remote_objects(bytes, target_password).map(|v| v.0))
+        .transpose()?;
+    let mut changes = vec![];
+    for id in a
+        .channel_keys
+        .0
+        .keys()
+        .chain(
+            a.channel_authorizations
+                .iter()
+                .filter(|(_, a)| a.has_secret_material())
+                .map(|(id, _)| id),
+        )
+        .collect::<BTreeSet<_>>()
+    {
+        let before = b
+            .as_ref()
+            .map(|b| {
+                serde_json::to_vec(&(&b.channel_keys.0.get(id), &b.channel_authorizations.get(id)))
+            })
+            .transpose()?;
+        let after = Zeroizing::new(serde_json::to_vec(&(
+            &a.channel_keys.0.get(id),
+            &a.channel_authorizations.get(id),
+        ))?);
+        let before = before.map(Zeroizing::new);
+        if before
+            .as_ref()
+            .is_none_or(|v| v.as_slice() != after.as_slice())
+        {
+            if let Some(c) = a
+                .models
+                .payload
+                .policy
+                .iter()
+                .flat_map(|p| &p.channels)
+                .find(|c| &c.id == id)
+            {
+                changes.push(super::sync_state::Change {
+                    kind: "channels".into(),
+                    id: (*id).clone(),
+                    label: c.label.clone(),
+                    mark: "update".into(),
+                    fields: vec!["credentials".into()],
+                    ..Default::default()
+                })
+            }
+        }
+    }
+    for mcp in &a.assets.mcps {
+        if mcp.secrets.0.is_empty() {
+            continue;
+        }
+        if b.as_ref()
+            .and_then(|b| b.assets.mcps.iter().find(|old| old.name == mcp.name))
+            .is_none_or(|old| old.secrets.0 != mcp.secrets.0)
+        {
+            changes.push(super::sync_state::Change {
+                kind: "mcp".into(),
+                id: mcp.name.clone(),
+                label: mcp.name.clone(),
+                mark: "update".into(),
+                fields: vec!["credentials".into()],
+                ..Default::default()
+            })
+        }
+    }
+    Ok(changes)
+}
+/// Global template references in a portable snapshot describe the source
+/// context. Flatten them into selected channels; keep the target's globals.
+fn snapshot_package(package: &ModelPackage, include_order: bool) -> ModelResult<ModelPackage> {
+    transfer::validate_package(package)?;
+    let mut package = package.clone();
+    if package.payload.candidate.is_some() {
+        return Ok(package);
+    }
+    if let Some(policy) = &mut package.payload.policy {
+        let global = policy.template_refs.take().unwrap_or_default();
+        policy.default_channel_id = None;
+        for channel in &mut policy.channels {
+            let mut refs = global.clone();
+            for reference in &channel.template_refs {
+                if let Some(old) = refs
+                    .iter_mut()
+                    .find(|r| r.template_id == reference.template_id)
+                {
+                    *old = reference.clone()
+                } else {
+                    refs.push(reference.clone())
+                }
+            }
+            channel.template_refs = refs;
+        }
+        let selected = policy
+            .channels
+            .iter()
+            .map(|c| c.id.as_str())
+            .collect::<BTreeSet<_>>();
+        if let Some(order) = &mut policy.channel_order {
+            order.retain(|id| selected.contains(id.as_str()));
+        }
+        if include_order {
+            let full = policy
+                .channels
+                .iter()
+                .filter(|c| c.family_scope.is_none() && c.model_subset.is_none())
+                .map(|c| c.id.clone())
+                .collect::<Vec<_>>();
+            policy.channel_order = if full.len() > 1 { Some(full) } else { None };
+        }
+    }
+    package.digest = sha256(&serde_json::to_vec(&package.payload)?);
+    package.format_version = package
+        .format_version
+        .max(transfer::package_version(&package.payload));
+    transfer::validate_package(&package)?;
+    Ok(package)
+}
+pub fn inherit_content_time(
+    root: &Path,
+    bytes: &[u8],
+    password: Option<&str>,
+    saved_at: &str,
+) -> ModelResult<()> {
+    let opened = portable_file::open(bytes, password)?;
+    let objects = decode(&opened.document)?;
+    let (digest, key) = object_content_identity(&objects)?;
+    super::content_versions::stamp(root, &key, &digest, saved_at, true)?;
+    Ok(())
 }
 fn cache_path(root: &Path, id: &str, extension: &str) -> ModelResult<PathBuf> {
     require_uuid(id)?;
@@ -484,10 +817,42 @@ pub struct RemoteSummary {
     pub credential_count: usize,
     pub protected: bool,
     pub assets: portable_assets::Summary,
+    pub credential_counts: CredentialCounts,
 }
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct CredentialCounts {
+    pub channel_keys: usize,
+    pub extensions: usize,
+    pub webdav_passwords: usize,
+}
+fn counts_of(objects: &Objects) -> CredentialCounts {
+    CredentialCounts {
+        channel_keys: objects.channel_keys.0.len()
+            + objects
+                .channel_authorizations
+                .values()
+                .filter(|a| a.has_secret_material())
+                .count(),
+        extensions: objects
+            .assets
+            .skills
+            .iter()
+            .filter(|s| s.contains_secrets)
+            .count()
+            + objects
+                .assets
+                .mcps
+                .iter()
+                .filter(|m| !m.secrets.0.is_empty())
+                .count(),
+        webdav_passwords: objects.webdav_passwords.0.len(),
+    }
+}
+
 fn remote_objects(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<(Objects, bool)> {
     let opened = portable_file::open(bytes, passphrase)?;
-    let objects = decode(&opened.document)?;
+    let mut objects = decode(&opened.document)?;
     if !objects.manager.webdav.is_empty() || !objects.webdav_passwords.0.is_empty() {
         return Err(invalid(
             "sync_self_scope",
@@ -499,31 +864,35 @@ fn remote_objects(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<(Object
     {
         return Err(invalid("portable_manifest", "远端清单与对象不同"));
     }
+    objects.models = snapshot_package(&objects.models, false)?;
     Ok((objects, opened.protected))
 }
 pub fn remote_summary(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<RemoteSummary> {
     let (objects, protected) = remote_objects(bytes, passphrase)?;
     let credential_count = secret_objects(&objects);
     let assets = portable_assets::summarize(&objects.assets);
+    let credential_counts = counts_of(&objects);
     Ok(RemoteSummary {
         package: objects.models,
         manager: objects.manager,
         credential_count,
         protected,
         assets,
+        credential_counts,
     })
 }
 /// 两份配置文件内容是否一致（忽略包创建时间与包摘要）。
 pub fn same_content(a: &[u8], b: &[u8], passphrase: Option<&str>) -> ModelResult<bool> {
-    let value = |bytes: &[u8]| -> ModelResult<serde_json::Value> {
-        let mut value = serde_json::to_value(&remote_objects(bytes, passphrase)?.0)?;
-        if let Some(models) = value.get_mut("models").and_then(|m| m.as_object_mut()) {
-            models.remove("createdAt");
-            models.remove("digest");
-        }
-        Ok(value)
-    };
-    Ok(value(a)? == value(b)?)
+    Ok(
+        object_content_identity(&remote_objects(a, passphrase)?.0)?.0
+            == object_content_identity(&remote_objects(b, passphrase)?.0)?.0,
+    )
+}
+/// Content identity excludes transport timestamps and envelope randomness.
+/// This digest remains in device-local metadata and is never a displayed Key.
+pub fn content_digest(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<String> {
+    let opened = portable_file::open(bytes, passphrase)?;
+    Ok(object_content_identity(&decode(&opened.document)?)?.0)
 }
 pub fn merge_remote(
     remote_bytes: &[u8],
@@ -531,8 +900,23 @@ pub fn merge_remote(
     passphrase: Option<&str>,
     operation_id: &str,
 ) -> ModelResult<Vec<u8>> {
-    let (mut remote, remote_protected) = remote_objects(remote_bytes, passphrase)?;
-    let (local, local_protected) = remote_objects(local_bytes, passphrase)?;
+    merge_remote_protection(
+        remote_bytes,
+        local_bytes,
+        passphrase,
+        passphrase,
+        operation_id,
+    )
+}
+pub fn merge_remote_protection(
+    remote_bytes: &[u8],
+    local_bytes: &[u8],
+    read_password: Option<&str>,
+    write_password: Option<&str>,
+    operation_id: &str,
+) -> ModelResult<Vec<u8>> {
+    let (mut remote, _) = remote_objects(remote_bytes, read_password)?;
+    let (local, _) = remote_objects(local_bytes, write_password)?;
     for incoming in local.models.payload.policy.iter().flat_map(|p| &p.channels) {
         if (remote.channel_keys.0.contains_key(&incoming.id)
             || remote.channel_authorizations.contains_key(&incoming.id))
@@ -653,16 +1037,6 @@ pub fn merge_remote(
     }
     validate(&remote)?;
     let document = Zeroizing::new(serde_json::to_vec(&remote)?);
-    // 只有源文件或本机副本确实是加密的，才需要原口令；否则沿用用户选择
-    // （留空即不加密），不强制。
-    let password = if remote_protected || local_protected {
-        Some(
-            passphrase
-                .ok_or_else(|| invalid("passphrase_required", "源文件受保护，请输入原保护口令"))?,
-        )
-    } else {
-        passphrase
-    };
     portable_file::seal(
         portable_file::Manifest {
             id: operation_id.into(),
@@ -672,7 +1046,7 @@ pub fn merge_remote(
             document_digest: String::new(),
         },
         &document,
-        password,
+        write_password,
     )
 }
 pub fn select_remote(
@@ -948,7 +1322,9 @@ fn receive_bound_context(
     };
     let credential_count = secret_objects(&objects);
     let mut plan = match config_home {
-        Some(home) => transfer::receive_file(root, objects.models.clone(), home)?,
+        Some(home) => {
+            transfer::receive_file(root, snapshot_package(&objects.models, false)?, home)?
+        }
         None => transfer::receive(root, objects.models.clone())?,
     };
     plan.protected = format["format"] == "OCXDCONF" && format["payload"]["kind"] == "protected";
@@ -983,24 +1359,187 @@ fn receive_bound_context(
         }
         plan.assets = Some(portable_assets::summarize(&objects.assets));
         plan.available_extension_credentials = portable_assets::secret_count(&objects.assets) > 0;
+        plan.available_extension_ids = objects
+            .assets
+            .skills
+            .iter()
+            .filter(|s| s.contains_secrets)
+            .map(|s| format!("skill:{}", s.name))
+            .chain(
+                objects
+                    .assets
+                    .mcps
+                    .iter()
+                    .filter(|m| !m.secrets.0.is_empty())
+                    .map(|m| format!("mcp:{}", m.name)),
+            )
+            .collect();
     }
     if credential_count > 0 {
         plan.available_keys = objects
             .channel_keys
             .0
             .keys()
-            .chain(objects.channel_authorizations.keys())
+            .chain(
+                objects
+                    .channel_authorizations
+                    .iter()
+                    .filter(|(_, a)| a.has_secret_material())
+                    .map(|(id, _)| id),
+            )
             .filter(|id| transfer::key_target(&plan, id).is_some())
             .cloned()
             .collect();
     }
     atomic_write(&cache_path(root, &plan.id, "ocxdconf")?, bytes, 0o600)?;
     plan.file_digest = Some(sha256(bytes));
+    compare_incoming(root, &mut plan, passphrase)?;
     transfer::write_incoming(root, &plan)?;
     let index = root.join("manager-state/portable-latest-incoming.json");
     safety::check_path(root, &index, true)?;
     atomic_write(&index, &serde_json::to_vec(&plan.id)?, 0o600)?;
     Ok(plan)
+}
+pub(super) fn compare_incoming(
+    root: &Path,
+    plan: &mut IncomingPlan,
+    passphrase: Option<&str>,
+) -> ModelResult<()> {
+    let Some(home) = plan.file_home.clone() else {
+        return Ok(());
+    };
+    let path = cache_path(root, &plan.id, "asset-home.json")?;
+    let local_home = if path.exists() {
+        Some(serde_json::from_slice::<PathBuf>(&safety::read_file(
+            &path, 32768,
+        )?)?)
+    } else {
+        None
+    };
+    let result = super::config_remote::compare_incoming(root, plan, &home, local_home.as_deref())
+        .and_then(|mut preview| {
+            if !plan.available_keys.is_empty() || plan.available_extension_credentials {
+                let original = open_source(root, plan, passphrase)?;
+                let snapshot = transfer::local_for_plan(root, plan)?;
+                let mut secrets = vec![];
+                for source in original
+                    .models
+                    .payload
+                    .policy
+                    .iter()
+                    .flat_map(|p| &p.channels)
+                {
+                    if !plan.available_keys.contains(&source.id)
+                        || !plan
+                            .package
+                            .payload
+                            .policy
+                            .as_ref()
+                            .is_some_and(|p| p.channels.iter().any(|c| c.id == source.id))
+                    {
+                        continue;
+                    }
+                    let target = transfer::key_target(plan, &source.id)
+                        .and_then(|id| snapshot.policy.channels.iter().find(|c| c.id == id));
+                    let changed = if let (Some(target), Some(public), Some(auth)) = (
+                        target,
+                        source.connection.as_ref().and_then(|c| c.provider.as_ref()),
+                        original.channel_authorizations.get(&source.id),
+                    ) {
+                        let raw = super::provider_auth::source_row(
+                            &home,
+                            &target.connection.provider_id,
+                        )?;
+                        let local_public = super::provider_fields::public_from_raw(&raw)?;
+                        let local = super::provider_auth::export_portable_scoped(
+                            &home,
+                            &target.connection.provider_id,
+                            public,
+                            &local_public,
+                        )?;
+                        let a = Zeroizing::new(serde_json::to_vec(auth)?);
+                        let b = Zeroizing::new(serde_json::to_vec(&local)?);
+                        a.as_slice() != b.as_slice()
+                    } else {
+                        true
+                    };
+                    if changed {
+                        secrets.push(super::sync_state::Change {
+                            kind: "channels".into(),
+                            id: source.id.clone(),
+                            label: source.label.clone(),
+                            mark: "update".into(),
+                            fields: vec!["credentials".into()],
+                            ..Default::default()
+                        })
+                    }
+                }
+                for mcp in &original.assets.mcps {
+                    if !plan
+                        .available_extension_ids
+                        .contains(&format!("mcp:{}", mcp.name))
+                        || !plan
+                            .assets
+                            .as_ref()
+                            .is_some_and(|a| a.mcps.iter().any(|m| m.name == mcp.name))
+                    {
+                        continue;
+                    }
+                    let target_name = plan
+                        .asset_mappings
+                        .mcps
+                        .get(&mcp.name)
+                        .map(String::as_str)
+                        .unwrap_or(&mcp.name);
+                    let local_home = local_home
+                        .as_deref()
+                        .ok_or_else(|| invalid("asset_home", "MCP凭据比较未绑定本机主目录"))?;
+                    let targets = crate::modules::extensions::CLIENT_IDS.map(|id| {
+                        crate::modules::extensions::ClientTarget::user_target(
+                            id, local_home, true, true,
+                        )
+                    });
+                    let changed = match portable_assets::resolve_mcp(root, target_name, &targets)? {
+                        Some(raw) => {
+                            portable_assets::split_mcp(raw, true, false)?.secrets.0 != mcp.secrets.0
+                        }
+                        None => true,
+                    };
+                    if changed {
+                        secrets.push(super::sync_state::Change {
+                            kind: "mcp".into(),
+                            id: mcp.name.clone(),
+                            label: mcp.name.clone(),
+                            mark: "update".into(),
+                            fields: vec!["credentials".into()],
+                            ..Default::default()
+                        })
+                    }
+                }
+                if let Some(changes) = &mut preview.changes {
+                    super::sync_state::include_credential_changes(
+                        changes,
+                        &mut preview.unchanged,
+                        secrets,
+                    )
+                }
+            }
+            Ok(preview)
+        });
+    plan.comparison = Some(match result {
+        Ok(p) => p,
+        Err(e) => {
+            plan.notices
+                .push(format!("无法比较当前内容（{}），请重新读取后确认", e.code));
+            super::sync_state::SyncPreview {
+                source: "file".into(),
+                changes: None,
+                unchanged: 0,
+                created_at: plan.package.created_at.clone(),
+            }
+        }
+    });
+    Ok(())
 }
 pub(super) fn remember_incoming(root: &Path, id: &str) -> ModelResult<()> {
     let index = root.join("manager-state/portable-latest-incoming.json");
@@ -1074,6 +1613,83 @@ pub(super) fn select_asset_subset(
         selected.notices.push("扩展目标名称已映射；资源正文、脚本和命令参数保持原内容。内部写死的名称或路径需在使用前检查。".into());
     }
     selected.available_extension_credentials = portable_assets::secret_count(&assets) > 0;
+    selected.available_extension_ids = original
+        .available_extension_ids
+        .iter()
+        .filter(|id| {
+            id.strip_prefix("skill:")
+                .is_some_and(|n| skills.iter().any(|s| s == n))
+                || id
+                    .strip_prefix("mcp:")
+                    .is_some_and(|n| mcps.iter().any(|m| m == n))
+        })
+        .cloned()
+        .collect();
+    Ok(())
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CredentialChoice {
+    digest: String,
+    ids: Option<Vec<String>>,
+}
+fn credential_choice(root: &Path, id: &str) -> ModelResult<Option<Vec<String>>> {
+    let path = cache_path(root, id, "credential-choice.json")?;
+    if !path.exists() {
+        return Ok(None);
+    }
+    let choice: CredentialChoice = serde_json::from_slice(&safety::read_file(&path, 1024 * 1024)?)?;
+    if choice.digest != transfer::read_incoming(root, id)?.package.digest {
+        return Err(invalid("credential_scope", "凭据范围不属于原接收操作"));
+    }
+    Ok(choice.ids)
+}
+pub fn freeze_credential_choice(
+    root: &Path,
+    id: &str,
+    mut ids: Option<Vec<String>>,
+) -> ModelResult<()> {
+    if let Some(ids) = &mut ids {
+        ids.sort();
+        ids.dedup();
+    }
+    let plan = transfer::read_incoming(root, id)?;
+    if let Some(ids) = &ids {
+        if ids.len() > 30000
+            || ids.iter().any(|v| {
+                !plan.available_extension_ids.contains(v)
+                    && !v
+                        .strip_prefix("channel:")
+                        .is_some_and(|c| plan.available_keys.iter().any(|id| id == c))
+            })
+        {
+            return Err(invalid(
+                "credential_scope",
+                "所选凭据不在当前包内的已选对象中",
+            ));
+        }
+    }
+    let path = cache_path(root, id, "credential-choice.json")?;
+    let _guard = crate::infrastructure::locking::TargetFileLock::lock(&path)?;
+    if path.exists() {
+        let old: CredentialChoice =
+            serde_json::from_slice(&safety::read_file(&path, 1024 * 1024)?)?;
+        if old.digest != plan.package.digest || old.ids != ids {
+            return Err(invalid(
+                "credential_scope",
+                "原操作凭据子项已冻结，请沿原操作重试",
+            ));
+        }
+        return Ok(());
+    }
+    atomic_write(
+        &path,
+        &serde_json::to_vec(&CredentialChoice {
+            digest: plan.package.digest,
+            ids,
+        })?,
+        0o600,
+    )?;
     Ok(())
 }
 pub fn latest(root: &Path) -> ModelResult<Option<IncomingPlan>> {
@@ -1090,7 +1706,19 @@ pub fn latest(root: &Path) -> ModelResult<Option<IncomingPlan>> {
 pub(super) fn has_adoption(root: &Path, id: &str) -> ModelResult<bool> {
     Ok(cache_path(root, id, "adoption.json")?.exists())
 }
+pub fn completed(root: &Path, id: &str) -> ModelResult<bool> {
+    let p = cache_path(root, id, "adoption.json")?;
+    if !p.exists() {
+        return Ok(false);
+    }
+    let r: Adoption = serde_json::from_slice(&safety::read_file(&p, 4096)?)?;
+    if r.id != id {
+        return Err(invalid("incoming_identity", "采用记录身份不同"));
+    }
+    Ok(r.completed)
+}
 fn attach_adoption(root: &Path, plan: &mut IncomingPlan) -> ModelResult<()> {
+    plan.models_accepted = transfer::accepted(root, plan)?;
     let path = cache_path(root, &plan.id, "adoption.json")?;
     if path.exists() {
         let value: Adoption = serde_json::from_slice(&safety::read_file(&path, 4096)?)?;
@@ -1292,16 +1920,22 @@ fn open_source(root: &Path, plan: &IncomingPlan, passphrase: Option<&str>) -> Mo
     let value: Value = serde_json::from_slice(&bytes)?;
     if value["format"] == "OCXDCONF" {
         let opened = portable_file::open(&bytes, passphrase)?;
-        let objects = decode(&opened.document)?;
+        let mut objects = decode(&opened.document)?;
         if opened.manifest.secret_objects != secret_objects(&objects)
             || opened.manifest.sections != sections(&objects)
         {
             return Err(invalid("portable_manifest", "源文件清单与对象不同"));
         }
+        if plan.file_home.is_some() {
+            objects.models = snapshot_package(&objects.models, false)?;
+        }
         Ok(objects)
     } else {
         // 明文携带扩展凭据同样允许；风险提示在确认页。
-        let objects = decode(&bytes)?;
+        let mut objects = decode(&bytes)?;
+        if plan.file_home.is_some() {
+            objects.models = snapshot_package(&objects.models, false)?;
+        }
         Ok(objects)
     }
 }
@@ -1344,6 +1978,7 @@ fn stage_provider_materials(
     adopt_keys: bool,
     passphrase: Option<&str>,
 ) -> ModelResult<()> {
+    let selected = credential_choice(root, &plan.id)?;
     let local = transfer::local_for_plan(root, plan)?;
     let channels = plan
         .package
@@ -1367,6 +2002,10 @@ fn stage_provider_materials(
     };
     let mut changed = false;
     for source in channels {
+        let adopt_keys = adopt_keys
+            && selected
+                .as_ref()
+                .is_none_or(|ids| ids.contains(&format!("channel:{}", source.id)));
         let Some(public) = source.connection.as_ref().and_then(|c| c.provider.as_ref()) else {
             continue;
         };
@@ -1419,7 +2058,13 @@ fn stage_provider_materials(
         };
         channel.connection.imported_config = Some(reference);
         channel.connection.auth_mode = public["authMode"].as_str().map(str::to_owned);
-        channel.connection.enabled = false;
+        channel.connection.enabled = !plan
+            .channel_bindings
+            .values()
+            .any(|b| b.target_id == channel.id && !b.keep_local_connection)
+            && plan.file_home.is_some()
+            && plan.package.payload.candidate.is_none()
+            && !public["disabled"].as_bool().unwrap_or(false);
         changed = true;
     }
     if changed {
@@ -1438,6 +2083,16 @@ fn accept_domains(
     credentials: &impl Credentials,
 ) -> ModelResult<Snapshot> {
     let mut plan = transfer::read_incoming(root, id)?;
+    if plan
+        .comparison
+        .as_ref()
+        .is_some_and(|p| p.changes.is_none())
+    {
+        return Err(invalid(
+            "sync_compare",
+            "无法比较当前内容，未开始更新，请重新读取",
+        ));
+    }
     if let Some(error) = &plan.preview_error {
         return Err(invalid(error, "所选配置或资源仍有冲突，请比较后再采用"));
     }
@@ -1484,7 +2139,8 @@ fn accept_domains(
             plan.expected_library.clone(),
             plan.expected_policy.clone(),
             plan.expected_workspace.clone(),
-        ) {
+        ) || !transfer::file_layout_matches(root, &plan)?
+        {
             let bindings_path = cache_path(root, id, "bindings.json")?;
             let bindings: BTreeMap<String, String> = if adopt_keys && bindings_path.exists() {
                 serde_json::from_slice(&safety::read_file(&bindings_path, 1024 * 1024)?)?
@@ -1588,30 +2244,195 @@ fn accept_domains(
     }
     atomic_write(&record_path, &serde_json::to_vec(&record)?, 0o600)?;
     stage_provider_materials(root, &mut plan, adopt_keys, passphrase)?;
-    let result = accept_with(root, id, adopt_keys, passphrase, credentials)?;
+    let model_result = accept_with(root, id, adopt_keys, passphrase, credentials);
+    let mut domain_error = model_result.as_ref().err().map(|e|invalid(&e.code,&e.message));
     if let Some(assets) = &assets {
-        portable_assets::apply(root, id, assets, adopt_extensions).map_err(|error| {
-            invalid(
-                "portable_partial",
-                format!(
-                    "模型对象已接收，扩展资源尚未全部完成：{}。请沿原操作核对",
-                    error.message
-                ),
-            )
-        })?;
+        let ids = credential_choice(root, id)?.map(|ids| {
+            ids.into_iter()
+                .map(|id| {
+                    if let Some(n) = id.strip_prefix("skill:") {
+                        format!(
+                            "skill:{}",
+                            plan.asset_mappings
+                                .skills
+                                .get(n)
+                                .map(String::as_str)
+                                .unwrap_or(n)
+                        )
+                    } else if let Some(n) = id.strip_prefix("mcp:") {
+                        format!(
+                            "mcp:{}",
+                            plan.asset_mappings
+                                .mcps
+                                .get(n)
+                                .map(String::as_str)
+                                .unwrap_or(n)
+                        )
+                    } else {
+                        id
+                    }
+                })
+                .collect::<Vec<_>>()
+        });
+        if let Err(error) =
+            portable_assets::apply_selected(root, id, assets, adopt_extensions, ids.as_deref())
+        {
+            domain_error = Some(error);
+        }
     }
-    portable_manager::apply(root, id).map_err(|error| {
-        invalid(
+    if let Err(error) = portable_manager::apply(root, id) {
+        if domain_error.is_none() {
+            domain_error = Some(error)
+        }
+    }
+    if let Some(error) = domain_error {
+        return Err(invalid(
             "portable_partial",
             format!(
-                "模型对象已接收，管理器配置未全部完成：{}。请核对原导入，不要新建重复操作",
-                error.message
+                "部分资源未完成（{}），已完成项保留。请沿原操作重试未完成项。",
+                error.code
             ),
-        )
-    })?;
+        ));
+    }
+    let result=model_result?;
+    if plan.file_home.is_some() && plan.package.payload.candidate.is_none() {
+        inherit_received_version(root, &plan, adopt_keys, adopt_extensions)?;
+    }
     record.completed = true;
     atomic_write(&record_path, &serde_json::to_vec(&record)?, 0o600)?;
     Ok(result)
+}
+fn inherit_received_version(
+    root: &Path,
+    plan: &IncomingPlan,
+    keys: bool,
+    extensions: bool,
+) -> ModelResult<()> {
+    let current = transfer::local_for_plan(root, plan)?;
+    let channel_ids = plan
+        .package
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+        .map(|c| {
+            plan.channel_bindings
+                .get(&c.id)
+                .map(|b| b.target_id.clone())
+                .unwrap_or_else(|| c.id.clone())
+        })
+        .filter(|id| current.policy.channels.iter().any(|c| &c.id == id))
+        .collect::<Vec<_>>();
+    let manager = plan.manager.clone().unwrap_or_default();
+    let assets = plan.assets.clone().unwrap_or_default();
+    let selected = credential_choice(root, &plan.id)?;
+    let credential_ids = selected.map(|ids| {
+        ids.into_iter()
+            .map(|id| {
+                if let Some(c) = id.strip_prefix("channel:") {
+                    format!(
+                        "channel:{}",
+                        plan.channel_bindings
+                            .get(c)
+                            .map(|b| b.target_id.as_str())
+                            .unwrap_or(c)
+                    )
+                } else if let Some(s) = id.strip_prefix("skill:") {
+                    format!(
+                        "skill:{}",
+                        plan.asset_mappings
+                            .skills
+                            .get(s)
+                            .map(String::as_str)
+                            .unwrap_or(s)
+                    )
+                } else if let Some(m) = id.strip_prefix("mcp:") {
+                    format!(
+                        "mcp:{}",
+                        plan.asset_mappings
+                            .mcps
+                            .get(m)
+                            .map(String::as_str)
+                            .unwrap_or(m)
+                    )
+                } else {
+                    id
+                }
+            })
+            .collect::<Vec<_>>()
+    });
+    let home_path = cache_path(root, &plan.id, "asset-home.json")?;
+    let local_home = if home_path.exists() {
+        Some(serde_json::from_slice::<PathBuf>(&safety::read_file(
+            &home_path, 32768,
+        )?)?)
+    } else {
+        None
+    };
+    let catalog =
+        crate::modules::sync::portable_accounts::catalog(root, plan.file_home.as_deref().unwrap())?;
+    let account_ids = catalog
+        .iter()
+        .filter(|local| {
+            manager.accounts.iter().any(|source| {
+                crate::modules::sync::portable_accounts::same_identity(&local.account, source)
+            })
+        })
+        .map(|a| a.account.id.clone())
+        .collect::<Vec<_>>();
+    let mut scope = super::config_remote::Scope {
+        channel_ids,
+        template_ids: plan
+            .package
+            .payload
+            .templates
+            .iter()
+            .map(|t| t.id.clone())
+            .collect(),
+        preferences: manager.preferences.is_some(),
+        extensions: manager.extensions.is_some(),
+        include_keys: keys,
+        extension_credentials: extensions,
+        credential_ids,
+        account_ids,
+        upstream_root: plan.file_home.clone(),
+        local_home,
+        skill_names: assets
+            .skills
+            .iter()
+            .map(|s| {
+                plan.asset_mappings
+                    .skills
+                    .get(&s.name)
+                    .cloned()
+                    .unwrap_or_else(|| s.name.clone())
+            })
+            .collect(),
+        mcp_names: assets
+            .mcps
+            .iter()
+            .map(|m| {
+                plan.asset_mappings
+                    .mcps
+                    .get(&m.name)
+                    .cloned()
+                    .unwrap_or_else(|| m.name.clone())
+            })
+            .collect(),
+        ..Default::default()
+    };
+    scope.include_keys &= !scope.channel_ids.is_empty();
+    if !scope.channel_ids.is_empty()
+        || !scope.template_ids.is_empty()
+        || scope.preferences
+        || scope.extensions
+        || !scope.account_ids.is_empty()
+        || !scope.skill_names.is_empty()
+        || !scope.mcp_names.is_empty()
+    {
+        super::config_remote::source_state_with_time(root, &scope, Some(&plan.package.created_at))?;
+    }
+    Ok(())
 }
 fn accept_with(
     root: &Path,
@@ -1627,6 +2448,12 @@ fn accept_with(
     if plan.available_keys.is_empty() {
         return Err(invalid("credential_scope", "已选接收范围中没有渠道Key"));
     }
+    let chosen = credential_choice(root, id)?;
+    let selected = |id: &str| {
+        chosen
+            .as_ref()
+            .is_none_or(|ids| ids.contains(&format!("channel:{id}")))
+    };
     if let Some(error) = &plan.preview_error {
         return Err(invalid(error, "所选接收配置仍有冲突，未写入凭据"));
     }
@@ -1666,7 +2493,7 @@ fn accept_with(
         .into_iter()
         .flat_map(|p| p.channels.iter())
     {
-        if !plan.available_keys.contains(&channel.id) {
+        if !plan.available_keys.contains(&channel.id) || !selected(&channel.id) {
             continue;
         }
         let Some(target) = transfer::key_target(&plan, &channel.id) else {
@@ -1693,6 +2520,7 @@ fn accept_with(
             .flat_map(|p| &p.channels)
             .any(|c| {
                 plan.available_keys.contains(&c.id)
+                    && selected(&c.id)
                     && transfer::key_target(&plan, &c.id).is_some()
                     && objects.channel_authorizations.contains_key(&c.id)
             })
@@ -1742,11 +2570,23 @@ fn accept_with(
         return transfer::accept_with_credentials(root, id, &bindings);
     }
     atomic_write(&bindings_path, &serde_json::to_vec(&bindings)?, 0o600)?;
+    let file_keys = if plan.file_home.is_some() && plan.package.payload.candidate.is_none() {
+        wanted
+            .iter()
+            .map(|(id, value)| super::config_file::CredentialEdit {
+                channel_id: id.clone(),
+                action: "replace".into(),
+                value: Some(value.to_string()),
+            })
+            .collect()
+    } else {
+        vec![]
+    };
     let result = (|| {
         for (channel, value) in wanted {
             credentials.install(&bindings[&channel], value)?;
         }
-        transfer::accept_with_credentials(root, id, &bindings)
+        transfer::accept_with_file_keys(root, id, &bindings, file_keys)
     })();
     if result.is_err() {
         if let Ok(current) = transfer::local_for_plan(root, &plan) {
@@ -2976,6 +3816,122 @@ mod tests {
     struct Memory {
         values: Mutex<BTreeMap<String, String>>,
         writes: Mutex<usize>,
+    }
+    #[test]
+    fn credential_object_counts_match_capabilities_without_changing_legacy_manifest_counts() {
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(home.path().join(".codex")).unwrap();
+        std::fs::create_dir_all(home.path().join(".agents/skills/plain")).unwrap();
+        std::fs::write(
+            home.path().join(".agents/skills/plain/SKILL.md"),
+            "# Plain Skill\nNo authentication material.\n",
+        )
+        .unwrap();
+        std::fs::write(home.path().join(".codex/config.toml"),"[mcp_servers.fixture]\ncommand='/usr/bin/false'\n[mcp_servers.fixture.env]\nTOKEN='fixture-token-value'\nAPI_KEY='fixture-api-key-value'\n").unwrap();
+        let catalog = portable_assets::catalog(root.path(), home.path()).unwrap();
+        assert!(catalog.credential_skills.is_empty());
+        assert_eq!(catalog.credential_mcps, vec!["fixture"]);
+        let scope = ManagerScope {
+            mcp_names: vec!["fixture".into()],
+            extension_credentials: true,
+            local_home: Some(home.path().into()),
+            ..Default::default()
+        };
+        let plan = transfer::prepare_file_scope(
+            root.path(),
+            transfer::ExportScope {
+                include_policy: false,
+                channel_ids: vec![],
+                template_refs: vec![],
+                include_global: false,
+                channel_models: Default::default(),
+                channel_families: Default::default(),
+            },
+            None,
+            false,
+            &scope,
+        )
+        .unwrap();
+        assert_eq!(plan.credential_counts.unwrap().extensions, 1);
+        let bytes = transfer::file_bytes(root.path(), &plan.id).unwrap();
+        let legacy = portable_file::open(&bytes, None).unwrap();
+        assert_eq!(
+            legacy.manifest.secret_objects, 2,
+            "existing container integrity counts retain their original field units"
+        );
+        assert_eq!(
+            remote_summary(&bytes, None)
+                .unwrap()
+                .credential_counts
+                .extensions,
+            1
+        );
+    }
+    #[test]
+    fn key_only_changes_are_named_without_secret_values_and_count_as_one_changed_object() {
+        let root = tempfile::tempdir().unwrap();
+        let id = uuid::Uuid::new_v4().to_string();
+        let reference = uuid::Uuid::new_v4().to_string();
+        fixture(root.path(), &id, &reference);
+        let keys = Memory::default();
+        keys.values
+            .lock()
+            .unwrap()
+            .insert(reference.clone(), "fixture-old-key".into());
+        let package = transfer::export(
+            root.path(),
+            transfer::ExportScope {
+                include_policy: true,
+                channel_ids: vec![id.clone()],
+                include_global: false,
+                template_refs: vec![],
+                channel_models: Default::default(),
+                channel_families: Default::default(),
+            },
+        )
+        .unwrap();
+        let (old, _) = seal_with(
+            root.path(),
+            &uuid::Uuid::new_v4().to_string(),
+            &package,
+            true,
+            None,
+            &keys,
+        )
+        .unwrap();
+        keys.values
+            .lock()
+            .unwrap()
+            .insert(reference, "fixture-new-key".into());
+        let (new, _) = seal_with(
+            root.path(),
+            &uuid::Uuid::new_v4().to_string(),
+            &package,
+            true,
+            None,
+            &keys,
+        )
+        .unwrap();
+        let secrets = credential_changes(&new, Some(&old), None, None).unwrap();
+        assert_eq!(secrets.len(), 1);
+        assert_eq!(secrets[0].kind, "channels");
+        assert_eq!(secrets[0].id, id);
+        assert_eq!(secrets[0].fields, vec!["credentials"]);
+        let serialized = serde_json::to_string(&secrets).unwrap();
+        assert!(!serialized.contains("fixture-old-key"));
+        assert!(!serialized.contains("fixture-new-key"));
+        assert!(!serialized.contains("sha256:"));
+        let mut changes = vec![];
+        let mut same = 1;
+        super::super::sync_state::include_credential_changes(
+            &mut changes,
+            &mut same,
+            secrets.clone(),
+        );
+        assert_eq!((changes.len(), same), (1, 0));
+        super::super::sync_state::include_credential_changes(&mut changes, &mut same, secrets);
+        assert_eq!((changes.len(), same), (1, 0));
     }
     impl Credentials for Memory {
         fn read(&self, reference: &str) -> ModelResult<Zeroizing<String>> {

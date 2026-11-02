@@ -32,6 +32,7 @@ export const useFeedbackStore = defineStore("feedback", {
   state: () => ({
     toast: "",
     toastRevision: 0,
+    toastResultId:null as string|null,
     toastKind: "success" as ToastKind,
     // 运行期异常兜底（IMP-04 §14.3）：非空时界面顶部显示故障条，提供恢复动作。
     uiFault: "",
@@ -44,10 +45,11 @@ export const useFeedbackStore = defineStore("feedback", {
      * 这一层不持久、不进列表；要留痕的内容必须另写通知实体。
      * 倒计时在悬停、焦点停留或窗口隐藏时暂停；到点后收起到铃铛（S18-09）。
      */
-    showToast(message: string, options?: { kind?: 'info' | 'error'; durationMs?: number }) {
+    showToast(message: string, options?: { kind?: 'info' | 'error'; durationMs?: number;resultId?:string }) {
       if (!allowsFeedbackSignal("ui-toast")) return
       this.cancelToastCountdown()
       this.toast = message
+      this.toastResultId=options?.resultId??null
       this.toastKind = options?.kind ?? "success"
       const revision = ++this.toastRevision
       const duration = options?.durationMs ?? (options?.kind === 'error' ? TOAST_ERROR_MS : TOAST_INFO_MS)
@@ -64,6 +66,7 @@ export const useFeedbackStore = defineStore("feedback", {
       this.cancelToastCountdown()
       this.toastRevision += 1
       this.toast = ""
+      this.toastResultId=null
     },
     /** 手动收起：先停倒计时，再走同一套收起到铃铛动效。 */
     collapseToast() {

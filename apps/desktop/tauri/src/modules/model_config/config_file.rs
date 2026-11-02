@@ -21,6 +21,21 @@ use zeroize::{Zeroize, Zeroizing};
 
 const MAX_CONFIG: u64 = 16 * 1024 * 1024;
 const METADATA: &str = "manager-state/model-channel-layout.json";
+pub(super) fn metadata_digest(root: &Path) -> ModelResult<String> {
+    let path = root.join(METADATA);
+    safety::check_path(root, &path, true)?;
+    Ok(sha256(&if path.exists() {
+        safety::read_file(&path, 16 * 1024 * 1024)?
+    } else {
+        vec![]
+    }))
+}
+pub(super) fn intended_metadata_digest(policy: &Policy) -> ModelResult<String> {
+    Ok(sha256(&serde_json::to_vec(&layout_policy(policy))?))
+}
+pub(super) fn intended_metadata_bytes(policy: &Policy) -> ModelResult<Vec<u8>> {
+    Ok(serde_json::to_vec(&layout_policy(policy))?)
+}
 
 fn config_path(home: &Path) -> ModelResult<PathBuf> {
     if !home.is_absolute() {
@@ -597,6 +612,23 @@ fn scope_picker(
     }
 }
 pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveResult> {
+    save_observed(root, home, request, |_, _| Ok(()))
+}
+pub(super) fn save_observed(
+    root: &Path,
+    home: &Path,
+    request: SaveRequest,
+    before_commit: impl FnOnce(&[u8], &Policy) -> ModelResult<()>,
+) -> ModelResult<SaveResult> {
+    save_observed_checked(root, home, request, None, before_commit)
+}
+pub(super) fn save_observed_checked(
+    root: &Path,
+    home: &Path,
+    request: SaveRequest,
+    expected_metadata: Option<&str>,
+    before_commit: impl FnOnce(&[u8], &Policy) -> ModelResult<()>,
+) -> ModelResult<SaveResult> {
     let path = config_path(home)?;
     let _lock = TargetFileLock::lock(&path)?;
     let before_existed = path.exists();
@@ -610,6 +642,13 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
         ));
     }
     let mut layout = LockedLayout::acquire(root)?;
+    let current_metadata = metadata_digest(root)?;
+    if expected_metadata.is_some_and(|expected| current_metadata != expected) {
+        return Err(invalid(
+            "layout_changed",
+            "预览后渠道布局或采用关系改变，未覆盖；请重新比较",
+        ));
+    }
     let meta = layout.policy()?;
     let before = current_policy(&config, &meta)?;
     let intended = if let Some(scope) = &request.scope {
@@ -681,6 +720,7 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
     } else {
         Zeroizing::new(before_bytes.to_vec())
     };
+    before_commit(&bytes, &intended)?;
     let mut raw_written = false;
     let committed = (|| {
         // Check even a metadata-only save: a non-cooperating external writer
@@ -734,6 +774,36 @@ pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveR
             Err(error)
         }
     }
+}
+/// Complete only this operation's layout after a crash between the file and
+/// metadata commit. The raw file must still match its recorded final digest.
+pub(super) fn finish_recorded(
+    root: &Path,
+    home: &Path,
+    expected: &str,
+    policy: &Policy,
+    before_metadata: Option<&str>,
+) -> ModelResult<Snapshot> {
+    let path = config_path(home)?;
+    let _lock = TargetFileLock::lock(&path)?;
+    let (value, bytes) = read(home)?;
+    if sha256(&bytes) != expected {
+        return Err(invalid("file_changed", "配置已在操作后改变，未恢复旧操作"));
+    }
+    let mut layout = LockedLayout::acquire(root)?;
+    let current = metadata_digest(root)?;
+    if current != intended_metadata_digest(policy)? && before_metadata != Some(current.as_str()) {
+        return Err(invalid(
+            "layout_changed",
+            "原操作后布局发生新的修改，未覆盖恢复",
+        ));
+    }
+    layout.write(&layout_policy(policy))?;
+    let result = snapshot_value(root, &value, &bytes, &layout.policy()?)?;
+    if read(home)?.1.as_slice() != bytes.as_slice() {
+        return Err(invalid("file_changed", "核对期间配置发生变化"));
+    }
+    Ok(result)
 }
 
 fn rollback_raw(

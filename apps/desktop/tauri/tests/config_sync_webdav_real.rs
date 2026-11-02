@@ -47,7 +47,7 @@ fn template(root: &std::path::Path, label: &str) -> String {
 }
 #[tokio::test]
 #[ignore = "requires the explicit owned HTTPS fixture; writes only temporary local configurations"]
-async fn current_file_channel_roundtrips_over_verified_https_before_explicit_file_save() {
+async fn current_file_channel_roundtrips_over_verified_https_and_commits_on_confirmation() {
     use opencodex_desktop_lib::modules::model_config::config_file;
     use serde_json::json;
     let mut config = endpoint();
@@ -130,21 +130,8 @@ async fn current_file_channel_roundtrips_over_verified_https_before_explicit_fil
     .unwrap();
     assert!(std::fs::read(target_home.join("config.json")).unwrap() == target_bytes);
     let adopted = file_objects::accept(target.path(), &incoming.id, false, None).unwrap();
-    let candidate = adopted.workspace.unwrap();
-    assert_eq!(candidate.base_policy, adopted.policy_digest);
-    assert!(std::fs::read(target_home.join("config.json")).unwrap() == target_bytes);
-    let saved = config_file::save(
-        target.path(),
-        &target_home,
-        config_file::SaveRequest {
-            scope: None,
-            expected_file: adopted.policy_digest,
-            policy: candidate.policy,
-            credentials: vec![],
-        },
-    )
-    .unwrap();
-    assert!(saved.changed);
+    assert!(adopted.workspace.is_none());
+    assert!(std::fs::read(target_home.join("config.json")).unwrap()!=target_bytes);
     let reopened = config_file::snapshot(target.path(), &target_home).unwrap();
     assert_eq!(reopened.policy.channels.len(), 1);
     assert_eq!(reopened.policy.channels[0].model_order, ["site/custom-id"]);
@@ -156,7 +143,7 @@ async fn current_file_channel_roundtrips_over_verified_https_before_explicit_fil
         "real TLS roundtrip"
     );
     assert!(std::fs::read(target.path().join(DRAFT_PATH)).unwrap() == b"broken legacy draft");
-    println!("HTTPS current-file transfer passed: actual reqwest TLS + conditional publication + download, damaged legacy copies ignored, adopt did not write config, explicit Save/reopen preserved exact model and unrelated data; no external service or user file");
+    println!("HTTPS current-file transfer passed: actual reqwest TLS + conditional publication + download, damaged legacy copies ignored, confirmation committed saved config, reopen preserved exact model and unrelated data; no external service or user file");
 }
 #[tokio::test]
 #[ignore = "needs explicit owned TLS WebDAV fixture and OCXD_CONFIG_WEBDAV_CA for its local CA"]

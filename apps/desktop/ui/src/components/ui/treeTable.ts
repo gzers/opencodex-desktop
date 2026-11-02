@@ -2,6 +2,8 @@ export interface TreeTableNode {
   id: string
   label: string
   children?: readonly TreeTableNode[]
+  groupControls?:boolean
+  expandable?:boolean
   selectable?: boolean
   selected?: boolean | "mixed"
   disabled?: boolean

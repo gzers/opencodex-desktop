@@ -38,6 +38,8 @@ pub struct Scope {
     pub mcp_sources: BTreeMap<String, String>,
     #[serde(default)]
     pub extension_credentials: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub credential_ids: Option<Vec<String>>,
     #[serde(default)]
     pub assets_reviewed: bool,
     #[serde(default)]
@@ -61,11 +63,32 @@ pub struct Endpoint {
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Settings {
+    #[serde(serialize_with = "serialize_portable_preferences")]
     pub preferences: Option<Preferences>,
     pub extensions: Option<ExtensionConfig>,
     pub webdav: Vec<Endpoint>,
     #[serde(default)]
     pub accounts: Vec<AccountInfo>,
+}
+// Portable display preferences are an allowlist. Network/proxy, autostart,
+// update/backup policies, CLI and device operation choices belong to the target.
+const PORTABLE_PREFERENCES: [&str; 4] =
+    ["theme", "interface_scale", "visual_effects", "glow_render"];
+fn portable_preferences(value: &Preferences) -> serde_json::Value {
+    let mut flat = serde_json::to_value(value).unwrap();
+    flat.as_object_mut()
+        .unwrap()
+        .retain(|key, _| PORTABLE_PREFERENCES.contains(&key.as_str()));
+    flat
+}
+fn serialize_portable_preferences<S: serde::Serializer>(
+    value: &Option<Preferences>,
+    serializer: S,
+) -> Result<S::Ok, S::Error> {
+    value
+        .as_ref()
+        .map(portable_preferences)
+        .serialize(serializer)
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -88,6 +111,8 @@ struct Plan {
     id: String,
     files: Vec<File>,
     completed: bool,
+    #[serde(default)]
+    completed_paths: BTreeSet<String>,
 }
 fn state_path(root: &Path, id: &str) -> ModelResult<PathBuf> {
     require_uuid(id)?;
@@ -197,11 +222,11 @@ pub fn validate(settings: &Settings) -> ModelResult<()> {
 }
 pub fn export(root: &Path, scope: &Scope) -> ModelResult<Settings> {
     let prefs = if scope.preferences {
-        Some(
-            PreferencesStore::new(root)
+        Some(serde_json::from_value(portable_preferences(
+            &PreferencesStore::new(root)
                 .load()
                 .map_err(|_| invalid("portable_preferences", "本机偏好无法读取，未导出"))?,
-        )
+        ))?)
     } else {
         None
     };
@@ -217,6 +242,7 @@ pub fn export(root: &Path, scope: &Scope) -> ModelResult<Settings> {
             None => ExtensionConfig::default(),
         };
         config.source_store = None;
+        config.revision = 1;
         Some(config)
     } else {
         None
@@ -280,7 +306,16 @@ pub fn prepare(root: &Path, id: &str, settings: &Settings) -> ModelResult<()> {
         });
     }
     if let Some(prefs) = &settings.preferences {
-        let mut value = preferences::document_from_preferences(prefs);
+        let local = PreferencesStore::new(root)
+            .load()
+            .map_err(|_| invalid("portable_preferences", "本机偏好无法读取，未覆盖"))?;
+        let mut merged = serde_json::to_value(local)?;
+        merged
+            .as_object_mut()
+            .unwrap()
+            .extend(portable_preferences(prefs).as_object().unwrap().clone());
+        let merged: Preferences = serde_json::from_value(merged)?;
+        let mut value = preferences::document_from_preferences(&merged);
         preferences::preserve_model_agent(
             &root.join(preferences::PREFERENCES_RELATIVE_PATH),
             &mut value,
@@ -330,6 +365,7 @@ pub fn prepare(root: &Path, id: &str, settings: &Settings) -> ModelResult<()> {
             id: id.into(),
             files,
             completed: false,
+            completed_paths: BTreeSet::new(),
         })?,
         0o600,
     )?;
@@ -476,6 +512,7 @@ pub fn select(
             id: new_id.into(),
             files,
             completed: false,
+            completed_paths: BTreeSet::new(),
         })?,
         0o600,
     )?;
@@ -542,12 +579,43 @@ fn load(root: &Path, id: &str) -> ModelResult<Plan> {
 pub fn exists(root: &Path, id: &str) -> ModelResult<bool> {
     Ok(state_path(root, id)?.exists())
 }
+pub fn applied_paths(root: &Path, id: &str) -> ModelResult<BTreeSet<String>> {
+    if !exists(root, id)? {
+        return Ok(BTreeSet::new());
+    }
+    let plan = load(root, id)?;
+    let mut out = BTreeSet::new();
+    for f in &plan.files {
+        if plan.completed
+            || plan.completed_paths.contains(&f.path)
+            || bytes(root, &f.path)?.as_deref() == Some(f.after.as_slice())
+        {
+            out.insert(f.path.clone());
+        }
+    }
+    Ok(out)
+}
+pub fn applied_files(root: &Path, id: &str) -> ModelResult<BTreeMap<String, Vec<u8>>> {
+    if !exists(root, id)? {
+        return Ok(BTreeMap::new());
+    }
+    let p = load(root, id)?;
+    let applied = applied_paths(root, id)?;
+    Ok(p.files
+        .into_iter()
+        .filter(|f| applied.contains(&f.path))
+        .map(|f| (f.path, f.after))
+        .collect())
+}
 pub fn verify(root: &Path, id: &str) -> ModelResult<()> {
     let plan = load(root, id)?;
     if plan.completed {
         return Ok(());
     }
     for file in &plan.files {
+        if plan.completed_paths.contains(&file.path) {
+            continue;
+        }
         let current = bytes(root, &file.path)?;
         if current != file.before && current.as_deref() != Some(file.after.as_slice()) {
             return Err(invalid(
@@ -591,32 +659,56 @@ pub fn apply(root: &Path, id: &str) -> ModelResult<()> {
         guards.push(TargetFileLock::lock(&target)?);
     }
     verify(root, id)?;
-    for file in &plan.files {
-        if bytes(root, &file.path)?.as_deref() == Some(file.after.as_slice()) {
+    let mut first_error = None;
+    for file in plan.files.clone() {
+        if plan.completed_paths.contains(&file.path) {
             continue;
         }
-        if let Some(before) = &file.before {
-            backup::backup_file(
-                root,
-                BackupAction::Import,
-                &root.join(&file.path),
-                before,
-                chrono::Utc::now(),
-                Some("统一配置文件采用前保护".into()),
-            )?;
+        let applied = (|| {
+            let current = bytes(root, &file.path)?;
+            if current.as_deref() != Some(file.after.as_slice()) {
+                if current != file.before {
+                    return Err(invalid(
+                        "portable_manager_drift",
+                        "接收后所选配置发生修改，未覆盖",
+                    ));
+                }
+                if let Some(before) = &file.before {
+                    backup::backup_file(
+                        root,
+                        BackupAction::Import,
+                        &root.join(&file.path),
+                        before,
+                        chrono::Utc::now(),
+                        Some("统一配置采用前保护".into()),
+                    )?;
+                }
+                if bytes(root, &file.path)? != file.before {
+                    return Err(invalid(
+                        "portable_manager_drift",
+                        "保护备份期间配置发生修改，未覆盖",
+                    ));
+                }
+                atomic_write(&root.join(&file.path), &file.after, 0o600)?;
+            }
+            if bytes(root, &file.path)?.as_deref() != Some(file.after.as_slice()) {
+                return Err(invalid(
+                    "portable_manager_readback",
+                    "配置未通过写后读回，原操作保留",
+                ));
+            }
+            plan.completed_paths.insert(file.path);
+            atomic_write(&path, &serde_json::to_vec(&plan)?, 0o600)?;
+            ModelResult::Ok(())
+        })();
+        if let Err(error) = applied {
+            if first_error.is_none() {
+                first_error = Some(error)
+            }
         }
     }
-    verify(root, id)?;
-    for file in &plan.files {
-        if bytes(root, &file.path)?.as_deref() != Some(file.after.as_slice()) {
-            atomic_write(&root.join(&file.path), &file.after, 0o600)?;
-        }
-        if bytes(root, &file.path)?.as_deref() != Some(file.after.as_slice()) {
-            return Err(invalid(
-                "portable_manager_readback",
-                "配置文件写后未通过读回；请核对原导入",
-            ));
-        }
+    if let Some(error) = first_error {
+        return Err(error);
     }
     plan.completed = true;
     atomic_write(&path, &serde_json::to_vec(&plan)?, 0o600)?;

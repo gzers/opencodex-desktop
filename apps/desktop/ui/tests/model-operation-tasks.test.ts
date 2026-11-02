@@ -26,20 +26,16 @@ describe('registered model task observations', () => {
     for (const phase of ['running', 'failed', 'review', 'succeeded']) tasks.apply({id,kind:'policy_save',phase})
     expect(tasks.tasks).toHaveLength(0)
   })
-  it('rebinds receive to its durable receipt and adopts or retries the same transfer card',()=>{
+  it('keeps preview observations out of task history and reuses the confirmed operation ID for retry',()=>{
     const tasks=useOperationTasks(),pending=crypto.randomUUID(),receipt=crypto.randomUUID()
-    tasks.apply({id:pending,kind:'transfer',phase:'running'});tasks.apply({id:receipt,kind:'transfer',phase:'review',previousId:pending})
-    expect(tasks.tasks).toHaveLength(1);expect(tasks.tasks[0]).toMatchObject({id:receipt,phase:'review'})
-    tasks.apply({id:receipt,kind:'transfer',phase:'running'});tasks.apply({id:receipt,kind:'transfer',phase:'failed'});tasks.collapse(receipt)
-    tasks.apply({id:receipt,kind:'transfer',phase:'running'});tasks.apply({id:receipt,kind:'transfer',phase:'succeeded'})
-    expect(tasks.tasks).toHaveLength(1);expect(tasks.tasks[0]).toMatchObject({id:receipt,phase:'succeeded',collapsed:false})
+    tasks.apply({id:pending,kind:'transfer',phase:'running'});tasks.apply({id:receipt,kind:'transfer',phase:'review',previousId:pending});expect(tasks.tasks).toHaveLength(0)
+    tasks.apply({id:receipt,kind:'transfer',phase:'running'});expect(tasks.tasks[0]).toMatchObject({id:receipt,phase:'running'})
+    tasks.apply({id:receipt,kind:'transfer',phase:'failed'});expect(tasks.tasks).toHaveLength(0)
+    tasks.apply({id:receipt,kind:'transfer',phase:'running'});tasks.apply({id:receipt,kind:'transfer',phase:'succeeded'});expect(tasks.tasks).toHaveLength(0)
   })
-  it('does not let receipt rebind steal another operation or overwrite an existing terminal receipt',()=>{
-    const tasks=useOperationTasks(),pending=crypto.randomUUID(),receipt=crypto.randomUUID(),other=crypto.randomUUID()
-    tasks.apply({id:other,kind:'generation',phase:'running'});tasks.apply({id:receipt,kind:'transfer',phase:'review',previousId:other});expect(tasks.tasks).toHaveLength(1)
-    tasks.apply({id:receipt,kind:'transfer',phase:'running'});tasks.apply({id:receipt,kind:'transfer',phase:'succeeded'})
-    tasks.apply({id:pending,kind:'transfer',phase:'running'});tasks.apply({id:receipt,kind:'transfer',phase:'review',previousId:pending})
-    expect(tasks.tasks).toHaveLength(2);expect(tasks.tasks.find(t=>t.id===receipt)!.phase).toBe('succeeded');expect(tasks.tasks.find(t=>t.id===other)!.phase).toBe('running')
+  it('does not let transfer completion or preview cleanup remove another kind of operation',()=>{
+    const tasks=useOperationTasks(),other=crypto.randomUUID(),receipt=crypto.randomUUID()
+    tasks.apply({id:other,kind:'generation',phase:'running'});tasks.apply({id:receipt,kind:'transfer',phase:'review',previousId:other});tasks.apply({id:other,kind:'transfer',phase:'succeeded'});expect(tasks.tasks).toHaveLength(1);expect(tasks.tasks[0]).toMatchObject({id:other,kind:'generation',phase:'running'})
   })
   it('keeps concurrent tasks separate and collapse does not cancel or lose terminal facts', () => {
     const tasks=useOperationTasks();const a=crypto.randomUUID();const b=crypto.randomUUID()

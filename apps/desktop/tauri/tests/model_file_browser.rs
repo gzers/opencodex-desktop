@@ -109,22 +109,25 @@ async fn rpc(State(s): State<Arc<Fixture>>, Json(body): Json<Value>) -> (HeaderM
                 None,
             )?)
             .map_err(Into::into),
-            "accept" => serde_json::to_value(file_objects::accept_extended(
-                &s.root,
-                args["id"].as_str().unwrap(),
-                false,
-                false,
-                false,
-                None,
-            )?)
-            .map_err(Into::into),
+            "accept" => {
+                let id = args["id"].as_str().unwrap();
+                let backup = args["options"]["backupBeforeUpdate"]
+                    .as_bool()
+                    .unwrap_or(true);
+                opencodex_desktop_lib::modules::model_config::transfer_backup::prepare(
+                    &s.root, id, backup,
+                )?;
+                let result = file_objects::accept_extended(&s.root, id, false, false, false, None);
+                opencodex_desktop_lib::modules::model_config::transfer_backup::finish(&s.root, id)?;
+                serde_json::to_value(result?).map_err(Into::into)
+            }
             "catalog" => serde_json::to_value(portable_channels::catalog_file(&s.root, &s.home)?)
                 .map_err(Into::into),
             "disk" => {
                 let text = std::fs::read_to_string(s.home.join("config.json")).unwrap();
                 let raw: Value = serde_json::from_str(&text)?;
                 Ok(
-                    json!({"configText":text,"providers":raw["providers"],"key":raw["providers"]["demo"]["apiKey"],"url":raw["providers"]["demo"]["baseUrl"],"unknown":raw["providers"]["demo"]["unknown"],"models":raw["providers"]["demo"]["models"],"providerCount":raw["providers"].as_object().unwrap().len(),"imported":raw["providers"].as_object().unwrap().values().find(|r|r["note"]=="current-file-source"),"backups":std::fs::read_dir(s.root.join("backups/model-config")).map(|i|i.count()).unwrap_or(0)}),
+                    json!({"configText":text,"providers":raw["providers"],"key":raw["providers"]["demo"]["apiKey"],"url":raw["providers"]["demo"]["baseUrl"],"unknown":raw["providers"]["demo"]["unknown"],"models":raw["providers"]["demo"]["models"],"providerCount":raw["providers"].as_object().unwrap().len(),"imported":raw["providers"].as_object().unwrap().values().find(|r|r["note"]=="current-file-source"),"scopeBackups":std::fs::read_dir(s.root.join("backups/transfer-scope")).map(|i|i.filter_map(Result::ok).filter(|e|e.path().extension().and_then(|x|x.to_str())==Some("json")).count()).unwrap_or(0),"backups":std::fs::read_dir(s.root.join("backups/model-config")).map(|i|i.count()).unwrap_or(0)}),
                 )
             }
             "finish" => {

@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import {useSyncStore} from '@/features/sync/store'
 import FeedbackToast from '@/components/patterns/FeedbackToast.vue'
 import { currentToastCountdown, toastKey, useFeedbackStore } from '@/app/feedback/store'
 
 const feedback = useFeedbackStore()
+function viewResult(){const id=feedback.toastResultId;if(id){useSyncStore().openResult(id);feedback.collapseToast()}}
 
 // 收起只隐藏 Toast，不产生已读 / 已解决副作用；动效结束后由 motion 触发铃铛脉冲。
 function collapse() {
@@ -10,4 +12,4 @@ function collapse() {
 }
 </script>
 
-<template><div v-if="feedback.toast" class="notif-host" aria-live="polite"><FeedbackToast :key="feedback.toastRevision" :message="feedback.toast" :notification-key="toastKey(feedback.toastRevision)" :countdown="currentToastCountdown()" @collapse="collapse" /></div></template>
+<template><div v-if="feedback.toast" class="notif-host" aria-live="polite"><FeedbackToast :key="feedback.toastRevision" :message="feedback.toast" :notification-key="toastKey(feedback.toastRevision)" :countdown="currentToastCountdown()" :action-label="feedback.toastResultId?'查看结果':undefined" @action="viewResult" @collapse="collapse" /></div></template>

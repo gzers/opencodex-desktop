@@ -112,6 +112,42 @@ impl Device {
 }
 #[derive(Default)]
 struct Keys(RefCell<BTreeMap<String, String>>);
+#[test]
+fn selected_channels_carry_their_exact_global_dependencies_without_changing_unselected_channels() {
+    let source = Device::new("source");
+    let target = Device::new("local");
+    let source_ref = source.custom_template();
+    let local_ref = target.custom_template();
+    let mut source_layout = source.snapshot().policy;
+    source_layout.template_refs = vec![source_ref.clone()];
+    config_file::record_layout(&source.root, &source_layout);
+    let mut target_layout = target.snapshot().policy;
+    target_layout.template_refs = vec![local_ref.clone()];
+    config_file::record_layout(&target.root, &target_layout);
+    let original = target.raw()["providers"]["local"].clone();
+    let plan = source.export(source.scope(), false);
+    let portable = plan.package.payload.policy.as_ref().unwrap();
+    assert!(portable.template_refs.is_none());
+    assert!(portable.channels[0].template_refs.contains(&source_ref));
+    let bytes = transfer::file_bytes(&source.root, &plan.id).unwrap();
+    let incoming = receive_context_file(&target.root, &bytes, None, None, &target.home).unwrap();
+    let adopted = accept(&target.root, &incoming.id, false, None).unwrap();
+    assert_eq!(adopted.policy.template_refs, vec![local_ref]);
+    assert_eq!(target.raw()["providers"]["local"], original);
+    assert!(adopted
+        .policy
+        .channels
+        .iter()
+        .find(|c| c.label == "source")
+        .unwrap()
+        .template_refs
+        .contains(&source_ref));
+    assert!(adopted
+        .library
+        .templates
+        .iter()
+        .any(|t| t.id == source_ref.template_id));
+}
 impl Credentials for Keys {
     fn read(&self, reference: &str) -> ModelResult<Zeroizing<String>> {
         self.0
@@ -305,7 +341,7 @@ fn file_export_ignores_stale_policy_and_cli_and_carries_current_raw_authorizatio
 }
 
 #[test]
-fn file_compare_accept_and_replay_keep_saved_file_and_retired_draft_separate_from_candidate() {
+fn ordinary_file_accept_and_replay_commit_saved_config_and_preserve_retired_history() {
     let source = Device::new("source");
     let target = Device::new("local");
     let mut layout = source.snapshot().policy;
@@ -354,18 +390,16 @@ fn file_compare_accept_and_replay_keep_saved_file_and_retired_draft_separate_fro
     .unwrap();
     assert_eq!(selected.file_home, incoming.file_home);
     let adopted = accept(&target.root, &selected.id, false, None).unwrap();
-    assert_eq!(adopted.policy, before.policy);
-    assert_eq!(adopted.policy_digest, before.policy_digest);
-    let draft = adopted.workspace.as_ref().unwrap();
-    assert_eq!(draft.base_policy, before.policy_digest);
-    assert_eq!(draft.policy.channels.len(), 2);
-    let channel = draft
+    assert!(adopted.workspace.is_none());
+    assert_ne!(adopted.policy_digest, before.policy_digest);
+    assert_eq!(adopted.policy.channels.len(), 2);
+    let channel = adopted
         .policy
         .channels
         .iter()
         .find(|c| c.id == exported.package.payload.policy.as_ref().unwrap().channels[0].id)
         .unwrap();
-    assert!(!channel.connection.enabled);
+    assert!(channel.connection.enabled);
     assert_eq!(
         channel
             .connection
@@ -376,20 +410,20 @@ fn file_compare_accept_and_replay_keep_saved_file_and_retired_draft_separate_fro
             .url,
         "https://source.example.test/v1"
     );
-    let staged = super::super::provider_import::load(
-        &target.root,
-        channel,
-        channel.connection.imported_config.as_ref().unwrap(),
-    )
-    .unwrap();
-    assert_eq!(staged.public["note"], "saved file");
-    assert!(staged.authorization.is_none());
+    let actual = target.raw();
+    let provider = &actual["providers"][&channel.connection.provider_id];
+    assert_eq!(provider["note"], "saved file");
+    assert!(provider.get("apiKey").is_none());
+    assert_eq!(
+        actual["providers"]["local"]["apiKey"],
+        "fixture-current-file-SECRET"
+    );
     assert!(adopted
         .library
         .templates
         .iter()
         .any(|t| t.id == reference.template_id));
-    assert_eq!(
+    assert_ne!(
         std::fs::read(target.home.join("config.json")).unwrap(),
         original_bytes
     );
@@ -406,6 +440,40 @@ fn file_compare_accept_and_replay_keep_saved_file_and_retired_draft_separate_fro
     assert_eq!(replay.workspace, adopted.workspace);
     assert_eq!(target.snapshot(), current);
     target.history_unchanged();
+}
+#[test]
+fn a_layout_only_edit_after_preview_blocks_adoption_and_scope_backup_without_touching_the_file() {
+    let source = Device::new("source");
+    let target = Device::new("local");
+    let exported = source.export(source.scope(), false);
+    let bytes = transfer::file_bytes(&source.root, &exported.id).unwrap();
+    let incoming = receive_context_file(&target.root, &bytes, None, None, &target.home).unwrap();
+    let raw = std::fs::read(target.home.join("config.json")).unwrap();
+    let mut changed = target.snapshot().policy;
+    changed.channels[0].label = "later saved layout label".into();
+    config_file::record_layout(&target.root, &changed);
+    assert_eq!(
+        super::super::transfer_backup::prepare(&target.root, &incoming.id, true)
+            .unwrap_err()
+            .code,
+        "stale_baseline"
+    );
+    assert_eq!(
+        accept(&target.root, &incoming.id, false, None)
+            .unwrap_err()
+            .code,
+        "stale_baseline"
+    );
+    assert_eq!(std::fs::read(target.home.join("config.json")).unwrap(), raw);
+    assert_eq!(
+        target.snapshot().policy.channels[0].label,
+        "later saved layout label"
+    );
+    assert!(!target
+        .root
+        .join("backups/transfer-scope")
+        .join(format!("{}.json", incoming.id))
+        .exists());
 }
 
 #[test]
@@ -514,11 +582,9 @@ fn file_acceptance_checks_file_digest_before_installing_plain_keys_and_mapping_k
     .unwrap();
     assert!(mapped.available_keys.is_empty());
     let kept = accept_all(&target.root, &mapped.id, false, false, None, &receiver_keys).unwrap();
-    assert_eq!(
-        kept.workspace.unwrap().policy.channels[0].connection,
-        local.connection
-    );
+    assert_eq!(kept.policy.channels[0].connection, local.connection);
     assert!(receiver_keys.0.borrow().is_empty());
+    let compared = recompare_file(&target.root, &incoming.id, None, &target.home).unwrap();
     let separated = transfer::select_received(
         &target.root,
         &compared.id,
@@ -544,24 +610,19 @@ fn file_acceptance_checks_file_digest_before_installing_plain_keys_and_mapping_k
         &receiver_keys,
     )
     .unwrap();
-    assert_eq!(accepted.policy, saved.policy);
+    assert!(accepted.workspace.is_none());
+    assert_ne!(accepted.policy, saved.policy);
     let imported = accepted
-        .workspace
-        .as_ref()
-        .unwrap()
         .policy
         .channels
         .iter()
         .find(|c| c.label == "separate import")
         .unwrap();
     assert_eq!(
-        receiver_keys
-            .read(imported.connection.credential_ref.as_deref().unwrap())
-            .unwrap()
-            .as_str(),
+        target.raw()["providers"][&imported.connection.provider_id]["apiKey"],
         "fixture-legacy-SECRET"
     );
-    assert_eq!(target.snapshot(), saved);
+    assert_eq!(target.snapshot(), accepted);
     let replay = accept_all(
         &target.root,
         &separated.id,
@@ -623,7 +684,7 @@ fn memory_export_freezes_supplied_policy_without_an_ordinary_disk_draft() {
 }
 
 #[test]
-fn interrupted_file_library_commit_resumes_and_receipt_rejects_a_modified_candidate() {
+fn interrupted_saved_file_commit_resumes_and_rejects_a_modified_receipt() {
     let source = Device::new("source");
     let target = Device::new("local");
     target.retired_history();
@@ -652,8 +713,8 @@ fn interrupted_file_library_commit_resumes_and_receipt_rejects_a_modified_candid
     let first = transfer::accept(&target.root, &incoming.id).unwrap();
     assert_ne!(first.library_digest, before.library_digest);
     let directory = target.root.join("manager-state/model-config-incoming");
-    // Simulate interruption after the library readback and candidate write,
-    // before the final acceptance receipt reaches disk.
+    // The raw file and layout are committed, but the final receipt is lost.
+    // The pre-write digest intent must recover the same operation.
     std::fs::remove_file(directory.join(format!("{}.accepted.json", incoming.id))).unwrap();
     let resumed = accept_all(
         &target.root,
@@ -665,17 +726,17 @@ fn interrupted_file_library_commit_resumes_and_receipt_rejects_a_modified_candid
     )
     .unwrap();
     assert_eq!(resumed, first);
-    assert_eq!(target.snapshot().policy, before.policy);
+    assert_eq!(target.snapshot().policy, first.policy);
     target.history_unchanged();
-    let path = directory.join(format!("{}.candidate.json", incoming.id));
-    let mut candidate: Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
-    candidate["workspace"]["policy"]["channels"][0]["label"] = json!("changed after acceptance");
-    std::fs::write(path, serde_json::to_vec(&candidate).unwrap()).unwrap();
+    let path = directory.join(format!("{}.accepted.json", incoming.id));
+    let mut receipt: Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+    receipt["packageDigest"] = json!("changed-after-acceptance");
+    std::fs::write(path, serde_json::to_vec(&receipt).unwrap()).unwrap();
     assert_eq!(
         accept(&target.root, &incoming.id, false, None)
             .unwrap_err()
             .code,
-        "import_replay_conflict"
+        "incoming_identity"
     );
-    assert_eq!(target.snapshot().policy, before.policy);
+    assert_eq!(target.snapshot().policy, first.policy);
 }

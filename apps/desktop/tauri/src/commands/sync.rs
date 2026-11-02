@@ -194,6 +194,80 @@ pub async fn save_sync_endpoint(
     })
 }
 
+/// Test the unsaved form without installing credentials or changing endpoints.
+/// A blank password can reuse the stored secret only for the same server/user.
+#[tauri::command]
+pub async fn test_sync_candidate(
+    app: tauri::AppHandle,
+    request: SaveSyncEndpointRequest,
+    data_root: State<'_, SharedDataRoot>,
+) -> AppResult<SyncOperationResultDto> {
+    let root = data_root.inner().0.clone();
+    run_owned_sync("test unsaved sync connection", move || {
+        let input = SyncEndpointInput {
+            base_url: request.base_url,
+            remote_path: request.remote_path,
+            username: request.username,
+            password: request.password,
+            conflict_policy: request.conflict_policy,
+        };
+        crate::modules::sync::config::validate_input(&input)?;
+        let password = if input.password.is_empty() {
+            let config = SyncConfigStore::new(&root).load()?;
+            let endpoint = config
+                .active()
+                .filter(|e| {
+                    e.url.trim_end_matches('/') == input.base_url.trim().trim_end_matches('/')
+                        && e.username == input.username
+                })
+                .ok_or(AppError::NotConfigured)?;
+            webdav_config(endpoint)?.password
+        } else {
+            input.password
+        };
+        let candidate = WebDavConfig {
+            base_url: input.base_url.trim().trim_end_matches('/').into(),
+            remote_path: input.remote_path,
+            username: input.username,
+            password,
+        };
+        candidate.validate().map_err(|_| AppError::NotConfigured)?;
+        let client = WebDavClient::production();
+        let result = tauri::async_runtime::block_on(async {
+            tokio::time::timeout(client.total_timeout(), client.test_connection(&candidate))
+                .await
+                .unwrap_or(Err(WebDavError::Network))
+        });
+        let evidence = zeroize::Zeroizing::new(
+            serde_json::to_vec(&(
+                &candidate.base_url,
+                &candidate.remote_path,
+                &candidate.username,
+                &candidate.password,
+            ))
+            .map_err(|_| AppError::NotConfigured)?,
+        );
+        publish_endpoint_result(&app, &root, "sync-connection", &evidence, result.is_ok());
+        Ok(SyncOperationResultDto {
+            connection_state: if result.is_ok() { "synced" } else { "failed" }.into(),
+            operation_state: if result.is_ok() {
+                "succeeded"
+            } else {
+                "failed"
+            }
+            .into(),
+            message: match result {
+                Ok(()) => "WebDAV 连接成功，当前表单尚未保存。".into(),
+                Err(error) => error.user_message(WebDavOperation::Probe).into(),
+            },
+            snapshot_id: None,
+            backup_id: None,
+            etag: None,
+        })
+    })
+    .await
+}
+
 #[tauri::command]
 pub async fn delete_sync_endpoint(
     delete_credentials: bool,

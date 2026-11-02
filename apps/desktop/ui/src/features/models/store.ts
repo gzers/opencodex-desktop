@@ -389,14 +389,14 @@ export const useModelsStore = defineStore('model-config', () => {
       // Template-only adoption never promotes an unrelated disk workspace or
       // replaces the actual-file snapshot/baseline, including during recovery.
       snapshot.value={...snapshot.value!,library:saved.library,libraryDigest:saved.libraryDigest}
-      if (plan.mergedPolicy===null||!saved.workspace) return
-      if (saved.workspace.basePolicy!==saved.policyDigest) throw {message:'导入草稿与当前配置文件不符，请重新比较；当前输入已保留。'}
+      if (plan.mergedPolicy===null||plan.mergedPolicy===undefined&&!saved.workspace) return
+      if (saved.workspace&&saved.workspace.basePolicy!==saved.policyDigest) throw {message:'导入草稿与当前配置文件不符，请重新比较；当前输入已保留。'}
       // Re-read live input after IPC: even a field typed while awaiting the
       // backend participates in the merge and can block this adoption.
-      const merged=mergeIncoming(saved.workspace.policy,saved.policyDigest)
+      const merged=mergeIncoming(saved.workspace?.policy??saved.policy,saved.workspace?saved.policyDigest:plan.expectedPolicy)
       snapshot.value=saved
       channelDraft.value=merged
-      transferAdopted.value=true
+      transferAdopted.value=!!saved.workspace
       channelClean.value=canonicalPolicy(saved.policy)
       channelBaseline.value=saved.policyDigest
       workspaceBaseline.value=saved.workspaceDigest

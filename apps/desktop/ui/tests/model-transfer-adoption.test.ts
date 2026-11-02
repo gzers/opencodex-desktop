@@ -19,6 +19,27 @@ function plan(policy:ModelPolicy) {return {expectedPolicy:'actual-file',mergedPo
 beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();useModelsStore().acceptTransfer(actual())})
 
 describe('transfer adoption into the current file draft',()=>{
+  it('rebases unsaved input onto a directly committed snapshot',async()=>{
+    const store=useModelsStore(),incoming=actual().policy
+    store.channelDraft!.channels[1]!.label='unsaved local label'
+    store.editCredential('b','pending-key','old-key')
+    incoming.channels[0]!.defaults.fast={mode:'custom',value:true}
+    const saved={...actual(),policy:copy(incoming),policyDigest:'updated-file',workspace:null,workspaceDigest:'no-disk-draft'}
+    await store.adoptTransfer(plan(incoming),async()=>saved)
+    expect(store.snapshot!.policy).toEqual(incoming)
+    expect(store.channelBaseline).toBe('updated-file')
+    expect(store.channelDraft!.channels[1]!.label).toBe('unsaved local label')
+    expect(store.channelDraft!.channels[0]!.defaults.fast).toEqual({mode:'custom',value:true})
+    expect(store.credentialEdits.b?.value).toBe('pending-key')
+    expect(store.channelDirty).toBe(true)
+  })
+  it('leaves a clean editor clean after a directly saved import',async()=>{
+    const store=useModelsStore(),incoming=actual().policy
+    incoming.channels[0]!.label='updated label'
+    await store.adoptTransfer(plan(incoming),async()=>({...actual(),policy:copy(incoming),policyDigest:'updated-file'}))
+    expect(store.channelDirty).toBe(false)
+    expect(store.channelBaseline).toBe('updated-file')
+  })
   it('merges unrelated channels, nested fields and model rows while retaining every Key intent and raw receipt',async()=>{
     const store=useModelsStore(),incoming=actual().policy
     store.channelDraft!.channels[1]!.label='unsaved other channel'
