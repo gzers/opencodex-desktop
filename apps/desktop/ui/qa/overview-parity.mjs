@@ -30,7 +30,7 @@ try{
   await proto.evaluate(()=>{window.setEnv('ready');document.querySelector('[data-prototype-action=import]').click()})
   await proto.waitForTimeout(200)
   const pi=await info(proto,'#modal'),ii=await info(app,'dialog[open]')
-  check(tag+' import initial disabled',ii.buttons.some(x=>x.text==='读取并比较'&&x.disabled))
+  check(tag+' import initial disabled',ii.buttons.some(x=>x.text==='读取配置'&&x.disabled))
   check(tag+' import file action accessible',await app.getByRole('button',{name:'选择文件',exact:true}).isEnabled())
   check(tag+' import title',pi.title===ii.title,{pi,ii})
   check(tag+' import width matches',Math.abs(pi.width-ii.width)<=2,{prototype:pi.width,implementation:ii.width})
