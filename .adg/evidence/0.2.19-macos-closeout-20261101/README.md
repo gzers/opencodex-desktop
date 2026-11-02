@@ -36,7 +36,7 @@
 
 Windows CDP协议检查14/14、发布工具单测29/29通过（windows-cdp-protocol.log、release-tools.log）。cleanup.json确认本轮沙箱程序和服务均已停止；保留/tmp便于复核。
 
-GitHub CI最终运行及结果将在收口时追加。PR #33标题/说明由gh更新（连接器仍403），保持draft，不合并。
+GitHub CI [41365765185](https://github.com/gzers/opencodex-desktop/actions/runs/41365765185)（同一代码730b9e8b2）已成功：frontend、backend（macOS 15）、backend-windows（MSVC，含原生凭据、托管升级/离线重装、最终EXE、Node24/Node22.20安装失败恢复、普通账户）、release-tools、windows-smoke-evidence五job通过；build因仅main执行按设计跳过。PR #33标题/说明由gh更新（连接器仍403），保持draft，不合并。
 
 ## 边界
 

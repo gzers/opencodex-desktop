@@ -55,16 +55,18 @@
   {
     "requirement": "原清单回写与提交推送",
     "evidence": [
-      "staged scoped changes; unrelated staged DMD excluded"
+      "docs commit a49cace53 pushed; unrelated staged DMD remains excluded"
     ],
-    "status": "pending"
+    "status": "passed"
   },
   {
     "requirement": "最终CI",
     "evidence": [
-      "41365765185"
+      "ci-final-run.json",
+      "ci-final-jobs.json",
+      "41365765185 success on 730b9e8b2; five jobs passed, main-only build skipped"
     ],
-    "status": "pending"
+    "status": "passed"
   },
   {
     "requirement": "不发布/不真实同步/不改日常配置",
