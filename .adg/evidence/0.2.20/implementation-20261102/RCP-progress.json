@@ -72,9 +72,9 @@
       "run": 41414060520,
       "status": "in_progress",
       "head": "2fe154b8",
-      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence"],
-      "passed_steps": ["backend clippy", "backend bounded metadata process tree"],
-      "running_jobs": ["backend: remaining workspace regression", "backend-windows: Windows backend regression"],
+      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
+      "passed_backend_steps": ["fmt", "clippy", "bounded metadata process tree", "remaining workspace regression"],
+      "running_jobs": ["backend-windows: Windows backend regression"],
       "purpose": "rerun Windows native EXE smoke with direct saved-config and provider-identity assertions"
     }
   ]
