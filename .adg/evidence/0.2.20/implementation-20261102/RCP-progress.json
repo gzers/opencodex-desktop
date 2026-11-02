@@ -24,7 +24,7 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. Latest CI run 41408838770 macOS backend, Windows backend regression, isolated native credentials, managed install upgrade/offline reinstall, and dependency diagnostics passed; Windows release build is running and final EXE smoke follows. Earlier Windows release build succeeded, but final EXE smoke failed on stale assertion that portable acceptance must leave config.json unchanged; assertion was corrected in commit 28ac719e and is being rerun",
+      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. Latest CI run 41408838770 macOS backend, Windows backend regression, isolated native credentials, managed install upgrade/offline reinstall, dependency diagnostics, and Windows release build passed; final EXE smoke is running. Earlier smoke failed on stale assertion that portable acceptance must leave config.json unchanged; assertion was corrected in commit 28ac719e and is now under native rerun",
       "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI run 41403032342"
     },
     "release-and-ota": {
@@ -63,8 +63,8 @@
       "status": "in_progress",
       "head": "28ac719e",
       "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
-      "passed_windows_steps": ["Windows backend regression", "isolated native credential protection", "official managed install upgrade and offline reinstall", "native dependency diagnostics"],
-      "running_jobs": ["backend-windows: release build; final EXE smoke pending"],
+      "passed_windows_steps": ["Windows backend regression", "isolated native credential protection", "official managed install upgrade and offline reinstall", "native dependency diagnostics", "release build"],
+      "running_jobs": ["backend-windows: final EXE smoke"],
       "purpose": "rerun Windows native EXE smoke after aligning saved-config assertion with S20-13"
     }
   ]
