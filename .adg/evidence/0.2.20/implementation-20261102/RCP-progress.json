@@ -9,8 +9,8 @@
     },
     "saved-file-and-backup": {
       "status": "in_progress",
-      "reason": "Native QA found export preview writes an immutable temporary package cache under manager-state before final confirmation; the existing release left it after Cancel. Follow-up code 0389bcc0 deletes unattempted plan/package on cancel and bounded startup cleanup, while a shared attempt lock/durable result preserves retry bytes. Local Tauri IPC verified both cancel cleanup and SIGKILL/restart cleanup in an isolated HOME/data root. Six focused Rust tests, 37 focused ModelTransfer tests, full UI 177/1092, typecheck/build, Clippy and rustfmt pass. The prior full Rust suite passed 1164/4 ignored before the final durable-result guard test; PR #37 CI 41471655619 provides full current-head validation.",
-      "evidence": "implementation-20261102/export-preview-cancellation.md; PR #37 commit 0389bcc0; local Tauri IPC sandbox; six focused Rust tests; 37 focused ModelTransfer tests; full UI suite 177/1092; PR CI 41471655619"
+      "reason": "Native QA found export preview writes an immutable temporary package cache under manager-state before final confirmation; released app left it after Cancel. Follow-up code 1cbe4a69 deletes unattempted plan/package on cancel and bounded startup cleanup, while locks/durable result receipts preserve attempts for retry. Local Tauri IPC verified cancel cleanup and SIGKILL/restart cleanup using a temporary HOME/data root (native observation predates the final durable-receipt guard/unmount hook). Six focused Rust tests, 37 focused ModelTransfer tests, full UI 177/1092, typecheck/build, Clippy and rustfmt pass. Current PR #37 CI 41472954091 is running full current-head checks; full serial Rust baseline 1164/4 ignored predates the last guard test.",
+      "evidence": "implementation-20261102/export-preview-cancellation.md; PR #37 head 1cbe4a6921613ed2a66f322918f85058c6294c56; six focused Rust tests; 37 ModelTransfer tests; full UI suite 177/1092; PR CI 41472954091"
     },
     "credential-and-scope-boundaries": {
       "status": "in_progress",
@@ -24,8 +24,8 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "CI 41420204361 and integrated PR #35 CI 41439302028 passed Windows native/build/EXE matrix; PR #36 diagnostic harness fix merged as 70724914649, pre-merge CI 41448593550 passed required checks. Existing v0.2.20 four-cell MSI/NSIS matrix 41448710359 passed. Isolated native macOS used temp HOME plus Node/npm links and an inert CLI fixture; overview, Settings general/data-backup, export encryption preview/cancel, import picker/cancel, WebDAV connection/cancel, notification detail, new channel, template version/use, Agent model picker and extension/client views were observed. No save/export/import, WebDAV request/sync, backup mutation, notification deletion, or install was executed. Production dialog callsites and full cross-platform business states remain incomplete. Native Tauri IPC follow-up branch verifies canceled export-plan deletion and startup cleanup in a temporary sandbox; final change remains unmerged and needs CI plus new packages and OTA. Local Tauri dev build of the follow-up branch verified real IPC cache creation, cancel deletion, empty user export destination, and SIGKILL/restart cleanup in an isolated data root. PR #37 CI/full current-head validation is pending; if merged, new release packages and native/installer/OTA acceptance remain required. Local Tauri IPC on the follow-up branch confirms cancel deletes internal frozen preview files and crash/restart sweeps an abandoned unattempted plan. PR #37 full CI is pending; if accepted, repeat package/install/OTA on the updated release source.",
-      "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/windows-existing-installer-matrix.md; implementation-20261102/dialog-callsite-ledger.md; CI runs 41420204361, 41439302028, 41448593550; Windows installer matrix 41448710359; implementation-20261102/export-preview-cancellation.md; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619"
+      "reason": "CI 41420204361 and integrated PR #35 CI 41439302028 passed Windows native/build/EXE matrix; PR #36 diagnostic harness fix merged as 70724914649, pre-merge CI 41448593550 passed required checks. Existing v0.2.20 four-cell MSI/NSIS matrix 41448710359 passed. Isolated native macOS used temp HOME plus Node/npm links and an inert CLI fixture; overview, Settings general/data-backup, export encryption preview/cancel, import picker/cancel, WebDAV connection/cancel, notification detail, new channel, template version/use, Agent model picker and extension/client views were observed. No save/export/import, WebDAV request/sync, backup mutation, notification deletion, or install was executed. Production dialog callsites and full cross-platform business states remain incomplete. Native Tauri IPC follow-up branch verifies canceled export-plan deletion and startup cleanup in a temporary sandbox; final change remains unmerged and needs CI plus new packages and OTA. Local Tauri dev build of the follow-up branch verified real IPC cache creation, cancel deletion, empty user export destination, and SIGKILL/restart cleanup in an isolated data root. PR #37 CI/full current-head validation is pending; if merged, new release packages and native/installer/OTA acceptance remain required. Local Tauri IPC on the follow-up branch confirms cancel deletes internal frozen preview files and crash/restart sweeps an abandoned unattempted plan. PR #37 full CI is pending; if accepted, repeat package/install/OTA on the updated release source. Native follow-up proves the principal cancel/crash-cleanup path in an isolated Tauri IPC build; current final PR #37 head is under CI 41472954091 and must still pass Windows/macOS checks and receive packaged native acceptance.",
+      "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/windows-existing-installer-matrix.md; implementation-20261102/dialog-callsite-ledger.md; CI runs 41420204361, 41439302028, 41448593550; Windows installer matrix 41448710359; implementation-20261102/export-preview-cancellation.md; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; PR #37 head 1cbe4a69; CI run 41472954091"
     },
     "release-and-ota": {
       "status": "pending",
@@ -337,6 +337,23 @@
         "frontend",
         "backend",
         "backend-windows"
+      ]
+    },
+    {
+      "run": 41472954091,
+      "workflow": "PR #37 final-head cancellation cleanup validation",
+      "head": "1cbe4a6921613ed2a66f322918f85058c6294c56",
+      "status": "in_progress",
+      "passed_jobs": [
+        "release-tools",
+        "windows-smoke-evidence"
+      ],
+      "running_jobs": [
+        "backend-windows"
+      ],
+      "queued_jobs": [
+        "backend",
+        "frontend"
       ]
     }
   ]
