@@ -24,7 +24,7 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. Windows CI runs 41408838770 and 41414060520 built release successfully but EXE smoke exposed stale assertions about direct-saved import receipt and closed-by-cancel connection dialog. Corrected direct-save/provider checks in 28ac719e/2fe154b8 and connection-dialog cancel flow in 8aa3d2aa; new run 41420204361 is rerunning native smoke.",
+      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. CI run 41420204361 fully passed on macOS and Windows, including native credentials, managed install/offline reinstall, release build, final EXE smoke, Node24/Node22.20 matrices, recovery/path regression and ordinary-account smoke. Earlier smoke runs exposed stale direct-save and connection-dialog assertions; corrections are committed and now passed. Formal release installers, OS signing-policy verification, OTA and consumer-by-consumer dialog state closure remain incomplete.",
       "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI run 41403032342"
     },
     "release-and-ota": {
@@ -81,13 +81,12 @@
     },
     {
       "run": 41420204361,
-      "status": "in_progress",
+      "status": "success",
       "head": "8aa3d2aa",
-      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence"],
-      "passed_steps": ["backend-windows: fmt/clippy", "backend: fmt/clippy"],
-      "running_jobs": ["backend-windows: Windows backend regression", "backend: remaining workspace regression"],
-      "completed_steps_since_last_update": ["backend: bounded metadata process tree"],
-      "pending_jobs": ["macOS workspace regression", "Windows backend regression", "Windows native EXE smoke and version matrix"],
+      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend", "backend-windows"],
+      "passed_windows_steps": ["fmt/clippy", "Windows backend regression", "native credential protection", "managed install upgrade/offline reinstall", "dependency diagnostics", "release build", "final EXE smoke", "Node24 native version matrix", "native recovery/path regression", "Node22.20 npm regression", "ordinary-account smoke"],
+      "passed_backend_steps": ["fmt/clippy", "bounded metadata process tree", "remaining workspace regression"],
+      "pending_jobs": ["formal signed release packages and exact installer matrix", "Windows 0.2.19→0.2.20 OTA for MSI/NSIS", "macOS native interactive acceptance", "consumer-by-consumer dialog state closure"],
       "purpose": "rerun Windows native EXE smoke after correcting connection-dialog cancellation action"
     }
   ]
