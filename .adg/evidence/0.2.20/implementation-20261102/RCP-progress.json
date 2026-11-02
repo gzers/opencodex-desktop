@@ -14,8 +14,8 @@
     },
     "credential-and-scope-boundaries": {
       "status": "in_progress",
-      "reason": "native macOS secure-store test and macOS CI backend regression passed; scope regressions passed locally; Windows backend regression, isolated native credentials, managed install upgrade/offline reinstall, and native dependency diagnostics passed",
-      "evidence": "native-candidate-509cb996-build.json; code commit 777aa9c5; CI run 41403032342"
+      "reason": "scope regressions passed locally; CI run 41420204361 passed Windows backend, native credential, managed-install and recovery coverage. PR #35 run 41434514282 later failed two fixture-only deadlines (Node startup/read at 2 seconds under full-suite load); the test-only waits are now 10 seconds while the dedicated production timeout assertion remains 2 seconds. Revalidation is running in 41439071945 and 41439302028.",
+      "evidence": "native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028; code commit 490a4ce8"
     },
     "all-entry-coverage": {
       "status": "in_progress",
@@ -24,18 +24,18 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. CI run 41420204361 fully passed on macOS and Windows, including native credentials, managed install/offline reinstall, release build, final EXE smoke, Node24/Node22.20 matrices, recovery/path regression and ordinary-account smoke. Earlier smoke runs exposed stale direct-save and connection-dialog assertions; corrections are committed and now passed. Formal release installers, OS signing-policy verification, OTA and consumer-by-consumer dialog state closure remain incomplete.",
-      "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI run 41403032342"
+      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. CI run 41420204361 fully passed on macOS and Windows, including native credentials, managed install/offline reinstall, release build, final EXE smoke, Node24/Node22.20 matrices, recovery/path regression and ordinary-account smoke. Later PR #35 run 41434514282 failed only the two Windows test-fixture deadlines; test-only wait increases are under CI revalidation. Formal release installer matrix, OS signing-policy verification, OTA, macOS native interaction and consumer-by-consumer dialog state closure remain incomplete.",
+      "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028"
     },
     "release-and-ota": {
       "status": "pending",
-      "reason": "PR #34 merged at ca434f7dd and v0.2.20 tag pushed; Release workflow run 41429792658 is building candidate assets. Exact package/signature/install/OTA verification and stable promotion remain pending. Existing policy uses macOS ad-hoc codesign and unsigned Windows MSI/NSIS test installers without configured OS signing certificates; Tauri updater signatures are a separate cryptographic check.",
-      "evidence": "docs/03-开发实施/REL-OPENCODEX-DESKTOP-19.md §发布边界; .github/workflows/release.yml (ad-hoc macOS verification, updater signing secret, Windows installer smoke)"
+      "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Release run 41429792658 failed its isolated installer matrix: default MSI/NSIS passed, custom MSI install/uninstall returned success but MSI AppSearch reused the remembered default path so the custom destination had no EXE. PR #35 contains the HKCU remembered-path isolation fix. Inspection also found its exact-package acceptance script excluded 0.2.20 (allowlist ended at 0.2.19); commit 97c5aedd adds 0.2.20 and a regression guard. Installer-only acceptance and OTA have not run yet. macOS uses ad-hoc codesign and Windows MSI/NSIS have no OS Authenticode certificate; Tauri updater signatures are a separate cryptographic check. Stable promotion remains pending.",
+      "evidence": "/tmp/ocx020-release-414297-evidence/installer-verification.json; CI run 41429792658; PR #35 commits 490a4ce8 and 97c5aedd; .github/workflows/windows-release-acceptance.yml; docs/03-开发实施/REL-OPENCODEX-DESKTOP-19.md §发布边界"
     }
   },
   "tests": {
     "ui_checkpoint": "509cb996 test fix local rerun: 177 files, 1090 passed; CI frontend pass in 41403032342",
-    "rust_checkpoint": "777aa9c5 full cargo test --locked --lib: 1159 passed, 0 failed, 4 ignored; CI macOS/Windows backend jobs still running",
+      "rust_checkpoint": "777aa9c5 full cargo test --locked --lib: 1159 passed, 0 failed, 4 ignored; CI run 41420204361 passed both backend jobs; PR #35 initial run 41434514282 had 937 passed, 2 fixture-deadline failures, 4 ignored; 10-second test-only fixture windows revalidating in 41439071945 and 41439302028",
     "native_credential": "OPENCODEX_SANDBOX=1 explicit macOS native test passed"
   },
   "daily_config_writes": false,
@@ -43,20 +43,37 @@
   "published": false,
   "ci_runs": [
     {
+      "run": 41439302028,
+      "workflow": "PR #35 v0.2.20 acceptance allowlist and Windows fixture startup tolerance",
+      "head": "97c5aedd7f179dc06cd76e40fb888be997b7be18",
+      "status": "in_progress"
+    },
+    {
+      "run": 41439071945,
+      "workflow": "PR #35 Windows fixture startup tolerance",
+      "head": "490a4ce8c564723d3ab411d14393795a12807668",
+      "status": "in_progress"
+    },
+    {
       "run": 41434514282,
       "workflow": "PR #35 Windows MSI remembered-install-dir isolation",
       "head": "d8d09b659626d6e510c3bce521d73b0b57e734e6",
-      "status": "in_progress",
-      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence"],
-      "passed_steps": ["backend fmt/clippy", "macOS clippy", "bounded metadata process-tree check"],
-      "running_jobs": ["macOS workspace regression", "Windows backend regression"]
+      "status": "failure",
+      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
+      "failed_job": "backend-windows: 937 passed, 2 failed, 4 ignored",
+      "failed_tests": ["windows_query_job::successful_root_does_not_return_before_its_owned_descendant_exits: fixture stdout read exceeded 2 seconds", "remote_windows_tests::metadata_invalid_json_version_encoding_and_spawn_failures_keep_distinct_reasons: local Node fixture exceeded 2 seconds and was classified as production timeout"],
+      "cause": "fixture-only deadlines were too short under full Windows workspace load; no assertion indicated a product regression"
     },
     {
       "run": 41429792658,
       "workflow": "Release",
       "tag": "v0.2.20",
       "merge_commit": "ca434f7dd3490fbd900650fde626d524c7a9757c",
-      "status": "in_progress"
+      "status": "failure",
+      "passed_jobs": ["release macOS arm64 build and bundle verification"],
+      "failed_windows_step": "isolated installer verification: remembered MSI default path overrode custom INSTALLDIR",
+      "failed_msi_sha256": "9054739868df77ce61812b70a6b42b663c3c1198a53078a3e9a296b9d851ff7f",
+      "evidence": "/tmp/ocx020-release-414297-evidence/installer-verification.json"
     },
     {
       "run": 41403032342,
