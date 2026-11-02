@@ -1,6 +1,6 @@
 {
   "status": "active",
-  "source": "code branch codex/0.2.20-prototype-alignment at 28ac719e8; docs branch docs/governance-main at 245cdb33a; release not complete",
+  "source": "code branch codex/0.2.20-prototype-alignment at 8aa3d2aad; docs branch docs/governance-main at 4714f88ea; release not complete",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
@@ -24,7 +24,7 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. CI run 41408838770 passed macOS backend, Windows regression, native credentials, managed installation/offline reinstall, dependency diagnostics, and release build. Final EXE smoke exposed two stale expectations: ordinary portable acceptance must write config.json and its transient importedConfig receipt is not retained after direct save. Both assertions were aligned with S20-13 and saved-file/provider readback in commits 28ac719e and 2fe154b8. New run 41414060520 is validating them",
+      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. Windows CI runs 41408838770 and 41414060520 built release successfully but EXE smoke exposed stale assertions about direct-saved import receipt and closed-by-cancel connection dialog. Corrected direct-save/provider checks in 28ac719e/2fe154b8 and connection-dialog cancel flow in 8aa3d2aa; new run 41420204361 is rerunning native smoke.",
       "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI run 41403032342"
     },
     "release-and-ota": {
@@ -77,6 +77,12 @@
       "passed_windows_steps": ["fmt", "clippy", "Windows backend regression"],
       "running_jobs": ["backend-windows: isolated native credential protection"],
       "purpose": "rerun Windows native EXE smoke with direct saved-config and provider-identity assertions"
+    },
+    {
+      "run": 41420204361,
+      "status": "in_progress",
+      "head": "8aa3d2aa",
+      "purpose": "rerun Windows native EXE smoke after correcting connection-dialog cancellation action"
     }
   ]
 }
