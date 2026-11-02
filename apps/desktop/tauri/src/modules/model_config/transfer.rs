@@ -510,6 +510,45 @@ pub fn file_summary(root: &Path, id: &str) -> ModelResult<FileExportPlan> {
     validate_package(&p.package)?;
     Ok(p)
 }
+/// Remove only the frozen package files owned by this unattempted preview.
+/// The caller serializes this with export/protect using the per-plan attempt lock.
+pub fn discard_prepared_file(root: &Path, id: &str) -> ModelResult<bool> {
+    require_uuid(id)?;
+    let plan_path = export_plan_path(root, id)?;
+    crate::modules::backup::safety::check_path(root, &plan_path, true)?;
+    if plan_path.exists() {
+        let plan = file_summary(root, id)?;
+        if plan.id != id {
+            return Err(invalid("export_identity", "导出计划身份不同"));
+        }
+    }
+    let paths = [
+        plan_path.clone(),
+        plan_path.with_extension("ocxdconf"),
+        plan_path.with_extension("protection-source.json"),
+    ];
+    for path in &paths {
+        crate::modules::backup::safety::check_path(root, path, true)?;
+    }
+    let had_files = paths.iter().any(|path| path.exists());
+    for path in paths {
+        match std::fs::symlink_metadata(&path) {
+            Ok(metadata) if metadata.is_file() && !metadata.file_type().is_symlink() => {
+                std::fs::remove_file(path)
+                    .map_err(|error| invalid("export_discard", error.to_string()))?;
+            }
+            Ok(_) => {
+                return Err(invalid(
+                    "export_discard",
+                    "临时导出计划包含非普通文件，已保留",
+                ))
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(error) => return Err(invalid("export_discard", error.to_string())),
+        }
+    }
+    Ok(had_files)
+}
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct ProtectionSource {

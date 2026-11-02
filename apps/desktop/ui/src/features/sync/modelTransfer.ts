@@ -58,6 +58,7 @@ export function remoteScope(scope:TransferScope,options?:RemoteOptions):RemoteSc
 export interface ExportedModels { path: string; digest: string; templates: number; channels: number }
 export const modelTransferApi = {
   protect:(planId:string,passphrase?:string)=>invoke<FilePlan>('model_transfer_protect',{planId,passphrase:passphrase??null}),
+  discardUnattempted:(planId:string)=>invoke<boolean>('model_transfer_discard_unattempted',{planId}),
   prepareDraft:(scope:TransferScope,draft:DraftCandidate,passphrase?:string,policy?:ModelPolicy)=>invoke<FilePlan>('model_transfer_prepare_draft',{scope,draft,passphrase:passphrase??null,policy:policy??null}),
   prepare: (scope: TransferScope,passphrase?:string,includeKeys=false,managerScope?:ManagerScope) => invoke<FilePlan>('model_transfer_prepare', { scope,passphrase:passphrase??null,includeKeys,managerScope:managerScope??null }),
   // targetDir 为空时写受管导出目录；用户另存时传绝对路径。

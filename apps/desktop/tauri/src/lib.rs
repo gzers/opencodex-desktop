@@ -140,6 +140,21 @@ pub fn run() {
             }
             // 启动事件附构建来源：维护事故可把本机安装映射回提交（F-09）。
             record_startup_event(&data_root, &app.package_info().version.to_string());
+            // Preview plans are durable only to freeze the exact reviewed bytes
+            // within a running app session. On restart, plans with no export
+            // attempt cannot be resumed by the UI and may contain plaintext
+            // package data; remove those while retaining attempted operations.
+            match crate::modules::model_config::file_exports::discard_abandoned_previews(&data_root) {
+                Ok(removed) if removed > 0 => record_window_event(
+                    &data_root,
+                    &format!("discarded {removed} abandoned unattempted export preview(s)"),
+                ),
+                Ok(_) => {}
+                Err(_) => record_window_event(
+                    &data_root,
+                    "abandoned export preview cleanup incomplete; retained affected files",
+                ),
+            }
             app.manage(std::sync::Mutex::new(
                 crate::modules::sync::SyncRun {
                     run_id: "sync-initial".to_string(),
@@ -543,6 +558,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::model_transfer::model_transfer_export,
             commands::model_transfer::model_transfer_protect,
+            commands::model_transfer::model_transfer_discard_unattempted,
             commands::model_transfer::model_transfer_prepare,
             commands::model_transfer::model_transfer_prepare_draft,
             commands::model_transfer::model_transfer_receive,

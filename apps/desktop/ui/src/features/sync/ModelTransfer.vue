@@ -41,6 +41,11 @@ const selectionReady=ref(false);const choiceError=ref('');const credentialIds=re
 let choiceWrite=Promise.resolve();let choiceRevision=0
 const selectionOpen = ref(true)
 const filePlan = ref<FilePlan | null>(null)
+// Frozen packages are necessary for confirmation/retry identity, but an
+// unattempted preview must not remain as a plaintext cache after cancellation.
+// Keep every prepared/protected plan created by this dialog instance; backend
+// discard is idempotent and refuses plans that already have an export attempt.
+const pendingFilePlanIds = new Set<string>()
 const upload = ref<UploadPlan | null>(null)
 const incoming = ref<IncomingPlan | null>(null)
 const incomingSource=ref<IncomingPlan|null>(null)
@@ -90,7 +95,7 @@ function toggleCredential(id:string,checked:boolean){const next=new Set(credenti
 watch(()=>JSON.stringify([credentialChannels.value,credentialExtensions.value,credentialIds.value]),()=>{exportKeys.value=credentialChannels.value.some(x=>credentialIds.value.includes(x.id));extensionCredentials.value=credentialExtensions.value.some(x=>credentialIds.value.includes(x.id))})
 function credentialState(kind:'channel'|'extension'){const rows=kind==='channel'?credentialChannels.value:credentialExtensions.value;const count=rows.filter(x=>credentialIds.value.includes(x.id)).length;return !count?false:count===rows.length?true:'mixed'}
 let disposed=false
-onBeforeUnmount(()=>{disposed=true;exportPackagePassword.value='';exportPackagePasswordAgain.value='';importPassword.value='';unlockedPassword=''})
+onBeforeUnmount(()=>{disposed=true;if(!busy.value)void discardPendingFilePlans();exportPackagePassword.value='';exportPackagePasswordAgain.value='';importPassword.value='';unlockedPassword=''})
 const hasScope = computed(() => accountIds.value.length>0 || templateIds.value.length > 0 || channelIds.value.length > 0 || includeGlobal.value||managerPreferences.value||managerExtensions.value||!props.remote&&managerWebdav.value&&activeWebdav.value||hasAssets.value||props.remote&&(allTemplates.value||allChannels.value))
 const familyScopesValid=computed(()=>Object.values(channelFamilies.value).every(scope=>scope.templateIds.length>0));
 const preview = computed(() => incoming.value?.package ?? upload.value?.package ?? filePlan.value?.package)
@@ -254,7 +259,7 @@ async function startSync(){
 async function perform(action: () => Promise<void>) {
   if (busy.value) return
   busy.value = true; error.value = '';requestedResultId=null
-  try { await action() } catch (cause) { error.value = errorText(cause);const id=requestedResultId;if(id){void transferResultApi.read(id).then(value=>{if(value)syncStore.rememberResult(id,!!props.remote)}).catch(()=>{})} } finally { busy.value = false }
+  try { await action() } catch (cause) { error.value = errorText(cause);const id=requestedResultId;if(id){void transferResultApi.read(id).then(value=>{if(value)syncStore.rememberResult(id,!!props.remote)}).catch(()=>{})} } finally { busy.value = false;if(disposed)void discardPendingFilePlans() }
 }
 async function begin() {
  if(catalogueLoading.value)return
@@ -278,6 +283,16 @@ async function begin() {
 }else if(choiceError.value){await persistChoice()} }finally{catalogueLoading.value=false}
 }
 function managerScope():ManagerScope{return {...(accountIds.value.length?{accountIds:accountIds.value}:{}),preferences:managerPreferences.value,extensions:managerExtensions.value,webdav:managerWebdav.value,webdavPasswords:webdavPasswords.value,credentialIds:credentialIds.value,...assetScope()}}
+function rememberFilePlan(plan:FilePlan){pendingFilePlanIds.add(plan.id);return plan}
+async function discardPendingFilePlans(keepId?:string){
+ const ids=[...pendingFilePlanIds].filter(id=>id!==keepId);for(const id of ids)pendingFilePlanIds.delete(id)
+ const outcomes=await Promise.all(ids.map(async id=>{try{await modelTransferApi.discardUnattempted(id);return {id,ok:true}}catch{return {id,ok:false}}}))
+ let failed=false
+ for(const outcome of outcomes)if(!outcome.ok){pendingFilePlanIds.add(outcome.id);failed=true}
+ if(keepId)pendingFilePlanIds.add(keepId)
+ if(failed)app.showToast('已关闭预览，但部分未执行的临时导出快照清理失败；可重试或稍后检查。')
+ return !failed
+}
 async function prepare() {
   if (!selectionReady.value||choiceError.value||props.remote&&!remoteScopeLoaded.value||!models.snapshot || !hasScope.value||!familyScopesValid.value||catalogueLoading.value) return
   await perform(async () => {
@@ -287,7 +302,7 @@ async function prepare() {
       if(!models.snapshot||!models.channelDraft)throw {message:'工作区未读取'}
       const draft={expectedLibrary:models.snapshot.libraryDigest,expectedPolicy:models.snapshot.policyDigest,expectedWorkspace:models.snapshot.workspaceDigest}
       const policy=JSON.parse(JSON.stringify(models.channelDraft)) as ModelPolicy
-      filePlan.value=await modelTransferApi.prepareDraft(scope,draft,undefined,policy)
+      filePlan.value=rememberFilePlan(await modelTransferApi.prepareDraft(scope,draft,undefined,policy))
       preparedExport.value={kind:'file',scope,includeKeys:false,managerScope:managerScope(),draft,policy}
     }else if (props.remote){
       const options=remoteOptions()
@@ -297,7 +312,7 @@ async function prepare() {
       remotePassword.value=''
     }else{
       const manager=managerScope()
-      filePlan.value = await modelTransferApi.prepare(scope,undefined,exportKeys.value,manager)
+      filePlan.value = rememberFilePlan(await modelTransferApi.prepare(scope,undefined,exportKeys.value,manager))
       noteConflicts(filePlan.value)
       preparedExport.value={kind:'file',scope,includeKeys:exportKeys.value,managerScope:manager}
     }
@@ -306,10 +321,10 @@ async function prepare() {
   })
 }
 /** 用户在确认弹窗选择加密后，按同一冻结范围重新生成受口令保护的计划；未勾选则沿用已预览计划。 */
-async function preparedWithPassphrase(passphrase?:string){if(!filePlan.value)throw {message:'原导出计划已失效，请重新导出。'};return await modelTransferApi.protect(filePlan.value.id,passphrase)}
+async function preparedWithPassphrase(passphrase?:string){if(!filePlan.value)throw {message:'原导出计划已失效，请重新导出。'};return rememberFilePlan(await modelTransferApi.protect(filePlan.value.id,passphrase))}
 
 /** S18-03：选定来源后按同一冻结范围重算计划，选中的来源作为该 MCP 的定义；清空即本次不同步该 MCP。 */
-async function rebuildPreview(){const prepared=preparedExport.value;if(!prepared||prepared.draft)return;if(prepared.kind==='remote'){upload.value=await modelTransferApi.prepareUpload(prepared.scope,prepared.options??remoteOptions());noteConflicts(upload.value)}else{filePlan.value=await modelTransferApi.prepare(prepared.scope,undefined,prepared.includeKeys,prepared.managerScope);noteConflicts(filePlan.value)}previewInvalid.value=false}
+async function rebuildPreview(){const prepared=preparedExport.value;if(!prepared||prepared.draft)return;if(prepared.kind==='remote'){upload.value=await modelTransferApi.prepareUpload(prepared.scope,prepared.options??remoteOptions());noteConflicts(upload.value)}else{const next=rememberFilePlan(await modelTransferApi.prepare(prepared.scope,undefined,prepared.includeKeys,prepared.managerScope));filePlan.value=next;noteConflicts(next)}previewInvalid.value=false}
 async function retryPreview(){await perform(rebuildPreview)}
 async function setMcpSource(name:string,value:string){
  const next={...mcpSources.value};if(value)next[name]=value;else delete next[name];mcpSources.value=next
@@ -394,6 +409,7 @@ async function finishExport(){
   }else if(filePlan.value.protected)filePlan.value=await preparedWithPassphrase()
   if(destinationMode.value==='custom'&&!exportTargetDir.value){error.value='请选择自定义目录，或改回默认导出目录。';return}
   const id=filePlan.value.id;requestedResultId=id;await modelTransferApi.export(id, exportTargetDir.value || undefined)
+  await discardPendingFilePlans(id);pendingFilePlanIds.delete(id)
   recordSyncActivity('export',Math.max(0,scopeKeys.value.length-pendingCount.value));syncStore.rememberResult(id,false);filePlan.value=null;preparedExport.value=null;exportPackagePassword.value='';exportPackagePasswordAgain.value='';if(props.actionOnly)emit('close')
 }
 
@@ -432,7 +448,7 @@ watch(()=>JSON.stringify([receiveRefs.value,receiveChannels.value,receiveGlobal.
 let receiveRevision=0
 async function compareReceived(){if(!incomingSource.value)return;await perform(async()=>{const revision=receiveRevision;const scope={...(Object.keys(receiveChannelModels.value).length?{channelModels:Object.fromEntries(Object.entries(receiveChannelModels.value).filter(([id])=>receiveChannels.value.includes(id)))}:{}),...assetMappingScope(),...channelMappingScope(),templateRefs:receiveRefs.value.map(value=>{const [templateId,revisionId]=JSON.parse(value) as [string,string];return {templateId,revisionId}}),channelIds:receiveChannels.value,includeGlobal:receiveGlobal.value&&receiveChannels.value.length>0,...(incomingSource.value!.manager?{accountIds:receiveAccounts.value,preferences:receivePreferences.value,extensions:receiveExtensions.value,endpointIds:receiveEndpoints.value}:{}),...(incomingSource.value!.assets?{skillNames:receiveSkills.value,mcpNames:receiveMcps.value}:{})};const selected=unlockedPassword?await modelTransferApi.select(incomingSource.value!.id,scope,unlockedPassword):await modelTransferApi.select(incomingSource.value!.id,scope);if(revision!==receiveRevision)return;incoming.value=selected;if(!incoming.value.availableKeys?.length)adoptKeys.value=false;if(!incoming.value.availableExtensionCredentials)adoptExtensionCredentials.value=false;receiveDirty.value=false})}
 
-function closePreview() { if (!busy.value) { previewInvalid.value=false;pickOpen.value=false;passwordOpen.value=false;importPassword.value=''; const same=props.remote&&incoming.value?.sync&&incoming.value.sync.changes?.length===0?incoming.value.sync:null;if(same){/* 后端读取云端快照时已记为已一致；概览卡片同步展示。 */recordRemoteVersion(same.createdAt);syncStore.setWebdavState('synced')} emit('update:importOpen',false); incoming.value = null;incomingSource.value=null; filePlan.value = null; upload.value = null;preparedExport.value=null;exportPackagePassword.value='';exportPackagePasswordAgain.value='';remotePassword.value='';unlockedPassword='';if(props.actionOnly)emit('close') } }
+async function closePreview() { if (!busy.value) { await discardPendingFilePlans();previewInvalid.value=false;pickOpen.value=false;passwordOpen.value=false;importPassword.value=''; const same=props.remote&&incoming.value?.sync&&incoming.value.sync.changes?.length===0?incoming.value.sync:null;if(same){/* 后端读取云端快照时已记为已一致；概览卡片同步展示。 */recordRemoteVersion(same.createdAt);syncStore.setWebdavState('synced')} emit('update:importOpen',false); incoming.value = null;incomingSource.value=null; filePlan.value = null; upload.value = null;preparedExport.value=null;exportPackagePassword.value='';exportPackagePasswordAgain.value='';remotePassword.value='';unlockedPassword='';if(props.actionOnly)emit('close') } }
 </script>
 <template>
   <article class="model-transfer">
