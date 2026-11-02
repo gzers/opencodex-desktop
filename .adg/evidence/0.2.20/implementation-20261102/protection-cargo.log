@@ -1,0 +1,19 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+warning: function `config_sync_store` is never used
+   --> src/commands/model_transfer.rs:101:4
+    |
+101 | fn config_sync_store(root: &std::path::Path) -> crate::modules::sync::config::SyncConfigStore {
+    |    ^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `opencodex-desktop` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 20.34s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-05eb0b407d835ec1)
+
+running 2 tests
+test modules::model_config::transfer_protection::tests::identities_are_root_bound ... ok
+test modules::model_config::transfer_protection::tests::metadata_never_contains_secret_and_disable_does_not_delete_it ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1138 filtered out; finished in 0.02s
+

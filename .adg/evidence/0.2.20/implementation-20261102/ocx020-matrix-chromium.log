@@ -1,0 +1,14 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#sync-webdav-panel .sync-scope-credentials') to be visible[22m
+[2m    65 × locator resolved to hidden <aside aria-label="其他凭据" data-v-9510aeb3="" class="sync-scope-credentials" data-testid="sync-scope-credentials">…</aside>[22m
+
+    at /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/sync-020-matrix.browser.mjs:13:133 {
+  name: 'TimeoutError'
+}
+
+Node.js v26.8.1

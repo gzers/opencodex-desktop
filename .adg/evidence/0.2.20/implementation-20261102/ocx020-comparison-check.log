@@ -1,0 +1,33 @@
+    Checking opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+error[E0603]: function `verify_pending` is private
+   --> src/commands/model_transfer.rs:557:79
+    |
+557 | ...                   crate::modules::model_config::sync_state::verify_pending(
+    |                                                                 ^^^^^^^^^^^^^^ private function
+    |
+note: the function `verify_pending` is defined here
+   --> src/modules/model_config/sync_state.rs:306:1
+    |
+306 | / pub(super) async fn verify_pending<T: WebDavTransport>(
+307 | |     root: &Path,
+308 | |     id: &str,
+309 | |     binding: &str,
+...   |
+325 | |     Ok(())
+326 | | }
+    | |_^
+
+error[E0308]: mismatched types
+   --> src/modules/model_config/sync_state.rs:571:11
+    |
+571 |         ..Default::default()..Change::default()
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Change`, found `Range<Change>`
+    |
+    = note: expected struct `Change`
+               found struct `std::ops::Range<Change>`
+
+Some errors have detailed explanations: E0308, E0603.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `opencodex-desktop` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

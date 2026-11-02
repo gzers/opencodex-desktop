@@ -1,0 +1,8 @@
+file:///Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/sync-020-matrix.browser.mjs:16
+if(errors.length)throw Error(JSON.stringify(errors));console.log(engine.name,checks.length,'state/geometry checks;',screens.length,'screens');
+                       ^
+
+Error: [{"key":"900-light-low-100","surface":"prototype","message":"ResizeObserver loop completed with undelivered notifications."}]
+    at file:///Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/sync-020-matrix.browser.mjs:16:24
+
+Node.js v26.8.1

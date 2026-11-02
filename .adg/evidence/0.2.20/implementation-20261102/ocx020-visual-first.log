@@ -1,0 +1,14 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.click: Error: strict mode violation: getByRole('button', { name: '关闭', exact: true }) resolved to 2 elements:
+    1) <button type="button" class="btn ghost" data-v-f2b1bc8e="">…</button> aka getByRole('button', { name: '关闭' }).first()
+    2) <button class="btn" type="button" data-v-2182aaa0="">…</button> aka getByRole('contentinfo').getByRole('button', { name: '关闭' })
+
+Call log:
+[2m  - waiting for getByRole('button', { name: '关闭', exact: true })[22m
+
+    at /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/sync-020.browser.mjs:11:213
+
+Node.js v26.8.1

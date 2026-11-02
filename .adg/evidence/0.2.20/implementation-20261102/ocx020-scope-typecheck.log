@@ -1,0 +1,7 @@
+
+> opencodex-desktop-ui@0.2.20 typecheck
+> vue-tsc --noEmit
+
+src/features/sync/ModelTransfer.vue(448,153): error TS2345: Argument of type '(revision: Revision, baseline?: boolean) => string' is not assignable to parameter of type '(value: { id: string; createdAt: string; savedLabel: string; content: { description: string; matching: { include: { kind: "exact" | "prefix" | "glob"; value: string; }[]; exclude: { kind: "exact" | "prefix" | "glob"; value: string; }[]; caseSensitive: boolean; channelMode: "all" | ... 1 more ... | "blacklist"; chann...'.
+  Types of parameters 'baseline' and 'index' are incompatible.
+    Type 'number' is not assignable to type 'boolean | undefined'.

@@ -1,0 +1,114 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/model-transfer.test.ts (36 tests | 4 failed | 10 skipped) 458ms
+   ❯ model transfer review (36)
+     × exports the reviewed frozen plan instead of rebuilding from later editor content 24ms
+     × SY-1/SY-2/N-SY-2：导出确认弹窗按原型顺序承载保存位置、树、说明、凭据与可选口令，范围首项保持 all 8ms
+     × receives only a review and requires adoption while preserving the manual template buffer 13ms
+     × keeps the temporary file password for an encrypted Skill even when no credential was included 13ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > exports the reviewed frozen plan instead of rebuilding from later editor content
+AssertionError: expected "vi.fn()" to be called with arguments: [ Array(4) ]
+
+Received:
+
+  1st vi.fn() call:
+
+@@ -11,10 +11,11 @@
+      ],
+    },
+    undefined,
+    false,
+    {
++     "credentialIds": [],
+      "extensions": true,
+      "preferences": true,
+      "webdav": false,
+      "webdavPasswords": true,
+    },
+
+
+Number of calls: 1
+
+ ❯ tests/model-transfer.test.ts:216:38
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > SY-1/SY-2/N-SY-2：导出确认弹窗按原型顺序承载保存位置、树、说明、凭据与可选口令，范围首项保持 all
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ tests/model-transfer.test.ts:228:19
+    226|     const wrapper=render();await flushPromises();await flushPromises()
+    227|     const preset=wrapper.findAllComponents(UiSelectField).find(c=>c.pr…
+    228|     expect(preset.props('modelValue')).toBe('all')
+       |                   ^
+    229|     await customExportScope(wrapper);await chooseExport(wrapper,'测试族')
+    230|     await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigge…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > receives only a review and requires adoption while preserving the manual template buffer
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'incoming', ObjectContaining{…} ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "incoming",
+-   ObjectContaining {
+-     "adoptKeys": false,
++   {
++     "adoptExtensionCredentials": true,
++     "adoptKeys": true,
+      "backupBeforeUpdate": true,
++     "credentialIds": [],
++     "passphrase": "",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/model-transfer.test.ts:276:37
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > keeps the temporary file password for an encrypted Skill even when no credential was included
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'asset-incoming', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "asset-incoming",
+-   ObjectContaining {
+-     "adoptKeys": false,
++   {
++     "adoptExtensionCredentials": true,
++     "adoptKeys": true,
+      "backupBeforeUpdate": true,
++     "credentialIds": [],
+      "passphrase": "fixture-assets-password",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/model-transfer.test.ts:427:37
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  4 failed | 43 passed | 10 skipped (57)
+   Start at  11:48:09
+   Duration  1.35s (environment 42%, transform 35%, tests 18%, import 6%)
+

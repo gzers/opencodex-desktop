@@ -1,0 +1,14 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.click: Error: strict mode violation: getByRole('button', { name: '同步', exact: true }) resolved to 2 elements:
+    1) <button title="同步" class="active" aria-label="同步">…</button> aka getByLabel('同步', { exact: true })
+    2) <button type="button" data-v-9510aeb3="" class="btn primary">…</button> aka getByLabel('WebDAV同步').getByRole('button', { name: '同步' })
+
+Call log:
+[2m  - waiting for getByRole('button', { name: '同步', exact: true })[22m
+
+    at /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/sync-020.browser.mjs:12:580
+
+Node.js v26.8.1

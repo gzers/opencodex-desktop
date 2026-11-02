@@ -1,0 +1,52 @@
+{
+  "id": "TASK-UI020-20261102",
+  "imp_ref": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-28.md",
+  "dmd_ref": "docs/01-需求管理/需求/DMD-OPENCODEX-UI-020.md",
+  "status": "active",
+  "acceptance": [
+    "AC-020-01",
+    "AC-020-02",
+    "AC-020-03",
+    "AC-020-04",
+    "AC-020-05",
+    "AC-020-06",
+    "AC-020-07",
+    "AC-020-08",
+    "AC-020-09",
+    "AC-020-10",
+    "AC-020-11",
+    "AC-020-12",
+    "AC-020-13",
+    "AC-020-14",
+    "AC-020-15",
+    "AC-020-16",
+    "AC-020-17",
+    "AC-020-18",
+    "AC-020-19",
+    "AC-020-20"
+  ],
+  "required_checks": [
+    "review:prototype-parity",
+    "review:saved-file-and-backup",
+    "review:credential-and-scope-boundaries",
+    "review:all-entry-coverage",
+    "review:macos-windows-native",
+    "review:release-and-ota"
+  ],
+  "source_baseline": "v0.2.19 cb4c9c9b7",
+  "prototype": [
+    "cfbd90c4b",
+    "1da4cabca"
+  ],
+  "owner": "current chat integration",
+  "write_scope": {
+    "code": "codex/0.2.20-prototype-alignment: apps/** test/** .github/** CHANGELOG.md",
+    "docs": "docs/governance-main: DMD-UI-020, IMP-28, 0.2.20-bugs, implementation evidence, adopted core rules and REL when created"
+  },
+  "constraints": [
+    "no daily config mutations",
+    "no secrets in reports",
+    "no future prototype modules",
+    "no closure with pending required checks"
+  ]
+}

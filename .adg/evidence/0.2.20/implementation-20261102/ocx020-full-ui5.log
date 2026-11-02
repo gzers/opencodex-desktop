@@ -1,0 +1,193 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 9 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+EnvironmentTeardownError: Cannot load '/src/composables/useAppController.ts' imported from /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue after the environment was torn down. This is not a bug in Vitest. The last recorded callstack:
+- /src/composables/useAppController.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/stores/routes.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/ModelSaveHistory.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/BackupManagement.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/tests/backup-management.test.ts
+ ❯ src/routes/OverviewRoute.vue:14:1
+     12| import { useRouteStore } from '@/stores/routes'
+     13| import { useAppStore } from '@/stores/app'
+     14| import { useAppController } from '@/composables/useAppController'
+       | ^
+     15| import AppTopbar from '@/components/AppTopbar.vue'
+     16| import UiButton from '@/components/ui/UiButton.vue'
+ ❯ src/stores/routes.ts:13:1
+
+This error originated in "tests/backup-management.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+EnvironmentTeardownError: Cannot load '/src/composables/useAppController.ts' imported from /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue after the environment was torn down. This is not a bug in Vitest. The last recorded callstack:
+- /src/composables/useAppController.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/stores/routes.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/ModelSaveHistory.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/BackupManagement.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/tests/backup-management.test.ts
+ ❯ src/routes/OverviewRoute.vue:14:1
+     12| import { useRouteStore } from '@/stores/routes'
+     13| import { useAppStore } from '@/stores/app'
+     14| import { useAppController } from '@/composables/useAppController'
+       | ^
+     15| import AppTopbar from '@/components/AppTopbar.vue'
+     16| import UiButton from '@/components/ui/UiButton.vue'
+ ❯ src/stores/routes.ts:13:1
+
+This error originated in "tests/backup-management.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+EnvironmentTeardownError: Cannot load '/src/composables/useAppController.ts' imported from /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue after the environment was torn down. This is not a bug in Vitest. The last recorded callstack:
+- /src/composables/useAppController.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/stores/routes.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/ModelSaveHistory.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/BackupManagement.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/tests/backup-management.test.ts
+ ❯ src/routes/OverviewRoute.vue:14:1
+     12| import { useRouteStore } from '@/stores/routes'
+     13| import { useAppStore } from '@/stores/app'
+     14| import { useAppController } from '@/composables/useAppController'
+       | ^
+     15| import AppTopbar from '@/components/AppTopbar.vue'
+     16| import UiButton from '@/components/ui/UiButton.vue'
+ ❯ src/stores/routes.ts:13:1
+
+This error originated in "tests/backup-management.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+EnvironmentTeardownError: Cannot load '/src/composables/useAppController.ts' imported from /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue after the environment was torn down. This is not a bug in Vitest. The last recorded callstack:
+- /src/composables/useAppController.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/stores/routes.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/ModelSaveHistory.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/BackupManagement.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/tests/backup-management.test.ts
+ ❯ src/routes/OverviewRoute.vue:14:1
+     12| import { useRouteStore } from '@/stores/routes'
+     13| import { useAppStore } from '@/stores/app'
+     14| import { useAppController } from '@/composables/useAppController'
+       | ^
+     15| import AppTopbar from '@/components/AppTopbar.vue'
+     16| import UiButton from '@/components/ui/UiButton.vue'
+ ❯ src/stores/routes.ts:13:1
+
+This error originated in "tests/backup-management.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+EnvironmentTeardownError: Cannot load '/src/composables/useAppController.ts' imported from /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue after the environment was torn down. This is not a bug in Vitest. The last recorded callstack:
+- /src/composables/useAppController.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/stores/routes.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/ModelSaveHistory.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/BackupManagement.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/tests/backup-management.test.ts
+ ❯ src/routes/OverviewRoute.vue:14:1
+     12| import { useRouteStore } from '@/stores/routes'
+     13| import { useAppStore } from '@/stores/app'
+     14| import { useAppController } from '@/composables/useAppController'
+       | ^
+     15| import AppTopbar from '@/components/AppTopbar.vue'
+     16| import UiButton from '@/components/ui/UiButton.vue'
+ ❯ src/stores/routes.ts:13:1
+
+This error originated in "tests/backup-management.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+EnvironmentTeardownError: Cannot load '/src/composables/useAppController.ts' imported from /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue after the environment was torn down. This is not a bug in Vitest. The last recorded callstack:
+- /src/composables/useAppController.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/stores/routes.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/ModelSaveHistory.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/BackupManagement.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/tests/backup-management.test.ts
+ ❯ src/routes/OverviewRoute.vue:14:1
+     12| import { useRouteStore } from '@/stores/routes'
+     13| import { useAppStore } from '@/stores/app'
+     14| import { useAppController } from '@/composables/useAppController'
+       | ^
+     15| import AppTopbar from '@/components/AppTopbar.vue'
+     16| import UiButton from '@/components/ui/UiButton.vue'
+ ❯ src/stores/routes.ts:13:1
+
+This error originated in "tests/backup-management.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+EnvironmentTeardownError: Cannot load '/src/composables/useAppController.ts' imported from /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue after the environment was torn down. This is not a bug in Vitest. The last recorded callstack:
+- /src/composables/useAppController.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/stores/routes.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/ModelSaveHistory.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/BackupManagement.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/tests/backup-management.test.ts
+ ❯ src/routes/OverviewRoute.vue:14:1
+     12| import { useRouteStore } from '@/stores/routes'
+     13| import { useAppStore } from '@/stores/app'
+     14| import { useAppController } from '@/composables/useAppController'
+       | ^
+     15| import AppTopbar from '@/components/AppTopbar.vue'
+     16| import UiButton from '@/components/ui/UiButton.vue'
+ ❯ src/stores/routes.ts:13:1
+
+This error originated in "tests/backup-management.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+EnvironmentTeardownError: Cannot load '/src/composables/useAppController.ts' imported from /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue after the environment was torn down. This is not a bug in Vitest. The last recorded callstack:
+- /src/composables/useAppController.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/stores/routes.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/ModelSaveHistory.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/BackupManagement.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/tests/backup-management.test.ts
+ ❯ src/routes/OverviewRoute.vue:14:1
+     12| import { useRouteStore } from '@/stores/routes'
+     13| import { useAppStore } from '@/stores/app'
+     14| import { useAppController } from '@/composables/useAppController'
+       | ^
+     15| import AppTopbar from '@/components/AppTopbar.vue'
+     16| import UiButton from '@/components/ui/UiButton.vue'
+ ❯ src/stores/routes.ts:13:1
+
+This error originated in "tests/backup-management.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+EnvironmentTeardownError: Cannot load '/src/composables/useAppController.ts' imported from /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue after the environment was torn down. This is not a bug in Vitest. The last recorded callstack:
+- /src/composables/useAppController.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/routes/OverviewRoute.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/stores/routes.ts
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/ModelSaveHistory.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/backup/BackupManagement.vue
+- /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/tests/backup-management.test.ts
+ ❯ src/routes/OverviewRoute.vue:14:1
+     12| import { useRouteStore } from '@/stores/routes'
+     13| import { useAppStore } from '@/stores/app'
+     14| import { useAppController } from '@/composables/useAppController'
+       | ^
+     15| import AppTopbar from '@/components/AppTopbar.vue'
+     16| import UiButton from '@/components/ui/UiButton.vue'
+ ❯ src/stores/routes.ts:13:1
+
+This error originated in "tests/backup-management.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  177 passed (177)
+      Tests  1090 passed (1090)
+     Errors  9 errors
+   Start at  14:01:18
+   Duration  7.53s (environment 48%, tests 21%, transform 19%, import 12%, worker 1%)
+
+Environment  jsdom was created 177 times · 53.49s total, 48% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

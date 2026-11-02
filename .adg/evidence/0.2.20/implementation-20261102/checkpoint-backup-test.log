@@ -1,0 +1,27 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+warning: unused import: `store::sha256`
+ --> src/modules/model_config/transfer_backup.rs:3:24
+  |
+3 | use super::{schema::*, store::sha256, transfer};
+  |                        ^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `config_sync_store` is never used
+   --> src/commands/model_transfer.rs:101:4
+    |
+101 | fn config_sync_store(root: &std::path::Path) -> crate::modules::sync::config::SyncConfigStore {
+    |    ^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `opencodex-desktop` (lib test) generated 2 warnings (run `cargo fix --lib -p opencodex-desktop --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 24.38s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-1179d0dfc9266c75)
+
+running 2 tests
+test modules::model_config::transfer_backup::tests::inverse_preserves_outside_edits_and_rejects_overlap ... ok
+test modules::model_config::transfer_backup::tests::snapshots_reject_symlinks_and_restore_exact_resource_bytes ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1141 filtered out; finished in 0.01s
+

@@ -1,0 +1,38 @@
+{
+  "status": "active",
+  "source": "worktree development checkpoints; final source not yet committed",
+  "required_checks": {
+    "prototype-parity": {
+      "status": "pending",
+      "reason": "基础Chromium22、WebKit20；完整三档缩放Chromium648通过，WebKit保留1条原型ResizeObserver异常；后续变化待重验"
+    },
+    "saved-file-and-backup": {
+      "status": "pending",
+      "reason": "落盘/范围恢复/重试有局部证据，新增范围完整性与UI入口待最终复验"
+    },
+    "credential-and-scope-boundaries": {
+      "status": "pending",
+      "reason": "macOS原生安全库通过、Key差异脱敏/新设备目录通过，Windows待验"
+    },
+    "all-entry-coverage": {
+      "status": "pending",
+      "reason": "8路由/35调用点及动态台账仍待逐态；原全应用411项中10失败需区分基线/真缺陷"
+    },
+    "macos-windows-native": {
+      "status": "pending",
+      "reason": "Mac首轮发现计数差异，已修待最终构建复验；Windows未执行"
+    },
+    "release-and-ota": {
+      "status": "pending",
+      "reason": "未提交/合并/构建正式包/发布0.2.20"
+    }
+  },
+  "tests": {
+    "ui_checkpoint": "177 files 1090 pass; subsequent modifications require rerun",
+    "rust_checkpoint": "full cargo test passed before recent changes; subsequent rerun required",
+    "native_credential": "OPENCODEX_SANDBOX=1 explicit macOS native test passed"
+  },
+  "daily_config_writes": false,
+  "daily_real_sync": false,
+  "published": false
+}

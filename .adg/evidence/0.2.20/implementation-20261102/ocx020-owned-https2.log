@@ -1,0 +1,13 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.84s
+     Running tests/config_sync_webdav_real.rs (target/debug/deps/config_sync_webdav_real-ed6d226c8dc864ed)
+
+running 2 tests
+test conditional_publish_preserves_remote_objects_and_device_scoped_reception ... TLS WebDAV config domain: conditional create/update/readback passed; competing plan refused; partial union preserved; device-scoped review/adoption passed; old domain intact; no remote deletion
+ok
+test current_file_channel_roundtrips_over_verified_https_and_commits_on_confirmation ... HTTPS current-file transfer passed: actual reqwest TLS + conditional publication + download, damaged legacy copies ignored, confirmation committed saved config, reopen preserved exact model and unrelated data; no external service or user file
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.99s
+
+{"scope": "owned loopback HTTPS only; synthetic credentials; temporary local configurations", "remote_objects": 6, "exit_code": 0}

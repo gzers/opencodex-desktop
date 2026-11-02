@@ -1,0 +1,6 @@
+
+> opencodex-desktop-ui@0.2.20 typecheck
+> vue-tsc --noEmit
+
+src/features/sync/ModelTransfer.vue(460,811): error TS2551: Property 'models' does not exist on type '{ mode: "none" | "all"; } | { mode: "whitelist"; models: string[]; }'. Did you mean 'mode'?
+  Property 'models' does not exist on type '{ mode: "none" | "all"; }'.

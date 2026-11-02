@@ -1,0 +1,52 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/ui-tree-table.test.ts (15 tests | 2 failed) 79ms
+   ❯ shared tree table (15)
+     × returns removed async leaf focus to the nearest surviving ancestor (remove parent: false) 6ms
+     × returns removed async leaf focus to the nearest surviving ancestor (remove parent: true) 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ui-tree-table.test.ts > shared tree table > returns removed async leaf focus to the nearest surviving ancestor (remove parent: false)
+AssertionError: expected '收起 升级备份' to be '升级备份' // Object.is equality
+
+Expected: "升级备份"
+Received: "收起 升级备份"
+
+ ❯ tests/ui-tree-table.test.ts:129:64
+    127|     await wrapper.setProps({ loading: false })
+    128|     await wrapper.vm.$nextTick()
+    129|     expect(document.activeElement?.getAttribute("aria-label")).toBe(re…
+       |                                                                ^
+    130|     wrapper.unmount()
+    131|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/ui-tree-table.test.ts > shared tree table > returns removed async leaf focus to the nearest surviving ancestor (remove parent: true)
+AssertionError: expected '收起 10' to be '10' // Object.is equality
+
+Expected: "10"
+Received: "收起 10"
+
+ ❯ tests/ui-tree-table.test.ts:129:64
+    127|     await wrapper.setProps({ loading: false })
+    128|     await wrapper.vm.$nextTick()
+    129|     expect(document.activeElement?.getAttribute("aria-label")).toBe(re…
+       |                                                                ^
+    130|     wrapper.unmount()
+    131|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 68 passed (70)
+   Start at  13:14:21
+   Duration  1.44s (transform 43%, environment 31%, tests 19%, import 7%)
+
+  Transform  transforming modules took 2.02s · 43% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

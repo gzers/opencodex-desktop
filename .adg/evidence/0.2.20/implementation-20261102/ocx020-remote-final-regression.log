@@ -1,0 +1,19 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.62s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-1179d0dfc9266c75)
+
+running 10 tests
+test modules::model_config::config_remote::tests::account_participation_matches_subject_across_devices_and_never_matches_email ... ok
+test modules::model_config::config_remote::tests::lost_pointer_reply_reuses_original_configuration_plan_and_does_not_republish ... ok
+test modules::model_config::config_remote::tests::account_only_sync_is_reviewed_and_preserves_an_existing_local_login_store ... ok
+test modules::model_config::config_remote::tests::actual_skill_resources_follow_saved_device_scope_and_remain_pending_until_asset_adoption ... ok
+test modules::model_config::config_remote::tests::new_device_lists_remote_objects_without_expanding_scope_and_can_explicitly_select_them ... ok
+test modules::model_config::config_remote::tests::partial_remote_upload_preserves_other_objects_and_saved_device_scope_bounds_reception ... ok
+test modules::model_config::config_remote::tests::file_channels_use_the_same_export_and_webdav_source_without_retired_policy_or_cli ... ok
+test modules::model_config::config_remote::tests::sync_direction_follows_last_synced_pointer_and_preview_lists_only_changes ... ok
+test modules::model_config::config_remote::tests::protected_remote_requires_content_password_and_scope_change_cannot_publish_an_old_plan ... ok
+test modules::model_config::config_remote::tests::protection_can_rotate_or_disable_without_changing_saved_content_time has been running for over 60 seconds
+test modules::model_config::config_remote::tests::protection_can_rotate_or_disable_without_changing_saved_content_time ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 113.60s
+

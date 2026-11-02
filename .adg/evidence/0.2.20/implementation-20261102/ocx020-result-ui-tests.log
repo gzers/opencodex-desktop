@@ -1,0 +1,59 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/model-transfer.test.ts (35 tests | 1 failed) 487ms
+   ❯ model transfer review (35)
+     × automatically compares an explicit endpoint-conflict channel mapping 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > automatically compares an explicit endpoint-conflict channel mapping
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'channel-incoming', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "channel-incoming",
+-   ObjectContaining {
++   {
++     "channelIds": [
++       "channel-source",
++     ],
+      "channelMappings": {
+        "channel-source": {
+-         "label": "独立接收",
++         "label": "来源渠道（导入）",
+          "mode": "new",
++       },
+      },
++     "includeGlobal": false,
++     "templateRefs": [
++       {
++         "revisionId": "revision-1",
++         "templateId": "family",
+        },
++     ],
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/model-transfer.test.ts:155:37
+    153|     expect(modelTransferApi.accept).not.toHaveBeenCalled()
+    154|     await flushPromises()
+    155|     expect(modelTransferApi.select).toHaveBeenCalledWith('channel-inco…
+       |                                     ^
+    156|     expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(wrap…
+    157|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 46 passed (47)
+   Start at  12:15:14
+   Duration  1.31s (transform 50%, tests 26%, environment 17%, import 7%)
+

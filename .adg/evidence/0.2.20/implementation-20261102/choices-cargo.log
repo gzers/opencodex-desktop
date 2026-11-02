@@ -1,0 +1,52 @@
+   Compiling tauri v2.12.1
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-dialog v2.8.1
+error[E0308]: mismatched types
+   --> src/commands/model_transfer.rs:576:242
+    |
+576 | ... transfer choices",move||crate::modules::model_config::transfer_choices::load(&root,remote)).await}
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<_, AppError>`, found `Result<Option<Choice>, ModelError>`
+    |
+    = note: expected enum `Result<_, errors::AppError>`
+               found enum `Result<std::option::Option<transfer_choices::Choice>, modules::model_config::schema::ModelError>`
+
+error[E0308]: mismatched types
+   --> src/commands/model_transfer.rs:576:192
+    |
+576 | ...();super::run_blocking("read transfer choices",move||crate::modules::model_config::transfer_choices::load(&root,remote)).await}
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<Option<Choice>, ModelError>`, found `Result<_, AppError>`
+    |
+    = note: expected enum `Result<std::option::Option<transfer_choices::Choice>, modules::model_config::schema::ModelError>`
+               found enum `Result<_, errors::AppError>`
+help: use the `?` operator to extract the `Result<_, errors::AppError>` value, propagating a `Result::Err` value to the caller
+    |
+576 | pub async fn transfer_choices(remote:bool,data_root:tauri::State<'_,SharedDataRoot>)->ModelResult<Option<crate::modules::model_config::transfer_choices::Choice>>{let root=data_root.0.clone();super::run_blocking("read transfer choices",move||crate::modules::model_config::transfer_choices::load(&root,remote)).await?}
+    |                                                                                                                                                                                                                                                                                                                           +
+
+error[E0308]: mismatched types
+   --> src/commands/model_transfer.rs:578:399
+    |
+578 | ..._admission=admission;crate::modules::model_config::transfer_choices::save(&root,remote,choice)}).await}
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<_, AppError>`, found `Result<Choice, ModelError>`
+    |
+    = note: expected enum `Result<_, errors::AppError>`
+               found enum `Result<transfer_choices::Choice, modules::model_config::schema::ModelError>`
+
+error[E0308]: mismatched types
+   --> src/commands/model_transfer.rs:578:323
+    |
+578 | ...)?;super::run_blocking("save transfer choices",move||{let _admission=admission;crate::modules::model_config::transfer_choices::save(&root,remote,choice)}).await}
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<Choice, ModelError>`, found `Result<_, AppError>`
+    |
+    = note: expected enum `Result<transfer_choices::Choice, modules::model_config::schema::ModelError>`
+               found enum `Result<_, errors::AppError>`
+help: use the `?` operator to extract the `Result<_, errors::AppError>` value, propagating a `Result::Err` value to the caller
+    |
+578 | pub async fn save_transfer_choices(remote:bool,choice:crate::modules::model_config::transfer_choices::Choice,data_root:tauri::State<'_,SharedDataRoot>)->ModelResult<crate::modules::model_config::transfer_choices::Choice>{let root=data_root.0.clone();let admission=crate::infrastructure::storage_writers::global().admit()?;super::run_blocking("save transfer choices",move||{let _admission=admission;crate::modules::model_config::transfer_choices::save(&root,remote,choice)}).await?}
+    |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                +
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `opencodex-desktop` (lib test) due to 4 previous errors

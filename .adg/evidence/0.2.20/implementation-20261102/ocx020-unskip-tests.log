@@ -1,0 +1,22 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/model-transfer.test.ts (36 tests | 1 failed | 2 skipped) 450ms
+   ❯ model transfer review (36)
+     × automatically compares an explicit endpoint-conflict channel mapping 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > automatically compares an explicit endpoint-conflict channel mapping
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ tests/model-transfer.test.ts:156:140
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 41 passed | 2 skipped (44)
+   Start at  11:52:07
+   Duration  1.08s (transform 42%, tests 33%, environment 18%, import 7%)
+

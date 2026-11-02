@@ -1,0 +1,15 @@
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `npm --prefix ui run build`
+
+> opencodex-desktop-ui@0.2.20 build
+> vue-tsc --noEmit && vite build
+
+src/dev/modelFixtures.ts(113,43): error TS2322: Type 'Promise<"/fixture/custom-export" | "/fixture/device-config.ocxdconf">' is not assignable to type 'Promise<OpenDialogReturn<T>>'.
+  Type '"/fixture/custom-export" | "/fixture/device-config.ocxdconf"' is not assignable to type 'OpenDialogReturn<T>'.
+    Type '"/fixture/custom-export"' is not assignable to type 'OpenDialogReturn<T>'.
+src/dev/modelFixtures.ts(114,3): error TS2322: Type '(_path: string, password: string | undefined) => Promise<{ id: `${string}-${string}-${string}-${string}-${string}`; package: ModelPackage; expectedLibrary: string; expectedPolicy: string; ... 5 more ...; comparison: { ...; }; }>' is not assignable to type '(path: string, passphrase?: string) => Promise<IncomingPlan>'.
+  Type 'Promise<{ id: `${string}-${string}-${string}-${string}-${string}`; package: ModelPackage; expectedLibrary: string; expectedPolicy: string; expectedWorkspace: string; mergedPolicy: ModelPolicy; notices: never[]; availableKeys: never[]; availableExtensionIds: never[]; comparison: { ...; }; }>' is not assignable to type 'Promise<IncomingPlan>'.
+    Type '{ id: `${string}-${string}-${string}-${string}-${string}`; package: ModelPackage; expectedLibrary: string; expectedPolicy: string; expectedWorkspace: string; mergedPolicy: ModelPolicy; notices: never[]; availableKeys: never[]; availableExtensionIds: never[]; comparison: { ...; }; }' is not assignable to type 'IncomingPlan'.
+      The types of 'comparison.source' are incompatible between these types.
+        Type '"file"' is not assignable to type '"local" | "remote"'.
+       Error beforeBuildCommand `npm --prefix ui run build` failed with exit code 2

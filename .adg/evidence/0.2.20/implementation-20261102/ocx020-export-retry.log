@@ -1,0 +1,19 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 20.71s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-1179d0dfc9266c75)
+
+running 1 test
+
+thread 'modules::model_config::file_exports::tests::retry_reuses_the_custom_package_and_never_overwrites_later_content' (112174490) panicked at src/modules/model_config/file_exports.rs:219:9:
+assertion failed: directory(root.path(), &plan.id).unwrap().starts_with(custom.path())
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::model_config::file_exports::tests::retry_reuses_the_custom_package_and_never_overwrites_later_content ... FAILED
+
+failures:
+
+failures:
+    modules::model_config::file_exports::tests::retry_reuses_the_custom_package_and_never_overwrites_later_content
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1148 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `--lib`

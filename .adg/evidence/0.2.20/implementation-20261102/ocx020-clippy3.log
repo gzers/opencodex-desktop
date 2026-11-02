@@ -1,0 +1,25 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+error[E0425]: cannot find value `raw` in this scope
+    --> src/modules/sync/portable_assets.rs:1688:30
+     |
+1688 |             definitions.push(raw);
+     |                              ^^^ not found in this scope
+
+error[E0499]: cannot borrow `objects` as mutable more than once at a time
+   --> src/modules/model_config/config_remote.rs:146:9
+    |
+118 |     let mut push = |kind: &str, group: &str, id: &str, label: &str| {
+    |                    ------------------------------------------------ first mutable borrow occurs here
+119 |         objects.push(CatalogObject {
+    |         ------- first borrow occurs due to use of `objects` in closure
+...
+145 |         push("skills", "Skills", &s.name, &format!("Skill · {}", s.name));
+    |         ---- first borrow later used here
+146 |         objects.last_mut().unwrap().files = s.file_entries.iter().map(|f| f.path.clone()).collect();
+    |         ^^^^^^^ second mutable borrow occurs here
+
+Some errors have detailed explanations: E0425, E0499.
+For more information about an error, try `rustc --explain E0425`.
+error: could not compile `opencodex-desktop` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

@@ -1,0 +1,49 @@
+
+浏览器探针：401/411 通过，失败 10
+  FAIL 设置·migration 关键结构存在（.settings-tabs）
+  FAIL 设置·sync 关键结构存在（.settings-tabs）
+  FAIL 概览动作按钮材质 不做实时模糊（性能预算） — [["btn primary","none"],["btn danger","none"],["btn","saturate(1.5) blur(8px)"],["btn ghost","none"]]
+  FAIL 性能·档位动画-mid 无持续动画 rAF — frames=60
+  FAIL 性能·档位动画-mid 隐藏后暂停 — frames=22
+  FAIL 性能·档位动画-low 无持续动画 rAF — frames=72
+  FAIL 性能·档位动画-low 隐藏后暂停 — frames=26
+  FAIL 交互·画质卡片 执行 — locator.innerText: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="card-quality"]').locator('[data-testid="setting-glow-render"]').locator('.select-value')[22m
+
+  FAIL 交互·卸载弹窗（Revision 11） 执行 — locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="runtime-uninstall"]')[22m
+[2m    - locator resolved to <button disabled type="button" data-v-d98acdc2="" class="btn btn danger" data-testid="runtime-uninstall">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+  FAIL 交互·通知写动作无后端不假成功 执行 — locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.notification-head-actions button').filter({ hasText: '清理已解决' })[22m
+
+新页面错误 0
+  性能 性能·档位动画 high rAF=2800 p50=0.1ms p95=22.6ms max=30.8ms（30s，③ 层）
+  性能 性能·档位动画 mid rAF=60 p50=19.8ms p95=20.2ms max=20.3ms（1.2s，③ 层）
+  性能 性能·档位动画 low rAF=72 p50=16.6ms p95=17.2ms max=17.5ms（1.2s，③ 层）
+  性能 性能·启动 首帧中位数=224ms 业务就绪中位数=236ms（5 次，③ 层开发服务器）
+  性能 性能·资源 40 次切换后 长寿 listener Δadd=88 Δremove=144 Δinterval=0 Δ活observer=-1
+  性能 性能·三档CPU内存 high 3s任务耗时=575ms 脚本=14ms 布局=8ms 堆=11MB（③ 层）
+  性能 性能·三档CPU内存 mid 3s任务耗时=33ms 脚本=5ms 布局=0ms 堆=11MB（③ 层）
+  性能 性能·三档CPU内存 low 3s任务耗时=38ms 脚本=6ms 布局=0ms 堆=11MB（③ 层）
+  性能 性能·交互分布 路由 median=7ms p95=60ms；通知面板(200 条) median=98ms p95=502ms（各 20 次，③ 层）
+  性能 性能·通知长列表渲染 rendered=200 renderMs=471（③ 层，开发服务器）
+  性能 性能·路由切换 switchMs=107（③ 层，开发服务器）
+  性能 性能·Markdown 渲染 nodes=242 renderMs=73（③ 层，开发服务器）
+报告：/tmp/ocx020-all-route-audit/audit-report.json

@@ -1,0 +1,8 @@
+
+> opencodex-desktop-ui@0.2.20 typecheck
+> vue-tsc --noEmit
+
+tests/sync-prototype-020.test.ts(41,18): error TS2352: Conversion of type '{ id: string; package: ModelPackage; expectedPolicy: string; expectedLibrary: string; expectedWorkspace: string; mergedPolicy: null; notices: never[]; assets: { skills: { name: string; files: number; bytes: number; warnings: never[]; protected: false; }[]; mcps: never[]; conflicts: never[]; }; }' to type 'IncomingPlan' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  The types of 'assets.skills' are incompatible between these types.
+    Type '{ name: string; files: number; bytes: number; warnings: never[]; protected: false; }[]' is not comparable to type '{ name: string; digest: string; files: number; bytes: number; warnings: string[]; protected: boolean; }[]'.
+      Property 'digest' is missing in type '{ name: string; files: number; bytes: number; warnings: never[]; protected: false; }' but required in type '{ name: string; digest: string; files: number; bytes: number; warnings: string[]; protected: boolean; }'.

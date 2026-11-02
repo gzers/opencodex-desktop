@@ -1,0 +1,105 @@
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `npm --prefix ui run build`
+
+> opencodex-desktop-ui@0.2.20 build
+> vue-tsc --noEmit && vite build
+
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 329 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                     0.99 kB │ gzip:   0.41 kB
+dist/assets/ConnectionDialog-DK_KJUd6.css           0.47 kB │ gzip:   0.24 kB
+dist/assets/TransferBackups-BzuREmOJ.css            0.73 kB │ gzip:   0.31 kB
+dist/assets/SyncResultDialog-hT99n9SE.css           0.97 kB │ gzip:   0.43 kB
+dist/assets/SyncRoute-DDECSxd6.css                  1.12 kB │ gzip:   0.46 kB
+dist/assets/ModelSaveHistory-BaDMLQ8j.css           1.53 kB │ gzip:   0.49 kB
+dist/assets/ModelsRoute-Bb7Kqz6J.css               33.79 kB │ gzip:   6.04 kB
+dist/assets/index-DXlm4LtJ.css                    142.14 kB │ gzip:  24.89 kB
+dist/assets/rolldown-runtime-DK3Fl9T5.js            0.15 kB │ gzip:   0.15 kB
+dist/assets/preload-helper-BZ1Pz5am.js              1.21 kB │ gzip:   0.69 kB
+dist/assets/SyncRoute-CpGbzVPf.js                   2.51 kB │ gzip:   1.16 kB
+dist/assets/core-DNNVStWM.js                        2.85 kB │ gzip:   1.14 kB
+dist/assets/TransferBackups-nqjfJCiG.js             3.83 kB │ gzip:   1.87 kB
+dist/assets/ConnectionDialog-DRjnD6VN.js            4.08 kB │ gzip:   1.67 kB
+dist/assets/SyncResultDialog-AwWnC7sS.js            5.42 kB │ gzip:   2.52 kB
+dist/assets/pinia-Degfou_Q.js                       5.99 kB │ gzip:   2.83 kB
+dist/assets/ModelSaveHistory-ubYhepbI.js            7.45 kB │ gzip:   3.29 kB
+dist/assets/reactivity.esm-bundler-CiLpcgQX.js     20.90 kB │ gzip:   7.86 kB
+dist/assets/store-ITh4U79r.js                      27.98 kB │ gzip:   4.72 kB
+dist/assets/runtime-core.esm-bundler-BIovt1e_.js   42.99 kB │ gzip:  17.74 kB
+dist/assets/ModelsRoute-CgGfLYKs.js               180.65 kB │ gzip:  53.39 kB
+dist/assets/index-BYKRt2hn.js                     544.38 kB │ gzip: 173.08 kB
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/sync/store.ts is dynamically imported by src/composables/useAppController.ts but also statically imported by src/components/TaskProgressHost.vue?vue&type=script&setup=true&lang.ts, src/components/ToastHost.vue?vue&type=script&setup=true&lang.ts, src/features/sync/ConnectionDialog.vue?vue&type=script&setup=true&lang.ts, src/features/sync/ModelTransfer.vue?vue&type=script&setup=true&lang.ts, src/features/sync/SyncDialogHost.vue?vue&type=script&setup=true&lang.ts, ..., dynamic import will not move module into another chunk.
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/features/updates/useUpdateScheduler.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/updates/update.ts is dynamically imported by src/features/updates/store.ts but also statically imported by src/features/backup/BackupManagement.vue?vue&type=script&setup=true&lang.ts, src/features/updates/UpdateCenter.vue?vue&type=script&setup=true&lang.ts, src/features/updates/useUpdateScheduler.ts, src/routes/OverviewRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/models/store.ts is dynamically imported by src/composables/useAppController.ts but also statically imported by src/features/backup/ModelSaveHistory.vue?vue&type=script&setup=true&lang.ts, src/features/backup/TransferBackups.vue?vue&type=script&setup=true&lang.ts, src/features/models/AgentExecutionField.vue?vue&type=script&setup=true&lang.ts, src/features/models/BatchAgentDialog.vue?vue&type=script&setup=true&lang.ts, src/features/models/ChannelBatchDialog.vue?vue&type=script&setup=true&lang.ts, ..., dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/sync/ModelTransfer.vue is dynamically imported by src/features/sync/SyncDialogHost.vue?vue&type=script&setup=true&lang.ts, src/routes/SyncRoute.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/routes/OverviewRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/event.js is dynamically imported by src/app/appearance/effects.ts, src/app/lifecycle/store.ts, src/components/TaskProgressHost.vue?vue&type=script&setup=true&lang.ts, src/features/notifications/store.ts, src/features/runtime/store.ts, ... but also statically imported by src/app/appearance/nativeWindow.ts, dynamic import will not move module into another chunk.
+
+✓ built in 376ms
+    Blocking waiting for file lock on artifact directory
+   Compiling objc2-exception-helper v0.1.1
+   Compiling ring v0.17.14
+   Compiling objc2 v0.6.4
+   Compiling tauri v2.12.1
+   Compiling objc2-foundation v0.3.2
+   Compiling wry v0.57.0
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-process v2.4.0
+   Compiling objc2-core-foundation v0.3.2
+   Compiling block2 v0.6.2
+   Compiling tauri-plugin-dialog v2.8.1
+   Compiling dispatch2 v0.3.1
+   Compiling rustls v0.23.45
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+   Compiling objc2-core-graphics v0.3.2
+   Compiling rustls-webpki v0.103.15
+warning: opencodex-desktop@0.2.20: STATIC_VCRUNTIME is deprecated; use build.windows.staticVCRuntime in tauri.conf.json or tauri_build::WindowsAttributes::static_vc_runtime instead.
+   Compiling tokio-rustls v0.26.6
+   Compiling rustls-platform-verifier v0.7.1
+   Compiling hyper-rustls v0.27.10
+   Compiling reqwest v0.13.5
+   Compiling reqwest v0.12.28
+   Compiling objc2-quartz-core v0.3.2
+   Compiling objc2-app-kit v0.3.2
+   Compiling objc2-web-kit v0.3.2
+   Compiling tao v0.37.1
+   Compiling muda v0.20.0
+   Compiling window-vibrancy v0.8.1
+   Compiling objc2-osa-kit v0.3.2
+   Compiling rfd v0.16.0
+   Compiling osakit v0.3.1
+   Compiling tauri-runtime v2.12.1
+   Compiling tray-icon v0.25.1
+   Compiling tauri-runtime-wry v2.12.1
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 53.69s
+       Built application at: /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/opencodex-desktop
+    Bundling OpenCodeX Desktop.app (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app)
+     Signing with identity "-"
+Signing with identity "-"
+Signing /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd
+/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/ocxd: replacing existing signature
+Signing with identity "-"
+Signing /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop
+/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop: replacing existing signature
+Signing with identity "-"
+Signing /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app
+/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app: replacing existing signature
+        Warn skipping app notarization, no APPLE_ID & APPLE_PASSWORD & APPLE_TEAM_ID or APPLE_API_KEY & APPLE_API_ISSUER & APPLE_API_KEY_PATH environment variables found
+    Finished 1 bundle at:
+        /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app
+

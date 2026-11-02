@@ -1,0 +1,46 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.57s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-1179d0dfc9266c75)
+
+running 21 tests
+test modules::model_config::file_objects::tests::raw_secret_objects_and_unknown_secret_targets_are_rejected_before_any_cache_write ... ok
+test modules::model_config::file_objects::file_tests::memory_export_freezes_supplied_policy_without_an_ordinary_disk_draft ... ok
+test modules::model_config::file_objects::tests::legacy_plaintext_file_is_read_as_its_actual_categories_without_creating_a_model_library ... ok
+test modules::model_config::file_objects::tests::unknown_manager_fields_are_rejected_instead_of_being_truncated ... ok
+test modules::model_config::file_objects::tests::a_half_applied_unified_import_resumes_the_same_receipt_and_does_not_duplicate_connections ... ok
+test modules::model_config::file_objects::tests::plaintext_manifest_restores_only_selected_inactive_webdav_password ... ok
+test modules::model_config::file_objects::file_tests::template_only_file_acceptance_and_legacy_recompare_never_create_a_channel_workspace ... ok
+test modules::model_config::file_objects::tests::named_asset_conflicts_can_be_remapped_with_settings_without_overwriting_existing_sources ... ok
+test modules::model_config::file_objects::tests::account_info_round_trip_selects_only_requested_identity_without_login_material ... ok
+
+thread 'modules::model_config::file_objects::file_tests::interrupted_saved_file_commit_resumes_and_rejects_a_modified_receipt' (112099048) panicked at src/modules/model_config/file_objects_file_tests.rs:665:5:
+assertion `left == right` failed
+  left: "storage"
+ right: "incoming_identity"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::model_config::file_objects::file_tests::interrupted_saved_file_commit_resumes_and_rejects_a_modified_receipt ... FAILED
+test modules::model_config::file_objects::file_tests::file_export_ignores_stale_policy_and_cli_and_carries_current_raw_authorization ... ok
+test modules::model_config::file_objects::file_tests::ordinary_file_accept_and_replay_commit_saved_config_and_preserve_retired_history ... ok
+test modules::model_config::file_objects::file_tests::file_acceptance_checks_file_digest_before_installing_plain_keys_and_mapping_keeps_local_connection ... ok
+test modules::model_config::file_objects::tests::unified_file_carries_skill_resources_and_mcp_definitions_with_explicit_subset_adoption ... ok
+
+thread 'modules::model_config::file_objects::tests::protected_original_channel_model_subset_uses_full_source_auth_and_only_selected_public_fields' (112099061) panicked at src/modules/model_config/file_objects.rs:2015:9:
+assertion failed: !target.connection.enabled
+test modules::model_config::file_objects::tests::protected_original_channel_model_subset_uses_full_source_auth_and_only_selected_public_fields ... FAILED
+test modules::model_config::file_objects::tests::one_protected_manifest_restores_selected_manager_settings_and_inactive_webdav_password ... ok
+test modules::model_config::file_objects::tests::remote_endpoint_change_without_new_key_never_reuses_the_old_remote_credential ... ok
+test modules::model_config::file_objects::tests::exported_keys_are_protected_and_explicit_adoption_only_creates_a_new_draft_reference ... ok
+test modules::model_config::file_objects::tests::mapping_keeps_source_key_out_of_local_connection_and_binds_new_keys_only_to_new_channel ... ok
+test modules::model_config::file_objects::tests::protected_remote_skill_files_survive_an_upload_that_did_not_select_extension_credentials ... ok
+test modules::model_config::file_objects::tests::partial_remote_original_config_updates_keep_bound_private_pool_and_refuse_endpoint_retargeting has been running for over 60 seconds
+test modules::model_config::file_objects::tests::partial_remote_original_config_updates_keep_bound_private_pool_and_refuse_endpoint_retargeting ... ok
+
+failures:
+
+failures:
+    modules::model_config::file_objects::file_tests::interrupted_saved_file_commit_resumes_and_rejects_a_modified_receipt
+    modules::model_config::file_objects::tests::protected_original_channel_model_subset_uses_full_source_auth_and_only_selected_public_fields
+
+test result: FAILED. 19 passed; 2 failed; 0 ignored; 0 measured; 1122 filtered out; finished in 61.72s
+
+error: test failed, to rerun pass `--lib`

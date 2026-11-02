@@ -1,0 +1,2079 @@
+{
+  "generatedAt": "2026-11-02T05:54:09.241Z",
+  "base": "http://127.0.0.1:5199",
+  "total": 411,
+  "passed": 401,
+  "failed": 10,
+  "warnings": [],
+  "performance": [
+    "性能·档位动画 high rAF=2800 p50=0.1ms p95=22.6ms max=30.8ms（30s，③ 层）",
+    "性能·档位动画 mid rAF=60 p50=19.8ms p95=20.2ms max=20.3ms（1.2s，③ 层）",
+    "性能·档位动画 low rAF=72 p50=16.6ms p95=17.2ms max=17.5ms（1.2s，③ 层）",
+    "性能·启动 首帧中位数=224ms 业务就绪中位数=236ms（5 次，③ 层开发服务器）",
+    "性能·资源 40 次切换后 长寿 listener Δadd=88 Δremove=144 Δinterval=0 Δ活observer=-1",
+    "性能·三档CPU内存 high 3s任务耗时=575ms 脚本=14ms 布局=8ms 堆=11MB（③ 层）",
+    "性能·三档CPU内存 mid 3s任务耗时=33ms 脚本=5ms 布局=0ms 堆=11MB（③ 层）",
+    "性能·三档CPU内存 low 3s任务耗时=38ms 脚本=6ms 布局=0ms 堆=11MB（③ 层）",
+    "性能·交互分布 路由 median=7ms p95=60ms；通知面板(200 条) median=98ms p95=502ms（各 20 次，③ 层）",
+    "性能·通知长列表渲染 rendered=200 renderMs=471（③ 层，开发服务器）",
+    "性能·路由切换 switchMs=107（③ 层，开发服务器）",
+    "性能·Markdown 渲染 nodes=242 renderMs=73（③ 层，开发服务器）"
+  ],
+  "results": [
+    {
+      "name": "概览 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览 关键结构存在（[data-testid=\"overview-motion\"]）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "概览 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "面板 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "面板 关键结构存在（.panel-shell）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "面板页不保留软件顶栏（IMP-07）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "面板 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "面板 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "扩展·Skills 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "扩展·Skills 关键结构存在（.ext-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "扩展·Skills 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "扩展·Skills 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "扩展·Skills 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "扩展·Skills 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "扩展·MCP 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "扩展·MCP 关键结构存在（.ext-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "扩展·MCP 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "扩展·MCP 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "扩展·MCP 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "扩展·MCP 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·诊断 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·诊断 关键结构存在（.diag-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·诊断 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·诊断 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·诊断 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "日志·诊断 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·历史 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·历史 关键结构存在（.diag-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·历史 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·历史 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·历史 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "日志·历史 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·通知 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·通知 关键结构存在（.diag-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·通知 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·通知 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "日志·通知 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "日志·通知 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "托盘 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "托盘 关键结构存在（.tray-stage）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "托盘 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "托盘 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·general 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·general 关键结构存在（.settings-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·general 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·general 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·general 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "设置·general 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·installation 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·installation 关键结构存在（.settings-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·installation 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·installation 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·installation 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "设置·installation 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·backup 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·backup 关键结构存在（.settings-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·backup 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·backup 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·backup 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "设置·backup 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·extensions 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·extensions 关键结构存在（.settings-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·extensions 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·extensions 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·extensions 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "设置·extensions 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·migration 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·migration 关键结构存在（.settings-tabs）",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "设置·migration 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·migration 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·migration 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "设置·migration 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·sync 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·sync 关键结构存在（.settings-tabs）",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "设置·sync 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·sync 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·sync 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "设置·sync 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·cleanup 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·cleanup 关键结构存在（.settings-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·cleanup 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·cleanup 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·cleanup 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "设置·cleanup 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·cli 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·cli 关键结构存在（.settings-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·cli 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·cli 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·cli 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "设置·cli 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·upgrade 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·upgrade 关键结构存在（.settings-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·upgrade 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·upgrade 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·upgrade 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "设置·upgrade 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·about 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·about 关键结构存在（.settings-tabs）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·about 顶栏刷新入口存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·about 顶栏刷新入口为「刷新状态」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "设置·about 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "设置·about 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "通知中心 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "通知中心 状态断言",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "通知中心 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Toast 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Toast 状态断言",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Toast 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "任务卡 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "任务卡 状态断言",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "任务卡 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "通知·空 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "通知·空 状态断言",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "通知·空 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "通知·长文本 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "通知·长文本 状态断言",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "通知·长文本 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "任务·超时 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "任务·超时 状态断言",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "任务·超时 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "任务·失败 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "任务·失败 状态断言",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "任务·失败 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "light·overview 主题生效",
+      "ok": true,
+      "detail": "theme=light"
+    },
+    {
+      "name": "light·overview 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "light·overview 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "light·settings 主题生效",
+      "ok": true,
+      "detail": "theme=light"
+    },
+    {
+      "name": "light·settings 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "light·settings 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "light·extensions 主题生效",
+      "ok": true,
+      "detail": "theme=light"
+    },
+    {
+      "name": "light·extensions 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "light·extensions 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "light·logs 主题生效",
+      "ok": true,
+      "detail": "theme=light"
+    },
+    {
+      "name": "light·logs 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "light·logs 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "light·tray 主题生效",
+      "ok": true,
+      "detail": "theme=light"
+    },
+    {
+      "name": "light·tray 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "light·tray 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "light·panel 主题生效",
+      "ok": true,
+      "detail": "theme=light"
+    },
+    {
+      "name": "light·panel 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "light·panel 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dark·overview 主题生效",
+      "ok": true,
+      "detail": "theme=dark"
+    },
+    {
+      "name": "dark·overview 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "dark·overview 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dark·settings 主题生效",
+      "ok": true,
+      "detail": "theme=dark"
+    },
+    {
+      "name": "dark·settings 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "dark·settings 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dark·extensions 主题生效",
+      "ok": true,
+      "detail": "theme=dark"
+    },
+    {
+      "name": "dark·extensions 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "dark·extensions 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dark·logs 主题生效",
+      "ok": true,
+      "detail": "theme=dark"
+    },
+    {
+      "name": "dark·logs 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "dark·logs 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dark·tray 主题生效",
+      "ok": true,
+      "detail": "theme=dark"
+    },
+    {
+      "name": "dark·tray 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "dark·tray 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dark·panel 主题生效",
+      "ok": true,
+      "detail": "theme=dark"
+    },
+    {
+      "name": "dark·panel 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "dark·panel 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 就绪形态",
+      "ok": true,
+      "detail": "mode=ready"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 固定舞台 300px",
+      "ok": true,
+      "detail": "fixedH=300"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 动画舞台 168px",
+      "ok": true,
+      "detail": "stageH=168"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 光场绘制层 660px",
+      "ok": true,
+      "detail": "markH=660"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light Logo 展示 140px",
+      "ok": true,
+      "detail": "heroW=140"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 光场铺满主内容全边界",
+      "ok": true,
+      "detail": "glowW=933 mainW=933 edges={\"main\":{\"left\":246,\"right\":1179,\"top\":30},\"glow\":{\"x\":246,\"y\":30,\"width\":933,\"height\":729,\"top\":30,\"right\":1179,\"bottom\":759,\"left\":246}}"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 光场不做逐层模糊（保帧预算）",
+      "ok": true,
+      "detail": "ambient=none layers=0"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 光场纵向渐隐",
+      "ok": true,
+      "detail": "mode=mesh canvas=1 mask=linear-gradient(90deg, rgba(0, 0, 0, 0), rgb(0, 0, 0) 12%, rgb(0, 0, 0) 88%, rgba(0, 0, 0, 0)), linear-gradient(rgba(0, 0, 0, 0), rgb(0, 0, 0) 6%, rgb(0, 0, 0) 55%, rgba(0, 0, 0, 0))"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 能量束径向遮罩（无硬边圆环）",
+      "ok": true,
+      "detail": "mask=radial-gradient(rgba(0, 0, 0, 0) 24%, rgb(0, 0, 0) 45%, rgba(0, 0, 0, 0) 72%)"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 光场盖过下方三卡",
+      "ok": true,
+      "detail": "markBottom=709 modsBottom=600"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 无常驻环境摘要行",
+      "ok": true,
+      "detail": "envRow=0"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 无准备态门禁卡",
+      "ok": true,
+      "detail": "gate=0"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 底部原三卡",
+      "ok": true,
+      "detail": "mods=3"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 最近事件卡",
+      "ok": true,
+      "detail": "events=1"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-light 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 就绪形态",
+      "ok": true,
+      "detail": "mode=ready"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 固定舞台 300px",
+      "ok": true,
+      "detail": "fixedH=300"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 动画舞台 168px",
+      "ok": true,
+      "detail": "stageH=168"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 光场绘制层 660px",
+      "ok": true,
+      "detail": "markH=660"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark Logo 展示 140px",
+      "ok": true,
+      "detail": "heroW=140"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 光场铺满主内容全边界",
+      "ok": true,
+      "detail": "glowW=933 mainW=933 edges={\"main\":{\"left\":246,\"right\":1179,\"top\":30},\"glow\":{\"x\":246,\"y\":30,\"width\":933,\"height\":729,\"top\":30,\"right\":1179,\"bottom\":759,\"left\":246}}"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 光场不做逐层模糊（保帧预算）",
+      "ok": true,
+      "detail": "ambient=none layers=0"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 光场纵向渐隐",
+      "ok": true,
+      "detail": "mode=mesh canvas=1 mask=linear-gradient(90deg, rgba(0, 0, 0, 0), rgb(0, 0, 0) 12%, rgb(0, 0, 0) 88%, rgba(0, 0, 0, 0)), linear-gradient(rgba(0, 0, 0, 0), rgb(0, 0, 0) 6%, rgb(0, 0, 0) 55%, rgba(0, 0, 0, 0))"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 能量束径向遮罩（无硬边圆环）",
+      "ok": true,
+      "detail": "mask=radial-gradient(rgba(0, 0, 0, 0) 24%, rgb(0, 0, 0) 45%, rgba(0, 0, 0, 0) 72%)"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 光场盖过下方三卡",
+      "ok": true,
+      "detail": "markBottom=709 modsBottom=600"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 无常驻环境摘要行",
+      "ok": true,
+      "detail": "envRow=0"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 无准备态门禁卡",
+      "ok": true,
+      "detail": "gate=0"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 底部原三卡",
+      "ok": true,
+      "detail": "mods=3"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 最近事件卡",
+      "ok": true,
+      "detail": "events=1"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "概览形象·默认窗口-1180x760-dark 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 就绪形态",
+      "ok": true,
+      "detail": "mode=ready"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 固定舞台 222px",
+      "ok": true,
+      "detail": "fixedH=222"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 动画舞台 128px",
+      "ok": true,
+      "detail": "stageH=128"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 光场绘制层 640px",
+      "ok": true,
+      "detail": "markH=640"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light Logo 展示 100px",
+      "ok": true,
+      "detail": "heroW=100"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 光场铺满主内容全边界",
+      "ok": true,
+      "detail": "glowW=653 mainW=653 edges={\"main\":{\"left\":246,\"right\":899,\"top\":30},\"glow\":{\"x\":246,\"y\":30,\"width\":653,\"height\":569,\"top\":30,\"right\":899,\"bottom\":599,\"left\":246}}"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 光场不做逐层模糊（保帧预算）",
+      "ok": true,
+      "detail": "ambient=none layers=0"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 光场纵向渐隐",
+      "ok": true,
+      "detail": "mode=mesh canvas=1 mask=linear-gradient(90deg, rgba(0, 0, 0, 0), rgb(0, 0, 0) 12%, rgb(0, 0, 0) 88%, rgba(0, 0, 0, 0)), linear-gradient(rgba(0, 0, 0, 0), rgb(0, 0, 0) 6%, rgb(0, 0, 0) 55%, rgba(0, 0, 0, 0))"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 能量束径向遮罩（无硬边圆环）",
+      "ok": true,
+      "detail": "mask=radial-gradient(rgba(0, 0, 0, 0) 24%, rgb(0, 0, 0) 45%, rgba(0, 0, 0, 0) 72%)"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 光场盖过下方三卡",
+      "ok": true,
+      "detail": "markBottom=690 modsBottom=497"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 无常驻环境摘要行",
+      "ok": true,
+      "detail": "envRow=0"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 无准备态门禁卡",
+      "ok": true,
+      "detail": "gate=0"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 底部原三卡",
+      "ok": true,
+      "detail": "mods=3"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 最近事件卡",
+      "ok": true,
+      "detail": "events=1"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-light 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 就绪形态",
+      "ok": true,
+      "detail": "mode=ready"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 固定舞台 222px",
+      "ok": true,
+      "detail": "fixedH=222"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 动画舞台 128px",
+      "ok": true,
+      "detail": "stageH=128"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 光场绘制层 640px",
+      "ok": true,
+      "detail": "markH=640"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark Logo 展示 100px",
+      "ok": true,
+      "detail": "heroW=100"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 光场铺满主内容全边界",
+      "ok": true,
+      "detail": "glowW=653 mainW=653 edges={\"main\":{\"left\":246,\"right\":899,\"top\":30},\"glow\":{\"x\":246,\"y\":30,\"width\":653,\"height\":569,\"top\":30,\"right\":899,\"bottom\":599,\"left\":246}}"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 光场不做逐层模糊（保帧预算）",
+      "ok": true,
+      "detail": "ambient=none layers=0"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 光场纵向渐隐",
+      "ok": true,
+      "detail": "mode=mesh canvas=1 mask=linear-gradient(90deg, rgba(0, 0, 0, 0), rgb(0, 0, 0) 12%, rgb(0, 0, 0) 88%, rgba(0, 0, 0, 0)), linear-gradient(rgba(0, 0, 0, 0), rgb(0, 0, 0) 6%, rgb(0, 0, 0) 55%, rgba(0, 0, 0, 0))"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 能量束径向遮罩（无硬边圆环）",
+      "ok": true,
+      "detail": "mask=radial-gradient(rgba(0, 0, 0, 0) 24%, rgb(0, 0, 0) 45%, rgba(0, 0, 0, 0) 72%)"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 光场盖过下方三卡",
+      "ok": true,
+      "detail": "markBottom=690 modsBottom=497"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 无常驻环境摘要行",
+      "ok": true,
+      "detail": "envRow=0"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 无准备态门禁卡",
+      "ok": true,
+      "detail": "gate=0"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 底部原三卡",
+      "ok": true,
+      "detail": "mods=3"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 最近事件卡",
+      "ok": true,
+      "detail": "events=1"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 无横向溢出",
+      "ok": true,
+      "detail": "docOverflow=0"
+    },
+    {
+      "name": "概览形象·最小窗口-900x600-dark 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览形象·环境准备 准备形态",
+      "ok": true,
+      "detail": "mode=setup"
+    },
+    {
+      "name": "概览形象·环境准备 顶部缩短 174px",
+      "ok": true,
+      "detail": "fixedH=174"
+    },
+    {
+      "name": "概览形象·环境准备 三卡收起",
+      "ok": true,
+      "detail": "mods=0"
+    },
+    {
+      "name": "概览形象·环境准备 最近事件收起",
+      "ok": true,
+      "detail": "events=0"
+    },
+    {
+      "name": "概览形象·环境准备 检查三项",
+      "ok": true,
+      "detail": "checks=3"
+    },
+    {
+      "name": "概览形象·环境准备 安装与离线导入出口",
+      "ok": true,
+      "detail": "install=3"
+    },
+    {
+      "name": "概览形象·环境准备 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览形象·弹窗 运行详情可达",
+      "ok": true,
+      "detail": "运行详情\n✕\n进程与就绪\n运行状态\n运行中\n健康\n正常\nPID / 进程\n39421\n端口\n10100\n当前操作\n无\n运"
+    },
+    {
+      "name": "概览形象·弹窗 上部两列（环境列）",
+      "ok": true,
+      "detail": "env=1"
+    },
+    {
+      "name": "概览形象·弹窗 环境三项",
+      "ok": true,
+      "detail": "checks=3"
+    },
+    {
+      "name": "概览形象·弹窗 长值复制出口",
+      "ok": true,
+      "detail": "copies=2"
+    },
+    {
+      "name": "概览形象·弹窗 运行详情可关闭",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览形象·弹窗 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览形象·主线 pending → 运行中",
+      "ok": true,
+      "detail": "运行中"
+    },
+    {
+      "name": "概览形象·主线 running → 运行中",
+      "ok": true,
+      "detail": "运行中"
+    },
+    {
+      "name": "概览形象·主线 at_risk → 未运行",
+      "ok": true,
+      "detail": "未运行"
+    },
+    {
+      "name": "概览形象·主线 external_takeover → 运行中",
+      "ok": true,
+      "detail": "运行中"
+    },
+    {
+      "name": "概览形象·主线 unreachable → 运行中",
+      "ok": true,
+      "detail": "运行中"
+    },
+    {
+      "name": "概览形象·主线 stopped → 未运行",
+      "ok": true,
+      "detail": "未运行"
+    },
+    {
+      "name": "概览形象·主线 starting → 未运行",
+      "ok": true,
+      "detail": "未运行"
+    },
+    {
+      "name": "概览形象·主线 starting_failed → 未运行",
+      "ok": true,
+      "detail": "未运行"
+    },
+    {
+      "name": "概览形象·主线 not_found → 待接入",
+      "ok": true,
+      "detail": "待接入"
+    },
+    {
+      "name": "概览形象·主线 loading → 正在确认",
+      "ok": true,
+      "detail": "正在确认"
+    },
+    {
+      "name": "概览形象·动作 stopped → 启动 OpenCodex",
+      "ok": true,
+      "detail": "启动 OpenCodex"
+    },
+    {
+      "name": "概览形象·动作 starting_failed → 重试启动/查看日志",
+      "ok": true,
+      "detail": "重试启动/查看日志"
+    },
+    {
+      "name": "概览形象·动作 at_risk → 启动 OpenCodex",
+      "ok": true,
+      "detail": "启动 OpenCodex"
+    },
+    {
+      "name": "概览形象·动作 external_takeover → 查看建议",
+      "ok": true,
+      "detail": "查看建议"
+    },
+    {
+      "name": "概览形象·动作 unreachable → 查看日志",
+      "ok": true,
+      "detail": "查看日志"
+    },
+    {
+      "name": "概览形象·动作 running → 打开面板/停止/重启/查看日志",
+      "ok": true,
+      "detail": "打开面板/停止/重启/查看日志"
+    },
+    {
+      "name": "概览形象·新鲜度 主线归「正在确认」",
+      "ok": true,
+      "detail": "正在确认"
+    },
+    {
+      "name": "概览形象·新鲜度 说明标注过期",
+      "ok": true,
+      "detail": "事实已过期 · 等待重新采集"
+    },
+    {
+      "name": "概览形象·环境顺序 检查中只亮首项",
+      "ok": true,
+      "detail": "[\"检查中\",\"待检查\",\"待检查\"]"
+    },
+    {
+      "name": "概览形象·环境顺序 三项且无「未检查」",
+      "ok": true,
+      "detail": "[\"已发现\",\"未发现\",\"待检查\"]"
+    },
+    {
+      "name": "概览形象·环境顺序 通过/未通过/待检查",
+      "ok": true,
+      "detail": "[\"已发现\",\"未发现\",\"待检查\"]"
+    },
+    {
+      "name": "概览形象·环境顺序 门禁卡含三项结论",
+      "ok": true,
+      "detail": "npm 不可用\n\n补全启动条件后，即可继续使用 OpenCodex。\n\n1 / "
+    },
+    {
+      "name": "缩放·50 成功 缩放探针就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "缩放·50 成功 生效缩放 --ui-zoom=0.5",
+      "ok": true,
+      "detail": "uiZoom=0.5 raw=\"50\" slider=50"
+    },
+    {
+      "name": "缩放·50 成功 输入回写为 50",
+      "ok": true,
+      "detail": "normalized=50 raw=\"50\""
+    },
+    {
+      "name": "缩放·100 成功 缩放探针就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "缩放·100 成功 生效缩放 --ui-zoom=1",
+      "ok": true,
+      "detail": "uiZoom=1 raw=\"100\" slider=100"
+    },
+    {
+      "name": "缩放·100 成功 输入回写为 100",
+      "ok": true,
+      "detail": "normalized=100 raw=\"100\""
+    },
+    {
+      "name": "缩放·200 成功 缩放探针就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "缩放·200 成功 生效缩放 --ui-zoom=2",
+      "ok": true,
+      "detail": "uiZoom=2 raw=\"200\" slider=200"
+    },
+    {
+      "name": "缩放·200 成功 输入回写为 200",
+      "ok": true,
+      "detail": "normalized=200 raw=\"200\""
+    },
+    {
+      "name": "缩放·越界 999→200 缩放探针就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "缩放·越界 999→200 生效缩放 --ui-zoom=2",
+      "ok": true,
+      "detail": "uiZoom=2 raw=\"999\" slider=200"
+    },
+    {
+      "name": "缩放·越界 999→200 输入回写为 200",
+      "ok": true,
+      "detail": "normalized=200 raw=\"999\""
+    },
+    {
+      "name": "缩放·空值→100 缩放探针就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "缩放·空值→100 生效缩放 --ui-zoom=1",
+      "ok": true,
+      "detail": "uiZoom=1 raw=\"\" slider=100"
+    },
+    {
+      "name": "缩放·空值→100 输入回写为 100",
+      "ok": true,
+      "detail": "normalized=100 raw=\"\""
+    },
+    {
+      "name": "缩放·保存失败回退 50→100 缩放探针就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "缩放·保存失败回退 50→100 生效缩放 --ui-zoom=1",
+      "ok": true,
+      "detail": "uiZoom=1 raw=\"50\" slider=100"
+    },
+    {
+      "name": "缩放·保存失败回退 50→100 输入回写为 100",
+      "ok": true,
+      "detail": "normalized=100 raw=\"50\""
+    },
+    {
+      "name": "三档·high 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·high 属性=high",
+      "ok": true,
+      "detail": "data-effects=high"
+    },
+    {
+      "name": "三档·high 通知面玻璃=有模糊",
+      "ok": true,
+      "detail": "panelBlur=saturate(1.5) blur(8px)"
+    },
+    {
+      "name": "三档·high 环境光=block",
+      "ok": true,
+      "detail": "ambient=block"
+    },
+    {
+      "name": "三档·high 卡片面玻璃=有模糊",
+      "ok": true,
+      "detail": "cardBlur=saturate(1.5) blur(8px)"
+    },
+    {
+      "name": "三档·high 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·mid 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·mid 属性=mid",
+      "ok": true,
+      "detail": "data-effects=mid"
+    },
+    {
+      "name": "三档·mid 通知面玻璃=有模糊",
+      "ok": true,
+      "detail": "panelBlur=saturate(1.5) blur(8px)"
+    },
+    {
+      "name": "三档·mid 环境光=block",
+      "ok": true,
+      "detail": "ambient=block"
+    },
+    {
+      "name": "三档·mid 卡片面玻璃=有模糊",
+      "ok": true,
+      "detail": "cardBlur=saturate(1.5) blur(8px)"
+    },
+    {
+      "name": "三档·mid 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·low 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·low 属性=low",
+      "ok": true,
+      "detail": "data-effects=low"
+    },
+    {
+      "name": "三档·low 通知面玻璃=无模糊",
+      "ok": true,
+      "detail": "panelBlur=none"
+    },
+    {
+      "name": "三档·low 环境光=none",
+      "ok": true,
+      "detail": "ambient=none"
+    },
+    {
+      "name": "三档·low 卡片面玻璃=无模糊",
+      "ok": true,
+      "detail": "cardBlur=none"
+    },
+    {
+      "name": "三档·low 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·低档实底·设置·通用 属性=low",
+      "ok": true,
+      "detail": "data-effects=low"
+    },
+    {
+      "name": "三档·低档实底·设置·通用 .card 无 backdrop-filter",
+      "ok": true,
+      "detail": "found=true blur=none"
+    },
+    {
+      "name": "三档·低档实底·设置·通用 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·低档实底·扩展·Skills 属性=low",
+      "ok": true,
+      "detail": "data-effects=low"
+    },
+    {
+      "name": "三档·低档实底·扩展·Skills .card 无 backdrop-filter",
+      "ok": true,
+      "detail": "found=true blur=none"
+    },
+    {
+      "name": "三档·低档实底·扩展·Skills 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·低档实底·诊断·环境 属性=low",
+      "ok": true,
+      "detail": "data-effects=low"
+    },
+    {
+      "name": "三档·低档实底·诊断·环境 .card 无 backdrop-filter",
+      "ok": true,
+      "detail": "found=true blur=none"
+    },
+    {
+      "name": "三档·低档实底·诊断·环境 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·低档实底·面板壳 属性=low",
+      "ok": true,
+      "detail": "data-effects=low"
+    },
+    {
+      "name": "三档·低档实底·面板壳 .panel-shell 无 backdrop-filter",
+      "ok": true,
+      "detail": "found=true blur=none"
+    },
+    {
+      "name": "三档·低档实底·面板壳 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·减少动态保持高档 审计报告就绪",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "三档·减少动态保持高档 高档在减少动态下保持 high",
+      "ok": true,
+      "detail": "data-effects=high"
+    },
+    {
+      "name": "三档·减少动态保持高档 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "概览动作按钮材质 存在",
+      "ok": true,
+      "detail": "[\"btn primary\",\"btn danger\",\"btn\",\"btn ghost\"]"
+    },
+    {
+      "name": "概览动作按钮材质 所有按钮统一取消内高光",
+      "ok": true,
+      "detail": "[[\"btn primary\",\"rgba(16, 24, 40, 0.08) 0px 8px 22px 0px\"],[\"btn danger\",\"rgba(16, 24, 40, 0.08) 0px 8px 22px 0px\"],[\"btn\",\"rgba(16, 24, 40, 0.08) 0px 8px 22px 0px\"],[\"btn ghost\",\"rgba(16, 24, 40, 0.08) 0px 8px 22px 0px\"]]"
+    },
+    {
+      "name": "概览动作按钮材质 边框非透明",
+      "ok": true,
+      "detail": "[[\"btn primary\",\"color(srgb 0.0509804 0.0509804 0.0509804 / 0.42)\"],[\"btn danger\",\"color(srgb 0.72549 0.109804 0.109804 / 0.38)\"],[\"btn\",\"color(srgb 0.0509804 0.0509804 0.0509804 / 0.13)\"],[\"btn ghost\",\"color(srgb 0.0509804 0.0509804 0.0509804 / 0.15)\"]]"
+    },
+    {
+      "name": "概览动作按钮材质 不做实时模糊（性能预算）",
+      "ok": false,
+      "detail": "[[\"btn primary\",\"none\"],[\"btn danger\",\"none\"],[\"btn\",\"saturate(1.5) blur(8px)\"],[\"btn ghost\",\"none\"]]"
+    },
+    {
+      "name": "概览动作按钮材质 主按钮为强调玻璃",
+      "ok": true,
+      "detail": "linear-gradient(158deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 62%), linear-gradient(24deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 58%), linear-gradient(color(srgb 0.0509804 0.0509804 0.0509804 / 0.8), color(srgb 0.0509804 0.0509804 0.0509804 / 0.8))"
+    },
+    {
+      "name": "概览动作按钮材质 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "性能·档位动画-high 高档持续动画",
+      "ok": true,
+      "detail": "frames=2800"
+    },
+    {
+      "name": "性能·档位动画-high 帧间隔 p95 ≤ 2B(33.4ms)",
+      "ok": true,
+      "detail": "p95=22.6ms"
+    },
+    {
+      "name": "性能·档位动画-high 无 > 6B(100ms) 卡顿",
+      "ok": true,
+      "detail": "max=30.8ms"
+    },
+    {
+      "name": "性能·档位动画-high 隐藏后暂停",
+      "ok": true,
+      "detail": "frames=0"
+    },
+    {
+      "name": "性能·档位动画-mid 无持续动画 rAF",
+      "ok": false,
+      "detail": "frames=60"
+    },
+    {
+      "name": "性能·档位动画-mid 隐藏后暂停",
+      "ok": false,
+      "detail": "frames=22"
+    },
+    {
+      "name": "性能·档位动画-low 无持续动画 rAF",
+      "ok": false,
+      "detail": "frames=72"
+    },
+    {
+      "name": "性能·档位动画-low 隐藏后暂停",
+      "ok": false,
+      "detail": "frames=26"
+    },
+    {
+      "name": "性能·启动采样 有 5 个样本",
+      "ok": true,
+      "detail": "n=5"
+    },
+    {
+      "name": "性能·启动采样 无挂起样本（< 20s）",
+      "ok": true,
+      "detail": "224,225,206,223,224"
+    },
+    {
+      "name": "性能·资源不增长 切档不新增 IPC",
+      "ok": true,
+      "detail": "Δipc=0"
+    },
+    {
+      "name": "性能·资源不增长 interval 不增长",
+      "ok": true,
+      "detail": "Δinterval=0"
+    },
+    {
+      "name": "性能·资源不增长 活 observer 不增长",
+      "ok": true,
+      "detail": "Δobserver=-1"
+    },
+    {
+      "name": "性能·资源不增长 长寿 listener 不增长",
+      "ok": true,
+      "detail": "Δadd=88 Δremove=144"
+    },
+    {
+      "name": "交互·设置开关 状态翻转",
+      "ok": true,
+      "detail": "true->false"
+    },
+    {
+      "name": "交互·设置开关 给保存反馈",
+      "ok": true,
+      "detail": "启动时打开主界面已关闭。\n本通知将在2秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+    },
+    {
+      "name": "交互·设置开关 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·选择器 初始收起",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·选择器 展开",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·选择器 选择生效",
+      "ok": true,
+      "detail": "浏览器兜底"
+    },
+    {
+      "name": "交互·选择器 选择后收起",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·选择器 选中态回读",
+      "ok": true,
+      "detail": "浏览器兜底"
+    },
+    {
+      "name": "交互·设置选择器 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "画质卡片存在",
+      "ok": true,
+      "detail": "count=1"
+    },
+    {
+      "name": "画质卡片含视觉特效",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "画质卡片含背景光渲染",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·画质卡片 执行",
+      "ok": false,
+      "detail": "locator.innerText: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"card-quality\"]').locator('[data-testid=\"setting-glow-render\"]').locator('.select-value')\u001b[22m\n"
+    },
+    {
+      "name": "交互·设置分区切换 生效",
+      "ok": true,
+      "detail": "数据与备份"
+    },
+    {
+      "name": "交互·设置分区切换 同步 hash",
+      "ok": true,
+      "detail": "#settings?section=backup"
+    },
+    {
+      "name": "交互·设置分区切换 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·卸载弹窗 非托管来源也常显入口",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·卸载弹窗 入口文案无省略号",
+      "ok": true,
+      "detail": "卸载"
+    },
+    {
+      "name": "交互·卸载弹窗（Revision 11） 执行",
+      "ok": false,
+      "detail": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"runtime-uninstall\"]')\u001b[22m\n\u001b[2m    - locator resolved to <button disabled type=\"button\" data-v-d98acdc2=\"\" class=\"btn btn danger\" data-testid=\"runtime-uninstall\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    57 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+    },
+    {
+      "name": "交互·主题切换 深色",
+      "ok": true,
+      "detail": "dark"
+    },
+    {
+      "name": "交互·主题切换 浅色",
+      "ok": true,
+      "detail": "light"
+    },
+    {
+      "name": "交互·主题切换 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·通知中心 分类数",
+      "ok": true,
+      "detail": "5"
+    },
+    {
+      "name": "交互·通知分类 选中",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·通知分类 过滤数量一致",
+      "ok": true,
+      "detail": "visible=1 count=1"
+    },
+    {
+      "name": "交互·通知分类与动作 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·全部已读 无后端保持未读（不假成功）",
+      "ok": true,
+      "detail": "2->2"
+    },
+    {
+      "name": "交互·通知写动作无后端不假成功 执行",
+      "ok": false,
+      "detail": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.notification-head-actions button').filter({ hasText: '清理已解决' })\u001b[22m\n"
+    },
+    {
+      "name": "交互·诊断分区切换 生效",
+      "ok": true,
+      "detail": "日志历史"
+    },
+    {
+      "name": "交互·诊断分区切换 内容切换",
+      "ok": true,
+      "detail": "应用日志\n调用日志\n应用日志 · 读取失败 · 本地滚动截断 · 只读\n面板请求"
+    },
+    {
+      "name": "交互·诊断分区切换 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·托盘切换 Windows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·托盘切换 macOS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·托盘平台切换 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·概览主线详情入口 存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·概览主线详情入口 打开弹窗",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·概览主线详情入口 关闭",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·概览主线详情入口 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·扩展分页签 生效",
+      "ok": true,
+      "detail": "MCP"
+    },
+    {
+      "name": "交互·扩展分页签 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·正常无故障提示",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·正常无故障提示 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·故障弹窗出现",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·故障弹窗 role=alertdialog",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·故障弹窗 modal 语义",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·故障弹窗有遮罩",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·故障弹窗含原因",
+      "ok": true,
+      "detail": "界面异常：TypeError: 审计场景触发的示例故障（render）"
+    },
+    {
+      "name": "交互·故障弹窗居中",
+      "ok": true,
+      "detail": "{\"cx\":720,\"cy\":450,\"vw\":1440,\"vh\":900}"
+    },
+    {
+      "name": "交互·故障弹窗可关闭（恢复）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·故障提示为弹窗与恢复 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "自检·初始无故障弹窗",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "自检·入口文案是「界面诊断」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "自检·Doctor 按钮用中文名",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "自检·触发后出现故障弹窗",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "自检·故障弹窗 role=alertdialog",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "自检·故障弹窗含自检原因",
+      "ok": true,
+      "detail": "界面异常：Error: 界面异常自检：这是一次受控的示例异常，用于验证兜底条与恢复动作。（事件处理）"
+    },
+    {
+      "name": "自检·故障弹窗文案不含英文链接",
+      "ok": true,
+      "detail": "界面异常：Error: 界面异常自检：这是一次受控的示例异常，用于验证兜底条与恢复动作。（事件处理）"
+    },
+    {
+      "name": "自检·故障弹窗提供两个恢复动作",
+      "ok": true,
+      "detail": "关闭提示,重新加载界面"
+    },
+    {
+      "name": "自检·「关闭提示」恢复",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "自检·可重复触发",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "自检·点遮罩恢复",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "自检·「重新加载界面」后无故障弹窗",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "交互·界面诊断自检（制品内触发故障弹窗） 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "性能·三档CPU内存 三档均有采样",
+      "ok": true,
+      "detail": "n=3"
+    },
+    {
+      "name": "性能·三档CPU内存 中/低档脚本成本低于高档",
+      "ok": true,
+      "detail": "high=14ms others=5/6ms"
+    },
+    {
+      "name": "性能·三档CPU内存 中/低档任务耗时低于高档",
+      "ok": true,
+      "detail": "high=575ms others=33/38ms"
+    },
+    {
+      "name": "性能·三档CPU内存 堆占用不随重复加载单调增长（单页 < 200MB）",
+      "ok": true,
+      "detail": "high:11MB mid:11MB low:11MB"
+    },
+    {
+      "name": "性能·交互分布 路由 20 样本",
+      "ok": true,
+      "detail": "n=20"
+    },
+    {
+      "name": "性能·交互分布 通知面板 20 样本",
+      "ok": true,
+      "detail": "n=20"
+    },
+    {
+      "name": "性能·交互分布 路由 p95 有界(<1500ms)",
+      "ok": true,
+      "detail": "p95=60ms"
+    },
+    {
+      "name": "性能·交互分布 通知面板 p95 有界(<3000ms)",
+      "ok": true,
+      "detail": "p95=502ms"
+    },
+    {
+      "name": "性能·通知长列表渲染 渲染 200 条",
+      "ok": true,
+      "detail": "rendered=200"
+    },
+    {
+      "name": "性能·通知长列表渲染 渲染耗时上限",
+      "ok": true,
+      "detail": "renderMs=471"
+    },
+    {
+      "name": "性能·路由切换 到达目标页",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "性能·路由切换 耗时上限",
+      "ok": true,
+      "detail": "switchMs=107"
+    },
+    {
+      "name": "性能·路由切换 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "性能·Markdown 渲染 正文已渲染",
+      "ok": true,
+      "detail": "nodes=242"
+    },
+    {
+      "name": "性能·Markdown 渲染 耗时上限",
+      "ok": true,
+      "detail": "renderMs=73"
+    },
+    {
+      "name": "性能·Markdown 渲染 无未捕获错误",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

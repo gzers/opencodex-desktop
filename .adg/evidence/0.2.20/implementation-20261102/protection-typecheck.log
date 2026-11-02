@@ -1,0 +1,6 @@
+
+> opencodex-desktop-ui@0.2.20 typecheck
+> vue-tsc --noEmit
+
+src/features/sync/ModelTransfer.vue(159,7): error TS6133: 'remotePasswordLabel' is declared but its value is never read.
+src/features/sync/ModelTransfer.vue(160,7): error TS6133: 'remotePlaintextSecrets' is declared but its value is never read.

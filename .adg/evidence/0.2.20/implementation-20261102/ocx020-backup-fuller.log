@@ -1,0 +1,10 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.02s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-1179d0dfc9266c75)
+
+running 2 tests
+test modules::model_config::transfer_backup::tests::inverse_preserves_outside_edits_and_rejects_overlap ... ok
+test modules::model_config::transfer_backup::tests::snapshots_reject_symlinks_and_restore_exact_resource_bytes ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 0.01s
+

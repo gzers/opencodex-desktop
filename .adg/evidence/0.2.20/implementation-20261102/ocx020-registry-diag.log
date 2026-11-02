@@ -1,0 +1,19 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.58s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-1179d0dfc9266c75)
+
+running 1 test
+
+thread 'modules::notifications::registry::receipt_registry_diagnostic::registry_json_schema_and_cross_references' (112215316) panicked at src/modules/notifications/registry.rs:915:194:
+embedded registry schema: unknown variant `transfer_result`, expected one of `model_policy`, `models`, `restore`, `upgrade`, `app_update`, `sync`, `logs`, `settings_installation`, `settings_cleanup` at line 1951 column 33
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::notifications::registry::receipt_registry_diagnostic::registry_json_schema_and_cross_references ... FAILED
+
+failures:
+
+failures:
+    modules::notifications::registry::receipt_registry_diagnostic::registry_json_schema_and_cross_references
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

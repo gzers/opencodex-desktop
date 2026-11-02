@@ -1,0 +1,20 @@
+   Compiling tauri v2.12.1
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-dialog v2.8.1
+error[E0277]: the trait bound `modules::model_config::transfer::ExportScope: std::default::Default` is not satisfied
+    --> src/modules/model_config/transfer.rs:2693:125
+     |
+2693 | ...hannel_ids:vec![id],include_global:false,..Default::default()}).unwrap();
+     |                                               ^^^^^^^^^^^^^^^^^^ the trait `std::default::Default` is not implemented for `modules::model_config::transfer::ExportScope`
+     |
+help: consider annotating `modules::model_config::transfer::ExportScope` with `#[derive(Default)]`
+     |
+ 142 + #[derive(Default)]
+ 143 | pub struct ExportScope {
+     |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

@@ -1,0 +1,27 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/model-transfer.test.ts (35 tests | 1 failed) 609ms
+   ❯ model transfer review (35)
+     × keeps two accounts independently selected across platform filtering and excludes an unsupported source 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > keeps two accounts independently selected across platform filtering and excludes an unsupported source
+TypeError: Cannot read properties of undefined (reading 'vm')
+ ❯ tests/model-transfer.test.ts:177:12
+    175|     const wrapper=render();await flushPromises();await flushPromises()…
+    176|     await chooseExport(wrapper,'工作账户');const filter=wrapper.findAllCom…
+    177|     filter.vm.$emit('update:modelValue','antigravity');await flushProm…
+       |            ^
+    178|     filter.vm.$emit('update:modelValue','chatgpt');await flushPromises…
+    179|     expect((wrapper.get('input[aria-label="选择 工作账户"]').element as HTML…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 54 passed (55)
+   Start at  13:10:22
+   Duration  1.66s (transform 42%, environment 28%, tests 23%, import 6%)
+

@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.39s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-05eb0b407d835ec1)
+
+running 11 tests
+test modules::sync::portable_assets::tests::links_path_escape_and_case_collisions_refuse_instead_of_being_skipped ... ok
+test modules::sync::portable_assets::tests::mcp_separates_environment_headers_and_credential_urls_without_discarding_normal_fields ... ok
+test modules::sync::portable_assets::tests::mapping_rejects_paths_platform_names_duplicate_targets_and_unselected_sources ... ok
+test modules::sync::portable_assets::tests::skill_snapshot_carries_real_resources_and_excludes_recognized_credentials_until_selected ... ok
+test modules::sync::portable_assets::tests::differing_same_named_mcp_is_skipped_and_reported_until_a_source_client_is_chosen ... ok
+test modules::sync::portable_assets::tests::edits_between_preview_and_confirm_refuse_instead_of_being_overwritten ... ok
+test modules::sync::portable_assets::tests::renamed_mcp_secrets_bind_only_to_new_definition_and_later_destination_edits_refuse ... ok
+test modules::sync::portable_assets::tests::mcp_definition_restores_secrets_through_fresh_references_without_running_or_projecting_any_client ... ok
+test modules::sync::portable_assets::tests::imported_mcp_is_discovered_and_explicit_distribution_uses_the_existing_client_writer ... ok
+test modules::sync::portable_assets::tests::same_named_source_skill_is_replaced_with_backup_and_keeps_withheld_local_credentials ... ok
+test modules::sync::portable_assets::tests::skill_resource_import_resumes_a_partial_owned_directory_and_never_touches_client_or_source_files ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1127 filtered out; finished in 0.23s
+

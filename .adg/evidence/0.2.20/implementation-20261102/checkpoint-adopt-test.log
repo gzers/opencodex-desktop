@@ -1,0 +1,36 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/model-transfer-adoption.test.ts (23 tests | 1 failed) 43ms
+   ❯ transfer adoption into the current file draft (23)
+     × supports a template-only acceptance with no workspace and keeps a clean file draft clean 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-transfer-adoption.test.ts > transfer adoption into the current file draft > supports a template-only acceptance with no workspace and keeps a clean file draft clean
+AssertionError: expected { schemaVersion: 1, …(2) } to be { schemaVersion: 1, …(2) } // Object.is equality
+
+If it should pass with deep equality, replace "toBe" with "toStrictEqual"
+
+Expected: { schemaVersion: 1, …(2) }
+Received: serializes to the same string
+
+
+Compared values have no visual difference.
+
+ ❯ tests/model-transfer-adoption.test.ts:203:32
+    201|     const store=useModelsStore(),draft=store.channelDraft,policy=store…
+    202|     await store.adoptTransfer({expectedPolicy:'actual-file'},vi.fn().m…
+    203|     expect(store.channelDraft).toBe(draft);expect(store.snapshot!.poli…
+       |                                ^
+    204|     expect(store.channelBaseline).toBe('actual-file');expect(store.sna…
+    205|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 27 passed (28)
+   Start at  11:27:18
+   Duration  658ms (transform 47%, environment 33%, tests 12%, import 9%)
+

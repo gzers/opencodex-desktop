@@ -1,0 +1,30 @@
+   Compiling tauri v2.12.1
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-dialog v2.8.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 38.69s
+     Running tests/config_sync_webdav_real.rs (target/debug/deps/config_sync_webdav_real-ed6d226c8dc864ed)
+
+running 2 tests
+test conditional_publish_preserves_remote_objects_and_device_scoped_reception ... 
+thread 'conditional_publish_preserves_remote_objects_and_device_scoped_reception' (112606779) panicked at tests/config_sync_webdav_real.rs:173:10:
+called `Result::unwrap()` on an `Err` value: Tls
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test current_file_channel_roundtrips_over_verified_https_and_commits_on_confirmation ... 
+thread 'current_file_channel_roundtrips_over_verified_https_and_commits_on_confirmation' (112606798) panicked at tests/config_sync_webdav_real.rs:97:6:
+called `Result::unwrap()` on an `Err` value: ModelError { code: "model_sync_transport", message: "TLS 证书校验失败，已取消上传；远端内容未修改。" }
+FAILED
+
+failures:
+
+failures:
+    conditional_publish_preserves_remote_objects_and_device_scoped_reception
+    current_file_channel_roundtrips_over_verified_https_and_commits_on_confirmation
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.53s
+
+error: test failed, to rerun pass `--test config_sync_webdav_real`
+{"scope": "owned loopback HTTPS only; synthetic credentials; temporary local configurations", "remote_objects": 0, "exit_code": 101}

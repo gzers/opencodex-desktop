@@ -1,0 +1,10 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 26.53s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-1179d0dfc9266c75)
+
+running 2 tests
+test modules::model_config::transfer_results::tests::reading_a_failed_export_is_read_only_and_retry_reuses_its_identity ... ok
+test modules::model_config::transfer_results::tests::import_retry_cannot_change_the_original_backup_or_credential_choice ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1149 filtered out; finished in 0.26s
+

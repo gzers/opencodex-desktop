@@ -1,0 +1,22 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/model-transfer.test.ts (36 tests | 1 failed | 2 skipped) 498ms
+   ❯ model transfer review (36)
+     × automatically compares an explicit endpoint-conflict channel mapping 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > automatically compares an explicit endpoint-conflict channel mapping
+AssertionError: expected undefined to be defined
+ ❯ tests/model-transfer.test.ts:153:90
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 33 passed | 2 skipped (36)
+   Start at  11:54:19
+   Duration  1.19s (tests 44%, transform 35%, environment 15%, import 6%)
+

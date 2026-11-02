@@ -1,0 +1,76 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/model-transfer.test.ts (36 tests | 2 failed | 2 skipped) 624ms
+   ❯ model transfer review (36)
+     × automatically compares an explicit endpoint-conflict channel mapping 24ms
+     × exports the reviewed frozen plan instead of rebuilding from later editor content 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > automatically compares an explicit endpoint-conflict channel mapping
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'channel-incoming', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "channel-incoming",
+-   ObjectContaining {
++   {
++     "channelIds": [
++       "channel-source",
++     ],
+      "channelMappings": {
+        "channel-source": {
+-         "label": "独立接收",
++         "label": "来源渠道（导入）",
+          "mode": "new",
++       },
+      },
++     "includeGlobal": false,
++     "templateRefs": [
++       {
++         "revisionId": "revision-1",
++         "templateId": "family",
+        },
++     ],
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/model-transfer.test.ts:155:37
+    153|     expect(modelTransferApi.accept).not.toHaveBeenCalled()
+    154|     await flushPromises()
+    155|     expect(modelTransferApi.select).toHaveBeenCalledWith('channel-inco…
+       |                                     ^
+    156|     expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(wrap…
+    157|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > exports the reviewed frozen plan instead of rebuilding from later editor content
+AssertionError: expected '导入与导出把选定配置带到另一台设备，分享时可不携带凭据。导入配置导出配置已…' to contain '/fixture/export.json'
+
+Expected: "/fixture/export.json"
+Received: "导入与导出把选定配置带到另一台设备，分享时可不携带凭据。导入配置导出配置已选 3 个对象配置对象范围与凭据桌面偏好2 / 2模型模版1 / 1Skills0 / 1MCP0 / 1其他凭据账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。渠道 API Key渠道可单独分享，接收方自行填 Key。先在左栏选择含 Key 认证的渠道。扩展凭据例如 MCP 的 Authorization / 环境变量。先在左栏选择 Skills 或 MCP。当前不携带凭据"
+
+ ❯ tests/model-transfer.test.ts:205:28
+    203|     await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigg…
+    204|     expect(modelTransferApi.export).toHaveBeenCalledExactlyOnceWith('f…
+    205|     expect(wrapper.text()).toContain('/fixture/export.json');wrapper.u…
+       |                            ^
+    206|   })
+    207|   it('SY-1/SY-2/N-SY-2：导出确认弹窗按原型顺序承载保存位置、树、说明、凭据与可选口令，范围首项保持 all',asyn…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 48 passed | 2 skipped (52)
+   Start at  12:09:25
+   Duration  1.75s (transform 44%, tests 25%, environment 24%, import 7%)
+
