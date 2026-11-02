@@ -59,7 +59,7 @@ describe('settings that cannot be honored are read-only', () => {
     await nextTick()
     for (const title of ['备份包含 Skills 目录', '备份包含 MCP 配置']) {
       const row = rowText(wrapper, title)
-      expect(row.find('.setting-readonly').text()).toBe('不含')
+      expect(row.find('.setting-readonly').text()).toBe('按所选范围')
       expect(row.find('button.toggle').exists()).toBe(false)
     }
     await wrapper.unmount()
