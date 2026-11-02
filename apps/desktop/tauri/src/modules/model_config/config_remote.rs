@@ -1514,6 +1514,47 @@ async fn download_pointed<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
 mod tests {
     use super::super::remote::tests::Memory;
     use super::*;
+    #[test]
+    fn existing_scope_is_not_expanded_during_first_catalog_migration() {
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        let saved = save_scope(
+            root.path(),
+            Scope {
+                channel_ids: vec!["00000000-0000-4000-8000-000000000001".into()],
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let catalog = CloudCatalog {
+            binding: "server".into(),
+            objects: vec![CatalogObject {
+                id: serde_json::to_string(&["channels", "cloud-channel"]).unwrap(),
+                category: "channels".into(),
+                category_label: String::new(),
+                label: String::new(),
+                detail: String::new(),
+                mark: String::new(),
+                files: vec![],
+            }],
+            credential_ids: vec![],
+            created_at: String::new(),
+            accounts: vec![],
+        };
+        assert!(!initialize_remote_scope(
+            root.path(),
+            "server",
+            &catalog,
+            home.path(),
+            home.path(),
+        )
+        .unwrap());
+        assert_eq!(
+            load_scope(root.path()).unwrap().channel_ids,
+            saved.channel_ids
+        );
+        assert!(root.path().join(INITIALIZED).exists());
+    }
     #[tokio::test]
     async fn new_device_lists_remote_objects_without_expanding_scope_and_can_explicitly_select_them(
     ) {
