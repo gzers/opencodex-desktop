@@ -4,8 +4,8 @@
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
-      "reason": "candidate Chromium/WebKit each 648 state/geometry checks and 96 screens passed; remaining consumer/dialog state audit is tracked under all-entry-coverage",
-      "evidence": "implementation-20261102/ocx020-matrix-chromium.log; implementation-20261102/ocx020-matrix-webkit.log"
+      "reason": "Correction: cited browser route audit artifact is 411 checks, 401 pass, 10 fail (not 428/428). The 10 retained failures include stale Settings structural selectors, blur-budget and mid/low animation assertions, quality-card interaction, disabled uninstall action, and notification cleanup. Prototype parity remains in progress until each failure is resolved/reclassified with a new report and the 35 production dialog callsites are covered.",
+      "evidence": "implementation-20261102/ocx020-all-route-audit/audit-report.json (411/401/10); implementation-20261102/dialog-callsite-ledger.md; prototype-audit-20261102/application-dialog-inventory.json"
     },
     "saved-file-and-backup": {
       "status": "in_progress",
@@ -19,8 +19,8 @@
     },
     "all-entry-coverage": {
       "status": "in_progress",
-      "reason": "all-app browser audit 428/428 passed with zero page errors; 8 routes and 35 production dialog call sites still need consumer-by-consumer applicable-state verification",
-      "evidence": "implementation-20261102/ocx020-all-route-audit/audit-report.json; prototype-audit-20261102/application-dialog-inventory.json"
+      "reason": "Correction: route audit is 411/401/10, not 428/428. Static inventory has 35 production dialog callsites and 2 dev-gallery references. Native macOS saw bounded navigation/cancel states but remained at missing-Node startup; no production callsite has full state acceptance yet. Each callsite and applicable state must be mapped and evidenced; dynamic modals and native menus remain included.",
+      "evidence": "implementation-20261102/ocx020-all-route-audit/audit-report.json; implementation-20261102/dialog-callsite-ledger.md; prototype-audit-20261102/application-dialog-inventory.json; implementation-20261102/native-release-package-and-ui.md"
     },
     "macos-windows-native": {
       "status": "in_progress",
