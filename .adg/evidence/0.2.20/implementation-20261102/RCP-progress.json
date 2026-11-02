@@ -85,7 +85,8 @@
       "head": "8aa3d2aa",
       "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence"],
       "passed_steps": ["backend-windows: fmt/clippy", "backend: fmt/clippy"],
-      "running_jobs": ["backend-windows: Windows backend regression", "backend: bounded metadata process tree then workspace regression"],
+      "running_jobs": ["backend-windows: Windows backend regression", "backend: remaining workspace regression"],
+      "completed_steps_since_last_update": ["backend: bounded metadata process tree"],
       "pending_jobs": ["macOS workspace regression", "Windows backend regression", "Windows native EXE smoke and version matrix"],
       "purpose": "rerun Windows native EXE smoke after correcting connection-dialog cancellation action"
     }
