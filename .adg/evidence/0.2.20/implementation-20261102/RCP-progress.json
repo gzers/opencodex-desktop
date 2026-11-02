@@ -1,6 +1,6 @@
 {
   "status": "active",
-  "source": "code branch codex/0.2.20-prototype-alignment at 830e5ef13; docs branch docs/governance-main at 63ecc8beb; release not complete",
+  "source": "code branch codex/0.2.20-prototype-alignment at 28ac719e8; docs branch docs/governance-main at 245cdb33a; release not complete",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
@@ -61,6 +61,8 @@
       "run": 41408838770,
       "status": "in_progress",
       "head": "28ac719e",
+      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence"],
+      "running_jobs": ["backend-windows: Windows backend regression", "backend: remaining workspace regression"],
       "purpose": "rerun Windows native EXE smoke after aligning saved-config assertion with S20-13"
     }
   ]
