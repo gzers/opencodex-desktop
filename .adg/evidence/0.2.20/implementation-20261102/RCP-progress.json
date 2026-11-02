@@ -74,7 +74,8 @@
       "head": "2fe154b8",
       "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
       "passed_backend_steps": ["fmt", "clippy", "bounded metadata process tree", "remaining workspace regression"],
-      "running_jobs": ["backend-windows: Windows backend regression"],
+      "passed_windows_steps": ["fmt", "clippy", "Windows backend regression"],
+      "running_jobs": ["backend-windows: isolated native credential protection"],
       "purpose": "rerun Windows native EXE smoke with direct saved-config and provider-identity assertions"
     }
   ]
