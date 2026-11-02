@@ -38,6 +38,9 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
             custom_case.index("Clear-ProductRememberedInstallDirectory"),
             custom_case.index("Invoke-Installer 'msiexec.exe'"),
         )
+        self.assertIn("RegistryView]::Registry32", script)
+        self.assertIn("RegistryView]::Registry64", script)
+        self.assertIn("DeleteValue('InstallDir',$false)", script)
 
 
 if __name__ == "__main__":
