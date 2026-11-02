@@ -46,9 +46,8 @@ function Find-DefaultInstalledDirectory {
 }
 function Clear-ProductRememberedInstallDirectory {
     # WiX AppSearch restores the last MSI location from this product-owned HKCU
-    # value before resolving INSTALLDIR. The custom-path test must start without
-    # the default-install probe's remembered path, or MSI overrides its explicit
-    # INSTALLDIR argument and the harness tests a different destination.
+    # value before resolving INSTALLDIR. Each MSI case must start without stale
+    # runner state so the default and explicit-path checks test their own target.
     $productKey='HKCU:\Software\gzers\OpenCodeX Desktop'
     if(Test-Path -LiteralPath $productKey){
         Remove-ItemProperty -LiteralPath $productKey -Name InstallDir -ErrorAction SilentlyContinue
@@ -64,7 +63,10 @@ try {
         $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $kind) -Filter $pattern -File)
         if($package.Count -ne 1){throw 'Exact default installer package missing'}
         if($kind -eq 'nsis'){[void](Invoke-Installer $package[0].FullName '/S')}
-        else{[void](Invoke-Installer 'msiexec.exe' ('/i "'+$package[0].FullName+'" /qn /norestart'))}
+        else{
+            Clear-ProductRememberedInstallDirectory
+            [void](Invoke-Installer 'msiexec.exe' ('/i "'+$package[0].FullName+'" /qn /norestart'))
+        }
         $defaultRoot=Find-DefaultInstalledDirectory
         try{
             $defaultExe=Join-Path $defaultRoot 'opencodex-desktop.exe'
