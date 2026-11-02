@@ -45,7 +45,7 @@ function Write-SandboxFileInventory([string]$SandboxRoot, [string]$OutputRoot) {
     # startup receipt without copying configuration contents into CI artifacts.
     # WebView owns live lockfiles, so omit its private cache tree altogether.
     $files = @(Get-ChildItem -LiteralPath $SandboxRoot -Force -File -Recurse -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -notmatch '[\/]EBWebView([\/]|$)' } | Select-Object -First 500)
+        Where-Object { $_.FullName.IndexOf('EBWebView', [StringComparison]::OrdinalIgnoreCase) -lt 0 } | Select-Object -First 500)
     $inventory = foreach ($file in $files) {
         $digest = $null
         try { $digest = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256 -ErrorAction Stop).Hash.ToLowerInvariant() } catch {}
