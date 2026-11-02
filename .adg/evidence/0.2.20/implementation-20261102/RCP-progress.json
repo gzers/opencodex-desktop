@@ -43,6 +43,15 @@
   "published": false,
   "ci_runs": [
     {
+      "run": 41434514282,
+      "workflow": "PR #35 Windows MSI remembered-install-dir isolation",
+      "head": "d8d09b659626d6e510c3bce521d73b0b57e734e6",
+      "status": "in_progress",
+      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence"],
+      "passed_steps": ["backend fmt/clippy", "macOS clippy", "bounded metadata process-tree check"],
+      "running_jobs": ["macOS workspace regression", "Windows backend regression"]
+    },
+    {
       "run": 41429792658,
       "workflow": "Release",
       "tag": "v0.2.20",
