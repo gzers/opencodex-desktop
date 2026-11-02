@@ -1,0 +1,174 @@
+Window: "", App: OCX 0.2.19 Sandbox.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#panel
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 button 概览
+				7 button 面板
+				8 button 模型
+				9 button 拓展
+				10 button 同步
+				11 button 诊断
+				12 button 设置
+			13 text 官方面板已嵌入主窗口
+	14 scroll area
+		15 HTML content Description: opencodex · proxy dashboard, URL: 127.0.0.1:60419/web#dashboard
+			16 button (expanded) 收起侧边栏, Secondary Actions: Collapse
+			17 container
+				18 button 前往仪表板
+				19 button 仪表盘
+				20 button 连接
+				21 button Codex
+				22 button 提供方
+				23 button 模型
+				24 button 子代理
+				25 button 用量与日志
+				26 button 远程连接
+				27 combo box (collapsed, settable) 语言, Value: 中文, Secondary Actions: Expand
+					28 text 中文
+				29 text 主题
+				30 container 主题
+					31 toggle button 浅色, Value: off
+					32 toggle button 深色, Value: on
+					33 toggle button 跟随系统, Value: off
+				34 text 代理
+				35 button 停止代理
+				36 button 重新加载 Codex 模型列表
+				37 link GitHub, Value: github.com/lidge-jun/opencodex
+				38 toggle button 在 GitHub 上加星, Value: off
+				39 button 检查更新
+			40 container
+				41 heading 仪表盘, Value: 2
+					42 text 仪表盘
+				43 text 本地 opencodex 代理、其提供方以及路由到 Codex 的模型的实时状态。
+				44 tab group (selectable) 板块
+					45 tab (selected) 概览
+					46 tab (selectable) 活跃提供方
+					47 tab (selectable) 可用模型
+				48 container 概览
+					49 text 子代理
+					50 pop up button 子代理
+					51 (settable, unknown) 子代理
+						52 radio button v1, Value: 0
+						53 radio button base, Value: 1
+						54 radio button v2, Value: 0
+					55 text 状态
+					56 text 在线
+					57 text 版本
+					58 text 2.84.0
+					59 text 运行时间
+					60 text 6小时 41分钟
+					61 text 提供方
+					62 text 1
+					63 text Token (30 天)
+					64 text —
+					65 button Codex 不依赖本地代理
+					66 text V2 ultra 推理强度限制
+					67 pop up button V2 ultra 推理强度限制
+					68 combo box (collapsed, settable) V2 ultra 推理强度限制, Value: 无上限, Secondary Actions: Expand
+						69 text 无上限
+					70 combo box (collapsed, settable) V2 子代理推理强度限制, Value: 无上限, Secondary Actions: Expand
+						71 text 无上限
+					72 text 子代理委托
+					73 combo box (collapsed, settable) 子代理委托, Value: 无, Secondary Actions: Expand
+						74 text 无
+					75 button 打开设置
+					76 text 同步模型
+					77 text 按已连接的提供商重写 Codex 的模型目录。
+					78 button 立即同步
+					79 pop up button 检查更新
+					80 text 随 Codex 启动 opencodex
+					81 text 允许已安装的 launcher shim 运行 ocx ensure。此设置不会安装重启保护；请在启动安全中检查实际状态。
+					82 toggle button 随 Codex 启动 opencodex, Value: on
+					83 text 无需登录即可打开 Codex
+					84 text 默认关闭。为符合条件的本地连接跳过单独的 Desktop 登录。仍需上游提供商凭据。更改后请重启 Codex。依赖账户的 Desktop 功能可能不可用。
+					85 toggle button 无需登录即可打开 Codex, Value: off
+					86 text 使用客户端压缩
+					87 text 默认关闭，仅适用于已认证的 loopback 路由。未来压缩会保存可移植的明文摘要，同时保留 OpenCodeX 与 V2 提供方路由；已配置的提供方可能处理摘要并消耗其额度。已有 ocx1 历史仍需单独恢复。更改后请重启 Codex。
+					88 toggle button 使用客户端压缩, Value: off
+					89 text 网页搜索附属服务
+					90 text 选择路由模型进行网页搜索时使用的后端和模型。
+					91 combo box (collapsed, settable) 模型, Value: gpt-5.6-luna, Secondary Actions: Expand
+						92 text gpt-5.6-luna
+					93 container 实时流式输出开头的文本和推理，直到模型决定调用工具；其余部分为拦截搜索而保持缓冲。搜索前的文本可能会部分重复。
+						94 text 实时流式输出回答
+						95 toggle button 实时流式输出回答, Value: off
+					96 text 视觉附属服务
+					97 text 选择纯文本路由模型描述图像时使用的后端和模型。
+					98 combo box (collapsed, settable) 模型, Value: gpt-5.6-luna, Secondary Actions: Expand
+						99 text gpt-5.6-luna
+					100 combo box (collapsed, settable) 视觉附属服务 — 推理强度, Value: low, Secondary Actions: Expand
+						101 text low
+					102 pop up button 高级设置
+					103 text 影子调用拦截
+					104 pop up button 影子调用拦截
+					105 text ⚠ 6-luna, 5.6-luna
+					106 toggle button 影子调用拦截, Value: off
+					107 combo box (disabled, collapsed, settable) 替代模型, Value: —, Secondary Actions: Expand
+					108 container 压缩路由
+						109 text 压缩路由
+						110 text 选择 Codex 压缩请求使用的模型，以及它覆盖哪些触发方式。后续消息保留对话设置。
+						111 text 被覆盖的压缩请求会将整个对话发送给所选模型的提供商进行摘要，即使对话正在其他提供商上运行。
+						112 text 推理设置仅在压缩端点支持时生效。模型必须能容纳完整对话。
+						113 text 仅当压缩请求的来源模型匹配所选模型或 provider/* 时才使用覆盖；其他请求仍使用自身模型压缩。
+						114 text 压缩模型
+						115 combo box (collapsed, settable) 压缩模型, Value: 使用对话模型, Secondary Actions: Expand
+							116 text 使用对话模型
+						117 text 适用于
+						118 combo box (disabled, collapsed, settable) 适用于, Value: 仅手动 /compact, Secondary Actions: Expand
+						119 text 来源范围
+						120 combo box (disabled, collapsed, settable) 来源范围, Value: 所有对话模型, Secondary Actions: Expand
+						121 text 推理强度
+						122 combo box (disabled, collapsed, settable) 推理强度, Value: 保留请求的推理强度, Secondary Actions: Expand
+						123 button (disabled) 保存
+					124 container 记忆路由 Extract 和 Consolidation 是什么？
+						125 text 记忆路由
+						126 pop up button Extract 和 Consolidation 是什么？
+						127 text 会话结束后，Codex 会在后台写入记忆。为每个阶段选择模型，或保留现有路由。
+						128 text 提取
+						129 text 把每个结束的会话汇总成一条原始记忆。每个会话运行一次。
+						130 combo box (collapsed, settable) 模型, Value: 关闭, Secondary Actions: Expand
+							131 text 关闭
+						132 combo box (disabled, collapsed, settable) 推理强度, Value: Codex 默认, Secondary Actions: Expand
+						133 text 整合
+						134 text 把原始记忆合并进 Codex 之后读取的记忆文件。很少运行，并会修改文件。
+						135 combo box (collapsed, settable) 模型, Value: 关闭, Secondary Actions: Expand
+							136 text 关闭
+						137 combo box (disabled, collapsed, settable) 推理强度, Value: Codex 默认, Secondary Actions: Expand
+						138 text 所选模型会收到该阶段的输入：Extract 是已结束的会话，Consolidation 是原始记忆。
+						139 button (disabled) 保存
+					140 text 内存可观测性
+					141 text 进行中的请求
+					142 text 0
+					143 button 排空并重启
+					144 text 相对告警阈值
+					145 text rss
+					146 text 191.6 MiB / 4.0 GiB
+					147 text 阈值的 5%
+					148 text 常驻内存 (RSS)
+					149 text 191.6 MiB
+					150 text JS 堆已用
+					151 text 40.6 MiB
+					152 text 堆区 37.3 MiB
+					153 text JSC 堆
+					154 text 40.8 MiB
+					155 text 每小时观测变化
+					156 text +18.8 MiB/小时
+					157 summary 详情, Value: off
+						158 text 详情
+					159 text 未检测到重启保护。重启后代理可能不会自动恢复，需手动启动。
+			160 pop up button 98%, Help: 面板快捷操作
+		161 scroll bar (settable, float) 0
+	162 close button
+	163 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	164 minimize button
+165 menu bar
+	166 OCX 0.2.19 Sandbox
+	167 进程
+	168 编辑
+	169 视图
+	170 诊断
+
+The focused UI element is 15 HTML content Description: opencodex · proxy dashboard, URL: 127.0.0.1:60419/web#dashboard

@@ -1,0 +1,131 @@
+Diff in /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/commands/panel.rs:111:
+     fn validate(&self, width: f64, height: f64, zoom: f64, macos: bool) -> AppResult<()> {
+         let sidebar = PANEL_SIDEBAR_WIDTH * zoom;
+         // Windows 原生标题栏在客户区外；只有 macOS Overlay 在 WebView 内占 28px。
+-        let titlebar = if macos { PANEL_MACOS_TITLEBAR_HEIGHT } else { 0.0 };
++        let titlebar = if macos {
++            PANEL_MACOS_TITLEBAR_HEIGHT
++        } else {
++            0.0
++        };
+         if ![self.x, self.y, self.width, self.height]
+             .iter()
+             .all(|n| n.is_finite())
+Diff in /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/commands/panel.rs:492:
+
+     #[test]
+     fn show_rejection_reason_names_runtime_and_missing_port() {
+-        assert_eq!(show_rejection_reason(RuntimeState::Running, Some(10100)), None);
+         assert_eq!(
++            show_rejection_reason(RuntimeState::Running, Some(10100)),
++            None
++        );
++        assert_eq!(
+             show_rejection_reason(RuntimeState::Running, None).as_deref(),
+             Some("runtime=Running port=none")
+         );
+Diff in /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/commands/panel.rs:632:
+     #[test]
+     fn native_caption_panel_starts_at_client_top_without_covering_macos_overlay() {
+         for zoom in [0.5, 0.98, 1.0, 1.5, 2.0] {
+-            let bounds = PanelBounds { x: 64.0 * zoom, y: 1.0, width: 1180.0 - 64.0 * zoom, height: 759.0 };
++            let bounds = PanelBounds {
++                x: 64.0 * zoom,
++                y: 1.0,
++                width: 1180.0 - 64.0 * zoom,
++                height: 759.0,
++            };
+             assert!(bounds.validate(1180., 760., zoom, false).is_ok());
+             assert!(bounds.validate(1180., 760., zoom, true).is_err());
+-            assert!(PanelBounds { y: -1.0, ..bounds }.validate(1180., 760., zoom, false).is_err());
++            assert!(PanelBounds { y: -1.0, ..bounds }
++                .validate(1180., 760., zoom, false)
++                .is_err());
+         }
+     }
+     #[test]
+Diff in /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/infrastructure/window_appearance.rs:176:
+         let Some(window) = app.get_window("main") else {
+             return;
+         };
+-        let Some(webview) = app.get_webview("main") else { return };
++        let Some(webview) = app.get_webview("main") else {
++            return;
++        };
+         let Ok(handle) = window.hwnd() else { return };
+         let hwnd = handle.0 as HWND;
+         let preferences = app
+Diff in /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/infrastructure/window_appearance.rs:313:
+         } else {
+             tauri::utils::config::Color(232, 237, 245, 255)
+         };
+-        if let Err(error) = window.set_background_color(Some(color))
+-            .and_then(|_| webview.set_background_color(Some(color))) {
++        if let Err(error) = window
++            .set_background_color(Some(color))
++            .and_then(|_| webview.set_background_color(Some(color)))
++        {
+             eprintln!("Native window background failed: {error}");
+             state.material = "solid";
+             state.reason = "webview-background-unavailable";
+Diff in /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/infrastructure/window_appearance.rs:366:
+             if let Some(app) = APP.get() {
+                 // WM_ACTIVATE 到达时 GetForegroundWindow 仍可能是切换前的窗口。
+                 // 使用消息自己的活动事实，避免失焦后残留透明 Mica 壳。
+-                refresh_with_active(app, (msg == WM_ACTIVATE).then_some(wp & 0xffff != WA_INACTIVE as usize));
++                refresh_with_active(
++                    app,
++                    (msg == WM_ACTIVATE).then_some(wp & 0xffff != WA_INACTIVE as usize),
++                );
+             }
+         }
+         result
+Diff in /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/modules/sync/portable_assets.rs:1828:
+         let root = tempfile::tempdir().unwrap();
+         let home = tempfile::tempdir().unwrap();
+         std::fs::write(package.path().join("SKILL.md"), "# fixture\nincoming").unwrap();
+-        let assets = Assets { skills: vec![snapshot_skill(package.path(), "fixture", false, true).unwrap()], mcps: vec![] };
++        let assets = Assets {
++            skills: vec![snapshot_skill(package.path(), "fixture", false, true).unwrap()],
++            mcps: vec![],
++        };
+         let local = home.path().join(".agents/skills/fixture");
+         std::fs::create_dir_all(&local).unwrap();
+         std::fs::write(local.join("SKILL.md"), "# fixture\nlocal").unwrap();
+Diff in /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/modules/sync/portable_assets.rs:1835:
+-        std::fs::write(local.join("old.txt"), "remove only after replacement succeeds").unwrap();
++        std::fs::write(
++            local.join("old.txt"),
++            "remove only after replacement succeeds",
++        )
++        .unwrap();
+         let id = uuid::Uuid::new_v4().to_string();
+         prepare(root.path(), home.path(), &id, &assets).unwrap();
+         // Windows 的目录句柄允许读写但不允许删除/重命名；不修改 ACL 或日常目录。
+Diff in /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/modules/sync/portable_assets.rs:1839:
+-        let handle = std::fs::OpenOptions::new().read(true).custom_flags(0x0200_0000)
+-            .share_mode(0x1 | 0x2).open(&local).unwrap();
++        let handle = std::fs::OpenOptions::new()
++            .read(true)
++            .custom_flags(0x0200_0000)
++            .share_mode(0x1 | 0x2)
++            .open(&local)
++            .unwrap();
+         assert!(apply_with(root.path(), &id, &assets, false, &Memory::default()).is_err());
+-        assert_eq!(std::fs::read_to_string(local.join("SKILL.md")).unwrap(), "# fixture\nlocal");
++        assert_eq!(
++            std::fs::read_to_string(local.join("SKILL.md")).unwrap(),
++            "# fixture\nlocal"
++        );
+         assert!(local.join("old.txt").is_file());
+         drop(handle);
+         apply_with(root.path(), &id, &assets, false, &Memory::default()).unwrap();
+Diff in /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/modules/sync/portable_assets.rs:1846:
+-        assert_eq!(std::fs::read_to_string(local.join("SKILL.md")).unwrap(), "# fixture\nincoming");
++        assert_eq!(
++            std::fs::read_to_string(local.join("SKILL.md")).unwrap(),
++            "# fixture\nincoming"
++        );
+         assert!(!local.join("old.txt").exists());
+         assert!(backup_count(root.path()) > 0);
+     }

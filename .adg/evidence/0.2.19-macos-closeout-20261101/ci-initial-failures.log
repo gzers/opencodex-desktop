@@ -1,0 +1,1349 @@
+backend-windows	UNKNOWN STEP	﻿2026-11-01T14:20:31.8003863Z Current runner version: '2.338.2'
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8030716Z ##[group]Runner Image Provisioner
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8031542Z Hosted Compute Agent
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8032117Z Version: 20261021.618
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8032696Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8033394Z Build Date: 2026-10-21T00:45:21Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8034064Z Worker ID: {165fca28-6030-4c4d-9443-c810195ed42d}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8035221Z Region: westus
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8035782Z Cloud: Azure
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8036306Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8037810Z ##[group]Operating System
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8038505Z Microsoft Windows Server 2025
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8039057Z 10.0.26100
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8039526Z Datacenter
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8040011Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8040485Z ##[group]Runner Image
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8041048Z Image: windows-2025-vs2026
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8041654Z Version: 20261021.278.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8043177Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8044752Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8045699Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8046815Z ##[group]GITHUB_TOKEN Permissions
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8048691Z Actions: read
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8049236Z Contents: read
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8049753Z Metadata: read
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8050277Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8052349Z Secret source: Actions
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8053217Z Cache mode: write
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8053878Z Prepare workflow directory
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8573457Z Prepare all required actions
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:31.8636135Z Getting action download info
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:32.2051864Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:32.3402911Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:32.5301757Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:b725eda525362e7cf34af9a7243cac1e3f01a7ec)
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:32.7364152Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.1203063Z Complete job name: backend-windows
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2812300Z ##[group]Run actions/checkout@v5
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2814739Z with:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2815470Z   repository: gzers/opencodex-desktop
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2822932Z   token: ***
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2823589Z   ssh-strict: true
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2824251Z   ssh-user: git
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2824937Z   persist-credentials: true
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2825689Z   clean: true
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2826368Z   sparse-checkout-cone-mode: true
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2827190Z   fetch-depth: 1
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2827836Z   fetch-tags: false
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2828513Z   show-progress: true
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2829202Z   lfs: false
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2829858Z   submodules: false
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2830546Z   set-safe-directory: true
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2831648Z   allow-unsafe-pr-checkout: false
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.2832823Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.4435821Z Syncing repository: gzers/opencodex-desktop
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.4437585Z ##[group]Getting Git version info
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.4438362Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.5359199Z [command]"C:\Program Files\Git\bin\git.exe" version
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.9116182Z git version 2.56.0.windows.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.9175605Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.9198588Z Temporarily overriding HOME='D:\a\_temp\db943859-2026-4edd-9bcd-d4878cef5ac6' before making global git config changes
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.9201962Z Adding repository directory to the temporary git global config as a safe directory
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.9212445Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.9902558Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.9910641Z ##[group]Initializing the repository
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:33.9918885Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:34.0973375Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:34.1026900Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:34.1803102Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:34.1804016Z ##[group]Disabling automatic garbage collection
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:34.1812948Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:34.2205131Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:34.2205958Z ##[group]Setting up auth
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:34.2217279Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:34.2611571Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:35.8283429Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:35.8674389Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:36.4389214Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:36.4803260Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:37.0670548Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:37.1095044Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:37.1095685Z ##[group]Fetching the repository
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:37.1111341Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +2aeaa3f4e3c89e8592453b6ff359341ddbe2b3bd:refs/remotes/pull/33/merge
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.4065639Z From https://github.com/gzers/opencodex-desktop
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.4066756Z  * [new ref]         2aeaa3f4e3c89e8592453b6ff359341ddbe2b3bd -> pull/33/merge
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.4115365Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.4116382Z ##[group]Determining the checkout info
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.4118064Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.4127159Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.4642143Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.5054537Z ##[group]Checking out the ref
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.5065784Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/33/merge
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8087359Z Note: switching to 'refs/remotes/pull/33/merge'.
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8088746Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8089814Z You are in 'detached HEAD' state. You can look around, make experimental
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8090899Z changes and commit them, and you can discard any commits you make in this
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8092144Z state without impacting any branches by switching back to a branch.
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8093099Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8093330Z If you want to create a new branch to retain commits you create, you may
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8093827Z do so (now or later) by using -c with the switch command. Example:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8094090Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8094219Z   git switch -c <new-branch-name>
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8094401Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8094492Z Or undo this operation with:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8094655Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8096358Z   git switch -
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8096588Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8096966Z Turn off this advice by setting config variable advice.detachedHead to false
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8097542Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8098267Z HEAD is now at 2aeaa3f Merge 1fc19df6868dc3c069fb2c24f69a2f74919c7076 into b7cd663438cf9f949280d337058333115ea5802a
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8182633Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.8669425Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.9036678Z 2aeaa3f4e3c89e8592453b6ff359341ddbe2b3bd
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.9549198Z ##[group]Run actions/setup-node@v5
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.9549535Z with:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.9549721Z   node-version: 24
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.9549928Z   always-auth: false
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.9550133Z   check-latest: false
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.9553028Z   token: ***
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.9553252Z   package-manager-cache: true
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:38.9553512Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:39.1572165Z Found in cache @ C:\hostedtoolcache\windows\node\24.22.1\x64
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:39.1579799Z (node:9112) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:39.1580698Z (Use `node --trace-deprecation ...` to show where the warning was created)
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:39.1583140Z ##[group]Environment details
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.2614919Z node: v24.22.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.2615232Z npm: 11.19.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.2615699Z yarn: 1.22.22
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.2619046Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3162307Z ##[group]Run dtolnay/rust-toolchain@stable
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3162660Z with:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3162856Z   components: rustfmt, clippy
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3163090Z   toolchain: stable
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3163291Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3231934Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3422647Z ##[group]Run if [[ -z $toolchain ]]; then
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3423048Z ^[[36;1mif [[ -z $toolchain ]]; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3423608Z ^[[36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3424169Z ^[[36;1m  echo "'toolchain' is a required input" >&2^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3424451Z ^[[36;1m  exit 1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3424766Z ^[[36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3425164Z ^[[36;1m  if [[ Windows == macOS ]]; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3425732Z ^[[36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3426226Z ^[[36;1m  else^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3426605Z ^[[36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3427046Z ^[[36;1m  fi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3427316Z ^[[36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3427839Z ^[[36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3428285Z ^[[36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3428784Z ^[[36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3429262Z ^[[36;1melse^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3429430Z ^[[36;1m  delimiter=EOF^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3429720Z ^[[36;1m  while [[ $toolchain == *$delimiter* ]]; do delimiter+=_; done^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3430212Z ^[[36;1m  printf 'toolchain<<%s\n%s\n%s\n' "$delimiter" "$toolchain" "$delimiter" >> $GITHUB_OUTPUT^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3430620Z ^[[36;1mfi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3454563Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3454957Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3455125Z   toolchain: stable
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.3455367Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.5668059Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=243]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.5673097Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.5823738Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.5824252Z ^[[36;1mecho CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.5842025Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.5842409Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6270725Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=59]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6273266Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6282925Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6285138Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6433911Z ##[group]Run if ! command -v rustup &>/dev/null; then
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6434283Z ^[[36;1mif ! command -v rustup &>/dev/null; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6435341Z ^[[36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6438021Z ^[[36;1m  'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6438535Z ^[[36;1m  echo "$CARGO_HOME\bin" >> $GITHUB_PATH^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6439043Z ^[[36;1mfi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6456825Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6457212Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6457403Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6457654Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.6988393Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=70]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7003485Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7159286Z ##[group]Run set -f  # split targets and components on commas and whitespace, without glob expansion
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7159967Z ^[[36;1mset -f  # split targets and components on commas and whitespace, without glob expansion^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7160405Z ^[[36;1mflags=()^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7160670Z ^[[36;1mfor t in ${targets//,/ }; do flags+=(--target "$t"); done^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7161069Z ^[[36;1mfor c in ${components//,/ }; do flags+=(--component "$c"); done^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7161569Z ^[[36;1mif [[ $toolchain == nightly && -n $components ]]; then flags+=(--allow-downgrade); fi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7161973Z ^[[36;1mlog=$(mktemp)^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7162187Z ^[[36;1mtrap 'rm -f "$log"' EXIT^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7162419Z ^[[36;1mfor attempt in 1 2 3 4 5; do^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7162980Z ^[[36;1m  if rustup toolchain install "$toolchain" "${flags[@]}" --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7163534Z ^[[36;1m    break^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7163706Z ^[[36;1m  else^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7163871Z ^[[36;1m    status=$?^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7164048Z ^[[36;1m  fi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7164303Z ^[[36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7164842Z ^[[36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7165294Z ^[[36;1m    exit "$status"^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7165488Z ^[[36;1m  fi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7165810Z ^[[36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7166229Z ^[[36;1m  sleep 30^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7166398Z ^[[36;1mdone^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7184058Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7184642Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7184839Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7185097Z   toolchain: stable
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7185273Z   targets:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7185446Z   components: rustfmt, clippy
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7185673Z   RUSTUP_PERMIT_COPY_RENAME: 1
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:44.7185882Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.0724446Z info: syncing channel updates for stable-x86_64-pc-windows-msvc
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.5304354Z info: latest update on 2026-10-15 for version 1.99.1 (58cf8f9c3 2026-10-13)
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.5621007Z info: component clippy is up to date
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.5621576Z info: component rustfmt is up to date
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.5621877Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.5804628Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.5805190Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.6272564Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=4926]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.6280595Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.6420621Z ##[group]Run rustup default "$toolchain" --force-non-host
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.6421015Z ^[[36;1mrustup default "$toolchain" --force-non-host^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.6438098Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.6438475Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.6439355Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.6439635Z   toolchain: stable
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.6439816Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7154884Z info: using existing install for stable-x86_64-pc-windows-msvc
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7262751Z info: default toolchain set to stable-x86_64-pc-windows-msvc
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7263385Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7472703Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7473341Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7561832Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=128]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7566403Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7727508Z ##[group]Run DATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7728382Z ^[[36;1mDATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7729069Z ^[[36;1mHASH=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-hash: //p')^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7729569Z ^[[36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7746427Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7746810Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7747010Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7747265Z   toolchain: stable
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:49.7747460Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.6599303Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=903]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.6601993Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.6750072Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.6750521Z ^[[36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.6750853Z ^[[36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.6751112Z ^[[36;1mfi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.6768081Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.6768476Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.6768667Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.6768918Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7207980Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=60]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7211332Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7363295Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7363659Z ^[[36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7363967Z ^[[36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7364233Z ^[[36;1mfi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7380847Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7381246Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7381440Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7381707Z   CARGO_INCREMENTAL: 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7381901Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7848858Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=63]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.7853111Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8007402Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8007989Z ^[[36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8008721Z ^[[36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8009401Z ^[[36;1m  if rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[89]\.'; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8010113Z ^[[36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8010639Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8011164Z ^[[36;1m  elif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[67]\.'; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8011694Z ^[[36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8012153Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8012497Z ^[[36;1m  fi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8012664Z ^[[36;1mfi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8029767Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8030161Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8030357Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8030614Z   CARGO_INCREMENTAL: 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8030809Z   CARGO_TERM_COLOR: always
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8031007Z   toolchain: stable
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:50.8031183Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0077512Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=222]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0080985Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0241247Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0242021Z ^[[36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0242683Z ^[[36;1mif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.7[01]\.'; then^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0243147Z ^[[36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0243439Z ^[[36;1mfi^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0260510Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0260906Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0261097Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0261386Z   CARGO_INCREMENTAL: 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0261590Z   CARGO_TERM_COLOR: always
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0261790Z   toolchain: stable
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.0261980Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1343891Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=126]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1349336Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1502570Z ##[group]Run rustc +"$toolchain" --version --verbose
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1503331Z ^[[36;1mrustc +"$toolchain" --version --verbose^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1519558Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1519949Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1520132Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1520386Z   CARGO_INCREMENTAL: 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1520581Z   CARGO_TERM_COLOR: always
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1520780Z   toolchain: stable
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.1520979Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.2420127Z rustc 1.99.1 (58cf8f9c3 2026-10-13)
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.2420791Z binary: rustc
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.2421452Z commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.2422189Z commit-date: 2026-10-13
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.2422974Z host: x86_64-pc-windows-msvc
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.2423401Z release: 1.99.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.2424140Z LLVM version: 23.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.2570499Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=122]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.2767937Z ##[group]Run npm --prefix ../ui ci
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.2768292Z ^[[36;1mnpm --prefix ../ui ci^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.3453138Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.3453652Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.3453932Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.3454327Z   CARGO_INCREMENTAL: 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.3454636Z   CARGO_TERM_COLOR: always
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:51.3454940Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:55.1834780Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6323109Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6323811Z added 146 packages, and audited 147 packages in 7s
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6324320Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6327233Z 27 packages are looking for funding
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6329717Z   run `npm fund` for details
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6507779Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6508354Z 8 vulnerabilities (7 moderate, 1 high)
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6509125Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6509517Z To address all issues (including breaking changes), run:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6510117Z   npm audit fix --force
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6510357Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:58.6510543Z Run `npm audit` for details.
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:59.9169468Z ##[group]Run npm --prefix ../ui run build
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:59.9169859Z ^[[36;1mnpm --prefix ../ui run build^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:59.9242596Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:59.9242947Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:59.9243134Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:59.9243390Z   CARGO_INCREMENTAL: 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:59.9243582Z   CARGO_TERM_COLOR: always
+backend-windows	UNKNOWN STEP	2026-11-01T14:20:59.9243780Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:00.7308901Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:00.7309509Z > opencodex-desktop-ui@0.2.19 build
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:00.7309945Z > vue-tsc --noEmit && vite build
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:00.7310152Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:13.6672897Z ^[[36mvite v8.3.0 ^[[32mbuilding client environment for production...^[[36m^[[39m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:13.6818037Z transforming...
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:14.8830003Z ✓ 327 modules transformed.
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:14.9554517Z rendering chunks...
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0560638Z computing gzip size...
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0612648Z dist/index.html                                      1.09 kB │ gzip:   0.44 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0614313Z dist/assets/WebDavConnection-B7AwJcts.css            0.12 kB │ gzip:   0.12 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0615618Z dist/assets/ImportedConnections-ZcgCE3WT.css         0.38 kB │ gzip:   0.23 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0616871Z dist/assets/SyncRoute-CVsBgWau.css                   0.87 kB │ gzip:   0.39 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0618068Z dist/assets/ModelSaveHistory-D4_CeHq2.css            1.53 kB │ gzip:   0.50 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0619290Z dist/assets/ModelsRoute-cY6wiEm5.css                33.79 kB │ gzip:   6.03 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0620529Z dist/assets/index-4rWXJCmF.css                     140.64 kB │ gzip:  24.63 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0621666Z dist/assets/rolldown-runtime-DK3Fl9T5.js             0.15 kB │ gzip:   0.15 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0622333Z dist/assets/preload-helper-BZ1Pz5am.js               1.21 kB │ gzip:   0.69 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0623003Z dist/assets/ImportedConnections-DD1A9b8F.js          2.56 kB │ gzip:   1.29 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0623640Z dist/assets/core-DNNVStWM.js                         2.85 kB │ gzip:   1.14 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0624245Z dist/assets/SyncRoute-C_Y9hCXP.js                    3.54 kB │ gzip:   1.52 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0625180Z dist/assets/WebDavConnection-DYbj9QSX.js             4.57 kB │ gzip:   1.93 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0626368Z dist/assets/pinia-Degfou_Q.js                        5.99 kB │ gzip:   2.83 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0627579Z dist/assets/ModelSaveHistory-Di4C2mUj.js             7.50 kB │ gzip:   3.32 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0628905Z dist/assets/_plugin-vue_export-helper-D_aHQ0wF.js   13.62 kB │ gzip:   5.60 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0630215Z dist/assets/reactivity.esm-bundler-CiLpcgQX.js      20.90 kB │ gzip:   7.86 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0631497Z dist/assets/store-5e4FOthS.js                       25.91 kB │ gzip:   4.55 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0632345Z dist/assets/runtime-core.esm-bundler-BIovt1e_.js    42.99 kB │ gzip:  17.74 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0633055Z dist/assets/ModelsRoute-COn1LDmO.js                180.76 kB │ gzip:  53.38 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0634680Z dist/assets/index-vK9HHDgV.js                      513.22 kB │ gzip: 162.99 kB
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0635009Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0636754Z ^[[33m^[[33m[INEFFECTIVE_DYNAMIC_IMPORT] ^[[0msrc/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/features/updates/useUpdateScheduler.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0638144Z ^[[39m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0638423Z ^[[33m[plugin builtin:vite-reporter]
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0638865Z (!) Some chunks are larger than 500 kB after minification. Consider:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0639316Z - Using dynamic import() to code-split the application
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0644249Z - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0646060Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.^[[39m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0650575Z ^[[33m^[[33m[INEFFECTIVE_DYNAMIC_IMPORT] ^[[0msrc/features/updates/update.ts is dynamically imported by src/features/updates/store.ts but also statically imported by src/features/backup/BackupManagement.vue?vue&type=script&setup=true&lang.ts, src/features/updates/UpdateCenter.vue?vue&type=script&setup=true&lang.ts, src/features/updates/useUpdateScheduler.ts, src/routes/OverviewRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0653926Z ^[[39m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0656908Z ^[[33m^[[33m[INEFFECTIVE_DYNAMIC_IMPORT] ^[[0msrc/features/models/store.ts is dynamically imported by src/composables/useAppController.ts but also statically imported by src/features/backup/ModelSaveHistory.vue?vue&type=script&setup=true&lang.ts, src/features/models/AgentExecutionField.vue?vue&type=script&setup=true&lang.ts, src/features/models/BatchAgentDialog.vue?vue&type=script&setup=true&lang.ts, src/features/models/ChannelBatchDialog.vue?vue&type=script&setup=true&lang.ts, src/features/models/ChannelEditor.vue?vue&type=script&setup=true&lang.ts, ..., dynamic import will not move module into another chunk.
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0659732Z ^[[39m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0663770Z ^[[33m^[[33m[INEFFECTIVE_DYNAMIC_IMPORT] ^[[0mnode_modules/@tauri-apps/api/event.js is dynamically imported by src/app/appearance/effects.ts, src/app/lifecycle/store.ts, src/components/TaskProgressHost.vue?vue&type=script&setup=true&lang.ts, src/features/notifications/store.ts, src/features/runtime/store.ts, ... but also statically imported by src/app/appearance/nativeWindow.ts, dynamic import will not move module into another chunk.
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0667541Z ^[[39m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.0668104Z ^[[32m✓ built in 1.40s^[[39m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.5013612Z ##[group]Run cargo fmt --all -- --check
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.5014208Z ^[[36;1mcargo fmt --all -- --check^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.5139224Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.5139843Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.5140145Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.5140612Z   CARGO_INCREMENTAL: 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.5140950Z   CARGO_TERM_COLOR: always
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:15.5141303Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8030763Z Diff in \\?\D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\commands\panel.rs:111:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8032084Z      fn validate(&self, width: f64, height: f64, zoom: f64, macos: bool) -> AppResult<()> {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8032926Z          let sidebar = PANEL_SIDEBAR_WIDTH * zoom;
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8034056Z          // Windows 原生标题栏在客户区外；只有 macOS Overlay 在 WebView 内占 28px。
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8035215Z ^[[31m-        let titlebar = if macos { PANEL_MACOS_TITLEBAR_HEIGHT } else { 0.0 };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8035956Z ^[[0m^[[32m+        let titlebar = if macos {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8036806Z ^[[0m^[[32m+            PANEL_MACOS_TITLEBAR_HEIGHT
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8037240Z ^[[0m^[[32m+        } else {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8037555Z ^[[0m^[[32m+            0.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8037855Z ^[[0m^[[32m+        };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8038276Z ^[[0m         if ![self.x, self.y, self.width, self.height]
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8038652Z              .iter()
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8038925Z              .all(|n| n.is_finite())
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8039622Z Diff in \\?\D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\commands\panel.rs:492:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8040221Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8040423Z      #[test]
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8040785Z      fn show_rejection_reason_names_runtime_and_missing_port() {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8042104Z ^[[31m-        assert_eq!(show_rejection_reason(RuntimeState::Running, Some(10100)), None);
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8042571Z ^[[0m         assert_eq!(
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8043059Z ^[[32m+            show_rejection_reason(RuntimeState::Running, Some(10100)),
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8043450Z ^[[0m^[[32m+            None
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8043693Z ^[[0m^[[32m+        );
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8043937Z ^[[0m^[[32m+        assert_eq!(
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8044422Z ^[[0m             show_rejection_reason(RuntimeState::Running, None).as_deref(),
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8044835Z              Some("runtime=Running port=none")
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8045099Z          );
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8045566Z Diff in \\?\D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\commands\panel.rs:632:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8046022Z      #[test]
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8046370Z      fn native_caption_panel_starts_at_client_top_without_covering_macos_overlay() {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8046815Z          for zoom in [0.5, 0.98, 1.0, 1.5, 2.0] {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8047481Z ^[[31m-            let bounds = PanelBounds { x: 64.0 * zoom, y: 1.0, width: 1180.0 - 64.0 * zoom, height: 759.0 };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8048035Z ^[[0m^[[32m+            let bounds = PanelBounds {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8048396Z ^[[0m^[[32m+                x: 64.0 * zoom,
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8048710Z ^[[0m^[[32m+                y: 1.0,
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8049059Z ^[[0m^[[32m+                width: 1180.0 - 64.0 * zoom,
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8049422Z ^[[0m^[[32m+                height: 759.0,
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8049699Z ^[[0m^[[32m+            };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8050111Z ^[[0m             assert!(bounds.validate(1180., 760., zoom, false).is_ok());
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8050557Z              assert!(bounds.validate(1180., 760., zoom, true).is_err());
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8051217Z ^[[31m-            assert!(PanelBounds { y: -1.0, ..bounds }.validate(1180., 760., zoom, false).is_err());
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8051798Z ^[[0m^[[32m+            assert!(PanelBounds { y: -1.0, ..bounds }
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8053404Z ^[[0m^[[32m+                .validate(1180., 760., zoom, false)
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8053774Z ^[[0m^[[32m+                .is_err());
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8056462Z ^[[0m         }
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8057138Z      }
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.8057324Z      #[test]
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9397281Z Diff in \\?\D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\infrastructure\window_appearance.rs:176:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9398522Z          let Some(window) = app.get_window("main") else {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9399174Z              return;
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9399584Z          };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9400745Z ^[[31m-        let Some(webview) = app.get_webview("main") else { return };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9402094Z ^[[0m^[[32m+        let Some(webview) = app.get_webview("main") else {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9403107Z ^[[0m^[[32m+            return;
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9404156Z ^[[0m^[[32m+        };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9405021Z ^[[0m         let Ok(handle) = window.hwnd() else { return };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9405921Z          let hwnd = handle.0 as HWND;
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9406637Z          let preferences = app
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9408149Z Diff in \\?\D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\infrastructure\window_appearance.rs:313:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9409424Z          } else {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9410098Z              tauri::utils::config::Color(232, 237, 245, 255)
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9410786Z          };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9411724Z ^[[31m-        if let Err(error) = window.set_background_color(Some(color))
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9413340Z ^[[0m^[[31m-            .and_then(|_| webview.set_background_color(Some(color))) {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9414205Z ^[[0m^[[32m+        if let Err(error) = window
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9414904Z ^[[0m^[[32m+            .set_background_color(Some(color))
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9415791Z ^[[0m^[[32m+            .and_then(|_| webview.set_background_color(Some(color)))
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9416473Z ^[[0m^[[32m+        {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9417161Z ^[[0m             eprintln!("Native window background failed: {error}");
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9417837Z              state.material = "solid";
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9418436Z              state.reason = "webview-background-unavailable";
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9419655Z Diff in \\?\D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\infrastructure\window_appearance.rs:366:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9420671Z              if let Some(app) = APP.get() {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9421527Z                  // WM_ACTIVATE 到达时 GetForegroundWindow 仍可能是切换前的窗口。
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9422321Z                  // 使用消息自己的活动事实，避免失焦后残留透明 Mica 壳。
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9423552Z ^[[31m-                refresh_with_active(app, (msg == WM_ACTIVATE).then_some(wp & 0xffff != WA_INACTIVE as usize));
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9424633Z ^[[0m^[[32m+                refresh_with_active(
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9425273Z ^[[0m^[[32m+                    app,
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9426248Z ^[[0m^[[32m+                    (msg == WM_ACTIVATE).then_some(wp & 0xffff != WA_INACTIVE as usize),
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9427079Z ^[[0m^[[32m+                );
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9427521Z ^[[0m             }
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9427850Z          }
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:19.9428160Z          result
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1526821Z Diff in \\?\D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\modules\sync\portable_assets.rs:1828:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1528309Z          let root = tempfile::tempdir().unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1529047Z          let home = tempfile::tempdir().unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1529843Z          std::fs::write(package.path().join("SKILL.md"), "# fixture\nincoming").unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1531297Z ^[[31m-        let assets = Assets { skills: vec![snapshot_skill(package.path(), "fixture", false, true).unwrap()], mcps: vec![] };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1532210Z ^[[0m^[[32m+        let assets = Assets {
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1533039Z ^[[0m^[[32m+            skills: vec![snapshot_skill(package.path(), "fixture", false, true).unwrap()],
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1534194Z ^[[0m^[[32m+            mcps: vec![],
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1534668Z ^[[0m^[[32m+        };
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1536516Z ^[[0m         let local = home.path().join(".agents/skills/fixture");
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1537010Z          std::fs::create_dir_all(&local).unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1537477Z          std::fs::write(local.join("SKILL.md"), "# fixture\nlocal").unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1538300Z Diff in \\?\D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\modules\sync\portable_assets.rs:1835:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1539417Z ^[[31m-        std::fs::write(local.join("old.txt"), "remove only after replacement succeeds").unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1540022Z ^[[0m^[[32m+        std::fs::write(
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1540381Z ^[[0m^[[32m+            local.join("old.txt"),
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1540852Z ^[[0m^[[32m+            "remove only after replacement succeeds",
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1541246Z ^[[0m^[[32m+        )
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1541511Z ^[[0m^[[32m+        .unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1541954Z ^[[0m         let id = uuid::Uuid::new_v4().to_string();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1542402Z          prepare(root.path(), home.path(), &id, &assets).unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1542954Z          // Windows 的目录句柄允许读写但不允许删除/重命名；不修改 ACL 或日常目录。
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1543660Z Diff in \\?\D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\modules\sync\portable_assets.rs:1839:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1544586Z ^[[31m-        let handle = std::fs::OpenOptions::new().read(true).custom_flags(0x0200_0000)
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1545208Z ^[[0m^[[31m-            .share_mode(0x1 | 0x2).open(&local).unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1545746Z ^[[0m^[[32m+        let handle = std::fs::OpenOptions::new()
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1546151Z ^[[0m^[[32m+            .read(true)
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1546503Z ^[[0m^[[32m+            .custom_flags(0x0200_0000)
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1546854Z ^[[0m^[[32m+            .share_mode(0x1 | 0x2)
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1547172Z ^[[0m^[[32m+            .open(&local)
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1547459Z ^[[0m^[[32m+            .unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1548025Z ^[[0m         assert!(apply_with(root.path(), &id, &assets, false, &Memory::default()).is_err());
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1548795Z ^[[31m-        assert_eq!(std::fs::read_to_string(local.join("SKILL.md")).unwrap(), "# fixture\nlocal");
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1549291Z ^[[0m^[[32m+        assert_eq!(
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1549751Z ^[[0m^[[32m+            std::fs::read_to_string(local.join("SKILL.md")).unwrap(),
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1550164Z ^[[0m^[[32m+            "# fixture\nlocal"
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1550444Z ^[[0m^[[32m+        );
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1550757Z ^[[0m         assert!(local.join("old.txt").is_file());
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1551042Z          drop(handle);
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1551454Z          apply_with(root.path(), &id, &assets, false, &Memory::default()).unwrap();
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1552185Z Diff in \\?\D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\src\modules\sync\portable_assets.rs:1846:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1554139Z ^[[31m-        assert_eq!(std::fs::read_to_string(local.join("SKILL.md")).unwrap(), "# fixture\nincoming");
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1554682Z ^[[0m^[[32m+        assert_eq!(
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1555170Z ^[[0m^[[32m+            std::fs::read_to_string(local.join("SKILL.md")).unwrap(),
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1555596Z ^[[0m^[[32m+            "# fixture\nincoming"
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1555888Z ^[[0m^[[32m+        );
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1556208Z ^[[0m         assert!(!local.join("old.txt").exists());
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1556546Z          assert!(backup_count(root.path()) > 0);
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.1556803Z      }
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.5746423Z ##[error]Process completed with exit code 1.
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.5948978Z ##[group]Run $env:OPENCODEX_SANDBOX = '1'
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.5949382Z ^[[36;1m$env:OPENCODEX_SANDBOX = '1'^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.5949861Z ^[[36;1mcargo test --locked --test provider_auth_native -- --ignored --test-threads=1 --nocapture^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.5950400Z ^[[36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.6024251Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.6024607Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.6024804Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.6025060Z   CARGO_INCREMENTAL: 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.6025257Z   CARGO_TERM_COLOR: always
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:21.6025458Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:22.5887788Z ^[[1m^[[92m    Updating^[[0m crates.io index
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.3557084Z ^[[1m^[[92m Downloading^[[0m crates ...
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.4239158Z ^[[1m^[[92m  Downloaded^[[0m cpufeatures v0.2.17
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.4545915Z ^[[1m^[[92m  Downloaded^[[0m adler2 v2.0.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.4699417Z ^[[1m^[[92m  Downloaded^[[0m sync_wrapper v1.0.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.4878912Z ^[[1m^[[92m  Downloaded^[[0m subtle v2.6.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.5095924Z ^[[1m^[[92m  Downloaded^[[0m vswhom-sys v0.1.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.5282715Z ^[[1m^[[92m  Downloaded^[[0m windows-interface v0.59.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.5400632Z ^[[1m^[[92m  Downloaded^[[0m markup5ever v0.39.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.5541521Z ^[[1m^[[92m  Downloaded^[[0m synstructure v0.14.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.5715648Z ^[[1m^[[92m  Downloaded^[[0m tauri-macros v2.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.6146456Z ^[[1m^[[92m  Downloaded^[[0m tauri-plugin v2.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.6366392Z ^[[1m^[[92m  Downloaded^[[0m tauri-plugin-process v2.4.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.6698973Z ^[[1m^[[92m  Downloaded^[[0m thiserror-impl v2.0.21
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.7079629Z ^[[1m^[[92m  Downloaded^[[0m time-macros v0.2.32
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:24.8063514Z ^[[1m^[[92m  Downloaded^[[0m tauri-plugin-dialog v2.8.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:25.0075035Z ^[[1m^[[92m  Downloaded^[[0m tauri-plugin-fs v2.6.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.2290260Z ^[[1m^[[92m  Downloaded^[[0m toml v0.9.12+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.4724581Z ^[[1m^[[92m  Downloaded^[[0m tauri-runtime v2.12.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.5046992Z ^[[1m^[[92m  Downloaded^[[0m form_urlencoded v1.2.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.5229209Z ^[[1m^[[92m  Downloaded^[[0m futures-task v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.5593060Z ^[[1m^[[92m  Downloaded^[[0m dyn-clone v1.0.20
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.6168786Z ^[[1m^[[92m  Downloaded^[[0m fnv v1.0.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.6771585Z ^[[1m^[[92m  Downloaded^[[0m tauri-winres v0.3.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.7427138Z ^[[1m^[[92m  Downloaded^[[0m toml_writer v1.1.2+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.8004900Z ^[[1m^[[92m  Downloaded^[[0m untrusted v0.9.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.8179318Z ^[[1m^[[92m  Downloaded^[[0m tauri-build v2.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.8487781Z ^[[1m^[[92m  Downloaded^[[0m time-core v0.1.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:26.9058388Z ^[[1m^[[92m  Downloaded^[[0m tinystr v0.8.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.1070413Z ^[[1m^[[92m  Downloaded^[[0m toml_datetime v0.7.5+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.1745507Z ^[[1m^[[92m  Downloaded^[[0m universal-hash v0.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.2296141Z ^[[1m^[[92m  Downloaded^[[0m tauri-codegen v2.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.3083167Z ^[[1m^[[92m  Downloaded^[[0m schemars_derive v0.8.22
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.4195236Z ^[[1m^[[92m  Downloaded^[[0m tar v0.4.46
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.5939032Z ^[[1m^[[92m  Downloaded^[[0m tower-service v0.3.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.6315092Z ^[[1m^[[92m  Downloaded^[[0m tendril v0.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.7244587Z ^[[1m^[[92m  Downloaded^[[0m windows-implement v0.60.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.7608371Z ^[[1m^[[92m  Downloaded^[[0m thiserror v2.0.21
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.8618362Z ^[[1m^[[92m  Downloaded^[[0m toml v1.1.6+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.9209364Z ^[[1m^[[92m  Downloaded^[[0m toml_datetime v1.1.1+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.9344673Z ^[[1m^[[92m  Downloaded^[[0m urlpattern v0.6.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.9724509Z ^[[1m^[[92m  Downloaded^[[0m utf8_iter v1.0.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:27.9886753Z ^[[1m^[[92m  Downloaded^[[0m windows-collections v0.3.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.0052876Z ^[[1m^[[92m  Downloaded^[[0m windows-registry v0.6.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.0539069Z ^[[1m^[[92m  Downloaded^[[0m windows-threading v0.2.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.0640717Z ^[[1m^[[92m  Downloaded^[[0m web-time v1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.0896605Z ^[[1m^[[92m  Downloaded^[[0m toml_parser v1.1.3+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.1200025Z ^[[1m^[[92m  Downloaded^[[0m darling_macro v0.24.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.1317845Z ^[[1m^[[92m  Downloaded^[[0m defmt-parser v1.0.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.1424405Z ^[[1m^[[92m  Downloaded^[[0m tauri-utils v2.10.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.1772851Z ^[[1m^[[92m  Downloaded^[[0m tempfile v3.27.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.1991746Z ^[[1m^[[92m  Downloaded^[[0m writeable v0.6.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.2220650Z ^[[1m^[[92m  Downloaded^[[0m tauri-runtime-wry v2.12.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.2422749Z ^[[1m^[[92m  Downloaded^[[0m tinyvec v1.13.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.2876609Z ^[[1m^[[92m  Downloaded^[[0m tokio-macros v2.7.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.2973531Z ^[[1m^[[92m  Downloaded^[[0m typeid v1.0.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.3144401Z ^[[1m^[[92m  Downloaded^[[0m unsafe-libyaml v0.2.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.3495188Z ^[[1m^[[92m  Downloaded^[[0m crypto-common v0.1.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.3626958Z ^[[1m^[[92m  Downloaded^[[0m cssparser-macros v0.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.3699502Z ^[[1m^[[92m  Downloaded^[[0m try-lock v0.2.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.3813179Z ^[[1m^[[92m  Downloaded^[[0m cpufeatures v0.3.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.3964394Z ^[[1m^[[92m  Downloaded^[[0m tower-layer v0.3.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.4074833Z ^[[1m^[[92m  Downloaded^[[0m want v0.3.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.4198727Z ^[[1m^[[92m  Downloaded^[[0m winapi-util v0.1.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.4361348Z ^[[1m^[[92m  Downloaded^[[0m windows-core v0.62.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:28.4855819Z ^[[1m^[[92m  Downloaded^[[0m hex v0.4.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.3555677Z ^[[1m^[[92m  Downloaded^[[0m itoa v1.0.18
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.3692847Z ^[[1m^[[92m  Downloaded^[[0m version_check v0.9.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.3867661Z ^[[1m^[[92m  Downloaded^[[0m vswhom v0.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.4002861Z ^[[1m^[[92m  Downloaded^[[0m windows-link v0.2.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.4123807Z ^[[1m^[[92m  Downloaded^[[0m httpdate v1.0.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.4374943Z ^[[1m^[[92m  Downloaded^[[0m http-body v1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.4679035Z ^[[1m^[[92m  Downloaded^[[0m ident_case v1.0.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.4767163Z ^[[1m^[[92m  Downloaded^[[0m idna_adapter v1.2.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.4892855Z ^[[1m^[[92m  Downloaded^[[0m inout v0.1.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.5084442Z ^[[1m^[[92m  Downloaded^[[0m lru-slab v0.1.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.5167286Z ^[[1m^[[92m  Downloaded^[[0m webview2-com v0.39.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.5290232Z ^[[1m^[[92m  Downloaded^[[0m dirs v7.0.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.5451180Z ^[[1m^[[92m  Downloaded^[[0m dunce v1.0.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.5579896Z ^[[1m^[[92m  Downloaded^[[0m futures-io v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.5663831Z ^[[1m^[[92m  Downloaded^[[0m futures-sink v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.5751656Z ^[[1m^[[92m  Downloaded^[[0m jiff-tzdb-platform v0.1.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.5862618Z ^[[1m^[[92m  Downloaded^[[0m webview2-com-macros v0.8.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.5938419Z ^[[1m^[[92m  Downloaded^[[0m windows-future v0.3.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.6114038Z ^[[1m^[[92m  Downloaded^[[0m windows-result v0.4.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.6313354Z ^[[1m^[[92m  Downloaded^[[0m windows-targets v0.52.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.6396235Z ^[[1m^[[92m  Downloaded^[[0m windows-version v0.1.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.6492744Z ^[[1m^[[92m  Downloaded^[[0m yoke-derive v0.8.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.6634503Z ^[[1m^[[92m  Downloaded^[[0m zerofrom v0.1.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.6730351Z ^[[1m^[[92m  Downloaded^[[0m alloc-no-stdlib v3.0.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.6909412Z ^[[1m^[[92m  Downloaded^[[0m ctr v0.9.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.7144919Z ^[[1m^[[92m  Downloaded^[[0m dirs v6.0.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.7281736Z ^[[1m^[[92m  Downloaded^[[0m displaydoc v0.2.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.7531552Z ^[[1m^[[92m  Downloaded^[[0m dtoa v1.0.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.7674775Z ^[[1m^[[92m  Downloaded^[[0m equivalent v1.0.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.7778819Z ^[[1m^[[92m  Downloaded^[[0m erased-serde v0.4.10
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.8073353Z ^[[1m^[[92m  Downloaded^[[0m filetime v0.2.29
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.8287627Z ^[[1m^[[92m  Downloaded^[[0m heck v0.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.8498828Z ^[[1m^[[92m  Downloaded^[[0m same-file v1.0.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.8635164Z ^[[1m^[[92m  Downloaded^[[0m serde_repr v0.1.21
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:29.8851167Z ^[[1m^[[92m  Downloaded^[[0m tao v0.37.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.4380090Z ^[[1m^[[92m  Downloaded^[[0m tauri-plugin-updater v2.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.4655392Z ^[[1m^[[92m  Downloaded^[[0m tokio-rustls v0.26.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.4795285Z ^[[1m^[[92m  Downloaded^[[0m url v2.5.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.5066141Z ^[[1m^[[92m  Downloaded^[[0m walkdir v2.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.5245324Z ^[[1m^[[92m  Downloaded^[[0m defmt-macros v1.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.5733221Z ^[[1m^[[92m  Downloaded^[[0m deranged v0.5.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.5995137Z ^[[1m^[[92m  Downloaded^[[0m dirs-sys v0.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.6160255Z ^[[1m^[[92m  Downloaded^[[0m dpi v0.1.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.6257200Z ^[[1m^[[92m  Downloaded^[[0m futures-macro v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.6360706Z ^[[1m^[[92m  Downloaded^[[0m ghash v0.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.6549585Z ^[[1m^[[92m  Downloaded^[[0m mime v0.3.17
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.6673479Z ^[[1m^[[92m  Downloaded^[[0m serde_spanned v1.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.6768235Z ^[[1m^[[92m  Downloaded^[[0m serde_urlencoded v0.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.6965519Z ^[[1m^[[92m  Downloaded^[[0m web_atoms v0.2.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.7052123Z ^[[1m^[[92m  Downloaded^[[0m windows-strings v0.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.7212323Z ^[[1m^[[92m  Downloaded^[[0m dtoa-short v0.3.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.7280966Z ^[[1m^[[92m  Downloaded^[[0m futures-core v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.7399036Z ^[[1m^[[92m  Downloaded^[[0m generic-array v0.14.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.7533057Z ^[[1m^[[92m  Downloaded^[[0m rustc-hash v2.1.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.7645012Z ^[[1m^[[92m  Downloaded^[[0m syn v3.0.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.8470439Z ^[[1m^[[92m  Downloaded^[[0m tracing-core v0.1.36
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.8756690Z ^[[1m^[[92m  Downloaded^[[0m serde_with_macros v3.24.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.8912694Z ^[[1m^[[92m  Downloaded^[[0m pin-project-lite v0.2.17
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:30.9660378Z ^[[1m^[[92m  Downloaded^[[0m tower v0.5.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.0806470Z ^[[1m^[[92m  Downloaded^[[0m yoke v0.8.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.0999515Z ^[[1m^[[92m  Downloaded^[[0m cargo-platform v0.1.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.1106215Z ^[[1m^[[92m  Downloaded^[[0m serde_path_to_error v0.1.20
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.1285669Z ^[[1m^[[92m  Downloaded^[[0m syn v2.0.119
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.2138510Z ^[[1m^[[92m  Downloaded^[[0m tray-icon v0.25.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.2377268Z ^[[1m^[[92m  Downloaded^[[0m windows-numerics v0.3.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.2502691Z ^[[1m^[[92m  Downloaded^[[0m windows-targets v0.53.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.2600530Z ^[[1m^[[92m  Downloaded^[[0m zerovec-derive v0.11.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.7207573Z ^[[1m^[[92m  Downloaded^[[0m percent-encoding v2.3.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.7286193Z ^[[1m^[[92m  Downloaded^[[0m rustls-pki-types v1.15.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.7555201Z ^[[1m^[[92m  Downloaded^[[0m uuid v1.27.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.7795347Z ^[[1m^[[92m  Downloaded^[[0m winreg v0.55.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.8093194Z ^[[1m^[[92m  Downloaded^[[0m blake2 v0.10.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.8291148Z ^[[1m^[[92m  Downloaded^[[0m http-body-util v0.1.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.8526580Z ^[[1m^[[92m  Downloaded^[[0m hyper-rustls v0.27.10
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.8655889Z ^[[1m^[[92m  Downloaded^[[0m phf_shared v0.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.8734231Z ^[[1m^[[92m  Downloaded^[[0m rand_core v0.9.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.8844452Z ^[[1m^[[92m  Downloaded^[[0m unicode-ident v1.0.26
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.9085210Z ^[[1m^[[92m  Downloaded^[[0m unicode-segmentation v1.13.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.9244836Z ^[[1m^[[92m  Downloaded^[[0m cfg-if v1.0.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.9362422Z ^[[1m^[[92m  Downloaded^[[0m cipher v0.4.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.9517104Z ^[[1m^[[92m  Downloaded^[[0m ipnet v2.12.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.9672320Z ^[[1m^[[92m  Downloaded^[[0m phf_macros v0.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:31.9757126Z ^[[1m^[[92m  Downloaded^[[0m tokio-util v0.7.19
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.0539552Z ^[[1m^[[92m  Downloaded^[[0m json-patch v4.2.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.0635095Z ^[[1m^[[92m  Downloaded^[[0m fastrand v2.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.0754154Z ^[[1m^[[92m  Downloaded^[[0m schemars v1.2.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.2725151Z ^[[1m^[[92m  Downloaded^[[0m defmt v1.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.3266557Z ^[[1m^[[92m  Downloaded^[[0m getrandom v0.2.17
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.3539269Z ^[[1m^[[92m  Downloaded^[[0m lock_api v0.4.14
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.3653969Z ^[[1m^[[92m  Downloaded^[[0m num-traits v0.2.19
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.3925946Z ^[[1m^[[92m  Downloaded^[[0m serialize-to-javascript v0.1.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.4046444Z ^[[1m^[[92m  Downloaded^[[0m rand_core v0.10.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.4204397Z ^[[1m^[[92m  Downloaded^[[0m ctor v1.0.13
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.4449774Z ^[[1m^[[92m  Downloaded^[[0m digest v0.10.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.4619375Z ^[[1m^[[92m  Downloaded^[[0m glob v0.3.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.4744481Z ^[[1m^[[92m  Downloaded^[[0m serde_derive v1.0.229
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.5058800Z ^[[1m^[[92m  Downloaded^[[0m raw-window-handle v0.6.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.5236066Z ^[[1m^[[92m  Downloaded^[[0m autocfg v1.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.5403230Z ^[[1m^[[92m  Downloaded^[[0m num-conv v0.2.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.5512064Z ^[[1m^[[92m  Downloaded^[[0m atomic-waker v1.1.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.5617297Z ^[[1m^[[92m  Downloaded^[[0m bitflags v2.13.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.6070867Z ^[[1m^[[92m  Downloaded^[[0m shlex v2.0.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.6182240Z ^[[1m^[[92m  Downloaded^[[0m zerofrom-derive v0.1.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.6785449Z ^[[1m^[[92m  Downloaded^[[0m embed-resource v3.0.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.9631068Z ^[[1m^[[92m  Downloaded^[[0m fdeflate v0.3.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:32.9972676Z ^[[1m^[[92m  Downloaded^[[0m find-msvc-tools v0.1.14
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.0153583Z ^[[1m^[[92m  Downloaded^[[0m rand_pcg v0.10.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.0297440Z ^[[1m^[[92m  Downloaded^[[0m ref-cast v1.0.27
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.0660720Z ^[[1m^[[92m  Downloaded^[[0m bit-vec v0.8.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.0787570Z ^[[1m^[[92m  Downloaded^[[0m bitflags v1.3.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.1132525Z ^[[1m^[[92m  Downloaded^[[0m ref-cast-impl v1.0.27
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.1207619Z ^[[1m^[[92m  Downloaded^[[0m crc32fast v1.5.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.1367460Z ^[[1m^[[92m  Downloaded^[[0m crossbeam-utils v0.8.23
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.1659728Z ^[[1m^[[92m  Downloaded^[[0m rand_chacha v0.9.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.2056962Z ^[[1m^[[92m  Downloaded^[[0m schannel v0.1.29
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.2238847Z ^[[1m^[[92m  Downloaded^[[0m zeroize v1.9.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.2361586Z ^[[1m^[[92m  Downloaded^[[0m cargo_metadata v0.19.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.2522900Z ^[[1m^[[92m  Downloaded^[[0m infer v0.22.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.2795971Z ^[[1m^[[92m  Downloaded^[[0m phf v0.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.2977426Z ^[[1m^[[92m  Downloaded^[[0m parking_lot_core v0.9.12
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.3182674Z ^[[1m^[[92m  Downloaded^[[0m litemap v0.8.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.3403420Z ^[[1m^[[92m  Downloaded^[[0m rand_core v0.6.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.3514289Z ^[[1m^[[92m  Downloaded^[[0m axum-core v0.5.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.3771547Z ^[[1m^[[92m  Downloaded^[[0m cookie v0.18.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.3981366Z ^[[1m^[[92m  Downloaded^[[0m new_debug_unreachable v1.0.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.4083645Z ^[[1m^[[92m  Downloaded^[[0m option-ext v0.2.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.4163415Z ^[[1m^[[92m  Downloaded^[[0m alloc-stdlib v0.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.4305682Z ^[[1m^[[92m  Downloaded^[[0m siphasher v1.0.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.4475785Z ^[[1m^[[92m  Downloaded^[[0m string_cache v0.9.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.4646177Z ^[[1m^[[92m  Downloaded^[[0m typenum v1.20.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.4871726Z ^[[1m^[[92m  Downloaded^[[0m zerovec v0.11.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.5425029Z ^[[1m^[[92m  Downloaded^[[0m cssparser v0.37.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.5615097Z ^[[1m^[[92m  Downloaded^[[0m darling v0.24.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.6644343Z ^[[1m^[[92m  Downloaded^[[0m password-hash v0.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.6812255Z ^[[1m^[[92m  Downloaded^[[0m phf_generator v0.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.6912963Z ^[[1m^[[92m  Downloaded^[[0m tower-http v0.6.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.7814484Z ^[[1m^[[92m  Downloaded^[[0m base64 v0.23.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.8202440Z ^[[1m^[[92m  Downloaded^[[0m base64ct v1.8.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.8489884Z ^[[1m^[[92m  Downloaded^[[0m futures-channel v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.8687437Z ^[[1m^[[92m  Downloaded^[[0m precomputed-hash v0.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.8839703Z ^[[1m^[[92m  Downloaded^[[0m rustc_version v0.4.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.8967772Z ^[[1m^[[92m  Downloaded^[[0m serde-untagged v0.1.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.9108765Z ^[[1m^[[92m  Downloaded^[[0m serde_derive_internals v0.29.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.9270155Z ^[[1m^[[92m  Downloaded^[[0m argon2 v0.5.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.9419504Z ^[[1m^[[92m  Downloaded^[[0m base64 v0.22.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:33.9714843Z ^[[1m^[[92m  Downloaded^[[0m hmac v0.12.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.4877307Z ^[[1m^[[92m  Downloaded^[[0m httparse v1.10.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.5109508Z ^[[1m^[[92m  Downloaded^[[0m jiff-tzdb v0.1.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.5203919Z ^[[1m^[[92m  Downloaded^[[0m jsonptr v0.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.5483629Z ^[[1m^[[92m  Downloaded^[[0m zerotrie v0.2.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.5826714Z ^[[1m^[[92m  Downloaded^[[0m bit-set v0.8.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.5938233Z ^[[1m^[[92m  Downloaded^[[0m bs58 v0.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.6117618Z ^[[1m^[[92m  Downloaded^[[0m getrandom v0.3.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.6438994Z ^[[1m^[[92m  Downloaded^[[0m getrandom v0.4.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.6816571Z ^[[1m^[[92m  Downloaded^[[0m icu_provider v2.3.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.7069174Z ^[[1m^[[92m  Downloaded^[[0m minisign-verify v0.2.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.7254288Z ^[[1m^[[92m  Downloaded^[[0m once_cell v1.21.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.7532214Z ^[[1m^[[92m  Downloaded^[[0m opaque-debug v0.3.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.7617727Z ^[[1m^[[92m  Downloaded^[[0m quinn-udp v0.5.16
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.7772834Z ^[[1m^[[92m  Downloaded^[[0m quote v1.0.47
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.8068764Z ^[[1m^[[92m  Downloaded^[[0m simd-adler32 v0.3.10
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.8276223Z ^[[1m^[[92m  Downloaded^[[0m smallvec v1.16.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.8410119Z ^[[1m^[[92m  Downloaded^[[0m socket2 v0.6.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.8554502Z ^[[1m^[[92m  Downloaded^[[0m string_cache_codegen v0.6.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:34.8621371Z ^[[1m^[[92m  Downloaded^[[0m time v0.3.55
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.0061073Z ^[[1m^[[92m  Downloaded^[[0m winnow v0.7.15
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.1047518Z ^[[1m^[[92m  Downloaded^[[0m winnow v1.0.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.1884698Z ^[[1m^[[92m  Downloaded^[[0m wry v0.57.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.2646160Z ^[[1m^[[92m  Downloaded^[[0m zip v4.6.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.2985032Z ^[[1m^[[92m  Downloaded^[[0m anyhow v1.0.104
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.3428754Z ^[[1m^[[92m  Downloaded^[[0m async-trait v0.1.92
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.7071949Z ^[[1m^[[92m  Downloaded^[[0m bytemuck v1.25.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.7461305Z ^[[1m^[[92m  Downloaded^[[0m cargo_toml v1.0.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.7607585Z ^[[1m^[[92m  Downloaded^[[0m crossbeam-channel v0.5.17
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.7999315Z ^[[1m^[[92m  Downloaded^[[0m foldhash v0.2.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.8134294Z ^[[1m^[[92m  Downloaded^[[0m html5ever v0.39.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.8495215Z ^[[1m^[[92m  Downloaded^[[0m ico v0.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.8766213Z ^[[1m^[[92m  Downloaded^[[0m icu_locale_core v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.9479965Z ^[[1m^[[92m  Downloaded^[[0m icu_normalizer_data v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.9625007Z ^[[1m^[[92m  Downloaded^[[0m indexmap v1.9.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:35.9876213Z ^[[1m^[[92m  Downloaded^[[0m keyring v3.6.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.0075543Z ^[[1m^[[92m  Downloaded^[[0m log v0.4.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.0261293Z ^[[1m^[[92m  Downloaded^[[0m matchit v0.8.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.0435855Z ^[[1m^[[92m  Downloaded^[[0m miniz_oxide v0.9.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.0613218Z ^[[1m^[[92m  Downloaded^[[0m mio v1.2.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.1166327Z ^[[1m^[[92m  Downloaded^[[0m parking_lot v0.12.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.1388544Z ^[[1m^[[92m  Downloaded^[[0m potential_utf v0.1.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.1479596Z ^[[1m^[[92m  Downloaded^[[0m ppv-lite86 v0.2.21
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.1582424Z ^[[1m^[[92m  Downloaded^[[0m serde_core v1.0.229
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.1826659Z ^[[1m^[[92m  Downloaded^[[0m serde_with v3.24.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.3255545Z ^[[1m^[[92m  Downloaded^[[0m tauri v2.12.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.4534600Z ^[[1m^[[92m  Downloaded^[[0m block-buffer v0.10.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.4629473Z ^[[1m^[[92m  Downloaded^[[0m darling_core v0.24.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.5229279Z ^[[1m^[[92m  Downloaded^[[0m derive_more v2.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.6794145Z ^[[1m^[[92m  Downloaded^[[0m derive_more-impl v2.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:36.7263559Z ^[[1m^[[92m  Downloaded^[[0m dom_query v0.28.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.2079534Z ^[[1m^[[92m  Downloaded^[[0m hashbrown v0.12.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.2337813Z ^[[1m^[[92m  Downloaded^[[0m icu_collections v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.2971968Z ^[[1m^[[92m  Downloaded^[[0m phf_codegen v0.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.3054531Z ^[[1m^[[92m  Downloaded^[[0m plist v1.10.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.3447484Z ^[[1m^[[92m  Downloaded^[[0m polyval v0.6.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.3615605Z ^[[1m^[[92m  Downloaded^[[0m rfd v0.16.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.4099709Z ^[[1m^[[92m  Downloaded^[[0m semver v1.0.28
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.4330398Z ^[[1m^[[92m  Downloaded^[[0m serde_yaml v0.9.34+deprecated
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.4653060Z ^[[1m^[[92m  Downloaded^[[0m slab v0.4.12
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.4759876Z ^[[1m^[[92m  Downloaded^[[0m softbuffer v0.4.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.5061285Z ^[[1m^[[92m  Downloaded^[[0m flate2 v1.1.10
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.5567758Z ^[[1m^[[92m  Downloaded^[[0m http v1.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.5860042Z ^[[1m^[[92m  Downloaded^[[0m indexmap v2.14.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.6198382Z ^[[1m^[[92m  Downloaded^[[0m keyboard-types v0.8.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.6458731Z ^[[1m^[[92m  Downloaded^[[0m powerfmt v0.2.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.6591919Z ^[[1m^[[92m  Downloaded^[[0m schemars v0.9.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.9648067Z ^[[1m^[[92m  Downloaded^[[0m scopeguard v1.2.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.9755127Z ^[[1m^[[92m  Downloaded^[[0m serialize-to-javascript-impl v0.1.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.9822206Z ^[[1m^[[92m  Downloaded^[[0m strsim v0.11.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:37.9935454Z ^[[1m^[[92m  Downloaded^[[0m aead v0.5.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:38.0027416Z ^[[1m^[[92m  Downloaded^[[0m byteorder-lite v0.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:38.0124361Z ^[[1m^[[92m  Downloaded^[[0m miniz_oxide v0.8.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:38.0384863Z ^[[1m^[[92m  Downloaded^[[0m icu_properties v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:38.0647394Z ^[[1m^[[92m  Downloaded^[[0m hyper-util v0.1.21
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:38.6668032Z ^[[1m^[[92m  Downloaded^[[0m jiff-core v0.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:38.9109471Z ^[[1m^[[92m  Downloaded^[[0m memchr v2.8.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:38.9553102Z ^[[1m^[[92m  Downloaded^[[0m byteorder v1.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:38.9713273Z ^[[1m^[[92m  Downloaded^[[0m idna v1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:38.9908831Z ^[[1m^[[92m  Downloaded^[[0m serde v1.0.229
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.0177433Z ^[[1m^[[92m  Downloaded^[[0m aes v0.8.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.0475078Z ^[[1m^[[92m  Downloaded^[[0m muda v0.20.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.0899524Z ^[[1m^[[92m  Downloaded^[[0m png v0.17.16
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.1225474Z ^[[1m^[[92m  Downloaded^[[0m png v0.18.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.1589071Z ^[[1m^[[92m  Downloaded^[[0m reqwest v0.12.28
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.1982737Z ^[[1m^[[92m  Downloaded^[[0m hashbrown v0.17.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.2376197Z ^[[1m^[[92m  Downloaded^[[0m icu_properties_data v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.3553225Z ^[[1m^[[92m  Downloaded^[[0m serde_json v1.0.151
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.4226676Z ^[[1m^[[92m  Downloaded^[[0m aes-gcm v0.10.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.4382902Z ^[[1m^[[92m  Downloaded^[[0m futures-util v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.8501381Z ^[[1m^[[92m  Downloaded^[[0m hyper v1.11.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.9073862Z ^[[1m^[[92m  Downloaded^[[0m stable_deref_trait v1.2.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.9157933Z ^[[1m^[[92m  Downloaded^[[0m aho-corasick v1.1.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:39.9576016Z ^[[1m^[[92m  Downloaded^[[0m axum v0.8.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.0288171Z ^[[1m^[[92m  Downloaded^[[0m moxcms v0.8.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.1306985Z ^[[1m^[[92m  Downloaded^[[0m zerocopy v0.8.59
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.3569738Z ^[[1m^[[92m  Downloaded^[[0m zmij v1.0.23
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.3714842Z ^[[1m^[[92m  Downloaded^[[0m cfg_aliases v0.2.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.3811435Z ^[[1m^[[92m  Downloaded^[[0m rustls-platform-verifier v0.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.4221845Z ^[[1m^[[92m  Downloaded^[[0m sha2 v0.10.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.4526971Z ^[[1m^[[92m  Downloaded^[[0m image v0.25.10
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.5296845Z ^[[1m^[[92m  Downloaded^[[0m servo_arc v0.4.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.5368491Z ^[[1m^[[92m  Downloaded^[[0m rustls-native-certs v0.8.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.5474102Z ^[[1m^[[92m  Downloaded^[[0m zlib-rs v0.6.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.5974154Z ^[[1m^[[92m  Downloaded^[[0m camino v1.2.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.6099389Z ^[[1m^[[92m  Downloaded^[[0m chacha20 v0.10.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.6316133Z ^[[1m^[[92m  Downloaded^[[0m regex-syntax v0.8.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.6729681Z ^[[1m^[[92m  Downloaded^[[0m brotli-decompressor v6.0.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.7120232Z ^[[1m^[[92m  Downloaded^[[0m ryu v1.0.23
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.7420455Z ^[[1m^[[92m  Downloaded^[[0m icu_normalizer v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.7810622Z ^[[1m^[[92m  Downloaded^[[0m proc-macro2 v1.0.107
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:40.8090065Z ^[[1m^[[92m  Downloaded^[[0m schemars v0.8.22
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:41.3645142Z ^[[1m^[[92m  Downloaded^[[0m selectors v0.38.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:41.3804909Z ^[[1m^[[92m  Downloaded^[[0m quinn v0.11.12
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:41.4066298Z ^[[1m^[[92m  Downloaded^[[0m rustls-webpki v0.103.15
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:41.4334477Z ^[[1m^[[92m  Downloaded^[[0m bytes v1.12.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:41.4641776Z ^[[1m^[[92m  Downloaded^[[0m cfb v0.14.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:41.5117819Z ^[[1m^[[92m  Downloaded^[[0m jiff v0.2.37
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:41.6212342Z ^[[1m^[[92m  Downloaded^[[0m quick-xml v0.42.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:41.6684297Z ^[[1m^[[92m  Downloaded^[[0m libc v0.2.190
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:42.0514802Z ^[[1m^[[92m  Downloaded^[[0m cc v1.6.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:42.0786450Z ^[[1m^[[92m  Downloaded^[[0m rand v0.9.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:42.1138570Z ^[[1m^[[92m  Downloaded^[[0m rand v0.10.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:42.1448636Z ^[[1m^[[92m  Downloaded^[[0m tracing v0.1.44
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:42.2245474Z ^[[1m^[[92m  Downloaded^[[0m regex v1.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:42.2713034Z ^[[1m^[[92m  Downloaded^[[0m reqwest v0.13.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:42.3100413Z ^[[1m^[[92m  Downloaded^[[0m rustls v0.23.45
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:42.9076791Z ^[[1m^[[92m  Downloaded^[[0m chrono v0.4.45
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:42.9584814Z ^[[1m^[[92m  Downloaded^[[0m quinn-proto v0.11.19
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:43.0035279Z ^[[1m^[[92m  Downloaded^[[0m tokio v1.53.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:43.4310319Z ^[[1m^[[92m  Downloaded^[[0m windows_x86_64_msvc v0.52.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:43.4531656Z ^[[1m^[[92m  Downloaded^[[0m windows_x86_64_msvc v0.53.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:43.4746354Z ^[[1m^[[92m  Downloaded^[[0m regex-automata v0.4.18
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:43.5617471Z ^[[1m^[[92m  Downloaded^[[0m brotli v9.0.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:43.6355489Z ^[[1m^[[92m  Downloaded^[[0m pxfm v0.1.30
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:44.2740350Z ^[[1m^[[92m  Downloaded^[[0m window-vibrancy v0.8.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:44.3173687Z ^[[1m^[[92m  Downloaded^[[0m ring v0.17.14
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:44.6508791Z ^[[1m^[[92m  Downloaded^[[0m windows-sys v0.59.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:44.9581492Z ^[[1m^[[92m  Downloaded^[[0m windows-sys v0.61.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:45.6317422Z ^[[1m^[[92m  Downloaded^[[0m windows-sys v0.60.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:46.4375427Z ^[[1m^[[92m  Downloaded^[[0m webview2-com-sys v0.39.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:46.7608495Z ^[[1m^[[92m  Downloaded^[[0m windows v0.62.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:49.3342784Z ^[[1m^[[92m   Compiling^[[0m proc-macro2 v1.0.107
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:49.3344208Z ^[[1m^[[92m   Compiling^[[0m unicode-ident v1.0.26
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:49.3345319Z ^[[1m^[[92m   Compiling^[[0m quote v1.0.47
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:49.3346102Z ^[[1m^[[92m   Compiling^[[0m cfg-if v1.0.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:54.4376816Z ^[[1m^[[92m   Compiling^[[0m windows-link v0.2.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:54.5027014Z ^[[1m^[[92m   Compiling^[[0m itoa v1.0.18
+backend-windows	UNKNOWN STEP	2026-11-01T14:21:57.6531800Z ^[[1m^[[92m   Compiling^[[0m serde_core v1.0.229
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:00.0755171Z ^[[1m^[[92m   Compiling^[[0m memchr v2.8.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:02.9524008Z ^[[1m^[[92m   Compiling^[[0m syn v3.0.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:03.0344417Z ^[[1m^[[92m   Compiling^[[0m syn v2.0.119
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:04.2294180Z ^[[1m^[[92m   Compiling^[[0m writeable v0.6.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:04.3857509Z ^[[1m^[[92m   Compiling^[[0m litemap v0.8.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:04.6052372Z ^[[1m^[[92m   Compiling^[[0m siphasher v1.0.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:04.6786922Z ^[[1m^[[92m   Compiling^[[0m utf8_iter v1.0.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:04.8438427Z ^[[1m^[[92m   Compiling^[[0m phf_shared v0.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:04.8681015Z ^[[1m^[[92m   Compiling^[[0m icu_properties_data v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:05.1534424Z ^[[1m^[[92m   Compiling^[[0m icu_normalizer_data v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:05.2316619Z ^[[1m^[[92m   Compiling^[[0m fastrand v2.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:05.4232115Z ^[[1m^[[92m   Compiling^[[0m bytes v1.12.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:05.5272016Z ^[[1m^[[92m   Compiling^[[0m phf_generator v0.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:05.9975789Z ^[[1m^[[92m   Compiling^[[0m zmij v1.0.23
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:06.3244818Z ^[[1m^[[92m   Compiling^[[0m stable_deref_trait v1.2.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:06.6597707Z ^[[1m^[[92m   Compiling^[[0m thiserror v2.0.21
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:07.0964573Z ^[[1m^[[92m   Compiling^[[0m smallvec v1.16.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:07.3218031Z ^[[1m^[[92m   Compiling^[[0m http v1.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:07.3688097Z ^[[1m^[[92m   Compiling^[[0m windows-sys v0.61.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:09.3884093Z ^[[1m^[[92m   Compiling^[[0m synstructure v0.14.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:10.3409917Z ^[[1m^[[92m   Compiling^[[0m getrandom v0.4.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:10.6776567Z ^[[1m^[[92m   Compiling^[[0m log v0.4.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:10.9317229Z ^[[1m^[[92m   Compiling^[[0m version_check v0.9.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:11.3410063Z ^[[1m^[[92m   Compiling^[[0m parking_lot_core v0.9.12
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:11.3745183Z ^[[1m^[[92m   Compiling^[[0m serde v1.0.229
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:11.7875916Z ^[[1m^[[92m   Compiling^[[0m phf_macros v0.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:11.9101932Z ^[[1m^[[92m   Compiling^[[0m time-core v0.1.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:11.9420139Z ^[[1m^[[92m   Compiling^[[0m zerofrom-derive v0.1.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:12.2497338Z ^[[1m^[[92m   Compiling^[[0m yoke-derive v0.8.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:13.1824002Z ^[[1m^[[92m   Compiling^[[0m serde_derive v1.0.229
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:14.1867815Z ^[[1m^[[92m   Compiling^[[0m zerovec-derive v0.11.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:14.2836555Z ^[[1m^[[92m   Compiling^[[0m zerofrom v0.1.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:14.4674203Z ^[[1m^[[92m   Compiling^[[0m displaydoc v0.2.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:16.0733357Z ^[[1m^[[92m   Compiling^[[0m yoke v0.8.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:16.6799870Z ^[[1m^[[92m   Compiling^[[0m thiserror-impl v2.0.21
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:16.7223929Z ^[[1m^[[92m   Compiling^[[0m zerovec v0.11.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:17.9815420Z ^[[1m^[[92m   Compiling^[[0m num-conv v0.2.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:18.2239667Z ^[[1m^[[92m   Compiling^[[0m base64 v0.23.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:19.2547547Z ^[[1m^[[92m   Compiling^[[0m powerfmt v0.2.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:19.5535246Z ^[[1m^[[92m   Compiling^[[0m scopeguard v1.2.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:19.7866435Z ^[[1m^[[92m   Compiling^[[0m shlex v2.0.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:19.7917318Z ^[[1m^[[92m   Compiling^[[0m autocfg v1.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:20.0784728Z ^[[1m^[[92m   Compiling^[[0m find-msvc-tools v0.1.14
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:20.5255895Z ^[[1m^[[92m   Compiling^[[0m deranged v0.5.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:20.9782516Z ^[[1m^[[92m   Compiling^[[0m winnow v1.0.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:21.7602267Z ^[[1m^[[92m   Compiling^[[0m toml_parser v1.1.3+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:21.7877102Z ^[[1m^[[92m   Compiling^[[0m cc v1.6.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:22.5857718Z ^[[1m^[[92m   Compiling^[[0m lock_api v0.4.14
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:23.0210922Z ^[[1m^[[92m   Compiling^[[0m tinystr v0.8.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:23.3212957Z ^[[1m^[[92m   Compiling^[[0m phf_codegen v0.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:23.3898405Z ^[[1m^[[92m   Compiling^[[0m strsim v0.11.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:23.4649111Z ^[[1m^[[92m   Compiling^[[0m ident_case v1.0.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:23.5810092Z ^[[1m^[[92m   Compiling^[[0m toml_writer v1.1.2+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:23.9142466Z ^[[1m^[[92m   Compiling^[[0m typeid v1.0.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:23.9395325Z ^[[1m^[[92m   Compiling^[[0m darling_core v0.24.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:24.3051124Z ^[[1m^[[92m   Compiling^[[0m icu_locale_core v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:24.7810086Z ^[[1m^[[92m   Compiling^[[0m potential_utf v0.1.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:24.9940331Z ^[[1m^[[92m   Compiling^[[0m zerotrie v0.2.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:25.5452808Z ^[[1m^[[92m   Compiling^[[0m hashbrown v0.17.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:26.8124107Z ^[[1m^[[92m   Compiling^[[0m erased-serde v0.4.10
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:26.9466275Z ^[[1m^[[92m   Compiling^[[0m equivalent v1.0.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:27.0792222Z ^[[1m^[[92m   Compiling^[[0m indexmap v2.14.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:27.3494821Z ^[[1m^[[92m   Compiling^[[0m icu_provider v2.3.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:27.8951756Z ^[[1m^[[92m   Compiling^[[0m icu_collections v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:28.3995743Z ^[[1m^[[92m   Compiling^[[0m aho-corasick v1.1.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:29.0559654Z ^[[1m^[[92m   Compiling^[[0m fnv v1.0.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:29.1464844Z ^[[1m^[[92m   Compiling^[[0m new_debug_unreachable v1.0.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:29.2360304Z ^[[1m^[[92m   Compiling^[[0m web-time v1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:29.4828309Z ^[[1m^[[92m   Compiling^[[0m regex-syntax v0.8.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:29.9384480Z ^[[1m^[[92m   Compiling^[[0m darling_macro v0.24.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:30.6620747Z ^[[1m^[[92m   Compiling^[[0m darling v0.24.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:30.7462720Z ^[[1m^[[92m   Compiling^[[0m phf v0.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:31.0180023Z ^[[1m^[[92m   Compiling^[[0m generic-array v0.14.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:31.2875371Z ^[[1m^[[92m   Compiling^[[0m string_cache_codegen v0.6.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:31.6823000Z ^[[1m^[[92m   Compiling^[[0m precomputed-hash v0.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:31.7627738Z ^[[1m^[[92m   Compiling^[[0m alloc-no-stdlib v3.0.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:31.8891077Z ^[[1m^[[92m   Compiling^[[0m serde_json v1.0.151
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:31.9798314Z ^[[1m^[[92m   Compiling^[[0m web_atoms v0.2.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:32.3142362Z ^[[1m^[[92m   Compiling^[[0m alloc-stdlib v0.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:32.4980337Z ^[[1m^[[92m   Compiling^[[0m parking_lot v0.12.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:33.1690533Z ^[[1m^[[92m   Compiling^[[0m regex-automata v0.4.18
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:33.4544547Z ^[[1m^[[92m   Compiling^[[0m serde_with_macros v3.24.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:34.6002609Z ^[[1m^[[92m   Compiling^[[0m icu_normalizer v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:36.1969912Z ^[[1m^[[92m   Compiling^[[0m icu_properties v2.3.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:36.2071072Z ^[[1m^[[92m   Compiling^[[0m semver v1.0.28
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:37.1493366Z ^[[1m^[[92m   Compiling^[[0m quick-xml v0.42.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:40.4842858Z ^[[1m^[[92m   Compiling^[[0m regex v1.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:40.7063222Z ^[[1m^[[92m   Compiling^[[0m libc v0.2.190
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:41.4152552Z ^[[1m^[[92m   Compiling^[[0m typenum v1.20.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:41.4299447Z ^[[1m^[[92m   Compiling^[[0m anyhow v1.0.104
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:41.8170806Z ^[[1m^[[92m   Compiling^[[0m dunce v1.0.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:42.2118839Z ^[[1m^[[92m   Compiling^[[0m idna_adapter v1.2.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:42.3875189Z ^[[1m^[[92m   Compiling^[[0m string_cache v0.9.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:42.6565758Z ^[[1m^[[92m   Compiling^[[0m brotli-decompressor v6.0.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:43.7272408Z ^[[1m^[[92m   Compiling^[[0m serde_spanned v1.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:43.7779004Z ^[[1m^[[92m   Compiling^[[0m toml_datetime v1.1.1+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:43.8750872Z ^[[1m^[[92m   Compiling^[[0m dtoa v1.0.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:44.0379805Z ^[[1m^[[92m   Compiling^[[0m percent-encoding v2.3.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:44.3168024Z ^[[1m^[[92m   Compiling^[[0m form_urlencoded v1.2.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:44.5410537Z ^[[1m^[[92m   Compiling^[[0m brotli v9.0.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:44.6687708Z ^[[1m^[[92m   Compiling^[[0m toml v1.1.6+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:44.6841554Z ^[[1m^[[92m   Compiling^[[0m dtoa-short v0.3.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:45.1923409Z ^[[1m^[[92m   Compiling^[[0m idna v1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:46.9901389Z ^[[1m^[[92m   Compiling^[[0m tendril v0.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:47.1175952Z ^[[1m^[[92m   Compiling^[[0m selectors v0.38.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:47.5253367Z ^[[1m^[[92m   Compiling^[[0m indexmap v1.9.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:47.6916834Z ^[[1m^[[92m   Compiling^[[0m cssparser-macros v0.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:47.7833543Z ^[[1m^[[92m   Compiling^[[0m uuid v1.27.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:48.2137492Z ^[[1m^[[92m   Compiling^[[0m derive_more-impl v2.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:48.2616099Z ^[[1m^[[92m   Compiling^[[0m serde_derive_internals v0.29.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:48.8303821Z ^[[1m^[[92m   Compiling^[[0m getrandom v0.2.17
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:49.0724795Z ^[[1m^[[92m   Compiling^[[0m camino v1.2.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:49.5404144Z ^[[1m^[[92m   Compiling^[[0m glob v0.3.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:49.8664648Z ^[[1m^[[92m   Compiling^[[0m bitflags v2.13.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:49.9707594Z ^[[1m^[[92m   Compiling^[[0m ctor v1.0.13
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:50.1801094Z ^[[1m^[[92m   Compiling^[[0m schemars_derive v0.8.22
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:50.1908040Z ^[[1m^[[92m   Compiling^[[0m derive_more v2.1.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:50.3596448Z ^[[1m^[[92m   Compiling^[[0m cssparser v0.37.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:50.5635389Z ^[[1m^[[92m   Compiling^[[0m markup5ever v0.39.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:50.6970323Z ^[[1m^[[92m   Compiling^[[0m url v2.5.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:50.9062669Z ^[[1m^[[92m   Compiling^[[0m winapi-util v0.1.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:51.3022068Z ^[[1m^[[92m   Compiling^[[0m servo_arc v0.4.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:51.5575509Z ^[[1m^[[92m   Compiling^[[0m schemars v0.8.22
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:51.7207302Z ^[[1m^[[92m   Compiling^[[0m rustc-hash v2.1.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:51.8458250Z ^[[1m^[[92m   Compiling^[[0m hashbrown v0.12.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:51.8524689Z ^[[1m^[[92m   Compiling^[[0m dyn-clone v1.0.20
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:52.0715562Z ^[[1m^[[92m   Compiling^[[0m bit-vec v0.8.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:52.3770567Z ^[[1m^[[92m   Compiling^[[0m bit-set v0.8.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:52.6598490Z ^[[1m^[[92m   Compiling^[[0m same-file v1.0.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:52.7126281Z ^[[1m^[[92m   Compiling^[[0m html5ever v0.39.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:53.3511486Z ^[[1m^[[92m   Compiling^[[0m cfb v0.14.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:54.2322987Z ^[[1m^[[92m   Compiling^[[0m jsonptr v0.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:54.5814648Z ^[[1m^[[92m   Compiling^[[0m time v0.3.55
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:54.8316762Z ^[[1m^[[92m   Compiling^[[0m cargo-platform v0.1.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:55.3083282Z ^[[1m^[[92m   Compiling^[[0m foldhash v0.2.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:55.4422021Z ^[[1m^[[92m   Compiling^[[0m serde-untagged v0.1.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:55.5147892Z ^[[1m^[[92m   Compiling^[[0m dom_query v0.28.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:55.5417518Z ^[[1m^[[92m   Compiling^[[0m cargo_metadata v0.19.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:55.8385715Z ^[[1m^[[92m   Compiling^[[0m json-patch v4.2.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:56.7719573Z ^[[1m^[[92m   Compiling^[[0m infer v0.22.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:58.1751060Z ^[[1m^[[92m   Compiling^[[0m plist v1.10.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:58.3807445Z ^[[1m^[[92m   Compiling^[[0m walkdir v2.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:58.5264764Z ^[[1m^[[92m   Compiling^[[0m urlpattern v0.6.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:22:59.0711024Z ^[[1m^[[92m   Compiling^[[0m serde_with v3.24.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:00.0533193Z ^[[1m^[[92m   Compiling^[[0m windows-strings v0.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:00.2527889Z ^[[1m^[[92m   Compiling^[[0m windows-result v0.4.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:00.4007459Z ^[[1m^[[92m   Compiling^[[0m pin-project-lite v0.2.17
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:00.4906621Z ^[[1m^[[92m   Compiling^[[0m windows_x86_64_msvc v0.52.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:00.6431124Z ^[[1m^[[92m   Compiling^[[0m once_cell v1.21.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:01.0824701Z ^[[1m^[[92m   Compiling^[[0m vswhom-sys v0.1.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:01.4320814Z ^[[1m^[[92m   Compiling^[[0m option-ext v0.2.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:01.5151932Z ^[[1m^[[92m   Compiling^[[0m simd-adler32 v0.3.10
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:02.2126339Z ^[[1m^[[92m   Compiling^[[0m tauri-utils v2.10.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:03.0555069Z ^[[1m^[[92m   Compiling^[[0m windows-targets v0.52.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:03.1122867Z ^[[1m^[[92m   Compiling^[[0m crc32fast v1.5.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:03.1790452Z ^[[1m^[[92m   Compiling^[[0m adler2 v2.0.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:03.3021275Z ^[[1m^[[92m   Compiling^[[0m windows-sys v0.59.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:03.6998643Z ^[[1m^[[92m   Compiling^[[0m subtle v2.6.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:04.2987876Z ^[[1m^[[92m   Compiling^[[0m miniz_oxide v0.9.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:06.9720175Z ^[[1m^[[92m   Compiling^[[0m vswhom v0.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:08.0359789Z ^[[1m^[[92m   Compiling^[[0m winreg v0.55.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:08.2090792Z ^[[1m^[[92m   Compiling^[[0m rustc_version v0.4.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:08.2687948Z ^[[1m^[[92m   Compiling^[[0m mio v1.2.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:08.5284927Z ^[[1m^[[92m   Compiling^[[0m socket2 v0.6.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:08.6274616Z ^[[1m^[[92m   Compiling^[[0m tokio-macros v2.7.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:09.4425647Z ^[[1m^[[92m   Compiling^[[0m windows-interface v0.59.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:09.6742584Z ^[[1m^[[92m   Compiling^[[0m windows-implement v0.60.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:09.8356975Z ^[[1m^[[92m   Compiling^[[0m tokio v1.53.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:10.5777607Z ^[[1m^[[92m   Compiling^[[0m embed-resource v3.0.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:10.7747696Z ^[[1m^[[92m   Compiling^[[0m windows-core v0.62.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:11.6214760Z ^[[1m^[[92m   Compiling^[[0m dirs-sys v0.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:11.9344757Z ^[[1m^[[92m   Compiling^[[0m rand_core v0.6.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:12.6021737Z ^[[1m^[[92m   Compiling^[[0m futures-core v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:12.7892121Z ^[[1m^[[92m   Compiling^[[0m heck v0.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:13.1740225Z ^[[1m^[[92m   Compiling^[[0m dirs v7.0.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:13.8140685Z ^[[1m^[[92m   Compiling^[[0m tauri-winres v0.3.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:14.3123680Z ^[[1m^[[92m   Compiling^[[0m cargo_toml v1.0.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:14.9828552Z ^[[1m^[[92m   Compiling^[[0m block-buffer v0.10.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:15.1435617Z ^[[1m^[[92m   Compiling^[[0m cpufeatures v0.2.17
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:16.9273066Z ^[[1m^[[92m   Compiling^[[0m tauri-build v2.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:19.0999723Z ^[[1m^[[92m   Compiling^[[0m tauri-plugin v2.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:19.6844003Z ^[[1m^[[92m   Compiling^[[0m crypto-common v0.1.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:19.7920364Z ^[[1m^[[92m   Compiling^[[0m miniz_oxide v0.8.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:19.8064195Z ^[[1m^[[92m   Compiling^[[0m fdeflate v0.3.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:20.6228897Z ^[[1m^[[92m   Compiling^[[0m tracing-core v0.1.36
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:21.2326361Z ^[[1m^[[92m   Compiling^[[0m time-macros v0.2.32
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:21.8556547Z ^[[1m^[[92m   Compiling^[[0m windows-threading v0.2.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:22.0057537Z ^[[1m^[[92m   Compiling^[[0m zeroize v1.9.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:22.2689939Z ^[[1m^[[92m   Compiling^[[0m windows-future v0.3.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:22.6498243Z ^[[1m^[[92m   Compiling^[[0m tracing v0.1.44
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:22.9937044Z ^[[1m^[[92m   Compiling^[[0m windows-numerics v0.3.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:23.3110954Z ^[[1m^[[92m   Compiling^[[0m windows-collections v0.3.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:23.4808693Z ^[[1m^[[92m   Compiling^[[0m raw-window-handle v0.6.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:23.8591024Z ^[[1m^[[92m   Compiling^[[0m crossbeam-utils v0.8.23
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:24.0717899Z ^[[1m^[[92m   Compiling^[[0m windows v0.62.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:24.2875676Z ^[[1m^[[92m   Compiling^[[0m dpi v0.1.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:24.8443331Z ^[[1m^[[92m   Compiling^[[0m ring v0.17.14
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:25.6171256Z ^[[1m^[[92m   Compiling^[[0m webview2-com-sys v0.39.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:28.6816084Z ^[[1m^[[92m   Compiling^[[0m flate2 v1.1.10
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:29.3408664Z ^[[1m^[[92m   Compiling^[[0m num-traits v0.2.19
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:29.5681877Z ^[[1m^[[92m   Compiling^[[0m cookie v0.18.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:29.6253316Z ^[[1m^[[92m   Compiling^[[0m tauri v2.12.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:29.8278357Z ^[[1m^[[92m   Compiling^[[0m http-body v1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:30.1468224Z ^[[1m^[[92m   Compiling^[[0m getrandom v0.3.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:30.2530652Z ^[[1m^[[92m   Compiling^[[0m zlib-rs v0.6.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:30.6282556Z ^[[1m^[[92m   Compiling^[[0m bitflags v1.3.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:32.0396046Z ^[[1m^[[92m   Compiling^[[0m crossbeam-channel v0.5.17
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:32.1709229Z ^[[1m^[[92m   Compiling^[[0m rustls-pki-types v1.15.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:34.0274064Z ^[[1m^[[92m   Compiling^[[0m futures-macro v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:34.1180473Z ^[[1m^[[92m   Compiling^[[0m webview2-com-macros v0.8.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:35.7148291Z ^[[1m^[[92m   Compiling^[[0m windows-version v0.1.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:35.8443329Z ^[[1m^[[92m   Compiling^[[0m futures-task v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:35.9802774Z ^[[1m^[[92m   Compiling^[[0m byteorder v1.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:36.0630233Z ^[[1m^[[92m   Compiling^[[0m httparse v1.10.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:36.2850185Z ^[[1m^[[92m   Compiling^[[0m slab v0.4.12
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:36.4337637Z ^[[1m^[[92m   Compiling^[[0m tower-service v0.3.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:36.4927628Z ^[[1m^[[92m   Compiling^[[0m untrusted v0.9.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:36.5279965Z ^[[1m^[[92m   Compiling^[[0m futures-util v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:40.3381626Z ^[[1m^[[92m   Compiling^[[0m digest v0.10.7
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:42.3657164Z ^[[1m^[[92m   Compiling^[[0m png v0.17.16
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:44.8475714Z ^[[1m^[[92m   Compiling^[[0m rustls v0.23.45
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:45.1174213Z ^[[1m^[[92m   Compiling^[[0m muda v0.20.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:45.3743334Z ^[[1m^[[92m   Compiling^[[0m try-lock v0.2.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:45.3958970Z ^[[1m^[[92m   Compiling^[[0m wry v0.57.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:45.4706681Z ^[[1m^[[92m   Compiling^[[0m base64 v0.22.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:45.8584327Z ^[[1m^[[92m   Compiling^[[0m tauri-runtime v2.12.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:46.0898655Z ^[[1m^[[92m   Compiling^[[0m want v0.3.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:46.3029471Z ^[[1m^[[92m   Compiling^[[0m ico v0.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:46.9880845Z ^[[1m^[[92m   Compiling^[[0m sha2 v0.10.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:47.2116510Z ^[[1m^[[92m   Compiling^[[0m rustls-webpki v0.103.15
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:48.2199558Z ^[[1m^[[92m   Compiling^[[0m png v0.18.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:49.4273360Z ^[[1m^[[92m   Compiling^[[0m sync_wrapper v1.0.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:49.5347736Z ^[[1m^[[92m   Compiling^[[0m futures-channel v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:49.8183127Z ^[[1m^[[92m   Compiling^[[0m keyboard-types v0.8.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:50.9319160Z ^[[1m^[[92m   Compiling^[[0m tauri-runtime-wry v2.12.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:51.1914222Z ^[[1m^[[92m   Compiling^[[0m atomic-waker v1.1.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:51.3224905Z ^[[1m^[[92m   Compiling^[[0m httpdate v1.0.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:51.4485491Z ^[[1m^[[92m   Compiling^[[0m tower-layer v0.3.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:51.6514026Z ^[[1m^[[92m   Compiling^[[0m mime v0.3.17
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:51.7077626Z ^[[1m^[[92m   Compiling^[[0m pxfm v0.1.30
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:52.1121477Z ^[[1m^[[92m   Compiling^[[0m tray-icon v0.25.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:52.4203132Z ^[[1m^[[92m   Compiling^[[0m unicode-segmentation v1.13.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:53.1108752Z ^[[1m^[[92m   Compiling^[[0m windows_x86_64_msvc v0.53.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:53.4288745Z ^[[1m^[[92m   Compiling^[[0m hyper v1.11.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:23:56.3962237Z ^[[1m^[[92m   Compiling^[[0m moxcms v0.8.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:02.3230922Z ^[[1m^[[92m   Compiling^[[0m tauri-codegen v2.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:13.7866898Z ^[[1m^[[92m   Compiling^[[0m tao v0.37.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:19.2526680Z ^[[1m^[[92m   Compiling^[[0m webview2-com v0.39.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:19.4654715Z ^[[1m^[[92m   Compiling^[[0m softbuffer v0.4.8
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:19.9089655Z ^[[1m^[[92m   Compiling^[[0m windows-registry v0.6.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:20.3405205Z ^[[1m^[[92m   Compiling^[[0m serialize-to-javascript-impl v0.1.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:20.7390376Z ^[[1m^[[92m   Compiling^[[0m byteorder-lite v0.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:20.8431905Z ^[[1m^[[92m   Compiling^[[0m bytemuck v1.25.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:21.0895518Z ^[[1m^[[92m   Compiling^[[0m ipnet v2.12.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:21.2116604Z ^[[1m^[[92m   Compiling^[[0m image v0.25.10
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:22.1189832Z ^[[1m^[[92m   Compiling^[[0m hyper-util v0.1.21
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:26.0644942Z ^[[1m^[[92m   Compiling^[[0m serialize-to-javascript v0.1.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:26.2390059Z ^[[1m^[[92m   Compiling^[[0m tauri-macros v2.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:29.0612212Z ^[[1m^[[92m   Compiling^[[0m tower v0.5.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:29.1836324Z ^[[1m^[[92m   Compiling^[[0m window-vibrancy v0.8.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:29.4401710Z ^[[1m^[[92m   Compiling^[[0m http-body-util v0.1.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:29.4662867Z ^[[1m^[[92m   Compiling^[[0m tauri-plugin-fs v2.6.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:29.8418545Z ^[[1m^[[92m   Compiling^[[0m schannel v0.1.29
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:29.9021831Z ^[[1m^[[92m   Compiling^[[0m serde_repr v0.1.21
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:30.6044037Z ^[[1m^[[92m   Compiling^[[0m zerocopy v0.8.59
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:31.3377675Z ^[[1m^[[92m   Compiling^[[0m rustls-native-certs v0.8.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:31.5511546Z ^[[1m^[[92m   Compiling^[[0m windows-targets v0.53.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:31.6389887Z ^[[1m^[[92m   Compiling^[[0m tokio-rustls v0.26.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:32.0253116Z ^[[1m^[[92m   Compiling^[[0m inout v0.1.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:32.1463224Z ^[[1m^[[92m   Compiling^[[0m ryu v1.0.23
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:32.1614063Z ^[[1m^[[92m   Compiling^[[0m cipher v0.4.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:32.2430395Z ^[[1m^[[92m   Compiling^[[0m hyper-rustls v0.27.10
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:32.4239222Z ^[[1m^[[92m   Compiling^[[0m windows-sys v0.60.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:32.7109087Z ^[[1m^[[92m   Compiling^[[0m tower-http v0.6.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:33.4663205Z ^[[1m^[[92m   Compiling^[[0m tauri-plugin-process v2.4.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:34.8846094Z ^[[1m^[[92m   Compiling^[[0m tauri-plugin-updater v2.13.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:36.2927448Z ^[[1m^[[92m   Compiling^[[0m tauri-plugin-dialog v2.8.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:37.5935708Z ^[[1m^[[92m   Compiling^[[0m universal-hash v0.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:37.7059473Z ^[[1m^[[92m   Compiling^[[0m futures-sink v0.3.34
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:37.7086754Z ^[[1m^[[92m   Compiling^[[0m rfd v0.16.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:37.8165489Z ^[[1m^[[92m   Compiling^[[0m opaque-debug v0.3.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:37.9094411Z ^[[1m^[[92m   Compiling^[[0m polyval v0.6.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:37.9964647Z ^[[1m^[[92m   Compiling^[[0m tokio-util v0.7.19
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:38.3008255Z ^[[1m^[[92m   Compiling^[[0m serde_urlencoded v0.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:38.6636033Z ^[[1m^[[92m   Compiling^[[0m rustls-platform-verifier v0.7.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:38.8606842Z ^[[1m^[[92m   Compiling^[[0m ppv-lite86 v0.2.21
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:38.9650856Z ^[[1m^[[92m   Compiling^[[0m rand_core v0.9.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:39.2341958Z ^[[1m^[[92m   Compiling^[[0m base64ct v1.8.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:39.5359509Z ^[[1m^[[92m   Compiling^[[0m rand_chacha v0.9.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:39.6762211Z ^[[1m^[[92m   Compiling^[[0m tempfile v3.27.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:39.7715092Z ^[[1m^[[92m   Compiling^[[0m password-hash v0.5.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:40.2302482Z ^[[1m^[[92m   Compiling^[[0m reqwest v0.13.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:40.5368498Z ^[[1m^[[92m   Compiling^[[0m ghash v0.5.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:40.6578983Z ^[[1m^[[92m   Compiling^[[0m ctr v0.9.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:42.0736111Z ^[[1m^[[92m   Compiling^[[0m aes v0.8.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:42.5925347Z ^[[1m^[[92m   Compiling^[[0m blake2 v0.10.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:43.0397077Z ^[[1m^[[92m   Compiling^[[0m axum-core v0.5.6
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:43.4921360Z ^[[1m^[[92m   Compiling^[[0m zip v4.6.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:45.6647197Z ^[[1m^[[92m   Compiling^[[0m opencodex-desktop v0.2.19 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:45.6757452Z ^[[1m^[[92m   Compiling^[[0m aead v0.5.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:45.8625862Z ^[[1m^[[92m   Compiling^[[0m serde_path_to_error v0.1.20
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:46.5180957Z ^[[1m^[[92m   Compiling^[[0m toml_datetime v0.7.5+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:47.0696940Z ^[[1m^[[92m   Compiling^[[0m filetime v0.2.29
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:47.3199823Z ^[[1m^[[92m   Compiling^[[0m matchit v0.8.4
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:47.4768064Z ^[[1m^[[92m   Compiling^[[0m winnow v0.7.15
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:47.9124666Z ^[[1m^[[92m   Compiling^[[0m minisign-verify v0.2.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:49.4095536Z ^[[1m^[[92m   Compiling^[[0m unsafe-libyaml v0.2.11
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:49.8248620Z ^[[1m^[[92m   Compiling^[[0m toml v0.9.12+spec-1.1.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:50.2088954Z ^[[1m^[[92m   Compiling^[[0m axum v0.8.9
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:50.9043988Z ^[[1m^[[92m   Compiling^[[0m serde_yaml v0.9.34+deprecated
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:53.1016544Z ^[[1m^[[92m   Compiling^[[0m tar v0.4.46
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:53.3674842Z ^[[1m^[[92m   Compiling^[[0m aes-gcm v0.10.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:53.5377999Z ^[[1m^[[92m   Compiling^[[0m argon2 v0.5.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:54.7405248Z ^[[1m^[[92m   Compiling^[[0m rand v0.9.5
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:55.2337190Z ^[[1m^[[92m   Compiling^[[0m reqwest v0.12.28
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:55.7232380Z ^[[1m^[[92m   Compiling^[[0m keyring v3.6.3
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:56.6880061Z ^[[1m^[[92m   Compiling^[[0m hmac v0.12.1
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:56.8293382Z ^[[1m^[[92m   Compiling^[[0m dirs v6.0.0
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:56.9394472Z ^[[1m^[[92m   Compiling^[[0m chrono v0.4.45
+backend-windows	UNKNOWN STEP	2026-11-01T14:24:56.9400516Z ^[[1m^[[92m   Compiling^[[0m async-trait v0.1.92
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:35.8911596Z ^[[1m^[[92m    Finished^[[0m `test` profile [unoptimized + debuginfo] target(s) in 5m 13s
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.0942371Z ^[[1m^[[92m     Running^[[0m tests\provider_auth_native.rs (target\debug\deps\provider_auth_native-af6b3b541f02fc1f.exe)
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.1108535Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.1108965Z running 1 test
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.2080635Z test native_protection_reference_resolution_rebind_and_missing_key_refusal ... native-platform=windows sandbox-only=true original-reference-resolved=true protected-stage-and-runtime-rebind=true missing-key-refused=true owned-entries-cleaned=true network=false
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.2098856Z ok
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.2099081Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.2099633Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.2100016Z
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3743972Z ##[group]Run $outputDirectory = "../../../test/out/windows-backend"
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3744716Z ^[[36;1m$outputDirectory = "../../../test/out/windows-backend"^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3745241Z ^[[36;1mNew-Item -ItemType Directory -Force $outputDirectory | Out-Null^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3745666Z ^[[36;1m[ordered]@{^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3745891Z ^[[36;1m  runner = $env:RUNNER_NAME^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3746163Z ^[[36;1m  image = $env:ImageOS^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3746435Z ^[[36;1m  imageVersion = $env:ImageVersion^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3746808Z ^[[36;1m  os = [System.Environment]::OSVersion.VersionString^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3747239Z ^[[36;1m  rust = (rustc --version 2>&1 | Out-String).Trim()^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3747644Z ^[[36;1m  cargo = (cargo --version 2>&1 | Out-String).Trim()^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3748033Z ^[[36;1m  node = (node --version 2>&1 | Out-String).Trim()^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3748584Z ^[[36;1m} | ConvertTo-Json | Set-Content (Join-Path $outputDirectory "environment.json")^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3749330Z ^[[36;1mcargo metadata --locked --format-version 1 > (Join-Path $outputDirectory "cargo-metadata.json") 2>&1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3750024Z ^[[36;1mcargo tree --locked > (Join-Path $outputDirectory "cargo-tree.txt") 2>&1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3750996Z ^[[36;1m$testExecutable = Get-ChildItem "target/debug/deps/opencodex_desktop_lib-*.exe" -ErrorAction SilentlyContinue |^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3751724Z ^[[36;1m  Sort-Object LastWriteTime -Descending | Select-Object -First 1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3752133Z ^[[36;1mif ($testExecutable) {^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3752598Z ^[[36;1m  Copy-Item $testExecutable.FullName (Join-Path $outputDirectory $testExecutable.Name)^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3753204Z ^[[36;1m  Get-FileHash $testExecutable.FullName -Algorithm SHA256 |^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3753795Z ^[[36;1m    ConvertTo-Json | Set-Content (Join-Path $outputDirectory "test-executable-sha256.json")^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3754530Z ^[[36;1m  $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3755032Z ^[[36;1m  $dumpbin = $null^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3755261Z ^[[36;1m  $mt = $null^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3755488Z ^[[36;1m  if (Test-Path $vswhere) {^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3756609Z ^[[36;1m    $vsInstall = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath |^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3757367Z ^[[36;1m      Select-Object -First 1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3757639Z ^[[36;1m    if ($vsInstall) {^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3758245Z ^[[36;1m      $dumpbin = Get-ChildItem (Join-Path $vsInstall 'VC\Tools\MSVC\*\bin\Hostx64\x64\dumpbin.exe') -ErrorAction SilentlyContinue |^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3758944Z ^[[36;1m        Sort-Object FullName | Select-Object -Last 1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3759264Z ^[[36;1m    }^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3759440Z ^[[36;1m  }^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3759810Z ^[[36;1m  if (-not $dumpbin) { $dumpbin = Get-Command dumpbin -ErrorAction SilentlyContinue }^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3760624Z ^[[36;1m  $mt = Get-ChildItem (Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\bin\*\x64\mt.exe') -ErrorAction SilentlyContinue |^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3761293Z ^[[36;1m    Sort-Object FullName | Select-Object -Last 1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3761624Z ^[[36;1m  if ($dumpbin) {^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3762053Z ^[[36;1m    $dumpbinPath = if ($dumpbin.FullName) { $dumpbin.FullName } else { $dumpbin.Source }^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3762899Z ^[[36;1m    & $dumpbinPath /DEPENDENTS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-dependents.txt") 2>&1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3763864Z ^[[36;1m    & $dumpbinPath /IMPORTS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-imports.txt") 2>&1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3764820Z ^[[36;1m    & $dumpbinPath /HEADERS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-headers.txt") 2>&1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3767098Z ^[[36;1m  } else {^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3767651Z ^[[36;1m    "dumpbin was not found on PATH" | Set-Content (Join-Path $outputDirectory "dumpbin-unavailable.txt")^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3768244Z ^[[36;1m  }^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3768433Z ^[[36;1m  if ($mt) {^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3768834Z ^[[36;1m    $manifestPath = Join-Path $outputDirectory "test-executable.manifest.xml"^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3769339Z ^[[36;1m    $resource = "$($testExecutable.FullName);#1"^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3770039Z ^[[36;1m    & $mt.FullName "-inputresource:$resource" "-out:$manifestPath" > (Join-Path $outputDirectory "test-executable-manifest.txt") 2>&1^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3770695Z ^[[36;1m  } else {^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3771161Z ^[[36;1m    "mt.exe was not found in Windows SDK" | Set-Content (Join-Path $outputDirectory "mt-unavailable.txt")^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3771676Z ^[[36;1m  }^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3771851Z ^[[36;1m} else {^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3772429Z ^[[36;1m  "Windows backend test executable was not produced" | Set-Content (Join-Path $outputDirectory "test-executable-unavailable.txt")^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3773073Z ^[[36;1m}^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3773803Z ^[[36;1m$webViewLoader = Get-ChildItem "${env:ProgramFiles(x86)}\Microsoft\EdgeWebView\Application\*\EBWebView\x64\EmbeddedBrowserWebView.dll" -ErrorAction SilentlyContinue^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3775274Z ^[[36;1mif ($webViewLoader) { $webViewLoader | Select-Object -ExpandProperty FullName | Set-Content (Join-Path $outputDirectory "webview2-runtime-files.txt") }^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3776741Z ^[[36;1mGet-ItemProperty "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\*" -ErrorAction SilentlyContinue |^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3777681Z ^[[36;1m  Select-Object name, pv, version | ConvertTo-Json | Set-Content (Join-Path $outputDirectory "webview2-registry.json")^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3778546Z ^[[36;1mGet-ItemProperty "HKLM:\SOFTWARE\Microsoft\EdgeUpdate\Clients\*" -ErrorAction SilentlyContinue |^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3779408Z ^[[36;1m  Select-Object name, pv, version | ConvertTo-Json | Add-Content (Join-Path $outputDirectory "webview2-registry.json")^[[0m
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3949319Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3949735Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3950186Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3950544Z   CARGO_INCREMENTAL: 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3950787Z   CARGO_TERM_COLOR: always
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:36.3951028Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5739841Z ##[group]Run actions/upload-artifact@v4
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5740269Z with:
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5740569Z   name: windows-startup-evidence
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5742278Z   path: test/out/windows-startup
+backend-windows	UNKNOWN STEP	test/out/windows-backend
+backend-windows	UNKNOWN STEP	test/out/windows-native-018
+backend-windows	UNKNOWN STEP	test/out/windows-native-018-node22
+backend-windows	UNKNOWN STEP	test/out/windows-ordinary
+backend-windows	UNKNOWN STEP	test/out/windows-query-etw
+backend-windows	UNKNOWN STEP	test/runtime/ci-bd2-query-etw/capture
+backend-windows	UNKNOWN STEP	!test/out/windows-native-018/OpenCodeX Native*/**
+backend-windows	UNKNOWN STEP	!test/out/windows-native-018-node22/OpenCodeX Native*/**
+backend-windows	UNKNOWN STEP	!test/out/windows-startup/**/sandbox-*/**
+backend-windows	UNKNOWN STEP	!test/out/windows-ordinary/**/sandbox-*/**
+backend-windows	UNKNOWN STEP
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5744196Z   if-no-files-found: warn
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5744479Z   compression-level: 6
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5744743Z   overwrite: false
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5745505Z   include-hidden-files: false
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5745820Z env:
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5746100Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5746428Z   CARGO_INCREMENTAL: 0
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5746775Z   CARGO_TERM_COLOR: always
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.5747052Z ##[endgroup]
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.7744054Z (node:5704) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.7744859Z (Use `node --trace-deprecation ...` to show where the warning was created)
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.7837223Z Multiple search paths detected. Calculating the least common ancestor of all paths
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.7844056Z The least common ancestor is D:\a\opencodex-desktop\opencodex-desktop\test. This will be the root directory of the artifact
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.7845309Z With the provided path, there will be 6 files uploaded
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.7850933Z Artifact name is valid!
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:52.7852724Z Root directory input is valid!
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:53.1851371Z Beginning upload of artifact content to blob storage
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:53.2671420Z (node:5704) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:53.8016616Z Uploaded bytes 252045
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:53.8809914Z Finished uploading artifact content to blob storage!
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:53.8811577Z SHA256 digest of uploaded artifact zip is 212e82840b036fff6cf9800595f279cc2238b1995e9c0d84cd0d65bc1b7d38d8
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:53.8814362Z Finalizing artifact upload
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.3871881Z Artifact windows-startup-evidence.zip successfully finalized. Artifact ID 13087482370
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.3873592Z Artifact windows-startup-evidence has been successfully uploaded! Final size is 252045 bytes. Artifact ID is 13087482370
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.3890232Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/41315705197/artifacts/13087482370
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.4269436Z Post job cleanup.
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.6216366Z [command]"C:\Program Files\Git\bin\git.exe" version
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.6597836Z git version 2.56.0.windows.2
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.6672565Z Temporarily overriding HOME='D:\a\_temp\761dfaf1-f462-4772-adc4-2cc73d8865c6' before making global git config changes
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.6673450Z Adding repository directory to the temporary git global config as a safe directory
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.6684208Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.7077479Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:54.7467980Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:55.3346583Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:55.3687262Z http.https://github.com/.extraheader
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:55.3736931Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:55.4139936Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:55.9890416Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:56.0278494Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:56.6297583Z Cleaning up orphan processes
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:56.6519672Z Terminate orphan process: pid (5920) (vctip)
+backend-windows	UNKNOWN STEP	2026-11-01T14:26:56.6604025Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

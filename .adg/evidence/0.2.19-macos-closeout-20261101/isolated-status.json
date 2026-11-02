@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "runtimeRole": "standalone",
+  "proxy": {
+    "running": true,
+    "pid": null,
+    "staleProcessState": false,
+    "health": {
+      "ok": true,
+      "url": "http://127.0.0.1:60419/healthz",
+      "message": "ok (pid unknown)"
+    }
+  },
+  "listen": {
+    "port": 60419,
+    "hostname": "127.0.0.1",
+    "source": "config"
+  },
+  "scope": "isolated official server 60419; direct server entrypoint"
+}

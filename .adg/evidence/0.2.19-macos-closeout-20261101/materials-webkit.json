@@ -1,0 +1,386 @@
+{
+  "baseline": "cfbd90c4b",
+  "engine": "WebKit",
+  "states": [
+    {
+      "theme": "light",
+      "effects": "high",
+      "app": {
+        "page": {
+          "bg": "rgba(255, 255, 255, 0.4)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgba(244, 245, 249, 0.52)",
+          "blur": "saturate(1.5) blur(8px)"
+        },
+        "blurSupport": true
+      },
+      "prototype": {
+        "page": {
+          "bg": "rgba(255, 255, 255, 0.4)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgba(244, 245, 249, 0.52)",
+          "blur": "saturate(1.5) blur(8px)"
+        },
+        "blurSupport": true
+      }
+    },
+    {
+      "theme": "light",
+      "effects": "mid",
+      "app": {
+        "page": {
+          "bg": "rgba(255, 255, 255, 0.4)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgba(244, 245, 249, 0.52)",
+          "blur": "saturate(1.5) blur(8px)"
+        },
+        "blurSupport": true
+      },
+      "prototype": {
+        "page": {
+          "bg": "rgba(255, 255, 255, 0.4)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgba(244, 245, 249, 0.52)",
+          "blur": "saturate(1.5) blur(8px)"
+        },
+        "blurSupport": true
+      }
+    },
+    {
+      "theme": "light",
+      "effects": "low",
+      "app": {
+        "page": {
+          "bg": "rgb(255, 255, 255)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgb(255, 255, 255)",
+          "blur": "none"
+        },
+        "blurSupport": true
+      },
+      "prototype": {
+        "page": {
+          "bg": "rgb(255, 255, 255)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgb(255, 255, 255)",
+          "blur": "none"
+        },
+        "blurSupport": true
+      }
+    },
+    {
+      "theme": "dark",
+      "effects": "high",
+      "app": {
+        "page": {
+          "bg": "rgba(38, 38, 38, 0.4)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)"
+        },
+        "blurSupport": true
+      },
+      "prototype": {
+        "page": {
+          "bg": "rgba(38, 38, 38, 0.4)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)"
+        },
+        "blurSupport": true
+      }
+    },
+    {
+      "theme": "dark",
+      "effects": "mid",
+      "app": {
+        "page": {
+          "bg": "rgba(38, 38, 38, 0.4)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)"
+        },
+        "blurSupport": true
+      },
+      "prototype": {
+        "page": {
+          "bg": "rgba(38, 38, 38, 0.4)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)"
+        },
+        "blurSupport": true
+      }
+    },
+    {
+      "theme": "dark",
+      "effects": "low",
+      "app": {
+        "page": {
+          "bg": "rgb(38, 38, 38)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgb(38, 38, 38)",
+          "blur": "none"
+        },
+        "blurSupport": true
+      },
+      "prototype": {
+        "page": {
+          "bg": "rgb(38, 38, 38)",
+          "blur": "none"
+        },
+        "card": {
+          "bg": "rgb(38, 38, 38)",
+          "blur": "none"
+        },
+        "blurSupport": true
+      }
+    }
+  ],
+  "errors": [],
+  "checks": [
+    {
+      "name": "light high page bg",
+      "ok": true,
+      "details": {
+        "app": "rgba(255, 255, 255, 0.4)",
+        "prototype": "rgba(255, 255, 255, 0.4)"
+      }
+    },
+    {
+      "name": "light high page blur",
+      "ok": true,
+      "details": {
+        "app": "none",
+        "prototype": "none"
+      }
+    },
+    {
+      "name": "light high card bg",
+      "ok": true,
+      "details": {
+        "app": "rgba(244, 245, 249, 0.52)",
+        "prototype": "rgba(244, 245, 249, 0.52)"
+      }
+    },
+    {
+      "name": "light high card blur",
+      "ok": true,
+      "details": {
+        "app": "saturate(1.5) blur(8px)",
+        "prototype": "saturate(1.5) blur(8px)"
+      }
+    },
+    {
+      "name": "light high blur supported",
+      "ok": true
+    },
+    {
+      "name": "light mid page bg",
+      "ok": true,
+      "details": {
+        "app": "rgba(255, 255, 255, 0.4)",
+        "prototype": "rgba(255, 255, 255, 0.4)"
+      }
+    },
+    {
+      "name": "light mid page blur",
+      "ok": true,
+      "details": {
+        "app": "none",
+        "prototype": "none"
+      }
+    },
+    {
+      "name": "light mid card bg",
+      "ok": true,
+      "details": {
+        "app": "rgba(244, 245, 249, 0.52)",
+        "prototype": "rgba(244, 245, 249, 0.52)"
+      }
+    },
+    {
+      "name": "light mid card blur",
+      "ok": true,
+      "details": {
+        "app": "saturate(1.5) blur(8px)",
+        "prototype": "saturate(1.5) blur(8px)"
+      }
+    },
+    {
+      "name": "light mid blur supported",
+      "ok": true
+    },
+    {
+      "name": "light low page bg",
+      "ok": true,
+      "details": {
+        "app": "rgb(255, 255, 255)",
+        "prototype": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "name": "light low page blur",
+      "ok": true,
+      "details": {
+        "app": "none",
+        "prototype": "none"
+      }
+    },
+    {
+      "name": "light low card bg",
+      "ok": true,
+      "details": {
+        "app": "rgb(255, 255, 255)",
+        "prototype": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "name": "light low card blur",
+      "ok": true,
+      "details": {
+        "app": "none",
+        "prototype": "none"
+      }
+    },
+    {
+      "name": "light low blur supported",
+      "ok": true
+    },
+    {
+      "name": "dark high page bg",
+      "ok": true,
+      "details": {
+        "app": "rgba(38, 38, 38, 0.4)",
+        "prototype": "rgba(38, 38, 38, 0.4)"
+      }
+    },
+    {
+      "name": "dark high page blur",
+      "ok": true,
+      "details": {
+        "app": "none",
+        "prototype": "none"
+      }
+    },
+    {
+      "name": "dark high card bg",
+      "ok": true,
+      "details": {
+        "app": "rgba(34, 36, 42, 0.56)",
+        "prototype": "rgba(34, 36, 42, 0.56)"
+      }
+    },
+    {
+      "name": "dark high card blur",
+      "ok": true,
+      "details": {
+        "app": "saturate(1.5) blur(8px)",
+        "prototype": "saturate(1.5) blur(8px)"
+      }
+    },
+    {
+      "name": "dark high blur supported",
+      "ok": true
+    },
+    {
+      "name": "dark mid page bg",
+      "ok": true,
+      "details": {
+        "app": "rgba(38, 38, 38, 0.4)",
+        "prototype": "rgba(38, 38, 38, 0.4)"
+      }
+    },
+    {
+      "name": "dark mid page blur",
+      "ok": true,
+      "details": {
+        "app": "none",
+        "prototype": "none"
+      }
+    },
+    {
+      "name": "dark mid card bg",
+      "ok": true,
+      "details": {
+        "app": "rgba(34, 36, 42, 0.56)",
+        "prototype": "rgba(34, 36, 42, 0.56)"
+      }
+    },
+    {
+      "name": "dark mid card blur",
+      "ok": true,
+      "details": {
+        "app": "saturate(1.5) blur(8px)",
+        "prototype": "saturate(1.5) blur(8px)"
+      }
+    },
+    {
+      "name": "dark mid blur supported",
+      "ok": true
+    },
+    {
+      "name": "dark low page bg",
+      "ok": true,
+      "details": {
+        "app": "rgb(38, 38, 38)",
+        "prototype": "rgb(38, 38, 38)"
+      }
+    },
+    {
+      "name": "dark low page blur",
+      "ok": true,
+      "details": {
+        "app": "none",
+        "prototype": "none"
+      }
+    },
+    {
+      "name": "dark low card bg",
+      "ok": true,
+      "details": {
+        "app": "rgb(38, 38, 38)",
+        "prototype": "rgb(38, 38, 38)"
+      }
+    },
+    {
+      "name": "dark low card blur",
+      "ok": true,
+      "details": {
+        "app": "none",
+        "prototype": "none"
+      }
+    },
+    {
+      "name": "dark low blur supported",
+      "ok": true
+    },
+    {
+      "name": "zero page errors",
+      "ok": true,
+      "details": []
+    }
+  ]
+}

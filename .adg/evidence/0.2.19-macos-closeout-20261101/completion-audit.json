@@ -1,0 +1,77 @@
+[
+  {
+    "requirement": "拉取指定分支与提交",
+    "evidence": [
+      "code 1fc19df68 ancestor of 730b9e8b2",
+      "docs 988d8c107"
+    ],
+    "status": "passed"
+  },
+  {
+    "requirement": "阅读开发实施与偏差记录",
+    "evidence": [
+      "0.2.19-bugs.md:418 and Windows supplement"
+    ],
+    "status": "passed"
+  },
+  {
+    "requirement": "新增路径macOS行为",
+    "evidence": [
+      "native-app.log",
+      "panel-native.png",
+      "panel-98-ax.txt",
+      "panel-98-native.png",
+      "native-materials-contact.jpg"
+    ],
+    "status": "passed"
+  },
+  {
+    "requirement": "冻结原型材质核对",
+    "evidence": [
+      "materials-webkit.json",
+      "geometry-webkit.log"
+    ],
+    "status": "passed"
+  },
+  {
+    "requirement": "本地测试与静态检查",
+    "evidence": [
+      "vitest.log",
+      "typecheck.log",
+      "ui-build.log",
+      "cargo-test-bounded.log",
+      "rustfmt.log",
+      "clippy.log"
+    ],
+    "status": "passed with initial failed round preserved"
+  },
+  {
+    "requirement": "PR元数据",
+    "evidence": [
+      "PR #33 updated via gh after connector 403; draft retained"
+    ],
+    "status": "passed"
+  },
+  {
+    "requirement": "原清单回写与提交推送",
+    "evidence": [
+      "staged scoped changes; unrelated staged DMD excluded"
+    ],
+    "status": "pending"
+  },
+  {
+    "requirement": "最终CI",
+    "evidence": [
+      "41365765185"
+    ],
+    "status": "pending"
+  },
+  {
+    "requirement": "不发布/不真实同步/不改日常配置",
+    "evidence": [
+      "README.md scope",
+      "cleanup.json"
+    ],
+    "status": "respected"
+  }
+]

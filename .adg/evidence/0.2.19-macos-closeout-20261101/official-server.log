@@ -1,0 +1,9 @@
+opencodex config at /tmp/ocxd-0219-macos-20261101/opencodex-home/config.json: repaired missing field(s) [defaultProvider] with defaults. Your providers and accounts are preserved.
+🚀 opencodex proxy running on http://localhost:60419
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+isolated official server 60419
+🔐 Claude intercept proxy active on http://127.0.0.1:60519 (CONNECT api.anthropic.com → local TLS)
