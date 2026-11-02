@@ -14,7 +14,7 @@
     },
     "credential-and-scope-boundaries": {
       "status": "in_progress",
-      "reason": "native macOS secure-store test and scope/credential regressions passed; CI Windows backend regression still running",
+      "reason": "native macOS secure-store test and macOS CI backend regression passed; scope/credential regressions passed locally; CI Windows backend regression still running",
       "evidence": "native-candidate-509cb996-build.json; code commit 777aa9c5; CI run 41403032342"
     },
     "all-entry-coverage": {
@@ -24,7 +24,7 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "macOS debug bundle for 509cb996 built and sandbox launched; native interaction pending. CI run 41403032342 macOS/Windows backend jobs still running; Windows native install/OTA matrix not yet executed",
+      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. CI macOS backend passed; Windows backend regression still running, and Windows native install/OTA matrix is not yet executed",
       "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI run 41403032342"
     },
     "release-and-ota": {
@@ -43,7 +43,7 @@
   "ci": {
     "run": 41403032342,
     "status": "in_progress",
-    "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence"],
-    "running_jobs": ["backend", "backend-windows"]
+    "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
+    "running_jobs": ["backend-windows"]
   }
 }
