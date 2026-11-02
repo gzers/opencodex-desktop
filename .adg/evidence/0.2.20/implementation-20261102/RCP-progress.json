@@ -24,7 +24,7 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. Latest CI run 41408838770 macOS backend, Windows backend regression, isolated native credentials, managed install upgrade/offline reinstall, dependency diagnostics, and Windows release build passed; final EXE smoke is running. Earlier smoke failed on stale assertion that portable acceptance must leave config.json unchanged; assertion was corrected in commit 28ac719e and is now under native rerun",
+      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. CI run 41408838770 passed macOS backend, Windows regression, native credentials, managed installation/offline reinstall, dependency diagnostics, and release build. Final EXE smoke exposed two stale expectations: ordinary portable acceptance must write config.json and its transient importedConfig receipt is not retained after direct save. Both assertions were aligned with S20-13 and saved-file/provider readback in commits 28ac719e and 2fe154b8. New run 41414060520 is validating them",
       "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI run 41403032342"
     },
     "release-and-ota": {
@@ -60,12 +60,19 @@
     },
     {
       "run": 41408838770,
-      "status": "in_progress",
+      "status": "failure",
       "head": "28ac719e",
       "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
       "passed_windows_steps": ["Windows backend regression", "isolated native credential protection", "official managed install upgrade and offline reinstall", "native dependency diagnostics", "release build"],
-      "running_jobs": ["backend-windows: final EXE smoke"],
+      "failed_windows_step": "Windows final EXE smoke: stale assertion expected importedConfig receipt in the committed channel; direct save persists provider/config and does not keep the transient receipt",
+      "skipped_windows_steps": ["Node24 version matrix", "native recovery/path regression", "Node22.20 regression", "ordinary-account final EXE smoke"],
       "purpose": "rerun Windows native EXE smoke after aligning saved-config assertion with S20-13"
+    },
+    {
+      "run": 41414060520,
+      "status": "in_progress",
+      "head": "2fe154b8",
+      "purpose": "rerun Windows native EXE smoke with direct saved-config and provider-identity assertions"
     }
   ]
 }
