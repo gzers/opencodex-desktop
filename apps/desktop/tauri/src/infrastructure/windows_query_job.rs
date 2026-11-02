@@ -362,14 +362,17 @@ mod tests {
                 job.assign_and_resume(&child).unwrap();
                 let mut stdout = BufReader::new(child.stdout.take().unwrap());
                 let mut line = String::new();
-                tokio::time::timeout(std::time::Duration::from_secs(2), stdout.read_line(&mut line)).await.unwrap().unwrap();
+                // This test runs beside the full Windows workspace suite. Allow
+                // the local Node fixture to start under runner load; the check
+                // below still requires a live descendant before root exit.
+                tokio::time::timeout(std::time::Duration::from_secs(10), stdout.read_line(&mut line)).await.unwrap().unwrap();
                 let pid = line.trim().parse::<u32>().unwrap();
                 let raw = unsafe { OpenProcess(PROCESS_SYNCHRONIZE, 0, pid) };
                 assert!(!raw.is_null(), "retain helper handle before permitting root exit");
                 let process = unsafe { OwnedHandle::from_raw_handle(raw) };
                 assert_eq!(unsafe { WaitForSingleObject(process.as_raw_handle(), 0) }, WAIT_TIMEOUT);
                 child.stdin.take().unwrap().write_all(b"exit").await.unwrap();
-                let output = tokio::time::timeout(std::time::Duration::from_secs(2), child.wait_with_output()).await.unwrap().unwrap();
+                let output = tokio::time::timeout(std::time::Duration::from_secs(10), child.wait_with_output()).await.unwrap().unwrap();
                 assert!(output.status.success());
                 assert_eq!(unsafe { WaitForSingleObject(process.as_raw_handle(), 0) }, WAIT_TIMEOUT, "fixture child must be alive before family cleanup");
                 job.terminate_and_wait().await.unwrap();
