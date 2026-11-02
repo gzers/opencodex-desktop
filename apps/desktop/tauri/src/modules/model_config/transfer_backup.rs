@@ -377,7 +377,17 @@ pub fn finish(root: &Path, id: &str) -> ModelResult<()> {
                         executable: BTreeSet::new(),
                     };
                 } else if let Some(name) = group.strip_prefix("skill:") {
-                    if portable_assets::completed_skill_target(root, id, name)?.as_ref()
+                    if let Some((mode_path, bytes)) =
+                        portable_assets::completed_modes(root, id, name)?.filter(|(p, _)| p == path)
+                    {
+                        let _ = mode_path;
+                        after[i] = Image {
+                            exists: true,
+                            directory: false,
+                            files: BTreeMap::from([(String::new(), bytes)]),
+                            executable: BTreeSet::new(),
+                        };
+                    } else if portable_assets::completed_skill_target(root, id, name)?.as_ref()
                         == Some(path)
                     {
                         after[i] = image(base, path)?;

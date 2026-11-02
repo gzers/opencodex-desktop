@@ -291,7 +291,7 @@ pub async fn config_sync_check(
                 crate::modules::model_config::transfer_protection::read_password(&root)?;
             let previous =
                 crate::modules::model_config::transfer_protection::previous_password(&root)?;
-            tauri::async_runtime::block_on(config_remote::refresh_catalog(
+            let catalog = tauri::async_runtime::block_on(config_remote::refresh_catalog(
                 &root,
                 transport,
                 config,
@@ -299,6 +299,15 @@ pub async fn config_sync_check(
                 read_password.as_deref().map(|p| p.as_str()),
                 previous.as_deref().map(|p| p.as_str()),
             ))?;
+            if let Some(catalog) = catalog.as_ref() {
+                config_remote::initialize_remote_scope(
+                    &root,
+                    binding,
+                    catalog,
+                    &config_home,
+                    &local_home,
+                )?;
+            }
             let mut scope = config_remote::load_scope(&root)?;
             scope.cloud_binding = Some(binding.into());
             scope.upstream_root = Some(config_home);

@@ -27,6 +27,7 @@ use std::{
 };
 const SCOPE: &str = "manager-state/config-sync-scope.json";
 const CATALOG: &str = "manager-state/config-sync-catalog.json";
+const INITIALIZED: &str = "manager-state/config-sync-initialized.json";
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CatalogObject {
@@ -518,6 +519,61 @@ pub fn save_scope(root: &Path, mut scope: Scope) -> ModelResult<Scope> {
         return Err(invalid("sync_scope_readback", "范围保存后未通过读回"));
     }
     Ok(scope)
+}
+/// Initialize the device range exactly once, after a complete cloud catalog has
+/// been fetched and validated. Later catalogs never widen the saved range.
+pub fn initialize_remote_scope(
+    root: &Path,
+    binding: &str,
+    catalog: &CloudCatalog,
+    upstream_root: &Path,
+    local_home: &Path,
+) -> ModelResult<bool> {
+    let marker = root.join(INITIALIZED);
+    safety::check_path(root, &marker, true)?;
+    let _guard = crate::infrastructure::locking::TargetFileLock::lock(&marker)?;
+    if marker.exists() {
+        return Ok(false);
+    }
+    let scope_path = root.join(SCOPE);
+    safety::check_path(root, &scope_path, true)?;
+    if scope_path.exists() {
+        // A previously persisted selection is an explicit user choice. Mark
+        // the device initialized without widening it during an upgrade.
+        atomic_write(&marker, b"{\"initialized\":true}", 0o600)?;
+        return Ok(false);
+    }
+    let mut scope = load_scope(root)?;
+    scope.cloud_binding = Some(binding.into());
+    scope.upstream_root = Some(upstream_root.into());
+    scope.local_home = Some(local_home.into());
+    for object in &catalog.objects {
+        let parts: Vec<String> = serde_json::from_str(&object.id)?;
+        if parts.len() != 2 {
+            return Err(invalid("sync_catalog", "云端对象身份无效"));
+        }
+        match parts[0].as_str() {
+            "templates" => scope.template_ids.push(parts[1].clone()),
+            "channels" => scope.channel_ids.push(parts[1].clone()),
+            "accounts" => scope.account_ids.push(parts[1].clone()),
+            "skills" => scope.skill_names.push(parts[1].clone()),
+            "mcps" => scope.mcp_names.push(parts[1].clone()),
+            _ => return Err(invalid("sync_catalog", "云端对象类别无效")),
+        }
+    }
+    scope.template_ids.sort();
+    scope.template_ids.dedup();
+    scope.channel_ids.sort();
+    scope.channel_ids.dedup();
+    scope.account_ids.sort();
+    scope.account_ids.dedup();
+    scope.skill_names.sort();
+    scope.skill_names.dedup();
+    scope.mcp_names.sort();
+    scope.mcp_names.dedup();
+    save_scope(root, scope)?;
+    atomic_write(&marker, b"{\"initialized\":true}", 0o600)?;
+    Ok(true)
 }
 fn scope_digest(scope: &Scope) -> ModelResult<String> {
     Ok(sha256(&serde_json::to_vec(scope)?))
@@ -1501,7 +1557,7 @@ mod tests {
         )
         .await
         .unwrap();
-        let initial = save_scope(
+        let _initial = save_scope(
             target.path(),
             Scope {
                 preferences: true,
@@ -1524,10 +1580,15 @@ mod tests {
         .await
         .unwrap()
         .unwrap();
-        assert_eq!(
-            load_scope(target.path()).unwrap().channel_ids,
-            Vec::<String>::new()
-        );
+        std::fs::remove_file(target.path().join(SCOPE)).unwrap();
+        initialize_remote_scope(
+            target.path(),
+            "catalog-bound",
+            &c,
+            target_home.path(),
+            local_home.path(),
+        )
+        .unwrap();
         assert_eq!(
             std::fs::read(target_home.path().join("config.json")).unwrap(),
             before
@@ -1541,6 +1602,56 @@ mod tests {
         )
         .unwrap()[1]
             .clone();
+        assert_eq!(
+            load_scope(target.path()).unwrap().channel_ids,
+            vec![cloud_id.clone()],
+            "the first successful cloud catalog initializes all available objects as selected"
+        );
+        let saved_scope = load_scope(target.path()).unwrap();
+        let mut later_catalog = c.clone();
+        later_catalog.objects.push(CatalogObject {
+            id: serde_json::to_string(&["channels", "later-channel"]).unwrap(),
+            category: "channels".into(),
+            category_label: "渠道与模型".into(),
+            label: "后续新增".into(),
+            detail: String::new(),
+            mark: String::new(),
+            files: vec![],
+        });
+        assert!(!initialize_remote_scope(
+            target.path(),
+            "catalog-bound",
+            &later_catalog,
+            target_home.path(),
+            local_home.path(),
+        )
+        .unwrap());
+        assert_eq!(load_scope(target.path()).unwrap(), saved_scope);
+        let failed_root = tempfile::tempdir().unwrap();
+        let invalid_catalog = CloudCatalog {
+            binding: "catalog-bound".into(),
+            objects: vec![CatalogObject {
+                id: "not-json".into(),
+                category: "channels".into(),
+                category_label: String::new(),
+                label: String::new(),
+                detail: String::new(),
+                mark: String::new(),
+                files: vec![],
+            }],
+            credential_ids: vec![],
+            created_at: String::new(),
+            accounts: vec![],
+        };
+        assert!(initialize_remote_scope(
+            failed_root.path(),
+            "catalog-bound",
+            &invalid_catalog,
+            target_home.path(),
+            local_home.path(),
+        )
+        .is_err());
+        assert!(!failed_root.path().join(INITIALIZED).exists());
         assert!(cached_catalog(target.path(), "other-endpoint")
             .unwrap()
             .is_none());
@@ -1550,7 +1661,7 @@ mod tests {
                 channel_ids: vec![cloud_id],
                 preferences: false,
                 cloud_binding: Some("catalog-bound".into()),
-                ..initial
+                ..saved_scope
             },
         )
         .unwrap();

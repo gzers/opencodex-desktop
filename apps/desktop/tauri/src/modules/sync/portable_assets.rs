@@ -479,6 +479,44 @@ pub fn split_mcp(
         warnings,
     })
 }
+fn mode_path(root: &Path, label: &str) -> ModelResult<PathBuf> {
+    name(label)?;
+    let p = root
+        .join("manager-state/skill-portable-modes")
+        .join(format!("{label}.json"));
+    safety::check_path(root, &p, true)?;
+    Ok(p)
+}
+type PortableModes = BTreeMap<String, (String, bool)>;
+fn retain_portable_modes(root: &Path, skill: &mut Skill) -> ModelResult<()> {
+    let p = mode_path(root, &skill.name)?;
+    if !p.exists() {
+        return Ok(());
+    }
+    let modes: PortableModes = serde_json::from_slice(&safety::read_file(&p, 4 * 1024 * 1024)?)?;
+    for file in &mut skill.files {
+        if let Some((digest, executable)) = modes.get(&file.path) {
+            if digest == &file.digest {
+                file.executable = *executable;
+            }
+        }
+    }
+    skill.digest = sha256(&serde_json::to_vec(&skill.files)?);
+    Ok(())
+}
+fn record_portable_modes(root: &Path, skill: &Skill) -> ModelResult<()> {
+    let modes = skill
+        .files
+        .iter()
+        .map(|f| (f.path.clone(), (f.digest.clone(), f.executable)))
+        .collect::<PortableModes>();
+    atomic_write(
+        &mode_path(root, &skill.name)?,
+        &serde_json::to_vec(&modes)?,
+        0o600,
+    )?;
+    Ok(())
+}
 pub fn summarize(assets: &Assets) -> Summary {
     Summary {
         skills: assets
@@ -718,9 +756,11 @@ pub fn export_with_credential_scope(
         } else {
             discovery::skills_store_dir(root).join(skill)
         };
-        result
-            .skills
-            .push(snapshot_skill(&path, skill, include_secrets, reviewed)?);
+        let mut saved = snapshot_skill(&path, skill, include_secrets, reviewed)?;
+        if cfg!(windows) {
+            retain_portable_modes(root, &mut saved)?;
+        }
+        result.skills.push(saved);
     }
     for server in mcps {
         let include_secrets = include_secrets
@@ -922,6 +962,8 @@ struct ApplyPlan {
     mcp_after: Option<Vec<u8>>,
     #[serde(default)]
     completed_skill_paths: BTreeMap<String, PathBuf>,
+    #[serde(default)]
+    portable_modes: BTreeMap<String, PortableModes>,
 }
 fn apply_path(root: &Path, id: &str) -> ModelResult<PathBuf> {
     require_uuid(id)?;
@@ -965,6 +1007,13 @@ pub fn backup_targets(root: &Path, id: &str) -> ModelResult<Vec<(String, PathBuf
             store.join(name),
         ));
         targets.push((format!("skill:{name}"), source.clone(), source.join(name)));
+        if cfg!(windows) {
+            targets.push((
+                format!("skill:{name}"),
+                root.to_path_buf(),
+                mode_path(root, name)?,
+            ));
+        }
     }
     targets.push(("mcp".into(), root.to_path_buf(), root.join(MCP_STORE)));
     Ok(targets)
@@ -1055,6 +1104,19 @@ pub fn prepare(root: &Path, home: &Path, id: &str, assets: &Assets) -> ModelResu
         mcp_completed: false,
         mcp_after: None,
         completed_skill_paths: BTreeMap::new(),
+        portable_modes: assets
+            .skills
+            .iter()
+            .map(|s| {
+                (
+                    s.name.clone(),
+                    s.files
+                        .iter()
+                        .map(|f| (f.path.clone(), (f.digest.clone(), f.executable)))
+                        .collect(),
+                )
+            })
+            .collect(),
     };
     atomic_write(&apply_path(root, id)?, &serde_json::to_vec(&plan)?, 0o600)?;
     Ok(())
@@ -1137,6 +1199,23 @@ pub fn apply_progress(root: &Path, id: &str) -> ModelResult<(bool, BTreeSet<Stri
 }
 pub fn completed_mcp_bytes(root: &Path, id: &str) -> ModelResult<Option<Vec<u8>>> {
     Ok(read_apply(root, id)?.mcp_after)
+}
+pub fn completed_modes(
+    root: &Path,
+    id: &str,
+    name: &str,
+) -> ModelResult<Option<(PathBuf, Vec<u8>)>> {
+    if !cfg!(windows) {
+        return Ok(None);
+    }
+    let p = read_apply(root, id)?;
+    if !p.completed_skills.contains_key(name) {
+        return Ok(None);
+    }
+    p.portable_modes
+        .get(name)
+        .map(|m| Ok((mode_path(root, name)?, serde_json::to_vec(m)?)))
+        .transpose()
 }
 pub fn completed_skill_target(root: &Path, id: &str, name: &str) -> ModelResult<Option<PathBuf>> {
     let plan = read_apply(root, id)?;
@@ -1554,6 +1633,9 @@ fn apply_with_scope(
                     discovery::skills_store_dir(root).join(&skill.name)
                 };
                 let saved = snapshot_skill(&target, &skill.name, true, false)?;
+                if cfg!(windows) {
+                    record_portable_modes(root, skill)?;
+                }
                 plan.completed_skills
                     .insert(skill.name.clone(), saved.digest);
                 plan.completed_skill_paths
@@ -1916,6 +1998,73 @@ mod tests {
     }
     #[derive(Default)]
     struct Memory(std::sync::Mutex<BTreeMap<String, String>>);
+    #[test]
+    fn portable_executable_intent_survives_a_platform_that_cannot_store_unix_modes() {
+        let root = tempfile::tempdir().unwrap();
+        let content = tempfile::tempdir().unwrap();
+        std::fs::write(content.path().join("SKILL.md"), "# Modes Fixture").unwrap();
+        std::fs::write(content.path().join("script.sh"), "#!/bin/sh\nexit 0\n").unwrap();
+        let mut original = snapshot_skill(content.path(), "fixture", false, false).unwrap();
+        original
+            .files
+            .iter_mut()
+            .find(|f| f.path == "script.sh")
+            .unwrap()
+            .executable = true;
+        original.digest = sha256(&serde_json::to_vec(&original.files).unwrap());
+        record_portable_modes(root.path(), &original).unwrap();
+        let mut read = snapshot_skill(content.path(), "fixture", false, false).unwrap();
+        read.files.iter_mut().for_each(|f| f.executable = false);
+        retain_portable_modes(root.path(), &mut read).unwrap();
+        assert_eq!(read.digest, original.digest);
+        std::fs::write(content.path().join("script.sh"), "new content").unwrap();
+        let mut edited = snapshot_skill(content.path(), "fixture", false, false).unwrap();
+        edited.files.iter_mut().for_each(|f| f.executable = false);
+        retain_portable_modes(root.path(), &mut edited).unwrap();
+        assert!(
+            !edited
+                .files
+                .iter()
+                .find(|f| f.path == "script.sh")
+                .unwrap()
+                .executable
+        );
+        assert_ne!(edited.digest, original.digest);
+        let receiver = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        let id = uuid::Uuid::new_v4().to_string();
+        let assets = Assets {
+            skills: vec![original.clone()],
+            mcps: vec![],
+        };
+        prepare(receiver.path(), home.path(), &id, &assets).unwrap();
+        apply(receiver.path(), &id, &assets, false).unwrap();
+        let exported = export(
+            receiver.path(),
+            home.path(),
+            &["fixture".into()],
+            &[],
+            false,
+            false,
+        )
+        .unwrap();
+        assert_eq!(
+            exported.skills[0].digest, original.digest,
+            "receive then export must converge across Unix and Windows permission semantics"
+        );
+        assert!(
+            exported.skills[0]
+                .files
+                .iter()
+                .find(|f| f.path == "script.sh")
+                .unwrap()
+                .executable
+        );
+        assert!(
+            !home.path().join(".codex").exists(),
+            "the script must never be executed or distributed by transfer"
+        );
+    }
     #[test]
     fn object_details_return_field_names_and_files_without_secret_values() {
         let root = tempfile::tempdir().unwrap();

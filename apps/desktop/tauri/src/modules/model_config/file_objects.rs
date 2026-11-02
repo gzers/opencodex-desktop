@@ -531,7 +531,26 @@ fn object_content_identity(objects: &Objects) -> ModelResult<(String, String)> {
     {
         channels.sort_by_key(|c| c["id"].as_str().unwrap_or("").to_owned());
     }
-    let identity = serde_json::json!({"channels":objects.models.payload.policy.iter().flat_map(|p|&p.channels).map(|c|(&c.id,&c.model_subset,&c.family_scope)).collect::<Vec<_>>(),"global":objects.models.payload.policy.as_ref().is_some_and(|p|p.template_refs.is_some()),"templates":objects.models.payload.templates.iter().map(|t|&t.id).collect::<Vec<_>>(),"accounts":objects.manager.accounts.iter().map(|a|&a.id).collect::<Vec<_>>(),"preferences":objects.manager.preferences.is_some(),"extensions":objects.manager.extensions.is_some(),"webdav":objects.manager.webdav.iter().map(|e|&e.id).collect::<Vec<_>>(),"skills":objects.assets.skills.iter().map(|s|&s.name).collect::<Vec<_>>(),"mcps":objects.assets.mcps.iter().map(|m|&m.name).collect::<Vec<_>>()});
+    let mut identity = serde_json::json!({"channels":objects.models.payload.policy.iter().flat_map(|p|&p.channels).map(|c|(&c.id,&c.model_subset,&c.family_scope)).collect::<Vec<_>>(),"global":objects.models.payload.policy.as_ref().is_some_and(|p|p.template_refs.is_some()),"templates":objects.models.payload.templates.iter().map(|t|&t.id).collect::<Vec<_>>(),"accounts":objects.manager.accounts.iter().map(|a|&a.id).collect::<Vec<_>>(),"preferences":objects.manager.preferences.is_some(),"extensions":objects.manager.extensions.is_some(),"webdav":objects.manager.webdav.iter().map(|e|&e.id).collect::<Vec<_>>(),"skills":objects.assets.skills.iter().map(|s|&s.name).collect::<Vec<_>>(),"mcps":objects.assets.mcps.iter().map(|m|&m.name).collect::<Vec<_>>()});
+    for pointer in ["/assets/skills", "/assets/mcps"] {
+        if let Some(items) = value.pointer_mut(pointer).and_then(Value::as_array_mut) {
+            items.sort_by_key(|item| item["name"].as_str().unwrap_or("").to_owned());
+        }
+    }
+    if let Some(fields) = identity.as_object_mut() {
+        for key in [
+            "channels",
+            "templates",
+            "accounts",
+            "webdav",
+            "skills",
+            "mcps",
+        ] {
+            if let Some(items) = fields.get_mut(key).and_then(Value::as_array_mut) {
+                items.sort_by_key(|item| serde_json::to_string(item).unwrap_or_default());
+            }
+        }
+    }
     let digest = sha256(&serde_json::to_vec(&value)?);
     super::provider_auth::erase_value(&mut value);
     Ok((digest, super::content_versions::key(&identity)?))
