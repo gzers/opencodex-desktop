@@ -131,7 +131,7 @@ async fn current_file_channel_roundtrips_over_verified_https_and_commits_on_conf
     assert!(std::fs::read(target_home.join("config.json")).unwrap() == target_bytes);
     let adopted = file_objects::accept(target.path(), &incoming.id, false, None).unwrap();
     assert!(adopted.workspace.is_none());
-    assert!(std::fs::read(target_home.join("config.json")).unwrap()!=target_bytes);
+    assert!(std::fs::read(target_home.join("config.json")).unwrap() != target_bytes);
     let reopened = config_file::snapshot(target.path(), &target_home).unwrap();
     assert_eq!(reopened.policy.channels.len(), 1);
     assert_eq!(reopened.policy.channels[0].model_order, ["site/custom-id"]);

@@ -2245,7 +2245,10 @@ fn accept_domains(
     atomic_write(&record_path, &serde_json::to_vec(&record)?, 0o600)?;
     stage_provider_materials(root, &mut plan, adopt_keys, passphrase)?;
     let model_result = accept_with(root, id, adopt_keys, passphrase, credentials);
-    let mut domain_error = model_result.as_ref().err().map(|e|invalid(&e.code,&e.message));
+    let mut domain_error = model_result
+        .as_ref()
+        .err()
+        .map(|e| invalid(&e.code, &e.message));
     if let Some(assets) = &assets {
         let ids = credential_choice(root, id)?.map(|ids| {
             ids.into_iter()
@@ -2294,7 +2297,7 @@ fn accept_domains(
             ),
         ));
     }
-    let result=model_result?;
+    let result = model_result?;
     if plan.file_home.is_some() && plan.package.payload.candidate.is_none() {
         inherit_received_version(root, &plan, adopt_keys, adopt_extensions)?;
     }

@@ -667,7 +667,8 @@ mod content_direction_tests {
             &Default::default(),
             &Default::default(),
         );
-        source.retain(|(rank,_),_|*rank==2);target.retain(|(rank,_),_|*rank==2);
+        source.retain(|(rank, _), _| *rank == 2);
+        target.retain(|(rank, _), _| *rank == 2);
         assert_eq!(source.len(), 2);
         assert_eq!(diff(&source, &target), (vec![], 2));
         let (changes, _) = diff(&source, &Facts::new());
