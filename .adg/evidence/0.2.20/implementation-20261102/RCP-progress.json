@@ -14,7 +14,7 @@
     },
     "credential-and-scope-boundaries": {
       "status": "in_progress",
-      "reason": "scope regressions passed locally; CI run 41420204361 passed Windows backend, native credential, managed-install and recovery coverage. PR #35 run 41434514282 later failed two fixture-only deadlines (Node startup/read at 2 seconds under full-suite load); the test-only waits are now 10 seconds while the dedicated production timeout assertion remains 2 seconds. Revalidation is running in 41439071945 and 41439302028.",
+      "reason": "scope regressions passed locally; CI run 41420204361 passed Windows backend, native credential, managed-install and recovery coverage. PR #35 run 41434514282 later failed two fixture-only deadlines (Node startup/read at 2 seconds under full-suite load); the test-only waits are now 10 seconds while the dedicated production timeout assertion remains 2 seconds. The full Windows backend regression including both cases passed on 41439302028; native credential, managed-install/offline reinstall and later EXE steps are still running. The earlier 41439071945 run is being canceled as superseded by the integrated head.",
       "evidence": "native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028; code commit 490a4ce8"
     },
     "all-entry-coverage": {
@@ -24,18 +24,18 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "CI run 41420204361 fully passed on macOS and Windows, including native credentials, managed install/offline reinstall, release build, final EXE smoke, Node24/Node22.20 matrices, recovery/path regression and ordinary-account smoke. PR #35 run 41434514282 failed two test-fixture deadlines; 10-second test-only waits are under CI revalidation in 41439071945/41439302028 (latest backend-windows job still running; other jobs passed). Exact v0.2.20 macOS package signature/resources and updater signatures passed; isolated native macOS navigation and safe cancel paths were observed, but the QA copy stayed at missing-Node startup prerequisite and did not cover full dialog/business states. Formal installer matrix, OS signing-policy acceptance, OTA and consumer-by-consumer dialog closure remain open.",
-      "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028"
+      "reason": "CI run 41420204361 fully passed on macOS and Windows, including native credentials, managed install/offline reinstall, release build, final EXE smoke, Node24/Node22.20 matrices, recovery/path regression and ordinary-account smoke. PR #35 run 41434514282 failed two test-fixture deadlines; both cases now passed in the Windows backend regression on 41439302028. Remaining Windows native credential, install/offline reinstall, release build, EXE and matrix steps are still running. Exact v0.2.20 macOS package signature/resources and updater signatures passed; isolated native macOS navigation and safe cancel paths were observed, but the QA copy stayed at missing-Node startup prerequisite and did not cover full dialog/business states. Formal installer matrix, OS signing-policy acceptance, OTA and consumer-by-consumer dialog closure remain open.",
+      "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439302028"
     },
     "release-and-ota": {
       "status": "pending",
-      "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Release run 41429792658 failed its isolated installer matrix: default MSI/NSIS passed, custom MSI install/uninstall returned success but MSI AppSearch reused the remembered default path so the custom destination had no EXE. PR #35 contains the HKCU remembered-path isolation fix. Inspection also found its exact-package acceptance script excluded 0.2.20 (allowlist ended at 0.2.19); commit 97c5aedd adds 0.2.20 and a regression guard. Installer-only acceptance and OTA have not run yet. macOS uses ad-hoc codesign and Windows MSI/NSIS have no OS Authenticode certificate; Tauri updater signatures are a separate cryptographic check. Stable promotion remains pending.",
+      "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Release run 41429792658 failed its isolated installer matrix: default MSI/NSIS passed, custom MSI install/uninstall returned success but MSI AppSearch reused the remembered default path so the custom destination had no EXE. PR #35 contains the HKCU remembered-path isolation fix. Inspection also found its exact-package acceptance script excluded 0.2.20 (allowlist ended at 0.2.19); commit 97c5aedd adds 0.2.20 and its regression test passed in CI run 41439302028 release-tools. The integrated Windows backend fixture regression also passed; remaining Windows native job steps are running. Installer-only acceptance and OTA have not run yet. macOS uses ad-hoc codesign and Windows MSI/NSIS have no OS Authenticode certificate; Tauri updater signatures are a separate cryptographic check. Stable promotion remains pending.",
       "evidence": "/tmp/ocx020-release-414297-evidence/installer-verification.json; implementation-20261102/native-release-package-and-ui.md; CI run 41429792658; PR #35 commits 490a4ce8 and 97c5aedd; .github/workflows/windows-release-acceptance.yml; docs/03-开发实施/REL-OPENCODEX-DESKTOP-19.md §发布边界"
     }
   },
   "tests": {
     "ui_checkpoint": "509cb996 test fix local rerun: 177 files, 1090 passed; CI frontend pass in 41403032342",
-      "rust_checkpoint": "777aa9c5 full cargo test --locked --lib: 1159 passed, 0 failed, 4 ignored; CI run 41420204361 passed both backend jobs; PR #35 initial run 41434514282 had 937 passed, 2 fixture-deadline failures, 4 ignored; 10-second test-only fixture windows revalidating in 41439071945 and 41439302028",
+    "rust_checkpoint": "777aa9c5 full cargo test --locked --lib: 1159 passed, 0 failed, 4 ignored; CI run 41420204361 passed both backend jobs; PR #35 initial run 41434514282 had 937 passed, 2 fixture-deadline failures, 4 ignored; both failed test fixtures passed in the integrated Windows backend regression in 41439302028",
     "native_credential": "OPENCODEX_SANDBOX=1 explicit macOS native test passed"
   },
   "daily_config_writes": false,
@@ -46,22 +46,46 @@
       "run": 41439302028,
       "workflow": "PR #35 v0.2.20 acceptance allowlist and Windows fixture startup tolerance",
       "head": "97c5aedd7f179dc06cd76e40fb888be997b7be18",
-      "status": "in_progress"
+      "status": "in_progress",
+      "passed_jobs": [
+        "frontend",
+        "release-tools",
+        "backend",
+        "windows-smoke-evidence"
+      ],
+      "passed_windows_steps": [
+        "fmt/clippy",
+        "Windows backend regression: both fixture deadline cases pass"
+      ],
+      "running_windows_steps": [
+        "isolated native credentials",
+        "managed install/offline reinstall",
+        "dependency diagnostics",
+        "release build/EXE smoke and remaining matrices"
+      ]
     },
     {
       "run": 41439071945,
       "workflow": "PR #35 Windows fixture startup tolerance",
       "head": "490a4ce8c564723d3ab411d14393795a12807668",
-      "status": "in_progress"
+      "status": "cancel_requested_superseded_by_41439302028"
     },
     {
       "run": 41434514282,
       "workflow": "PR #35 Windows MSI remembered-install-dir isolation",
       "head": "d8d09b659626d6e510c3bce521d73b0b57e734e6",
       "status": "failure",
-      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
+      "passed_jobs": [
+        "frontend",
+        "release-tools",
+        "windows-smoke-evidence",
+        "backend"
+      ],
       "failed_job": "backend-windows: 937 passed, 2 failed, 4 ignored",
-      "failed_tests": ["windows_query_job::successful_root_does_not_return_before_its_owned_descendant_exits: fixture stdout read exceeded 2 seconds", "remote_windows_tests::metadata_invalid_json_version_encoding_and_spawn_failures_keep_distinct_reasons: local Node fixture exceeded 2 seconds and was classified as production timeout"],
+      "failed_tests": [
+        "windows_query_job::successful_root_does_not_return_before_its_owned_descendant_exits: fixture stdout read exceeded 2 seconds",
+        "remote_windows_tests::metadata_invalid_json_version_encoding_and_spawn_failures_keep_distinct_reasons: local Node fixture exceeded 2 seconds and was classified as production timeout"
+      ],
       "cause": "fixture-only deadlines were too short under full Windows workspace load; no assertion indicated a product regression"
     },
     {
@@ -70,7 +94,9 @@
       "tag": "v0.2.20",
       "merge_commit": "ca434f7dd3490fbd900650fde626d524c7a9757c",
       "status": "failure",
-      "passed_jobs": ["release macOS arm64 build and bundle verification"],
+      "passed_jobs": [
+        "release macOS arm64 build and bundle verification"
+      ],
       "failed_windows_step": "isolated installer verification: remembered MSI default path overrode custom INSTALLDIR",
       "failed_msi_sha256": "9054739868df77ce61812b70a6b42b663c3c1198a53078a3e9a296b9d851ff7f",
       "evidence": "/tmp/ocx020-release-414297-evidence/installer-verification.json"
@@ -78,48 +104,138 @@
     {
       "run": 41403032342,
       "status": "failure",
-      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
-      "passed_windows_steps": ["Windows backend regression", "isolated native credential protection", "official managed install upgrade and offline reinstall", "native dependency diagnostics"],
-      "passed_windows_steps_continued": ["release build"],
+      "passed_jobs": [
+        "frontend",
+        "release-tools",
+        "windows-smoke-evidence",
+        "backend"
+      ],
+      "passed_windows_steps": [
+        "Windows backend regression",
+        "isolated native credential protection",
+        "official managed install upgrade and offline reinstall",
+        "native dependency diagnostics"
+      ],
+      "passed_windows_steps_continued": [
+        "release build"
+      ],
       "failed_windows_step": "Windows final EXE smoke: stale no-config-write portable-acceptance assertion; artifact downloaded to /tmp/ocx020-failed-windows-414030",
-      "skipped_windows_steps": ["Node24 version matrix", "Windows native install recovery/path regression", "Node22.20 regression", "ordinary-account final EXE smoke"]
+      "skipped_windows_steps": [
+        "Node24 version matrix",
+        "Windows native install recovery/path regression",
+        "Node22.20 regression",
+        "ordinary-account final EXE smoke"
+      ]
     },
     {
       "run": 41405521167,
       "status": "in_progress",
       "head": "830e5ef13cf8946eab79eb96f31f4cedcb320731",
-      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
-      "running_jobs": ["backend-windows: Windows backend regression"]
+      "passed_jobs": [
+        "frontend",
+        "release-tools",
+        "windows-smoke-evidence",
+        "backend"
+      ],
+      "running_jobs": [
+        "backend-windows: Windows backend regression"
+      ]
     },
     {
       "run": 41408838770,
       "status": "failure",
       "head": "28ac719e",
-      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
-      "passed_windows_steps": ["Windows backend regression", "isolated native credential protection", "official managed install upgrade and offline reinstall", "native dependency diagnostics", "release build"],
+      "passed_jobs": [
+        "frontend",
+        "release-tools",
+        "windows-smoke-evidence",
+        "backend"
+      ],
+      "passed_windows_steps": [
+        "Windows backend regression",
+        "isolated native credential protection",
+        "official managed install upgrade and offline reinstall",
+        "native dependency diagnostics",
+        "release build"
+      ],
       "failed_windows_step": "Windows final EXE smoke: stale assertion expected importedConfig receipt in the committed channel; direct save persists provider/config and does not keep the transient receipt",
-      "skipped_windows_steps": ["Node24 version matrix", "native recovery/path regression", "Node22.20 regression", "ordinary-account final EXE smoke"],
+      "skipped_windows_steps": [
+        "Node24 version matrix",
+        "native recovery/path regression",
+        "Node22.20 regression",
+        "ordinary-account final EXE smoke"
+      ],
       "purpose": "rerun Windows native EXE smoke after aligning saved-config assertion with S20-13"
     },
     {
       "run": 41414060520,
       "status": "failure",
       "head": "2fe154b8",
-      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
-      "passed_backend_steps": ["fmt", "clippy", "bounded metadata process tree", "remaining workspace regression"],
-      "passed_windows_steps": ["fmt", "clippy", "Windows backend regression", "isolated native credential protection", "official managed install upgrade and offline reinstall", "native dependency diagnostics", "release build"],
+      "passed_jobs": [
+        "frontend",
+        "release-tools",
+        "windows-smoke-evidence",
+        "backend"
+      ],
+      "passed_backend_steps": [
+        "fmt",
+        "clippy",
+        "bounded metadata process tree",
+        "remaining workspace regression"
+      ],
+      "passed_windows_steps": [
+        "fmt",
+        "clippy",
+        "Windows backend regression",
+        "isolated native credential protection",
+        "official managed install upgrade and offline reinstall",
+        "native dependency diagnostics",
+        "release build"
+      ],
       "failed_windows_step": "Windows final EXE smoke: click('关闭','dialog[open]') could not find the hidden header close action in the connection dialog; bottom cancel action is the designed control",
-      "skipped_windows_steps": ["Node24 version matrix", "native recovery/path regression", "Node22.20 regression", "ordinary-account final EXE smoke"],
+      "skipped_windows_steps": [
+        "Node24 version matrix",
+        "native recovery/path regression",
+        "Node22.20 regression",
+        "ordinary-account final EXE smoke"
+      ],
       "purpose": "rerun Windows native EXE smoke with direct saved-config and provider-identity assertions"
     },
     {
       "run": 41420204361,
       "status": "success",
       "head": "8aa3d2aa",
-      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend", "backend-windows"],
-      "passed_windows_steps": ["fmt/clippy", "Windows backend regression", "native credential protection", "managed install upgrade/offline reinstall", "dependency diagnostics", "release build", "final EXE smoke", "Node24 native version matrix", "native recovery/path regression", "Node22.20 npm regression", "ordinary-account smoke"],
-      "passed_backend_steps": ["fmt/clippy", "bounded metadata process tree", "remaining workspace regression"],
-      "pending_jobs": ["formal signed release packages and exact installer matrix", "Windows 0.2.19→0.2.20 OTA for MSI/NSIS", "macOS native interactive acceptance", "consumer-by-consumer dialog state closure"],
+      "passed_jobs": [
+        "frontend",
+        "release-tools",
+        "windows-smoke-evidence",
+        "backend",
+        "backend-windows"
+      ],
+      "passed_windows_steps": [
+        "fmt/clippy",
+        "Windows backend regression",
+        "native credential protection",
+        "managed install upgrade/offline reinstall",
+        "dependency diagnostics",
+        "release build",
+        "final EXE smoke",
+        "Node24 native version matrix",
+        "native recovery/path regression",
+        "Node22.20 npm regression",
+        "ordinary-account smoke"
+      ],
+      "passed_backend_steps": [
+        "fmt/clippy",
+        "bounded metadata process tree",
+        "remaining workspace regression"
+      ],
+      "pending_jobs": [
+        "formal signed release packages and exact installer matrix",
+        "Windows 0.2.19→0.2.20 OTA for MSI/NSIS",
+        "macOS native interactive acceptance",
+        "consumer-by-consumer dialog state closure"
+      ],
       "purpose": "rerun Windows native EXE smoke after correcting connection-dialog cancellation action"
     }
   ]
