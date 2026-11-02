@@ -51,7 +51,9 @@
     {
       "run": 41405521167,
       "status": "in_progress",
-      "head": "830e5ef13cf8946eab79eb96f31f4cedcb320731"
+      "head": "830e5ef13cf8946eab79eb96f31f4cedcb320731",
+      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
+      "running_jobs": ["backend-windows: Windows backend regression"]
     }
   ]
 }
