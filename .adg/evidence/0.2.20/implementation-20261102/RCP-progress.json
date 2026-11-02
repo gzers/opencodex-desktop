@@ -24,7 +24,7 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. CI macOS backend and Windows backend regression, native credentials, managed install upgrade/offline reinstall, and dependency diagnostics passed. Windows release build succeeded, but final EXE smoke failed on stale assertion that portable acceptance must leave config.json unchanged; contract requires direct saved-file update. Assertion fixed in commit 28ac719e and new CI run 41408838770 is pending",
+      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. Latest CI run 41408838770 backend workspace regression passed; Windows backend regression is running. Earlier Windows backend regression, native credentials, managed install upgrade/offline reinstall, and dependency diagnostics passed. Earlier Windows release build succeeded, but final EXE smoke failed on stale assertion that portable acceptance must leave config.json unchanged; contract requires direct saved-file update. Assertion fixed in commit 28ac719e and will rerun in current CI",
       "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI run 41403032342"
     },
     "release-and-ota": {
@@ -61,7 +61,7 @@
       "run": 41408838770,
       "status": "in_progress",
       "head": "28ac719e",
-      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence"],
+      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
       "running_jobs": ["backend-windows: Windows backend regression", "backend: remaining workspace regression"],
       "purpose": "rerun Windows native EXE smoke after aligning saved-config assertion with S20-13"
     }
