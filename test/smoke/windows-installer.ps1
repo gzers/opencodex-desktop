@@ -48,9 +48,14 @@ function Clear-ProductRememberedInstallDirectory {
     # WiX AppSearch restores the last MSI location from this product-owned HKCU
     # value before resolving INSTALLDIR. Each MSI case must start without stale
     # runner state so the default and explicit-path checks test their own target.
-    $productKey='HKCU:\Software\gzers\OpenCodeX Desktop'
-    if(Test-Path -LiteralPath $productKey){
-        Remove-ItemProperty -LiteralPath $productKey -Name InstallDir -ErrorAction SilentlyContinue
+    foreach($view in @([Microsoft.Win32.RegistryView]::Registry32,[Microsoft.Win32.RegistryView]::Registry64)){
+        $base=[Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::CurrentUser,$view)
+        try{
+            $key=$base.OpenSubKey('Software\gzers\OpenCodeX Desktop',$true)
+            if($key){
+                try{$key.DeleteValue('InstallDir',$false)}finally{$key.Dispose()}
+            }
+        }finally{$base.Dispose()}
     }
 }
 try {
