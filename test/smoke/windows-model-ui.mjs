@@ -236,7 +236,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  assert.equal(accepted.workspace??null,null,'ordinary portable acceptance must commit the saved file, not leave a second-save draft')
  assert.notEqual(accepted.policyDigest,transferBaseline.policyDigest,'portable acceptance must change the saved configuration baseline')
  const copy=accepted.policy.channels.find(c=>c.label==='Native portable copy')
- assert(copy?.connection.importedConfig,'raw authorization receipt missing from accepted snapshot')
+ assert(copy?.connection.providerId,'accepted channel must retain its installed provider identity')
  const copyFile=JSON.parse(await readFile(configPath)),rawCopy=copyFile.providers[copy.connection.providerId]
  const beforeAdoptFile=JSON.parse(beforeAdopt)
  for(const [providerId,provider] of Object.entries(beforeAdoptFile.providers))assert.deepEqual(copyFile.providers[providerId],provider,'portable acceptance changed another provider or Key: '+providerId)
