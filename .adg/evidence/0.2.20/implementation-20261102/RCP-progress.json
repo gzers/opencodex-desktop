@@ -1,6 +1,6 @@
 {
   "status": "active",
-  "source": "code branch codex/0.2.20-prototype-alignment at 509cb9965; docs branch docs/governance-main at 313bbcdb8; release not complete",
+  "source": "code branch codex/0.2.20-prototype-alignment at 830e5ef13; docs branch docs/governance-main at 63ecc8beb; release not complete",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
@@ -40,11 +40,18 @@
   "daily_config_writes": false,
   "daily_real_sync": false,
   "published": false,
-  "ci": {
-    "run": 41403032342,
-    "status": "in_progress",
-    "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
-    "passed_windows_steps": ["Windows backend regression", "isolated native credential protection"],
-    "running_jobs": ["backend-windows: managed install upgrade and offline reinstall"]
-  }
+  "ci_runs": [
+    {
+      "run": 41403032342,
+      "status": "in_progress",
+      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
+      "passed_windows_steps": ["Windows backend regression", "isolated native credential protection"],
+      "running_jobs": ["backend-windows: managed install upgrade and offline reinstall"]
+    },
+    {
+      "run": 41405521167,
+      "status": "in_progress",
+      "head": "830e5ef13cf8946eab79eb96f31f4cedcb320731"
+    }
+  ]
 }
