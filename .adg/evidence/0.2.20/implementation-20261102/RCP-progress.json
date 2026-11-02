@@ -24,13 +24,13 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "macOS debug bundle for 509cb996 built and sandbox launch verified; native interaction pending. CI run 41420204361 fully passed on macOS and Windows, including native credentials, managed install/offline reinstall, release build, final EXE smoke, Node24/Node22.20 matrices, recovery/path regression and ordinary-account smoke. Later PR #35 run 41434514282 failed only the two Windows test-fixture deadlines; test-only wait increases are under CI revalidation. Formal release installer matrix, OS signing-policy verification, OTA, macOS native interaction and consumer-by-consumer dialog state closure remain incomplete.",
-      "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028"
+      "reason": "CI run 41420204361 fully passed on macOS and Windows, including native credentials, managed install/offline reinstall, release build, final EXE smoke, Node24/Node22.20 matrices, recovery/path regression and ordinary-account smoke. PR #35 run 41434514282 failed two test-fixture deadlines; 10-second test-only waits are under CI revalidation in 41439071945/41439302028 (latest backend-windows job still running; other jobs passed). Exact v0.2.20 macOS package signature/resources and updater signatures passed; isolated native macOS navigation and safe cancel paths were observed, but the QA copy stayed at missing-Node startup prerequisite and did not cover full dialog/business states. Formal installer matrix, OS signing-policy acceptance, OTA and consumer-by-consumer dialog closure remain open.",
+      "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028"
     },
     "release-and-ota": {
       "status": "pending",
       "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Release run 41429792658 failed its isolated installer matrix: default MSI/NSIS passed, custom MSI install/uninstall returned success but MSI AppSearch reused the remembered default path so the custom destination had no EXE. PR #35 contains the HKCU remembered-path isolation fix. Inspection also found its exact-package acceptance script excluded 0.2.20 (allowlist ended at 0.2.19); commit 97c5aedd adds 0.2.20 and a regression guard. Installer-only acceptance and OTA have not run yet. macOS uses ad-hoc codesign and Windows MSI/NSIS have no OS Authenticode certificate; Tauri updater signatures are a separate cryptographic check. Stable promotion remains pending.",
-      "evidence": "/tmp/ocx020-release-414297-evidence/installer-verification.json; CI run 41429792658; PR #35 commits 490a4ce8 and 97c5aedd; .github/workflows/windows-release-acceptance.yml; docs/03-开发实施/REL-OPENCODEX-DESKTOP-19.md §发布边界"
+      "evidence": "/tmp/ocx020-release-414297-evidence/installer-verification.json; implementation-20261102/native-release-package-and-ui.md; CI run 41429792658; PR #35 commits 490a4ce8 and 97c5aedd; .github/workflows/windows-release-acceptance.yml; docs/03-开发实施/REL-OPENCODEX-DESKTOP-19.md §发布边界"
     }
   },
   "tests": {
