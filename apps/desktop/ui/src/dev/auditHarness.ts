@@ -626,6 +626,7 @@ function trashCenterDelta(): { dx: number; dy: number } | null {
  */
 function installRuntimeStub(app: AppStore) {
   const runtime = useRuntimeStore()
+  runtime.protectionGeneration++;runtime.protectionLoading=false;runtime.protectionError='';runtime.protection={state:'none',version:null,backupId:null};runtime.loadProtection=async()=>{runtime.protectionError='';runtime.protection={state:'none',version:null,backupId:null}}
   runtime.source = {
     kind: 'discovered',
     path: '/home/.local/bin/ocx',

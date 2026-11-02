@@ -169,6 +169,16 @@ pub struct SkillSummary {
     pub bytes: usize,
     pub warnings: Vec<String>,
     pub protected: bool,
+    #[serde(default)]
+    pub file_entries: Vec<SkillFileFact>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct SkillFileFact {
+    pub path: String,
+    pub digest: String,
+    pub executable: bool,
+    pub sensitive: bool,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -306,15 +316,9 @@ pub fn snapshot_skill(
     path: &Path,
     label: &str,
     include_secrets: bool,
-    reviewed: bool,
+    _reviewed: bool,
 ) -> ModelResult<Skill> {
     name(label)?;
-    if !reviewed {
-        return Err(invalid(
-            "asset_review",
-            "请先检查所选Skill的自定义文本与资源，再确认参与迁移",
-        ));
-    }
     let metadata = std::fs::symlink_metadata(path)?;
     if !metadata.is_dir() || metadata.is_symlink() {
         return Err(invalid("asset_link", "Skill读源须为普通目录"));
@@ -328,7 +332,7 @@ pub fn snapshot_skill(
         return Err(invalid("asset_manifest", "所选Skill缺少SKILL.md"));
     }
     let mut secrets = false;
-    let mut warnings = vec!["自定义文本与二进制资源仅作受限检查，需由选择者核对内容。".into()];
+    let mut warnings = vec!["自定义文本与二进制资源按所选内容传输，不会执行。".into()];
     let mut kept = vec![];
     for mut file in files {
         let bytes = STANDARD
@@ -363,7 +367,7 @@ pub fn snapshot_skill(
 pub fn split_mcp(
     definition: discovery::RawServerDefinition,
     include_secrets: bool,
-    reviewed: bool,
+    _reviewed: bool,
 ) -> ModelResult<Mcp> {
     name(&definition.name)?;
     let mut value = definition.value;
@@ -455,13 +459,7 @@ pub fn split_mcp(
         .cloned()
         .collect::<Vec<_>>();
     if !unknown.is_empty() {
-        if !reviewed {
-            return Err(invalid(
-                "asset_review",
-                "MCP含自定义字段，请检查后确认参与迁移",
-            ));
-        }
-        warnings.push(format!("已人工确认的自定义字段：{}", unknown.join("、")));
+        warnings.push(format!("保留自定义字段：{}", unknown.join("、")));
     }
     if value.get("command").is_none() && value.get("url").is_none() {
         return Err(invalid("mcp_definition", "MCP定义缺少command或url"));
@@ -481,6 +479,44 @@ pub fn split_mcp(
         warnings,
     })
 }
+fn mode_path(root: &Path, label: &str) -> ModelResult<PathBuf> {
+    name(label)?;
+    let p = root
+        .join("manager-state/skill-portable-modes")
+        .join(format!("{label}.json"));
+    safety::check_path(root, &p, true)?;
+    Ok(p)
+}
+type PortableModes = BTreeMap<String, (String, bool)>;
+fn retain_portable_modes(root: &Path, skill: &mut Skill) -> ModelResult<()> {
+    let p = mode_path(root, &skill.name)?;
+    if !p.exists() {
+        return Ok(());
+    }
+    let modes: PortableModes = serde_json::from_slice(&safety::read_file(&p, 4 * 1024 * 1024)?)?;
+    for file in &mut skill.files {
+        if let Some((digest, executable)) = modes.get(&file.path) {
+            if digest == &file.digest {
+                file.executable = *executable;
+            }
+        }
+    }
+    skill.digest = sha256(&serde_json::to_vec(&skill.files)?);
+    Ok(())
+}
+fn record_portable_modes(root: &Path, skill: &Skill) -> ModelResult<()> {
+    let modes = skill
+        .files
+        .iter()
+        .map(|f| (f.path.clone(), (f.digest.clone(), f.executable)))
+        .collect::<PortableModes>();
+    atomic_write(
+        &mode_path(root, &skill.name)?,
+        &serde_json::to_vec(&modes)?,
+        0o600,
+    )?;
+    Ok(())
+}
 pub fn summarize(assets: &Assets) -> Summary {
     Summary {
         skills: assets
@@ -498,6 +534,16 @@ pub fn summarize(assets: &Assets) -> Summary {
                     .sum(),
                 warnings: skill.warnings.clone(),
                 protected: skill.contains_secrets,
+                file_entries: skill
+                    .files
+                    .iter()
+                    .map(|f| SkillFileFact {
+                        path: f.path.clone(),
+                        digest: f.digest.clone(),
+                        executable: f.executable,
+                        sensitive: f.sensitive,
+                    })
+                    .collect(),
             })
             .collect(),
         mcps: assets
@@ -665,6 +711,28 @@ pub fn export_with_sources(
     include_secrets: bool,
     reviewed: bool,
 ) -> ModelResult<(Assets, Vec<McpConflict>)> {
+    export_with_credential_scope(
+        root,
+        home,
+        skills,
+        mcps,
+        sources,
+        include_secrets,
+        reviewed,
+        None,
+    )
+}
+#[allow(clippy::too_many_arguments)]
+pub fn export_with_credential_scope(
+    root: &Path,
+    home: &Path,
+    skills: &[String],
+    mcps: &[String],
+    sources: &BTreeMap<String, String>,
+    include_secrets: bool,
+    reviewed: bool,
+    credential_ids: Option<&[String]>,
+) -> ModelResult<(Assets, Vec<McpConflict>)> {
     if !home.is_absolute() || !home.is_dir() {
         return Err(invalid("asset_home", "扩展读源未绑定有效主目录"));
     }
@@ -680,17 +748,23 @@ pub fn export_with_sources(
     };
     let mut result = Assets::default();
     for skill in skills {
+        let include_secrets = include_secrets
+            && credential_ids.is_none_or(|ids| ids.contains(&format!("skill:{skill}")));
         name(skill)?;
         let path = if source.join(skill).exists() {
             source.join(skill)
         } else {
             discovery::skills_store_dir(root).join(skill)
         };
-        result
-            .skills
-            .push(snapshot_skill(&path, skill, include_secrets, reviewed)?);
+        let mut saved = snapshot_skill(&path, skill, include_secrets, reviewed)?;
+        if cfg!(windows) {
+            retain_portable_modes(root, &mut saved)?;
+        }
+        result.skills.push(saved);
     }
     for server in mcps {
+        let include_secrets = include_secrets
+            && credential_ids.is_none_or(|ids| ids.contains(&format!("mcp:{server}")));
         name(server)?;
         if let Some(stored) = mcp_store(root)?
             .into_iter()
@@ -876,6 +950,20 @@ struct ApplyPlan {
     references: BTreeMap<String, BTreeMap<String, String>>,
     adopt_credentials: Option<bool>,
     completed: bool,
+    #[serde(default)]
+    source_root: Option<PathBuf>,
+    #[serde(default)]
+    completed_skills: BTreeMap<String, String>,
+    #[serde(default)]
+    credential_ids: Option<Vec<String>>,
+    #[serde(default)]
+    mcp_completed: bool,
+    #[serde(default)]
+    mcp_after: Option<Vec<u8>>,
+    #[serde(default)]
+    completed_skill_paths: BTreeMap<String, PathBuf>,
+    #[serde(default)]
+    portable_modes: BTreeMap<String, PortableModes>,
 }
 fn apply_path(root: &Path, id: &str) -> ModelResult<PathBuf> {
     require_uuid(id)?;
@@ -904,6 +992,69 @@ fn source_dir(root: &Path, home: &Path) -> ModelResult<PathBuf> {
     } else {
         Ok(source)
     }
+}
+/// Backup targets are derived from the already validated import plan, never
+/// accepted from a restore manifest or front-end path.
+pub fn backup_targets(root: &Path, id: &str) -> ModelResult<Vec<(String, PathBuf, PathBuf)>> {
+    let plan = read_apply(root, id)?;
+    let source = source_dir(root, &plan.home)?;
+    let store = discovery::skills_store_dir(root);
+    let mut targets = vec![];
+    for name in plan.skills_before.keys() {
+        targets.push((
+            format!("skill:{name}"),
+            root.to_path_buf(),
+            store.join(name),
+        ));
+        targets.push((format!("skill:{name}"), source.clone(), source.join(name)));
+        if cfg!(windows) {
+            targets.push((
+                format!("skill:{name}"),
+                root.to_path_buf(),
+                mode_path(root, name)?,
+            ));
+        }
+    }
+    targets.push(("mcp".into(), root.to_path_buf(), root.join(MCP_STORE)));
+    Ok(targets)
+}
+pub fn saved_source_paths(
+    root: &Path,
+    home: &Path,
+    skills: &[String],
+    mcps: &[String],
+    sources: &BTreeMap<String, String>,
+) -> ModelResult<Vec<PathBuf>> {
+    let source = source_dir(root, home)?;
+    let mut out = vec![];
+    for skill in skills {
+        let p = source.join(skill);
+        out.push(if p.exists() {
+            p
+        } else {
+            discovery::skills_store_dir(root).join(skill)
+        })
+    }
+    let stored = mcp_store(root)?;
+    for name in mcps {
+        if stored.iter().any(|m| m.name == *name) {
+            out.push(root.join(MCP_STORE));
+            continue;
+        }
+        for id in CLIENT_IDS {
+            if sources.get(name).is_some_and(|c| *c != client_key(id)) {
+                continue;
+            }
+            let target = ClientTarget::user_target(id, home, true, true);
+            if discovery::read_server_definition(&target, name)
+                .map_err(|_| invalid("mcp_read", "MCP来源无法读取"))?
+                .is_some()
+            {
+                out.push(target.mcp_config_path)
+            }
+        }
+    }
+    Ok(out)
 }
 fn skill_digest(path: &Path, skill: &Skill) -> ModelResult<Option<String>> {
     match std::fs::symlink_metadata(path) {
@@ -947,6 +1098,25 @@ pub fn prepare(root: &Path, home: &Path, id: &str, assets: &Assets) -> ModelResu
         references: BTreeMap::new(),
         adopt_credentials: None,
         completed: false,
+        source_root: Some(source),
+        completed_skills: BTreeMap::new(),
+        credential_ids: None,
+        mcp_completed: false,
+        mcp_after: None,
+        completed_skill_paths: BTreeMap::new(),
+        portable_modes: assets
+            .skills
+            .iter()
+            .map(|s| {
+                (
+                    s.name.clone(),
+                    s.files
+                        .iter()
+                        .map(|f| (f.path.clone(), (f.digest.clone(), f.executable)))
+                        .collect(),
+                )
+            })
+            .collect(),
     };
     atomic_write(&apply_path(root, id)?, &serde_json::to_vec(&plan)?, 0o600)?;
     Ok(())
@@ -995,6 +1165,7 @@ fn read_apply(root: &Path, id: &str) -> ModelResult<ApplyPlan> {
         || !plan.home.is_absolute()
         || plan.references.len() > 1000
         || plan.skills_before.len() > 500
+        || plan.completed_skills.len() > 500
     {
         return Err(invalid("asset_plan", "扩展采用计划无效"));
     }
@@ -1003,6 +1174,7 @@ fn read_apply(root: &Path, id: &str) -> ModelResult<ApplyPlan> {
         .keys()
         .chain(plan.source_before.keys())
         .chain(plan.references.keys())
+        .chain(plan.completed_skills.keys())
     {
         self::name(name)?;
     }
@@ -1012,6 +1184,56 @@ fn read_apply(root: &Path, id: &str) -> ModelResult<ApplyPlan> {
         }
     }
     Ok(plan)
+}
+pub fn apply_progress(root: &Path, id: &str) -> ModelResult<(bool, BTreeSet<String>, bool)> {
+    let path = apply_path(root, id)?;
+    if !path.exists() {
+        return Ok((false, BTreeSet::new(), false));
+    }
+    let p = read_apply(root, id)?;
+    Ok((
+        p.completed,
+        p.completed_skills.into_keys().collect(),
+        p.mcp_completed || p.completed,
+    ))
+}
+pub fn completed_mcp_bytes(root: &Path, id: &str) -> ModelResult<Option<Vec<u8>>> {
+    Ok(read_apply(root, id)?.mcp_after)
+}
+pub fn completed_modes(
+    root: &Path,
+    id: &str,
+    name: &str,
+) -> ModelResult<Option<(PathBuf, Vec<u8>)>> {
+    if !cfg!(windows) {
+        return Ok(None);
+    }
+    let p = read_apply(root, id)?;
+    if !p.completed_skills.contains_key(name) {
+        return Ok(None);
+    }
+    p.portable_modes
+        .get(name)
+        .map(|m| Ok((mode_path(root, name)?, serde_json::to_vec(m)?)))
+        .transpose()
+}
+pub fn completed_skill_target(root: &Path, id: &str, name: &str) -> ModelResult<Option<PathBuf>> {
+    let plan = read_apply(root, id)?;
+    let Some(path) = plan.completed_skill_paths.get(name) else {
+        return Ok(None);
+    };
+    let source = source_dir(root, &plan.home)?;
+    if *path != source.join(name) && *path != discovery::skills_store_dir(root).join(name) {
+        return Err(invalid("scope_backup", "Skill完成位置不属于原资源范围"));
+    }
+    let saved = snapshot_skill(path, name, true, false)?;
+    if plan.completed_skills.get(name) != Some(&saved.digest) {
+        return Err(invalid(
+            "scope_backup_changed",
+            "Skill在完成后又被修改，未把后续编辑写入原更新备份",
+        ));
+    }
+    Ok(Some(path.clone()))
 }
 pub fn verify(root: &Path, id: &str, assets: &Assets) -> ModelResult<()> {
     validate(assets)?;
@@ -1031,14 +1253,20 @@ pub fn verify(root: &Path, id: &str, assets: &Assets) -> ModelResult<()> {
             "接收后本机MCP定义源改变，请重新比较原文件",
         ));
     }
-    if plan.adopt_credentials.is_some() {
-        // Resuming an interrupted confirm: replaced Skills are rewritten
-        // from the frozen package, so earlier partial work is not drift.
-        return Ok(());
-    }
     let source = source_dir(root, &plan.home)?;
+    if plan.source_root.as_ref().is_some_and(|p| p != &source) {
+        return Err(invalid(
+            "asset_source_changed",
+            "资源源目录已改变，未继续原操作",
+        ));
+    }
     let store = discovery::skills_store_dir(root);
     for skill in &assets.skills {
+        // This item was already read back. Retry only the unfinished items;
+        // a user's later edit to a completed Skill must never be rewritten.
+        if plan.completed_skills.contains_key(&skill.name) {
+            continue;
+        }
         for (path, before) in [
             (source.join(&skill.name), &plan.source_before),
             (store.join(&skill.name), &plan.skills_before),
@@ -1047,7 +1275,35 @@ pub fn verify(root: &Path, id: &str, assets: &Assets) -> ModelResult<()> {
                 .get(&skill.name)
                 .ok_or_else(|| invalid("asset_plan", "Skill不在原接收范围"))?;
             let current = skill_digest(&path, skill)?;
-            if current != *expected && current.as_deref() != Some(skill.digest.as_str()) {
+            let own_result = if plan.adopt_credentials.is_some() && path.exists() {
+                let secrets = plan.adopt_credentials.unwrap_or(false)
+                    && plan
+                        .credential_ids
+                        .as_ref()
+                        .is_none_or(|ids| ids.contains(&format!("skill:{}", skill.name)));
+                let have = snapshot_skill(&path, &skill.name, secrets, false)?;
+                let desired = skill
+                    .files
+                    .iter()
+                    .filter(|f| secrets || !f.sensitive)
+                    .cloned()
+                    .collect::<Vec<_>>();
+                same_files(&have.files, &desired)
+                    || (expected.is_none()
+                        && have.files.iter().all(|file| {
+                            desired.iter().any(|want| {
+                                want.path == file.path
+                                    && want.digest == file.digest
+                                    && (cfg!(not(unix)) || want.executable == file.executable)
+                            })
+                        }))
+            } else {
+                false
+            };
+            if current != *expected
+                && current.as_deref() != Some(skill.digest.as_str())
+                && !own_result
+            {
                 return Err(invalid(
                     "asset_drift",
                     format!("Skill「{}」在预览后被修改，请重新预览", skill.name),
@@ -1067,6 +1323,8 @@ fn same_files(current: &[SkillFile], desired: &[SkillFile]) -> bool {
             })
         })
 }
+#[cfg(test)]
+thread_local! {static SKILL_FAILURE:std::cell::RefCell<Option<String>>=const{std::cell::RefCell::new(None)};}
 /// Replaces one Skill directory as a whole (S18-04). The target is the
 /// directory discovery reads for this name. Existing content is backed up
 /// first, files absent from the package are removed, and local credential
@@ -1077,6 +1335,21 @@ fn replace_skill(
     skill: &Skill,
     adopt_credentials: bool,
 ) -> ModelResult<()> {
+    #[cfg(test)]
+    if SKILL_FAILURE.with(|fault| {
+        let mut f = fault.borrow_mut();
+        if f.as_deref() == Some(skill.name.as_str()) {
+            f.take();
+            true
+        } else {
+            false
+        }
+    }) {
+        return Err(invalid(
+            "asset_fixture_write",
+            "fixture second-item write failure",
+        ));
+    }
     let (base, target) = if source.join(&skill.name).exists() {
         (source.to_path_buf(), source.join(&skill.name))
     } else {
@@ -1205,6 +1478,28 @@ fn apply_with(
     adopt_credentials: bool,
     credentials: &impl Credentials,
 ) -> ModelResult<Summary> {
+    apply_with_scope(root, id, assets, adopt_credentials, None, credentials)
+}
+pub fn apply_selected(
+    root: &Path,
+    id: &str,
+    assets: &Assets,
+    adopt_credentials: bool,
+    ids: Option<&[String]>,
+) -> ModelResult<Summary> {
+    apply_with_scope(root, id, assets, adopt_credentials, ids, &SystemCredentials)
+}
+fn apply_with_scope(
+    root: &Path,
+    id: &str,
+    assets: &Assets,
+    adopt_credentials: bool,
+    ids: Option<&[String]>,
+    credentials: &impl Credentials,
+) -> ModelResult<Summary> {
+    let chosen = |kind: &str, name: &str| {
+        adopt_credentials && ids.is_none_or(|ids| ids.contains(&format!("{kind}:{name}")))
+    };
     let path = apply_path(root, id)?;
     safety::check_path(
         root,
@@ -1229,6 +1524,12 @@ fn apply_with(
     )?;
     let _store_guard = crate::infrastructure::locking::TargetFileLock::lock(&store_path)?;
     let mut plan = read_apply(root, id)?;
+    if plan.digest != sha256(&serde_json::to_vec(assets)?) {
+        return Err(invalid("asset_plan", "扩展内容与原操作不同，未继续"));
+    }
+    if plan.adopt_credentials.is_some() && plan.credential_ids.as_deref() != ids {
+        return Err(invalid("asset_intent", "原操作的扩展凭据子项已冻结"));
+    }
     if plan
         .adopt_credentials
         .is_some_and(|adopt| adopt != adopt_credentials)
@@ -1239,14 +1540,13 @@ fn apply_with(
         return Ok(summarize(assets));
     }
     verify(root, id, assets)?;
-    if !adopt_credentials
-        && assets.skills.iter().any(|skill| {
-            skill
+    if assets.skills.iter().any(|skill| {
+        !chosen("skill", &skill.name)
+            && skill
                 .files
                 .iter()
                 .any(|file| file.path == "SKILL.md" && file.sensitive)
-        })
-    {
+    }) {
         return Err(invalid(
             "asset_secret",
             "所选Skill的正文含秘密，须采用受保护凭据或跳过该Skill",
@@ -1254,7 +1554,7 @@ fn apply_with(
     }
     for mcp in &assets.mcps {
         let refs = plan.references.entry(mcp.name.clone()).or_default();
-        if adopt_credentials {
+        if !plan.mcp_completed && chosen("mcp", &mcp.name) {
             for field in mcp.secrets.0.keys() {
                 refs.entry(field.clone())
                     .or_insert_with(|| uuid::Uuid::new_v4().to_string());
@@ -1262,15 +1562,19 @@ fn apply_with(
         }
     }
     plan.adopt_credentials = Some(adopt_credentials);
+    plan.credential_ids = ids.map(<[String]>::to_vec);
     atomic_write(&path, &serde_json::to_vec(&plan)?, 0o600)?;
     let mut stored = mcp_store(root)?;
     for mcp in &assets.mcps {
+        if plan.mcp_completed {
+            continue;
+        }
         let mut refs = stored
             .iter()
             .find(|item| item.name == mcp.name)
             .map(|item| item.references.clone())
             .unwrap_or_default();
-        if adopt_credentials {
+        if chosen("mcp", &mcp.name) {
             for field in mcp.secrets.0.keys() {
                 let reference = &plan.references[&mcp.name][field];
                 refs.insert(field.clone(), reference.clone());
@@ -1290,7 +1594,9 @@ fn apply_with(
     }
     let next = serde_json::to_vec(&stored)?;
     let current = store_bytes(root)?;
-    if sha256(current.as_deref().unwrap_or_default()) != plan.store_before
+    if !assets.mcps.is_empty()
+        && !plan.mcp_completed
+        && sha256(current.as_deref().unwrap_or_default()) != plan.store_before
         && current.as_deref() != Some(next.as_slice())
     {
         return Err(invalid(
@@ -1298,8 +1604,11 @@ fn apply_with(
             "本机MCP定义源在接收后发生变化，未覆盖",
         ));
     }
-    if adopt_credentials {
+    if adopt_credentials && !plan.mcp_completed {
         for mcp in &assets.mcps {
+            if !chosen("mcp", &mcp.name) {
+                continue;
+            }
             for (field, value) in &mcp.secrets.0 {
                 let reference = &plan.references[&mcp.name][field];
                 credentials.install(reference, value)?;
@@ -1309,13 +1618,40 @@ fn apply_with(
             }
         }
     }
+    let mut skill_error = None;
     if !assets.skills.is_empty() {
         let source = source_dir(root, &plan.home)?;
         for skill in &assets.skills {
-            replace_skill(root, &source, skill, adopt_credentials)?;
+            if plan.completed_skills.contains_key(&skill.name) {
+                continue;
+            }
+            let applied = (|| {
+                replace_skill(root, &source, skill, chosen("skill", &skill.name))?;
+                let target = if source.join(&skill.name).exists() {
+                    source.join(&skill.name)
+                } else {
+                    discovery::skills_store_dir(root).join(&skill.name)
+                };
+                let saved = snapshot_skill(&target, &skill.name, true, false)?;
+                if cfg!(windows) {
+                    record_portable_modes(root, skill)?;
+                }
+                plan.completed_skills
+                    .insert(skill.name.clone(), saved.digest);
+                plan.completed_skill_paths
+                    .insert(skill.name.clone(), target);
+                atomic_write(&path, &serde_json::to_vec(&plan)?, 0o600)?;
+                ModelResult::Ok(())
+            })();
+            if let Err(error) = applied {
+                if skill_error.is_none() {
+                    skill_error = Some(error)
+                }
+            }
         }
     }
-    if !assets.mcps.is_empty() && current.as_deref() != Some(next.as_slice()) {
+    if !plan.mcp_completed && !assets.mcps.is_empty() && current.as_deref() != Some(next.as_slice())
+    {
         let store_path = root.join(MCP_STORE);
         if let Some(previous) = current {
             crate::modules::backup::backup_file(
@@ -1334,6 +1670,18 @@ fn apply_with(
         if store_bytes(root)?.as_deref() != Some(next.as_slice()) {
             return Err(invalid("mcp_readback", "MCP定义源未通过读回"));
         }
+    }
+    plan.mcp_completed = true;
+    if plan.mcp_after.is_none() {
+        plan.mcp_after = if assets.mcps.is_empty() {
+            None
+        } else {
+            Some(next)
+        };
+    }
+    atomic_write(&path, &serde_json::to_vec(&plan)?, 0o600)?;
+    if let Some(error) = skill_error {
+        return Err(error);
     }
     plan.completed = true;
     atomic_write(&path, &serde_json::to_vec(&plan)?, 0o600)?;
@@ -1356,12 +1704,151 @@ pub fn stored_public(root: &Path) -> ModelResult<Vec<discovery::RawServerDefinit
 pub struct Catalog {
     pub skills: Vec<String>,
     pub mcps: Vec<String>,
+    pub credential_skills: Vec<String>,
+    pub credential_mcps: Vec<String>,
+}
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Detail {
+    pub source: String,
+    pub fields: Vec<String>,
+    pub files: Vec<String>,
+    pub bytes: usize,
+    pub clients: Vec<String>,
+    pub conflicts: Vec<String>,
+    pub warnings: Vec<String>,
+}
+pub fn detail(
+    root: &Path,
+    home: &Path,
+    kind: &str,
+    label: &str,
+    chosen: Option<&str>,
+) -> ModelResult<Detail> {
+    name(label)?;
+    if chosen.is_some_and(|c| !CLIENT_IDS.iter().any(|id| client_key(*id) == c)) {
+        return Err(invalid("mcp_source", "采用来源无效"));
+    }
+    if kind == "skills" {
+        let source = source_dir(root, home)?;
+        let path = if source.join(label).exists() {
+            source.join(label)
+        } else {
+            discovery::skills_store_dir(root).join(label)
+        };
+        let skill = snapshot_skill(&path, label, false, false)?;
+        return Ok(Detail {
+            source: "本机扩展库".into(),
+            fields: vec!["SKILL.md正文、所需资源与可执行标志".into()],
+            files: skill.files.iter().map(|f| f.path.clone()).collect(),
+            bytes: skill
+                .files
+                .iter()
+                .filter_map(|f| STANDARD.decode(&f.data_b64).ok())
+                .map(|b| b.len())
+                .sum(),
+            clients: vec![],
+            conflicts: vec![],
+            warnings: skill.warnings,
+        });
+    }
+    if kind != "mcps" {
+        return Err(invalid("asset_detail", "资源类型无效"));
+    }
+    let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home, true, true));
+    let mut fields = BTreeSet::new();
+    let mut clients = vec![];
+    let mut definitions = vec![];
+    for target in &targets {
+        if let Some(definition) = discovery::read_server_definition(target, label)
+            .map_err(|_| invalid("mcp_read", "定义来源无法读取"))?
+        {
+            clients.push(client_key(target.client_id));
+            let raw = definition.value.clone();
+            let public = split_mcp(definition, false, false)?;
+            fields.extend(
+                public
+                    .definition
+                    .as_object()
+                    .into_iter()
+                    .flat_map(|o| o.keys().cloned()),
+            );
+            definitions.push(raw);
+        }
+    }
+    let stored = mcp_store(root)?.into_iter().find(|m| m.name == label);
+    let source = if let Some(stored) = stored {
+        fields.extend(
+            stored
+                .definition
+                .as_object()
+                .into_iter()
+                .flat_map(|o| o.keys().cloned()),
+        );
+        "受管定义".to_owned()
+    } else if let Some(chosen) = chosen {
+        format!("已记住采用来源：{chosen}")
+    } else {
+        "客户端源定义".into()
+    };
+    let conflicts = if definitions.len() > 1 {
+        differing_fields(&definitions.iter().collect::<Vec<_>>())
+    } else {
+        vec![]
+    };
+    Ok(Detail {
+        source,
+        fields: fields.into_iter().collect(),
+        files: vec!["MCP完整定义".into()],
+        bytes: 0,
+        clients,
+        conflicts,
+        warnings: vec![],
+    })
 }
 pub fn catalog(root: &Path, home: &Path) -> ModelResult<Catalog> {
     let source = source_dir(root, home)?;
     let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home, true, true));
     let discovered = discovery::discover(root, home, &source, &targets)
         .map_err(|_| invalid("asset_discovery", "扩展资源列表读取失败"))?;
+    let skills: Vec<String> = discovered.skills.iter().map(|s| s.name.clone()).collect();
+    let mut credential_skills = vec![];
+    for skill in &skills {
+        let path = if source.join(skill).exists() {
+            source.join(skill)
+        } else {
+            discovery::skills_store_dir(root).join(skill)
+        };
+        match snapshot_skill(&path, skill, false, false) {
+            Ok(s)
+                if s.warnings
+                    .iter()
+                    .any(|w| w.starts_with("未携带可能的凭据文件")) =>
+            {
+                credential_skills.push(skill.clone())
+            }
+            Err(e) if e.code == "asset_secret" => credential_skills.push(skill.clone()),
+            _ => {}
+        }
+    }
+    let mut credential_mcps = BTreeSet::new();
+    for mcp in mcp_store(root)? {
+        if !mcp.secret_fields.is_empty() {
+            credential_mcps.insert(mcp.name);
+        }
+    }
+    for mcp in &discovered.servers {
+        for target in &targets {
+            if let Some(definition) = discovery::read_server_definition(target, &mcp.name)
+                .map_err(|_| invalid("mcp_read", "凭据字段目录无法读取"))?
+            {
+                let value = split_mcp(definition, false, false)?;
+                if !value.secret_fields.is_empty() {
+                    credential_mcps.insert(mcp.name.clone());
+                }
+            }
+        }
+    }
     Ok(Catalog {
         skills: discovered
             .skills
@@ -1373,6 +1860,8 @@ pub fn catalog(root: &Path, home: &Path) -> ModelResult<Catalog> {
             .into_iter()
             .map(|server| server.name)
             .collect(),
+        credential_skills,
+        credential_mcps: credential_mcps.into_iter().collect(),
     })
 }
 pub fn remove_stored(root: &Path, label: &str) -> ModelResult<()> {
@@ -1509,6 +1998,180 @@ mod tests {
     }
     #[derive(Default)]
     struct Memory(std::sync::Mutex<BTreeMap<String, String>>);
+    #[test]
+    fn portable_executable_intent_survives_a_platform_that_cannot_store_unix_modes() {
+        let root = tempfile::tempdir().unwrap();
+        let content = tempfile::tempdir().unwrap();
+        std::fs::write(content.path().join("SKILL.md"), "# Modes Fixture").unwrap();
+        std::fs::write(content.path().join("script.sh"), "#!/bin/sh\nexit 0\n").unwrap();
+        let mut original = snapshot_skill(content.path(), "fixture", false, false).unwrap();
+        original
+            .files
+            .iter_mut()
+            .find(|f| f.path == "script.sh")
+            .unwrap()
+            .executable = true;
+        original.digest = sha256(&serde_json::to_vec(&original.files).unwrap());
+        record_portable_modes(root.path(), &original).unwrap();
+        let mut read = snapshot_skill(content.path(), "fixture", false, false).unwrap();
+        read.files.iter_mut().for_each(|f| f.executable = false);
+        retain_portable_modes(root.path(), &mut read).unwrap();
+        assert_eq!(read.digest, original.digest);
+        std::fs::write(content.path().join("script.sh"), "new content").unwrap();
+        let mut edited = snapshot_skill(content.path(), "fixture", false, false).unwrap();
+        edited.files.iter_mut().for_each(|f| f.executable = false);
+        retain_portable_modes(root.path(), &mut edited).unwrap();
+        assert!(
+            !edited
+                .files
+                .iter()
+                .find(|f| f.path == "script.sh")
+                .unwrap()
+                .executable
+        );
+        assert_ne!(edited.digest, original.digest);
+        let receiver = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        let id = uuid::Uuid::new_v4().to_string();
+        let assets = Assets {
+            skills: vec![original.clone()],
+            mcps: vec![],
+        };
+        prepare(receiver.path(), home.path(), &id, &assets).unwrap();
+        apply(receiver.path(), &id, &assets, false).unwrap();
+        let exported = export(
+            receiver.path(),
+            home.path(),
+            &["fixture".into()],
+            &[],
+            false,
+            false,
+        )
+        .unwrap();
+        assert_eq!(
+            exported.skills[0].digest, original.digest,
+            "receive then export must converge across Unix and Windows permission semantics"
+        );
+        assert!(
+            exported.skills[0]
+                .files
+                .iter()
+                .find(|f| f.path == "script.sh")
+                .unwrap()
+                .executable
+        );
+        assert!(
+            !home.path().join(".codex").exists(),
+            "the script must never be executed or distributed by transfer"
+        );
+    }
+    #[test]
+    fn object_details_return_field_names_and_files_without_secret_values() {
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(home.path().join(".codex")).unwrap();
+        std::fs::write(home.path().join(".codex/config.toml"),"[mcp_servers.fixture]\ncommand='fixture-detail-command'\n[mcp_servers.fixture.env]\nTOKEN='fixture-detail-secret'\n").unwrap();
+        let info = detail(root.path(), home.path(), "mcps", "fixture", Some("codex")).unwrap();
+        let text = serde_json::to_string(&info).unwrap();
+        assert!(info.fields.contains(&"command".into()));
+        assert_eq!(info.clients, vec!["codex"]);
+        assert!(!text.contains("fixture-detail-secret"));
+        assert!(!text.contains("fixture-detail-command"));
+        assert!(detail(
+            root.path(),
+            home.path(),
+            "mcps",
+            "fixture",
+            Some("unknown-client")
+        )
+        .is_err());
+    }
+    #[test]
+    fn partial_skill_retry_updates_only_the_failed_item_and_preserves_later_edits() {
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        let package = tempfile::tempdir().unwrap();
+        let mut skills = vec![];
+        for n in ["first", "second"] {
+            let p = package.path().join(n);
+            std::fs::create_dir_all(&p).unwrap();
+            std::fs::write(p.join("SKILL.md"), format!("# {n}\nincoming")).unwrap();
+            skills.push(snapshot_skill(&p, n, false, false).unwrap())
+        }
+        let assets = Assets {
+            skills,
+            mcps: vec![],
+        };
+        let id = uuid::Uuid::new_v4().to_string();
+        prepare(root.path(), home.path(), &id, &assets).unwrap();
+        SKILL_FAILURE.with(|f| *f.borrow_mut() = Some("second".into()));
+        assert_eq!(
+            apply_with(root.path(), &id, &assets, false, &Memory::default())
+                .unwrap_err()
+                .code,
+            "asset_fixture_write"
+        );
+        let first = discovery::skills_store_dir(root.path()).join("first/SKILL.md");
+        assert!(first.exists());
+        std::fs::write(&first, "later user edit").unwrap();
+        apply_with(root.path(), &id, &assets, false, &Memory::default()).unwrap();
+        assert_eq!(std::fs::read_to_string(&first).unwrap(), "later user edit");
+        assert_eq!(
+            std::fs::read_to_string(
+                discovery::skills_store_dir(root.path()).join("second/SKILL.md")
+            )
+            .unwrap(),
+            "# second\nincoming"
+        );
+    }
+    #[test]
+    fn credential_subset_installs_only_the_chosen_mcp_and_export_skips_other_secrets() {
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        let keys = Memory::default();
+        let mcps=["first","second"].into_iter().map(|n|split_mcp(discovery::RawServerDefinition{name:n.into(),value:serde_json::json!({"command":"fixture-command","env":{"TOKEN":format!("fixture-{n}-secret")}})},true,false).unwrap()).collect();
+        let assets = Assets {
+            skills: vec![],
+            mcps,
+        };
+        let id = uuid::Uuid::new_v4().to_string();
+        prepare(root.path(), home.path(), &id, &assets).unwrap();
+        apply_with_scope(
+            root.path(),
+            &id,
+            &assets,
+            true,
+            Some(&["mcp:first".into()]),
+            &keys,
+        )
+        .unwrap();
+        assert_eq!(keys.0.lock().unwrap().len(), 1);
+        let stored = mcp_store(root.path()).unwrap();
+        assert_eq!(stored.len(), 2);
+        assert!(stored
+            .iter()
+            .find(|m| m.name == "second")
+            .unwrap()
+            .references
+            .is_empty());
+        let (exported, _) = export_with_credential_scope(
+            root.path(),
+            home.path(),
+            &[],
+            &["second".into()],
+            &BTreeMap::new(),
+            true,
+            false,
+            Some(&["mcp:first".into()]),
+        )
+        .unwrap();
+        assert!(exported.mcps[0].secrets.0.is_empty());
+        assert!(
+            !String::from_utf8(store_bytes(root.path()).unwrap().unwrap())
+                .unwrap()
+                .contains("fixture-first-secret")
+        );
+    }
     impl Credentials for Memory {
         fn read(&self, reference: &str) -> ModelResult<String> {
             self.0
@@ -1928,12 +2591,7 @@ mod tests {
         std::fs::create_dir(root.path().join("scripts")).unwrap();
         std::fs::write(root.path().join("scripts/check.py"), "print('fixture')").unwrap();
         std::fs::write(root.path().join(".env"), "TOKEN=fixture-only-value").unwrap();
-        assert_eq!(
-            snapshot_skill(root.path(), "fixture", false, false)
-                .unwrap_err()
-                .code,
-            "asset_review"
-        );
+        assert!(snapshot_skill(root.path(), "fixture", false, false).is_ok());
         let ordinary = snapshot_skill(root.path(), "fixture", false, true).unwrap();
         assert_eq!(ordinary.files.len(), 2);
         assert!(ordinary
@@ -1998,9 +2656,15 @@ mod tests {
     #[test]
     fn mcp_separates_environment_headers_and_credential_urls_without_discarding_normal_fields() {
         let value = serde_json::json!({"url":"https://user:fixturepass@example.test/mcp?token=fixture-token&project=demo","headers":{"Authorization":"Bearer fixture-only-key"},"env":{"API_TOKEN":"fixture-secret"},"timeout":9000,"customField":{"keep":"yes"}});
-        assert!(
-            matches!(split_mcp(discovery::RawServerDefinition {name:"fixture".into(),value:value.clone()},false,false),Err(error) if error.code=="asset_review")
-        );
+        assert!(split_mcp(
+            discovery::RawServerDefinition {
+                name: "fixture".into(),
+                value: value.clone()
+            },
+            false,
+            false
+        )
+        .is_ok());
         let public = split_mcp(
             discovery::RawServerDefinition {
                 name: "fixture".into(),

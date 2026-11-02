@@ -7,6 +7,7 @@ import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { useOperationTasks, operationTitles, operationPhaseText, taskCountdown, taskKey, isTerminalPhase } from '@/app/feedback/tasks'
 import { currentProcessCountdown, PROCESS_NOTIFICATION_KEY, useLifecycleStore } from '@/app/lifecycle/store'
 import { useAppStore } from '@/stores/app'
+import {useSyncStore} from '@/features/sync/store'
 import { useRouteStore } from '@/stores/routes'
 import { runtimeLabel } from '@/lib/labels'
 import type { LifecycleAction } from '@/types/ui'
@@ -76,7 +77,7 @@ function collapseOperation(id: string) {
    <template #actions><UiButton class="ghost notif-ctl" @click="app.dismissProcessProgress()">{{ app.processActionBusy?'后台运行':'关闭' }}</UiButton></template>
   </TaskProgressCard>
   <TaskProgressCard v-for="task in operations.tasks.filter(t=>!t.collapsed)" :key="task.id" :title="operationTitles[task.kind]" :message="operationPhaseText(task)" :phase="task.phase==='failed'?'error':task.phase==='running'?'running':'done'" :show-track="task.phase==='running'" collapse-label="收起任务到通知入口" :notification-key="taskKey(task.id)" :countdown="isTerminalPhase(task.phase)?taskCountdown(task.id):null" @collapse="collapseOperation(task.id)">
-   <template #actions><UiButton class="ghost notif-ctl" @click="collapseOperation(task.id)">收起</UiButton><UiButton class="notif-ctl" @click="routes.go('models')">查看模型配置</UiButton></template>
+   <template #actions><UiButton class="ghost notif-ctl" @click="collapseOperation(task.id)">收起</UiButton><UiButton v-if="task.kind==='transfer'" class="notif-ctl" @click="useSyncStore().openResult(task.id)">查看结果</UiButton><UiButton v-else class="notif-ctl" @click="routes.go('models')">查看模型配置</UiButton></template>
   </TaskProgressCard>
 </template>
 

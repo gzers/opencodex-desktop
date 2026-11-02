@@ -1,0 +1,15 @@
+import {beforeEach,describe,expect,it,vi} from 'vitest'
+import {mount,flushPromises} from '@vue/test-utils'
+import {createPinia,setActivePinia} from 'pinia'
+import {defineComponent} from 'vue'
+import ConnectionDialog from '@/features/sync/ConnectionDialog.vue'
+import {getSyncConfig,saveSyncEndpoint,testSyncCandidate} from '@/features/sync/api'
+vi.mock('@/features/sync/api',async original=>({...await original<typeof import('@/features/sync/api')>(),getSyncConfig:vi.fn(),saveSyncEndpoint:vi.fn(),testSyncCandidate:vi.fn()}))
+const dialog=defineComponent({props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'})
+const render=()=>mount(ConnectionDialog,{global:{stubs:{UiDialog:dialog}}})
+beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(getSyncConfig).mockResolvedValue({endpoint:null})})
+describe('unsaved WebDAV connection form',()=>{
+ it('tests current unsaved values and cancel never saves or installs a connection',async()=>{vi.mocked(testSyncCandidate).mockResolvedValue({connectionState:'synced',operationState:'succeeded',message:'fixture connection ok',snapshotId:null,backupId:null,etag:null});const w=render();await flushPromises();const fields=w.findAll('input');await fields[0]!.setValue('https://fixture.example');await fields[1]!.setValue('/independent-directory');await fields[2]!.setValue('fixture-user');await fields[3]!.setValue('fixture-password');await w.findAll('button').find(b=>b.text()==='测试连接')!.trigger('click');await flushPromises();expect(testSyncCandidate).toHaveBeenCalledExactlyOnceWith({baseUrl:'https://fixture.example',remotePath:'/independent-directory',username:'fixture-user',password:'fixture-password',conflictPolicy:'ask'});expect(w.text()).toContain('fixture connection ok');await w.findAll('button').find(b=>b.text()==='取消')!.trigger('click');expect(saveSyncEndpoint).not.toHaveBeenCalled();expect(w.emitted('close')).toHaveLength(1);w.unmount()})
+ it('keeps a failed initial read from silently replacing a saved connection',async()=>{vi.mocked(getSyncConfig).mockRejectedValue({message:'fixture read failure'});const w=render();await flushPromises();expect(w.text()).toContain('无法读取已保存连接');expect(w.findAll('button').find(b=>b.text()==='保存连接')!.attributes('disabled')).toBeDefined();await w.findAll('button').find(b=>b.text()==='取消')!.trigger('click');expect(w.emitted('close')).toHaveLength(1);expect(saveSyncEndpoint).not.toHaveBeenCalled();w.unmount()})
+ it('does not reuse a stored password for a changed server or account',async()=>{vi.mocked(getSyncConfig).mockResolvedValue({endpoint:{endpointId:'e',url:'https://old.example',remotePath:'/config',username:'old-user',credentialRefId:'opaque',tlsPolicy:'verify_required',payloadProtection:'integrity_only',conflictPolicy:'ask'}});const w=render();await flushPromises();await w.findAll('input')[0]!.setValue('https://new.example');await w.findAll('button').find(b=>b.text()==='测试连接')!.trigger('click');expect(w.text()).toContain('请填写连接密码');expect(testSyncCandidate).not.toHaveBeenCalled();w.unmount()})
+})

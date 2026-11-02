@@ -62,8 +62,7 @@ export interface SyncOperationResultDto {
 }
 
 export async function getSyncConfig(): Promise<SyncConfigDto> {
-  const invoke = (await import('@tauri-apps/api/core')).invoke
-  return invoke<SyncConfigDto>('get_sync_config')
+  return syncEndpointApi.load()
 }
 export interface ImportedConnection {id:string;endpoint:{id:string;url:string;remotePath:string;username:string;conflictPolicy:string};hasPassword:boolean}
 export const importedConnectionApi={list:async():Promise<{baseline:string;items:ImportedConnection[]}>=>(await import('@tauri-apps/api/core')).invoke('list_imported_sync_connections'),activate:async(candidateId:string,expectedBaseline:string):Promise<void>=>(await import('@tauri-apps/api/core')).invoke('activate_imported_sync_connection',{candidateId,expectedBaseline})}
@@ -71,8 +70,7 @@ export async function listImportedConnections():Promise<{baseline:string;items:I
 export async function activateImportedConnection(candidateId:string,expectedBaseline:string):Promise<void>{return importedConnectionApi.activate(candidateId,expectedBaseline)}
 
 export async function saveSyncEndpoint(request: SaveSyncEndpointRequest): Promise<SyncConfigDto> {
-  const invoke = (await import('@tauri-apps/api/core')).invoke
-  return invoke<SyncConfigDto>('save_sync_endpoint', { request })
+  return syncEndpointApi.save(request)
 }
 
 export async function deleteSyncEndpoint(deleteCredentials: boolean): Promise<SyncConfigDto> {
@@ -89,3 +87,7 @@ export async function getSyncStatus(): Promise<SyncOperationResultDto> {
   const invoke = (await import('@tauri-apps/api/core')).invoke
   return invoke<SyncOperationResultDto>('get_sync_status')
 }
+
+export async function testSyncCandidate(request:SaveSyncEndpointRequest):Promise<SyncOperationResultDto>{return syncEndpointApi.test(request)}
+
+export const syncEndpointApi={load:async()=> (await import('@tauri-apps/api/core')).invoke<SyncConfigDto>('get_sync_config'),save:async(request:SaveSyncEndpointRequest)=>(await import('@tauri-apps/api/core')).invoke<SyncConfigDto>('save_sync_endpoint',{request}),test:async(request:SaveSyncEndpointRequest)=>(await import('@tauri-apps/api/core')).invoke<SyncOperationResultDto>('test_sync_candidate',{request})}

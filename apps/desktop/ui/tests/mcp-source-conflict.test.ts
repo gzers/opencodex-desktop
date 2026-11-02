@@ -3,11 +3,11 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { defineComponent } from 'vue'
 import ModelTransfer from '@/features/sync/ModelTransfer.vue'
-import { modelTransferApi, type FilePlan, type McpConflict, type ModelPackage } from '@/features/sync/modelTransfer'
+import { modelTransferApi,transferChoiceApi, type FilePlan, type McpConflict, type ModelPackage } from '@/features/sync/modelTransfer'
 import { useModelsStore } from '@/features/models/store'
 import type { ModelSnapshot } from '@/features/models/api'
 vi.mock('@tauri-apps/plugin-dialog', () => ({ open: vi.fn() }))
-vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), modelTransferApi: {prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()} }))
+vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), transferChoiceApi:{load:vi.fn(),save:vi.fn()},modelTransferApi: {prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()} }))
 
 const snapshot = (): ModelSnapshot => ({ library:{schemaVersion:1,templates:[]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspace:null,workspaceDigest:'workspace' })
 const pack = (): ModelPackage => ({format:'OCXD_MODEL_CONFIG',formatVersion:1,schemaVersion:1,createdAt:'2026-10-18T00:00:00Z',digest:'frozen-digest',payload:{templates:[],policy:null}})
@@ -21,7 +21,7 @@ async function checkbox(wrapper:ReturnType<typeof render>,label:string){await wr
 const conflict = {name:'fixture-mcp',clients:['codex','claude'],fields:['command','args']}
 
 beforeEach(() => {
-  setActivePinia(createPinia());vi.clearAllMocks()
+  setActivePinia(createPinia());vi.clearAllMocks();localStorage.clear();vi.mocked(transferChoiceApi.load).mockResolvedValue(null);vi.mocked(transferChoiceApi.save).mockImplementation(async(_remote,choice)=>choice)
   vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([])
   vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:[],mcps:['fixture-mcp','node_repl']})
   useModelsStore().snapshot=snapshot()
@@ -41,7 +41,6 @@ describe('S18-03 同名 MCP 选来源与 node_repl 默认不同步', () => {
   it('导出确认按原型顺序列出冲突，选定来源后按同一范围重算并带上来源', async () => {
     vi.mocked(modelTransferApi.prepare).mockResolvedValueOnce(plan([conflict])).mockResolvedValue(plan([]))
     const wrapper=render();await flushPromises();await flushPromises()
-    await wrapper.findAll('label').find(l=>l.text().startsWith('已复核所选资源'))!.get('input').setValue(true)
     await button(wrapper,'导出配置').trigger('click');await flushPromises()
     const text=wrapper.text()
     expect(text).toContain('同名定义在 Codex、Claude 中不同（差异字段：command、args），请选择来源')
@@ -62,10 +61,9 @@ describe('S18-03 同名 MCP 选来源与 node_repl 默认不同步', () => {
   it('范围只剩未选来源的同名 MCP 时不能生成，提示先选来源或调整范围', async () => {
     vi.mocked(modelTransferApi.prepare).mockResolvedValue(plan([conflict]))
     const wrapper=render();await flushPromises();await flushPromises()
-    await button(wrapper,'清空选择').trigger('click')
+    await wrapper.get('input[aria-label="选择当前筛选全部配置对象"]').setValue(true);await wrapper.get('input[aria-label="选择当前筛选全部配置对象"]').setValue(false)
     await (await checkbox(wrapper,'MCP · fixture-mcp')).setValue(true)
     await wrapper.get('input[aria-label="搜索配置对象"]').setValue('')
-    await wrapper.findAll('label').find(l=>l.text().startsWith('已复核所选资源'))!.get('input').setValue(true)
     await button(wrapper,'导出配置').trigger('click');await flushPromises()
     await button(wrapper,'生成配置包').trigger('click');await flushPromises()
     expect(wrapper.text()).toContain('请为同名 MCP 选择来源，或调整导出范围。')

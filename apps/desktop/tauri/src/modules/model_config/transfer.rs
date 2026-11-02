@@ -203,6 +203,8 @@ pub struct IncomingPlan {
     pub expected_library: String,
     pub expected_policy: String,
     pub expected_workspace: String,
+    #[serde(default)]
+    pub expected_layout: Option<String>,
     pub package: ModelPackage,
     pub merged_library: Library,
     pub merged_policy: Option<Policy>,
@@ -224,6 +226,10 @@ pub struct IncomingPlan {
     #[serde(default)]
     pub available_extension_credentials: bool,
     #[serde(default)]
+    pub available_extension_ids: Vec<String>,
+    #[serde(default)]
+    pub models_accepted: bool,
+    #[serde(default)]
     pub protected: bool,
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub channel_bindings: BTreeMap<String, ChannelBinding>,
@@ -237,6 +243,8 @@ pub struct IncomingPlan {
     /// 设备间同步预览（S18-01），仅在同步下载时填写。
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sync: Option<super::sync_state::SyncPreview>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub comparison: Option<super::sync_state::SyncPreview>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -260,6 +268,8 @@ pub struct FileExportPlan {
     pub manager: Option<crate::modules::sync::portable_manager::Settings>,
     #[serde(default)]
     pub assets: Option<crate::modules::sync::portable_assets::Summary>,
+    #[serde(default)]
+    pub credential_counts: Option<super::file_objects::CredentialCounts>,
 }
 fn export_plan_path(root: &Path, id: &str) -> ModelResult<std::path::PathBuf> {
     require_uuid(id)?;
@@ -336,7 +346,7 @@ pub fn prepare_file_scope(
 fn freeze_file_package(
     root: &Path,
     id: String,
-    package: ModelPackage,
+    mut package: ModelPackage,
     passphrase: Option<&str>,
     include_keys: bool,
     manager_scope: &crate::modules::sync::portable_manager::Scope,
@@ -349,6 +359,8 @@ fn freeze_file_package(
         passphrase,
         manager_scope,
     )?;
+    let (saved_package, counts) = super::file_objects::content_view(&bytes, passphrase)?;
+    package = saved_package;
     let plan = FileExportPlan {
         id,
         package,
@@ -357,6 +369,7 @@ fn freeze_file_package(
         credential_count,
         manager: Some(manager),
         assets: Some(assets),
+        credential_counts: Some(counts),
     };
     let payload = export_plan_path(root, &plan.id)?.with_extension("ocxdconf");
     crate::modules::backup::safety::check_path(root, &payload, true)?;
@@ -485,6 +498,95 @@ pub fn file_package(root: &Path, id: &str) -> ModelResult<ModelPackage> {
     }
     validate_package(&plan.package)?;
     Ok(plan.package)
+}
+pub fn file_summary(root: &Path, id: &str) -> ModelResult<FileExportPlan> {
+    let p: FileExportPlan = serde_json::from_slice(&crate::modules::backup::safety::read_file(
+        &export_plan_path(root, id)?,
+        64 * 1024 * 1024,
+    )?)?;
+    if p.id != id {
+        return Err(invalid("export_identity", "导出计划身份不同"));
+    }
+    validate_package(&p.package)?;
+    Ok(p)
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ProtectionSource {
+    id: String,
+    base_id: String,
+    digest: String,
+}
+/// Protect the exact reviewed bytes; never reread current channels/resources.
+/// A protection-only child remains linked to the original immutable snapshot.
+pub fn protect_file(root: &Path, id: &str, password: Option<&str>) -> ModelResult<FileExportPlan> {
+    use crate::modules::sync::portable_file;
+    let plan = file_summary(root, id)?;
+    let bytes = zeroize::Zeroizing::new(file_bytes(root, id)?);
+    let password = password.filter(|s| !s.is_empty());
+    if super::file_exports::attempted(root, id)? {
+        if plan.protected != password.is_some() {
+            return Err(invalid(
+                "export_intent",
+                "原导出保护方式已冻结，请沿结果重试或重新导出",
+            ));
+        }
+        if plan.protected {
+            portable_file::open(&bytes, password)?;
+        }
+        return Ok(plan);
+    }
+    if !plan.protected && password.is_none() {
+        return Ok(plan);
+    }
+    let link_path = export_plan_path(root, id)?.with_extension("protection-source.json");
+    crate::modules::backup::safety::check_path(root, &link_path, true)?;
+    let (base_id, source) = if link_path.exists() {
+        let link: ProtectionSource = serde_json::from_slice(
+            &crate::modules::backup::safety::read_file(&link_path, 4096)?,
+        )?;
+        if link.id != id {
+            return Err(invalid("export_identity", "保护来源身份不同"));
+        }
+        let source = zeroize::Zeroizing::new(file_bytes(root, &link.base_id)?);
+        if sha256(&source) != link.digest {
+            return Err(invalid("export_digest", "原冻结内容改变，未重新保护"));
+        }
+        (link.base_id, source)
+    } else {
+        if plan.protected {
+            portable_file::open(&bytes, password)?;
+            return Ok(plan);
+        }
+        (id.to_string(), bytes)
+    };
+    let opened = portable_file::open(&source, None)?;
+    let new_id = uuid::Uuid::new_v4().to_string();
+    let mut manifest = opened.manifest;
+    manifest.id = new_id.clone();
+    manifest.created_at = chrono::Utc::now().to_rfc3339();
+    let protected = portable_file::seal(manifest, &opened.document, password)?;
+    let mut next = plan;
+    next.id = new_id.clone();
+    next.protected = password.is_some();
+    next.file_digest = sha256(&protected);
+    let path = export_plan_path(root, &new_id)?;
+    crate::infrastructure::atomic_write::atomic_write(
+        &path.with_extension("ocxdconf"),
+        &protected,
+        0o600,
+    )?;
+    crate::infrastructure::atomic_write::atomic_write(
+        &path.with_extension("protection-source.json"),
+        &serde_json::to_vec(&ProtectionSource {
+            id: new_id,
+            base_id,
+            digest: sha256(&source),
+        })?,
+        0o600,
+    )?;
+    crate::infrastructure::atomic_write::atomic_write(&path, &serde_json::to_vec(&next)?, 0o600)?;
+    Ok(next)
 }
 fn revision_refs(policy: &PortablePolicy) -> Vec<&TemplateRef> {
     policy
@@ -1761,6 +1863,7 @@ pub(super) fn merge_packages(
 ) -> ModelResult<ModelPackage> {
     validate_package(&remote)?;
     validate_package(&local)?;
+    let source_created_at = local.created_at.clone();
     if remote.payload.candidate.is_some() || local.payload.candidate.is_some() {
         return Err(invalid(
             "draft_remote",
@@ -1810,7 +1913,7 @@ pub(super) fn merge_packages(
         format: "OCXD_MODEL_CONFIG".into(),
         format_version: package_version(&payload),
         schema_version: SCHEMA_VERSION,
-        created_at: chrono::Utc::now().to_rfc3339(),
+        created_at: source_created_at,
         digest: sha256(&serde_json::to_vec(&payload)?),
         payload,
     };
@@ -1838,6 +1941,12 @@ pub(super) fn receive_file(
 /// Resolve the baseline from the plan's original context, including on retry.
 pub fn local_for_plan(root: &Path, plan: &IncomingPlan) -> ModelResult<Snapshot> {
     local_for_home(root, plan.file_home.as_deref())
+}
+pub(super) fn file_layout_matches(root: &Path, plan: &IncomingPlan) -> ModelResult<bool> {
+    match &plan.expected_layout {
+        Some(expected) => Ok(super::config_file::metadata_digest(root)? == *expected),
+        None => Ok(true),
+    }
 }
 fn local_for_home(root: &Path, home: Option<&Path>) -> ModelResult<Snapshot> {
     match home {
@@ -1874,7 +1983,7 @@ fn receive_bound(
         }
     }
     let effective = mapped_package(&local, &package, &bindings)?;
-    let (merged_library, merged_policy, mut notices, preview_error) =
+    let (merged_library, mut merged_policy, mut notices, preview_error) =
         match merge(&local, &effective) {
             Ok((library, policy, notices)) => (library, policy, notices, None),
             Err(error) => (
@@ -1884,6 +1993,21 @@ fn receive_bound(
                 Some(error.code),
             ),
         };
+    if home.is_some() && package.payload.candidate.is_none() {
+        for source in effective.payload.policy.iter().flat_map(|p| &p.channels) {
+            if let Some(public) = source.connection.as_ref().and_then(|c| c.provider.as_ref()) {
+                if let Some(target) = merged_policy
+                    .as_mut()
+                    .and_then(|p| p.channels.iter_mut().find(|c| c.id == source.id))
+                {
+                    target.connection.enabled = !bindings
+                        .values()
+                        .any(|b| b.target_id == source.id && !b.keep_local_connection)
+                        && !public["disabled"].as_bool().unwrap_or(false);
+                }
+            }
+        }
+    }
     for (source, binding) in &bindings {
         notices.push(if binding.keep_local_connection {
             format!("渠道 {source} → {}：采用模型规则，保留本机协议、节点、当前节点和Key；不采用来源Key", binding.target_id)
@@ -1897,6 +2021,11 @@ fn receive_bound(
         expected_library: local.library_digest,
         expected_policy: local.policy_digest,
         expected_workspace: local.workspace_digest,
+        expected_layout: if home.is_some() {
+            Some(super::config_file::metadata_digest(root)?)
+        } else {
+            None
+        },
         package,
         merged_library,
         merged_policy,
@@ -1909,11 +2038,14 @@ fn receive_bound(
         adoption: None,
         assets: None,
         available_extension_credentials: false,
+        available_extension_ids: vec![],
+        models_accepted: false,
         protected: false,
         channel_bindings: bindings,
         asset_mappings: Default::default(),
         extension_source: None,
         sync: None,
+        comparison: None,
     };
     let bytes = serde_json::to_vec_pretty(&plan)?;
     if bytes.len() > 64 * 1024 * 1024 {
@@ -2094,6 +2226,9 @@ pub fn select_received_context(
         policy
             .channels
             .retain(|channel| scope.channel_ids.contains(&channel.id));
+        if let Some(order) = &mut policy.channel_order {
+            order.retain(|id| scope.channel_ids.contains(id));
+        }
         if !scope.include_global {
             policy.template_refs = None;
             policy.channel_order = None;
@@ -2266,6 +2401,14 @@ pub fn select_received_context(
         &scope.asset_mappings,
         passphrase,
     )?;
+    super::file_objects::compare_incoming(root, &mut selected, passphrase)?;
+    if original.sync.is_some() {
+        selected.sync = selected.comparison.clone().map(|mut p| {
+            p.source = "remote".into();
+            p
+        });
+        super::sync_state::rebind_pending(root, &original.id, &selected.id)?;
+    }
     write_incoming(root, &selected)?;
     super::file_objects::remember_incoming(root, &selected.id)?;
     Ok(selected)
@@ -2281,17 +2424,104 @@ struct AcceptanceReceipt {
     intent_digest: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     candidate_digest: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    saved_file_digest: Option<String>,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 struct FileAcceptanceCandidate {
     workspace: Option<PolicyDraft>,
 }
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct FileSaveIntent {
+    receipt: AcceptanceReceipt,
+    policy: Policy,
+    #[serde(default)]
+    final_bytes: Option<Vec<u8>>,
+}
+fn read_file_intent(
+    root: &Path,
+    plan: &IncomingPlan,
+    credentials: &BTreeMap<String, String>,
+) -> ModelResult<Option<FileSaveIntent>> {
+    let path = incoming_path(root, &plan.id)?.with_extension("saving.json");
+    crate::modules::backup::safety::check_path(root, &path, true)?;
+    if !path.exists() {
+        return Ok(None);
+    }
+    let value: FileSaveIntent = serde_json::from_slice(
+        &crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)?,
+    )?;
+    if value
+        .final_bytes
+        .as_ref()
+        .is_some_and(|b| value.receipt.saved_file_digest.as_deref() != Some(sha256(b).as_str()))
+    {
+        return Err(invalid("incoming_intent", "原保存内容未通过摘要核验"));
+    }
+    if value.receipt.id != plan.id
+        || value.receipt.package_digest != plan.package.digest
+        || value.receipt.intent_digest != intent_digest(plan, credentials)?
+    {
+        return Err(invalid(
+            "import_replay_conflict",
+            "原文件写入意图与所选范围不同",
+        ));
+    }
+    Ok(Some(value))
+}
+pub(super) fn saved_file_material(
+    root: &Path,
+    plan: &IncomingPlan,
+) -> ModelResult<Option<(Vec<u8>, Vec<u8>)>> {
+    let accepted = incoming_path(root, &plan.id)?.with_extension("accepted.json");
+    let pending = incoming_path(root, &plan.id)?.with_extension("saving.json");
+    crate::modules::backup::safety::check_path(root, &accepted, true)?;
+    crate::modules::backup::safety::check_path(root, &pending, true)?;
+    if !accepted.exists() || !pending.exists() {
+        return Ok(None);
+    }
+    let receipt: AcceptanceReceipt =
+        serde_json::from_slice(&crate::modules::backup::safety::read_file(&accepted, 4096)?)?;
+    let intent: FileSaveIntent = serde_json::from_slice(
+        &crate::modules::backup::safety::read_file(&pending, 64 * 1024 * 1024)?,
+    )?;
+    if receipt.id != plan.id
+        || receipt.package_digest != plan.package.digest
+        || receipt.intent_digest != intent.receipt.intent_digest
+    {
+        return Err(invalid("scope_backup", "保存回执与原备份操作不同"));
+    }
+    let Some(bytes) = intent.final_bytes else {
+        return Ok(None);
+    };
+    if receipt.saved_file_digest.as_deref() != Some(sha256(&bytes).as_str()) {
+        return Err(invalid("scope_backup", "已保存内容未通过原回执核验"));
+    }
+    Ok(Some((
+        bytes,
+        super::config_file::intended_metadata_bytes(&intent.policy)?,
+    )))
+}
 fn intent_digest(
     plan: &IncomingPlan,
     credentials: &BTreeMap<String, String>,
 ) -> ModelResult<String> {
     if plan.file_home.is_some() {
+        if let Some(layout) = &plan.expected_layout {
+            return Ok(sha256(&serde_json::to_vec(&(
+                &plan.file_home,
+                &plan.expected_policy,
+                layout,
+                &plan.expected_library,
+                &plan.merged_library,
+                &plan.merged_policy,
+                credentials,
+                &plan.channel_bindings,
+                &plan.asset_mappings,
+            ))?));
+        }
         return Ok(sha256(&serde_json::to_vec(&(
             &plan.file_home,
             &plan.expected_policy,
@@ -2379,6 +2609,28 @@ pub(super) fn intended_applied(
 ) -> ModelResult<bool> {
     let local = local_for_plan(root, plan)?;
     if plan.file_home.is_some() {
+        let path = incoming_path(root, &plan.id)?.with_extension("accepted.json");
+        crate::modules::backup::safety::check_path(root, &path, true)?;
+        if path.exists() {
+            let receipt: AcceptanceReceipt =
+                serde_json::from_slice(&crate::modules::backup::safety::read_file(&path, 4096)?)?;
+            if let Some(saved) = receipt.saved_file_digest {
+                return Ok(receipt.id == plan.id
+                    && receipt.package_digest == plan.package.digest
+                    && local.policy_digest == saved
+                    && local.library == plan.merged_library);
+            }
+        }
+        if plan.package.payload.candidate.is_none() {
+            if let Some(pending) = read_file_intent(root, plan, credentials)? {
+                if pending.receipt.saved_file_digest.as_deref()
+                    == Some(local.policy_digest.as_str())
+                    && local.library == plan.merged_library
+                {
+                    return Ok(true);
+                }
+            }
+        }
         return Ok(plan.preview_error.is_none()
             && local.policy_digest == plan.expected_policy
             && local.library == plan.merged_library);
@@ -2418,6 +2670,14 @@ pub(super) fn accept_with_credentials(
     id: &str,
     credentials: &BTreeMap<String, String>,
 ) -> ModelResult<Snapshot> {
+    accept_with_file_keys(root, id, credentials, vec![])
+}
+pub(super) fn accept_with_file_keys(
+    root: &Path,
+    id: &str,
+    credentials: &BTreeMap<String, String>,
+    file_keys: Vec<super::config_file::CredentialEdit>,
+) -> ModelResult<Snapshot> {
     let path = incoming_path(root, id)?;
     crate::modules::backup::safety::check_path(
         root,
@@ -2441,6 +2701,17 @@ pub(super) fn accept_with_credentials(
     let receipt_path = path.with_extension("accepted.json");
     crate::modules::backup::safety::check_path(root, &receipt_path, true)?;
     if plan.file_home.is_some() {
+        if plan.package.payload.candidate.is_none() {
+            return accept_file_snapshot(
+                root,
+                &plan,
+                local,
+                credentials,
+                &receipt_path,
+                &intent_digest,
+                file_keys,
+            );
+        }
         return accept_file_candidate(
             root,
             &plan,
@@ -2497,6 +2768,7 @@ pub(super) fn accept_with_credentials(
             package_digest: plan.package.digest,
             intent_digest,
             candidate_digest: None,
+            saved_file_digest: None,
         })?,
         0o600,
     )?;
@@ -2539,7 +2811,13 @@ fn recompute_acceptance(
         }
         target.connection.imported_config = Some(reference.clone());
         target.connection.auth_mode = source["authMode"].as_str().map(str::to_owned);
-        target.connection.enabled = false;
+        target.connection.enabled = !plan
+            .channel_bindings
+            .values()
+            .any(|b| b.target_id == target.id && !b.keep_local_connection)
+            && plan.file_home.is_some()
+            && plan.package.payload.candidate.is_none()
+            && !source["disabled"].as_bool().unwrap_or(false);
     }
     bind_credentials(&mut policy, credentials)?;
     let mut intended_policy = plan.merged_policy.clone();
@@ -2565,6 +2843,18 @@ pub(super) fn accepted_snapshot(root: &Path, plan: &IncomingPlan) -> ModelResult
     let receipt: AcceptanceReceipt = serde_json::from_slice(
         &crate::modules::backup::safety::read_file(&receipt_path, 4096)?,
     )?;
+    if receipt.id != plan.id || receipt.package_digest != plan.package.digest {
+        return Err(invalid(
+            "incoming_identity",
+            "接收回执与原操作不同，未替换当前配置",
+        ));
+    }
+    if receipt.id == plan.id
+        && receipt.package_digest == plan.package.digest
+        && receipt.saved_file_digest.is_some()
+    {
+        return Ok(snapshot);
+    }
     let candidate_path = incoming_path(root, &plan.id)?.with_extension("candidate.json");
     crate::modules::backup::safety::check_path(root, &candidate_path, false)?;
     let bytes = crate::modules::backup::safety::read_file(&candidate_path, 64 * 1024 * 1024)?;
@@ -2608,6 +2898,7 @@ fn accept_file_candidate(
         return accepted_snapshot(root, plan);
     }
     if local.policy_digest != plan.expected_policy
+        || !file_layout_matches(root, plan)?
         || local.workspace_digest != plan.expected_workspace
         || (local.library_digest != plan.expected_library && local.library != plan.merged_library)
     {
@@ -2657,6 +2948,115 @@ fn accept_file_candidate(
             package_digest: plan.package.digest.clone(),
             intent_digest: intent.into(),
             candidate_digest: Some(sha256(&bytes)),
+            saved_file_digest: None,
+        })?,
+        0o600,
+    )?;
+    Ok(result)
+}
+
+/// Ordinary committed snapshots update the authoritative file. Only explicit
+/// draft packages retain the historical candidate contract above.
+fn accept_file_snapshot(
+    root: &Path,
+    plan: &IncomingPlan,
+    local: Snapshot,
+    credentials: &BTreeMap<String, String>,
+    receipt_path: &Path,
+    intent: &str,
+    file_keys: Vec<super::config_file::CredentialEdit>,
+) -> ModelResult<Snapshot> {
+    if plan
+        .comparison
+        .as_ref()
+        .is_some_and(|p| p.changes.is_none())
+    {
+        return Err(invalid("sync_compare", "无法比较当前内容，未更新保存文件"));
+    }
+    if verify_acceptance(root, plan, credentials)? {
+        return accepted_snapshot(root, plan);
+    }
+    if let Some(pending) = read_file_intent(root, plan, credentials)? {
+        if pending.receipt.saved_file_digest.as_deref() == Some(local.policy_digest.as_str())
+            && local.library == plan.merged_library
+        {
+            let result = super::config_file::finish_recorded(
+                root,
+                plan.file_home.as_deref().unwrap(),
+                &local.policy_digest,
+                &pending.policy,
+                plan.expected_layout.as_deref(),
+            )?;
+            crate::infrastructure::atomic_write::atomic_write(
+                receipt_path,
+                &serde_json::to_vec(&pending.receipt)?,
+                0o600,
+            )?;
+            return Ok(result);
+        }
+    }
+    if plan.preview_error.is_some() {
+        return Err(invalid("incoming_preview", "所选配置仍有冲突，请重新比较"));
+    }
+    if local.policy_digest != plan.expected_policy
+        || !file_layout_matches(root, plan)?
+        || local.workspace_digest != plan.expected_workspace
+        || (local.library_digest != plan.expected_library && local.library != plan.merged_library)
+    {
+        return Err(invalid(
+            "stale_baseline",
+            "确认前配置文件或模版库已变化，请重新读取；未覆盖配置",
+        ));
+    }
+    let (library, policy) = recompute_acceptance(root, plan, &local, credentials)?;
+    // The library can safely append immutable revisions before the file commit.
+    // A failed file save keeps the same plan retryable against this exact library.
+    ModelStore::new(root).accept_library(&local.library_digest, library)?;
+    let result = if let Some(policy) = policy {
+        super::config_file::save_observed_checked(
+            root,
+            plan.file_home.as_deref().unwrap(),
+            super::config_file::SaveRequest {
+                expected_file: plan.expected_policy.clone(),
+                policy,
+                credentials: file_keys,
+                scope: None,
+            },
+            plan.expected_layout.as_deref(),
+            |bytes, policy| {
+                let path = incoming_path(root, &plan.id)?.with_extension("saving.json");
+                crate::modules::backup::safety::check_path(root, &path, true)?;
+                let pending = FileSaveIntent {
+                    receipt: AcceptanceReceipt {
+                        id: plan.id.clone(),
+                        package_digest: plan.package.digest.clone(),
+                        intent_digest: intent.into(),
+                        candidate_digest: None,
+                        saved_file_digest: Some(sha256(bytes)),
+                    },
+                    policy: policy.clone(),
+                    final_bytes: Some(bytes.to_vec()),
+                };
+                crate::infrastructure::atomic_write::atomic_write(
+                    &path,
+                    &serde_json::to_vec(&pending)?,
+                    0o600,
+                )?;
+                Ok(())
+            },
+        )?
+        .snapshot
+    } else {
+        local_for_plan(root, plan)?
+    };
+    crate::infrastructure::atomic_write::atomic_write(
+        receipt_path,
+        &serde_json::to_vec(&AcceptanceReceipt {
+            id: plan.id.clone(),
+            package_digest: plan.package.digest.clone(),
+            intent_digest: intent.into(),
+            candidate_digest: None,
+            saved_file_digest: Some(result.policy_digest.clone()),
         })?,
         0o600,
     )?;
@@ -2679,6 +3079,137 @@ fn bind_credentials(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn protection_uses_only_frozen_content_and_export_retry_keeps_identical_ciphertext() {
+        use crate::modules::sync::{portable_file, portable_manager::Scope};
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        let path = home.path().join("config.json");
+        let original = serde_json::json!({"providers":{"fixture":{"adapter":"openai-chat","baseUrl":"https://fixture.example/v1","models":["old-model"],"selectedModels":["old-model"],"apiKey":"fixture-original-secret"}}});
+        std::fs::write(&path, serde_json::to_vec(&original).unwrap()).unwrap();
+        let saved = super::super::config_file::snapshot(root.path(), home.path()).unwrap();
+        let plan = prepare_file_scope(
+            root.path(),
+            ExportScope {
+                include_policy: true,
+                channel_ids: vec![saved.policy.channels[0].id.clone()],
+                include_global: true,
+                template_refs: vec![],
+                channel_models: Default::default(),
+                channel_families: Default::default(),
+            },
+            None,
+            true,
+            &Scope {
+                upstream_root: Some(home.path().into()),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let before = file_bytes(root.path(), &plan.id).unwrap();
+        let frozen = portable_file::open(&before, None).unwrap();
+        let mut later = original;
+        later["providers"]["fixture"]["models"] = serde_json::json!(["later-model"]);
+        later["providers"]["fixture"]["apiKey"] = serde_json::json!("fixture-later-secret");
+        std::fs::write(&path, serde_json::to_vec(&later).unwrap()).unwrap();
+        let protected =
+            protect_file(root.path(), &plan.id, Some("fixture-protection-password")).unwrap();
+        assert_ne!(protected.id, plan.id);
+        let ciphertext = file_bytes(root.path(), &protected.id).unwrap();
+        let opened = portable_file::open(&ciphertext, Some("fixture-protection-password")).unwrap();
+        assert_eq!(sha256(&opened.document), sha256(&frozen.document));
+        assert_eq!(protected.package.created_at, plan.package.created_at);
+        super::super::file_exports::export(root.path(), &protected.id, None).unwrap();
+        let retry = protect_file(
+            root.path(),
+            &protected.id,
+            Some("fixture-protection-password"),
+        )
+        .unwrap();
+        assert_eq!(retry.id, protected.id);
+        assert_eq!(
+            sha256(&file_bytes(root.path(), &retry.id).unwrap()),
+            sha256(&ciphertext)
+        );
+        assert_eq!(
+            protect_file(root.path(), &retry.id, None).unwrap_err().code,
+            "export_intent"
+        );
+        assert_eq!(
+            std::fs::read(&path).unwrap(),
+            serde_json::to_vec(&later).unwrap()
+        );
+    }
+    #[test]
+    fn ordinary_file_acceptance_commits_saved_config_and_replay_preserves_later_edits() {
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        let path = home.path().join("config.json");
+        let raw = serde_json::json!({"providers":{"demo":{"adapter":"openai-chat","baseUrl":"https://fixture.example/v1","models":["a","b"],"selectedModels":["a"],"apiKey":"fixture-local-key","futureField":42}},"unrelated":true});
+        std::fs::write(&path, serde_json::to_vec(&raw).unwrap()).unwrap();
+        let local = super::super::config_file::snapshot(root.path(), home.path()).unwrap();
+        let mut source = local.clone();
+        source.policy.channels[0].selection = ModelSelection::Whitelist(vec!["b".into()]);
+        let id = source.policy.channels[0].id.clone();
+        let package = export_snapshot(
+            &source,
+            ExportScope {
+                include_policy: true,
+                channel_ids: vec![id],
+                include_global: false,
+                template_refs: vec![],
+                channel_models: Default::default(),
+                channel_families: Default::default(),
+            },
+        )
+        .unwrap();
+        let plan = receive_file(root.path(), package, home.path()).unwrap();
+        super::super::transfer_backup::prepare(root.path(), &plan.id, true).unwrap();
+        let backup_path = root
+            .path()
+            .join("backups/transfer-scope")
+            .join(format!("{}.json", plan.id));
+        let original_backup = std::fs::read(&backup_path).unwrap();
+        super::super::transfer_backup::prepare(root.path(), &plan.id, true).unwrap();
+        assert_eq!(std::fs::read(&backup_path).unwrap(), original_backup);
+        assert_eq!(
+            std::fs::read(&path).unwrap(),
+            serde_json::to_vec(&raw).unwrap()
+        );
+        let accepted = accept(root.path(), &plan.id).unwrap();
+        super::super::transfer_backup::finish(root.path(), &plan.id).unwrap();
+        assert!(
+            accepted.workspace.is_none(),
+            "ordinary import must commit the saved file"
+        );
+        let actual: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+        assert_eq!(
+            actual["providers"]["demo"]["selectedModels"],
+            serde_json::json!(["b"])
+        );
+        assert_eq!(actual["providers"]["demo"]["apiKey"], "fixture-local-key");
+        assert_eq!(actual["providers"]["demo"]["futureField"], 42);
+        assert_eq!(actual["unrelated"], true);
+        let mut later = actual.clone();
+        later["unrelated"] = serde_json::json!("later");
+        std::fs::write(&path, serde_json::to_vec(&later).unwrap()).unwrap();
+        let replay = accept(root.path(), &plan.id).unwrap();
+        assert!(replay.workspace.is_none());
+        assert_eq!(
+            std::fs::read(&path).unwrap(),
+            serde_json::to_vec(&later).unwrap()
+        );
+        super::super::transfer_backup::restore(root.path(), &plan.id, &["channels".into()])
+            .unwrap();
+        let restored: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+        assert_eq!(
+            restored["providers"]["demo"]["selectedModels"],
+            serde_json::json!(["a"])
+        );
+        assert_eq!(restored["unrelated"], "later");
+    }
     fn family_fixture(root: &Path) -> (Snapshot, TemplateRef, TemplateRef) {
         let mut channel = channel_fixture(root);
         let store = ModelStore::new(root);

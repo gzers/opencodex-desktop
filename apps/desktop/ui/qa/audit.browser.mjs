@@ -106,7 +106,7 @@ async function main() {
       { name: '托盘', route: 'tray', sel: '.tray-stage' },
     ]
     const settingsSections = ['general', 'installation', 'backup', 'extensions', 'migration', 'sync', 'cleanup', 'cli', 'upgrade', 'about']
-    for (const s of settingsSections) pages.push({ name: `设置·${s}`, route: 'settings', section: s, sel: '.settings-tabs' })
+    for (const s of settingsSections) pages.push({ name: `设置·${s}`, route: 'settings', section: s, sel: ['migration','sync'].includes(s)?'.sync-tabs':'.settings-tabs' })
 
     for (const p of pages) if (want(p.name)) await auditPage(browser, p)
 
@@ -493,7 +493,7 @@ async function auditLifecycle(browser, want) {
 async function auditOverviewActions(browser, want) {
   const name = '概览动作按钮材质'
   if (!want(name)) return
-  const { page, errors } = await openPage(browser, { route: 'overview', runtime: 'running', env: 'ready' })
+  const { page, errors } = await openPage(browser, { route: 'overview', runtime: 'running', env: 'ready',effects:'low' })
   try {
     await page.waitForSelector('.motion-actions > .btn', { timeout: 15000 }).catch(() => {})
     const mat = await page.evaluate(() => {
@@ -559,6 +559,7 @@ async function auditAnimation(browser, want) {
       await page.goto(`${BASE}/?${queryFor({ route: 'overview', runtime: 'running', env: 'ready', effects: item.tier })}`)
       await page.waitForSelector('[data-testid="overview-motion"]', { timeout: 15000 }).catch(() => {})
       await page.waitForTimeout(400)
+      await page.evaluate(async()=>{(await import('/src/app/feedback/store.ts')).useFeedbackStore().clearToast();(await import('/src/app/feedback/tasks.ts')).useOperationTasks().clearFinished()})
       await page.evaluate(() => { window.__rafCount = 0; window.__rafTimes = [] })
       // §7：高档稳定可见采样 30s；中/低档只需证明无持续动画，取 1.2s 样本即可。
       await page.waitForTimeout(item.continuous ? 30000 : 1200)
@@ -586,6 +587,7 @@ async function auditAnimation(browser, want) {
         document.dispatchEvent(new Event('visibilitychange'))
       })
       await page.waitForTimeout(150)
+      await page.evaluate(async()=>{(await import('/src/app/feedback/store.ts')).useFeedbackStore().clearToast();(await import('/src/app/feedback/tasks.ts')).useOperationTasks().clearFinished()})
       await page.evaluate(() => { window.__rafCount = 0; window.__rafTimes = [] })
       await page.waitForTimeout(900)
       const hiddenFrames = await page.evaluate(() => window.__rafCount)
@@ -1107,18 +1109,14 @@ async function auditInteractions(browser, want) {
     check('画质卡片含视觉特效', (await quality.locator('[data-testid="setting-visual-effects"]').count()) === 1, '')
     const glowRow = quality.locator('[data-testid="setting-glow-render"]')
     check('画质卡片含背景光渲染', (await glowRow.count()) === 1, '')
-    const glowValue = (await glowRow.locator('.select-value').innerText()).trim()
+    const glowValue = (await glowRow.locator('[role=radio][aria-checked=true]').innerText()).trim()
     check('背景光渲染默认 WEBGL', glowValue.startsWith('WEBGL'), glowValue)
     // 切到 CSS：根属性即时生效，供样式层二选一。
-    await glowRow.locator('.select-trigger').click()
-    await page.waitForTimeout(150)
-    await page.locator('.select-menu[aria-label="背景光渲染"] .select-option', { hasText: 'CSS' }).click()
+    await glowRow.getByRole('radio',{name:'CSS',exact:true}).click()
     await page.waitForTimeout(250)
     const mode = await page.evaluate(() => document.documentElement.getAttribute('data-glow-render'))
     check('背景光渲染切 CSS 生效', mode === 'css', `mode=${mode}`)
-    await glowRow.locator('.select-trigger').click()
-    await page.waitForTimeout(150)
-    await page.locator('.select-menu[aria-label="背景光渲染"] .select-option', { hasText: 'WEBGL' }).click()
+    await glowRow.getByRole('radio',{name:'WEBGL',exact:true}).click()
     await page.waitForTimeout(250)
     const back = await page.evaluate(() => document.documentElement.getAttribute('data-glow-render'))
     check('背景光渲染切回 WEBGL 生效', back === 'mesh', `mode=${back}`)
@@ -1218,10 +1216,10 @@ async function auditInteractions(browser, want) {
     const dotAfter = (await page.locator('.notification-dot').innerText()).trim()
     check('交互·全部已读 无后端保持未读（不假成功）', dotAfter === dotBefore, `${dotBefore}->${dotAfter}`)
     const resolvedBefore = await page.locator('.notification-list .notification-item.resolved').count()
-    await page.locator('.notification-head-actions button', { hasText: '清理已解决' }).click()
+    await page.locator('.notification-head-actions button').filter({hasText:/^清理$/}).click();await page.getByRole('button',{name:'确认清理',exact:true}).click()
     await page.waitForTimeout(200)
     const resolvedAfter = await page.locator('.notification-list .notification-item.resolved').count()
-    check('交互·清理已解决 无后端保持现状（不假成功）', resolvedAfter === resolvedBefore, `${resolvedBefore}->${resolvedAfter}`)
+    check('交互·清理全部 无后端保持现状（不假成功）', resolvedAfter === resolvedBefore, `${resolvedBefore}->${resolvedAfter}`)
   })
 
   add('交互·诊断分区切换', { route: 'logs', tab: 'doctor' }, async page => {

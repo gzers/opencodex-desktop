@@ -1320,7 +1320,7 @@
       ],
       "fact": "success",
       "availability": "active",
-      "policy": null,
+      "policy": "sync_connection_success",
       "resolves": [
         "sync-connection-failed"
       ]
@@ -1350,7 +1350,7 @@
       ],
       "fact": "success",
       "availability": "active",
-      "policy": null,
+      "policy": "sync_endpoint_save_success",
       "resolves": [
         "sync-endpoint-save-failed"
       ]
@@ -1619,6 +1619,138 @@
       "fact": "risk",
       "availability": "active",
       "policy": "model_policy_blocked",
+      "resolves": []
+    },
+    {
+      "id": "config-export-directory-opened",
+      "job": "config_export",
+      "object": "configuration",
+      "action": "read",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": "config_export_directory",
+      "resolves": []
+    },
+    {
+      "id": "config-snapshot-import-started",
+      "job": "config_import",
+      "object": "configuration",
+      "action": "import",
+      "phase": "progress",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "config-snapshot-sync-started",
+      "job": "sync_run",
+      "object": "sync",
+      "action": "synchronize",
+      "phase": "progress",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "config-snapshot-export-succeeded",
+      "job": "config_export",
+      "object": "configuration",
+      "action": "export",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": "config_export_success",
+      "resolves": [
+        "config-snapshot-export-failed"
+      ]
+    },
+    {
+      "id": "config-snapshot-export-failed",
+      "job": "config_export",
+      "object": "configuration",
+      "action": "export",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "snapshot_export_failure",
+      "resolves": []
+    },
+    {
+      "id": "config-snapshot-import-succeeded",
+      "job": "config_import",
+      "object": "configuration",
+      "action": "import",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": "config_import_success",
+      "resolves": [
+        "config-snapshot-import-failed"
+      ]
+    },
+    {
+      "id": "config-snapshot-import-failed",
+      "job": "config_import",
+      "object": "configuration",
+      "action": "import",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "snapshot_import_failure",
+      "resolves": []
+    },
+    {
+      "id": "config-snapshot-sync-succeeded",
+      "job": "sync_run",
+      "object": "sync",
+      "action": "synchronize",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": "sync_run_success",
+      "resolves": [
+        "config-snapshot-sync-failed"
+      ]
+    },
+    {
+      "id": "config-snapshot-sync-failed",
+      "job": "sync_run",
+      "object": "sync",
+      "action": "synchronize",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "snapshot_sync_failure",
       "resolves": []
     }
   ],
@@ -1994,6 +2126,114 @@
       "dedupe": "model-policy:save-blocked",
       "lifecycle_preference": false,
       "cooldown_seconds": 1
+    },
+    {
+      "id": "config_export_success",
+      "level": "info",
+      "category": "system",
+      "source": "user_action",
+      "title": "配置导出完成",
+      "body": "已生成本次所选配置包，可查看结果与保存位置。",
+      "action": "transfer_result",
+      "dedupe": "config-snapshot-export:succeeded",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 1
+    },
+    {
+      "id": "config_import_success",
+      "level": "info",
+      "category": "system",
+      "source": "user_action",
+      "title": "配置导入处理完成",
+      "body": "所选内容已处理，可查看本次结果与未变化项。",
+      "action": "transfer_result",
+      "dedupe": "config-snapshot-import:succeeded",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 1
+    },
+    {
+      "id": "sync_run_success",
+      "level": "info",
+      "category": "system",
+      "source": "user_action",
+      "title": "同步处理完成",
+      "body": "所选内容已处理，完成、未变化和跳过项可在结果中查看。",
+      "action": "transfer_result",
+      "dedupe": "config-snapshot-sync:succeeded",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 1
+    },
+    {
+      "id": "sync_connection_success",
+      "level": "info",
+      "category": "system",
+      "source": "user_action",
+      "title": "WebDAV 连接成功",
+      "body": "当前填写的连接已通过测试。",
+      "action": "sync",
+      "dedupe": "sync-connection:succeeded",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 1
+    },
+    {
+      "id": "sync_endpoint_save_success",
+      "level": "info",
+      "category": "system",
+      "source": "user_action",
+      "title": "WebDAV 连接已保存",
+      "body": "连接设置已保存。",
+      "action": "sync",
+      "dedupe": "sync-endpoint-save:succeeded",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 1
+    },
+    {
+      "id": "config_export_directory",
+      "level": "info",
+      "category": "system",
+      "source": "user_action",
+      "title": "已打开导出目录",
+      "body": "已请求系统打开本次配置包所在目录。",
+      "action": "transfer_result",
+      "dedupe": "config-export:directory",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 1
+    },
+    {
+      "id": "snapshot_export_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "配置导出未完成",
+      "body": "配置包写入或回读核验失败。目标文件可能已改变，请检查导出文件后再重试。",
+      "action": "transfer_result",
+      "dedupe": "config-snapshot-export:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "snapshot_import_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "配置导入未完成",
+      "body": "配置读取、保护备份、写入或回读核验失败。恢复可能未完成，请检查当前配置和备份后再重试。",
+      "action": "transfer_result",
+      "dedupe": "config-snapshot-import:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "snapshot_sync_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "WebDAV 同步未完成",
+      "body": "同步执行或结果核验未完成，可能已应用或上传部分内容；请检查同步状态后重试。",
+      "action": "transfer_result",
+      "dedupe": "config-snapshot-sync:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
     }
   ],
   "emission_sites": [
@@ -2471,6 +2711,51 @@
       "event": "model-policy-save-blocked",
       "source": "commands/model_config.rs::model_policy_save_blocked fixed reason enum; one confirmation, no plan/channel/url/key",
       "wiring": "scoped_lifecycle"
+    },
+    {
+      "event": "config-snapshot-export-succeeded",
+      "source": "model_config/feedback::transfer_registered after frozen snapshot result readback",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "config-snapshot-export-failed",
+      "source": "model_config/feedback::transfer_registered after frozen snapshot result readback",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "config-snapshot-import-succeeded",
+      "source": "model_config/feedback::transfer_registered after frozen snapshot result readback",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "config-snapshot-import-failed",
+      "source": "model_config/feedback::transfer_registered after frozen snapshot result readback",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "config-snapshot-sync-succeeded",
+      "source": "model_config/feedback::transfer_registered after frozen snapshot result readback",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "config-snapshot-sync-failed",
+      "source": "model_config/feedback::transfer_registered after frozen snapshot result readback",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "config-snapshot-import-started",
+      "source": "model_config/feedback::transfer_registered after explicit confirmation",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "config-snapshot-sync-started",
+      "source": "model_config/feedback::transfer_registered after explicit confirmation",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "config-export-directory-opened",
+      "source": "commands/model_transfer::open_transfer_export_directory bound to the original export receipt",
+      "wiring": "scoped_terminal"
     }
   ],
   "scheduling_sites": [

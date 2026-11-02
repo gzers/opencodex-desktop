@@ -214,6 +214,15 @@ pub enum PolicyId {
     SyncRunFailure,
     ConfigExportFailure,
     ConfigImportFailure,
+    ConfigExportSuccess,
+    ConfigImportSuccess,
+    SyncRunSuccess,
+    SyncConnectionSuccess,
+    SyncEndpointSaveSuccess,
+    ConfigExportDirectory,
+    SnapshotExportFailure,
+    SnapshotImportFailure,
+    SnapshotSyncFailure,
     ExtensionConfigSaveFailure,
 }
 #[derive(Debug, Deserialize)]
@@ -365,6 +374,17 @@ pub fn lookup(id: &str) -> Result<&'static EventDefinition, RegistryError> {
         return Err(RegistryError::Planned);
     }
     Ok(event)
+}
+fn receipt_success(event: &EventDefinition) -> bool {
+    matches!(
+        event.id.as_str(),
+        "config-snapshot-export-succeeded"
+            | "config-snapshot-import-succeeded"
+            | "config-snapshot-sync-succeeded"
+            | "sync-connection-succeeded"
+            | "sync-endpoint-save-succeeded"
+            | "config-export-directory-opened"
+    )
 }
 /// High-frequency signals validate only the embedded catalog. They never create
 /// candidate UUIDs, acquire a persistence lock, or mutate notification history.
@@ -521,6 +541,10 @@ pub fn deliver(
         let policy = policy(policy_id);
         if !policy.lifecycle_preference || preferences.lifecycle {
             let mut item = notification(event, delivery.occurred_at)?;
+            if event.fact == Fact::Success {
+                item.resolved = true;
+                item.resolved_at = Some(delivery.occurred_at.to_rfc3339());
+            }
             if let Some(Detail::ModelPolicyBlocked(reason)) = delivery.detail {
                 item.body = format!(
                     "本次确认没有写入：{}。草稿保留，可回到模型配置重新核对后再保存。",
@@ -544,7 +568,10 @@ pub fn deliver(
             item.event_identity = Some(delivery.identity.clone());
             // UI 规范 §38.5：保存被拦下的通知，用户删除后不因再次确认自动复活。
             // 只对该事件生效；其它通知（如运行失败）仍需在条件复现时重新提醒。
-            if event.id == "model-policy-save-blocked"
+            if (event.id == "model-policy-save-blocked"
+                || event.id.starts_with("config-snapshot-export-")
+                || event.id.starts_with("config-snapshot-import-")
+                || event.id.starts_with("config-snapshot-sync-"))
                 && store.notifications.iter().any(|existing| {
                     existing.deleted
                         && existing.dedupe_key == item.dedupe_key
@@ -725,6 +752,24 @@ enum SupportedEvent {
     ConfigImportFailed,
     #[serde(rename = "config-import-succeeded")]
     ConfigImportSucceeded,
+    #[serde(rename = "config-export-directory-opened")]
+    ConfigExportDirectoryOpened,
+    #[serde(rename = "config-snapshot-export-failed")]
+    SnapshotExportFailed,
+    #[serde(rename = "config-snapshot-export-succeeded")]
+    SnapshotExportSucceeded,
+    #[serde(rename = "config-snapshot-import-failed")]
+    SnapshotImportFailed,
+    #[serde(rename = "config-snapshot-import-succeeded")]
+    SnapshotImportSucceeded,
+    #[serde(rename = "config-snapshot-sync-failed")]
+    SnapshotSyncFailed,
+    #[serde(rename = "config-snapshot-sync-succeeded")]
+    SnapshotSyncSucceeded,
+    #[serde(rename = "config-snapshot-import-started")]
+    ConfigImportStarted,
+    #[serde(rename = "config-snapshot-sync-started")]
+    SyncRunStarted,
     #[serde(rename = "migration-completed")]
     MigrationCompleted,
     #[serde(rename = "manager-install-failed")]
@@ -958,7 +1003,8 @@ impl RegistryConfig {
             }
             if let Some(id) = event.policy {
                 config_assert(
-                    matches!(event.fact, Fact::Failure | Fact::Risk)
+                    (matches!(event.fact, Fact::Failure | Fact::Risk)
+                        || (event.fact == Fact::Success && receipt_success(event)))
                         && self.notification_policies.iter().any(|p| p.id == id),
                 )?;
             }
@@ -986,7 +1032,7 @@ impl RegistryConfig {
                     .ok_or(RegistryError::InvalidConfig)?;
                 config_assert(
                     event.fact == Fact::Success
-                        && event.policy.is_none()
+                        && (event.policy.is_none() || receipt_success(event))
                         && matches!(failure.fact, Fact::Failure | Fact::Risk)
                         && failure.availability == Availability::Active
                         && failure.policy.is_some()

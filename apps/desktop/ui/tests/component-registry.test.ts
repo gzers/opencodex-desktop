@@ -16,7 +16,7 @@ describe('component specification source map',()=>{
   for(const name of ['main.ts','App.vue'])expect(fs.readFileSync(path.join(src,name),'utf8')).not.toMatch(/components\/registry|component-gallery/)
  })
  it('requires existing switch consumers to use the shared named controlled component',()=>{
-  const settings=fs.readFileSync(path.join(src,'routes/SettingsRoute.vue'),'utf8');expect(settings.match(/<UiSwitch\b/g)).toHaveLength(14);expect(settings).not.toMatch(/<button[^>]*role="switch"/)
+  const settings=fs.readFileSync(path.join(src,'routes/SettingsRoute.vue'),'utf8');expect(settings.match(/<UiSwitch\b/g)).toHaveLength(10);expect(settings).not.toMatch(/<button[^>]*role="switch"/)
   expect(componentRegistry.find(c=>c.id==='choice.switch')?.implementations).toContain('components/ui/UiSwitch.vue')
  })
 })

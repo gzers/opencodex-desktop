@@ -30,10 +30,9 @@ describe('one top-level configuration sync entry',()=>{
   expect(source).toContain('aria-label="同步方式"')
  })
   it('keeps the range workspace and its credential column in the page body',()=>{
-    // 原型里同步范围与凭据栏是常驻两栏；收进弹窗会让用户看不到自己选了什么。
+    // DOM ownership only; actual two-column geometry/scrollports are asserted in qa/sync-020.browser.mjs.
     const source=readFileSync(resolve(__dirname,'../src/features/sync/ModelTransfer.vue'),'utf8')
     expect(source).toContain('data-testid="sync-scope-workspace"')
     expect(source).toContain('data-testid="sync-scope-credentials"')
-    expect(source).toMatch(/\.sync-scope-workspace\{display:grid;grid-template-columns:minmax\(0,1fr\)/)
   })
 })

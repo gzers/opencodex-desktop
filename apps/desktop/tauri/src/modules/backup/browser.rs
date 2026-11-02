@@ -80,6 +80,29 @@ fn validate_manifest(path: &Path) -> AppResult<()> {
 }
 
 fn purpose(path: &Path, depth: usize, directory: bool) -> String {
+    if depth == 1 && directory {
+        match path.file_name().and_then(|s| s.to_str()) {
+            Some("transfer-scope") => return "同步与导入前的所选范围备份。".into(),
+            Some("model-config") => return "渠道配置写入前的内部保护副本。".into(),
+            _ => {}
+        }
+    }
+    if path.components().any(|p| p.as_os_str() == "transfer-scope") {
+        return if directory {
+            "范围备份目录。"
+        } else {
+            "按原操作保存的资源内容与完整性摘要；在范围恢复入口核对。"
+        }
+        .into();
+    }
+    if path.components().any(|p| p.as_os_str() == "model-config") {
+        return if directory {
+            "一次渠道保存的保护记录。"
+        } else {
+            "写入前的渠道配置原始字节副本。"
+        }
+        .into();
+    }
     if !directory {
         return if path.file_name().is_some_and(|s| s == MANIFEST_NAME) {
             "备份范围、时间与完整性摘要；恢复前重新校验。"
@@ -127,10 +150,18 @@ fn visit(
         // Bound collection too: a huge flat directory must not allocate unbounded memory.
         let mut entries = Vec::new();
         for entry in std::fs::read_dir(path).map_err(|_| fail("无法读取备份目录"))? {
+            let entry = entry.map_err(|_| fail("无法读取备份目录"))?;
+            if entry
+                .file_name()
+                .to_str()
+                .is_some_and(|n| n.ends_with(".lock"))
+            {
+                continue;
+            }
             if entries.len() >= *remaining {
                 return Err(fail("备份目录超过浏览上限，请缩小范围后重试"));
             }
-            entries.push(entry.map_err(|_| fail("无法读取备份目录"))?.path());
+            entries.push(entry.path());
         }
         entries.sort();
         for entry in entries {
@@ -224,6 +255,21 @@ pub fn resolve_open(data_root: &Path, id: &str) -> AppResult<PathBuf> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn scope_backups_are_not_mislabeled_as_years_and_internal_locks_are_not_browseable_items() {
+        let temp = tempfile::tempdir().unwrap();
+        let dir = temp.path().join("backups/transfer-scope");
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(dir.join("fixture.json"), b"{}").unwrap();
+        std::fs::write(dir.join("fixture.json.lock"), b"internal lock").unwrap();
+        let tree = list(temp.path()).unwrap();
+        let scope = &tree.nodes[0].children[0];
+        assert_eq!(scope.label, "transfer-scope");
+        assert!(scope.purpose.contains("范围备份"));
+        assert_eq!(scope.children.len(), 1);
+        assert_eq!(scope.children[0].label, "fixture.json");
+        assert!(!scope.children[0].purpose.contains("UTC"));
+    }
     use super::*;
     #[test]
     fn lists_real_files_without_verifying_payload_and_checks_manifest() {

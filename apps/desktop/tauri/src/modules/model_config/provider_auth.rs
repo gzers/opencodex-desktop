@@ -1436,6 +1436,21 @@ pub struct PortableAuthorization {
     active_id: Option<String>,
     fields: serde_json::Value,
 }
+impl PortableAuthorization {
+    pub fn has_secret_material(&self) -> bool {
+        ["apiKey", "apiKeyPool", "headers", "queryParams"]
+            .iter()
+            .any(|key| {
+                self.fields.get(*key).is_some_and(|v| match v {
+                    serde_json::Value::Null => false,
+                    serde_json::Value::String(s) => !s.is_empty(),
+                    serde_json::Value::Array(a) => !a.is_empty(),
+                    serde_json::Value::Object(o) => !o.is_empty(),
+                    _ => false,
+                })
+            })
+    }
+}
 impl Drop for PortableAuthorization {
     fn drop(&mut self) {
         erase_value(&mut self.fields);

@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$OutputDirectory,[ValidateSet('msi','nsis')][string]$Kind,[ValidateSet('default','custom')][string]$Mode,[string]$Version='0.2.19',[Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{64}$')][string]$ExpectedBuiltSha256)
+param([Parameter(Mandatory=$true)][string]$OutputDirectory,[ValidateSet('msi','nsis')][string]$Kind,[ValidateSet('default','custom')][string]$Mode,[string]$Version='0.2.20',[Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{64}$')][string]$ExpectedBuiltSha256)
 $ErrorActionPreference='Stop'
 if(!$IsWindows -or $env:GITHUB_ACTIONS -cne 'true' -or $env:GITHUB_REPOSITORY -cne 'gzers/opencodex-desktop'){throw 'Restricted to project disposable Windows runner'}
 $taskOutput=[IO.Path]::GetFullPath($OutputDirectory)

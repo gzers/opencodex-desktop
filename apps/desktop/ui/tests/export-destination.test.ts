@@ -11,15 +11,14 @@ describe('导出可选保存路径 (WP-32)', () => {
     expect(view).toContain('export-destination')
     expect(view).toContain('选择目录…')
     // WP-56：按“日期 / 单次备份包”组织，不再散落成单文件。
-    expect(view).toContain('每次导出生成一个独立备份包')
-    expect(view).toContain('日期 / 单次包')
+    expect(view).toContain('复制整个备份包即可带到另一台设备')
+    expect(view).toContain('同日多次导出各自建包')
   })
 
-  it('勾选 Skill / MCP 后必须能完成复核，否则导出永久禁用（WP-56 回归）', () => {
-    // assetsReviewed 曾只被读取和重置、没有可交互控件，勾选资源后导出按钮再也点不动。
-    expect(view).toContain('v-model="assetsReviewed"')
-    expect(view).toContain('已复核所选资源')
-    expect(view).toContain('勾选 Skill 或 MCP 后需先复核资源内容，方可导出')
+  it('does not retain the retired human-review contract',()=>{
+    // Actual preview/button behavior is covered by sync-prototype-020.test.ts.
+    expect(view).not.toContain('v-model="assetsReviewed"')
+    expect(view).not.toContain('已复核所选资源')
   })
 
   it('确认页展示生成位置目录树（与原型一致，WP-58）', () => {
@@ -30,13 +29,13 @@ describe('导出可选保存路径 (WP-32)', () => {
   })
 
   it('结果区显示备份包路径与打开目录', () => {
-    expect(view).toContain('备份包')
-    expect(view).toContain('打开备份包目录')
+    expect(view).not.toContain('v-if="exportedPath"')
+    // Actual result reading/directory actions are exercised in sync-result.test.ts.
   })
 
   it('导出调用带目标目录，默认留空', () => {
     expect(api).toContain('targetDir')
-    expect(view).toContain("modelTransferApi.export(filePlan.value.id, exportTargetDir.value || undefined)")
+    expect(view).toContain("modelTransferApi.export(id, exportTargetDir.value || undefined)")
   })
 
   it('能力清单允许系统保存对话框', () => {

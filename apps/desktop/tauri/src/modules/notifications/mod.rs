@@ -48,6 +48,7 @@ pub enum NotificationAction {
     Upgrade,
     AppUpdate,
     Sync,
+    TransferResult,
     Logs,
     SettingsInstallation,
     SettingsCleanup,

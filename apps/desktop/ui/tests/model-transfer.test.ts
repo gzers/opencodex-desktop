@@ -3,7 +3,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { defineComponent } from 'vue'
 import ModelTransfer from '@/features/sync/ModelTransfer.vue'
-import { modelTransferApi, scopeFor, remoteScope, type ModelPackage } from '@/features/sync/modelTransfer'
+import { modelTransferApi,transferChoiceApi,transferProtectionApi,importCredentialChoiceApi, scopeFor, remoteScope, type ModelPackage } from '@/features/sync/modelTransfer'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ObjectScopeTree from '@/features/sync/ObjectScopeTree.vue'
 import { useModelsStore } from '@/features/models/store'
@@ -12,29 +12,26 @@ vi.mock('@tauri-apps/plugin-dialog', () => ({ open: vi.fn().mockResolvedValue('/
 vi.mock('@/features/backup/api', async original => ({ ...await original<typeof import('@/features/backup/api')>(), createBackup: vi.fn().mockResolvedValue({ id: 'backup-1' }) }))
 import { createBackup } from '@/features/backup/api'
 import { useSyncStore } from '@/features/sync/store'
-vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), modelTransferApi: {prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),checkSync:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()} }))
+vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), transferChoiceApi:{load:vi.fn(),save:vi.fn()},transferProtectionApi:{load:vi.fn(),save:vi.fn()},importCredentialChoiceApi:{load:vi.fn(),save:vi.fn()},modelTransferApi: {protect:vi.fn(),prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),checkSync:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()} }))
 function snapshot(): ModelSnapshot {
   return { library:{schemaVersion:1,templates:[{id:'family',label:'测试族',source:'user',defaultRevision:null,revisions:[{id:'revision-1',createdAt:'2026-10-18T00:00:00Z',savedLabel:'测试族',content:emptyContent(),digest:'digest',baseRevision:null,changes:[]}]}]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspace:null,workspaceDigest:'workspace' }
 }
 const pack = (): ModelPackage => ({format:'OCXD_MODEL_CONFIG',formatVersion:1,schemaVersion:1,createdAt:'2026-10-18T00:00:00Z',digest:'frozen-digest',payload:{templates:snapshot().library.templates,policy:null}})
 const dialog = defineComponent({ props:['open'], template:'<section v-if="open"><slot/><slot name="actions"/></section>' })
-function render(remote = false) { return mount(ModelTransfer, {props:{remote},global:{stubs:{UiDialog:dialog,UiSelectField:true}}}) }
+function render(remote = false,source:'saved'|'draft'='saved') { return mount(ModelTransfer, {props:{remote,source},global:{stubs:{UiDialog:dialog,UiSelectField:true}}}) }
 async function chooseExport(wrapper:ReturnType<typeof render>,name:string,selected=true){await flushPromises();const search=wrapper.get('input[aria-label="搜索配置对象"]');await search.setValue(name);await wrapper.get('input[aria-label="选择 '+name+'"]').setValue(selected);await search.setValue('')}
 
+async function openReceivedDetails(wrapper:ReturnType<typeof render>,group:string,label:string){const host=wrapper.get('.model-transfer-scope');const toggle=host.findAll('button').find(b=>b.attributes('aria-label')==='展开 '+group);if(toggle)await toggle.trigger('click');await host.get('button[aria-label="'+label+'"]').trigger('click');await flushPromises()}
+async function openDetails(wrapper:ReturnType<typeof render>,label:string){const search=wrapper.find('input[aria-label="搜索配置对象"]');if(search.exists())await search.setValue(label);await flushPromises();await wrapper.findAll('button').find(b=>b.attributes('aria-label')===label)!.trigger('click');await flushPromises()}
 // 原型对象树接收侧默认折叠；操作子项前先展开对应分组。
-async function expandGroup(wrapper: ReturnType<typeof render>, label: string) {
-  const toggle = wrapper.findAll('button').find(b => b.attributes('aria-label') === '展开 ' + label)
-  if (toggle) await toggle.trigger('click')
-  await flushPromises()
-}
 async function customExportScope(wrapper:ReturnType<typeof render>){
- await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='清空选择')!.trigger('click')
- await chooseExport(wrapper,'桌面偏好');await chooseExport(wrapper,'扩展设置与名称清单')
+ await flushPromises();await wrapper.get('input[aria-label="选择当前筛选全部配置对象"]').setValue(true);await wrapper.get('input[aria-label="选择当前筛选全部配置对象"]').setValue(false)
+ await chooseExport(wrapper,'通用偏好')
  const global=wrapper.findAll('label').find(l=>l.text()==='全局采用及渠道组顺序');if(global)await global.get('input').setValue(false)
 }
 
 
-beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
+beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();localStorage.clear();vi.mocked(transferChoiceApi.load).mockResolvedValue(null);vi.mocked(transferChoiceApi.save).mockImplementation(async(_remote,choice)=>choice);vi.mocked(transferProtectionApi.load).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(transferProtectionApi.save).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(importCredentialChoiceApi.load).mockResolvedValue({keys:true,extensions:true});vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
 describe('model transfer review', () => {
   it('shows scope inline without preparing or writing on mount, and blocks writes until the saved remote scope is known',async()=>{
     let resolve!:(value:Awaited<ReturnType<typeof modelTransferApi.loadRemoteScope>>)=>void
@@ -51,7 +48,7 @@ describe('model transfer review', () => {
     expect(save().attributes('disabled')).toBeUndefined();expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled()
     wrapper.unmount()
   })
-  it.skip('[0.2.5 原型无此入口] preserves explicit file selections after an initially failed catalogue is recovered, without applying all by surprise',async()=>{
+  it('preserves explicit file selections after an initially failed catalogue is recovered, without applying all by surprise',async()=>{
     vi.mocked(modelTransferApi.channelCatalog).mockRejectedValueOnce({message:'目录读取失败'}).mockResolvedValue([])
     const wrapper=render();await flushPromises();await chooseExport(wrapper,'测试族')
     const before=[...wrapper.getComponent(ObjectScopeTree).props('selectedIds')]
@@ -59,21 +56,22 @@ describe('model transfer review', () => {
     expect(wrapper.getComponent(ObjectScopeTree).props('selectedIds')).toEqual(before)
     expect(wrapper.text()).not.toContain('目录读取失败');expect(modelTransferApi.prepare).not.toHaveBeenCalled();wrapper.unmount()
   })
-  it.skip('[0.2.5 原型无此入口] does not overwrite an unreadable saved WebDAV scope with initial defaults; an explicit reload can recover',async()=>{
+  it('does not overwrite an unreadable saved WebDAV scope with initial defaults; an explicit reload can recover',async()=>{
     vi.mocked(modelTransferApi.loadRemoteScope).mockRejectedValue({message:'范围读取失败'})
     const wrapper=render(true);await flushPromises()
-    const save=()=>wrapper.findAll('button').find(b=>b.text()==='保存本机范围')!
+    const save=()=>wrapper.findAll('button').find(b=>b.text()==='同步')!
     expect(save().attributes('disabled')).toBeDefined();expect(wrapper.text()).toContain('范围读取失败')
     expect(modelTransferApi.saveRemoteScope).not.toHaveBeenCalled()
     vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:false,includeKeys:false})
     await wrapper.findAll('button').find(b=>b.text()==='重新读取范围目录')!.trigger('click');await flushPromises()
     expect(save().attributes('disabled')).toBeUndefined();expect(modelTransferApi.saveRemoteScope).not.toHaveBeenCalled();wrapper.unmount()
   })
-  it('selects exact families instead of a model subset, carries shared fields only when checked, and serializes the same WebDAV scope',async()=>{
+  it('preserves explicit legacy partial selections and selects exact families instead of a model subset, carries shared fields only when checked, and serializes the same WebDAV scope',async()=>{
     const store=useModelsStore();const c:ChannelPolicy={id:'family-channel',label:'族范围渠道',templateRefs:[],modelRefs:{},connection:{providerId:'p',protocol:'openai-chat',nodes:[],activeNodeId:'',credentialRef:null,enabled:false,allowPrivateNetwork:false},selection:{mode:'all'},modelOrder:['raw-a','raw-b'],discovered:[],defaults:emptyRules(),overrides:{},familyOverrides:{}}
     store.snapshot!.policy.channels=[c];store.snapshot!.policy.templateRefs=[{templateId:'family',revisionId:'revision-1'}]
     vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([c]);vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'family-file',package:pack()})
-    const wrapper=render();await flushPromises();await customExportScope(wrapper);await chooseExport(wrapper,'族范围渠道');await wrapper.get('input[aria-label="搜索配置对象"]').setValue('族范围渠道')
+    vi.mocked(transferChoiceApi.load).mockResolvedValue({selectedIds:[JSON.stringify(['channels','family-channel'])],credentialIds:[],versions:{},mcpSources:{},includeGlobal:false,webdavPasswords:false,channelModels:{'family-channel':['raw-a','raw-b']}})
+    const wrapper=render();await flushPromises();await openDetails(wrapper,'族范围渠道')
     await wrapper.get('input[aria-label="族范围渠道范围内型号 raw-b"]').setValue(false)
     const granularity=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='族范围渠道策略范围')!
     granularity.vm.$emit('update:modelValue','families');await flushPromises()
@@ -105,30 +103,17 @@ describe('model transfer review', () => {
   it('does not offer a received family fragment as whole model or independent channel material',async()=>{
     const source=pack();source.formatVersion=5;source.payload.policy={templateRefs:null,channelOrder:null,channels:[{id:'fragment',label:'族片段',familyScope:{templateIds:['family'],includeChannelDefaults:false},modelSubset:[],selection:{mode:'none'}}]}
     vi.mocked(modelTransferApi.receive).mockResolvedValue({id:'received-family',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:source,notices:[]})
-    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises();await flushPromises();const expandChannel=wrapper.findAll('button').find(b=>b.attributes('aria-label')==='展开 渠道与模型');if(expandChannel)await expandChannel.trigger('click')
-    expect(wrapper.text()).toContain('共用默认字段沿本机值解析');expect(wrapper.text()).toContain('仅合并所选族')
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises();await flushPromises();const expandChannel=wrapper.findAll('button').find(b=>b.attributes('aria-label')==='展开 渠道与模型');if(expandChannel)await expandChannel.trigger('click')
+    await openDetails(wrapper,'族片段');expect(wrapper.text()).toContain('共用默认字段沿本机值解析');expect(wrapper.text()).toContain('仅合并所选族')
     expect(wrapper.find('input[aria-label="族片段型号范围搜索"]').exists()).toBe(false)
-    const mapping=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='族片段接收方式')!
-    expect(mapping.props('options')).not.toEqual(expect.arrayContaining([expect.objectContaining({value:'new'})]));wrapper.unmount()
+    expect(wrapper.findAllComponents(UiSelectField).some(c=>c.props('label')==='族片段接收方式')).toBe(false);wrapper.unmount()
   })
 
-  it.skip('[0.2.5 原型无此入口] share and device-transfer presets freeze separate protected selections and still require custom asset review',async()=>{
-    vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'preset',package:pack()});const wrapper=render();await flushPromises();await flushPromises();await flushPromises()
-    const preset=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='配置范围预设')!
-    expect(preset.props('modelValue')).toBe('all');expect(wrapper.text()).toContain('已选 5 个对象')
-    preset.vm.$emit('update:modelValue','move');await flushPromises()
-    expect((wrapper.findAll('label').find(l=>l.text().includes('渠道 API Key'))!.get('input').element as HTMLInputElement).checked).toBe(true)
-    expect(wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.attributes('disabled')).toBeDefined()
-    preset.vm.$emit('update:modelValue','share');await flushPromises()
-    expect((wrapper.findAll('label').find(l=>l.text().includes('渠道 API Key'))!.get('input').element as HTMLInputElement).checked).toBe(false)
-    await wrapper.findAll('label').find(l=>l.text().startsWith('已检查所选Skill'))!.get('input').setValue(true)
-    await wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.trigger('click');await flushPromises()
-    expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.objectContaining({includeGlobal:true}),undefined,false,expect.objectContaining({webdavPasswords:false,extensionCredentials:false,assetsReviewed:true}));wrapper.unmount()
-  })
+  it('does not reintroduce cancelled scope presets or a separate clear action',async()=>{const wrapper=render();await flushPromises();expect(wrapper.findAllComponents(UiSelectField).some(c=>c.props('label')==='配置范围预设')).toBe(false);expect(wrapper.text()).not.toContain('清空选择');wrapper.unmount()})
   it('resets a reselected WebDAV object to carrying its password while retaining other explicit choices',async()=>{
     const sync=await import('@/features/sync/api');vi.spyOn(sync,'getSyncConfig').mockResolvedValue({endpoint:{endpointId:'dav',url:'https://dav.example.test',remotePath:'config',username:'fixture',credentialRefId:'cred-fixture',tlsPolicy:'verify_required',payloadProtection:'integrity_only',conflictPolicy:'ask'}})
     const wrapper=render();await flushPromises();await flushPromises();await flushPromises()
-    await wrapper.get('input[aria-label="搜索配置对象"]').setValue('WebDAV连接配置');await flushPromises();const webdavToggle=wrapper.findAll('button').find(b=>b.attributes('aria-label')==='展开 WebDAV 配置');if(webdavToggle)await webdavToggle.trigger('click');await flushPromises();await wrapper.findAll('label').find(l=>l.text()==='包含连接密码')!.get('input').setValue(false)
+    await wrapper.get('input[aria-label="搜索配置对象"]').setValue('WebDAV连接配置');await flushPromises();const webdavToggle=wrapper.findAll('button').find(b=>b.attributes('aria-label')==='展开 WebDAV 配置');if(webdavToggle)await webdavToggle.trigger('click');await flushPromises();await openDetails(wrapper,'WebDAV连接配置');await wrapper.findAll('label').find(l=>l.text()==='包含连接密码')!.get('input').setValue(false)
     await chooseExport(wrapper,'WebDAV连接配置',false);await chooseExport(wrapper,'WebDAV连接配置',true);await wrapper.get('input[aria-label="搜索配置对象"]').setValue('WebDAV连接配置')
     expect((wrapper.findAll('label').find(l=>l.text()==='包含连接密码')!.get('input').element as HTMLInputElement).checked).toBe(true);wrapper.unmount();vi.mocked(sync.getSyncConfig).mockRestore()
   })
@@ -140,34 +125,34 @@ describe('model transfer review', () => {
     expect(useModelsStore().snapshot!.policy.channels).toHaveLength(0);
     await chooseExport(wrapper,'原有官方渠道');
     await wrapper.get('input[aria-label="搜索配置对象"]').setValue('原有官方渠道');
-    await wrapper.get('input[aria-label="原有官方渠道范围内型号 original/other"]').setValue(false);
+    await openDetails(wrapper,'原有官方渠道');expect(wrapper.find('input[aria-label="原有官方渠道范围内型号 original/other"]').exists()).toBe(false);
     await wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.trigger('click');await flushPromises();
-    expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.objectContaining({includePolicy:true,channelIds:['official-channel'],channelModels:{'official-channel':['original/model']}}),undefined,false,expect.any(Object));
+    expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.objectContaining({includePolicy:true,channelIds:['official-channel']}),undefined,false,expect.any(Object));
     wrapper.unmount();
   })
 
-  it.skip('[0.2.5 原型无此入口] freezes selected extension target names only after comparing again',async()=>{
+  it('automatically compares explicit draft compatibility asset mappings',async()=>{
     const original={id:'asset-conflict',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],previewError:'asset_conflict',assets:{skills:[{name:'fixture-skill',digest:'skill-digest',files:2,bytes:100,warnings:[],protected:false}],mcps:[{name:'fixture-mcp',digest:'mcp-digest',secretFields:[],warnings:[]}]}}
+    original.package.payload.candidate={expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace'}
     vi.mocked(modelTransferApi.receive).mockResolvedValue(original);vi.mocked(modelTransferApi.select).mockResolvedValue({...original,previewError:null,assetMappings:{skills:{'fixture-skill':'received-skill'},mcps:{'fixture-mcp':'received-mcp'}}})
-    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises();await flushPromises()
-    const expandSkills=wrapper.findAll('button').find(b=>b.attributes('aria-label')==='展开 Skills');if(expandSkills)await expandSkills.trigger('click');await wrapper.get('button[aria-label="展开 MCP"]').trigger('click')
-    await expandGroup(wrapper,'Skills');await wrapper.get('input[aria-label="fixture-skill目标Skill名称"]').setValue('received-skill');await wrapper.get('input[aria-label="fixture-mcp目标MCP名称"]').setValue('received-mcp')
-    expect(wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.attributes('disabled')).toBeDefined()
-    await wrapper.findAll('button').find(b=>b.text()==='比较所选范围')!.trigger('click');await flushPromises()
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises();await flushPromises()
+    await openReceivedDetails(wrapper,'Skills','Skill · fixture-skill');await wrapper.get('input[aria-label="fixture-skill目标Skill名称"]').setValue('received-skill');await openReceivedDetails(wrapper,'MCP','MCP · fixture-mcp');await wrapper.get('input[aria-label="fixture-mcp目标MCP名称"]').setValue('received-mcp')
+    expect(wrapper.findAll('button').find(b=>b.text()==='确认更新')!.attributes('disabled')).toBeDefined()
+    await flushPromises()
     expect(modelTransferApi.select).toHaveBeenCalledWith('asset-conflict',expect.objectContaining({assetMappings:{skills:{'fixture-skill':'received-skill'},mcps:{'fixture-mcp':'received-mcp'}}}))
     expect(wrapper.text()).toContain('received-skill（来源：fixture-skill）');expect(modelTransferApi.accept).not.toHaveBeenCalled();wrapper.unmount()
   })
-  it.skip('[0.2.5 原型无此入口] requires a new comparison for channel mapping and sends the chosen independent name',async()=>{
+  it('automatically compares an explicit endpoint-conflict channel mapping',async()=>{
     const value=pack();value.payload.policy={templateRefs:null,channelOrder:null,channels:[{id:'channel-source',label:'来源渠道',selection:{mode:'none'},connection:{nodes:[{id:'node-source',name:'主站',url:'https://source.example.test/v1'}]}}]}
     const original={id:'channel-incoming',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:value,notices:[],previewError:'channel_endpoint_conflict'}
     vi.mocked(modelTransferApi.receive).mockResolvedValue(original)
     vi.mocked(modelTransferApi.select).mockResolvedValue({...original,previewError:null,channelBindings:{'channel-source':{targetId:'new-channel',keepLocalConnection:false,label:'独立接收'}}})
     const select=defineComponent({props:['modelValue','options','label','disabled'],emits:['update:modelValue'],template:'<label>{{label}}<select :value="modelValue" :disabled="disabled" @change="$emit(\'update:modelValue\',$event.target.value)"><option v-for="item in options" :key="item.value" :value="item.value">{{item.label}}</option></select></label>'})
-    const wrapper=mount(ModelTransfer,{global:{stubs:{UiDialog:dialog,UiSelectField:select}}})
-    await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises();await flushPromises()
-    const expandChannel=wrapper.findAll('button').find(b=>b.attributes('aria-label')==='展开 渠道与模型');if(expandChannel)await expandChannel.trigger('click');await wrapper.findAll('label').find(l=>l.text().startsWith('来源渠道接收方式'))!.get('select').setValue('new');await wrapper.findAll('label').find(l=>l.text()==='新渠道名称')!.get('input').setValue('独立接收')
-    expect(wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.attributes('disabled')).toBeDefined()
-    await wrapper.findAll('button').find(b=>b.text()==='比较所选范围')!.trigger('click');await flushPromises()
+    const wrapper=mount(ModelTransfer,{global:{stubs:{UiDialog:dialog,UiSelectField:select}}});await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises();await flushPromises()
+    await openReceivedDetails(wrapper,'渠道与模型','来源渠道');await wrapper.findAll('label').find(l=>l.text().startsWith('来源渠道接收方式'))!.get('select').setValue('new');await flushPromises();await wrapper.findAll('label').find(l=>l.text()==='新渠道名称')!.get('input').setValue('独立接收')
+    expect(modelTransferApi.accept).not.toHaveBeenCalled()
+    await flushPromises()
     expect(modelTransferApi.select).toHaveBeenCalledWith('channel-incoming',expect.objectContaining({channelMappings:{'channel-source':{mode:'new',label:'独立接收'}}}))
     expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(wrapper.text()).toContain('独立停用草稿');wrapper.unmount()
   })
@@ -176,7 +161,7 @@ describe('model transfer review', () => {
     vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'account-file',package:pack()})
     const wrapper=render();await flushPromises();expect(modelTransferApi.accountCatalog).toHaveBeenCalledOnce();expect(modelTransferApi.prepare).not.toHaveBeenCalled()
     await flushPromises();await customExportScope(wrapper);await flushPromises()
-    await wrapper.get('input[aria-label="搜索配置对象"]').setValue('测试账户');expect(wrapper.text()).toContain('官方不支持手工导入登录态');expect((wrapper.get('input[aria-label="选择 测试账户"]').element as HTMLInputElement).checked).toBe(false)
+    await wrapper.get('input[aria-label="搜索配置对象"]').setValue('测试账户');await openDetails(wrapper,'测试账户');expect(wrapper.text()).toContain('官方不支持手工导入登录态');expect((wrapper.get('input[aria-label="选择 测试账户"]').element as HTMLInputElement).checked).toBe(false)
     await chooseExport(wrapper,'测试账户');await wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.trigger('click');await flushPromises()
     expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.anything(),undefined,false,expect.objectContaining({accountIds:['fixture-account']}));wrapper.unmount()
   })
@@ -189,7 +174,7 @@ describe('model transfer review', () => {
     ])
     vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'accounts-selected',package:pack()})
     const wrapper=render();await flushPromises();await flushPromises();await customExportScope(wrapper)
-    await chooseExport(wrapper,'工作账户');const filter=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='账户平台筛选')!
+    await chooseExport(wrapper,'工作账户');const accountToggle=wrapper.find('button[aria-label="展开 账户"]');if(accountToggle.exists())await accountToggle.trigger('click');const filter=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='账户平台筛选')!
     filter.vm.$emit('update:modelValue','antigravity');await flushPromises();expect(wrapper.text()).toContain('筛选外仍有')
     filter.vm.$emit('update:modelValue','chatgpt');await flushPromises();await wrapper.get('input[aria-label="搜索配置对象"]').setValue('工作账户')
     expect((wrapper.get('input[aria-label="选择 工作账户"]').element as HTMLInputElement).checked).toBe(true)
@@ -201,9 +186,9 @@ describe('model transfer review', () => {
     const original={id:'account-incoming',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],manager:{preferences:null,extensions:null,webdav:[],accounts:[{id:'a',provider:'chatgpt',subject:'subject',label:'测试账户',email:null}]}}
     vi.mocked(modelTransferApi.receive).mockResolvedValue(original)
     vi.mocked(modelTransferApi.select).mockResolvedValue({...original,manager:{...original.manager,accounts:[]}})
-    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises();await flushPromises()
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises();await flushPromises()
     expect(wrapper.text()).toContain('不代表登录已恢复');await wrapper.get('button[aria-label="展开 账户"]').trigger('click');await wrapper.findAll('button').find(b=>b.attributes('aria-label')==='展开 账户')?.trigger('click');await flushPromises();await wrapper.get('input[aria-label="选择 测试账户"]').setValue(false)
-    await wrapper.findAll('button').find(b=>b.text()==='比较所选范围')!.trigger('click');await flushPromises()
+    await flushPromises()
     expect(modelTransferApi.select).toHaveBeenCalledWith('account-incoming',expect.objectContaining({accountIds:[]}));expect(modelTransferApi.accept).not.toHaveBeenCalled();wrapper.unmount()
   })
   it('exports the reviewed frozen plan instead of rebuilding from later editor content', async () => {
@@ -213,19 +198,18 @@ describe('model transfer review', () => {
     await flushPromises();await customExportScope(wrapper)
     await chooseExport(wrapper,'测试族')
     await wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.trigger('click');await flushPromises()
-    expect(modelTransferApi.prepare).toHaveBeenCalledWith({includePolicy:false,channelIds:[],includeGlobal:false,templateRefs:[{templateId:'family',revisionId:'revision-1'}]},undefined,false,{preferences:true,extensions:true,webdav:false,webdavPasswords:true})
+    expect(modelTransferApi.prepare).toHaveBeenCalledWith({includePolicy:false,channelIds:[],includeGlobal:false,templateRefs:[{templateId:'family',revisionId:'revision-1'}]},undefined,false,{preferences:true,extensions:true,webdav:false,webdavPasswords:true,credentialIds:[]})
     expect(modelTransferApi.export).not.toHaveBeenCalled()
     useModelsStore().snapshot!.library.templates[0]!.label='later'
     await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises()
     expect(modelTransferApi.export).toHaveBeenCalledExactlyOnceWith('frozen-plan', undefined)
-    expect(wrapper.text()).toContain('/fixture/export.json');wrapper.unmount()
+    expect(useSyncStore().lastResultId).toBe('frozen-plan');expect(wrapper.find('.model-transfer-path').exists()).toBe(false);wrapper.unmount()
   })
   it('SY-1/SY-2/N-SY-2：导出确认弹窗按原型顺序承载保存位置、树、说明、凭据与可选口令，范围首项保持 all',async()=>{
     vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'prototype-shape',package:pack(),credentialCount:1})
     vi.mocked(modelTransferApi.export).mockResolvedValue({path:'/fixture/export.json',digest:'frozen-digest',templates:1,channels:0})
     const wrapper=render();await flushPromises();await flushPromises()
-    const preset=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='配置范围预设')!
-    expect(preset.props('modelValue')).toBe('all')
+    expect(wrapper.findAllComponents(UiSelectField).some(c=>c.props('label')==='配置范围预设')).toBe(false)
     await customExportScope(wrapper);await chooseExport(wrapper,'测试族')
     await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises()
     const text=wrapper.text()
@@ -238,25 +222,19 @@ describe('model transfer review', () => {
     expect(wrapper.find('input[aria-label="自定义导出目录"]').exists()).toBe(true)
     expect(wrapper.findAll('button').some(b=>b.text()==='选择目录…')).toBe(true)
     // 口令只在弹窗内；按原型固定呈现两次输入。含凭据时默认建议加密且可取消。
-    expect((wrapper.get('input[aria-label="加密口令"]').element as HTMLInputElement).disabled).toBe(false)
+    expect(wrapper.find('input[aria-label="加密口令"]').exists()).toBe(false)
     await wrapper.findAll('label').find(l=>l.text().startsWith('加密配置包'))!.get('input').setValue(true)
     expect(wrapper.get('input[aria-label="加密口令"]').attributes('disabled')).toBeUndefined()
     expect(wrapper.find('input[aria-label="再次输入加密口令"]').exists()).toBe(true)
     wrapper.unmount()
   })
-  it('SY-1：含凭据但不加密时先确认明文风险，取消不导出',async()=>{
+  it('credential-bearing plaintext export has one confirmation',async()=>{
     vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'plaintext-plan',package:pack(),credentialCount:2})
     vi.mocked(modelTransferApi.export).mockResolvedValue({path:'/fixture/export.json',digest:'frozen-digest',templates:1,channels:0})
-    const wrapper=render();await flushPromises();await flushPromises();await customExportScope(wrapper);await chooseExport(wrapper,'测试族')
-    await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises()
-    await wrapper.findAll('label').find(l=>l.text().startsWith('加密配置包'))!.get('input').setValue(false)
-    await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises()
-    expect(wrapper.text()).toContain('当前范围含 2 项凭据');expect(modelTransferApi.export).not.toHaveBeenCalled()
-    await wrapper.findAll('button').find(b=>b.text()==='返回设置口令')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.export).not.toHaveBeenCalled()
-    await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises()
-    await wrapper.findAll('button').find(b=>b.text()==='仍以明文导出')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.export).toHaveBeenCalledWith('plaintext-plan',undefined);wrapper.unmount()
+    const wrapper=render();await flushPromises();await customExportScope(wrapper);await chooseExport(wrapper,'测试族');await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises()
+    expect(wrapper.get<HTMLInputElement>('.export-encrypt input').element.checked).toBe(false)
+    expect(wrapper.text()).toContain('以明文写入');await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.export).toHaveBeenCalledExactlyOnceWith('plaintext-plan',undefined);expect(wrapper.text()).not.toContain('仍以明文导出');wrapper.unmount()
   })
   it('N-SY-1：树表列名与原型一致',async()=>{
     const wrapper=mount(ObjectScopeTree,{props:{objects:[{id:'x',category:'channels',categoryLabel:'渠道与模型',label:'测试渠道',detail:'原设置'}],selectedIds:['x'],label:'导出配置对象'}})
@@ -265,8 +243,7 @@ describe('model transfer review', () => {
   it('SY-2：目录读取失败时仍保持默认范围并明确报错',async()=>{
     vi.mocked(modelTransferApi.channelCatalog).mockRejectedValueOnce({message:'目录读取失败'})
     const wrapper=render();await flushPromises();await flushPromises()
-    const preset=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='配置范围预设')!
-    expect(preset.props('modelValue')).toBe('all');expect(wrapper.text()).toContain('目录读取失败')
+    expect(wrapper.text()).toContain('目录读取失败')
     expect(wrapper.text()).not.toContain('自定义范围');wrapper.unmount()
   })
   it('receives only a review and requires adoption while preserving the manual template buffer', async () => {
@@ -275,12 +252,12 @@ describe('model transfer review', () => {
     vi.mocked(modelTransferApi.accept).mockResolvedValue({...snapshot(),libraryDigest:'received'})
     const wrapper=render()
     await flushPromises()
-    await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises();await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises();await flushPromises()
     expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(store.snapshot!.libraryDigest).toBe('library')
     expect((wrapper.findAll('label').find(l=>l.text()==='更新前备份')!.get('input').element as HTMLInputElement).checked).toBe(true)
-    await wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.trigger('click');await flushPromises()
-    expect(createBackup).toHaveBeenCalledOnce()
-    expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('incoming');expect(store.snapshot!.libraryDigest).toBe('received')
+    await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises()
+    expect(createBackup).not.toHaveBeenCalled()
+    expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('incoming',expect.objectContaining({backupBeforeUpdate:true,adoptKeys:false}));expect(store.snapshot!.libraryDigest).toBe('received')
     expect(store.draft!.label).toBe('人工输入');expect(store.dirty).toBe(true);wrapper.unmount()
   })
   it('blocks a preview overlapping live channel edits before calling accept',async()=>{
@@ -289,8 +266,8 @@ describe('model transfer review', () => {
     base.policy.channels=[channel];store.acceptTransfer(base);store.channelDraft!.channels[0]!.label='unsaved label';store.clearCredential('channel')
     const incoming=structuredClone(base.policy);incoming.channels[0]!.label='incoming label'
     vi.mocked(modelTransferApi.receive).mockResolvedValue({id:'overlap',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',mergedPolicy:incoming,package:pack(),notices:[]})
-    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises()
-    await wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.trigger('click');await flushPromises()
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises()
     expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(createBackup).not.toHaveBeenCalled();expect(wrapper.text()).toContain('当前输入已保留')
     expect(store.channelDraft!.channels[0]!.label).toBe('unsaved label');expect(store.credentialEdits.channel?.action).toBe('clear');wrapper.unmount()
   })
@@ -300,12 +277,9 @@ describe('model transfer review', () => {
     store.acceptTransfer(base);store.channelDraft!.channels[0]!.label='in-memory label';store.editCredential('channel','local-only-secret','saved')
     const frozen=JSON.parse(JSON.stringify(store.channelDraft))
     vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue(base.policy.channels)
-    vi.mocked(modelTransferApi.prepareDraft).mockResolvedValueOnce({id:'plain-draft',package:pack(),credentialCount:0}).mockResolvedValueOnce({id:'encrypted-draft',package:pack(),credentialCount:0,protected:true})
+    vi.mocked(modelTransferApi.prepareDraft).mockResolvedValueOnce({id:'plain-draft',package:pack(),credentialCount:0});vi.mocked(modelTransferApi.protect).mockResolvedValue({id:'encrypted-draft',package:pack(),credentialCount:0,protected:true})
     vi.mocked(modelTransferApi.export).mockResolvedValue({path:'/fixture/draft.ocxdconf',digest:'digest',templates:0,channels:1})
-    const wrapper=render();await flushPromises();await flushPromises()
-    await wrapper.findAll('button').find(b=>b.text()==='清空选择')!.trigger('click')
-    ;(wrapper.vm.$ as unknown as {setupState:{exportSource:string}}).setupState.exportSource='draft'
-    wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='配置范围预设')!.vm.$emit('update:modelValue','all');await flushPromises()
+    const wrapper=render(false,'draft');await flushPromises();await flushPromises()
     await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises()
     const candidate={expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace'}
     expect(modelTransferApi.prepareDraft).toHaveBeenCalledExactlyOnceWith({includePolicy:true,channelIds:['channel'],includeGlobal:false,templateRefs:[]},candidate,undefined,frozen)
@@ -315,54 +289,51 @@ describe('model transfer review', () => {
     await wrapper.get('.export-encrypt input[type="checkbox"]').setValue(true)
     await wrapper.get('input[aria-label="加密口令"]').setValue('fixture-export-passphrase');await wrapper.get('input[aria-label="再次输入加密口令"]').setValue('fixture-export-passphrase')
     await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.prepareDraft).toHaveBeenLastCalledWith({includePolicy:true,channelIds:['channel'],includeGlobal:false,templateRefs:[]},candidate,'fixture-export-passphrase',frozen)
+    expect(modelTransferApi.prepareDraft).toHaveBeenCalledOnce();expect(modelTransferApi.protect).toHaveBeenCalledExactlyOnceWith('plain-draft','fixture-export-passphrase')
     expect(modelTransferApi.export).toHaveBeenCalledExactlyOnceWith('encrypted-draft',undefined)
     expect(store.channelDraft!.channels[0]!.label).toBe('typed after export preview');expect(store.credentialEdits.channel?.value).toBe('local-only-secret');wrapper.unmount()
   })
-  it.skip('[0.2.5 待按新结构重写] retains the original operation ID after uncertain WebDAV publication', async () => {
-    vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue({id:'upload-once',phase:'prepared',package:pack()})
-    vi.mocked(modelTransferApi.publish).mockRejectedValueOnce({message:'结果待核对'}).mockResolvedValue({id:'upload-once',phase:'published',package:pack()})
-    const wrapper=render(true)
-    await wrapper.findAll('button').find(b=>b.text()==='重新读取范围目录')!.trigger('click')
-    await chooseExport(wrapper,'测试族')
-    await wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.trigger('click');await flushPromises()
-    await wrapper.findAll('button').find(b=>b.text()==='确认上传')!.trigger('click');await flushPromises()
-    expect(wrapper.text()).toContain('结果待核对')
-    await wrapper.findAll('button').find(b=>b.text()==='确认上传')!.trigger('click');await flushPromises()
-    expect(vi.mocked(modelTransferApi.publish).mock.calls).toEqual([['upload-once'],['upload-once']]);wrapper.unmount()
+  it('retains the original operation ID after uncertain WebDAV publication',async()=>{
+    vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'local',hasRemote:false});vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
+    const plan={id:'upload-once',phase:'prepared',package:pack(),sync:{source:'local' as const,changes:[{kind:'templates',id:'family',label:'测试族',mark:'update' as const}],unchanged:0,createdAt:''}}
+    vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue(plan);vi.mocked(modelTransferApi.publish).mockRejectedValueOnce({message:'结果待核对'}).mockResolvedValue({...plan,phase:'published'})
+    const wrapper=render(true);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises();expect(wrapper.text()).toContain('结果待核对')
+    await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises();expect(vi.mocked(modelTransferApi.publish).mock.calls).toEqual([['upload-once'],['upload-once']]);expect(modelTransferApi.prepareUpload).toHaveBeenCalledOnce();wrapper.unmount()
   })
   it('keeps global-only selection from expanding to every channel', () => {
     expect(scopeFor(snapshot(),[],[],true,{})).toEqual({includePolicy:true,channelIds:[],templateRefs:[],includeGlobal:true})
   })
-  it.skip('[0.2.5 原型无此入口] requires another comparison after choosing an import subset and adopts only that reviewed plan',async()=>{
+  it('automatically compares an import subset and adopts only its resulting plan',async()=>{
     const incoming={id:'original',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[]}
     vi.mocked(modelTransferApi.receive).mockResolvedValue(incoming);vi.mocked(modelTransferApi.select).mockResolvedValue({...incoming,id:'selected-plan'});vi.mocked(modelTransferApi.accept).mockResolvedValue(snapshot())
-    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises();await flushPromises()
-    await wrapper.get('.model-transfer-scope input[type=checkbox]').setValue(false);expect(wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.attributes('disabled')).toBeDefined()
-    await wrapper.get('.model-transfer-scope input[type=checkbox]').setValue(true);await wrapper.findAll('button').find(b=>b.text()==='比较所选范围')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.select).toHaveBeenCalledWith('original',{templateRefs:[{templateId:'family',revisionId:'revision-1'}],channelIds:[],includeGlobal:false});await wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.trigger('click');await flushPromises();expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('selected-plan');wrapper.unmount()
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises();await flushPromises()
+    await wrapper.get('.model-transfer-scope input[type=checkbox]').setValue(false);await flushPromises()
+    await wrapper.get('.model-transfer-scope input[type=checkbox]').setValue(true);await flushPromises()
+    expect(modelTransferApi.select).toHaveBeenCalledWith('original',{templateRefs:[{templateId:'family',revisionId:'revision-1'}],channelIds:[],includeGlobal:false});await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises();expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('selected-plan',expect.objectContaining({backupBeforeUpdate:true}));wrapper.unmount()
   })
   it('asks once for the protected file password and never adopts on decryption failure',async()=>{
     vi.mocked(modelTransferApi.receive).mockRejectedValueOnce({code:'passphrase_required',message:'请输入保护口令'}).mockRejectedValueOnce({code:'portable_authentication',message:'口令不正确或文件已损坏'}).mockResolvedValue({id:'opened',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[]})
-    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises();await flushPromises();await flushPromises()
-    const input=wrapper.get('input[aria-label="导入解密口令"]');await input.setValue('fixture-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='解密并比较'||b.text()==='直接读取并比较')!.trigger('click');await flushPromises();expect(wrapper.text()).toContain('口令不正确');expect(modelTransferApi.accept).not.toHaveBeenCalled()
-    await wrapper.get('input[aria-label="导入解密口令"]').setValue('correct-fixture-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='解密并比较'||b.text()==='直接读取并比较')!.trigger('click');await flushPromises();expect(modelTransferApi.receive).toHaveBeenLastCalledWith('/fixture/models.json','correct-fixture-password');expect(wrapper.find('input[aria-label="导入解密口令"]').exists()).toBe(false);expect(modelTransferApi.accept).not.toHaveBeenCalled();wrapper.unmount()
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises();await flushPromises();await flushPromises()
+    const input=wrapper.get('input[aria-label="导入解密口令"]');await input.setValue('fixture-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取配置')!.trigger('click');await flushPromises();expect(wrapper.text()).toContain('口令不正确');expect(modelTransferApi.accept).not.toHaveBeenCalled()
+    await wrapper.get('input[aria-label="导入解密口令"]').setValue('correct-fixture-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取配置')!.trigger('click');await flushPromises();expect(modelTransferApi.receive).toHaveBeenLastCalledWith('/fixture/models.json','correct-fixture-password');expect(wrapper.find('input[aria-label="导入解密口令"]').exists()).toBe(false);expect(modelTransferApi.accept).not.toHaveBeenCalled();wrapper.unmount()
   })
-  it('keeps channel Key adoption off until explicitly selected and passes the same file password',async()=>{
+  it('restores the default import Key preference and passes the same file password',async()=>{
     const packageValue=pack();packageValue.payload.policy={templateRefs:null,channelOrder:null,channels:[{id:'channel',label:'测试渠道',selection:{mode:'none'}}]}
     vi.mocked(modelTransferApi.receive).mockRejectedValueOnce({code:'passphrase_required'}).mockResolvedValue({id:'protected-incoming',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:packageValue,notices:[],availableKeys:['channel']})
     vi.mocked(modelTransferApi.accept).mockResolvedValue(snapshot())
-    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises();await flushPromises();await wrapper.get('input[aria-label="导入解密口令"]').setValue('fixture-key-file-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='解密并比较'||b.text()==='直接读取并比较')!.trigger('click');await flushPromises()
-    const toggle=wrapper.findAll('label').find(label=>label.text().startsWith('采用所选渠道的Key'))!.get<HTMLInputElement>('input');expect(toggle.element.checked).toBe(false);expect(modelTransferApi.accept).not.toHaveBeenCalled()
-    await toggle.setValue(true);await wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.trigger('click');await flushPromises();expect(modelTransferApi.accept).toHaveBeenCalledWith('protected-incoming',{adoptKeys:true,passphrase:'fixture-key-file-password'});wrapper.unmount()
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises();await flushPromises();await wrapper.get('input[aria-label="导入解密口令"]').setValue('fixture-key-file-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取配置')!.trigger('click');await flushPromises()
+    const toggle=wrapper.findAll('label').find(label=>label.text().startsWith('采用所选渠道的Key'))!.get<HTMLInputElement>('input');expect(toggle.element.checked).toBe(true);expect(modelTransferApi.accept).not.toHaveBeenCalled()
+    await toggle.setValue(true);await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises();expect(modelTransferApi.accept).toHaveBeenCalledWith('protected-incoming',expect.objectContaining({adoptKeys:true,passphrase:'fixture-key-file-password',credentialIds:['channel:channel']}));wrapper.unmount()
   })
-  it.skip('[0.2.5 原型无此入口] restores the frozen import identity and exact credential intent without silently creating a new comparison',async()=>{
+  it('restores the original import receipt and credential intent through the shared retry dialog',async()=>{
     const packageValue=pack();packageValue.payload.policy={templateRefs:null,channelOrder:null,channels:[{id:'channel',label:'测试渠道',selection:{mode:'none'}}]}
-    const original={id:'original-adoption',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:packageValue,notices:[],availableKeys:['channel'],adoption:{keys:true,webdav:false,completed:false}}
-    vi.mocked(modelTransferApi.latestIncoming).mockResolvedValue(original);vi.mocked(modelTransferApi.openReceived).mockResolvedValue(original);vi.mocked(modelTransferApi.accept).mockResolvedValue(snapshot())
-    const wrapper=render();await wrapper.findAll('button').find(b=>b.text()==='恢复上次接收')!.trigger('click');await flushPromises();expect(modelTransferApi.recompare).not.toHaveBeenCalled();expect(wrapper.text()).toContain('原导入采用范围已冻结')
-    await wrapper.findAll('button').find(b=>b.text()==='核对原导入')!.trigger('click');await wrapper.get('input[aria-label="导入解密口令"]').setValue('fixture-original-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='解密并比较'||b.text()==='直接读取并比较')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.openReceived).toHaveBeenCalledExactlyOnceWith('original-adoption','fixture-original-password');await wrapper.findAll('button').find(b=>b.text()==='核对原导入')!.trigger('click');await flushPromises();expect(modelTransferApi.accept).toHaveBeenCalledWith('original-adoption',{adoptKeys:true,passphrase:'fixture-original-password'});expect(modelTransferApi.recompare).not.toHaveBeenCalled();wrapper.unmount()
+    const original={id:'original-adoption',modelsAccepted:true,expectedLibrary:'library',expectedPolicy:'old-file',expectedWorkspace:'workspace',package:packageValue,notices:[],availableKeys:['channel'],protected:true,adoption:{keys:true,webdav:false,completed:false}}
+    const receipt={id:'original-adoption',kind:'import' as const,phase:'partial' as const,startedAt:'',finishedAt:null,items:[],errorCode:'fixture_partial',exportPath:null,sourceDigest:'frozen',retry:{adoptKeys:true,adoptWebdavPasswords:false,adoptExtensionCredentials:false,backupBeforeUpdate:false,credentialIds:['channel:channel']}}
+    vi.mocked(modelTransferApi.openReceived).mockRejectedValueOnce({code:'passphrase_required'}).mockResolvedValue(original);vi.mocked(modelTransferApi.accept).mockResolvedValue({...snapshot(),libraryDigest:'received-library'})
+    const store=useModelsStore();store.edit();store.draft!.label='retained manual input'
+    const wrapper=mount(ModelTransfer,{props:{actionOnly:true,retryReceipt:receipt},global:{stubs:{UiDialog:dialog,UiSelectField:true}}});await flushPromises();expect(modelTransferApi.openReceived).toHaveBeenCalledExactlyOnceWith('original-adoption');expect(modelTransferApi.receive).not.toHaveBeenCalled();expect(modelTransferApi.recompare).not.toHaveBeenCalled()
+    await wrapper.get('input[aria-label="导入解密口令"]').setValue('fixture-original-password');await wrapper.findAll('button').find(b=>b.text()==='读取配置')!.trigger('click');await flushPromises();expect(modelTransferApi.openReceived).toHaveBeenLastCalledWith('original-adoption','fixture-original-password');expect(wrapper.text()).not.toContain('选择文件')
+    await wrapper.findAll('button').find(b=>b.text()==='核对原导入')!.trigger('click');await flushPromises();expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('original-adoption',expect.objectContaining({backupBeforeUpdate:false,adoptKeys:true,credentialIds:['channel:channel'],passphrase:'fixture-original-password'}));expect(store.draft!.label).toBe('retained manual input');expect(wrapper.emitted('close')).toHaveLength(1);wrapper.unmount()
   })
   // S18-01：0.2.18 原型 sync-config.js syncPreview：一个「同步」按钮，按整份快照新旧定方向，确认前只预览。
   it('saves the device scope on 同步, previews a newer local snapshot and publishes only after 确认更新',async()=>{
@@ -371,7 +342,7 @@ describe('model transfer review', () => {
     vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue({id:'up',phase:'prepared',package:pack(),sync:{source:'local',changes:[{kind:'template',id:'family',label:'测试族',mark:'update',before:1,after:2}],unchanged:3,createdAt:'2026-11-01T10:00:00Z'}})
     vi.mocked(modelTransferApi.publish).mockResolvedValue({id:'up',phase:'published',package:pack()})
     const wrapper=render(true);await flushPromises();await flushPromises();await chooseExport(wrapper,'测试族');await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledExactlyOnceWith({templateIds:['family'],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false})
+    expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({templateIds:['family'],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false}))
     expect(modelTransferApi.prepareUpload).toHaveBeenCalledOnce();expect(modelTransferApi.download).not.toHaveBeenCalled();expect(modelTransferApi.publish).not.toHaveBeenCalled()
     expect(wrapper.text()).toContain('本机配置 → 云端');expect(wrapper.text()).toContain('1 项变化');expect(wrapper.text()).toContain('3 项保持不变');expect(wrapper.text()).toContain('测试族')
     expect(wrapper.findAll('label').some(l=>l.text()==='更新前备份')).toBe(false)
@@ -391,8 +362,8 @@ describe('model transfer review', () => {
     expect(createBackup).not.toHaveBeenCalled();expect(modelTransferApi.accept).not.toHaveBeenCalled()
     await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
     await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises()
-    expect(createBackup).toHaveBeenCalledOnce();expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('remote-in')
-    expect(vi.mocked(createBackup).mock.invocationCallOrder[0]).toBeLessThan(vi.mocked(modelTransferApi.accept).mock.invocationCallOrder[0]);wrapper.unmount()
+    expect(createBackup).not.toHaveBeenCalled();expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('remote-in',expect.objectContaining({backupBeforeUpdate:true}))
+    wrapper.unmount()
   })
   it('disables 确认更新 and offers 关闭 when the selected range is already the same',async()=>{
     vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
@@ -415,25 +386,23 @@ describe('model transfer review', () => {
     const picker=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='docs 采用来源')!
     expect(picker.props('modelValue')).toBe('');expect(picker.props('options')[0]).toEqual({value:'',label:'暂不同步'});wrapper.unmount()
   })
-  it.skip('[0.2.5 待按新结构重写] uses the separate content password for a protected remote download and leaves adoption pending',async()=>{
-    vi.mocked(modelTransferApi.download).mockRejectedValueOnce({code:'passphrase_required'}).mockResolvedValue({id:'remote-received',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[]})
-    const wrapper=render(true);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='下载并比较')!.trigger('click');await flushPromises();await wrapper.get('input[aria-label="导入解密口令"]').setValue('fixture-sync-content-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='解密并比较'||b.text()==='直接读取并比较')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.download).toHaveBeenLastCalledWith('fixture-sync-content-password');expect(modelTransferApi.receive).not.toHaveBeenCalled();expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(wrapper.findAll('button').some(b=>b.text()==='采用到本机')).toBe(true);wrapper.unmount()
+  it('uses the separate content password inside the remote preview without adopting',async()=>{
+    vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'remote',hasRemote:true});vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
+    vi.mocked(modelTransferApi.download).mockRejectedValueOnce({code:'passphrase_required'}).mockResolvedValue({id:'remote-received',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],sync:{source:'remote',changes:[],unchanged:1,createdAt:''}})
+    const wrapper=render(true);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises();await wrapper.get('input[aria-label="导入解密口令"]').setValue('fixture-sync-content-password');await wrapper.findAll('button').find(b=>b.text()==='读取配置')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.download).toHaveBeenLastCalledWith('fixture-sync-content-password');expect(modelTransferApi.receive).not.toHaveBeenCalled();expect(modelTransferApi.accept).not.toHaveBeenCalled();wrapper.unmount()
   })
-  it.skip('[0.2.5 原型无此入口] restores the persisted upload and queries its original publication instead of preparing another plan',async()=>{
-    vi.mocked(modelTransferApi.latestUpload).mockResolvedValue({id:'original-remote-plan',phase:'publishing',package:pack()});vi.mocked(modelTransferApi.publish).mockResolvedValue({id:'original-remote-plan',phase:'published',package:pack()})
-    const wrapper=render(true);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='查看原上传计划')!.trigger('click');await flushPromises();expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();await wrapper.findAll('button').find(b=>b.text()==='核对原上传')!.trigger('click');await flushPromises();expect(modelTransferApi.publish).toHaveBeenCalledExactlyOnceWith('original-remote-plan');expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();wrapper.unmount()
-  })
-  it('requires review of chosen custom assets before export proceeds (WP-56 assetsReviewed)',async()=>{
-    vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'asset-file',package:pack(),protected:false,credentialCount:0,assets:{skills:[{name:'fixture-skill',digest:'skill-digest',files:2,bytes:100,warnings:[],protected:false}],mcps:[]}})
-    const wrapper=render();await flushPromises();await flushPromises();await customExportScope(wrapper);const labels=()=>wrapper.findAll('label');await chooseExport(wrapper,'Skill · fixture-skill')
-    expect(wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.attributes('disabled')).toBeDefined();await labels().find(label=>label.text().includes('已复核所选资源'))!.get('input').setValue(true);await wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.trigger('click');await flushPromises()
-    expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.anything(),undefined,false,expect.objectContaining({skillNames:['fixture-skill'],mcpNames:[],extensionCredentials:false,assetsReviewed:true}));expect(wrapper.text()).toContain('2 文件');expect(modelTransferApi.export).not.toHaveBeenCalled();wrapper.unmount()
+  // Original upload ID recovery is exercised by sync-result.test.ts through the real result entry.
+  it('previews selected assets with no human review gate',async()=>{
+    vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'asset-file',package:pack(),assets:{skills:[{name:'fixture-skill',digest:'skill-digest',files:2,bytes:100,warnings:[],protected:false}],mcps:[]}})
+    const wrapper=render();await flushPromises();await customExportScope(wrapper);await chooseExport(wrapper,'Skill · fixture-skill')
+    const action=wrapper.findAll('button').find(b=>b.text()==='导出配置')!;expect(action.attributes('disabled')).toBeUndefined();expect(wrapper.text()).not.toContain('已复核所选资源');await action.trigger('click');await flushPromises()
+    expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.anything(),undefined,false,expect.objectContaining({skillNames:['fixture-skill'],mcpNames:[],extensionCredentials:false}));expect(wrapper.text()).toContain('2 文件');expect(modelTransferApi.export).not.toHaveBeenCalled();wrapper.unmount()
   })
   it('keeps the temporary file password for an encrypted Skill even when no credential was included',async()=>{
     const original={id:'asset-incoming',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],protected:true,assets:{skills:[{name:'fixture-skill',digest:'digest',files:2,bytes:100,warnings:[],protected:false}],mcps:[]}}
     vi.mocked(modelTransferApi.receive).mockRejectedValueOnce({code:'passphrase_required'}).mockResolvedValue(original);vi.mocked(modelTransferApi.accept).mockResolvedValue(snapshot())
-    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取并比较')!.trigger('click');await flushPromises();await flushPromises();await wrapper.get('input[aria-label="导入解密口令"]').setValue('fixture-assets-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='解密并比较'||b.text()==='直接读取并比较')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('asset-incoming',{adoptKeys:false,passphrase:'fixture-assets-password'});wrapper.unmount()
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises();await flushPromises();await wrapper.get('input[aria-label="导入解密口令"]').setValue('fixture-assets-password');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='读取配置')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('asset-incoming',expect.objectContaining({adoptKeys:false,passphrase:'fixture-assets-password',backupBeforeUpdate:true}));wrapper.unmount()
   })
 })

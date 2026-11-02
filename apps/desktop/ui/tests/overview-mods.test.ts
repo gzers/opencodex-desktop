@@ -55,9 +55,24 @@ describe('overview module cards', () => {
     Object.assign(HTMLDialogElement.prototype,{showModal(this:HTMLDialogElement){this.setAttribute('open','')},close(this:HTMLDialogElement){this.removeAttribute('open')}})
     setActivePinia(createPinia())
     invoke.mockReset()
-    invoke.mockImplementation((command: string) =>
-      command === 'discover_environment' ? Promise.resolve(readyEnvironment()) : command === 'official_project_facts' ? Promise.resolve({displayName:'OpenCodex',version:'2.50.0',rawVersion:'2.50.0',truncated:false}) : command === 'official_remote_latest' ? Promise.resolve({tag:'latest',version:'2.51.0',integrity:null}) : Promise.resolve(undefined),
-    )
+    invoke.mockImplementation((command:string,args?:Record<string,unknown>)=>{
+      if(command==='discover_environment')return Promise.resolve(readyEnvironment())
+      if(command==='official_project_facts')return Promise.resolve({displayName:'OpenCodex',version:'2.50.0',rawVersion:'2.50.0',truncated:false})
+      if(command==='official_remote_latest')return Promise.resolve({tag:'latest',version:'2.51.0',integrity:null})
+      if(command==='import_credential_choices')return Promise.resolve({keys:true,extensions:true})
+      if(command==='transfer_choices')return Promise.resolve(null)
+      if(command==='save_transfer_choices')return Promise.resolve(args?.choice)
+      if(command==='transfer_protection'||command==='save_transfer_protection')return Promise.resolve({enabled:false,hasPassword:false})
+      if(command==='get_sync_config')return Promise.resolve({endpoint:null})
+      if(command==='portable_account_catalog'||command==='portable_channel_catalog')return Promise.resolve([])
+      if(command==='portable_extension_catalog')return Promise.resolve({skills:[],mcps:[]})
+      if(command==='model_file_snapshot')return Promise.resolve({library:{schemaVersion:1,templates:[]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspace:null,workspaceDigest:'workspace'})
+      if(command==='config_sync_scope')return Promise.resolve({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false})
+      if(command==='config_sync_save_scope')return Promise.resolve(args?.scope)
+      if(command==='config_sync_check')return Promise.resolve({source:'local',hasRemote:false})
+      if(command==='model_transfer_prepare'||command==='config_sync_prepare')return Promise.resolve({id:'fixture-operation',phase:'prepared',package:{format:'OCXD_MODEL_CONFIG',formatVersion:1,schemaVersion:1,createdAt:'',digest:'digest',payload:{templates:[],policy:null}},sync:command==='config_sync_prepare'?{source:'local',changes:[],unchanged:0,createdAt:''}:null})
+      return Promise.resolve(undefined)
+    })
   })
 
   it('uses the header ⋯ as the settings entry instead of a third action button', async () => {
@@ -105,7 +120,7 @@ describe('overview module cards', () => {
     expect(route.current).toBe('overview')
     const modal=document.querySelector('dialog[open]')
     expect(modal?.textContent).toContain('尚未选择文件')
-    const read=[...modal!.querySelectorAll('button')].find(b=>b.textContent==='读取并比较')!
+    const read=[...modal!.querySelectorAll('button')].find(b=>b.textContent==='读取配置')!
     expect(read.disabled).toBe(true)
     const cancel=[...modal!.querySelectorAll('button')].find(b=>b.textContent==='取消')!
     cancel.click();await flushPromises()
@@ -131,7 +146,7 @@ describe('overview module cards', () => {
     sync.$onAction(({ name, args }) => { if (name === 'requestAction') requested.push(args[0]) })
     await file.findAll('.mod-actions button')[1].trigger('click')
     expect(requested).toEqual(['export'])
-    expect(route.current).toBe('sync')
+    expect(route.current).toBe('overview')
     expect(route.syncTab).toBe('file')
     localStorage.removeItem('ocx-sync-activity'); syncActivity.value = {}
   })
@@ -164,7 +179,7 @@ describe('overview module cards', () => {
     sync.$onAction(({ name, args }) => { if (name === 'requestAction') requested.push(args[0]) })
     await card().findAll('.mod-actions button')[0].trigger('click')
     expect(requested).toEqual(['sync'])
-    expect(useRouteStore(wrapper.vm.$pinia).syncTab).toBe('webdav')
+    expect(useRouteStore(wrapper.vm.$pinia).current).toBe('overview')
     localStorage.removeItem('ocx-sync-activity'); syncActivity.value = {}
   })
 

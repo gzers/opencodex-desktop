@@ -10,15 +10,16 @@ describe('文件保护口令改为可选', () => {
   })
 
   it('标签与占位符说明留空即明文写入', () => {
-    expect(source).toContain('文件保护口令（可选）')
-    expect(source).toContain('留空则凭据以明文写入文件')
+    expect(source).toContain('加密配置包')
+    expect(source).toContain('不加密则凭据以明文写入')
     expect(source).not.toContain('含凭据，必需')
   })
 
   it('导入不再要求先填口令', () => {
     // 旧的禁用条件形如 :disabled="!importPassword"，现在必须消失。
     expect(source.includes(':disabled="!importPassword"')).toBe(false)
-    expect(source).toContain('直接读取并比较')
+    expect(source).toContain('选择文件')
+    expect(source).toContain('读取配置')
   })
 
   it('勾选项不再声称必须独立口令', () => {

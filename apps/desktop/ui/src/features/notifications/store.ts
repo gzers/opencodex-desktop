@@ -60,11 +60,11 @@ export const useNotificationsStore = defineStore('notifications', {
       const before = new Set(this.list.map(item => item.id))
       await this.load()
       if (this.error) return
-      const fresh = this.list.find(item => !item.read && !item.resolved && !before.has(item.id))
+      const fresh = this.list.find(item => !item.read && (!item.resolved||item.kind==='info'&&['transfer_result','sync'].includes(item.action??'')) && !before.has(item.id))
       if (!fresh) return
       // 懒加载避免 store 之间的循环依赖（反馈域不依赖通知域）。
       const { useFeedbackStore } = await import('@/app/feedback/store')
-      useFeedbackStore().showToast(fresh.title + '：' + fresh.detail)
+      useFeedbackStore().showToast(fresh.title + '：' + fresh.detail, fresh.action==='transfer_result'||fresh.action==='sync'?{durationMs:8000,kind:fresh.kind==='info'?undefined:'error',resultId:fresh.action==='transfer_result'?fresh.objectId??undefined:undefined}:undefined)
     },
     async load() {
       if (this.loading) {

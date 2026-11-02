@@ -16,6 +16,7 @@ export const notificationConfirmLabels: Record<NotificationAction, string> = {
   upgrade: '前往处理',
   app_update: '前往处理',
   sync: '前往处理',
+  transfer_result:'查看结果',
   logs: '查看日志',
   settings_installation: '前往设置',
   settings_cleanup: '前往设置',

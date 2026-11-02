@@ -35,7 +35,7 @@ export async function verifyUiAlignment({call,evaluate,wait,click,output,templat
  await click('WebDAV 同步','.sync-route');await wait("!!document.querySelector('#sync-webdav-panel .sync-scope-workspace')",'inline WebDAV scope')
  const remote=await evaluate("(()=>{const parent=document.querySelector('#sync-webdav-panel .u-stack'),cards=parent?[...parent.children].filter(e=>e.getClientRects().length):[];return {scope:!!document.querySelector('#sync-webdav-panel .sync-scope-credentials'),gaps:cards.slice(1).map((e,i)=>e.getBoundingClientRect().top-cards[i].getBoundingClientRect().bottom),settings:!![...document.querySelectorAll('#sync-webdav-panel button')].find(e=>e.textContent.trim()==='连接设置')}})()")
  assert(remote.scope&&remote.settings);assert(remote.gaps.every(gap=>gap>=8),'WebDAV cards require spacing');receipts.push({label:'remote-scope',...remote});await shot('webdav-scope')
- await click('连接设置','.sync-route');await wait("!!document.querySelector('dialog[open]')",'on-demand connection settings');await shot('connection-dialog');await click('关闭','dialog[open]')
+ await click('连接设置','.sync-route');await wait("!!document.querySelector('dialog[open]')",'on-demand connection settings');await shot('connection-dialog');await click('取消','dialog[open]');await wait("!document.querySelector('dialog[open]')",'cancel connection settings')
  await click('设置','.side');await wait("!!document.querySelector('[role=radiogroup][aria-label=视觉特效]')",'quality segmented radios')
  assert.equal(await evaluate("document.querySelectorAll('[role=radiogroup][aria-label=视觉特效] [role=radio]').length"),3)
  for(const [effect,label] of [['high','高'],['mid','中'],['low','低']]){

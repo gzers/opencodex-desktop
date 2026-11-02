@@ -66,6 +66,8 @@ export const useOperationTasks = defineStore('operation-tasks', {
       if (Object.keys(value).some(key => !['id','kind','phase','previousId'].includes(key)) || typeof value.id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(value.id) || typeof value.kind !== 'string' || !Object.hasOwn(operationTitles,value.kind) || typeof value.phase !== 'string' || !Object.hasOwn(operationPhases,value.phase)) return
       // 保存结果由 modelSave 的一次反馈负责；旧保存 progress 不再生成第二张任务卡。
       if (value.kind === 'policy_save') return
+      if(value.kind==='transfer'&&isTerminalPhase(value.phase as ModelOperationPhase)){clearCollapseTimer(value.id);this.tasks=this.tasks.filter(t=>t.id!==value.id||t.kind!=='transfer');return}
+      if(value.kind==='transfer'&&value.phase==='review'){if(value.previousId!==undefined&&(typeof value.previousId!=='string'||!this.tasks.some(t=>t.id===value.previousId&&t.kind==='transfer'&&t.phase==='running')))return;this.tasks=this.tasks.filter(t=>t.kind!=='transfer'||t.id!==value.id&&t.id!==value.previousId);return}
       // 被合并或淘汰的旧 run 再晚回也不复活：否则一次重试就能把已收起的卡重新刷出来。
       if (retired.has(value.id)) return
       if(value.previousId!==undefined){

@@ -1,4 +1,4 @@
-//! File transfer stays in the unified sync domain; received policy is a draft.
+//! File transfer shares the sync domain; ordinary snapshots commit saved files.
 use crate::infrastructure::webdav_client::{ReqwestWebDavTransport, WebDavConfig};
 use crate::modules::model_config::config_remote;
 use crate::{
@@ -8,7 +8,6 @@ use crate::{
     },
     state::SharedDataRoot,
 };
-use serde::Serialize;
 
 fn require_file_plan(root: &std::path::Path, home: &std::path::Path, id: &str) -> ModelResult<()> {
     let plan = transfer::read_incoming(root, id)?;
@@ -19,6 +18,37 @@ fn require_file_plan(root: &std::path::Path, home: &std::path::Path, id: &str) -
         ));
     }
     Ok(())
+}
+fn cached_password(
+    root: &std::path::Path,
+    id: &str,
+) -> ModelResult<Option<zeroize::Zeroizing<String>>> {
+    let primary = crate::modules::model_config::transfer_protection::read_password(root)?;
+    match crate::modules::model_config::file_objects::open_received(
+        root,
+        id,
+        primary.as_deref().map(|p| p.as_str()),
+    ) {
+        Ok(_) => Ok(primary),
+        Err(error)
+            if ["passphrase_required", "portable_authentication"]
+                .contains(&error.code.as_str()) =>
+        {
+            let previous =
+                crate::modules::model_config::transfer_protection::previous_password(root)?;
+            if previous.is_some() {
+                crate::modules::model_config::file_objects::open_received(
+                    root,
+                    id,
+                    previous.as_deref().map(|p| p.as_str()),
+                )?;
+                Ok(previous)
+            } else {
+                Err(error)
+            }
+        }
+        Err(e) => Err(e),
+    }
 }
 fn active_remote(root: &std::path::Path) -> ModelResult<(String, WebDavConfig, String)> {
     let config = crate::modules::sync::config::SyncConfigStore::new(root).load()?;
@@ -93,15 +123,12 @@ pub async fn config_sync_save_scope(
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
+        scope.cloud_binding = active_remote(&root).ok().map(|v| v.2);
         config_remote::save_scope(&root, scope)
     })
     .await
     .map_err(|_| invalid("sync_scope", "设备范围保存中断，请核对原范围"))?
 }
-fn config_sync_store(root: &std::path::Path) -> crate::modules::sync::config::SyncConfigStore {
-    crate::modules::sync::config::SyncConfigStore::new(root)
-}
-
 #[tauri::command]
 pub async fn config_sync_prepare(
     scope: config_remote::Scope,
@@ -116,23 +143,30 @@ pub async fn config_sync_prepare(
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
-        let password = passphrase.map(zeroize::Zeroizing::new);
-        // 口令写入失败不该阻断上传本身：本次仍按用户输入封包，下次再提示输入。
-        let _remembered = config_sync_store(&root)
-            .remember_sync_passphrase(password.as_deref().map(|p| p.as_str()));
+        let password = match passphrase {
+            Some(value) => Some(zeroize::Zeroizing::new(value)),
+            None => crate::modules::model_config::transfer_protection::password(&root)?,
+        };
+        let read_password =
+            crate::modules::model_config::transfer_protection::read_password(&root)?;
+        let previous_password =
+            crate::modules::model_config::transfer_protection::previous_password(&root)?;
         remote_operation(&root, |transport, config, binding, unchanged| {
             let mut scope = scope;
+            scope.cloud_binding = Some(binding.into());
             scope.local_home = Some(local_home);
             scope.upstream_root = Some(upstream_root);
             scope.upstream_snapshot = None;
             let scope = config_remote::save_scope(&root, scope)?;
-            tauri::async_runtime::block_on(config_remote::prepare(
+            tauri::async_runtime::block_on(config_remote::prepare_with_protection(
                 &root,
                 transport,
                 config,
                 binding,
                 scope,
                 password.as_deref().map(|p| p.as_str()),
+                read_password.as_deref().map(|p| p.as_str()),
+                previous_password.as_deref().map(|p| p.as_str()),
                 unchanged,
             ))
         })
@@ -143,19 +177,42 @@ pub async fn config_sync_prepare(
 #[tauri::command]
 pub async fn config_sync_publish(
     plan_id: String,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+    home: tauri::State<'_, crate::state::SharedHomeDir>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<config_remote::UploadView> {
     let root = data_root.0.clone();
+    let config_home = context.opencodex_home.clone();
+    let local_home = home.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
-        crate::modules::model_config::feedback::transfer(&root, &plan_id, false, || {
-            remote_operation(&root, |transport, config, binding, unchanged| {
-                tauri::async_runtime::block_on(config_remote::publish(
-                    &root, transport, config, &plan_id, binding, unchanged,
-                ))
-            })
-        })
+        crate::modules::model_config::feedback::transfer_registered(
+            &root,
+            &plan_id,
+            "config-snapshot-sync",
+            || {
+                crate::modules::model_config::transfer_results::upload(&root, &plan_id, || {
+                    remote_operation(&root, |transport, config, binding, unchanged| {
+                        let mut scope = config_remote::load_scope(&root)?;
+                        scope.cloud_binding = Some(binding.into());
+                        scope.upstream_root = Some(config_home);
+                        scope.local_home = Some(local_home);
+                        tauri::async_runtime::block_on(config_remote::publish(
+                            &root,
+                            transport,
+                            config,
+                            &plan_id,
+                            binding,
+                            || {
+                                unchanged()?;
+                                config_remote::verify_upload_source(&root, &plan_id, &scope)
+                            },
+                        ))
+                    })
+                })
+            },
+        )
     })
     .await
     .map_err(|_| invalid("transfer_worker", "配置上传结果待核对，请保留原计划"))?
@@ -174,24 +231,44 @@ pub async fn config_sync_download(
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         // 优先用调用方给的口令；没给就读本机记下的，读不到才由界面提示输入。
-        let stored = if passphrase.is_none() {
-            config_sync_store(&root).sync_passphrase().ok().flatten()
-        } else {
-            None
+        let explicit = passphrase.is_some();
+        let password = match passphrase {
+            Some(value) => Some(zeroize::Zeroizing::new(value)),
+            None => crate::modules::model_config::transfer_protection::read_password(&root)?,
         };
-        let password = passphrase.or(stored).map(zeroize::Zeroizing::new);
         crate::modules::model_config::feedback::receive_transfer(&root, || {
             remote_operation(&root, |transport, config, binding, unchanged| {
-                tauri::async_runtime::block_on(config_remote::download_sync(
-                    &root,
-                    transport,
-                    config,
-                    password.as_deref().map(|p| p.as_str()),
-                    Some(&local_home),
-                    &config_home,
-                    binding,
-                    unchanged,
-                ))
+                let download = |password: Option<&str>| {
+                    tauri::async_runtime::block_on(config_remote::download_sync(
+                        &root,
+                        transport,
+                        config,
+                        password,
+                        Some(&local_home),
+                        &config_home,
+                        binding,
+                        unchanged,
+                    ))
+                };
+                let result = download(password.as_deref().map(|p| p.as_str()));
+                match result {
+                    Err(error)
+                        if !explicit
+                            && ["passphrase_required", "portable_authentication"]
+                                .contains(&error.code.as_str()) =>
+                    {
+                        let previous =
+                            crate::modules::model_config::transfer_protection::previous_password(
+                                &root,
+                            )?;
+                        if previous.is_some() {
+                            download(previous.as_deref().map(|p| p.as_str()))
+                        } else {
+                            Err(error)
+                        }
+                    }
+                    other => other,
+                }
             })
         })
     })
@@ -201,14 +278,45 @@ pub async fn config_sync_download(
 /// 同步按钮：判断本次以本机还是云端为新版。
 #[tauri::command]
 pub async fn config_sync_check(
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+    home: tauri::State<'_, crate::state::SharedHomeDir>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<crate::modules::model_config::sync_state::Check> {
     let root = data_root.0.clone();
+    let config_home = context.opencodex_home.clone();
+    let local_home = home.0.clone();
     tauri::async_runtime::spawn_blocking(move || {
-        remote_operation(&root, |transport, config, binding, _| {
-            tauri::async_runtime::block_on(crate::modules::model_config::sync_state::check(
-                &root, transport, config, binding,
-            ))
+        remote_operation(&root, |transport, config, binding, unchanged| {
+            let read_password =
+                crate::modules::model_config::transfer_protection::read_password(&root)?;
+            let previous =
+                crate::modules::model_config::transfer_protection::previous_password(&root)?;
+            let catalog = tauri::async_runtime::block_on(config_remote::refresh_catalog(
+                &root,
+                transport,
+                config,
+                binding,
+                read_password.as_deref().map(|p| p.as_str()),
+                previous.as_deref().map(|p| p.as_str()),
+            ))?;
+            if let Some(catalog) = catalog.as_ref() {
+                config_remote::initialize_remote_scope(
+                    &root,
+                    binding,
+                    catalog,
+                    &config_home,
+                    &local_home,
+                )?;
+            }
+            let mut scope = config_remote::load_scope(&root)?;
+            scope.cloud_binding = Some(binding.into());
+            scope.upstream_root = Some(config_home);
+            scope.local_home = Some(local_home);
+            let result = tauri::async_runtime::block_on(config_remote::check_source(
+                &root, transport, config, binding, &scope,
+            ))?;
+            unchanged()?;
+            Ok(result)
         })
     })
     .await
@@ -223,14 +331,7 @@ pub async fn config_sync_latest_upload(
         .await
         .map_err(|_| invalid("transfer_worker", "原配置上传记录读取中断"))?
 }
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ExportedModels {
-    pub path: String,
-    pub digest: String,
-    pub templates: usize,
-    pub channels: usize,
-}
+pub use crate::modules::model_config::file_exports::Exported as ExportedModels;
 /// target_dir 为空时写受管 exports/；指定目录时按用户选择落盘。
 /// 非受管目录的写入同样做读回校验，确认落盘内容与计划一致。
 #[tauri::command]
@@ -243,78 +344,20 @@ pub async fn model_transfer_export(
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
-        crate::modules::model_config::feedback::transfer(&root, &plan_id, false, || {
-            let package = transfer::file_package(&root, &plan_id)?;
-            let managed = root.join("exports");
-            let directory = match target_dir
-                .as_deref()
-                .map(str::trim)
-                .filter(|v| !v.is_empty())
-            {
-                Some(custom) => {
-                    let path = std::path::PathBuf::from(custom);
-                    if !path.is_absolute() {
-                        return Err(invalid("export_target", "导出目录须为绝对路径"));
-                    }
-                    if !path.is_dir() {
-                        return Err(invalid("export_target", "导出目录不存在或不可写"));
-                    }
-                    path
-                }
-                None => {
-                    crate::modules::backup::safety::check_path(&root, &managed, true)?;
-                    managed
-                }
-            };
-            // WP-56：目录按“日期 / 单次备份包”组织，每次导出是一个可整体拷贝的包。
-            // 同一天多次导出各成独立包，互不覆盖，也不把不同模块拆成并列目录。
-            let date = chrono::Local::now().format("%Y-%m-%d").to_string();
-            let mut stamp = format!(
-                "opencodex-backup-{}-{}",
-                chrono::Local::now().format("%H%M%S"),
-                &uuid::Uuid::new_v4().to_string()[..8]
-            );
-            let managed = directory == root.join("exports");
-            let mut path = directory
-                .join(&date)
-                .join(&stamp)
-                .join(format!("{stamp}.ocxdconf"));
-            let mut attempt = 1;
-            while managed && path.exists() && attempt < 100 {
-                attempt += 1;
-                stamp = format!(
-                    "opencodex-backup-{}-{}-{attempt}",
-                    chrono::Local::now().format("%H%M%S"),
-                    &uuid::Uuid::new_v4().to_string()[..8]
-                );
-                path = directory
-                    .join(&date)
-                    .join(&stamp)
-                    .join(format!("{stamp}.ocxdconf"));
-            }
-            if managed {
-                crate::modules::backup::safety::check_path(&root, &path, true)?;
-                std::fs::create_dir_all(path.parent().expect("package directory"))?;
-            } else if path.exists() {
-                return Err(invalid("export_target", "目标包已存在，请换一个目录"));
-            }
-            let bytes = transfer::file_bytes(&root, &plan_id)?;
-            crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)?;
-            if crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)? != bytes {
-                return Err(invalid("export_readback", "导出文件读回失败"));
-            }
-            Ok(ExportedModels {
-                path: path.to_string_lossy().into_owned(),
-                digest: package.digest,
-                templates: package.payload.templates.len(),
-                channels: package
-                    .payload
-                    .policy
-                    .as_ref()
-                    .map(|p| p.channels.len())
-                    .unwrap_or_default(),
-            })
-        })
+        crate::modules::model_config::feedback::transfer_registered(
+            &root,
+            &plan_id,
+            "config-snapshot-export",
+            || {
+                crate::modules::model_config::transfer_results::export(&root, &plan_id, || {
+                    crate::modules::model_config::file_exports::export(
+                        &root,
+                        &plan_id,
+                        target_dir.as_deref(),
+                    )
+                })
+            },
+        )
     })
     .await
     .map_err(|_| invalid("transfer_worker", "导出任务中断"))?
@@ -411,6 +454,7 @@ pub async fn model_transfer_receive(
     .await
     .map_err(|_| invalid("transfer_worker", "读取导入任务中断"))?
 }
+#[allow(clippy::too_many_arguments)]
 #[tauri::command]
 pub async fn model_transfer_accept(
     incoming_id: String,
@@ -418,28 +462,126 @@ pub async fn model_transfer_accept(
     passphrase: Option<String>,
     adopt_webdav_passwords: Option<bool>,
     adopt_extension_credentials: Option<bool>,
+    backup_before_update: Option<bool>,
+    credential_ids: Option<Vec<String>>,
     context: tauri::State<'_, crate::state::SharedProcessContext>,
+    home: tauri::State<'_, crate::state::SharedHomeDir>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<Snapshot> {
     let config_home = context.opencodex_home.clone();
+    let local_home = home.0.clone();
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         require_file_plan(&root, &config_home, &incoming_id)?;
-        crate::modules::model_config::feedback::transfer(&root, &incoming_id, false, || {
-            let passphrase = passphrase.map(zeroize::Zeroizing::new);
-            let snapshot = crate::modules::model_config::file_objects::accept_extended(
-                &root,
-                &incoming_id,
-                adopt_keys.unwrap_or(false),
-                adopt_webdav_passwords.unwrap_or(false),
-                adopt_extension_credentials.unwrap_or(false),
-                passphrase.as_deref().map(|p| p.as_str()),
-            )?;
-            let _ = crate::modules::model_config::sync_state::promote_pending(&root, &incoming_id);
-            Ok(snapshot)
-        })
+        let is_sync = transfer::read_incoming(&root, &incoming_id)?.sync.is_some();
+        let already_complete =
+            crate::modules::model_config::file_objects::completed(&root, &incoming_id)?;
+        let event = if is_sync {
+            "config-snapshot-sync"
+        } else {
+            "config-snapshot-import"
+        };
+        crate::modules::model_config::feedback::transfer_registered(
+            &root,
+            &incoming_id,
+            event,
+            || {
+                let intent = crate::modules::model_config::transfer_results::RetryIntent {
+                    adopt_keys: adopt_keys.unwrap_or(false),
+                    adopt_webdav_passwords: adopt_webdav_passwords.unwrap_or(false),
+                    adopt_extension_credentials: adopt_extension_credentials.unwrap_or(false),
+                    backup_before_update: backup_before_update.unwrap_or(true),
+                    credential_ids: credential_ids.clone(),
+                };
+                crate::modules::model_config::transfer_results::import(
+                    &root,
+                    &incoming_id,
+                    intent,
+                    || {
+                        let accept = || {
+                            let passphrase = match passphrase.filter(|p| !p.is_empty()) {
+                                Some(p) => Some(zeroize::Zeroizing::new(p)),
+                                None => {
+                                    if is_sync && !already_complete {
+                                        cached_password(&root, &incoming_id)?
+                                    } else {
+                                        None
+                                    }
+                                }
+                            };
+                            crate::modules::model_config::file_objects::freeze_credential_choice(
+                                &root,
+                                &incoming_id,
+                                credential_ids,
+                            )?;
+                            crate::modules::model_config::transfer_backup::prepare(
+                                &root,
+                                &incoming_id,
+                                backup_before_update.unwrap_or(true),
+                            )?;
+                            let result =
+                                crate::modules::model_config::file_objects::accept_extended(
+                                    &root,
+                                    &incoming_id,
+                                    adopt_keys.unwrap_or(false),
+                                    adopt_webdav_passwords.unwrap_or(false),
+                                    adopt_extension_credentials.unwrap_or(false),
+                                    passphrase.as_deref().map(|p| p.as_str()),
+                                );
+                            // Keep the original snapshot even on partial adoption; finalization
+                            // is mandatory before acknowledging a successful operation.
+                            crate::modules::model_config::transfer_backup::finish(
+                                &root,
+                                &incoming_id,
+                            )?;
+                            let snapshot = result?;
+                            if is_sync && !already_complete {
+                                let mut scope = config_remote::load_scope(&root)?;
+                                scope.cloud_binding = Some(active_remote(&root)?.2);
+                                scope.upstream_root = Some(config_home.clone());
+                                scope.local_home = Some(local_home);
+                                let source_time = transfer::read_incoming(&root, &incoming_id)?
+                                    .package
+                                    .created_at;
+                                let (local, key) = config_remote::source_state_with_time(
+                                    &root,
+                                    &scope,
+                                    Some(&source_time),
+                                )?;
+                                let binding = active_remote(&root)?.2;
+                                crate::modules::model_config::sync_state::promote_pending_content(
+                                    &root,
+                                    &incoming_id,
+                                    &binding,
+                                    &local,
+                                    &key,
+                                )?;
+                            }
+                            Ok(snapshot)
+                        };
+                        if is_sync && !already_complete {
+                            remote_operation(&root, |transport, config, binding, unchanged| {
+                                tauri::async_runtime::block_on(
+                                    crate::modules::model_config::sync_state::verify_pending(
+                                        &root,
+                                        &incoming_id,
+                                        binding,
+                                        transport,
+                                        config,
+                                    ),
+                                )?;
+                                unchanged()?;
+                                accept()
+                            })
+                        } else {
+                            accept()
+                        }
+                    },
+                )
+            },
+        )
     })
     .await
     .map_err(|_| invalid("transfer_worker", "接受导入结果待核对"))?
@@ -518,7 +660,16 @@ pub async fn portable_open_received(
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         require_file_plan(&root, &config_home, &incoming_id)?;
-        let passphrase = passphrase.map(zeroize::Zeroizing::new);
+        let passphrase = match passphrase.filter(|p| !p.is_empty()) {
+            Some(p) => Some(zeroize::Zeroizing::new(p)),
+            None => {
+                if transfer::read_incoming(&root, &incoming_id)?.sync.is_some() {
+                    cached_password(&root, &incoming_id)?
+                } else {
+                    None
+                }
+            }
+        };
         crate::modules::model_config::file_objects::open_received(
             &root,
             &incoming_id,
@@ -570,4 +721,238 @@ pub async fn portable_channel_catalog(
     })
     .await
     .map_err(|_| invalid("provider_scope", "读取当前渠道文件中断"))?
+}
+
+#[tauri::command]
+pub async fn transfer_choices(
+    remote: bool,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Option<crate::modules::model_config::transfer_choices::Choice>> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::transfer_choices::load(&root, remote)
+    })
+    .await
+    .map_err(|_| invalid("transfer_choices", "范围读取中断"))?
+}
+#[tauri::command]
+pub async fn save_transfer_choices(
+    remote: bool,
+    choice: crate::modules::model_config::transfer_choices::Choice,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::transfer_choices::Choice> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::transfer_choices::save(&root, remote, choice)
+    })
+    .await
+    .map_err(|_| invalid("transfer_choices", "范围保存中断"))?
+}
+
+#[tauri::command]
+pub async fn transfer_protection(
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::transfer_protection::Status> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::transfer_protection::status(&root)
+    })
+    .await
+    .map_err(|_| invalid("sync_protection", "保护设置读取中断"))?
+}
+#[tauri::command]
+pub async fn save_transfer_protection(
+    enabled: bool,
+    passphrase: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::transfer_protection::Status> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        let passphrase = passphrase.map(zeroize::Zeroizing::new);
+        crate::modules::model_config::transfer_protection::save(
+            &root,
+            enabled,
+            passphrase.as_deref().map(|v| v.as_str()),
+        )
+    })
+    .await
+    .map_err(|_| invalid("sync_protection", "保护设置保存中断"))?
+}
+
+#[tauri::command]
+pub async fn transfer_backup_status(
+    incoming_id: String,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Option<crate::modules::model_config::transfer_backup::Status>> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        require_file_plan(&root, &home, &incoming_id)?;
+        crate::modules::model_config::transfer_backup::status(&root, &incoming_id)
+    })
+    .await
+    .map_err(|_| invalid("scope_backup", "备份状态读取中断"))?
+}
+#[tauri::command]
+pub async fn restore_transfer_backup(
+    incoming_id: String,
+    groups: Vec<String>,
+    baseline: String,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Snapshot> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        require_file_plan(&root, &home, &incoming_id)?;
+        crate::modules::model_config::transfer_backup::restore_checked(
+            &root,
+            &incoming_id,
+            &groups,
+            &baseline,
+        )?;
+        crate::modules::model_config::config_file::snapshot(&root, &home)
+    })
+    .await
+    .map_err(|_| invalid("scope_backup", "恢复结果待核对"))?
+}
+#[tauri::command]
+pub async fn import_credential_choices(
+    preferences: Option<crate::modules::model_config::transfer_choices::ImportCredentials>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::transfer_choices::ImportCredentials> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::transfer_choices::import_credentials(&root, preferences)
+    })
+    .await
+    .map_err(|_| invalid("transfer_choices", "导入凭据偏好读写中断"))?
+}
+
+#[tauri::command]
+pub async fn open_transfer_export_directory(
+    plan_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<()> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let dir = crate::modules::model_config::file_exports::directory(&root, &plan_id)?;
+        crate::commands::workspace::open_path(&dir)
+            .map_err(|_| invalid("export_directory", "无法打开本次导出目录"))?;
+        crate::modules::model_config::feedback::export_directory_opened(&root, &plan_id);
+        Ok(())
+    })
+    .await
+    .map_err(|_| invalid("export_directory", "打开导出目录任务中断"))?
+}
+
+#[tauri::command]
+pub async fn transfer_result(
+    operation_id: Option<String>,
+    mode: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Option<crate::modules::model_config::transfer_results::Receipt>> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        if operation_id.is_none() {
+            if let Some(mode) = mode {
+                return crate::modules::model_config::transfer_results::read_mode(&root, &mode);
+            }
+        }
+        crate::modules::model_config::transfer_results::read(&root, operation_id.as_deref())
+    })
+    .await
+    .map_err(|_| invalid("transfer_result", "结果读取任务中断"))?
+}
+
+#[tauri::command]
+pub async fn model_transfer_protect(
+    plan_id: String,
+    passphrase: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<FileExportPlan> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        let passphrase = passphrase.map(zeroize::Zeroizing::new);
+        transfer::protect_file(&root, &plan_id, passphrase.as_deref().map(|p| p.as_str()))
+    })
+    .await
+    .map_err(|_| invalid("transfer_worker", "文件保护任务中断，未重新读取业务内容"))?
+}
+
+#[tauri::command]
+pub async fn list_transfer_backups(
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Vec<crate::modules::model_config::transfer_backup::Status>> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::transfer_backup::list(&root, &home)
+    })
+    .await
+    .map_err(|_| invalid("scope_backup", "读取更新前备份任务中断"))?
+}
+#[tauri::command]
+pub async fn preview_transfer_restore(
+    incoming_id: String,
+    groups: Vec<String>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<String> {
+    let root = data_root.0.clone();
+    let home = context.opencodex_home.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        require_file_plan(&root, &home, &incoming_id)?;
+        crate::modules::model_config::transfer_backup::restore_baseline(
+            &root,
+            &incoming_id,
+            &groups,
+        )
+    })
+    .await
+    .map_err(|_| invalid("scope_restore", "恢复预览读取中断"))?
+}
+
+#[tauri::command]
+pub async fn config_sync_catalog(
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Option<config_remote::CloudCatalog>> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let binding = match active_remote(&root) {
+            Ok(v) => v.2,
+            Err(error) if error.code == "not_configured" => return Ok(None),
+            Err(error) => return Err(error),
+        };
+        config_remote::cached_catalog(&root, &binding)
+    })
+    .await
+    .map_err(|_| invalid("sync_catalog", "云端对象目录读取中断"))?
+}
+
+#[tauri::command]
+pub async fn portable_asset_detail(
+    kind: String,
+    name: String,
+    source: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    home: tauri::State<'_, crate::state::SharedHomeDir>,
+) -> ModelResult<crate::modules::sync::portable_assets::Detail> {
+    let root = data_root.0.clone();
+    let home = home.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::sync::portable_assets::detail(&root, &home, &kind, &name, source.as_deref())
+    })
+    .await
+    .map_err(|_| invalid("asset_detail", "读取资源详情任务中断"))?
 }

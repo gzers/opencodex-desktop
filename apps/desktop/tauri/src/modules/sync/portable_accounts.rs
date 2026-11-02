@@ -110,6 +110,27 @@ fn same_object(a: &AccountInfo, b: &AccountInfo) -> bool {
 pub fn same_identity(a: &AccountInfo, b: &AccountInfo) -> bool {
     (a.id == b.id && same_object(a, b)) || same_subject(a, b)
 }
+pub fn comparison_value(account: &AccountInfo) -> ModelResult<serde_json::Value> {
+    let mut value = serde_json::to_value(account)?;
+    if account.subject.is_some() && account.origin.is_some() {
+        value.as_object_mut().unwrap().remove("id");
+        if let Some(origin) = value
+            .get_mut("origin")
+            .and_then(serde_json::Value::as_object_mut)
+        {
+            origin.remove("sourceAccountId");
+        }
+    }
+    Ok(value)
+}
+pub fn comparison_identity(account: &AccountInfo) -> ModelResult<String> {
+    let mut value = comparison_value(account)?;
+    value.as_object_mut().unwrap().remove("label");
+    value.as_object_mut().unwrap().remove("email");
+    Ok(crate::modules::model_config::store::sha256(
+        &serde_json::to_vec(&value)?,
+    ))
+}
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum LoginTransfer {

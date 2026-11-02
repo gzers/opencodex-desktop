@@ -36,9 +36,19 @@ export const useSyncStore = defineStore('sync', {
     testing: false,
     running: false,
     // S18-01：概览入口请求同步页执行的动作，由同步页挂载后消费一次。
+    connectionOpen:false,
+    resultOpen:false,
+    resultId:null as string|null,
+    lastResultId:null as string|null,
+    fileResultId:null as string|null,
+    webdavResultId:null as string|null,
     pendingAction: null as null | 'sync' | 'export' | 'connection',
   }),
   actions: {
+    openConnection(){this.connectionOpen=true},
+    rememberResult(id:string,remote:boolean){this.lastResultId=id;if(remote)this.webdavResultId=id;else this.fileResultId=id},
+    openResult(id?:string){this.resultId=id??this.lastResultId;this.resultOpen=true},
+    closeResult(){this.resultOpen=false},
     setWebdavState(next: ConnectionState) {
       this.webdavState = next
     },

@@ -15,6 +15,7 @@ describe('notification action label contract', () => {
       'upgrade',
       'app_update',
       'sync',
+      'transfer_result',
       'logs',
       'settings_installation',
       'settings_cleanup',

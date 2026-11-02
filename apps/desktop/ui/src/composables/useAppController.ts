@@ -56,7 +56,8 @@ export function useAppController(initialize = false) {
       confirmLabel: notificationConfirmLabel(notification.action),
       onConfirm: () => {
         if (notification.action === 'restore') openRestoreConfirm(notification.target ?? app.runtimeState)
-        else if (notification.action === 'sync') routes.go('sync',{tab:'webdav'})
+        else if (notification.action === 'sync') void import('@/features/sync/store').then(({useSyncStore})=>useSyncStore().openConnection())
+        else if (notification.action === 'transfer_result') void import('@/features/sync/store').then(({useSyncStore})=>useSyncStore().openResult(notification.objectId??undefined))
         else if (notification.action === 'logs') routes.go('logs', { tab: 'logs' })
         else if (notification.action === 'model_policy') {
           void import('@/features/models/store').then(({useModelsStore})=>{if(notification.objectId)useModelsStore().policyNotificationTarget={planId:notification.objectId};routes.go('models')})

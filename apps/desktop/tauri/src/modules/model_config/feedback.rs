@@ -185,38 +185,95 @@ pub fn transfer<T>(
     );
     result
 }
+fn receipt_event(root: &Path, event: &str, id: &str, candidate: &str) {
+    let Some(app) = APP.get() else { return };
+    let (Ok(object_id), Ok(candidate)) = (OpaqueId::parse(id), OpaqueId::parse(candidate)) else {
+        return;
+    };
+    let Ok(definition) = registry::lookup(event) else {
+        diagnostic(root);
+        return;
+    };
+    let identity = EventIdentity {
+        object: definition.object,
+        object_id,
+        action: definition.action,
+        phase: definition.phase,
+        channel: Channel::Local,
+        candidate,
+    };
+    crate::commands::event_delivery::publish(app, root, event, Some(identity), Trigger::User);
+}
+pub fn transfer_registered<T>(
+    root: &Path,
+    id: &str,
+    stem: &str,
+    action: impl FnOnce() -> super::schema::ModelResult<T>,
+) -> super::schema::ModelResult<T> {
+    progress(root, id, OperationKind::Transfer, OperationPhase::Running);
+    let started = match stem {
+        "config-snapshot-import" => Some("config-snapshot-import-started"),
+        "config-snapshot-sync" => Some("config-snapshot-sync-started"),
+        _ => None,
+    };
+    if let (Some(app), Some(event)) = (APP.get(), started) {
+        if let Ok(d) = registry::lookup(event) {
+            let _ = crate::commands::event_delivery::emit_signal(
+                app,
+                event,
+                d.job,
+                Trigger::User,
+                Channel::Local,
+                Signal {
+                    id,
+                    kind: OperationKind::Transfer,
+                    phase: OperationPhase::Running,
+                    previous_id: None,
+                },
+            );
+        }
+    }
+    let result = action();
+    let event = format!(
+        "{stem}-{}",
+        if result.is_ok() {
+            "succeeded"
+        } else {
+            "failed"
+        }
+    );
+    receipt_event(root, &event, id, id);
+    progress(
+        root,
+        id,
+        OperationKind::Transfer,
+        if result.is_ok() {
+            OperationPhase::Succeeded
+        } else {
+            OperationPhase::Failed
+        },
+    );
+    result
+}
+pub fn export_directory_opened(root: &Path, id: &str) {
+    receipt_event(
+        root,
+        "config-export-directory-opened",
+        id,
+        &uuid::Uuid::new_v4().to_string(),
+    )
+}
 
 /// Receiving creates its durable identity only after the file/remote document
 /// validates. Rebind the transient observation to that exact receipt, so later
 /// adoption/retries update it instead of leaving a permanent review card.
 pub fn receive_transfer(
-    root: &Path,
+    _root: &Path,
     action: impl FnOnce() -> super::schema::ModelResult<super::transfer::IncomingPlan>,
 ) -> super::schema::ModelResult<super::transfer::IncomingPlan> {
-    let pending = uuid::Uuid::new_v4().to_string();
-    progress(
-        root,
-        &pending,
-        OperationKind::Transfer,
-        OperationPhase::Running,
-    );
-    let result = action();
-    match &result {
-        Ok(receipt) => progress_linked(
-            root,
-            &receipt.id,
-            OperationKind::Transfer,
-            OperationPhase::Review,
-            Some(&pending),
-        ),
-        Err(_) => progress(
-            root,
-            &pending,
-            OperationKind::Transfer,
-            OperationPhase::Failed,
-        ),
-    }
-    result
+    // Reading/decrypting a preview is not an import operation. The dialog owns
+    // its busy/error state; only explicit confirmation starts a task receipt.
+    action()
 }
 
 /// Upgrade diagnostics use the existing bell. Only fixed classifications cross

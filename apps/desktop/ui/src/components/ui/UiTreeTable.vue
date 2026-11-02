@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{
   "update:expandedIds": [ids: string[]]
   select: [id: string, selected: boolean]
+  activate: [id:string]
   retry: []
 }>()
 const localExpanded = ref(initialTreeExpansion(props.nodes, props.initialExpandedDepth))
@@ -65,8 +66,9 @@ function resolveFocus(snapshot: FocusSnapshot): HTMLElement | undefined {
   }
   return controls.get(rows.value[0]?.node.id ?? "")
 }
+function branch(node:TreeTableNode){return !!node.children?.length||!!node.expandable}
 function toggle(node: TreeTableNode) {
-  if (!node.children?.length) return
+  if (!branch(node)) return
   const next = new Set(expanded.value)
   if (next.has(node.id)) next.delete(node.id)
   else next.add(node.id)
@@ -86,7 +88,7 @@ function onKey(event: KeyboardEvent, row: TreeTableRow) {
     case "Home": target = rows.value[0]?.node.id; break
     case "End": target = rows.value.at(-1)?.node.id; break
     case "ArrowRight":
-      if (row.node.children?.length && !expanded.value.has(row.node.id)) toggle(row.node)
+      if (branch(row.node) && !expanded.value.has(row.node.id)) toggle(row.node)
       else target = row.node.children?.[0]?.id
       break
     case "ArrowLeft":
@@ -121,30 +123,30 @@ watch([rows, () => props.loading, () => props.error], async ([, loading], [previ
 <template>
   <div class="ui-tree-table" :aria-busy="loading || undefined">
     <table :aria-label="label">
-      <thead><tr><th scope="col">{{ nameLabel }}</th><th v-for="column in columns" :key="column.key" scope="col">{{ column.label }}</th></tr></thead>
+      <thead><tr><th scope="col"><slot name="name-header">{{ nameLabel }}</slot></th><th v-for="column in columns" :key="column.key" scope="col">{{ column.label }}</th></tr></thead>
       <tbody>
         <tr v-if="error || loading || !rows.length"><td :colspan="columns.length + 1" class="tree-message">
           <span :role="error ? 'alert' : 'status'">{{ error || (loading ? "正在读取…" : emptyLabel) }}</span>
           <button v-if="error && !loading" ref="retryControl" type="button" class="btn ghost" @click="emit('retry')">重试</button>
         </td></tr>
         <template v-else>
-          <tr v-for="row in rows" :key="row.node.id" :data-node-id="row.node.id">
+          <template v-for="row in rows" :key="row.node.id"><tr :data-node-id="row.node.id">
             <th scope="row">
               <div class="tree-name" :style="{ '--tree-depth': row.depth }">
                 <span class="tree-selection">
                   <input v-if="row.node.selectable" :ref="el => setSelection(row.node.id, el)" type="checkbox" class="tree-check" :aria-label="`选择 ${row.node.label}`" :checked="row.node.selected === true" :indeterminate="row.node.selected === 'mixed'" :aria-checked="row.node.selected === 'mixed' ? 'mixed' : row.node.selected === true" :disabled="row.node.disabled" @keydown="onKey($event, row)" @change="emit('select', row.node.id, ($event.target as HTMLInputElement).checked)" />
                 </span>
-                <button v-if="row.node.children?.length" :ref="el => setControl(row.node.id, el)" class="tree-toggle" type="button" :aria-label="row.node.children?.length ? `${expanded.has(row.node.id) ? '收起' : '展开'} ${row.node.label}` : row.node.label" :aria-expanded="row.node.children?.length ? expanded.has(row.node.id) : undefined" @keydown="onKey($event, row)" @click="toggle(row.node)">
-                  <svg v-if="row.node.children?.length" aria-hidden="true" viewBox="0 0 16 16" :class="{ expanded: expanded.has(row.node.id) }"><path d="m6 4 4 4-4 4" /></svg>
+                <button v-if="branch(row.node)" :ref="el => setControl(row.node.id, el)" class="tree-toggle" type="button" :aria-label="branch(row.node) ? `${expanded.has(row.node.id) ? '收起' : '展开'} ${row.node.label}` : row.node.label" :aria-expanded="branch(row.node) ? expanded.has(row.node.id) : undefined" @keydown="onKey($event, row)" @click="toggle(row.node)">
+                  <svg v-if="branch(row.node)" aria-hidden="true" viewBox="0 0 16 16" :class="{ expanded: expanded.has(row.node.id) }"><path d="m6 4 4 4-4 4" /></svg>
                 </button>
                 <span v-else class="tree-toggle-placeholder" aria-hidden="true"></span>
                 <span class="tree-icon" aria-hidden="true"><slot name="icon" :node="row.node" :depth="row.depth"></slot></span>
-                <button v-if="!row.node.children?.length" :ref="el => setControl(row.node.id, el)" class="tree-label tree-leaf" type="button" :aria-label="row.node.label" @keydown="onKey($event, row)"><slot name="name" :node="row.node" :depth="row.depth">{{ row.node.label }}</slot></button>
+                <button v-if="!branch(row.node)" :ref="el => setControl(row.node.id, el)" class="tree-label tree-leaf" type="button" :aria-label="row.node.label" @keydown="onKey($event, row)" @click="emit('activate',row.node.id)"><slot name="name" :node="row.node" :depth="row.depth">{{ row.node.label }}</slot></button>
                 <span v-else class="tree-label"><slot name="name" :node="row.node" :depth="row.depth">{{ row.node.label }}</slot></span>
               </div>
             </th>
             <td v-for="column in columns" :key="column.key"><div class="tree-cell" :class="{ 'tree-cell-action': column.kind === 'action' }"><slot :name="`cell-${column.key}`" :node="row.node" :depth="row.depth"></slot></div></td>
-          </tr>
+          </tr><tr v-if="row.node.groupControls&&expanded.has(row.node.id)" class="tree-group-controls"><td :colspan="columns.length+1"><slot name="group-controls" :node="row.node" /></td></tr></template>
         </template>
       </tbody>
     </table>
