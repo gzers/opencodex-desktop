@@ -29,8 +29,8 @@
     },
     "release-and-ota": {
       "status": "pending",
-      "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Release run 41429792658 failed its isolated installer matrix: default MSI/NSIS passed, custom MSI install/uninstall returned success but MSI AppSearch reused the remembered default path so the custom destination had no EXE. PR #35 merged as f19e5e99210db8eea1500bd2d1b4daf1b3af3382; it isolates the remembered HKCU path, adds v0.2.20 to exact-package acceptance, and extends only test-fixture startup waits. Full CI 41439302028 passed across Windows native build/EXE/install regression, macOS, frontend and release tools. The original-asset four-combination installer acceptance and actual 0.2.19→0.2.20 OTA are still pending. macOS uses ad-hoc codesign and Windows MSI/NSIS have no OS Authenticode certificate; Tauri updater signatures are separate and verified. Stable promotion remains pending.",
-      "evidence": "/tmp/ocx020-release-414297-evidence/installer-verification.json; implementation-20261102/native-release-package-and-ui.md; CI run 41429792658; PR #35 commits 490a4ce8 and 97c5aedd; .github/workflows/windows-release-acceptance.yml; docs/03-开发实施/REL-OPENCODEX-DESKTOP-19.md §发布边界"
+      "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Original release run 41429792658 had custom MSI remembered-path failure; PR #35 merged at f19e5e992 fixed disposable-runner path isolation, accepted v0.2.20 in exact-package verifier, and lengthened only local fixture waits. Existing package four-cell Windows matrix final pass is run 41448710359 (head d35d8ef7): MSI/NSIS × default/custom, immutable original hashes and installed EXE identities verified; earlier diagnostic failures remain preserved in 41446111057/41447323857/41447830049, and MSI default passed on the failed-job rerun. Updater signatures and package digests pass. Actual 0.2.19→0.2.20 OTA is still unrun, consumer-by-consumer dialog parity remains open, and release is still draft. macOS is ad-hoc signed; Windows MSI/NSIS lack OS Authenticode; updater signatures are distinct.",
+      "evidence": "implementation-20261102/windows-existing-installer-matrix.md; implementation-20261102/native-release-package-and-ui.md; /tmp/ocx020-release-414297-evidence/installer-verification.json; release run 41429792658; installer matrix run 41448710359; diagnostic runs 41446111057, 41447323857, 41447830049; PR #35 merge f19e5e992; .github/workflows/windows-release-acceptance.yml"
     }
   },
   "tests": {
@@ -243,6 +243,56 @@
         "consumer-by-consumer dialog state closure"
       ],
       "purpose": "rerun Windows native EXE smoke after correcting connection-dialog cancellation action"
+    },
+    {
+      "run": 41446111057,
+      "workflow": "Existing v0.2.20 Windows installer matrix after PR #35 merge",
+      "status": "failure",
+      "passed_cells": [
+        "MSI custom",
+        "MSI default",
+        "NSIS default"
+      ],
+      "failed_cell": "NSIS custom: startup file inventory traversed live WebView lockfile; application had installed executable identity and responded, uninstall succeeded; harness diagnostic aborted on a locked file"
+    },
+    {
+      "run": 41447323857,
+      "workflow": "Existing v0.2.20 installer matrix with sandbox inventory",
+      "head": "09f94fd805fe14960297692bf8fe2daafd951536",
+      "status": "failure",
+      "cause": "Inventory path filter mishandled Windows separators and included WebView crashpad files; MSI custom/NSIS default passed; NSIS custom failed during diagnostic inventory; MSI default later failed startup-log check"
+    },
+    {
+      "run": 41447830049,
+      "workflow": "Existing v0.2.20 installer matrix with safe WebView exclusion",
+      "head": "7532df332f5aa1fbcb3b1d88c703197f6d1d11ed",
+      "status": "failure",
+      "passed_cells": [
+        "MSI custom",
+        "MSI default initial attempt",
+        "NSIS default"
+      ],
+      "failed_cell": "NSIS custom: EXE window responsive but no data-root files or startup log; a separate first MSI default attempt also showed empty sandbox. No installer identity mismatch."
+    },
+    {
+      "run": 41448710359,
+      "workflow": "Final existing v0.2.20 Windows MSI/NSIS default/custom acceptance",
+      "head": "d35d8ef7b2799e2376b8d79bd241a84ad61cb56c",
+      "status": "success",
+      "conclusion": "success",
+      "passed_cells": [
+        "MSI default",
+        "MSI custom",
+        "NSIS default",
+        "NSIS custom"
+      ],
+      "passed_rerun": "MSI default failed once with missing startup log, then passed when failed matrix job was rerun within this workflow",
+      "asset_sha256": {
+        "MSI": "9054739868df77ce61812b70a6b42b663c3c1198a53078a3e9a296b9d851ff7f",
+        "NSIS": "6bcacd17bfd89612ff6e50be88c96c32edb8301f614490e6cd95ff626de7ec64"
+      },
+      "existingAssetsUnchanged": true,
+      "rebuilt": false
     }
   ]
 }
