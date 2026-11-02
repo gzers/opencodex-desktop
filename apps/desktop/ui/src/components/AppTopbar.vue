@@ -5,6 +5,7 @@ import { useRouteStore } from '@/stores/routes'
 import { useThemeStore } from '@/app/appearance/theme'
 import { useAppController } from '@/composables/useAppController'
 import { useNotificationsStore } from '@/features/notifications/store'
+import { pulseBell } from '@/app/feedback/motion'
 import type { NotificationItem } from '@/types/ui'
 
 const routes = useRouteStore()
@@ -14,7 +15,8 @@ const controller = useAppController()
 defineProps<{ compact?: boolean; subtitleOverride?: string }>()
 const notifications = useNotificationsStore()
 const panelOpen = computed({ get: () => notifications.panelOpen, set: value => { notifications.panelOpen = value } })
-const bellPulsing = computed(() => routes.bellPulse)
+// 每次请求关注都重新播放一次铃铛脉冲（原型 pulseBell）；计数只作触发信号。
+watch(() => routes.bellPulse, () => pulseBell())
 // 顶栏全局刷新（IMP-06）：转圈期间禁止重复点击，失败由编排层给 Toast，不改写任何状态。
 const refreshing = ref(false)
 
@@ -113,7 +115,7 @@ onBeforeUnmount(() => {
       <div class="notification-wrap">
         <button
           class="notification-btn"
-          :class="{ 'bell-pulse': bellPulsing }"
+          data-notification-bell
           :aria-expanded="panelOpen ? 'true' : 'false'"
           title="通知"
           @click.stop="togglePanel"

@@ -26,7 +26,7 @@ try{
   await proto.goto('file://'+encodeURI(prototype)+'#overview');await proto.waitForTimeout(500)
   await proto.evaluate(({w,h,theme,effects})=>{const win=document.querySelector('.window');win.style.width=w+'px';win.style.height=h+'px';win.style.flex='none';document.documentElement.dataset.theme=theme;document.documentElement.dataset.effects=effects;if(window.applyTheme)window.applyTheme(theme)},c)
   await app.goto('http://127.0.0.1:'+port+'/qa/overview-harness/index.html?effects='+c.effects+'&theme='+c.theme);await app.waitForSelector('.mods')
-  await app.getByRole('button',{name:'导入配置',exact:true}).click();await app.waitForSelector('dialog[open]')
+  await app.getByRole('button',{name:'导入',exact:true}).click();await app.waitForSelector('dialog[open]')
   await proto.evaluate(()=>{window.setEnv('ready');document.querySelector('[data-prototype-action=import]').click()})
   await proto.waitForTimeout(200)
   const pi=await info(proto,'#modal'),ii=await info(app,'dialog[open]')
@@ -40,7 +40,7 @@ try{
   check(tag+' import within window',ii.top>=0&&ii.bottom<=c.h&&!ii.horizontal,ii)
   await proto.locator('#modal').screenshot({path:path.join(output,tag+'-prototype-import.png')});await app.locator('dialog[open]').screenshot({path:path.join(output,tag+'-implementation-import.png')})
   await app.getByRole('button',{name:'取消',exact:true}).click();await proto.evaluate(()=>window.closeModal())
-  await app.getByRole('button',{name:'查看桌面管理器更新详情',exact:true}).click();await app.waitForSelector('[data-testid=manager-update-card]')
+  await app.getByRole('button',{name:/^查看桌面管理器更新详情/}).click();await app.waitForSelector('[data-testid=manager-update-card]')
   await proto.evaluate(()=>{document.querySelector('[data-maint-action=update-detail][data-target=manager]').click()});await proto.waitForTimeout(250)
   // If the prototype is initially unchecked, the explicit check has no side effects.
   if(!await proto.locator('#modal').innerText().then(t=>t.includes('更新详情与确认'))){await proto.evaluate(()=>{window.closeModal();document.querySelector('[data-maint-action=check-all]').click()});await proto.waitForTimeout(1100);await proto.evaluate(()=>document.querySelector('[data-maint-action=update-detail][data-target=manager]').click())}

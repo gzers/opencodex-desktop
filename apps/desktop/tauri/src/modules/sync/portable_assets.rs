@@ -1,6 +1,8 @@
-//! Explicit extension assets. Source trees are read-only; received assets live
-//! in the existing manager skill store or a manager-owned MCP definition source.
-//! A definition does not execute or project into a client merely by importing it.
+//! Explicit extension assets. A received Skill replaces the directory that
+//! discovery uses for that name (the read source when present, otherwise the
+//! manager skill store) after a backup (S18-04); MCPs live in a manager-owned
+//! definition source. A definition does not execute or project into a client
+//! merely by importing it.
 use crate::{
     infrastructure::atomic_write::atomic_write,
     modules::{
@@ -24,6 +26,27 @@ use zeroize::Zeroize;
 const MCP_STORE: &str = "manager-state/mcp-definitions.json";
 const FILE_LIMIT: u64 = 8 * 1024 * 1024;
 const TOTAL_LIMIT: usize = 24 * 1024 * 1024;
+/// MCPs maintained by a client application itself (local paths, app versions).
+/// "All" scopes skip them; an explicit selection still includes them (S18-03).
+pub const DEFAULT_EXCLUDED_MCPS: [&str; 1] = ["node_repl"];
+pub fn default_included_mcp(name: &str) -> bool {
+    !DEFAULT_EXCLUDED_MCPS.contains(&name)
+}
+/// Same-named MCP whose client definitions differ and no source was chosen.
+/// Only client ids and differing top-level field names, never values.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct McpConflict {
+    pub name: String,
+    pub clients: Vec<String>,
+    pub fields: Vec<String>,
+}
+pub fn client_key(client: extensions::ClientId) -> String {
+    serde_json::to_value(client)
+        .ok()
+        .and_then(|value| value.as_str().map(str::to_owned))
+        .unwrap_or_default()
+}
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SkillFile {
@@ -134,6 +157,8 @@ pub fn remap(assets: &Assets, mappings: &NameMappings) -> ModelResult<Assets> {
 pub struct Summary {
     pub skills: Vec<SkillSummary>,
     pub mcps: Vec<McpSummary>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub conflicts: Vec<McpConflict>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -485,6 +510,7 @@ pub fn summarize(assets: &Assets) -> Summary {
                 warnings: mcp.warnings.clone(),
             })
             .collect(),
+        conflicts: vec![],
     }
 }
 pub fn secret_count(assets: &Assets) -> usize {
@@ -593,9 +619,56 @@ pub fn export(
     include_secrets: bool,
     reviewed: bool,
 ) -> ModelResult<Assets> {
+    let (assets, conflicts) = export_with_sources(
+        root,
+        home,
+        skills,
+        mcps,
+        &BTreeMap::new(),
+        include_secrets,
+        reviewed,
+    )?;
+    if let Some(conflict) = conflicts.first() {
+        return Err(invalid(
+            "mcp_source",
+            format!(
+                "MCP「{}」在多个客户端的定义不同，请先选择采用来源",
+                conflict.name
+            ),
+        ));
+    }
+    Ok(assets)
+}
+fn differing_fields(definitions: &[&Value]) -> Vec<String> {
+    let mut keys = BTreeSet::new();
+    for definition in definitions {
+        if let Some(object) = definition.as_object() {
+            keys.extend(object.keys().cloned());
+        }
+    }
+    keys.into_iter()
+        .filter(|key| {
+            let first = definitions[0].get(key);
+            definitions.iter().any(|other| other.get(key) != first)
+        })
+        .collect()
+}
+/// Exports the selected assets. A same-named MCP with differing client
+/// definitions uses the chosen source client; without a choice it is skipped
+/// and reported, so one conflict does not block the rest (S18-03).
+pub fn export_with_sources(
+    root: &Path,
+    home: &Path,
+    skills: &[String],
+    mcps: &[String],
+    sources: &BTreeMap<String, String>,
+    include_secrets: bool,
+    reviewed: bool,
+) -> ModelResult<(Assets, Vec<McpConflict>)> {
     if !home.is_absolute() || !home.is_dir() {
         return Err(invalid("asset_home", "扩展读源未绑定有效主目录"));
     }
+    let mut conflicts = vec![];
     let config = config(root)?;
     let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, home, true, true));
     let source = extensions::source_dir::configured_source_dir(&config, home);
@@ -638,35 +711,57 @@ pub fn export(
             }
             continue;
         }
-        let mut definitions = vec![];
+        let mut found = vec![];
         for target in &targets {
             if let Some(definition) = discovery::read_server_definition(target, server)
                 .map_err(|_| invalid("mcp_read", "MCP源配置无法安全读取"))?
             {
-                if !definitions
-                    .iter()
-                    .any(|old: &discovery::RawServerDefinition| old.value == definition.value)
-                {
-                    definitions.push(definition);
-                }
+                found.push((client_key(target.client_id), definition));
             }
         }
-        if definitions.len() != 1 {
-            return Err(invalid(
-                "mcp_source",
-                if definitions.is_empty() {
-                    "所选MCP定义不存在"
-                } else {
-                    "多个客户端的同名MCP定义不同，请先明确采用来源"
-                },
-            ));
+        let chosen = if let Some(source) = sources.get(server) {
+            Some(
+                found
+                    .iter()
+                    .find(|(client, _)| client == source)
+                    .map(|(_, definition)| definition.clone())
+                    .ok_or_else(|| {
+                        invalid(
+                            "mcp_source",
+                            format!("所选来源客户端中已没有MCP「{server}」，请重新选择"),
+                        )
+                    })?,
+            )
+        } else {
+            let mut distinct: Vec<&discovery::RawServerDefinition> = vec![];
+            for (_, definition) in &found {
+                if !distinct.iter().any(|old| old.value == definition.value) {
+                    distinct.push(definition);
+                }
+            }
+            match distinct.len() {
+                0 => return Err(invalid("mcp_source", "所选MCP定义不存在")),
+                1 => Some(distinct[0].clone()),
+                _ => {
+                    conflicts.push(McpConflict {
+                        name: server.clone(),
+                        clients: found.iter().map(|(client, _)| client.clone()).collect(),
+                        fields: differing_fields(
+                            &distinct.iter().map(|d| &d.value).collect::<Vec<_>>(),
+                        ),
+                    });
+                    None
+                }
+            }
+        };
+        if let Some(definition) = chosen {
+            result
+                .mcps
+                .push(split_mcp(definition, include_secrets, reviewed)?);
         }
-        result
-            .mcps
-            .push(split_mcp(definitions.remove(0), include_secrets, reviewed)?);
     }
     validate(&result)?;
-    Ok(result)
+    Ok((result, conflicts))
 }
 fn mcp_store(root: &Path) -> ModelResult<Vec<StoredMcp>> {
     let path = root.join(MCP_STORE);
@@ -830,50 +925,16 @@ pub fn prepare(root: &Path, home: &Path, id: &str, assets: &Assets) -> ModelResu
     let mut skills_before = BTreeMap::new();
     let mut source_before = BTreeMap::new();
     for skill in &assets.skills {
-        let before = skill_digest(&store.join(&skill.name), skill)?;
-        let original = skill_digest(&source.join(&skill.name), skill)?;
-        if before
-            .as_ref()
-            .is_some_and(|digest| digest != &skill.digest)
-            || original
-                .as_ref()
-                .is_some_and(|digest| digest != &skill.digest)
-        {
-            return Err(invalid(
-                "asset_conflict",
-                format!(
-                    "Skill「{}」与本机同名内容不同，请选择跳过或改名",
-                    skill.name
-                ),
-            ));
-        }
-        skills_before.insert(skill.name.clone(), before);
-        source_before.insert(skill.name.clone(), original);
-    }
-    let stored = mcp_store(root)?;
-    let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, home, true, true));
-    for mcp in &assets.mcps {
-        if stored
-            .iter()
-            .any(|existing| existing.name == mcp.name && existing.definition != mcp.definition)
-        {
-            return Err(invalid(
-                "mcp_conflict",
-                format!("MCP「{}」与本机定义不同，请先明确映射", mcp.name),
-            ));
-        }
-        for target in &targets {
-            if let Some(existing) = discovery::read_server_definition(target, &mcp.name)
-                .map_err(|_| invalid("mcp_read", "本机MCP定义无法安全核对"))?
-            {
-                if split_mcp(existing, false, true)?.definition != mcp.definition {
-                    return Err(invalid(
-                        "mcp_conflict",
-                        format!("客户端中的MCP「{}」存在不同定义，未覆盖", mcp.name),
-                    ));
-                }
-            }
-        }
+        // Same-named local content is replaced on confirm (S18-04); the
+        // digests only detect edits made between preview and confirm.
+        skills_before.insert(
+            skill.name.clone(),
+            skill_digest(&store.join(&skill.name), skill)?,
+        );
+        source_before.insert(
+            skill.name.clone(),
+            skill_digest(&source.join(&skill.name), skill)?,
+        );
     }
     let digest = sha256(&serde_json::to_vec(assets)?);
     let plan = ApplyPlan {
@@ -952,46 +1013,6 @@ fn read_apply(root: &Path, id: &str) -> ModelResult<ApplyPlan> {
     }
     Ok(plan)
 }
-fn verify_skill_target(
-    root: &Path,
-    skill: &Skill,
-    expected: Option<&String>,
-    resuming: bool,
-) -> ModelResult<()> {
-    let path = discovery::skills_store_dir(root).join(&skill.name);
-    safety::check_path(root, &path, true)?;
-    if !path.exists() {
-        if expected.is_some() {
-            return Err(invalid(
-                "asset_drift",
-                "本机Skill在接收后被移除，未自动重建",
-            ));
-        }
-        return Ok(());
-    }
-    if skill_digest(&path, skill).is_ok_and(|digest| digest.as_deref() == Some(&skill.digest)) {
-        return Ok(());
-    }
-    if expected.is_some() || !resuming {
-        return Err(invalid("asset_drift", "接收后Skill发生修改，未覆盖"));
-    }
-    let canonical = path.canonicalize()?;
-    let mut current = vec![];
-    walk(&canonical, &canonical, &mut current, &mut 0)?;
-    if current.iter().any(|file| {
-        !skill.files.iter().any(|desired| {
-            desired.path == file.path
-                && desired.digest == file.digest
-                && desired.executable == file.executable
-        })
-    }) {
-        return Err(invalid(
-            "asset_drift",
-            "部分导入目录出现后来内容，未继续覆盖",
-        ));
-    }
-    Ok(())
-}
 pub fn verify(root: &Path, id: &str, assets: &Assets) -> ModelResult<()> {
     validate(assets)?;
     let plan = read_apply(root, id)?;
@@ -1010,38 +1031,162 @@ pub fn verify(root: &Path, id: &str, assets: &Assets) -> ModelResult<()> {
             "接收后本机MCP定义源改变，请重新比较原文件",
         ));
     }
-    let targets =
-        CLIENT_IDS.map(|client| ClientTarget::user_target(client, &plan.home, true, true));
-    for mcp in &assets.mcps {
-        for target in &targets {
-            if let Some(current) = discovery::read_server_definition(target, &mcp.name)
-                .map_err(|_| invalid("mcp_read", "本机MCP目标无法安全核对"))?
-            {
-                if split_mcp(current, false, true)?.definition != mcp.definition {
-                    return Err(invalid(
-                        "mcp_drift",
-                        "所选MCP目标的客户端定义在确认前不同，未采用",
-                    ));
-                }
+    if plan.adopt_credentials.is_some() {
+        // Resuming an interrupted confirm: replaced Skills are rewritten
+        // from the frozen package, so earlier partial work is not drift.
+        return Ok(());
+    }
+    let source = source_dir(root, &plan.home)?;
+    let store = discovery::skills_store_dir(root);
+    for skill in &assets.skills {
+        for (path, before) in [
+            (source.join(&skill.name), &plan.source_before),
+            (store.join(&skill.name), &plan.skills_before),
+        ] {
+            let expected = before
+                .get(&skill.name)
+                .ok_or_else(|| invalid("asset_plan", "Skill不在原接收范围"))?;
+            let current = skill_digest(&path, skill)?;
+            if current != *expected && current.as_deref() != Some(skill.digest.as_str()) {
+                return Err(invalid(
+                    "asset_drift",
+                    format!("Skill「{}」在预览后被修改，请重新预览", skill.name),
+                ));
             }
         }
     }
-    let source = source_dir(root, &plan.home)?;
-    for skill in &assets.skills {
-        if skill_digest(&source.join(&skill.name), skill)?
-            != *plan
-                .source_before
-                .get(&skill.name)
-                .ok_or_else(|| invalid("asset_plan", "Skill不在原接收范围"))?
-        {
-            return Err(invalid("asset_drift", "扩展读源发生变化，请重新比较"));
+    Ok(())
+}
+fn same_files(current: &[SkillFile], desired: &[SkillFile]) -> bool {
+    current.len() == desired.len()
+        && desired.iter().all(|want| {
+            current.iter().any(|have| {
+                have.path == want.path
+                    && have.digest == want.digest
+                    && (cfg!(not(unix)) || have.executable == want.executable)
+            })
+        })
+}
+/// Replaces one Skill directory as a whole (S18-04). The target is the
+/// directory discovery reads for this name. Existing content is backed up
+/// first, files absent from the package are removed, and local credential
+/// files that the package withheld are kept.
+fn replace_skill(
+    root: &Path,
+    source: &Path,
+    skill: &Skill,
+    adopt_credentials: bool,
+) -> ModelResult<()> {
+    let (base, target) = if source.join(&skill.name).exists() {
+        (source.to_path_buf(), source.join(&skill.name))
+    } else {
+        let store = discovery::skills_store_dir(root);
+        (root.to_path_buf(), store.join(&skill.name))
+    };
+    safety::check_path(&base, &target, true)?;
+    let mut desired: Vec<SkillFile> = skill
+        .files
+        .iter()
+        .filter(|file| adopt_credentials || !file.sensitive)
+        .cloned()
+        .collect();
+    let exists = std::fs::symlink_metadata(&target).is_ok();
+    if exists {
+        let metadata = std::fs::symlink_metadata(&target)?;
+        if !metadata.is_dir() || metadata.is_symlink() {
+            return Err(invalid("asset_link", "本机同名Skill不是普通目录，未覆盖"));
         }
-        verify_skill_target(
-            root,
-            skill,
-            plan.skills_before.get(&skill.name).and_then(Option::as_ref),
-            plan.adopt_credentials.is_some(),
-        )?;
+        let canonical = target.canonicalize()?;
+        let mut current = vec![];
+        walk(&canonical, &canonical, &mut current, &mut 0)?;
+        if !adopt_credentials {
+            for file in current {
+                let bytes = STANDARD
+                    .decode(&file.data_b64)
+                    .map_err(|_| invalid("asset_payload", "资源编码无效"))?;
+                if sensitive_file(&file.path, &bytes)
+                    && !desired.iter().any(|want| want.path == file.path)
+                {
+                    desired.push(file);
+                }
+            }
+            let mut again = vec![];
+            walk(&canonical, &canonical, &mut again, &mut 0)?;
+            current = again;
+        }
+        if same_files(&current, &desired) {
+            return Ok(());
+        }
+        match projection::backup_skill_directory(root, &target, "同步覆盖Skill前保护") {
+            Ok(()) | Err(projection::ProjectionError::NotFound) => {}
+            Err(_) => {
+                return Err(invalid(
+                    "asset_backup",
+                    format!("Skill「{}」备份失败，未覆盖原内容", skill.name),
+                ))
+            }
+        }
+    }
+    let parent = target
+        .parent()
+        .ok_or_else(|| invalid("asset_path", "Skill目标目录无效"))?;
+    std::fs::create_dir_all(parent)?;
+    for entry in std::fs::read_dir(parent)? {
+        let entry = entry?;
+        if entry
+            .file_name()
+            .to_str()
+            .is_some_and(|name| name.starts_with(&format!(".ocx-tmp-{}-", skill.name)))
+        {
+            let _ = std::fs::remove_dir_all(entry.path());
+        }
+    }
+    let token = uuid::Uuid::new_v4().simple().to_string();
+    let staging = parent.join(format!(".ocx-tmp-{}-{token}", skill.name));
+    safety::check_path(&base, &staging, true)?;
+    let staged = (|| -> ModelResult<()> {
+        std::fs::create_dir(&staging)?;
+        for file in &desired {
+            let destination = staging.join(relative(&file.path)?);
+            let bytes = STANDARD
+                .decode(&file.data_b64)
+                .map_err(|_| invalid("asset_payload", "资源编码无效"))?;
+            atomic_write(
+                &destination,
+                &bytes,
+                if file.executable { 0o700 } else { 0o600 },
+            )?;
+        }
+        Ok(())
+    })();
+    if let Err(error) = staged {
+        let _ = std::fs::remove_dir_all(&staging);
+        return Err(error);
+    }
+    let retired = parent.join(format!(".ocx-old-{}-{token}", skill.name));
+    if exists {
+        if let Err(error) = std::fs::rename(&target, &retired) {
+            let _ = std::fs::remove_dir_all(&staging);
+            return Err(error.into());
+        }
+    }
+    if let Err(error) = std::fs::rename(&staging, &target) {
+        if exists {
+            let _ = std::fs::rename(&retired, &target);
+        }
+        let _ = std::fs::remove_dir_all(&staging);
+        return Err(error.into());
+    }
+    if exists {
+        let _ = std::fs::remove_dir_all(&retired);
+    }
+    for file in &desired {
+        let bytes = STANDARD
+            .decode(&file.data_b64)
+            .map_err(|_| invalid("asset_payload", "资源编码无效"))?;
+        if safety::read_file(&target.join(relative(&file.path)?), FILE_LIMIT)? != bytes {
+            return Err(invalid("asset_readback", "资源文件未通过读回确认"));
+        }
     }
     Ok(())
 }
@@ -1164,33 +1309,10 @@ fn apply_with(
             }
         }
     }
-    for skill in &assets.skills {
-        let directory = discovery::skills_store_dir(root).join(&skill.name);
-        safety::check_path(root, &directory, true)?;
-        for file in skill
-            .files
-            .iter()
-            .filter(|file| adopt_credentials || !file.sensitive)
-        {
-            let destination = directory.join(relative(&file.path)?);
-            safety::check_path(root, &destination, true)?;
-            let bytes = STANDARD
-                .decode(&file.data_b64)
-                .map_err(|_| invalid("asset_payload", "资源编码无效"))?;
-            if destination.exists() {
-                if safety::read_file(&destination, FILE_LIMIT)? != bytes {
-                    return Err(invalid("asset_drift", "资源文件已有后来内容，未覆盖"));
-                }
-            } else {
-                atomic_write(
-                    &destination,
-                    &bytes,
-                    if file.executable { 0o700 } else { 0o600 },
-                )?;
-            }
-            if safety::read_file(&destination, FILE_LIMIT)? != bytes {
-                return Err(invalid("asset_readback", "资源文件未通过读回确认"));
-            }
+    if !assets.skills.is_empty() {
+        let source = source_dir(root, &plan.home)?;
+        for skill in &assets.skills {
+            replace_skill(root, &source, skill, adopt_credentials)?;
         }
     }
     if !assets.mcps.is_empty() && current.as_deref() != Some(next.as_slice()) {
@@ -1516,17 +1638,231 @@ mod tests {
             std::fs::read_to_string(destination.join("scripts/check.py")).unwrap(),
             "later human edit"
         );
+        // A new sync replaces the same-named Skill as a whole (S18-04):
+        // edited files are restored, stale files removed, old content backed up.
+        std::fs::write(destination.join("stale.txt"), "stale").unwrap();
+        let id = uuid::Uuid::new_v4().to_string();
+        prepare(root.path(), home.path(), &id, &assets).unwrap();
+        apply_with(root.path(), &id, &assets, false, &Memory::default()).unwrap();
         assert_eq!(
-            prepare(
+            std::fs::read_to_string(destination.join("scripts/check.py")).unwrap(),
+            "print('fixture')"
+        );
+        assert!(!destination.join("stale.txt").exists());
+        assert!(backup_count(root.path()) > 0);
+    }
+    fn backup_count(root: &Path) -> usize {
+        fn count(path: &Path) -> usize {
+            std::fs::read_dir(path)
+                .map(|entries| {
+                    entries
+                        .flatten()
+                        .map(|entry| {
+                            if entry.path().is_dir() {
+                                count(&entry.path())
+                            } else {
+                                1
+                            }
+                        })
+                        .sum()
+                })
+                .unwrap_or(0)
+        }
+        count(&root.join("backups"))
+    }
+    #[test]
+    fn differing_same_named_mcp_is_skipped_and_reported_until_a_source_client_is_chosen() {
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(home.path().join(".codex")).unwrap();
+        std::fs::create_dir_all(home.path().join(".hermes")).unwrap();
+        std::fs::write(
+            home.path().join(".codex/config.toml"),
+            "[mcp_servers.fixture]\ncommand = 'codex-command'\n[mcp_servers.same]\ncommand = 'same-command'\n",
+        )
+        .unwrap();
+        std::fs::write(
+            home.path().join(".hermes/config.yaml"),
+            "mcp_servers:\n  fixture:\n    command: hermes-command\n  same:\n    command: same-command\n",
+        )
+        .unwrap();
+        let names = vec!["fixture".to_string(), "same".to_string()];
+        let (assets, conflicts) = export_with_sources(
+            root.path(),
+            home.path(),
+            &[],
+            &names,
+            &BTreeMap::new(),
+            false,
+            true,
+        )
+        .unwrap();
+        assert_eq!(
+            assets
+                .mcps
+                .iter()
+                .map(|m| m.name.as_str())
+                .collect::<Vec<_>>(),
+            vec!["same"]
+        );
+        assert_eq!(
+            conflicts,
+            vec![McpConflict {
+                name: "fixture".into(),
+                clients: vec!["codex".into(), "hermes".into()],
+                fields: vec!["command".into()],
+            }]
+        );
+        let summary = serde_json::to_string(&conflicts).unwrap();
+        assert!(!summary.contains("codex-command") && !summary.contains("hermes-command"));
+        let (assets, conflicts) = export_with_sources(
+            root.path(),
+            home.path(),
+            &[],
+            &names,
+            &BTreeMap::from([("fixture".to_string(), "hermes".to_string())]),
+            false,
+            true,
+        )
+        .unwrap();
+        assert!(conflicts.is_empty());
+        let chosen = assets.mcps.iter().find(|m| m.name == "fixture").unwrap();
+        assert_eq!(chosen.definition["command"], "hermes-command");
+        assert_eq!(
+            export_with_sources(
                 root.path(),
                 home.path(),
-                &uuid::Uuid::new_v4().to_string(),
-                &assets
+                &[],
+                &names,
+                &BTreeMap::from([("fixture".to_string(), "gemini".to_string())]),
+                false,
+                true,
             )
-            .unwrap_err()
+            .err()
+            .unwrap()
             .code,
-            "asset_conflict"
+            "mcp_source"
         );
+        assert_eq!(
+            export(root.path(), home.path(), &[], &names, false, true)
+                .err()
+                .unwrap()
+                .code,
+            "mcp_source"
+        );
+        assert!(!default_included_mcp("node_repl"));
+        assert!(default_included_mcp("fixture"));
+    }
+    #[test]
+    fn same_named_source_skill_is_replaced_with_backup_and_keeps_withheld_local_credentials() {
+        let package = tempfile::tempdir().unwrap();
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        std::fs::write(package.path().join("SKILL.md"), "# fixture\nincoming").unwrap();
+        let skill = snapshot_skill(package.path(), "fixture", false, true).unwrap();
+        let assets = Assets {
+            skills: vec![skill],
+            mcps: vec![],
+        };
+        let local = home.path().join(".agents/skills/fixture");
+        std::fs::create_dir_all(&local).unwrap();
+        std::fs::write(local.join("SKILL.md"), "# fixture\nlocal").unwrap();
+        std::fs::write(local.join("notes.md"), "local only").unwrap();
+        std::fs::write(local.join(".env"), "TOKEN=local-SECRET").unwrap();
+        let id = uuid::Uuid::new_v4().to_string();
+        prepare(root.path(), home.path(), &id, &assets).unwrap();
+        apply_with(root.path(), &id, &assets, false, &Memory::default()).unwrap();
+        assert_eq!(
+            std::fs::read_to_string(local.join("SKILL.md")).unwrap(),
+            "# fixture\nincoming"
+        );
+        assert!(!local.join("notes.md").exists());
+        assert_eq!(
+            std::fs::read_to_string(local.join(".env")).unwrap(),
+            "TOKEN=local-SECRET"
+        );
+        assert!(!discovery::skills_store_dir(root.path())
+            .join("fixture")
+            .exists());
+        assert!(backup_count(root.path()) > 0);
+        let leftovers: Vec<_> = std::fs::read_dir(home.path().join(".agents/skills"))
+            .unwrap()
+            .flatten()
+            .filter(|entry| entry.file_name().to_string_lossy().starts_with(".ocx-"))
+            .collect();
+        assert!(leftovers.is_empty());
+    }
+    #[test]
+    fn edits_between_preview_and_confirm_refuse_instead_of_being_overwritten() {
+        let package = tempfile::tempdir().unwrap();
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        std::fs::write(package.path().join("SKILL.md"), "# fixture\nincoming").unwrap();
+        let skill = snapshot_skill(package.path(), "fixture", false, true).unwrap();
+        let assets = Assets {
+            skills: vec![skill],
+            mcps: vec![],
+        };
+        let local = home.path().join(".agents/skills/fixture");
+        std::fs::create_dir_all(&local).unwrap();
+        std::fs::write(local.join("SKILL.md"), "# fixture\nlocal").unwrap();
+        let id = uuid::Uuid::new_v4().to_string();
+        prepare(root.path(), home.path(), &id, &assets).unwrap();
+        std::fs::write(local.join("SKILL.md"), "# fixture\nedited after preview").unwrap();
+        assert_eq!(
+            apply_with(root.path(), &id, &assets, false, &Memory::default())
+                .unwrap_err()
+                .code,
+            "asset_drift"
+        );
+        assert_eq!(
+            std::fs::read_to_string(local.join("SKILL.md")).unwrap(),
+            "# fixture\nedited after preview"
+        );
+    }
+    #[cfg(windows)]
+    #[test]
+    fn windows_locked_skill_directory_preserves_old_files_and_retries_after_release() {
+        use std::os::windows::fs::OpenOptionsExt;
+        let package = tempfile::tempdir().unwrap();
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        std::fs::write(package.path().join("SKILL.md"), "# fixture\nincoming").unwrap();
+        let assets = Assets {
+            skills: vec![snapshot_skill(package.path(), "fixture", false, true).unwrap()],
+            mcps: vec![],
+        };
+        let local = home.path().join(".agents/skills/fixture");
+        std::fs::create_dir_all(&local).unwrap();
+        std::fs::write(local.join("SKILL.md"), "# fixture\nlocal").unwrap();
+        std::fs::write(
+            local.join("old.txt"),
+            "remove only after replacement succeeds",
+        )
+        .unwrap();
+        let id = uuid::Uuid::new_v4().to_string();
+        prepare(root.path(), home.path(), &id, &assets).unwrap();
+        // Windows 的目录句柄允许读写但不允许删除/重命名；不修改 ACL 或日常目录。
+        let handle = std::fs::OpenOptions::new()
+            .read(true)
+            .custom_flags(0x0200_0000)
+            .share_mode(0x1 | 0x2)
+            .open(&local)
+            .unwrap();
+        assert!(apply_with(root.path(), &id, &assets, false, &Memory::default()).is_err());
+        assert_eq!(
+            std::fs::read_to_string(local.join("SKILL.md")).unwrap(),
+            "# fixture\nlocal"
+        );
+        assert!(local.join("old.txt").is_file());
+        drop(handle);
+        apply_with(root.path(), &id, &assets, false, &Memory::default()).unwrap();
+        assert_eq!(
+            std::fs::read_to_string(local.join("SKILL.md")).unwrap(),
+            "# fixture\nincoming"
+        );
+        assert!(!local.join("old.txt").exists());
+        assert!(backup_count(root.path()) > 0);
     }
     #[test]
     fn mcp_definition_restores_secrets_through_fresh_references_without_running_or_projecting_any_client(

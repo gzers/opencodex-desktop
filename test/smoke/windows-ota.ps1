@@ -1,7 +1,7 @@
-param([Parameter(Mandatory=$true)][ValidateSet('msi','nsis')][string]$Kind,[Parameter(Mandatory=$true)][string]$OutputDirectory,[string]$Version='0.2.18',[string]$FromVersion='0.2.17')
+param([Parameter(Mandatory=$true)][ValidateSet('msi','nsis')][string]$Kind,[Parameter(Mandatory=$true)][string]$OutputDirectory,[string]$Version='0.2.19',[string]$FromVersion='0.2.18')
 $ErrorActionPreference='Stop'
 if(!$IsWindows -or $env:GITHUB_ACTIONS -cne 'true' -or $env:GITHUB_REPOSITORY -cne 'gzers/opencodex-desktop'){throw 'OTA acceptance is restricted to the disposable project runner'}
-if(!(($Version -ceq '0.2.18' -and $FromVersion -ceq '0.2.17') -or ($Version -ceq '0.2.17' -and $FromVersion -ceq '0.2.16'))){throw 'Only the admitted adjacent releases may be tested'}
+if(!(($Version -ceq '0.2.19' -and $FromVersion -ceq '0.2.18') -or ($Version -ceq '0.2.18' -and $FromVersion -ceq '0.2.17') -or ($Version -ceq '0.2.17' -and $FromVersion -ceq '0.2.16'))){throw 'Only the admitted adjacent releases may be tested'}
 $taskOutput=[IO.Path]::GetFullPath($OutputDirectory)
 New-Item -ItemType Directory -Force $taskOutput|Out-Null
 $taskInstall=Join-Path $env:RUNNER_TEMP ('OpenCodeX OTA 中文 '+$Kind+' '+[guid]::NewGuid().ToString('N'))

@@ -1,6 +1,8 @@
 import { defineStore } from "pinia"
 import { getStatusSnapshot, type StatusSnapshot } from "@/contracts/runtimeStatus"
 import { useFeedbackStore } from "@/app/feedback/store"
+import { createCountdown, type Countdown } from "@/app/feedback/countdown"
+import { cancelLeave, leave } from "@/app/feedback/motion"
 import { runProcessAction } from "@/features/runtime/processAction"
 import { runtimeLabel } from "@/lib/labels"
 import {
@@ -18,6 +20,17 @@ import {
   LIFECYCLE_NOTICE_START_MS,
   LIFECYCLE_NOTICE_STOP_MS,
 } from "@/config/runtimeDefaults"
+
+/** 启停成功卡停留 2600 ms（FZ-43.3）；倒计时对象不可序列化，按模块持有。 */
+export const PROCESS_SUCCESS_MS = 2600
+export const PROCESS_NOTIFICATION_KEY = "process"
+let processCountdown: Countdown | null = null
+export function currentProcessCountdown(): Countdown | null { return processCountdown }
+function cancelProcessCountdown() {
+  processCountdown?.cancel()
+  processCountdown = null
+  cancelLeave(PROCESS_NOTIFICATION_KEY)
+}
 
 /**
  * 运行生命周期与状态域（IMP-04 §19.4 E 切片十五）。
@@ -118,11 +131,24 @@ export const useLifecycleStore = defineStore("lifecycle", {
       if (this.processAutoDismissTimer !== null) {
         window.clearTimeout(this.processAutoDismissTimer)
       }
+      cancelProcessCountdown()
       // 成功后自动退出通知；失败/超时保留，等待用户处理（FZ-43.3）。
-      this.processAutoDismissTimer = window.setTimeout(() => {
-        this.processAutoDismissTimer = null
-        this.processProgressOpen = false
-      }, 2600)
+      // 倒计时可被悬停 / 焦点暂停，到点后收起到铃铛（S18-09）。
+      const countdown = createCountdown({
+        durationMs: PROCESS_SUCCESS_MS,
+        tone: "success",
+        onElapsed: () => {
+          if (processCountdown !== countdown) return
+          leave(PROCESS_NOTIFICATION_KEY, () => {
+            if (processCountdown !== countdown) return
+            processCountdown = null
+            this.processAutoDismissTimer = null
+            this.processProgressOpen = false
+          })
+        },
+      })
+      processCountdown = countdown
+      this.processAutoDismissTimer = null
     },
     finishProcessAction() {
       this.processActionBusy = false
@@ -158,7 +184,12 @@ export const useLifecycleStore = defineStore("lifecycle", {
             (action === "start" ||
               this.processProgressSawTransition ||
               (action === "restart" && pidChanged))
-      const failed = ["starting_failed", "unreachable"].includes(runtime)
+      // 只有官方明确报告的启动失败才立即判失败（S18-02）。启动/重启后代理端口
+      // 尚未监听时会短暂读到 `unreachable`，这是过渡观测而非启动结果：继续等待
+      // 运行态或超时，避免「已启动、网页能打开」却被报成未能进入可用状态。
+      const failed =
+        runtime === "starting_failed" ||
+        (action === "stop" && runtime === "unreachable")
       if (complete || failed) {
         if (failed) {
           this.processProgressError =
@@ -176,7 +207,13 @@ export const useLifecycleStore = defineStore("lifecycle", {
         window.clearTimeout(this.processAutoDismissTimer)
         this.processAutoDismissTimer = null
       }
+      cancelProcessCountdown()
       this.processProgressOpen = false
+    },
+    /** 手动收起：停掉倒计时，走收起到铃铛动效后再关闭；后台动作不取消。 */
+    collapseProcessProgress() {
+      processCountdown?.cancel()
+      leave(PROCESS_NOTIFICATION_KEY, () => this.dismissProcessProgress())
     },
     reopenProcessProgress() {
       if (this.processProgressAction) this.processProgressOpen = true
@@ -197,6 +234,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
         window.clearTimeout(this.processAutoDismissTimer)
         this.processAutoDismissTimer = null
       }
+      cancelProcessCountdown()
       this.clearProcessProgressTimer()
       this.startProcessActionPoll()
       this.processProgressTimer = window.setTimeout(() => {

@@ -559,6 +559,7 @@ pub fn run() {
             commands::model_transfer::config_sync_publish,
             commands::model_transfer::config_sync_download,
             commands::model_transfer::config_sync_latest_upload,
+            commands::model_transfer::config_sync_check,
             commands::model_config::model_config_snapshot,
             commands::model_config::model_file_snapshot,
             commands::model_config::model_file_save,

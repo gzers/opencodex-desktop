@@ -7,10 +7,13 @@ import StickyTabs from '@/components/layout/StickyTabs.vue'
 import Stack from '@/components/layout/Stack.vue'
 import {useRouteStore} from '@/stores/routes'
 import {useAppStore} from '@/stores/app'
+import {useSyncStore} from '@/features/sync/store'
 const ModelTransfer=defineAsyncComponent(()=>import('@/features/sync/ModelTransfer.vue'))
 const ImportedConnections=defineAsyncComponent(()=>import('@/features/sync/ImportedConnections.vue'))
 const WebDavConnection=defineAsyncComponent(()=>import('@/features/sync/WebDavConnection.vue'))
 const routes=useRouteStore();const app=useAppStore();const connectionOpen=ref(false);const remoteMounted=ref(routes.syncTab==='webdav');watch(()=>routes.syncTab,tab=>{if(tab==='webdav')remoteMounted.value=true})
+// S18-01：概览 WebDAV 卡片「配置 WebDAV / 重试连接」进入同步页后直接打开连接设置。
+const syncStore=useSyncStore();watch(()=>syncStore.pendingAction,()=>{if(syncStore.takeAction('connection')){remoteMounted.value=true;connectionOpen.value=true}},{immediate:true})
 </script>
 <template>
  <section class="sync-route"><AppTopbar/><StickyTabs><div class="sync-tabs" role="tablist" aria-label="同步方式"><button type="button" role="tab" aria-controls="sync-file-panel" :aria-selected="routes.syncTab==='file'" :class="{active:routes.syncTab==='file'}" @click="routes.go('sync',{tab:'file'})">文件同步</button><button type="button" role="tab" aria-controls="sync-webdav-panel" :aria-selected="routes.syncTab==='webdav'" :class="{active:routes.syncTab==='webdav'}" @click="routes.go('sync',{tab:'webdav'})">WebDAV 同步</button></div></StickyTabs>

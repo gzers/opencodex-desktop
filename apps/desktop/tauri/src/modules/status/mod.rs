@@ -727,8 +727,12 @@ where
     pub fn new(source: S) -> Self {
         Self {
             source,
+            // 首次采集成功前运行态未知：用 `Loading`（与 `unconfigured_snapshot` 一致）。
+            // 冷启动时官方 `ocx status` 可能超过采集上限（Windows 实测首轮 6.8 s），
+            // 若初值是 `NotFound`，这段瞬时超时会把正在运行的代理报成「未发现」，
+            // 面板与启动进度据此误判（S18-02）。来源未解析仍在失败分支落到 `NotFound`。
             matrix: StatusMatrix {
-                runtime: RuntimeState::NotFound,
+                runtime: RuntimeState::Loading,
                 connection: ConnectionState::Unconfigured,
                 operation: OperationState::Idle,
             },
@@ -1089,7 +1093,8 @@ mod tests {
         sleep(Duration::from_millis(1));
         let error = collector.refresh().expect_err("timeout");
         assert_eq!(error, CollectError::Timeout);
-        assert_eq!(collector.matrix().runtime, RuntimeState::NotFound);
+        // 首次采集前超时：保持「加载中」，不能把尚未确认的代理报成未发现安装（S18-02）。
+        assert_eq!(collector.matrix().runtime, RuntimeState::Loading);
         assert_eq!(collector.failure_count(), 1);
         assert_eq!(
             collector.next_interval(StatusDimension::Runtime, false),

@@ -11,6 +11,23 @@
  */
 
 /* —— 中档：玻璃不变，仅关闭跨帧装饰动画（静态光场由动效组件呈现静态目标）—— */
+/* S18-07：没有模糊能力时采用同一份实底配方，不改变用户三档偏好。 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  html {
+    --glass-fill: var(--panel);
+    --glass-blur-notif: none;
+    --glass-blur: none;
+    --surface-page-bg: var(--panel);
+    --surface-panel-bg: var(--panel);
+    --surface-panel-blur: none;
+    --surface-control-bg: var(--raised);
+    --surface-control-blur: none;
+    --surface-control-bg-hover: var(--raised-hover);
+    --surface-overlay-bg: var(--panel);
+    --surface-overlay-blur: none;
+  }
+}
+
 html[data-effects="mid"] {
   --motion-ambient-speed: 0;
 }

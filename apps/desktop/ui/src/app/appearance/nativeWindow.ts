@@ -23,6 +23,8 @@ export function applyNativeAppearance(value: NativeAppearance | null): void {
 
 export async function installNativeAppearance(): Promise<void> {
   if (!/^Win/.test(navigator.platform) || !('__TAURI_INTERNALS__' in window)) return
+  // 查询尚未完成（包括返回 null）时保留实底；事件确认 Mica 后才允许透明。
+  document.documentElement.dataset.nativeMaterial = 'solid'
   let revision = 0
   try {
     await listen<NativeAppearance>('native-window-appearance', event => {

@@ -239,6 +239,15 @@ pub async fn publish<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     .await?;
     Ok(plan)
 }
+/// 发布时写入远端的指针；同步状态记录同一指针，用来判断远端是否在之后改变。
+pub(super) fn pointer_of(domain: Domain, id: &str, body: &[u8]) -> Pointer {
+    Pointer {
+        format: domain.format.into(),
+        version: 1,
+        operation_id: id.into(),
+        digest: sha256(body),
+    }
+}
 #[allow(clippy::too_many_arguments)]
 pub(super) async fn publish_blob<
     T: WebDavTransport,
@@ -260,12 +269,7 @@ pub(super) async fn publish_blob<
     if body.len() > LIMIT {
         return Err(invalid("remote_limit", "配置载荷超过64MiB"));
     }
-    let next = Pointer {
-        format: domain.format.into(),
-        version: 1,
-        operation_id: id.into(),
-        digest: sha256(&body),
-    };
+    let next = pointer_of(domain, id, &body);
     let current = pointer_for(domain, transport, config).await?;
     if current.as_ref().is_some_and(|head| head.pointer == next) {
         if fetch_for(domain, transport, config, &next).await? != body {

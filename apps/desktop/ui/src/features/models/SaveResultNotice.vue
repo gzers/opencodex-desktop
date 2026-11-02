@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
 import TaskProgressCard from '@/components/patterns/TaskProgressCard.vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import { useFeedbackStore } from '@/app/feedback/store'
+import { createCountdown } from '@/app/feedback/countdown'
+import { TERMINAL_TTL_MS } from '@/app/feedback/tasks'
+import { cancelLeave, leave } from '@/app/feedback/motion'
 import { errorText, modelApi } from './api'
 
 // 由全局 TaskProgressHost 承载，关闭后不留下任务或待重启状态。
@@ -15,6 +18,16 @@ const busy = ref(false)
 const restartButton = ref<InstanceType<typeof UiButton> | null>(null)
 let disposed = false
 let origin: HTMLElement | null = null
+// 原型 scheduleTaskCollapse：「已写入」卡与其它终态任务卡同为 8 秒成功倒计时，到点收起到铃铛。
+// 每次保存由宿主按 revision 重建本组件，倒计时随实例独立。
+const NOTICE_KEY = 'model-save:' + useId()
+const countdown = createCountdown({
+  durationMs: TERMINAL_TTL_MS,
+  tone: 'success',
+  onElapsed: () => leave(NOTICE_KEY, () => { if (!disposed && !busy.value) emit('close') }),
+})
+// 重启确认框打开或重启进行中时不允许自动收起，否则会连同确认框一起关掉。
+watch([confirming, busy], ([open, running]) => (open || running ? countdown.pause('dialog') : countdown.resume('dialog')))
 
 watch(() => props.open, async open => {
   if (!open) { confirming.value = false; return }
@@ -33,6 +46,8 @@ function onEscape(event: KeyboardEvent) {
 onMounted(() => window.addEventListener('keydown', onEscape))
 onBeforeUnmount(() => {
   disposed = true
+  countdown.cancel()
+  cancelLeave(NOTICE_KEY)
   window.removeEventListener('keydown', onEscape)
   if (origin?.isConnected) origin.focus()
 })
@@ -62,6 +77,8 @@ async function restart() {
     phase="done"
     :show-track="false"
     :show-collapse="false"
+    :notification-key="NOTICE_KEY"
+    :countdown="countdown"
   >
     <template #actions>
       <UiButton ref="restartButton" class="notif-ctl" :disabled="busy" @click="confirming = true">立即重启 Codex</UiButton>

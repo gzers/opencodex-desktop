@@ -157,18 +157,26 @@ mod native {
         app.try_state::<State>()?.0.lock().ok()?.clone()
     }
     pub(super) fn refresh(app: &tauri::AppHandle) {
+        refresh_with_active(app, None);
+    }
+    fn refresh_with_active(app: &tauri::AppHandle, active: Option<bool>) {
         let app = app.clone();
         // DWM and the native caption are updated on the window's UI thread.
         let queued = app.clone();
-        let _ = app.run_on_main_thread(move || apply(&queued));
+        let _ = app.run_on_main_thread(move || apply(&queued, active));
     }
-    fn apply(app: &tauri::AppHandle) {
+    fn apply(app: &tauri::AppHandle, active_event: Option<bool>) {
         // SystemUsesLightTheme can change while the app's explicit theme stays
         // unchanged, so refresh the tray before the appearance cache early-return.
         if let Err(error) = crate::infrastructure::windows_tray_icon::refresh(app) {
             eprintln!("Windows tray appearance refresh failed: {error}");
         }
-        let Some(window) = app.get_webview_window("main") else {
+        // add_child 后 main 不再是单 WebView 窗口，get_webview_window 会返回 None。
+        // 原生窗口与主 WebView 分别获取，避免打开面板后材质、主题及非活动回退停止刷新。
+        let Some(window) = app.get_window("main") else {
+            return;
+        };
+        let Some(webview) = app.get_webview("main") else {
             return;
         };
         let Ok(handle) = window.hwnd() else { return };
@@ -205,7 +213,7 @@ mod native {
             && contrast.dwFlags & HCF_HIGHCONTRASTON != 0;
         let composition = unsafe { DwmIsCompositionEnabled(&mut composed) } >= 0 && composed != 0;
         let active = unsafe {
-            GetAncestor(GetForegroundWindow(), GA_ROOT) == hwnd
+            active_event.unwrap_or_else(|| GetAncestor(GetForegroundWindow(), GA_ROOT) == hwnd)
                 && IsWindowVisible(hwnd) != 0
                 && IsIconic(hwnd) == 0
         };
@@ -263,7 +271,8 @@ mod native {
             // on initial Win11. It is not attempted on Win10.
             let result = attribute(hwnd, 1029, i32::from(state.reason == "mica"));
             state.dwm_result = Some(result);
-            if state.reason == "mica" && result >= 0 {
+            state.backdrop_attribute = read_attribute(hwnd, 1029);
+            if state.reason == "mica" && result >= 0 && state.backdrop_attribute == Some(1) {
                 state.material = "mica";
             } else if state.reason == "mica" {
                 state.reason = "dwm-unavailable";
@@ -291,6 +300,9 @@ mod native {
                 state.reason = "frame-extension-failed";
                 state.dwm_result = Some(extended);
                 let _ = attribute(hwnd, DWMWA_SYSTEMBACKDROP_TYPE as u32, DWMSBT_NONE);
+                state.backdrop_attribute = read_attribute(hwnd, DWMWA_SYSTEMBACKDROP_TYPE as u32);
+                let margins = windows_sys::Win32::UI::Controls::MARGINS::default();
+                unsafe { DwmExtendFrameIntoClientArea(hwnd, &margins) };
             }
         } else {
             let margins = windows_sys::Win32::UI::Controls::MARGINS::default();
@@ -303,7 +315,10 @@ mod native {
         } else {
             tauri::utils::config::Color(232, 237, 245, 255)
         };
-        if let Err(error) = window.set_background_color(Some(color)) {
+        if let Err(error) = window
+            .set_background_color(Some(color))
+            .and_then(|_| webview.set_background_color(Some(color)))
+        {
             eprintln!("Native window background failed: {error}");
             state.material = "solid";
             state.reason = "webview-background-unavailable";
@@ -315,6 +330,7 @@ mod native {
                 tauri::utils::config::Color(232, 237, 245, 255)
             };
             let _ = window.set_background_color(Some(fallback));
+            let _ = webview.set_background_color(Some(fallback));
         }
         if let Some(store) = app.try_state::<State>() {
             if let Ok(mut stored) = store.0.lock() {
@@ -332,8 +348,8 @@ mod native {
         );
         if let Some(root) = app.try_state::<crate::state::SharedDataRoot>() {
             let _ = crate::infrastructure::runtime_log::RuntimeLog::new(&root.0).append_event(
-                &format!("window appearance: theme={} material={} reason={} build={} active={} transparency={} dwm={:?}",
-                    state.theme, state.material, state.reason, state.build, state.active, state.transparency, state.dwm_result));
+                &format!("window appearance: theme={} material={} reason={} build={} active={} transparency={} dwm={:?} backdrop={:?}",
+                    state.theme, state.material, state.reason, state.build, state.active, state.transparency, state.dwm_result, state.backdrop_attribute));
         }
     }
     unsafe extern "system" fn message(
@@ -352,7 +368,12 @@ mod native {
             WM_SETTINGCHANGE | WM_THEMECHANGED | WM_DWMCOMPOSITIONCHANGED | WM_ACTIVATE | WM_SIZE
         ) {
             if let Some(app) = APP.get() {
-                refresh(app);
+                // WM_ACTIVATE 到达时 GetForegroundWindow 仍可能是切换前的窗口。
+                // 使用消息自己的活动事实，避免失焦后残留透明 Mica 壳。
+                refresh_with_active(
+                    app,
+                    (msg == WM_ACTIVATE).then_some(wp & 0xffff != WA_INACTIVE as usize),
+                );
             }
         }
         result
@@ -369,7 +390,7 @@ mod native {
         {
             eprintln!("Native appearance setting-change listener unavailable");
         }
-        apply(app);
+        apply(app, None);
     }
 }
 

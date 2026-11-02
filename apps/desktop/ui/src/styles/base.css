@@ -50,8 +50,11 @@ a { color: inherit; }
 }
 /* Windows uses the system-drawn caption and buttons: native hit testing, Snap,
    accessibility and close requests stay with User32. There is no second DOM row. */
-.app-window.is-windows { background: transparent; border: none; }
+.app-window.is-windows { background: #e8edf5; border: none; }
+html[data-theme="dark"] .app-window.is-windows { background: #20242c; }
 .app-window.is-windows::before, .app-window.is-windows::after { display: none; }
+/* S18-07：首帧、原生查询失败和回退均保留实底；只有 DWM 确认 Mica 后才透出原生底面。 */
+html[data-native-material="mica"] .app-window.is-windows { background: transparent; }
 html[data-native-material="mica"], html[data-native-material="mica"] body { background: transparent; }
 html[data-native-material="solid"] body { background: #e8edf5; }
 html[data-native-material="solid"][data-theme="dark"] body { background: #20242c; }
@@ -162,7 +165,7 @@ html[data-native-material="solid"][data-theme="dark"] body { background: #20242c
   transition: background var(--motion-fast), color var(--motion-fast);
 }
 .nav button:hover { background: var(--hover); color: var(--text); }
-.nav button.active { background: var(--accent-soft); color: var(--text); font-weight: 600; }
+.nav button.active { background: var(--accent-soft); color: var(--text); font-weight: inherit; }
 
 .app-shell.panel-mode .side { padding: calc(var(--titlebar-height) + 18px) 14px 18px; align-items: flex-start; gap: 18px; }
 .app-shell.panel-mode .brand { justify-content: flex-start; width: var(--control-lg); height: var(--control-lg); padding: 0; margin: 0; flex: none; }
@@ -188,8 +191,8 @@ html[data-native-material="solid"][data-theme="dark"] body { background: #20242c
    这里**故意不用 backdrop-filter**：WKWebView 里它会去采样窗口背后的桌面（实测页面颜色会跟着窗口位置变），
    那就不是"软件自己的底"了；而背面那层环境光本来就被 `.app-window::before` 的 filter 柔化过，
    柔和感由它提供，再叠一层模糊既没用又会把桌面引进来。
-   外壳（.app-window / .side / .titlebar）保持不透明、不带模糊；卡片等子层保持实底，
-   所以正文与长表可读性不变，页面只在卡片之间的留白处透出底色。 */
+   Windows 外壳沿 §27 的真实 Mica / 实色回退；页面消费三档配方，高／中档 .40 填充，
+   低档实底。卡片等子层沿 §26，页面自身不叠第二层模糊。 */
 .main {
   height: 100%;
   min-height: 0;
@@ -197,7 +200,7 @@ html[data-native-material="solid"][data-theme="dark"] body { background: #20242c
   padding: 20px 22px 24px;
   width: 100%;
   container-type: inline-size;
-  background: var(--page-fill);
+  background: var(--surface-page-bg, var(--page-fill));
   border-top: 1px solid var(--border);
   border-left: 1px solid var(--border);
   border-top-left-radius: var(--radius);
@@ -483,8 +486,10 @@ input, textarea, select, [contenteditable="true"], pre, code, .ui-table td, .mod
 .mod-go:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .mod-go svg { width: 13px; height: 13px; display: block; }
 .mod-status { display: grid; gap: 6px; font-size: var(--text-label); line-height: var(--leading-ui); color: var(--muted); }
-.mod-status > span { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-.mod-status b { color: var(--text); font-weight: 600; white-space: nowrap; }
+.mod-status > span { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; color: var(--text); }
+/* 概览状态区只有一种字号与字重（原型同款）：子元素继承行字号，统一 400，只用颜色区分主次。 */
+.mod-status * { font-size: inherit; font-weight: 400; letter-spacing: normal; }
+.mod-status b { color: var(--text); white-space: nowrap; }
 .mod-actions { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border-soft); }
 .mod-actions .btn { width: 100%; white-space: nowrap; }
 @container (max-width: 759px) { .mods { gap: 8px; } .mod { padding: 12px; gap: 8px; } .mod-head h3 { font-size: var(--text-control); } .mod-actions { gap: 6px; } }
@@ -569,8 +574,22 @@ input, textarea, select, [contenteditable="true"], pre, code, .ui-table td, .mod
 .n-del:hover { background: var(--notif-btn-bg); color: var(--text); border-color: var(--notif-btn-bd); }
 .n-del svg { width: 15px; height: 15px; display: block; }
 .notification-empty { padding: 26px 12px; text-align: center; color: var(--muted); font-size: var(--text-control); }
-@keyframes bell-pulse { 0% { transform: none; } 30% { transform: rotate(-12deg) scale(1.08); } 60% { transform: rotate(10deg) scale(1.08); } 100% { transform: none; } }
-.notification-btn.bell-pulse { animation: bell-pulse .42s ease; }
+/* 通知收起到铃铛后的脉冲（原型 bellPulse）；由 app/feedback/motion 每次收起重新触发。 */
+@keyframes bellPulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 55%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+.notification-btn.collapse-pulse { animation: bellPulse .52s ease-out; }
+@media (prefers-reduced-motion: reduce) { .notification-btn.collapse-pulse { animation: none; } }
+
+/* 公共通知自动收起倒计时（原型 notification-countdown.css）：固定半透明，仅长度递减表示剩余停留时间。 */
+.has-notification-countdown { position: relative; }
+.notification-countdown { position: absolute; inset-inline: 10px; bottom: 2px; height: 3px; border-radius: 999px; overflow: hidden; background: transparent; pointer-events: none; }
+.notification-countdown[data-tone=success] { --notification-countdown-color: var(--green); }
+.notification-countdown[data-tone=error] { --notification-countdown-color: var(--red); }
+.notification-countdown[data-tone=warning] { --notification-countdown-color: var(--amber); }
+.notification-countdown[data-tone=info] { --notification-countdown-color: var(--blue); }
+.notification-countdown[data-tone=neutral] { --notification-countdown-color: var(--muted); }
+.notification-countdown-fill { position: relative; display: block; width: 100%; height: 100%; overflow: hidden; border-radius: inherit; background: linear-gradient(90deg, color-mix(in srgb, var(--notification-countdown-color, var(--blue)) 70%, transparent) 0%, color-mix(in srgb, var(--notification-countdown-color, var(--blue)) 70%, transparent) 44%, color-mix(in srgb, var(--notification-countdown-color, var(--blue)) 40%, transparent) 80%, transparent 100%); transform-origin: left center; opacity: .55; will-change: transform; }
+.notification-countdown-help { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .notification-countdown-fill { will-change: auto; } }
 
 .settings-panel { display: none; }
 .settings-panel.active { display: grid; gap: 16px; }
@@ -801,9 +820,9 @@ input.input:focus-visible, .select-trigger:focus-visible, .toggle:focus-visible 
 .panel-shell { display: none; height: 100%; background: var(--panel); overflow: hidden; }
 .panel-shell.show { display: grid; grid-template-rows: 1fr; }
 .panel-frame-iframe.ready { opacity: 1; }
-.panel-state { position: absolute; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; gap: 12px; padding: 24px; text-align: center; background: var(--panel); }
-.panel-state p { max-width: 520px; color: var(--muted); }
-.panel-state .btn + .btn { margin-left: 8px; }
+/* 面板空态：取原型 index.html `.panel-empty`（S18-02）。原型以 display 切换显隐，这里由 v-if 控制。 */
+.panel-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 24px; color: var(--muted); font-size: var(--text-control); }
+.panel-empty strong { color: var(--text); font-size: var(--text-subtitle); }
 .panel-mock.show { display: block; background: var(--panel); }
 .panel-frame { min-height: 0; position: relative; overflow: hidden; background: var(--panel); min-width: calc(960px / var(--ui-zoom)); }
 /* 面板页不保留软件顶栏（IMP-07 用户 2026-10-02 修订，推翻 IMP-06）：整块让给官方页面；

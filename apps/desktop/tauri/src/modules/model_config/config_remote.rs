@@ -43,6 +43,8 @@ pub struct Scope {
     pub skill_names: Vec<String>,
     #[serde(default)]
     pub mcp_names: Vec<String>,
+    #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
+    pub mcp_sources: std::collections::BTreeMap<String, String>,
     #[serde(default)]
     pub extension_credentials: bool,
     #[serde(default)]
@@ -80,6 +82,7 @@ impl Default for Scope {
             include_keys: false,
             skill_names: vec![],
             mcp_names: vec![],
+            mcp_sources: Default::default(),
             extension_credentials: false,
             account_ids: vec![],
             account_identities: vec![],
@@ -168,6 +171,16 @@ impl Scope {
         {
             return Err(invalid("sync_scope", "扩展范围名称或数量无效"));
         }
+        if self.mcp_sources.len() > 1000
+            || self.mcp_sources.iter().any(|(name, client)| {
+                !crate::modules::extensions::discovery::is_safe_skill_name(name)
+                    || !crate::modules::extensions::CLIENT_IDS
+                        .iter()
+                        .any(|id| crate::modules::sync::portable_assets::client_key(*id) == *client)
+            })
+        {
+            return Err(invalid("sync_scope", "MCP采用来源无效"));
+        }
         Ok(())
     }
     fn manager(&self) -> ManagerScope {
@@ -178,6 +191,7 @@ impl Scope {
             webdav_passwords: false,
             skill_names: self.skill_names.clone(),
             mcp_names: self.mcp_names.clone(),
+            mcp_sources: self.mcp_sources.clone(),
             extension_credentials: self.extension_credentials,
             assets_reviewed: self.assets_reviewed,
             account_ids: self.account_ids.clone(),
@@ -323,6 +337,9 @@ pub struct UploadView {
     pub protected: bool,
     #[serde(default)]
     pub assets: crate::modules::sync::portable_assets::Summary,
+    /// 设备间同步预览（S18-01）：新版来源、变化列表与保持不变的数量。
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sync: Option<super::sync_state::SyncPreview>,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -390,7 +407,15 @@ pub async fn prepare<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
             manager.skill_names = catalog.skills;
         }
         if scope.all_mcps {
-            manager.mcp_names = catalog.mcps;
+            // 「全部 MCP」只跳过默认不同步项（如 node_repl）；用户手动勾选的仍保留。
+            manager.mcp_names = catalog
+                .mcps
+                .into_iter()
+                .filter(|name| {
+                    crate::modules::sync::portable_assets::default_included_mcp(name)
+                        || scope.mcp_names.contains(name)
+                })
+                .collect();
         }
     }
     let local =
@@ -399,16 +424,31 @@ pub async fn prepare<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     let baseline = remote::pointer_for(remote::CONFIG, transport, config).await?;
     unchanged()?;
     let id = uuid::Uuid::new_v4().to_string();
-    let payload = match &baseline {
-        Some(base) => file_objects::merge_remote(
-            &remote::fetch_for(remote::CONFIG, transport, config, &base.pointer).await?,
-            &local_bytes,
-            passphrase,
-            &id,
-        )?,
-        None => local_bytes,
+    let remote_bytes = match &baseline {
+        Some(base) => {
+            Some(remote::fetch_for(remote::CONFIG, transport, config, &base.pointer).await?)
+        }
+        None => None,
+    };
+    let payload = match &remote_bytes {
+        Some(rb) => file_objects::merge_remote(rb, &local_bytes, passphrase, &id)?,
+        None => local_bytes.clone(),
     };
     let summary = file_objects::remote_summary(&payload, passphrase)?;
+    let mut assets = summary.assets.clone();
+    assets.conflicts = local
+        .assets
+        .as_ref()
+        .map(|local| local.conflicts.clone())
+        .unwrap_or_default();
+    let preview = upload_preview(
+        &local,
+        &summary,
+        &assets.conflicts,
+        remote_bytes.as_deref(),
+        &payload,
+        passphrase,
+    );
     let view = UploadView {
         id: id.clone(),
         phase: "prepared".into(),
@@ -416,7 +456,8 @@ pub async fn prepare<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         manager: summary.manager,
         credential_count: summary.credential_count,
         protected: summary.protected,
-        assets: summary.assets,
+        assets,
+        sync: Some(preview),
     };
     let plan = Plan {
         view: view.clone(),
@@ -480,6 +521,7 @@ pub async fn publish<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     }
     let baseline = plan.baseline.clone();
     let published = plan.view.phase == "published";
+    let pointer = remote::pointer_of(remote::CONFIG, id, &bytes);
     remote::publish_blob(
         remote::CONFIG,
         transport,
@@ -495,6 +537,8 @@ pub async fn publish<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         current,
     )
     .await?;
+    // 同步记录失败只影响下次方向判断（会按云端为新版重新比较），不回退已完成的发布。
+    let _ = super::sync_state::record_synced(root, binding, &pointer);
     Ok(plan.view)
 }
 pub async fn download<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
@@ -547,6 +591,278 @@ async fn download_bound_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     config_home: Option<&Path>,
     unchanged: F,
 ) -> ModelResult<IncomingPlan> {
+    download_pointed(
+        root,
+        transport,
+        config,
+        passphrase,
+        home,
+        config_home,
+        unchanged,
+    )
+    .await
+    .map(|(plan, _)| plan)
+}
+/// 设备间同步下载（S18-01）：接收云端新版，并与本机当前内容比较生成同步预览。
+#[allow(clippy::too_many_arguments)]
+pub async fn download_sync<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
+    root: &Path,
+    transport: &T,
+    config: &WebDavConfig,
+    passphrase: Option<&str>,
+    local_home: Option<&Path>,
+    config_home: &Path,
+    binding: &str,
+    unchanged: F,
+) -> ModelResult<IncomingPlan> {
+    let (mut plan, pointer) = download_pointed(
+        root,
+        transport,
+        config,
+        passphrase,
+        local_home,
+        Some(config_home),
+        unchanged,
+    )
+    .await?;
+    let renames: std::collections::BTreeMap<String, String> = plan
+        .channel_bindings
+        .iter()
+        .map(|(source, binding)| (source.clone(), binding.target_id.clone()))
+        .collect();
+    let keep_local: BTreeSet<String> = plan
+        .channel_bindings
+        .values()
+        .filter(|binding| binding.keep_local_connection)
+        .map(|binding| binding.target_id.clone())
+        .collect();
+    let source = super::sync_state::facts(
+        &plan.package,
+        &plan.manager.clone().unwrap_or_default(),
+        &plan.assets.clone().unwrap_or_default(),
+        &renames,
+        &keep_local,
+    );
+    let changes = local_target(root, &plan, &renames, config_home, local_home)
+        .map(|(package, manager, assets)| {
+            let target = super::sync_state::facts(
+                &package,
+                &manager,
+                &assets,
+                &Default::default(),
+                &keep_local,
+            );
+            super::sync_state::diff(&source, &target)
+        })
+        .ok();
+    let _ = super::sync_state::record_download(
+        root,
+        binding,
+        &pointer,
+        &plan.id,
+        changes.as_ref().map(|(changes, _)| changes.as_slice()),
+    );
+    plan.sync = Some(super::sync_state::SyncPreview {
+        source: "remote".into(),
+        unchanged: changes.as_ref().map(|(_, n)| *n).unwrap_or_default(),
+        changes: changes.map(|(changes, _)| changes),
+        created_at: plan.package.created_at.clone(),
+    });
+    Ok(plan)
+}
+/// 上传预览：只比较本机所选条目与当前云端内容；冲突 MCP 单独列为「选择来源」。
+fn upload_preview(
+    local: &transfer::FileExportPlan,
+    merged: &file_objects::RemoteSummary,
+    conflicts: &[crate::modules::sync::portable_assets::McpConflict],
+    remote_bytes: Option<&[u8]>,
+    payload: &[u8],
+    passphrase: Option<&str>,
+) -> super::sync_state::SyncPreview {
+    let none = Default::default();
+    let keep = BTreeSet::new();
+    let compare = || -> ModelResult<(Vec<super::sync_state::Change>, usize)> {
+        let local_facts = super::sync_state::facts(
+            &local.package,
+            &local.manager.clone().unwrap_or_default(),
+            &local.assets.clone().unwrap_or_default(),
+            &none,
+            &keep,
+        );
+        let merged_facts = super::sync_state::facts(
+            &merged.package,
+            &merged.manager,
+            &merged.assets,
+            &none,
+            &keep,
+        );
+        let remote_facts = match remote_bytes {
+            Some(bytes) => {
+                let remote = file_objects::remote_summary(bytes, passphrase)?;
+                Some(super::sync_state::facts(
+                    &remote.package,
+                    &remote.manager,
+                    &remote.assets,
+                    &none,
+                    &keep,
+                ))
+            }
+            None => None,
+        };
+        let (mut changes, unchanged) =
+            super::sync_state::upload_changes(&local_facts, merged_facts, remote_facts, conflicts);
+        if changes.is_empty() {
+            if let Some(bytes) = remote_bytes {
+                if !file_objects::same_content(bytes, payload, passphrase)? {
+                    changes.push(super::sync_state::Change {
+                        kind: "other".into(),
+                        id: "other".into(),
+                        label: "其他配置".into(),
+                        mark: "update".into(),
+                        ..Default::default()
+                    });
+                }
+            }
+        }
+        Ok((changes, unchanged))
+    };
+    let result = compare().ok();
+    super::sync_state::SyncPreview {
+        source: "local".into(),
+        unchanged: result.as_ref().map(|(_, n)| *n).unwrap_or_default(),
+        changes: result.map(|(changes, _)| changes),
+        created_at: merged.package.created_at.clone(),
+    }
+}
+/// 同步下载的比较目标：按来源条目在本机已有的部分生成同一形态的配置包。
+/// 本机不存在的渠道、模版版本、Skill与MCP不进入目标，比较结果即显示为「新增」。
+fn local_target(
+    root: &Path,
+    plan: &IncomingPlan,
+    renames: &std::collections::BTreeMap<String, String>,
+    config_home: &Path,
+    local_home: Option<&Path>,
+) -> ModelResult<(
+    ModelPackage,
+    crate::modules::sync::portable_manager::Settings,
+    crate::modules::sync::portable_assets::Summary,
+)> {
+    let scope = load_scope(root)?;
+    let snapshot = super::config_file::snapshot(root, config_home)?;
+    let channel_ids: Vec<String> = plan
+        .package
+        .payload
+        .policy
+        .iter()
+        .flat_map(|policy| &policy.channels)
+        .map(|channel| {
+            renames
+                .get(&channel.id)
+                .cloned()
+                .unwrap_or_else(|| channel.id.clone())
+        })
+        .filter(|id| snapshot.policy.channels.iter().any(|c| &c.id == id))
+        .collect();
+    let template_refs: Vec<TemplateRef> =
+        plan.package
+            .payload
+            .templates
+            .iter()
+            .flat_map(|template| {
+                template.revisions.iter().map(|revision| TemplateRef {
+                    template_id: template.id.clone(),
+                    revision_id: revision.id.clone(),
+                })
+            })
+            .filter(|r| {
+                snapshot.library.templates.iter().any(|t| {
+                    t.id == r.template_id && t.revisions.iter().any(|v| v.id == r.revision_id)
+                })
+            })
+            .collect();
+    let package = super::portable_channels::export_file(
+        root,
+        config_home,
+        ExportScope {
+            channel_families: scope
+                .channel_families
+                .iter()
+                .filter(|(id, _)| channel_ids.contains(id))
+                .map(|(id, value)| (id.clone(), value.clone()))
+                .collect(),
+            channel_models: scope
+                .channel_models
+                .iter()
+                .filter(|(id, _)| channel_ids.contains(id))
+                .map(|(id, models)| (id.clone(), models.clone()))
+                .collect(),
+            include_policy: scope.include_global || !channel_ids.is_empty(),
+            channel_ids,
+            template_refs,
+            include_global: scope.include_global,
+        },
+    )?;
+    let plan_manager = plan.manager.clone().unwrap_or_default();
+    let plan_assets = plan.assets.clone().unwrap_or_default();
+    let (skill_names, mcp_names) = match local_home {
+        Some(home) => {
+            let catalog = crate::modules::sync::portable_assets::catalog(root, home)?;
+            (
+                plan_assets
+                    .skills
+                    .iter()
+                    .map(|skill| skill.name.clone())
+                    .filter(|name| catalog.skills.contains(name))
+                    .collect(),
+                plan_assets
+                    .mcps
+                    .iter()
+                    .map(|mcp| mcp.name.clone())
+                    .filter(|name| catalog.mcps.contains(name))
+                    .collect(),
+            )
+        }
+        None => (vec![], vec![]),
+    };
+    let manager = ManagerScope {
+        preferences: plan_manager.preferences.is_some(),
+        extensions: plan_manager.extensions.is_some(),
+        webdav: false,
+        webdav_passwords: false,
+        skill_names,
+        mcp_names,
+        mcp_sources: scope.mcp_sources.clone(),
+        extension_credentials: false,
+        assets_reviewed: true,
+        account_ids: scope
+            .account_identities
+            .iter()
+            .filter(|local| {
+                plan_manager.accounts.iter().any(|remote| {
+                    crate::modules::sync::portable_accounts::same_identity(local, remote)
+                })
+            })
+            .map(|local| local.id.clone())
+            .collect(),
+        upstream_root: Some(config_home.to_path_buf()),
+        upstream_snapshot: None,
+        local_home: local_home.map(Path::to_path_buf),
+    };
+    let id = uuid::Uuid::new_v4().to_string();
+    let (_, _, settings, assets) =
+        file_objects::seal_manager(root, &id, &package, false, None, &manager)?;
+    Ok((package, settings, assets))
+}
+#[allow(clippy::too_many_arguments)]
+async fn download_pointed<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
+    root: &Path,
+    transport: &T,
+    config: &WebDavConfig,
+    passphrase: Option<&str>,
+    home: Option<&Path>,
+    config_home: Option<&Path>,
+    unchanged: F,
+) -> ModelResult<(IncomingPlan, remote::Pointer)> {
     let scope = load_scope(root)?;
     let base = remote::pointer_for(remote::CONFIG, transport, config)
         .await?
@@ -601,6 +917,10 @@ async fn download_bound_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
             .assets
             .mcps
             .iter()
+            .filter(|mcp| {
+                crate::modules::sync::portable_assets::default_included_mcp(&mcp.name)
+                    || scope.mcp_names.contains(&mcp.name)
+            })
             .map(|mcp| mcp.name.clone())
             .collect();
     }
@@ -646,6 +966,7 @@ async fn download_bound_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         &manager,
         scope.include_keys,
     )
+    .map(|plan| (plan, base.pointer.clone()))
 }
 
 #[cfg(test)]
@@ -1050,6 +1371,137 @@ mod tests {
             })
             .unwrap()
             .template_id
+    }
+    #[tokio::test]
+    async fn sync_direction_follows_last_synced_pointer_and_preview_lists_only_changes() {
+        use super::super::sync_state;
+        let remote = Memory::default();
+        let first = tempfile::tempdir().unwrap();
+        let first_home = tempfile::tempdir().unwrap();
+        let a = create(first.path(), "sync-a");
+        let scope = Scope {
+            template_ids: vec![a.clone()],
+            ..Default::default()
+        };
+        let saved = save_scope(first.path(), scope.clone()).unwrap();
+        assert_eq!(
+            sync_state::check(first.path(), &remote, &config(), "bound")
+                .await
+                .unwrap()
+                .source,
+            "local"
+        );
+        let plan = prepare(
+            first.path(),
+            &remote,
+            &config(),
+            "bound",
+            saved,
+            None,
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        let changes = plan.sync.as_ref().unwrap().changes.clone().unwrap();
+        assert!(changes
+            .iter()
+            .any(|change| change.kind == "templates" && change.id == a && change.mark == "new"));
+        publish(first.path(), &remote, &config(), &plan.id, "bound", || {
+            Ok(())
+        })
+        .await
+        .unwrap();
+        let first_check = sync_state::check(first.path(), &remote, &config(), "bound")
+            .await
+            .unwrap();
+        assert_eq!(first_check.source, "local");
+        assert!(first_check.has_remote && first_check.last_synced_at.is_some());
+        assert_eq!(
+            sync_state::check(first.path(), &remote, &config(), "other-binding")
+                .await
+                .unwrap()
+                .source,
+            "remote"
+        );
+        let again = prepare(
+            first.path(),
+            &remote,
+            &config(),
+            "bound",
+            load_scope(first.path()).unwrap(),
+            None,
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        assert_eq!(again.sync.unwrap().changes, Some(vec![]));
+
+        let second = tempfile::tempdir().unwrap();
+        let second_home = tempfile::tempdir().unwrap();
+        save_scope(second.path(), scope).unwrap();
+        assert_eq!(
+            sync_state::check(second.path(), &remote, &config(), "bound")
+                .await
+                .unwrap()
+                .source,
+            "remote"
+        );
+        let incoming = download_sync(
+            second.path(),
+            &remote,
+            &config(),
+            None,
+            None,
+            second_home.path(),
+            "bound",
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        let preview = incoming.sync.clone().unwrap();
+        assert_eq!(preview.source, "remote");
+        assert!(preview
+            .changes
+            .unwrap()
+            .iter()
+            .any(|change| change.kind == "templates" && change.id == a));
+        assert_eq!(
+            sync_state::check(second.path(), &remote, &config(), "bound")
+                .await
+                .unwrap()
+                .source,
+            "remote"
+        );
+        file_objects::accept(second.path(), &incoming.id, false, None).unwrap();
+        assert!(sync_state::promote_pending(second.path(), &incoming.id).unwrap());
+        assert!(sync_state::last_synced(second.path(), "bound").is_some());
+        assert_eq!(
+            sync_state::check(second.path(), &remote, &config(), "bound")
+                .await
+                .unwrap()
+                .source,
+            "local"
+        );
+        let same = download_sync(
+            first.path(),
+            &remote,
+            &config(),
+            None,
+            None,
+            first_home.path(),
+            "bound",
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        assert_eq!(same.sync.unwrap().changes, Some(vec![]));
+        assert_eq!(
+            sync_state::check(first.path(), &remote, &config(), "bound")
+                .await
+                .unwrap()
+                .source,
+            "local"
+        );
     }
     #[tokio::test]
     async fn partial_remote_upload_preserves_other_objects_and_saved_device_scope_bounds_reception()

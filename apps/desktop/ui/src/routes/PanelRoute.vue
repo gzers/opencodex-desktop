@@ -8,18 +8,37 @@ import { useThemeStore } from '@/app/appearance/theme'
 import { useEffectsStore } from '@/app/appearance/effects'
 import { clampScale } from '@/app/appearance/scale'
 import { useOverlaySurfaces } from '@/app/surfaces'
+import { useRouteStore } from '@/stores/routes'
 import { LIFECYCLE_FALLBACK_MS, PANEL_LOAD_NOTICE_MS } from '@/config/runtimeDefaults'
 
 const app = useAppStore()
 const theme = useThemeStore()
 const effects = useEffectsStore()
 const panel = usePanelStore()
+const routes = useRouteStore()
 // 覆盖表面规则集中在 app（IMP-04 §13.5）：面板只消费派生值，不逐字段判断。
 const { requiredOverlays } = useOverlaySurfaces()
 const panelFrame = ref<HTMLElement | null>(null)
 const panelReady = ref(false)
 const panelLoading = ref(true)
-const panelError = ref('')
+
+// 面板空态（原型 `.panel-empty` / prototype-panel.js S18-02）：进程状态与页面加载是两件事。
+// - `load-failed`：OpenCodex 已运行、内嵌页面没加载出来——「重试加载」只重载页面，不碰进程；
+// - `not-running`：OpenCodex 没在运行——「返回概览」，由概览启动；
+// - `unavailable`：进程在但代理不健康/不可达（原型静态默认文案）——重新判断后再加载；
+// - `waiting` / `browser`：等待首个状态快照、浏览器兜底模式，只给说明。
+type PanelNoticeKind = 'load-failed' | 'not-running' | 'unavailable' | 'waiting' | 'browser'
+interface PanelNotice { kind: PanelNoticeKind; title: string; message: string }
+const NOTICES: Record<PanelNoticeKind, PanelNotice> = {
+  'load-failed': { kind: 'load-failed', title: '官方面板加载失败', message: 'OpenCodex 正在运行，内嵌页面未能加载。' },
+  'not-running': { kind: 'not-running', title: 'OpenCodex 未运行', message: '请从概览启动 OpenCodex 后再打开面板。' },
+  unavailable: { kind: 'unavailable', title: '面板不可用', message: '请先启动 OpenCodex，或检查代理状态后重新加载。' },
+  waiting: { kind: 'waiting', title: '', message: '正在等待 OpenCodex 状态；就绪后会自动嵌入官方面板。' },
+  browser: { kind: 'browser', title: '', message: '浏览器兜底模式已启用；官方面板不会嵌入主窗口。' },
+}
+const panelNotice = ref<PanelNotice | null>(null)
+// 页面加载失败时为让空态可见而收起了子视图；页面随后仍加载完成时据此重新显示。
+let panelHiddenForFailure = false
 const panelScale = ref(100)
 const syncBusy = ref(false)
 let observer: ResizeObserver | null = null
@@ -54,6 +73,31 @@ function stopStatusWait() {
   statusWaitTimer = null
 }
 
+function showNotice(kind: PanelNoticeKind) {
+  panelLoading.value = false
+  panelReady.value = false
+  panelNotice.value = NOTICES[kind]
+}
+
+// 依据当前快照说明面板为何不能嵌入；不把「页面没加载」与「进程没启动」混为一谈。
+function unavailableKind(): PanelNoticeKind {
+  const snapshot = app.statusSnapshot
+  const runtime = snapshot?.matrix.runtime
+  if (runtime === 'running' && snapshot?.port != null) return 'unavailable'
+  if (runtime === 'unreachable' || runtime === 'pending' || runtime === 'external_takeover') return 'unavailable'
+  return 'not-running'
+}
+
+// 嵌入失败时按进程事实分流：进程仍在运行 ⇒ 页面加载失败，不改报启动失败、不重启服务。
+function reportLoadFailure() {
+  clearLoadTimeout()
+  const running = app.statusSnapshot?.matrix.runtime === 'running'
+  showNotice(running ? 'load-failed' : unavailableKind())
+  // 原生子视图盖在主 WebView 之上：页面没加载出来时先收起，空态说明才可见。
+  panelHiddenForFailure = true
+  void syncEmbeddedPanel({ action: 'hide' }).catch(() => {})
+}
+
 // 状态事件流未就绪时快照可能一直为空：按节奏主动补取，拿到运行态后由 watch 自动嵌入，
 // 否则会永远停在「正在等待 OpenCodex 状态」。
 function startStatusWait() {
@@ -70,10 +114,7 @@ function startStatusWait() {
 function scheduleLoadTimeout() {
   clearLoadTimeout()
   loadTimeout = window.setTimeout(() => {
-    if (!panelReady.value) {
-      panelLoading.value = false
-      panelError.value = '官方面板加载超时；主界面仍可继续操作，请重试或在浏览器打开。'
-    }
+    if (!panelReady.value) reportLoadFailure()
   }, PANEL_LOAD_NOTICE_MS)
 }
 
@@ -86,18 +127,6 @@ function getBounds(): PanelBounds | null {
   // 原生子视图也按同一坐标系摆放，故直接上报；边界校验按 `scale` 在
   // `commands/panel.rs` 里折算，两处不重复缩放。
   return { x: rect.left, y: rect.top, width: rect.width, height: rect.height }
-}
-
-// 后端错误是 `{code, message}` 形状的 IPC 载荷；这里取可读文案，避免把失败原因
-// 笼统说成「需要先启动服务」而误导排障。
-function describePanelError(error: unknown): string {
-  if (typeof error === 'string' && error) return error
-  if (error && typeof error === 'object' && 'message' in error) {
-    const message = (error as { message?: unknown }).message
-    if (typeof message === 'string' && message) return message
-  }
-  if (error instanceof Error && error.message) return error.message
-  return '未返回原因'
 }
 
 async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
@@ -119,31 +148,41 @@ async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
       effects: effects.setting,
     })
     if (action === 'show') {
-      panelError.value = ''
+      panelHiddenForFailure = false
       if (!result.visible) {
-        // 原生视图不存在且未创建：停止「正在嵌入」并显示显式失败，不留下悬空的加载态。
-        clearLoadTimeout()
-        panelLoading.value = false
-        panelError.value = '官方面板未能嵌入主窗口。'
+        // 原生视图不存在且未创建：停止「正在嵌入」并按进程事实给出显式失败，不留下悬空的加载态。
+        reportLoadFailure()
       } else if (app.panelLoaded) {
         // 视图被复用且本轮已成功加载过：不再等待页面事件，也不启动加载超时。
         clearLoadTimeout()
+        panelNotice.value = null
         panelLoading.value = false
         panelReady.value = true
       } else {
+        panelNotice.value = null
         panelLoading.value = true
         scheduleLoadTimeout()
       }
     }
-  } catch (error) {
-    if (action !== 'hide') {
-      panelLoading.value = false
-      panelError.value =
-        app.panelError || `官方面板加载失败：${describePanelError(error)}。`
-    }
+  } catch {
+    // 后端拒绝或建视图失败：原因已写入运行日志（commands/panel.rs），这里只按进程事实分流。
+    // 布局同步失败不改变已展示的面板。
+    if (action === 'show') reportLoadFailure()
   } finally {
     syncBusy.value = false
   }
+}
+
+// 「重试加载」：只重新加载内嵌页面，不发起任何启停动作。
+function retryLoad() {
+  if (app.statusSnapshot?.matrix.runtime !== 'running') {
+    void loadPanel()
+    return
+  }
+  panelNotice.value = null
+  panelLoading.value = true
+  usePanelStore().setLoaded(false)
+  void nextTick(() => syncPanel('show', true))
 }
 
 function onPanelEvent(event: Event) {
@@ -155,12 +194,15 @@ function onPanelEvent(event: Event) {
       usePanelStore().setLoaded(true)
       panelReady.value = true
       panelLoading.value = false
-      panelError.value = ''
+      panelNotice.value = null
+      // 超时后页面仍加载完成：把为空态收起的子视图重新显示出来。
+      if (panelHiddenForFailure && !panelHiddenForSurface) void syncPanel('show')
     } else {
       // 新的页面加载开始（含重载与端口变化后的重建）：重新等待本次加载。
       usePanelStore().setLoaded(false)
       panelReady.value = false
       panelLoading.value = true
+      panelNotice.value = null
     }
     return
   }
@@ -194,23 +236,21 @@ async function loadPanel() {
   await app.loadPreferences()
   panelScale.value = app.preferences?.interfaceScale ?? 100
   if (!embedded.value) {
-    panelLoading.value = false
-    panelError.value = '浏览器兜底模式已启用；官方面板不会嵌入主窗口。'
+    showNotice('browser')
     return
   }
   if (!app.statusSnapshot) await app.loadStatusSnapshot()
   if (!await app.loadPanelUrl()) {
-    panelLoading.value = false
     pendingStatusRetry = waitingForStatus.value
     // 快照未就绪时 `loadPanelUrl` 也会给出「请先启动服务」，这里要先于它判断。
-    panelError.value = waitingForStatus.value
-      ? '正在等待 OpenCodex 状态；就绪后会自动嵌入官方面板。'
-      : app.panelError || '官方面板需要 OpenCodex 处于运行且健康可用状态。'
+    showNotice(waitingForStatus.value ? 'waiting' : unavailableKind())
     if (waitingForStatus.value) startStatusWait()
     return
   }
   pendingStatusRetry = false
   stopStatusWait()
+  panelNotice.value = null
+  if (!panelReady.value) panelLoading.value = true
   await nextTick()
   await syncPanel('show')
   if (requiredOverlays.value && !panelHiddenForSurface) {
@@ -234,7 +274,10 @@ function scheduleLayout() {
   if (resizeFrame !== null) cancelAnimationFrame(resizeFrame)
   resizeFrame = requestAnimationFrame(() => {
     resizeFrame = null
-    void syncPanel('layout')
+    // 首次挂载可能尚无可用尺寸，Show 会在 getBounds 处延后；尺寸就绪后补 Show，
+    // 不能仅发 Layout（原生视图尚未创建时 Layout 不会创建它）。失败空态仍由用户重试。
+    const awaitingView = panelLoading.value && !panelNotice.value && !!app.panelUrl
+    void syncPanel(awaitingView ? 'show' : 'layout')
   })
 }
 
@@ -301,7 +344,8 @@ watch(requiredOverlays, visible => {
     void syncPanel('hide')
   } else if (!visible && panelHiddenForSurface) {
     panelHiddenForSurface = false
-    void syncPanel('show')
+    // 页面加载失败时子视图本就收起：表面消失后保持空态，不重新露出未加载的视图。
+    if (!panelNotice.value) void syncPanel('show')
   }
 })
 </script>
@@ -309,13 +353,16 @@ watch(requiredOverlays, visible => {
 <template>
   <section class="panel-shell show">
     <div ref="panelFrame" class="panel-frame">
-      <div v-if="panelLoading || panelError" class="panel-state" role="status" aria-live="polite">
-        <p v-if="panelLoading">正在将官方面板嵌入主窗口…</p>
-        <p v-else>{{ panelError }}</p>
-        <div v-if="panelError" class="panel-state-actions">
-          <UiButton class="btn" type="button" @click="void loadPanel()">重试</UiButton>
-          <UiButton class="btn" type="button" @click="void openBrowserFallback()">在浏览器打开</UiButton>
-        </div>
+      <div v-if="panelNotice" class="panel-empty" role="status" aria-live="polite">
+        <strong v-if="panelNotice.title">{{ panelNotice.title }}</strong>
+        <span>{{ panelNotice.message }}</span>
+        <UiButton v-if="panelNotice.kind === 'load-failed'" type="button" @click="retryLoad()">重试加载</UiButton>
+        <UiButton v-else-if="panelNotice.kind === 'unavailable'" type="button" @click="void loadPanel()">重试加载</UiButton>
+        <UiButton v-else-if="panelNotice.kind === 'not-running'" type="button" @click="routes.go('overview')">返回概览</UiButton>
+        <UiButton v-if="panelNotice.kind === 'load-failed' || panelNotice.kind === 'browser'" variant="ghost" type="button" @click="void openBrowserFallback()">浏览器打开</UiButton>
+      </div>
+      <div v-else-if="panelLoading" class="panel-empty" role="status" aria-live="polite">
+        <span>正在将官方面板嵌入主窗口…</span>
       </div>
       <p v-if="panelReady" class="panel-embedded-note">官方面板已嵌入主窗口</p>
     </div>

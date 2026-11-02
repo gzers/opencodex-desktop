@@ -23,6 +23,8 @@ import { hasNewerVersion } from '@/features/updates/version'
 import RuntimeMotionMark from '@/features/runtime/components/RuntimeMotionMark.vue'
 import EnvironmentGate from '@/features/environment/components/EnvironmentGate.vue'
 import { webdavStates } from '@/features/sync/states'
+import { useSyncStore } from '@/features/sync/store'
+import { clockText, syncActivity } from '@/features/sync/activity'
 import { runtimeSourceLabel } from '@/lib/labels'
 import { buildEnvironmentPresentation, environmentChecksOrdered } from '@/features/environment/presentation'
 import { projectMotion } from '@/features/runtime/motion/projection'
@@ -30,6 +32,7 @@ import { projectMotion } from '@/features/runtime/motion/projection'
 const routes = useRouteStore()
 const app = useAppStore()
 const controller = useAppController()
+const syncStore = useSyncStore()
 
 const updateCenter = ref<InstanceType<typeof UpdateCenter> | null>(null)
 const updateOpen = ref(false)
@@ -133,7 +136,6 @@ const updatePhaseLabels: Record<UpdatePhase, string> = {
   unknown: '—',
 }
 const managerVersion = computed(() => managerUpdateStatus.value?.currentVersion ?? app.aboutApp?.version ?? '—')
-const officialVersion = computed(() => app.officialProject?.version ?? '—')
 const managerPhase = computed<UpdatePhase>(() => {
   const stage = managerInstallProgress.value?.stage
   if (stage === 'failed') return 'failed'
@@ -161,6 +163,26 @@ const managerPhaseLabel = computed(() =>
   managerPhase.value === 'unknown' ? (managerUpdateStatus.value?.channel ?? '—') : updatePhaseLabels[managerPhase.value],
 )
 const officialPhaseLabel = computed(() => updatePhaseLabels[officialPhase.value])
+// S18-09：0.2.18 原型 maintenance-ui.js:7-12/95-101 概览版本行＝左对象名，右侧「阶段词（仅检查中/失败/更新中/待重启）+ 版本 + 状态点 + ›」。
+// 有候选/更新中/待重启显示候选版本，已是最新显示当前版本，其余显示「—」且不带点；尚未检查与进行中的行不可点。
+const ROW_DOTS: Partial<Record<UpdatePhase, string>> = { idle: 'idle', checking: 'info', available: 'ok', latest: 'idle', failed: 'error', applying: 'info', 'restart-required': 'info' }
+const ROW_WORDS: Partial<Record<UpdatePhase, string>> = { checking: '检查中', failed: '失败', applying: '更新中', 'restart-required': '待重启' }
+function versionRow(key: 'manager' | 'official', label: string, name: string, phase: UpdatePhase, current: string | null | undefined, candidate: string | null | undefined) {
+  const useCandidate = ['available', 'applying', 'restart-required'].includes(phase)
+  const shown = useCandidate ? candidate : phase === 'latest' ? current : null
+  const version = shown || '—'
+  return {
+    key, label, phase, version,
+    word: ROW_WORDS[phase] ?? '',
+    dot: shown ? (ROW_DOTS[phase] ?? '') : '',
+    disabled: phase === 'idle' || phase === 'checking' || phase === 'applying',
+    aria: '查看' + name + '更新详情（' + (key === 'manager' ? managerPhaseLabel.value : officialPhaseLabel.value) + '）',
+  }
+}
+const versionRows = computed(() => [
+  versionRow('manager', '管理器', '桌面管理器', managerPhase.value, managerVersion.value === '—' ? null : managerVersion.value, managerInstallProgress.value?.candidateVersion ?? managerUpdateStatus.value?.availableVersion),
+  versionRow('official', '面板', ' OpenCodex 面板', officialPhase.value, app.officialProject?.version, app.officialRemote?.version),
+])
 const runtime = computed(() =>
   knownInstall.value && app.statusSnapshot?.facts.runtime_label
     ? `Codex 运行时（${runtimeSourceLabel(app.statusSnapshot.facts.runtime_label)}）`
@@ -272,31 +294,40 @@ function guide() {
 
 // 顺序与文案对齐 0.2.0 原型 index.html:1866/1885/1905：版本升级 → 文件同步 → WebDAV 同步。
 // 「最近事件」在原型里排在模块区之前（index.html:1853），见模板顺序。
+function activityText(entry: { time: string; count: number } | undefined, empty: string) {
+  const time = clockText(entry?.time)
+  return entry && time ? time + ' · ' + entry.count + ' 项' : empty
+}
+// S18-01：WebDAV 卡片按 0.2.18 原型 webdavStates 渲染；线上版本时间来自本机最近一次同步记录。
+const webdavView = computed(() => webdavStates[app.webdavState])
+const remoteVersionTime = computed(() => webdavView.value.remote ? clockText(syncActivity.value.sync?.remoteTime) || '—' : '—')
 const mods = computed(() => [
   {
     key: 'upgrade',
     title: '版本升级',
-    // 原型 index.html:1873 用「可用」；连接/清单状态区分见 N-OV-1。
-    tag: '可用',
+    // 0.2.18 原型 index.html:747 隐藏版本卡与 WebDAV 卡头部标签：状态已在正文逐行给出。
+    tag: '',
     rows: [],
+    // 原型 maintenance-ui.js:103：更新中 / 待重启时在检查更新后追加对应对象的「查看…进度」。
     actions: [
-      { label: '检查更新', cls: 'btn primary', run: () => openUpdates(null, true) },
+      { label: '检查更新', cls: 'btn primary', disabled: versionRows.value.some(row => row.phase === 'checking' || row.phase === 'applying'), run: () => openUpdates(null, true) },
+      ...versionRows.value.filter(row => row.phase === 'applying' || row.phase === 'restart-required').map(row => ({ label: '查看' + row.label + '进度', cls: 'btn', run: () => openUpdates(row.key) })),
     ],
   },
   {
     key: 'migration',
     // 原型 index.html:1891 标题是「文件同步」，不是「配置迁移」。
     title: '文件同步',
-    // 原型 index.html:1892 用「规划中」。
-    tag: '规划中',
-    rows: [['导出范围', '可选对象'], ['凭据', '独立选择']],
-    // 原型 index.html:1881/:1900-1901 的入口是「导入配置 / 选择同步范围」。
+    // S18-01：0.2.18 原型 index.html:1930-1946 无标签，只显示最近一次导入 / 导出（时间 + 项数）。
+    tag: '',
+    rows: [['最近导入', activityText(syncActivity.value.import, '尚未导入')], ['最近导出', activityText(syncActivity.value.export, '尚未导出')]],
+    // 导入在概览原位打开；导出进入文件同步页按记住的范围直接准备导出包。
     actions: [
-      { label: '导入配置', cls: 'btn', run: () => { importOpen.value = true } },
-      { label: '选择同步范围', cls: 'btn ghost', run: () => routes.go('settings',{section:'migration'}) },
+      { label: '导入', cls: 'btn', run: () => { importOpen.value = true } },
+      { label: '导出', cls: 'btn', run: () => { syncStore.requestAction('export'); routes.go('sync', { tab: 'file' }) } },
     ],
   },
-  { key: 'sync', title: 'WebDAV 同步', tag: webdavStates[app.webdavState].tag, rows: [['连接状态', webdavStates[app.webdavState].conn], ['冲突策略', webdavStates[app.webdavState].conflict]], actions: webdavStates[app.webdavState].actions.map(a => ({ label: a.label, cls: a.cls, run: () => routes.go('sync',{tab:'webdav'}) })) },
+  { key: 'sync', title: 'WebDAV 同步', tag: '', rows: [['连接状态', webdavView.value.conn]], actions: webdavView.value.actions.map(a => ({ label: a.label, cls: a.cls, disabled: !!a.disabled, run: () => { syncStore.requestAction(a.act); routes.go('sync', { tab: 'webdav' }) } })) },
 ])
 </script>
 
@@ -363,7 +394,7 @@ const mods = computed(() => [
       <UiCard v-for="mod in mods" :key="mod.key" class="mod">
         <div class="mod-head">
           <h3>{{ mod.title }}</h3>
-          <span class="tag">{{ mod.tag }}</span>
+          <span v-if="mod.tag" class="tag">{{ mod.tag }}</span>
           <button
             class="mod-go"
             type="button"
@@ -373,27 +404,33 @@ const mods = computed(() => [
         </div>
         <div class="mod-status">
           <template v-if="mod.key === 'upgrade'">
-            <button class="mnt-version-row" type="button" aria-label="查看桌面管理器更新详情" @click="openUpdates('manager')">
-              <span>管理器</span>
-              <b>{{ managerVersion }}</b>
-              <span class="mnt-status" :class="{ danger: managerPhase === 'failed' }">{{ managerPhaseLabel }}</span>
-              <span class="mnt-chevron" aria-hidden="true">›</span>
-            </button>
-            <button class="mnt-version-row" type="button" aria-label="查看 OpenCodex 面板更新详情" @click="openUpdates('official')">
-              <span>面板</span>
-              <b>{{ officialVersion }}</b>
-              <span class="mnt-status" :class="{ danger: officialPhase === 'failed' }">{{ officialPhaseLabel }}</span>
-              <span class="mnt-chevron" aria-hidden="true">›</span>
-            </button>
+            <button
+              v-for="row in versionRows"
+              :key="row.key"
+              class="mnt-version-row"
+              type="button"
+              :data-phase="row.dot"
+              :disabled="row.disabled"
+              :aria-label="row.aria"
+              @click="openUpdates(row.key)"
+            ><span>{{ row.label }}</span><span class="mnt-version-side"><span v-if="row.word" class="mnt-status" :class="{ danger: row.phase === 'failed' }">{{ row.word }}</span><b class="mnt-version-latest">{{ row.version }}</b><span v-if="row.dot" class="mnt-dot" :class="'is-' + row.dot" aria-hidden="true"></span><span aria-hidden="true">›</span></span></button>
           </template>
           <template v-else><InformationRow v-for="row in mod.rows" :key="row[0]" :label="row[0]" :value="row[1]" /></template>
+          <div v-if="mod.key === 'sync'" class="info-row ov-remote-row" data-testid="overview-remote-version">
+            <span class="info-row-label">线上版本</span>
+            <span class="ov-state-side">
+              <span v-if="webdavView.remote" class="ov-state-dot" :class="'is-' + webdavView.remote.dot" aria-hidden="true"></span>
+              <b>{{ remoteVersionTime }}</b>
+              <template v-if="webdavView.remote"><span class="ov-state-sep" aria-hidden="true">·</span><span class="ov-state-text" :class="'is-' + webdavView.remote.dot">{{ webdavView.remote.text }}</span></template>
+            </span>
+          </div>
         </div>
         <div class="mod-actions">
           <UiButton
             v-for="action in mod.actions"
             :key="action.label"
-            :variant="action.cls.includes('primary') ? 'primary' : 'default'"
-            :disabled="mod.key === 'upgrade' && action.label === '检查更新' && app.officialProjectLoading"
+            :variant="action.cls.includes('primary') ? 'primary' : action.cls.includes('ghost') ? 'ghost' : 'default'"
+            :disabled="(mod.key === 'upgrade' && action.label === '检查更新' && app.officialProjectLoading) || ('disabled' in action && !!action.disabled)"
             @click="action.run?.()"
           >{{ action.label }}</UiButton>
         </div>
@@ -512,13 +549,41 @@ const mods = computed(() => [
 
 <style scoped>
 /* 原型 .mnt-version-row / .mnt-status：版本、阶段与箭头同一行垂直居中，窄卡也不拆行。 */
-.mnt-version-row { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; padding: 4px 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; white-space: nowrap; cursor: pointer; }
+/* S18-09：原型 maintenance-ui.css 版本行左名右值同字号同字重400、同 --text。 */
+.mnt-version-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; min-width: 0; min-height: 18px; padding: 0; border: 0; background: transparent; color: var(--text); font: inherit; font-weight: 400; line-height: inherit; text-align: left; white-space: nowrap; cursor: pointer; }
 .mnt-version-row > span:first-child { flex: none; }
-.mnt-version-row > b { flex: none; color: var(--text); font-weight: 600; white-space: nowrap; }
-.mnt-version-row:hover { color: var(--accent); }
-.mnt-status { margin-inline-start: auto; min-width: 0; overflow: hidden; color: var(--muted); text-overflow: ellipsis; }
+.mnt-version-row:hover:not(:disabled) { color: var(--accent); }
+.mnt-version-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.mnt-version-row:disabled { cursor: default; }
+.mnt-version-side { display: inline-flex; align-items: center; justify-content: flex-end; gap: 6px; flex: none; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--text); font-weight: 400; }
+.mnt-version-latest { font-weight: 400; color: var(--text); }
 .mnt-status.danger { color: var(--red); }
-.mnt-chevron { flex: none; color: var(--muted); }
+.mnt-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex: none; }
+.mnt-dot.is-ok { background: var(--green); }
+.mnt-dot.is-info { background: var(--blue); }
+.mnt-dot.is-warn { background: var(--amber); }
+.mnt-dot.is-error { background: var(--red); }
+.mnt-dot.is-idle { background: var(--muted); }
+/* S18-09：原型 .mod-status 行 min-height/line-height 18px、无内边距，名与值同为 400、--text。 */
+.mod-status :deep(.info-row) { min-height: 18px; padding: 0; border: 0; border-radius: 0; line-height: 18px; }
+.mod-status :deep(.info-row-label) { color: var(--text); font-weight: 400; }
+.mod-status :deep(.info-row-value) { font-weight: 400; }
+/* S18-01：0.2.18 原型 index.html:768-780 线上版本状态点与方向词。 */
+.ov-remote-row .ov-state-side { margin-inline-start: auto; }
+.ov-remote-row b { color: var(--text); font-weight: 400; }
+.ov-state-dot{width:7px;height:7px;border-radius:50%;flex:none;background:var(--muted)}
+.ov-state-dot.is-ok{background:var(--green)}
+.ov-state-dot.is-info{background:var(--blue)}
+.ov-state-dot.is-warn{background:var(--amber)}
+.ov-state-dot.is-error{background:var(--red)}
+.ov-state-text{font-weight:500;color:var(--text);white-space:nowrap}
+.ov-state-text.is-ok{color:var(--green)}
+.ov-state-text.is-info{color:var(--blue)}
+.ov-state-text.is-warn{color:var(--amber)}
+.ov-state-text.is-error{color:var(--red)}
+.ov-state-text.is-idle{color:var(--muted)}
+.ov-state-side{display:inline-flex;align-items:center;justify-content:flex-end;gap:6px;flex:none;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ov-state-sep{color:var(--border)}
 /* 最近事件是列表行：时间与消息同行垂直居中，消息换行时不把时间挤偏。 */
 .recent-events-list li { align-items: center; }
 </style>

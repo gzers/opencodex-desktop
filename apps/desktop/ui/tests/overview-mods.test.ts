@@ -7,6 +7,8 @@ import App from '@/App.vue'
 import { useUpdatesStore } from '@/features/updates/store'
 import { useRouteStore } from '@/stores/routes'
 import { managerUpdateStatus } from '@/features/updates/update'
+import { useSyncStore } from '@/features/sync/store'
+import { recordRemoteVersion, recordSyncActivity, syncActivity } from '@/features/sync/activity'
 
 const invoke = vi.fn()
 
@@ -98,7 +100,7 @@ describe('overview module cards', () => {
   it('opens import in the overview with a disabled read action before a file is selected', async () => {
     const wrapper = mountOverview(); await settle(wrapper); await flushPromises()
     const route=useRouteStore(wrapper.vm.$pinia)
-    const importer=wrapper.findAll('button').find(b=>b.text()==='导入配置')!
+    const importer=wrapper.findAll('.mods .mod')[1].findAll('.mod-actions button').find(b=>b.text()==='导入')!
     await importer.trigger('click'); await flushPromises()
     expect(route.current).toBe('overview')
     const modal=document.querySelector('dialog[open]')
@@ -111,8 +113,63 @@ describe('overview module cards', () => {
     expect(document.querySelector('dialog[open]')).toBeNull()
   })
 
-  // OV-4 / N-OV-2：版本行按原型「管理器 / 面板 + 版本 + 阶段 + ›」三段呈现（index.html:1877-1878）。
-  it('renders each upgrade row as label, version, phase and chevron', async () => {
+  // S18-01：0.2.18 原型 index.html:1930-1963 的文件同步与 WebDAV 卡片。
+  it('shows recent import and export facts on the file card without a tag', async () => {
+    localStorage.removeItem('ocx-sync-activity'); syncActivity.value = {}
+    const wrapper = mountOverview(); await settle(wrapper)
+    const file = wrapper.findAll('.mods .mod')[1]
+    expect(file.find('.mod-head h3').text()).toBe('文件同步')
+    expect(file.find('.mod-head .tag').exists()).toBe(false)
+    expect(file.findAll('.info-row').map(row => row.text())).toEqual(['最近导入尚未导入', '最近导出尚未导出'])
+    expect(file.findAll('.mod-actions button').map(b => b.text())).toEqual(['导入', '导出'])
+    recordSyncActivity('export', 3, '2026-11-01T09:05:00')
+    await wrapper.vm.$nextTick()
+    expect(file.findAll('.info-row')[1].text()).toBe('最近导出09:05 · 3 项')
+    const route = useRouteStore(wrapper.vm.$pinia)
+    const sync = useSyncStore(wrapper.vm.$pinia)
+    const requested: unknown[] = []
+    sync.$onAction(({ name, args }) => { if (name === 'requestAction') requested.push(args[0]) })
+    await file.findAll('.mod-actions button')[1].trigger('click')
+    expect(requested).toEqual(['export'])
+    expect(route.current).toBe('sync')
+    expect(route.syncTab).toBe('file')
+    localStorage.removeItem('ocx-sync-activity'); syncActivity.value = {}
+  })
+
+  it('renders the WebDAV card from the connection state with the remote version row', async () => {
+    localStorage.removeItem('ocx-sync-activity'); syncActivity.value = {}
+    const wrapper = mountOverview(); await settle(wrapper)
+    const card = () => wrapper.findAll('.mods .mod')[2]
+    expect(card().find('.mod-head .tag').exists()).toBe(false)
+    expect(card().find('.info-row').text()).toBe('连接状态未配置')
+    expect(card().find('[data-testid=overview-remote-version]').text()).toBe('线上版本—')
+    expect(card().find('.ov-state-dot').exists()).toBe(false)
+    expect(card().findAll('.mod-actions button').map(b => b.text())).toEqual(['配置 WebDAV'])
+    const sync = useSyncStore(wrapper.vm.$pinia)
+    recordRemoteVersion('2026-11-01T11:02:00')
+    sync.setWebdavState('synced'); await wrapper.vm.$nextTick()
+    expect(card().find('.mod-head .tag').exists()).toBe(false)
+    expect(card().find('.info-row').text()).toBe('连接状态已连接')
+    expect(card().find('[data-testid=overview-remote-version]').text().replace(/\s+/g, '')).toBe('线上版本11:02·已一致')
+    expect(card().find('.ov-state-dot').classes()).toContain('is-idle')
+    sync.setWebdavState('syncing'); await wrapper.vm.$nextTick()
+    const busy = card().findAll('.mod-actions button')
+    expect(busy.map(b => b.text())).toEqual(['同步中…'])
+    expect(busy[0].attributes('disabled')).toBeDefined()
+    sync.setWebdavState('conflict'); await wrapper.vm.$nextTick()
+    expect(card().find('.mod-head .tag').exists()).toBe(false)
+    expect(card().findAll('.mod-actions button').map(b => b.text())).toEqual(['同步', '查看结果'])
+    expect(card().findAll('.mod-actions button')[1].classes()).toContain('ghost')
+    const requested: unknown[] = []
+    sync.$onAction(({ name, args }) => { if (name === 'requestAction') requested.push(args[0]) })
+    await card().findAll('.mod-actions button')[0].trigger('click')
+    expect(requested).toEqual(['sync'])
+    expect(useRouteStore(wrapper.vm.$pinia).syncTab).toBe('webdav')
+    localStorage.removeItem('ocx-sync-activity'); syncActivity.value = {}
+  })
+
+  // S18-09：0.2.18 原型 maintenance-ui.js:95-101 版本行＝对象名 + 右侧（候选版本 + 状态点 + ›），有更新时不再写阶段长词。
+  it('renders each upgrade row as label plus candidate version, dot and chevron', async () => {
     managerUpdateStatus.value = {
       channel: 'stable', availableVersion: '0.2.9', currentVersion: '0.2.8', lastCheckedAt: '2026-10-25T00:00:00Z',
       signatureVerified: true, error: null,
@@ -123,12 +180,13 @@ describe('overview module cards', () => {
       await useUpdatesStore(wrapper.vm.$pinia).loadProject();await useUpdatesStore(wrapper.vm.$pinia).loadRemoteLatest();await flushPromises()
       const upgrade = wrapper.findAll('.mods .mod')[0]
       const rows = upgrade.findAll('.mnt-version-row')
-      await vi.waitFor(() => expect(rows.map(row => Array.from(row.element.children).map(node => node.textContent?.trim()))).toEqual([
-        ['管理器', '0.2.8', '有可用更新', '›'],
-        ['面板', '2.50.0', '有可用更新', '›'],
-      ]))
-      expect(rows[0].attributes('aria-label')).toBe('查看桌面管理器更新详情')
-      expect(rows[1].attributes('aria-label')).toBe('查看 OpenCodex 面板更新详情')
+      const side = (row: (typeof rows)[number]) => Array.from(row.find('.mnt-version-side').element.children).map(node => node.className || node.textContent?.trim())
+      await vi.waitFor(() => expect(rows.map(row => row.element.firstElementChild?.textContent)).toEqual(['管理器', '面板']))
+      expect(rows[0].find('.mnt-version-latest').text()).toBe('0.2.9')
+      expect(side(rows[0])).toEqual(['mnt-version-latest', 'mnt-dot is-ok', '›'])
+      expect(rows[0].find('.mnt-status').exists()).toBe(false)
+      expect(rows[0].attributes('aria-label')).toBe('查看桌面管理器更新详情（有可用更新）')
+      expect(rows[1].attributes('aria-label')).toMatch(/^查看 OpenCodex 面板更新详情（/)
     } finally {
       managerUpdateStatus.value = null
     }
@@ -151,7 +209,9 @@ describe('overview module cards', () => {
       const wrapper = mountOverview()
       await settle(wrapper)
       const row = wrapper.findAll('.mnt-version-row')[0]
-      expect(Array.from(row.element.children).map(node => node.textContent?.trim())).toEqual(['管理器', '0.2.8', '已是最新', '›'])
+      expect(row.text()).toBe('管理器0.2.8›')
+      expect(row.find('.mnt-dot').classes()).toContain('is-idle')
+      expect(row.attributes('disabled')).toBeUndefined()
     } finally {
       managerUpdateStatus.value = null
     }

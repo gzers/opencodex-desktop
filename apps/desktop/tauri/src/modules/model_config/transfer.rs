@@ -234,6 +234,9 @@ pub struct IncomingPlan {
     pub asset_mappings: crate::modules::sync::portable_assets::NameMappings,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub extension_source: Option<crate::modules::extensions::ExtensionConfig>,
+    /// 设备间同步预览（S18-01），仅在同步下载时填写。
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sync: Option<super::sync_state::SyncPreview>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -1334,6 +1337,33 @@ pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
     }
     Ok(())
 }
+/// An incoming whole channel is a copy of this machine's official Codex
+/// channel (S18-05) when it carries a local native channel's identity, or when
+/// it has no local identity match and repeats a native channel's label,
+/// protocol and service address. Older packages carry no provider id and the
+/// native ids are minted per machine, so the second rule covers them. A
+/// same-named custom channel with another address is still received.
+fn is_native_copy(
+    channel: &PortableChannel,
+    matched: Option<&ChannelPolicy>,
+    local_native: &[&ChannelPolicy],
+) -> bool {
+    if let Some(existing) = matched {
+        return super::compiler::channel_is_native(&existing.connection.provider_id);
+    }
+    let Some(connection) = &channel.connection else {
+        return false;
+    };
+    local_native.iter().any(|native| {
+        native.label.eq_ignore_ascii_case(&channel.label)
+            && native.connection.protocol == channel.protocol
+            && native
+                .connection
+                .nodes
+                .iter()
+                .any(|n| connection.nodes.iter().any(|m| m.url == n.url))
+    })
+}
 fn merge(
     local: &Snapshot,
     package: &ModelPackage,
@@ -1411,9 +1441,25 @@ fn merge(
             }
             policy.template_refs = global.clone();
         }
+        let local_native: Vec<&ChannelPolicy> = local
+            .policy
+            .channels
+            .iter()
+            .chain(local.workspace.iter().flat_map(|w| &w.policy.channels))
+            .filter(|c| super::compiler::channel_is_native(&c.connection.provider_id))
+            .collect();
         for channel in &incoming.channels {
             let committed = local.policy.channels.iter().find(|c| c.id == channel.id);
             let working = policy.channels.iter().find(|c| c.id == channel.id);
+            if channel.family_scope.is_none()
+                && is_native_copy(channel, committed.or(working), &local_native)
+            {
+                notices.push(format!(
+                    "{}：本机官方渠道沿用本机Codex配置，未接收副本",
+                    channel.label
+                ));
+                continue;
+            }
             if channel.family_scope.is_none()
                 && working != committed
                 && working
@@ -1867,6 +1913,7 @@ fn receive_bound(
         channel_bindings: bindings,
         asset_mappings: Default::default(),
         extension_source: None,
+        sync: None,
     };
     let bytes = serde_json::to_vec_pretty(&plan)?;
     if bytes.len() > 64 * 1024 * 1024 {
@@ -3359,6 +3406,106 @@ mod tests {
             },
         )
         .unwrap()
+    }
+    fn official(label: &str) -> ChannelPolicy {
+        let node = ServiceNode {
+            id: uuid::Uuid::new_v4().to_string(),
+            name: "服务地址".into(),
+            url: "https://api.openai.com/v1".into(),
+        };
+        ChannelPolicy {
+            naming: Default::default(),
+            id: uuid::Uuid::new_v4().to_string(),
+            label: label.into(),
+            template_refs: vec![],
+            model_refs: BTreeMap::new(),
+            connection: ChannelConnection {
+                provider_id: "openai".into(),
+                protocol: "openai-responses".into(),
+                active_node_id: node.id.clone(),
+                nodes: vec![node],
+                ..Default::default()
+            },
+            selection: ModelSelection::None,
+            model_order: vec![],
+            discovered: vec![],
+            defaults: Default::default(),
+            overrides: Default::default(),
+            family_overrides: Default::default(),
+        }
+    }
+    fn commit_channels(root: &Path, channels: Vec<ChannelPolicy>) {
+        let store = ModelStore::new(root);
+        let snapshot = store.load().unwrap();
+        store
+            .commit_runtime_policy(
+                &snapshot.library_digest,
+                &snapshot.policy_digest,
+                &snapshot.workspace_digest,
+                Policy {
+                    channels,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+    }
+    #[test]
+    fn old_package_official_copies_are_skipped_and_same_named_custom_channels_are_kept() {
+        let source = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        // An old package: the source's official channel travelled with its own
+        // per-machine id and no provider id, next to a user channel that is
+        // also called "openai" but points at another service.
+        let source_official = official("openai");
+        let mut custom = channel_fixture(source.path());
+        custom.label = "openai".into();
+        commit_channels(source.path(), vec![source_official.clone(), custom.clone()]);
+        let package = export(
+            source.path(),
+            ExportScope {
+                channel_families: Default::default(),
+                channel_models: Default::default(),
+                include_policy: true,
+                channel_ids: vec![source_official.id.clone(), custom.id.clone()],
+                template_refs: vec![],
+                include_global: false,
+            },
+        )
+        .unwrap();
+        assert_eq!(package.payload.policy.as_ref().unwrap().channels.len(), 2);
+
+        let local_official = official("OpenAI");
+        commit_channels(target.path(), vec![local_official.clone()]);
+        let incoming = receive(target.path(), package.clone()).unwrap();
+        assert!(incoming.preview_error.is_none());
+        assert!(incoming
+            .notices
+            .iter()
+            .any(|n| n == "openai：本机官方渠道沿用本机Codex配置，未接收副本"));
+        let adopted = accept(target.path(), &incoming.id).unwrap();
+        let channels = &adopted.workspace.as_ref().unwrap().policy.channels;
+        assert_eq!(channels.len(), 2);
+        assert_eq!(channels[0], local_official);
+        assert_eq!(channels[1].id, custom.id);
+        assert_eq!(channels[1].label, "openai");
+        assert_eq!(channels[1].connection.nodes, custom.connection.nodes);
+        assert!(!super::super::compiler::channel_is_native(
+            &channels[1].connection.provider_id
+        ));
+
+        // The same identity as a local official channel is never overwritten,
+        // even when its label or address differ.
+        let same_id = tempfile::tempdir().unwrap();
+        let mut local = source_official.clone();
+        local.label = "本机官方".into();
+        local.connection.nodes[0].url = "https://proxy.example.test/v1".into();
+        commit_channels(same_id.path(), vec![local.clone()]);
+        let incoming = receive(same_id.path(), package).unwrap();
+        assert!(incoming.preview_error.is_none());
+        let adopted = accept(same_id.path(), &incoming.id).unwrap();
+        let channels = &adopted.workspace.as_ref().unwrap().policy.channels;
+        assert_eq!(channels[0], local);
+        assert_eq!(channels.len(), 2);
     }
     #[test]
     fn portable_nodes_restore_as_disabled_draft_with_new_local_binding_and_no_runtime_or_secret_refs(

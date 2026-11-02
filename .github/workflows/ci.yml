@@ -42,7 +42,7 @@ jobs:
       - run: python3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v
 
   frontend:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -56,7 +56,7 @@ jobs:
       - run: npm --prefix apps/desktop/ui run build
 
   backend:
-    runs-on: macos-14
+    runs-on: macos-15
     # Cargo 清单在 apps/desktop/tauri/Cargo.toml（仓库根无 Cargo.toml）；cargo 命令必须在
     # apps/desktop/tauri 下执行，否则根目录会以「could not find Cargo.toml」立即失败（DEF-01）。
     defaults:
@@ -278,7 +278,7 @@ jobs:
   build:
     if: github.ref == 'refs/heads/main'
     needs: [frontend, backend, backend-windows, release-tools, windows-smoke-evidence]
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5

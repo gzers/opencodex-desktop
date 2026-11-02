@@ -134,6 +134,20 @@ async function main(){
       }
       check('WP58 模型行高度未被摘要撑破',align.every(r=>r.rowH<=112),'rowH='+align.map(r=>r.rowH).join('/'))
     }
+    // S18-08：表头“全选”与每个模型行复选框共用同一条竖向中心线；排序抓手不能挤偏勾选框。
+    const pickX=await page.evaluate(()=>{
+      const cx=el=>{const r=el.getBoundingClientRect();return r.left+r.width/2}
+      const head=document.querySelector('.channel-model-table thead th:first-child input[type=checkbox]')
+      const rows=[...document.querySelectorAll('.channel-model-table tbody tr[data-model] td:first-child input[type=checkbox]')]
+      if(!head||!rows.length) return null
+      const grip=document.querySelector('.channel-model-table tbody tr[data-model] .model-grip')
+      return {deltas:rows.map(i=>Math.round((cx(i)-cx(head))*10)/10), gripW:grip?Math.round(grip.getBoundingClientRect().width):0}
+    })
+    check('S1808 表头与行复选框已渲染',!!pickX)
+    if(pickX){
+      check('S1808 表头与行复选框水平中心差≤2px',pickX.deltas.every(d=>Math.abs(d)<=2),'deltas='+pickX.deltas.join('/'))
+      check('S1808 排序抓手保留固定占位',pickX.gripW===16,'grip='+pickX.gripW)
+    }
     // WP-58 过滤区：公开范围 / 搜索 / 族筛选 / 仅启用 / 计数同一行、同一高度，勾选框不被撑宽。
     // 旧实现 `.model-toolbar input{flex:1;min-width:180px}` 命中了复选框，把 13px 勾选框撑成 180px。
     const bar=await page.evaluate(()=>{

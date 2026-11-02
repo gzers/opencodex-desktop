@@ -26,7 +26,7 @@ function themeBlocks(css: string): { light: string; dark: string } {
 describe('内容页表面材质（半透明磨砂）', () => {
   it('内容页用半透明填充，不再是实底 --panel', () => {
     const main = rule('.main')
-    expect(main).toContain('background: var(--page-fill)')
+    expect(main).toContain('background: var(--surface-page-bg, var(--page-fill))')
     expect(main).not.toMatch(/background:\s*var\(--panel\)/)
   })
 

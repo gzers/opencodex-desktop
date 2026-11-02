@@ -29,7 +29,7 @@ fn collector_refresh_failure_preserves_state_and_increments_backoff() {
     );
     let error = collector.refresh().expect_err("timeout expected");
     assert_eq!(error, CollectError::Timeout);
-    assert_eq!(collector.matrix().runtime, RuntimeState::NotFound);
+    assert_eq!(collector.matrix().runtime, RuntimeState::Loading);
     assert_eq!(collector.failure_count(), 1);
     assert_eq!(
         collector.next_interval(

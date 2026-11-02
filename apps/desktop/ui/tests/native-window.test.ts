@@ -1,6 +1,8 @@
 import { beforeEach, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
-import { applyNativeAppearance } from '@/app/appearance/nativeWindow'
+import { applyNativeAppearance, installNativeAppearance } from '@/app/appearance/nativeWindow'
+import { invoke } from '@tauri-apps/api/core'
+import { listen } from '@tauri-apps/api/event'
 import { useThemeStore } from '@/app/appearance/theme'
 import { useEffectsStore } from '@/app/appearance/effects'
 
@@ -32,4 +34,23 @@ it('Windows system-theme events update only the resolved theme, without a prefer
   expect(document.documentElement.dataset.theme).toBe('dark')
   applyNativeAppearance(null)
   expect(document.documentElement.dataset.nativeMaterial).toBe('mica')
+})
+
+it('keeps a solid shell while the native material query is pending or unavailable', async () => {
+  vi.spyOn(navigator, 'platform', 'get').mockReturnValue('Win32')
+  Object.defineProperty(window, '__TAURI_INTERNALS__', { value: {}, configurable: true })
+  vi.mocked(listen).mockResolvedValue(() => {})
+  let finish: (value: null) => void = () => {}
+  vi.mocked(invoke).mockImplementation(() => new Promise(resolve => { finish = resolve as typeof finish }))
+  try {
+    const installed = installNativeAppearance()
+    expect(document.documentElement.dataset.nativeMaterial).toBe('solid')
+    await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('window_appearance'))
+    finish(null)
+    await installed
+    expect(document.documentElement.dataset.nativeMaterial).toBe('solid')
+  } finally {
+    delete (window as unknown as Record<string, unknown>).__TAURI_INTERNALS__
+    vi.restoreAllMocks()
+  }
 })

@@ -104,7 +104,7 @@ try{
   await click('完成')
   await verifyWindowsQueryUi(call,output,sandbox)
   await click('概览','.side');await wait("!!document.querySelector('.ov .mods')")
-  await click('导入配置','.ov')
+  await click('导入','.ov')
   await wait("!!document.querySelector('dialog[open].transfer-file-picker')")
   const picker=await evaluate("(()=>{const d=document.querySelector('dialog[open].transfer-file-picker');return {title:d.querySelector('h2').textContent,readDisabled:[...d.querySelectorAll('button')].find(b=>b.textContent.trim()==='读取并比较').disabled,hash:location.hash}})()")
   assert.equal(picker.title,'导入配置');assert(picker.readDisabled&&picker.hash.startsWith('#overview'))

@@ -9,14 +9,19 @@ import ChannelModelScope from './ChannelModelScope.vue'
 import { useModelsStore } from '@/features/models/store'
 import {useAppStore} from '@/stores/app'
 import { errorText, versionLabel, type ChannelPolicy, type ModelPolicy } from '@/features/models/api'
-import { modelTransferApi, scopeFor,remoteScope, accountInformationLabel, accountInformationSupported, accountTransferLabel, accountPlatforms, type AccountCatalogEntry, type ChannelImportMapping, type DraftCandidate, type FamilyScope, type FilePlan, type IncomingPlan, type ManagerScope, type RemoteOptions, type TransferScope, type UploadPlan } from './modelTransfer'
+import { modelTransferApi, scopeFor,remoteScope,defaultIncludedMcp,type McpConflict, accountInformationLabel, accountInformationSupported, accountTransferLabel, accountPlatforms, type AccountCatalogEntry, type ChannelImportMapping, type DraftCandidate, type FamilyScope, type FilePlan, type IncomingPlan, type ManagerScope, type RemoteOptions, type TransferScope, type UploadPlan, type SyncChange, type SyncPreview } from './modelTransfer'
 import {getSyncConfig} from './api'
+import {createBackup} from '@/features/backup/api'
+import {useSyncStore} from './store'
+import {recordSyncActivity,recordRemoteVersion} from './activity'
+import {clientLabels} from '@/features/extensions/presentation'
+import type {ExtensionClientId} from '@/features/extensions/api'
 import { displayPath } from '@/lib/paths'
 const props = defineProps<{ remote?: boolean; importOnly?: boolean; importOpen?: boolean }>()
 const emit = defineEmits<{ 'update:importOpen': [value: boolean] }>()
 const pickOpen = ref(false)
 const models = useModelsStore()
-const app=useAppStore()
+const app=useAppStore();const syncStore=useSyncStore()
 const busy = ref(false)
 const error = ref('')
 const templateIds = ref<string[]>([])
@@ -50,7 +55,7 @@ const exportedPath = ref('')
 const exportSource=ref('saved')
 const importPassword=ref('');const passwordOpen=ref(false);const importPath=ref('')
 const recompareId=ref('');const openingOriginal=ref(false)
-const remoteUnlock=ref(false);const scopeSaved=ref(false);const remoteScopeLoaded=ref(!props.remote);const scopeReadError=ref('')
+const remoteUnlock=ref(false);const remoteScopeLoaded=ref(!props.remote);const scopeReadError=ref('')
 const exportKeys=ref(false);const adoptKeys=ref(false);let unlockedPassword=''
 const managerPreferences=ref(true);const managerExtensions=ref(true);const managerWebdav=ref(true);const webdavPasswords=ref(true);const activeWebdav=ref(false)
 const receivePreferences=ref(false);const receiveExtensions=ref(false);const receiveEndpoints=ref<string[]>([]);const adoptWebdavPasswords=ref(true)
@@ -62,6 +67,11 @@ const receiveSkills=ref<string[]>([]);const receiveMcps=ref<string[]>([]);const 
 const accountPlatform=ref('all');const accountIds=ref<string[]>([]);const accountCatalog=ref<AccountCatalogEntry[]>([]);const accountError=ref('');const receiveAccounts=ref<string[]>([])
 function scopeAccounts(id:string){const value=accountCatalog.value.find(a=>a.account.id===JSON.parse(id)[1])?.account;return value?[value]:[]}
 const allTemplates=ref(false);const allChannels=ref(false);const allSkills=ref(false);const allMcps=ref(false)
+// S18-03：同名 MCP 在多个客户端定义不同时由用户选「采用来源」；未选的只跳过该 MCP。
+const mcpSources=ref<Record<string,string>>({});const mcpConflicts=ref<McpConflict[]>([])
+function selectedMcpSources(){return Object.fromEntries(Object.entries(mcpSources.value).filter(([name])=>mcpNames.value.includes(name)||allMcps.value&&defaultIncludedMcp(name)))}
+function noteConflicts(plan?:{assets?:{conflicts?:McpConflict[]}|null}|null){const merged=new Map(mcpConflicts.value.map(c=>[c.name,c]));for(const c of plan?.assets?.conflicts??[])merged.set(c.name,c);mcpConflicts.value=[...merged.values()]}
+const clientName=(c:string)=>clientLabels[c as ExtensionClientId]??c
 const hasAssets=computed(()=>skillNames.value.length>0||mcpNames.value.length>0||props.remote&&(allSkills.value||allMcps.value))
 const keyChannelIds=computed(()=>(allChannels.value?savedChannels.value.map(c=>c.id):channelIds.value).filter(id=>!channelFamilies.value[id]));
 watch(()=>keyChannelIds.value.length,length=>{if(!length)exportKeys.value=false})
@@ -78,13 +88,13 @@ const scopeObjects=computed<ScopeObject[]>(()=>[
  ...savedChannels.value.map(c=>({id:scopeKey('channels',c.id),category:'channels',categoryLabel:exportSource.value==='draft'?'渠道草稿':'渠道与模型',label:c.label,detail:exportSource.value==='draft'?'未提交草稿；精确模版依赖一并导出':'原设置、服务节点、模型规则及精确模版依赖',mark:exportKeys.value&&!channelFamilies.value[c.id]?'含凭据':'不带 Key',disabled:props.remote&&allChannels.value})),
  ...accountCatalog.value.filter(a=>accountPlatform.value==='all'||(a.account.origin?.accountPlatform??'legacy')===accountPlatform.value).map(a=>({id:scopeKey('accounts',a.account.id),category:'accounts',categoryLabel:'账户',label:a.account.label,detail:accountInformationLabel(a.account),mark:a.informationSupported?'仅账户信息':'暂不支持',disabled:!a.informationSupported})),
  ...assetCatalog.value.skills.map(name=>({id:scopeKey('skills',name),category:'skills',categoryLabel:'Skills',label:'Skill · '+name,detail:'实际SKILL.md与所需资源',mark:hasAssets.value&&extensionCredentials.value?'含凭据':'配置',disabled:props.remote&&allSkills.value})),
- ...assetCatalog.value.mcps.map(name=>({id:scopeKey('mcps',name),category:'mcps',categoryLabel:'MCP',label:'MCP · '+name,detail:'完整源定义；不自动执行',mark:hasAssets.value&&extensionCredentials.value?'含凭据':'配置',disabled:props.remote&&allMcps.value})),
+ ...assetCatalog.value.mcps.map(name=>({id:scopeKey('mcps',name),category:'mcps',categoryLabel:'MCP',label:'MCP · '+name,detail:defaultIncludedMcp(name)?'完整源定义；不自动执行':'由客户端应用维护 · 含本机路径',mark:hasAssets.value&&extensionCredentials.value?'含凭据':'配置',disabled:props.remote&&allMcps.value&&defaultIncludedMcp(name)})),
 ].filter(item=>exportSource.value!=='draft'||['templates','channels'].includes(item.category)))
 const scopeKeys=computed(()=>[
  ...(managerPreferences.value?[scopeKey('manager','preferences')]:[]),...(managerExtensions.value?[scopeKey('manager','extensions')]:[]),...(!props.remote&&managerWebdav.value&&activeWebdav.value?[scopeKey('manager','webdav')]:[]),
  ...(allTemplates.value?(models.snapshot?.library.templates??[]).map(t=>t.id):templateIds.value).map(id=>scopeKey('templates',id)),
  ...(allChannels.value?savedChannels.value.map(c=>c.id):channelIds.value).map(id=>scopeKey('channels',id)),...accountIds.value.map(id=>scopeKey('accounts',id)),
- ...(allSkills.value?assetCatalog.value.skills:skillNames.value).map(id=>scopeKey('skills',id)),...(allMcps.value?assetCatalog.value.mcps:mcpNames.value).map(id=>scopeKey('mcps',id)),
+ ...(allSkills.value?assetCatalog.value.skills:skillNames.value).map(id=>scopeKey('skills',id)),...(allMcps.value?assetCatalog.value.mcps.filter(n=>defaultIncludedMcp(n)||mcpNames.value.includes(n)):mcpNames.value).map(id=>scopeKey('mcps',id)),
 ])
 const receiveObjects=computed<ScopeObject[]>(()=>{
  const source=incomingSource.value;if(!source)return []
@@ -108,7 +118,28 @@ function updateReceiveKeys(keys:string[]){
  receivePreferences.value=ids('manager').includes('preferences');receiveExtensions.value=ids('manager').includes('extensions');receiveEndpoints.value=ids('endpoints');receiveAccounts.value=ids('accounts');receiveRefs.value=ids('templates');receiveChannels.value=ids('channels');receiveSkills.value=ids('skills');receiveMcps.value=ids('mcps');receiveDirty.value=true;
 }
 const selectedCredentialKinds=computed(()=>[...(exportKeys.value?['渠道认证（'+keyChannelIds.value.length+'个渠道）']:[]),...(hasAssets.value&&extensionCredentials.value?['所选扩展授权']:[]),...(!props.remote&&managerWebdav.value&&activeWebdav.value&&webdavPasswords.value?['WebDAV连接密码']:[])])
-watch(()=>JSON.stringify([templateIds.value,channelIds.value,channelModels.value,channelFamilies.value,includeGlobal.value,versions.value,accountIds.value,managerPreferences.value,managerExtensions.value,exportKeys.value,skillNames.value,mcpNames.value,extensionCredentials.value,allTemplates.value,allChannels.value,allSkills.value,allMcps.value]),()=>{scopeSaved.value=false},{flush:'sync'})
+// S18-01：同步预览按原型列出变化项；下载与导入默认勾选更新前备份。
+const backupBeforeUpdate=ref(true)
+const syncPreview=computed<SyncPreview|null>(()=>props.remote?((incoming.value??upload.value)?.sync??null):null)
+const syncChanges=computed(()=>syncPreview.value?.changes)
+const pendingCount=computed(()=>mcpConflicts.value.filter(c=>!mcpSources.value[c.name]).length)
+function pickerClients(c:SyncChange){return c.mark==='conflict'?c.clients??[]:c.kind==='mcp'?mcpConflicts.value.find(x=>x.name===c.id)?.clients??[]:[]}
+function syncTime(value:string){const date=new Date(value);return Number.isNaN(date.getTime())?'—':date.toLocaleString('sv-SE').slice(0,16)}
+function changeSummary(c:SyncChange){
+ if(c.mark==='conflict')return '同名定义在 '+(c.clients??[]).map(clientName).join('、')+' 中不同（差异字段：'+(c.fields??[]).join('、')+'），请选择来源'
+ if(c.mark==='new')return '新增配置'
+ switch(c.kind){
+  case 'channels':return typeof c.before==='number'&&typeof c.after==='number'?'更新已选模型 '+c.before+' → '+c.after+'；应用来源中的模型选择、顺序与服务节点':'更新服务节点、模型选择与顺序'
+  case 'templates':return typeof c.version==='number'?'更新模版内容至 v'+c.version+'，已有历史版本保留':'更新已保存模版内容'
+  case 'accounts':return '更新账户信息，保留本机登录'
+  case 'skills':return '替换Skill内容'
+  case 'mcp':return '替换MCP定义与所选凭据'
+  case 'preferences':return '更新所选桌面偏好'
+  default:return '更新所选配置'
+ }
+}
+function markText(c:SyncChange){return c.mark==='conflict'?'选择来源':c.mark==='new'?'新增':'更新'}
+function syncToast(p:SyncPreview,pending:number){if(!p.changes)return '同步完成';const updated=p.changes.filter(c=>c.mark!=='conflict').length;return '同步完成：已更新 '+updated+' 项，未变化 '+p.unchanged+' 项'+(pending>0?'，待选来源 '+pending+' 项':'')}
 // SY-2：范围首项与原型一致从「默认配置范围」开始；读取失败也保留 all，并就地报错。
 const scopePreset=ref('all');const catalogueLoading=ref(true);let fileScopeInitialized=false
 // 搜索与范围预设同处一条工具栏；对象树只消费这个值。
@@ -141,7 +172,7 @@ const exportPlaintextRisk=computed(()=>!incoming.value&&!props.remote&&!encryptE
 watch(encryptExport,value=>{if(!value){exportPackagePassword.value='';exportPackagePasswordAgain.value=''}})
 watch(destinationMode,value=>{if(value==='default')exportTargetDir.value=''})
 const exportGroupLabels=computed(()=>[...new Set(scopeObjects.value.filter(item=>scopeKeys.value.includes(item.id)).map(item=>item.categoryLabel))].join(' / '))
-// 原型里 WebDAV 只有两个主操作：保存本机范围 / 同步配置。
+// 原型里 WebDAV 只有一个「同步」按钮，方向由较新版本决定。
 const remoteActionsDisabled=computed(()=>busy.value||!models.snapshot||catalogueLoading.value||!remoteScopeLoaded.value||!hasScope.value||!familyScopesValid.value||(hasAssets.value&&!assetsReviewed.value))
 function updateScopeKeys(keys:string[]){
  const previous=new Set(scopeKeys.value);const next=new Set(keys);const changed=new Set([...previous,...next].filter(k=>previous.has(k)!==next.has(k)).map(k=>(JSON.parse(k) as [string,string])[0]))
@@ -151,23 +182,46 @@ function updateScopeKeys(keys:string[]){
  if(changed.has('channels')){allChannels.value=false;channelIds.value=ids('channels');channelModels.value=Object.fromEntries(Object.entries(channelModels.value).filter(([id])=>channelIds.value.includes(id)));channelFamilies.value=Object.fromEntries(Object.entries(channelFamilies.value).filter(([id])=>channelIds.value.includes(id)))}
  if(changed.has('accounts'))accountIds.value=ids('accounts')
  if(changed.has('skills')){allSkills.value=false;skillNames.value=ids('skills')}
- if(changed.has('mcps')){allMcps.value=false;mcpNames.value=ids('mcps')}
+ if(changed.has('mcps')){const toggled=[...previous,...next].filter(k=>previous.has(k)!==next.has(k)).map(k=>JSON.parse(k) as [string,string]).filter(v=>v[0]==='mcps').map(v=>v[1]);if(toggled.some(defaultIncludedMcp))allMcps.value=false;mcpNames.value=ids('mcps')}
  scopePreset.value='custom'
 }
 function applyScopePreset(value:string){
  scopePreset.value=value;if(value==='custom')return;channelModels.value={};channelFamilies.value={};if(exportSource.value==='draft'){templateIds.value=[];channelIds.value=savedChannels.value.map(c=>c.id);includeGlobal.value=false;return}
  managerPreferences.value=true;managerExtensions.value=true;managerWebdav.value=!props.remote;webdavPasswords.value=value!=='share';
- templateIds.value=(models.snapshot?.library.templates??[]).map(t=>t.id);channelIds.value=savedChannels.value.map(c=>c.id);accountIds.value=accountCatalog.value.filter(a=>a.informationSupported).map(a=>a.account.id);skillNames.value=[...assetCatalog.value.skills];mcpNames.value=[...assetCatalog.value.mcps];includeGlobal.value=true;
+ templateIds.value=(models.snapshot?.library.templates??[]).map(t=>t.id);channelIds.value=savedChannels.value.map(c=>c.id);accountIds.value=accountCatalog.value.filter(a=>a.informationSupported).map(a=>a.account.id);skillNames.value=[...assetCatalog.value.skills];mcpNames.value=assetCatalog.value.mcps.filter(defaultIncludedMcp);includeGlobal.value=true;
  allTemplates.value=false;allChannels.value=false;allSkills.value=false;allMcps.value=false;exportKeys.value=value==='move';extensionCredentials.value=value==='move';assetsReviewed.value=false;
 }
 
 onMounted(async () => { if(props.importOnly)return; try{if (!models.snapshot) await models.load();if(!props.remote)await getSyncConfig().then(config=>{activeWebdav.value=!!config.endpoint}).catch(()=>{});else await loadScope()}finally{catalogueLoading.value=false;await begin()} })
+// S18-01：概览卡片的「同步 / 导出」进入本页后执行一次；条件未满足时就地提示，不静默忽略。
+watch(()=>[syncStore.pendingAction,catalogueLoading.value,remoteScopeLoaded.value] as const,()=>{
+ if(props.importOnly||catalogueLoading.value)return
+ if(props.remote){
+  if(remoteScopeLoaded.value&&syncStore.takeAction('sync')){
+   if(remoteActionsDisabled.value)error.value='请先完成同步范围（如复核所选资源）再同步。'
+   else startSync()
+  }
+ }else if(syncStore.takeAction('export')){
+  if(hasAssets.value&&!assetsReviewed.value)error.value='请先复核所选 Skill 与 MCP 资源，再导出。'
+  else if(!(exportSource.value==='draft'&&!channelIds.value.length))prepare()
+ }
+},{immediate:true})
 async function loadAssets(){try{const catalog=await modelTransferApi.extensionCatalog();if(!catalog||!Array.isArray(catalog.skills)||!Array.isArray(catalog.mcps)||![...catalog.skills,...catalog.mcps].every(name=>typeof name==='string'))throw {message:'扩展目录返回结构无效，请重新读取；未扩大配置范围'};assetCatalog.value=catalog;assetError.value=''}catch(cause){assetError.value=errorText(cause)}}
-function assetScope(){return hasAssets.value?{skillNames:skillNames.value,mcpNames:mcpNames.value,extensionCredentials:extensionCredentials.value,assetsReviewed:assetsReviewed.value}:{}}
+function assetScope(){return hasAssets.value?{skillNames:skillNames.value,mcpNames:mcpNames.value,extensionCredentials:extensionCredentials.value,assetsReviewed:assetsReviewed.value,...(Object.keys(selectedMcpSources()).length?{mcpSources:selectedMcpSources()}:{})}:{}}
 function remoteOptions(){return {...(accountIds.value.length?{accountIds:accountIds.value}:{}),preferences:managerPreferences.value,extensions:managerExtensions.value,includeKeys:exportKeys.value,...assetScope(),...(allTemplates.value||allChannels.value||allSkills.value||allMcps.value?{allTemplates:allTemplates.value,allChannels:allChannels.value,allSkills:allSkills.value,allMcps:allMcps.value}:{}),passphrase:remotePassword.value||undefined}}
-async function loadScope(){try{const scope=await modelTransferApi.loadRemoteScope();accountIds.value=scope.accountIds??[];templateIds.value=scope.templateIds;channelIds.value=scope.channelIds;channelModels.value=scope.channelModels??{};channelFamilies.value=scope.channelFamilies??{};includeGlobal.value=scope.includeGlobal;managerPreferences.value=scope.preferences;managerExtensions.value=scope.extensions;exportKeys.value=scope.includeKeys;skillNames.value=scope.skillNames??[];mcpNames.value=scope.mcpNames??[];extensionCredentials.value=scope.extensionCredentials??false;allTemplates.value=scope.allTemplates??false;allChannels.value=scope.allChannels??false;allSkills.value=scope.allSkills??false;allMcps.value=scope.allMcps??false;remoteScopeLoaded.value=true;scopeReadError.value=''}catch(cause){remoteScopeLoaded.value=false;scopeReadError.value=errorText(cause)}}
+async function loadScope(){try{const scope=await modelTransferApi.loadRemoteScope();accountIds.value=scope.accountIds??[];templateIds.value=scope.templateIds;channelIds.value=scope.channelIds;channelModels.value=scope.channelModels??{};channelFamilies.value=scope.channelFamilies??{};includeGlobal.value=scope.includeGlobal;managerPreferences.value=scope.preferences;managerExtensions.value=scope.extensions;exportKeys.value=scope.includeKeys;skillNames.value=scope.skillNames??[];mcpNames.value=scope.mcpNames??[];mcpSources.value=scope.mcpSources??{};extensionCredentials.value=scope.extensionCredentials??false;allTemplates.value=scope.allTemplates??false;allChannels.value=scope.allChannels??false;allSkills.value=scope.allSkills??false;allMcps.value=scope.allMcps??false;remoteScopeLoaded.value=true;scopeReadError.value=''}catch(cause){remoteScopeLoaded.value=false;scopeReadError.value=errorText(cause)}}
 function transferScope(){return scopeFor(models.snapshot!,templateIds.value,allChannels.value?savedChannels.value.map(c=>c.id):channelIds.value,includeGlobal.value,versions.value,channelModels.value,channelFamilies.value)}
-async function saveRemoteScope(){if(!models.snapshot||!remoteScopeLoaded.value||catalogueLoading.value)return;await perform(async()=>{await modelTransferApi.saveRemoteScope(remoteScope(transferScope(),remoteOptions()));scopeSaved.value=true;selectionOpen.value=false})}
+/** S18-01：保存本机范围后按较新版本决定方向：本机新则预览上传，云端新则预览下载。 */
+async function startSync(){
+ if(remoteActionsDisabled.value)return
+ const state={source:''}
+ await perform(async()=>{
+  await modelTransferApi.saveRemoteScope(remoteScope(transferScope(),remoteOptions()))
+  state.source=(await modelTransferApi.checkSync()).source
+ })
+ if(state.source==='local')await prepare()
+ else if(state.source==='remote')await receive()
+}
 async function perform(action: () => Promise<void>) {
   if (busy.value) return
   busy.value = true; error.value = ''
@@ -182,6 +236,7 @@ function managerScope():ManagerScope{return {...(accountIds.value.length?{accoun
 async function prepare() {
   if (props.remote&&!remoteScopeLoaded.value||!models.snapshot || !hasScope.value||!familyScopesValid.value||catalogueLoading.value) return
   await perform(async () => {
+    mcpConflicts.value=[];backupBeforeUpdate.value=true
     const scope = JSON.parse(JSON.stringify(transferScope())) as TransferScope
     if(exportSource.value==='draft'&&!props.remote){
       if(!models.snapshot||!models.channelDraft)throw {message:'工作区未读取'}
@@ -192,11 +247,13 @@ async function prepare() {
     }else if (props.remote){
       const options=remoteOptions()
       upload.value = await modelTransferApi.prepareUpload(scope,options)
+      noteConflicts(upload.value)
       preparedExport.value={kind:'remote',scope,includeKeys:exportKeys.value,managerScope:managerScope(),options}
       remotePassword.value=''
     }else{
       const manager=managerScope()
       filePlan.value = await modelTransferApi.prepare(scope,undefined,exportKeys.value,manager)
+      noteConflicts(filePlan.value)
       preparedExport.value={kind:'file',scope,includeKeys:exportKeys.value,managerScope:manager}
     }
     destinationMode.value='default';encryptExport.value=exportCredentialCount.value>0;exportPackagePassword.value='';exportPackagePasswordAgain.value=''
@@ -205,6 +262,17 @@ async function prepare() {
 }
 /** 用户在确认弹窗选择加密后，按同一冻结范围重新生成受口令保护的计划；未勾选则沿用已预览计划。 */
 async function preparedWithPassphrase(passphrase?:string){const prepared=preparedExport.value;if(!prepared)throw {message:'导出范围已失效，请重新选择范围并导出。'};if(prepared.kind==='remote'){const options:RemoteOptions={...(prepared.options??remoteOptions()),passphrase};prepared.options=options;return await modelTransferApi.prepareUpload(prepared.scope,options)}if(prepared.draft)return await modelTransferApi.prepareDraft(prepared.scope,prepared.draft,passphrase,prepared.policy);return await modelTransferApi.prepare(prepared.scope,passphrase,prepared.includeKeys,prepared.managerScope)}
+/** S18-03：选定来源后按同一冻结范围重算计划，选中的来源作为该 MCP 的定义；清空即本次不同步该 MCP。 */
+async function setMcpSource(name:string,value:string){
+ const next={...mcpSources.value};if(value)next[name]=value;else delete next[name];mcpSources.value=next
+ const prepared=preparedExport.value;if(!prepared||prepared.draft)return
+ await perform(async()=>{
+  if(prepared.kind==='remote'){const options:RemoteOptions={...(prepared.options??remoteOptions())};const sources=selectedMcpSources();if(Object.keys(sources).length)options.mcpSources=sources;else delete options.mcpSources;prepared.options=options;upload.value=await modelTransferApi.prepareUpload(prepared.scope,options);noteConflicts(upload.value)}
+  else{prepared.managerScope={...managerScope()};filePlan.value=await modelTransferApi.prepare(prepared.scope,undefined,prepared.includeKeys,prepared.managerScope);noteConflicts(filePlan.value)}
+ })
+}
+/** 所选范围只剩未选来源的同名 MCP 时不能继续：原型要求先选来源或调整范围。 */
+function onlyUnresolvedMcps(){const unresolved=mcpConflicts.value.map(c=>c.name).filter(name=>!mcpSources.value[name]);if(!unresolved.length)return false;const keys=new Set(unresolved.map(name=>scopeKey('mcps',name)));return scopeKeys.value.every(k=>keys.has(k))}
 function openImport() { if (!busy.value) { importPath.value=''; error.value=''; pickOpen.value=true } }
 async function chooseImportFile() {
   try {
@@ -230,7 +298,7 @@ watch(() => props.importOpen, value => { if(value)openImport() }, { immediate:tr
 function closeImport() { if(!busy.value){pickOpen.value=false;emit('update:importOpen',false)} }
 function selectIncoming(plan:IncomingPlan){
  receiveChannelModels.value={};
- receiveSkillTargets.value=Object.fromEntries((plan.assets?.skills??[]).map(s=>[s.name,plan.assetMappings?.skills[s.name]??s.name]));receiveMcpTargets.value=Object.fromEntries((plan.assets?.mcps??[]).map(m=>[m.name,plan.assetMappings?.mcps[m.name]??m.name]));receiveMappings.value=Object.fromEntries(Object.entries(plan.channelBindings??{}).map(([id,b])=>[id,b.keepLocalConnection?'local:'+b.targetId:'new']));receiveNewLabels.value=Object.fromEntries((plan.package.payload.policy?.channels??[]).map(c=>[c.id,plan.channelBindings?.[c.id]?.label??c.label+'（导入）']));receiveAccounts.value=plan.manager?.accounts?.filter(accountInformationSupported).map(a=>a.id)??[];incomingSource.value=plan;receiveRefs.value=plan.package.payload.templates.flatMap(t=>t.revisions.map(r=>JSON.stringify([t.id,r.id])));receiveChannels.value=plan.package.payload.policy?.channels.map(c=>c.id)??[];receiveGlobal.value=!!(plan.package.payload.policy?.templateRefs||plan.package.payload.policy?.channelOrder||plan.package.payload.policy?.defaultChannelId);receivePreferences.value=!!plan.manager?.preferences;receiveExtensions.value=!!plan.manager?.extensions;receiveEndpoints.value=plan.manager?.webdav.map(e=>e.id)??[];receiveSkills.value=plan.assets?.skills.map(skill=>skill.name)??[];receiveMcps.value=plan.assets?.mcps.map(mcp=>mcp.name)??[];adoptExtensionCredentials.value=plan.adoption?.extensionCredentials??false;adoptKeys.value=plan.adoption?.keys??false;adoptWebdavPasswords.value=plan.adoption?.webdav??true;receiveDirty.value=false
+ receiveSkillTargets.value=Object.fromEntries((plan.assets?.skills??[]).map(s=>[s.name,plan.assetMappings?.skills[s.name]??s.name]));receiveMcpTargets.value=Object.fromEntries((plan.assets?.mcps??[]).map(m=>[m.name,plan.assetMappings?.mcps[m.name]??m.name]));receiveMappings.value=Object.fromEntries(Object.entries(plan.channelBindings??{}).map(([id,b])=>[id,b.keepLocalConnection?'local:'+b.targetId:'new']));receiveNewLabels.value=Object.fromEntries((plan.package.payload.policy?.channels??[]).map(c=>[c.id,plan.channelBindings?.[c.id]?.label??c.label+'（导入）']));receiveAccounts.value=plan.manager?.accounts?.filter(accountInformationSupported).map(a=>a.id)??[];incomingSource.value=plan;receiveRefs.value=plan.package.payload.templates.flatMap(t=>t.revisions.map(r=>JSON.stringify([t.id,r.id])));receiveChannels.value=plan.package.payload.policy?.channels.map(c=>c.id)??[];receiveGlobal.value=!!(plan.package.payload.policy?.templateRefs||plan.package.payload.policy?.channelOrder||plan.package.payload.policy?.defaultChannelId);receivePreferences.value=!!plan.manager?.preferences;receiveExtensions.value=!!plan.manager?.extensions;receiveEndpoints.value=plan.manager?.webdav.map(e=>e.id)??[];receiveSkills.value=plan.assets?.skills.map(skill=>skill.name)??[];receiveMcps.value=plan.assets?.mcps.map(mcp=>mcp.name)??[];adoptExtensionCredentials.value=plan.adoption?.extensionCredentials??false;adoptKeys.value=plan.adoption?.keys??false;adoptWebdavPasswords.value=plan.adoption?.webdav??true;receiveDirty.value=false;backupBeforeUpdate.value=true;if(props.remote&&!plan.adoption){adoptKeys.value=exportKeys.value&&!!plan.availableKeys?.length;adoptExtensionCredentials.value=extensionCredentials.value&&!!plan.availableExtensionCredentials}
 }
 async function unlockFile(){await perform(async()=>{incoming.value=remoteUnlock.value?await modelTransferApi.download(importPassword.value):recompareId.value?(openingOriginal.value?await modelTransferApi.openReceived(recompareId.value,importPassword.value):await modelTransferApi.recompare(recompareId.value,importPassword.value)):await modelTransferApi.receive(importPath.value,importPassword.value);unlockedPassword=importPassword.value;passwordOpen.value=false;importPassword.value='';filePlan.value=null;upload.value=null;if(!openingOriginal.value)selectIncoming(incoming.value)})}
 async function recompareOriginal(){if(!incomingSource.value)return;await perform(async()=>{recompareId.value=incomingSource.value!.id;openingOriginal.value=false;try{incoming.value=await modelTransferApi.recompare(recompareId.value);selectIncoming(incoming.value)}catch(cause){if(typeof cause==='object'&&cause!==null&&'code' in cause&&cause.code==='passphrase_required'){passwordOpen.value=true;importPassword.value='';return}throw cause}})}
@@ -242,13 +310,20 @@ async function confirm() {
       if(receiveDirty.value||incoming.value.previewError)return
       const includeDav=adoptWebdavPasswords.value&&!!incoming.value.availableWebdavPasswords?.length
       const plan=incoming.value
+      const syncResult=props.remote?plan.sync??null:null;const count=receiveKeys.value.length
+      const needBackup=backupBeforeUpdate.value&&!plan.adoption&&(props.remote?!!syncResult&&syncResult.changes?.length!==0:true)
+      // 更新前备份放在草稿冲突预检之后、写入之前：被冲突拦下的导入不留下多余备份。
       await models.adoptTransfer(plan,async()=>{
+        if(needBackup){try{await createBackup()}catch(cause){throw {message:'更新前备份未完成，原内容保留。'+errorText(cause)}}}
         try{return adoptKeys.value||includeDav||adoptExtensionCredentials.value||plan.protected&&!!(plan.assets?.skills.length||plan.assets?.mcps.length)?await modelTransferApi.accept(plan.id,{adoptKeys:adoptKeys.value,...(includeDav?{adoptWebdavPasswords:true}:{}),...(adoptExtensionCredentials.value?{adoptExtensionCredentials:true}:{}),passphrase:unlockedPassword}):await modelTransferApi.accept(plan.id)}catch(cause){try{const latest=await modelTransferApi.latestIncoming();if(latest?.id===plan.id&&latest.adoption)plan.adoption=latest.adoption}catch{}throw cause}
       })
-      const updatePreferences=!!plan.manager?.preferences; emit('update:importOpen',false); app.showToast('配置已接收。'); incoming.value = null;incomingSource.value=null;unlockedPassword='';if(updatePreferences)await app.loadPreferences()
+      const updatePreferences=!!plan.manager?.preferences; emit('update:importOpen',false); if(syncResult){recordRemoteVersion(syncResult.createdAt);syncStore.setWebdavState('synced');app.showToast(syncToast(syncResult,0))}else{if(!props.remote)recordSyncActivity('import',count);app.showToast('配置已接收。')}; incoming.value = null;incomingSource.value=null;unlockedPassword='';if(updatePreferences)await app.loadPreferences()
+    } else if ((upload.value||filePlan.value)&&onlyUnresolvedMcps()) {error.value='请为同名 MCP 选择来源，或调整导出范围。';return
     } else if (upload.value) {
       if(preparedExport.value?.kind==='remote'&&remotePassword.value){const options:RemoteOptions={...(preparedExport.value.options??remoteOptions()),passphrase:remotePassword.value};upload.value=await modelTransferApi.prepareUpload(preparedExport.value.scope,options)}
+      const syncResult=upload.value.sync??null
       upload.value = await modelTransferApi.publish(upload.value.id)
+      if(syncResult){recordRemoteVersion(upload.value.package.createdAt);syncStore.setWebdavState('synced');app.showToast(syncToast(syncResult,pendingCount.value));upload.value=null;mcpConflicts.value=[]}
       remotePassword.value='';preparedExport.value=null
     } else if (filePlan.value) await finishExport()
   })
@@ -275,7 +350,7 @@ async function finishExport(plaintextAccepted=false){
   else if(filePlan.value.protected)filePlan.value=await preparedWithPassphrase()
   if(destinationMode.value==='custom'&&!exportTargetDir.value){error.value='请选择自定义目录，或改回默认导出目录。';return}
   const result=await modelTransferApi.export(filePlan.value.id, exportTargetDir.value || undefined)
-  exportedPath.value=result.path;filePlan.value=null;preparedExport.value=null;plaintextConfirmOpen.value=false;exportPackagePassword.value='';exportPackagePasswordAgain.value=''
+  recordSyncActivity('export',scopeKeys.value.length);exportedPath.value=result.path;filePlan.value=null;preparedExport.value=null;plaintextConfirmOpen.value=false;exportPackagePassword.value='';exportPackagePasswordAgain.value=''
 }
 async function acceptPlaintextExport(){await perform(()=>finishExport(true))}
 function setModelScope(id:string,values:string[]|undefined,receive=false){const target=receive?receiveChannelModels:channelModels;const next={...target.value};if(values===undefined)delete next[id];else next[id]=values;target.value=next;if(receive)receiveDirty.value=true;else scopePreset.value='custom'}
@@ -307,15 +382,14 @@ function channelMappingScope(){
 }
 async function compareReceived(){if(!incomingSource.value)return;await perform(async()=>{const scope={...(Object.keys(receiveChannelModels.value).length?{channelModels:Object.fromEntries(Object.entries(receiveChannelModels.value).filter(([id])=>receiveChannels.value.includes(id)))}:{}),...assetMappingScope(),...channelMappingScope(),templateRefs:receiveRefs.value.map(value=>{const [templateId,revisionId]=JSON.parse(value) as [string,string];return {templateId,revisionId}}),channelIds:receiveChannels.value,includeGlobal:receiveGlobal.value,...(incomingSource.value!.manager?{accountIds:receiveAccounts.value,preferences:receivePreferences.value,extensions:receiveExtensions.value,endpointIds:receiveEndpoints.value}:{}),...(incomingSource.value!.assets?{skillNames:receiveSkills.value,mcpNames:receiveMcps.value}:{})};incoming.value=unlockedPassword?await modelTransferApi.select(incomingSource.value!.id,scope,unlockedPassword):await modelTransferApi.select(incomingSource.value!.id,scope);if(!incoming.value.availableKeys?.length)adoptKeys.value=false;if(!incoming.value.availableExtensionCredentials)adoptExtensionCredentials.value=false;receiveDirty.value=false})}
 
-function closePreview() { if (!busy.value) { emit('update:importOpen',false); incoming.value = null;incomingSource.value=null; filePlan.value = null; upload.value = null;preparedExport.value=null;plaintextConfirmOpen.value=false;exportPackagePassword.value='';exportPackagePasswordAgain.value='';remotePassword.value='';unlockedPassword='' } }
+function closePreview() { if (!busy.value) { const same=props.remote&&incoming.value?.sync&&incoming.value.sync.changes?.length===0?incoming.value.sync:null;if(same){/* 后端读取云端快照时已记为已一致；概览卡片同步展示。 */recordRemoteVersion(same.createdAt);syncStore.setWebdavState('synced')} emit('update:importOpen',false); incoming.value = null;incomingSource.value=null; filePlan.value = null; upload.value = null;preparedExport.value=null;plaintextConfirmOpen.value=false;exportPackagePassword.value='';exportPackagePasswordAgain.value='';remotePassword.value='';unlockedPassword='' } }
 </script>
 <template>
   <article class="model-transfer" :class="{ card: !importOnly }">
     <template v-if="!importOnly">
-    <div class="card-head"><div><h2>{{ remote ? '设备间同步' : '导入与导出' }}</h2><p>{{ remote ? '本机范围同时用于上传与接收；下载的变化先预览，再应用。' : '把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。' }}</p></div><div class="sync-head-actions"><template v-if="remote"><UiButton variant="primary" :disabled="remoteActionsDisabled" @click="saveRemoteScope">保存本机范围</UiButton><UiButton :disabled="remoteActionsDisabled" @click="prepare">同步配置</UiButton></template><template v-else><UiButton :disabled="busy||catalogueLoading||!models.snapshot" @click="openImport">导入配置</UiButton><UiButton variant="primary" :disabled="busy||!models.snapshot||catalogueLoading||!hasScope||!familyScopesValid||(exportSource==='draft'&&!channelIds.length)||(hasAssets&&!assetsReviewed)" @click="prepare">导出配置</UiButton></template></div></div>
+    <div class="card-head"><div><h2>{{ remote ? '设备间同步' : '导入与导出' }}</h2><p>{{ remote ? '较新版本覆盖所选范围，确认前可查看变化。' : '把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。' }}</p></div><div class="sync-head-actions"><template v-if="remote"><UiButton variant="primary" :disabled="remoteActionsDisabled" :loading="busy" @click="startSync">{{ busy?'同步中…':'同步' }}</UiButton></template><template v-else><UiButton :disabled="busy||catalogueLoading||!models.snapshot" @click="openImport">导入配置</UiButton><UiButton variant="primary" :disabled="busy||!models.snapshot||catalogueLoading||!hasScope||!familyScopesValid||(exportSource==='draft'&&!channelIds.length)||(hasAssets&&!assetsReviewed)" @click="prepare">导出配置</UiButton></template></div></div>
     <p v-if="models.error && !models.snapshot" class="model-error" role="alert">{{ models.error }}</p>
     <p v-if="error && !preview" class="model-error" role="alert">{{ error }}</p>
-<p v-if="remote&&scopeSaved" role="status">本设备范围已保存，尚未上传；采用结果另行核对。</p>
     <div v-if="exportedPath" class="model-transfer-path" role="status"><span>备份包</span><code class="local-path">{{ displayPath(exportedPath) }}</code><UiButton size="sm" variant="ghost" @click="openExportParent">打开备份包目录</UiButton></div>
     <!-- 范围是页面主体的一部分，不再收进弹窗：原型里它是列表旁的常驻两栏工作区。 -->
     <!-- 原型结构：一条工具栏（范围预设 + 搜索 + 清空）+ 两栏；右栏是凭据清单，不是操作列。 -->
@@ -359,21 +433,35 @@ function closePreview() { if (!busy.value) { emit('update:importOpen',false); in
     </section>
     </template>
     <UiDialog panel-class="transfer-file-picker" hide-close :open="pickOpen" title="导入配置" :busy="busy" @close="closeImport"><div class="transfer-file-field"><span class="transfer-file-label">配置文件</span><div class="transfer-file-row" role="group" aria-label="配置文件"><UiButton :disabled="busy" @click="chooseImportFile">选择文件</UiButton><span class="local-path" aria-live="polite">{{ displayPath(importPath) || '尚未选择文件' }}</span></div></div><p v-if="error" class="model-error" role="alert">{{ error }}</p><template #actions><UiButton :disabled="busy" @click="closeImport">取消</UiButton><UiButton variant="primary" :disabled="busy||!importPath" :loading="busy" @click="receive">读取并比较</UiButton></template></UiDialog>
-    <UiDialog panel-class="transfer-review" :open="!!preview" :title="incoming ? '比较配置文件' : remote ? '确认配置上传' : '确认导出'" :busy="busy" wide @close="closePreview">
+    <UiDialog panel-class="transfer-review" :open="!!preview" :title="syncPreview ? '同步预览' : incoming ? '比较配置文件' : remote ? '确认配置上传' : '确认导出'" :busy="busy" wide @close="closePreview">
       <p v-if="error" class="model-error" role="alert">{{ error }}</p>
       <p v-if="preview?.payload.candidate" role="status">未提交草稿候选；采用后仍进入本机工作区，须另行预览并保存，不表示运行配置已写入。</p>
-
+      <template v-if="syncPreview">
+        <dl class="sx-detail-list sx-snapshot-facts"><dt>新版来源</dt><dd>{{ syncPreview.source==='local'?'本机配置 → 云端':'云端配置 → 本机' }}</dd><dt>版本时间</dt><dd>{{ syncTime(syncPreview.createdAt) }}</dd></dl>
+        <label v-if="syncPreview.source==='remote'&&syncChanges?.length!==0&&!incoming?.adoption"><input v-model="backupBeforeUpdate" type="checkbox" :disabled="busy" />更新前备份</label>
+        <p v-if="incoming?.previewError" class="model-error" role="alert">{{ incoming.previewError }}</p>
+        <p v-if="syncChanges===null" class="sx-muted">无法比较变化</p>
+        <p v-else-if="syncChanges?.length===0" class="sx-muted">所选内容已一致，无需更新。</p>
+        <template v-else>
+          <div class="sx-preview-summary"><strong>{{ syncChanges?.length }} 项变化</strong><span class="sx-muted">{{ syncPreview.unchanged }} 项保持不变</span></div>
+          <ul class="sx-outcomes sx-change-list"><li v-for="c in syncChanges??[]" :key="c.kind+c.id"><div><strong>{{ c.label }}</strong><small>{{ changeSummary(c) }}</small><label v-if="upload&&pickerClients(c).length" class="sx-mcp-source"><span>采用来源</span><UiSelectField size="sm" :label="c.label+' 采用来源'" :model-value="mcpSources[c.id]??''" :options="[{value:'',label:'暂不同步'},...pickerClients(c).map(v=>({value:v,label:clientName(v)}))]" :disabled="busy" @update:model-value="setMcpSource(c.id,$event)"/></label></div><span class="sx-mark">{{ markText(c) }}</span></li></ul>
+        </template>
+        <template v-if="upload&&remoteSecrets"><label class="export-encrypt"><span>同步保护口令</span><input v-model="remotePassword" aria-label="导出保护口令" class="input" type="password" autocomplete="new-password" placeholder="请输入保护口令" :disabled="busy" /></label><p class="export-plaintext-risk" role="note">{{ remotePlaintextSecrets?'所选凭据将随同步快照传输；未填口令时以明文写入。':'所选凭据已用口令加密。' }}</p></template>
+      </template>
+      <template v-else>
       <div v-if="!incoming&&!remote" class="export-destination"><span>保存位置</span><div class="export-destination-choice" role="radiogroup" aria-label="保存位置"><label><input v-model="destinationMode" type="radio" value="default" :disabled="busy" />默认导出目录</label><label><input v-model="destinationMode" type="radio" value="custom" :disabled="busy" />自定义目录</label></div><div v-if="destinationMode==='custom'" class="export-destination-custom"><div class="export-destination-row"><input class="input local-path" type="text" readonly :value="displayPath(exportTargetDir)" aria-label="自定义导出目录" placeholder="尚未选择目录"><UiButton size="sm" variant="ghost" :disabled="busy" @click="chooseExportDir">选择目录…</UiButton></div><p class="model-muted">未选择目录时按默认导出目录保存。</p></div></div>
       <div v-if="!incoming&&!remote" class="export-package-layout">
         <!-- 原型顺序：标题 → 导出目录 → 生成位置树 → 说明段 → 文件保护/携带凭据 → 口令 → 底部主按钮。 -->
         <div class="export-tree" aria-label="导出目录结构"><p class="export-tree-kicker">生成位置</p><pre>{{ exportTreeText }}</pre><p class="model-muted">按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。</p></div>
         <div class="export-summary"><strong>{{ scopeKeys.length }} 项配置 · 同一备份包</strong><p class="model-muted">{{ exportCredentialCount ? '含 '+exportCredentialCount+' 项凭据；可选择加密，不加密则凭据以明文写入，文件可被直接读取。口令始终不写入包。' : '不含凭据，可直接使用完整性校验。' }}每次导出生成一个独立备份包，按“日期 / 单次包”存放，可整体拷贝到其它设备再导入。</p><p class="model-muted">包内按 {{ exportGroupLabels || '所选范围' }} 分组，导入时仍按所选范围识别。</p></div>
       </div>
+      <div v-if="!incoming&&mcpConflicts.length" class="transfer-mcp-conflicts" role="group" aria-label="同名 MCP 定义不同"><strong>同名 MCP 定义不同</strong><ul><li v-for="c in mcpConflicts" :key="c.name"><strong>{{ c.name }}</strong><small>同名定义在 {{ c.clients.map(clientName).join('、') }} 中不同（差异字段：{{ c.fields.join('、') }}），请选择来源</small><label class="sx-mcp-source"><span>采用来源</span><UiSelectField size="sm" :label="c.name+' 采用来源'" :model-value="mcpSources[c.name]??''" :options="[{value:'',label:remote?'暂不同步':'暂不导出'},...c.clients.map(v=>({value:v,label:clientName(v)}))]" :disabled="busy" @update:model-value="setMcpSource(c.name,$event)"/></label></li></ul></div>
       <div v-if="!incoming&&!remote" class="export-info"><strong>{{ scopeKeys.length }} 项配置 · {{ exportCredentialCount?'含 '+exportCredentialCount+' 项凭据':'不含任何凭据' }}</strong><br><span v-for="([label,count],index) in exportCredentialSummary" :key="label">{{ index?' / ':'' }}{{ label }} {{ count }} 项</span></div>
       <label v-if="!incoming&&!remote" class="export-encrypt"><input v-model="encryptExport" type="checkbox" :disabled="busy" />{{ exportCredentialCount?'加密配置包（建议；不加密则凭据以明文写入）':'为配置包设置加密口令' }}</label>
       <div v-if="!incoming&&!remote&&(exportCredentialCount>0||encryptExport)" class="export-passphrase"><label>加密口令（可选，至少 8 位）<input v-model="exportPackagePassword" aria-label="加密口令" class="input" type="password" autocomplete="new-password" :disabled="busy||!encryptExport" :placeholder="encryptExport?'至少 8 位':'勾选加密后可填写'" /></label><label>再次输入<input v-model="exportPackagePasswordAgain" aria-label="再次输入加密口令" class="input" type="password" autocomplete="new-password" :disabled="busy||!encryptExport" :placeholder="encryptExport?'再次输入':'勾选加密后可填写'" /></label></div>
       <p v-if="exportPlaintextRisk" class="export-plaintext-risk" role="note">不加密时凭据以明文写入该文件，任何能读取文件的人都能看到这些凭据。</p>
       <label v-if="remote&&upload" class="export-encrypt">{{ remotePasswordLabel }}<input v-model="remotePassword" aria-label="导出保护口令" class="input" type="password" autocomplete="new-password" :disabled="busy" :placeholder="remotePlaintextSecrets?'留空则凭据以明文写入文件':'留空使用完整性校验'" /></label><p v-if="remote&&upload&&remoteSecrets" class="export-plaintext-risk" role="note">{{ remotePlaintextSecrets?'所选凭据将随同步快照传输；未填口令时以明文写入。':'所选凭据已用口令加密。' }}</p>
+      <label v-if="incoming&&!remote&&!incoming.adoption"><input v-model="backupBeforeUpdate" type="checkbox" :disabled="busy" />更新前备份</label>
       <p v-if="incoming?.adoption">{{ incoming.adoption.completed?'原导入已完成；当前本机配置保持。':'原导入采用范围已冻结，请核对同一操作。' }}</p><label v-if="incoming?.availableExtensionCredentials"><input v-model="adoptExtensionCredentials" type="checkbox" :disabled="busy||receiveDirty||!!incoming.adoption" />采用所选扩展凭据（新本机引用及受保护资源）</label><label v-if="incoming?.availableWebdavPasswords?.length"><input v-model="adoptWebdavPasswords" type="checkbox" :disabled="busy||receiveDirty||!!incoming?.adoption" />采用包内连接密码（{{ incoming.availableWebdavPasswords.length }} 项），连接保持未启用</label><label v-if="incoming?.availableKeys?.length"><input v-model="adoptKeys" type="checkbox" :disabled="busy||receiveDirty||!!incoming?.adoption" />采用所选渠道的Key与认证配置（{{ incoming.availableKeys.length }} 个渠道），创建受保护本机材料并进入草稿</label>
       <details v-if="incomingSource" open class="model-transfer-scope"><summary>选择接收范围</summary><UiButton size="sm" variant="ghost" :disabled="busy||!!incoming?.adoption" @click="recompareOriginal">按当前基准重新比较原文件</UiButton><ObjectScopeTree :objects="receiveObjects" :selected-ids="receiveKeys" label="接收配置对象" :disabled="busy||!!incoming?.adoption" @update:selected-ids="updateReceiveKeys"><template #options="{object}">
        <template v-if="object.category==='skills'&&receiveSkills.includes(JSON.parse(object.id)[1])"><label>接收Skill名称<input v-model="receiveSkillTargets[JSON.parse(object.id)[1]]" class="input" maxlength="256" :aria-label="JSON.parse(object.id)[1]+'目标Skill名称'" :disabled="busy||!!incoming?.adoption" @input="receiveDirty=true" /></label></template>
@@ -385,7 +473,8 @@ function closePreview() { if (!busy.value) { emit('update:importOpen',false); in
       <details v-if="preview" class="model-transfer-manifest-wrap"><summary>查看内容清单</summary><p>模版 {{ preview.payload.templates.length }} · 渠道 {{ preview.payload.policy?.channels.length ?? 0 }}</p>
         <ul class="model-transfer-manifest"><li v-for="template in preview.payload.templates" :key="template.id"><strong>{{ template.label }}</strong><span>{{ template.revisions.length }} 个保存版本</span><code>{{ template.id }}</code><small v-if="incoming">{{ models.snapshot?.library.templates.some(t => t.id === template.id) ? '合并保存版本，保持本机默认' : '新增模版，不自动采用' }}</small></li><li v-for="channel in preview.payload.policy?.channels ?? []" :key="channel.id"><strong>{{ channel.label }}</strong><small v-if="channel.familyScope">模型族片段 · {{ channel.familyScope.templateIds.length }} 族 · {{ channel.familyScope.includeChannelDefaults?'含渠道共用默认字段（影响全部型号）':'共用默认值不携带，沿接收方配置解析' }}</small><small v-else-if="channel.modelSubset">型号子集 · {{ channel.modelSubset.length }} 项</small><span v-if="!channel.familyScope">{{ channel.selection.mode === 'all' ? '全部模型' : channel.selection.mode === 'none' ? '不选择模型' : '指定模型' }}</span><code>{{ channel.id }}</code><small v-if="channel.connection?.provider">原渠道配置 · {{ Object.keys(channel.connection.provider).length }} 个公开字段 · 认证 {{ channel.connection.provider.authMode??'key' }}</small><small v-for="node in channel.connection?.nodes??[]" :key="node.id">{{ node.name }} · {{ node.url }}</small><details v-if="channel.connection?.provider"><summary>渠道原设置</summary><pre class="model-transfer-fields">{{ JSON.stringify(channel.connection.provider,null,2) }}</pre></details><small v-if="incoming&&channel.familyScope">仅合并所选族；其他族、连接、Key、已有选择和顺序保持</small><small v-else-if="incoming">{{ models.snapshot?.policy.channels.some(c => c.id === channel.id) ? '同身份原设置进入停用草稿；映射到本机渠道时保留本机连接和凭据' : '新增渠道草稿，确认节点及凭据后再保存，保持停用' }}</small></li></ul>
         <p v-for="(binding,sourceId) in incoming?.channelBindings??{}" :key="sourceId">{{ preview.payload.policy?.channels.find(c=>c.id===sourceId)?.label }} → {{ binding.keepLocalConnection?localChannels.find(c=>c.id===binding.targetId)?.label:binding.label }} · {{ binding.keepLocalConnection?'保留本机连接和Key':'独立停用草稿' }}</p><p v-for="notice in incoming?.notices ?? []" :key="notice">{{ notice }}</p><code class="model-transfer-digest">{{ preview.digest }}</code></details>
-      <template #actions><UiButton v-if="upload?.phase === 'published'||incoming?.adoption?.completed" variant="primary" @click="closePreview">完成</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="!!incoming&&(receiveDirty||!!incoming.previewError)" @click="confirm">{{ incoming ? incoming.adoption?'核对原导入':'采用到本机' : remote ? (upload?.phase === 'prepared' ? '确认上传' : '核对原上传') : '生成配置包' }}</UiButton></template>
+      </template>
+      <template #actions><template v-if="syncPreview&&!(upload?.phase==='published'||incoming?.adoption?.completed)"><UiButton :disabled="busy" @click="closePreview">{{ syncChanges?.length===0?'关闭':'取消' }}</UiButton><UiButton variant="primary" :loading="busy" :disabled="busy||syncChanges?.length===0||!!incoming?.previewError||(!!incoming&&receiveDirty)" @click="confirm">确认更新</UiButton></template><UiButton v-else-if="upload?.phase === 'published'||incoming?.adoption?.completed" variant="primary" @click="closePreview">完成</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="!!incoming&&(receiveDirty||!!incoming.previewError)" @click="confirm">{{ incoming ? incoming.adoption?'核对原导入':'采用到本机' : remote ? (upload?.phase === 'prepared' ? '确认上传' : '核对原上传') : '生成配置包' }}</UiButton></template>
     </UiDialog>
     <UiDialog panel-class="transfer-plaintext" :open="plaintextConfirmOpen" title="凭据将以明文写入" :busy="busy" @close="plaintextConfirmOpen=false">
       <p>当前范围含 {{ exportCredentialCount }} 项凭据，不加密将以明文写入该文件，任何能读取文件的人都能看到这些凭据。继续？</p><p v-if="error" class="model-error" role="alert">{{ error }}</p>
@@ -433,6 +522,19 @@ label{display:flex;align-items:center;gap:8px}
 </style>
 
 <style scoped>
+.sx-outcomes{list-style:none;margin:0;padding:0}
+.sx-outcomes li{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.sx-outcomes li>div{min-width:0;overflow-wrap:anywhere}
+.sx-outcomes small{display:block;color:var(--muted);margin-top:4px}
+.sx-preview-summary{display:flex;align-items:center;gap:12px;margin:16px 0 4px}
+.sx-snapshot-facts{margin:0 0 16px;gap:8px 14px}
+.sx-change-list{max-height:220px;overflow:auto;overscroll-behavior:contain;padding-right:6px}
+.sx-change-list li{padding:9px 0}
+.sx-detail-list{display:grid;grid-template-columns:110px minmax(0,1fr)}
+.sx-detail-list dt{color:var(--muted)}
+.sx-detail-list dd{margin:0;overflow-wrap:anywhere;line-height:1.6}
+.sx-mark{display:inline-flex;align-items:center;border-radius:5px;padding:3px 7px;font-size:11px;line-height:1.5;background:var(--rail);color:var(--muted);white-space:nowrap}
+.sx-muted{color:var(--muted)}
 .export-destination{display:grid;gap:var(--space-1);padding-block:var(--space-2);border-top:1px solid var(--border-soft)}
 .export-destination>span{color:var(--muted);font-size:var(--text-label)}
 .export-destination-choice{display:flex;gap:var(--space-4);align-items:center;flex-wrap:wrap}
@@ -452,6 +554,11 @@ label{display:flex;align-items:center;gap:8px}
 .export-passphrase label{display:grid;align-items:stretch;gap:var(--space-1);margin-block:var(--space-3)}
 .export-plaintext-risk{margin-block:var(--space-2);color:var(--red);font-size:var(--text-label);line-height:1.6}
 .export-destination-row .input{min-width:0}
+.transfer-mcp-conflicts{padding:var(--space-3);background:var(--rail);border-radius:var(--radius-sm);margin-block:var(--space-3)}
+.transfer-mcp-conflicts ul{list-style:none;padding:0;margin:var(--space-2) 0 0;display:grid;gap:var(--space-2)}
+.transfer-mcp-conflicts small{display:block;color:var(--muted)}
+.sx-mcp-source{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px;color:var(--muted)}
+.sx-mcp-source :deep(.select){min-width:140px}
 .sync-head-actions{display:flex;gap:var(--space-2);flex-wrap:wrap;justify-content:flex-end}
 .sync-scope-workspace{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:var(--space-5);margin-top:var(--space-4);min-width:0}
 .sync-scope-main{display:grid;gap:var(--space-3);align-content:start;min-width:0}

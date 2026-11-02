@@ -1649,7 +1649,7 @@ fn write_server_definition(
     Ok(written)
 }
 
-fn backup_skill_directory(
+pub(crate) fn backup_skill_directory(
     data_root: &Path,
     target: &Path,
     note: &'static str,

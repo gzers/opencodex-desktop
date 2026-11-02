@@ -406,22 +406,25 @@ fn seal_scope(
         channel_authorizations: authorizations,
         manager: portable_manager::export(root, scope)?,
         webdav_passwords: Default::default(),
-        assets: if scope.skill_names.is_empty() && scope.mcp_names.is_empty() {
-            Assets::default()
-        } else {
-            portable_assets::export(
-                root,
-                scope
-                    .local_home
-                    .as_deref()
-                    .ok_or_else(|| invalid("asset_home", "导出扩展资源的本机路径尚未绑定"))?,
-                &scope.skill_names,
-                &scope.mcp_names,
-                scope.extension_credentials,
-                scope.assets_reviewed,
-            )?
-        },
+        assets: Assets::default(),
     };
+    let mut conflicts = vec![];
+    if !scope.skill_names.is_empty() || !scope.mcp_names.is_empty() {
+        let (assets, skipped) = portable_assets::export_with_sources(
+            root,
+            scope
+                .local_home
+                .as_deref()
+                .ok_or_else(|| invalid("asset_home", "导出扩展资源的本机路径尚未绑定"))?,
+            &scope.skill_names,
+            &scope.mcp_names,
+            &scope.mcp_sources,
+            scope.extension_credentials,
+            scope.assets_reviewed,
+        )?;
+        objects.assets = assets;
+        conflicts = skipped;
+    }
     if scope.webdav_passwords && scope.webdav {
         let config = crate::modules::sync::config::SyncConfigStore::new(root).load()?;
         for endpoint in &objects.manager.webdav {
@@ -461,12 +464,9 @@ fn seal_scope(
         &plaintext,
         passphrase,
     )?;
-    Ok((
-        bytes,
-        count,
-        objects.manager,
-        portable_assets::summarize(&objects.assets),
-    ))
+    let mut summary = portable_assets::summarize(&objects.assets);
+    summary.conflicts = conflicts;
+    Ok((bytes, count, objects.manager, summary))
 }
 fn cache_path(root: &Path, id: &str, extension: &str) -> ModelResult<PathBuf> {
     require_uuid(id)?;
@@ -512,6 +512,18 @@ pub fn remote_summary(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<Rem
         protected,
         assets,
     })
+}
+/// 两份配置文件内容是否一致（忽略包创建时间与包摘要）。
+pub fn same_content(a: &[u8], b: &[u8], passphrase: Option<&str>) -> ModelResult<bool> {
+    let value = |bytes: &[u8]| -> ModelResult<serde_json::Value> {
+        let mut value = serde_json::to_value(&remote_objects(bytes, passphrase)?.0)?;
+        if let Some(models) = value.get_mut("models").and_then(|m| m.as_object_mut()) {
+            models.remove("createdAt");
+            models.remove("digest");
+        }
+        Ok(value)
+    };
+    Ok(value(a)? == value(b)?)
 }
 pub fn merge_remote(
     remote_bytes: &[u8],
@@ -1038,6 +1050,7 @@ pub(super) fn select_asset_subset(
             .filter(|mcp| mcps.contains(&mcp.name))
             .cloned()
             .collect(),
+        conflicts: vec![],
     };
     let mut objects = open_source(root, original, passphrase)?;
     let assets =
@@ -2130,7 +2143,9 @@ mod tests {
         let bytes = transfer::file_bytes(source.path(), &plan.id).unwrap();
         let incoming =
             receive_context(target.path(), &bytes, None, Some(target_home.path())).unwrap();
-        assert_eq!(incoming.preview_error.as_deref(), Some("asset_conflict"));
+        // Same names no longer block the preview: confirm replaces them as a
+        // whole after a backup (S18-04). Renaming is still available.
+        assert!(incoming.preview_error.is_none());
         let selected = transfer::select_received(
             target.path(),
             &incoming.id,

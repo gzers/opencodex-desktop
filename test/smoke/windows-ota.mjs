@@ -5,7 +5,7 @@ import {join} from 'node:path'
 import {createHash} from 'node:crypto'
 import {discoverMainTarget} from './windows-cdp.mjs'
 import {verifyWindowsModelUi,modelConfigPath,assertModelSandbox} from './windows-model-ui.mjs'
-const [endpoint,output,sandbox,phase,version,fromVersion='0.2.17']=process.argv.slice(2)
+const [endpoint,output,sandbox,phase,version,fromVersion='0.2.18']=process.argv.slice(2)
 assert.equal(new URL(endpoint).hostname,'127.0.0.1')
 assert(['prepare-exit','prepare-restart','verify'].includes(phase))
 const target=await discoverMainTarget(endpoint)
