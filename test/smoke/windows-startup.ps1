@@ -40,6 +40,20 @@ function Get-SmokeDiagnostics([int]$RootProcessId, [int]$Port, [datetime]$Starte
     } catch { $diagnostics.processOrListenerError = $_.Exception.Message }
     return $diagnostics
 }
+function Write-SandboxFileInventory([string]$SandboxRoot, [string]$OutputRoot) {
+    # Paths, sizes and hashes only: retain enough evidence to locate an isolated
+    # startup receipt without copying configuration contents into CI artifacts.
+    $files = @(Get-ChildItem -LiteralPath $SandboxRoot -Force -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 500)
+    $inventory = foreach ($file in $files) {
+        [ordered]@{
+            relativePath = [IO.Path]::GetRelativePath($SandboxRoot, $file.FullName)
+            bytes = $file.Length
+            sha256 = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+        }
+    }
+    [ordered]@{ root = $SandboxRoot; truncated = $files.Count -ge 500; files = @($inventory) } |
+        ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $OutputRoot 'sandbox-file-inventory.json') -Encoding utf8
+}
 
 New-Item -ItemType Directory -Path $taskOutput -Force | Out-Null
 $taskSandbox = Join-Path $taskOutput ('sandbox-' + [guid]::NewGuid().ToString('N'))
@@ -101,8 +115,9 @@ try {
     if ($taskProcess.MainWindowHandle -eq 0) { throw 'Main window handle missing' }
     $taskResult.mainWindowPresent = $true
     $taskResult.responding = $taskProcess.Responding
+    Write-SandboxFileInventory $taskSandbox $taskOutput
     $taskLog = Join-Path $taskSandbox 'logs/app.log'
-    if (!(Test-Path -LiteralPath $taskLog)) { throw 'Sandbox startup log missing' }
+    if (!(Test-Path -LiteralPath $taskLog)) { throw 'Sandbox startup log missing; see sandbox-file-inventory.json' }
     if (!(Get-Content -LiteralPath $taskLog -Raw).Contains("commit=$ExpectedCommit")) {
         throw "EXE build provenance does not match source commit $ExpectedCommit"
     }
