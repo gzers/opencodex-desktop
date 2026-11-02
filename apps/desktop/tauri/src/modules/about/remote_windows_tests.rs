@@ -223,7 +223,10 @@ fn script_query_paths(script: Option<&str>, verbatim: bool) -> QueryEvidence {
         &root.path().join("logs"),
         &environment,
         "test@latest",
-        std::time::Duration::from_secs(2),
+        // The fixture itself only emits deterministic local data. Leave enough
+        // room for Node startup while the full Windows workspace is busy; the
+        // production timeout behavior is covered by a dedicated 2-second case.
+        std::time::Duration::from_secs(10),
     );
     let records = records(&root.path().join("logs"));
     (result, records)

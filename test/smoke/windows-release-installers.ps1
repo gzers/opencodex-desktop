@@ -5,7 +5,7 @@ $taskOutput=[IO.Path]::GetFullPath($OutputDirectory)
 New-Item -ItemType Directory -Force $taskOutput | Out-Null
 $taskAssets=Join-Path $taskOutput 'assets'
 New-Item -ItemType Directory -Force $taskAssets | Out-Null
-if($Version -notmatch '^0[.]2[.](17|18|19)$'){throw 'Unsupported release acceptance version'}
+if($Version -notmatch '^0[.]2[.](17|18|19|20)$'){throw 'Unsupported release acceptance version'}
 $taskTag='v'+$Version
 & git fetch --depth=1 origin ('refs/tags/'+$taskTag+':refs/tags/'+$taskTag)
 if($LASTEXITCODE -ne 0){throw 'Target release tag not available'}
