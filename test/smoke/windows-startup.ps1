@@ -43,12 +43,16 @@ function Get-SmokeDiagnostics([int]$RootProcessId, [int]$Port, [datetime]$Starte
 function Write-SandboxFileInventory([string]$SandboxRoot, [string]$OutputRoot) {
     # Paths, sizes and hashes only: retain enough evidence to locate an isolated
     # startup receipt without copying configuration contents into CI artifacts.
-    $files = @(Get-ChildItem -LiteralPath $SandboxRoot -Force -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 500)
+    # WebView owns live lockfiles, so omit its private cache tree altogether.
+    $files = @(Get-ChildItem -LiteralPath $SandboxRoot -Force -File -Recurse -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -notmatch '[\/]EBWebView([\/]|$)' } | Select-Object -First 500)
     $inventory = foreach ($file in $files) {
+        $digest = $null
+        try { $digest = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256 -ErrorAction Stop).Hash.ToLowerInvariant() } catch {}
         [ordered]@{
             relativePath = [IO.Path]::GetRelativePath($SandboxRoot, $file.FullName)
             bytes = $file.Length
-            sha256 = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            sha256 = $digest
         }
     }
     [ordered]@{ root = $SandboxRoot; truncated = $files.Count -ge 500; files = @($inventory) } |
