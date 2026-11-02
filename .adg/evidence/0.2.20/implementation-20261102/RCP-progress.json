@@ -9,8 +9,8 @@
     },
     "saved-file-and-backup": {
       "status": "in_progress",
-      "reason": "real writer/browser integration 47 checks and Rust lib suite 1159 passed; full platform/native failure and recovery paths remain",
-      "evidence": "implementation-20261102/ocx020-real-writer-webkit3; local cargo test --locked --lib: 1159 passed, 4 ignored"
+      "reason": "Native QA found export preview writes an immutable temporary package cache under manager-state before final confirmation; the existing release left it after Cancel. Follow-up code 0389bcc0 deletes unattempted plan/package on cancel and bounded startup cleanup, while a shared attempt lock/durable result preserves retry bytes. Local Tauri IPC verified both cancel cleanup and SIGKILL/restart cleanup in an isolated HOME/data root. Six focused Rust tests, 37 focused ModelTransfer tests, full UI 177/1092, typecheck/build, Clippy and rustfmt pass. The prior full Rust suite passed 1164/4 ignored before the final durable-result guard test; PR #37 CI 41471655619 provides full current-head validation.",
+      "evidence": "implementation-20261102/export-preview-cancellation.md; PR #37 commit 0389bcc0; local Tauri IPC sandbox; six focused Rust tests; 37 focused ModelTransfer tests; full UI suite 177/1092; PR CI 41471655619"
     },
     "credential-and-scope-boundaries": {
       "status": "in_progress",
@@ -24,13 +24,13 @@
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "CI 41420204361 and integrated PR #35 CI 41439302028 passed cross-platform backend/native credential/managed installation/release build/final EXE/version matrices/recovery/ordinary-account coverage. PR #35 merged as f19e5e99210db8eea1500bd2d1b4daf1b3af3382. Exact v0.2.20 macOS package signature/resources and updater signatures passed; isolated macOS QA observed navigation and safe cancel paths but stopped at missing-Node prerequisites, so remaining dialogs/business paths remain open.",
-      "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/native-candidate-509cb996-build.json; CI runs 41420204361, 41439302028"
+      "reason": "CI 41420204361 and integrated PR #35 CI 41439302028 passed Windows native/build/EXE matrix; PR #36 diagnostic harness fix merged as 70724914649, pre-merge CI 41448593550 passed required checks. Existing v0.2.20 four-cell MSI/NSIS matrix 41448710359 passed. Isolated native macOS used temp HOME plus Node/npm links and an inert CLI fixture; overview, Settings general/data-backup, export encryption preview/cancel, import picker/cancel, WebDAV connection/cancel, notification detail, new channel, template version/use, Agent model picker and extension/client views were observed. No save/export/import, WebDAV request/sync, backup mutation, notification deletion, or install was executed. Production dialog callsites and full cross-platform business states remain incomplete. Native Tauri IPC follow-up branch verifies canceled export-plan deletion and startup cleanup in a temporary sandbox; final change remains unmerged and needs CI plus new packages and OTA. Local Tauri dev build of the follow-up branch verified real IPC cache creation, cancel deletion, empty user export destination, and SIGKILL/restart cleanup in an isolated data root. PR #37 CI/full current-head validation is pending; if merged, new release packages and native/installer/OTA acceptance remain required. Local Tauri IPC on the follow-up branch confirms cancel deletes internal frozen preview files and crash/restart sweeps an abandoned unattempted plan. PR #37 full CI is pending; if accepted, repeat package/install/OTA on the updated release source.",
+      "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/windows-existing-installer-matrix.md; implementation-20261102/dialog-callsite-ledger.md; CI runs 41420204361, 41439302028, 41448593550; Windows installer matrix 41448710359; implementation-20261102/export-preview-cancellation.md; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619"
     },
     "release-and-ota": {
       "status": "pending",
-      "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Original release run 41429792658 had custom MSI remembered-path failure; PR #35 merged at f19e5e992 fixed disposable-runner path isolation, accepted v0.2.20 in exact-package verifier, and lengthened only local fixture waits. Existing package four-cell Windows matrix final pass is run 41448710359 (head d35d8ef7): MSI/NSIS × default/custom, immutable original hashes and installed EXE identities verified; earlier diagnostic failures remain preserved in 41446111057/41447323857/41447830049, and MSI default passed on the failed-job rerun. Updater signatures and package digests pass. Actual 0.2.19→0.2.20 OTA is still unrun, consumer-by-consumer dialog parity remains open, and release is still draft. macOS is ad-hoc signed; Windows MSI/NSIS lack OS Authenticode; updater signatures are distinct.",
-      "evidence": "implementation-20261102/windows-existing-installer-matrix.md; implementation-20261102/native-release-package-and-ui.md; /tmp/ocx020-release-414297-evidence/installer-verification.json; release run 41429792658; installer matrix run 41448710359; diagnostic runs 41446111057, 41447323857, 41447830049; PR #35 merge f19e5e992; .github/workflows/windows-release-acceptance.yml"
+      "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Original release run 41429792658 had custom MSI remembered-path failure; PR #35 merged at f19e5e992 fixed disposable-runner path isolation, accepted v0.2.20 in exact-package verifier, and lengthened only local fixture waits. Existing package four-cell Windows matrix final pass is run 41448710359 (head d35d8ef7): MSI/NSIS × default/custom, immutable original hashes and installed EXE identities verified; earlier diagnostic failures remain preserved in 41446111057/41447323857/41447830049, and MSI default passed on the failed-job rerun. Updater signatures and package digests pass. Actual 0.2.19→0.2.20 OTA is still unrun, consumer-by-consumer dialog parity remains open, and release is still draft. macOS is ad-hoc signed; Windows MSI/NSIS lack OS Authenticode; updater signatures are distinct. Follow-up branch codex/0.2.20-discard-cancelled-export-plan fixes cancellation/startup cleanup for internal frozen preview cache; this production change is not yet merged or in candidate packages and must be tested/repackaged/revalidated before stable. Current tag assets predate the production export-cache lifecycle fix on codex/0.2.20-discard-cancelled-export-plan; if accepted, rebuild/re-sign and repeat installer/OTA verification before promotion. Follow-up production PR #37 (head 0389bcc0) now fixes unattempted preview-cache retention, with native Tauri IPC verification. Current v0.2.20 tag assets predate it; merge/rebuild/re-sign and repeat installer plus adjacent-release OTA acceptance if it is merged. Candidate tag/assets predate production preview-cache cleanup in PR #37 (0389bcc0); merge, rebuild/sign, installer matrix, and adjacent OTA must be rerun before stable.",
+      "evidence": "implementation-20261102/windows-existing-installer-matrix.md; implementation-20261102/native-release-package-and-ui.md; /tmp/ocx020-release-414297-evidence/installer-verification.json; release run 41429792658; installer matrix run 41448710359; diagnostic runs 41446111057, 41447323857, 41447830049; PR #35 merge f19e5e992; .github/workflows/windows-release-acceptance.yml; implementation-20261102/export-preview-cancellation.md; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619"
     }
   },
   "tests": {
@@ -293,6 +293,51 @@
       },
       "existingAssetsUnchanged": true,
       "rebuilt": false
+    },
+    {
+      "run": 41448593550,
+      "workflow": "PR #36 safe sandbox startup inventory for Windows smoke",
+      "head": "d35d8ef7b2799e2376b8d79bd241a84ad61cb56c",
+      "status": "success",
+      "required_jobs": [
+        "frontend",
+        "release-tools",
+        "backend",
+        "backend-windows",
+        "windows-smoke-evidence"
+      ],
+      "pr_merged": true,
+      "merge_commit": "70724914649a23f252563f8a3675fcef736122e4"
+    },
+    {
+      "run": 41454457169,
+      "workflow": "PR #36 merge commit CI",
+      "head": "70724914649a23f252563f8a3675fcef736122e4",
+      "status": "in_progress",
+      "passed_jobs": [
+        "frontend",
+        "release-tools",
+        "windows-smoke-evidence"
+      ],
+      "running_jobs": [
+        "backend",
+        "backend-windows"
+      ]
+    },
+    {
+      "run": 41471655619,
+      "workflow": "PR #37 canceled export preview plan lifecycle",
+      "head": "0389bcc04cccc6000b1a90ef784e83c3a7785191",
+      "status": "in_progress",
+      "passed_jobs": [
+        "release-tools",
+        "windows-smoke-evidence"
+      ],
+      "running_jobs": [
+        "frontend",
+        "backend",
+        "backend-windows"
+      ]
     }
   ]
 }
