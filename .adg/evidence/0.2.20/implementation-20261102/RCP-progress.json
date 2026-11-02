@@ -70,18 +70,22 @@
     },
     {
       "run": 41414060520,
-      "status": "in_progress",
+      "status": "failure",
       "head": "2fe154b8",
       "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence", "backend"],
       "passed_backend_steps": ["fmt", "clippy", "bounded metadata process tree", "remaining workspace regression"],
-      "passed_windows_steps": ["fmt", "clippy", "Windows backend regression"],
-      "running_jobs": ["backend-windows: isolated native credential protection"],
+      "passed_windows_steps": ["fmt", "clippy", "Windows backend regression", "isolated native credential protection", "official managed install upgrade and offline reinstall", "native dependency diagnostics", "release build"],
+      "failed_windows_step": "Windows final EXE smoke: click('关闭','dialog[open]') could not find the hidden header close action in the connection dialog; bottom cancel action is the designed control",
+      "skipped_windows_steps": ["Node24 version matrix", "native recovery/path regression", "Node22.20 regression", "ordinary-account final EXE smoke"],
       "purpose": "rerun Windows native EXE smoke with direct saved-config and provider-identity assertions"
     },
     {
       "run": 41420204361,
       "status": "in_progress",
       "head": "8aa3d2aa",
+      "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence"],
+      "running_jobs": ["backend: clippy", "backend-windows: clippy"],
+      "pending_jobs": ["macOS workspace regression", "Windows backend regression", "Windows native EXE smoke and version matrix"],
       "purpose": "rerun Windows native EXE smoke after correcting connection-dialog cancellation action"
     }
   ]
