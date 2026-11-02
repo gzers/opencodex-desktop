@@ -1,38 +1,49 @@
 {
   "status": "active",
-  "source": "worktree development checkpoints; final source not yet committed",
+  "source": "code branch codex/0.2.20-prototype-alignment at 509cb9965; docs branch docs/governance-main at 313bbcdb8; release not complete",
   "required_checks": {
     "prototype-parity": {
-      "status": "pending",
-      "reason": "基础Chromium22、WebKit20；完整三档缩放Chromium648通过，WebKit保留1条原型ResizeObserver异常；后续变化待重验"
+      "status": "in_progress",
+      "reason": "candidate Chromium/WebKit each 648 state/geometry checks and 96 screens passed; remaining consumer/dialog state audit is tracked under all-entry-coverage",
+      "evidence": "implementation-20261102/ocx020-matrix-chromium.log; implementation-20261102/ocx020-matrix-webkit.log"
     },
     "saved-file-and-backup": {
-      "status": "pending",
-      "reason": "落盘/范围恢复/重试有局部证据，新增范围完整性与UI入口待最终复验"
+      "status": "in_progress",
+      "reason": "real writer/browser integration 47 checks and Rust lib suite 1159 passed; full platform/native failure and recovery paths remain",
+      "evidence": "implementation-20261102/ocx020-real-writer-webkit3; local cargo test --locked --lib: 1159 passed, 4 ignored"
     },
     "credential-and-scope-boundaries": {
-      "status": "pending",
-      "reason": "macOS原生安全库通过、Key差异脱敏/新设备目录通过，Windows待验"
+      "status": "in_progress",
+      "reason": "native macOS secure-store test and scope/credential regressions passed; CI Windows backend regression still running",
+      "evidence": "native-candidate-509cb996-build.json; code commit 777aa9c5; CI run 41403032342"
     },
     "all-entry-coverage": {
-      "status": "pending",
-      "reason": "8路由/35调用点及动态台账仍待逐态；原全应用411项中10失败需区分基线/真缺陷"
+      "status": "in_progress",
+      "reason": "all-app browser audit 428/428 passed with zero page errors; 8 routes and 35 production dialog call sites still need consumer-by-consumer applicable-state verification",
+      "evidence": "implementation-20261102/ocx020-all-route-audit/audit-report.json; prototype-audit-20261102/application-dialog-inventory.json"
     },
     "macos-windows-native": {
-      "status": "pending",
-      "reason": "Mac首轮发现计数差异，已修待最终构建复验；Windows未执行"
+      "status": "in_progress",
+      "reason": "macOS debug bundle for 509cb996 built and sandbox launched; native interaction pending. CI run 41403032342 macOS/Windows backend jobs still running; Windows native install/OTA matrix not yet executed",
+      "evidence": "implementation-20261102/native-candidate-509cb996-build.json; CI run 41403032342"
     },
     "release-and-ota": {
       "status": "pending",
-      "reason": "未提交/合并/构建正式包/发布0.2.20"
+      "reason": "PR #34 remains draft; formal signed packages, install/upgrade/OTA and stable publication have not been completed"
     }
   },
   "tests": {
-    "ui_checkpoint": "177 files 1090 pass; subsequent modifications require rerun",
-    "rust_checkpoint": "full cargo test passed before recent changes; subsequent rerun required",
+    "ui_checkpoint": "509cb996 test fix local rerun: 177 files, 1090 passed; CI frontend pass in 41403032342",
+    "rust_checkpoint": "777aa9c5 full cargo test --locked --lib: 1159 passed, 0 failed, 4 ignored; CI macOS/Windows backend jobs still running",
     "native_credential": "OPENCODEX_SANDBOX=1 explicit macOS native test passed"
   },
   "daily_config_writes": false,
   "daily_real_sync": false,
-  "published": false
+  "published": false,
+  "ci": {
+    "run": 41403032342,
+    "status": "in_progress",
+    "passed_jobs": ["frontend", "release-tools", "windows-smoke-evidence"],
+    "running_jobs": ["backend", "backend-windows"]
+  }
 }
