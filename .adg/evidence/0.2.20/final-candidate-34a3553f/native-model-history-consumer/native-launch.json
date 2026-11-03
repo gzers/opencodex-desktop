@@ -1,0 +1,50 @@
+{
+  "pid": 51651,
+  "bundle": "/private/tmp/ocx020-font-final-native-bda/OpenCodeX Final Font QA.app",
+  "nativePackageSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "currentProductSource": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "reuseProof": [
+    {
+      "path": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "sha256": "85d0d2e14bbb5e152e393028f90552e961b866df7d456ce248ab1ec2f72b5445",
+      "identical": true
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/store.ts",
+      "sha256": "79a55df11df0cd862a8cf740923c04f61ef5327fddfa3bdefb847bf1f596396a",
+      "identical": true
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/api.ts",
+      "sha256": "0accd818270a926c0ca88627d1944f0c5ea9c090103d9cfaf63ac4092412abb4",
+      "identical": true
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiDialog.vue",
+      "sha256": "694c19dd80d01932ab52d6f30586512277e3a54878ac2adfcfbea80d9ca67f20",
+      "identical": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/recovery.rs",
+      "sha256": "18e431de399561710bd7a538059c9db333ca7e98650b3b48c31e4f88b70ad0a9",
+      "identical": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+      "sha256": "cfaeadd6daa0206361a13bf24edeea4aa300d3a03b5e37c4440aa261f54e1565",
+      "identical": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/model_config.rs",
+      "sha256": "129bf6ab8f44e20849cdac7f91f5a8e9abf87d7f9d48321732af064c7c74a937",
+      "identical": true
+    },
+    {
+      "path": "apps/desktop/ui/src/styles/tokens.css",
+      "sha256": "68eb612b6dcf34b06b55c95571e969b892353005c1e0787b5288bdd3c5f849db",
+      "identical": true
+    }
+  ],
+  "boundary": "actual bda formal package identity-isolated copy; tested history/controls/font modules byte-identical in34a; changed UpdateCenter not covered here",
+  "sandboxRoot": "/private/tmp/ocx020-history-native-34a/data"
+}

@@ -241,3 +241,14 @@ Mac从公开0.2.19副本实际经beta检查、下载、签名安装、手动重�
 连接密码沿用既有macOS本机0600文件/0700目录（Windows DPAPI）的旧后端；credential_ref.backend=keychain是历史元数据，不据它宣称系统钥匙串。内容保护口令独立使用transfer_protection Native keyring。原生探针先用security查唯一自有账户返回44，随后读源码和自有凭据文件证明实际后端；没有读取日常账户。目录保存的updated_at依法更新，改正了最初全对象相等的过严断言，稳定账户身份与真实密码另核对。自有凭据文件/进程/监听均已清理。权限失败保留系统详细原因，未声称其自定义中文文案。新证据在font-final-candidate-bda7c92d/native-connection-consumers。
 
 独立复核发现最终入口映射还需明确非Dialog命名的UpdateCenter/既有AgentPanel，以及最终字体在其他窗口的布局凭证；同时纠正模型历史“恢复草稿”不可引用混合资源范围恢复。正在补证，不据OTA通过关闭全入口/原型审阅或整体目标。
+
+
+### 2026-11-04 新正式包签名与原生补证
+
+新Release433039253的八资产已逐字节核对API摘要/长度，三份tag公钥签名与sidecar、五平台manifest通过；原封Mac包deep/strict、嵌入34a源码/许可资源与DMG完整性通过。Mac EXE SHA de367a3215878bb4993a31758fdc3cef527457957a387e059d1962f95d060555；Windows原始EXE SHA f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060。构建41688640805双平台成功，四独立安装41692094130进行；正式CI41687967250仅剩Windows后续原生链在执行。原始GraphQL读取EOF另保留，后续只读验证改用已知REST release/asset ID，没有因网络观察失败重复构建。
+
+新包Mac隔离副本只改身份和ad-hoc签名，全部有文件载荷Mach-O section与原封包一致。原生从概览100%打开更新结果、通过真实设置改200%、概览和设置两宿主打开更新详情均正常放大且关闭可达，Escape各返回原宿主。业务config SHA保持，自有QA已停且偏好恢复100%；没有点击更新安装。高缩放精确像素比例与长说明滚动由双引擎实际布局补证，不从AX猜测数值。
+
+模型历史恢复草稿原生成功路径已补：实际ModelStore生成独立canonical前后内容，显式seed一份经过production history读取器校验的legacy成功记录，仅作为消费者夹具，未冒称真实官方运行时保存。实际UI比较上下文64000→128000，默认不恢复模版指针，点击放入草稿后只model-config-draft.json改变；已保存策略仍64000、业务config及合成凭据原字节保持，返回模型页显示历史草稿/未保存。所用bda正式包副本与34a的history/store/api/UiDialog/Rust模块及字体字节完全一致，复用证明保存；这是实际原生UI/IPC/文件，不再错挂同步资源恢复。未执行运行时提交/生成/日常同步，自有进程已停。digest最初漏比sha256:前缀的探针断言已纠正，内容从未改变。
+
+final-independent-review当前仅对其审阅范围标pass：37+26+3入口及最终字体补证、缩放产品修复与新包原生通过；最终新payload的四安装、实际OTA和stable发布门单独保持待验，不从此局部pass关闭目标。

@@ -1,0 +1,35 @@
+{
+  "result": "pass",
+  "nativePackageSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "currentProductSource": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "testedModulesByteIdentical": true,
+  "actualNativeUiAndIpc": true,
+  "historySourceId": "728394ea-18c3-45f0-ae30-8ed54d45a2f4",
+  "nativeActions": [
+    "select exact validated history record",
+    "default restore-default-pointers unchecked",
+    "prepare real recovery comparison64000→128000",
+    "accept real recovery draft",
+    "return to model owner with unsaved historical draft"
+  ],
+  "actualFiles": {
+    "result": "pass",
+    "changedManagerFiles": [
+      "manager-state/model-config-draft.json"
+    ],
+    "businessConfigUnchanged": true,
+    "savedCanonicalPolicyContextWindow": 64000,
+    "recoveryDraftContextWindow": 128000,
+    "recoveryId": "af07d076-4639-44ec-ad40-3316bbeb247b",
+    "sourceId": "728394ea-18c3-45f0-ae30-8ed54d45a2f4",
+    "noRuntimeApply": true
+  },
+  "businessConfigurationAndCredentialsUnchanged": true,
+  "canonicalSavedPolicyUnchanged": true,
+  "onlyDraftFileChanged": true,
+  "runtimeApplyOrGenerationOrRealSync": false,
+  "fixtureBoundary": "Actual ModelStore canonical local commits plus explicitly seeded validated legacy successful-plan catalog. No runtime CLI, provider/key changes or generation. Native consumer will prepare/accept via real IPC.",
+  "sourceReuseBoundary": "actual bda formal package identity-isolated copy; tested history/controls/font modules byte-identical in34a; changed UpdateCenter not covered here",
+  "testOnlyProcessStopped": true,
+  "driverCorrection": "ModelStore digest includes sha256: prefix; initial raw-hexdigest comparison was corrected after semantic and exact byte check proved no product side effect."
+}

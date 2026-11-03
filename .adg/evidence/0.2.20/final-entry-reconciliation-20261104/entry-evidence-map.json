@@ -36,12 +36,13 @@
         "secondary",
         "reviewAgent-secondary-chromium",
         "reviewAgent-secondary-webkit",
-        "historyBackendRealFiles"
+        "historyBackendRealFiles",
+        "nativeModelHistoryConsumer"
       ],
       "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
       "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
       "closureStatus": "await final overallRCP",
-      "evidenceBoundary": "Actual backend recovery files plus currentbrowser preview/cancel. Finalnative UIaccept not established."
+      "evidenceBoundary": "Actual native UI/IPC successful preview+accept+model-owner return; validated seeded legacy history catalog, real canonical ModelStore/draft files. Business runtime config remains unchanged. History modules and font equal bda/34a."
     },
     {
       "file": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
@@ -1120,6 +1121,12 @@
         "path": ".adg/evidence/0.2.20/final-entry-reconciliation-20261104/independent-bda-review/reports/update-hosts-webkit-r4/browser-boundary-and-fonts.json",
         "sha256": "60a17e0075cfe90e25c6dc88c9e7acdab7b790525eff28b86bd13391d25acefa"
       }
+    },
+    "nativeModelHistoryConsumer": {
+      "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-model-history-consumer/result.json",
+      "result": "pass",
+      "nativePackageSource": "bda7c92d",
+      "productSourceReuse": "all tested modules byte-identical34a"
     }
   },
   "sourceExclusions": [
@@ -1705,7 +1712,7 @@
   "unchangedConsumerReuse": "All Rust/other production UI files equal bda, only UpdateCenter CSS changed; original bda package install/OTA are historical, new payload gates separate.",
   "updateScaleFix": {
     "source": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
-    "status": "browser pass; final native package pending",
+    "status": "twoengine rendered contracts plus actual new formal Mac package both hosts100/200% passed",
     "originalBlockingFinding": "FR-020-UPDATE-SCALE",
     "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/independent-update-scale-review/handoff.json",
     "checksPerEngine": {
@@ -1718,7 +1725,8 @@
       34,
       51,
       68
-    ]
+    ],
+    "nativeEvidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-update-scale/result.json"
   },
-  "finalNativeHistoryRecovery": "pending direct final package successful recovery-draft acceptance; backend+preview/cancel retained, no mixed scope-restore association"
+  "finalNativeHistoryRecovery": "passed actual native UI/IPC acceptance and only draft file changed; precise seeded historical-catalog boundary in receipt"
 }

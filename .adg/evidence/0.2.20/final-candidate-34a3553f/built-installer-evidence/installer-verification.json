@@ -1,0 +1,87 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "builtExecutableSha256": "f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060",
+  "version": "0.2.20",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.2.20_x64_en-US.msi",
+      "bytes": 7233536,
+      "sha256": "6c43822ec3857fd5db1de96be40b0ba3dca89fcee38e257293e6efe1d2612ada",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-28b0435bcf6544eb99dc9c32d1f0358b",
+      "result": "pass",
+      "registryCleanup": [],
+      "installExitCode": 0,
+      "installedExecutableSha256": "432bc088ef29ed7f5e24b2c7161a7df1d1c3db370d70212cf8a4e88c9844edb0",
+      "expectedInstalledExecutableSha256": "432bc088ef29ed7f5e24b2c7161a7df1d1c3db370d70212cf8a4e88c9844edb0",
+      "bundleMarker": "MSI",
+      "bundleMarkerOffset": 13985877,
+      "productVersion": "0.2.20",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "startupPointerRemoved": true,
+        "anchorAndActiveRootRemoved": true,
+        "externalHomeUnchanged": true,
+        "applicationRetained": true,
+        "applicationRootBindingTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    },
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.2.20_x64-setup.exe",
+      "bytes": 5165583,
+      "sha256": "c7110603a26a05a009b8522284945cc74886635bc551fa680cd58dd031fd8c08",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-9798ee1eb4744dbb825eaa868c95fa7a",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "0f0db4e674c5bc672e0b961437a2678ec981ab71bf40ed31495d790dd3fdc575",
+      "expectedInstalledExecutableSha256": "0f0db4e674c5bc672e0b961437a2678ec981ab71bf40ed31495d790dd3fdc575",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 13985877,
+      "productVersion": "0.2.20",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "startupPointerRemoved": true,
+        "anchorAndActiveRootRemoved": true,
+        "externalHomeUnchanged": true,
+        "applicationRetained": true,
+        "applicationRootBindingTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    }
+  ],
+  "defaultInstallChecks": [
+    {
+      "installDirectory": "C:\\Program Files\\OpenCodeX Desktop\\",
+      "pathOverride": false,
+      "kind": "msi",
+      "boundary": "MSI fresh first; NSIS may honor the existing product remembered directory",
+      "result": "pass"
+    },
+    {
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-9798ee1eb4744dbb825eaa868c95fa7a",
+      "pathOverride": false,
+      "kind": "nsis",
+      "boundary": "per-user NSIS is checked after MSI cells to avoid contaminating MSI AppSearch",
+      "result": "pass"
+    }
+  ],
+  "defaultMsiRegistryCleanup": []
+}

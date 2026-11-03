@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 2,
+  "mode": "ordinary",
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 4056,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-03T18:10:26.4342006Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-03T18:10:27.7714174Z"
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 8112,
+    "executable": "D:\\a\\_temp\\ocxd-candidate-msi-28b0435bcf6544eb99dc9c32d1f0358b\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-11-03T18:10:27.7775664Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-03T18:11:07.7662673Z"
+  },
+  "applicationTokenVerified": true,
+  "applicationModeMatched": true,
+  "result": "pass",
+  "executable": "D:\\a\\_temp\\ocxd-candidate-msi-28b0435bcf6544eb99dc9c32d1f0358b\\opencodex-desktop.exe",
+  "sha256": "432bc088ef29ed7f5e24b2c7161a7df1d1c3db370d70212cf8a4e88c9844edb0",
+  "homeRemoved": true,
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\release-windows-installer\\msi-startup\\startup\\sandbox-aab04d81535d4b818a26a43a51ff88c8",
+  "observedSeconds": 30,
+  "cdpPort": 60430,
+  "expectedCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "sourceCommitMatched": true,
+  "mainWindowPresent": true,
+  "pid": 8112,
+  "responding": true
+}

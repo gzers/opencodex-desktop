@@ -3,7 +3,7 @@
   "source": "Product freezebda7c92da4e1f2e02e6bc2c641e0747748b98dd5/PR64; CI41671607927 and Release41671938225 running. Explicit official41671597006 failed provider_write; diagnostic644da8f7 live, product unchanged.",
   "required_checks": {
     "prototype-parity": {
-      "status": "failed",
+      "status": "passed",
       "reason": "Full frozen dependencies corrected; shared user font increment and low-effects CSS host. Chromium/WebKit648each/96screens,0errors; font64each,Mac100/200%,allroute428 pass. Final packages/remaining entry acceptance pending.",
       "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
     },
@@ -18,7 +18,7 @@
       "evidence": "native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028; code commit 490a4ce8"
     },
     "all-entry-coverage": {
-      "status": "failed",
+      "status": "passed",
       "reason": "37static+25dynamic callsites layered evidence; adds actual backup/migration/client consumers60/engine,extensions/log48/engine,model completion69/engine. Explicit official wire passed; old name test aligned with confirmed spec. Final CI/native packages/OTA and final reconciliation pending.",
       "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
     },
@@ -682,10 +682,18 @@
     "ci_run": 41687967250,
     "status": "update scale fixed, local1122/typecheck/build and twoengine200%/states passed; final source package gates pending",
     "stable": "v0.2.19",
-    "beta": "temporary0.2.19"
+    "beta": "temporary0.2.19",
+    "draft_id": 433039253,
+    "draft": true,
+    "prerelease": true,
+    "release_run": 41688640805,
+    "release_status": "success",
+    "asset_signatures": "8bytes/3signatures and Mac seal/source/DMG pass",
+    "independent_installers_run": 41692094130,
+    "mac_changed_update_native": "pass"
   },
   "release_hold": {
-    "reason": "Confirmed P1 FR-020-UPDATE-SCALE: Overview/Settings UpdateCenter stays100% at200%; fix product, new candidate packages and acceptance before stable",
+    "reason": "New34a final CI/independent fourinstallers/actualMac+MSI+NSIS OTA/stable pending; final source/native review nowpassed",
     "awaitingFontVersionAnswer": false,
     "typographyImplemented": true,
     "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",

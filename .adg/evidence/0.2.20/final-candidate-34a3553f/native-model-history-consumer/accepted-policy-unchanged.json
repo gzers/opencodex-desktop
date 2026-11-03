@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "templateRefs": [],
+  "channels": [
+    {
+      "id": "1eaa6c99-3f66-42e3-84ad-abc9e00c95c6",
+      "label": "历史草稿原生校验",
+      "templateRefs": [],
+      "modelRefs": {},
+      "connection": {
+        "providerId": "owned_history_fixture",
+        "protocol": "openai-chat",
+        "nodes": [
+          {
+            "id": "949fb2fe-c7f0-43b4-8c3e-0cfab8601261",
+            "name": "owned history fixture node",
+            "url": "https://fixture.example.test/v1"
+          }
+        ],
+        "activeNodeId": "949fb2fe-c7f0-43b4-8c3e-0cfab8601261",
+        "credentialRef": null,
+        "enabled": false,
+        "allowPrivateNetwork": false
+      },
+      "selection": {
+        "mode": "all"
+      },
+      "modelOrder": [],
+      "discovered": [],
+      "defaults": {
+        "protocol": {
+          "mode": "inherit"
+        },
+        "contextWindow": {
+          "mode": "custom",
+          "value": 64000
+        },
+        "inputModalities": {
+          "mode": "inherit"
+        },
+        "reasoningEfforts": {
+          "mode": "inherit"
+        },
+        "defaultEffort": {
+          "mode": "inherit"
+        },
+        "fast": {
+          "mode": "inherit"
+        }
+      },
+      "overrides": {},
+      "familyOverrides": {}
+    }
+  ]
+}

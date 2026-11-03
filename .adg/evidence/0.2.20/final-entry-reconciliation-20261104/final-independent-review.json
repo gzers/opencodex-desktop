@@ -1,5 +1,5 @@
 {
-  "result": "in_progress",
+  "result": "pass",
   "sourceCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
   "reviewer": "independent subagent 01a1a26d-432c-7f73-850d-0498cf452511 + integration actual native/package receipts",
   "entryScope": {
@@ -26,7 +26,18 @@
   },
   "originalBdaReports": ".adg/evidence/0.2.20/final-entry-reconciliation-20261104/independent-bda-review/review-summary.json",
   "currentMap": ".adg/evidence/0.2.20/final-entry-reconciliation-20261104/entry-evidence-map.json",
-  "remaining": "direct successful native history-draft consumer; new final package/source/signature/install/OTA/stable gates outside this browser review",
+  "remaining": "review scopes complete. Actual new package four installers/CI/OTA/stable tracked separately; not inferred from this pass.",
   "prototypeProbeCorrection": "browser viewport was not prototype product window; actual measured900x600 window in existing1700x1000 reviewcanvas passes; not draggable coordinates; no source mutation",
-  "sourceExclusions": "future mock multi-agent/conversation/connection-map only; adopted existing AgentPanel included"
+  "sourceExclusions": "future mock multi-agent/conversation/connection-map only; adopted existing AgentPanel included",
+  "nativeHistoryRecovery": {
+    "result": "pass",
+    "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-model-history-consumer/result.json",
+    "actualNativeUiAndIpc": true,
+    "nativePackage": "bda with unchanged history modules/font relative34a",
+    "noRuntimeSaveClaimed": true
+  },
+  "changedUpdateCenterNative": {
+    "result": "pass",
+    "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-update-scale/result.json"
+  }
 }

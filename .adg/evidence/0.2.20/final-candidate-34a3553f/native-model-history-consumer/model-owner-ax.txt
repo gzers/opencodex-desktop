@@ -1,0 +1,74 @@
+Window: "", App: OpenCodeX Desktop.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#models
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 模型
+				10 button 拓展
+				11 button 同步
+				12 button 诊断
+				13 button 设置
+			14 container
+				15 heading 模型配置, Value: 1
+					16 text 模型配置
+				17 text 管理渠道模型、模版与选择器顺序。
+				18 container 主题
+					19 button 浅色
+					20 button 深色
+					21 button 跟随系统
+				22 text 加载中
+				23 button 刷新状态
+				24 button (collapsed) Description: 通知, Secondary Actions: Expand
+				25 tab group (selectable) 模型配置
+					26 tab (selected) 渠道模型
+					27 tab (selectable) 模型模版
+				28 text 未保存修改
+				29 button 还原修改
+				30 button 保存, Help: 保存 · 查看剩余修改的保存预览，确认后写入
+				31 search text field (settable) 搜索渠道
+					32 text 搜索渠道
+				33 button 读取现有渠道
+				34 button (disabled) 新增渠道
+				35 table
+					36 row (selectable) 选择当前结果中的可编辑渠道, Value: 渠道
+服务节点
+模型
+启用
+操作
+						37 checkbox 选择当前结果中的可编辑渠道, Value: 0
+					38 row (selectable)
+						39 cell (selectable) 选择渠道 历史草稿原生校验
+							40 checkbox (disabled) 选择渠道 历史草稿原生校验, Value: 0
+						41 cell (selectable) 历史草稿原生校验
+1 节点 · 停用
+						42 cell (selectable) 历史草稿原生校验当前节点
+						43 cell (selectable) 0 / 0
+已选 / 发现
+						44 cell (selectable)
+							45 switch (disabled, settable, boolean) 历史草稿原生校验渠道启用状态, Value: off
+							46 text 停用
+						47 cell (selectable) 编辑
+复制
+删除
+历史草稿原生校验排序
+历史草稿原生校验上移
+历史草稿原生校验下移, Description: 历史草稿原生校验排序
+历史草稿原生校验上移
+历史草稿原生校验下移
+				48 text 启用开关修改当前编辑；停用保留已选模型与配置。拖动渠道调整整组顺序。
+	49 close button
+	50 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	51 minimize button
+52 menu bar
+	53 OpenCodeX Final Font QA
+	54 进程
+	55 编辑
+	56 视图
+	57 诊断
+
+The focused UI element is 2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#models
