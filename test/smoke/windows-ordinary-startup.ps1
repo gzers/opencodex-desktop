@@ -2,6 +2,7 @@ param(
  [Parameter(Mandatory=$true)][string]$Executable,
  [Parameter(Mandatory=$true)][string]$Node,
  [Parameter(Mandatory=$true)][string]$OutputDirectory,
+ [string]$ExpectedCommit='',
  [switch]$ProfileOnly
 )
 $ErrorActionPreference='Stop'
@@ -10,6 +11,8 @@ $taskExe=(Resolve-Path -LiteralPath $Executable).Path
 $taskNode=(Resolve-Path -LiteralPath $Node).Path
 $taskOutput=[IO.Path]::GetFullPath($OutputDirectory)
 New-Item -ItemType Directory -Force $taskOutput|Out-Null
+if(!$ExpectedCommit){$ExpectedCommit=(& git rev-parse HEAD).Trim()}
+if($ExpectedCommit -notmatch '^[0-9a-f]{40}$'){throw 'A full expected source commit is required'}
 $taskName='ocxacc'+[guid]::NewGuid().ToString('N').Substring(0,8)
 $taskSecret=[Security.Cryptography.RandomNumberGenerator]::GetBytes(32)
 $taskSecure=ConvertTo-SecureString ([Convert]::ToBase64String($taskSecret)+'aA1!') -AsPlainText -Force
@@ -78,7 +81,7 @@ public sealed class OcxTemporaryDesktopAccess : IDisposable {
  }
  $taskChild=Join-Path $taskOutput 'ordinary-child.ps1'
  $taskConfig=Join-Path $taskOutput 'ordinary-input.json'
- [ordered]@{executable=$taskExe;node=$taskNode;output=(Join-Path $taskOutput 'startup');script=(Join-Path $PSScriptRoot 'windows-startup.ps1');commit=(& git rev-parse HEAD).Trim();accountSid=$taskUser.SID.Value;profileOnly=[bool]$ProfileOnly} | ConvertTo-Json | Set-Content -LiteralPath $taskConfig -Encoding utf8
+ [ordered]@{executable=$taskExe;node=$taskNode;output=(Join-Path $taskOutput 'startup');script=(Join-Path $PSScriptRoot 'windows-startup.ps1');commit=$ExpectedCommit;accountSid=$taskUser.SID.Value;profileOnly=[bool]$ProfileOnly} | ConvertTo-Json | Set-Content -LiteralPath $taskConfig -Encoding utf8
  @'
 param([string]$InputFile)
 $ErrorActionPreference='Stop'
