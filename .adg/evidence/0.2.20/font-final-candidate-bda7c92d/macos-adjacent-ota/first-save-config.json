@@ -1,0 +1,19 @@
+{
+  "outsideSentinel": "keep-exactly",
+  "providers": {
+    "mixed-fixture": {
+      "adapter": "openai-chat",
+      "apiKey": "synthetic-channel-only-key",
+      "authMode": "key",
+      "baseUrl": "https://example.test/v1",
+      "disabled": false,
+      "models": [
+        "fixture-alpha",
+        "fixture-beta"
+      ],
+      "selectedModels": [
+        "fixture-alpha"
+      ]
+    }
+  }
+}

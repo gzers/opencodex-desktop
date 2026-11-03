@@ -681,11 +681,11 @@
     "sourceTree": "1b72afcd13c1b02597ec3b321ccd953e15189eb6",
     "tag": "v0.2.20",
     "draft_id": 432929365,
-    "draft": true,
+    "draft": false,
     "prerelease": true,
     "ci_run": 41671607927,
     "release_run": 41671938225,
-    "status": "frozen source full CI/official contract, uploaded assets, native Mac package and four Windows installers passed; actual OTA pending",
+    "status": "public prerelease same frozen8assets verified; actual Mac/MSI/NSIS OTA passed; final entry/font review pending before stable",
     "stable": "v0.2.19",
     "macAdjacentBaseline": "2 real native UI commits+exact preimages verified; actual OTA not run",
     "windows_asset_signatures": "2/2 actualuploadedbytes pass",
@@ -700,14 +700,25 @@
       "result": "pass",
       "tests": 2,
       "evidence": "font-final-candidate-bda7c92d/official-contract-frozen-attempt2"
+    },
+    "actual_ota": {
+      "windowsRun": 41683704589,
+      "windowsCells": "MSI/NSIS actual signature/install/automatic restart/readback passed",
+      "macos": "actual signed updater/exact installed package/automatic OS process observed; native readback of identical installed bundle copy after preexisting AppKit restoration prompt",
+      "baseline": "0.2.19",
+      "to": "0.2.20",
+      "channel": "existing beta",
+      "dailyTouched": false,
+      "evidence": "font-final-candidate-bda7c92d/{windows-adjacent-ota-41683704589,macos-adjacent-ota}"
     }
   },
   "release_hold": {
-    "reason": "Actual macOS/MSI/NSIS adjacent OTA and final audit before stable",
+    "reason": "Final independent per-entry/font evidence corrections before public stable promotion",
     "awaitingFontVersionAnswer": false,
     "typographyImplemented": true,
     "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",
-    "evidence": "integration-20261104"
+    "evidence": "integration-20261104",
+    "actualOta": "passed; explicit environment/readback boundaries in receipts"
   },
   "formal_task": ".adg/work/objects/task/TASK-OPENCODEX-UI020-CLOSEOUT-20261104.json",
   "formal_task_digest": "05900c538996b6111920e6f6659e122788896fcf035040f1d6133bcb81122b7d",

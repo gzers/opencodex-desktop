@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "endpoints": [
+    {
+      "endpoint_id": "default",
+      "url": "https://127.0.0.1:53114",
+      "remote_path": "owned-native-probe",
+      "username": "owned-native-user",
+      "credential_ref": {
+        "ref_id": "cred_41f0d1af-b84a-46cb-bca1-40556a1657c8",
+        "backend": "keychain",
+        "service_name": "OpenCodex Desktop Sandbox",
+        "account_key": "ocx.dav.cred_41f0d1af-b84a-46cb-bca1-40556a1657c8",
+        "purpose": "webdav_credential",
+        "created_at": "2026-11-03T17:31:19Z",
+        "updated_at": "2026-11-03T17:31:19Z"
+      },
+      "tls_policy": "verify_required",
+      "conflict_policy": "ask"
+    }
+  ]
+}

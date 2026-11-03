@@ -1,0 +1,30 @@
+{
+  "result": "pass",
+  "kind": "msi",
+  "from": "0.2.19",
+  "to": "0.2.20",
+  "channel": "beta",
+  "baselinePackageSha256": "63b26f2b19c5d0b05ab9c98fa775d260d11b077969b21ff12c024ac2f55b7dc7",
+  "expectedBuiltSha256": "f864de162ba28b4f2c386fce4bf06d3b959bfc4475c959b7c557a8c0d5b84158",
+  "installDirectory": "D:\\a\\_temp\\OpenCodeX OTA 中文 msi 02acca945f4d450286285c8a30112811",
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-msi\\actual-sandbox",
+  "scope": "real production-channel signed updater and published baseline; isolated production model file, synthetic credentials and prewrite backup; no user machine changes",
+  "ordinaryExitPreservedOldVersion": true,
+  "automaticRestartObserved": true,
+  "automaticRestartProcess": {
+    "pid": 2660,
+    "path": "D:\\a\\_temp\\OpenCodeX OTA 中文 msi 02acca945f4d450286285c8a30112811\\opencodex-desktop.exe",
+    "creationDate": "2026-11-03T17:23:42.635279+00:00",
+    "version": "0.2.20"
+  },
+  "readbackMethod": "automatic new process observed by OS; exact updated EXE then relaunched with explicit isolated test environment for Tauri/file readback",
+  "installedExecutableSha256": "dad99f90ac289384a837db30a7320de7b1fc6441be23741989cd705026f7ee32",
+  "installedBundleIdentity": {
+    "builtSha256": "f864de162ba28b4f2c386fce4bf06d3b959bfc4475c959b7c557a8c0d5b84158",
+    "expectedSha256": "dad99f90ac289384a837db30a7320de7b1fc6441be23741989cd705026f7ee32",
+    "installedSha256": "dad99f90ac289384a837db30a7320de7b1fc6441be23741989cd705026f7ee32",
+    "bundleMarkerOffset": 13985957,
+    "bundleMarker": "MSI",
+    "result": "pass"
+  }
+}

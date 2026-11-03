@@ -1,0 +1,26 @@
+[
+  {
+    "id": "7ca9a5a6-8d97-4ce2-b18a-10beb4b73645",
+    "endpoint": {
+      "id": "owned-import-with-password",
+      "url": "https://127.0.0.1:53114",
+      "remotePath": "owned-imported-candidate",
+      "username": "owned-native-user",
+      "conflictPolicy": "ask"
+    },
+    "credentialRef": "cred_41f0d1af-b84a-46cb-bca1-40556a1657c8",
+    "importedAt": "2026-11-03T17:32:00Z"
+  },
+  {
+    "id": "cb57c145-8d9e-4627-b801-63bf789269f1",
+    "endpoint": {
+      "id": "owned-import-without-password",
+      "url": "https://127.0.0.1:53114",
+      "remotePath": "owned-missing-password",
+      "username": "owned-native-user",
+      "conflictPolicy": "ask"
+    },
+    "credentialRef": null,
+    "importedAt": "2026-11-03T17:32:00Z"
+  }
+]

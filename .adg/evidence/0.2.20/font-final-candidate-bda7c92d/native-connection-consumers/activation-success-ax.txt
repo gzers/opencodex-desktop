@@ -1,0 +1,46 @@
+Window: "", App: OpenCodeX Desktop.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#overview
+			3 container WebDAV 连接
+				4 heading WebDAV 连接, Value: 2
+					5 text WebDAV 连接
+				6 container
+					7 text 服务地址
+					8 text field (settable) 服务地址, Value: https://127.0.0.1:53114
+				9 container
+					10 text 独立配置同步目录
+					11 text field (settable) 独立配置同步目录, Value: owned-imported-candidate
+				12 container
+					13 text 用户名
+					14 text field (settable) 用户名, Value: owned-native-user
+				15 container
+					16 text 连接密码
+					17 secure text field (settable) 连接密码, Value: 本机已保存 · 留空保留
+				18 button 测试连接
+				19 container (expanded) Secondary Actions: Collapse
+					20 summary 导入的连接, Value: on
+						21 text 导入的连接
+					22 container 导入的连接
+						23 heading 导入的连接, Value: 2
+							24 text 导入的连接
+						25 text 采用文件不会自动启用连接。启用后，后续同步使用所选服务器。
+						26 button 刷新
+						27 text owned-native-user · https://127.0.0.1:53114 owned-imported-candidate · 已携带密码
+						28 button 启用此连接
+						29 text owned-native-user · https://127.0.0.1:53114 owned-missing-password · 未携带密码，请在连接表单补全
+						30 button (disabled) 启用此连接
+				31 container
+					32 button 取消
+					33 button 保存连接
+	34 close button
+	35 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	36 minimize button
+37 menu bar
+	38 OpenCodeX Final Font QA
+	39 进程
+	40 编辑
+	41 视图
+	42 诊断
+
+The focused UI element is 3 container WebDAV 连接

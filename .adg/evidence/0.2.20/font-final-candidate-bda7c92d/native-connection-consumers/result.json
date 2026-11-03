@@ -1,0 +1,51 @@
+{
+  "result": "pass",
+  "sourceCommit": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "packageIdentity": "same finalfontqa sections as original release; see native-final-macos-package/identity.json",
+  "actualNativeTests": [
+    "new connection missing password validation",
+    "real HTTPS PROPFIND authentication refused",
+    "real HTTPS PROPFIND success without persisting endpoint",
+    "actual save/close to overview",
+    "reopen password empty + retained-placeholder",
+    "blank password reuses exact existing credential for changed directory",
+    "directory persisted with credential identity retained; updated_at legitimately advances",
+    "real filesystem permission refusal retains exact prior file and local input",
+    "candidate catalog with and without password uses real file reader and retained credential",
+    "activation cancellation retains exact active endpoint",
+    "actual candidate activation persists selected directory and returns to form"
+  ],
+  "requests": [
+    {
+      "method": "PROPFIND",
+      "path": "/owned-native-probe/",
+      "authenticationMatched": false
+    },
+    {
+      "method": "PROPFIND",
+      "path": "/owned-native-probe/",
+      "authenticationMatched": true
+    },
+    {
+      "method": "PROPFIND",
+      "path": "/owned-native-probe-renamed/",
+      "authenticationMatched": true
+    }
+  ],
+  "storedSecretMatchedSynthetic": true,
+  "credentialBackend": "legacy WebDAV local file backend: macOS plain with 0600/0700; content-protection passphrase is separately native keyring. The schema credential_ref.backend=keychain is historical metadata, not proof of actual backend.",
+  "ownedCredentialFileCleaned": true,
+  "businessModelConfigurationUnchanged": true,
+  "dailyConfigurationOrSecretsUsed": false,
+  "trustBoundary": "SSL_CERT_FILE only in owned process, self-created CA/loopback leaf; no TLS verification disabled, no system trust changes",
+  "importBoundary": "candidate catalog explicitly seeded; proves activation consumer, not package-transfer import",
+  "errorBoundary": "filesystem permission refusal displays detailed system error",
+  "realSyncExecuted": false,
+  "noPutImplementation": true,
+  "ownedAppAndServerStopped": true,
+  "driverCorrections": [
+    "secure AX setValue does not fill WebKit password; normal native paste used",
+    "full credential_ref equality was too strict because updated_at legitimately changes; stable identity and actual credential are verified",
+    "attempted exact owned security lookup returned44 because WebDAV uses existing file backend, confirmed credentials.rs; no native keychain success is claimed"
+  ]
+}

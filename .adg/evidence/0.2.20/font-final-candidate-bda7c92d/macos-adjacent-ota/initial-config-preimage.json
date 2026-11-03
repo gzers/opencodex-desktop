@@ -1,0 +1,19 @@
+{
+  "providers": {
+    "mixed-fixture": {
+      "adapter": "openai-chat",
+      "baseUrl": "https://example.test/v1",
+      "authMode": "key",
+      "apiKey": "synthetic-channel-only-key",
+      "models": [
+        "fixture-alpha",
+        "fixture-beta"
+      ],
+      "selectedModels": [
+        "fixture-alpha"
+      ],
+      "disabled": true
+    }
+  },
+  "outsideSentinel": "keep-exactly"
+}

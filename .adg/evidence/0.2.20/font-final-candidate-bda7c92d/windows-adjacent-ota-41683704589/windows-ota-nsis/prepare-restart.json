@@ -1,0 +1,66 @@
+{
+  "result": "pass",
+  "from": "0.2.19",
+  "to": "0.2.20",
+  "channel": "beta",
+  "signatureVerified": true,
+  "pendingRestart": "0.2.20",
+  "progress": [
+    {
+      "operationId": "manager-2-14626831429875467494",
+      "target": "manager",
+      "channel": "beta",
+      "candidateVersion": "0.2.20",
+      "generation": 2,
+      "sequence": 1,
+      "stage": "backup",
+      "downloadedBytes": 0,
+      "totalBytes": null
+    },
+    {
+      "operationId": "manager-2-14626831429875467494",
+      "target": "manager",
+      "channel": "beta",
+      "candidateVersion": "0.2.20",
+      "generation": 2,
+      "sequence": 2,
+      "stage": "checking",
+      "downloadedBytes": 0,
+      "totalBytes": null
+    },
+    {
+      "operationId": "manager-2-14626831429875467494",
+      "target": "manager",
+      "channel": "beta",
+      "candidateVersion": "0.2.20",
+      "generation": 2,
+      "sequence": 3,
+      "stage": "downloading",
+      "downloadedBytes": 0,
+      "totalBytes": null
+    },
+    {
+      "operationId": "manager-2-14626831429875467494",
+      "target": "manager",
+      "channel": "beta",
+      "candidateVersion": "0.2.20",
+      "generation": 2,
+      "sequence": 4,
+      "stage": "downloading",
+      "downloadedBytes": 7283,
+      "totalBytes": 5166683
+    },
+    {
+      "operationId": "manager-2-14626831429875467494",
+      "target": "manager",
+      "channel": "beta",
+      "candidateVersion": "0.2.20",
+      "generation": 2,
+      "sequence": 5,
+      "stage": "pending_restart",
+      "downloadedBytes": 5166683,
+      "totalBytes": 5166683
+    }
+  ],
+  "productionChannelEndpoint": true
+}
