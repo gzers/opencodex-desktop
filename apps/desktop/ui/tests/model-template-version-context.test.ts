@@ -14,6 +14,20 @@ const dialog=defineComponent({props:['open'],template:'<section v-if="open"><slo
 function render(){return mount(ModelsRoute,{global:{stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,BatchAgentDialog:true,ExternalTaskDialog:true,UiDialog:dialog,UiSelectField:true,ModelRuleFields:true}}})}
 beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelApi.load).mockResolvedValue(snapshot());vi.mocked(modelApi.setDefault).mockImplementation(async()=>{const s=snapshot();s.library.templates[0]!.defaultRevision='new';return s});useModelsStore().view.tab='templates'})
 describe('template browser/default version separation',()=>{
+ it('closes a version search on Escape while preserving source-page search and rejects dismissal during a write',async()=>{
+  const wrapper=render();await flushPromises()
+  await wrapper.get('input[aria-label="搜索模版"]').setValue('模型族')
+  await wrapper.findAll('button').find(b=>b.text()==='版本管理')!.trigger('click');await flushPromises()
+  await wrapper.get('input[aria-label="搜索版本"]').setValue('no-such-version')
+  useModelsStore().busy=true;await flushPromises()
+  await wrapper.get('input[aria-label="搜索版本"]').trigger('keydown',{key:'Escape'});expect(wrapper.find('input[aria-label="搜索版本"]').exists()).toBe(true)
+  useModelsStore().busy=false;await flushPromises()
+  await wrapper.get('input[aria-label="搜索版本"]').trigger('keydown',{key:'Escape'});await flushPromises()
+  expect(wrapper.find('input[aria-label="搜索版本"]').exists()).toBe(false)
+  expect((wrapper.get('input[aria-label="搜索模版"]').element as HTMLInputElement).value).toBe('模型族')
+  expect(modelApi.setDefault).not.toHaveBeenCalled();wrapper.unmount()
+ })
+
  it('starts from the saved default and prevents list version changes while an editor buffer is dirty',async()=>{
   const wrapper=render();await flushPromises();const select=wrapper.findAllComponents(UiSelectField).find(c=>String(c.props('label')).endsWith('保存版本'))!
   expect(select.props('modelValue')).toBe('old');expect((select.props('options') as {value:string;label:string}[]).find(o=>o.value==='old')!.label).toContain('默认')
