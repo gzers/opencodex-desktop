@@ -1,0 +1,173 @@
+Window: "", App: OpenCodeX Keyboard Acceptance.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#models
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 模型
+				10 button 拓展
+				11 button 同步
+				12 button 诊断
+				13 button 设置
+			14 container
+				15 heading 模型配置, Value: 1
+					16 text 模型配置
+				17 text 管理渠道模型、模版与选择器顺序。
+				18 container 主题
+					19 button 浅色
+					20 button 深色
+					21 button 跟随系统
+				22 text 未发现
+				23 button 刷新状态
+				24 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+				25 tab group (selectable) 模型配置
+					26 tab (selected) 渠道模型
+					27 tab (selectable) 模型模版
+				28 button 返回渠道列表
+				29 text native-dialog-fixture
+				30 container
+					31 container 当前渠道的保存状态
+						32 text 未修改
+					33 text 已停用 未验证 已选 1 / 发现 2
+				34 pop up button 切换渠道
+				35 container 渠道导航
+					36 button (expanded) 收起渠道导航, Secondary Actions: Collapse
+					37 link 渠道配置, Value: tauri://localhost#channel-config
+					38 link 服务节点, Value: tauri://localhost#channel-nodes
+					39 link 模型默认, Value: tauri://localhost#channel-defaults
+					40 link 模型列表, Value: tauri://localhost#channel-models
+					41 button (disabled) 保存渠道草稿, Help: 保存当前渠道，成功后返回渠道列表；其它渠道修改保留
+				42 heading 渠道配置, Value: 2
+					43 text 渠道配置
+				44 container
+					45 text 渠道名称
+					46 text field (settable) 渠道名称, Value: native-dialog-fixture
+				47 container
+					48 text 渠道标识
+					49 text field 渠道标识, Value: native-dialog-fixture
+					50 text 标识固定，名称可修改。
+				51 container
+					52 text 默认接口协议
+					53 pop up button 默认接口协议
+				54 container
+					55 text 认证方式
+					56 pop up button 认证方式
+				57 container
+					58 text API Key
+					59 secure text field (settable) API Key, Value: ••••••••••••••••••••••••
+					60 toggle button 显示 API Key, Value: off
+					61 button API Key •••••••••••••••••••••••• 保持原 Key 配置文件
+					62 text 保持原 Key 配置文件
+				63 text 认证与 Key 由全部服务节点共用；地址在服务节点中维护。
+				64 container
+					65 checkbox 启用渠道, Value: 0
+					66 text 启用渠道
+				67 container 服务节点
+					68 container 服务节点
+						69 container
+							70 heading 服务节点, Value: 2
+								71 text 服务节点
+							72 button 检测全部节点
+							73 button 新增节点
+						74 text 检测模型清单请求的耗时；当前节点由你手动选择。
+						75 container
+							76 text 名称
+							77 text field (settable) 节点1名称, Value: 当前节点
+							78 text 服务基地址
+							79 URL field (settable) 节点1服务基地址, Value: https://example.test/v1, Placeholder: https://api.example.com/v1
+							80 button 检测节点1
+							81 button (disabled) 设节点1为当前
+							82 button (disabled) 删除节点1
+				83 heading 模型默认, Value: 2
+					84 text 模型默认
+				85 button (collapsed) 编辑默认配置, Secondary Actions: Expand
+				86 text 作用于本渠道全部型号；未覆盖字段继续继承模版或上游声明。
+				87 description list
+					88 text 上下文窗口
+					89 text 继承
+					90 text 输入模态
+					91 text 继承
+					92 text 可选推理档位
+					93 text 继承
+					94 text 默认推理档位
+					95 text 继承
+					96 text Fast支持
+					97 text 继承
+				98 heading 模型列表, Value: 2
+					99 text 模型列表
+				100 button 获取模型列表
+				101 button 手动添加ID
+				102 pop up button 模型公开范围
+				103 search text field (settable) 搜索渠道内型号, Placeholder: 搜索型号或名称
+					104 text 搜索型号或名称
+				105 pop up button 渠道内型号族筛选
+				106 container
+					107 checkbox 仅启用, Value: 0
+					108 text 仅启用
+				109 text 2 / 2 项
+				110 button 全部展开
+				111 button 全部收起
+				112 pop up button 模型快捷排序
+				113 table
+					114 row (selectable) 选择当前型号结果, Value: 模型标识 / 别名与配置
+启停
+编辑与排序
+						115 checkbox 选择当前型号结果, Value: 0
+					116 row (selectable)
+						117 cell (selectable) 操作选择 gpt-fixture-a
+							118 checkbox 操作选择 gpt-fixture-a, Value: 0
+						119 cell (selectable)
+							120 container gpt-fixture-a
+								121 text native-dialog-fixture/gpt-fixture-a
+							122 container
+								123 text 路由别名
+								124 text field (settable) gpt-fixture-a路由别名, Placeholder: 路由别名（可选）
+							125 text openai-chat
+							126 text 上下文未知
+							127 text 推理 未知
+							128 text 快速 未知
+						129 cell (selectable)
+							130 switch (settable, boolean) gpt-fixture-a启用状态, Value: on
+							131 text 启用
+						132 cell (selectable) 展开编辑
+编辑明细
+gpt-fixture-a上移
+gpt-fixture-a下移, Description: gpt-fixture-a上移
+gpt-fixture-a下移
+					133 row (selectable)
+						134 cell (selectable) 操作选择 gpt-fixture-b
+							135 checkbox 操作选择 gpt-fixture-b, Value: 0
+						136 cell (selectable)
+							137 container gpt-fixture-b
+								138 text native-dialog-fixture/gpt-fixture-b
+							139 container
+								140 text 路由别名
+								141 text field (settable) gpt-fixture-b路由别名, Placeholder: 路由别名（可选）
+							142 text openai-chat
+							143 text 上下文未知
+							144 text 推理 未知
+							145 text 快速 未知
+						146 cell (selectable)
+							147 switch (settable, boolean) gpt-fixture-b启用状态, Value: off
+							148 text 停用
+						149 cell (selectable) 展开编辑
+编辑明细
+gpt-fixture-b上移
+gpt-fixture-b下移, Description: gpt-fixture-b上移
+gpt-fixture-b下移
+				150 text 渠道已停用，模型配置仍可编辑；启用渠道后恢复计划选择器。
+	151 close button
+	152 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	153 minimize button
+154 menu bar
+	155 OpenCodeX Keyboard Acceptance
+	156 进程
+	157 编辑
+	158 视图
+	159 诊断
+
+The focused UI element is 160 container

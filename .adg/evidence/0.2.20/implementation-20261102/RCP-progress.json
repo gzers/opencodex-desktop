@@ -19,7 +19,7 @@
     },
     "all-entry-coverage": {
       "status": "in_progress",
-      "reason": "2026-11-03 current static inventory has 37 Dialog/Modal references excluding DEV. Historical 35 include four retired references; six new component/host references are included. PR #46 adds bounded Chromium/WebKit export/WebDAV/import error/preview/cancel checks (104 assertions, 40 screenshots, zero page errors). All native/business states and remaining callsites still require acceptance.",
+      "reason": "PR50 adds keyboard regressions and native input/menu fix. WebKit model dialogs pass344 at four variants. Chromium252 checks then high-zoom navigation timeout retained; native/business/full-callsite and final package checks remain open.",
       "evidence": "implementation-20261102/dialog-callsite-ledger.md; acceptance-20261103/current-dialog-inventory.json; acceptance-20261103/README.md"
     },
     "macos-windows-native": {
@@ -447,6 +447,24 @@
       "sourceFilterRetained": true,
       "releaseCandidate": false,
       "evidence": "acceptance-20261103/native-model-feedback-be695fc5"
+    },
+    "protected_import_close_merged": "0dbb781e49c8690d11efd67e6a79fbbe129fdd67",
+    "native_model_feedback_merged": "3120d90a4f04c8a6f2b4405db169b1012bdeb2ed",
+    "keyboard_fix": {
+      "pr": 50,
+      "head": "e1674de7",
+      "unitTests": 7,
+      "fullUiTests": 1104,
+      "nativeInputAndMenu": true,
+      "nativeConfigUnchanged": true,
+      "finalReleaseCandidate": false
+    },
+    "model_dialog_rendered": {
+      "webkitChecks": 344,
+      "webkitScreenshots": 32,
+      "chromium": "incomplete:252 checks then timeout at 200% model editor navigation",
+      "externalRequests": 0,
+      "finalReleaseCandidate": false
     }
   }
 }

@@ -1,0 +1,53 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/ui-dialog-keyboard.test.ts (5 tests | 4 failed) 90ms
+   ❯ native dialog keyboard ownership (5)
+     × closes from a populated input before native search cancellation can consume Escape 17ms
+     × keeps busy dialogs open and prevents the browser default close 4ms
+     × lets an open select menu consume the first Escape, then closes its owner 60ms
+     × only closes the nested dialog containing the event target 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ui-dialog-keyboard.test.ts > native dialog keyboard ownership > closes from a populated input before native search cancellation can consume Escape
+AssertionError: Target cannot be null or undefined.
+ ❯ tests/ui-dialog-keyboard.test.ts:14:206
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/ui-dialog-keyboard.test.ts > native dialog keyboard ownership > keeps busy dialogs open and prevents the browser default close
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/ui-dialog-keyboard.test.ts:15:233
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/ui-dialog-keyboard.test.ts > native dialog keyboard ownership > lets an open select menu consume the first Escape, then closes its owner
+AssertionError: Target cannot be null or undefined.
+ ❯ tests/ui-dialog-keyboard.test.ts:20:329
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/ui-dialog-keyboard.test.ts > native dialog keyboard ownership > only closes the nested dialog containing the event target
+AssertionError: Target cannot be null or undefined.
+ ❯ tests/ui-dialog-keyboard.test.ts:24:277
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  19:16:42
+   Duration  765ms (environment 65%, transform 14%, tests 14%, import 6%, worker 1%)
+

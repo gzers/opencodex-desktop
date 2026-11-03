@@ -1,0 +1,78 @@
+{
+  "engine": "chromium",
+  "source": null,
+  "scope": "rendered DEV model dialogs; explicit adapters; no native file or release acceptance",
+  "checks": [
+    {
+      "key": "1180-light-high-100",
+      "name": "new empty validation keeps connection step",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "new channel dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 133,
+        "right": 1015,
+        "bottom": 627,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 184,
+            "height": 34
+          },
+          {
+            "label": "关闭",
+            "x": 865,
+            "right": 917,
+            "bottom": 610,
+            "height": 34
+          },
+          {
+            "label": "下一步",
+            "x": 929,
+            "right": 994,
+            "bottom": 610,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "new initial selection empty",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "discovery error visible",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "discovery busy blocks adoption",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "cancelled discovery late rows discarded",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "explicit discovery selection permits draft",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-light-high-100-new-channel-filter.png"
+  ]
+}

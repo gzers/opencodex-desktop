@@ -1,0 +1,121 @@
+Window: "", App: OpenCodeX Keyboard Acceptance.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#models
+			3 container 模型编辑明细
+				4 container
+					5 heading 模型编辑明细, Value: 2
+						6 text 模型编辑明细
+					7 button 关闭
+				8 text gpt-fixture-a · 未采用模版匹配
+				9 text native-dialog-fixture/gpt-fixture-a
+				10 text 显示名称本轮固定为 渠道名/原始模型ID，不提供友好名称编辑（UI 规范 §29.1）。
+				11 container
+					12 text 路由别名
+					13 text field (settable) 路由别名
+				14 button 沿用原别名
+				15 button 移除自定义别名
+				16 container
+					17 checkbox 启用此型号（关闭将使用明确白名单）, Value: 1
+					18 text 启用此型号（关闭将使用明确白名单）
+				19 container
+					20 heading 协议与基本能力, Value: 3
+						21 text 协议与基本能力
+					22 text 协议
+					23 pop up button 协议
+					24 text 上下文预设
+					25 pop up button 上下文预设
+					26 text 上下文窗口（tokens）
+					27 number field (settable) 上下文窗口（tokens）, Placeholder: 继承
+						28 stepper 0
+							29 unknown
+							30 unknown
+					31 text 输入模态
+					32 checkbox 继承, Value: 1
+					33 text 继承
+					34 heading 推理与快速模式, Value: 3
+						35 text 推理与快速模式
+					36 text 可选推理档位
+					37 checkbox 继承, Value: 1
+					38 text 继承 继承保留父层规则；自定义只覆盖本字段。默认档位独立选择，未知能力不能由名称或目录推断。 默认推理档位
+					39 pop up button 默认推理档位
+					40 text Fast支持
+					41 pop up button Fast支持
+					42 summary 高级推理设置, Value: off
+						43 text 高级推理设置
+					44 table 当前草稿有效值与来源
+						45 text 当前草稿有效值与来源
+						46 row (selectable) 字段
+本层设置
+当前解析结果
+来源
+						47 row (selectable)
+							48 cell (selectable) 协议
+							49 cell (selectable) 继承
+							50 cell (selectable) openai-chat
+							51 cell (selectable) 渠道默认
+						52 row (selectable)
+							53 cell (selectable) 上下文窗口
+							54 cell (selectable) 继承
+							55 cell (selectable) 未知（无声明或覆盖）
+							56 cell (selectable) 无可核验声明
+						57 row (selectable)
+							58 cell (selectable) 输入模态
+							59 cell (selectable) 继承
+							60 cell (selectable) 未知（无声明或覆盖）
+							61 cell (selectable) 无可核验声明
+						62 row (selectable)
+							63 cell (selectable) 可选推理档位
+							64 cell (selectable) 继承
+							65 cell (selectable) 未知（无声明或覆盖）
+							66 cell (selectable) 无可核验声明
+						67 row (selectable)
+							68 cell (selectable) 默认推理档位
+							69 cell (selectable) 继承
+							70 cell (selectable) 未知（无声明或覆盖）
+							71 cell (selectable) 无可核验声明
+						72 row (selectable)
+							73 cell (selectable) Fast支持
+							74 cell (selectable) 继承
+							75 cell (selectable) 未知（无声明或覆盖）
+							76 cell (selectable) 无可核验声明
+						77 row (selectable)
+							78 cell (selectable) 强制推理档位
+							79 cell (selectable) 继承
+							80 cell (selectable) 未知（无声明或覆盖）
+							81 cell (selectable) 无可核验声明
+						82 row (selectable)
+							83 cell (selectable) 推理标签映射
+							84 cell (selectable) 继承
+							85 cell (selectable) 未知（无声明或覆盖）
+							86 cell (selectable) 无可核验声明
+						87 row (selectable)
+							88 cell (selectable) 不传推理参数
+							89 cell (selectable) 继承
+							90 cell (selectable) 未知（无声明或覆盖）
+							91 cell (selectable) 无可核验声明
+						92 row (selectable)
+							93 cell (selectable) 推理列表权威
+							94 cell (selectable) 继承
+							95 cell (selectable) 未知（无声明或覆盖）
+							96 cell (selectable) 无可核验声明
+						97 row (selectable)
+							98 cell (selectable) Fast wire
+							99 cell (selectable) 继承
+							100 cell (selectable) 未知（无声明或覆盖）
+							101 cell (selectable) 无可核验声明
+				102 pop up button 明细采用版本
+				103 container
+					104 button 取消
+					105 button 加入草稿
+	106 close button
+	107 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	108 minimize button
+109 menu bar
+	110 OpenCodeX Keyboard Acceptance
+	111 进程
+	112 编辑
+	113 视图
+	114 诊断
+
+The focused UI element is 41 pop up button Fast支持

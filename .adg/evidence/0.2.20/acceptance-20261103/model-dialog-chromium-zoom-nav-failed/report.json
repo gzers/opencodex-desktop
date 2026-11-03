@@ -1,0 +1,2546 @@
+{
+  "engine": "chromium",
+  "source": "e1674de7",
+  "scope": "rendered DEV model dialogs; explicit adapters; no native file or release acceptance",
+  "checks": [
+    {
+      "key": "1180-light-high-100",
+      "name": "new empty validation keeps connection step",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "new channel dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 133,
+        "right": 1015,
+        "bottom": 627,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 184,
+            "height": 34
+          },
+          {
+            "label": "关闭",
+            "x": 865,
+            "right": 917,
+            "bottom": 610,
+            "height": 34
+          },
+          {
+            "label": "下一步",
+            "x": 929,
+            "right": 994,
+            "bottom": 610,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "new initial selection empty",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "discovery error visible",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "discovery busy blocks adoption",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "cancelled discovery late rows discarded",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "explicit discovery selection permits draft",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "new channel search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "new channel search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "new cancellation preserves saved and draft",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "copy key reuse defaults off",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "copy channel dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 229.5,
+        "right": 870,
+        "bottom": 530.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 797,
+            "right": 849,
+            "bottom": 280.5,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 681,
+            "right": 733,
+            "bottom": 513.5,
+            "height": 34
+          },
+          {
+            "label": "建立副本草稿",
+            "x": 745,
+            "right": 849,
+            "bottom": 513.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "copy channel Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "copy channel owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "copy cancellation unchanged",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "application confirmation labelled",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "delete cancellation unchanged",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "按族批量配置 requires template",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "family requires adopted exact version",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "failed family comparison preserves draft",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "按族批量配置 dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 20,
+        "right": 1015,
+        "bottom": 740,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 71,
+            "height": 34
+          },
+          {
+            "label": "比较本次修改",
+            "x": 800,
+            "right": 904,
+            "bottom": 723,
+            "height": 34
+          },
+          {
+            "label": "加入草稿",
+            "x": 916,
+            "right": 994,
+            "bottom": 723,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "按族批量配置 Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "按族批量配置 owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "套用模版 requires template",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "override clearing defaults off",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "adoption comparison enables explicit draft acceptance",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "adoption preview no draft mutation",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "套用模版 dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 108.34375,
+        "right": 1015,
+        "bottom": 651.65625,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 159.34375,
+            "height": 34
+          },
+          {
+            "label": "比较本次修改",
+            "x": 800,
+            "right": 904,
+            "bottom": 634.65625,
+            "height": 34
+          },
+          {
+            "label": "加入草稿",
+            "x": 916,
+            "right": 994,
+            "bottom": 634.65625,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "套用模版 Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "套用模版 owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "manual empty disabled",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "duplicate ID rejected",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "manual model dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 212,
+        "right": 870,
+        "bottom": 548,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 797,
+            "right": 849,
+            "bottom": 263,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 707,
+            "right": 759,
+            "bottom": 531,
+            "height": 34
+          },
+          {
+            "label": "添加型号",
+            "x": 771,
+            "right": 849,
+            "bottom": 531,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "manual model Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "manual model owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "model detail dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 20,
+        "right": 1015,
+        "bottom": 740,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 71,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 852,
+            "right": 904,
+            "bottom": 723,
+            "height": 34
+          },
+          {
+            "label": "加入草稿",
+            "x": 916,
+            "right": 994,
+            "bottom": 723,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "first Escape closes select without closing owner",
+      "passed": true,
+      "detail": {
+        "openDialogs": [
+          "模型编辑明细关闭gpt-demo-0 · 未采用模版匹配NewApi/gpt-demo-0显示名称本轮固定为 渠道名/原始模型ID，不提供友好名称编辑（UI 规范 §29.1）。路由别名沿用原别名移除自定义别名启用此型号（关闭将使用明确白名单）协议与基本能力协议继承上下文预设继承上下文窗口（tokens）输入模态继承推理与快速模式可选推理档位继承继承保留父层规则；自定义只覆盖本字段。默认档位独立选择，未知能力不能由名称或目录推断。默认推理档位继承Fast支持继承高级推理设置当前2.84.0仅核实OpenAI Chat支持不传参数、强制档、标签映射及请求权威约束；其他协议可保留候选定义，应用前须恢复继承或通过支持校验。不传推理参数继承不传参数优先于默认档、强制档和标签映射；恢复允许后仍沿原能力列表。强制推理档位继承强制档独立于默认档，须属于最终可选列表；none按上游契约不发送强制推理参数。继承标签映射推理列表权威声明继承Fast wire继承上游权威声明和Fast wire由运行分组共用；型号设置不同时，保存会拆成独立分组并列出选择入口变化。wire声明不自动开启Fast能力。当前草稿有效值与来源字段本层设置当前解析结果来源协议继承openai-responses渠道默认上下文窗口继承未知（无声明或覆盖）无可核验声明输入模态继承未知（无声明或覆盖）无可核验声明可选推理档位继承未知（无声明或覆盖）无可核验声明默认推理档位继承未知（无声明或覆盖）无可核验声明Fast支持继承未知（无声明或覆盖）无可核验声明强制推理档位继承未知（无声明或覆盖）无可核验声明推理标签映射继承未知（无声明或覆盖）无可核验声明不传推理参数继承未知（无声明或覆盖）无可核验声明推理列表权威继承未知（无声明或覆盖）无可核验声明Fast wire继承未知（无声明或覆盖）无可核验声明沿用匹配结果取消加入草稿"
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "model detail Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "model detail owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "row detail cancel preserves draft",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "busy detail cannot close with Escape",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "failed detail validation preserves draft",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "failed detail Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "failed detail owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "model batch dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 20,
+        "right": 1015,
+        "bottom": 740,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 71,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 826,
+            "right": 878,
+            "bottom": 723,
+            "height": 34
+          },
+          {
+            "label": "整批加入草稿",
+            "x": 890,
+            "right": 994,
+            "bottom": 723,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "model batch Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "model batch owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "selector save preview dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 100,
+        "y": 22,
+        "right": 1080,
+        "bottom": 738,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1007,
+            "right": 1059,
+            "bottom": 73,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 917,
+            "right": 969,
+            "bottom": 721,
+            "height": 34
+          },
+          {
+            "label": "确认保存",
+            "x": 981,
+            "right": 1059,
+            "bottom": 721,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "selector preview Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "selector preview owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "selector cancellation retains edited buffer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "selector parse error visible",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "selector error Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "selector error owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "selector failure preserves saved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "agent no selection cannot save",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "picker empty cannot confirm",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "model picker dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 146.125,
+        "right": 1015,
+        "bottom": 613.875,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 197.125,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 852,
+            "right": 904,
+            "bottom": 596.875,
+            "height": 34
+          },
+          {
+            "label": "确定选择",
+            "x": 916,
+            "right": 994,
+            "bottom": 596.875,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "picker search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "picker search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "picker closes to Agent owner",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "agent settings Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "agent settings owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "version deletion protected",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "version manager dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 255,
+        "right": 1015,
+        "bottom": 505,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 306,
+            "height": 34
+          },
+          {
+            "label": "删除所选版本",
+            "x": 890,
+            "right": 994,
+            "bottom": 488,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "version search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "version search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "source template filter retained",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "template usage dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 141,
+        "right": 1015,
+        "bottom": 619,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 192,
+            "height": 34
+          },
+          {
+            "label": "重新读取",
+            "x": 852,
+            "right": 930,
+            "bottom": 602,
+            "height": 34
+          },
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 602,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "template usage search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "template usage search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "batch agent needs execution model",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "batch agent dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 161.25,
+        "right": 1015,
+        "bottom": 598.75,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 212.25,
+            "height": 34
+          },
+          {
+            "label": "恢复上次建议",
+            "x": 736,
+            "right": 840,
+            "bottom": 581.75,
+            "height": 34
+          },
+          {
+            "label": "关闭",
+            "x": 852,
+            "right": 904,
+            "bottom": 581.75,
+            "height": 34
+          },
+          {
+            "label": "检查更新",
+            "x": 916,
+            "right": 994,
+            "bottom": 581.75,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "batch agent Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "batch agent owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "comparison reports editor change",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "template comparison dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 161.5,
+        "right": 1015,
+        "bottom": 598.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 212.5,
+            "height": 34
+          },
+          {
+            "label": "关闭",
+            "x": 942,
+            "right": 994,
+            "bottom": 581.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "template comparison Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "template comparison owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "comparison preserves buffer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "match requires raw model ID",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "match result visible",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "match preview dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 185.5,
+        "right": 870,
+        "bottom": 574.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 797,
+            "right": 849,
+            "bottom": 236.5,
+            "height": 34
+          },
+          {
+            "label": "检查匹配",
+            "x": 771,
+            "right": 849,
+            "bottom": 557.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "match preview Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "match preview owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100",
+      "name": "all cancellation and comparison flows leave saved snapshot unchanged",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "new empty validation keeps connection step",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "new channel dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 53,
+        "right": 875,
+        "bottom": 547,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 104,
+            "height": 34
+          },
+          {
+            "label": "关闭",
+            "x": 725,
+            "right": 777,
+            "bottom": 530,
+            "height": 34
+          },
+          {
+            "label": "下一步",
+            "x": 789,
+            "right": 854,
+            "bottom": 530,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "new initial selection empty",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "discovery error visible",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "discovery busy blocks adoption",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "cancelled discovery late rows discarded",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "explicit discovery selection permits draft",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "new channel search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "new channel search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "new cancellation preserves saved and draft",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "copy key reuse defaults off",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "copy channel dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 170,
+        "y": 149.5,
+        "right": 730,
+        "bottom": 450.5,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 657,
+            "right": 709,
+            "bottom": 200.5,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 541,
+            "right": 593,
+            "bottom": 433.5,
+            "height": 34
+          },
+          {
+            "label": "建立副本草稿",
+            "x": 605,
+            "right": 709,
+            "bottom": 433.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "copy channel Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "copy channel owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "copy cancellation unchanged",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "application confirmation labelled",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "delete cancellation unchanged",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "按族批量配置 requires template",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "family requires adopted exact version",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "failed family comparison preserves draft",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "按族批量配置 dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 20,
+        "right": 875,
+        "bottom": 580,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 71,
+            "height": 34
+          },
+          {
+            "label": "比较本次修改",
+            "x": 660,
+            "right": 764,
+            "bottom": 563,
+            "height": 34
+          },
+          {
+            "label": "加入草稿",
+            "x": 776,
+            "right": 854,
+            "bottom": 563,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "按族批量配置 Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "按族批量配置 owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "套用模版 requires template",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "override clearing defaults off",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "adoption comparison enables explicit draft acceptance",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "adoption preview no draft mutation",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "套用模版 dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 28.34375,
+        "right": 875,
+        "bottom": 571.65625,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 79.34375,
+            "height": 34
+          },
+          {
+            "label": "比较本次修改",
+            "x": 660,
+            "right": 764,
+            "bottom": 554.65625,
+            "height": 34
+          },
+          {
+            "label": "加入草稿",
+            "x": 776,
+            "right": 854,
+            "bottom": 554.65625,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "套用模版 Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "套用模版 owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "manual empty disabled",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "duplicate ID rejected",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "manual model dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 170,
+        "y": 132,
+        "right": 730,
+        "bottom": 468,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 657,
+            "right": 709,
+            "bottom": 183,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 567,
+            "right": 619,
+            "bottom": 451,
+            "height": 34
+          },
+          {
+            "label": "添加型号",
+            "x": 631,
+            "right": 709,
+            "bottom": 451,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "manual model Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "manual model owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "model detail dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 20,
+        "right": 875,
+        "bottom": 580,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 71,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 712,
+            "right": 764,
+            "bottom": 563,
+            "height": 34
+          },
+          {
+            "label": "加入草稿",
+            "x": 776,
+            "right": 854,
+            "bottom": 563,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "first Escape closes select without closing owner",
+      "passed": true,
+      "detail": {
+        "openDialogs": [
+          "模型编辑明细关闭gpt-demo-0 · 未采用模版匹配NewApi/gpt-demo-0显示名称本轮固定为 渠道名/原始模型ID，不提供友好名称编辑（UI 规范 §29.1）。路由别名沿用原别名移除自定义别名启用此型号（关闭将使用明确白名单）协议与基本能力协议继承上下文预设继承上下文窗口（tokens）输入模态继承推理与快速模式可选推理档位继承继承保留父层规则；自定义只覆盖本字段。默认档位独立选择，未知能力不能由名称或目录推断。默认推理档位继承Fast支持继承高级推理设置当前2.84.0仅核实OpenAI Chat支持不传参数、强制档、标签映射及请求权威约束；其他协议可保留候选定义，应用前须恢复继承或通过支持校验。不传推理参数继承不传参数优先于默认档、强制档和标签映射；恢复允许后仍沿原能力列表。强制推理档位继承强制档独立于默认档，须属于最终可选列表；none按上游契约不发送强制推理参数。继承标签映射推理列表权威声明继承Fast wire继承上游权威声明和Fast wire由运行分组共用；型号设置不同时，保存会拆成独立分组并列出选择入口变化。wire声明不自动开启Fast能力。当前草稿有效值与来源字段本层设置当前解析结果来源协议继承openai-responses渠道默认上下文窗口继承未知（无声明或覆盖）无可核验声明输入模态继承未知（无声明或覆盖）无可核验声明可选推理档位继承未知（无声明或覆盖）无可核验声明默认推理档位继承未知（无声明或覆盖）无可核验声明Fast支持继承未知（无声明或覆盖）无可核验声明强制推理档位继承未知（无声明或覆盖）无可核验声明推理标签映射继承未知（无声明或覆盖）无可核验声明不传推理参数继承未知（无声明或覆盖）无可核验声明推理列表权威继承未知（无声明或覆盖）无可核验声明Fast wire继承未知（无声明或覆盖）无可核验声明沿用匹配结果取消加入草稿"
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "model detail Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "model detail owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "row detail cancel preserves draft",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "busy detail cannot close with Escape",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "failed detail validation preserves draft",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "failed detail Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "failed detail owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "model batch dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 20,
+        "right": 875,
+        "bottom": 580,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 71,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 686,
+            "right": 738,
+            "bottom": 563,
+            "height": 34
+          },
+          {
+            "label": "整批加入草稿",
+            "x": 750,
+            "right": 854,
+            "bottom": 563,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "model batch Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "model batch owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "selector save preview dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 17,
+        "y": 22,
+        "right": 883,
+        "bottom": 578,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 810,
+            "right": 862,
+            "bottom": 73,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 720,
+            "right": 772,
+            "bottom": 561,
+            "height": 34
+          },
+          {
+            "label": "确认保存",
+            "x": 784,
+            "right": 862,
+            "bottom": 561,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "selector preview Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "selector preview owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "selector cancellation retains edited buffer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "selector parse error visible",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "selector error Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "selector error owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "selector failure preserves saved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "agent no selection cannot save",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "picker empty cannot confirm",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "model picker dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 66.125,
+        "right": 875,
+        "bottom": 533.875,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 117.125,
+            "height": 34
+          },
+          {
+            "label": "取消",
+            "x": 712,
+            "right": 764,
+            "bottom": 516.875,
+            "height": 34
+          },
+          {
+            "label": "确定选择",
+            "x": 776,
+            "right": 854,
+            "bottom": 516.875,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "picker search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "picker search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "picker closes to Agent owner",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "agent settings Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "agent settings owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "version deletion protected",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "version manager dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 175,
+        "right": 875,
+        "bottom": 425,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 226,
+            "height": 34
+          },
+          {
+            "label": "删除所选版本",
+            "x": 750,
+            "right": 854,
+            "bottom": 408,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "version search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "version search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "source template filter retained",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "template usage dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 61,
+        "right": 875,
+        "bottom": 539,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 112,
+            "height": 34
+          },
+          {
+            "label": "重新读取",
+            "x": 712,
+            "right": 790,
+            "bottom": 522,
+            "height": 34
+          },
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 522,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "template usage search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "template usage search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "batch agent needs execution model",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "batch agent dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 81.25,
+        "right": 875,
+        "bottom": 518.75,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 132.25,
+            "height": 34
+          },
+          {
+            "label": "恢复上次建议",
+            "x": 596,
+            "right": 700,
+            "bottom": 501.75,
+            "height": 34
+          },
+          {
+            "label": "关闭",
+            "x": 712,
+            "right": 764,
+            "bottom": 501.75,
+            "height": 34
+          },
+          {
+            "label": "检查更新",
+            "x": 776,
+            "right": 854,
+            "bottom": 501.75,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "batch agent Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "batch agent owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "comparison reports editor change",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "template comparison dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 81.5,
+        "right": 875,
+        "bottom": 518.5,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 132.5,
+            "height": 34
+          },
+          {
+            "label": "关闭",
+            "x": 802,
+            "right": 854,
+            "bottom": 501.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "template comparison Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "template comparison owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "comparison preserves buffer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "match requires raw model ID",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "match result visible",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "match preview dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 170,
+        "y": 105.5,
+        "right": 730,
+        "bottom": 494.5,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 657,
+            "right": 709,
+            "bottom": 156.5,
+            "height": 34
+          },
+          {
+            "label": "检查匹配",
+            "x": 631,
+            "right": 709,
+            "bottom": 477.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "match preview Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "match preview owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "900-dark-low-100",
+      "name": "all cancellation and comparison flows leave saved snapshot unchanged",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "new empty validation keeps connection step",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "new channel dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 40,
+        "right": 1146,
+        "bottom": 720,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 142,
+            "height": 68
+          },
+          {
+            "label": "关闭",
+            "x": 846,
+            "right": 950,
+            "bottom": 686,
+            "height": 68
+          },
+          {
+            "label": "下一步",
+            "x": 974,
+            "right": 1104,
+            "bottom": 686,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "new initial selection empty",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "discovery error visible",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "discovery busy blocks adoption",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "cancelled discovery late rows discarded",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "explicit discovery selection permits draft",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "new channel search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "new channel search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "new cancellation preserves saved and draft",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "copy key reuse defaults off",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "copy channel dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 78.5,
+        "right": 1146,
+        "bottom": 681.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 180.5,
+            "height": 68
+          },
+          {
+            "label": "取消",
+            "x": 768,
+            "right": 872,
+            "bottom": 647.5,
+            "height": 68
+          },
+          {
+            "label": "建立副本草稿",
+            "x": 896,
+            "right": 1104,
+            "bottom": 647.5,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "copy channel Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "copy channel owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "copy cancellation unchanged",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "application confirmation labelled",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "delete cancellation unchanged",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "按族批量配置 requires template",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "family requires adopted exact version",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "failed family comparison preserves draft",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "按族批量配置 dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 40,
+        "right": 1146,
+        "bottom": 720,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 142,
+            "height": 68
+          },
+          {
+            "label": "比较本次修改",
+            "x": 716,
+            "right": 924,
+            "bottom": 686,
+            "height": 68
+          },
+          {
+            "label": "加入草稿",
+            "x": 948,
+            "right": 1104,
+            "bottom": 686,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "按族批量配置 Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "按族批量配置 owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "套用模版 requires template",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "override clearing defaults off",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "adoption comparison enables explicit draft acceptance",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "adoption preview no draft mutation",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "套用模版 dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 40,
+        "right": 1146,
+        "bottom": 720,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 142,
+            "height": 68
+          },
+          {
+            "label": "比较本次修改",
+            "x": 716,
+            "right": 924,
+            "bottom": 686,
+            "height": 68
+          },
+          {
+            "label": "加入草稿",
+            "x": 948,
+            "right": 1104,
+            "bottom": 686,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "套用模版 Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "套用模版 owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "manual empty disabled",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "duplicate ID rejected",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "manual model dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 44,
+        "right": 1146,
+        "bottom": 716,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 146,
+            "height": 68
+          },
+          {
+            "label": "取消",
+            "x": 820,
+            "right": 924,
+            "bottom": 682,
+            "height": 68
+          },
+          {
+            "label": "添加型号",
+            "x": 948,
+            "right": 1104,
+            "bottom": 682,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "manual model Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "manual model owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "model detail dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 40,
+        "right": 1146,
+        "bottom": 720,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 142,
+            "height": 68
+          },
+          {
+            "label": "取消",
+            "x": 820,
+            "right": 924,
+            "bottom": 686,
+            "height": 68
+          },
+          {
+            "label": "加入草稿",
+            "x": 948,
+            "right": 1104,
+            "bottom": 686,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "first Escape closes select without closing owner",
+      "passed": true,
+      "detail": {
+        "openDialogs": [
+          "模型编辑明细关闭gpt-demo-0 · 未采用模版匹配NewApi/gpt-demo-0显示名称本轮固定为 渠道名/原始模型ID，不提供友好名称编辑（UI 规范 §29.1）。路由别名沿用原别名移除自定义别名启用此型号（关闭将使用明确白名单）协议与基本能力协议继承上下文预设继承上下文窗口（tokens）输入模态继承推理与快速模式可选推理档位继承继承保留父层规则；自定义只覆盖本字段。默认档位独立选择，未知能力不能由名称或目录推断。默认推理档位继承Fast支持继承高级推理设置当前2.84.0仅核实OpenAI Chat支持不传参数、强制档、标签映射及请求权威约束；其他协议可保留候选定义，应用前须恢复继承或通过支持校验。不传推理参数继承不传参数优先于默认档、强制档和标签映射；恢复允许后仍沿原能力列表。强制推理档位继承强制档独立于默认档，须属于最终可选列表；none按上游契约不发送强制推理参数。继承标签映射推理列表权威声明继承Fast wire继承上游权威声明和Fast wire由运行分组共用；型号设置不同时，保存会拆成独立分组并列出选择入口变化。wire声明不自动开启Fast能力。当前草稿有效值与来源字段本层设置当前解析结果来源协议继承openai-responses渠道默认上下文窗口继承未知（无声明或覆盖）无可核验声明输入模态继承未知（无声明或覆盖）无可核验声明可选推理档位继承未知（无声明或覆盖）无可核验声明默认推理档位继承未知（无声明或覆盖）无可核验声明Fast支持继承未知（无声明或覆盖）无可核验声明强制推理档位继承未知（无声明或覆盖）无可核验声明推理标签映射继承未知（无声明或覆盖）无可核验声明不传推理参数继承未知（无声明或覆盖）无可核验声明推理列表权威继承未知（无声明或覆盖）无可核验声明Fast wire继承未知（无声明或覆盖）无可核验声明沿用匹配结果取消加入草稿"
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "model detail Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "model detail owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "row detail cancel preserves draft",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "busy detail cannot close with Escape",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "failed detail validation preserves draft",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "failed detail Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "failed detail owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "model batch dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 40,
+        "right": 1146,
+        "bottom": 720,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 142,
+            "height": 68
+          },
+          {
+            "label": "取消",
+            "x": 768,
+            "right": 872,
+            "bottom": 686,
+            "height": 68
+          },
+          {
+            "label": "整批加入草稿",
+            "x": 896,
+            "right": 1104,
+            "bottom": 686,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "model batch Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "model batch owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "selector save preview dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 44,
+        "right": 1146,
+        "bottom": 716,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 146,
+            "height": 68
+          },
+          {
+            "label": "取消",
+            "x": 820,
+            "right": 924,
+            "bottom": 682,
+            "height": 68
+          },
+          {
+            "label": "确认保存",
+            "x": 948,
+            "right": 1104,
+            "bottom": 682,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "selector preview Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "selector preview owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "selector cancellation retains edited buffer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "selector parse error visible",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "selector error Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "selector error owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "selector failure preserves saved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "agent no selection cannot save",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "picker empty cannot confirm",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "model picker dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 40,
+        "right": 1146,
+        "bottom": 720,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 142,
+            "height": 68
+          },
+          {
+            "label": "取消",
+            "x": 820,
+            "right": 924,
+            "bottom": 686,
+            "height": 68
+          },
+          {
+            "label": "确定选择",
+            "x": 948,
+            "right": 1104,
+            "bottom": 686,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "picker search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "picker search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "picker closes to Agent owner",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "agent settings Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "agent settings owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "version deletion protected",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "version manager dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 130,
+        "right": 1146,
+        "bottom": 630,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 232,
+            "height": 68
+          },
+          {
+            "label": "删除所选版本",
+            "x": 896,
+            "right": 1104,
+            "bottom": 596,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "version search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "version search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "source template filter retained",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "template usage dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 40,
+        "right": 1146,
+        "bottom": 720,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 142,
+            "height": 68
+          },
+          {
+            "label": "重新读取",
+            "x": 820,
+            "right": 976,
+            "bottom": 686,
+            "height": 68
+          },
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 686,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "template usage search Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "template usage search owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "batch agent needs execution model",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "batch agent dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 40,
+        "right": 1146,
+        "bottom": 720,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 142,
+            "height": 68
+          },
+          {
+            "label": "恢复上次建议",
+            "x": 588,
+            "right": 796,
+            "bottom": 686,
+            "height": 68
+          },
+          {
+            "label": "关闭",
+            "x": 820,
+            "right": 924,
+            "bottom": 686,
+            "height": 68
+          },
+          {
+            "label": "检查更新",
+            "x": 948,
+            "right": 1104,
+            "bottom": 686,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "batch agent Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "batch agent owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "comparison reports editor change",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "template comparison dialog and actions fit",
+      "passed": true,
+      "detail": {
+        "x": 34,
+        "y": 40,
+        "right": 1146,
+        "bottom": 720,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 142,
+            "height": 68
+          },
+          {
+            "label": "关闭",
+            "x": 1000,
+            "right": 1104,
+            "bottom": 686,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "template comparison Escape closes one layer",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "template comparison owner route preserved",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-mid-200",
+      "name": "comparison preserves buffer",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-light-high-100-new-channel-filter.png",
+    "1180-light-high-100-family-validation.png",
+    "1180-light-high-100-adopt-review.png",
+    "1180-light-high-100-model-detail.png",
+    "1180-light-high-100-selector-preview.png",
+    "1180-light-high-100-picker-no-results.png",
+    "1180-light-high-100-template-usage.png",
+    "1180-light-high-100-template-comparison.png",
+    "900-dark-low-100-new-channel-filter.png",
+    "900-dark-low-100-family-validation.png",
+    "900-dark-low-100-adopt-review.png",
+    "900-dark-low-100-model-detail.png",
+    "900-dark-low-100-selector-preview.png",
+    "900-dark-low-100-picker-no-results.png",
+    "900-dark-low-100-template-usage.png",
+    "900-dark-low-100-template-comparison.png",
+    "1180-dark-mid-200-new-channel-filter.png",
+    "1180-dark-mid-200-family-validation.png",
+    "1180-dark-mid-200-adopt-review.png",
+    "1180-dark-mid-200-model-detail.png",
+    "1180-dark-mid-200-selector-preview.png",
+    "1180-dark-mid-200-picker-no-results.png",
+    "1180-dark-mid-200-template-usage.png",
+    "1180-dark-mid-200-template-comparison.png"
+  ]
+}

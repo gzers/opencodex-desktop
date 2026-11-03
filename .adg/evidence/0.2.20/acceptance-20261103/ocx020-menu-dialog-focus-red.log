@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/ui-dialog-keyboard.test.ts (7 tests | 1 failed) 92ms
+   ❯ native dialog keyboard ownership (7)
+     × closes an open child menu first when native AX activation kept focus on the dialog 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ui-dialog-keyboard.test.ts > native dialog keyboard ownership > closes an open child menu first when native AX activation kept focus on the dialog
+AssertionError: expected <button data-v-2494b5ac …(4)></button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  aria-selected="true"
+  class="select-option selected"
+  data-v-2494b5ac=""
+  role="option"
+  type="button"
+>
+  条目A
+</button>
+
+ ❯ tests/ui-dialog-keyboard.test.ts:32:300
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  19:21:51
+   Duration  519ms (environment 58%, tests 20%, transform 15%, import 7%)
+
