@@ -73,6 +73,21 @@ impl Drop for ProcessGroup {
         }
     }
 }
+struct ProviderReceiptDiagnostic(std::path::PathBuf);
+impl Drop for ProviderReceiptDiagnostic {
+    fn drop(&mut self) {
+        if std::thread::panicking() {
+            eprintln!(
+                "owned-official-latest-provider-receipt {}",
+                std::fs::read_to_string(&self.0)
+                    .unwrap_or_default()
+                    .chars()
+                    .take(16384)
+                    .collect::<String>()
+            );
+        }
+    }
+}
 fn quote(path: &Path) -> String {
     format!("'{}'", path.to_string_lossy().replace('\'', "'\\''"))
 }
@@ -192,6 +207,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     let wrapper = root.path().join("ocx");
     let fail_sync = root.path().join("fail-sync");
     let provider_receipt = root.path().join("provider-apply-receipt.txt");
+    let _provider_receipt_diagnostic = ProviderReceiptDiagnostic(provider_receipt.clone());
     std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nexport CODEX_CLI_PATH={}\nif [ \"$1\" = sync ] && [ -f {} ]; then exit 17; fi\nif [ \"$1\" = provider ] && [ \"$2\" = apply ]; then {} {} \"$@\" >{} 2>&1; result=$?; /bin/cat {}; exit $result; fi\nexec {} {} \"$@\"\n",quote(&user),quote(&codex),quote(&xdg),quote(&codex_binary),quote(&fail_sync),quote(&node),quote(&entry),quote(&provider_receipt),quote(&provider_receipt),quote(&node),quote(&entry))).unwrap();
     std::fs::set_permissions(&wrapper, std::fs::Permissions::from_mode(0o700)).unwrap();
     let mut command = tokio::process::Command::new(&wrapper);
