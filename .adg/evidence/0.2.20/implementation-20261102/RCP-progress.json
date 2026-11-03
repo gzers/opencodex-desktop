@@ -1,6 +1,6 @@
 {
   "status": "active",
-  "source": "Main includes PR50-53 through3e33ab6c. Current code57239d5a (PR54-59 follow-ups under CI); release tag/assets remain old, not accepted.",
+  "source": "Main through PR54 9d0ca179; integrated PR55 currentc8c7bfa4 under CI41642730883. PR56-59 commits retained within integrated head; not independently accepted. Release tag/assets remain olderefbe46e8 and not accepted.",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
@@ -29,7 +29,7 @@
     },
     "release-and-ota": {
       "status": "in_progress",
-      "reason": "2026-11-03 correction: Release 41589977450 was green with only 3 cells; PowerShell $kind overwrote $Kind and skipped NSIS/default. Draft MSI/NSIS SHA256 also differ from the packages tested by that run. PR #45 fixes collision and fails closed on incomplete reports; real macOS/Windows PowerShell contract tests pass. All package/install/OTA gates remain open.",
+      "reason": "PR54 allows real built-in beta channel before stable promotion and exact updated EXE hash. Unified PR55c8c7bfa4 also separates old baseline saved-file seed from new UI contracts. Integrated CI41642730883 is running after retained native menu-driver failure41635474209. Old tag/draft assets are not accepted. Final frozen-source clean packages, exact uploaded bytes/signatures, independent four installer cells, final Mac native and actual adjacent OTA all pending.",
       "evidence": "acceptance-20261103/README.md; release-41589977450-three-cells.json; draft-assets-snapshot.json; matrix-contract-macos.json; matrix-contract-windows.json; PR #45"
     }
   },
@@ -617,6 +617,31 @@
       "identityChecksPerEngine": 10,
       "secondaryChecksPerEngine": 117,
       "newNativeLabels": "final package pending"
+    },
+    "integrated_closeout": {
+      "pr": 55,
+      "head": "c8c7bfa453dbbfd01eee8696a21e75063ff5eb4d",
+      "run": 41642730883,
+      "status": "in_progress",
+      "oldWindowsRun": 41635474209,
+      "oldWindowsResult": "failure:menu geometry; equivalent offscreen DOM-click driver reproduced locally, new actual pointer check pending Windows",
+      "includedPrs": [
+        55,
+        56,
+        57,
+        58,
+        59
+      ],
+      "oldRunsCancellationRequested": [
+        41637577990,
+        41638473713,
+        41640626634,
+        41641241574,
+        41642194514
+      ],
+      "nodeTools": 17,
+      "actualOTA": "not run",
+      "finalReleaseCandidate": false
     }
   }
 }

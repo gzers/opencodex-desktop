@@ -1,5 +1,5 @@
 {
-  "code_source": "b810aec24bbd4efd86aa230c43bf4059145b567b",
+  "code_source": "c8c7bfa453dbbfd01eee8696a21e75063ff5eb4d",
   "scope": "static production component references, not unique windows or runtime closure",
   "callsites": [
     {
@@ -191,178 +191,178 @@
   "dynamicAppModalCallsites": [
     {
       "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
-      "line": 69,
+      "line": 71,
       "call": "app.openModal(",
       "titleExpression": "'正在准备恢复确认'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
-      "line": 76,
+      "line": 80,
       "call": "app.openModal(",
       "titleExpression": "'影响摘要不可用'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
-      "line": 124,
+      "line": 128,
       "call": "app.openModal(",
       "titleExpression": "'恢复前确认'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
-      "line": 134,
+      "line": 139,
       "call": "app.openModal(",
       "titleExpression": "'官方恢复引导'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/composables/useAppController.ts",
       "line": 53,
       "call": "app.openModal(",
       "titleExpression": "notification.title",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
       "line": 72,
       "call": "app.openModal(",
       "titleExpression": "'确认清理备份'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
       "line": 82,
       "call": "app.openModal(",
       "titleExpression": "'恢复管理器偏好'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
       "line": 103,
       "call": "app.openModal(",
       "titleExpression": "node.directory ? '打开备份目录' : '打开备份文件'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
       "line": 98,
       "call": "app.openModal(",
       "titleExpression": "entry.name + ' · 配置说明'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
       "line": 38,
       "call": "modal.open(",
       "titleExpression": "candidate.selection.mode==='none'?'隐藏全部型号':'改为仅公开所选型号'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
       "line": 211,
       "call": "modal.open(",
       "titleExpression": "'删除渠道'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
       "line": 228,
       "call": "modal.open(",
       "titleExpression": "'还原修改'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
       "line": 204,
       "call": "app.openInputModal(",
       "titleExpression": "'恢复 Skill'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
       "line": 230,
       "call": "app.openModal(",
       "titleExpression": "'卸载 Skill'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
       "line": 272,
       "call": "app.openInputModal(",
       "titleExpression": "'新增 MCP 服务器'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
       "line": 288,
       "call": "app.openInputModal(",
       "titleExpression": "`编辑 ${server.name}`",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
       "line": 307,
       "call": "app.openModal(",
       "titleExpression": "'删除 MCP 服务器'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
       "line": 329,
       "call": "app.openModal(",
       "titleExpression": "previous ? '编辑 MCP 服务器' : '新增 MCP 服务器'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/LogsRoute.vue",
       "line": 58,
       "call": "app.openModal(",
       "titleExpression": "'清理日志'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/LogsRoute.vue",
       "line": 74,
       "call": "app.openModal(",
       "titleExpression": "pending > 0 ? `还有 ${pending} 条未处理通知` : '清理已解决通知'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/LogsRoute.vue",
       "line": 91,
       "call": "app.openModal(",
       "titleExpression": "'清理已读通知'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
       "line": 94,
       "call": "modal.open(",
       "titleExpression": "'取消新建模版'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
       "line": 98,
       "call": "modal.open(",
       "titleExpression": "'还原模版修改'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
       "line": 133,
       "call": "modal.open(",
       "titleExpression": "'设为默认版本'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     },
     {
       "file": "apps/desktop/ui/src/routes/SettingsRoute.vue",
       "line": 247,
       "call": "app.openModal(",
       "titleExpression": "'迁移数据目录'",
-      "scope": "production consumer; bounded checks in ledger; not automatically verified"
+      "scope": "bounded consumer evidence in ledger; not automatic runtime acceptance"
     }
   ]
 }

@@ -1,0 +1,45 @@
+backend-windows	Windows final EXE smoke	﻿2026-11-03T13:07:55.9413169Z ##[group]Run & ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
+backend-windows	Windows final EXE smoke	2026-11-03T13:07:55.9414967Z ^[[36;1m& ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup^[[0m
+backend-windows	Windows final EXE smoke	2026-11-03T13:07:55.9416086Z ^[[36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }^[[0m
+backend-windows	Windows final EXE smoke	2026-11-03T13:07:55.9497413Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+backend-windows	Windows final EXE smoke	2026-11-03T13:07:55.9497853Z env:
+backend-windows	Windows final EXE smoke	2026-11-03T13:07:55.9498126Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+backend-windows	Windows final EXE smoke	2026-11-03T13:07:55.9498476Z   CARGO_INCREMENTAL: 0
+backend-windows	Windows final EXE smoke	2026-11-03T13:07:55.9498749Z   CARGO_TERM_COLOR: always
+backend-windows	Windows final EXE smoke	2026-11-03T13:07:55.9499025Z ##[endgroup]
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1142670Z node:internal/modules/run_main:107
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1145125Z     triggerUncaughtException(
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1146845Z     ^
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1148205Z 
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1150238Z AssertionError [ERR_ASSERTION]: low-effects menu detached vertically from its trigger
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1152251Z     at verifyWindowsModelUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-model-ui.mjs:153:3)
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1153789Z     at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-webview.mjs:101:56 {
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1155336Z   generatedMessage: false,
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1156849Z   code: 'ERR_ASSERTION',
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1158547Z   actual: false,
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1160278Z   expected: true,
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1162339Z   operator: '==',
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1163948Z   diff: 'simple'
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1165597Z }
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1166949Z 
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1168562Z Node.js v24.22.2
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1170248Z WebView smoke failed: 1
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1172324Z at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1: line 131
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1174276Z at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\out\windows-startup\ordinary-child.ps1: line 65
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1188369Z {
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1190001Z   "registered": "C:\\Users\\ocxaccad950382",
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1191563Z   "profile": "C:\\Users\\ocxaccad950382",
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1193103Z   "roaming": "C:\\Users\\ocxaccad950382\\AppData\\Roaming",
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1194454Z   "local": "C:\\Users\\ocxaccad950382\\AppData\\Local",
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1196261Z   "processProfile": "C:\\Users\\ocxaccad950382"
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1198021Z }
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1208695Z Windows tray appearance refresh failed: tray icon error: Access is denied. (os error 5)
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1210297Z Windows tray appearance refresh failed: tray icon error: Access is denied. (os error 5)
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1211977Z Windows tray appearance refresh failed: tray icon error: Access is denied. (os error 5)
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.1213301Z 
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.2460572Z ^[[31;1mException: ^[[0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-ordinary-startup.ps1:163^[[0m
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.2461894Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.2462652Z ^[[31;1m^[[0m^[[36;1m^[[36;1m 163 | ^[[0m   ^[[36;1mthrow 'Ordinary native startup failed; see retained output'^[[0m
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.2463546Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^[[0m
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.2464480Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mOrdinary native startup failed; see retained output^[[0m
+backend-windows	Windows final EXE smoke	2026-11-03T13:08:58.2916112Z ##[error]Process completed with exit code 1.
