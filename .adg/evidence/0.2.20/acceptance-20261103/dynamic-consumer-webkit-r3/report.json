@@ -1,0 +1,82 @@
+{
+  "completed": false,
+  "failure": {
+    "key": "1180-100-high",
+    "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '清理日志', exact: true })\u001b[22m\n"
+  },
+  "engine": "webkit",
+  "scope": "real production extension/log consumer handlers with explicit in-memory write adapters; no real files/clients/log deletion",
+  "checks": [
+    {
+      "key": "1180-100-high",
+      "name": "blank restore does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "restore cancel does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "restore failure specific and exact request",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "uninstall cancellation no request",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "uninstall confirm carries identity",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "blank MCP does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP boundary cancel does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP add exact operands",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP edit exact confirmed request",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP delete cancel no request",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP pending has no false success",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP failure returns same owner",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP success only after confirmed write",
+      "passed": true
+    }
+  ],
+  "screens": [
+    "1180-100-high-skill-failure.png",
+    "1180-100-high-mcp-failure.png"
+  ],
+  "errors": [],
+  "external": []
+}

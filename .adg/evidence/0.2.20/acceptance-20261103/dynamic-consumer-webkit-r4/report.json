@@ -1,0 +1,261 @@
+{
+  "completed": true,
+  "failure": null,
+  "engine": "webkit",
+  "scope": "real production extension/log consumer handlers with explicit in-memory write adapters; no real files/clients/log deletion",
+  "checks": [
+    {
+      "key": "1180-100-high",
+      "name": "blank restore does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "restore cancel does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "restore failure specific and exact request",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "uninstall cancellation no request",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "uninstall confirm carries identity",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "blank MCP does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP boundary cancel does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP add exact operands",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP edit exact confirmed request",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP delete cancel no request",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP pending has no false success",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP failure returns same owner",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP success only after confirmed write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "log cancel does not call cleanup",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "log error no false success",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "log success exact one confirmed retry",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "blank restore does not write",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "restore cancel does not write",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "restore failure specific and exact request",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "uninstall cancellation no request",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "uninstall confirm carries identity",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "blank MCP does not write",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "MCP boundary cancel does not write",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "MCP add exact operands",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "MCP edit exact confirmed request",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "MCP delete cancel no request",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "MCP pending has no false success",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "MCP failure returns same owner",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "MCP success only after confirmed write",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "log cancel does not call cleanup",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "log error no false success",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "log success exact one confirmed retry",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "blank restore does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "restore cancel does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "restore failure specific and exact request",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "uninstall cancellation no request",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "uninstall confirm carries identity",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "blank MCP does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "MCP boundary cancel does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "MCP add exact operands",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "MCP edit exact confirmed request",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "MCP delete cancel no request",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "MCP pending has no false success",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "MCP failure returns same owner",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "MCP success only after confirmed write",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "log cancel does not call cleanup",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "log error no false success",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "log success exact one confirmed retry",
+      "passed": true
+    }
+  ],
+  "screens": [
+    "1180-100-high-skill-failure.png",
+    "1180-100-high-mcp-failure.png",
+    "1180-100-high-logs-result.png",
+    "900-100-low-skill-failure.png",
+    "900-100-low-mcp-failure.png",
+    "900-100-low-logs-result.png",
+    "1180-200-mid-skill-failure.png",
+    "1180-200-mid-mcp-failure.png",
+    "1180-200-mid-logs-result.png"
+  ],
+  "errors": [],
+  "external": []
+}

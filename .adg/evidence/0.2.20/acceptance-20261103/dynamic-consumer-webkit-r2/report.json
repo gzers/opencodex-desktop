@@ -1,0 +1,58 @@
+{
+  "completed": false,
+  "failure": {
+    "key": "1180-100-high",
+    "message": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('MCP 写入失败；目标冲突或配置不可写。：owned fixture refusal', { exact: true }) to be visible\u001b[22m\n"
+  },
+  "engine": "webkit",
+  "scope": "real production extension/log consumer handlers with explicit in-memory write adapters; no real files/clients/log deletion",
+  "checks": [
+    {
+      "key": "1180-100-high",
+      "name": "blank restore does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "restore cancel does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "restore failure specific and exact request",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "uninstall cancellation no request",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "uninstall confirm carries identity",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "blank MCP does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP boundary cancel does not write",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "MCP add exact operands",
+      "passed": true
+    }
+  ],
+  "screens": [
+    "1180-100-high-skill-failure.png"
+  ],
+  "errors": [
+    "DataCloneError: The object can not be cloned."
+  ],
+  "external": []
+}

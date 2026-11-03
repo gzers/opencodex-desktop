@@ -181,3 +181,8 @@ PR61冻结产品源码c691ce7a3935c7f9162260d616ff13fb6a8f280e，tree eb57589b56
 PR62/98e779753032d5755bc6d951c7151a036c797f7c仅修正OTA验收工具：Tauri把唯一bundle-type标记UNK改为MSI/NSS，已安装EXE不能直接等同原始EXE摘要；只还原一处所选标记，要求唯一重建结果等于冻结原始SHA，再比较完整预期补丁字节。错误种类/载荷/来源摘要均拒绝。10项工具与PowerShell7.5.4解析通过，实际OTA仍待执行。工具源码与产品c691分别记身份，不为工具重建/改标产品包。
 
 补充隔离证据：自有CA真实HTTPS2/2通过，真实Rust文件写入+WebKit47/47通过；官方2.84.0包独立安装后显式运行2项ignored合同测试均在首次初始化catalog失败，日志ocx020-final-owned-official-284-failed.log保留，继续查明夹具所需catalog来源，不算通过。日常配置/真实服务器/账户未参与。S20、AC与全部required_checks继续active/in_progress；首次成功读取全选、之后新增对象不勾选规则保持。
+
+
+### 动态扩展与日志消费者补核（c691）
+
+通过真实生产按钮打开AppModal/input，显式内存适配写入动作：两引擎各48项/9截图，含Skill恢复空值/取消/失败、卸载取消/确认失败、MCP添加输入与边界确认取消/失败/成功、编辑确认失败、删除pending不得假成功/失败保原页，以及真实日志清理入口取消/失败/成功。没有执行真实扩展分发、MCP命令、日志删除。原驱动使用dialog[open]误定位AppModal、structuredClone无法复制Vue代理、未选择日志子tab的失败分别保留，修驱动后最后两报告completed=true。这里只补动态消费者状态，不将模拟成功当真实文件事务通过。字体hold及官方registration_unknown合同失败仍保持开放，实际OTA未执行。
