@@ -116,3 +116,7 @@ The source has 37 references under the same Dialog/Modal component boundary, exc
 | routes/ModelsRoute.vue | TemplateComparisonDialog | 217 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
 | routes/ModelsRoute.vue | ExternalTaskDialog | 218 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
 | routes/ModelsRoute.vue | BatchAgentDialog | 219 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+
+## Native model dialogs follow-up (f1f26d8f)
+
+See ../acceptance-20261103/native-integrated-f1f26d8f/native-model-dialogs.json and model-*.png. NewChannelDialog validation/Escape, AgentExecutionField unconfigured/save-disabled/cancel, ModelPicker catalog-error/empty/confirm-disabled/cancel, BatchAgentDialog missing-model and target count, ExternalTaskDialog local scope/default/close, ModelsRoute version builtin protection/search/close, and TemplateUsageDialog no-reference/no-model/filter/Escape states were observed natively. Raw English unconfigured feedback and version-search Escape dismissal need fixes and native rechecks. Opening an external-task dialog created a sandbox-local task plan, so no no-write claim is made. No external execution, copy/submission, channel save or version delete/default mutation was attempted. All callsites retain remaining states.

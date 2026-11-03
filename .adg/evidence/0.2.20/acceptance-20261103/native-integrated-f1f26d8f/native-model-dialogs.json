@@ -1,0 +1,87 @@
+{
+  "source": "f1f26d8f90cd5681299bdc98c8e9fcfb55daae81",
+  "ownedPid": 71336,
+  "stopped": true,
+  "scope": "bounded native app dialog states; no model execution, channel save or external task submission",
+  "observations": [
+    {
+      "component": "NewChannelDialog",
+      "states": [
+        "empty form",
+        "required name error",
+        "Escape cancel"
+      ],
+      "complete": false
+    },
+    {
+      "component": "AgentExecutionField",
+      "states": [
+        "unconfigured empty execution model",
+        "save disabled",
+        "cancel"
+      ],
+      "complete": false
+    },
+    {
+      "component": "ModelPicker",
+      "states": [
+        "unconfigured catalog error",
+        "0 models",
+        "confirm disabled",
+        "cancel returns to Agent form"
+      ],
+      "issue": "raw English application is not configured yet",
+      "complete": false
+    },
+    {
+      "component": "BatchAgentDialog",
+      "states": [
+        "17 built-in target templates",
+        "missing model context",
+        "update disabled",
+        "close"
+      ],
+      "complete": false
+    },
+    {
+      "component": "ExternalTaskDialog",
+      "states": [
+        "generated scoped local task preview",
+        "allowNew default false",
+        "close without copy or submission"
+      ],
+      "sideEffect": "Opening creates a sandbox-local task; not a no-write preview claim",
+      "complete": false
+    },
+    {
+      "component": "ModelsRoute version UiDialog",
+      "states": [
+        "built-in baseline deletion/default controls disabled",
+        "search no results",
+        "header close preserves source search"
+      ],
+      "issue": "Escape while search focused did not close; native keyboard interaction needs follow-up",
+      "complete": false
+    },
+    {
+      "component": "TemplateUsageDialog",
+      "states": [
+        "no policy references",
+        "0 known channel models",
+        "matched-only filter",
+        "Escape closes"
+      ],
+      "complete": false
+    }
+  ],
+  "notExecuted": [
+    "model execution",
+    "network connection test",
+    "channel save",
+    "model selection success",
+    "version deletion or default mutation",
+    "external task copy/submission"
+  ],
+  "dailyConfigurationTouched": false,
+  "allEntryAcceptance": false
+}
