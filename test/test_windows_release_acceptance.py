@@ -45,7 +45,9 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
     def test_installed_packages_start_as_an_ordinary_user_before_admin_uninstall(self):
         script = (ROOT / "test/smoke/windows-installer.ps1").read_text(encoding="utf-8")
         self.assertEqual(script.count("'windows-ordinary-startup.ps1'"), 2)
-        self.assertNotIn("'windows-startup.ps1'", script)
+        self.assertIn("windows-startup.ps1", script)
+        self.assertIn("Default per-user NSIS EXE failed owner-account startup smoke", script)
+        self.assertIn("-ExpectedCommit $taskSource -Mode any", script)
         self.assertIn("finally{", script)
         self.assertIn("Invoke-Installer 'msiexec.exe' ('/x", script)
 

@@ -75,8 +75,15 @@ try {
         $defaultRoot=Find-DefaultInstalledDirectory
         try{
             $defaultExe=Join-Path $defaultRoot 'opencodex-desktop.exe'
-            & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind+'-default-startup'))
-            if($LASTEXITCODE -ne 0){throw 'Default installed EXE failed ordinary-account startup smoke'}
+            if($kind -eq 'nsis'){
+                # Default NSIS is per-user under the installing account's AppData;
+                # another temporary user's token correctly cannot read that tree.
+                & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind+'-default-startup')) -ExpectedCommit $taskSource -Mode any
+                if($LASTEXITCODE -ne 0){throw 'Default per-user NSIS EXE failed owner-account startup smoke'}
+            }else{
+                & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind+'-default-startup'))
+                if($LASTEXITCODE -ne 0){throw 'Default MSI EXE failed ordinary-account startup smoke'}
+            }
             $taskResult.defaultInstallChecks+=@{kind=$kind;result='pass';installDirectory=$defaultRoot;pathOverride=$false;boundary=$(if($Kind -ceq 'all'){'MSI fresh first; NSIS may honor the existing product remembered directory'}else{'fresh isolated runner; no earlier installed product or directory override'})}
             foreach($resource in @('LICENSE','THIRD-PARTY-NOTICES.txt')){
                 if(!(Test-Path -LiteralPath (Join-Path $defaultRoot ('resources/'+$resource)))){throw 'Installed local documentation resource missing'}
