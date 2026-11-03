@@ -20,7 +20,8 @@ function fitNavigation(){
  // never keep scrolling a form once that boundary has been reached.
  const minimum=(collapse?.offsetHeight??0)+(primary?.offsetHeight??0)+56
  const stickyTop=Number.parseFloat(getComputedStyle(navigation).top)||0
- const lift=Math.min(minimum-available,(position.top-viewport.top)/zoom-stickyTop,main.scrollHeight-main.clientHeight-main.scrollTop)
+ const scrollportInset=main.clientTop+(Number.parseFloat(getComputedStyle(main).paddingTop)||0)
+ const lift=Math.min(minimum-available,(position.top-viewport.top)/zoom-stickyTop-scrollportInset,main.scrollHeight-main.clientHeight-main.scrollTop)
  if(lift>1){main.scrollTop+=lift;schedule();return}
  const height=Math.max(0,available)+'px'
  if(root.value.style.getPropertyValue('--detail-navigation-height')!==height)root.value.style.setProperty('--detail-navigation-height',height)
@@ -74,9 +75,11 @@ onBeforeUnmount(()=>{disposed=true;observer?.disconnect();main?.removeEventListe
   <header ref="head" class="detail-workspace-head"><slot name="header" /></header>
   <div class="detail-workspace-body">
    <nav class="detail-navigation" :aria-label="label">
+    <div class="detail-navigation-scroll">
     <UiButton size="sm" variant="ghost" class="detail-collapse" :aria-label="(collapsed?'展开':'收起')+label" :title="(collapsed?'展开':'收起')+label" :aria-expanded="!collapsed" @click="collapse"><svg class="detail-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span v-if="!collapsed">收起导航</span></UiButton>
     <div class="detail-navigation-links"><a v-for="(item,index) in sections" :key="item.id" :href="'#'+item.id" :title="item.label" :aria-label="item.label" :aria-current="activeId===item.id?'location':undefined" @click.prevent="go(item.id)"><span class="detail-nav-number" aria-hidden="true">{{ String(index+1).padStart(2,'0') }}</span><span v-if="!collapsed">{{ item.label }}</span></a></div>
     <div v-if="$slots.actions" class="detail-navigation-actions"><slot name="actions" :collapsed="collapsed" /></div>
+    </div>
     <div v-if="$slots.primary" class="detail-navigation-primary"><slot name="primary" :collapsed="collapsed" /></div>
    </nav>
    <div class="detail-workspace-content"><slot /></div>
@@ -95,8 +98,12 @@ onBeforeUnmount(()=>{disposed=true;observer?.disconnect();main?.removeEventListe
 </style>
 
 <style scoped>
-.detail-navigation-links{display:grid;gap:var(--space-1);min-height:0;overflow:auto;flex:0 1 auto}
-.detail-navigation-actions{min-height:0;overflow:auto;flex:0 1 auto}
+/* Share the available scroll space instead of shrinking separate link/action
+   panes to zero. The primary save area remains outside this scrollport. */
+.detail-navigation-scroll{display:flex;flex-direction:column;gap:4px;min-height:0;overflow:auto;overscroll-behavior:contain;flex:1 1 auto}
+.detail-navigation-scroll .detail-collapse{position:static;flex:none}
+.detail-navigation-links{display:grid;gap:var(--space-1);flex:none}
+.detail-navigation-actions{flex:none}
 .detail-navigation-primary{flex:none;display:grid;gap:var(--space-2);padding-top:var(--space-2);border-top:1px solid var(--border);margin-top:auto}
 .detail-navigation-primary :deep(.btn){width:100%}
 </style>
