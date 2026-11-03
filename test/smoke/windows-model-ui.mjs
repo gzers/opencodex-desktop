@@ -128,6 +128,32 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  async function inputValue(selector,value){await evaluate("(()=>{const input=document.querySelector("+JSON.stringify(selector)+");if(!input)throw Error('native input missing');input.value="+JSON.stringify(value)+";input.dispatchEvent(new Event('input',{bubbles:true}));return true})()")}
  const detailSaveDisabled="document.querySelector('button[aria-label=\"保存渠道草稿\"]').disabled"
  await wait("document.querySelector('[data-testid=policy-save]')?.disabled",'clean list Save disabled')
+ // The previous public version remains the OTA baseline, so only the 0.2.20
+ // candidate owns this newly corrected keyboard contract.
+ if(facts.about.version==='0.2.20'){
+  const escape=async()=>{for(const type of ['keyDown','keyUp'])await call('Input.dispatchKeyEvent',{type,key:'Escape',code:'Escape',windowsVirtualKeyCode:27,nativeVirtualKeyCode:27})}
+  await openChannel(channelId,'native-sandbox-key')
+  await click('编辑明细','.channel-model-table')
+  await wait("!!document.querySelector('dialog[open] input')",'native model detail open')
+  await inputValue('dialog[open] label input','discarded-native-alias')
+  await evaluate("document.querySelector('dialog[open] label input').focus();true")
+  await escape();await wait("!document.querySelector('dialog[open]')",'Escape closes a populated model detail input')
+  assert.equal(await evaluate("document.querySelector('input[aria-label=\"fixture-alpha路由别名\"]').value"),'','cancel must discard detail alias')
+  await click('编辑明细','.channel-model-table')
+  await wait("!!document.querySelector('dialog[open]')",'reopen native model detail')
+  await click('Fast支持','dialog[open]')
+  await wait("!!document.querySelector('dialog[open] [data-ui-escape-owner]')",'native inner select open')
+  // AX activation can leave focus elsewhere in the same owner. Use the real
+  // header button as that focus target; do not synthesize a DOM Escape event.
+  await evaluate("document.querySelector('dialog[open] header button').focus();true")
+  await escape();await wait("!!document.querySelector('dialog[open]')&&!document.querySelector('dialog[open] [data-ui-escape-owner]')",'first Escape closes only the inner select')
+  await escape();await wait("!document.querySelector('dialog[open]')",'second Escape closes the owning dialog')
+  const canceledEvidence=await modelFileEvidence(configPath,expected)
+  assert(canceledEvidence.bytes.equals(initialBytes),'keyboard cancellation changed config.json')
+  assert.deepEqual(canceledEvidence.backups,initialEvidence.backups,'keyboard cancellation added a backup')
+  await writeFile(join(output,'model-dialog-keyboard-native.json'),JSON.stringify({result:'pass',version:facts.about.version,input:'real WebView2 CDP keyDown/keyUp',populatedInputEscape:true,aliasDiscarded:true,innerSelectPriorityFromOwnerFocus:true,secondEscapeClosesOwner:true,configAndBackupsUnchanged:true,noModelRequest:true},null,2)+'\n')
+  await click('返回渠道列表');await wait("!!document.querySelector('.channel-table')&&!document.querySelector('.channel-detail-name')",'keyboard checks return to clean list')
+ }
  await openChannel(otherChannelId,'native-scope-a-original-key')
  assert.equal(await evaluate(detailSaveDisabled),true,'clean detail Save disabled')
  await inputValue('#channel-config label input','Native scope A pending')
