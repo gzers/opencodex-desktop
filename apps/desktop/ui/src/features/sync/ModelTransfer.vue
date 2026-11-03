@@ -650,6 +650,5 @@ label{display:flex;align-items:center;gap:8px}
 .sync-scope-credentials{display:block;min-height:0;overflow:auto;overscroll-behavior:contain;border-inline-start:1px solid var(--border);padding-inline-start:18px}
 .sync-scope-credentials h3{margin:0 0 5px;font-size:var(--text-label);font-weight:650}.sync-scope-credentials label{font-size:var(--text-label);line-height:1.5}.sx-subpicks{display:grid;gap:9px;margin:12px 0 0 23px}.sx-subpicks label{font-size:12px}
 @container(max-width:760px){.sync-scope-workspace{grid-template-columns:minmax(0,1fr) 180px;gap:14px}.sync-scope-credentials{padding-inline-start:12px}.sync-scope-credentials .sync-credentials-note{margin-top:10px}}
-@container sync-workspace (max-height:600px){.sync-credential-block{padding-block:10px}}
 @media(max-width:720px){.export-package-layout{grid-template-columns:minmax(0,1fr)}.export-passphrase{grid-template-columns:minmax(0,1fr)}}
 </style>
