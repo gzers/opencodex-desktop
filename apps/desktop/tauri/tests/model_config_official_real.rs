@@ -415,6 +415,16 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
             "isolated-order-diagnostic {}",
             json!({"intended":stored["nextOrder"],"actual":actual.order,"phase":saved.phase,"error":saved.error})
         );
+        // The fixture contains synthetic identities only. Keep the official
+        // refusal that led to this phase instead of losing it with TempDir.
+        eprintln!(
+            "isolated-provider-refusal {}",
+            std::fs::read_to_string(&provider_receipt)
+                .unwrap_or_default()
+                .chars()
+                .take(8192)
+                .collect::<String>()
+        );
     }
     assert_eq!(
         saved.phase, "committed",
