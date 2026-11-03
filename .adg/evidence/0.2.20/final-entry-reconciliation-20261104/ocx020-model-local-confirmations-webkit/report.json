@@ -1,0 +1,19 @@
+{
+  "engine": "webkit",
+  "completed": false,
+  "failure": {
+    "key": "1180-100",
+    "message": "locator.waitFor: Error: strict mode violation: getByText('删除确认已过期，请重新核对当前草稿', { exact: true }) resolved to 2 elements:\n    1) <p role=\"alert\" data-v-840f478a=\"\" class=\"model-error\">删除确认已过期，请重新核对当前草稿</p> aka getByRole('alert')\n    2) <p role=\"alert\" data-v-840f478a=\"\" class=\"model-error\">删除确认已过期，请重新核对当前草稿</p> aka getByText('删除确认已过期，请重新核对当前草稿').nth(1)\n\nCall log:\n\u001b[2m  - waiting for getByText('删除确认已过期，请重新核对当前草稿', { exact: true }) to be visible\u001b[22m\n"
+  },
+  "scope": "real ChannelsView/ModelsRoute confirmation callbacks; explicit in-memory draft/library services; no filesystem/runtime changes",
+  "checks": [
+    {
+      "key": "1180-100",
+      "name": "delete channel cancel keeps exact draft",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": []
+}

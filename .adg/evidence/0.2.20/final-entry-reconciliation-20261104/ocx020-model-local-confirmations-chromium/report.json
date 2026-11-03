@@ -1,0 +1,273 @@
+{
+  "engine": "chromium",
+  "completed": true,
+  "failure": null,
+  "scope": "real ChannelsView/ModelsRoute confirmation callbacks; explicit in-memory draft/library services; no filesystem/runtime changes",
+  "checks": [
+    {
+      "key": "1180-100",
+      "name": "delete channel cancel keeps exact draft",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "stale delete preserves channel and late edit",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "confirmed deletion changes only selected draft channel",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "restore cancel keeps removed draft state",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "restore returns exact saved channels",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "cancel-new dialog cancellation retains input",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "stale cancel-new retains newer buffer",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "explicit cancel-new removes only new buffer",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "template restore cancel keeps buffer",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "stale template restore preserves newer input",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "confirmed template restore returns initial name",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "default cancel returns manager without write",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "default failure preserves prior pointer",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "stale default does not call writer",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "default pending has one writer and busy ownership",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "default success adopts exact selected revision",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "all confirmations preserve unrelated channel draft",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "delete channel cancel keeps exact draft",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "stale delete preserves channel and late edit",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "confirmed deletion changes only selected draft channel",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "restore cancel keeps removed draft state",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "restore returns exact saved channels",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "cancel-new dialog cancellation retains input",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "stale cancel-new retains newer buffer",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "explicit cancel-new removes only new buffer",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "template restore cancel keeps buffer",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "stale template restore preserves newer input",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "confirmed template restore returns initial name",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "default cancel returns manager without write",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "default failure preserves prior pointer",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "stale default does not call writer",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "default pending has one writer and busy ownership",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "default success adopts exact selected revision",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "all confirmations preserve unrelated channel draft",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "delete channel cancel keeps exact draft",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "stale delete preserves channel and late edit",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "confirmed deletion changes only selected draft channel",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "restore cancel keeps removed draft state",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "restore returns exact saved channels",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "cancel-new dialog cancellation retains input",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "stale cancel-new retains newer buffer",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "explicit cancel-new removes only new buffer",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "template restore cancel keeps buffer",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "stale template restore preserves newer input",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "confirmed template restore returns initial name",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "default cancel returns manager without write",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "default failure preserves prior pointer",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "stale default does not call writer",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "default pending has one writer and busy ownership",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "default success adopts exact selected revision",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "all confirmations preserve unrelated channel draft",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-100-channels-restored.png",
+    "1180-100-default-success.png",
+    "900-100-channels-restored.png",
+    "900-100-default-success.png",
+    "1180-200-channels-restored.png",
+    "1180-200-default-success.png"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "engine": "webkit",
+  "completed": false,
+  "failure": {
+    "key": "1180-100",
+    "message": "locator.waitFor: Error: strict mode violation: getByText('选择确认已过期，请重新核对', { exact: true }) resolved to 2 elements:\n    1) <p role=\"alert\" data-v-6df0b110=\"\" class=\"model-error\">选择确认已过期，请重新核对</p> aka locator('#channel-models').getByText('选择确认已过期，请重新核对')\n    2) <p role=\"alert\" data-v-6df0b110=\"\" class=\"model-error\">选择确认已过期，请重新核对</p> aka getByText('选择确认已过期，请重新核对').nth(1)\n\nCall log:\n\u001b[2m  - waiting for getByText('选择确认已过期，请重新核对', { exact: true }) to be visible\u001b[22m\n"
+  },
+  "scope": "actual ChannelEditor/ChannelModelTable dynamic AppModal consumers; explicit in-memory draft setup/late edits, no saved file or runtime writes",
+  "checks": [
+    {
+      "key": "1180-100",
+      "name": "ChannelEditor inline-store consumer cancel retains exact draft",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "explicit hide-all stays local",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "explicit all includes future only after confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "stale scope confirmation cannot overwrite late input",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "explicit whitelist captures all current IDs",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "row all-to-whitelist cancel retains all",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-100-channel-scope-stale.png"
+  ]
+}

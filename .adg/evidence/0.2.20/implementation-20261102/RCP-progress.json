@@ -43,7 +43,9 @@
     "official_ci_284": "41658802959:2 explicit tests fail registration_unknown after catalog seeded on clean Mac; no product acceptance; log retained",
     "compact_typography": "1122UI/typecheck/build,64checks/16screens each engine,Macnative100/200% and fullroute428 passed; final complete sync648/engine with0errors",
     "backup_migration_clients": "60checks/12screens per engine; production consumer handlers with explicit mocked IPC, no real mutations",
-    "official_contract": "41672846917 undertest-only644da8f7:2/2passed in563.97s. Product code and assertions identical tobda; added failure logging only. Earlier41671597006failure preserved, unproven root cause not rewritten."
+    "official_contract": "41672846917 undertest-only644da8f7:2/2passed in563.97s. Product code and assertions identical tobda; added failure logging only. Earlier41671597006failure preserved, unproven root cause not rewritten.",
+    "final_entry_inventory": "37static references+26dynamic callers; inlineChannelEditor previouslyomitted,33scope and51local confirms perengine passed",
+    "final_package_assets": "8actualassetbytes/3signatures+sidecars/5platformmanifest/Macsource+seal+license/DMG passed"
   },
   "daily_config_writes": false,
   "daily_real_sync": false,
@@ -683,16 +685,25 @@
     "prerelease": true,
     "ci_run": 41671607927,
     "release_run": 41671938225,
-    "status": "private;Windowsassetsand4installsverified;MacandfullCI/actualOTApending",
+    "status": "frozen source full CI/official contract, uploaded assets, native Mac package and four Windows installers passed; actual OTA pending",
     "stable": "v0.2.19",
     "macAdjacentBaseline": "2 real native UI commits+exact preimages verified; actual OTA not run",
     "windows_asset_signatures": "2/2 actualuploadedbytes pass",
     "independent_installers_run": 41675807159,
     "independent_installer_cells": "4/4pass, sourcebda andbuiltSHAF864 verified fromrawreports",
-    "mac_build": "Release41671938225 attempt2, onlyMacrerun afterhostedARMcapacitycancel"
+    "mac_build": "41671938225 attempt2success, originalcapacitycancellationretained",
+    "ci_status": "41671607927 fullsuccess",
+    "official_contract": {
+      "run": 41671597006,
+      "attempt": 2,
+      "head": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+      "result": "pass",
+      "tests": 2,
+      "evidence": "font-final-candidate-bda7c92d/official-contract-frozen-attempt2"
+    }
   },
   "release_hold": {
-    "reason": "Full CI, new Mac asset/independentfourinstaller/actual adjacentOTA and final coverage audit remain open",
+    "reason": "Actual macOS/MSI/NSIS adjacent OTA and final audit before stable",
     "awaitingFontVersionAnswer": false,
     "typographyImplemented": true,
     "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",

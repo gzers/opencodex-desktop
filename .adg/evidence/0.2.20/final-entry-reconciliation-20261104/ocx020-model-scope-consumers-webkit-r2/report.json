@@ -1,0 +1,183 @@
+{
+  "engine": "webkit",
+  "completed": true,
+  "failure": null,
+  "scope": "actual ChannelEditor/ChannelModelTable dynamic AppModal consumers; explicit in-memory draft setup/late edits, no saved file or runtime writes",
+  "checks": [
+    {
+      "key": "1180-100",
+      "name": "ChannelEditor inline-store consumer cancel retains exact draft",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "explicit hide-all stays local",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "explicit all includes future only after confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "stale scope confirmation cannot overwrite late input",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "explicit whitelist captures all current IDs",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "row all-to-whitelist cancel retains all",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "row stale confirmation retains all and late input",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "row confirm excludes exact model and keeps other known IDs",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "last row hide-all cancel keeps original selection",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "last row hide-all requires explicit confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "all scope consumers leave saved snapshot untouched",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "ChannelEditor inline-store consumer cancel retains exact draft",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "explicit hide-all stays local",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "explicit all includes future only after confirmation",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "stale scope confirmation cannot overwrite late input",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "explicit whitelist captures all current IDs",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "row all-to-whitelist cancel retains all",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "row stale confirmation retains all and late input",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "row confirm excludes exact model and keeps other known IDs",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "last row hide-all cancel keeps original selection",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "last row hide-all requires explicit confirmation",
+      "passed": true
+    },
+    {
+      "key": "900-100",
+      "name": "all scope consumers leave saved snapshot untouched",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "ChannelEditor inline-store consumer cancel retains exact draft",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "explicit hide-all stays local",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "explicit all includes future only after confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "stale scope confirmation cannot overwrite late input",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "explicit whitelist captures all current IDs",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "row all-to-whitelist cancel retains all",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "row stale confirmation retains all and late input",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "row confirm excludes exact model and keeps other known IDs",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "last row hide-all cancel keeps original selection",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "last row hide-all requires explicit confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-200",
+      "name": "all scope consumers leave saved snapshot untouched",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-100-channel-scope-stale.png",
+    "1180-100-scope-local-result.png",
+    "900-100-channel-scope-stale.png",
+    "900-100-scope-local-result.png",
+    "1180-200-channel-scope-stale.png",
+    "1180-200-scope-local-result.png"
+  ]
+}
