@@ -31,18 +31,24 @@ try{
   assert.equal(hash(await readFile(config)),prior.configSha256,'actual config and synthetic credentials changed during OTA')
   const snapshot=await invoke('model_file_snapshot');assert(snapshot.policy.channels.some(c=>c.connection.providerId===prior.providerId),'updated application cannot reopen the baseline saved provider')
   const status=await invoke('get_update_status');assert.equal(status.currentVersion,version);assert.equal(status.channel,channel);assert.equal(status.pendingRestart,null)
-  // Exercise the installed production window. A fresh UI may legitimately have
-  // no last-check fact: its version shortcut is disabled until an explicit check.
-  await evaluate("document.documentElement.style.setProperty('--ui-zoom','1');[...document.querySelectorAll('.nav button')].find(b=>b.textContent.trim()==='概览').click();true")
-  let opened=false,openMethod='',preflight=null
+  // Settings exposes this window even when the fresh runner has no managed
+  // runtime, in which case Overview intentionally shows environment preparation.
+  const scalePreflight=await evaluate("({route:location.hash,heading:document.querySelector('h1')?.textContent,visibleButtons:[...document.querySelectorAll('button')].filter(b=>b.getClientRects().length>0).map(b=>({text:b.textContent.trim().slice(0,80),aria:b.getAttribute('aria-label'),disabled:b.disabled})).slice(0,40)})")
+  await writeFile(join(output,'update-scale-preflight.json'),JSON.stringify(scalePreflight,null,2)+'\n')
+  await evaluate("document.documentElement.style.setProperty('--ui-zoom','1');[...document.querySelectorAll('.nav button')].find(b=>b.textContent.trim()==='设置').click();true")
+  let selected=false
   for(let n=0;n<120;n++){
-   preflight=await evaluate("(()=>{const detail=document.querySelector('button[aria-label^=\"查看桌面管理器更新详情\"]'),check=[...document.querySelectorAll('button')].find(b=>b.textContent.trim()==='检查更新');return {detail:detail?{label:detail.getAttribute('aria-label'),disabled:detail.disabled}:null,check:check?{disabled:check.disabled}:null,route:location.hash}})()")
-   if(preflight.detail&&!preflight.detail.disabled){await evaluate("document.querySelector('button[aria-label^=\"查看桌面管理器更新详情\"]').click();true");openMethod='available production version detail';opened=true;break}
-   if(preflight.check&&!preflight.check.disabled){await evaluate("[...document.querySelectorAll('button')].find(b=>b.textContent.trim()==='检查更新').click();true");openMethod='explicit production check button because fresh shortcut is not available';opened=true;break}
-   await new Promise(resolve=>setTimeout(resolve,100))
+   selected=await evaluate("(()=>{const tab=[...document.querySelectorAll('[role=tab]')].find(b=>b.textContent.trim()==='版本升级');if(!tab)return false;tab.click();return true})()")
+   if(selected)break;await new Promise(resolve=>setTimeout(resolve,100))
   }
-  await writeFile(join(output,'update-scale-preflight.json'),JSON.stringify({preflight,openMethod,opened},null,2)+'\n')
-  assert(opened,'actual updated Overview has no admitted update opener: '+JSON.stringify(preflight))
+  assert(selected,'actual updated Settings version-upgrade tab missing')
+  let opened=false
+  for(let n=0;n<120;n++){
+   opened=await evaluate("(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent.trim()==='查看管理器更新'&&b.getClientRects().length>0&&!b.disabled);if(!b)return false;b.click();return true})()")
+   if(opened)break;await new Promise(resolve=>setTimeout(resolve,100))
+  }
+  assert(opened,'actual updated Settings update detail opener unavailable: '+JSON.stringify(scalePreflight))
+  const openMethod='production Settings version-upgrade manager details; independent of managed runtime availability'
   const scaleSamples=[]
   for(const scale of [100,150,200]){
    await evaluate("document.documentElement.style.setProperty('--ui-zoom',"+JSON.stringify(String(scale/100))+");true")
@@ -59,7 +65,7 @@ try{
   for(const sample of scaleSamples)assert(Math.abs(sample.buttonHeight/scaleSamples[0].buttonHeight-sample.scale/100)<.03,'updated native dialog does not follow shared scale: '+JSON.stringify(scaleSamples))
   await evaluate("document.querySelector('[data-testid=update-center] button[aria-label=\"关闭更新中心\"]').click();document.documentElement.style.setProperty('--ui-zoom','1');true")
   assert.equal(hash(await readFile(config)),prior.configSha256,'native update view mutated saved business configuration')
-  await writeFile(join(output,'update-scale-native.json'),JSON.stringify({result:'pass',version,host:'actual updated Overview UpdateCenter',engine:'Windows installed WebView2',openMethod,preflight,samples:scaleSamples,configurationUnchanged:true,scope:'actual installed binary CSS scale token; explicit check may read public existing update endpoints; no installation or persisted preference write'},null,2)+'\n')
+  await writeFile(join(output,'update-scale-native.json'),JSON.stringify({result:'pass',version,host:'actual updated Settings UpdateCenter',engine:'Windows installed WebView2',openMethod,preflight:scalePreflight,samples:scaleSamples,configurationUnchanged:true,scope:'actual installed binary CSS scale token; direct detail open, no extra update check or installation or persisted preference write'},null,2)+'\n')
   await writeFile(join(output,'ota-verified.json'),JSON.stringify({result:'pass',version,channel,updatedApplicationReadback:true,automaticRestartEvidence:'ota-result.json OS process observation',configAndCredentialBytesUnchanged:true,immutableSandboxUnchanged:true,pendingRestartCleared:true},null,2)+'\n')
  }else{
   assert.equal(facts.about.version,fromVersion)
