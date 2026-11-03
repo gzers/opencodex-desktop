@@ -84,6 +84,38 @@ fn free_port() -> u16 {
         .port()
 }
 
+async fn seed_native_catalog(codex_home: &Path) -> std::path::PathBuf {
+    // The official package's upstream-models.json is a metadata summary, not a
+    // native catalog: it has no base_instructions and cannot admit convergence.
+    // Read the real bundled catalog from an explicitly installed owned binary.
+    let binary = std::path::PathBuf::from(
+        std::env::var_os("OCXD_TEST_CODEX_BIN").expect("set the owned Codex binary"),
+    );
+    assert!(binary.is_absolute() && binary.is_file());
+    let mut command = tokio::process::Command::new(&binary);
+    command
+        .args(["debug", "models", "--bundled"])
+        .env_clear()
+        .env("HOME", codex_home.parent().unwrap())
+        .env("CODEX_HOME", codex_home)
+        .current_dir(codex_home)
+        .kill_on_drop(true);
+    let output = tokio::time::timeout(Duration::from_secs(25), command.output())
+        .await
+        .expect("owned catalog probe timed out")
+        .unwrap();
+    assert!(output.status.success(), "owned bundled catalog unavailable");
+    let catalog: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert!(catalog["models"]
+        .as_array()
+        .is_some_and(|rows| rows.iter().any(|row| row["slug"]
+            .as_str()
+            .is_some_and(|slug| !slug.contains('/'))
+            && row.get("base_instructions").is_some())));
+    std::fs::write(codex_home.join("opencodex-catalog.json"), output.stdout).unwrap();
+    binary
+}
+
 async fn history_plan(
     manager: &Path,
     context: &ProcessContext,
@@ -117,7 +149,7 @@ async fn history_plan(
     .unwrap()
 }
 #[tokio::test]
-#[ignore = "requires explicit OCXD_TEST_OFFICIAL_ENTRY and OCXD_TEST_OFFICIAL_NODE; runs installed official in temporary HOME"]
+#[ignore = "requires explicit official entry, Node and OCXD_TEST_CODEX_BIN; runs installed official in temporary HOME"]
 async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     use std::os::unix::fs::PermissionsExt;
     let entry = std::path::PathBuf::from(
@@ -138,6 +170,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     for path in [&user, &upstream_home, &manager, &codex, &xdg] {
         std::fs::create_dir_all(path).unwrap();
     }
+    let codex_binary = seed_native_catalog(&codex).await;
     let listener = tokio::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
         .await
         .unwrap();
@@ -159,7 +192,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     let wrapper = root.path().join("ocx");
     let fail_sync = root.path().join("fail-sync");
     let provider_receipt = root.path().join("provider-apply-receipt.txt");
-    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nif [ \"$1\" = sync ] && [ -f {} ]; then exit 17; fi\nif [ \"$1\" = provider ] && [ \"$2\" = apply ]; then {} {} \"$@\" >{} 2>&1; result=$?; /bin/cat {}; exit $result; fi\nexec {} {} \"$@\"\n",quote(&user),quote(&codex),quote(&xdg),quote(&fail_sync),quote(&node),quote(&entry),quote(&provider_receipt),quote(&provider_receipt),quote(&node),quote(&entry))).unwrap();
+    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nexport CODEX_CLI_PATH={}\nif [ \"$1\" = sync ] && [ -f {} ]; then exit 17; fi\nif [ \"$1\" = provider ] && [ \"$2\" = apply ]; then {} {} \"$@\" >{} 2>&1; result=$?; /bin/cat {}; exit $result; fi\nexec {} {} \"$@\"\n",quote(&user),quote(&codex),quote(&xdg),quote(&codex_binary),quote(&fail_sync),quote(&node),quote(&entry),quote(&provider_receipt),quote(&provider_receipt),quote(&node),quote(&entry))).unwrap();
     std::fs::set_permissions(&wrapper, std::fs::Permissions::from_mode(0o700)).unwrap();
     let mut command = tokio::process::Command::new(&wrapper);
     command
@@ -218,7 +251,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .unwrap();
     if !initialized.success {
         let output = tokio::process::Command::new(context.executable().unwrap())
-            .args(["inspect", "catalog", "--json"])
+            .args(["sync"])
             .env_clear()
             .env("OPENCODEX_HOME", &upstream_home)
             .env("PATH", node.parent().unwrap())
@@ -227,7 +260,10 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
             .await
             .unwrap();
         panic!(
-            "isolated initial sync/catalog: {}",
+            "isolated initial sync/catalog: {:?}; status {:?}; stdout {}; stderr {}",
+            initialized,
+            output.status,
+            String::from_utf8_lossy(&output.stdout),
             String::from_utf8_lossy(&output.stderr)
         );
     }
@@ -393,6 +429,16 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
             "isolated-order-diagnostic {}",
             json!({"intended":stored["nextOrder"],"actual":actual.order,"phase":saved.phase,"error":saved.error})
         );
+        // The fixture contains synthetic identities only. Keep the official
+        // refusal that led to this phase instead of losing it with TempDir.
+        eprintln!(
+            "isolated-provider-refusal {}",
+            std::fs::read_to_string(&provider_receipt)
+                .unwrap_or_default()
+                .chars()
+                .take(8192)
+                .collect::<String>()
+        );
     }
     assert_eq!(
         saved.phase, "committed",
@@ -446,13 +492,19 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     assert!(order
         .iter()
         .any(|slug| slug.as_str() == Some(&format!("{mapped}/fixture-anthropic"))));
+    // UI specification §29.1 keeps legacy display intent local and clears
+    // selected upstream friendly names. Aliases above remain routing identities.
+    assert!(after.providers["providers"]["fixture"]["modelDisplayNames"]
+        .get("fixture-base")
+        .is_none());
+    assert!(after.providers["providers"][mapped]["modelDisplayNames"]
+        .get("fixture-anthropic")
+        .is_none());
     assert_eq!(
-        after.providers["providers"]["fixture"]["modelDisplayNames"]["fixture-base"],
-        "基础型号"
-    );
-    assert_eq!(
-        after.providers["providers"][mapped]["modelDisplayNames"]["fixture-anthropic"],
-        "协议型号"
+        store.load().unwrap().policy.channels[0].naming["fixture-base"]
+            .display_name
+            .as_deref(),
+        Some("基础型号")
     );
     let stable_group = plan.protocol_groups[0].clone();
     // Same wire protocol can still need distinct provider-wide rule values.
@@ -640,8 +692,8 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .unwrap()
         .label
         .clear();
-    // Explicit naming overrides the discovered label; clear the edited display
-    // intent through the same new field the real form now edits.
+    // Clear legacy display intent through the compatibility schema; the current
+    // UI does not offer a friendly-name editor (§29.1).
     restored_policy.channels[0]
         .naming
         .get_mut("fixture-base")
@@ -1207,7 +1259,10 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     let original_keys = management.key_state(original_name).await.unwrap();
     let original_raw: serde_json::Value =
         serde_json::from_slice(&std::fs::read(upstream_home.join("config.json")).unwrap()).unwrap();
-    let inventory = model_config::portable_channels::catalog(&manager, &original_snapshot).unwrap();
+    // Normal file export uses the saved-file inventory, whose stable channel
+    // identities are independent of the retired runtime-derived inventory.
+    let inventory =
+        model_config::portable_channels::catalog_file(&manager, &upstream_home).unwrap();
     let original_id = inventory
         .iter()
         .find(|c| c.connection.provider_id == original_name)
@@ -1222,7 +1277,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .iter()
         .any(|c| c.id == original_id));
     assert_eq!(
-        model_config::portable_channels::catalog(&manager, &original_snapshot)
+        model_config::portable_channels::catalog_file(&manager, &upstream_home)
             .unwrap()
             .iter()
             .find(|c| c.connection.provider_id == original_name)
@@ -1328,6 +1383,12 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .unwrap();
     let mut expected = original_snapshot.providers["providers"][original_name].clone();
     expected["disabled"] = json!(true);
+    // The receiving save also obeys §29.1, regardless of a historical source's
+    // friendly display name. Preserve route aliases and every other public field.
+    expected
+        .as_object_mut()
+        .unwrap()
+        .remove("modelDisplayNames");
     assert_eq!(received_public["providers"][&receiving_provider], expected);
     assert_eq!(
         management.key_state(&receiving_provider).await.unwrap(),
@@ -1726,7 +1787,7 @@ fn discovered_count(value: &serde_json::Value) -> usize {
 /// Focused wire proof, separate from the no-generation configuration/recovery
 /// chain. Every generation-shaped request terminates at our loopback fixture.
 #[tokio::test]
-#[ignore = "requires explicit installed official entry/node; generation requests only hit a temporary loopback fixture"]
+#[ignore = "requires explicit official entry/node/Codex binary; generation requests only hit a temporary loopback fixture"]
 async fn isolated_official_saved_protocol_alias_reasoning_and_fast_wire() {
     use std::os::unix::fs::PermissionsExt;
     let entry = std::path::PathBuf::from(
@@ -1744,6 +1805,7 @@ async fn isolated_official_saved_protocol_alias_reasoning_and_fast_wire() {
     for p in [&home, &manager, &user.join(".codex"), &user.join(".config")] {
         std::fs::create_dir_all(p).unwrap();
     }
+    let codex_binary = seed_native_catalog(&user.join(".codex")).await;
     let seen = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
     let captured = seen.clone();
     let service=axum::Router::new().route("/v1/models",axum::routing::get(||async{axum::Json(json!({"object":"list","data":[{"id":"wire-response","object":"model"},{"id":"wire-chat","object":"model"},{"id":"wire-anthropic","object":"model"}]}))})).fallback(move|request:axum::extract::Request|{
@@ -1772,7 +1834,7 @@ async fn isolated_official_saved_protocol_alias_reasoning_and_fast_wire() {
     ];
     std::fs::write(home.join("config.json"),serde_json::to_vec(&json!({"port":port,"hostname":"127.0.0.1","defaultProvider":"fixture","providers":{"fixture":{"adapter":"openai-responses","authMode":"key","baseUrl":base,"apiKey":"fixture-wire-only-key","models":raw_ids,"liveModels":false,"allowPrivateNetwork":true,"newModelPolicy":"off","selectedModels":raw_ids}},"claudeCode":{"systemEnv":false,"enabled":false},"clientIntegrations":{"codex":true,"grok":false,"claude":false},"syncResumeHistory":false,"serviceHealthRecovery":{"enabled":false},"oauthOpenBrowser":false})).unwrap()).unwrap();
     let wrapper = root.path().join("ocx");
-    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nexec {} {} \"$@\"\n",quote(&user),quote(&user.join(".codex")),quote(&user.join(".config")),quote(&node),quote(&entry))).unwrap();
+    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nexport CODEX_CLI_PATH={}\nexec {} {} \"$@\"\n",quote(&user),quote(&user.join(".codex")),quote(&user.join(".config")),quote(&codex_binary),quote(&node),quote(&entry))).unwrap();
     std::fs::set_permissions(&wrapper, std::fs::Permissions::from_mode(0o700)).unwrap();
     let mut command = tokio::process::Command::new(&wrapper);
     command
