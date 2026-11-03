@@ -21,6 +21,15 @@ function fixture(zoom=1,reflowShift=0){
  return{wrapper,main,header}
 }
 describe('shared continuous detail workspace',()=>{
+ it('does not keep lifting a navigation already sticky at a padded scrollport boundary',()=>{
+  const{wrapper,main}=fixture(2),nav=wrapper.get('.detail-navigation').element as HTMLElement
+  main.style.paddingTop='12px';Object.defineProperty(main,'clientTop',{value:1})
+  Object.defineProperty(wrapper.get('.detail-collapse').element,'offsetHeight',{value:28})
+  nav.style.top='50px';nav.getBoundingClientRect=()=>({top:226} as DOMRect)
+  main.getBoundingClientRect=()=>({top:100,bottom:326,height:1200} as DOMRect)
+  window.dispatchEvent(new Event('resize'));drain()
+  expect(main.scrollTop).toBe(0);wrapper.unmount()
+ })
  it('reveals a zoom-constrained workspace without repeatedly scrolling past its sticky boundary',()=>{
   const{wrapper,main}=fixture(2),nav=wrapper.get('.detail-navigation').element as HTMLElement
   Object.defineProperty(wrapper.get('.detail-collapse').element,'offsetHeight',{value:28})
