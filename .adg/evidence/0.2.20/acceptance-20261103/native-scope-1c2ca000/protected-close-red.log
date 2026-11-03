@@ -1,0 +1,33 @@
+
+> opencodex-desktop-ui@0.2.20 test
+> vitest --run tests/model-transfer.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/model-transfer.test.ts (37 tests | 1 failed) 626ms
+   ❯ model transfer review (37)
+     × keeps the temporary file password for an encrypted Skill even when no credential was included 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > keeps the temporary file password for an encrypted Skill even when no credential was included
+AssertionError: expected [ DOMWrapper{ …(3) }, …(1) ] to have a length of +0 but got 2
+
+- Expected
++ Received
+
+- 0
++ 2
+
+ ❯ tests/model-transfer.test.ts:433:273
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 36 passed (37)
+   Start at  17:03:47
+   Duration  1.61s (tests 41%, transform 34%, environment 20%, import 5%)
+

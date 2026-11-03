@@ -67,3 +67,17 @@ PR #47/1c2ca000修正新导出及WebDAV的偏好选择，已记住的旧extensio
 ## 全路由审计回收
 
 全量浏览器audit为427/428，0页面异常。唯一失败：三档CPU内存中script-time比较high=11ms、mid=3ms、low=14ms；总task-time则high=539ms、mid=25ms、low=95ms。原报告保留于all-routes-after-qa。相同脚本不改阈值定向复跑该用例4/4通过，script-time为high18/mid5/low11ms，原报告保留于cpu-tier-rerun。两轮都保留，不把后一次局部通过改写为全量428/428。本轮DEV夹具/用户状态修正不等于性能全面验收。
+
+## PR #47/#48当前代码的原生修复复核
+
+native-scope-1c2ca000记录PR #47原生自定义协议调试构建（嵌入当前生产UI），独立bundle id和/tmp数据身份。通过真实原生选择器读取上一轮生成的旧包，初始包含空extensions，但UI自动重选生成的incoming计划manager.extensions=null。确认前偏好字节保持，确认后只恢复system主题，未创建extension-config.json；唯一范围备份groups为preferences、前像SHA精确等于更新前dark偏好。这补充了UI→IPC→真实文件/备份链路；仍不是最终release包验收。
+
+相同构建的加密导出默认关闭，手动开启后双口令不一致显示错误且exports为空；匹配测试口令生成protected包，manifest.sections为models/preferences，不含extensions。原生导入错误口令报“口令不正确或受保护配置文件已损坏”，偏好和原备份保持。正确解密后取消“更新前备份”，确认后偏好确实恢复system，新增的备份记录enabled=false、groups/before为空，没有资源前像。但窗口退回“选择文件/读取配置”而未关闭。失败截图及已完成的数据/备份回执均保留；不把数据成功当界面完成。
+
+该确定缺陷由unlockFile成功后未清除pickOpen导致。PR #48/18597c8d只在解密成功后清除此标记，错误时仍停留原解密表单。新增窗口状态断言改前失败（残留两个picker动作），修复分支177文件/1092测试、typecheck/build通过。
+
+native-integrated-f1f26d8f是本地汇合PR #47和#48的源提交f1f26d8f，完整UI测试1095项及build通过、原生custom-protocol构建。全新/tmp身份从真实原生选择器读取protected显示偏好包，解密后确认导入：共享窗口正常关闭、仍在同步页，回执1项complete可查看和关闭。扩展配置不存在，备份只含preferences及精确原始前像。
+
+继续从设置→数据与备份→恢复所选范围执行真实恢复：导入后的system主题恢复为dark，同时保留导入后人工改为125%的界面缩放；扩展文件仍不存在。再生成恢复预览后在同一沙箱文件模拟外部修改theme=light，确认恢复被明确拒绝（“恢复预览后内容改变，请重新核对，未覆盖”），文件SHA不变。原生截图、前后摘要与范围备份原件均存档。只结束本轮已记录的68441号QA PID。测试未运行日常真实同步、读取用户凭据或改日常配置。
+
+PR #46已全CI通过并合并为90c39700；PR #47/#48仍待全CI和最终集成release候选验收。上述隔离调试构建、单资源原生状态不能关闭全部37个调用点、双平台/正式签名包安装或OTA门。

@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "previews": [
+    {
+      "path": "manager-state/model-config-incoming/e1a72462-7618-4c88-b74f-50562d06fd26.json",
+      "id": "e1a72462-7618-4c88-b74f-50562d06fd26",
+      "managerExtensions": null,
+      "preferencesPresent": true
+    },
+    {
+      "path": "manager-state/model-config-incoming/6d53ca54-edbf-4daf-a384-4b39e8945dd3.json",
+      "id": "6d53ca54-edbf-4daf-a384-4b39e8945dd3",
+      "managerExtensions": {
+        "skills": [],
+        "servers": [],
+        "enablement": {
+          "codex": true,
+          "claude": true,
+          "gemini": true,
+          "grok": true,
+          "opencode": true,
+          "hermes": true
+        },
+        "skill_targets": {},
+        "source_store": null,
+        "sync_method": "symlink",
+        "revision": 1
+      },
+      "preferencesPresent": true
+    }
+  ],
+  "preferencesUnchanged": true,
+  "extensionConfigExists": false,
+  "backupFiles": 0
+}

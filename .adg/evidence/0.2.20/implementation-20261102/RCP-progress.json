@@ -408,6 +408,35 @@
       "failure": "CPU tier script-time comparison high=11ms vs low=14ms; task totals high539/mid25/low95ms",
       "bounded_rerun": "4/4 CPU-tier checks passed; high script18ms vs low11ms; retain failed full run",
       "evidence": "acceptance-20261103/all-routes-after-qa/audit-report.json; acceptance-20261103/cpu-tier-rerun/audit-report.json"
+    },
+    "browser_qa_merged": "90c39700a2744c674dbe9e1bb155fe8219e59108",
+    "protected_import_close_fix_pr": 48,
+    "native_scope_fix_checks": {
+      "source": "1c2ca000",
+      "old_file_projected": true,
+      "extensions_file_absent": true,
+      "backup_groups": [
+        "preferences"
+      ],
+      "new_protected_export_excludes_extensions": true,
+      "wrong_password_preserved_files": true,
+      "backup_off_no_resource_preimages": true,
+      "completion_ui": "failed picker remains; fixed by PR #48",
+      "evidence": "acceptance-20261103/native-scope-1c2ca000"
+    },
+    "native_integrated_checks": {
+      "source": "f1f26d8f90cd5681299bdc98c8e9fcfb55daae81",
+      "prs": [
+        47,
+        48
+      ],
+      "protected_import_closes": true,
+      "prewrite_backup_exact": true,
+      "restore_theme": "dark",
+      "retained_postwrite_scale": 125,
+      "concurrent_restore_rejected": true,
+      "final_release_candidate": false,
+      "evidence": "acceptance-20261103/native-integrated-f1f26d8f"
     }
   }
 }
