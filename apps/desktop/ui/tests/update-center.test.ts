@@ -59,6 +59,7 @@ describe('shared production update center', () => {
     expect(wrapper.get('.update-version-hero').text()).toBe('0.2.20')
     expect(wrapper.get('h3').text()).toBe('桌面管理器更新详情')
     expect(wrapper.text()).not.toContain('安装后需重启管理器')
+    expect(wrapper.find('.release-notes').exists()).toBe(false)
     expect(button(wrapper, '关闭').exists()).toBe(true)
     expect(wrapper.find('[data-testid="install-manager-update"]').exists()).toBe(false)
   })
