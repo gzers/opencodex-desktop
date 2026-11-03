@@ -34,3 +34,20 @@ Chromium/WebKit各26项导出/WebDAV断言、26项导入状态断言，共104项
 ## Current callsite inventory
 
 Current source has 37 static Dialog/Modal component references excluding DEV; current-dialog-inventory.json records exact files/lines. Three ModelTransfer windows and the old SyncRoute direct UiDialog are retired, and six new component/host references are included. These are references, not 37 unique runtime modals. The current ledger maps each reference and preserves remaining native/state work.
+
+## 2026-11-03 原生macOS偏好文件流程
+
+native-preferences目录保存真实Tauri IPC与界面流程证据。原包来自本机既有558b9aec arm64候选，严格codesign校验通过后复制到/tmp/ocx020-native-20261103；副本更换test-only bundle ID并ad-hoc重签，仅为区分日常应用。身份、原/副本二进制摘要及嵌入源码见identity.json；本次不是最终tag包体验收。
+
+HOME、数据根、OpenCodex目录及npm缓存均指向该/tmp容器；应用显示缺少Node环境，仍可进入同步配置页。CLI是仅接受version查询、拒绝执行其它命令的惰性夹具。未运行真实服务、API或WebDAV，也未改日常配置。只结束了预先记录的61145号QA进程。
+
+实际执行并按字节验证：
+
+- 仅选择桌面偏好，打开导出预览创建一个未尝试冻结计划。取消后两个冻结文件均删除，exports没有文件；preview-before/after-cancel报告为证。
+- 确认明文导出，生成一个1,258字节的.ocxdconf并记录1项“通用偏好”完成回执，保留export-identity与原生截图。包内没有凭据。
+- 通过QA界面将主题改为dark，再由原生文件选择器选择刚导出的包。共享导入窗显示通用偏好更新、默认备份选中。第一次取消，preferences.json的SHA-256完全不变，没有新增范围备份。
+- 第二次确认更新，落盘appearance.theme从dark恢复为system；持久导入/导出回执均complete。唯一范围备份中的原始preferences字节与确认前SHA完全一致。
+
+仍待验证：备份groups还列出extensions、扩展配置前像不存在，而UI只选择了桌面偏好。包的manager含空扩展配置，可能存在未选范围携带或应用；本轮只证实偏好写入及其精确前像，未据此验收全部范围隔离/恢复。该差异回写S20-03/14继续查证。原生加密、凭据、Skill/MCP、备份恢复、所有入口/主题/缩放及最终正式包仍未由此完成。
+
+PR #45已在全CI通过后合并为ce9ea6e5；PR #46仍待完整Windows CI。安装包和OTA门保持未完成。
