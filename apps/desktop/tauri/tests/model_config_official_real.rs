@@ -1385,7 +1385,10 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     expected["disabled"] = json!(true);
     // The receiving save also obeys §29.1, regardless of a historical source's
     // friendly display name. Preserve route aliases and every other public field.
-    expected.as_object_mut().unwrap().remove("modelDisplayNames");
+    expected
+        .as_object_mut()
+        .unwrap()
+        .remove("modelDisplayNames");
     assert_eq!(received_public["providers"][&receiving_provider], expected);
     assert_eq!(
         management.key_state(&receiving_provider).await.unwrap(),
