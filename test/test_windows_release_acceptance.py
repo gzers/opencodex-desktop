@@ -49,6 +49,13 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
         self.assertIn("finally{", script)
         self.assertIn("Invoke-Installer 'msiexec.exe' ('/x", script)
 
+    def test_ci_release_exe_smoke_obeys_the_ordinary_token_boundary(self):
+        workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+        step = workflow.split("- name: Windows final EXE smoke", 1)[1].split("- name: Record Node24 driver", 1)[0]
+        self.assertIn("windows-ordinary-startup.ps1", step)
+        self.assertNotIn("windows-startup.ps1", step)
+        self.assertIn("if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }", step)
+
 
 if __name__ == "__main__":
     unittest.main()
