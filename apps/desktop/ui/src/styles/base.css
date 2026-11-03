@@ -1205,7 +1205,7 @@ html[data-overview-size="compact"] .ov[data-mode="setup"] .motion-hero svg { wid
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-size: 23px;
+  font-size: var(--text-display);
   font-weight: 650;
   line-height: 1.35;
   cursor: pointer;
@@ -1261,7 +1261,7 @@ html[data-overview-size="compact"] .ov[data-mode="setup"] .motion-hero svg { wid
 
 /* 最近事件摘要卡（标准最近两条 / 紧凑一条；完整历史在诊断中心）。 */
 /* 紧凑档：说明与动作行尺寸对齐原型 overview-dual.css。 */
-html[data-overview-size="compact"] .motion-mainline { font-size: 21px; }
+html[data-overview-size="compact"] .motion-mainline { font-size: var(--text-title); }
 html[data-overview-size="compact"] .motion-caption { margin-top: 2px; font-size: var(--text-caption); }
 html[data-overview-size="compact"] .motion-actions { padding-top: 5px; gap: 6px; }
 
