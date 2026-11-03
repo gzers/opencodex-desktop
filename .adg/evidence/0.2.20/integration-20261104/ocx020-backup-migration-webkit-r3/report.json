@@ -1,0 +1,92 @@
+{
+  "engine": "webkit",
+  "completed": false,
+  "failure": {
+    "key": "1180-100",
+    "message": "locator.waitFor: Error: strict mode violation: getByText('Owned migration refusal', { exact: true }) resolved to 2 elements:\n    1) <p role=\"alert\" class=\"env-bound\" data-v-d98acdc2=\"\">Owned migration refusal</p> aka getByRole('alert')\n    2) <span class=\"toast-txt\">Owned migration refusal</span> aka getByRole('status').getByText('Owned migration refusal')\n\nCall log:\n\u001b[2m  - waiting for getByText('Owned migration refusal', { exact: true }) to be visible\u001b[22m\n"
+  },
+  "scope": "real backup/data-root/client consumers; explicitly mocked IPC and in-memory mutation adapters; no filesystem migration/cleanup/restore/system opens",
+  "checks": [
+    {
+      "key": "1180-100",
+      "name": "cleanup cancel no mutation",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "cleanup pending disables owner actions",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "cleanup failure retains both records",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "cleanup success removes only preview candidate",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "restore cancel no mutation",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "restore failure retains source record",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "restore success target exact selected id",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "open owned-dir correctly titled",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "open cancellation no native call",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "open owned-file correctly titled",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "open cancellation no native call",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "open failure exact selected identity",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "blank migration produces no action",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "migration target rendered as text",
+      "passed": true
+    },
+    {
+      "key": "1180-100",
+      "name": "migration cancel preserves target",
+      "passed": true
+    }
+  ],
+  "screens": [
+    "1180-100-cleanup-failure.png",
+    "1180-100-restore-result.png"
+  ],
+  "errors": [],
+  "external": []
+}

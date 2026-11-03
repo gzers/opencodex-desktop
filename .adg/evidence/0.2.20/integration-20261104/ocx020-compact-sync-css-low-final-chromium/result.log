@@ -1,0 +1,13 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForSelector: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.sx-secrets') to be visible[22m
+
+    at /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/sync-020-matrix.browser.mjs:14:689 {
+  name: 'TimeoutError'
+}
+
+Node.js v26.8.1

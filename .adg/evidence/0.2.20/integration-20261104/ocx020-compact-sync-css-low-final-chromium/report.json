@@ -1,0 +1,1592 @@
+{
+  "engine": "chromium",
+  "baseline": "cfbd90c4b+1da4cabca+20261103-font+low-no-WebGL",
+  "prototypeUrl": "http://127.0.0.1:52429/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/01-%E9%A1%B9%E7%9B%AE%E6%94%AF%E6%92%91%E8%B5%84%E6%96%99/01-%E4%BA%A7%E5%93%81%E5%8E%9F%E5%8E%8B/%E5%8E%9F%E5%9E%8B/index.html",
+  "scope": "DEV fixture UI geometry/state, not native/file acceptance",
+  "checks": [
+    {
+      "key": "1180-light-high-50 file-scope viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": null,
+        "actions": []
+      }
+    },
+    {
+      "key": "1180-light-high-50 file-scope independent columns",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": null,
+        "actions": []
+      }
+    },
+    {
+      "key": "1180-light-high-50 export viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": {
+          "x": 410,
+          "y": 232.890625,
+          "right": 770,
+          "bottom": 527.109375,
+          "width": 360,
+          "height": 294.21875
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 683,
+            "y": 500.109375,
+            "right": 709,
+            "bottom": 518.109375,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "生成配置包",
+            "x": 715,
+            "y": 500.109375,
+            "right": 759,
+            "bottom": 518.109375,
+            "width": 44,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 export modal fits",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": {
+          "x": 410,
+          "y": 232.890625,
+          "right": 770,
+          "bottom": 527.109375,
+          "width": 360,
+          "height": 294.21875
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 683,
+            "y": 500.109375,
+            "right": 709,
+            "bottom": 518.109375,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "生成配置包",
+            "x": 715,
+            "y": 500.109375,
+            "right": 759,
+            "bottom": 518.109375,
+            "width": 44,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 export actions visible",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": {
+          "x": 410,
+          "y": 232.890625,
+          "right": 770,
+          "bottom": 527.109375,
+          "width": 360,
+          "height": 294.21875
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 683,
+            "y": 500.109375,
+            "right": 709,
+            "bottom": 518.109375,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "生成配置包",
+            "x": 715,
+            "y": 500.109375,
+            "right": 759,
+            "bottom": 518.109375,
+            "width": 44,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 default plaintext",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-50 import-empty viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": {
+          "x": 410,
+          "y": 306,
+          "right": 770,
+          "bottom": 454,
+          "width": 360,
+          "height": 148
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 689,
+            "y": 427,
+            "right": 715,
+            "bottom": 445,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "读取配置",
+            "x": 721,
+            "y": 427,
+            "right": 759,
+            "bottom": 445,
+            "width": 38,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 import-empty modal fits",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": {
+          "x": 410,
+          "y": 306,
+          "right": 770,
+          "bottom": 454,
+          "width": 360,
+          "height": 148
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 689,
+            "y": 427,
+            "right": 715,
+            "bottom": 445,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "读取配置",
+            "x": 721,
+            "y": 427,
+            "right": 759,
+            "bottom": 445,
+            "width": 38,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 import-empty actions visible",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": {
+          "x": 410,
+          "y": 306,
+          "right": 770,
+          "bottom": 454,
+          "width": 360,
+          "height": 148
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 689,
+            "y": 427,
+            "right": 715,
+            "bottom": 445,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "读取配置",
+            "x": 721,
+            "y": 427,
+            "right": 759,
+            "bottom": 445,
+            "width": 38,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 import-ready viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": {
+          "x": 410,
+          "y": 227.1875,
+          "right": 770,
+          "bottom": 532.8125,
+          "width": 360,
+          "height": 305.625
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 689,
+            "y": 505.8125,
+            "right": 715,
+            "bottom": 523.8125,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "确认更新",
+            "x": 721,
+            "y": 505.8125,
+            "right": 759,
+            "bottom": 523.8125,
+            "width": 38,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 import-ready modal fits",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": {
+          "x": 410,
+          "y": 227.1875,
+          "right": 770,
+          "bottom": 532.8125,
+          "width": 360,
+          "height": 305.625
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 689,
+            "y": 505.8125,
+            "right": 715,
+            "bottom": 523.8125,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "确认更新",
+            "x": 721,
+            "y": 505.8125,
+            "right": 759,
+            "bottom": 523.8125,
+            "width": 38,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 import-ready actions visible",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 361.5,
+          "y": 141,
+          "right": 821.5,
+          "bottom": 747,
+          "width": 460,
+          "height": 606
+        },
+        "aside": {
+          "x": 831.5,
+          "y": 141,
+          "right": 941.5,
+          "bottom": 747,
+          "width": 110,
+          "height": 606
+        },
+        "modal": {
+          "x": 410,
+          "y": 227.1875,
+          "right": 770,
+          "bottom": 532.8125,
+          "width": 360,
+          "height": 305.625
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 689,
+            "y": 505.8125,
+            "right": 715,
+            "bottom": 523.8125,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "确认更新",
+            "x": 721,
+            "y": 505.8125,
+            "right": 759,
+            "bottom": 523.8125,
+            "width": 38,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 same import host",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-50 webdav-scope viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "aside": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "modal": null,
+        "actions": []
+      }
+    },
+    {
+      "key": "1180-light-high-50 webdav-scope independent columns",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "aside": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "modal": null,
+        "actions": []
+      }
+    },
+    {
+      "key": "1180-light-high-50 connection viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "aside": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "modal": {
+          "x": 410,
+          "y": 258.75,
+          "right": 770,
+          "bottom": 501.25,
+          "width": 360,
+          "height": 242.5
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 689,
+            "y": 474.25,
+            "right": 715,
+            "bottom": 492.25,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "保存连接",
+            "x": 721,
+            "y": 474.25,
+            "right": 759,
+            "bottom": 492.25,
+            "width": 38,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 connection modal fits",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "aside": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "modal": {
+          "x": 410,
+          "y": 258.75,
+          "right": 770,
+          "bottom": 501.25,
+          "width": 360,
+          "height": 242.5
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 689,
+            "y": 474.25,
+            "right": 715,
+            "bottom": 492.25,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "保存连接",
+            "x": 721,
+            "y": 474.25,
+            "right": 759,
+            "bottom": 492.25,
+            "width": 38,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-50 connection actions visible",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "aside": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "modal": {
+          "x": 410,
+          "y": 258.75,
+          "right": 770,
+          "bottom": 501.25,
+          "width": 360,
+          "height": 242.5
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 689,
+            "y": 474.25,
+            "right": 715,
+            "bottom": 492.25,
+            "width": 26,
+            "height": 18
+          },
+          {
+            "text": "保存连接",
+            "x": 721,
+            "y": 474.25,
+            "right": 759,
+            "bottom": 492.25,
+            "width": 38,
+            "height": 18
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 file-scope viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": null,
+        "actions": []
+      }
+    },
+    {
+      "key": "1180-light-high-100 file-scope independent columns",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": null,
+        "actions": []
+      }
+    },
+    {
+      "key": "1180-light-high-100 export viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": {
+          "x": 230,
+          "y": 89.78125,
+          "right": 950,
+          "bottom": 670.21875,
+          "width": 720,
+          "height": 580.4375
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 781,
+            "y": 619.21875,
+            "right": 831,
+            "bottom": 653.21875,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "生成配置包",
+            "x": 843,
+            "y": 619.21875,
+            "right": 929,
+            "bottom": 653.21875,
+            "width": 86,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 export modal fits",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": {
+          "x": 230,
+          "y": 89.78125,
+          "right": 950,
+          "bottom": 670.21875,
+          "width": 720,
+          "height": 580.4375
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 781,
+            "y": 619.21875,
+            "right": 831,
+            "bottom": 653.21875,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "生成配置包",
+            "x": 843,
+            "y": 619.21875,
+            "right": 929,
+            "bottom": 653.21875,
+            "width": 86,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 export actions visible",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": {
+          "x": 230,
+          "y": 89.78125,
+          "right": 950,
+          "bottom": 670.21875,
+          "width": 720,
+          "height": 580.4375
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 781,
+            "y": 619.21875,
+            "right": 831,
+            "bottom": 653.21875,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "生成配置包",
+            "x": 843,
+            "y": 619.21875,
+            "right": 929,
+            "bottom": 653.21875,
+            "width": 86,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 default plaintext",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100 import-empty viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": {
+          "x": 230,
+          "y": 237,
+          "right": 950,
+          "bottom": 523,
+          "width": 720,
+          "height": 286
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 793,
+            "y": 472,
+            "right": 843,
+            "bottom": 506,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "读取配置",
+            "x": 855,
+            "y": 472,
+            "right": 929,
+            "bottom": 506,
+            "width": 74,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 import-empty modal fits",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": {
+          "x": 230,
+          "y": 237,
+          "right": 950,
+          "bottom": 523,
+          "width": 720,
+          "height": 286
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 793,
+            "y": 472,
+            "right": 843,
+            "bottom": 506,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "读取配置",
+            "x": 855,
+            "y": 472,
+            "right": 929,
+            "bottom": 506,
+            "width": 74,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 import-empty actions visible",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": {
+          "x": 230,
+          "y": 237,
+          "right": 950,
+          "bottom": 523,
+          "width": 720,
+          "height": 286
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 793,
+            "y": 472,
+            "right": 843,
+            "bottom": 506,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "读取配置",
+            "x": 855,
+            "y": 472,
+            "right": 929,
+            "bottom": 506,
+            "width": 74,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 import-ready viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": {
+          "x": 230,
+          "y": 83.59375,
+          "right": 950,
+          "bottom": 676.390625,
+          "width": 720,
+          "height": 592.796875
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 793,
+            "y": 625.390625,
+            "right": 843,
+            "bottom": 659.390625,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "确认更新",
+            "x": 855,
+            "y": 625.390625,
+            "right": 929,
+            "bottom": 659.390625,
+            "width": 74,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 import-ready modal fits",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": {
+          "x": 230,
+          "y": 83.59375,
+          "right": 950,
+          "bottom": 676.390625,
+          "width": 720,
+          "height": 592.796875
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 793,
+            "y": 625.390625,
+            "right": 843,
+            "bottom": 659.390625,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "确认更新",
+            "x": 855,
+            "y": 625.390625,
+            "right": 929,
+            "bottom": 659.390625,
+            "width": 74,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 import-ready actions visible",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 268,
+          "y": 250,
+          "right": 917,
+          "bottom": 735,
+          "width": 649,
+          "height": 485
+        },
+        "aside": {
+          "x": 937,
+          "y": 250,
+          "right": 1157,
+          "bottom": 735,
+          "width": 220,
+          "height": 485
+        },
+        "modal": {
+          "x": 230,
+          "y": 83.59375,
+          "right": 950,
+          "bottom": 676.390625,
+          "width": 720,
+          "height": 592.796875
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 793,
+            "y": 625.390625,
+            "right": 843,
+            "bottom": 659.390625,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "确认更新",
+            "x": 855,
+            "y": 625.390625,
+            "right": 929,
+            "bottom": 659.390625,
+            "width": 74,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 same import host",
+      "passed": true
+    },
+    {
+      "key": "1180-light-high-100 webdav-scope viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "aside": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "modal": null,
+        "actions": []
+      }
+    },
+    {
+      "key": "1180-light-high-100 webdav-scope independent columns",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "aside": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "modal": null,
+        "actions": []
+      }
+    },
+    {
+      "key": "1180-light-high-100 connection viewport",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "aside": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "modal": {
+          "x": 230,
+          "y": 144.5,
+          "right": 950,
+          "bottom": 615.5,
+          "width": 720,
+          "height": 471
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 793,
+            "y": 564.5,
+            "right": 843,
+            "bottom": 598.5,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "保存连接",
+            "x": 855,
+            "y": 564.5,
+            "right": 929,
+            "bottom": 598.5,
+            "width": 74,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 connection modal fits",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "aside": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "modal": {
+          "x": 230,
+          "y": 144.5,
+          "right": 950,
+          "bottom": 615.5,
+          "width": 720,
+          "height": 471
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 793,
+            "y": 564.5,
+            "right": 843,
+            "bottom": 598.5,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "保存连接",
+            "x": 855,
+            "y": 564.5,
+            "right": 929,
+            "bottom": 598.5,
+            "width": 74,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-high-100 connection actions visible",
+      "passed": true,
+      "detail": {
+        "window": {
+          "width": 1180,
+          "height": 760
+        },
+        "horizontal": 0,
+        "main": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "aside": {
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "modal": {
+          "x": 230,
+          "y": 144.5,
+          "right": 950,
+          "bottom": 615.5,
+          "width": 720,
+          "height": 471
+        },
+        "actions": [
+          {
+            "text": "取消",
+            "x": 793,
+            "y": 564.5,
+            "right": 843,
+            "bottom": 598.5,
+            "width": 50,
+            "height": 34
+          },
+          {
+            "text": "保存连接",
+            "x": 855,
+            "y": 564.5,
+            "right": 929,
+            "bottom": 598.5,
+            "width": 74,
+            "height": 34
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "key": "1180-light-high-100",
+      "surface": "prototype",
+      "resource": "http://127.0.0.1:52429/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/01-%E9%A1%B9%E7%9B%AE%E6%94%AF%E6%92%91%E8%B5%84%E6%96%99/01-%E4%BA%A7%E5%93%81%E5%8E%9F%E5%8E%8B/%E5%8E%9F%E5%9E%8B/index.html",
+      "status": 404
+    }
+  ],
+  "screens": [
+    "1180-light-high-100-file-scope.png",
+    "1180-light-high-100-export.png",
+    "1180-light-high-100-import-empty.png",
+    "1180-light-high-100-import-ready.png",
+    "1180-light-high-100-webdav-scope.png",
+    "1180-light-high-100-connection.png"
+  ]
+}

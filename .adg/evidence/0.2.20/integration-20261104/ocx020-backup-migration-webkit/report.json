@@ -1,0 +1,19 @@
+{
+  "engine": "webkit",
+  "completed": false,
+  "failure": {
+    "key": "1180-100",
+    "message": "locator.isDisabled: Error: strict mode violation: getByRole('button', { name: '刷新记录', exact: true }) resolved to 2 elements:\n    1) <button disabled type=\"button\" data-v-84d55e4b=\"\" class=\"btn btn ghost\">…</button> aka getByRole('button', { name: '刷新记录' }).first()\n    2) <button type=\"button\" data-v-ab9f6160=\"\" class=\"btn ghost btn-sm\">…</button> aka getByRole('button', { name: '刷新记录' }).nth(1)\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '刷新记录', exact: true })\u001b[22m\n"
+  },
+  "scope": "real backup/data-root/client consumers; explicitly mocked IPC and in-memory mutation adapters; no filesystem migration/cleanup/restore/system opens",
+  "checks": [
+    {
+      "key": "1180-100",
+      "name": "cleanup cancel no mutation",
+      "passed": true
+    }
+  ],
+  "screens": [],
+  "errors": [],
+  "external": []
+}

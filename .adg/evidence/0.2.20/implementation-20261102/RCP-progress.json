@@ -1,10 +1,10 @@
 {
   "status": "active",
-  "source": "main includesPR61 ec822e20; typographyPR63 head3e950b12 supersedes c691 package. Test-only official diagnostic590bbbfc/CI41662358604 failed catalog-unavailable; fixture repair pending.",
+  "source": "Integrated PR64 db371f82b58fe09bf7310165ed053c2470c24708; CI41669791169 and owned official41669619126 running. Product font fromf1579c6f. Old c691 package superseded.",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
-      "reason": "Candidate fullroute428/428,sync648/engine,logical height16/engine and native100/125% passed. Prototype screenshots reference100% only. Per-entry states and packages remain.",
+      "reason": "Full frozen dependencies corrected; shared user font increment and low-effects CSS host. Chromium/WebKit648each/96screens,0errors; font64each,Mac100/200%,allroute428 pass. Final packages/remaining entry acceptance pending.",
       "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
     },
     "saved-file-and-backup": {
@@ -19,7 +19,7 @@
     },
     "all-entry-coverage": {
       "status": "in_progress",
-      "reason": "37component references+25dynamic callsites; model69/engine and native shared preference added. Remaining applicable runtime/native/package states require reconciliation.",
+      "reason": "37static+25dynamic callsites layered evidence; adds actual backup/migration/client consumers60/engine,extensions/log48/engine,model completion69/engine. Explicit official wire passed; old name test aligned with confirmed spec. Final CI/native packages/OTA and final reconciliation pending.",
       "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
     },
     "macos-windows-native": {
@@ -41,7 +41,9 @@
     "owned_file_browser": "47/47 passed; acceptance-20261103/final-file-browser-6b2ea6d4",
     "owned_official_284": "2 explicit tests failed initial catalog; acceptance-20261103/ocx020-final-owned-official-284-failed.log; investigation open",
     "official_ci_284": "41658802959:2 explicit tests fail registration_unknown after catalog seeded on clean Mac; no product acceptance; log retained",
-    "compact_typography": "3e950b12:1122UI/typecheck/build,64checks/16screens each engine,Macnative100/200% pass. Fullroute428pass;WebKitfullsync648pass;Chromium522thenprototypeinitfail unresolved."
+    "compact_typography": "1122UI/typecheck/build,64checks/16screens each engine,Macnative100/200% and fullroute428 passed; final complete sync648/engine with0errors",
+    "backup_migration_clients": "60checks/12screens per engine; production consumer handlers with explicit mocked IPC, no real mutations",
+    "official_contract": "41666194973:wire test passed;old friendly-name assertion failed. db371f82 aligns tests withUI§29.1;41669619126 live, not yet passed"
   },
   "daily_config_writes": false,
   "daily_real_sync": false,
@@ -686,10 +688,10 @@
     "independent_installers_run": 41657773386
   },
   "release_hold": {
-    "reason": "New typography requires final CI/package/native/OTA; owned official catalog contract and Chromium prototype initialization unresolved",
+    "reason": "Integrated CI and explicit official contract pending, then new final package/install/actual OTA acceptance",
     "awaitingFontVersionAnswer": false,
-    "userDecision": "standard font too large atnormal100%; shared compact typography implemented",
-    "typographyEvidence": "compact-typography-20261103",
-    "oldCandidate": "c691 superseded; no public promotion"
+    "typographyImplemented": true,
+    "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",
+    "evidence": "integration-20261104"
   }
 }

@@ -175,7 +175,7 @@
     const compact = root.dataset.overviewSize === 'compact';
     const effects = root.dataset.effects || 'high';
     // 背景光渲染：默认 mesh（WEBGL 网格渐变 + 颗粒）；环境不支持 WEBGL 时父页已把值降级为 css。
-    const render = root.dataset.glowRender === 'css' ? 'css' : 'mesh';
+    const render = effects === 'low' || root.dataset.glowRender === 'css' ? 'css' : 'mesh';
     if (effects !== lastEffects || render !== lastRender) {
       const url = new URL('../../03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/01-需求分析/05-原型/候选/2026-09-28-Logo本体形变/index.html',source);
       url.search = '?embed=1&layout=hero&v=dual&effects=' + effects + '&render=' + render;
