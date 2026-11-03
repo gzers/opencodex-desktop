@@ -2,7 +2,7 @@ name: Isolated official runtime contract
 on:
   workflow_dispatch:
   push:
-    branches: [codex/0.2.20-owned-official-contract]
+    branches: [codex/0.2.20-owned-official-contract, codex/0.2.20-final-candidate]
 permissions:
   contents: read
 jobs:

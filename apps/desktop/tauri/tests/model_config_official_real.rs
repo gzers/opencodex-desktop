@@ -149,7 +149,7 @@ async fn history_plan(
     .unwrap()
 }
 #[tokio::test]
-#[ignore = "requires explicit OCXD_TEST_OFFICIAL_ENTRY and OCXD_TEST_OFFICIAL_NODE; runs installed official in temporary HOME"]
+#[ignore = "requires explicit official entry, Node and OCXD_TEST_CODEX_BIN; runs installed official in temporary HOME"]
 async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     use std::os::unix::fs::PermissionsExt;
     let entry = std::path::PathBuf::from(
@@ -492,13 +492,19 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     assert!(order
         .iter()
         .any(|slug| slug.as_str() == Some(&format!("{mapped}/fixture-anthropic"))));
+    // UI specification §29.1 keeps legacy display intent local and clears
+    // selected upstream friendly names. Aliases above remain routing identities.
+    assert!(after.providers["providers"]["fixture"]["modelDisplayNames"]
+        .get("fixture-base")
+        .is_none());
+    assert!(after.providers["providers"][mapped]["modelDisplayNames"]
+        .get("fixture-anthropic")
+        .is_none());
     assert_eq!(
-        after.providers["providers"]["fixture"]["modelDisplayNames"]["fixture-base"],
-        "基础型号"
-    );
-    assert_eq!(
-        after.providers["providers"][mapped]["modelDisplayNames"]["fixture-anthropic"],
-        "协议型号"
+        store.load().unwrap().policy.channels[0].naming["fixture-base"]
+            .display_name
+            .as_deref(),
+        Some("基础型号")
     );
     let stable_group = plan.protocol_groups[0].clone();
     // Same wire protocol can still need distinct provider-wide rule values.
@@ -686,8 +692,8 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .unwrap()
         .label
         .clear();
-    // Explicit naming overrides the discovered label; clear the edited display
-    // intent through the same new field the real form now edits.
+    // Clear legacy display intent through the compatibility schema; the current
+    // UI does not offer a friendly-name editor (§29.1).
     restored_policy.channels[0]
         .naming
         .get_mut("fixture-base")
@@ -1772,7 +1778,7 @@ fn discovered_count(value: &serde_json::Value) -> usize {
 /// Focused wire proof, separate from the no-generation configuration/recovery
 /// chain. Every generation-shaped request terminates at our loopback fixture.
 #[tokio::test]
-#[ignore = "requires explicit installed official entry/node; generation requests only hit a temporary loopback fixture"]
+#[ignore = "requires explicit official entry/node/Codex binary; generation requests only hit a temporary loopback fixture"]
 async fn isolated_official_saved_protocol_alias_reasoning_and_fast_wire() {
     use std::os::unix::fs::PermissionsExt;
     let entry = std::path::PathBuf::from(
