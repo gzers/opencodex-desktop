@@ -61,7 +61,9 @@ try{
  & node (Join-Path $PSScriptRoot 'windows-ota.mjs') ('http://127.0.0.1:'+$taskPort) $taskOutput $taskSandbox 'verify' $Version $FromVersion $Channel
  if($LASTEXITCODE -ne 0){throw 'Reopened OTA result verification failed'}
  $taskResult.installedExecutableSha256=(Get-FileHash -LiteralPath $taskExe).Hash.ToLowerInvariant()
- if($taskResult.installedExecutableSha256 -cne $ExpectedBuiltSha256.ToLowerInvariant()){throw 'OTA installed EXE differs from the frozen candidate build'}
+ $taskBundleIdentity=& node (Join-Path $PSScriptRoot 'windows-bundle-identity.mjs') '--installed-hash' $taskExe $Kind $ExpectedBuiltSha256.ToLowerInvariant()
+ if($LASTEXITCODE -ne 0){throw 'OTA installed EXE differs from the exact expected frozen candidate bundle bytes'}
+ $taskResult.installedBundleIdentity=$taskBundleIdentity|ConvertFrom-Json
  $taskResult.result='pass'
 }catch{$taskResult.error=$_.Exception.Message;throw}finally{
  if($taskApp -and !$taskApp.HasExited){$taskApp.Kill($true);[void]$taskApp.WaitForExit(10000)}

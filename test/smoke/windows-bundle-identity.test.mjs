@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { verifyBundleIdentity } from './windows-bundle-identity.mjs';
+import { verifyBundleIdentity,verifyInstalledBundleHash } from './windows-bundle-identity.mjs';
+import {createHash} from 'node:crypto';
 
 const original = Buffer.from('prefix\0__TAURI_BUNDLE_TYPE_VAR_UNK\0payload');
 const bundled = kind => Buffer.from('prefix\0__TAURI_BUNDLE_TYPE_VAR_' + kind + '\0payload');
@@ -23,4 +24,17 @@ test('rejects missing or ambiguous original marker', () => {
 });
 test('rejects unsupported bundle kind', () => {
   assert.throws(() => verifyBundleIdentity(original, bundled('NSS'), 'other'), /Unsupported/);
+});
+test('OTA recovers only the frozen original hash from its exact installer marker',()=>{
+  const expected=createHash('sha256').update(original).digest('hex');
+  for(const [kind,suffix] of [['msi','MSI'],['nsis','NSS']]){
+    const result=verifyInstalledBundleHash(bundled(suffix),expected,kind);
+    assert.equal(result.builtSha256,expected);assert.equal(result.result,'pass');
+  }
+});
+test('OTA rejects wrong package kind, changed payload, missing marker and another source EXE',()=>{
+  const expected=createHash('sha256').update(original).digest('hex'),changed=bundled('MSI');changed[0]^=1;
+  for(const bytes of [changed,original,bundled('NSS'),Buffer.from('no marker')])assert.throws(()=>verifyInstalledBundleHash(bytes,expected,'msi'));
+  assert.throws(()=>verifyInstalledBundleHash(bundled('MSI'),'0'.repeat(64),'msi'));
+  assert.throws(()=>verifyInstalledBundleHash(bundled('MSI'),'bad','msi'));
 });

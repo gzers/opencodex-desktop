@@ -25,7 +25,30 @@ export function verifyBundleIdentity(original, installed, kind) {
     bundleMarkerOffset: offset, bundleMarker: suffix, result: 'pass' };
 }
 
+// OTA has the frozen source EXE digest rather than its original bytes. Recover
+// exactly one matching original by undoing only this installer's marker patch.
+export function verifyInstalledBundleHash(installed, expectedBuiltSha256, kind) {
+  if (!/^[0-9a-f]{64}$/.test(expectedBuiltSha256)) throw new Error('Frozen original build SHA-256 required');
+  const suffix = { nsis: 'NSS', msi: 'MSI' }[kind];
+  if (!suffix) throw new Error('Unsupported bundle kind');
+  const patched = Buffer.from('__TAURI_BUNDLE_TYPE_VAR_' + suffix);
+  const matches = [];
+  for (let offset = installed.indexOf(patched); offset >= 0; offset = installed.indexOf(patched, offset + 1)) {
+    const original = Buffer.from(installed);
+    marker.copy(original, offset);
+    if (sha256(original) === expectedBuiltSha256) matches.push(original);
+  }
+  if (matches.length !== 1) throw new Error('One exact hash-matching frozen original EXE required');
+  return verifyBundleIdentity(matches[0], installed, kind);
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const [original, installed, kind] = process.argv.slice(2);
-  console.log(JSON.stringify(verifyBundleIdentity(readFileSync(original), readFileSync(installed), kind)));
+  const args = process.argv.slice(2);
+  if(args[0]==='--installed-hash'){
+    const [,installed,kind,expected]=args;
+    console.log(JSON.stringify(verifyInstalledBundleHash(readFileSync(installed),expected,kind)));
+  }else{
+    const [original,installed,kind]=args;
+    console.log(JSON.stringify(verifyBundleIdentity(readFileSync(original),readFileSync(installed),kind)));
+  }
 }
