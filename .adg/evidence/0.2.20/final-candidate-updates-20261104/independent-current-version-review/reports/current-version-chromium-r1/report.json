@@ -1,0 +1,5154 @@
+{
+  "engine": "chromium",
+  "completed": true,
+  "failure": null,
+  "result": "pass",
+  "sourceSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+  "scope": "Actual production Overview/Settings UpdateCenter with explicit memory-only state/IPC. Covers2hosts*2targets*same/lower/none/newer/unknownCurrent plus frozen pending manager/official sessions. No real network/native/install/restart.",
+  "checks": [
+    {
+      "key": "overview-manager-same",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道"
+      ]
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-same",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道"
+      ]
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-lower",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道"
+      ]
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-none",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+        "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+      ]
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "exact remote release description stays readable",
+      "passed": true,
+      "detail": "OWNED-EXACT-RELEASE-manager-0.2.21"
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "release query binds exact target and candidate",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-newer",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道"
+      ]
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "exact remote release description stays readable",
+      "passed": true,
+      "detail": "OWNED-EXACT-RELEASE-manager-0.2.20"
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "release query binds exact target and candidate",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "overview-official-same",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-official-same",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-same",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-same",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-same",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-same",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-same",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-same",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "官方项目 · @bitkyc08/opencodex"
+      ]
+    },
+    {
+      "key": "overview-official-same",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "overview-official-same",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "overview-official-same",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "overview-official-same",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "官方项目 · @bitkyc08/opencodex"
+      ]
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "overview-official-lower",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "overview-official-none",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-official-none",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-none",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-none",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-none",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-none",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-none",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-none",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "官方项目 · @bitkyc08/opencodex"
+      ]
+    },
+    {
+      "key": "overview-official-none",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "overview-official-none",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "overview-official-none",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "overview-official-none",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+        "面板升级前先备份配置；备份成功后才会安装选定版本。"
+      ]
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "exact remote release description stays readable",
+      "passed": true,
+      "detail": "OWNED-EXACT-RELEASE-official-2.85.0"
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "release query binds exact target and candidate",
+      "passed": true
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "overview-official-newer",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "官方项目 · @bitkyc08/opencodex"
+      ]
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "exact remote release description stays readable",
+      "passed": true,
+      "detail": "OWNED-EXACT-RELEASE-official-2.84.0"
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "release query binds exact target and candidate",
+      "passed": true
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道"
+      ]
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-same",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道"
+      ]
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-lower",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "0.2.20",
+        "current": "0.2.20",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道"
+      ]
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-none",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情与确认",
+        "hero": "0.2.20→0.2.21",
+        "current": "0.2.20",
+        "candidate": "0.2.21",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "确认更新",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+          "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+        ],
+        "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+      }
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+        "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+      ]
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "exact remote release description stays readable",
+      "passed": true,
+      "detail": "OWNED-EXACT-RELEASE-manager-0.2.21"
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "release query binds exact target and candidate",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-newer",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新详情",
+        "hero": "未知→0.2.20",
+        "current": "未知",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道"
+        ],
+        "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+      }
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道"
+      ]
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "exact remote release description stays readable",
+      "passed": true,
+      "detail": "OWNED-EXACT-RELEASE-manager-0.2.20"
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "release query binds exact target and candidate",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "settings-official-same",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-official-same",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-same",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-same",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-same",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-same",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-same",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-same",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "官方项目 · @bitkyc08/opencodex"
+      ]
+    },
+    {
+      "key": "settings-official-same",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "settings-official-same",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "settings-official-same",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "settings-official-same",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "官方项目 · @bitkyc08/opencodex"
+      ]
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "settings-official-lower",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "settings-official-none",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-official-none",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-none",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-none",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-none",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-none",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-none",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "2.84.0",
+        "current": "2.84.0",
+        "candidate": null,
+        "arrow": false,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-none",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "官方项目 · @bitkyc08/opencodex"
+      ]
+    },
+    {
+      "key": "settings-official-none",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "settings-official-none",
+      "name": "same/lower/none does not fetch an obsolete candidate description",
+      "passed": true
+    },
+    {
+      "key": "settings-official-none",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "settings-official-none",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情与确认",
+        "hero": "2.84.0→2.85.0",
+        "current": "2.84.0",
+        "candidate": "2.85.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "取消",
+            "label": "关闭更新中心",
+            "disabled": false
+          },
+          {
+            "text": "备份并更新面板",
+            "label": null,
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+          "面板升级前先备份配置；备份成功后才会安装选定版本。"
+        ],
+        "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+        "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+      }
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+        "面板升级前先备份配置；备份成功后才会安装选定版本。"
+      ]
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "exact remote release description stays readable",
+      "passed": true,
+      "detail": "OWNED-EXACT-RELEASE-official-2.85.0"
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "release query binds exact target and candidate",
+      "passed": true
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "settings-official-newer",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "current version stays exact",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "cached equal or lower does not produce a candidate arrow",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "candidate version is exact or absent",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "title only requests confirmation for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "footer says close for read-only details",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "update confirmation exists only for actual newer version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新详情",
+        "hero": "未知→2.84.0",
+        "current": "未知",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+        "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+      }
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "install or restart explanation absent from latest/unknown details",
+      "passed": true,
+      "detail": [
+        "官方项目 · @bitkyc08/opencodex"
+      ]
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "no restart button without pending progress",
+      "passed": true
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "exact remote release description stays readable",
+      "passed": true,
+      "detail": "OWNED-EXACT-RELEASE-official-2.84.0"
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "release query binds exact target and candidate",
+      "passed": true
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "read-only close retains original owner",
+      "passed": true
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "name": "reading details performs zero install/restart actions",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "name": "progress title remains progress",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新进度",
+        "hero": "0.2.19→0.2.20",
+        "current": "0.2.19",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道",
+          "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+        ],
+        "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "name": "progress retains the starting current version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新进度",
+        "hero": "0.2.19→0.2.20",
+        "current": "0.2.19",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道",
+          "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+        ],
+        "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "name": "progress retains confirmed candidate despite changed cached versions",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新进度",
+        "hero": "0.2.19→0.2.20",
+        "current": "0.2.19",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道",
+          "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+        ],
+        "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "name": "progress close is labelled close window",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新进度",
+        "hero": "0.2.19→0.2.20",
+        "current": "0.2.19",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道",
+          "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+        ],
+        "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "name": "progress does not offer a second update confirmation",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "name": "pending restart explains frozen actual transition",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道",
+        "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+      ]
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "name": "pending restart action remains present",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "name": "progress dismissal retains owner route",
+      "passed": true
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "name": "reopening progress preserves frozen version pair",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新进度",
+        "hero": "0.2.19→0.2.20",
+        "current": "0.2.19",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道",
+          "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+        ],
+        "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "name": "progress title remains progress",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "name": "progress retains the starting current version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "name": "progress retains confirmed candidate despite changed cached versions",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "name": "progress close is labelled close window",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "name": "progress does not offer a second update confirmation",
+      "passed": true
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "name": "progress dismissal retains owner route",
+      "passed": true
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "name": "reopening progress preserves frozen version pair",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "name": "failed official progress retains confirmed candidate",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n面板更新失败\n\n官方更新安装失败，请重试。\n\n准备\n下载\n校验\n应用与核验\n重试面板更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "name": "progress title remains progress",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新进度",
+        "hero": "0.2.19→0.2.20",
+        "current": "0.2.19",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道",
+          "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+        ],
+        "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "name": "progress retains the starting current version",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新进度",
+        "hero": "0.2.19→0.2.20",
+        "current": "0.2.19",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道",
+          "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+        ],
+        "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "name": "progress retains confirmed candidate despite changed cached versions",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新进度",
+        "hero": "0.2.19→0.2.20",
+        "current": "0.2.19",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道",
+          "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+        ],
+        "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "name": "progress close is labelled close window",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新进度",
+        "hero": "0.2.19→0.2.20",
+        "current": "0.2.19",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道",
+          "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+        ],
+        "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "name": "progress does not offer a second update confirmation",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "name": "pending restart explains frozen actual transition",
+      "passed": true,
+      "detail": [
+        "OpenCodex Desktop · 稳定通道",
+        "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+      ]
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "name": "pending restart action remains present",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "name": "progress dismissal retains owner route",
+      "passed": true
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "name": "reopening progress preserves frozen version pair",
+      "passed": true,
+      "detail": {
+        "title": "桌面管理器更新进度",
+        "hero": "0.2.19→0.2.20",
+        "current": "0.2.19",
+        "candidate": "0.2.20",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "OpenCodex Desktop · 稳定通道",
+          "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+        ],
+        "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "name": "result-row candidate only for proven newer",
+      "passed": true
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "name": "progress title remains progress",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "name": "progress retains the starting current version",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "name": "progress retains confirmed candidate despite changed cached versions",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "name": "progress close is labelled close window",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "name": "progress does not offer a second update confirmation",
+      "passed": true
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "name": "progress dismissal retains owner route",
+      "passed": true
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "name": "reopening progress preserves frozen version pair",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+        "notes": null
+      }
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "name": "failed official progress retains confirmed candidate",
+      "passed": true,
+      "detail": {
+        "title": "OpenCodex 面板更新进度",
+        "hero": "2.83.0→2.84.0",
+        "current": "2.83.0",
+        "candidate": "2.84.0",
+        "arrow": true,
+        "footer": [
+          {
+            "text": "关闭窗口",
+            "label": "关闭更新中心",
+            "disabled": false
+          }
+        ],
+        "hints": [
+          "官方项目 · @bitkyc08/opencodex"
+        ],
+        "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n面板更新失败\n\n官方更新安装失败，请重试。\n\n准备\n下载\n校验\n应用与核验\n重试面板更新\n关闭窗口",
+        "notes": null
+      }
+    }
+  ],
+  "states": [
+    {
+      "key": "overview-manager-same",
+      "owner": "overview",
+      "target": "manager",
+      "condition": "same",
+      "phase": "detail",
+      "title": "桌面管理器更新详情",
+      "hero": "0.2.20",
+      "current": "0.2.20",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道"
+      ],
+      "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "overview-manager-lower",
+      "owner": "overview",
+      "target": "manager",
+      "condition": "lower",
+      "phase": "detail",
+      "title": "桌面管理器更新详情",
+      "hero": "0.2.20",
+      "current": "0.2.20",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道"
+      ],
+      "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "overview-manager-none",
+      "owner": "overview",
+      "target": "manager",
+      "condition": "none",
+      "phase": "detail",
+      "title": "桌面管理器更新详情",
+      "hero": "0.2.20",
+      "current": "0.2.20",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道"
+      ],
+      "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "overview-manager-newer",
+      "owner": "overview",
+      "target": "manager",
+      "condition": "newer",
+      "phase": "detail",
+      "title": "桌面管理器更新详情与确认",
+      "hero": "0.2.20→0.2.21",
+      "current": "0.2.20",
+      "candidate": "0.2.21",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "取消",
+          "label": "关闭更新中心",
+          "disabled": false
+        },
+        {
+          "text": "确认更新",
+          "label": null,
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+        "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+      ],
+      "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+      "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+    },
+    {
+      "key": "overview-manager-unknownCurrent",
+      "owner": "overview",
+      "target": "manager",
+      "condition": "unknownCurrent",
+      "phase": "detail",
+      "title": "桌面管理器更新详情",
+      "hero": "未知→0.2.20",
+      "current": "未知",
+      "candidate": "0.2.20",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道"
+      ],
+      "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+      "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+    },
+    {
+      "key": "overview-official-same",
+      "owner": "overview",
+      "target": "official",
+      "condition": "same",
+      "phase": "detail",
+      "title": "OpenCodex 面板更新详情",
+      "hero": "2.84.0",
+      "current": "2.84.0",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "overview-official-lower",
+      "owner": "overview",
+      "target": "official",
+      "condition": "lower",
+      "phase": "detail",
+      "title": "OpenCodex 面板更新详情",
+      "hero": "2.84.0",
+      "current": "2.84.0",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "overview-official-none",
+      "owner": "overview",
+      "target": "official",
+      "condition": "none",
+      "phase": "detail",
+      "title": "OpenCodex 面板更新详情",
+      "hero": "2.84.0",
+      "current": "2.84.0",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "overview-official-newer",
+      "owner": "overview",
+      "target": "official",
+      "condition": "newer",
+      "phase": "detail",
+      "title": "OpenCodex 面板更新详情与确认",
+      "hero": "2.84.0→2.85.0",
+      "current": "2.84.0",
+      "candidate": "2.85.0",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "取消",
+          "label": "关闭更新中心",
+          "disabled": false
+        },
+        {
+          "text": "备份并更新面板",
+          "label": null,
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+        "面板升级前先备份配置；备份成功后才会安装选定版本。"
+      ],
+      "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+      "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+    },
+    {
+      "key": "overview-official-unknownCurrent",
+      "owner": "overview",
+      "target": "official",
+      "condition": "unknownCurrent",
+      "phase": "detail",
+      "title": "OpenCodex 面板更新详情",
+      "hero": "未知→2.84.0",
+      "current": "未知",
+      "candidate": "2.84.0",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+      "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+    },
+    {
+      "key": "settings-manager-same",
+      "owner": "settings",
+      "target": "manager",
+      "condition": "same",
+      "phase": "detail",
+      "title": "桌面管理器更新详情",
+      "hero": "0.2.20",
+      "current": "0.2.20",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道"
+      ],
+      "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "settings-manager-lower",
+      "owner": "settings",
+      "target": "manager",
+      "condition": "lower",
+      "phase": "detail",
+      "title": "桌面管理器更新详情",
+      "hero": "0.2.20",
+      "current": "0.2.20",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道"
+      ],
+      "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "settings-manager-none",
+      "owner": "settings",
+      "target": "manager",
+      "condition": "none",
+      "phase": "detail",
+      "title": "桌面管理器更新详情",
+      "hero": "0.2.20",
+      "current": "0.2.20",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道"
+      ],
+      "text": "桌面管理器更新详情\n版本升级\n已是最新版本\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "settings-manager-newer",
+      "owner": "settings",
+      "target": "manager",
+      "condition": "newer",
+      "phase": "detail",
+      "title": "桌面管理器更新详情与确认",
+      "hero": "0.2.20→0.2.21",
+      "current": "0.2.20",
+      "candidate": "0.2.21",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "取消",
+          "label": "关闭更新中心",
+          "disabled": false
+        },
+        {
+          "text": "确认更新",
+          "label": null,
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道 · 安装后需重启管理器",
+        "保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。"
+      ],
+      "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.20\n→\n0.2.21\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.21\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+      "notes": "OWNED-EXACT-RELEASE-manager-0.2.21"
+    },
+    {
+      "key": "settings-manager-unknownCurrent",
+      "owner": "settings",
+      "target": "manager",
+      "condition": "unknownCurrent",
+      "phase": "detail",
+      "title": "桌面管理器更新详情",
+      "hero": "未知→0.2.20",
+      "current": "未知",
+      "candidate": "0.2.20",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道"
+      ],
+      "text": "桌面管理器更新详情\n版本升级\n无法比较版本\n未知\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新内容\nOWNED-EXACT-RELEASE-manager-0.2.20\n关闭",
+      "notes": "OWNED-EXACT-RELEASE-manager-0.2.20"
+    },
+    {
+      "key": "settings-official-same",
+      "owner": "settings",
+      "target": "official",
+      "condition": "same",
+      "phase": "detail",
+      "title": "OpenCodex 面板更新详情",
+      "hero": "2.84.0",
+      "current": "2.84.0",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "settings-official-lower",
+      "owner": "settings",
+      "target": "official",
+      "condition": "lower",
+      "phase": "detail",
+      "title": "OpenCodex 面板更新详情",
+      "hero": "2.84.0",
+      "current": "2.84.0",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新详情\n版本升级\n已是最新版本\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "settings-official-none",
+      "owner": "settings",
+      "target": "official",
+      "condition": "none",
+      "phase": "detail",
+      "title": "OpenCodex 面板更新详情",
+      "hero": "2.84.0",
+      "current": "2.84.0",
+      "candidate": null,
+      "arrow": false,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新详情\n版本升级\n尚未检查\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\n\n尚无可核验的更新候选。\n\n关闭",
+      "notes": null
+    },
+    {
+      "key": "settings-official-newer",
+      "owner": "settings",
+      "target": "official",
+      "condition": "newer",
+      "phase": "detail",
+      "title": "OpenCodex 面板更新详情与确认",
+      "hero": "2.84.0→2.85.0",
+      "current": "2.84.0",
+      "candidate": "2.85.0",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "取消",
+          "label": "关闭更新中心",
+          "disabled": false
+        },
+        {
+          "text": "备份并更新面板",
+          "label": null,
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体",
+        "面板升级前先备份配置；备份成功后才会安装选定版本。"
+      ],
+      "text": "OpenCodex 面板更新详情与确认\n版本升级\n发现新版本\n2.84.0\n→\n2.85.0\n\n官方项目 · @bitkyc08/opencodex · 更新已登记的面板包体\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.85.0\n\n面板升级前先备份配置；备份成功后才会安装选定版本。\n\n取消\n备份并更新面板",
+      "notes": "OWNED-EXACT-RELEASE-official-2.85.0"
+    },
+    {
+      "key": "settings-official-unknownCurrent",
+      "owner": "settings",
+      "target": "official",
+      "condition": "unknownCurrent",
+      "phase": "detail",
+      "title": "OpenCodex 面板更新详情",
+      "hero": "未知→2.84.0",
+      "current": "未知",
+      "candidate": "2.84.0",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新详情\n版本升级\n无法比较版本\n未知\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n更新内容\nOWNED-EXACT-RELEASE-official-2.84.0\n关闭",
+      "notes": "OWNED-EXACT-RELEASE-official-2.84.0"
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "owner": "overview",
+      "target": "manager",
+      "condition": "pending",
+      "phase": "frozen",
+      "title": "桌面管理器更新进度",
+      "hero": "0.2.19→0.2.20",
+      "current": "0.2.19",
+      "candidate": "0.2.20",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭窗口",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道",
+        "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+      ],
+      "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+      "notes": null
+    },
+    {
+      "key": "overview-manager-pending-frozen",
+      "owner": "overview",
+      "target": "manager",
+      "condition": "pending",
+      "phase": "reopened",
+      "title": "桌面管理器更新进度",
+      "hero": "0.2.19→0.2.20",
+      "current": "0.2.19",
+      "candidate": "0.2.20",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭窗口",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道",
+        "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+      ],
+      "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+      "notes": null
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "owner": "overview",
+      "target": "official",
+      "condition": "pending",
+      "phase": "frozen",
+      "title": "OpenCodex 面板更新进度",
+      "hero": "2.83.0→2.84.0",
+      "current": "2.83.0",
+      "candidate": "2.84.0",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭窗口",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+      "notes": null
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "owner": "overview",
+      "target": "official",
+      "condition": "pending",
+      "phase": "reopened",
+      "title": "OpenCodex 面板更新进度",
+      "hero": "2.83.0→2.84.0",
+      "current": "2.83.0",
+      "candidate": "2.84.0",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭窗口",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+      "notes": null
+    },
+    {
+      "key": "overview-official-pending-frozen",
+      "owner": "overview",
+      "target": "official",
+      "condition": "pending",
+      "phase": "failed",
+      "title": "OpenCodex 面板更新进度",
+      "hero": "2.83.0→2.84.0",
+      "current": "2.83.0",
+      "candidate": "2.84.0",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭窗口",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n面板更新失败\n\n官方更新安装失败，请重试。\n\n准备\n下载\n校验\n应用与核验\n重试面板更新\n关闭窗口",
+      "notes": null
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "owner": "settings",
+      "target": "manager",
+      "condition": "pending",
+      "phase": "frozen",
+      "title": "桌面管理器更新进度",
+      "hero": "0.2.19→0.2.20",
+      "current": "0.2.19",
+      "candidate": "0.2.20",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭窗口",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道",
+        "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+      ],
+      "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+      "notes": null
+    },
+    {
+      "key": "settings-manager-pending-frozen",
+      "owner": "settings",
+      "target": "manager",
+      "condition": "pending",
+      "phase": "reopened",
+      "title": "桌面管理器更新进度",
+      "hero": "0.2.19→0.2.20",
+      "current": "0.2.19",
+      "candidate": "0.2.20",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭窗口",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "OpenCodex Desktop · 稳定通道",
+        "当前仍为 0.2.19。重启后核验 0.2.20 是否生效。"
+      ],
+      "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口",
+      "notes": null
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "owner": "settings",
+      "target": "official",
+      "condition": "pending",
+      "phase": "frozen",
+      "title": "OpenCodex 面板更新进度",
+      "hero": "2.83.0→2.84.0",
+      "current": "2.83.0",
+      "candidate": "2.84.0",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭窗口",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+      "notes": null
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "owner": "settings",
+      "target": "official",
+      "condition": "pending",
+      "phase": "reopened",
+      "title": "OpenCodex 面板更新进度",
+      "hero": "2.83.0→2.84.0",
+      "current": "2.83.0",
+      "candidate": "2.84.0",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭窗口",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n正在校验安装位置\n准备\n下载\n校验\n应用与核验\n关闭窗口",
+      "notes": null
+    },
+    {
+      "key": "settings-official-pending-frozen",
+      "owner": "settings",
+      "target": "official",
+      "condition": "pending",
+      "phase": "failed",
+      "title": "OpenCodex 面板更新进度",
+      "hero": "2.83.0→2.84.0",
+      "current": "2.83.0",
+      "candidate": "2.84.0",
+      "arrow": true,
+      "footer": [
+        {
+          "text": "关闭窗口",
+          "label": "关闭更新中心",
+          "disabled": false
+        }
+      ],
+      "hints": [
+        "官方项目 · @bitkyc08/opencodex"
+      ],
+      "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n面板更新失败\n\n官方更新安装失败，请重试。\n\n准备\n下载\n校验\n应用与核验\n重试面板更新\n关闭窗口",
+      "notes": null
+    }
+  ],
+  "screens": [
+    "overview-manager-same-detail.png",
+    "overview-manager-lower-detail.png",
+    "overview-manager-none-detail.png",
+    "overview-manager-newer-detail.png",
+    "overview-manager-unknownCurrent-detail.png",
+    "overview-official-same-detail.png",
+    "overview-official-lower-detail.png",
+    "overview-official-none-detail.png",
+    "overview-official-newer-detail.png",
+    "overview-official-unknownCurrent-detail.png",
+    "settings-manager-same-detail.png",
+    "settings-manager-lower-detail.png",
+    "settings-manager-none-detail.png",
+    "settings-manager-newer-detail.png",
+    "settings-manager-unknownCurrent-detail.png",
+    "settings-official-same-detail.png",
+    "settings-official-lower-detail.png",
+    "settings-official-none-detail.png",
+    "settings-official-newer-detail.png",
+    "settings-official-unknownCurrent-detail.png",
+    "overview-manager-pending-frozen-frozen.png",
+    "overview-manager-pending-frozen-reopened.png",
+    "overview-official-pending-frozen-frozen.png",
+    "overview-official-pending-frozen-reopened.png",
+    "overview-official-pending-frozen-failed.png",
+    "settings-manager-pending-frozen-frozen.png",
+    "settings-manager-pending-frozen-reopened.png",
+    "settings-official-pending-frozen-frozen.png",
+    "settings-official-pending-frozen-reopened.png",
+    "settings-official-pending-frozen-failed.png"
+  ]
+}

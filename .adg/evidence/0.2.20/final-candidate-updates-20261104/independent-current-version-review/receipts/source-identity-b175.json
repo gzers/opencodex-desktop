@@ -1,0 +1,13 @@
+{
+  "fixedCommit": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "head": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "UpdateCenterSha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+  "sourceSha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+  "priorReviewedSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+  "servedSourceSha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+  "capturedAt": "2026-11-03T19:00:59.248764+00:00",
+  "scriptSetupIdenticalToReviewed": true,
+  "stylesIdenticalToReviewed": true,
+  "delta": "--- reviewed-c2125ea9-UpdateCenter.vue\n+++ b1750f5c-UpdateCenter.vue\n@@ -253,7 +253,7 @@\n               <p v-if=\"selected === 'official' && officialQueryError\" class=\"update-error update-query-error\" role=\"status\" data-testid=\"official-query-error\">{{ officialQueryError }}</p>\n             <p v-if=\"selected === 'manager' && (session.managerCheckError || status?.error)\" class=\"update-error update-query-error\" role=\"status\">{{ session.managerCheckError || status?.error }}</p>\n             <template v-if=\"!showingProgress\">\n-              <ReleaseNotes :target=\"selected\" :channel=\"selected === 'manager' ? status?.channel ?? 'stable' : 'official'\" :version=\"selectedCandidate ?? null\" :updater-notes=\"selected === 'manager' ? status?.notes : null\" />\n+              <ReleaseNotes v-if=\"selectedCandidate\" :target=\"selected\" :channel=\"selected === 'manager' ? status?.channel ?? 'stable' : 'official'\" :version=\"selectedCandidate\" :updater-notes=\"selected === 'manager' ? status?.notes : null\" />\n               <div v-if=\"selected === 'manager' && managerAvailable\" class=\"update-confirm-scope\"><label class=\"update-backup\"><input v-model=\"session.backup\" type=\"checkbox\" :disabled=\"managerBusy\">更新前备份管理器偏好（建议）</label><p class=\"update-hint\">保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。</p></div>\n               <p v-if=\"selected === 'official' && officialAvailable\" class=\"update-hint\">面板升级前先备份配置；备份成功后才会安装选定版本。</p>\n             </template>\n",
+  "scope": "Finalsource sampled afterv-if; only affectedbody rechecked. Previousfull targeted reports retained underpreviousSHA."
+}

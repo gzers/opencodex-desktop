@@ -1,6 +1,6 @@
 {
-  "productSource": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
-  "scanWorktreeHead": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "productSource": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "scanWorktreeHead": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
   "allScannedSourceBytesEqualProductTag": true,
   "scope": "static Dialog/Modal tag references and actual AppModal/openInput callers; shared wrappers excluded,not unique window count",
   "static": [
@@ -1750,8 +1750,8 @@
     "meaning": "Existing adopted modeltemplate assistant is distinct from excluded futureconversation management/policy redesign."
   },
   "originalReviewProductSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
-  "currentSourceInventory": ".adg/evidence/0.2.20/final-candidate-34a3553f/current-callsite-inventory.json",
-  "unchangedConsumerReuse": "All Rust/other production UI files equal bda, only UpdateCenter CSS changed; original bda package install/OTA are historical, new payload gates separate.",
+  "currentSourceInventory": ".adg/evidence/0.2.20/final-candidate-updates-20261104/current-callsite-inventory.json",
+  "unchangedConsumerReuse": "All Rust/other production UI modules and typography bytes equal34a; only UpdateCenter latest-state rendering changed; new package/actualOTA gates separate.",
   "updateScaleFix": {
     "source": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
     "status": "passed finalsource browserandactualMac/Windows payload",
@@ -1771,5 +1771,15 @@
     "nativeEvidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-update-scale/result.json",
     "nativeWindowsEvidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/windows-adjacent-ota/summary.json"
   },
-  "finalNativeHistoryRecovery": "passed actual native UI/IPC acceptance and only draft file changed; precise seeded historical-catalog boundary in receipt"
+  "finalNativeHistoryRecovery": "passed actual native UI/IPC acceptance and only draft file changed; precise seeded historical-catalog boundary in receipt",
+  "previousSourceBeforeLatestStateFix": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "finalCurrentVersionDetails": {
+    "result": "browser pass, new payload native gate pending",
+    "source": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+    "handoff": ".adg/evidence/0.2.20/final-candidate-updates-20261104/independent-current-version-review/handoff.json",
+    "currentBodyAssertionsPerEngine": 212,
+    "priorStateAssertionsPerEngine": 286,
+    "sourceContinuousReuse": ".adg/evidence/0.2.20/final-candidate-updates-20261104/independent-current-version-review/continuous-source-reuse.json",
+    "meaning": "actual latest same/lower/no candidate current-only display; unknown local version still permits remote notes without install; pending frozen progress unchanged; no empty notes inlatest"
+  }
 }

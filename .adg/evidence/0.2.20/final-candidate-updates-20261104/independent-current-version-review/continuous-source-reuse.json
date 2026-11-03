@@ -1,0 +1,16 @@
+{
+  "priorReviewedSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+  "finalCommit": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "finalSha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+  "scriptSetupIdentical": true,
+  "stylesIdentical": true,
+  "diff": {
+    "path": "/tmp/ocx020-final-review-agent/final-current-version-details/sources/UpdateCenter-c212-to-b175.diff",
+    "sha256": "63d8f426bbfccc55d859fc476ba7dd77cee5f3d15fa365eb6e66e54ecc24b1d3"
+  },
+  "delta": "OnlyReleaseNotes now has v-if=selectedCandidate and version prop no null fallback. Noother production file changed.",
+  "newerFlowReason": "selectedCandidate is truthy in already-verifiednewer cases, so both old/new render sameReleaseNotes with sameexact version/props. Strictscale scenarios are newer candidates; CSSidentical.",
+  "pendingFlowReason": "ReleaseNotes is inside !showingProgress. Existingpending/failedprogress cases never enter thissubtree; frozenversion logic is in identicalscript setup.",
+  "affectedFlowReason": "same/lower/none with nullcandidate nowremove entireReleaseNotes; unknownCurrentwithremotecandidate stays truthy. Bothengines directfinalsource reran these16 states.",
+  "reuseDoesNotRelabelOldRuns": "Originalreports retain c212source and their oldSHA. Thisproof binds unchangedcoverage tofinalcommit; no unchangedscale matrices rerun afterv-if."
+}

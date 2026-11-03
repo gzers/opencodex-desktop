@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "4961751c70ddc2859cb4d5ba6a8280a465157605",
+  "sourceTree": "bdf696d778e4114b0af2fa807dc1295d4ae6aa11",
+  "previousProduct": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "pr": 67,
+  "changes": [
+    "CHANGELOG.md",
+    "apps/desktop/ui/qa/update-dialog-scale.mjs",
+    "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+    "apps/desktop/ui/tests/update-center.test.ts",
+    "test/smoke/windows-ota.mjs"
+  ],
+  "productChange": "Known equal/older cached candidate is not an available upgrade; current-only details and close; still-readable remote notes if local version unknown; prior shared-scale fix retained",
+  "allRustModulesUnchanged": true,
+  "allOtherUiModulesAndSharedFontsUnchanged": true,
+  "baselineContract": "formal TASK/AC frozen per prior bda baseline unchanged; new release/source outcome is separatelybound",
+  "publicStable": "0.2.19",
+  "old34a": "withdrawn to privatevalidation/0.2.20-34a3553f, original8assets retained",
+  "packageAndActualOta": "new496payload pending; old pass is historical only"
+}

@@ -1,0 +1,49 @@
+
+> opencodex-desktop-ui@0.2.20 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/update-release-details-flow.test.ts (3 tests | 1 failed) 71ms
+   ❯ release detail integration through the shared update center (3)
+     × loads the exact panel release body without running a version check, backup or install 45ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/update-release-details-flow.test.ts > release detail integration through the shared update center > loads the exact panel release body without running a version check, backup or install
+AssertionError: expected [ [ 'get_update_status' ] ] to deep equally contain [ 'update_release_details', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "update_release_details",
+-   {
+-     "candidateVersion": "2.84.0",
+-     "channel": "official",
+-     "force": false,
+-     "target": "official",
+-   },
++   [
++     "get_update_status",
++   ],
+  ]
+
+ ❯ tests/update-release-details-flow.test.ts:30:37
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 178 passed (179)
+      Tests  1 failed | 1122 passed (1123)
+   Start at  02:56:14
+   Duration  9.01s (environment 50%, tests 21%, transform 17%, import 11%, worker 1%)
+
+Environment  jsdom was created 179 times · 65.63s total, 50% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

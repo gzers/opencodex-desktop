@@ -1,0 +1,7 @@
+  function showUpdates(target) {
+    if(target){
+      const u=state.updates[target];if(!u)return;
+      if(['applying','restart-required','complete'].includes(u.phase)){progressDialog(target);return;}
+      if(u.phase==='available'||u.phase==='failed'){applyDialog(target);return;}
+      wideDialog(u.label+'更新详情','<p class="mnt-kicker">'+labels[u.phase]+'</p><div class="mnt-version-hero"><strong>'+esc(u.current)+'</strong></div><p class="mnt-note">'+esc(u.source)+'</p>','',null,{hideConfirm:true,cancelLabel:'关闭'});return;
+    }

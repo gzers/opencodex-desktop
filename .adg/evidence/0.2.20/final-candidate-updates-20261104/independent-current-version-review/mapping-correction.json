@@ -1,0 +1,171 @@
+{
+  "issue": "Currentversion cachedsame/lower/none update details wronglypresent candidateconfirmation",
+  "status": "pass-reviewed-final-source",
+  "fixedCommit": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "actualUpdateCenterSha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+  "scope": "Actual production OverviewRoute and SettingsRoute, manager and official targets; explicit memory-onlybrowserIPC/data. No product/docs modification or native/network/install/release actions.",
+  "finalDirectEvidence": [
+    {
+      "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/latest-body-chromium-b175/report.json",
+      "sha256": "b361adf3e7552e8a34ad2f2459720b4444f180ac4b53d7834aac5d5362bc35dd",
+      "suite": "final-latest-body",
+      "engine": "chromium",
+      "assertions": 212,
+      "result": "pass",
+      "sampledUpdateCenterSha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/latest-body-chromium-b175/browser-boundary-and-fonts.json",
+        "sha256": "7a4a52418d2ce4ce2877786bce9062fb2ac0d68cd23074f064eea24b9cfa2f94"
+      },
+      "binding": "direct-final-source",
+      "scopeCorrection": "REVIEW_BODY_ONLY=1:16details states; no newer/pending rerun. Reused report envelope scope is broader; actualstates/checks define thisrun."
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/latest-body-webkit-b175/report.json",
+      "sha256": "78b705985cc2dc0a21652f78db1a18e33e435c5a9c91a552774bc1ebdc6b1652",
+      "suite": "final-latest-body",
+      "engine": "webkit",
+      "assertions": 212,
+      "result": "pass",
+      "sampledUpdateCenterSha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/latest-body-webkit-b175/browser-boundary-and-fonts.json",
+        "sha256": "c7bb1c6c20f33e8f7e99d9850fd73e0342c5a256fa3d258f4cb04996c7dfdde6"
+      },
+      "binding": "direct-final-source",
+      "scopeCorrection": "REVIEW_BODY_ONLY=1:16details states; no newer/pending rerun. Reused report envelope scope is broader; actualstates/checks define thisrun."
+    }
+  ],
+  "priorVerifiedContinuousEvidence": [
+    {
+      "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/current-version-chromium-r1/report.json",
+      "sha256": "1513518600fc9b5cdf426e4eb30e28f3f9682b629057100dfaf88699bf79e20c",
+      "suite": "versions-and-frozen-progress",
+      "engine": "chromium",
+      "assertions": 286,
+      "result": "pass",
+      "sampledUpdateCenterSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/current-version-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "b6ea27dcf298ac4acc3b19028c54149515a522c627b95a011a62aac1f0b2497b"
+      },
+      "binding": "prior-continuous-source-plus-explicit-final-delta-proof"
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-hosts-chromium-r1/report.json",
+      "sha256": "a6867932f97b9ed0c3f7f00125b25fc85c2253b76c7af6262e24c3a1c19653a8",
+      "suite": "update-hosts",
+      "engine": "chromium",
+      "assertions": 156,
+      "result": "pass",
+      "sampledUpdateCenterSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-hosts-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "4fa9806447bf98c5284fe1f2cb83f9edb849bc8746dcb6d19067f23852b631a3"
+      },
+      "binding": "prior-continuous-source-plus-explicit-final-delta-proof"
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-contract-chromium-r1/report.json",
+      "sha256": "0fb2fcc8af104f94e910250f54db079e1f1189943a0ad0a0b619e18a0b098a20",
+      "suite": "original-strict-scale",
+      "engine": "chromium",
+      "assertions": 2,
+      "result": "pass",
+      "sampledUpdateCenterSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-contract-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "c84fe7e0fc831e39bb7c0ca2ca9365984fef20cddc6f09b8db02b9a814737b64"
+      },
+      "binding": "prior-continuous-source-plus-explicit-final-delta-proof"
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-expanded-chromium-r1/report.json",
+      "sha256": "4f4ac39f91484bcffddfd451d2c9d1ee0cef5f07df841ed4f11fab13f3fa2fb9",
+      "suite": "expanded-strict-scale",
+      "engine": "chromium",
+      "assertions": 372,
+      "result": "pass",
+      "sampledUpdateCenterSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-expanded-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "aab4c3b47cae83041fe342fbeefaf9e4918b5da028e05e262580a6b2c94fd689"
+      },
+      "binding": "prior-continuous-source-plus-explicit-final-delta-proof"
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/current-version-webkit-r1/report.json",
+      "sha256": "fe91402bea6c57b03455c02983a96e4788128c8a889c74aa57977ecd4aeae9fc",
+      "suite": "versions-and-frozen-progress",
+      "engine": "webkit",
+      "assertions": 286,
+      "result": "pass",
+      "sampledUpdateCenterSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/current-version-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "c36045a9c39df0f37d709e2f9f4e3e7e3224cc88211ffd84ae7ef559953518dd"
+      },
+      "binding": "prior-continuous-source-plus-explicit-final-delta-proof"
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-hosts-webkit-r1/report.json",
+      "sha256": "14a62c78b97c74dcac2e4f806881ca6b89cb421ce7f2401070af987ab96f2e0c",
+      "suite": "update-hosts",
+      "engine": "webkit",
+      "assertions": 156,
+      "result": "pass",
+      "sampledUpdateCenterSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-hosts-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "c78e5b347910a0b76b84bc80c9e2491397073246fc82954efe5bffd9b3086a4c"
+      },
+      "binding": "prior-continuous-source-plus-explicit-final-delta-proof"
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-contract-webkit-r1/report.json",
+      "sha256": "a492b9faf0e493366b42853228464213bffb5765158f01e8a3110c5e9f494b7c",
+      "suite": "original-strict-scale",
+      "engine": "webkit",
+      "assertions": 2,
+      "result": "pass",
+      "sampledUpdateCenterSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-contract-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "b6b3b67c12c451db009cbf28b060e38d68233ec147af5496b64591c36d0a4e03"
+      },
+      "binding": "prior-continuous-source-plus-explicit-final-delta-proof"
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-expanded-webkit-r1/report.json",
+      "sha256": "c4801d730600a0ca5a0195552370f14bfff7699f3f84981d7dcafe4160529696",
+      "suite": "expanded-strict-scale",
+      "engine": "webkit",
+      "assertions": 372,
+      "result": "pass",
+      "sampledUpdateCenterSha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-expanded-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "9e22c3ce1fbbe470245e65844070f54e3b5be76d12e38ecfc86301fe98350092"
+      },
+      "binding": "prior-continuous-source-plus-explicit-final-delta-proof"
+    }
+  ],
+  "sourceReuseProof": {
+    "path": "/tmp/ocx020-final-review-agent/final-current-version-details/continuous-source-reuse.json",
+    "sha256": "39bb8c723090b17f02d119821bffcf1d4cd02108b92a4e19a0cb2492e2c45d89"
+  },
+  "verifiedBehaviors": {
+    "sameLowerNone": "Currentversion only, no candidatearrow, details-onlytitle, close-onlyfooter, noinstall/restartinstruction orrelease-notes block.",
+    "newer": "Current→exactnewer version, confirmationtitle andappropriate action/explanation retained; prior fullmatrix reused with unchangedtruthyReleaseNotes props.",
+    "unknownCurrent": "Unknown→exactremote candidate andexactmatching release description remainreadable, actualAvailablefalse, noinstallconfirmation; finaldirect16state runincludes4unknown cases/engine.",
+    "progress": "Capturedcurrent/candidate survivecachechanges anddismiss/reopen forbothmanageranddeveloperofficialtargets. Managerpendingrestart retains0.2.19→0.2.20 even whenlatestcachebecomes0.2.21. Officialpending/failure retains2.83→2.84 despitecache2.85.",
+    "scale": "Bothhosts900x600/1180x760*100/150/200%, strict34/51/68 andoriginal200%ratio retained; fullCSSidentical andcandidate-truthyDOMidentical toverifiedsource."
+  },
+  "prototype": {
+    "path": "/tmp/ocx020-final-review-agent/final-current-version-details/sources/frozen-prototype-showUpdates.txt",
+    "sha256": "5287055cc4ddf840aefc5ee47d4bb73089a9821c378eb3f8ac4cef633b37e8fd"
+  },
+  "retiredPackageBoundary": "34a is retainedhistory only. These browserreports bindfinalsource; do notlabel old34apackage asfinalacceptance.",
+  "blockingFindings": [],
+  "releaseReadinessNotEvaluated": "NewfullCI/package/OTA/publication remain main-thread responsibility."
+}

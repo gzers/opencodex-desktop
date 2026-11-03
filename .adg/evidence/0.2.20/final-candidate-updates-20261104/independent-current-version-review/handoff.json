@@ -1,0 +1,52 @@
+{
+  "result": "pass-with-explicit-continuous-source-reuse",
+  "fixedCommit": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "UpdateCenterSha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+  "directFinalPerEngine": {
+    "latestBodyAssertions": 212,
+    "actualStates": 16,
+    "conditions": [
+      "same",
+      "lower",
+      "none",
+      "unknownCurrent"
+    ],
+    "hosts": [
+      "overview",
+      "settings"
+    ],
+    "targets": [
+      "manager",
+      "official"
+    ]
+  },
+  "priorReviewedPerEngine": {
+    "fullVersionAndPendingMatrix": 286,
+    "originalUpdateHosts": 156,
+    "originalStrictScale": 2,
+    "expandedGeometryRatioScroll": 372
+  },
+  "unchangedScaleRerunAfterVif": false,
+  "sourceReuseProof": {
+    "path": "/tmp/ocx020-final-review-agent/final-current-version-details/continuous-source-reuse.json",
+    "sha256": "39bb8c723090b17f02d119821bffcf1d4cd02108b92a4e19a0cb2492e2c45d89"
+  },
+  "sourceIdentity": {
+    "path": "/tmp/ocx020-final-review-agent/final-current-version-details/receipts/source-identity-after.json",
+    "sha256": "407331bbce844f3ce192e7f85a3a25c90363626e658876d08794211515f1d5ee"
+  },
+  "evidenceIndex": {
+    "path": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/index.json",
+    "sha256": "2972957f5b8a946f5bf86ddfcd9eb438dffe70d2bcf55b25cfb2bbd1f3a529aa"
+  },
+  "mappingCorrection": {
+    "path": "/tmp/ocx020-final-review-agent/final-current-version-details/mapping-correction.json",
+    "sha256": "4294d76084f1dcb9065527f1c400804eb228e15a5c9c9df9b546742d556513b0"
+  },
+  "exactCommands": {
+    "path": "/tmp/ocx020-final-review-agent/final-current-version-details/exact-commands.json",
+    "sha256": "9fcb9d5cfae59f88abd8f6a5bbbfac015d03c10432912cd90423e695ae568ef4"
+  },
+  "actualFailures": [],
+  "limits": "Browserfixtures only; no native/product/docs/publish actions. No claimofnewpackage/fullCI/stable completion."
+}

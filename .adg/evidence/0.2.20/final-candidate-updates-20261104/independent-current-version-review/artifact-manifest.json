@@ -1,0 +1,1780 @@
+{
+  "root": "/tmp/ocx020-final-review-agent/final-current-version-details",
+  "files": [
+    {
+      "path": "FINAL-REVIEW.md",
+      "bytes": 1770,
+      "sha256": "4236360228ece9f4a97e5a108e1f0bd24ff68b3a4ee6f3a9166256939effa2a9"
+    },
+    {
+      "path": "continuous-source-reuse.json",
+      "bytes": 1406,
+      "sha256": "39bb8c723090b17f02d119821bffcf1d4cd02108b92a4e19a0cb2492e2c45d89"
+    },
+    {
+      "path": "exact-commands.json",
+      "bytes": 8797,
+      "sha256": "9fcb9d5cfae59f88abd8f6a5bbbfac015d03c10432912cd90423e695ae568ef4"
+    },
+    {
+      "path": "handoff.json",
+      "bytes": 1926,
+      "sha256": "853edfcbef33b2945f7a8ab75a9f434f7a8963c7db9e0f63ec340528ebe8d015"
+    },
+    {
+      "path": "harness/current-version-matrix-r1.mjs",
+      "bytes": 12517,
+      "sha256": "845c231f48330e6db29cdc6ce515c1e9db993d0dbb4aeb5665591b0ea45a488b"
+    },
+    {
+      "path": "harness/current-version-matrix.mjs",
+      "bytes": 12791,
+      "sha256": "40c86f72ccf708f75f1c1628a9ad6e8b6af74d6265129f06268ec587624cb043"
+    },
+    {
+      "path": "harness/engine.mjs",
+      "bytes": 5165,
+      "sha256": "ffcbafa5124f6f1055cbe864dc10fa17095ae27b1c081a4eb5d305623529c182"
+    },
+    {
+      "path": "harness/finalize.py",
+      "bytes": 11210,
+      "sha256": "661f4a0763ee06ddc85d0ea2ab346f19ba50a6d1cb6c2ba67dfe40cff8cd26d2"
+    },
+    {
+      "path": "harness/run-existing.py",
+      "bytes": 1412,
+      "sha256": "846819587e57940f98c2f2032dbe2a05020befb786bb634f9700c850e6d5286a"
+    },
+    {
+      "path": "harness/update-hosts.mjs",
+      "bytes": 9512,
+      "sha256": "3f147d52840b9b5903d511c8acffec199111534373ec55ae8f76506e822fa51a"
+    },
+    {
+      "path": "harness/update-scale-contract.mjs",
+      "bytes": 3338,
+      "sha256": "5d81d30424ae620ea978a62693d899f221d1de71d8f8aef56f39c09d58133016"
+    },
+    {
+      "path": "harness/update-scale-expanded.mjs",
+      "bytes": 11667,
+      "sha256": "4e8995322f7bdce488f265482ac86cf37eb55b13048e4fba82ec2d0aedfc371e"
+    },
+    {
+      "path": "mapping-correction.json",
+      "bytes": 10335,
+      "sha256": "4294d76084f1dcb9065527f1c400804eb228e15a5c9c9df9b546742d556513b0"
+    },
+    {
+      "path": "receipts/existing-runs-chromium.json",
+      "bytes": 2304,
+      "sha256": "c3f06ec0ab06d0e6cb0b77aeeb57d8db9fbb3a7e6cec2b243f7feb68a5384156"
+    },
+    {
+      "path": "receipts/existing-runs-webkit.json",
+      "bytes": 2286,
+      "sha256": "7b1fceb08a0183c21e7748a8408422139273b2baa489213845153eb6f414125f"
+    },
+    {
+      "path": "receipts/harness-reuse.json",
+      "bytes": 1687,
+      "sha256": "22249362989f99256044dfe9590d626f2a7716dde7c3c9d53e646bd504ee7be5"
+    },
+    {
+      "path": "receipts/source-identity-after.json",
+      "bytes": 326,
+      "sha256": "407331bbce844f3ce192e7f85a3a25c90363626e658876d08794211515f1d5ee"
+    },
+    {
+      "path": "receipts/source-identity-b175.json",
+      "bytes": 2452,
+      "sha256": "f9e238bca969c043ec460596ea4dc39991f04da46e033dd4cf1a59b8f67e61e0"
+    },
+    {
+      "path": "receipts/source-identity-before.json",
+      "bytes": 33859,
+      "sha256": "311a265b2ebe27b4c8ff0322600ade6e9f53d0d3b3890c753578aa61ed43ff58"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/browser-boundary-and-fonts.json",
+      "bytes": 903906,
+      "sha256": "b6ea27dcf298ac4acc3b19028c54149515a522c627b95a011a62aac1f0b2497b"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-manager-lower-detail.png",
+      "bytes": 69406,
+      "sha256": "5c88e1c100d9137002a53dde3ab410051f5f9ffad706103677142a42310c991e"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-manager-newer-detail.png",
+      "bytes": 77269,
+      "sha256": "77f3d87d5330ba3def06532ad81ae4e74156a14ed23b2a22fbaf75e02247f559"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-manager-none-detail.png",
+      "bytes": 69431,
+      "sha256": "7a26018602ac129ff9704b52de770c367beb7e6895349319ad7a7d87dda2c797"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-manager-pending-frozen-frozen.png",
+      "bytes": 66730,
+      "sha256": "4a3005b0fdb979b63c4b4b6235988f408e97ad01b4fe5c6b435b084136511775"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-manager-pending-frozen-reopened.png",
+      "bytes": 66730,
+      "sha256": "4a3005b0fdb979b63c4b4b6235988f408e97ad01b4fe5c6b435b084136511775"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-manager-same-detail.png",
+      "bytes": 69406,
+      "sha256": "5c88e1c100d9137002a53dde3ab410051f5f9ffad706103677142a42310c991e"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-manager-unknownCurrent-detail.png",
+      "bytes": 67867,
+      "sha256": "958c3bfb6c07d243d2de1a0185a2ddce2d2fc9088d8f6e72dff51c6b957fb7d3"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-official-lower-detail.png",
+      "bytes": 70007,
+      "sha256": "3da16c1a2b6401eda712ca9c63d5134a3ddeb0477ff3b0aea7f30ef1b9adcf45"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-official-newer-detail.png",
+      "bytes": 74698,
+      "sha256": "d3825b9c1f5f5cfe3c16e5a0bdb8c1a072e991dbb002c39751bccfb2c7f7811d"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-official-none-detail.png",
+      "bytes": 69696,
+      "sha256": "5092830f521bf4a70c4e68dbfd90ded7aea1ad80517a75948803095694388407"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-official-pending-frozen-failed.png",
+      "bytes": 67757,
+      "sha256": "3b407de959c0cf348c32f1718c0d8f3ba6bf4b299527daec5d1b42299bac6d21"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-official-pending-frozen-frozen.png",
+      "bytes": 68191,
+      "sha256": "368dfb626bbff64f582a74209f25805f11e51e8dbd669fcae8fa590bab85044c"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-official-pending-frozen-reopened.png",
+      "bytes": 68191,
+      "sha256": "d4501d46c4c00d3b4db40d521b0aa4888a7ae234f6916072134fdee5a589ee2e"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-official-same-detail.png",
+      "bytes": 70071,
+      "sha256": "a6eb6443d23c3f016c28378ec6c91d8d52d842705f0c2bd8b6bbd1f4ae30b3ef"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/overview-official-unknownCurrent-detail.png",
+      "bytes": 68459,
+      "sha256": "1076d6d9ca40190d22cff6eadc0f4361e6075e2596759baa1debd255bd0506e0"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/report.json",
+      "bytes": 176093,
+      "sha256": "1513518600fc9b5cdf426e4eb30e28f3f9682b629057100dfaf88699bf79e20c"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-manager-lower-detail.png",
+      "bytes": 80426,
+      "sha256": "f9a31edc921261571c3556283b8e0d0973e094e34d1c41ba09d060749ea76016"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-manager-newer-detail.png",
+      "bytes": 86082,
+      "sha256": "ba0a6a4575c834ba811ef1b14ec1586887f20d4a818b68498b223f5ebdd57f8e"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-manager-none-detail.png",
+      "bytes": 80426,
+      "sha256": "f9a31edc921261571c3556283b8e0d0973e094e34d1c41ba09d060749ea76016"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-manager-pending-frozen-frozen.png",
+      "bytes": 84752,
+      "sha256": "45ca6cb7add7e4ff7b3f203e465938b4ff539d5b42305cbf43210717f51a32ff"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-manager-pending-frozen-reopened.png",
+      "bytes": 84752,
+      "sha256": "45ca6cb7add7e4ff7b3f203e465938b4ff539d5b42305cbf43210717f51a32ff"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-manager-same-detail.png",
+      "bytes": 80426,
+      "sha256": "f9a31edc921261571c3556283b8e0d0973e094e34d1c41ba09d060749ea76016"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-manager-unknownCurrent-detail.png",
+      "bytes": 82521,
+      "sha256": "afe9e1eff62d1f54212eb0cfe039df1c1f95e9e41b63b60af85b65797276e576"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-official-lower-detail.png",
+      "bytes": 80989,
+      "sha256": "8ff195fbf6f9400d45294d18e870567e974849d6853ef7128af15ed19fe48a68"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-official-newer-detail.png",
+      "bytes": 91139,
+      "sha256": "44abda2b629a355db5c6b53a68ef1cec161cc39fbeb1dd7b24079dfbf2b575d3"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-official-none-detail.png",
+      "bytes": 80742,
+      "sha256": "63b5e3867dcbeea3b65aa9dcd05df7c6d96af8ff2f791377bf37b15b414319be"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-official-pending-frozen-failed.png",
+      "bytes": 85311,
+      "sha256": "f1cf12751b40269e4513a5ddc2bb17e015975269d237f2bd76400fa89fa71f28"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-official-pending-frozen-frozen.png",
+      "bytes": 81488,
+      "sha256": "002696e14f4cff2c7c2e175d5af9ea854068ac395e3d9f60b51ebcbe5d302679"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-official-pending-frozen-reopened.png",
+      "bytes": 81488,
+      "sha256": "4fc453efa6d3d3a1c41ebc119cfac9ae87af05be9c5508243502d3f30f4ae15d"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-official-same-detail.png",
+      "bytes": 80989,
+      "sha256": "8ff195fbf6f9400d45294d18e870567e974849d6853ef7128af15ed19fe48a68"
+    },
+    {
+      "path": "reports/current-version-chromium-r1/settings-official-unknownCurrent-detail.png",
+      "bytes": 83141,
+      "sha256": "530060255b0c29d5f9b7641f3628cf02585846d1578be145882344b76cc2008a"
+    },
+    {
+      "path": "reports/current-version-chromium-r1.log",
+      "bytes": 31,
+      "sha256": "e620e53d180e68abd016d872ed060bc7e05d262ad425d34ee04d6db163f5a23c"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/browser-boundary-and-fonts.json",
+      "bytes": 903434,
+      "sha256": "c36045a9c39df0f37d709e2f9f4e3e7e3224cc88211ffd84ae7ef559953518dd"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-manager-lower-detail.png",
+      "bytes": 95737,
+      "sha256": "cee9552bcb9351b308901bd71b740476dd6548d614b95deb6714397efca89cae"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-manager-newer-detail.png",
+      "bytes": 99242,
+      "sha256": "79170edb411388b58d7568d0ab1c526874f0edaf2af2f816f182544588fd5b6f"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-manager-none-detail.png",
+      "bytes": 95755,
+      "sha256": "adde3a95deec80fb15c36ad70b5358ee9ece6473a8d3c4f785008960129b40e1"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-manager-pending-frozen-frozen.png",
+      "bytes": 88744,
+      "sha256": "09679937dd60f1999a9df590609936a859e385938d0ffd06e7a38505915d6123"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-manager-pending-frozen-reopened.png",
+      "bytes": 88744,
+      "sha256": "09679937dd60f1999a9df590609936a859e385938d0ffd06e7a38505915d6123"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-manager-same-detail.png",
+      "bytes": 95737,
+      "sha256": "cee9552bcb9351b308901bd71b740476dd6548d614b95deb6714397efca89cae"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-manager-unknownCurrent-detail.png",
+      "bytes": 93014,
+      "sha256": "05cc8249af33f23fedc22a606ce3234d5a5223cd85f9d4895cc7ecca09758158"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-official-lower-detail.png",
+      "bytes": 96634,
+      "sha256": "640a71c556b7cddc091b8828202ca060b88806584b798d3dc08e3d160ae16836"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-official-newer-detail.png",
+      "bytes": 98183,
+      "sha256": "24bd1779e7068728ccfa0859ba5c756fe88beaee361c03ac0530cf9e74e4a93c"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-official-none-detail.png",
+      "bytes": 96336,
+      "sha256": "480d05d303e1c5e9ef10b2704105b00b18532cbc4e35b3cef8191e563af907eb"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-official-pending-frozen-failed.png",
+      "bytes": 91159,
+      "sha256": "7f59ccde7354c32ff7a5e3f27b3128c36bfa424a5ba00887d9d6c795019f0d90"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-official-pending-frozen-frozen.png",
+      "bytes": 93518,
+      "sha256": "569ccfd46f01e65d323e3cb50c661662f470cfad0007875042068fa9167b9ebe"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-official-pending-frozen-reopened.png",
+      "bytes": 93514,
+      "sha256": "0b115899d7e165270bfec6c2e928fe37e306e0bbd1f9d876de2f73ec0888494a"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-official-same-detail.png",
+      "bytes": 96622,
+      "sha256": "bb17196e6f1ae027aeff59f3849e2bfe229d1ebd0e94b581816ea6a0f3890ffb"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/overview-official-unknownCurrent-detail.png",
+      "bytes": 93876,
+      "sha256": "ad188946b8c38387bf24b7d0adc19e63f1a35a7e15d74eeb526b72bee3d510a8"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/report.json",
+      "bytes": 176091,
+      "sha256": "fe91402bea6c57b03455c02983a96e4788128c8a889c74aa57977ecd4aeae9fc"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-manager-lower-detail.png",
+      "bytes": 102519,
+      "sha256": "fae96d6a3cbac87978313d8f878fe52bac8602955cf3e47f624b0d967820e0b8"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-manager-newer-detail.png",
+      "bytes": 107810,
+      "sha256": "096f20411b0c4d83e0d127e7fecffb8b529a95a39d09232bdc648d335042b58c"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-manager-none-detail.png",
+      "bytes": 102519,
+      "sha256": "fae96d6a3cbac87978313d8f878fe52bac8602955cf3e47f624b0d967820e0b8"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-manager-pending-frozen-frozen.png",
+      "bytes": 106182,
+      "sha256": "fdc761db0121032cb5ea685ccd10fe2c8471728b81aee7c09730f82931655d2f"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-manager-pending-frozen-reopened.png",
+      "bytes": 106182,
+      "sha256": "fdc761db0121032cb5ea685ccd10fe2c8471728b81aee7c09730f82931655d2f"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-manager-same-detail.png",
+      "bytes": 102519,
+      "sha256": "fae96d6a3cbac87978313d8f878fe52bac8602955cf3e47f624b0d967820e0b8"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-manager-unknownCurrent-detail.png",
+      "bytes": 104848,
+      "sha256": "e4c8ced6a47accc85adde085d939f1ad20c539e47f6c5daf22020cde54ea6d56"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-official-lower-detail.png",
+      "bytes": 103491,
+      "sha256": "33b64569d5492e563ebedbef98e5c43456c002042ec9333abc7f09722e397a2d"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-official-newer-detail.png",
+      "bytes": 114138,
+      "sha256": "e68bc6ae6d58d049bba2c54a936ee888f82cff7e8bc38fb8a340264a1e32bde1"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-official-none-detail.png",
+      "bytes": 103211,
+      "sha256": "13886166d8c7afb9841beadf0cfca0bbce92a5f02a7c6739b0dcf73e6094b3e3"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-official-pending-frozen-failed.png",
+      "bytes": 107466,
+      "sha256": "aab30b01a7c3a373d855653304e84a0163f31a6aadcd321fd0b62238346cdc30"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-official-pending-frozen-frozen.png",
+      "bytes": 103642,
+      "sha256": "50ee74e0147f036272b995508d3d957aa48354be8678e3cde2c684dd716e296a"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-official-pending-frozen-reopened.png",
+      "bytes": 103537,
+      "sha256": "f39a05445d1de0c442568ddd3b82e3c5612acee98e36979c243a69950290a019"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-official-same-detail.png",
+      "bytes": 103491,
+      "sha256": "33b64569d5492e563ebedbef98e5c43456c002042ec9333abc7f09722e397a2d"
+    },
+    {
+      "path": "reports/current-version-webkit-r1/settings-official-unknownCurrent-detail.png",
+      "bytes": 105607,
+      "sha256": "15ad9c1acf363fd51e6c10842676acbff3bbbf32ede16687bfaf7554751f6372"
+    },
+    {
+      "path": "reports/current-version-webkit-r1.log",
+      "bytes": 29,
+      "sha256": "f5d988715f4d76699807a3ecb4ea6612323d51f2d11ea6582af6dbdb75e83494"
+    },
+    {
+      "path": "reports/index.json",
+      "bytes": 8495,
+      "sha256": "2972957f5b8a946f5bf86ddfcd9eb438dffe70d2bcf55b25cfb2bbd1f3a529aa"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/browser-boundary-and-fonts.json",
+      "bytes": 594510,
+      "sha256": "7a4a52418d2ce4ce2877786bce9062fb2ac0d68cd23074f064eea24b9cfa2f94"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/overview-manager-lower-detail.png",
+      "bytes": 71531,
+      "sha256": "a7b0d7ccea632f8812cbb9f562928756a7eed07600bca6aae3378c5e3e5ee671"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/overview-manager-none-detail.png",
+      "bytes": 71592,
+      "sha256": "b5c9302a0b1c33f6f971766859e9fb7617183ac3801f07d0c6070dafcdef2b53"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/overview-manager-same-detail.png",
+      "bytes": 71531,
+      "sha256": "a7b0d7ccea632f8812cbb9f562928756a7eed07600bca6aae3378c5e3e5ee671"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/overview-manager-unknownCurrent-detail.png",
+      "bytes": 67858,
+      "sha256": "8fd646dbdcd5dfd2523ed50fc43102438269f0830e03e2cda02465252ede319d"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/overview-official-lower-detail.png",
+      "bytes": 72369,
+      "sha256": "160144926b10d697a356da952f896ed969d48150e9b35e717168a7d633307246"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/overview-official-none-detail.png",
+      "bytes": 71623,
+      "sha256": "6de451b49523e3e75336a3d3515092f4e7e88a54186c87317c17e4b099d4b582"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/overview-official-same-detail.png",
+      "bytes": 72369,
+      "sha256": "160144926b10d697a356da952f896ed969d48150e9b35e717168a7d633307246"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/overview-official-unknownCurrent-detail.png",
+      "bytes": 68272,
+      "sha256": "b1471a2ef3ae9b0b7cec43e92837960342e55c4bb36e5d07d5382509499f49d7"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/report.json",
+      "bytes": 101621,
+      "sha256": "b361adf3e7552e8a34ad2f2459720b4444f180ac4b53d7834aac5d5362bc35dd"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/settings-manager-lower-detail.png",
+      "bytes": 82701,
+      "sha256": "be03b99f568234802d8f07974754b552ba9ef7ae2d2ccd1cf0b1354ffc5ddfbe"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/settings-manager-none-detail.png",
+      "bytes": 82701,
+      "sha256": "be03b99f568234802d8f07974754b552ba9ef7ae2d2ccd1cf0b1354ffc5ddfbe"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/settings-manager-same-detail.png",
+      "bytes": 82701,
+      "sha256": "be03b99f568234802d8f07974754b552ba9ef7ae2d2ccd1cf0b1354ffc5ddfbe"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/settings-manager-unknownCurrent-detail.png",
+      "bytes": 82521,
+      "sha256": "afe9e1eff62d1f54212eb0cfe039df1c1f95e9e41b63b60af85b65797276e576"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/settings-official-lower-detail.png",
+      "bytes": 83391,
+      "sha256": "6d66067701591dab224f7ec351cf15df03d34f25805758c692fd625bf05ec580"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/settings-official-none-detail.png",
+      "bytes": 83100,
+      "sha256": "00070677833bce04469b6a930f6fd67ed745fa15e06055dcfd5d98310948c2fd"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/settings-official-same-detail.png",
+      "bytes": 83391,
+      "sha256": "6d66067701591dab224f7ec351cf15df03d34f25805758c692fd625bf05ec580"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175/settings-official-unknownCurrent-detail.png",
+      "bytes": 83141,
+      "sha256": "530060255b0c29d5f9b7641f3628cf02585846d1578be145882344b76cc2008a"
+    },
+    {
+      "path": "reports/latest-body-chromium-b175.log",
+      "bytes": 31,
+      "sha256": "b60a85934b21cc366cb6010fd68fe912bb0a9aa1484837bf54129e32531f6790"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/browser-boundary-and-fonts.json",
+      "bytes": 594236,
+      "sha256": "c7bb1c6c20f33e8f7e99d9850fd73e0342c5a256fa3d258f4cb04996c7dfdde6"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/overview-manager-lower-detail.png",
+      "bytes": 100313,
+      "sha256": "173f3a8dabbe38be97d5f7ab1bdae3285eac041b02202833bcb84a0763696000"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/overview-manager-none-detail.png",
+      "bytes": 100317,
+      "sha256": "4aaf2803f4b1b5e678bc486de15170a1baddf970bd3dfb2bbbce17685e04a813"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/overview-manager-same-detail.png",
+      "bytes": 100313,
+      "sha256": "173f3a8dabbe38be97d5f7ab1bdae3285eac041b02202833bcb84a0763696000"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/overview-manager-unknownCurrent-detail.png",
+      "bytes": 92947,
+      "sha256": "e4f4433ed891dca446fdeff6ff7a52d75dbf69f462791e37eb4900824fd76c2e"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/overview-official-lower-detail.png",
+      "bytes": 101007,
+      "sha256": "258b43c86831747c4564300b1f93a685bfa7f8c77888fc9dd60eacf16e412ed7"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/overview-official-none-detail.png",
+      "bytes": 100367,
+      "sha256": "649d43a39b1ae6ec6f7bb9b301b3a952e1d94d5ff2f054f102827986bf772bbc"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/overview-official-same-detail.png",
+      "bytes": 101007,
+      "sha256": "258b43c86831747c4564300b1f93a685bfa7f8c77888fc9dd60eacf16e412ed7"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/overview-official-unknownCurrent-detail.png",
+      "bytes": 93865,
+      "sha256": "be3b76aacce748cf49165aad1cafc84c30c55afd36ee9de4b881c9d80bd59392"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/report.json",
+      "bytes": 101619,
+      "sha256": "78b705985cc2dc0a21652f78db1a18e33e435c5a9c91a552774bc1ebdc6b1652"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/settings-manager-lower-detail.png",
+      "bytes": 104929,
+      "sha256": "2dc9ec27a3210224e9bd9a9511d4fdcaf544f2f49b1f1a5635534de73e8fd0ef"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/settings-manager-none-detail.png",
+      "bytes": 104929,
+      "sha256": "2dc9ec27a3210224e9bd9a9511d4fdcaf544f2f49b1f1a5635534de73e8fd0ef"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/settings-manager-same-detail.png",
+      "bytes": 104929,
+      "sha256": "2dc9ec27a3210224e9bd9a9511d4fdcaf544f2f49b1f1a5635534de73e8fd0ef"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/settings-manager-unknownCurrent-detail.png",
+      "bytes": 104848,
+      "sha256": "e4c8ced6a47accc85adde085d939f1ad20c539e47f6c5daf22020cde54ea6d56"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/settings-official-lower-detail.png",
+      "bytes": 105662,
+      "sha256": "8c70343a0ab97e6f9dc62ef57b73bb827121aaf5ea53f7cc4760828663abe2a2"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/settings-official-none-detail.png",
+      "bytes": 105332,
+      "sha256": "00174f1813afc9b136d8cf72a8829dc03a688f0e6449db71f329610713f9d051"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/settings-official-same-detail.png",
+      "bytes": 105662,
+      "sha256": "8c70343a0ab97e6f9dc62ef57b73bb827121aaf5ea53f7cc4760828663abe2a2"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175/settings-official-unknownCurrent-detail.png",
+      "bytes": 105607,
+      "sha256": "15ad9c1acf363fd51e6c10842676acbff3bbbf32ede16687bfaf7554751f6372"
+    },
+    {
+      "path": "reports/latest-body-webkit-b175.log",
+      "bytes": 29,
+      "sha256": "7ca15a4dc9fd980037b3dd648d391ab0274d9f853d25e7a247310a90d24f3e23"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/browser-boundary-and-fonts.json",
+      "bytes": 300358,
+      "sha256": "4fa9806447bf98c5284fe1f2cb83f9edb849bc8746dcb6d19067f23852b631a3"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/execution.json",
+      "bytes": 716,
+      "sha256": "f165b7ffaf60eec181fea60ba3ce85f0278144f14550c29a707b44b9f9cfbfa3"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/execution.log",
+      "bytes": 31,
+      "sha256": "f2ce9c0b0da4a28b71ad535e2b1519d150c53cec29b5a7ba6a6062d2426a98f5"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-check-failed.png",
+      "bytes": 612267,
+      "sha256": "6ef89bb2aea5d0c496a6518f6e80cd5603ca1290c83cf2e4ce6bd8beb0b2e6c4"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-manager-confirm.png",
+      "bytes": 583634,
+      "sha256": "086d68b62ea7ded2ceb3ac53ad3be09c9877fea21d4b49b7903c01d7f23657f6"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-manager-downloading.png",
+      "bytes": 597097,
+      "sha256": "1f03ee3e2cbf306eb41d5395781f4cc3b4372be5e9b9db9ae676eb06bfd0f956"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-manager-failed.png",
+      "bytes": 609362,
+      "sha256": "ddf370cfc35a5ddad89faa22e0e706dc3b88e34999768e74cdf7a8aee5bfd6c9"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-official-backup-failed.png",
+      "bytes": 610608,
+      "sha256": "e4d1d19069c740a8664c07918bb4a4dfd60edb796f961a501da6356a6eea2a24"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-pending-restart.png",
+      "bytes": 606811,
+      "sha256": "9ea05fda85c9efd1bb2f526edc4e19f4133ac992e8f001320defe5d95609f3ea"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-restart-refused.png",
+      "bytes": 596867,
+      "sha256": "a008b571bb93613424e2502597acc65e7932b956bf983844d3bb444b92c9634f"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-results.png",
+      "bytes": 619338,
+      "sha256": "9f88d67e69d9569f144dd79ed0a065f0f6d0d177d8a4d1a78135d24b02f0c7ee"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-check-failed.png",
+      "bytes": 325544,
+      "sha256": "485511d1973529f30cc484306c5b33386803b396bfe535311e99fabe7e0ab70e"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-manager-confirm.png",
+      "bytes": 318448,
+      "sha256": "63b9815eb8889ef3770febcee081df568e6ac7a301322b630add40465e15c493"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-manager-downloading.png",
+      "bytes": 313654,
+      "sha256": "864ba383a7d612347a97be10e940e1093eba045c90aa622fb2eb98a80470edae"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-manager-failed.png",
+      "bytes": 321111,
+      "sha256": "3a2f8e74765e1aca0782795ae8f0834693ea1d04c578c94948aa48959086c5f3"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-official-backup-failed.png",
+      "bytes": 321778,
+      "sha256": "ed2814dea9c8e542edb548951ed8733aeb8562eeedff03c6ac0c879ae08afa16"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-pending-restart.png",
+      "bytes": 313600,
+      "sha256": "8911f25d6d9ed3873566b74663b1a68332df19c1a665de3b259da358f56c485f"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-restart-refused.png",
+      "bytes": 320299,
+      "sha256": "2f32ab55c29c2bc03f54520aa41604b9c91440b7c587dc39db4a6163305e888b"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-results.png",
+      "bytes": 346877,
+      "sha256": "7626a1a2054cea67caf3981719390df3c8601ae9db3b5a71ff9815509c2bd487"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-check-failed.png",
+      "bytes": 66157,
+      "sha256": "3a7098bf5114d2c22bc9085af852b68e02d406e2960ccafa74d3de5b9ee6ecd4"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-manager-confirm.png",
+      "bytes": 62922,
+      "sha256": "181097444ee8a4b490c03a997d2908d4f973a3b965550adcda059a0977833865"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-manager-downloading.png",
+      "bytes": 52448,
+      "sha256": "7b3f7774a8a29c5bfd1e53b2e0e5d1395dd76eec644abe510f7b5020587cdfb4"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-manager-failed.png",
+      "bytes": 56438,
+      "sha256": "6d03d964717745cbb20d7ceb5c23833393ff76185b415490627dd2d2abf8d682"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-official-backup-failed.png",
+      "bytes": 56244,
+      "sha256": "0945ea9d71f784630e5c4f401656b7218e62eaf913aadfb419055ea4b705eb75"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-pending-restart.png",
+      "bytes": 55081,
+      "sha256": "cd2d8609354e5c25d1a29c09f630d002f828b495b09f0d328ea393d653e74816"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-restart-refused.png",
+      "bytes": 56510,
+      "sha256": "0dc5d19958ee1a107c948145c6489b47c82142296a248323cac9cf5191f2bc64"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-results.png",
+      "bytes": 67693,
+      "sha256": "255fb844c350e921daf976ed5a05dc076662a5766485d83c0623c408bcb9ad5a"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/report.json",
+      "bytes": 71388,
+      "sha256": "a6867932f97b9ed0c3f7f00125b25fc85c2253b76c7af6262e24c3a1c19653a8"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-check-failed.png",
+      "bytes": 516696,
+      "sha256": "a585a51f9150358882a8cf7c4c9da4561d0dd3af31c24d7694d21348e74ff703"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-manager-confirm.png",
+      "bytes": 498091,
+      "sha256": "05030dac2cab65ffdc140606608f6c5b79cb9beb4015d307105f8a8b002270d2"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-manager-downloading.png",
+      "bytes": 496221,
+      "sha256": "cdaf52b2a786549d6a7bb4fcb51fd3c2523af447d9218ba193055b6b7a11ba77"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-manager-failed.png",
+      "bytes": 502034,
+      "sha256": "3c3e89906c005020cd831ff577ec06c0334b02181f1e0ac7b61fe5018320a559"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-official-backup-failed.png",
+      "bytes": 501752,
+      "sha256": "a2cf5e804e1e71e5fff4af925d438115fc09b6f914aa11dae9c6025509bd0ab5"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-pending-restart.png",
+      "bytes": 499792,
+      "sha256": "d7eb6dcfcad3cc547d4cdd71f3cb8fcf8375c68f1e4f97e70850704f0e3d1ded"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-restart-refused.png",
+      "bytes": 496042,
+      "sha256": "045d7fa42f34acb2a2d4eca00545613e4d982dc1de9a2252b3b53a35f8cdc23f"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-results.png",
+      "bytes": 520178,
+      "sha256": "85557bc97e4c679ed5c5e08d031fa470d5d2ac96599feaa99f752e83d76cee40"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-check-failed.png",
+      "bytes": 267836,
+      "sha256": "ac1d41b476691b229602ecf593dddfb278543707912f8e26b57c368a11725ad6"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-manager-confirm.png",
+      "bytes": 263843,
+      "sha256": "9e472104dcee1973314fbf267b95fecab3227fc8817abbe1ee2ee6b6964eb652"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-manager-downloading.png",
+      "bytes": 257622,
+      "sha256": "a1c78f3cb69d088101de2617cb60715b7f1b1fbd0610739573625d60672d3659"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-manager-failed.png",
+      "bytes": 263035,
+      "sha256": "14b23c9316746d71fbb1f3d31fa5610e3871d763b5a6d4ad3ad93eddf468d8be"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-official-backup-failed.png",
+      "bytes": 274277,
+      "sha256": "2c42e028436ef7c5bc0a020a72347019757dee93ceb063f2adfd36073611632d"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-pending-restart.png",
+      "bytes": 256366,
+      "sha256": "2634c97035c971a985530d797e0afd253d6c01036a55900b529d188bfede772e"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-restart-refused.png",
+      "bytes": 261056,
+      "sha256": "cffb9ca83eb56fc2d657ed49987cba407b9a6bf4e645fa4f28860f8d2f6846c9"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-results.png",
+      "bytes": 287610,
+      "sha256": "01ec9e35c671eacbc1eda57e30b46d18d509f4dab70138a4b71e71ccfd5c64c4"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-check-failed.png",
+      "bytes": 70571,
+      "sha256": "bbd3829331d5b5ef2276470d30ee90ef2314a540dd3dac70e11bf4979d781e83"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-manager-confirm.png",
+      "bytes": 68838,
+      "sha256": "e3cd126442a4561685f8d0a2308ca47d1ee67c83ad9ababac831ac435fcef022"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-manager-downloading.png",
+      "bytes": 57843,
+      "sha256": "dd5bc3b8fca53ffacf3d6ad285849ebcd285cebcbcdcf629c5cf361dade43eda"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-manager-failed.png",
+      "bytes": 61703,
+      "sha256": "88c0d2ed1828e6fdb1b9be0ef4626d50091b45d9ddc7490e63f787b6d7ec28bc"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-official-backup-failed.png",
+      "bytes": 61506,
+      "sha256": "93b4ac3b109450c7777ee976b3a758bb96cabcf59620696ca1a371610558b6d2"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-pending-restart.png",
+      "bytes": 60043,
+      "sha256": "f7b0eb81f482b8fa929dbb1da7a7f5b8e1ce6cb133e1ce6f81ae88324b982118"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-restart-refused.png",
+      "bytes": 62671,
+      "sha256": "7d27420fc006c31aa38f247f4fd527d966f073aec6b62ac96b40118f189a22bb"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-results.png",
+      "bytes": 72871,
+      "sha256": "2ae5ec2c80d2aba6ba416267fb44f43b56de1e3be53823b1727ffed758ff4c9a"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/browser-boundary-and-fonts.json",
+      "bytes": 299608,
+      "sha256": "c78e5b347910a0b76b84bc80c9e2491397073246fc82954efe5bffd9b3086a4c"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/execution.json",
+      "bytes": 710,
+      "sha256": "6a03194fdf35478dae8c9894e4fc8bf104fe340bd37036e9821f82b583b2eb66"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/execution.log",
+      "bytes": 29,
+      "sha256": "cb8c7c376ab475b30660b2307ab31d5f3de477d7a689a05d6c000cdad91615db"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-check-failed.png",
+      "bytes": 1078436,
+      "sha256": "3a33c60086508589d935b7f43e75f4fda0f5a9e223478fccab80c915285efbdb"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-manager-confirm.png",
+      "bytes": 1031754,
+      "sha256": "6bfab95e0eab2821dbaa0c10dfdb487cf3509470b00d689da324c5d748ff9502"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-manager-downloading.png",
+      "bytes": 1068735,
+      "sha256": "a7d220c935afff09ea7f80c74114f61333eeb04f89e9d208d63efddf4982fcf4"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-manager-failed.png",
+      "bytes": 1077489,
+      "sha256": "56516dda90ece00fb7a60a036e23966efdd6e298436f45452fb1b53dfea39676"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-official-backup-failed.png",
+      "bytes": 1076372,
+      "sha256": "1fe2cf1cee8b1b87226246455725552884c5208926e1c28810689f7a8da4255a"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-pending-restart.png",
+      "bytes": 1069526,
+      "sha256": "73cd00775601313abadcada5dbddaf663edff9131880980f11859e3e1c4b3120"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-restart-refused.png",
+      "bytes": 1071003,
+      "sha256": "450a0ac84ac08a5ab61cea96dfea12d93ccb5d48dc1bfe703f1f0f1f822efc9f"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-results.png",
+      "bytes": 1083808,
+      "sha256": "d2418a8d5cc97d4aa41fd5848eba23d6a54fecf89f27a56e5ecf690454d9717c"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-check-failed.png",
+      "bytes": 626731,
+      "sha256": "4c5908ad0d0fd4a34d23a96da3063d5d4f5c635965ac3dd8b30db96924a1d064"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-manager-confirm.png",
+      "bytes": 569650,
+      "sha256": "7ac7347f1d9693ce75cfb0f8bb7eacdc1cb578ffa3c3efbe76d91023a6c56078"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-manager-downloading.png",
+      "bytes": 614403,
+      "sha256": "4677ba544484b5cb4781e0b8d9c0c2ff18c8c372907db6adc61fe3383ac83829"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-manager-failed.png",
+      "bytes": 625893,
+      "sha256": "21424ac0913498aaa845fff52dfd1a088462758790d3e884d8234ea288fd4934"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-official-backup-failed.png",
+      "bytes": 624302,
+      "sha256": "34eb14d2760b918ad839a8bea4eb24ae96bb5c5006c59f06a34d9d4ea69110d7"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-pending-restart.png",
+      "bytes": 609613,
+      "sha256": "65366ed0de0f39cf6e009c9d896752d668c58492eadcef08267a6c9abde49707"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-restart-refused.png",
+      "bytes": 620348,
+      "sha256": "0a85dc5a1923ed3b0b2f373ff17ffd0e21bcabe8b196ecc8a9855e35fece24e2"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-results.png",
+      "bytes": 646310,
+      "sha256": "c64f16697a39ec4bc316f99506c9199eeff2e75908b509a7a19044d2a2ad819d"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-check-failed.png",
+      "bytes": 80904,
+      "sha256": "043ee997adb3881260f36d201081c4aa7db2999519f0a98418832ad0869ed352"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-manager-confirm.png",
+      "bytes": 77573,
+      "sha256": "7c0cb171558588cde181eefe51e1d3b52f91746450611e4d465c0c217e0d29be"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-manager-downloading.png",
+      "bytes": 65907,
+      "sha256": "a5d26e89846e530cb53dca7119cb10466074e7cbfa9c1967a29a8798d7a565b0"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-manager-failed.png",
+      "bytes": 70580,
+      "sha256": "652ba70cd3ac3aec38954300c256d07a65766120efdba56fd51054613d5cba2f"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-official-backup-failed.png",
+      "bytes": 70825,
+      "sha256": "e77b4f56aa74a2c8c1c6f12876496bd42e2db0bc6453ffb3272656e8275fb123"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-pending-restart.png",
+      "bytes": 68182,
+      "sha256": "41075fe443efd8af9d642f4d28e9bf07c93cfdb589388703027be541a0de905e"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-restart-refused.png",
+      "bytes": 70231,
+      "sha256": "9fbb9c7d40b0dd4069f8b1f0bed6605530bea2eefc3e1d2619b3dd3e4d77169e"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-results.png",
+      "bytes": 83739,
+      "sha256": "dc20d0ed0155f95b8fa02c1ab1223737945be355488615f3acd3dd2a2b8057ff"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/report.json",
+      "bytes": 71730,
+      "sha256": "14a62c78b97c74dcac2e4f806881ca6b89cb421ce7f2401070af987ab96f2e0c"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-check-failed.png",
+      "bytes": 884605,
+      "sha256": "44896c00c6bd16fcf00165d7bd1d74a5d7bc084da58fd3a5debe532c9836652b"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-manager-confirm.png",
+      "bytes": 849988,
+      "sha256": "138dd574d1620c7e00073ee1b9e2fffd3198b27b3a3665cd96f3ccce49798418"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-manager-downloading.png",
+      "bytes": 865183,
+      "sha256": "2f6ad1a5f6e01eac68412b981a91fbb30b8153b1bf7b0022b53e656ebb92749c"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-manager-failed.png",
+      "bytes": 869567,
+      "sha256": "aac265324ad2fdb2e6eeece659670679ba2012145313caa39a31ef8caca38d74"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-official-backup-failed.png",
+      "bytes": 869312,
+      "sha256": "4c161aaa5939aef299f0cb32a45eeb171a6b33de5b730a4c5806fec8a13c2fb1"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-pending-restart.png",
+      "bytes": 868558,
+      "sha256": "d5cf733c3e952315388b37d51364c36ed4f7c6374d95fdeb09b8203dcd25771c"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-restart-refused.png",
+      "bytes": 866418,
+      "sha256": "25660c912a3285db56e9b2f2a723235dca8bedfdce6bb64c92c4dd04e2ee377f"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-results.png",
+      "bytes": 888725,
+      "sha256": "d91e20b4aae4b8c15a102d17a292688fb0fd0717f618db981416168e7a7127bb"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-check-failed.png",
+      "bytes": 584711,
+      "sha256": "eeb148ac2961e5c28c02049422eabfd6e47569ecccbfc72ef59cc42655ef250a"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-manager-confirm.png",
+      "bytes": 536009,
+      "sha256": "9ea4567c046f6a09cf71a36ba87d316e581e2eea4b4f981b0bae9b03a90ff4ce"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-manager-downloading.png",
+      "bytes": 564202,
+      "sha256": "629a956ada6c67d9a57d23400cdb814d50a0c742eb9ed49c1ba0a88d54309735"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-manager-failed.png",
+      "bytes": 572387,
+      "sha256": "5b80ecfb4f314ea3bf78c717d0aebae67c906fef5e55a1abdd9e3ef9dde7bf2c"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-official-backup-failed.png",
+      "bytes": 540073,
+      "sha256": "03e4338535291879a210928389f2e5a3df0a081d680b6e5569434feb553a0258"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-pending-restart.png",
+      "bytes": 564924,
+      "sha256": "947040f8c9216ea4e157c31930b340e136051d3871891586a7341621c242a366"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-restart-refused.png",
+      "bytes": 572945,
+      "sha256": "2d25caf0fc1a053f417b63bae9f3d72594b137fdddf4f4170aeef53b5d34e80e"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-results.png",
+      "bytes": 601888,
+      "sha256": "f3c02c0a0af30948fd8c5c22e4caba92d59b7f29f03f6dcf07789fbb657ff94a"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-check-failed.png",
+      "bytes": 85152,
+      "sha256": "57270c173ae49f901b35dd2295b14553d5762e0a821b795f6b0c1315bf1c6915"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-manager-confirm.png",
+      "bytes": 82965,
+      "sha256": "15bfeab38e169da5ee6cac503f603fafb90c9607c699883124b0e702a1991fc6"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-manager-downloading.png",
+      "bytes": 71162,
+      "sha256": "c7bffeea23a3964df43c9d9ebf52619ed4b35d78393b6051097d9b7fc3d73e6e"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-manager-failed.png",
+      "bytes": 74476,
+      "sha256": "3eef1e3bfc0451fce3eb8445efc5ba86ffd7d65fd6f77b49f3f66a5edc958c90"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-official-backup-failed.png",
+      "bytes": 74743,
+      "sha256": "558f052b233f3c8f11394c7e8ba32b21e258412032b6298f580cc06832439520"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-pending-restart.png",
+      "bytes": 73143,
+      "sha256": "6bf7cd9d6ff59e72d7e056d58b0fd2c76c066b14942d53ff7a93fd8bd21cfe3e"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-restart-refused.png",
+      "bytes": 75926,
+      "sha256": "8d05c1625f9264ccbb8fdd963c427fd6add2a69d2091c382d0f7a9bfcd10a4a8"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-results.png",
+      "bytes": 87557,
+      "sha256": "48413efb9dc813b876c1480e6245259b1e02bb55b91b1b539492bde191fb472e"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/browser-boundary-and-fonts.json",
+      "bytes": 149844,
+      "sha256": "c84fe7e0fc831e39bb7c0ca2ca9365984fef20cddc6f09b8db02b9a814737b64"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/execution.json",
+      "bytes": 743,
+      "sha256": "8863e94a9ece2020f66b91584df781f27cda6e4db0f7cf70cccbe82f23accbde"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/execution.log",
+      "bytes": 763,
+      "sha256": "fa6801be7bb6a765e5147a01b7029b5c8148d6eb833f6e40e2e0822db9de9f8b"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/overview-100.png",
+      "bytes": 82412,
+      "sha256": "b644e3d66196849a75a06f6481fecb6a8dc57ed67da38fda7349a2d74ea88c7e"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/overview-200.png",
+      "bytes": 66286,
+      "sha256": "9010999404e48a11ad279046bd449ec5666ddf993141f0e345f37c2bbbebb9ff"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/report.json",
+      "bytes": 2599,
+      "sha256": "0fb2fcc8af104f94e910250f54db079e1f1189943a0ad0a0b619e18a0b098a20"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/settings-100.png",
+      "bytes": 90708,
+      "sha256": "66296d431ce9f88edc19c6c058387da76b09e87375b55dcf3ab7cc3ae4e51bc4"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/settings-200.png",
+      "bytes": 72892,
+      "sha256": "e648401860f11f21066f9e77546c395d088f2f89b889dd48e162c3b57a54e529"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/browser-boundary-and-fonts.json",
+      "bytes": 149844,
+      "sha256": "b6b3b67c12c451db009cbf28b060e38d68233ec147af5496b64591c36d0a4e03"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/execution.json",
+      "bytes": 737,
+      "sha256": "2d64c542d8d9b8b0896494111e74fbc67a86d7c999b7cffcb6758c88c01d4dd8"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/execution.log",
+      "bytes": 761,
+      "sha256": "781d476da897126e03c1246a8cc55e6a62340366bfd82e5ab4f46defb902532c"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/overview-100.png",
+      "bytes": 104285,
+      "sha256": "c80ec5d6683d443fb02b177030e2655c49a06a97e220c385abd9848c5b71af3b"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/overview-200.png",
+      "bytes": 87830,
+      "sha256": "1c5d01748a4ee691837589b9ddb18bb0f927606c152e32a732d9c0bf59c094e3"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/report.json",
+      "bytes": 2597,
+      "sha256": "a492b9faf0e493366b42853228464213bffb5765158f01e8a3110c5e9f494b7c"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/settings-100.png",
+      "bytes": 112988,
+      "sha256": "fea3aa40566439c59ad45927d13662d2381497701614dde84d0a8f3f22c5baa2"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/settings-200.png",
+      "bytes": 94988,
+      "sha256": "d22465f34b4720933bc8347f05419a48bf95cb866a7223134d5f21b1a7fcebb2"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/browser-boundary-and-fonts.json",
+      "bytes": 517862,
+      "sha256": "aab4c3b47cae83041fe342fbeefaf9e4918b5da028e05e262580a6b2c94fd689"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/execution.json",
+      "bytes": 743,
+      "sha256": "0d4b4c072f14796f70fa5569b1605616d1260da6f8dc23edf6d353d836d157cb"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/execution.log",
+      "bytes": 31,
+      "sha256": "cc1746a9fbd8c9ccd9b049130009a870d96c2cf235acaaed98171707097be216"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-100-confirm-refused.png",
+      "bytes": 67979,
+      "sha256": "90a8a12f5a932b114e8cde8112d11e276bf8fc71d306e9cf8cfb58f3cb883c35"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-100-details-long-bottom.png",
+      "bytes": 117536,
+      "sha256": "301aebf428d67931154c8a201d650128cb04797852c2ab544ca6e8a636958161"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-100-details-long-top.png",
+      "bytes": 118867,
+      "sha256": "09a33efae0a5e1176d708ac40ba79f9c086c270019f44a68edc23a99662e2850"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-100-results.png",
+      "bytes": 80635,
+      "sha256": "fd15b16d89e2db49e589979963b4fbfbe2d4e8831a6af8d519fd7bf21a0d9f1e"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-150-confirm-refused.png",
+      "bytes": 63795,
+      "sha256": "eb28a3085fada4bf01b66e4a15f96467a900f6b5cb5abba4af2a21e01f39a838"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-150-details-long-bottom.png",
+      "bytes": 101723,
+      "sha256": "8daeaeca36b53a0922c09fbe7141baed79b5c3ace187273884130afc84cd19cc"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-150-details-long-top.png",
+      "bytes": 102149,
+      "sha256": "9342ab2bef1ab842e09749a9ec1d25769cbd85e122a9667dc7ddf6060763a654"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-150-results.png",
+      "bytes": 80987,
+      "sha256": "fa56bc7e50842b622b5e62f208bc9fb4aa435cc74a263b137d7ab41788addb26"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-200-confirm-refused.png",
+      "bytes": 59755,
+      "sha256": "76c57cfd34cf3324e5220dcf2b04aedc79d00c453107579c1a4f4c8975986be9"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-200-details-long-bottom.png",
+      "bytes": 68647,
+      "sha256": "1c6ee326ac551380e675cd099d10b66de6945425a18d785ec59400ca5518e53a"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-200-details-long-top.png",
+      "bytes": 74165,
+      "sha256": "9d2ad4866ff54a630e4bea3ec83ba6fdf805bf8c54766611b2d1d732142d8666"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-1180-760-200-results.png",
+      "bytes": 76952,
+      "sha256": "24ee007507e1b3439dcf525c922d985b96e075050efedf6a1796c2cbaaddeb58"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-100-confirm-refused.png",
+      "bytes": 57631,
+      "sha256": "6f8aafbab2f29a9d0631eb405274b80e4b8db7e5ce7f36d043c5347e8c149edb"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-100-details-long-bottom.png",
+      "bytes": 94148,
+      "sha256": "4d3bc477c34051590034d48d9dc23f14dcc99517015454f0f3f96bf85f5bf059"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-100-details-long-top.png",
+      "bytes": 91933,
+      "sha256": "34bfa5bede9d10dd9bf823348a96e373585b2d4534f72691191bcd1471155d0d"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-100-results.png",
+      "bytes": 68455,
+      "sha256": "74654ee412a3c21bfd617805aae694b83081a0f22475c299743be169267d890b"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-150-confirm-refused.png",
+      "bytes": 43045,
+      "sha256": "25b4ff480ac1d761f6ecad69944549a50eef91cc7e3bcc584b6cb414330890e9"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-150-details-long-bottom.png",
+      "bytes": 54953,
+      "sha256": "4ee1c88fa2bd2e12761a834bd583a632f97e2d9206effa5bd6dee88a056e0bec"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-150-details-long-top.png",
+      "bytes": 58567,
+      "sha256": "c9f0c5a7d8ef9361acce5707d3929b9c1a8b1032e5a8d2c1e76f259e4bf46a61"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-150-results.png",
+      "bytes": 59067,
+      "sha256": "f6d92fa125ff892dd85ffc62cb03aeba629499576c4a756231659311f8a2adde"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-200-confirm-refused.png",
+      "bytes": 41365,
+      "sha256": "df4f074e0861cfa71801a9f87f734ff18103fc93a7860bbe8f3e807139e25b4a"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-200-details-long-bottom.png",
+      "bytes": 55864,
+      "sha256": "15c4055f3a77811bd1f0ef7a55dd9ef28248557fbe5095bc45236abf6752c082"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-200-details-long-top.png",
+      "bytes": 50924,
+      "sha256": "10fcf22a904cdb9f6f8178598f35ef30af897303cb517a5d1b0fb1e121d9a652"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/overview-900-600-200-results.png",
+      "bytes": 39729,
+      "sha256": "666f6ee77fe235376560da705632c57af703405ab21d19fa41c61f45427329eb"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/report.json",
+      "bytes": 447650,
+      "sha256": "4f4ac39f91484bcffddfd451d2c9d1ee0cef5f07df841ed4f11fab13f3fa2fb9"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-100-confirm-refused.png",
+      "bytes": 85865,
+      "sha256": "9ad1f3d980cff9c464cbd432a353670d404dd6b18fa5f43eead67419e546c947"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-100-details-long-bottom.png",
+      "bytes": 127620,
+      "sha256": "da7e71896b59c7fc27cf39aec7f1bb5435d7baa56c31c73e99dcddf205ca572f"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-100-details-long-top.png",
+      "bytes": 129267,
+      "sha256": "b4b161ca2ff6f10aaaed261da589bfba1d4f5c9a88438ea6dcd6038f79c7e278"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-100-results.png",
+      "bytes": 97687,
+      "sha256": "0f1d8e006be7f89fe56cde21d92539030cf7eb2e5ee9a0d3642ad13922273d80"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-150-confirm-refused.png",
+      "bytes": 60427,
+      "sha256": "9399f927ebcc734b7f79257afc208006c2db461aaf5fc869ba6d8c16324bf06b"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-150-details-long-bottom.png",
+      "bytes": 104124,
+      "sha256": "fb4f0bd269e6d45ef99e7cf3619f0aa8714727255f81681d97912ff71263d800"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-150-details-long-top.png",
+      "bytes": 104435,
+      "sha256": "83a16ae3fcdb08e4533759dc3746bb2562597c1128d4065e44f958a07dad721c"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-150-results.png",
+      "bytes": 79295,
+      "sha256": "78b0b8291c3b7b72c2d311eeba72f6d44919b2079a7627abfac6d0c01e99c971"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-200-confirm-refused.png",
+      "bytes": 71374,
+      "sha256": "7a0dfd48a9d26a59301c8da2d0ecf1dc5e74d960c83bd02d64e4d057632c3581"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-200-details-long-bottom.png",
+      "bytes": 79851,
+      "sha256": "c810fcad474a2d1a57a1ba880c243513036c7479d1481ae5472599ad266c6794"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-200-details-long-top.png",
+      "bytes": 85245,
+      "sha256": "7b8f8dc37746c32b973494890ba950709cf50d2d34c9cee51d50a2b518a73a60"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-1180-760-200-results.png",
+      "bytes": 88227,
+      "sha256": "641d6406e343a460b2468bc750911bfc8a054ad951ff9e9e1d8b3757d7dae56e"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-100-confirm-refused.png",
+      "bytes": 62993,
+      "sha256": "c3b90247014834b361c0539f1df168ac185af0b5880d7ac7c62cebeee6267ccd"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-100-details-long-bottom.png",
+      "bytes": 95317,
+      "sha256": "bd4356a31e08dbe85d6de21ef4523b756f839afe19ca30ee888035c2255787d0"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-100-details-long-top.png",
+      "bytes": 93448,
+      "sha256": "a637439a0fb833c01a02759add73ae045de3795fb2fc37d6f8ca80b5ecef0f49"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-100-results.png",
+      "bytes": 72913,
+      "sha256": "69c0b56b6d5264c08e548fdfd3cbfc097b7b21468a12c62f641a92bfdb643872"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-150-confirm-refused.png",
+      "bytes": 43584,
+      "sha256": "32493f4e13088085540f39c3ceda933e95be263070f48f3b74d5fa2141362dff"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-150-details-long-bottom.png",
+      "bytes": 55581,
+      "sha256": "cddbf395c1598cffc6beb067fac84b60c4a27ccd4719af733c09226df7db80af"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-150-details-long-top.png",
+      "bytes": 59163,
+      "sha256": "6cf3a928deed1fb4b73d39b37abc9a3094782eeb9f48758cc68812009b003334"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-150-results.png",
+      "bytes": 59661,
+      "sha256": "9e9afdbfdc967164477fefdca086c3a8e267e172fc9e3712fe9b19bd532d3974"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-200-confirm-refused.png",
+      "bytes": 41083,
+      "sha256": "5911c464e8da992b090ae3e891604164d862fd8728d87248b7f2411e5f335991"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-200-details-long-bottom.png",
+      "bytes": 55679,
+      "sha256": "e5d486adfeb72e0b4b381106a559e875b9a35a04d72cdb8a4a2cd4463eeb26f3"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-200-details-long-top.png",
+      "bytes": 50758,
+      "sha256": "f50a25c2199da8d7546467664d26f12a63b57c82fcd251dbb3e518f1d5583ae2"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1/settings-900-600-200-results.png",
+      "bytes": 39587,
+      "sha256": "5759be8952d4fa6532008fed1c900b8110336501056b6af1c23f21e0101b0932"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/browser-boundary-and-fonts.json",
+      "bytes": 517368,
+      "sha256": "9e22c3ce1fbbe470245e65844070f54e3b5be76d12e38ecfc86301fe98350092"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/execution.json",
+      "bytes": 737,
+      "sha256": "604850ef542df499fbeafba32ed3f4fb1353bac197898326ce46eac81b26734f"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/execution.log",
+      "bytes": 29,
+      "sha256": "31f5361a84079b04832cb29335ed549ede1b505f0148824f998b8b2b7089f6f7"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-100-confirm-refused.png",
+      "bytes": 91029,
+      "sha256": "6d2ba0e7332178838d494b303654aff5008541567b3e0863522c7e5a004df69d"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-100-details-long-bottom.png",
+      "bytes": 137680,
+      "sha256": "1fe514edc09944e98f04056c4ffb0db39e857fba553901270882b2666fb55af2"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-100-details-long-top.png",
+      "bytes": 138573,
+      "sha256": "13d9ca133b19a88a620c07885fa483f00dff75b6c98be38a5b0d85224f0aed78"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-100-results.png",
+      "bytes": 104508,
+      "sha256": "c9dec240e3af7bf4bc5565d9e1a149a4892ab9bb27454720fd12a20affbb160a"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-150-confirm-refused.png",
+      "bytes": 85805,
+      "sha256": "67911e403bfcb872c0ed0750416da3982db5f75d8bd1ae18adc4e7db78919400"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-150-details-long-bottom.png",
+      "bytes": 125602,
+      "sha256": "0206e70f0b7f6b11d05f8828010452f2ceecc1e23f547fd93a9ce2967b926135"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-150-details-long-top.png",
+      "bytes": 121069,
+      "sha256": "9e7f7aa4f43b16fdc90777aef0b0192161f5897d86b4e7dff5557834f8bc9477"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-150-results.png",
+      "bytes": 104028,
+      "sha256": "9da4b1f651356bb6dc1a3ea06c20f475b748cbe68832d8b1b01140111236cb05"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-200-confirm-refused.png",
+      "bytes": 77734,
+      "sha256": "ae660d3176141464a748c6dd95809cba7ee15184fa5c3176cf3216c5bd62f1ff"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-200-details-long-bottom.png",
+      "bytes": 90870,
+      "sha256": "e800f39f57bfcae5c829d1d09318fcc5ce346abe21629467c0b6742d8ef46da1"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-200-details-long-top.png",
+      "bytes": 93352,
+      "sha256": "309e8079697d07a0b2c816f9f1c260327c166a0a78f34a4907362e835f577db7"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-1180-760-200-results.png",
+      "bytes": 98276,
+      "sha256": "13bf182a1854b8bb53649f0fb46d4d824b3252463b2643bc3030c64a8e06c758"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-100-confirm-refused.png",
+      "bytes": 71889,
+      "sha256": "c786b0b34b2c4b1b4b04b1f6ebfbcbca24e1b80f6e013f80bc538714e03fae91"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-100-details-long-bottom.png",
+      "bytes": 106912,
+      "sha256": "a34a5391da560c8d02aa03a95b15dcd99ea4b9829f8f739ef64fdd5129c82ff3"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-100-details-long-top.png",
+      "bytes": 103287,
+      "sha256": "fea9885be10fb514a5422baeeb5f3032549a29bd7f630e3c18516c9bbbfb207e"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-100-results.png",
+      "bytes": 83908,
+      "sha256": "43e458feb2d7e493eb516757e5750fda6943db63cebb902d5df8ff79f7859073"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-150-confirm-refused.png",
+      "bytes": 54878,
+      "sha256": "27314779fc5dca93a5623f090b8a6561a44769a95625c2ef0bf8dc9d9bdfdd34"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-150-details-long-bottom.png",
+      "bytes": 67813,
+      "sha256": "3c06383197679bb3ed1e605c4da4f5e8c19fb4c964650efbf7724e6d6500e794"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-150-details-long-top.png",
+      "bytes": 69873,
+      "sha256": "08e47861aa28ebd6b008a9dc618f6d5769980945faeff7f319145988667f4d68"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-150-results.png",
+      "bytes": 74180,
+      "sha256": "d35f662b040d894fa4ed7674d228a7cf6b7743c375cf20db1c4f890b97152a76"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-200-confirm-refused.png",
+      "bytes": 54746,
+      "sha256": "d19a60a08e4004971cfd91eedd24114aa27f79d6f50456f7c4a9bd0b793bdb33"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-200-details-long-bottom.png",
+      "bytes": 71595,
+      "sha256": "aaf0899eaaed1fb13d215799bec35a97629321ab4cd9f49448fe7e697bfc122d"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-200-details-long-top.png",
+      "bytes": 65875,
+      "sha256": "a92140d08721ead667f00551fd8720bf244ecfb4a6be8cd2aef8b1ade3a007b9"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/overview-900-600-200-results.png",
+      "bytes": 55244,
+      "sha256": "31246b5f5d4efbef29cce6dd8128383f93f3c33437d3a7fe5b56cead160da0dc"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/report.json",
+      "bytes": 452156,
+      "sha256": "c4801d730600a0ca5a0195552370f14bfff7699f3f84981d7dcafe4160529696"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-100-confirm-refused.png",
+      "bytes": 107421,
+      "sha256": "1ed592244f1ef4e404937263d14385b454ecc4573151dd4872b9f62bed0c3979"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-100-details-long-bottom.png",
+      "bytes": 148229,
+      "sha256": "6f98aaab604bc3eb79995e39fc30613f4de0b90da6504de08f268cdfea1583f7"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-100-details-long-top.png",
+      "bytes": 148984,
+      "sha256": "0938663b68c73e214ff790df4d924ef6541d67c93b93583d66ab5a6fc9e50f61"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-100-results.png",
+      "bytes": 120547,
+      "sha256": "48bc26cb73be25b6e5d46fdc76f8470d4663a79bdd60cef3266167a3595fd9d9"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-150-confirm-refused.png",
+      "bytes": 80553,
+      "sha256": "eb55e1e73b3dd637ee52fc710247869dba2e56883e4c23e46a37556fa7b180f0"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-150-details-long-bottom.png",
+      "bytes": 127790,
+      "sha256": "9e540c3d32d89279dc5bff4a3b74c62b39987db7f44e26d80e9a9d2b1a6c9b4a"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-150-details-long-top.png",
+      "bytes": 123064,
+      "sha256": "f47ed0a9e2ec0d366d4aba7f6ab2fc367083f41dbb781c86b2161aee9ad13cbf"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-150-results.png",
+      "bytes": 101296,
+      "sha256": "575422edc414724864c5cf3651c8c205bb3e18cbc9e55368e28006b9987626b7"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-200-confirm-refused.png",
+      "bytes": 90842,
+      "sha256": "86eddfc7949a1c826456c476dec71dc3269a92a6dfed63430ed64933ffd94653"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-200-details-long-bottom.png",
+      "bytes": 103304,
+      "sha256": "5cbf0244ae53280b53ad54f6019e8343ee87d2dbc01bae7458c242fb8c69ca05"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-200-details-long-top.png",
+      "bytes": 105588,
+      "sha256": "aafd4a88bebce928da0d02a8dd7935df9a27ae87b49887228cfcfc970147f652"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-1180-760-200-results.png",
+      "bytes": 110625,
+      "sha256": "02d50d006469ea5db808daf2c152034d24f0117a22adce99bb3428993c674eac"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-100-confirm-refused.png",
+      "bytes": 75711,
+      "sha256": "4421ffe8229b5a4f22207db8e5f77db85b12fcc76010d4bcc7dd8b472a6d8a8b"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-100-details-long-bottom.png",
+      "bytes": 108021,
+      "sha256": "d68d1bb2793596a4726e48039e686fcc171759fec5aa2be05e353ed9764bab38"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-100-details-long-top.png",
+      "bytes": 104805,
+      "sha256": "4dc8fcdc1ddd1dbc1ae0d63be0d1b98c95386fd66ac0b31edbf1272826437755"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-100-results.png",
+      "bytes": 88065,
+      "sha256": "b663a3c422742a360419fcdee9786a9e466140e8fa4738e58e71134327efc277"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-150-confirm-refused.png",
+      "bytes": 55369,
+      "sha256": "54861103b72ba1d24c3832ba864555466e37e9d5cb722474c2d524cd5e35c3c6"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-150-details-long-bottom.png",
+      "bytes": 68209,
+      "sha256": "3ed1495e919fadd54a618de060dcf30aa473a6a38c9e00829c7e18a3a3a38ac9"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-150-details-long-top.png",
+      "bytes": 70310,
+      "sha256": "c4df341863224366f28f31deaf066c78ce40f6a6d422b516213e9c678d20e0f4"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-150-results.png",
+      "bytes": 74647,
+      "sha256": "7cab04e6ccf47fe28d3ec23494c915b5479561cfa6ea518dcc5c0499f57ecc1c"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-200-confirm-refused.png",
+      "bytes": 54664,
+      "sha256": "e17a081da22c647fdae261a4f2192971ca6c6e8371ce8155cea9f808759be7be"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-200-details-long-bottom.png",
+      "bytes": 71372,
+      "sha256": "5426e630bcb9b850a9bee325d16a824f2a9acb76b0c8fc4b1e335b91e237cc1d"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-200-details-long-top.png",
+      "bytes": 65698,
+      "sha256": "4b54b4e88fea8fa77190d17c4b71f3e796feaf5860d936529e34abe7f92ae98d"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1/settings-900-600-200-results.png",
+      "bytes": 55086,
+      "sha256": "b77cc9ff966fd3278af9d97b7d98fed48c7d72d4930e508aea9eeb81382dd4d1"
+    },
+    {
+      "path": "sources/UpdateCenter-b175-vs34a.diff",
+      "bytes": 6647,
+      "sha256": "e2fa33f41440793a4219f867e9451c33b5a7fd1f8476d76164a2e8b8a2233866"
+    },
+    {
+      "path": "sources/UpdateCenter-c212-to-b175.diff",
+      "bytes": 1631,
+      "sha256": "63d8f426bbfccc55d859fc476ba7dd77cee5f3d15fa365eb6e66e54ecc24b1d3"
+    },
+    {
+      "path": "sources/UpdateCenter-vs34a.diff",
+      "bytes": 5541,
+      "sha256": "f5552e9b05249ce8ed01045332567e6bae9c1c68310ad83818aef5ab57df7559"
+    },
+    {
+      "path": "sources/UpdateCenter.34a.vue",
+      "bytes": 28545,
+      "sha256": "1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f"
+    },
+    {
+      "path": "sources/UpdateCenter.b175.vue",
+      "bytes": 29015,
+      "sha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81"
+    },
+    {
+      "path": "sources/UpdateCenter.current.vue",
+      "bytes": 28998,
+      "sha256": "c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d"
+    },
+    {
+      "path": "sources/frozen-prototype-showUpdates.txt",
+      "bytes": 546,
+      "sha256": "5287055cc4ddf840aefc5ee47d4bb73089a9821c378eb3f8ac4cef633b37e8fd"
+    }
+  ]
+}

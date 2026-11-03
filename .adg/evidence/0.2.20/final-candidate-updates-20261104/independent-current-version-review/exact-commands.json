@@ -1,0 +1,142 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/final-current-version-details/harness/update-hosts.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent/final-current-version-details",
+      "envOverrides": {
+        "AUDIT_ENGINE": "chromium",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-hosts-chromium-r1",
+        "AUDIT_SOURCE": "working-UpdateCenter-sha256:c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/final-current-version-details/browser-temp/update-hosts-chromium"
+      },
+      "startedAt": "2026-11-03T18:57:55.529913+00:00",
+      "exitCode": 0,
+      "finishedAt": "2026-11-03T18:58:08.802605+00:00"
+    },
+    {
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/final-current-version-details/harness/update-scale-contract.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent/final-current-version-details",
+      "envOverrides": {
+        "AUDIT_ENGINE": "chromium",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-contract-chromium-r1",
+        "AUDIT_SOURCE": "working-UpdateCenter-sha256:c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/final-current-version-details/browser-temp/update-scale-contract-chromium"
+      },
+      "startedAt": "2026-11-03T18:58:08.803364+00:00",
+      "exitCode": 0,
+      "finishedAt": "2026-11-03T18:58:11.354391+00:00"
+    },
+    {
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/final-current-version-details/harness/update-scale-expanded.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent/final-current-version-details",
+      "envOverrides": {
+        "AUDIT_ENGINE": "chromium",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-expanded-chromium-r1",
+        "AUDIT_SOURCE": "working-UpdateCenter-sha256:c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/final-current-version-details/browser-temp/update-scale-expanded-chromium"
+      },
+      "startedAt": "2026-11-03T18:58:11.355567+00:00",
+      "exitCode": 0,
+      "finishedAt": "2026-11-03T18:58:20.223534+00:00"
+    },
+    {
+      "name": "current-version-chromium-r1",
+      "cwd": "/tmp/ocx020-final-review-agent/final-current-version-details",
+      "command": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/final-current-version-details/reports/current-version-chromium-r1 AUDIT_SOURCE=working-UpdateCenter-sha256:c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d TMPDIR=/tmp/ocx020-final-review-agent/final-current-version-details/browser-temp node /tmp/ocx020-final-review-agent/final-current-version-details/harness/current-version-matrix.mjs > /tmp/ocx020-final-review-agent/final-current-version-details/reports/current-version-chromium-r1.log 2>&1",
+      "preservedExecutedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/harness/current-version-matrix-r1.mjs",
+        "sha256": "845c231f48330e6db29cdc6ce515c1e9db993d0dbb4aeb5665591b0ea45a488b"
+      },
+      "exitCode": 0
+    },
+    {
+      "name": "latest-body-chromium-b175",
+      "cwd": "/tmp/ocx020-final-review-agent/final-current-version-details",
+      "command": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/final-current-version-details/reports/latest-body-chromium-b175 REVIEW_BODY_ONLY=1 REVIEW_SOURCE_IDENTITY=/tmp/ocx020-final-review-agent/final-current-version-details/receipts/source-identity-b175.json AUDIT_SOURCE=b1750f5cf78b294b2edb34b9674d8c707ef8f810 TMPDIR=/tmp/ocx020-final-review-agent/final-current-version-details/browser-temp node /tmp/ocx020-final-review-agent/final-current-version-details/harness/current-version-matrix.mjs > /tmp/ocx020-final-review-agent/final-current-version-details/reports/latest-body-chromium-b175.log 2>&1",
+      "preservedExecutedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/harness/current-version-matrix.mjs",
+        "sha256": "40c86f72ccf708f75f1c1628a9ad6e8b6af74d6265129f06268ec587624cb043"
+      },
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/final-current-version-details/harness/update-hosts.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent/final-current-version-details",
+      "envOverrides": {
+        "AUDIT_ENGINE": "webkit",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-hosts-webkit-r1",
+        "AUDIT_SOURCE": "working-UpdateCenter-sha256:c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/final-current-version-details/browser-temp/update-hosts-webkit"
+      },
+      "startedAt": "2026-11-03T18:57:55.529908+00:00",
+      "exitCode": 0,
+      "finishedAt": "2026-11-03T18:58:07.675378+00:00"
+    },
+    {
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/final-current-version-details/harness/update-scale-contract.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent/final-current-version-details",
+      "envOverrides": {
+        "AUDIT_ENGINE": "webkit",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-contract-webkit-r1",
+        "AUDIT_SOURCE": "working-UpdateCenter-sha256:c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/final-current-version-details/browser-temp/update-scale-contract-webkit"
+      },
+      "startedAt": "2026-11-03T18:58:07.675956+00:00",
+      "exitCode": 0,
+      "finishedAt": "2026-11-03T18:58:11.668061+00:00"
+    },
+    {
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/final-current-version-details/harness/update-scale-expanded.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent/final-current-version-details",
+      "envOverrides": {
+        "AUDIT_ENGINE": "webkit",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/final-current-version-details/reports/update-scale-expanded-webkit-r1",
+        "AUDIT_SOURCE": "working-UpdateCenter-sha256:c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/final-current-version-details/browser-temp/update-scale-expanded-webkit"
+      },
+      "startedAt": "2026-11-03T18:58:11.668967+00:00",
+      "exitCode": 0,
+      "finishedAt": "2026-11-03T18:58:23.728157+00:00"
+    },
+    {
+      "name": "current-version-webkit-r1",
+      "cwd": "/tmp/ocx020-final-review-agent/final-current-version-details",
+      "command": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/final-current-version-details/reports/current-version-webkit-r1 AUDIT_SOURCE=working-UpdateCenter-sha256:c2125ea96b20b501327fe4e01c01e06fa74b20dca526bc7cdbe776ae0e2cb26d TMPDIR=/tmp/ocx020-final-review-agent/final-current-version-details/browser-temp node /tmp/ocx020-final-review-agent/final-current-version-details/harness/current-version-matrix.mjs > /tmp/ocx020-final-review-agent/final-current-version-details/reports/current-version-webkit-r1.log 2>&1",
+      "preservedExecutedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/harness/current-version-matrix-r1.mjs",
+        "sha256": "845c231f48330e6db29cdc6ce515c1e9db993d0dbb4aeb5665591b0ea45a488b"
+      },
+      "exitCode": 0
+    },
+    {
+      "name": "latest-body-webkit-b175",
+      "cwd": "/tmp/ocx020-final-review-agent/final-current-version-details",
+      "command": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/final-current-version-details/reports/latest-body-webkit-b175 REVIEW_BODY_ONLY=1 REVIEW_SOURCE_IDENTITY=/tmp/ocx020-final-review-agent/final-current-version-details/receipts/source-identity-b175.json AUDIT_SOURCE=b1750f5cf78b294b2edb34b9674d8c707ef8f810 TMPDIR=/tmp/ocx020-final-review-agent/final-current-version-details/browser-temp node /tmp/ocx020-final-review-agent/final-current-version-details/harness/current-version-matrix.mjs > /tmp/ocx020-final-review-agent/final-current-version-details/reports/latest-body-webkit-b175.log 2>&1",
+      "preservedExecutedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/final-current-version-details/harness/current-version-matrix.mjs",
+        "sha256": "40c86f72ccf708f75f1c1628a9ad6e8b6af74d6265129f06268ec587624cb043"
+      },
+      "exitCode": 0
+    }
+  ],
+  "allExecuted": true,
+  "noActionsNativeBuildOrPublication": true
+}

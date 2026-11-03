@@ -1,0 +1,35 @@
+
+> opencodex-desktop-ui@0.2.20 test
+> vitest --run tests/update-center.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/update-center.test.ts (16 tests | 1 failed) 143ms
+   ❯ shared production update center (16)
+     × shows only the current version when the cached candidate is already installed 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > shows only the current version when the cached candidate is already installed
+AssertionError: expected '0.2.20→0.2.20' to be '0.2.20' // Object.is equality
+
+Expected: "0.2.20"
+Received: "0.2.20→0.2.20"
+
+ ❯ tests/update-center.test.ts:59:56
+     57|     managerUpdateStatus.value = { ...managerUpdateStatus.value!, curre…
+     58|     const wrapper = render({ target: 'manager' }); await flushPromises…
+     59|     expect(wrapper.get('.update-version-hero').text()).toBe('0.2.20')
+       |                                                        ^
+     60|     expect(wrapper.get('h3').text()).toBe('桌面管理器更新详情')
+     61|     expect(wrapper.text()).not.toContain('安装后需重启管理器')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)
+   Start at  02:55:52
+   Duration  1.37s (transform 58%, environment 23%, tests 11%, import 8%)
+

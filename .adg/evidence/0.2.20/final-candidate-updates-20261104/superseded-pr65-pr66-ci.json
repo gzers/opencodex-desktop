@@ -1,0 +1,40 @@
+{
+  "currentSource": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "currentRun": 41699143981,
+  "reason": "integrated product adds latest-state fix; exact predecessor ancestry verified; cancelled is not passing; first ordinary-account failure retained",
+  "oldRuns": [
+    {
+      "run": 41687967250,
+      "old": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+      "observedStatus": "in_progress",
+      "observedConclusion": null,
+      "cancel": {
+        "exit": 0,
+        "stdout": "\u2713 Request to cancel workflow 41687967250 submitted.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "run": 41695127676,
+      "old": "67db1392de8461453a0eaba5b1b4e5b0941ee926",
+      "observedStatus": "in_progress",
+      "observedConclusion": null,
+      "cancel": {
+        "exit": 0,
+        "stdout": "\u2713 Request to cancel workflow 41695127676 submitted.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "run": 41698823176,
+      "old": "4961751c70ddc2859cb4d5ba6a8280a465157605",
+      "observedStatus": "queued",
+      "observedConclusion": null,
+      "cancel": {
+        "exit": 0,
+        "stdout": "\u2713 Request to cancel workflow 41698823176 submitted.\n",
+        "stderr": ""
+      }
+    }
+  ]
+}
