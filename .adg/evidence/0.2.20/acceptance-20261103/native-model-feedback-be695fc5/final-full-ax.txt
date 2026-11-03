@@ -1,0 +1,64 @@
+Window: "", App: OpenCodeX Model Acceptance.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#models
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 模型
+				10 button 拓展
+				11 button 同步
+				12 button 诊断
+				13 button 设置
+			14 container
+				15 heading 模型配置, Value: 1
+					16 text 模型配置
+				17 text 管理渠道模型、模版与选择器顺序。
+				18 container 主题
+					19 button 浅色
+					20 button 深色
+					21 button 跟随系统
+				22 text 未发现
+				23 button 刷新状态
+				24 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+				25 tab group (selectable) 模型配置
+					26 tab (selectable) 渠道模型
+					27 tab (selected) 模型模版
+				28 button Agent 配置, Help: 尚未选择执行模型 · 请配置执行模型
+				29 search text field (settable) 搜索模版, Value: GPT
+					30 text (settable) GPT
+					31 button cancel
+				32 button 新建模版
+				33 button 检查全部更新
+				34 button 外部任务
+				35 table
+					36 row (selectable) 选择
+模版
+版本
+操作
+					37 row (selectable)
+						38 cell (selectable) 勾选GPT
+							39 checkbox 勾选GPT, Value: 0
+						40 cell (selectable) GPT
+内置
+内置基线
+						41 cell (selectable) GPT保存版本
+						42 cell (selectable) 编辑
+复制
+版本管理
+匹配与使用
+				43 text 版本按北京时间精确到秒，并附唯一短标识；保存不覆盖旧版。下拉显示最近 5 个版本及当前/默认，其余在版本管理中选择。
+	44 close button
+	45 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	46 minimize button
+47 menu bar
+	48 OpenCodeX Model Acceptance
+	49 进程
+	50 编辑
+	51 视图
+	52 诊断
+
+The focused UI element is 53 button 版本管理

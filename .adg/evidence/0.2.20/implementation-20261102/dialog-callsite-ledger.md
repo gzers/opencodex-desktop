@@ -120,3 +120,7 @@ The source has 37 references under the same Dialog/Modal component boundary, exc
 ## Native model dialogs follow-up (f1f26d8f)
 
 See ../acceptance-20261103/native-integrated-f1f26d8f/native-model-dialogs.json and model-*.png. NewChannelDialog validation/Escape, AgentExecutionField unconfigured/save-disabled/cancel, ModelPicker catalog-error/empty/confirm-disabled/cancel, BatchAgentDialog missing-model and target count, ExternalTaskDialog local scope/default/close, ModelsRoute version builtin protection/search/close, and TemplateUsageDialog no-reference/no-model/filter/Escape states were observed natively. Raw English unconfigured feedback and version-search Escape dismissal need fixes and native rechecks. Opening an external-task dialog created a sandbox-local task plan, so no no-write claim is made. No external execution, copy/submission, channel save or version delete/default mutation was attempted. All callsites retain remaining states.
+
+## PR #49 原生模型反馈修复复核
+
+模型目录未配置时显示英文、版本搜索输入框内Escape未关闭，已由be695fc5修正。新增两项回归均在旧代码失败；修复后177文件/1097项UI测试、typecheck/build通过。隔离原生custom-protocol构建使用/tmp/ocx020-model-feedback-native-20261103和独立bundle ID；实屏确认模型选择器显示中文安装设置指引，未配置时确定仍禁用；版本搜索输入后按Escape关闭，源页GPT筛选和版本管理焦点保持。native-model-feedback-be695fc5保留截图、身份和完整AX。已停止自有PID73728，没有模型执行或版本变更。此为当前代码定向复核，最终release包与其余调用状态仍待验。
