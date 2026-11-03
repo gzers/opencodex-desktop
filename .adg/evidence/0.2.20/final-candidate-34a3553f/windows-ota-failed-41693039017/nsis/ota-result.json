@@ -1,0 +1,22 @@
+{
+  "result": "fail",
+  "kind": "nsis",
+  "from": "0.2.19",
+  "to": "0.2.20",
+  "channel": "beta",
+  "baselinePackageSha256": "72e00a1f70e1630fd3f46a66b30ea1b2f89480b2c0a34551e1d727d5128f5d03",
+  "expectedBuiltSha256": "f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060",
+  "installDirectory": "D:\\a\\_temp\\OpenCodeX OTA 中文 nsis a1e6ed1756ca4baaa0d119238c73c638",
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox",
+  "scope": "real production-channel signed updater and published baseline; isolated production model file, synthetic credentials and prewrite backup; no user machine changes",
+  "ordinaryExitPreservedOldVersion": true,
+  "automaticRestartObserved": true,
+  "automaticRestartProcess": {
+    "pid": 8540,
+    "path": "D:\\a\\_temp\\OpenCodeX OTA 中文 nsis a1e6ed1756ca4baaa0d119238c73c638\\opencodex-desktop.exe",
+    "creationDate": "2026-11-03T18:22:12.83808+00:00",
+    "version": "0.2.20"
+  },
+  "readbackMethod": "automatic new process observed by OS; exact updated EXE then relaunched with explicit isolated test environment for Tauri/file readback",
+  "error": "Reopened OTA result verification failed"
+}

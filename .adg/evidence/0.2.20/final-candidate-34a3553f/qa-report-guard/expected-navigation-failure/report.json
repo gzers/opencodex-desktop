@@ -1,0 +1,22 @@
+{
+  "engine": "chromium",
+  "completed": false,
+  "failure": {
+    "message": "page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:9/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:9/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low\", waiting until \"load\"\u001b[22m\n",
+    "stack": "page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:9/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:9/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low\", waiting until \"load\"\u001b[22m\n\n    at /private/tmp/ocx020-update-scale-report-guard/run.mjs:6:292"
+  },
+  "productSource": "34a3553f",
+  "result": "fail",
+  "scope": "Browser-only production Overview/Settings update consumers with explicit DEV fixtures; actual painted control size follows shared 50/100/150/200% scale. External requests blocked; no native bridge or installation.",
+  "samples": [],
+  "checks": [
+    {
+      "name": "complete actual host/scale traversal",
+      "passed": false,
+      "actual": {
+        "message": "page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:9/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:9/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low\", waiting until \"load\"\u001b[22m\n",
+        "stack": "page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:9/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:9/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low\", waiting until \"load\"\u001b[22m\n\n    at /private/tmp/ocx020-update-scale-report-guard/run.mjs:6:292"
+      }
+    }
+  ]
+}

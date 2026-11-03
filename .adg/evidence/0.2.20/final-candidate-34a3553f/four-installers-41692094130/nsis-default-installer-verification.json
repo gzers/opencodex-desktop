@@ -1,0 +1,19 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "builtExecutableSha256": "f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060",
+  "version": "0.2.20",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [],
+  "defaultInstallChecks": [
+    {
+      "result": "pass",
+      "kind": "nsis",
+      "pathOverride": false,
+      "boundary": "fresh isolated runner; no earlier installed product or directory override",
+      "installDirectory": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeX Desktop"
+    }
+  ]
+}

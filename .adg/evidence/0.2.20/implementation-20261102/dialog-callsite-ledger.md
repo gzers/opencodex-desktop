@@ -252,3 +252,15 @@ Mac从公开0.2.19副本实际经beta检查、下载、签名安装、手动重�
 模型历史恢复草稿原生成功路径已补：实际ModelStore生成独立canonical前后内容，显式seed一份经过production history读取器校验的legacy成功记录，仅作为消费者夹具，未冒称真实官方运行时保存。实际UI比较上下文64000→128000，默认不恢复模版指针，点击放入草稿后只model-config-draft.json改变；已保存策略仍64000、业务config及合成凭据原字节保持，返回模型页显示历史草稿/未保存。所用bda正式包副本与34a的history/store/api/UiDialog/Rust模块及字体字节完全一致，复用证明保存；这是实际原生UI/IPC/文件，不再错挂同步资源恢复。未执行运行时提交/生成/日常同步，自有进程已停。digest最初漏比sha256:前缀的探针断言已纠正，内容从未改变。
 
 final-independent-review当前仅对其审阅范围标pass：37+26+3入口及最终字体补证、缩放产品修复与新包原生通过；最终新payload的四安装、实际OTA和stable发布门单独保持待验，不从此局部pass关闭目标。
+
+
+### 2026-11-04 新原包实际OTA进展与Windows探针纠正
+
+新的Mac0.2.19基线使用原封bundle身份/签名，规范/private/tmp路径和进程级ApplePersistenceIgnoreState YES；旧版真实UI再次保存两次并验证新前像。实际beta下载、签名安装后，安装EXE与34a原包SHA完全相同、deep/strict过，确认重启使旧PID48420退出，新PID53693自动在同路径挂载0.2.20/34a。sandbox、进程参数继承，直接在同一自动进程打开原停用渠道读回，9项业务/偏好/新前像基线摘要保持，handoff消费。此次不需要二次readback副本，明确区别此前bda的AppKit提示轮次。自有进程已停。原件macos-adjacent-ota/ota-result.json。
+
+八新资产匿名下载摘要/长度全部匹配；首次并发urllib连接TLS EOF留为环境失败，保留已成功文件，仅对缺项用有界curl重试，没有凭token或改TLS放行。当前公开仍prerelease，stable保持0.2.19。
+
+Windows41693039017的MSI/NSIS均在新增窗口缩放探针失败，非签名下载/安装阶段：prepare-exit/prepare-restart均签名通过，普通退出保旧、自动新进程0.2.20已观察；错误为“actual updated Overview manager detail opener unavailable”。旧探针误要求首次UI尚无检查事实时的版本快捷入口可用，而生产OverviewRoute规定idle不可点。当前纠正为优先使用实际可用详情，否则点击正常“检查更新”主按钮（会只读既有公开端点），在同一生产窗口测100/150/200%，保留严比例/四边/操作断言并保存入口状态和截图，不强行启用按钮、不注入假成功。新测试工具head c4ff4c3de仅改QA，完整相邻OTA复跑41693777042正在进行，旧失败原件保留，不能记已通过新WindowsOTA。
+
+
+Windows第二轮41693777042原件补正：MSI已完成实际签名/安装/自动重启及文件/状态读回，失败在新增窗口入口探针，preflight明确detail=null、check=null、route=#overview，因此此前仅以idle快捷入口禁用解释不完整，撤回为未完全证实。源码与一次性runner没有托管运行环境的准备方式表明Overview环境准备分支不呈现维护卡，探针改从固定设置→版本升级→查看管理器更新打开，记录真实起始按钮与标题，不改变产品。该轮NSIS则在第一阶段discoverMainTarget的/json/list超时，根本未开始签名下载/安装；不写成升级失败或网络已证根因。新探针head b21618a93387fd2980aee39e45a45705355777ab仅改验收，严缩放比例/几何保持，尚待新原生回执。旧两轮均非通过。

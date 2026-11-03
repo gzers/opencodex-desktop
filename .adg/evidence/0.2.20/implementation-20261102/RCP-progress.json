@@ -690,10 +690,30 @@
     "release_status": "success",
     "asset_signatures": "8bytes/3signatures and Mac seal/source/DMG pass",
     "independent_installers_run": 41692094130,
-    "mac_changed_update_native": "pass"
+    "mac_changed_update_native": "pass",
+    "independent_installer_cells": "4/4 actualsource34a/builtSHAf557 verified",
+    "qaOnlyFollowup": {
+      "pr": 66,
+      "head": "2baefb358c51889a55690ac648daea4937c0b7c2",
+      "productUnchanged": true,
+      "purpose": "failure-report guard + actualupdatedWindows scale verification"
+    },
+    "actual_macos_ota": {
+      "result": "pass",
+      "evidence": "final-candidate-34a3553f/macos-adjacent-ota/ota-result.json",
+      "automaticSameProcessNativeReadback": true
+    },
+    "actual_windows_ota": {
+      "oldRun": 41693039017,
+      "result": "failed:new probe unavailable idle shortcut; signature/install/restart reached",
+      "retryRun": 41693777042,
+      "status": "in_progress",
+      "testToolHead": "c4ff4c3de460b2f264199eb6e5bf9291786c864e",
+      "productStill": "34a3553f"
+    }
   },
   "release_hold": {
-    "reason": "New34a final CI/independent fourinstallers/actualMac+MSI+NSIS OTA/stable pending; final source/native review nowpassed",
+    "reason": "New frozen34a Windows fullCI/final actualOTA pending; Mac actualOTA/fourinstallers/source signatures passed, stable notpromoted",
     "awaitingFontVersionAnswer": false,
     "typographyImplemented": true,
     "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",

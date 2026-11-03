@@ -1,0 +1,183 @@
+﻿2026-11-03T18:26:15.3925203Z Current runner version: '2.338.2'
+2026-11-03T18:26:15.3951193Z ##[group]Runner Image Provisioner
+2026-11-03T18:26:15.3951957Z Hosted Compute Agent
+2026-11-03T18:26:15.3952472Z Version: 20261021.618
+2026-11-03T18:26:15.3953060Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-11-03T18:26:15.3953736Z Build Date: 2026-10-21T00:45:21Z
+2026-11-03T18:26:15.3954374Z Worker ID: {be97c8af-f75d-41d8-99ff-6e70fc8a84f3}
+2026-11-03T18:26:15.3955062Z Region: westus2
+2026-11-03T18:26:15.3955537Z Cloud: Azure
+2026-11-03T18:26:15.3956222Z ##[endgroup]
+2026-11-03T18:26:15.3958856Z ##[group]Operating System
+2026-11-03T18:26:15.3959494Z Microsoft Windows Server 2025
+2026-11-03T18:26:15.3960065Z 10.0.26100
+2026-11-03T18:26:15.3960523Z Datacenter
+2026-11-03T18:26:15.3961034Z ##[endgroup]
+2026-11-03T18:26:15.3961513Z ##[group]Runner Image
+2026-11-03T18:26:15.3962072Z Image: windows-2025-vs2026
+2026-11-03T18:26:15.3962652Z Version: 20261030.294.1
+2026-11-03T18:26:15.3964056Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261030.294/images/windows/Windows2025-VS2026-Readme.md
+2026-11-03T18:26:15.3965606Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261030.294
+2026-11-03T18:26:15.3966550Z ##[endgroup]
+2026-11-03T18:26:15.3967546Z ##[group]GITHUB_TOKEN Permissions
+2026-11-03T18:26:15.3969353Z Contents: read
+2026-11-03T18:26:15.3969905Z Metadata: read
+2026-11-03T18:26:15.3970400Z ##[endgroup]
+2026-11-03T18:26:15.3972452Z Secret source: Actions
+2026-11-03T18:26:15.3973286Z Cache mode: write
+2026-11-03T18:26:15.3973980Z Prepare workflow directory
+2026-11-03T18:26:15.4369553Z Prepare all required actions
+2026-11-03T18:26:15.4441466Z Getting action download info
+2026-11-03T18:26:15.8244096Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-11-03T18:26:15.9865233Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+2026-11-03T18:26:16.1683751Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-03T18:26:16.5474115Z Complete job name: ota (msi)
+2026-11-03T18:26:16.7256730Z ##[group]Run actions/checkout@v5
+2026-11-03T18:26:16.7258204Z with:
+2026-11-03T18:26:16.7259023Z   repository: gzers/opencodex-desktop
+2026-11-03T18:26:16.7269909Z   token: ***
+2026-11-03T18:26:16.7270777Z   ssh-strict: true
+2026-11-03T18:26:16.7271602Z   ssh-user: git
+2026-11-03T18:26:16.7272438Z   persist-credentials: true
+2026-11-03T18:26:16.7273361Z   clean: true
+2026-11-03T18:26:16.7274200Z   sparse-checkout-cone-mode: true
+2026-11-03T18:26:16.7275191Z   fetch-depth: 1
+2026-11-03T18:26:16.7276027Z   fetch-tags: false
+2026-11-03T18:26:16.7276874Z   show-progress: true
+2026-11-03T18:26:16.7277699Z   lfs: false
+2026-11-03T18:26:16.7278475Z   submodules: false
+2026-11-03T18:26:16.7279325Z   set-safe-directory: true
+2026-11-03T18:26:16.7280650Z   allow-unsafe-pr-checkout: false
+2026-11-03T18:26:16.7282149Z ##[endgroup]
+2026-11-03T18:26:16.8798267Z Syncing repository: gzers/opencodex-desktop
+2026-11-03T18:26:16.8800986Z ##[group]Getting Git version info
+2026-11-03T18:26:16.8802383Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-11-03T18:26:16.9749426Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T18:26:17.3404032Z git version 2.56.0.windows.4
+2026-11-03T18:26:17.3460418Z ##[endgroup]
+2026-11-03T18:26:17.3483682Z Temporarily overriding HOME='D:\a\_temp\ef9a9cf9-819a-48c0-b73d-839fed480a7c' before making global git config changes
+2026-11-03T18:26:17.3486089Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T18:26:17.3495122Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-11-03T18:26:17.4109225Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-11-03T18:26:17.4115944Z ##[group]Initializing the repository
+2026-11-03T18:26:17.4125313Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+2026-11-03T18:26:17.5062215Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+2026-11-03T18:26:17.5120920Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+2026-11-03T18:26:17.5777697Z ##[endgroup]
+2026-11-03T18:26:17.5779147Z ##[group]Disabling automatic garbage collection
+2026-11-03T18:26:17.5789555Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-03T18:26:17.6171748Z ##[endgroup]
+2026-11-03T18:26:17.6173085Z ##[group]Setting up auth
+2026-11-03T18:26:17.6184035Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T18:26:17.6633535Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T18:26:19.1675721Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T18:26:19.2072119Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T18:26:19.8079443Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T18:26:19.8501768Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T18:26:20.4392827Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-03T18:26:20.4795271Z ##[endgroup]
+2026-11-03T18:26:20.4796171Z ##[group]Fetching the repository
+2026-11-03T18:26:20.4813166Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +c4ff4c3de460b2f264199eb6e5bf9291786c864e:refs/remotes/origin/codex/0.2.20-qa-report-guard
+2026-11-03T18:26:35.2861281Z From https://github.com/gzers/opencodex-desktop
+2026-11-03T18:26:35.2862342Z  * [new ref]         c4ff4c3de460b2f264199eb6e5bf9291786c864e -> origin/codex/0.2.20-qa-report-guard
+2026-11-03T18:26:35.2903387Z ##[endgroup]
+2026-11-03T18:26:35.2904091Z ##[group]Determining the checkout info
+2026-11-03T18:26:35.2906619Z ##[endgroup]
+2026-11-03T18:26:35.2918908Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-03T18:26:35.3510106Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-03T18:26:35.3929231Z ##[group]Checking out the ref
+2026-11-03T18:26:35.3941150Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B codex/0.2.20-qa-report-guard refs/remotes/origin/codex/0.2.20-qa-report-guard
+2026-11-03T18:26:35.7175734Z Switched to a new branch 'codex/0.2.20-qa-report-guard'
+2026-11-03T18:26:35.7205659Z branch 'codex/0.2.20-qa-report-guard' set up to track 'origin/codex/0.2.20-qa-report-guard'.
+2026-11-03T18:26:35.7272349Z ##[endgroup]
+2026-11-03T18:26:35.7769173Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-03T18:26:35.8130391Z c4ff4c3de460b2f264199eb6e5bf9291786c864e
+2026-11-03T18:26:35.8695309Z ##[group]Run actions/setup-node@v5
+2026-11-03T18:26:35.8695675Z with:
+2026-11-03T18:26:35.8695898Z   node-version: 24
+2026-11-03T18:26:35.8696123Z   always-auth: false
+2026-11-03T18:26:35.8696361Z   check-latest: false
+2026-11-03T18:26:35.8698848Z   token: ***
+2026-11-03T18:26:35.8699069Z   package-manager-cache: true
+2026-11-03T18:26:35.8699342Z ##[endgroup]
+2026-11-03T18:26:36.0601992Z Found in cache @ C:\hostedtoolcache\windows\node\24.22.2\x64
+2026-11-03T18:26:36.0609882Z (node:9160) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T18:26:36.0611822Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T18:26:36.0614385Z ##[group]Environment details
+2026-11-03T18:26:40.6749850Z node: v24.22.2
+2026-11-03T18:26:40.6750121Z npm: 11.19.1
+2026-11-03T18:26:40.6750311Z yarn: 1.22.22
+2026-11-03T18:26:40.6751162Z ##[endgroup]
+2026-11-03T18:26:40.7100338Z ##[group]Run ./test/smoke/windows-ota.ps1 -Kind 'msi' -OutputDirectory 'test/out/windows-ota-msi' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION -Channel $env:OCX_OTA_CHANNEL -ExpectedBuiltSha256 $env:OCX_BUILT_SHA256
+2026-11-03T18:26:40.7102110Z [36;1m./test/smoke/windows-ota.ps1 -Kind 'msi' -OutputDirectory 'test/out/windows-ota-msi' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION -Channel $env:OCX_OTA_CHANNEL -ExpectedBuiltSha256 $env:OCX_BUILT_SHA256[0m
+2026-11-03T18:26:40.7872239Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T18:26:40.7872702Z env:
+2026-11-03T18:26:40.7872933Z   OCX_BASELINE_VERSION: 0.2.19
+2026-11-03T18:26:40.7873215Z   OCX_ACCEPT_VERSION: 0.2.20
+2026-11-03T18:26:40.7873477Z   OCX_OTA_CHANNEL: beta
+2026-11-03T18:26:40.7873891Z   OCX_BUILT_SHA256: f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060
+2026-11-03T18:26:40.7874377Z ##[endgroup]
+2026-11-03T18:26:52.5742397Z [1103/182652.571:ERROR:ui\gfx\win\window_impl.cc:172] Failed to unregister class Chrome_WidgetWin_0. Error = 1412
+2026-11-03T18:27:14.9858507Z node:internal/modules/run_main:107
+2026-11-03T18:27:14.9859110Z     triggerUncaughtException(
+2026-11-03T18:27:14.9859519Z     ^
+2026-11-03T18:27:14.9859690Z 
+2026-11-03T18:27:14.9860626Z AssertionError [ERR_ASSERTION]: actual updated Overview has no admitted update opener: {"detail":null,"check":null,"route":"#overview"}
+2026-11-03T18:27:14.9862414Z     at file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-ota.mjs:45:3 {
+2026-11-03T18:27:14.9863211Z   generatedMessage: false,
+2026-11-03T18:27:14.9869944Z   code: 'ERR_ASSERTION',
+2026-11-03T18:27:14.9870355Z   actual: false,
+2026-11-03T18:27:14.9870706Z   expected: true,
+2026-11-03T18:27:14.9871070Z   operator: '==',
+2026-11-03T18:27:14.9875304Z   diff: 'simple'
+2026-11-03T18:27:14.9875681Z }
+2026-11-03T18:27:14.9875848Z 
+2026-11-03T18:27:14.9876015Z Node.js v24.22.2
+2026-11-03T18:27:15.2473174Z [31;1mException: [0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-ota.ps1:62[0m
+2026-11-03T18:27:15.2474506Z [31;1m[0m[36;1mLine |[0m
+2026-11-03T18:27:15.2476244Z [31;1m[0m[36;1m[36;1m  62 | [0m … $LASTEXITCODE -ne 0){[36;1mthrow 'Reopened OTA result verification failed'[0m}[0m
+2026-11-03T18:27:15.2477844Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-11-03T18:27:15.2479050Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mReopened OTA result verification failed[0m
+2026-11-03T18:27:15.2744177Z ##[error]Process completed with exit code 1.
+2026-11-03T18:27:15.2968245Z ##[group]Run actions/upload-artifact@v4
+2026-11-03T18:27:15.2968587Z with:
+2026-11-03T18:27:15.2968781Z   name: windows-ota-msi
+2026-11-03T18:27:15.2969323Z   path: test/out/windows-ota-msi/*.json
+test/out/windows-ota-msi/*.png
+test/out/windows-ota-msi/actual-sandbox/logs/*.log
+
+2026-11-03T18:27:15.2969883Z   if-no-files-found: error
+2026-11-03T18:27:15.2970122Z   compression-level: 6
+2026-11-03T18:27:15.2970329Z   overwrite: false
+2026-11-03T18:27:15.2970542Z   include-hidden-files: false
+2026-11-03T18:27:15.2970772Z ##[endgroup]
+2026-11-03T18:27:15.5029196Z (node:8880) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T18:27:15.5030005Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T18:27:15.5145980Z With the provided path, there will be 6 files uploaded
+2026-11-03T18:27:15.5151700Z Artifact name is valid!
+2026-11-03T18:27:15.5153809Z Root directory input is valid!
+2026-11-03T18:27:15.9147629Z Beginning upload of artifact content to blob storage
+2026-11-03T18:27:15.9468636Z (node:8880) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-03T18:27:16.2308365Z Uploaded bytes 2769
+2026-11-03T18:27:16.3111942Z Finished uploading artifact content to blob storage!
+2026-11-03T18:27:16.3113474Z SHA256 digest of uploaded artifact zip is 2662d145638ab8a16c7db47e856cfb027f3fe5b765915866f8fc1ac5c2203202
+2026-11-03T18:27:16.3116110Z Finalizing artifact upload
+2026-11-03T18:27:16.8091234Z Artifact windows-ota-msi.zip successfully finalized. Artifact ID 13259530443
+2026-11-03T18:27:16.8093302Z Artifact windows-ota-msi has been successfully uploaded! Final size is 2769 bytes. Artifact ID is 13259530443
+2026-11-03T18:27:16.8104763Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/41693777042/artifacts/13259530443
+2026-11-03T18:27:16.8483858Z Post job cleanup.
+2026-11-03T18:27:17.0830015Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T18:27:17.1277346Z git version 2.56.0.windows.4
+2026-11-03T18:27:17.1365772Z Temporarily overriding HOME='D:\a\_temp\c0c9b57d-2a9c-438c-ba10-06081bca7480' before making global git config changes
+2026-11-03T18:27:17.1367408Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T18:27:17.1377515Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-11-03T18:27:17.1792857Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T18:27:17.2207391Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T18:27:17.9113286Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T18:27:17.9482576Z http.https://github.com/.extraheader
+2026-11-03T18:27:17.9538029Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-03T18:27:17.9975106Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T18:27:18.6535476Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T18:27:18.6981763Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T18:27:19.3538426Z Cleaning up orphan processes
+2026-11-03T18:27:19.4170032Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

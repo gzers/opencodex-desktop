@@ -1,0 +1,45 @@
+{
+  "result": "pass",
+  "sourceCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "run": 41692094130,
+  "cells": [
+    {
+      "kind": "msi",
+      "mode": "default",
+      "result": "pass",
+      "sourceCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+      "builtExecutableSha256": "f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060",
+      "rawReport": "msi-default-installer-verification.json",
+      "rawArtifactZip": "msi-default-raw-evidence.zip"
+    },
+    {
+      "kind": "msi",
+      "mode": "custom",
+      "result": "pass",
+      "sourceCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+      "builtExecutableSha256": "f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060",
+      "rawReport": "msi-custom-installer-verification.json",
+      "rawArtifactZip": "msi-custom-raw-evidence.zip"
+    },
+    {
+      "kind": "nsis",
+      "mode": "default",
+      "result": "pass",
+      "sourceCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+      "builtExecutableSha256": "f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060",
+      "rawReport": "nsis-default-installer-verification.json",
+      "rawArtifactZip": "nsis-default-raw-evidence.zip"
+    },
+    {
+      "kind": "nsis",
+      "mode": "custom",
+      "result": "pass",
+      "sourceCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+      "builtExecutableSha256": "f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060",
+      "rawReport": "nsis-custom-installer-verification.json",
+      "rawArtifactZip": "nsis-custom-raw-evidence.zip"
+    }
+  ],
+  "exactCells": 4,
+  "scope": "actual final uploaded MSI/NSIS each default/custom, isolated native firstscreen/uninstall/data retention; OTA skipped here and tracked separately"
+}

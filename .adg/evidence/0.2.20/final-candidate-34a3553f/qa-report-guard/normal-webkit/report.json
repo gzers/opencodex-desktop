@@ -1,0 +1,188 @@
+{
+  "engine": "webkit",
+  "completed": true,
+  "failure": null,
+  "productSource": "34a3553f",
+  "result": "pass",
+  "scope": "Browser-only production Overview/Settings update consumers with explicit DEV fixtures; actual painted control size follows shared 50/100/150/200% scale. External requests blocked; no native bridge or installation.",
+  "samples": [
+    {
+      "owner": "overview",
+      "scale": 50,
+      "rootZoom": "0.5",
+      "shellZoom": "0.5",
+      "modalZoom": "0.5",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 18,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 16.5
+    },
+    {
+      "owner": "overview",
+      "scale": 100,
+      "rootZoom": "1",
+      "shellZoom": "1",
+      "modalZoom": "1",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 34,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 33
+    },
+    {
+      "owner": "overview",
+      "scale": 150,
+      "rootZoom": "1.5",
+      "shellZoom": "1.5",
+      "modalZoom": "1.5",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 51,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 49.5
+    },
+    {
+      "owner": "overview",
+      "scale": 200,
+      "rootZoom": "2",
+      "shellZoom": "2",
+      "modalZoom": "2",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 68,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 66
+    },
+    {
+      "owner": "settings",
+      "scale": 50,
+      "rootZoom": "0.5",
+      "shellZoom": "0.5",
+      "modalZoom": "0.5",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 18,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 16.5
+    },
+    {
+      "owner": "settings",
+      "scale": 100,
+      "rootZoom": "1",
+      "shellZoom": "1",
+      "modalZoom": "1",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 34,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 33
+    },
+    {
+      "owner": "settings",
+      "scale": 150,
+      "rootZoom": "1.5",
+      "shellZoom": "1.5",
+      "modalZoom": "1.5",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 51,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 49.5
+    },
+    {
+      "owner": "settings",
+      "scale": 200,
+      "rootZoom": "2",
+      "shellZoom": "2",
+      "modalZoom": "2",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 68,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 66
+    }
+  ],
+  "checks": [
+    {
+      "name": "overview UpdateCenter shares 200% interface scaling",
+      "passed": true,
+      "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+      "actual": {
+        "buttonHeight100": 34,
+        "buttonHeight200": 68,
+        "ratio": 2,
+        "shellTitleHeight100": 33,
+        "shellTitleHeight200": 66,
+        "modalInsideShell": false,
+        "rootZoom": "2",
+        "shellZoom": "2",
+        "modalZoom": "2"
+      }
+    },
+    {
+      "name": "settings UpdateCenter shares 200% interface scaling",
+      "passed": true,
+      "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+      "actual": {
+        "buttonHeight100": 34,
+        "buttonHeight200": 68,
+        "ratio": 2,
+        "shellTitleHeight100": 33,
+        "shellTitleHeight200": 66,
+        "modalInsideShell": false,
+        "rootZoom": "2",
+        "shellZoom": "2",
+        "modalZoom": "2"
+      }
+    },
+    {
+      "name": "overview UpdateCenter shares 50% interface scaling",
+      "passed": true,
+      "actual": {
+        "ratio": 0.5294117647058824,
+        "expected": 0.5
+      }
+    },
+    {
+      "name": "overview UpdateCenter shares 150% interface scaling",
+      "passed": true,
+      "actual": {
+        "ratio": 1.5,
+        "expected": 1.5
+      }
+    },
+    {
+      "name": "settings UpdateCenter shares 50% interface scaling",
+      "passed": true,
+      "actual": {
+        "ratio": 0.5294117647058824,
+        "expected": 0.5
+      }
+    },
+    {
+      "name": "settings UpdateCenter shares 150% interface scaling",
+      "passed": true,
+      "actual": {
+        "ratio": 1.5,
+        "expected": 1.5
+      }
+    },
+    {
+      "name": "isolated production consumers have no page errors or external requests",
+      "passed": true,
+      "actual": {
+        "errors": [],
+        "external": []
+      }
+    }
+  ]
+}

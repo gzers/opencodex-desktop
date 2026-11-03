@@ -1,0 +1,38 @@
+Window: "", App: OpenCodeX Desktop.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#overview
+			3 container 桌面管理器更新进度
+				4 heading 桌面管理器更新进度, Value: 3
+					5 text 桌面管理器更新进度
+				6 text 0.2.19
+				7 text 0.2.20
+				8 text OpenCodex Desktop · 测试通道
+				9 container
+					10 text 安装就绪，等待重启 当前仍为 0.2.19。重启后核验 0.2.20 是否生效。
+				11 content list 更新阶段
+					12 container 准备
+						13 list marker 1
+						14 text 准备
+					15 container 下载
+						16 list marker 2
+						17 text 下载
+					18 container 校验
+						19 list marker 3
+						20 text 校验
+					21 container 安装与重启
+						22 list marker 4
+						23 text 安装与重启
+				24 button 重启并应用更新
+				25 button 关闭更新中心
+	26 close button
+	27 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	28 minimize button
+29 menu bar
+	30 OpenCodeX Desktop
+	31 进程
+	32 编辑
+	33 视图
+	34 诊断
+
+The focused UI element is 3 container 桌面管理器更新进度

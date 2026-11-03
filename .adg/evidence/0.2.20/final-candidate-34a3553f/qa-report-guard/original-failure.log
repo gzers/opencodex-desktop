@@ -1,0 +1,13 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:9/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low
+Call log:
+[2m  - navigating to "http://127.0.0.1:9/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low", waiting until "load"[22m
+
+    at /private/tmp/ocx020-update-scale-report-guard/original-failure-run.mjs:5:292 {
+  name: 'Error'
+}
+
+Node.js v26.8.1
