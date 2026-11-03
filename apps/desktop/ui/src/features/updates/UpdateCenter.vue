@@ -286,8 +286,9 @@ defineExpose({ check })
 
 <style scoped>
 /* §39：结果页每个对象一行、一屏看完；宽度 780px，正文不出现外层滚动套嵌套滚动。 */
-.update-center.modal { width: min(780px, 90%); max-height: calc(100% - 24px); padding: 0; display: flex; flex-direction: column; overflow: hidden; }
-.update-center-head, .update-center-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-5) var(--space-6); }
+/* Teleport 在主壳外，须与 UiDialog 一样独立消费唯一缩放因子并折算视口。 */
+.update-center.modal { zoom: var(--ui-zoom); width: min(780px, calc(100vw / var(--ui-zoom) - 40px)); max-height: calc(100vh / var(--ui-zoom) - 40px); padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+.update-center-head, .update-center-foot { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-5) var(--space-6); }
 .update-center-head { padding:24px 24px 12px; }
 .update-center-head h3 { margin: var(--space-1) 0; }
 .update-center-head p, .update-center-foot p { margin: 0; font-size: var(--text-label); color: var(--muted); }
@@ -295,10 +296,10 @@ defineExpose({ check })
 .update-center-body { overflow: auto; min-height: 0; padding:0 24px 18px; display: grid; gap: var(--space-3); }
 .update-result-rows { display: grid; gap: var(--space-2); }
 .update-result-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border:0; border-bottom:1px solid var(--border); border-radius:0; background:transparent; }
-.update-result-main { display: grid; grid-template-columns: minmax(150px,1.1fr) minmax(150px,1fr); gap: var(--space-1) var(--space-4); min-width: 0; }
-.update-result-title { grid-column: 1; display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
+.update-result-main { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: var(--space-1) var(--space-4); min-width: 0; }
+.update-result-title { grid-column: 1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); min-width: 0; }
 .update-result-title strong { overflow-wrap: anywhere; }
-.update-result-version { grid-column: 2; display: flex; align-items: baseline; gap: var(--space-2); font-size: var(--text-label); color: var(--muted); font-variant-numeric: tabular-nums; }
+.update-result-version { grid-column: 2; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2); font-size: var(--text-label); color: var(--muted); font-variant-numeric: tabular-nums; }
 .update-result-version b { color: var(--text); font-family: var(--font-code); overflow-wrap: anywhere; }
 .update-result-source { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: var(--text-caption); overflow-wrap: anywhere; }
 .update-result-summary { grid-column: 1 / -1; margin: 0; color: var(--text); font-size: var(--text-caption); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
