@@ -142,3 +142,15 @@ S20-19/20 新增待修：Chromium200% 模型详情导航链接区被操作按钮
 navigation-native-9ce6672e为全新临时HOME/独立bundle ID的原生custom-protocol构建，持久200%/dark/mid偏好。实屏从模型模版进入GPT编辑，通过侧栏匹配规则打开匹配预览；空ID禁用检查，输入后Escape关闭并返回未修改编辑器。未调用检查/生成/发现，config.json SHA与合成停用渠道前像一致；已停止自有PID83944。原生200%证据不能代替Windows/最终包或其它数据状态。
 
 Windows smoke新增真实WebView2 keyDown/keyUp：输入Escape取消明细、别名不进入草稿、AX等价外窗焦点时先关内菜单、第二次关外窗、文件/备份不变；仅候选0.2.20要求新合同，公开0.2.19基线不误判。PR #50/#51完整CI与此Windows原生新增检查仍在进行；发布资产及安装/OTA门继续未完成。
+
+## PR #52/#53 扩展入口与完整详情受限布局
+
+PR #52/f7d8ca11修复Skills/MCP固定六列将名称/详情入口压至0宽：保留名称最小宽度，列表在局部区域横向滚动，不引入未来多Agent扩展包页面。补充secondary-dialog-states三组配置1180浅100%、900暗100%、1180暗200%，两引擎各111项、各33截图、0页面异常/外部请求；覆盖范围备份错误/忙碌Escape/无范围/取消/恢复失败、历史恢复默认不含指针/比较/取消、导入连接缺密码禁用/取消不激活/失败保留、空回执/读取错误/部分原ID重试/过期重新比较、通知清理取消、安装路径校验取消、Skill/MCP详情读取失败保留列表基础信息。178文件1105项UI与typecheck/build通过。原驱动等待未释放的scope preview导致禁用超时已修正；MCP读取失败只保证原列表描述/transport，不错误要求仅成功详情才有的完整command。失败原件保留。
+
+extension-native-f7d8ca11在200%/dark/low独立沙箱真实发现并读取SKILL.md、Codex config.toml定义，入口可打开、Escape回列表，文件摘要保持，未分发/执行。**该轮只证明入口与真实读取**：目检其skill-detail.png确认正文被元数据挤压且部分目标被裁切，不能据AX有文字宣称完整视觉通过。
+
+PR #53/a2bbb35e修复上述受限高度详情：测量内容区、元数据与目标区实际高度，普通高度保留正文内部滚动；空间不足则正文/元数据/客户端共用内容区滚动，固定标题及关闭按钮。观察器销毁释放，异步详情到达后重测。全数据探针首次误挂在主壳外、没有继承200%缩放，该12项结果无效；已归档extension-full-red并明确不用。正确挂在.main内的原版extension-full-red2在200%实测doc.height=0失败。改后Chromium/WebKit各14项/8截图通过（900×600与1180×760、100/200%）：正文可读、关闭可见、滚动至末尾客户端。178文件1105项UI、typecheck/build通过。
+
+extension-overflow-native-a2bbb35e原生200%实屏目检确认Skill正文和MCP完整配置可读，内容区滚动到底可见Hermes等全部客户端，标题及关闭按钮保持，Escape原位返回；两份真实夹具摘要均保持，已结束自有PID87059。原先PID86074也已停止。仅使用OPENCODEX_SANDBOX_ROOT内home的合成资源，没有分发、安装或启动MCP。所有原生构建均为独立bundle ID的custom-protocol调试副本，最终release候选仍待重建和验收。
+
+PR #50～53仍需完整后端CI/Windows新增键盘smoke并按依赖合并；当前正式v0.2.20 draft/tag旧资产未更新，四安装、签名字节核对、相邻实际OTA和全入口剩余状态继续待验。原型基线仍cfbd90c4b+1da4cabca、首次全选/后续新增不选规则保持，整体S20/AC/RCP不关闭。

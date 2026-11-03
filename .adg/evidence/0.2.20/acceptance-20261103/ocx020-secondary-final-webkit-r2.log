@@ -1,0 +1,9 @@
+file:///Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/secondary-dialog-states.mjs:8
+function check(name,passed,detail){checks.push({key,name,passed:!!passed,detail});if(!passed)throw Error(key+' '+name+': '+JSON.stringify(detail))}
+                                                                                                   ^
+
+Error: 1180-light-100 MCP detail retains basic command: undefined
+    at check (file:///Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/secondary-dialog-states.mjs:8:100)
+    at file:///Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/secondary-dialog-states.mjs:45:978
+
+Node.js v26.8.1

@@ -1,0 +1,81 @@
+Window: "", App: OpenCodeX Extension Acceptance.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#extensions?tab=mcp
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 button 概览
+				7 button 面板
+				8 button 模型
+				9 button 拓展
+				10 button 同步
+				11 button 诊断
+				12 button 设置
+			13 container
+				14 heading 扩展管理, Value: 1
+					15 text 扩展管理
+				16 text 集中发现与同步本机 Skills 和 MCP 服务器；目标客户端按图标开关。
+				17 container 主题
+					18 button 浅色
+					19 button 深色
+					20 button 跟随系统
+				21 text 未发现
+				22 button 刷新状态
+				23 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+				24 tab group (selectable) 扩展分区
+					25 tab (selectable) Skills
+					26 tab (selected) MCP
+					27 tab (selectable) 客户端
+				28 container MCP 服务器管理
+					29 heading MCP 服务器管理, Value: 2
+						30 text MCP 服务器管理
+					31 text 把同一个 MCP 服务器按需同步到各客户端配置；只写对应配置节点。
+					32 button 导入
+					33 button 添加
+					34 button 设置
+					35 toggle button 已配置 1 个 1, Value: on
+					36 toggle button Claude 0, Value: off
+					37 toggle button Codex 1, Value: off
+					38 toggle button Gemini 0, Value: off
+					39 toggle button Grok Build 0, Value: off
+					40 toggle button OpenCode 0, Value: off
+					41 toggle button Hermes 0, Value: off
+					42 search text field (settable) 搜索 MCP, Placeholder: 搜索 MCP 名称或说明
+						43 text 搜索 MCP 名称或说明
+					44 container MCP列表与客户端
+						45 text MCP 服务器
+						46 text Claude
+						47 text Codex
+						48 text Gemini
+						49 text Grok Build
+						50 text OpenCode
+						51 text Hermes
+						52 text 操作
+						53 container isolated-detail
+							54 button 查看 isolated-detail 完整信息
+							55 button 将 isolated-detail 写入 Claude, Help: Claude
+							56 button 将 isolated-detail 写入 Codex, Help: Codex
+							57 button 将 isolated-detail 写入 Gemini, Help: Gemini
+							58 button 将 isolated-detail 写入 Grok Build, Help: Grok Build
+							59 button 将 isolated-detail 写入 OpenCode, Help: OpenCode
+							60 button 将 isolated-detail 写入 Hermes, Help: Hermes
+							61 button 编辑
+							62 button 删除
+					63 text 1 / 1 条 · 第 1 / 1 页
+					64 button (disabled) 首页
+					65 button (disabled) 上一页
+					66 text 1
+					67 button (disabled) 下一页
+					68 button (disabled) 末页
+	69 close button
+	70 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	71 minimize button
+72 menu bar
+	73 OpenCodeX Extension Acceptance
+	74 进程
+	75 编辑
+	76 视图
+	77 诊断
+
+The focused UI element is 2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#extensions?tab=mcp

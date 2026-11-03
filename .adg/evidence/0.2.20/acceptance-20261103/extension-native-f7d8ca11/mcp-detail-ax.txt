@@ -1,0 +1,39 @@
+The following is a diff from the previous accessibility tree for Window: "" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 13-77
+~			12 container isolated-detail
++				13 heading isolated-detail, Value: 3
++					14 text isolated-detail
++				15 button 编辑
++				16 button 删除
++				17 container 完整内容
++					18 text fixture-command-never-executed
++					19 heading 完整配置, Value: 2
++						20 text 完整配置
++					21 text {
+  "args": [],
+  "command": "fixture-command-never-executed"
+}
++				22 description list
++					23 text 类型
++					24 text stdio
++					25 text 版本
++					26 text 本机配置
++					27 text 更新时间
++					28 text 2026-11-03
++					29 text 命令
++					30 text fixture-command-never-executed
++					31 text 参数
++					32 text —
++					33 text 环境变量
++					34 text —
++					35 text 配置落点
++					36 text Codex：/tmp/ocx020-extension-native-f7d8ca11/data/home/.codex/config.toml
++				37 container
++					38 toggle button Claude：未同步，点击同步, Value: off
++					39 toggle button Codex：已同步，点击关闭同步, Value: on
++					40 toggle button Gemini：未同步，点击同步, Value: off
++					41 toggle button Grok Build：未同步，点击同步, Value: off
++					42 toggle button OpenCode：未同步，点击同步, Value: off
++					43 toggle button Hermes：未同步，点击同步, Value: off
++				44 button 关闭
+The focused UI element is 12 container isolated-detail

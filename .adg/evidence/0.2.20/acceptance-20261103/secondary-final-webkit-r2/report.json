@@ -1,0 +1,387 @@
+{
+  "completed": false,
+  "failure": {
+    "key": "1180-light-100",
+    "message": "1180-light-100 MCP detail retains basic command: undefined"
+  },
+  "engine": "webkit",
+  "scope": "DEV adapters, rendered secondary dialog states; no native adoption",
+  "checks": [
+    {
+      "key": "1180-light-100",
+      "name": "restore compare failure blocks confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "scope restore failure fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 215,
+        "right": 870,
+        "bottom": 545,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 617.96875,
+            "right": 669.78125,
+            "bottom": 528,
+            "height": 34
+          },
+          {
+            "x": 681.78125,
+            "right": 759.390625,
+            "bottom": 528,
+            "height": 34
+          },
+          {
+            "x": 771.390625,
+            "right": 849,
+            "bottom": 528,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "restore busy prevents closing",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "no restore groups disables confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "restore cancel no adoption",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "restore error visible and remains open",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "history default pointers excluded",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "history comparison required",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "history recovery fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 240,
+        "right": 1015,
+        "bottom": 520,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 826.78125,
+            "right": 878.59375,
+            "bottom": 503,
+            "height": 34
+          },
+          {
+            "x": 890.59375,
+            "right": 994,
+            "bottom": 503,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "history preview explicit draft action",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "history cancel does not attach recovery",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "missing connection password cannot activate",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "imported connection fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 232.5,
+        "right": 870,
+        "bottom": 527.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 707.578125,
+            "right": 759.390625,
+            "bottom": 510.5,
+            "height": 34
+          },
+          {
+            "x": 771.390625,
+            "right": 849,
+            "bottom": 510.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "imported confirmation cancel no activation",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "imported cancel retains connection owner",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "import activation error visible",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "result empty fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 230,
+        "y": 269.5,
+        "right": 950,
+        "bottom": 490.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 877.1875,
+            "right": 929,
+            "bottom": 473.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "empty result no retry",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "result read-error fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 230,
+        "y": 269.5,
+        "right": 950,
+        "bottom": 490.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 787.578125,
+            "right": 839.390625,
+            "bottom": 473.5,
+            "height": 34
+          },
+          {
+            "x": 851.390625,
+            "right": 929,
+            "bottom": 473.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "read error offers reload",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "result partial fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 230,
+        "y": 110.90625,
+        "right": 950,
+        "bottom": 649.09375,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 761.78125,
+            "right": 813.59375,
+            "bottom": 632.09375,
+            "height": 34
+          },
+          {
+            "x": 825.59375,
+            "right": 929,
+            "bottom": 632.09375,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "retry uses exact original operation",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "partial retains completed and skipped details",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "result stale fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 230,
+        "y": 110.90625,
+        "right": 950,
+        "bottom": 649.09375,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 787.578125,
+            "right": 839.390625,
+            "bottom": 632.09375,
+            "height": 34
+          },
+          {
+            "x": 851.390625,
+            "right": 929,
+            "bottom": 632.09375,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "stale requires new comparison without blind retry",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "notification clear describes pending count",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "clear notifications fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 267.5,
+        "right": 870,
+        "bottom": 492.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 707.578125,
+            "right": 759.390625,
+            "bottom": 475.5,
+            "height": 34
+          },
+          {
+            "x": 771.390625,
+            "right": 849,
+            "bottom": 475.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "clear cancel preserves item",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "runtime install requires consent",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "runtime bad path blocks install",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "runtime cancel makes no install call",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "extension detail entry retains width",
+      "passed": true,
+      "detail": {
+        "x": 298,
+        "y": 409,
+        "width": 323,
+        "height": 59.28125
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "extension detail keeps basic content",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "extension detail labelled modal",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "extension cancel preserves list entry",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "MCP detail retains basic command",
+      "passed": false
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-light-100-scope-restore-error.png",
+    "1180-light-100-history-recovery-preview.png",
+    "1180-light-100-imported-connection.png",
+    "1180-light-100-result-empty.png",
+    "1180-light-100-result-read-error.png",
+    "1180-light-100-result-partial.png",
+    "1180-light-100-result-stale.png",
+    "1180-light-100-notification-clear.png",
+    "1180-light-100-runtime-install-validation.png",
+    "1180-light-100-extension-detail-read-failed.png"
+  ]
+}
