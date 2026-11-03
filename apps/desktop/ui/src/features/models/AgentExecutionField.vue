@@ -29,7 +29,8 @@ const channels=computed(()=>directory.value?.channels??localDirectory.value.chan
 let disposed=false
 let directoryRequest=0
 onBeforeUnmount(()=>{disposed=true;directoryRequest++})
-onMounted(async()=>{busy.value=true;try{const value=await modelApi.agentSettings();if(!disposed)settings.value=value}catch(cause){if(!disposed)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}})
+watch(()=>models.executionPreferenceRevision,revision=>{if(revision)settings.value=models.executionPreference?{...models.executionPreference}:null},{flush:'sync',immediate:true})
+onMounted(async()=>{const revision=models.executionPreferenceRevision;busy.value=true;try{const value=await modelApi.agentSettings();if(!disposed&&models.executionPreferenceRevision===revision)settings.value=value}catch(cause){if(!disposed&&models.executionPreferenceRevision===revision)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}})
 const current=computed<ModelChoice[]>(()=>{const value=candidate.value;const channel=channels.value.find(c=>c.providerId===value?.providerId);return value?[{channelId:value.channelId??channel?.id??value.providerId,modelId:value.modelId,...(value.reasoningEffort===null?{}:{reasoningEffort:value.reasoningEffort}),...(value.fast===null?{}:{fast:value.fast})}]:[]})
 function configure(){if(busy.value)return;candidate.value=settings.value?{...settings.value}:null;error.value='';configuring.value=true}
 // File loads/saves replace the saved policy, including layout-only renames whose
@@ -54,7 +55,7 @@ async function refreshDirectory(){
 }
 function browse(){if(busy.value)return;error.value='';open.value=true;void refreshDirectory()}
 function choose(picks:ModelChoice[]){if(loading.value||error.value)return;const pick=picks[0];if(!pick||pick.nativeModelId)return;const row=directory.value?.rows.find(r=>r.channelId===pick.channelId&&r.modelId===pick.modelId);if(!row||row.unavailableReason||!row.enabled||!row.connectionDigest)return;candidate.value={channelId:pick.channelId,connectionDigest:row.connectionDigest,providerId:row.providerId,modelId:pick.modelId!,reasoningEffort:pick.reasoningEffort??null,fast:pick.fast??null};open.value=false}
-async function save(){if(!candidate.value||busy.value)return;busy.value=true;error.value='';try{const value=await modelApi.saveAgentSettings({...candidate.value});if(!disposed){settings.value=value;configuring.value=false}}catch(cause){if(!disposed)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}}
+async function save(){if(!candidate.value||busy.value)return;busy.value=true;error.value='';try{const value=await modelApi.saveAgentSettings({...candidate.value});models.publishExecutionPreference(value);if(!disposed)configuring.value=false}catch(cause){if(!disposed)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}}
 /** 档位中文名；与原型 levels 表一致，未知值原样显示。 */
 const EFFORTS:Record<string,string>={none:'无',minimal:'最低',low:'低',medium:'中',high:'高',xhigh:'极高',max:'最高'}
 const committedRow=computed(()=>{const value=settings.value;if(!value)return null;return allRows.value.find(r=>r.providerId===value.providerId&&r.modelId===value.modelId&&(!value.channelId||r.channelId===value.channelId))??null})

@@ -3,7 +3,7 @@ import { computed, onScopeDispose, ref } from 'vue'
 import { defineStore } from 'pinia'
 import {pendingModelRows,writeRow,type ModelRowsState} from './modelRows'
 import {canonicalPolicy} from './policyEquality'
-import { emptyContent, emptyRules, errorText, modelApi, savePlanErrorText, type CredentialEdit, type ModelSnapshot, type ModelPolicy, type SavePlan, type Template, type TemplateDraft } from './api'
+import { emptyContent, emptyRules, errorText, modelApi, savePlanErrorText, type AgentSettings, type CredentialEdit, type ModelSnapshot, type ModelPolicy, type SavePlan, type Template, type TemplateDraft } from './api'
 
 interface HistoricalRecovery {
   id:string; sourceId:string; policy:ModelPolicy
@@ -129,6 +129,11 @@ function acceptChannelValue(submitted:MergeValue,live:MergeValue,saved:MergeValu
 
 // Route changes retain drafts; a refresh never discards an editor buffer.
 export const useModelsStore = defineStore('model-config', () => {
+  // Committed device-local execution preferences are shared by all mounted
+  // consumers. Temporary picker candidates never enter this projection.
+  const executionPreference = ref<AgentSettings|null>(null)
+  const executionPreferenceRevision=ref(0)
+  function publishExecutionPreference(value:AgentSettings){executionPreference.value={...value};executionPreferenceRevision.value++}
   const modelRows=ref<Record<string,ModelRowsState>>({})
   const pendingRows=computed(()=>Object.entries(modelRows.value).flatMap(([channel,state])=>pendingModelRows(state).map(model=>({channel,model}))))
   const snapshot = ref<ModelSnapshot | null>(null)
@@ -455,6 +460,6 @@ export const useModelsStore = defineStore('model-config', () => {
   // 这里只做同步读取，真正的“可用型号”判定仍在选择器里按每一行解释。
   const enabledChannels = computed(() => snapshot.value?.policy.channels.filter(c => c.connection.enabled) ?? [])
 
-  return { historicalRecovery,assertRecoveryReady,acceptHistoricalRecovery,saveHistoricalRecovery,credentialEdits,editCredential,clearCredential,modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelIsDirty, channelSaveCandidate, saveCurrentChannel, saveAllChannels, channelBaseline, channelError, staging, adoptTransfer, acceptTransfer, load, edit, leave, save, restoreChannels, enabledChannels }
+  return { executionPreference,executionPreferenceRevision,publishExecutionPreference,historicalRecovery,assertRecoveryReady,acceptHistoricalRecovery,saveHistoricalRecovery,credentialEdits,editCredential,clearCredential,modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelIsDirty, channelSaveCandidate, saveCurrentChannel, saveAllChannels, channelBaseline, channelError, staging, adoptTransfer, acceptTransfer, load, edit, leave, save, restoreChannels, enabledChannels }
 })
 
