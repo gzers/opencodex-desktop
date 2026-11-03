@@ -114,16 +114,20 @@ export const useNotificationsStore = defineStore('notifications', {
       try {
         this.list = (await clearNotificationsCommand()).items
         this.error = false
+        return true
       } catch {
         this.error = true
+        return false
       }
     },
     async clearRead() {
       try {
         this.list = (await clearReadNotificationsCommand()).items
         this.error = false
+        return true
       } catch {
         this.error = true
+        return false
       }
     },
     async markResolved(id: string) {
@@ -138,8 +142,10 @@ export const useNotificationsStore = defineStore('notifications', {
       try {
         this.list = (await clearResolvedNotificationsCommand()).items
         this.error = false
+        return true
       } catch {
         this.error = true
+        return false
       }
     },
     // 按保留策略清理（平台命令），返回是否成功。

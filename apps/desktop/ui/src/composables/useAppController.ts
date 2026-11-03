@@ -97,16 +97,17 @@ export function useAppController(initialize = false) {
   }
 
   function clearResolvedNotifications() {
-    void app.clearResolvedNotifications().then(() => {
-      app.showToast(app.notificationsError ? '清理已解决通知失败；已保留当前通知。' : '已清理已解决通知。')
+    return app.clearResolvedNotifications().then(success => {
+      app.showToast(success ? '已清理已解决通知。' : '清理已解决通知失败；已保留当前通知。')
+      return success
     })
   }
 
   /** 通知中心「清理」：清空全部（软删除）。二次确认由调用方负责。 */
   function clearAllNotifications() {
-    return app.clearNotifications().then(() => {
-      app.showToast(app.notificationsError ? '清理通知失败；已保留当前通知。' : '全部通知已清理。')
-      return !app.notificationsError
+    return app.clearNotifications().then(success => {
+      app.showToast(success ? '全部通知已清理。' : '清理通知失败；已保留当前通知。')
+      return success
     })
   }
 
