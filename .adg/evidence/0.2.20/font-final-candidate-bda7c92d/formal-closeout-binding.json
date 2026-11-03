@@ -1,0 +1,36 @@
+{
+  "task_id": "TASK-OPENCODEX-UI020-CLOSEOUT-20261104",
+  "task_digest": "05900c538996b6111920e6f6659e122788896fcf035040f1d6133bcb81122b7d",
+  "source": "RuntimeStore verified Markdown and CAS; no completion certificate created",
+  "required_checks": [
+    "review:prototype-parity",
+    "review:saved-file-and-backup",
+    "review:credential-and-scope-boundaries",
+    "review:all-entry-coverage",
+    "review:macos-windows-native",
+    "review:release-and-ota"
+  ],
+  "acceptance_count": 20,
+  "fact_writeback": [
+    {
+      "id": "demand",
+      "path": "docs/01-需求管理/需求/DMD-OPENCODEX-UI-020.md",
+      "before_digest": "ad523e2fbcb61a667e1ef8dd279ad112a6bcbc97f0c16c97b8b77b5ce4be9c4a"
+    },
+    {
+      "id": "implementation",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-28.md",
+      "before_digest": "9aa269ca6b8ea598afb39672bfce5256615c368e649b76e61c0ea7f547472ecd"
+    },
+    {
+      "id": "issues",
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.20-bugs.md",
+      "before_digest": "1e6680a397c3242146a28f035894aba25c23fa42c6fb7aee54e15e5a8b181302"
+    },
+    {
+      "id": "release",
+      "path": "docs/03-开发实施/REL-OPENCODEX-DESKTOP-23.md",
+      "before_digest": "651a5f98434cf0bb05248c1df8633ef7a9401d16bc6687c5389809dd51966a80"
+    }
+  ]
+}

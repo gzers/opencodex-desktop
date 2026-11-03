@@ -1,0 +1,1087 @@
+official-contract	Set up job	﻿2026-11-03T16:18:35.2601760Z Current runner version: '2.338.2'
+official-contract	Set up job	2026-11-03T16:18:35.2620700Z ##[group]Runner Image Provisioner
+official-contract	Set up job	2026-11-03T16:18:35.2621410Z Hosted Compute Agent
+official-contract	Set up job	2026-11-03T16:18:35.2622250Z Version: 20261021.618
+official-contract	Set up job	2026-11-03T16:18:35.2622700Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+official-contract	Set up job	2026-11-03T16:18:35.2623170Z Build Date: 2026-10-21T00:45:21Z
+official-contract	Set up job	2026-11-03T16:18:35.2623620Z Worker ID: {bbda93f5-abcc-41e3-9ec7-e6d1144a0056}
+official-contract	Set up job	2026-11-03T16:18:35.2624080Z Region: westus
+official-contract	Set up job	2026-11-03T16:18:35.2624420Z Cloud: MacCloud
+official-contract	Set up job	2026-11-03T16:18:35.2624780Z ##[endgroup]
+official-contract	Set up job	2026-11-03T16:18:35.2626090Z ##[group]Operating System
+official-contract	Set up job	2026-11-03T16:18:35.2626480Z macOS
+official-contract	Set up job	2026-11-03T16:18:35.2626790Z 15.8.2
+official-contract	Set up job	2026-11-03T16:18:35.2627110Z 24H232
+official-contract	Set up job	2026-11-03T16:18:35.2627430Z ##[endgroup]
+official-contract	Set up job	2026-11-03T16:18:35.2627810Z ##[group]Runner Image
+official-contract	Set up job	2026-11-03T16:18:35.2628200Z Image: macos-15-arm64
+official-contract	Set up job	2026-11-03T16:18:35.2628590Z Version: 20261028.0489.1
+official-contract	Set up job	2026-11-03T16:18:35.2629350Z Included Software: https://github.com/actions/runner-images/blob/macos-15-arm64/20261028.0489/images/macos/macos-15-arm64-Readme.md
+official-contract	Set up job	2026-11-03T16:18:35.2630520Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15-arm64%2F20261028.0489
+official-contract	Set up job	2026-11-03T16:18:35.2631180Z ##[endgroup]
+official-contract	Set up job	2026-11-03T16:18:35.2631910Z ##[group]GITHUB_TOKEN Permissions
+official-contract	Set up job	2026-11-03T16:18:35.2633680Z Contents: read
+official-contract	Set up job	2026-11-03T16:18:35.2634100Z Metadata: read
+official-contract	Set up job	2026-11-03T16:18:35.2634530Z ##[endgroup]
+official-contract	Set up job	2026-11-03T16:18:35.2636280Z Secret source: Actions
+official-contract	Set up job	2026-11-03T16:18:35.2636850Z Cache mode: write
+official-contract	Set up job	2026-11-03T16:18:35.2637270Z Prepare workflow directory
+official-contract	Set up job	2026-11-03T16:18:35.3021100Z Prepare all required actions
+official-contract	Set up job	2026-11-03T16:18:35.3065720Z Getting action download info
+official-contract	Set up job	2026-11-03T16:18:35.5730960Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+official-contract	Set up job	2026-11-03T16:18:35.9812010Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+official-contract	Set up job	2026-11-03T16:18:36.0896300Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:b725eda525362e7cf34af9a7243cac1e3f01a7ec)
+official-contract	Set up job	2026-11-03T16:18:37.0335220Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+official-contract	Set up job	2026-11-03T16:18:37.8279260Z Complete job name: official-contract
+official-contract	Run actions/checkout@v5	﻿2026-11-03T16:18:37.9771880Z ##[group]Run actions/checkout@v5
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9772840Z with:
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9773440Z   repository: gzers/opencodex-desktop
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9779240Z   token: ***
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9779800Z   ssh-strict: true
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9780360Z   ssh-user: git
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9780950Z   persist-credentials: true
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9781610Z   clean: true
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9782270Z   sparse-checkout-cone-mode: true
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9782960Z   fetch-depth: 1
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9783530Z   fetch-tags: false
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9784110Z   show-progress: true
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9784770Z   lfs: false
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9785360Z   submodules: false
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9785960Z   set-safe-directory: true
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9786670Z   allow-unsafe-pr-checkout: false
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:37.9787730Z ##[endgroup]
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.5309240Z Syncing repository: gzers/opencodex-desktop
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.5312420Z ##[group]Getting Git version info
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.5313480Z Working directory is '/Users/runner/work/opencodex-desktop/opencodex-desktop'
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.5315030Z [command]/opt/homebrew/bin/git version
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.5701370Z git version 2.56.0
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.5720110Z ##[endgroup]
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.5776380Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/4f505492-7b91-45f7-a5b8-0186c531d8e1/.gitconfig'
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.5807250Z Temporarily overriding HOME='/Users/runner/work/_temp/4f505492-7b91-45f7-a5b8-0186c531d8e1' before making global git config changes
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.5809580Z Adding repository directory to the temporary git global config as a safe directory
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.5811290Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/opencodex-desktop/opencodex-desktop
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6220680Z Deleting the contents of '/Users/runner/work/opencodex-desktop/opencodex-desktop'
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6232340Z ##[group]Initializing the repository
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6233500Z [command]/opt/homebrew/bin/git init /Users/runner/work/opencodex-desktop/opencodex-desktop
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6659490Z hint: Using 'master' as the name for the initial branch. This default branch name
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6661070Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6662300Z hint: to use in all of your new repositories, which will suppress this warning,
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6663310Z hint: call:
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6663860Z hint:
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6664540Z hint: 	git config --global init.defaultBranch <name>
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6665370Z hint:
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6666570Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6667750Z hint: 'development'. The just-created branch can be renamed via this command:
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6668850Z hint:
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6669440Z hint: 	git branch -m <name>
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6670500Z hint:
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6671340Z hint: Disable this message with "git config set advice.defaultBranchName false"
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6675110Z Initialized empty Git repository in /Users/runner/work/opencodex-desktop/opencodex-desktop/.git/
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6691720Z [command]/opt/homebrew/bin/git remote add origin https://github.com/gzers/opencodex-desktop
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6835600Z ##[endgroup]
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6838120Z ##[group]Disabling automatic garbage collection
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6840930Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6925080Z ##[endgroup]
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6927990Z ##[group]Setting up auth
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.6930480Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.7018360Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.8408100Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:38.8478810Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:39.0824180Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:39.1167150Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:39.3797220Z [command]/opt/homebrew/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:39.4002190Z ##[endgroup]
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:39.4008960Z ##[group]Fetching the repository
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:39.4027480Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +644da8f742c2e48df72349cb64f67374178e3e6b:refs/remotes/origin/codex/0.2.20-official-diagnostics
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.3027650Z From https://github.com/gzers/opencodex-desktop
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.3028690Z  * [new ref]         644da8f742c2e48df72349cb64f67374178e3e6b -> origin/codex/0.2.20-official-diagnostics
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.3030720Z ##[endgroup]
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.3031180Z ##[group]Determining the checkout info
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.3031720Z ##[endgroup]
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.3036110Z [command]/opt/homebrew/bin/git sparse-checkout disable
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.3111850Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.3175230Z ##[group]Checking out the ref
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.3177900Z [command]/opt/homebrew/bin/git checkout --progress --force -B codex/0.2.20-official-diagnostics refs/remotes/origin/codex/0.2.20-official-diagnostics
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.4605610Z Switched to a new branch 'codex/0.2.20-official-diagnostics'
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.4612510Z branch 'codex/0.2.20-official-diagnostics' set up to track 'origin/codex/0.2.20-official-diagnostics'.
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.4620990Z ##[endgroup]
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.4765230Z [command]/opt/homebrew/bin/git log -1 --format=%H
+official-contract	Run actions/checkout@v5	2026-11-03T16:18:41.4838270Z 644da8f742c2e48df72349cb64f67374178e3e6b
+official-contract	Run actions/setup-node@v5	﻿2026-11-03T16:18:41.5334760Z ##[group]Run actions/setup-node@v5
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.5335110Z with:
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.5335250Z   node-version: 24
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.5335450Z   always-auth: false
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.5335650Z   check-latest: false
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.5337580Z   token: ***
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.5337740Z   package-manager-cache: true
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.5337960Z ##[endgroup]
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.6963260Z Found in cache @ /Users/runner/hostedtoolcache/node/24.22.1/arm64
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.6966700Z (node:1094) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.6967340Z (Use `node --trace-deprecation ...` to show where the warning was created)
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:41.6968530Z ##[group]Environment details
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:42.2292920Z node: v24.22.1
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:42.2293760Z npm: 11.19.1
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:42.2294870Z yarn: 1.22.22
+official-contract	Run actions/setup-node@v5	2026-11-03T16:18:42.2296730Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	﻿2026-11-03T16:18:42.2538490Z ##[group]Run dtolnay/rust-toolchain@stable
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2538740Z with:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2538880Z   toolchain: stable
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2539030Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2603300Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2667210Z ##[group]Run if [[ -z $toolchain ]]; then
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2667640Z ^[[36;1mif [[ -z $toolchain ]]; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2668070Z ^[[36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2668630Z ^[[36;1m  echo "'toolchain' is a required input" >&2^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2668880Z ^[[36;1m  exit 1^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2669220Z ^[[36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2669550Z ^[[36;1m  if [[ macOS == macOS ]]; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2669970Z ^[[36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2670440Z ^[[36;1m  else^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2670790Z ^[[36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2671180Z ^[[36;1m  fi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2671470Z ^[[36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2671940Z ^[[36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2672340Z ^[[36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2672770Z ^[[36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2673260Z ^[[36;1melse^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2673480Z ^[[36;1m  delimiter=EOF^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2673740Z ^[[36;1m  while [[ $toolchain == *$delimiter* ]]; do delimiter+=_; done^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2674190Z ^[[36;1m  printf 'toolchain<<%s\n%s\n%s\n' "$delimiter" "$toolchain" "$delimiter" >> $GITHUB_OUTPUT^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2674530Z ^[[36;1mfi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2725500Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2725820Z env:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2725970Z   toolchain: stable
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.2726120Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3325970Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=72]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3331240Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3356160Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3356650Z ^[[36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3391250Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3391600Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3764470Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=43]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3766530Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3788830Z ##[group]Run if ! command -v rustup &>/dev/null; then
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3789180Z ^[[36;1mif ! command -v rustup &>/dev/null; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3789840Z ^[[36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3790550Z ^[[36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3790810Z ^[[36;1mfi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3869600Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3869960Z env:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3870180Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.3870400Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4160940Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=success;conclusion=success;duration_ms=39]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4167230Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4177670Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4187840Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4207100Z ##[group]Run set -f  # split targets and components on commas and whitespace, without glob expansion
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4207800Z ^[[36;1mset -f  # split targets and components on commas and whitespace, without glob expansion^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4208280Z ^[[36;1mflags=()^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4208570Z ^[[36;1mfor t in ${targets//,/ }; do flags+=(--target "$t"); done^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4208940Z ^[[36;1mfor c in ${components//,/ }; do flags+=(--component "$c"); done^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4209370Z ^[[36;1mif [[ $toolchain == nightly && -n $components ]]; then flags+=(--allow-downgrade); fi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4209730Z ^[[36;1mlog=$(mktemp)^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4209940Z ^[[36;1mtrap 'rm -f "$log"' EXIT^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4210160Z ^[[36;1mfor attempt in 1 2 3 4 5; do^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4210640Z ^[[36;1m  if rustup toolchain install "$toolchain" "${flags[@]}" --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4211280Z ^[[36;1m    break^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4211510Z ^[[36;1m  else^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4211680Z ^[[36;1m    status=$?^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4211870Z ^[[36;1m  fi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4212220Z ^[[36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4212780Z ^[[36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4213180Z ^[[36;1m    exit "$status"^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4213360Z ^[[36;1m  fi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4213670Z ^[[36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4214030Z ^[[36;1m  sleep 30^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4214210Z ^[[36;1mdone^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4248690Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4248990Z env:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4249200Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4249410Z   toolchain: stable
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4249600Z   targets: 
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4249750Z   components: 
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4249940Z   RUSTUP_PERMIT_COPY_RENAME: 1
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.4250130Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.7753690Z info: syncing channel updates for stable-aarch64-apple-darwin
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.8541240Z 
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.8700390Z   stable-aarch64-apple-darwin unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.8700850Z 
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.8701130Z info: self-update is disabled for this build of rustup
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.8701700Z info: any updates to rustup will need to be fetched with your system package manager
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.8912050Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=472]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.8917390Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.8981600Z ##[group]Run rustup default "$toolchain" --force-non-host
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.8981970Z ^[[36;1mrustup default "$toolchain" --force-non-host^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9018240Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9018520Z env:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9018700Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9031260Z   toolchain: stable
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9031500Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9340730Z info: using existing install for stable-aarch64-apple-darwin
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9353790Z info: default toolchain set to stable-aarch64-apple-darwin
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9354530Z 
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9498210Z   stable-aarch64-apple-darwin unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9498580Z 
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9509390Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=59]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9512590Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9528570Z ##[group]Run DATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9529270Z ^[[36;1mDATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9529830Z ^[[36;1mHASH=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-hash: //p')^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9530280Z ^[[36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9559130Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9559400Z env:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9559550Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9559770Z   toolchain: stable
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:42.9559920Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0408570Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=89]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0410650Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0426860Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0427220Z ^[[36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0427500Z ^[[36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0427710Z ^[[36;1mfi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0456480Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0456820Z env:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0456980Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0457180Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0642090Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=23]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0644150Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0659310Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0659650Z ^[[36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0659920Z ^[[36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0660170Z ^[[36;1mfi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0689270Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0689530Z env:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0689700Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0689910Z   CARGO_INCREMENTAL: 0
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0690080Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0875880Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=23]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0879510Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0911580Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0912070Z ^[[36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0912650Z ^[[36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/Users/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0913250Z ^[[36;1m  if rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[89]\.'; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0913730Z ^[[36;1m    touch "/Users/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0914190Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0914610Z ^[[36;1m  elif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[67]\.'; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0915100Z ^[[36;1m    touch "/Users/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0915550Z ^[[36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0915830Z ^[[36;1m  fi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0916010Z ^[[36;1mfi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0946220Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0946720Z env:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0946920Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0947140Z   CARGO_INCREMENTAL: 0
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0947310Z   CARGO_TERM_COLOR: always
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0947500Z   toolchain: stable
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.0947700Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1763340Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=87]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1768920Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1793650Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1794620Z ^[[36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1795310Z ^[[36;1mif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.7[01]\.'; then^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1795750Z ^[[36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1796010Z ^[[36;1mfi^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1833190Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1833580Z env:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1833870Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1834150Z   CARGO_INCREMENTAL: 0
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1834820Z   CARGO_TERM_COLOR: always
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1835020Z   toolchain: stable
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.1835210Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2381880Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=61]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2387480Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2604230Z ##[group]Run rustc +"$toolchain" --version --verbose
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2604650Z ^[[36;1mrustc +"$toolchain" --version --verbose^[[0m
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2641430Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2641750Z env:
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2641990Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2642220Z   CARGO_INCREMENTAL: 0
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2642430Z   CARGO_TERM_COLOR: always
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2642650Z   toolchain: stable
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.2642900Z ##[endgroup]
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.3166030Z rustc 1.99.1 (58cf8f9c3 2026-10-13)
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.3168430Z binary: rustc
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.3168970Z commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.3169480Z commit-date: 2026-10-13
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.3169830Z host: aarch64-apple-darwin
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.3171210Z release: 1.99.1
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.3171690Z LLVM version: 23.1.1
+official-contract	Run dtolnay/rust-toolchain@stable	2026-11-03T16:18:43.3193210Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=80]
+official-contract	Install pinned official into an owned empty home	﻿2026-11-03T16:18:43.3259450Z ##[group]Run mkdir -p "$RUNNER_TEMP/official-contract/home" "$RUNNER_TEMP/official-contract/install"
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3260090Z ^[[36;1mmkdir -p "$RUNNER_TEMP/official-contract/home" "$RUNNER_TEMP/official-contract/install"^[[0m
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3260760Z ^[[36;1mtouch "$RUNNER_TEMP/official-contract/user.npmrc" "$RUNNER_TEMP/official-contract/global.npmrc"^[[0m
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3262310Z ^[[36;1mHOME="$RUNNER_TEMP/official-contract/home" npm_config_userconfig="$RUNNER_TEMP/official-contract/user.npmrc" npm_config_globalconfig="$RUNNER_TEMP/official-contract/global.npmrc" npm_config_cache="$RUNNER_TEMP/official-contract/cache" npm install --prefix "$RUNNER_TEMP/official-contract/install" --ignore-scripts --no-audit --no-fund @bitkyc08/opencodex@2.84.0 @openai/codex@0.166.0^[[0m
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3263840Z ^[[36;1mecho "OCXD_TEST_OFFICIAL_ENTRY=$RUNNER_TEMP/official-contract/install/node_modules/@bitkyc08/opencodex/bin/ocx.mjs" >> "$GITHUB_ENV"^[[0m
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3264520Z ^[[36;1mecho "OCXD_TEST_OFFICIAL_NODE=$(command -v node)" >> "$GITHUB_ENV"^[[0m
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3265340Z ^[[36;1mecho "OCXD_TEST_CODEX_BIN=$RUNNER_TEMP/official-contract/install/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex" >> "$GITHUB_ENV"^[[0m
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3299590Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3299960Z env:
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3300360Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3300610Z   CARGO_INCREMENTAL: 0
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3300840Z   CARGO_TERM_COLOR: always
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:43.3301050Z ##[endgroup]
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:55.6694520Z 
+official-contract	Install pinned official into an owned empty home	2026-11-03T16:18:55.6800670Z added 104 packages in 12s
+official-contract	Run actual official contracts against loopback fixtures	﻿2026-11-03T16:18:55.7826340Z ##[group]Run set -o pipefail
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7826660Z ^[[36;1mset -o pipefail^[[0m
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7827540Z ^[[36;1mcargo test --locked --test model_config_official_real isolated_official_ -- --ignored --test-threads=1 --nocapture 2>&1 | tee "$RUNNER_TEMP/official-contract/result.log"^[[0m
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7870530Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7870900Z env:
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7871220Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7871480Z   CARGO_INCREMENTAL: 0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7871800Z   CARGO_TERM_COLOR: always
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7872260Z   OCXD_TEST_OFFICIAL_ENTRY: /Users/runner/work/_temp/official-contract/install/node_modules/@bitkyc08/opencodex/bin/ocx.mjs
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7872930Z   OCXD_TEST_OFFICIAL_NODE: /Users/runner/hostedtoolcache/node/24.22.1/arm64/bin/node
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7873610Z   OCXD_TEST_CODEX_BIN: /Users/runner/work/_temp/official-contract/install/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:55.7874330Z ##[endgroup]
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:56.4513430Z ^[[1m^[[92m    Updating^[[0m crates.io index
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5231070Z ^[[1m^[[92m Downloading^[[0m crates ...
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5585780Z ^[[1m^[[92m  Downloaded^[[0m cfg-if v1.0.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5647060Z ^[[1m^[[92m  Downloaded^[[0m cc v1.6.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5711560Z ^[[1m^[[92m  Downloaded^[[0m fnv v1.0.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5722820Z ^[[1m^[[92m  Downloaded^[[0m futures-task v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5816630Z ^[[1m^[[92m  Downloaded^[[0m rustls-pki-types v1.15.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5822680Z ^[[1m^[[92m  Downloaded^[[0m rand_pcg v0.10.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5834820Z ^[[1m^[[92m  Downloaded^[[0m thiserror-impl v2.0.21
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5886480Z ^[[1m^[[92m  Downloaded^[[0m rand_core v0.6.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5909900Z ^[[1m^[[92m  Downloaded^[[0m security-framework-sys v2.17.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.5984660Z ^[[1m^[[92m  Downloaded^[[0m adler2 v2.0.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6092640Z ^[[1m^[[92m  Downloaded^[[0m crc32fast v1.5.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6178570Z ^[[1m^[[92m  Downloaded^[[0m dtoa-short v0.3.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6179550Z ^[[1m^[[92m  Downloaded^[[0m serialize-to-javascript-impl v0.1.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6186830Z ^[[1m^[[92m  Downloaded^[[0m tauri-macros v2.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6187370Z ^[[1m^[[92m  Downloaded^[[0m cargo_toml v1.0.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6187910Z ^[[1m^[[92m  Downloaded^[[0m dom_query v0.28.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6402400Z ^[[1m^[[92m  Downloaded^[[0m scopeguard v1.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6530350Z ^[[1m^[[92m  Downloaded^[[0m serde_urlencoded v0.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6642300Z ^[[1m^[[92m  Downloaded^[[0m base64ct v1.8.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6768710Z ^[[1m^[[92m  Downloaded^[[0m cargo-platform v0.1.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6871170Z ^[[1m^[[92m  Downloaded^[[0m stable_deref_trait v1.2.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.6973840Z ^[[1m^[[92m  Downloaded^[[0m schemars_derive v0.8.22
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7073700Z ^[[1m^[[92m  Downloaded^[[0m tendril v0.5.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7175470Z ^[[1m^[[92m  Downloaded^[[0m anyhow v1.0.104
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7290530Z ^[[1m^[[92m  Downloaded^[[0m bs58 v0.5.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7362690Z ^[[1m^[[92m  Downloaded^[[0m rand v0.9.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7364170Z ^[[1m^[[92m  Downloaded^[[0m byteorder-lite v0.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7405690Z ^[[1m^[[92m  Downloaded^[[0m rand_core v0.9.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7508150Z ^[[1m^[[92m  Downloaded^[[0m serde_with_macros v3.24.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7587980Z ^[[1m^[[92m  Downloaded^[[0m alloc-no-stdlib v3.0.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7592490Z ^[[1m^[[92m  Downloaded^[[0m bitflags v1.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7593080Z ^[[1m^[[92m  Downloaded^[[0m cfb v0.14.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7593700Z ^[[1m^[[92m  Downloaded^[[0m serde_spanned v1.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7594310Z ^[[1m^[[92m  Downloaded^[[0m subtle v2.6.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7595540Z ^[[1m^[[92m  Downloaded^[[0m time-core v0.1.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7596220Z ^[[1m^[[92m  Downloaded^[[0m aho-corasick v1.1.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7599370Z ^[[1m^[[92m  Downloaded^[[0m alloc-stdlib v0.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7600840Z ^[[1m^[[92m  Downloaded^[[0m bit-set v0.8.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7601820Z ^[[1m^[[92m  Downloaded^[[0m blake2 v0.10.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7844600Z ^[[1m^[[92m  Downloaded^[[0m cargo_metadata v0.19.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.7954240Z ^[[1m^[[92m  Downloaded^[[0m cipher v0.4.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8081380Z ^[[1m^[[92m  Downloaded^[[0m darling v0.24.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8113920Z ^[[1m^[[92m  Downloaded^[[0m darling_core v0.24.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8115250Z ^[[1m^[[92m  Downloaded^[[0m defmt-macros v1.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8170390Z ^[[1m^[[92m  Downloaded^[[0m futures-channel v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8202410Z ^[[1m^[[92m  Downloaded^[[0m base64 v0.23.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8295430Z ^[[1m^[[92m  Downloaded^[[0m crossbeam-utils v0.8.23
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8358330Z ^[[1m^[[92m  Downloaded^[[0m erased-serde v0.4.10
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8432020Z ^[[1m^[[92m  Downloaded^[[0m futures-macro v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8441530Z ^[[1m^[[92m  Downloaded^[[0m rustc_version v0.4.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8465700Z ^[[1m^[[92m  Downloaded^[[0m aead v0.5.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8487600Z ^[[1m^[[92m  Downloaded^[[0m brotli v9.0.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8701830Z ^[[1m^[[92m  Downloaded^[[0m core-foundation v0.10.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8735960Z ^[[1m^[[92m  Downloaded^[[0m equivalent v1.0.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8749840Z ^[[1m^[[92m  Downloaded^[[0m serde-untagged v0.1.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8806280Z ^[[1m^[[92m  Downloaded^[[0m byteorder v1.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8815790Z ^[[1m^[[92m  Downloaded^[[0m camino v1.2.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8842520Z ^[[1m^[[92m  Downloaded^[[0m core-foundation-sys v0.8.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8911950Z ^[[1m^[[92m  Downloaded^[[0m displaydoc v0.2.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8960150Z ^[[1m^[[92m  Downloaded^[[0m futures-core v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.8992780Z ^[[1m^[[92m  Downloaded^[[0m dirs-sys v0.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9013620Z ^[[1m^[[92m  Downloaded^[[0m filetime v0.2.29
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9064590Z ^[[1m^[[92m  Downloaded^[[0m form_urlencoded v1.2.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9081740Z ^[[1m^[[92m  Downloaded^[[0m axum-core v0.5.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9173960Z ^[[1m^[[92m  Downloaded^[[0m ref-cast v1.0.27
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9252540Z ^[[1m^[[92m  Downloaded^[[0m rustc-hash v2.1.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9279910Z ^[[1m^[[92m  Downloaded^[[0m siphasher v1.0.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9310700Z ^[[1m^[[92m  Downloaded^[[0m string_cache_codegen v0.6.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9326970Z ^[[1m^[[92m  Downloaded^[[0m bit-vec v0.8.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9394420Z ^[[1m^[[92m  Downloaded^[[0m brotli-decompressor v6.0.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9467360Z ^[[1m^[[92m  Downloaded^[[0m bytes v1.12.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9541340Z ^[[1m^[[92m  Downloaded^[[0m crypto-common v0.1.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9550440Z ^[[1m^[[92m  Downloaded^[[0m darling_macro v0.24.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9561480Z ^[[1m^[[92m  Downloaded^[[0m deranged v0.5.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9579450Z ^[[1m^[[92m  Downloaded^[[0m digest v0.10.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9607450Z ^[[1m^[[92m  Downloaded^[[0m dpi v0.1.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9623340Z ^[[1m^[[92m  Downloaded^[[0m embed_plist v1.2.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9640690Z ^[[1m^[[92m  Downloaded^[[0m errno v0.3.14
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9667450Z ^[[1m^[[92m  Downloaded^[[0m fastrand v2.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9689940Z ^[[1m^[[92m  Downloaded^[[0m foreign-types v0.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9703230Z ^[[1m^[[92m  Downloaded^[[0m foreign-types-macros v0.2.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9717080Z ^[[1m^[[92m  Downloaded^[[0m futures-sink v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9730810Z ^[[1m^[[92m  Downloaded^[[0m ref-cast-impl v1.0.27
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9744030Z ^[[1m^[[92m  Downloaded^[[0m serde_derive_internals v0.29.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9766160Z ^[[1m^[[92m  Downloaded^[[0m serde_repr v0.1.21
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9814730Z ^[[1m^[[92m  Downloaded^[[0m servo_arc v0.4.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9829180Z ^[[1m^[[92m  Downloaded^[[0m strsim v0.11.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9852360Z ^[[1m^[[92m  Downloaded^[[0m sync_wrapper v1.0.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9859400Z ^[[1m^[[92m  Downloaded^[[0m system-configuration-sys v0.6.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9880190Z ^[[1m^[[92m  Downloaded^[[0m objc2-osa-kit v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9905220Z ^[[1m^[[92m  Downloaded^[[0m option-ext v0.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9915030Z ^[[1m^[[92m  Downloaded^[[0m phf_generator v0.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9935630Z ^[[1m^[[92m  Downloaded^[[0m ghash v0.5.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:57.9952060Z ^[[1m^[[92m  Downloaded^[[0m async-trait v0.1.92
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0023080Z ^[[1m^[[92m  Downloaded^[[0m atomic-waker v1.1.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0041490Z ^[[1m^[[92m  Downloaded^[[0m autocfg v1.5.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0088180Z ^[[1m^[[92m  Downloaded^[[0m axum v0.8.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0227780Z ^[[1m^[[92m  Downloaded^[[0m base64 v0.21.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0290610Z ^[[1m^[[92m  Downloaded^[[0m base64 v0.22.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0364950Z ^[[1m^[[92m  Downloaded^[[0m bitflags v2.13.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0445700Z ^[[1m^[[92m  Downloaded^[[0m block2 v0.6.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0473130Z ^[[1m^[[92m  Downloaded^[[0m chrono v0.4.45
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0573870Z ^[[1m^[[92m  Downloaded^[[0m cookie v0.18.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0609940Z ^[[1m^[[92m  Downloaded^[[0m core-foundation v0.9.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0667230Z ^[[1m^[[92m  Downloaded^[[0m core-graphics v0.25.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0696900Z ^[[1m^[[92m  Downloaded^[[0m cssparser-macros v0.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0706200Z ^[[1m^[[92m  Downloaded^[[0m ctor v1.0.13
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0745260Z ^[[1m^[[92m  Downloaded^[[0m defmt v1.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.0834920Z ^[[1m^[[92m  Downloaded^[[0m derive_more v2.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1081560Z ^[[1m^[[92m  Downloaded^[[0m derive_more-impl v2.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1189740Z ^[[1m^[[92m  Downloaded^[[0m dirs v6.0.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1225910Z ^[[1m^[[92m  Downloaded^[[0m dispatch2 v0.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1280660Z ^[[1m^[[92m  Downloaded^[[0m flate2 v1.1.10
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1379860Z ^[[1m^[[92m  Downloaded^[[0m rand_chacha v0.9.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1397970Z ^[[1m^[[92m  Downloaded^[[0m same-file v1.0.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1422120Z ^[[1m^[[92m  Downloaded^[[0m serde v1.0.229
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1482870Z ^[[1m^[[92m  Downloaded^[[0m serialize-to-javascript v0.1.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1502640Z ^[[1m^[[92m  Downloaded^[[0m sha2 v0.10.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1568480Z ^[[1m^[[92m  Downloaded^[[0m shlex v2.0.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1590430Z ^[[1m^[[92m  Downloaded^[[0m signal-hook-registry v1.4.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1612220Z ^[[1m^[[92m  Downloaded^[[0m slab v0.4.12
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1632380Z ^[[1m^[[92m  Downloaded^[[0m string_cache v0.9.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1659620Z ^[[1m^[[92m  Downloaded^[[0m system-configuration v0.7.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1682430Z ^[[1m^[[92m  Downloaded^[[0m tauri-plugin v2.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1699580Z ^[[1m^[[92m  Downloaded^[[0m tauri-winres v0.3.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1727630Z ^[[1m^[[92m  Downloaded^[[0m tinystr v0.8.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1783460Z ^[[1m^[[92m  Downloaded^[[0m matchit v0.8.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1825700Z ^[[1m^[[92m  Downloaded^[[0m osakit v0.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1868710Z ^[[1m^[[92m  Downloaded^[[0m ppv-lite86 v0.2.21
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1892090Z ^[[1m^[[92m  Downloaded^[[0m typeid v1.0.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1914330Z ^[[1m^[[92m  Downloaded^[[0m writeable v0.6.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1948220Z ^[[1m^[[92m  Downloaded^[[0m zerofrom-derive v0.1.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1965350Z ^[[1m^[[92m  Downloaded^[[0m glob v0.3.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.1990200Z ^[[1m^[[92m  Downloaded^[[0m http-body-util v0.1.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2026450Z ^[[1m^[[92m  Downloaded^[[0m ident_case v1.0.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2042320Z ^[[1m^[[92m  Downloaded^[[0m infer v0.22.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2089060Z ^[[1m^[[92m  Downloaded^[[0m mime v0.3.17
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2119010Z ^[[1m^[[92m  Downloaded^[[0m minisign-verify v0.2.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2165890Z ^[[1m^[[92m  Downloaded^[[0m opaque-debug v0.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2179030Z ^[[1m^[[92m  Downloaded^[[0m parking_lot_core v0.9.12
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2218950Z ^[[1m^[[92m  Downloaded^[[0m phf_shared v0.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2231410Z ^[[1m^[[92m  Downloaded^[[0m iana-time-zone v0.1.65
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2284370Z ^[[1m^[[92m  Downloaded^[[0m tokio-rustls v0.26.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2311450Z ^[[1m^[[92m  Downloaded^[[0m aes v0.8.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2366660Z ^[[1m^[[92m  Downloaded^[[0m aes-gcm v0.10.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2409340Z ^[[1m^[[92m  Downloaded^[[0m argon2 v0.5.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2441120Z ^[[1m^[[92m  Downloaded^[[0m chacha20 v0.10.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2560720Z ^[[1m^[[92m  Downloaded^[[0m cpufeatures v0.2.17
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2578990Z ^[[1m^[[92m  Downloaded^[[0m dunce v1.0.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2592870Z ^[[1m^[[92m  Downloaded^[[0m embed-resource v3.0.11
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2623850Z ^[[1m^[[92m  Downloaded^[[0m find-msvc-tools v0.1.14
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2651190Z ^[[1m^[[92m  Downloaded^[[0m foreign-types-shared v0.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2661360Z ^[[1m^[[92m  Downloaded^[[0m quinn-udp v0.5.16
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2688800Z ^[[1m^[[92m  Downloaded^[[0m quote v1.0.47
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2737780Z ^[[1m^[[92m  Downloaded^[[0m rand_core v0.10.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2767280Z ^[[1m^[[92m  Downloaded^[[0m raw-window-handle v0.6.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2808850Z ^[[1m^[[92m  Downloaded^[[0m rustls-native-certs v0.8.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2830270Z ^[[1m^[[92m  Downloaded^[[0m rustls-platform-verifier v0.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2905390Z ^[[1m^[[92m  Downloaded^[[0m ryu v1.0.23
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.2957420Z ^[[1m^[[92m  Downloaded^[[0m schemars v0.8.22
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3222750Z ^[[1m^[[92m  Downloaded^[[0m security-framework v3.7.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3290830Z ^[[1m^[[92m  Downloaded^[[0m selectors v0.38.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3329480Z ^[[1m^[[92m  Downloaded^[[0m semver v1.0.28
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3382220Z ^[[1m^[[92m  Downloaded^[[0m serde_core v1.0.229
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3425890Z ^[[1m^[[92m  Downloaded^[[0m serde_derive v1.0.229
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3482290Z ^[[1m^[[92m  Downloaded^[[0m serde_path_to_error v0.1.20
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3506200Z ^[[1m^[[92m  Downloaded^[[0m serde_yaml v0.9.34+deprecated
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3566100Z ^[[1m^[[92m  Downloaded^[[0m simd-adler32 v0.3.10
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3596800Z ^[[1m^[[92m  Downloaded^[[0m smallvec v1.16.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3619190Z ^[[1m^[[92m  Downloaded^[[0m socket2 v0.6.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3664700Z ^[[1m^[[92m  Downloaded^[[0m swift-rs v1.0.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3691760Z ^[[1m^[[92m  Downloaded^[[0m synstructure v0.14.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3706450Z ^[[1m^[[92m  Downloaded^[[0m tauri-build v2.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3732860Z ^[[1m^[[92m  Downloaded^[[0m tauri-codegen v2.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3755520Z ^[[1m^[[92m  Downloaded^[[0m tauri-plugin-process v2.4.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3787510Z ^[[1m^[[92m  Downloaded^[[0m tauri-plugin-updater v2.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3833780Z ^[[1m^[[92m  Downloaded^[[0m tauri-runtime v2.12.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3854940Z ^[[1m^[[92m  Downloaded^[[0m tempfile v3.27.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.3901720Z ^[[1m^[[92m  Downloaded^[[0m thiserror v2.0.21
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4048640Z ^[[1m^[[92m  Downloaded^[[0m time-macros v0.2.32
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4088930Z ^[[1m^[[92m  Downloaded^[[0m miniz_oxide v0.9.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4128690Z ^[[1m^[[92m  Downloaded^[[0m phf_macros v0.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4142930Z ^[[1m^[[92m  Downloaded^[[0m zerocopy v0.8.59
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4562150Z ^[[1m^[[92m  Downloaded^[[0m zerofrom v0.1.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4575210Z ^[[1m^[[92m  Downloaded^[[0m parking_lot v0.12.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4613720Z ^[[1m^[[92m  Downloaded^[[0m phf_codegen v0.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4625850Z ^[[1m^[[92m  Downloaded^[[0m pin-project-lite v0.2.17
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4728850Z ^[[1m^[[92m  Downloaded^[[0m web_atoms v0.2.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4752680Z ^[[1m^[[92m  Downloaded^[[0m winnow v0.7.15
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.4968240Z ^[[1m^[[92m  Downloaded^[[0m muda v0.20.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.5047680Z ^[[1m^[[92m  Downloaded^[[0m itoa v1.0.18
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.5066920Z ^[[1m^[[92m  Downloaded^[[0m dyn-clone v1.0.20
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.5096200Z ^[[1m^[[92m  Downloaded^[[0m rfd v0.16.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.5184330Z ^[[1m^[[92m  Downloaded^[[0m rustls-webpki v0.103.15
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.5256380Z ^[[1m^[[92m  Downloaded^[[0m schemars v0.9.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.5550390Z ^[[1m^[[92m  Downloaded^[[0m schemars v1.2.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.5922590Z ^[[1m^[[92m  Downloaded^[[0m serde_json v1.0.151
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6092180Z ^[[1m^[[92m  Downloaded^[[0m tar v0.4.46
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6132070Z ^[[1m^[[92m  Downloaded^[[0m tauri-plugin-fs v2.6.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6249480Z ^[[1m^[[92m  Downloaded^[[0m tauri-runtime-wry v2.12.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6287550Z ^[[1m^[[92m  Downloaded^[[0m tinyvec v1.13.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6350510Z ^[[1m^[[92m  Downloaded^[[0m jsonptr v0.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6400060Z ^[[1m^[[92m  Downloaded^[[0m icu_collections v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6508850Z ^[[1m^[[92m  Downloaded^[[0m untrusted v0.9.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6540110Z ^[[1m^[[92m  Downloaded^[[0m urlpattern v0.6.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6583070Z ^[[1m^[[92m  Downloaded^[[0m idna_adapter v1.2.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6601070Z ^[[1m^[[92m  Downloaded^[[0m inout v0.1.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6648440Z ^[[1m^[[92m  Downloaded^[[0m ipnet v2.12.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6666320Z ^[[1m^[[92m  Downloaded^[[0m keyboard-types v0.8.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6718850Z ^[[1m^[[92m  Downloaded^[[0m cfg_aliases v0.2.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6734360Z ^[[1m^[[92m  Downloaded^[[0m dirs v7.0.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6754740Z ^[[1m^[[92m  Downloaded^[[0m fdeflate v0.3.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6780540Z ^[[1m^[[92m  Downloaded^[[0m rand v0.10.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6835450Z ^[[1m^[[92m  Downloaded^[[0m tauri-plugin-dialog v2.8.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6912960Z ^[[1m^[[92m  Downloaded^[[0m objc2-core-graphics v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.6992650Z ^[[1m^[[92m  Downloaded^[[0m indexmap v2.14.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7065310Z ^[[1m^[[92m  Downloaded^[[0m memchr v2.8.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7148700Z ^[[1m^[[92m  Downloaded^[[0m hyper-rustls v0.27.10
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7172200Z ^[[1m^[[92m  Downloaded^[[0m hyper-util v0.1.21
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7315510Z ^[[1m^[[92m  Downloaded^[[0m ico v0.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7363410Z ^[[1m^[[92m  Downloaded^[[0m universal-hash v0.5.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7375890Z ^[[1m^[[92m  Downloaded^[[0m unsafe-libyaml v0.2.11
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7425600Z ^[[1m^[[92m  Downloaded^[[0m url v2.5.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7461200Z ^[[1m^[[92m  Downloaded^[[0m getrandom v0.4.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7538610Z ^[[1m^[[92m  Downloaded^[[0m hashbrown v0.12.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7600080Z ^[[1m^[[92m  Downloaded^[[0m hmac v0.12.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7631740Z ^[[1m^[[92m  Downloaded^[[0m httpdate v1.0.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7648320Z ^[[1m^[[92m  Downloaded^[[0m icu_provider v2.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7689840Z ^[[1m^[[92m  Downloaded^[[0m indexmap v1.9.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7738330Z ^[[1m^[[92m  Downloaded^[[0m log v0.4.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7772550Z ^[[1m^[[92m  Downloaded^[[0m objc2-io-surface v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7809470Z ^[[1m^[[92m  Downloaded^[[0m polyval v0.6.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7836260Z ^[[1m^[[92m  Downloaded^[[0m block-buffer v0.10.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7851080Z ^[[1m^[[92m  Downloaded^[[0m cssparser v0.37.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7889560Z ^[[1m^[[92m  Downloaded^[[0m reqwest v0.12.28
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.7975320Z ^[[1m^[[92m  Downloaded^[[0m reqwest v0.13.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.8604560Z ^[[1m^[[92m  Downloaded^[[0m tauri-utils v2.10.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.8679650Z ^[[1m^[[92m  Downloaded^[[0m objc2 v0.6.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.8860320Z ^[[1m^[[92m  Downloaded^[[0m icu_normalizer_data v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.8893130Z ^[[1m^[[92m  Downloaded^[[0m icu_properties v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.8938120Z ^[[1m^[[92m  Downloaded^[[0m objc2-exception-helper v0.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.8950420Z ^[[1m^[[92m  Downloaded^[[0m powerfmt v0.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.8971070Z ^[[1m^[[92m  Downloaded^[[0m toml v1.1.6+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9055790Z ^[[1m^[[92m  Downloaded^[[0m toml_writer v1.1.2+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9092300Z ^[[1m^[[92m  Downloaded^[[0m walkdir v2.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9121640Z ^[[1m^[[92m  Downloaded^[[0m zmij v1.0.23
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9148430Z ^[[1m^[[92m  Downloaded^[[0m core-graphics-types v0.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9162420Z ^[[1m^[[92m  Downloaded^[[0m ctr v0.9.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9199220Z ^[[1m^[[92m  Downloaded^[[0m futures-io v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9212370Z ^[[1m^[[92m  Downloaded^[[0m regex v1.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9314980Z ^[[1m^[[92m  Downloaded^[[0m lru-slab v0.1.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9329380Z ^[[1m^[[92m  Downloaded^[[0m tokio-macros v2.7.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9346760Z ^[[1m^[[92m  Downloaded^[[0m hex v0.4.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9373570Z ^[[1m^[[92m  Downloaded^[[0m potential_utf v0.1.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9391050Z ^[[1m^[[92m  Downloaded^[[0m toml_datetime v0.7.5+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9409640Z ^[[1m^[[92m  Downloaded^[[0m tower-layer v0.3.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9424820Z ^[[1m^[[92m  Downloaded^[[0m tower-service v0.3.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9440130Z ^[[1m^[[92m  Downloaded^[[0m unicode-ident v1.0.26
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9482070Z ^[[1m^[[92m  Downloaded^[[0m utf8_iter v1.0.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9496270Z ^[[1m^[[92m  Downloaded^[[0m yoke-derive v0.8.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9512530Z ^[[1m^[[92m  Downloaded^[[0m zerovec-derive v0.11.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9539740Z ^[[1m^[[92m  Downloaded^[[0m bytemuck v1.25.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9605260Z ^[[1m^[[92m  Downloaded^[[0m crossbeam-channel v0.5.17
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9671670Z ^[[1m^[[92m  Downloaded^[[0m defmt-parser v1.0.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9685210Z ^[[1m^[[92m  Downloaded^[[0m dtoa v1.0.11
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9710350Z ^[[1m^[[92m  Downloaded^[[0m serde_with v3.24.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:58.9959560Z ^[[1m^[[92m  Downloaded^[[0m winnow v1.0.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0115440Z ^[[1m^[[92m  Downloaded^[[0m tokio-util v0.7.19
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0270360Z ^[[1m^[[92m  Downloaded^[[0m heck v0.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0290690Z ^[[1m^[[92m  Downloaded^[[0m httparse v1.10.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0329190Z ^[[1m^[[92m  Downloaded^[[0m hyper v1.11.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0469270Z ^[[1m^[[92m  Downloaded^[[0m typenum v1.20.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0527750Z ^[[1m^[[92m  Downloaded^[[0m version_check v0.9.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0549410Z ^[[1m^[[92m  Downloaded^[[0m want v0.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0563960Z ^[[1m^[[92m  Downloaded^[[0m xattr v1.6.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0595020Z ^[[1m^[[92m  Downloaded^[[0m yoke v0.8.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0626530Z ^[[1m^[[92m  Downloaded^[[0m idna v1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0682100Z ^[[1m^[[92m  Downloaded^[[0m lock_api v0.4.14
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0708540Z ^[[1m^[[92m  Downloaded^[[0m toml_datetime v1.1.1+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0732490Z ^[[1m^[[92m  Downloaded^[[0m generic-array v0.14.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0757900Z ^[[1m^[[92m  Downloaded^[[0m quick-xml v0.42.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.0871010Z ^[[1m^[[92m  Downloaded^[[0m icu_properties_data v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1070040Z ^[[1m^[[92m  Downloaded^[[0m tracing-core v0.1.36
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1122460Z ^[[1m^[[92m  Downloaded^[[0m regex-syntax v0.8.11
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1230370Z ^[[1m^[[92m  Downloaded^[[0m syn v2.0.119
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1404080Z ^[[1m^[[92m  Downloaded^[[0m num-conv v0.2.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1415720Z ^[[1m^[[92m  Downloaded^[[0m num-traits v0.2.19
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1458390Z ^[[1m^[[92m  Downloaded^[[0m hashbrown v0.17.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1553680Z ^[[1m^[[92m  Downloaded^[[0m plist v1.10.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1623200Z ^[[1m^[[92m  Downloaded^[[0m quinn v0.11.12
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1670070Z ^[[1m^[[92m  Downloaded^[[0m toml_parser v1.1.3+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1704630Z ^[[1m^[[92m  Downloaded^[[0m foldhash v0.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1725930Z ^[[1m^[[92m  Downloaded^[[0m tao v0.37.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.1919610Z ^[[1m^[[92m  Downloaded^[[0m tauri v2.12.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.2157780Z ^[[1m^[[92m  Downloaded^[[0m time v0.3.55
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.2410140Z ^[[1m^[[92m  Downloaded^[[0m precomputed-hash v0.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.2421160Z ^[[1m^[[92m  Downloaded^[[0m tray-icon v0.25.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.2460370Z ^[[1m^[[92m  Downloaded^[[0m http-body v1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.2475770Z ^[[1m^[[92m  Downloaded^[[0m password-hash v0.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.2505000Z ^[[1m^[[92m  Downloaded^[[0m tower v0.5.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.2697670Z ^[[1m^[[92m  Downloaded^[[0m uuid v1.27.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.2749770Z ^[[1m^[[92m  Downloaded^[[0m syn v3.0.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.2929960Z ^[[1m^[[92m  Downloaded^[[0m icu_locale_core v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3051620Z ^[[1m^[[92m  Downloaded^[[0m tower-http v0.6.11
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3230200Z ^[[1m^[[92m  Downloaded^[[0m try-lock v0.2.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3243820Z ^[[1m^[[92m  Downloaded^[[0m http v1.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3304610Z ^[[1m^[[92m  Downloaded^[[0m once_cell v1.21.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3344660Z ^[[1m^[[92m  Downloaded^[[0m percent-encoding v2.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3356830Z ^[[1m^[[92m  Downloaded^[[0m phf v0.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3374700Z ^[[1m^[[92m  Downloaded^[[0m web-time v1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3398850Z ^[[1m^[[92m  Downloaded^[[0m rustls v0.23.45
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3644420Z ^[[1m^[[92m  Downloaded^[[0m getrandom v0.2.17
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3702360Z ^[[1m^[[92m  Downloaded^[[0m getrandom v0.3.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3768230Z ^[[1m^[[92m  Downloaded^[[0m wry v0.57.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.3928680Z ^[[1m^[[92m  Downloaded^[[0m rustix v1.1.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.4472710Z ^[[1m^[[92m  Downloaded^[[0m image v0.25.10
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.4628870Z ^[[1m^[[92m  Downloaded^[[0m new_debug_unreachable v1.0.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.4654530Z ^[[1m^[[92m  Downloaded^[[0m toml v0.9.12+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.4728330Z ^[[1m^[[92m  Downloaded^[[0m markup5ever v0.39.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.4748420Z ^[[1m^[[92m  Downloaded^[[0m html5ever v0.39.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.4825140Z ^[[1m^[[92m  Downloaded^[[0m jiff-core v0.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.4878500Z ^[[1m^[[92m  Downloaded^[[0m json-patch v4.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.4895170Z ^[[1m^[[92m  Downloaded^[[0m keyring v3.6.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.4935300Z ^[[1m^[[92m  Downloaded^[[0m mio v1.2.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.5030660Z ^[[1m^[[92m  Downloaded^[[0m objc2-web-kit v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.5356230Z ^[[1m^[[92m  Downloaded^[[0m png v0.18.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.5433360Z ^[[1m^[[92m  Downloaded^[[0m zip v4.6.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.5495630Z ^[[1m^[[92m  Downloaded^[[0m zlib-rs v0.6.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.5591890Z ^[[1m^[[92m  Downloaded^[[0m objc2-foundation v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.5980270Z ^[[1m^[[92m  Downloaded^[[0m moxcms v0.8.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.6487720Z ^[[1m^[[92m  Downloaded^[[0m objc2-core-foundation v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.6652400Z ^[[1m^[[92m  Downloaded^[[0m objc2-app-kit v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.7148820Z ^[[1m^[[92m  Downloaded^[[0m icu_normalizer v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.7278250Z ^[[1m^[[92m  Downloaded^[[0m zeroize v1.9.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.7301420Z ^[[1m^[[92m  Downloaded^[[0m regex-automata v0.4.18
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.7525000Z ^[[1m^[[92m  Downloaded^[[0m litemap v0.8.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.7589000Z ^[[1m^[[92m  Downloaded^[[0m png v0.17.16
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.7670520Z ^[[1m^[[92m  Downloaded^[[0m tracing v0.1.44
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.7945430Z ^[[1m^[[92m  Downloaded^[[0m futures-util v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.8273150Z ^[[1m^[[92m  Downloaded^[[0m libc v0.2.190
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.9304030Z ^[[1m^[[92m  Downloaded^[[0m objc2-encode v4.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:18:59.9316790Z ^[[1m^[[92m  Downloaded^[[0m tokio v1.53.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.0240970Z ^[[1m^[[92m  Downloaded^[[0m pxfm v0.1.30
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.0904870Z ^[[1m^[[92m  Downloaded^[[0m ring v0.17.14
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.1677300Z ^[[1m^[[92m  Downloaded^[[0m window-vibrancy v0.8.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.1801280Z ^[[1m^[[92m  Downloaded^[[0m quinn-proto v0.11.19
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.1918550Z ^[[1m^[[92m  Downloaded^[[0m zerotrie v0.2.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.1998960Z ^[[1m^[[92m  Downloaded^[[0m objc2-quartz-core v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.2052510Z ^[[1m^[[92m  Downloaded^[[0m miniz_oxide v0.8.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.2093520Z ^[[1m^[[92m  Downloaded^[[0m jiff v0.2.37
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.2336950Z ^[[1m^[[92m  Downloaded^[[0m zerovec v0.11.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.2441100Z ^[[1m^[[92m  Downloaded^[[0m proc-macro2 v1.0.107
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.4190810Z ^[[1m^[[92m   Compiling^[[0m proc-macro2 v1.0.107
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.4191570Z ^[[1m^[[92m   Compiling^[[0m unicode-ident v1.0.26
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.4192120Z ^[[1m^[[92m   Compiling^[[0m quote v1.0.47
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:00.8947070Z ^[[1m^[[92m   Compiling^[[0m libc v0.2.190
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:03.4951080Z ^[[1m^[[92m   Compiling^[[0m cfg-if v1.0.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:03.5599750Z ^[[1m^[[92m   Compiling^[[0m serde_core v1.0.229
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:04.5535500Z ^[[1m^[[92m   Compiling^[[0m syn v3.0.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:04.5855490Z ^[[1m^[[92m   Compiling^[[0m itoa v1.0.18
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:04.7272970Z ^[[1m^[[92m   Compiling^[[0m memchr v2.8.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:06.2591250Z ^[[1m^[[92m   Compiling^[[0m shlex v2.0.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:06.4656240Z ^[[1m^[[92m   Compiling^[[0m find-msvc-tools v0.1.14
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:06.6527140Z ^[[1m^[[92m   Compiling^[[0m cc v1.6.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:07.9176430Z ^[[1m^[[92m   Compiling^[[0m litemap v0.8.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:08.1091710Z ^[[1m^[[92m   Compiling^[[0m writeable v0.6.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:08.1709900Z ^[[1m^[[92m   Compiling^[[0m utf8_iter v1.0.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:08.3149700Z ^[[1m^[[92m   Compiling^[[0m synstructure v0.14.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:08.3567850Z ^[[1m^[[92m   Compiling^[[0m zmij v1.0.23
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:08.6468980Z ^[[1m^[[92m   Compiling^[[0m siphasher v1.0.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:08.8383110Z ^[[1m^[[92m   Compiling^[[0m icu_normalizer_data v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:08.8830750Z ^[[1m^[[92m   Compiling^[[0m icu_properties_data v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:09.1106540Z ^[[1m^[[92m   Compiling^[[0m phf_shared v0.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:09.2968580Z ^[[1m^[[92m   Compiling^[[0m bitflags v2.13.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:09.3781450Z ^[[1m^[[92m   Compiling^[[0m syn v2.0.119
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:09.6373980Z ^[[1m^[[92m   Compiling^[[0m serde_derive v1.0.229
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:09.6845820Z ^[[1m^[[92m   Compiling^[[0m zerofrom-derive v0.1.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:10.5402320Z ^[[1m^[[92m   Compiling^[[0m zerofrom v0.1.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:10.6251280Z ^[[1m^[[92m   Compiling^[[0m yoke-derive v0.8.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:11.3626680Z ^[[1m^[[92m   Compiling^[[0m zerovec-derive v0.11.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:11.5952840Z ^[[1m^[[92m   Compiling^[[0m displaydoc v0.2.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:12.1134750Z ^[[1m^[[92m   Compiling^[[0m fastrand v2.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:12.1573630Z ^[[1m^[[92m   Compiling^[[0m bytes v1.12.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:12.2439540Z ^[[1m^[[92m   Compiling^[[0m phf_generator v0.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:12.3665260Z ^[[1m^[[92m   Compiling^[[0m stable_deref_trait v1.2.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:12.4152730Z ^[[1m^[[92m   Compiling^[[0m smallvec v1.16.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:12.5399760Z ^[[1m^[[92m   Compiling^[[0m serde v1.0.229
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:12.6608240Z ^[[1m^[[92m   Compiling^[[0m http v1.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:12.7683400Z ^[[1m^[[92m   Compiling^[[0m yoke v0.8.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:12.9034390Z ^[[1m^[[92m   Compiling^[[0m version_check v0.9.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:13.0979920Z ^[[1m^[[92m   Compiling^[[0m getrandom v0.4.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:13.2576740Z ^[[1m^[[92m   Compiling^[[0m log v0.4.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:13.2732970Z ^[[1m^[[92m   Compiling^[[0m zerovec v0.11.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:13.4299390Z ^[[1m^[[92m   Compiling^[[0m thiserror v2.0.21
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:13.7033740Z ^[[1m^[[92m   Compiling^[[0m phf_macros v0.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:13.7404550Z ^[[1m^[[92m   Compiling^[[0m thiserror-impl v2.0.21
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:13.7802560Z ^[[1m^[[92m   Compiling^[[0m time-core v0.1.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:13.9358640Z ^[[1m^[[92m   Compiling^[[0m num-conv v0.2.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:14.0346390Z ^[[1m^[[92m   Compiling^[[0m autocfg v1.5.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:14.2076550Z ^[[1m^[[92m   Compiling^[[0m powerfmt v0.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:14.3219780Z ^[[1m^[[92m   Compiling^[[0m winnow v1.0.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:14.3734650Z ^[[1m^[[92m   Compiling^[[0m deranged v0.5.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:14.6316540Z ^[[1m^[[92m   Compiling^[[0m base64 v0.23.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:14.6586710Z ^[[1m^[[92m   Compiling^[[0m toml_parser v1.1.3+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:15.2201780Z ^[[1m^[[92m   Compiling^[[0m tinystr v0.8.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:15.5393340Z ^[[1m^[[92m   Compiling^[[0m phf_codegen v0.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:15.7632400Z ^[[1m^[[92m   Compiling^[[0m toml_writer v1.1.2+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:15.7735200Z ^[[1m^[[92m   Compiling^[[0m ident_case v1.0.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:15.9246580Z ^[[1m^[[92m   Compiling^[[0m serde_json v1.0.151
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:16.0342630Z ^[[1m^[[92m   Compiling^[[0m typeid v1.0.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:16.2590070Z ^[[1m^[[92m   Compiling^[[0m strsim v0.11.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:16.5418450Z ^[[1m^[[92m   Compiling^[[0m icu_locale_core v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:16.6025950Z ^[[1m^[[92m   Compiling^[[0m darling_core v0.24.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:16.7336620Z ^[[1m^[[92m   Compiling^[[0m potential_utf v0.1.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:16.8908220Z ^[[1m^[[92m   Compiling^[[0m zerotrie v0.2.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:17.2242180Z ^[[1m^[[92m   Compiling^[[0m parking_lot_core v0.9.12
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:17.5048660Z ^[[1m^[[92m   Compiling^[[0m hashbrown v0.17.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:18.2619490Z ^[[1m^[[92m   Compiling^[[0m erased-serde v0.4.10
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:18.2916770Z ^[[1m^[[92m   Compiling^[[0m equivalent v1.0.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:18.3608900Z ^[[1m^[[92m   Compiling^[[0m indexmap v2.14.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:18.5627330Z ^[[1m^[[92m   Compiling^[[0m icu_provider v2.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:18.8459610Z ^[[1m^[[92m   Compiling^[[0m icu_collections v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:19.7426880Z ^[[1m^[[92m   Compiling^[[0m darling_macro v0.24.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:19.8715200Z ^[[1m^[[92m   Compiling^[[0m aho-corasick v1.1.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:19.8737400Z ^[[1m^[[92m   Compiling^[[0m fnv v1.0.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:19.9461510Z ^[[1m^[[92m   Compiling^[[0m scopeguard v1.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:20.0561600Z ^[[1m^[[92m   Compiling^[[0m regex-syntax v0.8.11
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:20.0873460Z ^[[1m^[[92m   Compiling^[[0m new_debug_unreachable v1.0.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:20.1497530Z ^[[1m^[[92m   Compiling^[[0m web-time v1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:20.2251450Z ^[[1m^[[92m   Compiling^[[0m lock_api v0.4.14
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:20.4082680Z ^[[1m^[[92m   Compiling^[[0m darling v0.24.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:20.7302540Z ^[[1m^[[92m   Compiling^[[0m phf v0.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:20.8729920Z ^[[1m^[[92m   Compiling^[[0m generic-array v0.14.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:21.1000530Z ^[[1m^[[92m   Compiling^[[0m string_cache_codegen v0.6.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:21.5340480Z ^[[1m^[[92m   Compiling^[[0m precomputed-hash v0.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:21.6647460Z ^[[1m^[[92m   Compiling^[[0m alloc-no-stdlib v3.0.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:21.7959380Z ^[[1m^[[92m   Compiling^[[0m objc2-encode v4.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:21.9911180Z ^[[1m^[[92m   Compiling^[[0m regex-automata v0.4.18
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:22.3806460Z ^[[1m^[[92m   Compiling^[[0m alloc-stdlib v0.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:22.5146860Z ^[[1m^[[92m   Compiling^[[0m web_atoms v0.2.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:23.2796290Z ^[[1m^[[92m   Compiling^[[0m parking_lot v0.12.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:23.6504790Z ^[[1m^[[92m   Compiling^[[0m serde_with_macros v3.24.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:23.6776630Z ^[[1m^[[92m   Compiling^[[0m icu_properties v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:24.9068390Z ^[[1m^[[92m   Compiling^[[0m regex v1.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:25.5524770Z ^[[1m^[[92m   Compiling^[[0m icu_normalizer v2.3.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:25.7020560Z ^[[1m^[[92m   Compiling^[[0m objc2-exception-helper v0.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:26.0788730Z ^[[1m^[[92m   Compiling^[[0m semver v1.0.28
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:26.5041160Z ^[[1m^[[92m   Compiling^[[0m quick-xml v0.42.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:26.5261250Z ^[[1m^[[92m   Compiling^[[0m anyhow v1.0.104
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:27.0354100Z ^[[1m^[[92m   Compiling^[[0m typenum v1.20.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:28.0845490Z ^[[1m^[[92m   Compiling^[[0m idna_adapter v1.2.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:28.2602700Z ^[[1m^[[92m   Compiling^[[0m string_cache v0.9.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:28.9065830Z ^[[1m^[[92m   Compiling^[[0m brotli-decompressor v6.0.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:29.0928260Z ^[[1m^[[92m   Compiling^[[0m serde_spanned v1.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:29.2350180Z ^[[1m^[[92m   Compiling^[[0m toml_datetime v1.1.1+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:29.5620200Z ^[[1m^[[92m   Compiling^[[0m dtoa v1.0.11
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:29.7102590Z ^[[1m^[[92m   Compiling^[[0m dunce v1.0.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:29.7924610Z ^[[1m^[[92m   Compiling^[[0m same-file v1.0.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:29.9361790Z ^[[1m^[[92m   Compiling^[[0m percent-encoding v2.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:30.0872340Z ^[[1m^[[92m   Compiling^[[0m form_urlencoded v1.2.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:30.2607120Z ^[[1m^[[92m   Compiling^[[0m walkdir v2.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:30.3335150Z ^[[1m^[[92m   Compiling^[[0m brotli v9.0.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:30.6389930Z ^[[1m^[[92m   Compiling^[[0m dtoa-short v0.3.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:30.7547840Z ^[[1m^[[92m   Compiling^[[0m toml v1.1.6+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:32.8460490Z ^[[1m^[[92m   Compiling^[[0m idna v1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:33.5488870Z ^[[1m^[[92m   Compiling^[[0m tendril v0.5.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:33.9080430Z ^[[1m^[[92m   Compiling^[[0m selectors v0.38.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:33.9487000Z ^[[1m^[[92m   Compiling^[[0m indexmap v1.9.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:34.2977800Z ^[[1m^[[92m   Compiling^[[0m uuid v1.27.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:34.4458030Z ^[[1m^[[92m   Compiling^[[0m derive_more-impl v2.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:34.5685220Z ^[[1m^[[92m   Compiling^[[0m serde_derive_internals v0.29.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:34.9659110Z ^[[1m^[[92m   Compiling^[[0m cssparser-macros v0.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:35.5641630Z ^[[1m^[[92m   Compiling^[[0m getrandom v0.2.17
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:35.7940780Z ^[[1m^[[92m   Compiling^[[0m camino v1.2.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:35.9309000Z ^[[1m^[[92m   Compiling^[[0m ctor v1.0.13
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:35.9636710Z ^[[1m^[[92m   Compiling^[[0m objc2 v0.6.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:36.1138240Z ^[[1m^[[92m   Compiling^[[0m glob v0.3.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:36.1913610Z ^[[1m^[[92m   Compiling^[[0m core-foundation-sys v0.8.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:36.3585220Z ^[[1m^[[92m   Compiling^[[0m schemars_derive v0.8.22
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:36.5015630Z ^[[1m^[[92m   Compiling^[[0m derive_more v2.1.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:36.6311800Z ^[[1m^[[92m   Compiling^[[0m cssparser v0.37.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:37.1034420Z ^[[1m^[[92m   Compiling^[[0m markup5ever v0.39.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:37.4405700Z ^[[1m^[[92m   Compiling^[[0m url v2.5.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:38.0923380Z ^[[1m^[[92m   Compiling^[[0m swift-rs v1.0.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:38.9228760Z ^[[1m^[[92m   Compiling^[[0m servo_arc v0.4.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:39.1269610Z ^[[1m^[[92m   Compiling^[[0m bit-vec v0.8.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:39.1983080Z ^[[1m^[[92m   Compiling^[[0m dyn-clone v1.0.20
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:39.3404400Z ^[[1m^[[92m   Compiling^[[0m schemars v0.8.22
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:39.3529520Z ^[[1m^[[92m   Compiling^[[0m hashbrown v0.12.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:39.4954220Z ^[[1m^[[92m   Compiling^[[0m rustc-hash v2.1.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:39.6530150Z ^[[1m^[[92m   Compiling^[[0m bit-set v0.8.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:40.7433080Z ^[[1m^[[92m   Compiling^[[0m html5ever v0.39.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:41.6092340Z ^[[1m^[[92m   Compiling^[[0m cfb v0.14.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:41.7896640Z ^[[1m^[[92m   Compiling^[[0m jsonptr v0.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:42.4730790Z ^[[1m^[[92m   Compiling^[[0m time v0.3.55
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:42.4738960Z ^[[1m^[[92m   Compiling^[[0m cargo-platform v0.1.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:42.5863330Z ^[[1m^[[92m   Compiling^[[0m foldhash v0.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:42.6775950Z ^[[1m^[[92m   Compiling^[[0m base64 v0.21.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:42.7432970Z ^[[1m^[[92m   Compiling^[[0m dom_query v0.28.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:43.5157410Z ^[[1m^[[92m   Compiling^[[0m cargo_metadata v0.19.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:44.4120050Z ^[[1m^[[92m   Compiling^[[0m serde-untagged v0.1.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:44.7120280Z ^[[1m^[[92m   Compiling^[[0m infer v0.22.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:45.0786580Z ^[[1m^[[92m   Compiling^[[0m plist v1.10.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:45.2225700Z ^[[1m^[[92m   Compiling^[[0m json-patch v4.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:45.8822990Z ^[[1m^[[92m   Compiling^[[0m urlpattern v0.6.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:46.3722970Z ^[[1m^[[92m   Compiling^[[0m serde_with v3.24.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:47.1333000Z ^[[1m^[[92m   Compiling^[[0m errno v0.3.14
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:47.2618740Z ^[[1m^[[92m   Compiling^[[0m simd-adler32 v0.3.10
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:47.4560830Z ^[[1m^[[92m   Compiling^[[0m block2 v0.6.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:47.8086060Z ^[[1m^[[92m   Compiling^[[0m objc2-core-foundation v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:48.8142470Z ^[[1m^[[92m   Compiling^[[0m tauri-utils v2.10.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:49.9629670Z ^[[1m^[[92m   Compiling^[[0m crc32fast v1.5.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:49.9928460Z ^[[1m^[[92m   Compiling^[[0m pin-project-lite v0.2.17
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:50.0830820Z ^[[1m^[[92m   Compiling^[[0m once_cell v1.21.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:50.3943800Z ^[[1m^[[92m   Compiling^[[0m adler2 v2.0.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:51.1325480Z ^[[1m^[[92m   Compiling^[[0m option-ext v0.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:51.2467800Z ^[[1m^[[92m   Compiling^[[0m dirs-sys v0.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:51.4154360Z ^[[1m^[[92m   Compiling^[[0m miniz_oxide v0.9.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:51.6166790Z ^[[1m^[[92m   Compiling^[[0m objc2-foundation v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:56.2475320Z ^[[1m^[[92m   Compiling^[[0m subtle v2.6.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:59.0829810Z ^[[1m^[[92m   Compiling^[[0m dirs v7.0.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:59.3067530Z ^[[1m^[[92m   Compiling^[[0m signal-hook-registry v1.4.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:19:59.8040130Z ^[[1m^[[92m   Compiling^[[0m core-foundation v0.10.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:00.6813460Z ^[[1m^[[92m   Compiling^[[0m rustc_version v0.4.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:01.0020180Z ^[[1m^[[92m   Compiling^[[0m tokio-macros v2.7.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:01.8631160Z ^[[1m^[[92m   Compiling^[[0m mio v1.2.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:02.8784520Z ^[[1m^[[92m   Compiling^[[0m socket2 v0.6.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:03.6310420Z ^[[1m^[[92m   Compiling^[[0m tokio v1.53.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:14.0656300Z ^[[1m^[[92m   Compiling^[[0m embed-resource v3.0.11
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:16.1728050Z ^[[1m^[[92m   Compiling^[[0m miniz_oxide v0.8.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:17.1624210Z ^[[1m^[[92m   Compiling^[[0m fdeflate v0.3.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:17.4319230Z ^[[1m^[[92m   Compiling^[[0m rand_core v0.6.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:17.7799920Z ^[[1m^[[92m   Compiling^[[0m futures-core v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:17.8440400Z ^[[1m^[[92m   Compiling^[[0m heck v0.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:18.1546680Z ^[[1m^[[92m   Compiling^[[0m tauri-winres v0.3.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:18.6054930Z ^[[1m^[[92m   Compiling^[[0m cargo_toml v1.0.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:19.4227370Z ^[[1m^[[92m   Compiling^[[0m block-buffer v0.10.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:19.6444600Z ^[[1m^[[92m   Compiling^[[0m objc2-quartz-core v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:20.4329170Z ^[[1m^[[92m   Compiling^[[0m objc2-app-kit v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:22.2094120Z ^[[1m^[[92m   Compiling^[[0m tauri-build v2.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:23.7231720Z ^[[1m^[[92m   Compiling^[[0m crypto-common v0.1.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:23.8965990Z ^[[1m^[[92m   Compiling^[[0m tauri-plugin v2.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:24.3954890Z ^[[1m^[[92m   Compiling^[[0m time-macros v0.2.32
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:26.9528240Z ^[[1m^[[92m   Compiling^[[0m cpufeatures v0.2.17
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:29.5429010Z ^[[1m^[[92m   Compiling^[[0m crossbeam-utils v0.8.23
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:30.0997680Z ^[[1m^[[92m   Compiling^[[0m zeroize v1.9.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:30.7947490Z ^[[1m^[[92m   Compiling^[[0m zlib-rs v0.6.8
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:31.7675780Z ^[[1m^[[92m   Compiling^[[0m tauri v2.12.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:33.9470240Z ^[[1m^[[92m   Compiling^[[0m dpi v0.1.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:34.3831070Z ^[[1m^[[92m   Compiling^[[0m ring v0.17.14
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:35.0915890Z ^[[1m^[[92m   Compiling^[[0m raw-window-handle v0.6.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:37.2601750Z ^[[1m^[[92m   Compiling^[[0m flate2 v1.1.10
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:39.2485580Z ^[[1m^[[92m   Compiling^[[0m num-traits v0.2.19
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:40.6375000Z ^[[1m^[[92m   Compiling^[[0m http-body v1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:40.6611780Z ^[[1m^[[92m   Compiling^[[0m cookie v0.18.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:41.0797550Z ^[[1m^[[92m   Compiling^[[0m getrandom v0.3.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:41.2246930Z ^[[1m^[[92m   Compiling^[[0m bitflags v1.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:41.6798070Z ^[[1m^[[92m   Compiling^[[0m crossbeam-channel v0.5.17
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:41.8421180Z ^[[1m^[[92m   Compiling^[[0m rustls-pki-types v1.15.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:42.6810600Z ^[[1m^[[92m   Compiling^[[0m foreign-types-macros v0.2.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:43.1576130Z ^[[1m^[[92m   Compiling^[[0m futures-macro v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:43.8379590Z ^[[1m^[[92m   Compiling^[[0m futures-task v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:44.0707090Z ^[[1m^[[92m   Compiling^[[0m tower-service v0.3.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:44.1197550Z ^[[1m^[[92m   Compiling^[[0m system-configuration-sys v0.6.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:44.1949140Z ^[[1m^[[92m   Compiling^[[0m httparse v1.10.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:44.2041310Z ^[[1m^[[92m   Compiling^[[0m slab v0.4.12
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:44.4366990Z ^[[1m^[[92m   Compiling^[[0m untrusted v0.9.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:44.4969600Z ^[[1m^[[92m   Compiling^[[0m foreign-types-shared v0.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:44.6126150Z ^[[1m^[[92m   Compiling^[[0m foreign-types v0.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:44.7124030Z ^[[1m^[[92m   Compiling^[[0m futures-util v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:47.2509530Z ^[[1m^[[92m   Compiling^[[0m digest v0.10.7
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:47.8443640Z ^[[1m^[[92m   Compiling^[[0m wry v0.57.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:48.3781040Z ^[[1m^[[92m   Compiling^[[0m png v0.17.16
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:48.4645720Z ^[[1m^[[92m   Compiling^[[0m png v0.18.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:49.5277790Z ^[[1m^[[92m   Compiling^[[0m objc2-web-kit v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:50.9924250Z ^[[1m^[[92m   Compiling^[[0m core-graphics-types v0.2.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:51.1762460Z ^[[1m^[[92m   Compiling^[[0m dispatch2 v0.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:51.1867260Z ^[[1m^[[92m   Compiling^[[0m security-framework-sys v2.17.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:51.7776630Z ^[[1m^[[92m   Compiling^[[0m byteorder v1.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:51.9350130Z ^[[1m^[[92m   Compiling^[[0m muda v0.20.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:52.0472880Z ^[[1m^[[92m   Compiling^[[0m rustls v0.23.45
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:52.2779790Z ^[[1m^[[92m   Compiling^[[0m tauri-runtime v2.12.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:52.3989780Z ^[[1m^[[92m   Compiling^[[0m base64 v0.22.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:52.6430030Z ^[[1m^[[92m   Compiling^[[0m try-lock v0.2.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:52.7638410Z ^[[1m^[[92m   Compiling^[[0m want v0.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:52.9171970Z ^[[1m^[[92m   Compiling^[[0m ico v0.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:52.9273190Z ^[[1m^[[92m   Compiling^[[0m security-framework v3.7.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:53.5640950Z ^[[1m^[[92m   Compiling^[[0m core-graphics v0.25.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:54.7160190Z ^[[1m^[[92m   Compiling^[[0m sha2 v0.10.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:55.0183010Z ^[[1m^[[92m   Compiling^[[0m rustls-webpki v0.103.15
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:56.3192220Z ^[[1m^[[92m   Compiling^[[0m sync_wrapper v1.0.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:56.4364400Z ^[[1m^[[92m   Compiling^[[0m futures-channel v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:56.6963180Z ^[[1m^[[92m   Compiling^[[0m tracing-core v0.1.36
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:57.4655490Z ^[[1m^[[92m   Compiling^[[0m core-foundation v0.9.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:57.9904480Z ^[[1m^[[92m   Compiling^[[0m keyboard-types v0.8.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:58.0311240Z ^[[1m^[[92m   Compiling^[[0m mime v0.3.17
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:58.3916780Z ^[[1m^[[92m   Compiling^[[0m atomic-waker v1.1.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:58.5022370Z ^[[1m^[[92m   Compiling^[[0m httpdate v1.0.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:58.8022820Z ^[[1m^[[92m   Compiling^[[0m tauri-runtime-wry v2.12.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:59.1565920Z ^[[1m^[[92m   Compiling^[[0m tray-icon v0.25.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:59.2659600Z ^[[1m^[[92m   Compiling^[[0m pxfm v0.1.30
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:20:59.4458250Z ^[[1m^[[92m   Compiling^[[0m tower-layer v0.3.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:02.6956880Z ^[[1m^[[92m   Compiling^[[0m moxcms v0.8.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:04.1129580Z ^[[1m^[[92m   Compiling^[[0m hyper v1.11.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:06.1596230Z ^[[1m^[[92m   Compiling^[[0m system-configuration v0.7.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:06.5462610Z ^[[1m^[[92m   Compiling^[[0m tauri-codegen v2.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:08.7721370Z ^[[1m^[[92m   Compiling^[[0m tracing v0.1.44
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:12.3659070Z ^[[1m^[[92m   Compiling^[[0m tao v0.37.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:12.7861610Z ^[[1m^[[92m   Compiling^[[0m objc2-core-graphics v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:12.9998170Z ^[[1m^[[92m   Compiling^[[0m serialize-to-javascript-impl v0.1.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:13.5841140Z ^[[1m^[[92m   Compiling^[[0m rustix v1.1.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:14.0480480Z ^[[1m^[[92m   Compiling^[[0m ipnet v2.12.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:14.7453800Z ^[[1m^[[92m   Compiling^[[0m bytemuck v1.25.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:15.3970060Z ^[[1m^[[92m   Compiling^[[0m byteorder-lite v0.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:15.7216650Z ^[[1m^[[92m   Compiling^[[0m image v0.25.10
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:15.8265440Z ^[[1m^[[92m   Compiling^[[0m hyper-util v0.1.21
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:17.8056460Z ^[[1m^[[92m   Compiling^[[0m serialize-to-javascript v0.1.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:17.9289870Z ^[[1m^[[92m   Compiling^[[0m tauri-macros v2.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:18.4345370Z ^[[1m^[[92m   Compiling^[[0m tower v0.5.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:19.0922480Z ^[[1m^[[92m   Compiling^[[0m http-body-util v0.1.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:19.1660130Z ^[[1m^[[92m   Compiling^[[0m window-vibrancy v0.8.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:19.3076000Z ^[[1m^[[92m   Compiling^[[0m tauri-plugin-fs v2.6.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:19.4174730Z ^[[1m^[[92m   Compiling^[[0m serde_repr v0.1.21
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:19.7874790Z ^[[1m^[[92m   Compiling^[[0m zerocopy v0.8.59
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:20.0122100Z ^[[1m^[[92m   Compiling^[[0m embed_plist v1.2.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:20.2670790Z ^[[1m^[[92m   Compiling^[[0m tokio-rustls v0.26.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:20.4784180Z ^[[1m^[[92m   Compiling^[[0m rustls-native-certs v0.8.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:20.9515540Z ^[[1m^[[92m   Compiling^[[0m inout v0.1.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:21.0516650Z ^[[1m^[[92m   Compiling^[[0m ryu v1.0.23
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:21.2035380Z ^[[1m^[[92m   Compiling^[[0m cipher v0.4.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:21.4368720Z ^[[1m^[[92m   Compiling^[[0m hyper-rustls v0.27.10
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:21.8834410Z ^[[1m^[[92m   Compiling^[[0m tower-http v0.6.11
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:23.2485580Z ^[[1m^[[92m   Compiling^[[0m tauri-plugin-process v2.4.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:23.8652240Z ^[[1m^[[92m   Compiling^[[0m tauri-plugin-dialog v2.8.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:24.2909980Z ^[[1m^[[92m   Compiling^[[0m tauri-plugin-updater v2.13.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:24.7276450Z ^[[1m^[[92m   Compiling^[[0m universal-hash v0.5.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:24.9062310Z ^[[1m^[[92m   Compiling^[[0m futures-sink v0.3.34
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:24.9909660Z ^[[1m^[[92m   Compiling^[[0m opaque-debug v0.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:25.0415460Z ^[[1m^[[92m   Compiling^[[0m rfd v0.16.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:25.1789930Z ^[[1m^[[92m   Compiling^[[0m polyval v0.6.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:25.2686060Z ^[[1m^[[92m   Compiling^[[0m tokio-util v0.7.19
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:25.6659490Z ^[[1m^[[92m   Compiling^[[0m ppv-lite86 v0.2.21
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:25.8926270Z ^[[1m^[[92m   Compiling^[[0m serde_urlencoded v0.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:25.8972720Z ^[[1m^[[92m   Compiling^[[0m xattr v1.6.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:26.1191790Z ^[[1m^[[92m   Compiling^[[0m rustls-platform-verifier v0.7.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:26.1472980Z ^[[1m^[[92m   Compiling^[[0m rand_core v0.9.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:26.2971930Z ^[[1m^[[92m   Compiling^[[0m objc2-osa-kit v0.3.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:26.3334330Z ^[[1m^[[92m   Compiling^[[0m filetime v0.2.29
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:26.5948070Z ^[[1m^[[92m   Compiling^[[0m base64ct v1.8.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:26.7863470Z ^[[1m^[[92m   Compiling^[[0m tempfile v3.27.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:26.8319580Z ^[[1m^[[92m   Compiling^[[0m password-hash v0.5.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:27.1063590Z ^[[1m^[[92m   Compiling^[[0m osakit v0.3.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:27.3226820Z ^[[1m^[[92m   Compiling^[[0m tar v0.4.46
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:27.9051830Z ^[[1m^[[92m   Compiling^[[0m rand_chacha v0.9.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:28.2218490Z ^[[1m^[[92m   Compiling^[[0m reqwest v0.13.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:28.2972850Z ^[[1m^[[92m   Compiling^[[0m ghash v0.5.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:29.0500040Z ^[[1m^[[92m   Compiling^[[0m aes v0.8.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:29.3022860Z ^[[1m^[[92m   Compiling^[[0m ctr v0.9.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:29.3340570Z ^[[1m^[[92m   Compiling^[[0m blake2 v0.10.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:29.5293970Z ^[[1m^[[92m   Compiling^[[0m axum-core v0.5.6
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:30.0748260Z ^[[1m^[[92m   Compiling^[[0m aead v0.5.2
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:30.3382480Z ^[[1m^[[92m   Compiling^[[0m opencodex-desktop v0.2.20 (/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/tauri)
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:31.1397770Z ^[[1m^[[92m   Compiling^[[0m iana-time-zone v0.1.65
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:31.2402410Z ^[[1m^[[92m   Compiling^[[0m toml_datetime v0.7.5+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:31.3013090Z ^[[1m^[[92m   Compiling^[[0m serde_path_to_error v0.1.20
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:31.4386600Z ^[[1m^[[92m   Compiling^[[0m winnow v0.7.15
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:31.5203150Z ^[[1m^[[92m   Compiling^[[0m minisign-verify v0.2.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:31.8226790Z ^[[1m^[[92m   Compiling^[[0m matchit v0.8.4
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:32.0245700Z ^[[1m^[[92m   Compiling^[[0m unsafe-libyaml v0.2.11
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:32.0318020Z ^[[1m^[[92m   Compiling^[[0m axum v0.8.9
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:32.3838710Z ^[[1m^[[92m   Compiling^[[0m toml v0.9.12+spec-1.1.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:32.5953710Z ^[[1m^[[92m   Compiling^[[0m serde_yaml v0.9.34+deprecated
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:33.9969070Z ^[[1m^[[92m   Compiling^[[0m chrono v0.4.45
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:34.4274520Z ^[[1m^[[92m   Compiling^[[0m aes-gcm v0.10.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:34.6086240Z ^[[1m^[[92m   Compiling^[[0m argon2 v0.5.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:35.0098580Z ^[[1m^[[92m   Compiling^[[0m rand v0.9.5
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:35.7981670Z ^[[1m^[[92m   Compiling^[[0m reqwest v0.12.28
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:36.0023300Z ^[[1m^[[92m   Compiling^[[0m hmac v0.12.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:36.1060770Z ^[[1m^[[92m   Compiling^[[0m keyring v3.6.3
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:36.4818630Z ^[[1m^[[92m   Compiling^[[0m zip v4.6.1
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:37.0984590Z ^[[1m^[[92m   Compiling^[[0m dirs v6.0.0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:21:37.2387970Z ^[[1m^[[92m   Compiling^[[0m async-trait v0.1.92
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:23:10.9381110Z ^[[1m^[[92m    Finished^[[0m `test` profile [unoptimized + debuginfo] target(s) in 4m 14s
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:23:11.4589950Z ^[[1m^[[92m     Running^[[0m tests/model_config_official_real.rs (target/debug/deps/model_config_official_real-2b41b1013082f1c5)
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:23:11.5107760Z 
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:23:11.5108550Z running 2 tests
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:24:37.0592530Z test isolated_official_discovery_save_and_protocol_mapping_readback ... same-protocol-shared-fields-partitioned=true parent-retained=true exact-runtime-readback=true retired-group-hidden=true
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:28:12.5558250Z existing-auth-generation=true query-delete=true history-auth-only=true injected-failure-compensated=true later-private-drift-rejected=true keychain-reference-identities-preserved=true native-keychain-not-tested=true
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:30:39.6419820Z original-official-inventory=true protected-full-pool-transfer=true original-public-fields-exact=true imported-disabled=true separate-enable-with-alias-budget=true import-replay-preserves-later-save=true existing-import-replaces-explicit-private-generation=true imported-private-generation-compensated=true
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:31:53.5241930Z history-service-direction-restored=true paired-authorization-compensation=true direction-replay=true default-provider-direction=true adapter-and-key-transport-restored-together=true
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:31:53.5257940Z official=opencodex 2.84.0 models=12 catalog=2→2→0→1 phases=committed/committed/committed protocol-groups=1 stable-group=true new-default=true removal-including-owned-group=true history-to-normal-save=true multi-key-header-restored=true no-generation=true
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:31:53.7863250Z ok
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:32:16.9075290Z test isolated_official_saved_protocol_alias_reasoning_and_fast_wire ... wire-published-policy {"order":{"chosen":["gpt-6-astra","gpt-6.1-sol","gpt-6-luna"],"pickerAvailable":["fixture/wire-response","ocxd-83fe0d633c914ab19169516ff2f6e650/wire-chat","ocxd-c2113d39b00f41e79c88e5f5b0a2abf1/wire-anthropic"],"pickerOrder":["fixture/wire-response","ocxd-83fe0d633c914ab19169516ff2f6e650/wire-chat","ocxd-c2113d39b00f41e79c88e5f5b0a2abf1/wire-anthropic"],"pickerOrderMode":null},"providers":[{"adapter":"openai-responses","fastWire":{"canonicalToWire":{"priority":"priority"},"foreignCallerTiers":"drop","kind":"service-tier"},"id":"fixture","models":["wire-response","wire-chat","wire-anthropic"],"noReasoningModels":null},{"adapter":"openai-responses","fastWire":{"canonicalToWire":{"priority":"priority"},"foreignCallerTiers":"drop","kind":"service-tier"},"id":"ocxd-83fe0d633c914ab19169516ff2f6e650","models":["wire-chat"],"noReasoningModels":null},{"adapter":"anthropic","fastWire":{"canonicalToWire":{"priority":"fast"},"foreignCallerTiers":"drop","kind":"anthropic-speed"},"id":"ocxd-c2113d39b00f41e79c88e5f5b0a2abf1","models":["wire-anthropic"],"noReasoningModels":null}]}
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:32:17.1866910Z loopback-wire-receipts [{"beta":null,"body":{"input":"fixture only","model":"wire-response","reasoning":{"effort":"high"},"service_tier":"priority","stream":false},"path":"/v1/responses"},{"beta":null,"body":{"messages":[{"content":"fixture only","role":"user"}],"model":"wire-chat","reasoning_effort":"low","service_tier":"priority","stream":false},"path":"/v1/chat/completions"},{"beta":"fast-mode-2026-02-01","body":{"max_tokens":24576,"messages":[{"content":[{"cache_control":{"type":"ephemeral"},"text":"fixture only","type":"text"}],"role":"user"}],"model":"wire-anthropic","speed":"fast","stream":false,"thinking":{"budget_tokens":16384,"type":"enabled"}},"path":"/v1/messages"}]
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:32:35.1725240Z wire-official=opencodex 2.84.0 committed=true exact-raw-id=true alias-resolved=true protocols=responses/chat/anthropic pinned-and-map=true no-reasoning=true fast=service-tier/anthropic-speed chat-no-reasoning=true unsupported-reasoning-controls=blocked loopback-generation-requests=4 paid-requests=0
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:32:35.6787880Z ok
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:32:35.6790230Z 
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:32:35.6796740Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 563.97s
+official-contract	Run actual official contracts against loopback fixtures	2026-11-03T16:32:35.6797940Z 
+official-contract	Run actions/upload-artifact@v4	﻿2026-11-03T16:32:35.7832950Z ##[group]Run actions/upload-artifact@v4
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7833310Z with:
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7833520Z   name: isolated-official-contract
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7833900Z   path: /Users/runner/work/_temp/official-contract/result.log
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7834320Z   if-no-files-found: error
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7834680Z   compression-level: 6
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7834980Z   overwrite: false
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7835210Z   include-hidden-files: false
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7835470Z env:
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7835650Z   CARGO_HOME: /Users/runner/.cargo
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7835940Z   CARGO_INCREMENTAL: 0
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7836150Z   CARGO_TERM_COLOR: always
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7836870Z   OCXD_TEST_OFFICIAL_ENTRY: /Users/runner/work/_temp/official-contract/install/node_modules/@bitkyc08/opencodex/bin/ocx.mjs
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7837540Z   OCXD_TEST_OFFICIAL_NODE: /Users/runner/hostedtoolcache/node/24.22.1/arm64/bin/node
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7838260Z   OCXD_TEST_CODEX_BIN: /Users/runner/work/_temp/official-contract/install/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:35.7838930Z ##[endgroup]
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:36.5359450Z (node:19491) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:36.5459550Z (Use `node --trace-deprecation ...` to show where the warning was created)
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:36.5587750Z With the provided path, there will be 1 file uploaded
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:36.5588670Z Artifact name is valid!
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:36.5589090Z Root directory input is valid!
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:37.1493980Z (node:19491) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:37.1496320Z Beginning upload of artifact content to blob storage
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:37.1934990Z Uploaded bytes 6518
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:37.2156330Z Finished uploading artifact content to blob storage!
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:37.2159660Z SHA256 digest of uploaded artifact zip is 68f500ed1828b1ee7e5d56afb9c5ef3d35d3bf3fa11025c4a125e6b77bd38384
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:37.2164430Z Finalizing artifact upload
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:37.6750450Z Artifact isolated-official-contract.zip successfully finalized. Artifact ID 13248539698
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:37.6751540Z Artifact isolated-official-contract has been successfully uploaded! Final size is 6518 bytes. Artifact ID is 13248539698
+official-contract	Run actions/upload-artifact@v4	2026-11-03T16:32:37.6753530Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/41672846917/artifacts/13248539698
+official-contract	Post Run actions/setup-node@v5	﻿2026-11-03T16:32:37.6962340Z Post job cleanup.
+official-contract	Post Run actions/setup-node@v5	2026-11-03T16:32:37.8584960Z (node:19717) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+official-contract	Post Run actions/setup-node@v5	2026-11-03T16:32:37.8587260Z (Use `node --trace-deprecation ...` to show where the warning was created)
+official-contract	Post Run actions/checkout@v5	﻿2026-11-03T16:32:37.8721830Z Post job cleanup.
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:37.9766250Z [command]/opt/homebrew/bin/git version
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.0011090Z git version 2.56.0
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.0037120Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/04131eac-cc44-4fc9-a41d-21550355ca84/.gitconfig'
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.0054720Z Temporarily overriding HOME='/Users/runner/work/_temp/04131eac-cc44-4fc9-a41d-21550355ca84' before making global git config changes
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.0055500Z Adding repository directory to the temporary git global config as a safe directory
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.0056260Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/opencodex-desktop/opencodex-desktop
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.0181340Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.0253490Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.1412560Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.1525900Z http.https://github.com/.extraheader
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.1545870Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.1645950Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.2626190Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+official-contract	Post Run actions/checkout@v5	2026-11-03T16:32:38.2704970Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+official-contract	Complete job	﻿2026-11-03T16:32:38.3474490Z Cleaning up orphan processes
+official-contract	Complete job	2026-11-03T16:32:40.2713760Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

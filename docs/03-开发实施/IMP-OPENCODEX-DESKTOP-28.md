@@ -1,9 +1,13 @@
 ---
-id: IMP-OPENCODEX-DESKTOP-28
-object_kind: implementation
-title: 0.2.20 原型对齐与同步链路实施
-state: active
-dmd_refs: [DMD-OPENCODEX-UI-020]
+id: "IMP-OPENCODEX-DESKTOP-28"
+object_kind: "implementation.change"
+title: "0.2.20 原型对齐与同步链路实施"
+state: "in_progress"
+dmd_refs: ["DMD-OPENCODEX-UI-020"]
+summary: "实现与原型复核已有分层证据；最终包、双平台实际OTA与稳定发布收口仍进行中。"
+demand_ids: ["DMD-OPENCODEX-UI-020"]
+task_ids: ["TASK-OPENCODEX-UI020-CLOSEOUT-20261104"]
+completion_summary: null
 ---
 
 # 0.2.20 原型对齐与同步链路实施

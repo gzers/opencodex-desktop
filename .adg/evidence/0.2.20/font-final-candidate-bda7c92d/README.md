@@ -10,3 +10,8 @@
 macOS真实相邻OTA准备：已下载公开0.2.19，tag公钥验签与原封包deep/strict签名通过。独立副本仅改bundle ID/name并ad-hoc重签，OPENCODEX_SANDBOX_ROOT位于/tmp/ocx020-macos-adjacent-ota/data，更新通道使用产品已有beta、自动检查关闭，没有改更新URL或公钥。通过旧版真实UI开关渠道并分别确认保存两次，config实写读回启用后停用，合成Key与outsideSentinel保留；两份备份分别逐字节等同初始配置和第一次保存后配置。before-ota-file-hashes记录当前合成文件，完整升级尚未执行。
 
 另以自有无界面小程序按Tauri实际/usr/bin/open -n路径启动，原生子进程回执确认sandbox=1与显式隔离root均继承；只记录这两个测试变量，没有读取/记录用户环境。此结果仅证明隔离重启前提，不代替产品签名下载/应用/自动重启/新版本读回。新资产验签、四安装、Mac包与两平台实际OTA仍须继续，全部required_checks保持in_progress。
+
+
+正式治理绑定补正：原TASK/RCP进度文件是回执索引，不是不可变关闭合同。已通过已注册RuntimeStore生成TASK-OPENCODEX-UI020-CLOSEOUT-20261104，DMD/IMP投影逐字段绑定源Markdown，20条AC的criterion摘要、六个review门、四个人类回写目标摘要与写入范围已冻结，并以CAS进入in_progress；没有生成CERT。DMD/IMP状态规范化为in_progress，REL23为planned。前置解析拒绝只涉及frontmatter格式与object_kind；按实际provider合同改正，未跳过验证。关闭时必须由真实证据生成RCP，经原合同、文件摘要及CERT核验，不据此标记版本完成。
+
+独立官方诊断41672846917完整2项通过，日志保留所有实际协议/传输/凭据/失败补偿断言；当前产品实现及断言与bda相同，644da仅增加失败回执日志。前次provider_write仍保留失败，根因不作无证据归因。Windows新包原始EXE哈希与两更新签名已回收，独立四安装41675807159进行中。Mac首轮容量取消后原job rerun，attempt2已真实打包，Windows资产不重复构建。

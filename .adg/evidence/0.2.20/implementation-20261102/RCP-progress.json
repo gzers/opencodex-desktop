@@ -43,7 +43,7 @@
     "official_ci_284": "41658802959:2 explicit tests fail registration_unknown after catalog seeded on clean Mac; no product acceptance; log retained",
     "compact_typography": "1122UI/typecheck/build,64checks/16screens each engine,Macnative100/200% and fullroute428 passed; final complete sync648/engine with0errors",
     "backup_migration_clients": "60checks/12screens per engine; production consumer handlers with explicit mocked IPC, no real mutations",
-    "official_contract": "41671597006:wirepass, first legacy contract credentials_verified/provider_writefail. Diagnostic644da8f7 retains final receipt and has no product changes."
+    "official_contract": "41672846917 undertest-only644da8f7:2/2passed in563.97s. Product code and assertions identical tobda; added failure logging only. Earlier41671597006failure preserved, unproven root cause not rewritten."
   },
   "daily_config_writes": false,
   "daily_real_sync": false,
@@ -688,10 +688,13 @@
     "macAdjacentBaseline": "2 real native UI commits+exact preimages verified; actual OTA not run"
   },
   "release_hold": {
-    "reason": "Official failure needs actual receipt and resolution; finalCI/newassets/install/OTA still open",
+    "reason": "Full CI, new Mac asset/independentfourinstaller/actual adjacentOTA and final coverage audit remain open",
     "awaitingFontVersionAnswer": false,
     "typographyImplemented": true,
     "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",
     "evidence": "integration-20261104"
-  }
+  },
+  "formal_task": ".adg/work/objects/task/TASK-OPENCODEX-UI020-CLOSEOUT-20261104.json",
+  "formal_task_digest": "05900c538996b6111920e6f6659e122788896fcf035040f1d6133bcb81122b7d",
+  "purpose": "progress/evidence index only; formal closure requires stored TASK/RCP/CERT and source Markdown"
 }
