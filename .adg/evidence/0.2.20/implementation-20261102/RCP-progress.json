@@ -39,7 +39,8 @@
     "native_credential": "OPENCODEX_SANDBOX=1 explicit macOS native test passed",
     "owned_https": "2/2 passed; acceptance-20261103/ocx020-final-owned-https-6b2ea6d4.log",
     "owned_file_browser": "47/47 passed; acceptance-20261103/final-file-browser-6b2ea6d4",
-    "owned_official_284": "2 explicit tests failed initial catalog; acceptance-20261103/ocx020-final-owned-official-284-failed.log; investigation open"
+    "owned_official_284": "2 explicit tests failed initial catalog; acceptance-20261103/ocx020-final-owned-official-284-failed.log; investigation open",
+    "official_ci_284": "41658802959:2 explicit tests fail registration_unknown after catalog seeded on clean Mac; no product acceptance; log retained"
   },
   "daily_config_writes": false,
   "daily_real_sync": false,
@@ -391,6 +392,13 @@
       "conclusion": "success",
       "pr_merged": true,
       "merge_commit": "6ba433bd17f01fbff6506ba06df53f5a81e17db4"
+    },
+    {
+      "run": 41653396143,
+      "head": "c691ce7a3935c7f9162260d616ff13fb6a8f280e",
+      "status": "success",
+      "conclusion": "success",
+      "scope": "all required CI jobs including final Windows EXE/native matrices/ordinary account"
     }
   ],
   "acceptance_followups_20261103": {
@@ -671,8 +679,23 @@
     "prerelease": true,
     "release_run": 41654005109,
     "ci_run": 41653396143,
-    "status": "building_not_accepted",
+    "status": "built_and_signatures_verified; independent4installers_pass; font_hold_and_runtime_contract_failure; no_publication",
     "stable": "v0.2.19",
-    "ota_harness_source": "98e779753032d5755bc6d951c7151a036c797f7c"
+    "ota_harness_source": "98e779753032d5755bc6d951c7151a036c797f7c",
+    "independent_installers_run": 41657773386
+  },
+  "release_hold": {
+    "reason": "User reports font visibly larger than previous standard, asks parity with prototype. Investigate real default100% computed metrics/font fallback before any public prerelease or stable promotion.",
+    "productCandidate": "c691ce7a",
+    "published": false,
+    "knownFacts": [
+      "0.2.20 global tokens/base font/scale unchanged versusv0.2.19",
+      "QA copy was deliberately125% for short-height test, reset100% through its UI",
+      "live prototype tokenbody14/control13/title24 unchanged",
+      "actual consumer CSS and prior accepted render still under review",
+      "Daily installed applicationUI confirmed100%, returned prior models route, no preference write",
+      "0.2.18→0.2.19 Chinese fallback change gives14px text roughly14.7% wider for面板/模型/同步; ink height also grew",
+      "Awaiting accepted old-version typography baseline before global size change"
+    ]
   }
 }

@@ -1,0 +1,68 @@
+{
+  "sourceCommit": "c691ce7a3935c7f9162260d616ff13fb6a8f280e",
+  "releaseId": 432803988,
+  "draft": true,
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "latest.json",
+      "bytes": 5356,
+      "sha256": "2585480daaf071abf24fecf829a1f7049449d4de4f0306881cedb74af1cf3485"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.20_aarch64.dmg",
+      "bytes": 6883011,
+      "sha256": "d872d590eef0ba82e4efcc44f364942a83f3edf90300b2e1cebd946c90ea21f3"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.20_x64-setup.exe",
+      "bytes": 5163576,
+      "sha256": "074f6f2fbc079ca5747be86f3a9233a7a8446512cd219545013a68fe11470f5d"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.20_x64-setup.exe.sig",
+      "bytes": 452,
+      "sha256": "277de3c8c73e135c1a0d4beec5fe0f93b4cae437276bab29db2d78bcd4b51a44"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.20_x64_en-US.msi",
+      "bytes": 7233536,
+      "sha256": "c169b6c20bab2e0a602134eef96fbb10b16ed892f126dde0866b81991989d432"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.20_x64_en-US.msi.sig",
+      "bytes": 452,
+      "sha256": "f71b2cb29e0cd665c3a722e4ac9a99afbddde9fd171cfe099053d3697c60e3b0"
+    },
+    {
+      "name": "OpenCodeX.Desktop_aarch64.app.tar.gz",
+      "bytes": 7008873,
+      "sha256": "b76defba430bc6633dfec0c88f2cc76b935ae1fa235c202b03fb21ba72f3ccce"
+    },
+    {
+      "name": "OpenCodeX.Desktop_aarch64.app.tar.gz.sig",
+      "bytes": 440,
+      "sha256": "f30af2b95f7767d0af1e2e669332881cfc4e2961bdf2c4bff59a686bd421ca1c"
+    }
+  ],
+  "signedArtifacts": [
+    "OpenCodeX.Desktop_0.2.20_x64_en-US.msi",
+    "OpenCodeX.Desktop_0.2.20_x64-setup.exe",
+    "OpenCodeX.Desktop_aarch64.app.tar.gz"
+  ],
+  "platforms": [
+    "windows-x86_64",
+    "windows-x86_64-msi",
+    "windows-x86_64-nsis",
+    "darwin-aarch64",
+    "darwin-aarch64-app"
+  ],
+  "macBundle": {
+    "version": "0.2.20",
+    "id": "com.gzers.opencodex.desktop",
+    "deepStrictSignature": "pass",
+    "licenseAndNotices": "present"
+  },
+  "result": "pass",
+  "scope": "downloaded uploaded bytes/signatures/manifest/macOS bundle; not install/OTA acceptance"
+}

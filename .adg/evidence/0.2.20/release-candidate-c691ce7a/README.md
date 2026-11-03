@@ -1,0 +1,11 @@
+# c691ce7a候选正式包验收进度
+
+唯一Release41654005109双平台打包与各自资源/安装检查通过；完整CI41653396143全必需任务通过。PR61未据此自动合并/公开：新增字体视觉退化发布拦截与官方运行时显式合同失败仍未解决。
+
+asset-verification.json保存API资产摘要/长度与逐文件核对、tag内公钥的三份minisign更新签名、五平台manifest入口、macOS deep/strict签名和LICENSE/NOTICES检查。DMG校验通过。独立四安装格41657773386全通过，各报告sourceCommit=c691、原始EXE SHA b2674e6909a3988bb8ef0334827c2cd8180048039581a4b99aa9ce07d19d2e87。NSIS默认目录由独立全新runner证实在用户Local目录，不复用前一MSI/NSIS的记忆路径。
+
+native-macos-package：直接下载包的测试副本仅修改bundle ID并ad-hoc重签，Mach-O所有有文件载荷sections摘要相同，原始封包保持。真实UI导出21合成对象，选择Codex MCP来源、默认明文且只有一次确认；secretObjects=0、未选Key/.env均排除、desktop prefs仅4键。125%短高度说明隐藏，100%恢复，WebDAV字段与取消回原页。业务config前后SHA相同。仅独立沙箱设备偏好与内部操作记录变化，不跑真实同步/生成。
+
+官方2.84新Mac独立环境41658802959：补齐已安装包内catalog后首次sync通过，两个显式合同随后在registering_new/registration_unknown失败。保留failed日志；不能将测试版修前初始化失败归因覆盖为全通过，也不能宣称全部运行适配通过。当前本机还存在实际launchd原有job与测试HOME缺plist的ownership拒绝；不触碰真实服务来强行跑通。
+
+字体证据见../font-size-20261103。公开预发布/stable都未执行，现有公开stable0.2.19保持。实际OTA未执行，完整逐消费者/状态与版本收口仍进行中。
