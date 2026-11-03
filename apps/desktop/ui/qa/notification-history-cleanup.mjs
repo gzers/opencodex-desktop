@@ -1,0 +1,15 @@
+// Production history handlers + real notification-store API failure when the
+// browser has no native IPC bridge. No notification deletion can occur here.
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import {pickEngine} from './engine.mjs'
+const out=process.env.AUDIT_OUT;if(!out)throw Error('AUDIT_OUT required');await fs.mkdir(out,{recursive:true})
+const engine=await pickEngine(),browser=await engine.launch(),checks=[],errors=[],screens=[];let completed=false,failure=null
+try{for(const width of [1180,900]){
+ const p=await browser.newPage({viewport:{width,height:width===1180?760:600}});p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low');await p.waitForSelector('.channel-table');
+ for(const kind of ['all','resolved','read']){
+  await p.evaluate(async kind=>{const n=(await import('/src/features/notifications/store.ts')).useNotificationsStore();n.list=[{id:'history-fixture',kind:'info',category:'system',title:'Owned cleanup fixture',detail:'No native bridge exists in this DEV browser',time:'2026-11-03T00:00:00Z',read:true,resolved:kind==='resolved'}];(await import('/src/stores/routes.ts')).useRouteStore().go('logs',{tab:'notifications'});(await import('/src/app/feedback/store.ts')).useFeedbackStore().clearToast()},kind)
+  const before=await p.evaluate(async()=>JSON.stringify((await import('/src/features/notifications/store.ts')).useNotificationsStore().list));await p.getByRole('button',{name:kind==='read'?'清理已读':'清理已解决',exact:true}).click();const modal=p.locator('.modal-mask .modal');await modal.waitFor();await modal.getByRole('button',{name:'清理',exact:true}).click();const expected=kind==='all'?'清理通知失败；已保留当前通知。':kind==='read'?'清理已读通知失败；已保留当前通知。':'清理已解决通知失败；已保留当前通知。';await p.getByText(expected,{exact:true}).waitFor();const check=(name,passed)=>{checks.push({width,kind,name,passed});if(!passed)throw Error(name)};check('failure is visible',await p.getByText(expected,{exact:true}).isVisible());check('failed cleanup preserves the list',before===await p.evaluate(async()=>JSON.stringify((await import('/src/features/notifications/store.ts')).useNotificationsStore().list)));check('no success result was shown',!await p.getByText(kind==='all'?'全部通知已清理。':kind==='read'?'已读通知已清理。':'已清理已解决通知。',{exact:true}).count());check('confirmation resolves to original history',await modal.count()===0&&new URL(p.url()).hash==='#logs?tab=notifications');const file=width+'-'+kind+'.png';await p.screenshot({path:path.join(out,file)});screens.push(file)
+ }await p.close()
+}completed=true}catch(error){failure=error.message;throw error}finally{await browser.close();await fs.writeFile(path.join(out,'report.json'),JSON.stringify({completed,failure,engine:engine.name,scope:'DEV browser; production history/store failure path; absent native bridge; no disk mutations',checks,errors,screens},null,2)+'\n')}
+if(errors.length)throw Error(JSON.stringify(errors));console.log(engine.name,checks.length,'checks',screens.length,'screenshots')
