@@ -1259,7 +1259,10 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     let original_keys = management.key_state(original_name).await.unwrap();
     let original_raw: serde_json::Value =
         serde_json::from_slice(&std::fs::read(upstream_home.join("config.json")).unwrap()).unwrap();
-    let inventory = model_config::portable_channels::catalog(&manager, &original_snapshot).unwrap();
+    // Normal file export uses the saved-file inventory, whose stable channel
+    // identities are independent of the retired runtime-derived inventory.
+    let inventory =
+        model_config::portable_channels::catalog_file(&manager, &upstream_home).unwrap();
     let original_id = inventory
         .iter()
         .find(|c| c.connection.provider_id == original_name)
@@ -1274,7 +1277,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .iter()
         .any(|c| c.id == original_id));
     assert_eq!(
-        model_config::portable_channels::catalog(&manager, &original_snapshot)
+        model_config::portable_channels::catalog_file(&manager, &upstream_home)
             .unwrap()
             .iter()
             .find(|c| c.connection.provider_id == original_name)
@@ -1380,6 +1383,9 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .unwrap();
     let mut expected = original_snapshot.providers["providers"][original_name].clone();
     expected["disabled"] = json!(true);
+    // The receiving save also obeys §29.1, regardless of a historical source's
+    // friendly display name. Preserve route aliases and every other public field.
+    expected.as_object_mut().unwrap().remove("modelDisplayNames");
     assert_eq!(received_public["providers"][&receiving_provider], expected);
     assert_eq!(
         management.key_state(&receiving_provider).await.unwrap(),
