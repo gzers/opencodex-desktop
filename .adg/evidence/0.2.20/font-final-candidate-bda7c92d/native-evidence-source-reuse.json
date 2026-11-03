@@ -1,0 +1,30 @@
+{
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "checks": [
+    {
+      "evidence": "acceptance-20261103/mixed-import-native-35c06338",
+      "from": "35c06338",
+      "to": "bda7c92d",
+      "paths": [
+        "apps/desktop/tauri/src"
+      ],
+      "meaning": "All Rust product modules, commands, native credential/transfer/backup/restore code identical; UI evidence must be reconciled separately.",
+      "changedFiles": [],
+      "identical": true
+    },
+    {
+      "evidence": "release-candidate-c691ce7a/native-macos-package",
+      "from": "c691ce7a",
+      "to": "bda7c92d",
+      "paths": [
+        "apps/desktop/tauri/src",
+        "apps/desktop/ui/src/features/sync",
+        "apps/desktop/ui/src/features/backup"
+      ],
+      "meaning": "Transfer/backup handlers and native implementation identical. Shared font changes validated separately, so historical screenshots are not final typography proof.",
+      "changedFiles": [],
+      "identical": true
+    }
+  ],
+  "limits": "Source equality does not prove final package install/OTA or independent native layout; those gates remain open."
+}
