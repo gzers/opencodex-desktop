@@ -45,17 +45,22 @@ function Find-DefaultInstalledDirectory {
     return $found[0]
 }
 function Clear-ProductRememberedInstallDirectory {
-    # WiX AppSearch restores the last MSI location from this product-owned HKCU
-    # value before resolving INSTALLDIR. Each MSI case must start without stale
-    # runner state so the default and explicit-path checks test their own target.
-    foreach($view in @([Microsoft.Win32.RegistryView]::Registry32,[Microsoft.Win32.RegistryView]::Registry64)){
-        $base=[Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::CurrentUser,$view)
+    # WiX AppSearch restores the remembered location before resolving INSTALLDIR.
+    # Clear only this product-owned value in both views/hives, then prove it is
+    # absent so a later MSI command cannot silently be redirected by stale state.
+    foreach($hive in @([Microsoft.Win32.RegistryHive]::CurrentUser,[Microsoft.Win32.RegistryHive]::LocalMachine)){
+      foreach($view in @([Microsoft.Win32.RegistryView]::Registry32,[Microsoft.Win32.RegistryView]::Registry64)){
+        $base=[Microsoft.Win32.RegistryKey]::OpenBaseKey($hive,$view)
         try{
-            $key=$base.OpenSubKey('Software\gzers\OpenCodeX Desktop',$true)
-            if($key){
-                try{$key.DeleteValue('InstallDir',$false)}finally{$key.Dispose()}
-            }
+          $key=$base.OpenSubKey('Software\gzers\OpenCodeX Desktop',$true)
+          if($key){try{$key.DeleteValue('InstallDir',$false)}finally{$key.Dispose()}}
+          $verify=$base.OpenSubKey('Software\gzers\OpenCodeX Desktop',$false)
+          if($verify){
+            try{if($null -ne $verify.GetValue('InstallDir',$null)){throw "Could not clear product InstallDir from $hive ($view)"}}
+            finally{$verify.Dispose()}
+          }
         }finally{$base.Dispose()}
+      }
     }
 }
 try {

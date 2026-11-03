@@ -41,6 +41,10 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
         self.assertIn("RegistryView]::Registry32", script)
         self.assertIn("RegistryView]::Registry64", script)
         self.assertIn("DeleteValue('InstallDir',$false)", script)
+        self.assertIn("RegistryHive]::CurrentUser", script)
+        self.assertIn("RegistryHive]::LocalMachine", script)
+        self.assertIn("Could not clear product InstallDir", script)
+        self.assertIn("GetValue('InstallDir',$null)", script)
 
     def test_installed_packages_start_as_an_ordinary_user_before_admin_uninstall(self):
         script = (ROOT / "test/smoke/windows-installer.ps1").read_text(encoding="utf-8")
