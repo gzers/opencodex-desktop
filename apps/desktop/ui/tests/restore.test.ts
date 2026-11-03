@@ -9,6 +9,7 @@ vi.mock('@tauri-apps/api/core', () => ({
 import { createRestoreBackup, getRestoreRiskSummary } from '@/features/updates/upgrade'
 import { useAppController } from '@/composables/useAppController'
 import { useAppStore } from '@/stores/app'
+import {useModalStore} from '@/app/modal/store'
 
 const summary = {
   guidance: {
@@ -96,6 +97,27 @@ describe('official restore guidance', () => {
     expect(app.modal?.title).toBe('恢复前确认')
     expect(app.modal?.body).not.toContain('<code>ocx restore</code>')
     expect(invoke).toHaveBeenCalledTimes(2)
+  })
+
+  it.each(['success','failure'] as const)('does not reopen a cancelled preparation after late %s',async outcome=>{
+    let resolve!:(value:unknown)=>void,reject!:(error:Error)=>void
+    invoke.mockReturnValueOnce(new Promise((yes,no)=>{resolve=yes;reject=no}))
+    const controller=useAppController(),app=useAppStore(),pending=controller.openRestoreConfirm('at_risk')
+    expect(app.modal?.title).toBe('正在准备恢复确认');useModalStore().resolve('cancel')
+    if(outcome==='success')resolve(summary);else reject(Error('late fixture failure'))
+    await pending;expect(app.modal).toBeNull();expect(invoke).not.toHaveBeenCalledWith('create_restore_backup')
+  })
+  it('does not replace a newer dialog when the restore summary arrives',async()=>{
+    let finish!:(value:unknown)=>void;invoke.mockReturnValueOnce(new Promise(resolve=>{finish=resolve}))
+    const controller=useAppController(),app=useAppStore(),pending=controller.openRestoreConfirm('at_risk')
+    app.openModal({title:'Newer owned dialog',body:'Keep current work'});finish(summary);await pending
+    expect(app.modal?.title).toBe('Newer owned dialog')
+  })
+  it('does not resurrect guidance after a newer dialog was opened and closed while its backup was running',async()=>{
+    let finish!:(value:unknown)=>void;invoke.mockResolvedValueOnce(summary).mockReturnValueOnce(new Promise(resolve=>{finish=resolve}))
+    const app=useAppStore();await openRestore();useModalStore().resolve('confirm');await vi.waitFor(()=>expect(invoke).toHaveBeenCalledWith('create_restore_backup'))
+    app.openModal({title:'Different work',body:'Do not replace'});useModalStore().resolve('cancel');finish(backup)
+    await vi.waitFor(()=>expect(app.restoreBusy).toBe(false));await Promise.resolve();expect(app.modal).toBeNull()
   })
 
   async function openRestore() {
