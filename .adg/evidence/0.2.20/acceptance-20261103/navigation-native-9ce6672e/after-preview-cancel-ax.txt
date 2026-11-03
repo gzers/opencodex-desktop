@@ -1,0 +1,380 @@
+Window: "", App: OpenCodeX Navigation Acceptance.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#models
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 button 概览
+				7 button 面板
+				8 button 模型
+				9 button 拓展
+				10 button 同步
+				11 button 诊断
+				12 button 设置
+			13 container
+				14 heading 模型配置, Value: 1
+					15 text 模型配置
+				16 text 管理渠道模型、模版与选择器顺序。
+				17 container 主题
+					18 button 浅色
+					19 button 深色
+					20 button 跟随系统
+				21 text 未发现
+				22 button 刷新状态
+				23 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+				24 tab group (selectable) 模型配置
+					25 tab (selectable) 渠道模型
+					26 tab (selected) 模型模版
+				27 button 返回
+				28 text 内置
+				29 text field (settable) 模版名称, Value: GPT
+				30 text 编辑基于 2026-10-13 08:00:00 · 2F41
+				31 button 与版本比较
+				32 button 版本管理
+				33 text 未修改
+				34 container 模版导航
+					35 button (expanded) 收起模版导航, Secondary Actions: Collapse
+					36 link 基本信息, Value: tauri://localhost#model-basic
+					37 link 匹配规则, Value: tauri://localhost#model-matching
+					38 link 通用配置, Value: tauri://localhost#model-rules
+					39 link 版本或后缀, Value: tauri://localhost#model-variants
+					40 link 来源与版本, Value: tauri://localhost#model-source
+					41 button (collapsed) Agent自动填充, Secondary Actions: Expand
+					42 button 外部任务
+					43 button 复制模版, Help: 以当前编辑内容新建独立模版
+					44 button (disabled) 还原修改
+					45 button (disabled) 保存
+				46 heading 基本信息, Value: 2
+					47 text 基本信息
+				48 container
+					49 text 说明
+					50 text entry area (settable) 说明, Value: [text entry area]
+						51 text (settable) 基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。
+				52 container
+					53 checkbox 锁定说明, Value: 0
+					54 text 锁定说明
+				55 heading 匹配规则, Value: 2
+					56 text 匹配规则
+				57 button 匹配预览
+				58 text 包含
+				59 button 添加规则
+				60 pop up button 匹配类型
+				61 text field (settable) include规则1, Value: gpt-6-astra, Placeholder: 原始模型ID或匹配文本
+				62 button 移除
+				63 pop up button 匹配类型
+				64 text field (settable) include规则2, Value: gpt-6-luna, Placeholder: 原始模型ID或匹配文本
+				65 button 移除
+				66 pop up button 匹配类型
+				67 text field (settable) include规则3, Value: gpt-6-sol, Placeholder: 原始模型ID或匹配文本
+				68 button 移除
+				69 pop up button 匹配类型
+				70 text field (settable) include规则4, Value: gpt-6.1-sol, Placeholder: 原始模型ID或匹配文本
+				71 button 移除
+				72 text 排除
+				73 button 添加规则
+				74 container
+					75 checkbox 区分大小写, Value: 1
+					76 text 区分大小写
+				77 container
+					78 text 渠道范围
+					79 pop up button 渠道范围
+				80 container
+					81 text 优先级
+					82 number field (settable) 优先级, Value: 0
+						83 stepper 0
+							84 unknown
+							85 unknown
+				86 heading 通用配置, Value: 2
+					87 text 通用配置
+				88 container
+					89 heading 协议与基本能力, Value: 3
+						90 text 协议与基本能力
+					91 text 本层只定义可复用规则；继承值由模版、渠道及上游声明解析。未选择具体目标时，不推测最终能力。 协议
+					92 pop up button 协议
+					93 text 上下文预设
+					94 pop up button 上下文预设
+					95 text 上下文窗口（tokens）
+					96 number field (settable) 上下文窗口（tokens）, Placeholder: 继承
+						97 stepper 0
+							98 unknown
+							99 unknown
+					100 text 输入模态
+					101 checkbox 继承, Value: 1
+					102 text 继承
+					103 heading 推理与快速模式, Value: 3
+						104 text 推理与快速模式
+					105 text 可选推理档位
+					106 checkbox 继承, Value: 1
+					107 text 继承 继承保留父层规则；自定义只覆盖本字段。默认档位独立选择，未知能力不能由名称或目录推断。 默认推理档位
+					108 pop up button 默认推理档位
+					109 text Fast支持
+					110 pop up button Fast支持
+					111 summary 高级推理设置, Value: off
+						112 text 高级推理设置
+					113 summary 人工锁, Value: off
+						114 text 人工锁
+				115 heading 版本或后缀, Value: 2
+					116 text 版本或后缀
+				117 button 新增版本或后缀
+				118 container 协议与基本能力
+					119 container
+						120 text 名称
+						121 text field (settable) 名称, Value: gpt-6-astra
+					122 container
+						123 text 原始ID字面后缀
+						124 text field (settable) 原始ID字面后缀, Value: gpt-6-astra
+					125 container
+						126 heading 协议与基本能力, Value: 3
+							127 text 协议与基本能力
+						128 text 本层只定义可复用规则；继承值由模版、渠道及上游声明解析。未选择具体目标时，不推测最终能力。 协议
+						129 pop up button 协议
+						130 text 上下文预设
+						131 pop up button 上下文预设
+						132 text 上下文窗口（tokens）
+						133 number field (settable) 上下文窗口（tokens）, Value: 1050000, Placeholder: 继承
+							134 stepper 0
+								135 unknown
+								136 unknown
+						137 text 输入模态
+						138 checkbox 继承, Value: 0
+						139 text 继承
+						140 checkbox 文本, Value: 1
+						141 text 文本
+						142 checkbox 图像, Value: 1
+						143 text 图像
+						144 checkbox 音频, Value: 0
+						145 text 音频
+						146 checkbox 视频, Value: 0
+						147 text 视频
+						148 heading 推理与快速模式, Value: 3
+							149 text 推理与快速模式
+						150 text 可选推理档位
+						151 checkbox 继承, Value: 0
+						152 text 继承
+						153 checkbox none, Value: 0
+						154 text none
+						155 checkbox minimal, Value: 0
+						156 text minimal
+						157 checkbox low, Value: 1
+						158 text low
+						159 checkbox medium, Value: 1
+						160 text medium
+						161 checkbox high, Value: 1
+						162 text high
+						163 checkbox xhigh, Value: 1
+						164 text xhigh
+						165 checkbox max, Value: 1
+						166 text max
+						167 checkbox ultra, Value: 0
+						168 text ultra 继承保留父层规则；自定义只覆盖本字段。默认档位独立选择，未知能力不能由名称或目录推断。 默认推理档位
+						169 pop up button 默认推理档位
+						170 text Fast支持
+						171 pop up button Fast支持
+						172 summary 高级推理设置, Value: off
+							173 text 高级推理设置
+						174 summary 人工锁, Value: off
+							175 text 人工锁
+					176 button 移除此项
+				177 container 协议与基本能力
+					178 container
+						179 text 名称
+						180 text field (settable) 名称, Value: gpt-6.1-sol
+					181 container
+						182 text 原始ID字面后缀
+						183 text field (settable) 原始ID字面后缀, Value: gpt-6.1-sol
+					184 container
+						185 heading 协议与基本能力, Value: 3
+							186 text 协议与基本能力
+						187 text 本层只定义可复用规则；继承值由模版、渠道及上游声明解析。未选择具体目标时，不推测最终能力。 协议
+						188 pop up button 协议
+						189 text 上下文预设
+						190 pop up button 上下文预设
+						191 text 上下文窗口（tokens）
+						192 number field (settable) 上下文窗口（tokens）, Value: 1050000, Placeholder: 继承
+							193 stepper 0
+								194 unknown
+								195 unknown
+						196 text 输入模态
+						197 checkbox 继承, Value: 0
+						198 text 继承
+						199 checkbox 文本, Value: 1
+						200 text 文本
+						201 checkbox 图像, Value: 1
+						202 text 图像
+						203 checkbox 音频, Value: 0
+						204 text 音频
+						205 checkbox 视频, Value: 0
+						206 text 视频
+						207 heading 推理与快速模式, Value: 3
+							208 text 推理与快速模式
+						209 text 可选推理档位
+						210 checkbox 继承, Value: 0
+						211 text 继承
+						212 checkbox none, Value: 0
+						213 text none
+						214 checkbox minimal, Value: 0
+						215 text minimal
+						216 checkbox low, Value: 1
+						217 text low
+						218 checkbox medium, Value: 1
+						219 text medium
+						220 checkbox high, Value: 1
+						221 text high
+						222 checkbox xhigh, Value: 1
+						223 text xhigh
+						224 checkbox max, Value: 1
+						225 text max
+						226 checkbox ultra, Value: 0
+						227 text ultra 继承保留父层规则；自定义只覆盖本字段。默认档位独立选择，未知能力不能由名称或目录推断。 默认推理档位
+						228 pop up button 默认推理档位
+						229 text Fast支持
+						230 pop up button Fast支持
+						231 summary 高级推理设置, Value: off
+							232 text 高级推理设置
+						233 summary 人工锁, Value: off
+							234 text 人工锁
+					235 button 移除此项
+				236 container 协议与基本能力
+					237 container
+						238 text 名称
+						239 text field (settable) 名称, Value: gpt-6-luna
+					240 container
+						241 text 原始ID字面后缀
+						242 text field (settable) 原始ID字面后缀, Value: gpt-6-luna
+					243 container
+						244 heading 协议与基本能力, Value: 3
+							245 text 协议与基本能力
+						246 text 本层只定义可复用规则；继承值由模版、渠道及上游声明解析。未选择具体目标时，不推测最终能力。 协议
+						247 pop up button 协议
+						248 text 上下文预设
+						249 pop up button 上下文预设
+						250 text 上下文窗口（tokens）
+						251 number field (settable) 上下文窗口（tokens）, Value: 1050000, Placeholder: 继承
+							252 stepper 0
+								253 unknown
+								254 unknown
+						255 text 输入模态
+						256 checkbox 继承, Value: 0
+						257 text 继承
+						258 checkbox 文本, Value: 1
+						259 text 文本
+						260 checkbox 图像, Value: 1
+						261 text 图像
+						262 checkbox 音频, Value: 0
+						263 text 音频
+						264 checkbox 视频, Value: 0
+						265 text 视频
+						266 heading 推理与快速模式, Value: 3
+							267 text 推理与快速模式
+						268 text 可选推理档位
+						269 checkbox 继承, Value: 0
+						270 text 继承
+						271 checkbox none, Value: 1
+						272 text none
+						273 checkbox minimal, Value: 0
+						274 text minimal
+						275 checkbox low, Value: 1
+						276 text low
+						277 checkbox medium, Value: 1
+						278 text medium
+						279 checkbox high, Value: 1
+						280 text high
+						281 checkbox xhigh, Value: 1
+						282 text xhigh
+						283 checkbox max, Value: 1
+						284 text max
+						285 checkbox ultra, Value: 0
+						286 text ultra 继承保留父层规则；自定义只覆盖本字段。默认档位独立选择，未知能力不能由名称或目录推断。 默认推理档位
+						287 pop up button 默认推理档位
+						288 text Fast支持
+						289 pop up button Fast支持
+						290 summary 高级推理设置, Value: off
+							291 text 高级推理设置
+						292 summary 人工锁, Value: off
+							293 text 人工锁
+					294 button 移除此项
+				295 container 协议与基本能力
+					296 container
+						297 text 名称
+						298 text field (settable) 名称, Value: gpt-6-sol
+					299 container
+						300 text 原始ID字面后缀
+						301 text field (settable) 原始ID字面后缀, Value: gpt-6-sol
+					302 container
+						303 heading 协议与基本能力, Value: 3
+							304 text 协议与基本能力
+						305 text 本层只定义可复用规则；继承值由模版、渠道及上游声明解析。未选择具体目标时，不推测最终能力。 协议
+						306 pop up button 协议
+						307 text 上下文预设
+						308 pop up button 上下文预设
+						309 text 上下文窗口（tokens）
+						310 number field (settable) 上下文窗口（tokens）, Value: 1050000, Placeholder: 继承
+							311 stepper 0
+								312 unknown
+								313 unknown
+						314 text 输入模态
+						315 checkbox 继承, Value: 0
+						316 text 继承
+						317 checkbox 文本, Value: 1
+						318 text 文本
+						319 checkbox 图像, Value: 1
+						320 text 图像
+						321 checkbox 音频, Value: 0
+						322 text 音频
+						323 checkbox 视频, Value: 0
+						324 text 视频
+						325 heading 推理与快速模式, Value: 3
+							326 text 推理与快速模式
+						327 text 可选推理档位
+						328 checkbox 继承, Value: 0
+						329 text 继承
+						330 checkbox none, Value: 1
+						331 text none
+						332 checkbox minimal, Value: 0
+						333 text minimal
+						334 checkbox low, Value: 1
+						335 text low
+						336 checkbox medium, Value: 1
+						337 text medium
+						338 checkbox high, Value: 1
+						339 text high
+						340 checkbox xhigh, Value: 1
+						341 text xhigh
+						342 checkbox max, Value: 1
+						343 text max
+						344 checkbox ultra, Value: 0
+						345 text ultra 继承保留父层规则；自定义只覆盖本字段。默认档位独立选择，未知能力不能由名称或目录推断。 默认推理档位
+						346 pop up button 默认推理档位
+						347 text Fast支持
+						348 pop up button Fast支持
+						349 summary 高级推理设置, Value: off
+							350 text 高级推理设置
+						351 summary 人工锁, Value: off
+							352 text 人工锁
+					353 button 移除此项
+				354 heading 来源与版本, Value: 2
+					355 text 来源与版本
+				356 text 基于已保存版本编辑；保存产生独立版本。
+				357 text 2f415ab0-e93f-400d-b4a8-8539bfc87903
+				358 summary variants.2660fb7c-dcb3-43c4-bbfe-f5fd2a3e6c9b · 2026-10-13, Value: off
+					359 text variants.2660fb7c-dcb3-43c4-bbfe-f5fd2a3e6c9b · 2026-10-13
+				360 summary variants.2660fb7c-dcb3-43c4-bbfe-f5fd2a3e6c9b · 2026-10-13, Value: off
+					361 text variants.2660fb7c-dcb3-43c4-bbfe-f5fd2a3e6c9b · 2026-10-13
+				362 summary variants.549f12b2-2f58-434d-bf98-814a4935bf20 · 2026-10-13, Value: off
+					363 text variants.549f12b2-2f58-434d-bf98-814a4935bf20 · 2026-10-13
+				364 summary variants.8112514a-ce72-47b8-bb40-c2d6bc22d3a7 · 2026-10-13, Value: off
+					365 text variants.8112514a-ce72-47b8-bb40-c2d6bc22d3a7 · 2026-10-13
+				366 summary variants.fdcb0aa3-7513-4f79-a5d4-247e233adde5 · 2026-10-13, Value: off
+					367 text variants.fdcb0aa3-7513-4f79-a5d4-247e233adde5 · 2026-10-13
+	368 close button
+	369 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	370 minimize button
+371 menu bar
+	372 OpenCodeX Navigation Acceptance
+	373 进程
+	374 编辑
+	375 视图
+	376 诊断
+
+The focused UI element is 377 container

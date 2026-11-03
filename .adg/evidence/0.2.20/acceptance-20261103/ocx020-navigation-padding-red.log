@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/detail-workspace.test.ts (6 tests | 1 failed) 202ms
+   ❯ shared continuous detail workspace (5)
+     × does not keep lifting a navigation already sticky at a padded scrollport boundary 104ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/detail-workspace.test.ts > shared continuous detail workspace > does not keep lifting a navigation already sticky at a padded scrollport boundary
+AssertionError: expected 1800 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1800
+
+ ❯ tests/detail-workspace.test.ts:31:26
+     29|   main.getBoundingClientRect=()=>({top:100,bottom:326,height:1200} as …
+     30|   window.dispatchEvent(new Event('resize'));drain()
+     31|   expect(main.scrollTop).toBe(0);wrapper.unmount()
+       |                          ^
+     32|  })
+     33|  it('reveals a zoom-constrained workspace without repeatedly scrolling…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  19:35:26
+   Duration  476ms (tests 48%, environment 33%, transform 13%, import 6%)
+
