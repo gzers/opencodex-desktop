@@ -1,0 +1,38 @@
+name: Isolated official runtime contract
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/0.2.20-owned-official-contract]
+permissions:
+  contents: read
+jobs:
+  official-contract:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install pinned official into an owned empty home
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/official-contract/home" "$RUNNER_TEMP/official-contract/install"
+          touch "$RUNNER_TEMP/official-contract/user.npmrc" "$RUNNER_TEMP/official-contract/global.npmrc"
+          HOME="$RUNNER_TEMP/official-contract/home" npm_config_userconfig="$RUNNER_TEMP/official-contract/user.npmrc" npm_config_globalconfig="$RUNNER_TEMP/official-contract/global.npmrc" npm_config_cache="$RUNNER_TEMP/official-contract/cache" npm install --prefix "$RUNNER_TEMP/official-contract/install" --ignore-scripts --no-audit --no-fund @bitkyc08/opencodex@2.84.0 @openai/codex@0.166.0
+          echo "OCXD_TEST_OFFICIAL_ENTRY=$RUNNER_TEMP/official-contract/install/node_modules/@bitkyc08/opencodex/bin/ocx.mjs" >> "$GITHUB_ENV"
+          echo "OCXD_TEST_OFFICIAL_NODE=$(command -v node)" >> "$GITHUB_ENV"
+          echo "OCXD_TEST_CODEX_BIN=$RUNNER_TEMP/official-contract/install/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex" >> "$GITHUB_ENV"
+      - name: Run actual official contracts against loopback fixtures
+        working-directory: apps/desktop/tauri
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo test --locked --test model_config_official_real isolated_official_ -- --ignored --test-threads=1 --nocapture 2>&1 | tee "$RUNNER_TEMP/official-contract/result.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isolated-official-contract
+          path: ${{ runner.temp }}/official-contract/result.log
+          if-no-files-found: error
