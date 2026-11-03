@@ -48,20 +48,32 @@ function Clear-ProductRememberedInstallDirectory {
     # WiX AppSearch restores the remembered location before resolving INSTALLDIR.
     # Clear only this product-owned value in both views/hives, then prove it is
     # absent so a later MSI command cannot silently be redirected by stale state.
-    foreach($hive in @([Microsoft.Win32.RegistryHive]::CurrentUser,[Microsoft.Win32.RegistryHive]::LocalMachine)){
-      foreach($view in @([Microsoft.Win32.RegistryView]::Registry32,[Microsoft.Win32.RegistryView]::Registry64)){
+    $locations=[System.Collections.Generic.List[string]]::new()
+    foreach($view in @([Microsoft.Win32.RegistryView]::Registry32,[Microsoft.Win32.RegistryView]::Registry64)){
+      foreach($hive in @([Microsoft.Win32.RegistryHive]::CurrentUser,[Microsoft.Win32.RegistryHive]::LocalMachine)){
         $base=[Microsoft.Win32.RegistryKey]::OpenBaseKey($hive,$view)
         try{
-          $key=$base.OpenSubKey('Software\gzers\OpenCodeX Desktop',$true)
-          if($key){try{$key.DeleteValue('InstallDir',$false)}finally{$key.Dispose()}}
-          $verify=$base.OpenSubKey('Software\gzers\OpenCodeX Desktop',$false)
-          if($verify){
-            try{if($null -ne $verify.GetValue('InstallDir',$null)){throw "Could not clear product InstallDir from $hive ($view)"}}
-            finally{$verify.Dispose()}
-          }
+          $subkey='Software\gzers\OpenCodeX Desktop'
+          $key=$base.OpenSubKey($subkey,$true)
+          if($key){try{if($null -ne $key.GetValue('InstallDir',$null)){$locations.Add("$hive\$subkey ($view)");$key.DeleteValue('InstallDir',$false)}}finally{$key.Dispose()}}
+          $verify=$base.OpenSubKey($subkey,$false)
+          if($verify){try{if($null -ne $verify.GetValue('InstallDir',$null)){throw "Could not clear product InstallDir from $hive ($view)"}}finally{$verify.Dispose()}}
         }finally{$base.Dispose()}
       }
+      # MSI AppSearch can run against a user hive left loaded by a prior
+      # per-user install. Enumerate loaded hives but touch only this product key.
+      $users=[Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::Users,$view)
+      try{
+        foreach($sid in $users.GetSubKeyNames() | Where-Object {$_ -match '^S-1-' -and $_ -notmatch '_Classes$'}){
+          $subkey="$sid\Software\gzers\OpenCodeX Desktop"
+          $key=$users.OpenSubKey($subkey,$true)
+          if($key){try{if($null -ne $key.GetValue('InstallDir',$null)){$locations.Add("HKEY_USERS\$subkey ($view)");$key.DeleteValue('InstallDir',$false)}}finally{$key.Dispose()}}
+          $verify=$users.OpenSubKey($subkey,$false)
+          if($verify){try{if($null -ne $verify.GetValue('InstallDir',$null)){throw "Could not clear product InstallDir from HKEY_USERS\$subkey ($view)"}}finally{$verify.Dispose()}}
+        }
+      }finally{$users.Dispose()}
     }
+    return @($locations)
 }
 try {
     # No /D or INSTALLDIR override: exercise the installer's actual default/remembered path.
@@ -74,8 +86,9 @@ try {
         if($package.Count -ne 1){throw 'Exact default installer package missing'}
         if($kind -eq 'nsis'){[void](Invoke-Installer $package[0].FullName '/S')}
         else{
-            Clear-ProductRememberedInstallDirectory
+            $entryCleanup = Clear-ProductRememberedInstallDirectory
             [void](Invoke-Installer 'msiexec.exe' ('/i "'+$package[0].FullName+'" /qn /norestart'))
+            $taskResult.defaultMsiRegistryCleanup = @($entryCleanup)
         }
         $defaultRoot=Find-DefaultInstalledDirectory
         try{
@@ -121,7 +134,7 @@ try {
         if ($kind -eq 'nsis') {
             $entry.installExitCode = Invoke-Installer $package.FullName ('/S /D=' + $installRoot)
         } else {
-            Clear-ProductRememberedInstallDirectory
+            $entry.registryCleanup = @(Clear-ProductRememberedInstallDirectory)
             $entry.installExitCode = Invoke-Installer 'msiexec.exe' ('/i "' + $package.FullName + '" /qn /norestart INSTALLDIR="' + $installRoot + '" /L*v "' + $installLog + '"')
         }
         try {
