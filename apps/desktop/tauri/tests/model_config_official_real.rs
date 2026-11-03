@@ -84,22 +84,36 @@ fn free_port() -> u16 {
         .port()
 }
 
-fn seed_installed_catalog(entry: &Path, codex_home: &Path) {
-    // A fresh isolated HOME has neither an installed Codex runtime nor its
-    // catalog. Use the exact native metadata shipped in this installed official
-    // package; otherwise sync correctly refuses a missing catalog source.
-    let source = entry
-        .parent()
-        .unwrap()
-        .parent()
-        .unwrap()
-        .join("src/codex/data/upstream-models.json");
-    let bytes = std::fs::read(&source).expect("installed official catalog fixture");
-    let catalog: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+async fn seed_native_catalog(codex_home: &Path) -> std::path::PathBuf {
+    // The official package's upstream-models.json is a metadata summary, not a
+    // native catalog: it has no base_instructions and cannot admit convergence.
+    // Read the real bundled catalog from an explicitly installed owned binary.
+    let binary = std::path::PathBuf::from(
+        std::env::var_os("OCXD_TEST_CODEX_BIN").expect("set the owned Codex binary"),
+    );
+    assert!(binary.is_absolute() && binary.is_file());
+    let mut command = tokio::process::Command::new(&binary);
+    command
+        .args(["debug", "models", "--bundled"])
+        .env_clear()
+        .env("HOME", codex_home.parent().unwrap())
+        .env("CODEX_HOME", codex_home)
+        .current_dir(codex_home)
+        .kill_on_drop(true);
+    let output = tokio::time::timeout(Duration::from_secs(25), command.output())
+        .await
+        .expect("owned catalog probe timed out")
+        .unwrap();
+    assert!(output.status.success(), "owned bundled catalog unavailable");
+    let catalog: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert!(catalog["models"]
         .as_array()
-        .is_some_and(|rows| !rows.is_empty()));
-    std::fs::write(codex_home.join("opencodex-catalog.json"), bytes).unwrap();
+        .is_some_and(|rows| rows.iter().any(|row| row["slug"]
+            .as_str()
+            .is_some_and(|slug| !slug.contains('/'))
+            && row.get("base_instructions").is_some())));
+    std::fs::write(codex_home.join("opencodex-catalog.json"), output.stdout).unwrap();
+    binary
 }
 
 async fn history_plan(
@@ -156,7 +170,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     for path in [&user, &upstream_home, &manager, &codex, &xdg] {
         std::fs::create_dir_all(path).unwrap();
     }
-    seed_installed_catalog(&entry, &codex);
+    let codex_binary = seed_native_catalog(&codex).await;
     let listener = tokio::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
         .await
         .unwrap();
@@ -178,7 +192,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     let wrapper = root.path().join("ocx");
     let fail_sync = root.path().join("fail-sync");
     let provider_receipt = root.path().join("provider-apply-receipt.txt");
-    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nif [ \"$1\" = sync ] && [ -f {} ]; then exit 17; fi\nif [ \"$1\" = provider ] && [ \"$2\" = apply ]; then {} {} \"$@\" >{} 2>&1; result=$?; /bin/cat {}; exit $result; fi\nexec {} {} \"$@\"\n",quote(&user),quote(&codex),quote(&xdg),quote(&fail_sync),quote(&node),quote(&entry),quote(&provider_receipt),quote(&provider_receipt),quote(&node),quote(&entry))).unwrap();
+    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nexport CODEX_CLI_PATH={}\nif [ \"$1\" = sync ] && [ -f {} ]; then exit 17; fi\nif [ \"$1\" = provider ] && [ \"$2\" = apply ]; then {} {} \"$@\" >{} 2>&1; result=$?; /bin/cat {}; exit $result; fi\nexec {} {} \"$@\"\n",quote(&user),quote(&codex),quote(&xdg),quote(&codex_binary),quote(&fail_sync),quote(&node),quote(&entry),quote(&provider_receipt),quote(&provider_receipt),quote(&node),quote(&entry))).unwrap();
     std::fs::set_permissions(&wrapper, std::fs::Permissions::from_mode(0o700)).unwrap();
     let mut command = tokio::process::Command::new(&wrapper);
     command
@@ -1776,7 +1790,7 @@ async fn isolated_official_saved_protocol_alias_reasoning_and_fast_wire() {
     for p in [&home, &manager, &user.join(".codex"), &user.join(".config")] {
         std::fs::create_dir_all(p).unwrap();
     }
-    seed_installed_catalog(&entry, &user.join(".codex"));
+    let codex_binary = seed_native_catalog(&user.join(".codex")).await;
     let seen = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
     let captured = seen.clone();
     let service=axum::Router::new().route("/v1/models",axum::routing::get(||async{axum::Json(json!({"object":"list","data":[{"id":"wire-response","object":"model"},{"id":"wire-chat","object":"model"},{"id":"wire-anthropic","object":"model"}]}))})).fallback(move|request:axum::extract::Request|{
@@ -1805,7 +1819,7 @@ async fn isolated_official_saved_protocol_alias_reasoning_and_fast_wire() {
     ];
     std::fs::write(home.join("config.json"),serde_json::to_vec(&json!({"port":port,"hostname":"127.0.0.1","defaultProvider":"fixture","providers":{"fixture":{"adapter":"openai-responses","authMode":"key","baseUrl":base,"apiKey":"fixture-wire-only-key","models":raw_ids,"liveModels":false,"allowPrivateNetwork":true,"newModelPolicy":"off","selectedModels":raw_ids}},"claudeCode":{"systemEnv":false,"enabled":false},"clientIntegrations":{"codex":true,"grok":false,"claude":false},"syncResumeHistory":false,"serviceHealthRecovery":{"enabled":false},"oauthOpenBrowser":false})).unwrap()).unwrap();
     let wrapper = root.path().join("ocx");
-    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nexec {} {} \"$@\"\n",quote(&user),quote(&user.join(".codex")),quote(&user.join(".config")),quote(&node),quote(&entry))).unwrap();
+    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nexport CODEX_CLI_PATH={}\nexec {} {} \"$@\"\n",quote(&user),quote(&user.join(".codex")),quote(&user.join(".config")),quote(&codex_binary),quote(&node),quote(&entry))).unwrap();
     std::fs::set_permissions(&wrapper, std::fs::Permissions::from_mode(0o700)).unwrap();
     let mut command = tokio::process::Command::new(&wrapper);
     command

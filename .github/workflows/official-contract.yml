@@ -20,9 +20,10 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/official-contract/home" "$RUNNER_TEMP/official-contract/install"
           touch "$RUNNER_TEMP/official-contract/user.npmrc" "$RUNNER_TEMP/official-contract/global.npmrc"
-          HOME="$RUNNER_TEMP/official-contract/home" npm_config_userconfig="$RUNNER_TEMP/official-contract/user.npmrc" npm_config_globalconfig="$RUNNER_TEMP/official-contract/global.npmrc" npm_config_cache="$RUNNER_TEMP/official-contract/cache" npm install --prefix "$RUNNER_TEMP/official-contract/install" --ignore-scripts --no-audit --no-fund @bitkyc08/opencodex@2.84.0
+          HOME="$RUNNER_TEMP/official-contract/home" npm_config_userconfig="$RUNNER_TEMP/official-contract/user.npmrc" npm_config_globalconfig="$RUNNER_TEMP/official-contract/global.npmrc" npm_config_cache="$RUNNER_TEMP/official-contract/cache" npm install --prefix "$RUNNER_TEMP/official-contract/install" --ignore-scripts --no-audit --no-fund @bitkyc08/opencodex@2.84.0 @openai/codex@0.166.0
           echo "OCXD_TEST_OFFICIAL_ENTRY=$RUNNER_TEMP/official-contract/install/node_modules/@bitkyc08/opencodex/bin/ocx.mjs" >> "$GITHUB_ENV"
           echo "OCXD_TEST_OFFICIAL_NODE=$(command -v node)" >> "$GITHUB_ENV"
+          echo "OCXD_TEST_CODEX_BIN=$RUNNER_TEMP/official-contract/install/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex" >> "$GITHUB_ENV"
       - name: Run actual official contracts against loopback fixtures
         working-directory: apps/desktop/tauri
         shell: bash
