@@ -83,11 +83,12 @@ const officialNotes = computed<string | null>(() => officialAvailable.value ? '�
 const showingProgress = computed(() => selected.value === 'manager'
   ? managerBusy.value || pendingRestart.value || !!session.managerError || progress.value?.stage === 'failed'
   : selected.value === 'official' && (!!session.officialCandidate || officialBusy.value || officialFailed.value))
-const selectedTitle = computed(() => (selected.value === 'manager' ? '桌面管理器' : 'OpenCodex 面板') + (showingProgress.value ? '更新进度' : '更新详情与确认'))
+const selectedAvailable = computed(() => selected.value === 'manager' ? managerAvailable.value : officialAvailable.value)
+const selectedTitle = computed(() => (selected.value === 'manager' ? '桌面管理器' : 'OpenCodex 面板') + (showingProgress.value ? '更新进度' : selectedAvailable.value ? '更新详情与确认' : '更新详情'))
 const selectedCurrent = computed(() => selected.value === 'manager' ? showingProgress.value && session.managerCurrent || status.value?.currentVersion || app.aboutApp?.version || '未知' : showingProgress.value && session.officialCurrent || app.officialProject?.version || '未知')
 const selectedCandidate = computed(() => selected.value === 'manager'
-  ? showingProgress.value ? progress.value?.candidateVersion || status.value?.pendingRestart || session.managerCandidate || status.value?.availableVersion : status.value?.availableVersion
-  : showingProgress.value ? session.officialCandidate || app.officialRemote?.version : app.officialRemote?.version)
+  ? showingProgress.value ? progress.value?.candidateVersion || status.value?.pendingRestart || session.managerCandidate || status.value?.availableVersion : hasNewerVersion(status.value?.currentVersion ?? null, status.value?.availableVersion ?? null) === false ? null : status.value?.availableVersion
+  : showingProgress.value ? session.officialCandidate || app.officialRemote?.version : hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote?.version ?? null) === false ? null : app.officialRemote?.version)
 
 const selectedSource = computed(() => selected.value === 'manager' ? 'OpenCodex Desktop · ' + (status.value?.channel === 'beta' ? '测试' : '稳定') + '通道' : '官方项目 · @bitkyc08/opencodex')
 const managerUnavailableText = computed(() => session.managerError || progress.value?.stage === 'failed' ? '上次安装未完成，可进入详情重试。' : status.value?.availableVersion && hasNewerVersion(status.value.currentVersion, status.value.availableVersion) === null ? '无法比较版本。' : pendingRestart.value ? '更新已准备就绪，请进入详情重启。' : status.value?.lastCheckedAt ? '当前没有待确认的更新。' : '尚未检查。')
@@ -248,11 +249,11 @@ defineExpose({ check })
           <section v-else class="update-object" :data-testid="selected + '-update-card'">
             <div v-if="!showingProgress" class="update-result-heading"><span>版本升级</span><span class="tag">{{ selected === 'manager' ? managerResult : officialResult }}</span></div>
             <div class="update-version-hero"><span>{{ selectedCurrent }}</span><template v-if="selectedCandidate"><span aria-hidden="true">→</span><strong>{{ selectedCandidate }}</strong></template></div>
-            <p class="update-hint">{{ selectedSource }}<template v-if="!showingProgress"> · {{ selected === 'manager' ? '安装后需重启管理器' : '更新已登记的面板包体' }}</template></p>
+            <p class="update-hint">{{ selectedSource }}<template v-if="!showingProgress && selectedAvailable"> · {{ selected === 'manager' ? '安装后需重启管理器' : '更新已登记的面板包体' }}</template></p>
               <p v-if="selected === 'official' && officialQueryError" class="update-error update-query-error" role="status" data-testid="official-query-error">{{ officialQueryError }}</p>
             <p v-if="selected === 'manager' && (session.managerCheckError || status?.error)" class="update-error update-query-error" role="status">{{ session.managerCheckError || status?.error }}</p>
             <template v-if="!showingProgress">
-              <ReleaseNotes :target="selected" :channel="selected === 'manager' ? status?.channel ?? 'stable' : 'official'" :version="selectedCandidate ?? null" :updater-notes="selected === 'manager' ? status?.notes : null" />
+              <ReleaseNotes v-if="selectedCandidate" :target="selected" :channel="selected === 'manager' ? status?.channel ?? 'stable' : 'official'" :version="selectedCandidate" :updater-notes="selected === 'manager' ? status?.notes : null" />
               <div v-if="selected === 'manager' && managerAvailable" class="update-confirm-scope"><label class="update-backup"><input v-model="session.backup" type="checkbox" :disabled="managerBusy">更新前备份管理器偏好（建议）</label><p class="update-hint">保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。</p></div>
               <p v-if="selected === 'official' && officialAvailable" class="update-hint">面板升级前先备份配置；备份成功后才会安装选定版本。</p>
             </template>
@@ -274,7 +275,7 @@ defineExpose({ check })
         </div>
         <footer class="update-center-foot">
           <div class="update-object-actions">
-            <UiButton variant="ghost" aria-label="关闭更新中心" @click="close">{{ !selected ? '关闭' : !showingProgress ? '取消' : '关闭窗口' }}</UiButton>
+            <UiButton variant="ghost" aria-label="关闭更新中心" @click="close">{{ !selected || (!showingProgress && !selectedAvailable) ? '关闭' : !showingProgress ? '取消' : '关闭窗口' }}</UiButton>
             <UiButton v-if="selected === 'manager' && !showingProgress && managerAvailable" variant="primary" :disabled="busy" data-testid="install-manager-update" @click="installManager">确认更新</UiButton>
             <UiButton v-if="selected === 'official' && !showingProgress && officialAvailable" variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy" :loading="session.checking" data-testid="install-official-update" @click="installOfficial">备份并更新面板</UiButton>
           </div>
@@ -286,8 +287,9 @@ defineExpose({ check })
 
 <style scoped>
 /* §39：结果页每个对象一行、一屏看完；宽度 780px，正文不出现外层滚动套嵌套滚动。 */
-.update-center.modal { width: min(780px, 90%); max-height: calc(100% - 24px); padding: 0; display: flex; flex-direction: column; overflow: hidden; }
-.update-center-head, .update-center-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-5) var(--space-6); }
+/* Teleport 在主壳外，须与 UiDialog 一样独立消费唯一缩放因子并折算视口。 */
+.update-center.modal { zoom: var(--ui-zoom); width: min(780px, calc(100vw / var(--ui-zoom) - 40px)); max-height: calc(100vh / var(--ui-zoom) - 40px); padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+.update-center-head, .update-center-foot { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-5) var(--space-6); }
 .update-center-head { padding:24px 24px 12px; }
 .update-center-head h3 { margin: var(--space-1) 0; }
 .update-center-head p, .update-center-foot p { margin: 0; font-size: var(--text-label); color: var(--muted); }
@@ -295,10 +297,10 @@ defineExpose({ check })
 .update-center-body { overflow: auto; min-height: 0; padding:0 24px 18px; display: grid; gap: var(--space-3); }
 .update-result-rows { display: grid; gap: var(--space-2); }
 .update-result-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border:0; border-bottom:1px solid var(--border); border-radius:0; background:transparent; }
-.update-result-main { display: grid; grid-template-columns: minmax(150px,1.1fr) minmax(150px,1fr); gap: var(--space-1) var(--space-4); min-width: 0; }
-.update-result-title { grid-column: 1; display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
+.update-result-main { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: var(--space-1) var(--space-4); min-width: 0; }
+.update-result-title { grid-column: 1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); min-width: 0; }
 .update-result-title strong { overflow-wrap: anywhere; }
-.update-result-version { grid-column: 2; display: flex; align-items: baseline; gap: var(--space-2); font-size: var(--text-label); color: var(--muted); font-variant-numeric: tabular-nums; }
+.update-result-version { grid-column: 2; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2); font-size: var(--text-label); color: var(--muted); font-variant-numeric: tabular-nums; }
 .update-result-version b { color: var(--text); font-family: var(--font-code); overflow-wrap: anywhere; }
 .update-result-source { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: var(--text-caption); overflow-wrap: anywhere; }
 .update-result-summary { grid-column: 1 / -1; margin: 0; color: var(--text); font-size: var(--text-caption); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
