@@ -30,3 +30,6 @@ dmd_refs: [DMD-OPENCODEX-UI-020]
 ## 实际状态
 
 正在实施，尚未完成正式验收/发布；具体改动和剩余工作回写0.2.20-bugs.md第9节，本文件不另持有第二份问题状态。证据目录.adg/evidence/0.2.20/implementation-20261102，TASK.required_checks及RCP逐检查记录结果，保留所有失败轮次。未达到DMD完整验收前保持active。
+
+
+2026-11-03 用户追加100%缩放正常、标准字体偏大：共享字体增量采用body13/control12/subtitle15/title18/display22，micro/caption/label10/11/12保留。叠加冻结cfbd90c4b+1da4cabca，当前并行未来模块不纳入。实现及通过/失败回写原0.2.20-bugs；原型漏上级共享依赖已补正，不能把旧缺依赖截图作为完整视觉一致性证据。最终包/Windows/OTA按最后源码重新验收，整体继续active。

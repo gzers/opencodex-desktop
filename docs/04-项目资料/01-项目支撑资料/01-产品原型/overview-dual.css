@@ -18,7 +18,7 @@ html[data-route="overview"] .topbar { margin-bottom:14px; }
 .motion-identity { grid-row:2; grid-column:1; align-self:start; width:100%; text-align:center; min-width:0; max-width:100%; }
 .motion-heading { display:flex; align-items:center; justify-content:center; }
 .motion-detail-icon { display:inline-flex; align-items:center; justify-content:center; gap:6px; border:0; border-radius:6px; padding:2px 5px; background:transparent; color:var(--text); font:inherit; cursor:pointer; }
-.motion-mainline { font-size:23px; line-height:1.4; font-weight:650; }
+.motion-mainline { font-size:var(--text-display); line-height:1.4; font-weight:650; }
 .motion-detail-icon svg { color:var(--muted); width:14px; height:14px; opacity:.7; }
 .motion-detail-icon:hover svg { opacity:1; color:var(--text); }
 .motion-detail-icon:disabled { cursor:default; opacity:1; }
@@ -157,7 +157,7 @@ html[data-overview-size="compact"][data-route="overview"] .topbar { margin-botto
 html[data-overview-size="compact"] #route-overview.active { gap:10px; }
 html[data-overview-size="compact"] #card-overview-status .ovb-summary { height:222px; min-height:222px; grid-template-rows:128px 50px 44px; }
 html[data-overview-size="compact"] .motion-backdrop { --motion-overhang:66px; --motion-height:640px; }
-html[data-overview-size="compact"] .motion-mainline { font-size:21px; }
+html[data-overview-size="compact"] .motion-mainline { font-size:var(--text-title); }
 html[data-overview-size="compact"] .motion-caption { margin-top:2px; font-size:var(--text-caption); }
 html[data-overview-size="compact"] #card-overview-status .ovb-actions { padding-top:5px; gap:6px; }
 html[data-overview-size="compact"] #card-overview-status .ovb-actions>.btn { min-height:32px; font-size:var(--text-label); }

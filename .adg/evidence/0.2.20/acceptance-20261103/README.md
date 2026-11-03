@@ -186,3 +186,6 @@ PR62/98e779753032d5755bc6d951c7151a036c797f7c仅修正OTA验收工具：Tauri把
 ### 动态扩展与日志消费者补核（c691）
 
 通过真实生产按钮打开AppModal/input，显式内存适配写入动作：两引擎各48项/9截图，含Skill恢复空值/取消/失败、卸载取消/确认失败、MCP添加输入与边界确认取消/失败/成功、编辑确认失败、删除pending不得假成功/失败保原页，以及真实日志清理入口取消/失败/成功。没有执行真实扩展分发、MCP命令、日志删除。原驱动使用dialog[open]误定位AppModal、structuredClone无法复制Vue代理、未选择日志子tab的失败分别保留，修驱动后最后两报告completed=true。这里只补动态消费者状态，不将模拟成功当真实文件事务通过。字体hold及官方registration_unknown合同失败仍保持开放，实际OTA未执行。
+
+
+字体增量与原型依赖补正见../compact-typography-20261103/README.md。3e950b12的64项字号/引擎、Mac100/200%通过；完整Chromium原型启动失败、官方catalog合同及最终包/OTA未完成。旧漏上级共享CSS的原型截图不作为最终视觉一致性证据。

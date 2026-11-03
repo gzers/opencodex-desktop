@@ -1,0 +1,2320 @@
+{
+  "engine": "webkit",
+  "completed": true,
+  "failure": null,
+  "baseline": "cfbd90c4b+1da4cabca + explicit20261103compact typography decision",
+  "scope": "same100% default typography and150/200% geometry; native and final release still separate",
+  "checks": [
+    {
+      "key": "1180-100-light",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-100-light",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-100-light",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-100-light",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 218.125,
+        "width": 850,
+        "height": 323.734375
+      }
+    },
+    {
+      "key": "1180-100-light",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "1180-100-light",
+      "name": "frozen prototype adopted same type",
+      "passed": true,
+      "detail": {
+        "body": "13px",
+        "title": "22px",
+        "button": "12px",
+        "nav": "13px",
+        "caption": "11px"
+      }
+    },
+    {
+      "key": "1180-100-dark",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-100-dark",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-100-dark",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-100-dark",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 218.125,
+        "width": 850,
+        "height": 323.734375
+      }
+    },
+    {
+      "key": "1180-100-dark",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "1180-100-dark",
+      "name": "frozen prototype adopted same type",
+      "passed": true,
+      "detail": {
+        "body": "13px",
+        "title": "22px",
+        "button": "12px",
+        "nav": "13px",
+        "caption": "11px"
+      }
+    },
+    {
+      "key": "1180-150-light",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 309.28125
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-150-light",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 309.28125
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-150-light",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 309.28125
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-150-light",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 24,
+        "y": 138.4375,
+        "width": 1132,
+        "height": 483.125
+      }
+    },
+    {
+      "key": "1180-150-light",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "1180-150-dark",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 309.28125
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-150-dark",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 309.28125
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-150-dark",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 309.28125
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-150-dark",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 24,
+        "y": 138.4375,
+        "width": 1132,
+        "height": 483.125
+      }
+    },
+    {
+      "key": "1180-150-dark",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "1180-200-light",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 998
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-200-light",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 998
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-200-light",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 998
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-200-light",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 32,
+        "y": 56.25,
+        "width": 1116,
+        "height": 647.484375
+      }
+    },
+    {
+      "key": "1180-200-light",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "1180-200-dark",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 998
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-200-dark",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 998
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-200-dark",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 760,
+          "width": 1180
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 998
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "1180-200-dark",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 32,
+        "y": 56.25,
+        "width": 1116,
+        "height": 647.484375
+      }
+    },
+    {
+      "key": "1180-200-dark",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "900-100-light",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-100-light",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-100-light",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-100-light",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 138.125,
+        "width": 850,
+        "height": 323.734375
+      }
+    },
+    {
+      "key": "900-100-light",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "900-100-light",
+      "name": "frozen prototype adopted same type",
+      "passed": true,
+      "detail": {
+        "body": "13px",
+        "title": "22px",
+        "button": "12px",
+        "nav": "13px",
+        "caption": "11px"
+      }
+    },
+    {
+      "key": "900-100-dark",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-100-dark",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-100-dark",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 33,
+          "width": 206.390625
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 34,
+          "width": 73.6875
+        },
+        "zoom": "1",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-100-dark",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 138.125,
+        "width": 850,
+        "height": 323.734375
+      }
+    },
+    {
+      "key": "900-100-dark",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "900-100-dark",
+      "name": "frozen prototype adopted same type",
+      "passed": true,
+      "detail": {
+        "body": "13px",
+        "title": "22px",
+        "button": "12px",
+        "nav": "13px",
+        "caption": "11px"
+      }
+    },
+    {
+      "key": "900-150-light",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 765
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-150-light",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 765
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-150-light",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 765
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-150-light",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 24,
+        "y": 58.4375,
+        "width": 852,
+        "height": 483.125
+      }
+    },
+    {
+      "key": "900-150-light",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "900-150-dark",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 765
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-150-dark",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 765
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-150-dark",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 49.5,
+          "width": 765
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 51,
+          "width": 109.375
+        },
+        "zoom": "1.5",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-150-dark",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 24,
+        "y": 58.4375,
+        "width": 852,
+        "height": 483.125
+      }
+    },
+    {
+      "key": "900-150-dark",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "900-200-light",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 718
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-200-light",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 718
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-200-light",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 718
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-200-light",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 32,
+        "y": 40,
+        "width": 836,
+        "height": 520
+      }
+    },
+    {
+      "key": "900-200-light",
+      "name": "modal control uses compact type",
+      "passed": true
+    },
+    {
+      "key": "900-200-dark",
+      "name": "body13/title22/control12",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 718
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-200-dark",
+      "name": "navigation13/no extra zoom",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 718
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-200-dark",
+      "name": "viewport no horizontal overflow",
+      "passed": true,
+      "detail": {
+        "body": {
+          "fontSize": "13px",
+          "lineHeight": "19.5px",
+          "height": 600,
+          "width": 900
+        },
+        "title": {
+          "fontSize": "22px",
+          "lineHeight": "33px",
+          "height": 66,
+          "width": 718
+        },
+        "button": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "height": 68,
+          "width": 146.609375
+        },
+        "zoom": "2",
+        "labels": [
+          {
+            "text": "概览",
+            "fontSize": "13px"
+          },
+          {
+            "text": "面板",
+            "fontSize": "13px"
+          },
+          {
+            "text": "模型",
+            "fontSize": "13px"
+          },
+          {
+            "text": "拓展",
+            "fontSize": "13px"
+          },
+          {
+            "text": "同步",
+            "fontSize": "13px"
+          },
+          {
+            "text": "诊断",
+            "fontSize": "13px"
+          },
+          {
+            "text": "设置",
+            "fontSize": "13px"
+          }
+        ],
+        "horizontal": 0
+      }
+    },
+    {
+      "key": "900-200-dark",
+      "name": "modal within viewport",
+      "passed": true,
+      "detail": {
+        "x": 32,
+        "y": 40,
+        "width": 836,
+        "height": 520
+      }
+    },
+    {
+      "key": "900-200-dark",
+      "name": "modal control uses compact type",
+      "passed": true
+    }
+  ],
+  "screens": [
+    "1180-100-light-sync.png",
+    "1180-100-light-prototype-sync.png",
+    "1180-100-dark-sync.png",
+    "1180-100-dark-prototype-sync.png",
+    "1180-150-light-sync.png",
+    "1180-150-dark-sync.png",
+    "1180-200-light-sync.png",
+    "1180-200-dark-sync.png",
+    "900-100-light-sync.png",
+    "900-100-light-prototype-sync.png",
+    "900-100-dark-sync.png",
+    "900-100-dark-prototype-sync.png",
+    "900-150-light-sync.png",
+    "900-150-dark-sync.png",
+    "900-200-light-sync.png",
+    "900-200-dark-sync.png"
+  ],
+  "errors": []
+}

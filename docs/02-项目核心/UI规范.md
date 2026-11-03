@@ -142,7 +142,7 @@ macOS 用 `titleBarStyle: "Overlay"`（原生红黄绿压在网页内容上，�
 |---|---|
 | 圆角 | `--radius-2xs:4` `--radius-xs:6` `--radius-sm:8` `--radius:12` `--radius-lg:16` `--radius-pill:999`（px） |
 | 间距 | `--space-0-5:2` `--space-1:4` `--space-2:8` `--space-3:12` `--space-4:16` `--space-5:20` `--space-6:24` `--space-8:32`… |
-| 字号 | `--text-micro:10` `--text-caption:11` `--text-label:12` `--text-control:13` `--text-body:14` `--text-subtitle:16` `--text-title:20` `--text-display:24`（px） |
+| 字号 | `--text-micro:10` `--text-caption:11` `--text-label:12` `--text-control:12` `--text-body:13` `--text-subtitle:15` `--text-title:18` `--text-display:22`（px） |
 | 控件高 | `--control-sm:28` `--control-md:34` `--control-lg:40` `--control-touch:44`（px） |
 | 图标 | `--icon-sm:14` `--icon-md:16` `--icon-lg:20`（px） |
 | 开关 | `--toggle-w:38` `--toggle-h:22` `--toggle-dot:16`（px） |
@@ -154,6 +154,8 @@ macOS 用 `titleBarStyle: "Overlay"`（原生红黄绿压在网页内容上，�
 **中文回退顺序（2026-10-31 实测，必须遵守）**：`--font-ui` 的汉字回退位必须排在韩文字体之前，顺序为 `"OpenAI Sans","Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Noto Sans SC","Microsoft YaHei","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif`。
 
 原因：本机未装 OpenAI Sans / Pretendard 时，若把 `Apple SD Gothic Neo` / `Noto Sans KR` 排在前面，汉字会由韩文字体渲染，同一套界面里不同汉字拿到不同字宽（实测 14px 下「概览」「诊断」28px，「面板」「模型」「拓展」「同步」24.2px），视觉上就是“有的字偏大”。换成简体中文字体后 7 项导航统一 28×17px。修改字体栈后需重跑 `nav-typography` 实屏断言（同一字号下行内所有中文标签字宽必须一致）。
+
+2026-11-03 用户明确默认100%下标准字体偏大；0.2.20统一软件与活动原型的正文/导航13px、普通控件12px、副标题15px、弹窗标题18px和页标题22px。micro/caption/label保留10/11/12px，控件点击尺寸和50%–200%缩放合同沿原规则。中文字体回退保持一致，不能通过混用韩文字形制造不同字宽；该修订叠加于本版冻结原型，不采用其它并行未来模块。原14/13/16/20/24px是历史名义尺寸，0.2.19回退调整导致部分中文视觉增大，本次按用户要求收紧默认配方，不改用户设备缩放。
 
 ### 2.5 状态语义色（唯一口径，2026-10-31 确认）
 
@@ -208,8 +210,8 @@ macOS 用 `titleBarStyle: "Overlay"`（原生红黄绿压在网页内容上，�
 | 尺寸 | 基准最小高 | 字号 | 基准行高 | 内边距（上下 / 左右） | 图标 | 用途 |
 |---|---:|---|---:|---|---|---|
 | sm | control-sm 28px | text-label 12px | 16px | 5px / 10px | icon-sm 14px | 列表行内、紧凑次级动作 |
-| md（默认） | control-md 34px | text-control 13px | 18px | 7px / 12px | icon-md 16px | 页级、设置表单、弹窗常规操作 |
-| lg | control-lg 40px | text-body 14px | 20px | 9px / 15px | icon-lg 20px | 明确需要更大点击面的操作，不因primary自动选lg |
+| md（默认） | control-md 34px | text-control 12px | 18px | 7px / 12px | icon-md 16px | 页级、设置表单、弹窗常规操作 |
+| lg | control-lg 40px | text-body 13px | 20px | 9px / 15px | icon-lg 20px | 明确需要更大点击面的操作，不因primary自动选lg |
 | 通知专用 | notif-ctl-h 24px | text-caption | 沿通知配方 | notif-ctl-pad | 沿通知组件 | Toast、任务卡、通知中心内部紧凑动作 |
 
 表中为100%基准配方，数值由公共Token/组件样式唯一维护；实际最小高包含边框与内距。文字放大时允许控件增长，不能为了强求28/34/40而固定高度裁字。control-touch 44px当前是可用令牌，不代表UiButton已有touch size；有触控需求时另行补组件接入与验收。
