@@ -1,6 +1,6 @@
 {
   "status": "active",
-  "source": "PR #34 merged to main at ca434f7dd; tag v0.2.20 pushed; docs branch docs/governance-main at 011440bde; release assets/OTA/closure pending",
+  "source": "Main through PR49 at3120d90a4; accepted follow-ups PR50 e1674de7, PR51 9ce6672e, PR52 f7d8ca11, PR53 a2bbb35e are under CI and not yet release-tagged. Current draft/tag assets remain old and not accepted.",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
@@ -9,7 +9,7 @@
     },
     "saved-file-and-backup": {
       "status": "in_progress",
-      "reason": "Native QA found export preview writes an immutable temporary package cache under manager-state before final confirmation; released app left it after Cancel. Follow-up code dff7c75d deletes unattempted plan/package on cancel and bounded startup cleanup; locks/durable receipts preserve started exports for retry. Local Tauri IPC verified cancel cleanup and SIGKILL/restart cleanup in isolated HOME/data. Seven focused Rust file_exports tests pass, including malformed receipt fairness/preservation; 37 focused ModelTransfer tests and full UI 177/1092, typecheck/build, Clippy/rustfmt pass. PR #37 full current-head CI run 41474713948 is queued/running; full Rust serial run before the final two guard tests passed 1164 with four ignored.",
+      "reason": "Native isolated UI+IPC proves preferences export/import cancel and confirm, exact prewrite backup, backup-off metadata, scope exclusion of extensions, selected restore preserving later scale changes, and concurrent restore refusal. Rust file roundtrip and current PR48/49 CI passed. Other resource/credential and final-package matrix remains open.",
       "evidence": "implementation-20261102/export-preview-cancellation.md; PR #37 head dff7c75d; seven focused Rust tests; 37 focused ModelTransfer tests; full UI suite 177/1092; local Tauri IPC sandbox; PR CI 41474713948"
     },
     "credential-and-scope-boundaries": {
@@ -19,12 +19,12 @@
     },
     "all-entry-coverage": {
       "status": "in_progress",
-      "reason": "PR50 adds keyboard regressions and native input/menu fix. WebKit model dialogs pass344 at four variants. Chromium252 checks then high-zoom navigation timeout retained; native/business/full-callsite and final package checks remain open.",
+      "reason": "37 static references remain reconciled with historical/additional callers. Current evidence adds rendered model352, secondary111 and full extension14 checks per engine plus bounded native confirmations. Dynamic/runtime and remaining business states still need per-entry closure; no whole-app completion claim.",
       "evidence": "implementation-20261102/dialog-callsite-ledger.md; acceptance-20261103/current-dialog-inventory.json; acceptance-20261103/README.md"
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "CI 41420204361 and integrated PR #35 CI 41439302028 passed Windows native/build/EXE matrix; PR #36 diagnostic harness fix merged as 70724914649, pre-merge CI 41448593550 passed required checks. Existing v0.2.20 four-cell MSI/NSIS matrix 41448710359 passed. Isolated native macOS used temp HOME plus Node/npm links and an inert CLI fixture; overview, Settings general/data-backup, export encryption preview/cancel, import picker/cancel, WebDAV connection/cancel, notification detail, new channel, template version/use, Agent model picker and extension/client views were observed. No save/export/import, WebDAV request/sync, backup mutation, notification deletion, or install was executed. Production dialog callsites and full cross-platform business states remain incomplete. Native Tauri IPC follow-up branch verifies canceled export-plan deletion and startup cleanup in a temporary sandbox; final change remains unmerged and needs CI plus new packages and OTA. Local Tauri dev build of the follow-up branch verified real IPC cache creation, cancel deletion, empty user export destination, and SIGKILL/restart cleanup in an isolated data root. PR #37 CI/full current-head validation is pending; if merged, new release packages and native/installer/OTA acceptance remain required. Local Tauri IPC on the follow-up branch confirms cancel deletes internal frozen preview files and crash/restart sweeps an abandoned unattempted plan. PR #37 full CI is pending; if accepted, repeat package/install/OTA on the updated release source. Native follow-up proves the principal cancel/crash-cleanup path in an isolated Tauri IPC build; current final PR #37 head is under CI 41472954091 and must still pass Windows/macOS checks and receive packaged native acceptance. The follow-up export-cache lifecycle fix is now PR #37 head dff7c75d; local Tauri IPC proves cancel/crash cleanup. Current Windows/macOS CI 41474713948 must finish before merge; accepted code then requires a new release package and install/OTA validation.",
+      "reason": "Current native macOS sandbox evidence covers saved preference files, backups and scoped restore; model input/menu keyboard repair,200% navigation and full Skill/MCP details with unchanged synthetic files. PR50 Windows has passed backend/native credentials/managed installs/release EXE build and is running final EXE smoke; PR51-53 Windows jobs remain live. Final release packages/install/OTA and remaining applicable entry states still open.",
       "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/windows-existing-installer-matrix.md; implementation-20261102/dialog-callsite-ledger.md; CI runs 41420204361, 41439302028, 41448593550; Windows installer matrix 41448710359; implementation-20261102/export-preview-cancellation.md; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; PR #37 head 1cbe4a69; CI run 41472954091; PR #37 head dff7c75d; CI 41474713948"
     },
     "release-and-ota": {
@@ -34,7 +34,7 @@
     }
   },
   "tests": {
-    "ui_checkpoint": "509cb996 test fix local rerun: 177 files, 1090 passed; CI frontend pass in 41403032342",
+    "ui_checkpoint": "Current a2bbb35e:178 files/1105 UI tests, typecheck/build pass. Model rendered matrix Chromium/WebKit352 each; secondary111 each; full extension data14 each. Native macOS scoped read/write/restore and200% input/navigation/detail evidence retained; not final candidate acceptance.",
     "rust_checkpoint": "777aa9c5 full cargo test --locked --lib: 1159 passed, 0 failed, 4 ignored; CI 41420204361 passed both backend jobs; initial PR #35 CI 41434514282 had 937 passed and two test-fixture deadline failures; integrated CI 41439302028 passed both affected tests and all Windows backend/native build/smoke matrices.",
     "native_credential": "OPENCODEX_SANDBOX=1 explicit macOS native test passed"
   },
@@ -504,6 +504,12 @@
       "nativeFixtureBytesUnchanged": true,
       "fullUiTests": 1105,
       "finalReleaseCandidate": false
-    }
+    },
+    "ci_progress_runs": [
+      41627531292,
+      41629159210,
+      41631035206,
+      41631882781
+    ]
   }
 }

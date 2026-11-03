@@ -1,0 +1,432 @@
+{
+  "jobs": [
+    {
+      "id": 125888553247,
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 41627531292,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Verify Windows process-token evidence and smoke syntax",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Verify installer matrix completeness and parameter isolation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Verify isolated acceptance Profile admission",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Verify ordinary-account first-logon Profile before long builds",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Verify recovery restart waits for the old process exit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 125888553569,
+      "name": "backend-windows",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_id": 41627531292,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run npm --prefix ../ui ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Run npm --prefix ../ui run build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Windows backend regression",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Verify isolated native credential protection",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Verify official managed install upgrade and offline reinstall",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Collect Windows native dependency diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Run cargo build --locked --release --features custom-protocol --bins",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Windows final EXE smoke",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 15
+        },
+        {
+          "name": "Record Node24 driver for native version matrix",
+          "status": "pending",
+          "conclusion": null,
+          "number": 16
+        },
+        {
+          "name": "Windows native installation failure, metadata recovery and path regression",
+          "status": "pending",
+          "conclusion": null,
+          "number": 17
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 18
+        },
+        {
+          "name": "Windows original Node22.20 npm environment regression",
+          "status": "pending",
+          "conclusion": null,
+          "number": 19
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 20
+        },
+        {
+          "name": "Windows ordinary-account final EXE smoke",
+          "status": "pending",
+          "conclusion": null,
+          "number": 21
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "pending",
+          "conclusion": null,
+          "number": 22
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 43
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 44
+        }
+      ]
+    },
+    {
+      "id": 125888553586,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 41627531292,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Verify bounded metadata process tree before the workspace workload",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run remaining workspace regression without repeating the completed query fixture",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        }
+      ]
+    },
+    {
+      "id": 125888553606,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 41627531292,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Windows CDP protocol regression",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run typecheck",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run test -- --run",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 125888553718,
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 41627531292,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run sudo apt-get update && sudo apt-get install -y minisign",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_release_acceptance.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        }
+      ]
+    }
+  ]
+}
