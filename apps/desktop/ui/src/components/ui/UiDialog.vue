@@ -48,7 +48,7 @@ onBeforeUnmount(() => {disposed=true;window.removeEventListener('keydown',keydow
 <style scoped>
 .ui-dialog { color: var(--text); background: var(--surface-overlay-bg, var(--panel)); border: 1px solid var(--surface-overlay-border, var(--border)); border-radius: var(--radius-lg); padding: 0; width: min(560px, calc(100vw / var(--ui-zoom) - 32px)); max-height: calc(100vh / var(--ui-zoom) - 40px); zoom: var(--ui-zoom); box-shadow: var(--surface-overlay-shadow, var(--shadow)); backdrop-filter: var(--surface-overlay-blur); -webkit-backdrop-filter: var(--surface-overlay-blur); }
 .ui-dialog.wide { width: min(850px, calc(100vw / var(--ui-zoom) - 32px)); }
-.ui-dialog[open] { display:flex; flex-direction:column; }
+.ui-dialog[open] { display:flex; flex-direction:column; overflow:visible; }
 .ui-dialog::backdrop { background: var(--overlay-scrim); }
 header, footer { flex-shrink:0; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: 16px 20px; }
 header { border-bottom: 1px solid var(--border); }
