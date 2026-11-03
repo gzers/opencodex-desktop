@@ -8,6 +8,7 @@ param(
     [ValidateSet('all','default','custom')][string]$Mode='all'
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'windows-installer-matrix.ps1')
 if (!$IsWindows -or $env:GITHUB_ACTIONS -ne 'true') {
     throw 'Installer smoke is restricted to an ephemeral Windows Actions runner'
 }
@@ -83,11 +84,11 @@ try {
     # path that Windows Installer AppSearch can observe from loaded user hives.
     $defaultTaskKinds=if($Kind -ceq 'all'){@('msi')}else{@($Kind)}
     if($Mode -cne 'custom'){
-    foreach($kind in $defaultTaskKinds){
-        $pattern=if($kind -eq 'nsis'){'*-setup.exe'}else{'*.msi'}
-        $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $kind) -Filter $pattern -File)
+    foreach($installerKind in $defaultTaskKinds){
+        $pattern=if($installerKind -eq 'nsis'){'*-setup.exe'}else{'*.msi'}
+        $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $installerKind) -Filter $pattern -File)
         if($package.Count -ne 1){throw 'Exact default installer package missing'}
-        if($kind -eq 'nsis'){[void](Invoke-Installer $package[0].FullName '/S')}
+        if($installerKind -eq 'nsis'){[void](Invoke-Installer $package[0].FullName '/S')}
         else{
             $entryCleanup = Clear-ProductRememberedInstallDirectory
             [void](Invoke-Installer 'msiexec.exe' ('/i "'+$package[0].FullName+'" /qn /norestart'))
@@ -96,21 +97,21 @@ try {
         $defaultRoot=Find-DefaultInstalledDirectory
         try{
             $defaultExe=Join-Path $defaultRoot 'opencodex-desktop.exe'
-            if($kind -eq 'nsis'){
+            if($installerKind -eq 'nsis'){
                 # Default NSIS is per-user under the installing account's AppData;
                 # another temporary user's token correctly cannot read that tree.
-                & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind+'-default-startup')) -ExpectedCommit $taskSource -Mode any
+                & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($installerKind+'-default-startup')) -ExpectedCommit $taskSource -Mode any
                 if($LASTEXITCODE -ne 0){throw 'Default per-user NSIS EXE failed owner-account startup smoke'}
             }else{
-                & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind+'-default-startup'))
+                & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($installerKind+'-default-startup')) -ExpectedCommit $taskSource
                 if($LASTEXITCODE -ne 0){throw 'Default MSI EXE failed ordinary-account startup smoke'}
             }
-            $taskResult.defaultInstallChecks+=@{kind=$kind;result='pass';installDirectory=$defaultRoot;pathOverride=$false;boundary=$(if($Kind -ceq 'all'){'MSI fresh first; NSIS may honor the existing product remembered directory'}else{'fresh isolated runner; no earlier installed product or directory override'})}
+            $taskResult.defaultInstallChecks+=@{kind=$installerKind;result='pass';installDirectory=$defaultRoot;pathOverride=$false;boundary=$(if($Kind -ceq 'all'){'MSI fresh first; NSIS may honor the existing product remembered directory'}else{'fresh isolated runner; no earlier installed product or directory override'})}
             foreach($resource in @('LICENSE','THIRD-PARTY-NOTICES.txt')){
                 if(!(Test-Path -LiteralPath (Join-Path $defaultRoot ('resources/'+$resource)))){throw 'Installed local documentation resource missing'}
             }
         }finally{
-            if($kind -eq 'nsis'){[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}
+            if($installerKind -eq 'nsis'){[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}
             else{[void](Invoke-Installer 'msiexec.exe' ('/x "'+$package[0].FullName+'" /qn /norestart'))}
         }
     }
@@ -118,14 +119,14 @@ try {
     # MSI reads the shared remembered InstallDir even after NSIS uninstall.
     # Test MSI on the fresh runner first; NSIS /D explicitly chooses its own root.
     if($Mode -cne 'default'){
-    foreach ($kind in $taskKinds) {
-        $pattern = if ($kind -eq 'nsis') { '*-setup.exe' } else { '*.msi' }
-        $packages = @(Get-ChildItem -LiteralPath (Join-Path $taskBundle $kind) -Filter $pattern -File)
-        if ($packages.Count -ne 1) { throw "Expected one $kind package, found $($packages.Count)" }
+    foreach ($installerKind in $taskKinds) {
+        $pattern = if ($installerKind -eq 'nsis') { '*-setup.exe' } else { '*.msi' }
+        $packages = @(Get-ChildItem -LiteralPath (Join-Path $taskBundle $installerKind) -Filter $pattern -File)
+        if ($packages.Count -ne 1) { throw "Expected one $installerKind package, found $($packages.Count)" }
         $package = $packages[0]
-        $installRoot = Join-Path $env:RUNNER_TEMP ('ocxd-candidate-' + $kind + '-' + [guid]::NewGuid().ToString('N'))
+        $installRoot = Join-Path $env:RUNNER_TEMP ('ocxd-candidate-' + $installerKind + '-' + [guid]::NewGuid().ToString('N'))
         $entry = [ordered]@{
-            kind = $kind; name = $package.Name; bytes = $package.Length
+            kind = $installerKind; name = $package.Name; bytes = $package.Length
             sha256 = (Get-FileHash -LiteralPath $package.FullName -Algorithm SHA256).Hash.ToLower()
             installDirectory = $installRoot; result = 'fail'
         }
@@ -133,8 +134,8 @@ try {
         $retentionHash = $null
         $taskResult.installers += $entry
         $installed = Join-Path $installRoot 'opencodex-desktop.exe'
-        $installLog = Join-Path $taskOutput ($kind + '-install.log')
-        if ($kind -eq 'nsis') {
+        $installLog = Join-Path $taskOutput ($installerKind + '-install.log')
+        if ($installerKind -eq 'nsis') {
             $entry.installExitCode = Invoke-Installer $package.FullName ('/S /D=' + $installRoot)
         } else {
             $entry.registryCleanup = @(Clear-ProductRememberedInstallDirectory)
@@ -142,7 +143,7 @@ try {
         }
         try {
             if (!(Test-Path -LiteralPath $installed)) { throw 'Installed main EXE missing' }
-            $identityJson = & $Node (Join-Path $PSScriptRoot 'windows-bundle-identity.mjs') $taskBuilt $installed $kind
+            $identityJson = & $Node (Join-Path $PSScriptRoot 'windows-bundle-identity.mjs') $taskBuilt $installed $installerKind
             if ($LASTEXITCODE -ne 0) { throw 'Installed EXE failed exact bundle identity verification' }
             $identity = $identityJson | ConvertFrom-Json
             if ($identity.builtSha256 -ne $taskHash) { throw 'Built EXE changed during installer verification' }
@@ -153,7 +154,7 @@ try {
             $version = (Get-Item -LiteralPath $installed).VersionInfo.ProductVersion
             $entry.productVersion = $version
             if ($version -cne $taskVersion) { throw "Unexpected version $version; expected $taskVersion from tauri.conf.json" }
-            & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $installed -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind + '-startup'))
+            & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $installed -Node $Node -OutputDirectory (Join-Path $taskOutput ($installerKind + '-startup')) -ExpectedCommit $taskSource
             if($LASTEXITCODE -ne 0){throw 'Custom-path installed EXE failed ordinary-account startup smoke'}
             $entry.firstScreen = 'pass'
             $entry.explicitCleanupHelper = & (Join-Path $PSScriptRoot 'windows-uninstall-data.ps1') -InstallDirectory $installRoot
@@ -164,11 +165,11 @@ try {
             [IO.File]::WriteAllText($retentionFile,'default uninstall retains data',[Text.UTF8Encoding]::new($false))
             $retentionHash = (Get-FileHash -LiteralPath $retentionFile).Hash.ToLowerInvariant()
         } finally {
-            if ($kind -eq 'nsis') {
+            if ($installerKind -eq 'nsis') {
                 $uninstaller = Join-Path $installRoot 'uninstall.exe'
                 if (Test-Path -LiteralPath $uninstaller) { $entry.uninstallExitCode = Invoke-Installer $uninstaller '/S' }
             } else {
-                $uninstallLog = Join-Path $taskOutput ($kind + '-uninstall.log')
+                $uninstallLog = Join-Path $taskOutput ($installerKind + '-uninstall.log')
                 $entry.uninstallExitCode = Invoke-Installer 'msiexec.exe' ('/x "' + $package.FullName + '" /qn /norestart /L*v "' + $uninstallLog + '"')
             }
             $deadline = (Get-Date).AddSeconds(30)
@@ -186,8 +187,8 @@ try {
     }
     }
     if($Mode -cne 'custom' -and $Kind -ceq 'all'){
-        $kind='nsis'
-        $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $kind) -Filter '*-setup.exe' -File)
+        $installerKind='nsis'
+        $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $installerKind) -Filter '*-setup.exe' -File)
         if($package.Count -ne 1){throw 'Exact default NSIS installer package missing'}
         [void](Invoke-Installer $package[0].FullName '/S')
         $defaultRoot=Find-DefaultInstalledDirectory
@@ -201,6 +202,7 @@ try {
             }
         }finally{[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}
     }
+    Assert-WindowsInstallerMatrix -Kind $Kind -Mode $Mode -DefaultChecks @($taskResult.defaultInstallChecks) -CustomChecks @($taskResult.installers)
     $taskResult.result = 'pass'
 } catch {
     $taskResult.error = $_.Exception.Message

@@ -53,7 +53,7 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
         script = (ROOT / "test/smoke/windows-installer.ps1").read_text(encoding="utf-8")
         self.assertIn("$defaultTaskKinds=if($Kind -ceq 'all'){@('msi')}", script)
         default_nsis = script.index("if($Mode -cne 'custom' -and $Kind -ceq 'all')")
-        custom_cells = script.index("foreach ($kind in $taskKinds)")
+        custom_cells = script.index("foreach ($installerKind in $taskKinds)")
         self.assertLess(custom_cells, default_nsis)
         self.assertIn("avoid contaminating MSI AppSearch", script)
 
@@ -72,6 +72,15 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
         self.assertIn("windows-ordinary-startup.ps1", step)
         self.assertNotIn("windows-startup.ps1", step)
         self.assertIn("if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }", step)
+
+    def test_ordinary_package_smoke_uses_the_package_commit(self):
+        installer = (ROOT / "test/smoke/windows-installer.ps1").read_text(encoding="utf-8")
+        ordinary = (ROOT / "test/smoke/windows-ordinary-startup.ps1").read_text(encoding="utf-8")
+        calls = [line for line in installer.splitlines() if "'windows-ordinary-startup.ps1'" in line]
+        self.assertEqual(len(calls), 2)
+        for call in calls:
+            self.assertIn("-ExpectedCommit $taskSource", call)
+        self.assertIn("commit=$ExpectedCommit", ordinary)
 
 
 if __name__ == "__main__":
