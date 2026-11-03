@@ -75,7 +75,8 @@ try {
         $defaultRoot=Find-DefaultInstalledDirectory
         try{
             $defaultExe=Join-Path $defaultRoot 'opencodex-desktop.exe'
-            & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind+'-default-startup')) -ExpectedCommit $taskSource
+            & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind+'-default-startup'))
+            if($LASTEXITCODE -ne 0){throw 'Default installed EXE failed ordinary-account startup smoke'}
             $taskResult.defaultInstallChecks+=@{kind=$kind;result='pass';installDirectory=$defaultRoot;pathOverride=$false;boundary=$(if($Kind -ceq 'all'){'MSI fresh first; NSIS may honor the existing product remembered directory'}else{'fresh isolated runner; no earlier installed product or directory override'})}
             foreach($resource in @('LICENSE','THIRD-PARTY-NOTICES.txt')){
                 if(!(Test-Path -LiteralPath (Join-Path $defaultRoot ('resources/'+$resource)))){throw 'Installed local documentation resource missing'}
@@ -124,7 +125,8 @@ try {
             $version = (Get-Item -LiteralPath $installed).VersionInfo.ProductVersion
             $entry.productVersion = $version
             if ($version -cne $taskVersion) { throw "Unexpected version $version; expected $taskVersion from tauri.conf.json" }
-            & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $installed -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind + '-startup')) -ExpectedCommit $taskSource
+            & (Join-Path $PSScriptRoot 'windows-ordinary-startup.ps1') -Executable $installed -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind + '-startup'))
+            if($LASTEXITCODE -ne 0){throw 'Custom-path installed EXE failed ordinary-account startup smoke'}
             $entry.firstScreen = 'pass'
             $entry.explicitCleanupHelper = & (Join-Path $PSScriptRoot 'windows-uninstall-data.ps1') -InstallDirectory $installRoot
             # After confirmed cleanup, default uninstall must still retain data

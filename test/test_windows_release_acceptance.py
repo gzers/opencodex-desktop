@@ -42,6 +42,13 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
         self.assertIn("RegistryView]::Registry64", script)
         self.assertIn("DeleteValue('InstallDir',$false)", script)
 
+    def test_installed_packages_start_as_an_ordinary_user_before_admin_uninstall(self):
+        script = (ROOT / "test/smoke/windows-installer.ps1").read_text(encoding="utf-8")
+        self.assertEqual(script.count("'windows-ordinary-startup.ps1'"), 2)
+        self.assertNotIn("'windows-startup.ps1'", script)
+        self.assertIn("finally{", script)
+        self.assertIn("Invoke-Installer 'msiexec.exe' ('/x", script)
+
 
 if __name__ == "__main__":
     unittest.main()
