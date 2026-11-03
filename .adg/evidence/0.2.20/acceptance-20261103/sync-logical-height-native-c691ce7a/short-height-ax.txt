@@ -1,0 +1,91 @@
+Window: "", App: OpenCodeX Sync Height Recheck.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#sync
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 模型
+				10 button 拓展
+				11 button 同步
+				12 button 诊断
+				13 button 设置
+			14 container
+				15 heading 同步, Value: 1
+					16 text 同步
+				17 container 主题
+					18 button 浅色
+					19 button 深色
+					20 button 跟随系统
+				21 text 未发现
+				22 button 刷新状态
+				23 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+				24 tab group (selectable) 同步方式
+					25 tab (selected) 文件同步
+					26 tab (selectable) WebDAV 同步
+				27 container 文件同步
+					28 container 导入与导出
+						29 heading 导入与导出, Value: 2
+							30 text 导入与导出
+						31 button 导入配置
+						32 button 导出配置
+						33 container 同步范围
+							34 search text field (settable) 搜索配置对象
+								35 text 搜索配置对象
+							36 table 导出配置对象
+								37 row (selectable) 选择当前筛选全部配置对象, Value: 2
+导出范围
+范围与凭据
+								38 row (selectable)
+									39 cell (selectable) Value: 渠道与模型, 选择 渠道与模型
+展开 渠道与模型
+										40 checkbox 选择 渠道与模型, Value: 1
+									41 cell (selectable) 1 / 1
+								42 row (selectable)
+									43 cell (selectable) Value: 模型模版, 选择 模型模版
+展开 模型模版
+										44 checkbox 选择 模型模版, Value: 1
+									45 cell (selectable) 17 / 17
+								46 row (selectable)
+									47 cell (selectable) Value: Skills, 选择 Skills
+展开 Skills
+										48 checkbox 选择 Skills, Value: 1
+									49 cell (selectable) 1 / 1
+								50 row (selectable)
+									51 cell (selectable) 选择 MCP
+展开 MCP, Value: 2
+MCP
+									52 cell (selectable) 1 / 2
+								53 row (selectable)
+									54 cell (selectable) Value: 桌面偏好, 选择 桌面偏好
+展开 桌面偏好
+										55 checkbox 选择 桌面偏好, Value: 1
+									56 cell (selectable) 1 / 1
+							57 container 其他凭据
+								58 container
+									59 heading 其他凭据, Value: 3
+										60 text 其他凭据
+									61 text 账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。
+								62 container
+									63 checkbox 渠道 API Key, Value: 0
+									64 text 渠道 API Key
+								65 text 渠道可单独分享，接收方自行填 Key。
+								66 container
+									67 checkbox 扩展凭据, Value: 0
+									68 text 扩展凭据
+								69 text 例如 MCP 的 Authorization / 环境变量。
+								70 text 当前不携带凭据
+	71 close button
+	72 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	73 minimize button
+74 menu bar
+	75 OpenCodeX Sync Height Recheck
+	76 进程
+	77 编辑
+	78 视图
+	79 诊断
+
+The focused UI element is 2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#sync

@@ -1,11 +1,11 @@
 {
   "status": "active",
-  "source": "Main through PR54 9d0ca179; integrated PR55 currentc8c7bfa4 under CI41642730883. PR56-59 commits retained within integrated head; not independently accepted. Release tag/assets remain olderefbe46e8 and not accepted.",
+  "source": "Product c691ce7a3935c7f9162260d616ff13fb6a8f280e via PR61; main6ba433bd includes passed PR55/60. Test-only PR62 head98e779753032d5755bc6d951c7151a036c797f7c. Clean draft432803988/tag c691; Release41654005109 and CI41653396143 running.",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
-      "reason": "Evidence correction: the first retained report was an older run with 411 checks, 401 pass and 10 fail. Re-running the full audit against current code at 2026-11-02T13:18Z produced a new report with 428/428 pass and zero page errors. The earlier failed report remains preserved, not overwritten. The 35 production dialog callsites still lack complete per-callsite state acceptance, so this overall check stays in progress.",
-      "evidence": "implementation-20261102/ocx020-all-route-audit-rerun-20261102/audit-report.json (428/428, zero page errors); implementation-20261102/ocx020-all-route-audit/audit-report.json (earlier 411/401/10); implementation-20261102/dialog-callsite-ledger.md; prototype-audit-20261102/application-dialog-inventory.json"
+      "reason": "Candidate fullroute428/428,sync648/engine,logical height16/engine and native100/125% passed. Prototype screenshots reference100% only. Per-entry states and packages remain.",
+      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
     },
     "saved-file-and-backup": {
       "status": "in_progress",
@@ -19,24 +19,27 @@
     },
     "all-entry-coverage": {
       "status": "in_progress",
-      "reason": "37 static references remain reconciled with historical/additional callers. Current evidence adds rendered model352, secondary111 and full extension14 checks per engine plus bounded native confirmations. Dynamic/runtime and remaining business states still need per-entry closure; no whole-app completion claim.",
-      "evidence": "implementation-20261102/dialog-callsite-ledger.md; acceptance-20261103/current-dialog-inventory.json; acceptance-20261103/README.md"
+      "reason": "37component references+25dynamic callsites; model69/engine and native shared preference added. Remaining applicable runtime/native/package states require reconciliation.",
+      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
     },
     "macos-windows-native": {
       "status": "in_progress",
-      "reason": "Current native macOS sandbox evidence covers saved preference files, backups and scoped restore; model input/menu keyboard repair,200% navigation and full Skill/MCP details with unchanged synthetic files. PR50 Windows has passed backend/native credentials/managed installs/release EXE build and is running final EXE smoke; PR51-53 Windows jobs remain live. Final release packages/install/OTA and remaining applicable entry states still open.",
-      "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/windows-existing-installer-matrix.md; implementation-20261102/dialog-callsite-ledger.md; CI runs 41420204361, 41439302028, 41448593550; Windows installer matrix 41448710359; implementation-20261102/export-preview-cancellation.md; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; PR #37 head 1cbe4a69; CI run 41472954091; PR #37 head dff7c75d; CI 41474713948"
+      "reason": "PR55/60 CI passed/merged including Windows native keyboard/menu geometry/ordinary-account. Mac native shared preference and logical height passed; blank app/old height failures retained. Final packages/install/OTA pending.",
+      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
     },
     "release-and-ota": {
       "status": "in_progress",
-      "reason": "PR54 allows real built-in beta channel before stable promotion and exact updated EXE hash. Unified PR55c8c7bfa4 also separates old baseline saved-file seed from new UI contracts. Integrated CI41642730883 is running after retained native menu-driver failure41635474209. Old tag/draft assets are not accepted. Final frozen-source clean packages, exact uploaded bytes/signatures, independent four installer cells, final Mac native and actual adjacent OTA all pending.",
-      "evidence": "acceptance-20261103/README.md; release-41589977450-three-cells.json; draft-assets-snapshot.json; matrix-contract-macos.json; matrix-contract-windows.json; PR #45"
+      "reason": "Clean draft432803988/tagc691 replace obsolete unpublished assets. Single Release41654005109 building. PR62 marker-aware hash10 tests/pwsh parser passed; fresh bytes/signatures/four installs/Mac package/OTA not accepted.",
+      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
     }
   },
   "tests": {
-    "ui_checkpoint": "57239d5a:179files/1120tests, typecheck/build pass; identity10 and secondary117 per engine. Earlier model352/menu48/full-detail14 and fullroute428 evidence bounded to their recorded sources; all failures retained.",
+    "ui_checkpoint": "c691ce7a:179files/1122 tests,typecheck/build pass; sync648/engine,96screens,0errors; fullroute428/428,0errors; logical height16/engine,native100/125%; model states69/engine. Failures retained.",
     "rust_checkpoint": "777aa9c5 full cargo test --locked --lib: 1159 passed, 0 failed, 4 ignored; CI 41420204361 passed both backend jobs; initial PR #35 CI 41434514282 had 937 passed and two test-fixture deadline failures; integrated CI 41439302028 passed both affected tests and all Windows backend/native build/smoke matrices.",
-    "native_credential": "OPENCODEX_SANDBOX=1 explicit macOS native test passed"
+    "native_credential": "OPENCODEX_SANDBOX=1 explicit macOS native test passed",
+    "owned_https": "2/2 passed; acceptance-20261103/ocx020-final-owned-https-6b2ea6d4.log",
+    "owned_file_browser": "47/47 passed; acceptance-20261103/final-file-browser-6b2ea6d4",
+    "owned_official_284": "2 explicit tests failed initial catalog; acceptance-20261103/ocx020-final-owned-official-284-failed.log; investigation open"
   },
   "daily_config_writes": false,
   "daily_real_sync": false,
@@ -372,6 +375,22 @@
         "frontend",
         "backend"
       ]
+    },
+    {
+      "run": 41642730883,
+      "head": "c8c7bfa453dbbfd01eee8696a21e75063ff5eb4d",
+      "status": "success",
+      "conclusion": "success",
+      "pr_merged": true,
+      "merge_commit": "d983f9e24f4050ac359ef9e6042a7068ec7b5901"
+    },
+    {
+      "run": 41645111224,
+      "head": "6b2ea6d44544b867e69b9475cd906901e86ab59b",
+      "status": "success",
+      "conclusion": "success",
+      "pr_merged": true,
+      "merge_commit": "6ba433bd17f01fbff6506ba06df53f5a81e17db4"
     }
   ],
   "acceptance_followups_20261103": {
@@ -643,5 +662,17 @@
       "actualOTA": "not run",
       "finalReleaseCandidate": false
     }
+  },
+  "release_candidate": {
+    "source": "c691ce7a3935c7f9162260d616ff13fb6a8f280e",
+    "draft_id": 432803988,
+    "tag": "v0.2.20",
+    "draft": true,
+    "prerelease": true,
+    "release_run": 41654005109,
+    "ci_run": 41653396143,
+    "status": "building_not_accepted",
+    "stable": "v0.2.19",
+    "ota_harness_source": "98e779753032d5755bc6d951c7151a036c797f7c"
   }
 }

@@ -1,0 +1,41 @@
+Window: "", App: OpenCodeX Execution Recheck.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#models
+			3 container 检查模版更新
+				4 container
+					5 heading 检查模版更新, Value: 2
+						6 text 检查模版更新
+					7 button 关闭
+				8 text 模型模版助手 · 本机共用
+				9 button owned-agent / owned-execution-model · 未知（模型默认） · 快速能力待核对
+				10 button 更换执行模型
+				11 summary 执行模型与适用范围, Value: off
+					12 text 执行模型与适用范围
+				13 container
+					14 radio button 全部已保存模版, Value: 1
+					15 text 全部已保存模版
+				16 container
+					17 radio button (disabled) 已勾选 0 项, Value: 0
+					18 text 已勾选 0 项
+				19 text 17 个目标
+				20 container
+					21 text 补充要求
+					22 text entry area (settable) 补充要求, Value: [text entry area], Secondary Actions: Show Writing Tools
+				23 summary 在线资料, Value: off
+					24 text 在线资料
+				25 container
+					26 button 恢复上次建议
+					27 button 关闭
+					28 button 检查更新
+	29 close button
+	30 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	31 minimize button
+32 menu bar
+	33 OpenCodeX Execution Recheck
+	34 进程
+	35 编辑
+	36 视图
+	37 诊断
+
+The focused UI element is 7 button 关闭

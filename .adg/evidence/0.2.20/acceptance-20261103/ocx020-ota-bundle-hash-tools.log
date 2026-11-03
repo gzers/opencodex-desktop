@@ -1,0 +1,18 @@
+✔ accepts exact NSIS and MSI package bytes (0.785958ms)
+✔ rejects changed application payload (0.234916ms)
+✔ rejects wrong package marker or unchanged EXE (0.125208ms)
+✔ rejects missing or ambiguous original marker (0.091333ms)
+✔ rejects unsupported bundle kind (0.059042ms)
+✔ OTA recovers only the frozen original hash from its exact installer marker (0.831708ms)
+✔ OTA rejects wrong package kind, changed payload, missing marker and another source EXE (0.205292ms)
+✔ production stable remains the default; the existing beta channel is explicit (0.745083ms)
+✔ arbitrary URLs, fallback channels and malformed values cannot replace the real endpoint (0.192083ms)
+✔ OTA baseline writes reject an unowned data root before calling any application command (1.920542ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 79.573625

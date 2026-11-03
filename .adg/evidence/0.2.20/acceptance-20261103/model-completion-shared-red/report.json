@@ -1,0 +1,68 @@
+{
+  "completed": false,
+  "failure": {
+    "key": "1180-100-high",
+    "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('dialog[open]').last().getByRole('button', { name: '检查更新', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"btn\" type=\"button\" data-v-bb21d366=\"\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    59 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+  },
+  "engine": "webkit",
+  "source": "c8c7bfa4",
+  "scope": "production route/dialog handlers with explicit in-memory service and clipboard adapters; no native writes/restarts/model network",
+  "checks": [
+    {
+      "key": "1180-100-high",
+      "name": "settings write busy retains owner",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "settings error remains visible",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "settings saved exact committed model",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "settings did not alter channel policy",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "version delete needs a second explicit confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "delete cancellation keeps both revisions",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "failed version delete preserves saved revisions",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "version delete removes only selected revision",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "usage has actual fixture rows",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "usage filter no mutation",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-100-high-agent-settings-error.png",
+    "1180-100-high-version-delete-error.png"
+  ]
+}

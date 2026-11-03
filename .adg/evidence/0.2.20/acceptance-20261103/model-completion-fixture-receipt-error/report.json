@@ -1,0 +1,112 @@
+{
+  "completed": false,
+  "failure": {
+    "key": "1180-100-high",
+    "message": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('dialog[open]').last().getByText('状态：已保存', { exact: true }) to be visible\u001b[22m\n"
+  },
+  "engine": "webkit",
+  "source": "c8c7bfa4",
+  "scope": "production route/dialog handlers with explicit in-memory service and clipboard adapters; no native writes/restarts/model network",
+  "checks": [
+    {
+      "key": "1180-100-high",
+      "name": "settings write busy retains owner",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "settings error remains visible",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "settings saved exact committed model",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "settings did not alter channel policy",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "version delete needs a second explicit confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "delete cancellation keeps both revisions",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "failed version delete preserves saved revisions",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "version delete removes only selected revision",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "usage has actual fixture rows",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "usage filter no mutation",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "stop uses the active run id",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "late stopped report not adopted",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "batch generation failure visible",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "empty batch report cannot save unseen changes",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "activation failure does not copy content",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "external copy only after explicit activation",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "external receipt pending accurate",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "external receipt rejected accurate",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-100-high-agent-settings-error.png",
+    "1180-100-high-version-delete-error.png",
+    "1180-100-high-batch-report.png",
+    "1180-100-high-external-copied.png",
+    "1180-100-high-receipt-pending.png",
+    "1180-100-high-receipt-rejected.png"
+  ]
+}

@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/model-execution-field.test.ts (12 tests | 2 failed) 76ms
+   ❯ page state follows the prototype (5)
+     × updates another mounted consumer after shared settings commit and rejects its older read (false) 35ms
+     × updates another mounted consumer after shared settings commit and rejects its older read (true) 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-execution-field.test.ts > page state follows the prototype > updates another mounted consumer after shared settings commit and rejects its older read (false)
+AssertionError: expected '模型模版助手 · 本机共用尚未选择执行模型 · 请配置执行模型Agent …' to contain 'runtime-provider'
+
+Expected: "runtime-provider"
+Received: "模型模版助手 · 本机共用尚未选择执行模型 · 请配置执行模型Agent 配置为什么需要执行模型尚未选择执行模型。自动填充与模版检查需要先配置一个可用的执行模型。"
+
+ ❯ tests/model-execution-field.test.ts:29:26
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/model-execution-field.test.ts > page state follows the prototype > updates another mounted consumer after shared settings commit and rejects its older read (true)
+AssertionError: expected '模型模版助手 · 本机共用original / old未知更换执行模型执行…' to contain 'runtime-provider'
+
+Expected: "runtime-provider"
+Received: "模型模版助手 · 本机共用original / old未知更换执行模型执行模型与适用范围执行渠道original型号old推理档位未知（模型默认）快速模式未知 · 快速能力待核对适用范围模版自动填充、单个更新、所选更新与批量检查共用此设置。不改变 Codex 的命名、搜索与子 Agent 配置。修改只影响之后启动的任务；已启动任务继续使用启动时的设置。与运行配置的边界保存的是本机执行偏好，写入 manager-state/preferences.json 的 modelTemplateAgent 分区；不进入默认同步或普通导出。"
+
+ ❯ tests/model-execution-field.test.ts:29:26
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 10 passed (12)
+   Start at  21:25:57
+   Duration  676ms (environment 41%, transform 39%, tests 12%, import 7%)
+

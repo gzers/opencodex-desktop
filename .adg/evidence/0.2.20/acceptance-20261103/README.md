@@ -166,3 +166,18 @@ PR55旧aad48217的Windows workflow41635474209失败，步骤为final EXE smoke�
 PR55现为统一收口PR，head c8c7bfa453dbbfd01eee8696a21e75063ff5eb4d，所有原PR56～59提交均经git merge-base验证为其祖先，使用fast-forward汇入，未重写提交。原PR56因其目标分支已包含提交由GitHub标merged，但**不代表进入main**；57～59关闭为已被PR55覆盖。对应旧CI41637577990/41638473713/41640626634/41641241574与被新测试头替代的41642194514已请求取消，不记通过。唯一当前最终集成CI为41642730883，已确认in_progress；须其完整通过才能合并统一源码。
 
 main当前已到PR54/9d0ca17994ce8ead193c153f12f6d056b827c80d，PR52/53分别合并3ace1df1、3e33ab6c。发布说明已在统一PR中准备。最终tag/draft仍指向旧efbe46e8一轮资产，尚未清理重建；需待固定最终源码，再干净构建、校验上载字节/三份更新签名和资源、独立MSI/NSIS×默认/自定义四安装、最终Mac原生包及实际相邻OTA。现有S20清单、37组件引用/25动态调用的剩余状态继续对账，不能以统一CI完成替代全部required_checks。整体目标保持active。
+
+
+### 2026-11-03 最终候选 c691ce7a 与剩余发布门
+
+PR55/c8c7bfa4完整CI41642730883通过，合并main为d983f9e24f4050ac359ef9e6042a7068ec7b5901。PR60/6b2ea6d4完整CI41645111224通过，合并6ba433bd17f01fbff6506ba06df53f5a81e17db4。重复main CI核对tree等同已通过PR后取消，取消不是通过，ocx020-redundant-ci-cancellation.json保留回执。
+
+PR60修复主列表保存执行模型后，已挂载批量Agent仍使用旧设备偏好：store只发布已提交偏好与revision，旧异步读取不能覆盖新保存，临时候选保持各自窗口。2个改前反例失败、18项定向和179文件1122项UI、typecheck/build通过。生产渲染补充模型状态两引擎各69项/27截图。首个独立原生副本白屏且Reload无效，原因未证明，保留为失败；全新身份复测从真实UI保存后，已挂载Batch窗口读到相同选择，只有沙箱设备偏好变化，业务配置摘要保持，未生成请求。证据shared-execution-native-first、shared-execution-native-recheck及model-completion-*。
+
+PR61冻结产品源码c691ce7a3935c7f9162260d616ff13fb6a8f280e，tree eb57589b56573f224621f2834deb79866a524e31。同步凭据标题/介绍合为header，移除多余grid间隔；短窗口说明按冻结原型逻辑内容高度≤600隐藏。首版9cce1495的CSS container查询在原生125%未隐藏，Web Inspector测量和实屏均保留；最终以layoutObserver测量main逻辑内容高度并在卸载释放观察器。两引擎各16项/8截图及原生125%隐藏、100%恢复通过。最终c691同步全矩阵两引擎各648/648、各96截图、0页面异常；全路由428/428、0页面异常。179文件1122项UI、typecheck/build通过。冻结原型整体壳没有真实缩放，原型图仅100%参考；125/200%按冻结逻辑高度合同验证，不宣称有同倍数原型对照图。
+
+旧未公开草稿432275271与不一致资产在确认draft及无存活旧Release任务后删除；v0.2.20改指c691，新草稿432803988为draft=true/prerelease=true。唯一新Release41654005109正在双平台打包；CI41653396143当前Windows后端仍进行，不能写成通过。源码冻结/旧草稿快照/说明在release-candidate-c691ce7a。stable仍0.2.19，尚未公开0.2.20。后续验同一批新上传字节、三更新签名、资源/包签名、独立四安装格和相邻真实OTA，全部通过再晋升stable。
+
+PR62/98e779753032d5755bc6d951c7151a036c797f7c仅修正OTA验收工具：Tauri把唯一bundle-type标记UNK改为MSI/NSS，已安装EXE不能直接等同原始EXE摘要；只还原一处所选标记，要求唯一重建结果等于冻结原始SHA，再比较完整预期补丁字节。错误种类/载荷/来源摘要均拒绝。10项工具与PowerShell7.5.4解析通过，实际OTA仍待执行。工具源码与产品c691分别记身份，不为工具重建/改标产品包。
+
+补充隔离证据：自有CA真实HTTPS2/2通过，真实Rust文件写入+WebKit47/47通过；官方2.84.0包独立安装后显式运行2项ignored合同测试均在首次初始化catalog失败，日志ocx020-final-owned-official-284-failed.log保留，继续查明夹具所需catalog来源，不算通过。日常配置/真实服务器/账户未参与。S20、AC与全部required_checks继续active/in_progress；首次成功读取全选、之后新增对象不勾选规则保持。

@@ -1,0 +1,120 @@
+{
+  "engine": "webkit",
+  "scope": "DEV fixtures; browser import empty/protected/error/preview/cancel states; no real IPC/config/file import",
+  "prototype": "cfbd90c4b+1da4cabca",
+  "checks": [
+    {
+      "name": "empty import cannot read 1180",
+      "passed": true
+    },
+    {
+      "name": "one shared import dialog 1180",
+      "passed": true
+    },
+    {
+      "name": "protected file stays in shared dialog 1180",
+      "passed": true
+    },
+    {
+      "name": "empty password cannot read 1180",
+      "passed": true
+    },
+    {
+      "name": "wrong password preserves dialog 1180",
+      "passed": true
+    },
+    {
+      "name": "wrong password never adopts 1180",
+      "passed": true
+    },
+    {
+      "name": "unlocked file shows same shared dialog 1180",
+      "passed": true
+    },
+    {
+      "name": "backup enabled before import 1180",
+      "passed": true
+    },
+    {
+      "name": "preview never adopts 1180",
+      "passed": true
+    },
+    {
+      "name": "cancel never adopts 1180",
+      "passed": true
+    },
+    {
+      "name": "cancel preserves source route 1180",
+      "passed": true
+    },
+    {
+      "name": "reopen clears prior password 1180",
+      "passed": true
+    },
+    {
+      "name": "reopen clears prior filename 1180",
+      "passed": true
+    },
+    {
+      "name": "empty import cannot read 900",
+      "passed": true
+    },
+    {
+      "name": "one shared import dialog 900",
+      "passed": true
+    },
+    {
+      "name": "protected file stays in shared dialog 900",
+      "passed": true
+    },
+    {
+      "name": "empty password cannot read 900",
+      "passed": true
+    },
+    {
+      "name": "wrong password preserves dialog 900",
+      "passed": true
+    },
+    {
+      "name": "wrong password never adopts 900",
+      "passed": true
+    },
+    {
+      "name": "unlocked file shows same shared dialog 900",
+      "passed": true
+    },
+    {
+      "name": "backup enabled before import 900",
+      "passed": true
+    },
+    {
+      "name": "preview never adopts 900",
+      "passed": true
+    },
+    {
+      "name": "cancel never adopts 900",
+      "passed": true
+    },
+    {
+      "name": "cancel preserves source route 900",
+      "passed": true
+    },
+    {
+      "name": "reopen clears prior password 900",
+      "passed": true
+    },
+    {
+      "name": "reopen clears prior filename 900",
+      "passed": true
+    }
+  ],
+  "screens": [
+    "1180-import-empty.png",
+    "1180-import-wrong-password.png",
+    "1180-import-preview.png",
+    "900-import-empty.png",
+    "900-import-wrong-password.png",
+    "900-import-preview.png"
+  ],
+  "errors": []
+}

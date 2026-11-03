@@ -1,0 +1,56 @@
+{
+  "completed": false,
+  "failure": "topbar description follows frozen short-height rule: {\"v\":{\"width\":900,\"height\":600,\"scale\":100},\"current\":{\"topbarDescription\":true,\"scopeDescription\":true,\"mainHeight\":569,\"zoom\":1},\"expectedShort\":true}",
+  "engine": "webkit",
+  "baseline": "cfbd90c4b+1da4cabca sync-config.css:100",
+  "checks": [
+    {
+      "width": 1180,
+      "height": 760,
+      "scale": 100,
+      "name": "topbar description follows frozen short-height rule",
+      "passed": true,
+      "current": {
+        "topbarDescription": true,
+        "scopeDescription": true,
+        "mainHeight": 729,
+        "zoom": 1
+      },
+      "expectedShort": false
+    },
+    {
+      "width": 1180,
+      "height": 760,
+      "scale": 100,
+      "name": "scope description follows frozen short-height rule",
+      "passed": true,
+      "current": {
+        "topbarDescription": true,
+        "scopeDescription": true,
+        "mainHeight": 729,
+        "zoom": 1
+      },
+      "expectedShort": false
+    },
+    {
+      "width": 900,
+      "height": 600,
+      "scale": 100,
+      "name": "topbar description follows frozen short-height rule",
+      "passed": false,
+      "current": {
+        "topbarDescription": true,
+        "scopeDescription": true,
+        "mainHeight": 569,
+        "zoom": 1
+      },
+      "expectedShort": true
+    }
+  ],
+  "errors": [],
+  "screens": [
+    "1180-100-current.png",
+    "1180-100-prototype.png"
+  ],
+  "scope": "rendered short-height rule and frozen comparison; no native data operations"
+}

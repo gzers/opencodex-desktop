@@ -1,0 +1,26 @@
+   Compiling opencodex-desktop v0.2.20 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.10s
+     Running tests/model_config_official_real.rs (target/debug/deps/model_config_official_real-47ac5f4223f56fe2)
+
+running 2 tests
+test isolated_official_discovery_save_and_protocol_mapping_readback ... 
+thread 'isolated_official_discovery_save_and_protocol_mapping_readback' (117245201) panicked at tests/model_config_official_real.rs:229:9:
+isolated initial sync/catalog: Error: catalog not found
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test isolated_official_saved_protocol_alias_reasoning_and_fast_wire ... 
+thread 'isolated_official_saved_protocol_alias_reasoning_and_fast_wire' (117245583) panicked at tests/model_config_official_real.rs:1807:5:
+assertion failed: upstream::write(&context,
+                upstream::WriteOperation::Sync).await.unwrap().success
+FAILED
+
+failures:
+
+failures:
+    isolated_official_discovery_save_and_protocol_mapping_readback
+    isolated_official_saved_protocol_alias_reasoning_and_fast_wire
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.00s
+
+error: test failed, to rerun pass `--test model_config_official_real`
