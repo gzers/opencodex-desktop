@@ -15,6 +15,12 @@ on:
         type: string
         required: true
         default: '0.2.19'
+      ota_channel:
+        description: Existing production updater channel; beta permits prerelease acceptance before stable promotion
+        type: choice
+        required: true
+        default: stable
+        options: [stable, beta]
       built_sha256:
         description: Original Windows build SHA-256 from the release installer evidence
         type: string
@@ -72,7 +78,9 @@ jobs:
         env:
           OCX_BASELINE_VERSION: ${{ inputs.from_version }}
           OCX_ACCEPT_VERSION: ${{ inputs.version }}
-        run: ./test/smoke/windows-ota.ps1 -Kind '${{ matrix.kind }}' -OutputDirectory 'test/out/windows-ota-${{ matrix.kind }}' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION
+          OCX_OTA_CHANNEL: ${{ inputs.ota_channel }}
+          OCX_BUILT_SHA256: ${{ inputs.built_sha256 }}
+        run: ./test/smoke/windows-ota.ps1 -Kind '${{ matrix.kind }}' -OutputDirectory 'test/out/windows-ota-${{ matrix.kind }}' -Version $env:OCX_ACCEPT_VERSION -FromVersion $env:OCX_BASELINE_VERSION -Channel $env:OCX_OTA_CHANNEL -ExpectedBuiltSha256 $env:OCX_BUILT_SHA256
       - uses: actions/upload-artifact@v4
         if: always()
         with:
