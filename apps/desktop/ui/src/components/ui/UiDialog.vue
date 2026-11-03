@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
 import UiIconButton from './UiIconButton.vue'
 import UiButton from './UiButton.vue'
 const props = defineProps<{ open: boolean; title: string; wide?: boolean; busy?: boolean; panelClass?: string; hideClose?: boolean;iconClose?:boolean }>()
@@ -17,11 +17,24 @@ watch(() => props.open, async open => {
   else if (!open && element.open) { element.close(); origin?.focus();origin=null }
 }, { immediate: true })
 function close() { if (!props.busy) emit('close') }
+// Native inputs may consume Escape without issuing the dialog's cancel event.
+// An open child menu owns Escape even when it mounted after this dialog; listener
+// registration order must not decide which surface closes. Busy dialogs keep it.
+function keydown(event: KeyboardEvent) {
+  const element = dialog.value
+  if (event.key !== 'Escape' || event.defaultPrevented || !props.open || !element?.open
+    || !(event.target instanceof Node) || !element.contains(event.target)) return
+  if (element.querySelector('[data-ui-escape-owner]')) return
+  event.preventDefault()
+  event.stopPropagation()
+  close()
+}
+onMounted(() => window.addEventListener('keydown', keydown))
 function backdrop(event: MouseEvent) {
   const box = dialog.value?.getBoundingClientRect()
   if (event.target === dialog.value && box && (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom)) close()
 }
-onBeforeUnmount(() => {disposed=true;if(dialog.value?.open){dialog.value.close();origin?.focus()}origin=null})
+onBeforeUnmount(() => {disposed=true;window.removeEventListener('keydown',keydown);if(dialog.value?.open){dialog.value.close();origin?.focus()}origin=null})
 </script>
 <template>
   <Teleport to="body">
