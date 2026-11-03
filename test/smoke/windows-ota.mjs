@@ -1,11 +1,13 @@
-// Released application's actual signed stable updater. No intercepted IPC.
+// Released application's actual signed updater. No intercepted IPC/endpoints.
 import assert from 'node:assert/strict'
 import {writeFile,readFile} from 'node:fs/promises'
 import {join} from 'node:path'
 import {createHash} from 'node:crypto'
 import {discoverMainTarget} from './windows-cdp.mjs'
+import {otaChannel} from './windows-ota-channel.mjs'
 import {verifyWindowsModelUi,modelConfigPath,assertModelSandbox} from './windows-model-ui.mjs'
-const [endpoint,output,sandbox,phase,version,fromVersion='0.2.18']=process.argv.slice(2)
+const [endpoint,output,sandbox,phase,version,fromVersion='0.2.18',requestedChannel]=process.argv.slice(2)
+const channel=otaChannel(requestedChannel)
 assert.equal(new URL(endpoint).hostname,'127.0.0.1')
 assert(['prepare-exit','prepare-restart','verify'].includes(phase))
 const target=await discoverMainTarget(endpoint)
@@ -26,22 +28,22 @@ try{
   assert.equal(facts.about.version,version)
   const prior=JSON.parse(await readFile(join(output,'ota-data-before.json'),'utf8'))
   assert.equal(hash(await readFile(config)),prior.configSha256,'actual config and synthetic credentials changed during OTA')
-  const status=await invoke('get_update_status');assert.equal(status.currentVersion,version);assert.equal(status.pendingRestart,null)
-  await writeFile(join(output,'ota-verified.json'),JSON.stringify({result:'pass',version,updatedApplicationReadback:true,automaticRestartEvidence:'ota-result.json OS process observation',configAndCredentialBytesUnchanged:true,immutableSandboxUnchanged:true,pendingRestartCleared:true},null,2)+'\n')
+  const status=await invoke('get_update_status');assert.equal(status.currentVersion,version);assert.equal(status.channel,channel);assert.equal(status.pendingRestart,null)
+  await writeFile(join(output,'ota-verified.json'),JSON.stringify({result:'pass',version,channel,updatedApplicationReadback:true,automaticRestartEvidence:'ota-result.json OS process observation',configAndCredentialBytesUnchanged:true,immutableSandboxUnchanged:true,pendingRestartCleared:true},null,2)+'\n')
  }else{
   assert.equal(facts.about.version,fromVersion)
   if(phase==='prepare-exit'){
    await verifyWindowsModelUi(call,output,facts,sandbox)
    await writeFile(join(output,'ota-data-before.json'),JSON.stringify({configSha256:hash(await readFile(config)),fixture:'production file save and synthetic keys through released IPC; no daily configuration'},null,2)+'\n')
   }
-  await invoke('set_update_channel',{channel:'stable'})
-  const checked=await invoke('check_for_update',{trigger:'user'});assert.equal(checked.update.availableVersion,version)
+  await invoke('set_update_channel',{channel})
+  const checked=await invoke('check_for_update',{trigger:'user'});assert.equal(checked.update.channel,channel);assert.equal(checked.update.availableVersion,version)
   await evaluate('window.__otaProgress=[];window.__otaChannel=window.__TAURI_INTERNALS__.transformCallback(raw=>{if(raw.message)window.__otaProgress.push(raw.message)},false);true')
-  const channel=await evaluate('window.__otaChannel')
-  await invoke('install_update',{candidateVersion:version,channel:'stable',backup:true,progress:'__CHANNEL__:'+channel})
+  const progressChannel=await evaluate('window.__otaChannel')
+  await invoke('install_update',{candidateVersion:version,channel,backup:true,progress:'__CHANNEL__:'+progressChannel})
   const status=await invoke('get_update_status');assert.equal(status.signatureVerified,true);assert.equal(status.pendingRestart,version)
   let progress=[];for(let n=0;n<40;n++){progress=await evaluate('window.__otaProgress');if(progress.some(p=>p.stage==='pending_restart'))break;await new Promise(resolve=>setTimeout(resolve,50))}assert(progress.some(p=>p.stage==='pending_restart'),'real channel never delivered pending_restart: '+JSON.stringify(progress))
-  await writeFile(join(output,phase+'.json'),JSON.stringify({result:'pass',from:facts.about.version,to:version,signatureVerified:true,pendingRestart:status.pendingRestart,progress,productionStableEndpoint:true},null,2)+'\n')
+  await writeFile(join(output,phase+'.json'),JSON.stringify({result:'pass',from:facts.about.version,to:version,channel,signatureVerified:true,pendingRestart:status.pendingRestart,progress,productionChannelEndpoint:true},null,2)+'\n')
   const action=phase==='prepare-exit'?"window.__TAURI_INTERNALS__.invoke('plugin:process|exit',{code:0})":"window.__TAURI_INTERNALS__.invoke('restart_after_update')"
   await evaluate('setTimeout(()=>{'+action+'},150);true')
  }

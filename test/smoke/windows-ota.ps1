@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][ValidateSet('msi','nsis')][string]$Kind,[Parameter(Mandatory=$true)][string]$OutputDirectory,[string]$Version='0.2.20',[string]$FromVersion='0.2.19')
+param([Parameter(Mandatory=$true)][ValidateSet('msi','nsis')][string]$Kind,[Parameter(Mandatory=$true)][string]$OutputDirectory,[string]$Version='0.2.20',[string]$FromVersion='0.2.19',[ValidateSet('stable','beta')][string]$Channel='stable',[Parameter(Mandatory=$true)][ValidatePattern('^[a-fA-F0-9]{64}$')][string]$ExpectedBuiltSha256)
 $ErrorActionPreference='Stop'
 if(!$IsWindows -or $env:GITHUB_ACTIONS -cne 'true' -or $env:GITHUB_REPOSITORY -cne 'gzers/opencodex-desktop'){throw 'OTA acceptance is restricted to the disposable project runner'}
 if(!(($Version -ceq '0.2.20' -and $FromVersion -ceq '0.2.19') -or ($Version -ceq '0.2.19' -and $FromVersion -ceq '0.2.18') -or ($Version -ceq '0.2.18' -and $FromVersion -ceq '0.2.17') -or ($Version -ceq '0.2.17' -and $FromVersion -ceq '0.2.16'))){throw 'Only the admitted adjacent releases may be tested'}
@@ -27,17 +27,17 @@ function Start-OwnedApp {
  return [Diagnostics.Process]::Start($info)
 }
 $taskApp=$null
-$taskResult=[ordered]@{result='fail';kind=$Kind;from=$FromVersion;to=$Version;baselinePackageSha256=$taskHash;installDirectory=$taskInstall;sandbox=$taskSandbox;scope='real public stable updater and published baseline; isolated production model file, synthetic credentials and prewrite backup; no user machine changes'}
+$taskResult=[ordered]@{result='fail';kind=$Kind;from=$FromVersion;to=$Version;channel=$Channel;baselinePackageSha256=$taskHash;expectedBuiltSha256=$ExpectedBuiltSha256.ToLowerInvariant();installDirectory=$taskInstall;sandbox=$taskSandbox;scope='real production-channel signed updater and published baseline; isolated production model file, synthetic credentials and prewrite backup; no user machine changes'}
 try{
  $taskApp=Start-OwnedApp
- & node (Join-Path $PSScriptRoot 'windows-ota.mjs') ('http://127.0.0.1:'+$taskPort) $taskOutput $taskSandbox 'prepare-exit' $Version $FromVersion
+ & node (Join-Path $PSScriptRoot 'windows-ota.mjs') ('http://127.0.0.1:'+$taskPort) $taskOutput $taskSandbox 'prepare-exit' $Version $FromVersion $Channel
  if($LASTEXITCODE -ne 0){throw 'Actual updater preparation failed'}
  if(!$taskApp.WaitForExit(30000)){throw 'Ordinary exit failed'}
  Start-Sleep -Seconds 5
  if((Get-Item -LiteralPath $taskExe).VersionInfo.ProductVersion -cne $FromVersion){throw 'Ordinary exit installed an unconfirmed update'}
  $taskResult.ordinaryExitPreservedOldVersion=$true
  $taskApp=Start-OwnedApp
- & node (Join-Path $PSScriptRoot 'windows-ota.mjs') ('http://127.0.0.1:'+$taskPort) $taskOutput $taskSandbox 'prepare-restart' $Version $FromVersion
+ & node (Join-Path $PSScriptRoot 'windows-ota.mjs') ('http://127.0.0.1:'+$taskPort) $taskOutput $taskSandbox 'prepare-restart' $Version $FromVersion $Channel
  if($LASTEXITCODE -ne 0){throw 'Explicit update handoff failed'}
  if(!$taskApp.WaitForExit(30000)){throw 'Updater did not exit the old process'}
  $deadline=[datetimeoffset]::UtcNow.AddMinutes(3)
@@ -58,9 +58,11 @@ try{
  $taskApp=Start-OwnedApp
  $taskResult.readbackMethod='automatic new process observed by OS; exact updated EXE then relaunched with explicit isolated test environment for Tauri/file readback'
 
- & node (Join-Path $PSScriptRoot 'windows-ota.mjs') ('http://127.0.0.1:'+$taskPort) $taskOutput $taskSandbox 'verify' $Version $FromVersion
+ & node (Join-Path $PSScriptRoot 'windows-ota.mjs') ('http://127.0.0.1:'+$taskPort) $taskOutput $taskSandbox 'verify' $Version $FromVersion $Channel
  if($LASTEXITCODE -ne 0){throw 'Reopened OTA result verification failed'}
- $taskResult.installedExecutableSha256=(Get-FileHash -LiteralPath $taskExe).Hash.ToLowerInvariant();$taskResult.result='pass'
+ $taskResult.installedExecutableSha256=(Get-FileHash -LiteralPath $taskExe).Hash.ToLowerInvariant()
+ if($taskResult.installedExecutableSha256 -cne $ExpectedBuiltSha256.ToLowerInvariant()){throw 'OTA installed EXE differs from the frozen candidate build'}
+ $taskResult.result='pass'
 }catch{$taskResult.error=$_.Exception.Message;throw}finally{
  if($taskApp -and !$taskApp.HasExited){$taskApp.Kill($true);[void]$taskApp.WaitForExit(10000)}
  $taskResult|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $taskOutput 'ota-result.json') -Encoding utf8
