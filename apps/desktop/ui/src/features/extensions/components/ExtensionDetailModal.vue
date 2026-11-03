@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import UiButton from '@/components/ui/UiButton.vue'
-import { onMounted, ref, useId } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
+import {layoutObserver} from '@/lib/layoutObserver'
 import ClientIcon from './ClientIcon.vue'
 import MarkdownContent from '@/components/patterns/MarkdownContent.vue'
 import { clientLabels, skillClientOrder } from '../presentation'
@@ -42,6 +43,16 @@ const emit = defineEmits<{
 
 const titleId = `ext-detail-title-${useId()}`
 const dialog = ref<HTMLElement | null>(null)
+const constrained=ref(false)
+let observer:ReturnType<typeof layoutObserver>,disposed=false
+function measure(){
+ const body=dialog.value?.querySelector<HTMLElement>('.ext-detail-body')
+ const facts=dialog.value?.querySelector<HTMLElement>('.ext-detail-facts')
+ const targets=dialog.value?.querySelector<HTMLElement>('.ext-detail-targets')
+ if(!body||!facts||!targets)return
+ const gap=Number.parseFloat(getComputedStyle(body).gap)||0
+ constrained.value=body.clientHeight<facts.offsetHeight+targets.offsetHeight+gap*2+96
+}
 
 const clientOrder = skillClientOrder
 
@@ -64,7 +75,9 @@ function close() {
   emit('close')
 }
 
-onMounted(() => dialog.value?.focus())
+onMounted(() => {dialog.value?.focus();measure();observer=layoutObserver(measure);if(dialog.value)for(const e of dialog.value.querySelectorAll('.ext-detail-body,.ext-detail-facts,.ext-detail-targets'))observer?.observe(e)})
+watch(()=>[props.markdown,props.facts],()=>{void nextTick().then(()=>{if(!disposed)measure()})})
+onBeforeUnmount(()=>{disposed=true;observer?.disconnect()})
 </script>
 
 <template>
@@ -72,6 +85,7 @@ onMounted(() => dialog.value?.focus())
     <div
       ref="dialog"
       class="modal modal-wide modal-tall ext-detail"
+      :class="{'ext-detail-constrained':constrained}"
       role="dialog"
       aria-modal="true"
       :aria-labelledby="titleId"
@@ -132,3 +146,11 @@ onMounted(() => dialog.value?.focus())
     </div>
   </div>
 </template>
+<style scoped>
+/* In short/zoomed windows metadata must not erase the document or targets.
+   Keep the normal document-only scroll, then share one body scrollport when
+   that layout no longer has room for a readable document. */
+.ext-detail-constrained .ext-detail-body{overflow:auto;overscroll-behavior:contain}
+.ext-detail-constrained .ext-detail-doc{flex:none;min-height:96px}
+.ext-detail-constrained .ext-detail-md{flex:none;overflow:visible}
+</style>
