@@ -79,6 +79,9 @@ export function installModelFixtures() {
   let importPrefs={keys:true,extensions:true};importCredentialChoiceApi.load=async()=>({...importPrefs});importCredentialChoiceApi.save=async(value)=>{importPrefs={...value}}
   let endpoint={endpointId:'fixture-webdav',url:'https://dav.example.test',remotePath:'/config-sync',username:'fixture-user',credentialRefId:'fixture-opaque',tlsPolicy:'verify_required',payloadProtection:'integrity_only',conflictPolicy:'ask' as const};syncEndpointApi.load=async()=>({endpoint:{...endpoint}});syncEndpointApi.save=async(value)=>{endpoint={...endpoint,url:value.baseUrl,remotePath:value.remotePath,username:value.username};return {endpoint:{...endpoint}}};syncEndpointApi.test=async()=>({connectionState:'synced',operationState:'succeeded',message:'WebDAV 连接成功，当前表单尚未保存。',snapshotId:null,backupId:null,etag:null})
   const frozen=new Map<string,FilePlan>();const results=new Map<string,TransferResult>();let lastResult:string|null=null;
+  // Stay inside the explicit in-memory fixture when previews are cancelled.
+  // Completed exports retain the same plan for result/retry inspection.
+  modelTransferApi.discardUnattempted=async(id)=>results.has(id)?false:frozen.delete(id);
   transferResultApi.read=async(id)=>structuredClone(results.get(id??lastResult??'')??null);transferResultApi.readMode=async()=>structuredClone(results.get(lastResult??'')??null);transferResultApi.openDirectory=async()=>{};transferResultApi.backups=async()=>[];
   modelTransferApi.loadRemoteScope=async()=>({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false})
   importedConnectionApi.list=async()=>({baseline:'explicit-visual-fixture',items:[]})
