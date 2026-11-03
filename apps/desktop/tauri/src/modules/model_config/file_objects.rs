@@ -3579,6 +3579,107 @@ mod tests {
         );
     }
     #[test]
+    fn display_only_legacy_import_keeps_extension_file_and_backup_scope_untouched() {
+        for with_existing_extensions in [false, true] {
+            let source = tempfile::tempdir().unwrap();
+            let target = tempfile::tempdir().unwrap();
+            crate::modules::preferences::PreferencesStore::new(source.path())
+                .save(&crate::modules::preferences::Preferences {
+                    interface_scale: 125,
+                    ..Default::default()
+                })
+                .unwrap();
+            // An old file carries both preferences and whole-extension settings.
+            let plan = transfer::prepare_file_scope(
+                source.path(),
+                transfer::ExportScope {
+                    channel_families: Default::default(),
+                    channel_models: Default::default(),
+                    include_policy: false,
+                    channel_ids: vec![],
+                    template_refs: vec![],
+                    include_global: false,
+                },
+                None,
+                false,
+                &ManagerScope {
+                    preferences: true,
+                    extensions: true,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+            let bytes = transfer::file_bytes(source.path(), &plan.id).unwrap();
+            let extension_path = target.path().join("manager-state/extension-config.json");
+            let extension_before = if with_existing_extensions {
+                let config = crate::modules::extensions::ExtensionConfig {
+                    skills: vec!["local-only-skill".into()],
+                    servers: vec!["local-only-mcp".into()],
+                    ..Default::default()
+                };
+                let projection = crate::modules::extensions::projection::ExtensionProjection {
+                    fingerprint: crate::modules::extensions::ProjectionFingerprint::create(
+                        config.fingerprint(),
+                        chrono::Utc::now(),
+                    ),
+                    config,
+                };
+                let bytes = serde_json::to_vec(&projection).unwrap();
+                atomic_write(&extension_path, &bytes, 0o600).unwrap();
+                Some(bytes)
+            } else {
+                None
+            };
+            let incoming = receive(target.path(), &bytes, None).unwrap();
+            assert!(incoming.manager.as_ref().unwrap().extensions.is_some());
+            // The UI's portable display selection must project away that legacy
+            // section before preparing a backup or adopting the incoming plan.
+            let selected = transfer::select_received(
+                target.path(),
+                &incoming.id,
+                transfer::ReceiveScope {
+                    preferences: true,
+                    extensions: false,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+            assert!(selected.manager.as_ref().unwrap().extensions.is_none());
+            crate::modules::model_config::transfer_backup::prepare(
+                target.path(),
+                &selected.id,
+                true,
+            )
+            .unwrap();
+            accept_all(
+                target.path(),
+                &selected.id,
+                false,
+                false,
+                None,
+                &Memory::default(),
+            )
+            .unwrap();
+            crate::modules::model_config::transfer_backup::finish(target.path(), &selected.id)
+                .unwrap();
+            assert_eq!(std::fs::read(&extension_path).ok(), extension_before);
+            assert_eq!(
+                crate::modules::model_config::transfer_backup::status(target.path(), &selected.id)
+                    .unwrap()
+                    .unwrap()
+                    .groups,
+                vec!["preferences"]
+            );
+            assert_eq!(
+                crate::modules::preferences::PreferencesStore::new(target.path())
+                    .load()
+                    .unwrap()
+                    .interface_scale,
+                125
+            );
+        }
+    }
+    #[test]
     fn one_protected_manifest_restores_selected_manager_settings_and_inactive_webdav_password() {
         use crate::modules::sync::config::{
             CredentialRef, SyncConfig, SyncConfigStore, SyncEndpointConfig,

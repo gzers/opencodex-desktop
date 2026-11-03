@@ -33,6 +33,36 @@ async function customExportScope(wrapper:ReturnType<typeof render>){
 
 beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();localStorage.clear();vi.mocked(transferChoiceApi.load).mockResolvedValue(null);vi.mocked(transferChoiceApi.save).mockImplementation(async(_remote,choice)=>choice);vi.mocked(transferProtectionApi.load).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(transferProtectionApi.save).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(importCredentialChoiceApi.load).mockResolvedValue({keys:true,extensions:true});vi.mocked(modelTransferApi.discardUnattempted).mockResolvedValue(true);vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
 describe('model transfer review', () => {
+  it('exports display preferences without the hidden whole-extension configuration even for remembered legacy choices',async()=>{
+    vi.mocked(transferChoiceApi.load).mockResolvedValue({selectedIds:[JSON.stringify(['manager','preferences'])],preferences:true,extensions:true,credentialIds:[],versions:{},mcpSources:{},includeGlobal:false,webdavPasswords:false})
+    vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'display-only',package:pack()})
+    const wrapper=render();await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.anything(),undefined,false,expect.objectContaining({preferences:true,extensions:false}))
+    wrapper.unmount()
+  })
+  it('reselects a legacy file before confirmation so display preferences do not adopt extension configuration',async()=>{
+    const original={id:'legacy-settings',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],manager:{preferences:{theme:'system'},extensions:{skills:['not-selected-skill'],servers:['not-selected-mcp'],sync_method:'copy'},webdav:[],accounts:[]},comparison:{source:'file' as const,createdAt:'2026-10-18T00:00:00Z',changes:[{kind:'preferences',id:'preferences',label:'通用偏好',mark:'update' as const}],unchanged:0}}
+    vi.mocked(modelTransferApi.receive).mockResolvedValue(original)
+    vi.mocked(modelTransferApi.select).mockResolvedValue({...original,manager:{...original.manager,extensions:null}})
+    const wrapper=render();await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click')
+    await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises()
+    expect(modelTransferApi.select).toHaveBeenCalledWith('legacy-settings',expect.objectContaining({preferences:true,extensions:false}))
+    expect(modelTransferApi.accept).not.toHaveBeenCalled();wrapper.unmount()
+  })
+
+  it('blocks legacy-file confirmation if projecting the visible portable scope fails',async()=>{
+    const original={id:'legacy-settings-failed',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],manager:{preferences:{theme:'system'},extensions:{skills:['not-selected'],servers:[],sync_method:'copy'},webdav:[]},comparison:{source:'file' as const,createdAt:'2026-10-18T00:00:00Z',changes:[],unchanged:0}}
+    vi.mocked(modelTransferApi.receive).mockResolvedValue(original)
+    vi.mocked(modelTransferApi.select).mockRejectedValue({message:'fixture projection failed'})
+    const wrapper=render();await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click')
+    await wrapper.findAll('button').find(b=>b.text()==='选择文件')!.trigger('click');await flushPromises();await flushPromises()
+    const confirm=wrapper.findAll('button').find(b=>b.text()==='确认更新')!
+    expect(confirm.attributes('disabled')).toBeDefined();expect(wrapper.text()).toContain('fixture projection failed')
+    expect(modelTransferApi.accept).not.toHaveBeenCalled();wrapper.unmount()
+  })
   it('shows scope inline without preparing or writing on mount, and blocks writes until the saved remote scope is known',async()=>{
     let resolve!:(value:Awaited<ReturnType<typeof modelTransferApi.loadRemoteScope>>)=>void
     vi.mocked(modelTransferApi.loadRemoteScope).mockReturnValue(new Promise(done=>{resolve=done}))
@@ -198,7 +228,7 @@ describe('model transfer review', () => {
     await flushPromises();await customExportScope(wrapper)
     await chooseExport(wrapper,'测试族')
     await wrapper.findAll('button').find(b=>b.text()===(wrapper.props('remote')?'同步配置':'导出配置'))!.trigger('click');await flushPromises()
-    expect(modelTransferApi.prepare).toHaveBeenCalledWith({includePolicy:false,channelIds:[],includeGlobal:false,templateRefs:[{templateId:'family',revisionId:'revision-1'}]},undefined,false,{preferences:true,extensions:true,webdav:false,webdavPasswords:true,credentialIds:[]})
+    expect(modelTransferApi.prepare).toHaveBeenCalledWith({includePolicy:false,channelIds:[],includeGlobal:false,templateRefs:[{templateId:'family',revisionId:'revision-1'}]},undefined,false,{preferences:true,extensions:false,webdav:false,webdavPasswords:true,credentialIds:[]})
     expect(modelTransferApi.export).not.toHaveBeenCalled()
     useModelsStore().snapshot!.library.templates[0]!.label='later'
     await wrapper.findAll('button').find(b=>b.text()==='生成配置包')!.trigger('click');await flushPromises()
@@ -369,7 +399,7 @@ describe('model transfer review', () => {
     vi.mocked(modelTransferApi.prepareUpload).mockResolvedValue({id:'up',phase:'prepared',package:pack(),sync:{source:'local',changes:[{kind:'template',id:'family',label:'测试族',mark:'update',before:1,after:2}],unchanged:3,createdAt:'2026-11-01T10:00:00Z'}})
     vi.mocked(modelTransferApi.publish).mockResolvedValue({id:'up',phase:'published',package:pack()})
     const wrapper=render(true);await flushPromises();await flushPromises();await chooseExport(wrapper,'测试族');await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({templateIds:['family'],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false}))
+    expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({templateIds:['family'],channelIds:[],includeGlobal:false,preferences:true,extensions:false,includeKeys:false}))
     expect(modelTransferApi.prepareUpload).toHaveBeenCalledOnce();expect(modelTransferApi.download).not.toHaveBeenCalled();expect(modelTransferApi.publish).not.toHaveBeenCalled()
     expect(wrapper.text()).toContain('本机配置 → 云端');expect(wrapper.text()).toContain('1 项变化');expect(wrapper.text()).toContain('3 项保持不变');expect(wrapper.text()).toContain('测试族')
     expect(wrapper.findAll('label').some(l=>l.text()==='更新前备份')).toBe(false)
