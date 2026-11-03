@@ -18,6 +18,16 @@ function deferred<T>(){let resolve!:(value:T)=>void;let reject!:(cause:unknown)=
 async function browse(wrapper:ReturnType<typeof render>){await button(wrapper,'更换执行模型').trigger('click');await button(wrapper,'original / old').trigger('click')}
 beforeEach(()=>{vi.clearAllMocks();vi.mocked(modelApi.agentSettings).mockResolvedValue({...saved});vi.mocked(modelApi.executionDirectory).mockResolvedValue(execution());vi.mocked(modelApi.saveAgentSettings).mockImplementation(async value=>value)})
 describe('page state follows the prototype',()=>{
+ it.each([false,true])('updates another mounted consumer after shared settings commit and rejects its older read (%s)',async pendingRead=>{
+  const pinia=createPinia();setActivePinia(pinia);useModelsStore().acceptTransfer(fileSnapshot())
+  const oldRead=deferred<AgentSettings|null>();vi.mocked(modelApi.agentSettings).mockResolvedValueOnce(null)
+  if(pendingRead)vi.mocked(modelApi.agentSettings).mockReturnValueOnce(oldRead.promise);else vi.mocked(modelApi.agentSettings).mockResolvedValueOnce(null)
+  const Host=defineComponent({components:{AgentExecutionField},template:'<div><AgentExecutionField/><AgentExecutionField/></div>'})
+  const host=mount(Host,{global:{plugins:[pinia],stubs:{UiDialog:dialog,ModelPicker:picker}}});await flushPromises();const [first,second]=host.findAllComponents(AgentExecutionField)
+  await first!.findAll('button').find(b=>b.text()==='Agent 配置')!.trigger('click');await first!.findAll('button').find(b=>b.text()==='选择执行模型')!.trigger('click');await flushPromises();await first!.get('.pick-temp').trigger('click');await first!.findAll('button').find(b=>b.text()==='保存共用设置')!.trigger('click');await flushPromises()
+  if(pendingRead){oldRead.resolve(saved);await flushPromises()}
+  expect(second!.emitted('update:modelValue')?.at(-1)?.[0]).toEqual(expect.objectContaining({providerId:'runtime-provider',modelId:'exact/native-id',connectionDigest:'selected-binding'}));expect(second!.text()).toContain('exact/native-id');expect(second!.text()).not.toContain('尚未选择执行模型');expect(second!.text()).not.toContain('original / old');host.unmount()
+ })
  it('explains an unconfigured native model directory without exposing the raw English backend message',async()=>{
   vi.mocked(modelApi.executionDirectory).mockRejectedValueOnce({code:1,message:'application is not configured yet'})
   const wrapper=render();await flushPromises();await browse(wrapper);await flushPromises()
