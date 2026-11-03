@@ -8,10 +8,12 @@ import type { TrayAction } from '@/features/tray/api'
 import type { RuntimeState } from '@/types/ui'
 import { displayPath } from '@/lib/paths'
 import { escapeHtml } from '@/lib/html'
+import {useModalStore} from '@/app/modal/store'
 
 export function useLifecycleController(deps: { runDoctor: () => void | Promise<void>; loadLogs: () => void | Promise<void> }) {
   const app = useAppStore()
   const routes = useRouteStore()
+  const modalStore=useModalStore()
 
   function setRuntimeState(next: RuntimeState) {
     app.setRuntimeState(next)
@@ -71,7 +73,9 @@ export function useLifecycleController(deps: { runDoctor: () => void | Promise<v
       body: '<p>正在读取当前状态与配置影响摘要；不会读取配置内容或凭据。</p>',
       cancelLabel: '取消',
     })
+    const preparation=modalStore.generation
     const loaded = await app.loadRestoreRiskSummary()
+    if(modalStore.generation!==preparation)return
     if (!loaded) {
       app.openModal({
         title: '影响摘要不可用',
@@ -128,8 +132,9 @@ export function useLifecycleController(deps: { runDoctor: () => void | Promise<v
       confirmLabel: '生成备份',
       cancelLabel: '稍后处理',
       onConfirm: () => {
+        const confirmed=modalStore.generation
         void app.createRestoreBackup().then(backup => {
-          if (!backup) return
+          if (!backup||modalStore.generation!==confirmed) return
           const summaryState = target === 'external_takeover' ? '配置外部接管' : '启动状态存在风险'
           app.openModal({
             title: '官方恢复引导',

@@ -132,6 +132,10 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  // candidate owns this newly corrected keyboard contract.
  if(facts.about.version==='0.2.20'){
   const escape=async()=>{for(const type of ['keyDown','keyUp'])await call('Input.dispatchKeyEvent',{type,key:'Escape',code:'Escape',windowsVirtualKeyCode:27,nativeVirtualKeyCode:27})}
+  const originalPreferences=await invoke('get_preferences')
+  await invoke('save_preferences',{preferences:{...originalPreferences,visualEffects:'low'}})
+  await call('Page.reload',{ignoreCache:true})
+  await wait("document.documentElement.dataset.effects==='low'&&!!document.querySelector('.channel-table')",'native low-effects menu acceptance')
   await openChannel(channelId,'native-sandbox-key')
   await click('编辑明细','.channel-model-table')
   await wait("!!document.querySelector('dialog[open] input')",'native model detail open')
@@ -141,8 +145,18 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
   assert.equal(await evaluate("document.querySelector('input[aria-label=\"fixture-alpha路由别名\"]').value"),'','cancel must discard detail alias')
   await click('编辑明细','.channel-model-table')
   await wait("!!document.querySelector('dialog[open]')",'reopen native model detail')
-  await click('Fast支持','dialog[open]')
+  const menuTrigger=await evaluate("(()=>{const b=document.querySelector('dialog[open] button[aria-label=\"Fast支持\"]');if(!b)throw Error('native Fast select absent');b.scrollIntoView({block:'center'});return true})()")
+  assert(menuTrigger)
+  const triggerPoint=await wait("(()=>{const b=document.querySelector('dialog[open] button[aria-label=\"Fast支持\"]');if(!b)return null;const r=b.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2;return x>0&&y>0&&x<innerWidth&&y<innerHeight&&b.contains(document.elementFromPoint(x,y))?{x,y,top:r.top,bottom:r.bottom}:null})()",'native menu trigger is visible and hit-testable')
+  await writeFile(join(output,'model-menu-trigger-native.json'),JSON.stringify(triggerPoint,null,2)+'\n')
+  await call('Input.dispatchMouseEvent',{type:'mousePressed',x:triggerPoint.x,y:triggerPoint.y,button:'left',buttons:1,clickCount:1})
+  await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:triggerPoint.x,y:triggerPoint.y,button:'left',buttons:0,clickCount:1})
   await wait("!!document.querySelector('dialog[open] [data-ui-escape-owner]')",'native inner select open')
+  const menuPosition=await wait("(()=>{const d=document.querySelector('dialog[open]'),t=d?.querySelector('button[aria-label=\"Fast支持\"]'),m=d?.querySelector('[data-ui-escape-owner]');if(!t||!m)return null;const a=t.getBoundingClientRect(),b=m.getBoundingClientRect(),zoom=Number(getComputedStyle(d).zoom)||1;return b.width&&b.height?{trigger:{left:a.left,right:a.right,top:a.top,bottom:a.bottom},menu:{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width},zoom,width:innerWidth,height:innerHeight}:null})()",'native menu geometry')
+  const idealLeft=Math.max(12*menuPosition.zoom,Math.min(menuPosition.trigger.right-menuPosition.menu.width,menuPosition.width-menuPosition.menu.width-12*menuPosition.zoom))
+  await writeFile(join(output,'model-menu-position-native.json'),JSON.stringify(menuPosition,null,2)+'\n')
+  assert(Math.abs(menuPosition.menu.left-idealLeft)<=3,'low-effects menu detached horizontally from its trigger')
+  assert(Math.min(Math.abs(menuPosition.menu.top-menuPosition.trigger.bottom),Math.abs(menuPosition.trigger.top-menuPosition.menu.bottom))<=8*menuPosition.zoom+3,'low-effects menu detached vertically from its trigger')
   // AX activation can leave focus elsewhere in the same owner. Use the real
   // header button as that focus target; do not synthesize a DOM Escape event.
   await evaluate("document.querySelector('dialog[open] header button').focus();true")
@@ -151,8 +165,11 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
   const canceledEvidence=await modelFileEvidence(configPath,expected)
   assert(canceledEvidence.bytes.equals(initialBytes),'keyboard cancellation changed config.json')
   assert.deepEqual(canceledEvidence.backups,initialEvidence.backups,'keyboard cancellation added a backup')
-  await writeFile(join(output,'model-dialog-keyboard-native.json'),JSON.stringify({result:'pass',version:facts.about.version,input:'real WebView2 CDP keyDown/keyUp',populatedInputEscape:true,aliasDiscarded:true,innerSelectPriorityFromOwnerFocus:true,secondEscapeClosesOwner:true,configAndBackupsUnchanged:true,noModelRequest:true},null,2)+'\n')
+  await writeFile(join(output,'model-dialog-keyboard-native.json'),JSON.stringify({result:'pass',version:facts.about.version,input:'real WebView2 CDP keyDown/keyUp',populatedInputEscape:true,aliasDiscarded:true,innerSelectPriorityFromOwnerFocus:true,secondEscapeClosesOwner:true,configAndBackupsUnchanged:true,noModelRequest:true,lowEffectsMenuPosition:menuPosition},null,2)+'\n')
   await click('返回渠道列表');await wait("!!document.querySelector('.channel-table')&&!document.querySelector('.channel-detail-name')",'keyboard checks return to clean list')
+  await invoke('save_preferences',{preferences:originalPreferences})
+  await call('Page.reload',{ignoreCache:true})
+  await wait("!!document.querySelector('.channel-table')",'restore isolated display preferences before remaining checks')
  }
  await openChannel(otherChannelId,'native-scope-a-original-key')
  assert.equal(await evaluate(detailSaveDisabled),true,'clean detail Save disabled')

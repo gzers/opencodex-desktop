@@ -6,9 +6,11 @@ import type { ModalState } from '@/stores/app'
 export const useModalStore = defineStore('modal', {
   state: () => ({
     current: null as ModalState | null,
+    generation:0,
   }),
   actions: {
     open(modal: ModalState) {
+      this.generation++
       this.current = { cancelLabel: '取消', ...modal }
     },
     // 打开需要文本输入的对话框，返回字段取值；取消（按钮、Esc、遮罩）返回 null。
@@ -22,6 +24,7 @@ export const useModalStore = defineStore('modal', {
       })
     },
     resolve(result: 'confirm' | 'cancel' | 'delete' | 'resolve', values?: Record<string, string>) {
+      this.generation++
       const modal = this.current
       this.current = null
       if (!modal) return

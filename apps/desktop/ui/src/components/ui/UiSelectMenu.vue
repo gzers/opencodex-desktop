@@ -10,7 +10,7 @@ const emit = defineEmits<{ close: [] }>()
 const anchor = ref<HTMLElement | null>(null)
 const menu = ref<HTMLElement | null>(null)
 const target = ref<HTMLElement | string>('body')
-const position = ref({ left: '0px', top: '0px', minWidth: '0px', maxWidth: '320px', maxHeight: '260px' })
+const position = ref({ position:'fixed' as 'fixed'|'absolute', left: '0px', top: '0px', minWidth: '0px', maxWidth: '320px', maxHeight: '260px' })
 const trigger = () => anchor.value?.closest('.select')?.querySelector<HTMLButtonElement>('.select-trigger')
 const options = () => [...(menu.value?.querySelectorAll<HTMLButtonElement>('[role="option"]:not(:disabled),[role="menuitem"]:not(:disabled),[role="menuitemradio"]:not(:disabled)') ?? [])]
 const visible = computed(() => props.open)
@@ -31,10 +31,14 @@ function place() {
   const upwards = below < height && above > below
   const available = Math.max(30, upwards ? above : below)
   const shownHeight = Math.min(height, available)
-  const host = target.value instanceof HTMLDialogElement ? target.value.getBoundingClientRect() : null
+  const hostElement = target.value instanceof HTMLDialogElement ? target.value : null
+  const host = hostElement?.getBoundingClientRect()
   position.value = {
-    left: `${Math.max(12, Math.min(bounds.right / zoom - width, viewportWidth - width - 12)) - (host?.left ?? 0) / zoom}px`,
-    top: `${(upwards ? Math.max(12, bounds.top / zoom - shownHeight - 6) : bounds.bottom / zoom + 6) - (host?.top ?? 0) / zoom}px`,
+    // An explicit absolute dialog child has one stable coordinate space. Fixed
+    // positioning changes its containing block when blur is enabled/disabled.
+    position:hostElement?'absolute':'fixed',
+    left: `${Math.max(12, Math.min(bounds.right / zoom - width, viewportWidth - width - 12)) - (host?.left ?? 0) / zoom - (hostElement?.clientLeft ?? 0) + (hostElement?.scrollLeft ?? 0)}px`,
+    top: `${(upwards ? Math.max(12, bounds.top / zoom - shownHeight - 6) : bounds.bottom / zoom + 6) - (host?.top ?? 0) / zoom - (hostElement?.clientTop ?? 0) + (hostElement?.scrollTop ?? 0)}px`,
     minWidth: `${Math.min(bounds.width / zoom, viewportWidth - 24)}px`,
     maxWidth: `${viewportWidth - 24}px`,
     maxHeight: `${Math.min(260, available)}px`,

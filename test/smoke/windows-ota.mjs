@@ -5,7 +5,8 @@ import {join} from 'node:path'
 import {createHash} from 'node:crypto'
 import {discoverMainTarget} from './windows-cdp.mjs'
 import {otaChannel} from './windows-ota-channel.mjs'
-import {verifyWindowsModelUi,modelConfigPath,assertModelSandbox} from './windows-model-ui.mjs'
+import {modelConfigPath,assertModelSandbox} from './windows-model-ui.mjs'
+import {seedOtaBaseline} from './windows-ota-fixture.mjs'
 const [endpoint,output,sandbox,phase,version,fromVersion='0.2.18',requestedChannel]=process.argv.slice(2)
 const channel=otaChannel(requestedChannel)
 assert.equal(new URL(endpoint).hostname,'127.0.0.1')
@@ -28,13 +29,13 @@ try{
   assert.equal(facts.about.version,version)
   const prior=JSON.parse(await readFile(join(output,'ota-data-before.json'),'utf8'))
   assert.equal(hash(await readFile(config)),prior.configSha256,'actual config and synthetic credentials changed during OTA')
+  const snapshot=await invoke('model_file_snapshot');assert(snapshot.policy.channels.some(c=>c.connection.providerId===prior.providerId),'updated application cannot reopen the baseline saved provider')
   const status=await invoke('get_update_status');assert.equal(status.currentVersion,version);assert.equal(status.channel,channel);assert.equal(status.pendingRestart,null)
   await writeFile(join(output,'ota-verified.json'),JSON.stringify({result:'pass',version,channel,updatedApplicationReadback:true,automaticRestartEvidence:'ota-result.json OS process observation',configAndCredentialBytesUnchanged:true,immutableSandboxUnchanged:true,pendingRestartCleared:true},null,2)+'\n')
  }else{
   assert.equal(facts.about.version,fromVersion)
   if(phase==='prepare-exit'){
-   await verifyWindowsModelUi(call,output,facts,sandbox)
-   await writeFile(join(output,'ota-data-before.json'),JSON.stringify({configSha256:hash(await readFile(config)),fixture:'production file save and synthetic keys through released IPC; no daily configuration'},null,2)+'\n')
+   await seedOtaBaseline(invoke,output,facts,sandbox)
   }
   await invoke('set_update_channel',{channel})
   const checked=await invoke('check_for_update',{trigger:'user'});assert.equal(checked.update.channel,channel);assert.equal(checked.update.availableVersion,version)

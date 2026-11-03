@@ -165,7 +165,7 @@ describe('清理沿用公共 UiDialog', () => {
       { id: 'pending', kind: 'warning', category: 'system', title: '待处理', detail: '原因', read: false, time: '' },
       { id: 'done', kind: 'info', category: 'system', title: '已处理', detail: '结果', resolved: true, read: true, time: '' },
     ]
-    const clear = vi.spyOn(notifications, 'clearAll').mockImplementation(async () => { notifications.list = [] })
+    const clear = vi.spyOn(notifications, 'clearAll').mockImplementation(async () => { notifications.list = [];return true })
     await wrapper.get('.notification-btn').trigger('click')
     await button('清理').trigger('click')
     await flushPromises()

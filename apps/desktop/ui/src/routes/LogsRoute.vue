@@ -79,11 +79,9 @@ function openClearResolvedNotificationsModal() {
     confirmLabel: '清理',
     onConfirm: () => {
       if (pending > 0) {
-        void app.clearNotifications()
-        app.showToast('全部通知已清理。')
+        void controller.clearAllNotifications()
       } else {
-        void app.clearResolvedNotifications()
-        app.showToast('已清理已解决通知。')
+        void controller.clearResolvedNotifications()
       }
     },
   })
@@ -94,7 +92,7 @@ function openClearReadNotificationsModal() {
     title: '清理已读通知',
     body: '<p class="modal-lead">仅清空已读通知，未读通知保留在通知中心。</p>',
     confirmLabel: '清理',
-    onConfirm: () => { void app.clearReadNotifications(); app.showToast('已读通知已清理。') },
+    onConfirm: async () => { const success=await app.clearReadNotifications(); app.showToast(success?'已读通知已清理。':'清理已读通知失败；已保留当前通知。') },
   })
 }
 </script>
