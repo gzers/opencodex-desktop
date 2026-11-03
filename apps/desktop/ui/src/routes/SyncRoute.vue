@@ -21,4 +21,11 @@ const syncStore=useSyncStore();watch(()=>syncStore.pendingAction,()=>{if(syncSto
 <style scoped>
 .sync-connection-summary{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3)}.sync-connection-summary small{display:block;color:var(--muted);overflow-wrap:anywhere}.sync-route{min-width:0;min-height:0;height:100%;display:flex;flex-direction:column}.sync-route>[role=tabpanel]{display:flex;flex:1;min-height:0}.sync-route :deep(.sticky-page-tabs){flex:none}.sync-tabs{display:flex;gap:var(--space-3);flex-wrap:wrap;border-bottom:1px solid var(--border);padding-block:var(--space-2)}.sync-tabs button{border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);font-weight:var(--weight-semibold);min-height:var(--control-md);padding:var(--space-2) var(--space-3);cursor:pointer}.sync-tabs button.active{border-color:var(--text);color:var(--text)}.sync-route [role=tabpanel]{padding-top:12px}
 :global(.app-window[data-compact="true"] .sync-route){overflow:auto}:global(.app-window[data-compact="true"] .sync-route>[role="tabpanel"]){flex-shrink:0;min-height:400px}
+/* Frozen sync-config.css:100 uses available content height, including UI zoom. */
+:global(html[data-route="sync"] .main){container-type:size;container-name:sync-workspace}
+@container sync-workspace (max-height:600px){
+ .sync-route :deep(.topbar){margin-bottom:12px}
+ .sync-route :deep(.page-title p),.sync-route :deep(.model-transfer>.card-head>div>p){display:none}
+ .sync-route :deep(.model-transfer){gap:8px}
+}
 </style>

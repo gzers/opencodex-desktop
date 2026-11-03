@@ -490,9 +490,8 @@ async function closePreview() { if (!busy.value) { await discardPendingFilePlans
         </ObjectScopeTree>
       </div>
       <aside v-if="exportSource!=='draft'" class="sync-scope-credentials" aria-label="其他凭据" data-testid="sync-scope-credentials">
-        <h3>其他凭据</h3>
-
-        <p class="sync-credentials-note">{{ remote ? '账户按平台能力提供可选范围；当前仅账户信息；以下凭据可另选。' : '账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。' }}</p>
+        <header class="sync-credentials-intro"><h3>其他凭据</h3>
+        <p class="sync-credential-hint">{{ remote ? '账户按平台能力提供可选范围；当前仅账户信息；以下凭据可另选。' : '账户按平台能力提供可选范围；当前仅账户信息，WebDAV 密码随配置选择；以下凭据可另选。' }}</p></header>
         <section v-if="remote" class="sync-credential-block"><label><input v-model="remoteEncrypted" type="checkbox" :disabled="busy" />加密同步内容</label><label v-if="remoteEncrypted" class="sx-field"><span>保护口令</span><input v-model="remotePassword" class="input" type="password" autocomplete="off" aria-label="同步保护口令" :placeholder="remoteHasPassword?'本机已保存 · 留空保留':'填写保护口令'" :disabled="busy" /></label><p v-if="protectionError" class="model-error" role="alert">{{ protectionError }}</p><p class="sync-credential-hint">可选，与连接密码独立。</p></section>
         <section class="sync-credential-block">
           <label class="sync-credential-head"><input :checked="credentialState('channel')===true" :indeterminate="credentialState('channel')==='mixed'" :aria-checked="credentialState('channel')" @change="setCredentialGroup('channel',($event.target as HTMLInputElement).checked)" type="checkbox" :disabled="busy||catalogueLoading||!keyChannelIds.length" />渠道 API Key</label>
@@ -638,17 +637,19 @@ label{display:flex;align-items:center;gap:8px}
 .sync-scope-main{display:flex;flex-direction:column;gap:10px;min-width:0;min-height:0}.sync-scope-main :deep(.scope-object-tree){display:flex;flex-direction:column;flex:1;min-height:0}.sync-scope-main :deep(.ui-tree-table){flex:1;min-height:0;overflow:auto}.sync-scope-main :deep(thead){position:sticky;top:0;z-index:1;background:var(--rail)}
 .sync-scope-toolbar{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-2);align-items:end;min-width:0}
 .sync-scope-toolbar .sync-scope-search{min-width:0}
-.sync-credentials-note{margin:0;color:var(--muted);font-size:var(--text-label);line-height:1.6}
-.sync-credential-block{display:grid;gap:var(--space-1);padding-block:15px;border-bottom:1px solid var(--border-soft)}
+.sync-credentials-note{margin:14px 0 0;color:var(--muted);font-size:var(--text-label);line-height:1.65}
+.sync-credential-block{padding-block:15px;border-bottom:1px solid var(--border-soft)}
 .sync-credential-head,.sync-credential-inline,.sync-credential-password{display:flex;gap:var(--space-2);align-items:center;font-size:var(--text-control)}
-.sync-credential-hint{margin:0;color:var(--muted);font-size:var(--text-caption);line-height:1.5}
+.sync-credential-hint{margin:6px 0 0;color:var(--muted);font-size:var(--text-caption);line-height:1.6}
+.sync-credential-head{gap:9px;align-items:flex-start}.sync-credential-head input{margin-top:3px}
 .sync-credential-more{font-size:var(--text-label)}
 .sync-credential-password{display:grid;gap:var(--space-1);align-items:stretch}
 .sync-account-filter{display:grid;gap:var(--space-1);justify-items:start}
 
 .sync-scope-controls{display:flex;flex-wrap:wrap;gap:var(--space-2)}.sync-scope-controls>*{flex:1 1 200px;min-width:0}.sync-scope-objects,.sync-scope-credentials{display:grid;align-content:start;gap:var(--space-3);min-width:0}
-.sync-scope-credentials{min-height:0;overflow:auto;overscroll-behavior:contain;border-inline-start:1px solid var(--border);padding-inline-start:18px}
+.sync-scope-credentials{display:block;min-height:0;overflow:auto;overscroll-behavior:contain;border-inline-start:1px solid var(--border);padding-inline-start:18px}
 .sync-scope-credentials h3{margin:0 0 5px;font-size:var(--text-label);font-weight:650}.sync-scope-credentials label{font-size:var(--text-label);line-height:1.5}.sx-subpicks{display:grid;gap:9px;margin:12px 0 0 23px}.sx-subpicks label{font-size:12px}
-@container(max-width:760px){.sync-scope-workspace{grid-template-columns:minmax(0,1fr) 180px;gap:14px}.sync-scope-credentials{padding-inline-start:12px}}
+@container(max-width:760px){.sync-scope-workspace{grid-template-columns:minmax(0,1fr) 180px;gap:14px}.sync-scope-credentials{padding-inline-start:12px}.sync-scope-credentials .sync-credentials-note{margin-top:10px}}
+@container sync-workspace (max-height:600px){.sync-credential-block{padding-block:10px}}
 @media(max-width:720px){.export-package-layout{grid-template-columns:minmax(0,1fr)}.export-passphrase{grid-template-columns:minmax(0,1fr)}}
 </style>
