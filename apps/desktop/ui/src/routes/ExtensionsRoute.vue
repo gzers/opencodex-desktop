@@ -711,6 +711,7 @@ onUpdated(markClampedDescriptions)
           ><span>{{ chip.label }}</span><b>{{ chip.value }}</b></button>
         </div>
         <div class="skills-toolbar"><input v-model="skillsSearch" class="input skills-search" type="search" placeholder="搜索 Skills 名称或说明" aria-label="搜索 Skills"></div>
+        <div class="extension-resource-scroll" role="region" aria-label="Skills列表与客户端" tabindex="0">
         <div class="skills-list-head">
           <span>Skills</span>
           <div class="skills-target-labels"><span>Claude</span><span>Codex</span><span>Gemini</span><span>Grok Build</span><span>OpenCode</span><span>Hermes</span></div>
@@ -752,6 +753,7 @@ onUpdated(markClampedDescriptions)
             </div>
           </article>
         </div>
+        </div>
         <div class="skills-empty" v-if="extensionsError"><b>扩展发现失败</b><span>已保留上次结果；请确认本机 Skills 或客户端配置可读。</span></div>
         <div class="skills-empty" v-else-if="skills.length === 0"><b>暂无 Skills</b><span>发现本机 Skills 源后会显示在这里。</span></div>
         <div class="ext-pagination">
@@ -791,6 +793,7 @@ onUpdated(markClampedDescriptions)
           ><span>{{ chip.label }}</span><b>{{ chip.value }}</b></button>
         </div>
         <div class="skills-toolbar"><input v-model="mcpSearch" class="input skills-search" type="search" placeholder="搜索 MCP 名称或说明" aria-label="搜索 MCP"></div>
+        <div class="extension-resource-scroll" role="region" aria-label="MCP列表与客户端" tabindex="0">
         <div class="skills-list-head">
           <span>MCP 服务器</span>
           <div class="skills-target-labels"><span>Claude</span><span>Codex</span><span>Gemini</span><span>Grok Build</span><span>OpenCode</span><span>Hermes</span></div>
@@ -831,6 +834,7 @@ onUpdated(markClampedDescriptions)
               <button class="icon-btn danger" title="删除" @click="deleteMcpDefinition(server)"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg></button>
             </div>
           </article>
+        </div>
         </div>
         <div class="skills-empty" v-if="extensionsError"><b>扩展发现失败</b><span>已保留上次结果；请确认客户端 MCP 配置可读。</span></div>
         <div class="skills-empty" v-else-if="mcpServers.length === 0"><b>暂无 MCP</b><span>发现客户端 MCP 配置后会显示在这里。</span></div>
@@ -873,3 +877,8 @@ onUpdated(markClampedDescriptions)
     />
   </section>
 </template>
+<style scoped>
+.extension-resource-scroll{min-width:0;overflow-x:auto;overscroll-behavior-x:contain}
+/* Six fixed client columns must not collapse the resource detail entry to zero. */
+.extension-resource-scroll :is(.skills-list-head,.skill-row){box-sizing:border-box;min-width:692px;grid-template-columns:minmax(160px,1fr) auto 70px}
+</style>
