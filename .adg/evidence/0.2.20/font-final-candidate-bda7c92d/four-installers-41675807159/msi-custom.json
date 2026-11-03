@@ -1,0 +1,42 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "builtExecutableSha256": "f864de162ba28b4f2c386fce4bf06d3b959bfc4475c959b7c557a8c0d5b84158",
+  "version": "0.2.20",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX.Desktop_0.2.20_x64_en-US.msi",
+      "bytes": 7233536,
+      "sha256": "f7d937a21f95a63f6f338138f94865b6af7555265e87dd126d614759fab15437",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-445031f5fb59435ba9df7be0eae8871e",
+      "result": "pass",
+      "registryCleanup": [],
+      "installExitCode": 0,
+      "installedExecutableSha256": "dad99f90ac289384a837db30a7320de7b1fc6441be23741989cd705026f7ee32",
+      "expectedInstalledExecutableSha256": "dad99f90ac289384a837db30a7320de7b1fc6441be23741989cd705026f7ee32",
+      "bundleMarker": "MSI",
+      "bundleMarkerOffset": 13985957,
+      "productVersion": "0.2.20",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "startupPointerRemoved": true,
+        "anchorAndActiveRootRemoved": true,
+        "externalHomeUnchanged": true,
+        "applicationRetained": true,
+        "applicationRootBindingTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    }
+  ],
+  "defaultInstallChecks": []
+}
