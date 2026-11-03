@@ -84,6 +84,24 @@ fn free_port() -> u16 {
         .port()
 }
 
+fn seed_installed_catalog(entry: &Path, codex_home: &Path) {
+    // A fresh isolated HOME has neither an installed Codex runtime nor its
+    // catalog. Use the exact native metadata shipped in this installed official
+    // package; otherwise sync correctly refuses a missing catalog source.
+    let source = entry
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .join("src/codex/data/upstream-models.json");
+    let bytes = std::fs::read(&source).expect("installed official catalog fixture");
+    let catalog: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+    assert!(catalog["models"]
+        .as_array()
+        .is_some_and(|rows| !rows.is_empty()));
+    std::fs::write(codex_home.join("opencodex-catalog.json"), bytes).unwrap();
+}
+
 async fn history_plan(
     manager: &Path,
     context: &ProcessContext,
@@ -138,6 +156,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     for path in [&user, &upstream_home, &manager, &codex, &xdg] {
         std::fs::create_dir_all(path).unwrap();
     }
+    seed_installed_catalog(&entry, &codex);
     let listener = tokio::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
         .await
         .unwrap();
@@ -218,7 +237,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .unwrap();
     if !initialized.success {
         let output = tokio::process::Command::new(context.executable().unwrap())
-            .args(["inspect", "catalog", "--json"])
+            .args(["sync"])
             .env_clear()
             .env("OPENCODEX_HOME", &upstream_home)
             .env("PATH", node.parent().unwrap())
@@ -227,7 +246,10 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
             .await
             .unwrap();
         panic!(
-            "isolated initial sync/catalog: {}",
+            "isolated initial sync/catalog: {:?}; status {:?}; stdout {}; stderr {}",
+            initialized,
+            output.status,
+            String::from_utf8_lossy(&output.stdout),
             String::from_utf8_lossy(&output.stderr)
         );
     }
@@ -1744,6 +1766,7 @@ async fn isolated_official_saved_protocol_alias_reasoning_and_fast_wire() {
     for p in [&home, &manager, &user.join(".codex"), &user.join(".config")] {
         std::fs::create_dir_all(p).unwrap();
     }
+    seed_installed_catalog(&entry, &user.join(".codex"));
     let seen = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
     let captured = seen.clone();
     let service=axum::Router::new().route("/v1/models",axum::routing::get(||async{axum::Json(json!({"object":"list","data":[{"id":"wire-response","object":"model"},{"id":"wire-chat","object":"model"},{"id":"wire-anthropic","object":"model"}]}))})).fallback(move|request:axum::extract::Request|{
