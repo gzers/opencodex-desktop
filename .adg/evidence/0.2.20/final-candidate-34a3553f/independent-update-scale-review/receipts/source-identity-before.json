@@ -1,0 +1,830 @@
+{
+  "createdAt": "2026-11-03T17:47:15.461959+00:00",
+  "branch": "codex/0.2.20-update-scale",
+  "head": "f1b52e97557b0959d34898f23354b5afd0c255a1",
+  "base": "f1b52e97557b0959d34898f23354b5afd0c255a1",
+  "UpdateCenterSha256": "1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f",
+  "servedRawSourceSha256": "1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f",
+  "httpResponseSha256": "9174ed6980e5972d34cbab8ba19fcfd0a195f45bfb90be1e01d096ffd38da78e",
+  "origin": "http://127.0.0.1:52422",
+  "status": " M apps/desktop/ui/src/features/updates/UpdateCenter.vue\n",
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/ui/src/App.vue",
+      "sha256": "f89018c0a9978326458dbe0bcce4c6b1b8d1e08c30344d15b7f3712c5dc5ea44"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/api.ts",
+      "sha256": "209d0da338684d6e3b7b1eb002086aeb15430bcd17775de40545336d7ef8bf84"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/appearance/effects.ts",
+      "sha256": "f9aedbd6f3be18d8c05c552cad45f5f335b390ee8462dde8edaabc4eb079b1fb"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/appearance/glowRender.ts",
+      "sha256": "3e6833177176f6d7dd6900a80d9744f6df5fece2bb4d43b5826699e171bf5550"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/appearance/nativeWindow.ts",
+      "sha256": "0b478e2e8c6bf6f047c5668533525f7e225d579ab939b361d3fdc5d9bb9e718a"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/appearance/scale.ts",
+      "sha256": "2786f023bd9df873933121c3d95dc408ce40443d7214d647655326348ce705fc"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/appearance/theme.ts",
+      "sha256": "17dfd0afd71c61f999536d1396c33c9f7cf273a104b98c7070cc6a68a1a90184"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/bootstrap.ts",
+      "sha256": "29eab046026752509a9df37740104960898deab48415b56fa70d95fe72ad2f95"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/errors.ts",
+      "sha256": "545b06bedf4860d9322953289f1d693c479dd55fd4831a8fbf436f2803aa657b"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/feedback/countdown.ts",
+      "sha256": "c660f83eb5a82c318b710b1d4d0f09a3f23f10a42f9a08cd2d5d58b9a5a55eb7"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/feedback/modelSave.ts",
+      "sha256": "2b0b1e76db1993f0abf0d8a47e657fda139dcd754503b834b857741a66031a69"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/feedback/motion.ts",
+      "sha256": "0f00545414a1f42d3ef8f9e81e2cf40b19653b532c9c1c7cb722c8570bd03349"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/feedback/store.ts",
+      "sha256": "99840a68963f916671845c49e9de982ea14bfa13aa9a9ffa023962f755a2aa42"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/feedback/tasks.ts",
+      "sha256": "48a67737530f787e11d87aec1923f697028f06dcb6718ecfb74c5a8ebf680e17"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/lifecycle/store.ts",
+      "sha256": "08fd3e3cd6dbbf5d7c015910b2f93292fcff5ceda0acdd62af1fb4d36a89ad70"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/modal/store.ts",
+      "sha256": "c475e36c898a56e8b7cd0785b5f8c6c4972c5d514678b26ec9fda9d6b3786543"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/paths/store.ts",
+      "sha256": "f23b6da2ae53e4b2fd1d7530602d3a2ac835b41572144f857917cc095d154ffc"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/surfaces.ts",
+      "sha256": "384f8c9535ca3284aea4ae3a768eaf9e0a4423f40d8f6722fa36cd72151812aa"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "sha256": "7252e921ddbf4696fb510b245cbc81c87c41fa5bb2ddeaacef6f8db74428dab6"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/AppModal.vue",
+      "sha256": "12a5cbf195c8c0cc971e8f557654051367dad449911b0ea132909ab7d5d82b91"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/AppSidebar.vue",
+      "sha256": "7e24c1ccbf7a8bb4a8619fd16afce65fc945ce20d911b00c919740c5cc68e15a"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/AppTopbar.vue",
+      "sha256": "c4788ea630e128846aaf7bb4be26b3b21d89d964111de29be6e51748d403af42"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/BrandMark.vue",
+      "sha256": "b5eaff1b5b0812a79f95b0af0063a48661187b664b783d944a8635f9c8c8c14c"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/TaskProgressHost.vue",
+      "sha256": "873f38848fc8912b125f3e9a6a172635992aecb8c4287e3cd88169d02ddb0c26"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ToastHost.vue",
+      "sha256": "fc89297a06692bf051a8b9cb8fb6610f4c83da4581cc44f210b27ee3b4cd94f4"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/layout/DetailWorkspace.vue",
+      "sha256": "6d7b41e49fef21dbebef67fd7d52521db9cb2ed26ff0a4f7fb835d7de06e2dc9"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/layout/Inline.vue",
+      "sha256": "c9d8e8fea90c095643ee5fba65e0e67d2ebc83d7136409fe7e2607bd7bc6fcad"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/layout/Stack.vue",
+      "sha256": "86e2f931965a08ba1e1d8369acb7cfd787479d37932dd60a01959ffdecd2aadf"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/layout/StickyTabs.vue",
+      "sha256": "323127db98d954005b5234e9dc94e3a53222ca2eeae51926f832cfa4fc6b692b"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/layout/useShellLayout.ts",
+      "sha256": "8b7a8443ab2625b50d1972821ff0c981c116066b7351d4fceb40f8c1da827e30"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/FeedbackToast.vue",
+      "sha256": "9bd63475be53aee9b729de24012f8930aaa0f80ad595923682131924b4fc6d12"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/InformationRow.vue",
+      "sha256": "574273f1744df4a3b615afe62cfffdc02001c222790cd875bf160d8bb1522967"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/MarkdownContent.vue",
+      "sha256": "cc586cd00d6057c743d5c914469189641fc2ee50970540adbe4550e33ffb2679"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/ModalContent.vue",
+      "sha256": "aa793b8a61e73d38648634664a27355fac3ebca6360b5d4c4c986233f4ab50fb"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/NotificationCountdown.vue",
+      "sha256": "0a8a50cc7bcb638c43a1b0677172e1bdc3cff0fca39c15763904d70906262b57"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/SettingRow.vue",
+      "sha256": "5a75b4ed3a669716e08c821398488174ab92a2cfb7c8a729629a7a7783890ce0"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/TaskProgressCard.vue",
+      "sha256": "7f33cc411fc93f9790b65c1392a38d940609744af0b46d45eda519d87c3b1f05"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/modalContent.ts",
+      "sha256": "e9f1d7a74c2998f71fcc90ba20c2d1333b5df057a30873dba75dd6cf14582828"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/registry.ts",
+      "sha256": "086f58949537d29b5e97e1e3fd113580097abe89033617fd75324bf03bfcd556"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiButton.vue",
+      "sha256": "0c5ffc08988ca329f0aafcc9de4a3aee09a822087e8ea7cd26a6093affad66f9"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiCard.vue",
+      "sha256": "f05f99ef3bf02ae810f4ed5935c7f4fb98cbfc6f410c08bdd05ceec08a8d5146"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiCardHeader.vue",
+      "sha256": "6cf1bad6c06de90a3ecb6cbd9becfe9c5067cb90e54037eafab22a5a9f503ebb"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiDialog.vue",
+      "sha256": "694c19dd80d01932ab52d6f30586512277e3a54878ac2adfcfbea80d9ca67f20"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiDiscreteSlider.vue",
+      "sha256": "6119de3354ca471d6b6f39543635637eb7da7452ffe537350a9c198a53ef138d"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiIconButton.vue",
+      "sha256": "583f322175c13fe5450617ffe9ceca4a1d0483b5210c0cbd464de189db297b24"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiSegmented.vue",
+      "sha256": "358ab7444baac68af32c6e8c98335a340e1a3baf94c4b4c47c1ba64ab67ec562"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiSelectField.vue",
+      "sha256": "b024333f4fd345d263202342a03d4cc09bb2ca6b76b595c734d75ce7779ae210"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiSelectMenu.vue",
+      "sha256": "9056c481be9c187228ca3bb60a573a81dbbe77d5b905008bae9d1d2d63a4db76"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiStatus.vue",
+      "sha256": "89a3b21dd661e35d02173514e1a45d442fc047867d416ae7e21fd429b57ce09f"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiSwitch.vue",
+      "sha256": "5683aff3256bdd2f3aaa9e7b8d913441cc67c7a5effe1da742db019a61808253"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiTreeTable.vue",
+      "sha256": "d3cec84b94ccd6a0a7bf532783a9db334db2082f712b61643b795dcf7cc836a1"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/treeTable.ts",
+      "sha256": "003346c41010df0c8d1d15057b1843a2c51b059255ed03f9df896250708132a0"
+    },
+    {
+      "path": "apps/desktop/ui/src/composables/useAppController.ts",
+      "sha256": "64c685f4073870c8919b9daf3dcb0ed684a245c9158da966e6154ce956bdeb82"
+    },
+    {
+      "path": "apps/desktop/ui/src/config/eventRegistry.ts",
+      "sha256": "ec024481fa1415ae9245027fdaca1a41d484ca55cecfe68fad08c1d33e3c879f"
+    },
+    {
+      "path": "apps/desktop/ui/src/config/runtimeDefaults.ts",
+      "sha256": "9a3e14cc8287e6d8b61c57302eceb6f8a8268a5053272a1e57ca8910949ba2b0"
+    },
+    {
+      "path": "apps/desktop/ui/src/contracts/runtimeStatus.ts",
+      "sha256": "a6e59784bec07a20545ab5f85f1e4cf2225716fc980bba6e499748b98dd4abfb"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/auditHarness.ts",
+      "sha256": "cf903f16e3c7f86b56034c5964bff4f12343e924e1ca3f6aa060f62c7704852c"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/component-gallery/FoundationExamples.vue",
+      "sha256": "2fe5cd7de93fed45db00efab2fd538f243c92529a883715174d4092218229657"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue",
+      "sha256": "b60f3bdc790fd9db703fa599bc5c7a9d878460bddd6d01d6acdd87ef912bf35f"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/component-gallery/NodeExamples.vue",
+      "sha256": "4a3f1f15a8bae82bab543d8376f7235e212c7885d656db055964620e848b78cd"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/component-gallery/main.ts",
+      "sha256": "4a24764ce9197504fd6f9c6ef48ec1b00a3e70ca1679a09a37eee13341f79c4a"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "e9c810f883b6f6f2ed96704b258bad4c6a38644081e35077bec7c924ab18545e"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/about/api.ts",
+      "sha256": "cb0076b7a941af9a0bf1eb6d66606fb02f660fedf6512dd634bf95b2220541f0"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/about/store.ts",
+      "sha256": "2c3ac63b7a42aef5071bbb3687c32369879c6611e9d0bf437e40ee1662b752f9"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/BackupFiles.vue",
+      "sha256": "e5e2fde1f7e372579fee9a52bffe9f115de770064a1cd8736f9e7db0065587b0"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+      "sha256": "d608d34aaf7f774d0e5bd7c55450d357706c2dcd1a218cb880da3c34cfd08a34"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "sha256": "85d0d2e14bbb5e152e393028f90552e961b866df7d456ce248ab1ec2f72b5445"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
+      "sha256": "54c0e6da39157af30383ac5c288a8abaeeebf0cc02e2dc062bf78535e714be51"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/api.ts",
+      "sha256": "f7ba07246d626eff3ec1fe17b4cc9a0b2292b5dfc6fc357a52e61e73f017dc9e"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/codex-shim/api.ts",
+      "sha256": "bbd4533848aa05080c4ce9c224ec8fbf070040be64932e465b6ec7a4dd56c449"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/data-root/api.ts",
+      "sha256": "d7ac5d9919ea4db2463a78b28c9d1cc041e82206253655a5839f0c99910c82bc"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/data-root/store.ts",
+      "sha256": "5f448850fcc3ded1c4c3f08ef86561a1d92f3395db7b45a6b72f5eff7ff48232"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/diagnostics/doctor.ts",
+      "sha256": "e551fc8cb36b1a83fa31d72492c1c09dc8f4a28a82e0a1ebfd4b34c1a640010c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/diagnostics/logs.ts",
+      "sha256": "7aebb68ad5808eba7ec0ce4b1990889eff46e689054680db34edaa8d329d46e3"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/diagnostics/presentation.ts",
+      "sha256": "471c5a15e9fc207da29b63939cedb77581af8faa10ffa05a08e04051cfc9dcee"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/diagnostics/selfCheck.ts",
+      "sha256": "9e575431a490ae36e7f1900b92589905c7dfa70ec2273b9528828244bd426f62"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/diagnostics/store.ts",
+      "sha256": "9783ea0dbcacced021da5c200081db35bac8fcc04d083493b19b791ccc542b38"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/diagnostics/useDiagnosticsController.ts",
+      "sha256": "e2ebe64103cabd4014d6332c74217cc67a08cf31e417c486265d30a1d10b9e8d"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/environment/api.ts",
+      "sha256": "a2cae88cba52009527ad62694a185e98391ddb1e7b02d3e4d111735af6bcf05b"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue",
+      "sha256": "d20f9b746de692e527b2219b7b9926dc711353a42e6dfe70772e87d31321ba3e"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/environment/presentation.ts",
+      "sha256": "910c263ab8445a1f1ab5b6fd7228f67e575cb97634decb4dbbc478d94e695f8d"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/environment/store.ts",
+      "sha256": "2d4c0251b6f83f76db23cc47683e73b260f1a241c339e13c1af799b5665d0b68"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/api.ts",
+      "sha256": "e392d005c12812d3289bb83fa6d65fec50b46ed5688a698a87a639e526743c48"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/clientIcons.ts",
+      "sha256": "a231444adbe7753f15e341b83cc273d8e7eae7745437a0ea521bacefb7eb63b4"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/clients.ts",
+      "sha256": "2cc6382816ebfcdeaab02d3d6758a29cfb14f8c05612eb91401ff56b507d28d5"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/components/ClientIcon.vue",
+      "sha256": "96c34538adfdfdf5fd6aff0e54c8aac7da15f7030ac96f2f1b16eeb7aa66674f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+      "sha256": "ba755ac181863d954d233583687de4f6110500efbd820de2eaf7439973db33ae"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/components/ExtensionDetailModal.vue",
+      "sha256": "b7eb8df8930ce85ef02aa97fdaa846f53611870974fceab57ffd5b6e145f9ebc"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/errors.ts",
+      "sha256": "af817974e25c2ec6e582af44b76f6ad9d25704e1d5fc35c1103d8b3daa3f6c23"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/presentation.ts",
+      "sha256": "2ad2e230bf6b3d3f663e6cf48faed1c5d2ad25c9d53078b1ee9356a91615dbd8"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/projection.ts",
+      "sha256": "2cba3f4fb56c016b21bf7064f2be41ebaeed4b6a442336e30e1b2fc2ac42b06f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/store.ts",
+      "sha256": "dcc30472f1cd0183964d3d0657de19e5980c2db0439c5b9da7383e2011abbe5e"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/targets.ts",
+      "sha256": "3793684de57fe902ae8a1e9c2dc053a4a145e41fa8ed3703c6bb8168438a82e0"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/migration/api.ts",
+      "sha256": "87707bf28214054b775c05b8ef66fa1a77114eda393317c21d5aabe68fa26d19"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/migration/store.ts",
+      "sha256": "fcafdc5716a0181727d83ec461db1b22d4d1cf8825b6e362c16e66efdba3e497"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/AgentExecutionField.vue",
+      "sha256": "d9a57f6f4cb5040b131ca513d4f705b48463baef76f5583c53db33654d066e60"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/AgentPanel.vue",
+      "sha256": "0f140bf2b147b2f01da6d55362280062329c5c8483c7c49960297c2f0f5ef092"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+      "sha256": "d29d8ed0384d962e2aa9f1e12c0de22fb3fe8afd2fe6c7dfa8aa113a41bddc10"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "sha256": "04d3da5a7320e732be24a3bf6fd83b6aed220a0674dedc1afde3e74adcab1665"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "sha256": "eabe36c0b26d0aeb9ee02792424cf805295fda0120b4542e37dcf479001da758"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "sha256": "8ec386283ad583a856ec0576794eba676cb5ebc07deacfa5e9308bfc9c28f2bf"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelNodeSelect.vue",
+      "sha256": "b8bf60e8aee91759589d9ace8666c0fe2623acf5e71086436395c66bba119def"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "35f58fb18abf569f265c180ad13a8aaee5cfbc2a488825e1fb91cd7f00e7c24c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+      "sha256": "86218d96349dfdbd41349e1c1b7a151705a4711b6a823aea0d4eb3041b529213"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ModelChoiceOptions.vue",
+      "sha256": "641600fcd5b7a229d52471da35c38c31fe42bf85e7abd26f2f9e816df57eb401"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ModelPicker.vue",
+      "sha256": "e477ef90d71e22dcc855aa9454a83d8b3971fb555c9d28733747316912a223a2"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ModelRuleFields.vue",
+      "sha256": "ce59680eccc5f5292fee6892d450a3fe69433511fb6e9fb78565b563c67b0ec1"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "sha256": "22989e8784941dc46c5ae87383e5d3ef995eaffb764fa72a1bd355f7a67027d7"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NodePicker.vue",
+      "sha256": "dadcb5ff58199f7c2feb3fea0efa05696cd275f2994084990802db1021845ca2"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+      "sha256": "37ae1e0384d2a93e69e8f7a7ec0bc8563b42f3669670d19dcea9bb2c2492cbab"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+      "sha256": "e88ad52aa100020e83c285ed811285a2d3e99f2c2e14c0877de72159642ccb9e"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+      "sha256": "eae3c47718aca9bfb968dceb70edc6d3e936bcba127a7e20f763fa71a30d0164"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "sha256": "9247f40a8dad89626337684a66e355130e03537118c8b1ca91df7c5eab25bd97"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/agentView.ts",
+      "sha256": "ce59a13a9b65622383e1e14004ac07985544e5577192b82695b7cd2bcf8070ca"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/api.ts",
+      "sha256": "0accd818270a926c0ca88627d1944f0c5ea9c090103d9cfaf63ac4092412abb4"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/channelActions.ts",
+      "sha256": "cfc8049d0c87f3bb561861967c9a0e02ea5c6c5ed621161b68c5f8b6f15a71e6"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/modelRows.ts",
+      "sha256": "a41bd9b88993f8ff3381d80442f7988079b9474fcb3edbf7e96cc4e1a5cf80b1"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ordering.ts",
+      "sha256": "d2f2450f51ae47c785587781606fad7a8c3e229aa9576efffc7db7fc748fb674"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/pointerDrag.ts",
+      "sha256": "7c678cefcbe343bf461207c3b9645b309a90516b5126ba37aa28c56dcb4116bf"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/policyChanges.ts",
+      "sha256": "99a5fbddae63c0423a9f241fc434a4b5030b363235505a59980a1064553ce9cc"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/policyEquality.ts",
+      "sha256": "5a9f469c0d9ad03790e9eeaee677ac5a7d58ab0783d9cef09229baf292871137"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/proposals.ts",
+      "sha256": "3eea3b61d7d31011da04a8c177af8727cc71deec6c62e2ecbbad2290c7475b95"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/saveReview.ts",
+      "sha256": "902cc34ecc3093461b4c9ab2d398e4c89b1952ad2e0f7fac0c927d07881929cd"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/store.ts",
+      "sha256": "79a55df11df0cd862a8cf740923c04f61ef5327fddfa3bdefb847bf1f596396a"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/templateChanges.ts",
+      "sha256": "f56d985d4065077d187f5735b141090e8341edfd003da3c7af750efc9b424322"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/upstream.ts",
+      "sha256": "d32acefed79950c36938873cdda6f606e1fe94d5396ac4d800ef58412c9952cd"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/useNodeMeasurements.ts",
+      "sha256": "6814ae418b071888ab04ba1655579118b9d94a354b3cecc40ab282bdeda278f0"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/useViewPosition.ts",
+      "sha256": "cd7fbd469f724222e1b6ed6c2322eafd41e20fd1df384941bbbf6a4ba385b8a5"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/actions.ts",
+      "sha256": "c5e7643460a79ae524cf4caa05f40d5dcde5bb6da9ade7e777fa61320d91668f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/api.ts",
+      "sha256": "d423ffa12ba4a1c54169b284e5575429b37f9d1094c944866ba41433d1187bf7"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+      "sha256": "9c541d0f14087bcf5e7c6b257ac873fa690e0e24e3b3567a07ba3c9c44144b91"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/components/NotificationItem.vue",
+      "sha256": "b732229fd7f96b3cd46a6b44d4b312740b6826e886dff698eb5d8fff54e829fa"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/model.ts",
+      "sha256": "451ce9050b2a53c27e6b8ddfbf3dd00dc8507e0b85f860b29afc97182983e763"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/store.ts",
+      "sha256": "a597704b7d24a50e73f5a2ffa040a21a50dee81daac47e0cccfd16fbd2cbc72c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/panel/api.ts",
+      "sha256": "aec16dcaa61f95a19db33de3d390fea16fc05c925466bf444b7c9ccc2abc38a9"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/panel/store.ts",
+      "sha256": "b1a348c213afd098a8e587307ca2975d87ccb675ffcad056cd5d112439efa731"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/preferences/api.ts",
+      "sha256": "fdd03b1d21b0389308332e405f86e0e5fe8e8fa155150c3fc6a177c14c537c3c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/preferences/store.ts",
+      "sha256": "519a301d00e2c40976db889b474078ec5d1b3129cba896236bfcc9feaad070f8"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/api.ts",
+      "sha256": "6dc44d883196a982441e3452c05190f89efeb80ef058f9635c8e57ad233da46d"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue",
+      "sha256": "3e3b93a9c303a19c7d50966467a87e2102b2f49e0d3004ecf8c5ecd2ee8b1034"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue",
+      "sha256": "c71d27c913240c50e4b7355e18b1194555c59a9ebd503c2a1cb7931c1f53892f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/errors.ts",
+      "sha256": "c093a7d3b9f7315e56b5902851fc8ba719aefb57f19b889ab1f888d5804e95d6"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/installPath.ts",
+      "sha256": "5f072932d60134c9c660e049d54acb519f5e9acfd63face3fc5e0d1d596ced30"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/motion/logo.ts",
+      "sha256": "3b07d0be5d6a6d996dcba00ea24e04020d0281f04d31799d5aac3c3f899fc374"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/motion/meshGlow.ts",
+      "sha256": "b15c3b14300bf75fd6a0ac2cf5fed13506027defa13ca84e4c38a9b5e12a239c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/motion/projection.ts",
+      "sha256": "b498aabeff1845067be490cdf2ac6ad1a5bbb0fbf4c7ab7cd38969b0ab6d6ff6"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/motion/scene.ts",
+      "sha256": "fd56c878e44d80ed9e65441df82fa547e58a9cd742b180ebf25dded178226982"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/motion/states.ts",
+      "sha256": "d70491e0ab553bbc7e53039cecb152bef682889a05a0dccdd9df3546513fe868"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/presentation.ts",
+      "sha256": "397a6634ef075863c353376d9bbe89cca0e50cc0a0d865fef6ddc211c3a7f9bd"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/processAction.ts",
+      "sha256": "4d66dde4374a5fa8d3062674d3961a1a41a0100bfb096076c2e3249040737f07"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/scenarios.ts",
+      "sha256": "f89983bcec98cb924556f7b7ade6d662778841cab406b7d589d08d93a89f0c58"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/store.ts",
+      "sha256": "50228ddde3f017ea4685826877cf1580cb1003c6d3d939042a0f3766418937bd"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ChannelModelScope.vue",
+      "sha256": "4c74e9d2d385dbefbc51016f7685ea1b73554ee17d2085c089c22bcd85b09cda"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ConnectionDialog.vue",
+      "sha256": "3ab29a99ee1e6b8d3ba140f36af70734fead67b0da0d31717f03e851426d39ad"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ImportedConnections.vue",
+      "sha256": "b753cf9048d2476f1eb08b4838852a394741744b8358738ab7aa60ea226dd702"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "sha256": "d254b898cbaff5b67d9f53afa139030a1df00b2964efd6fac9430f95a1e89f41"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ObjectScopeTree.vue",
+      "sha256": "df956bf30e54e584ce58adccc5df8822dc217c4fe9b4391ca67137432a5df191"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/SyncDialogHost.vue",
+      "sha256": "2cd0d5842b968575bc32c3b54146f26cb608d051df17e59a2a845909fc9fb4b9"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/SyncResultDialog.vue",
+      "sha256": "cc040ebd2e39b3279c43773225179633daebef3818047c7e9a3b7d2b6cc8089a"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/WebDavConnection.vue",
+      "sha256": "a2f7731763744dda911627af63325870ca37248e06360add3fe9a4dbddd45ab9"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/activity.ts",
+      "sha256": "baf9b4c8451fc2348feddf054bb4cd8b2e06e198405f749567a3b3aefffd097f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/api.ts",
+      "sha256": "960b8173c856bbac150f03d55dc7f785b6fd8f543bd64b33b0acd666ab44989b"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/modelTransfer.ts",
+      "sha256": "87d8d986dcda2b02c93438711cfeff87a618335dadef39f434dd3845503df57f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/states.ts",
+      "sha256": "a25ddf75b916712831734377037054b922210acda692d947b6def78ab104ac1c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/store.ts",
+      "sha256": "99eda04d0536cbf77dc4c22804421819503381c84ffc61f2120bc0ac5823ad59"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/tray/api.ts",
+      "sha256": "0e60f74ec843927de7f893327463b5543028398f56c65c43568f974445ea1075"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/ReleaseNotes.vue",
+      "sha256": "209f6ee90bc1a7c2a34ebedf626ff0943ac61dae30adbe80bb6e1088091b8e62"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+      "sha256": "1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/errors.ts",
+      "sha256": "eb607aa843cf33e56395b4b694cd05c6ec7693dbe9d9f4bdd1bbd91699340147"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/releaseDetails.ts",
+      "sha256": "12064b6dff67b7b9b595ee9bf865e768cd54700cdaa7f362c90f9d778fd67a18"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/scheduler.ts",
+      "sha256": "1fdc3625bf87511cada30a51ce17755f2635fb6d258a663fb1081f38979fc652"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/store.ts",
+      "sha256": "3763d69fd461e909f1abcd93a93ac363453e110434c8427eba85d4ba7c363e37"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/update.ts",
+      "sha256": "066d60cb6d66ecf9b017e026dd52299509a3dba340fdb3103c8b96cb716c78eb"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/upgrade.ts",
+      "sha256": "9400b922ab21b815188d2e9018d8142319d174d36732f598325c02e93f949147"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/useUpdateScheduler.ts",
+      "sha256": "c0454000e16d92d690de2a222b5adb9b18397b4f70f112ffcba0b3f7e6d3bbaa"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/version.ts",
+      "sha256": "3899349091e320cc345e196177873cfd81b7ee38d86ddfd665e464f8adce693c"
+    },
+    {
+      "path": "apps/desktop/ui/src/lib/html.ts",
+      "sha256": "2bcc60f048946e764d216605d3ebb67a0ba8916bc612640c1c1c9c0408087129"
+    },
+    {
+      "path": "apps/desktop/ui/src/lib/labels.ts",
+      "sha256": "5b75e8ef17ddc30f702613ec2aa573ea36d7a8fff84984ba3e0de2e6687bf3bf"
+    },
+    {
+      "path": "apps/desktop/ui/src/lib/layoutObserver.ts",
+      "sha256": "dd96f86de7a881b809ede6d76489aa28bedcd27448f4ad9d3eba00f740ef2c71"
+    },
+    {
+      "path": "apps/desktop/ui/src/lib/markdown.ts",
+      "sha256": "a51cc9a729f15ab6e746480c8e34ebbf82d8e141f52c2f0a6a5fe4d8e7f2e3bd"
+    },
+    {
+      "path": "apps/desktop/ui/src/lib/paths.ts",
+      "sha256": "748ffbffa58b447dd06c386981d5bc72d59c3c90f7a979e8ece88d0304c8f9b9"
+    },
+    {
+      "path": "apps/desktop/ui/src/lib/saveStates.ts",
+      "sha256": "7702ee78d4f4f4dd47a99d917e78f29b37b4872a599be2599568e5b564a4cbfc"
+    },
+    {
+      "path": "apps/desktop/ui/src/lib/webglContext.ts",
+      "sha256": "5f3d36715442a33ffa82c06a8e26edee7e3327fb03151e3d6015d76bd5e05141"
+    },
+    {
+      "path": "apps/desktop/ui/src/lib/windowAddress.ts",
+      "sha256": "54688818a13e5b9163e60f4e19fa94cdae0c2f140f318c6447e9e46852a3a33e"
+    },
+    {
+      "path": "apps/desktop/ui/src/main.ts",
+      "sha256": "f9d86a1fde60605fa2f60b40c8adb444ae7fe64b354f3a7bf1199b5cbf036603"
+    },
+    {
+      "path": "apps/desktop/ui/src/navigation/index.ts",
+      "sha256": "bad64a35343c578c57070894dedd0cd0bb4f0cdf4343e95cca35f318abe1eba5"
+    },
+    {
+      "path": "apps/desktop/ui/src/platform/workspace.ts",
+      "sha256": "4ee2dbfec8077dd7d8b8d1c93c321507cf51f7a900e6b93e3183bbefe83c73b8"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "sha256": "66bf664664a7d25e2261894315888373e3683685178a3dc887d6ba23dccbe4e7"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/LogsRoute.vue",
+      "sha256": "f04ccbac8ac0ac363891f589e14572690b90437f451a2614cbfdf4ac6fc88407"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "sha256": "c89f086edb456e499f0111986cd736c75e1766486ffb8994c0b10afd08f2f394"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+      "sha256": "de3f2282b0d222db753f67559772899f98003cc1f97d85090f377ea4ef5ca418"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/PanelRoute.vue",
+      "sha256": "ca02484b1f576ee14e8bbd375cbf9d0de5d06acc545a7a43c8cf7c4c42f18d49"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+      "sha256": "2229674e586563e39187675fd8f95863656bb440ab276608346c65fbe4e95ea0"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/SyncRoute.vue",
+      "sha256": "7442373d22460b81fbb98a1ae544fe42322bdd39fb6839bc2b8e0c0cb2ef385d"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/TrayRoute.vue",
+      "sha256": "77b1073de89307417213255eeb09d9ed2d80e4096dc060f73ca9ab76ebce2846"
+    },
+    {
+      "path": "apps/desktop/ui/src/startup.ts",
+      "sha256": "afc2d184c820afe2815aa6c4f9eba45b97e1ad679abcf531bc93a7d7e33c21f3"
+    },
+    {
+      "path": "apps/desktop/ui/src/stores/app.ts",
+      "sha256": "4f4a1b8f3157c70d0d4feaf12d828d29ebe08630195c638e15ce9970af9c3f49"
+    },
+    {
+      "path": "apps/desktop/ui/src/stores/routes.ts",
+      "sha256": "983fc0b9a13ae815f468b7f0f06bbd1ea15c40be17a83627e821dd33cc0aee6b"
+    },
+    {
+      "path": "apps/desktop/ui/src/styles/base.css",
+      "sha256": "ea2ec8a4169781cac38e7b50ee992adb6589420b54b469bc5bf95bf77c99d062"
+    },
+    {
+      "path": "apps/desktop/ui/src/styles/effects.css",
+      "sha256": "c8d90e10c96119a474b2304a4f52643f3bb0188d735c8c99d13ca05bed624134"
+    },
+    {
+      "path": "apps/desktop/ui/src/styles/materials.css",
+      "sha256": "8f4f95d2a0b0def00b767fa0a3996402c33225346524b769dce6bb5df41f6516"
+    },
+    {
+      "path": "apps/desktop/ui/src/styles/tokens.css",
+      "sha256": "68eb612b6dcf34b06b55c95571e969b892353005c1e0787b5288bdd3c5f849db"
+    },
+    {
+      "path": "apps/desktop/ui/src/types/ui.ts",
+      "sha256": "0ef7d313b5a2023ce54a4990821458fcb7345a4647e2f2e7ff2e26641c72eb21"
+    },
+    {
+      "path": "apps/desktop/ui/src/vite-env.d.ts",
+      "sha256": "f67fd0ef7641e43eb0fc3245c1b583d66c8477bd2fe81e102333f4dac2378156"
+    }
+  ],
+  "scope": "Read-only actual working source including CSS-only UpdateCenter changes. Commit HEAD alone is not the fixed source identity."
+}

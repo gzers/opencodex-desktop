@@ -1,0 +1,128 @@
+{
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "createdAt": "2026-11-03T17:44:33.398170+00:00",
+  "productPassingAssertions": 1680,
+  "prototypePassingAssertions": 48,
+  "productScreenshots": 394,
+  "blockingFindings": [
+    {
+      "id": "FR-020-UPDATE-SCALE",
+      "priority": "P1",
+      "releaseBlocking": true,
+      "status": "confirmed-product-shared-scale-contract-failure",
+      "acceptanceIds": [
+        "AC-020-19",
+        "AC-020-20"
+      ],
+      "s20": [
+        "S20-19",
+        "S20-20"
+      ],
+      "title": "UpdateCenter in Overview and Settings does not follow shared interface scale",
+      "actual": "Same1180x760/theme/material:100% to200%, shell heading33 to66px; UpdateCenter footer button34 to34px. Root/shell zoom=2, modal zoom=1, modal outside app-window.",
+      "source": [
+        {
+          "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+          "line": 225
+        },
+        {
+          "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/styles/base.css",
+          "line": 35
+        },
+        {
+          "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/app/appearance/scale.ts",
+          "line": 17
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/tmp/ocx020-final-review-agent/reports/update-scale-chromium-r1/report.json",
+          "sha256": "5acd26334d1c462eb6da6c53d257d1c2e0408f97ae66eccd18916f62657dc051",
+          "engine": "chromium",
+          "result": "fail",
+          "checks": [
+            {
+              "name": "overview UpdateCenter shares 200% interface scaling",
+              "passed": false,
+              "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+              "actual": {
+                "buttonHeight100": 34,
+                "buttonHeight200": 34,
+                "ratio": 1,
+                "shellTitleHeight100": 33,
+                "shellTitleHeight200": 66,
+                "modalInsideShell": false,
+                "rootZoom": "2",
+                "shellZoom": "2",
+                "modalZoom": "1"
+              }
+            },
+            {
+              "name": "settings UpdateCenter shares 200% interface scaling",
+              "passed": false,
+              "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+              "actual": {
+                "buttonHeight100": 34,
+                "buttonHeight200": 34,
+                "ratio": 1,
+                "shellTitleHeight100": 33,
+                "shellTitleHeight200": 66,
+                "modalInsideShell": false,
+                "rootZoom": "2",
+                "shellZoom": "2",
+                "modalZoom": "1"
+              }
+            }
+          ]
+        },
+        {
+          "path": "/tmp/ocx020-final-review-agent/reports/update-scale-webkit-r1/report.json",
+          "sha256": "ccf69c783a21928672ca6727913beb7e8c0c1d7eb7a43a640a6871df1582a19b",
+          "engine": "webkit",
+          "result": "fail",
+          "checks": [
+            {
+              "name": "overview UpdateCenter shares 200% interface scaling",
+              "passed": false,
+              "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+              "actual": {
+                "buttonHeight100": 34,
+                "buttonHeight200": 34,
+                "ratio": 1,
+                "shellTitleHeight100": 33,
+                "shellTitleHeight200": 66,
+                "modalInsideShell": false,
+                "rootZoom": "2",
+                "shellZoom": "2",
+                "modalZoom": "1"
+              }
+            },
+            {
+              "name": "settings UpdateCenter shares 200% interface scaling",
+              "passed": false,
+              "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+              "actual": {
+                "buttonHeight100": 34,
+                "buttonHeight200": 34,
+                "ratio": 1,
+                "shellTitleHeight100": 33,
+                "shellTitleHeight200": 66,
+                "modalInsideShell": false,
+                "rootZoom": "2",
+                "shellZoom": "2",
+                "modalZoom": "1"
+              }
+            }
+          ]
+        }
+      ],
+      "action": "Fix product shared-scale/overlay integration and recheck both hosts, or obtain explicit requirement change. Do not infer scale acceptance from fitting geometry. This agent did not modify product."
+    }
+  ],
+  "prototype900OverflowReleaseBlocking": false,
+  "historyNativeUiAcceptance": "DirectfinalnativeUIreceipt not found, actualbackend+browser layer only",
+  "nativeConnection": "main-threadfinalpackage verified and mapped",
+  "actualDualPlatformOta": "main-threadreceipts pass",
+  "stable": "pendingmain-thread",
+  "mapping": "/tmp/ocx020-final-review-agent/entry-evidence-map.corrections.json"
+}

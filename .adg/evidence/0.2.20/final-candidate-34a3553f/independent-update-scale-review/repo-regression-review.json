@@ -1,0 +1,18 @@
+{
+  "script": {
+    "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/update-dialog-scale.mjs",
+    "sha256": "9fd17dfc7b406119a9a22b7fd7edd6cfa39cca09d75a62c4df549c6c54986895"
+  },
+  "actualRuns": "Both engines actually passed7/7; not static-only acceptance",
+  "original200PercentThresholdPreserved": true,
+  "additional50And150RatioAssertions": true,
+  "explicitExternalBlockAndPageErrorGate": true,
+  "nonBlockingScriptFinding": {
+    "priority": "P2",
+    "path": "apps/desktop/ui/qa/update-dialog-scale.mjs",
+    "line": 14,
+    "problem": "finally unconditionally writes completed:true and result derives from checks.every. An early navigation/selector exception before checks can emit completed:true/result:pass with an empty list, despite process exit1.",
+    "action": "Track completed/failure explicitly and require nonempty checks, while retaining the nonzero process exit. Current successful executions are unaffected; this is a harness metadata robustness issue, not an outstanding product-scale failure."
+  },
+  "scopeNote": "Permanent regression checks1180x760 at50/100/150/200%. Its layout/scroll coverage is supplied separately by this review expanded900/1180 and100/150/200% matrix."
+}

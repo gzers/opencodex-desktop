@@ -1,0 +1,10 @@
+file:///private/tmp/ocx020-final-review-agent/harness/update-hosts.mjs:3
+const check=(name,passed,detail)=>{checks.push({key,name,passed:!!passed,detail});if(!passed)throw Error(key+' '+name+' '+JSON.stringify(detail))}
+                                                                                                   ^
+
+Error: settings-1180-100-light-high Escape returns to original route undefined
+    at check (file:///private/tmp/ocx020-final-review-agent/harness/update-hosts.mjs:3:100)
+    at close (file:///private/tmp/ocx020-final-review-agent/harness/update-hosts.mjs:30:96)
+    at async file:///private/tmp/ocx020-final-review-agent/harness/update-hosts.mjs:31:384
+
+Node.js v26.8.1

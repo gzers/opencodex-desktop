@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "node",
+    "/tmp/ocx020-final-review-agent/update-scale-fix/harness/update-hosts.mjs"
+  ],
+  "envOverrides": {
+    "AUDIT_ENGINE": "chromium",
+    "AUDIT_OUT": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-hosts-chromium-r1",
+    "AUDIT_SOURCE": "working-UpdateCenter-sha256:1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f",
+    "TMPDIR": "/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp/update-hosts-chromium"
+  },
+  "cwd": "/tmp/ocx020-final-review-agent/update-scale-fix",
+  "startedAt": "2026-11-03T17:47:27.066868+00:00",
+  "exitCode": 0,
+  "finishedAt": "2026-11-03T17:47:40.151170+00:00"
+}

@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "sourceTree": "b11e47bec1a4200342c9c75ececa05d2170ceabb",
+  "baseProduct": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "pr": 65,
+  "ciRun": 41687967250,
+  "productChange": "UpdateCenter teleported dialog independently applies shared zoom, bounded logical viewport, fixed action bars and wrapping result rows",
+  "changes": [
+    "CHANGELOG.md",
+    "apps/desktop/ui/qa/update-dialog-scale.mjs",
+    "apps/desktop/ui/src/features/updates/UpdateCenter.vue"
+  ],
+  "sourceEquality": {
+    "allRustProductSource": true,
+    "sharedTypographyAndOtherUiProduct": true
+  },
+  "historicalEvidenceReuse": "bda non-update consumers and native transfer/backup/connection behavior reuse by exact unchanged product bytes; bda package install/signature/OTA are historical only, new payload gates mandatory",
+  "publicState": "prior bda candidate withdrawn to draft archive validation/0.2.20-bda7c92d; stable0.2.19; beta temporarily points0.2.19",
+  "newReleaseId": null,
+  "gates": "new package/source/signature/independent fourinstallers/macnative/actualOTA/stable pending"
+}

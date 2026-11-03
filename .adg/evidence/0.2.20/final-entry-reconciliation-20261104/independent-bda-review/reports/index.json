@@ -1,0 +1,277 @@
+{
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "passingBrowserReports": [
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-chromium-r1/report.json",
+      "sha256": "37e68c4fedafe60e9b6618c9c633ed1c952b1a6fa85ee7db2a9d5d31e3fdd7ff",
+      "suite": "model-dialogs",
+      "engine": "chromium",
+      "result": "pass",
+      "checks": 352,
+      "screens": 36,
+      "scope": "rendered DEV model dialogs; explicit adapters; no native file or release acceptance",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "9fea292581f7c137ec3ddba00a96cdf12ea98cb96ba80d8d2feb8db046b11ecf"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-webkit-r1/report.json",
+      "sha256": "a7a210e06c77a9ac283d7577080e7e9873d6a3b789b6b147adab404ed4cc4f08",
+      "suite": "model-dialogs",
+      "engine": "webkit",
+      "result": "pass",
+      "checks": 352,
+      "screens": 36,
+      "scope": "rendered DEV model dialogs; explicit adapters; no native file or release acceptance",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "0188bf4dd75793befbd7134b2cf99c57370f099a712c8b7f8c041f07ca4056d2"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/extensions-chromium-r1/report.json",
+      "sha256": "5ab37fbe0c0d624bd8b6ed857ea1216f937c02b2eb658637c3367642d26d7c3b",
+      "suite": "extensions",
+      "engine": "chromium",
+      "result": "pass",
+      "checks": 14,
+      "screens": 8,
+      "scope": "rendered full production component data; no native operations",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/extensions-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "bbaa49c82219c6e8d54b3df6a052d7984e431fd520daab726c1600a0b367f0a6"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/extensions-webkit-r1/report.json",
+      "sha256": "1887804dfbdc48b7a6b1e7cba9a9f8a16268b041ec16bf813b219c0431c919b8",
+      "suite": "extensions",
+      "engine": "webkit",
+      "result": "pass",
+      "checks": 14,
+      "screens": 8,
+      "scope": "rendered full production component data; no native operations",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/extensions-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "912f9854662fe9bc4de097b32c22912ec8146b0ca58e21d1972c08d14d450cd6"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/secondary-chromium-r1/report.json",
+      "sha256": "c930994e40441288c238c6c31af6057cba55f726bf6354340ab1d46fbd621037",
+      "suite": "secondary",
+      "engine": "chromium",
+      "result": "pass",
+      "checks": 117,
+      "screens": 36,
+      "scope": "DEV adapters, rendered secondary dialog states; no native adoption",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/secondary-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "8e44c58780b9c12a42d30018fc13f5c94da7fe126ac217c02063f0ee83c8451b"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/secondary-webkit-r1/report.json",
+      "sha256": "74745113013a09cf6d0659ea4edafc6cb9fc28a7deebb19317eddf9c8655f9d0",
+      "suite": "secondary",
+      "engine": "webkit",
+      "result": "pass",
+      "checks": 117,
+      "screens": 36,
+      "scope": "DEV adapters, rendered secondary dialog states; no native adoption",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/secondary-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "5591bd737ae5b3710cfc05046631bb2b0d0d5568622c7f4f535abecc2f5978e8"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/report.json",
+      "sha256": "e0929ad4c12c14e18ce3c52c3f97d9f0b3780b15a6b2a17524cd45c1996e392d",
+      "suite": "model-completion",
+      "engine": "chromium",
+      "result": "pass",
+      "checks": 69,
+      "screens": 27,
+      "scope": "production route/dialog handlers with explicit in-memory service and clipboard adapters; no native writes/restarts/model network",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "28ee26bb980432a0b65a64a0f646e7a328afda46b569af593f9a344e30a9d39f"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/model-completion-webkit-r1/report.json",
+      "sha256": "74cec18aafb6787397f5ed36cb0f87a37c0d0c27f573a0876b8a3cef84a8e246",
+      "suite": "model-completion",
+      "engine": "webkit",
+      "result": "pass",
+      "checks": 69,
+      "screens": 27,
+      "scope": "production route/dialog handlers with explicit in-memory service and clipboard adapters; no native writes/restarts/model network",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-completion-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "cfc581c98801d5bed16e7255552587631e899ec9aaa7027e6e21c6521976dfd4"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-chromium-r1/report.json",
+      "sha256": "8122234b5a317bc81259e4786f751feaa927c60133b22ead9b2181281ecfa4fb",
+      "suite": "agent-hosts",
+      "engine": "chromium",
+      "result": "pass",
+      "checks": 132,
+      "screens": 42,
+      "scope": "Real ModelsRoute AgentPanel existing/new-editor consumers with explicit in-memory model/conversation/settings adapters. No actual generation/research/files/native IPC.",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "d89102dfe0ea661db58517bf3ffac7266adf4bdce32cb9910f45b0d2c733d49a"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-webkit-r1/report.json",
+      "sha256": "e1ad0c7537eb8b08fa49a0308c38b293b3e2e39a392efa85581ff28ffd2e1dd3",
+      "suite": "agent-hosts",
+      "engine": "webkit",
+      "result": "pass",
+      "checks": 132,
+      "screens": 42,
+      "scope": "Real ModelsRoute AgentPanel existing/new-editor consumers with explicit in-memory model/conversation/settings adapters. No actual generation/research/files/native IPC.",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "d90bfc87281a1fa31b8cab2c92625461c34f68a7654100fd57a63a034bd6fbf6"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-chromium-r1/report.json",
+      "sha256": "c39c91314099582ac71d8464240b6b4970b843fbbf9d3d8d5d1946fa7f888e7a",
+      "suite": "update-hosts",
+      "engine": "chromium",
+      "result": "pass",
+      "checks": 156,
+      "screens": 48,
+      "scope": "Actual OverviewRoute and SettingsRoute consumers. Explicit memory IPC and progress fixtures; no OS installation/restart/download. Not OTA acceptance.",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "f02af71f71183669cddc8f577b67b2901c5a0d4880089188f51f9b4b7cf1b7b7"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r4/report.json",
+      "sha256": "2f2995009cc276c1be79c064911fef9a1db42c1c66e20ceb9d669eb7c5a49df9",
+      "suite": "update-hosts",
+      "engine": "webkit",
+      "result": "pass",
+      "checks": 156,
+      "screens": 48,
+      "scope": "Actual OverviewRoute and SettingsRoute consumers. Explicit memory IPC and progress fixtures; no OS installation/restart/download. Not OTA acceptance.",
+      "fontsAndBoundary": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r4/browser-boundary-and-fonts.json",
+        "sha256": "60a17e0075cfe90e25c6dc88c9e7acdab7b790525eff28b86bd13391d25acefa"
+      }
+    }
+  ],
+  "passingPrototypeReports": [
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r5/report.json",
+      "sha256": "e119ee23fa841d7016f84957f096330fc60f0d6a059f91860332482a0115e88f",
+      "engine": "chromium",
+      "checks": 24,
+      "screens": 10,
+      "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r5/report.json",
+      "sha256": "8a833469d03e8bcdf6f80044906f88b5bd3fe783688c33db4ec5979d8ab131ce",
+      "engine": "webkit",
+      "checks": 24,
+      "screens": 10,
+      "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
+    }
+  ],
+  "productAssertionsPassed": 1680,
+  "productScreenshots": 394,
+  "prototypeAssertionsPassed": 48,
+  "negativeScaleEvidence": [
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-scale-chromium-r1/report.json",
+      "sha256": "5acd26334d1c462eb6da6c53d257d1c2e0408f97ae66eccd18916f62657dc051",
+      "engine": "chromium",
+      "result": "fail",
+      "checks": [
+        {
+          "name": "overview UpdateCenter shares 200% interface scaling",
+          "passed": false,
+          "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+          "actual": {
+            "buttonHeight100": 34,
+            "buttonHeight200": 34,
+            "ratio": 1,
+            "shellTitleHeight100": 33,
+            "shellTitleHeight200": 66,
+            "modalInsideShell": false,
+            "rootZoom": "2",
+            "shellZoom": "2",
+            "modalZoom": "1"
+          }
+        },
+        {
+          "name": "settings UpdateCenter shares 200% interface scaling",
+          "passed": false,
+          "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+          "actual": {
+            "buttonHeight100": 34,
+            "buttonHeight200": 34,
+            "ratio": 1,
+            "shellTitleHeight100": 33,
+            "shellTitleHeight200": 66,
+            "modalInsideShell": false,
+            "rootZoom": "2",
+            "shellZoom": "2",
+            "modalZoom": "1"
+          }
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-scale-webkit-r1/report.json",
+      "sha256": "ccf69c783a21928672ca6727913beb7e8c0c1d7eb7a43a640a6871df1582a19b",
+      "engine": "webkit",
+      "result": "fail",
+      "checks": [
+        {
+          "name": "overview UpdateCenter shares 200% interface scaling",
+          "passed": false,
+          "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+          "actual": {
+            "buttonHeight100": 34,
+            "buttonHeight200": 34,
+            "ratio": 1,
+            "shellTitleHeight100": 33,
+            "shellTitleHeight200": 66,
+            "modalInsideShell": false,
+            "rootZoom": "2",
+            "shellZoom": "2",
+            "modalZoom": "1"
+          }
+        },
+        {
+          "name": "settings UpdateCenter shares 200% interface scaling",
+          "passed": false,
+          "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+          "actual": {
+            "buttonHeight100": 34,
+            "buttonHeight200": 34,
+            "ratio": 1,
+            "shellTitleHeight100": 33,
+            "shellTitleHeight200": 66,
+            "modalInsideShell": false,
+            "rootZoom": "2",
+            "shellZoom": "2",
+            "modalZoom": "1"
+          }
+        }
+      ]
+    }
+  ],
+  "scope": "Counts are actual observations, not total functional/native coverage. Shared zoom failure remains despite font-token/geometry passes."
+}

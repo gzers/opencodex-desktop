@@ -1,0 +1,9 @@
+file:///private/tmp/ocx020-final-review-agent/harness/update-hosts.mjs:3
+const check=(name,passed,detail)=>{checks.push({key,name,passed:!!passed,detail});if(!passed)throw Error(key+' '+name+' '+JSON.stringify(detail))}
+                                                                                                   ^
+
+Error: overview-1180-100-light-high check failure visible undefined
+    at check (file:///private/tmp/ocx020-final-review-agent/harness/update-hosts.mjs:3:100)
+    at file:///private/tmp/ocx020-final-review-agent/harness/update-hosts.mjs:37:179
+
+Node.js v26.8.1

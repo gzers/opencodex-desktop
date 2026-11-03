@@ -1,0 +1,1701 @@
+{
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "scanWorktreeHead": "644da8f742c2e48df72349cb64f67374178e3e6b",
+  "allScannedSourceBytesEqualProductTag": true,
+  "scope": "static Dialog/Modal tag references and actual AppModal/openInput callers; shared wrappers excluded,not unique window count",
+  "static": [
+    {
+      "file": "apps/desktop/ui/src/App.vue",
+      "component": "AppModal",
+      "line": 79,
+      "evidenceGroups": [
+        "all26dynamicCallers",
+        "final1122UI"
+      ],
+      "currentTypography": "compact-typography-20261103 font64/engine +finalnativepackage100%; unmodified feature handlers reused",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/App.vue",
+      "component": "RuntimeInstallDialog",
+      "line": 80,
+      "evidenceGroups": [
+        "finalCI41671607927 native installation/path/recovery/ordinary-account",
+        "fullRoutes428"
+      ],
+      "currentTypography": "compact-typography-20261103 font64/engine +finalnativepackage100%; unmodified feature handlers reused",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "component": "UiDialog",
+      "line": 56,
+      "evidenceGroups": [
+        "secondary",
+        "reviewAgent-secondary-chromium",
+        "reviewAgent-secondary-webkit",
+        "historyBackendRealFiles"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP",
+      "evidenceBoundary": "Actual backend recovery files plus currentbrowser preview/cancel. Finalnative UIaccept not established."
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
+      "component": "UiDialog",
+      "line": 18,
+      "evidenceGroups": [
+        "secondary",
+        "backupMigrationClients",
+        "native mixed import/restore35c06338 exactRust source reuse"
+      ],
+      "currentTypography": "compact-typography-20261103 font64/engine +finalnativepackage100%; unmodified feature handlers reused",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/AgentExecutionField.vue",
+      "component": "UiDialog",
+      "line": 88,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+      "component": "UiDialog",
+      "line": 59,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "component": "UiDialog",
+      "line": 85,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "component": "UiDialog",
+      "line": 140,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "component": "UiDialog",
+      "line": 123,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "component": "UiDialog",
+      "line": 126,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "ChannelBatchDialog",
+      "line": 266,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "NewChannelDialog",
+      "line": 267,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "UiDialog",
+      "line": 268,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "SelectorPreviewDialog",
+      "line": 269,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+      "component": "UiDialog",
+      "line": 35,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ModelPicker.vue",
+      "component": "UiDialog",
+      "line": 104,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "component": "UiDialog",
+      "line": 84,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+      "component": "UiDialog",
+      "line": 89,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+      "component": "UiDialog",
+      "line": 130,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+      "component": "UiDialog",
+      "line": 18,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "component": "UiDialog",
+      "line": 14,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+      "component": "UiDialog",
+      "line": 111,
+      "evidenceGroups": [
+        "notificationHistory",
+        "native final-package export notifications/result"
+      ],
+      "currentTypography": "compact-typography-20261103 font64/engine +finalnativepackage100%; unmodified feature handlers reused",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ConnectionDialog.vue",
+      "component": "UiDialog",
+      "line": 19,
+      "evidenceGroups": [
+        "secondary",
+        "completeSync648/engine",
+        "nativeConnectionConsumersFinal",
+        "reviewAgent-secondary-chromium",
+        "reviewAgent-secondary-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP",
+      "evidenceBoundary": "ActualmacOS finalUI save/reopen/blankpassword/activation; seededcatalog not package-transfer import; legacyfile WebDAV credentials."
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ImportedConnections.vue",
+      "component": "UiDialog",
+      "line": 15,
+      "evidenceGroups": [
+        "secondary",
+        "completeSync648/engine",
+        "nativeConnectionConsumersFinal",
+        "reviewAgent-secondary-chromium",
+        "reviewAgent-secondary-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP",
+      "evidenceBoundary": "ActualmacOS finalUI save/reopen/blankpassword/activation; seededcatalog not package-transfer import; legacyfile WebDAV credentials."
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "component": "UiDialog",
+      "line": 512,
+      "evidenceGroups": [
+        "secondary",
+        "completeSync648/engine",
+        "native final-package custom export/skip/source/results"
+      ],
+      "currentTypography": "compact-typography-20261103 font64/engine +finalnativepackage100%; unmodified feature handlers reused",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ObjectScopeTree.vue",
+      "component": "UiDialog",
+      "line": 32,
+      "evidenceGroups": [
+        "secondary",
+        "completeSync648/engine",
+        "native final-package custom export/skip/source/results"
+      ],
+      "currentTypography": "compact-typography-20261103 font64/engine +finalnativepackage100%; unmodified feature handlers reused",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/SyncDialogHost.vue",
+      "component": "ResultDialog",
+      "line": 14,
+      "evidenceGroups": [
+        "secondary",
+        "completeSync648/engine",
+        "native final-package custom export/skip/source/results"
+      ],
+      "currentTypography": "compact-typography-20261103 font64/engine +finalnativepackage100%; unmodified feature handlers reused",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/SyncDialogHost.vue",
+      "component": "ConnectionDialog",
+      "line": 14,
+      "evidenceGroups": [
+        "secondary",
+        "completeSync648/engine",
+        "native final-package custom export/skip/source/results"
+      ],
+      "currentTypography": "compact-typography-20261103 font64/engine +finalnativepackage100%; unmodified feature handlers reused",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/SyncResultDialog.vue",
+      "component": "UiDialog",
+      "line": 23,
+      "evidenceGroups": [
+        "secondary",
+        "completeSync648/engine",
+        "native final-package custom export/skip/source/results"
+      ],
+      "currentTypography": "compact-typography-20261103 font64/engine +finalnativepackage100%; unmodified feature handlers reused",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "component": "ExtensionDetailModal",
+      "line": 865,
+      "evidenceGroups": [
+        "extensions",
+        "extensionsLogs",
+        "native200% resource documents",
+        "reviewAgent-extensions-chromium",
+        "reviewAgent-extensions-webkit",
+        "reviewAgent-secondary-chromium",
+        "reviewAgent-secondary-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "TemplateUsageDialog",
+      "line": 208,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "UiDialog",
+      "line": 209,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "UiDialog",
+      "line": 214,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "UiDialog",
+      "line": 216,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "TemplateComparisonDialog",
+      "line": 217,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "ExternalTaskDialog",
+      "line": 218,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "BatchAgentDialog",
+      "line": 219,
+      "evidenceGroups": [
+        "modelDialogs",
+        "modelCompletion",
+        "modelScope",
+        "modelLocal",
+        "finalWindows native file/save/keyboard",
+        "reviewAgent-model-dialogs-chromium",
+        "reviewAgent-model-dialogs-webkit",
+        "reviewAgent-model-completion-chromium",
+        "reviewAgent-model-completion-webkit"
+      ],
+      "currentTypography": "bda actual rendered captures+computed font values at recorded states/scales; reports/index.json. Historical screenshots not final typography proof.",
+      "verificationMeaning": "implementation and caller references are not unique runtime windows; shared state suites plus own consumers/native layers",
+      "closureStatus": "await final overallRCP"
+    }
+  ],
+  "dynamic": [
+    {
+      "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "line": 71,
+      "call": "app.openModal(",
+      "titleSource": "title: '正在准备恢复确认',",
+      "renderedEvidenceGroup": "recovery",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "line": 80,
+      "call": "app.openModal(",
+      "titleSource": "title: '影响摘要不可用',",
+      "renderedEvidenceGroup": "recovery",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "line": 128,
+      "call": "app.openModal(",
+      "titleSource": "title: '恢复前确认',",
+      "renderedEvidenceGroup": "recovery",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "line": 139,
+      "call": "app.openModal(",
+      "titleSource": "title: '官方恢复引导',",
+      "renderedEvidenceGroup": "recovery",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/composables/useAppController.ts",
+      "line": 53,
+      "call": "app.openModal(",
+      "titleSource": "title: notification.title,",
+      "renderedEvidenceGroup": "notificationHistory",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+      "line": 72,
+      "call": "app.openModal(",
+      "titleSource": "title: '确认清理备份',",
+      "renderedEvidenceGroup": "backupMigrationClients",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+      "line": 82,
+      "call": "app.openModal(",
+      "titleSource": "title: '恢复管理器偏好',",
+      "renderedEvidenceGroup": "backupMigrationClients",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+      "line": 103,
+      "call": "app.openModal(",
+      "titleSource": "title: node.directory ? '打开备份目录' : '打开备份文件',",
+      "renderedEvidenceGroup": "backupMigrationClients",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+      "line": 98,
+      "call": "app.openModal(",
+      "titleSource": "title: entry.name + ' · 配置说明',",
+      "renderedEvidenceGroup": "backupMigrationClients",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "line": 88,
+      "call": "useModalStore().open(",
+      "titleSource": "title:'调整模型公开范围',body:value==='all'?'全部当前和未来发现型号将公开，保存时仍核对全局预算。':value==='none'?'当前和未来型号全部隐藏；已有规则和顺序保留。':'改为明确白名单，保留当前已知的启用项，未来新型号不自动公开。',confirmLabel",
+      "renderedEvidenceGroup": "modelScope",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "line": 38,
+      "call": "modal.open(",
+      "titleSource": "title:candidate.selection.mode==='none'?'隐藏全部型号':'改为仅公开所选型号',body:candidate.selection.mode==='none'?'此渠道及未来发现型号将全部隐藏，其他配置与顺序保留。':'使用明确白名单保留其他已知型号；未来发现",
+      "renderedEvidenceGroup": "modelScope",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "line": 211,
+      "call": "modal.open(",
+      "titleSource": "title:'删除渠道',body:'将 '+values.map(c=>escapeHtml(c.label)).join('、')+' 从草稿移除（包含这些渠道未确认的型号输入）。保存时一并移除对应官方运行渠道及其协议分组；此前可用还原修改撤回。',confirmLabel:'从草稿删除',on",
+      "renderedEvidenceGroup": "modelLocal",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "line": 228,
+      "call": "modal.open(",
+      "titleSource": "title: '还原修改', body: models.historicalRecovery?'放弃此历史恢复草稿并重新读取当前配置？已提交的运行写入不会被撤回。':'将全部渠道恢复到最近成功保存的配置？', confirmLabel: '还原修改', onConfirm: async () => ",
+      "renderedEvidenceGroup": "modelLocal",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 204,
+      "call": "app.openInputModal(",
+      "titleSource": "title: '恢复 Skill',",
+      "renderedEvidenceGroup": "extensionsLogs",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 230,
+      "call": "app.openModal(",
+      "titleSource": "title: '卸载 Skill',",
+      "renderedEvidenceGroup": "extensionsLogs",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 272,
+      "call": "app.openInputModal(",
+      "titleSource": "title: '新增 MCP 服务器',",
+      "renderedEvidenceGroup": "extensionsLogs",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 288,
+      "call": "app.openInputModal(",
+      "titleSource": "title: `编辑 ${server.name}`,",
+      "renderedEvidenceGroup": "extensionsLogs",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 307,
+      "call": "app.openModal(",
+      "titleSource": "title: '删除 MCP 服务器',",
+      "renderedEvidenceGroup": "extensionsLogs",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 329,
+      "call": "app.openModal(",
+      "titleSource": "title: previous ? '编辑 MCP 服务器' : '新增 MCP 服务器',",
+      "renderedEvidenceGroup": "extensionsLogs",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/LogsRoute.vue",
+      "line": 58,
+      "call": "app.openModal(",
+      "titleSource": "title: '清理日志',",
+      "renderedEvidenceGroup": "extensionsLogs",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/LogsRoute.vue",
+      "line": 74,
+      "call": "app.openModal(",
+      "titleSource": "title: pending > 0 ? `还有 ${pending} 条未处理通知` : '清理已解决通知',",
+      "renderedEvidenceGroup": "extensionsLogs",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/LogsRoute.vue",
+      "line": 91,
+      "call": "app.openModal(",
+      "titleSource": "title: '清理已读通知',",
+      "renderedEvidenceGroup": "extensionsLogs",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 94,
+      "call": "modal.open(",
+      "titleSource": "title:'取消新建模版',body:'放弃当前未保存的新建内容？原模版、其他编辑缓冲和渠道草稿保持。',confirmLabel:'放弃新建',onConfirm:()=>{if(models.busy||JSON.stringify(models.draft)!==baseline||mode",
+      "renderedEvidenceGroup": "modelLocal",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 98,
+      "call": "modal.open(",
+      "titleSource": "title:'还原模版修改',body:'还原当前模版到本次编辑的起点？其他模版与渠道草稿保持。',confirmLabel:'还原修改',onConfirm:()=>{if(JSON.stringify(models.draft)!==baseline||models.draftSession!=",
+      "renderedEvidenceGroup": "modelLocal",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 133,
+      "call": "modal.open(",
+      "titleSource": "title:'设为默认版本',body:'以后选择采用「'+escapeHtml(t.label)+'」时默认选择 '+versionLabel(r)+'；当前浏览版本、已有渠道和单模型精确引用保持。',confirmLabel:'设为默认',onCancel:()=>{if(reopen)mana",
+      "renderedEvidenceGroup": "modelLocal",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+      "line": 247,
+      "call": "app.openModal(",
+      "titleSource": "title: '迁移数据目录',",
+      "renderedEvidenceGroup": "backupMigrationClients",
+      "commonModalEvidence": "apps/desktop/ui/tests/app-modal.test.ts under final1122UI",
+      "verificationMeaning": "real production consumer callbacks under explicit fixture data, own entry/return/cancel/error or stale guards; native/file execution proven separately",
+      "closureStatus": "await final overallRCP; no independent per-reference lifecycle"
+    }
+  ],
+  "correction": "previous25-call inventory omitted inline useModalStore().open inChannelEditor; source always contained it",
+  "limits": "This is a coverage/evidence index, not proof of real OS/model/file operations from mocked services. Native/file/TLS/installation/OTA evidence and finalRCP remain separate.",
+  "passingEvidence": {
+    "modelDialogs": {
+      "path": "acceptance-20261103/navigation-final-webkit/report.json",
+      "sha256": "3b797dd12ddd83e1044c4eb69b2dc780dcf2a353342b01f16ce077687a1a64e6",
+      "checks": 352,
+      "scope": "rendered DEV model dialogs; explicit adapters; no native file or release acceptance",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "modelMenu": {
+      "path": "acceptance-20261103/menu-final-webkit/report.json",
+      "sha256": "6f83b78b66556ef9c4908216aaa34cc87f9ec5fc8ec38ab983525f9976960d3c",
+      "checks": 48,
+      "scope": "rendered production components; no native or file mutations",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "secondary": {
+      "path": "acceptance-20261103/credential-feedback-secondary-webkit/report.json",
+      "sha256": "d52581f1969fb98e1800be10612c283def4091bb83133255fc824d5ab84f17c7",
+      "checks": 117,
+      "scope": "DEV adapters, rendered secondary dialog states; no native adoption",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "extensions": {
+      "path": "acceptance-20261103/extension-full-green-webkit/report.json",
+      "sha256": "937b38bc8e0d5dab3df7041738d63426b92bbda802fd159260766152f158043a",
+      "checks": 14,
+      "scope": "rendered full production component data; no native operations",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "modelCompletion": {
+      "path": "acceptance-20261103/model-completion-webkit/report.json",
+      "sha256": "74cec18aafb6787397f5ed36cb0f87a37c0d0c27f573a0876b8a3cef84a8e246",
+      "checks": 69,
+      "scope": "production route/dialog handlers with explicit in-memory service and clipboard adapters; no native writes/restarts/model network",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "recovery": {
+      "path": "acceptance-20261103/restore-owner-webkit/report.json",
+      "sha256": "d01695f59e8da2610571a208b75054183680a9e1dc826c38719678a7b6f62275",
+      "checks": 14,
+      "scope": "DEV delayed adapters; production modal handlers; no real backup or config changes",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "notificationHistory": {
+      "path": "acceptance-20261103/history-cleanup-webkit/report.json",
+      "sha256": "81fe0544f9c3d10c7dd59a35c416b9096960eab2e9d02997b20d0551c20500d4",
+      "checks": 24,
+      "scope": "DEV browser; production history/store failure path; absent native bridge; no disk mutations",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "extensionsLogs": {
+      "path": "acceptance-20261103/dynamic-consumer-webkit-r4/report.json",
+      "sha256": "c4f1016682e871cbadb09b41d68a2cc03a0b8da83524095116e0c344bcb447ea",
+      "checks": 48,
+      "scope": "real production extension/log consumer handlers with explicit in-memory write adapters; no real files/clients/log deletion",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "backupMigrationClients": {
+      "path": "integration-20261104/ocx020-backup-migration-webkit-r4/report.json",
+      "sha256": "0ae3e5449fc96d53507121d2a66e1189fe494416e530aaad32c113b9d0e8ed9c",
+      "checks": 60,
+      "scope": "real backup/data-root/client consumers; explicitly mocked IPC and in-memory mutation adapters; no filesystem migration/cleanup/restore/system opens",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "modelScope": {
+      "path": "final-entry-reconciliation-20261104/ocx020-model-scope-consumers-webkit-r2/report.json",
+      "sha256": "2045530dea91e67b7b948f7e18bb6bd62d46a491bf710e140f5dc4fe9e366847",
+      "checks": 33,
+      "scope": "actual ChannelEditor/ChannelModelTable dynamic AppModal consumers; explicit in-memory draft setup/late edits, no saved file or runtime writes",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "modelLocal": {
+      "path": "final-entry-reconciliation-20261104/ocx020-model-local-confirmations-webkit-r3/report.json",
+      "sha256": "a838b7f7663c3a5ca3cb456fbc072bde8d4b4ea25ca6a9a6baca6b144fcd0b2b",
+      "checks": 51,
+      "scope": "real ChannelsView/ModelsRoute confirmation callbacks; explicit in-memory draft/library services; no filesystem/runtime changes",
+      "chromiumCompanion": "retained alongside the corresponding engine family; not double-counted as unique cases"
+    },
+    "nativeConnectionConsumersFinal": {
+      "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/result.json",
+      "sha256": "c31aeaf1124b210c7aca2a8dc57f82ebca6af5bf2ee0eff4c41b1678b8b727da",
+      "scope": "Actual finalmacOS UI/HTTPS/save/reopen/activation; explicitseed catalog only; legacy file credentials."
+    },
+    "historyBackendRealFiles": {
+      "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/implementation-20261102/ocx020-precommit-rust.log",
+      "sha256": "50ed6cda30fc1cbd6e0b87f64c006424786d400f1ba0c5080e89fa8ac1fcc4b7",
+      "scope": "Actual temporary-file recovery draft backend tests, not native UI",
+      "matchingLines": [
+        {
+          "line": 705,
+          "text": "test modules::model_config::recovery::tests::overlapping_draft_and_changed_confirmation_are_refused_without_runtime_or_library_writes ... ok"
+        },
+        {
+          "line": 706,
+          "text": "test modules::model_config::recovery::tests::restores_only_affected_channels_to_draft_preserves_independent_edits_and_replay_does_not_replace_later_input ... ok"
+        }
+      ]
+    },
+    "reviewAgent-model-dialogs-chromium": {
+      "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-chromium-r1/report.json",
+      "sha256": "37e68c4fedafe60e9b6618c9c633ed1c952b1a6fa85ee7db2a9d5d31e3fdd7ff",
+      "checks": 352,
+      "scope": "rendered DEV model dialogs; explicit adapters; no native file or release acceptance",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "9fea292581f7c137ec3ddba00a96cdf12ea98cb96ba80d8d2feb8db046b11ecf"
+      }
+    },
+    "reviewAgent-model-dialogs-webkit": {
+      "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-webkit-r1/report.json",
+      "sha256": "a7a210e06c77a9ac283d7577080e7e9873d6a3b789b6b147adab404ed4cc4f08",
+      "checks": 352,
+      "scope": "rendered DEV model dialogs; explicit adapters; no native file or release acceptance",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "0188bf4dd75793befbd7134b2cf99c57370f099a712c8b7f8c041f07ca4056d2"
+      }
+    },
+    "reviewAgent-extensions-chromium": {
+      "path": "/tmp/ocx020-final-review-agent/reports/extensions-chromium-r1/report.json",
+      "sha256": "5ab37fbe0c0d624bd8b6ed857ea1216f937c02b2eb658637c3367642d26d7c3b",
+      "checks": 14,
+      "scope": "rendered full production component data; no native operations",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/extensions-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "bbaa49c82219c6e8d54b3df6a052d7984e431fd520daab726c1600a0b367f0a6"
+      }
+    },
+    "reviewAgent-extensions-webkit": {
+      "path": "/tmp/ocx020-final-review-agent/reports/extensions-webkit-r1/report.json",
+      "sha256": "1887804dfbdc48b7a6b1e7cba9a9f8a16268b041ec16bf813b219c0431c919b8",
+      "checks": 14,
+      "scope": "rendered full production component data; no native operations",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/extensions-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "912f9854662fe9bc4de097b32c22912ec8146b0ca58e21d1972c08d14d450cd6"
+      }
+    },
+    "reviewAgent-secondary-chromium": {
+      "path": "/tmp/ocx020-final-review-agent/reports/secondary-chromium-r1/report.json",
+      "sha256": "c930994e40441288c238c6c31af6057cba55f726bf6354340ab1d46fbd621037",
+      "checks": 117,
+      "scope": "DEV adapters, rendered secondary dialog states; no native adoption",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/secondary-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "8e44c58780b9c12a42d30018fc13f5c94da7fe126ac217c02063f0ee83c8451b"
+      }
+    },
+    "reviewAgent-secondary-webkit": {
+      "path": "/tmp/ocx020-final-review-agent/reports/secondary-webkit-r1/report.json",
+      "sha256": "74745113013a09cf6d0659ea4edafc6cb9fc28a7deebb19317eddf9c8655f9d0",
+      "checks": 117,
+      "scope": "DEV adapters, rendered secondary dialog states; no native adoption",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/secondary-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "5591bd737ae5b3710cfc05046631bb2b0d0d5568622c7f4f535abecc2f5978e8"
+      }
+    },
+    "reviewAgent-model-completion-chromium": {
+      "path": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/report.json",
+      "sha256": "e0929ad4c12c14e18ce3c52c3f97d9f0b3780b15a6b2a17524cd45c1996e392d",
+      "checks": 69,
+      "scope": "production route/dialog handlers with explicit in-memory service and clipboard adapters; no native writes/restarts/model network",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "28ee26bb980432a0b65a64a0f646e7a328afda46b569af593f9a344e30a9d39f"
+      }
+    },
+    "reviewAgent-model-completion-webkit": {
+      "path": "/tmp/ocx020-final-review-agent/reports/model-completion-webkit-r1/report.json",
+      "sha256": "74cec18aafb6787397f5ed36cb0f87a37c0d0c27f573a0876b8a3cef84a8e246",
+      "checks": 69,
+      "scope": "production route/dialog handlers with explicit in-memory service and clipboard adapters; no native writes/restarts/model network",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-completion-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "cfc581c98801d5bed16e7255552587631e899ec9aaa7027e6e21c6521976dfd4"
+      }
+    },
+    "reviewAgent-agent-hosts-chromium": {
+      "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-chromium-r1/report.json",
+      "sha256": "8122234b5a317bc81259e4786f751feaa927c60133b22ead9b2181281ecfa4fb",
+      "checks": 132,
+      "scope": "Real ModelsRoute AgentPanel existing/new-editor consumers with explicit in-memory model/conversation/settings adapters. No actual generation/research/files/native IPC.",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "d89102dfe0ea661db58517bf3ffac7266adf4bdce32cb9910f45b0d2c733d49a"
+      }
+    },
+    "reviewAgent-agent-hosts-webkit": {
+      "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-webkit-r1/report.json",
+      "sha256": "e1ad0c7537eb8b08fa49a0308c38b293b3e2e39a392efa85581ff28ffd2e1dd3",
+      "checks": 132,
+      "scope": "Real ModelsRoute AgentPanel existing/new-editor consumers with explicit in-memory model/conversation/settings adapters. No actual generation/research/files/native IPC.",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "d90bfc87281a1fa31b8cab2c92625461c34f68a7654100fd57a63a034bd6fbf6"
+      }
+    },
+    "reviewAgent-update-hosts-chromium": {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-chromium-r1/report.json",
+      "sha256": "c39c91314099582ac71d8464240b6b4970b843fbbf9d3d8d5d1946fa7f888e7a",
+      "checks": 156,
+      "scope": "Actual OverviewRoute and SettingsRoute consumers. Explicit memory IPC and progress fixtures; no OS installation/restart/download. Not OTA acceptance.",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "f02af71f71183669cddc8f577b67b2901c5a0d4880089188f51f9b4b7cf1b7b7"
+      }
+    },
+    "reviewAgent-update-hosts-webkit": {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r4/report.json",
+      "sha256": "2f2995009cc276c1be79c064911fef9a1db42c1c66e20ceb9d669eb7c5a49df9",
+      "checks": 156,
+      "scope": "Actual OverviewRoute and SettingsRoute consumers. Explicit memory IPC and progress fixtures; no OS installation/restart/download. Not OTA acceptance.",
+      "fontSamples": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r4/browser-boundary-and-fonts.json",
+        "sha256": "60a17e0075cfe90e25c6dc88c9e7acdab7b790525eff28b86bd13391d25acefa"
+      }
+    }
+  },
+  "sourceExclusions": [
+    {
+      "module": "24-client target-management extension mock",
+      "source": "frozen extension-manager.js headerCOL-LOCAL-20261014-01;annotation多平台扩展·版本未定",
+      "reason": "Future multi-agent package explicitly excluded byDMD; current legacy skill/MCP/client consumers still tested"
+    },
+    {
+      "module": "conversation policy/conversation management/connection-map redesign",
+      "source": "DMD scope explicit exclusion and originalS20section5",
+      "reason": "future package, not0.2.20 adopted capability"
+    },
+    {
+      "module": "component gallery/prototype tools/annotations/mock passwords",
+      "source": "DEV/prototype-only registrations",
+      "reason": "reference/testing surfaces, not production features"
+    }
+  ],
+  "reviewAgentSourceIdentity": {
+    "path": "/tmp/ocx020-final-review-agent/receipts/source-identity.json",
+    "sha256": "1bc02c0ed8557607c3e5e8ab2a6c70f1cd518a7ed1956aef30b0b9d7d03024ad"
+  },
+  "reviewAgentReportIndex": {
+    "path": "/tmp/ocx020-final-review-agent/reports/index.json",
+    "sha256": "9cae9930111d8ab7d07037f64c1e4d16c57cd1c46584ebf32ef72603ab22255b"
+  },
+  "supplementalConsumers": [
+    {
+      "file": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+      "line": 337,
+      "component": "UpdateCenter",
+      "owner": "overview",
+      "prototypeReference": "frozen maintenance-ui.js145-207 showUpdates/progressDialog/applyDialog; settings-upgrade apply-dialog",
+      "evidenceGroups": [
+        "reviewAgent-update-hosts-chromium",
+        "reviewAgent-update-hosts-webkit"
+      ],
+      "prototypeEvidence": [
+        {
+          "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r5/report.json",
+          "sha256": "e119ee23fa841d7016f84957f096330fc60f0d6a059f91860332482a0115e88f",
+          "engine": "chromium",
+          "checks": 24,
+          "screens": 10,
+          "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
+        },
+        {
+          "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r5/report.json",
+          "sha256": "8a833469d03e8bcdf6f80044906f88b5bd3fe783688c33db4ec5979d8ab131ce",
+          "engine": "webkit",
+          "checks": 24,
+          "screens": 10,
+          "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
+        }
+      ],
+      "status": "state/geometry pass; shared-scale contract fails",
+      "blockingFinding": "FR-020-UPDATE-SCALE"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+      "line": 851,
+      "component": "UpdateCenter",
+      "owner": "settings",
+      "prototypeReference": "frozen maintenance-ui.js145-207 showUpdates/progressDialog/applyDialog; settings-upgrade apply-dialog",
+      "evidenceGroups": [
+        "reviewAgent-update-hosts-chromium",
+        "reviewAgent-update-hosts-webkit"
+      ],
+      "prototypeEvidence": [
+        {
+          "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r5/report.json",
+          "sha256": "e119ee23fa841d7016f84957f096330fc60f0d6a059f91860332482a0115e88f",
+          "engine": "chromium",
+          "checks": 24,
+          "screens": 10,
+          "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
+        },
+        {
+          "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r5/report.json",
+          "sha256": "8a833469d03e8bcdf6f80044906f88b5bd3fe783688c33db4ec5979d8ab131ce",
+          "engine": "webkit",
+          "checks": 24,
+          "screens": 10,
+          "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
+        }
+      ],
+      "status": "state/geometry pass; shared-scale contract fails",
+      "blockingFinding": "FR-020-UPDATE-SCALE"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 215,
+      "component": "AgentPanel",
+      "contexts": [
+        "existing-template editor",
+        "new-template editor"
+      ],
+      "prototypeReference": "Exactcfbd90c4b model-config.js1617,1620-1630 andmodel-config.css526-557",
+      "evidenceGroups": [
+        "reviewAgent-agent-hosts-chromium",
+        "reviewAgent-agent-hosts-webkit"
+      ],
+      "prototypeEvidence": [
+        {
+          "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r5/report.json",
+          "sha256": "e119ee23fa841d7016f84957f096330fc60f0d6a059f91860332482a0115e88f",
+          "engine": "chromium",
+          "checks": 24,
+          "screens": 10,
+          "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
+        },
+        {
+          "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r5/report.json",
+          "sha256": "8a833469d03e8bcdf6f80044906f88b5bd3fe783688c33db4ec5979d8ab131ce",
+          "engine": "webkit",
+          "checks": 24,
+          "screens": 10,
+          "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
+        }
+      ],
+      "status": "recorded browserstates/currentfontlayout passed",
+      "excludedAsFutureConversation": false,
+      "limits": "No actual modelgeneration/research/native persistence; no claim of full pixel/control parity."
+    }
+  ],
+  "reviewFindings": [
+    {
+      "id": "FR-020-UPDATE-SCALE",
+      "priority": "P1",
+      "releaseBlocking": true,
+      "status": "confirmed-product-shared-scale-contract-failure",
+      "acceptanceIds": [
+        "AC-020-19",
+        "AC-020-20"
+      ],
+      "s20": [
+        "S20-19",
+        "S20-20"
+      ],
+      "title": "UpdateCenter in Overview and Settings does not follow shared interface scale",
+      "actual": "Same1180x760/theme/material:100% to200%, shell heading33 to66px; UpdateCenter footer button34 to34px. Root/shell zoom=2, modal zoom=1, modal outside app-window.",
+      "source": [
+        {
+          "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+          "line": 225
+        },
+        {
+          "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/styles/base.css",
+          "line": 35
+        },
+        {
+          "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/src/app/appearance/scale.ts",
+          "line": 17
+        }
+      ],
+      "evidence": [
+        {
+          "path": "/tmp/ocx020-final-review-agent/reports/update-scale-chromium-r1/report.json",
+          "sha256": "5acd26334d1c462eb6da6c53d257d1c2e0408f97ae66eccd18916f62657dc051",
+          "engine": "chromium",
+          "result": "fail",
+          "checks": [
+            {
+              "name": "overview UpdateCenter shares 200% interface scaling",
+              "passed": false,
+              "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+              "actual": {
+                "buttonHeight100": 34,
+                "buttonHeight200": 34,
+                "ratio": 1,
+                "shellTitleHeight100": 33,
+                "shellTitleHeight200": 66,
+                "modalInsideShell": false,
+                "rootZoom": "2",
+                "shellZoom": "2",
+                "modalZoom": "1"
+              }
+            },
+            {
+              "name": "settings UpdateCenter shares 200% interface scaling",
+              "passed": false,
+              "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+              "actual": {
+                "buttonHeight100": 34,
+                "buttonHeight200": 34,
+                "ratio": 1,
+                "shellTitleHeight100": 33,
+                "shellTitleHeight200": 66,
+                "modalInsideShell": false,
+                "rootZoom": "2",
+                "shellZoom": "2",
+                "modalZoom": "1"
+              }
+            }
+          ]
+        },
+        {
+          "path": "/tmp/ocx020-final-review-agent/reports/update-scale-webkit-r1/report.json",
+          "sha256": "ccf69c783a21928672ca6727913beb7e8c0c1d7eb7a43a640a6871df1582a19b",
+          "engine": "webkit",
+          "result": "fail",
+          "checks": [
+            {
+              "name": "overview UpdateCenter shares 200% interface scaling",
+              "passed": false,
+              "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+              "actual": {
+                "buttonHeight100": 34,
+                "buttonHeight200": 34,
+                "ratio": 1,
+                "shellTitleHeight100": 33,
+                "shellTitleHeight200": 66,
+                "modalInsideShell": false,
+                "rootZoom": "2",
+                "shellZoom": "2",
+                "modalZoom": "1"
+              }
+            },
+            {
+              "name": "settings UpdateCenter shares 200% interface scaling",
+              "passed": false,
+              "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+              "actual": {
+                "buttonHeight100": 34,
+                "buttonHeight200": 34,
+                "ratio": 1,
+                "shellTitleHeight100": 33,
+                "shellTitleHeight200": 66,
+                "modalInsideShell": false,
+                "rootZoom": "2",
+                "shellZoom": "2",
+                "modalZoom": "1"
+              }
+            }
+          ]
+        }
+      ],
+      "action": "Fix product shared-scale/overlay integration and recheck both hosts, or obtain explicit requirement change. Do not infer scale acceptance from fitting geometry. This agent did not modify product."
+    }
+  ],
+  "prototypeHostDiagnosis": {
+    "id": "FR-020-PROTOTYPE-HOST",
+    "releaseBlocking": false,
+    "classification": "probe-viewport-versus-prototype-window-size-mismatch",
+    "originalFailure": {
+      "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r4/report.json",
+      "sha256": "83f55d2d1f78af2b12e68534272d66b07b828a2ac3a6a606deb70d9d7720b320"
+    },
+    "cause": "Browser900x600 did not resize the frozen prototype window1180x760, which was centered atx=-140. Assistant absolute coordinates belong to #mpAssistantHost/.window, not the browser viewport. No draggable-position cause.",
+    "source": "Exact frozen cfbd90c4b model-config.css526-530:host absolute inset0; panel absolute right24/bottom24 width360/height480; model-config.js1617,1620-1630. Source hashes equal before and after.",
+    "diagnosticEvidence": {
+      "path": "/tmp/ocx020-final-review-agent/reports/prototype-host-diagnostics-r1/report.json",
+      "sha256": "ff1a5d85886d0651c112df2398f21198d1a3b282634285472fb2cac28dcc374a"
+    },
+    "rawProbe": {
+      "mode": "raw-browser-900",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "window": {
+        "tag": "DIV",
+        "id": "",
+        "className": "window",
+        "rect": {
+          "x": -140,
+          "y": 0,
+          "right": 1040,
+          "bottom": 760,
+          "width": 1180,
+          "height": 760
+        },
+        "css": {
+          "position": "relative",
+          "width": "1180px",
+          "height": "760px",
+          "minWidth": "0px",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "clip",
+          "transform": "none",
+          "right": "0px",
+          "bottom": "0px"
+        },
+        "offsetParent": "stage"
+      },
+      "host": {
+        "tag": "DIV",
+        "id": "mpAssistantHost",
+        "className": "",
+        "rect": {
+          "x": -139,
+          "y": 1,
+          "right": 1039,
+          "bottom": 759,
+          "width": 1178,
+          "height": 758
+        },
+        "css": {
+          "position": "absolute",
+          "width": "1178px",
+          "height": "758px",
+          "minWidth": "0px",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "transform": "none",
+          "right": "0px",
+          "bottom": "0px"
+        },
+        "offsetParent": "window"
+      },
+      "panel": {
+        "tag": "SECTION",
+        "id": "mpAssistantPanel",
+        "className": "mp-assistant-panel",
+        "rect": {
+          "x": 655,
+          "y": 263,
+          "right": 1015,
+          "bottom": 743,
+          "width": 360,
+          "height": 480
+        },
+        "css": {
+          "position": "absolute",
+          "width": "360px",
+          "height": "480px",
+          "minWidth": "0px",
+          "maxWidth": "calc(100% - 32px)",
+          "maxHeight": "calc(100% - 32px)",
+          "overflow": "hidden",
+          "transform": "none",
+          "right": "24px",
+          "bottom": "16px"
+        },
+        "offsetParent": "mpAssistantHost"
+      },
+      "main": {
+        "tag": "MAIN",
+        "id": "",
+        "className": "main",
+        "rect": {
+          "x": 105,
+          "y": 29,
+          "right": 1039,
+          "bottom": 759,
+          "width": 934,
+          "height": 730
+        },
+        "css": {
+          "position": "static",
+          "width": "934px",
+          "height": "730px",
+          "minWidth": "auto",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "auto",
+          "transform": "none",
+          "right": "auto",
+          "bottom": "auto"
+        },
+        "offsetParent": "window"
+      },
+      "pageScroll": {
+        "width": 1040,
+        "height": 1948
+      }
+    },
+    "explicitProductWindowProbe": {
+      "mode": "explicit-900-product-window",
+      "viewport": {
+        "width": 1700,
+        "height": 1000
+      },
+      "window": {
+        "tag": "DIV",
+        "id": "",
+        "className": "window",
+        "rect": {
+          "x": 80,
+          "y": 200,
+          "right": 980,
+          "bottom": 800,
+          "width": 900,
+          "height": 600
+        },
+        "css": {
+          "position": "relative",
+          "width": "900px",
+          "height": "600px",
+          "minWidth": "0px",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "clip",
+          "transform": "none",
+          "right": "0px",
+          "bottom": "0px"
+        },
+        "offsetParent": "stage"
+      },
+      "host": {
+        "tag": "DIV",
+        "id": "mpAssistantHost",
+        "className": "",
+        "rect": {
+          "x": 81,
+          "y": 201,
+          "right": 979,
+          "bottom": 799,
+          "width": 898,
+          "height": 598
+        },
+        "css": {
+          "position": "absolute",
+          "width": "898px",
+          "height": "598px",
+          "minWidth": "0px",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "transform": "none",
+          "right": "0px",
+          "bottom": "0px"
+        },
+        "offsetParent": "window"
+      },
+      "panel": {
+        "tag": "SECTION",
+        "id": "mpAssistantPanel",
+        "className": "mp-assistant-panel",
+        "rect": {
+          "x": 595,
+          "y": 295,
+          "right": 955,
+          "bottom": 775,
+          "width": 360,
+          "height": 480
+        },
+        "css": {
+          "position": "absolute",
+          "width": "360px",
+          "height": "480px",
+          "minWidth": "0px",
+          "maxWidth": "calc(100% - 32px)",
+          "maxHeight": "calc(100% - 48px)",
+          "overflow": "hidden",
+          "transform": "none",
+          "right": "24px",
+          "bottom": "24px"
+        },
+        "offsetParent": "mpAssistantHost"
+      },
+      "main": {
+        "tag": "MAIN",
+        "id": "",
+        "className": "main",
+        "rect": {
+          "x": 325,
+          "y": 229,
+          "right": 979,
+          "bottom": 799,
+          "width": 654,
+          "height": 570
+        },
+        "css": {
+          "position": "static",
+          "width": "654px",
+          "height": "570px",
+          "minWidth": "auto",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "auto",
+          "transform": "none",
+          "right": "auto",
+          "bottom": "auto"
+        },
+        "offsetParent": "window"
+      },
+      "pageScroll": {
+        "width": 1700,
+        "height": 1000
+      }
+    },
+    "method": "Existing compact-type QA convention:review canvas1700x1000; in-memory .window width/height set to1180x760 or900x600, then check the panel against that measured frame. No floating-panel coordinates or source files changed.",
+    "finalPrototypeEvidence": [
+      {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r5/report.json",
+        "sha256": "e119ee23fa841d7016f84957f096330fc60f0d6a059f91860332482a0115e88f",
+        "engine": "chromium",
+        "checks": 24,
+        "screens": 10,
+        "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
+      },
+      {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r5/report.json",
+        "sha256": "8a833469d03e8bcdf6f80044906f88b5bd3fe783688c33db4ec5979d8ab131ce",
+        "engine": "webkit",
+        "checks": 24,
+        "screens": 10,
+        "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
+      }
+    ],
+    "independentProductEvidence": [
+      {
+        "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-chromium-r1/report.json",
+        "sha256": "8122234b5a317bc81259e4786f751feaa927c60133b22ead9b2181281ecfa4fb",
+        "suite": "agent-hosts",
+        "engine": "chromium",
+        "result": "pass",
+        "checks": 132,
+        "screens": 42,
+        "scope": "Real ModelsRoute AgentPanel existing/new-editor consumers with explicit in-memory model/conversation/settings adapters. No actual generation/research/files/native IPC.",
+        "fontsAndBoundary": {
+          "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-chromium-r1/browser-boundary-and-fonts.json",
+          "sha256": "d89102dfe0ea661db58517bf3ffac7266adf4bdce32cb9910f45b0d2c733d49a"
+        }
+      },
+      {
+        "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-webkit-r1/report.json",
+        "sha256": "e1ad0c7537eb8b08fa49a0308c38b293b3e2e39a392efa85581ff28ffd2e1dd3",
+        "suite": "agent-hosts",
+        "engine": "webkit",
+        "result": "pass",
+        "checks": 132,
+        "screens": 42,
+        "scope": "Real ModelsRoute AgentPanel existing/new-editor consumers with explicit in-memory model/conversation/settings adapters. No actual generation/research/files/native IPC.",
+        "fontsAndBoundary": {
+          "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-webkit-r1/browser-boundary-and-fonts.json",
+          "sha256": "d90bfc87281a1fa31b8cab2c92625461c34f68a7654100fd57a63a034bd6fbf6"
+        }
+      }
+    ],
+    "limits": "Prototype reference100% only; no claim of full prototype200% scaling or exact cross-product pixel parity. Actual product accessibility/layout separately verified. No future modules adopted."
+  },
+  "credentialStorageCorrection": {
+    "webdavPassword": "macOS legacy local plaintext file backend protected by0600/0700. backend=keychain is historical metadata, not proof of OS keyring.",
+    "contentProtection": "Independent model_config/transfer_protection uses native keyring. Do not generalize connection tests as full system-keychain acceptance.",
+    "source": [
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/infrastructure/credentials.rs",
+        "lines": [
+          73,
+          75,
+          115,
+          117,
+          166,
+          170
+        ]
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/transfer_protection.rs",
+        "lines": [
+          35,
+          50,
+          204
+        ]
+      }
+    ]
+  },
+  "actualOtaEvidence": [
+    {
+      "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/windows-adjacent-ota-41683704589/summary.json",
+      "sha256": "cefc280ddf0f7d2c4fdd67d7c2291781c75178d8784743fb0644dc2b6c85f6b3",
+      "status": "pass-main-thread-actual-OTA"
+    },
+    {
+      "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/macos-adjacent-ota/ota-result.json",
+      "sha256": "403af5c6af3af26448e133eda57f8ef5314c8f1408032d8ede098c381e3bf4fd",
+      "status": "pass-main-thread-actual-OTA"
+    }
+  ],
+  "scopeCountNote": "Original37 tags+26 dynamic calls remain scanner scope; three supplemental customconsumer references separate, not three unique windows.",
+  "existingAssistantNotExcluded": {
+    "source": "cfbd90c4b model-config.js assistantHTML and ModelsRoute.vue215",
+    "meaning": "Existing adopted modeltemplate assistant is distinct from excluded futureconversation management/policy redesign."
+  }
+}

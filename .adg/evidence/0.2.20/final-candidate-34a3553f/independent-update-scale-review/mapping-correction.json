@@ -1,0 +1,189 @@
+{
+  "findingId": "FR-020-UPDATE-SCALE",
+  "previousProduct": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "status": "resolved-for-reviewed-source",
+  "releaseBlockingForThisFinding": false,
+  "fixedCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "actualUpdateCenterSha256": "1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f",
+  "sourceIdentityBefore": {
+    "path": "/tmp/ocx020-final-review-agent/update-scale-fix/receipts/source-identity-before.json",
+    "sha256": "9ef87ac43322a4bfbfcd08b7f25594721f1cec1e0d4d551f0d96263ff534da7b"
+  },
+  "sourceIdentityAfter": {
+    "path": "/tmp/ocx020-final-review-agent/update-scale-fix/receipts/source-identity-after.json",
+    "sha256": "1a2bb5a5f723cac4735b6ca497e481cda98d403509e384311197c9c3dcd86fc0"
+  },
+  "evidence": [
+    {
+      "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-contract-chromium-r1/report.json",
+      "sha256": "6cc79d3c87bdbe94b7c56d347fc977b9291f54e459429e45d03da673fce28e44",
+      "suite": "original-scale",
+      "engine": "chromium",
+      "assertions": 2,
+      "result": "pass",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-contract-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "353ea82d9489cd7b789b2ea0c6d7f31afcdb87b39ece75c574cb3311ce72d24a"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-hosts-chromium-r1/report.json",
+      "sha256": "5bd7860e61054a225db44f203680f3c10eaa183328be050dde98c31bed13159a",
+      "suite": "hosts",
+      "engine": "chromium",
+      "assertions": 156,
+      "result": "pass",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-hosts-chromium-r1/browser-boundary-and-fonts.json",
+        "sha256": "34993ee3351e69ff40698b3966e1a940215b19c48be10cbf0b17574772fe7f06"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-chromium-r2/report.json",
+      "sha256": "0d0a0e9093c68e0232aee515aa5ba3f33eacacd6b5f63a8e1c25f67ab9313a2d",
+      "suite": "expanded",
+      "engine": "chromium",
+      "assertions": 372,
+      "result": "pass",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-chromium-r2/browser-boundary-and-fonts.json",
+        "sha256": "e672d40e20671b4dd3e01e8dd6026edfb57b829581de002a308a18df3977aa1e"
+      },
+      "actualPaintedButtonHeights": [
+        [
+          100,
+          34
+        ],
+        [
+          150,
+          51
+        ],
+        [
+          200,
+          68
+        ]
+      ],
+      "actualWidths": [
+        900,
+        1180
+      ],
+      "actualHeights": [
+        600,
+        760
+      ],
+      "scales": [
+        100,
+        150,
+        200
+      ]
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/update-scale-fix/repo-regression-chromium/report.json",
+      "sha256": "88dfe3d53128ce1e5dc611dcaf98cb3ad884b6aa97f1ab84b90430f68eb560f8",
+      "suite": "repo-regression",
+      "engine": "chromium",
+      "assertions": 7,
+      "result": "pass"
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-contract-webkit-r1/report.json",
+      "sha256": "ccd54987d19ee94beaa7df1e03d104d106149cff751de3c25bca3d53e38dec9d",
+      "suite": "original-scale",
+      "engine": "webkit",
+      "assertions": 2,
+      "result": "pass",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-contract-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "ce9c873ba9fee2c67763587f8f20c1b115bbcfc2100160592234869f3b17042d"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-hosts-webkit-r1/report.json",
+      "sha256": "0ff33360ec829ea96d8fbd5a4b945a1e823613e9c56da8a93a4c56dd357deb3e",
+      "suite": "hosts",
+      "engine": "webkit",
+      "assertions": 156,
+      "result": "pass",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-hosts-webkit-r1/browser-boundary-and-fonts.json",
+        "sha256": "b8226542b3c66047c25f808c5e64c92c6af524ad2a136c025489d909ac30b098"
+      }
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-webkit-r2/report.json",
+      "sha256": "c600c98ea12e6a89e69ec2ff51c1649997ac8d6b76c68a24c347fcad7ee6f107",
+      "suite": "expanded",
+      "engine": "webkit",
+      "assertions": 372,
+      "result": "pass",
+      "boundary": {
+        "path": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-webkit-r2/browser-boundary-and-fonts.json",
+        "sha256": "4d1b07651e673ffc223e80f60a97397c379629c19eaefcda77d3fd222dfd5db8"
+      },
+      "actualPaintedButtonHeights": [
+        [
+          100,
+          34
+        ],
+        [
+          150,
+          51
+        ],
+        [
+          200,
+          68
+        ]
+      ],
+      "actualWidths": [
+        900,
+        1180
+      ],
+      "actualHeights": [
+        600,
+        760
+      ],
+      "scales": [
+        100,
+        150,
+        200
+      ]
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/update-scale-fix/repo-regression-webkit/report.json",
+      "sha256": "dbc36f68cc79b57244afb2e4065548120fe7f5245d605cf4a748049282bb58f2",
+      "suite": "repo-regression",
+      "engine": "webkit",
+      "assertions": 7,
+      "result": "pass"
+    }
+  ],
+  "actual200Percent": "Both hosts and bothengines:34px at100%,51px at150%,68px at200%; originalratio>=1.8 kept unchanged.",
+  "geometry": "900x600/1180x760 actualviewports, allfour edges, header/footer, close/confirm hit-tested and clicked with realbrowsermouse; longnotes independentinternal scroll and outerbody scroll preserveactions.",
+  "scope": "Browser-only production consumers with explicitmemoryIPC. No OSinstall/restart/OTA/native acceptance. Does not replace main-thread newcandidateCI/package/releasegates.",
+  "mappingUpdates": [
+    {
+      "match": {
+        "file": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+        "line": 337,
+        "component": "UpdateCenter"
+      },
+      "status": "recordedbrowserstate/geometry/shared-scale pass for34a3553f"
+    },
+    {
+      "match": {
+        "file": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+        "line": 851,
+        "component": "UpdateCenter"
+      },
+      "status": "recordedbrowserstate/geometry/shared-scale pass for34a3553f"
+    }
+  ],
+  "doNotRewriteOldEvidence": "Originalbda scale failures and all previousreports remain unchanged; append thissource-bound resolution.",
+  "scriptFinding": {
+    "priority": "P2",
+    "path": "apps/desktop/ui/qa/update-dialog-scale.mjs",
+    "line": 14,
+    "problem": "finally unconditionally writes completed:true and result derives from checks.every. An early navigation/selector exception before checks can emit completed:true/result:pass with an empty list, despite process exit1.",
+    "action": "Track completed/failure explicitly and require nonempty checks, while retaining the nonzero process exit. Current successful executions are unaffected; this is a harness metadata robustness issue, not an outstanding product-scale failure."
+  }
+}

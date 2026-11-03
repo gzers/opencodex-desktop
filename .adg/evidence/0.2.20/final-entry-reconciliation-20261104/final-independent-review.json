@@ -1,0 +1,32 @@
+{
+  "result": "in_progress",
+  "sourceCommit": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "reviewer": "independent subagent 01a1a26d-432c-7f73-850d-0498cf452511 + integration actual native/package receipts",
+  "entryScope": {
+    "staticReferences": 37,
+    "dynamicCallers": 26,
+    "supplementalCustomReferences": 3
+  },
+  "resolvedProductFinding": {
+    "source": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+    "status": "browser pass; final native package pending",
+    "originalBlockingFinding": "FR-020-UPDATE-SCALE",
+    "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/independent-update-scale-review/handoff.json",
+    "checksPerEngine": {
+      "original": 2,
+      "states": 156,
+      "expanded": 372,
+      "repoRegression": 7
+    },
+    "actualHeights": [
+      34,
+      51,
+      68
+    ]
+  },
+  "originalBdaReports": ".adg/evidence/0.2.20/final-entry-reconciliation-20261104/independent-bda-review/review-summary.json",
+  "currentMap": ".adg/evidence/0.2.20/final-entry-reconciliation-20261104/entry-evidence-map.json",
+  "remaining": "direct successful native history-draft consumer; new final package/source/signature/install/OTA/stable gates outside this browser review",
+  "prototypeProbeCorrection": "browser viewport was not prototype product window; actual measured900x600 window in existing1700x1000 reviewcanvas passes; not draggable coordinates; no source mutation",
+  "sourceExclusions": "future mock multi-agent/conversation/connection-map only; adopted existing AgentPanel included"
+}

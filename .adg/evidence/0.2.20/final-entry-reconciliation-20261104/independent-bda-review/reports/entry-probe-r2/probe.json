@@ -1,0 +1,617 @@
+[
+  {
+    "state": "settings",
+    "text": "OpenCodeX-Desktop\nDesktop Manager\n概览\n面板\n模型\n拓展\n同步\n诊断\n设置\n设置\n\n集中管理偏好、安装配置、备份、升级与官方归属。\n\n运行中\n2\n通用\n安装配置\n数据与备份\n扩展管理\nAgent 配置\n日志与通知\nCLI 控制面\n版本升级\n关于\n软件更新\n检查更新\n桌面管理器\n查看通道版本、更新说明与实时进度；准备就绪后选择重启时机。\n查看管理器更新\nOpenCodex 面板\n当前 未发现；升级前必须备份配置。\n查看面板更新\n更新通道\n稳定通道或测试通道；检查、安装与自动调度共用同一通道来源。\n稳定通道\n网络连接\n检查更新失败多为网络问题；可在此跳转配置代理。\n配置网络\n自动检查更新\n开启后按通道后台检查；关闭后不影响手动检查。\n托盘命令通道暂不可用；可改用应用内按钮。\n本通知将在2秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+  },
+  {
+    "state": "manager",
+    "text": "桌面管理器更新详情与确认\n版本升级\n尚未检查\n未知\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\n\n尚无可核验的更新候选。\n\n取消"
+  },
+  {
+    "state": "prototype templates",
+    "buttons": [
+      {
+        "text": "渠道模型",
+        "action": "tab",
+        "label": null
+      },
+      {
+        "text": "模型模版",
+        "action": "tab",
+        "label": null
+      },
+      {
+        "text": "Agent 配置",
+        "action": "settings",
+        "label": null
+      },
+      {
+        "text": "原型01＋",
+        "label": "原型注释 01：渠道与模版均为内存演示"
+      },
+      {
+        "text": "新建模版",
+        "action": "new-template",
+        "label": null
+      },
+      {
+        "text": "检查全部更新",
+        "action": "update-all",
+        "label": null
+      },
+      {
+        "text": "外部任务",
+        "action": "external-agent",
+        "label": null
+      },
+      {
+        "text": "2026-10-03 16:20:00 · 76BB · 内置基线",
+        "label": "GPT 选择操作版本：2026-10-03 16:20:00 · 76BB · 内置基线"
+      },
+      {
+        "text": "2026-10-04 10:30:00 · 32A6",
+        "label": null
+      },
+      {
+        "text": "2026-10-03 18:42:00 · FFAD",
+        "label": null
+      },
+      {
+        "text": "2026-10-03 16:20:00 · 76BB · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-03 16:30:00 · 2863 · 内置基线",
+        "label": "Claude 选择操作版本：2026-10-03 16:30:00 · 2863 · 内置基线"
+      },
+      {
+        "text": "2026-10-03 16:30:00 · 2863 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-03 16:40:00 · DC3F · 内置基线",
+        "label": "Gemini 选择操作版本：2026-10-03 16:40:00 · DC3F · 内置基线"
+      },
+      {
+        "text": "2026-10-03 16:40:00 · DC3F · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-04 09:00:00 · C769 · 内置基线",
+        "label": "Qwen 选择操作版本：2026-10-04 09:00:00 · C769 · 内置基线"
+      },
+      {
+        "text": "2026-10-04 09:00:00 · C769 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-04 09:00:00 · 5C19 · 内置基线",
+        "label": "DeepSeek 选择操作版本：2026-10-04 09:00:00 · 5C19 · 内置基线"
+      },
+      {
+        "text": "2026-10-04 09:00:00 · 5C19 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-04 09:00:00 · 6FEE · 内置基线",
+        "label": "Grok 选择操作版本：2026-10-04 09:00:00 · 6FEE · 内置基线"
+      },
+      {
+        "text": "2026-10-04 09:00:00 · 6FEE · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · B1BC · 内置基线",
+        "label": "智谱 GLM 选择操作版本：2026-10-13 09:00:00 · B1BC · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · B1BC · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 4BB4 · 内置基线",
+        "label": "腾讯混元 HY 选择操作版本：2026-10-13 09:00:00 · 4BB4 · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 4BB4 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · D1C5 · 内置基线",
+        "label": "豆包 Seed 选择操作版本：2026-10-13 09:00:00 · D1C5 · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · D1C5 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 9BFC · 内置基线",
+        "label": "Kimi / Moonshot 选择操作版本：2026-10-13 09:00:00 · 9BFC · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 9BFC · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 77E6 · 内置基线",
+        "label": "MiniMax 选择操作版本：2026-10-13 09:00:00 · 77E6 · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 77E6 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · BCE3 · 内置基线",
+        "label": "百度 ERNIE 选择操作版本：2026-10-13 09:00:00 · BCE3 · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · BCE3 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · FD21 · 内置基线",
+        "label": "阶跃 Step 选择操作版本：2026-10-13 09:00:00 · FD21 · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · FD21 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 7A38 · 内置基线",
+        "label": "小米 MiMo 选择操作版本：2026-10-13 09:00:00 · 7A38 · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 7A38 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 2F92 · 内置基线",
+        "label": "Mistral / Devstral 选择操作版本：2026-10-13 09:00:00 · 2F92 · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 2F92 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · E0D8 · 内置基线",
+        "label": "Gemma 选择操作版本：2026-10-13 09:00:00 · E0D8 · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · E0D8 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 8F01 · 内置基线",
+        "label": "Llama 选择操作版本：2026-10-13 09:00:00 · 8F01 · 内置基线"
+      },
+      {
+        "text": "2026-10-13 09:00:00 · 8F01 · 内置基线",
+        "label": null
+      },
+      {
+        "text": "版本管理…",
+        "label": null
+      },
+      {
+        "text": "编辑",
+        "action": "open-template-editor",
+        "label": null
+      },
+      {
+        "text": "复制",
+        "action": "copy-list-template",
+        "label": null
+      },
+      {
+        "text": "版本管理",
+        "action": "template-version-history",
+        "label": null
+      },
+      {
+        "text": "匹配与使用",
+        "action": "template-inspect",
+        "label": null
+      },
+      {
+        "text": "原型07＋",
+        "label": "原型注释 07：模版列表版本与动作范围"
+      },
+      {
+        "text": "原型10＋",
+        "label": "原型注释 10：版本摘要的生成依据"
+      }
+    ]
+  },
+  {
+    "state": "prototype assistant",
+    "text": "Agent 助手\n本机共用\n选择执行模型\n任务\n自动填充\n描述模型族、匹配规则和配置要求，发送后可继续对话微调。\n资料\n当前资料\n锁定上下文\n发送"
+  },
+  {
+    "state": "prototype updates",
+    "text": "检查更新结果\n\n分别查看更新内容与范围，确认后才会开始更新。\n\n桌面管理器\n尚未检查\n0.1.9\n\nstable · 签名更新源（示例）\n\n当前没有待确认的更新。\n\n查看详情\nOpenCodex 面板\n尚未检查\n2.50.0\n\n官方 npm 包（示例）\n\n当前没有待确认的更新。\n\n查看详情\n关闭"
+  }
+]

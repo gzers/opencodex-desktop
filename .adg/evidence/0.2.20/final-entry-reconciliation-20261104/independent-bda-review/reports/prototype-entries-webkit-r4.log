@@ -1,0 +1,12 @@
+file:///private/tmp/ocx020-final-review-agent/harness/prototype-entries.mjs:3
+const check=(name,passed,detail)=>{checks.push({key,name,passed:!!passed,detail});if(!passed)throw Error(key+' '+name+' '+JSON.stringify(detail))}
+                                                                                                   ^
+
+Error: 900-dark-100 agent-existing actual prototype surface fits {"x":655,"y":263,"right":1015,"bottom":743,"width":900,"height":600}
+    at check (file:///private/tmp/ocx020-final-review-agent/harness/prototype-entries.mjs:3:100)
+    at shot (file:///private/tmp/ocx020-final-review-agent/harness/prototype-entries.mjs:8:208)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:541:9)
+    at async file:///private/tmp/ocx020-final-review-agent/harness/prototype-entries.mjs:9:487
+
+Node.js v26.8.1

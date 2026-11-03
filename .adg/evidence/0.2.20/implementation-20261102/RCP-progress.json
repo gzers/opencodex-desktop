@@ -3,7 +3,7 @@
   "source": "Product freezebda7c92da4e1f2e02e6bc2c641e0747748b98dd5/PR64; CI41671607927 and Release41671938225 running. Explicit official41671597006 failed provider_write; diagnostic644da8f7 live, product unchanged.",
   "required_checks": {
     "prototype-parity": {
-      "status": "in_progress",
+      "status": "failed",
       "reason": "Full frozen dependencies corrected; shared user font increment and low-effects CSS host. Chromium/WebKit648each/96screens,0errors; font64each,Mac100/200%,allroute428 pass. Final packages/remaining entry acceptance pending.",
       "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
     },
@@ -18,7 +18,7 @@
       "evidence": "native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028; code commit 490a4ce8"
     },
     "all-entry-coverage": {
-      "status": "in_progress",
+      "status": "failed",
       "reason": "37static+25dynamic callsites layered evidence; adds actual backup/migration/client consumers60/engine,extensions/log48/engine,model completion69/engine. Explicit official wire passed; old name test aligned with confirmed spec. Final CI/native packages/OTA and final reconciliation pending.",
       "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
     },
@@ -677,6 +677,25 @@
     }
   },
   "release_candidate": {
+    "source": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+    "pr": 65,
+    "ci_run": 41687967250,
+    "status": "update scale fixed, local1122/typecheck/build and twoengine200%/states passed; final source package gates pending",
+    "stable": "v0.2.19",
+    "beta": "temporary0.2.19"
+  },
+  "release_hold": {
+    "reason": "Confirmed P1 FR-020-UPDATE-SCALE: Overview/Settings UpdateCenter stays100% at200%; fix product, new candidate packages and acceptance before stable",
+    "awaitingFontVersionAnswer": false,
+    "typographyImplemented": true,
+    "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",
+    "evidence": "integration-20261104",
+    "actualOta": "passed; explicit environment/readback boundaries in receipts"
+  },
+  "formal_task": ".adg/work/objects/task/TASK-OPENCODEX-UI020-CLOSEOUT-20261104.json",
+  "formal_task_digest": "05900c538996b6111920e6f6659e122788896fcf035040f1d6133bcb81122b7d",
+  "purpose": "progress/evidence index only; formal closure requires stored TASK/RCP/CERT and source Markdown",
+  "superseded_candidate_bda": {
     "source": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
     "sourceTree": "1b72afcd13c1b02597ec3b321ccd953e15189eb6",
     "tag": "v0.2.20",
@@ -685,7 +704,7 @@
     "prerelease": true,
     "ci_run": 41671607927,
     "release_run": 41671938225,
-    "status": "public prerelease same frozen8assets verified; actual Mac/MSI/NSIS OTA passed; final entry/font review pending before stable",
+    "status": "bda public prerelease held; actual OTA passed but shared update modal scaling failed independent review",
     "stable": "v0.2.19",
     "macAdjacentBaseline": "2 real native UI commits+exact preimages verified; actual OTA not run",
     "windows_asset_signatures": "2/2 actualuploadedbytes pass",
@@ -711,16 +730,5 @@
       "dailyTouched": false,
       "evidence": "font-final-candidate-bda7c92d/{windows-adjacent-ota-41683704589,macos-adjacent-ota}"
     }
-  },
-  "release_hold": {
-    "reason": "Final independent per-entry/font evidence corrections before public stable promotion",
-    "awaitingFontVersionAnswer": false,
-    "typographyImplemented": true,
-    "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",
-    "evidence": "integration-20261104",
-    "actualOta": "passed; explicit environment/readback boundaries in receipts"
-  },
-  "formal_task": ".adg/work/objects/task/TASK-OPENCODEX-UI020-CLOSEOUT-20261104.json",
-  "formal_task_digest": "05900c538996b6111920e6f6659e122788896fcf035040f1d6133bcb81122b7d",
-  "purpose": "progress/evidence index only; formal closure requires stored TASK/RCP/CERT and source Markdown"
+  }
 }

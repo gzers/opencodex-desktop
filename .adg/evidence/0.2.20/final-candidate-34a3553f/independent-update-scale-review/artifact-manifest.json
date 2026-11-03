@@ -1,0 +1,1320 @@
+{
+  "root": "/tmp/ocx020-final-review-agent/update-scale-fix",
+  "files": [
+    {
+      "path": "FINAL-REVIEW.md",
+      "bytes": 1782,
+      "sha256": "f9a60a0426a62248a48f1d4bd291510d232608c9adbb31502c571328270d64ab"
+    },
+    {
+      "path": "exact-commands.json",
+      "bytes": 8525,
+      "sha256": "4077f04b5bed958c13273ce27c7937415d137522e3df880cefb3b44a35474833"
+    },
+    {
+      "path": "handoff.json",
+      "bytes": 6311,
+      "sha256": "2405c0a30e14c2b395685574e81e45a09431653e55e73be8599e3c2503320aad"
+    },
+    {
+      "path": "harness/engine.mjs",
+      "bytes": 5152,
+      "sha256": "418b5573d30684dfed6e52831129f808c65a73191baa8ad785723588ff975a95"
+    },
+    {
+      "path": "harness/final-handoff.py",
+      "bytes": 9316,
+      "sha256": "cf5f30b8d0b4da9a589c7b9abc399700d43256d6b0981ca7ee729a8ebfcfc39a"
+    },
+    {
+      "path": "harness/run-originals.py",
+      "bytes": 1399,
+      "sha256": "97d6fa56ac56ad41794845b86dab4b8cdf453e7f31659d444b02fa7ed99548cf"
+    },
+    {
+      "path": "harness/update-hosts.mjs",
+      "bytes": 9512,
+      "sha256": "3f147d52840b9b5903d511c8acffec199111534373ec55ae8f76506e822fa51a"
+    },
+    {
+      "path": "harness/update-scale-contract.mjs",
+      "bytes": 3338,
+      "sha256": "5d81d30424ae620ea978a62693d899f221d1de71d8f8aef56f39c09d58133016"
+    },
+    {
+      "path": "harness/update-scale-expanded-r1.mjs",
+      "bytes": 11527,
+      "sha256": "1fabba8f34b729dcc3ea88672e8b7ad070295009bae52f9cfacb7bb3ea1799e4"
+    },
+    {
+      "path": "harness/update-scale-expanded.mjs",
+      "bytes": 11654,
+      "sha256": "e58854f0faf9c4b7478b2aa74a7c4ef6648ce0c46c63dd5d77c6af547631064d"
+    },
+    {
+      "path": "mapping-correction.json",
+      "bytes": 7323,
+      "sha256": "b50cba4fae2d1cb1e79a013e3e53bf83a37b86997ec484d30fd0b487e201a6b2"
+    },
+    {
+      "path": "receipts/harness-reuse.json",
+      "bytes": 1317,
+      "sha256": "7405cc43965b5151801cc733cd69b67131626c74996193118aee323efa8f451b"
+    },
+    {
+      "path": "receipts/original-runs-chromium.json",
+      "bytes": 1424,
+      "sha256": "f1f14af19b7f58b4236795b92eb4a050922a904d1a026ee1f3174b6e11cc3de2"
+    },
+    {
+      "path": "receipts/original-runs-webkit.json",
+      "bytes": 1412,
+      "sha256": "47c06ab2479e882be47ae278c2161ef0c6e37b01243835448c410cf9b0968061"
+    },
+    {
+      "path": "receipts/source-identity-after.json",
+      "bytes": 1121,
+      "sha256": "1a2bb5a5f723cac4735b6ca497e481cda98d403509e384311197c9c3dcd86fc0"
+    },
+    {
+      "path": "receipts/source-identity-before.json",
+      "bytes": 33942,
+      "sha256": "9ef87ac43322a4bfbfcd08b7f25594721f1cec1e0d4d551f0d96263ff534da7b"
+    },
+    {
+      "path": "repo-regression-chromium/overview-100.png",
+      "bytes": 82241,
+      "sha256": "48d7736ad7c9f3c19a6a05ce12837800537bd998fcb5fe01907b548c07189f42"
+    },
+    {
+      "path": "repo-regression-chromium/overview-150.png",
+      "bytes": 62657,
+      "sha256": "85d87f1d040f544359f251a5848e3abfbe4af20e827ff7e5a39ca68caef16bc7"
+    },
+    {
+      "path": "repo-regression-chromium/overview-200.png",
+      "bytes": 65899,
+      "sha256": "412c07054dbb3314549e9d4a88a7d610434de541adc91ed681a67058c621aef0"
+    },
+    {
+      "path": "repo-regression-chromium/overview-50.png",
+      "bytes": 47231,
+      "sha256": "d65a7b35a833ec677a73faea4f3bea443f7ddf6d1552b4cb7a73be48392a989b"
+    },
+    {
+      "path": "repo-regression-chromium/report.json",
+      "bytes": 4783,
+      "sha256": "88dfe3d53128ce1e5dc611dcaf98cb3ad884b6aa97f1ab84b90430f68eb560f8"
+    },
+    {
+      "path": "repo-regression-chromium/settings-100.png",
+      "bytes": 90708,
+      "sha256": "66296d431ce9f88edc19c6c058387da76b09e87375b55dcf3ab7cc3ae4e51bc4"
+    },
+    {
+      "path": "repo-regression-chromium/settings-150.png",
+      "bytes": 64981,
+      "sha256": "29e515622566c06e12399ea83408709a50cd270f5d96f7359ae602997b6baa15"
+    },
+    {
+      "path": "repo-regression-chromium/settings-200.png",
+      "bytes": 72892,
+      "sha256": "e648401860f11f21066f9e77546c395d088f2f89b889dd48e162c3b57a54e529"
+    },
+    {
+      "path": "repo-regression-chromium/settings-50.png",
+      "bytes": 52782,
+      "sha256": "c2775d50e5c0357f0c154b2ac9cb52ce61bc5ad42128cdbf0fee17133e76f04c"
+    },
+    {
+      "path": "repo-regression-review.json",
+      "bytes": 1249,
+      "sha256": "18047c3e4c3315b427bce9b8ebc9a4796a694e74c37034b807c16922e5b14205"
+    },
+    {
+      "path": "repo-regression-webkit/overview-100.png",
+      "bytes": 104112,
+      "sha256": "1d6fec72b2ec3722db1623a4a11037862698634f00a81f6c9006f751a408b92a"
+    },
+    {
+      "path": "repo-regression-webkit/overview-150.png",
+      "bytes": 82562,
+      "sha256": "fc9e74834497584c456f5ca29b98cb7df1dc754692536575aba223683a7b71fc"
+    },
+    {
+      "path": "repo-regression-webkit/overview-200.png",
+      "bytes": 87360,
+      "sha256": "095770f6a33b5809d6322d116ef10484f3f956321dc3ab381746b0b38cacbcdd"
+    },
+    {
+      "path": "repo-regression-webkit/overview-50.png",
+      "bytes": 67935,
+      "sha256": "da272a90e96f2b7ac1e1d861c1303d68779c3dbf9682d414650ef8aad184be96"
+    },
+    {
+      "path": "repo-regression-webkit/report.json",
+      "bytes": 4781,
+      "sha256": "dbc36f68cc79b57244afb2e4065548120fe7f5245d605cf4a748049282bb58f2"
+    },
+    {
+      "path": "repo-regression-webkit/settings-100.png",
+      "bytes": 112988,
+      "sha256": "fea3aa40566439c59ad45927d13662d2381497701614dde84d0a8f3f22c5baa2"
+    },
+    {
+      "path": "repo-regression-webkit/settings-150.png",
+      "bytes": 84659,
+      "sha256": "20f9088cc20ca1cc324a63c5d89fcb34be451484f4318dae19494174b8fa401e"
+    },
+    {
+      "path": "repo-regression-webkit/settings-200.png",
+      "bytes": 94988,
+      "sha256": "d22465f34b4720933bc8347f05419a48bf95cb866a7223134d5f21b1a7fcebb2"
+    },
+    {
+      "path": "repo-regression-webkit/settings-50.png",
+      "bytes": 71942,
+      "sha256": "a0f63d03dcff6718ce940c9358f6c424358724db33913a368fed31e917d4beb7"
+    },
+    {
+      "path": "reports/repo-regression-chromium.log",
+      "bytes": 1384,
+      "sha256": "b464827bcf4e7143897496696fc558c8ac6509e2fce1072df1edbed808687296"
+    },
+    {
+      "path": "reports/repo-regression-webkit.log",
+      "bytes": 1382,
+      "sha256": "efeb29fab22b42acc5aded2ab65bd23936fdbc5e5a7ffd0e4f3e1f0385d73b01"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/browser-boundary-and-fonts.json",
+      "bytes": 299734,
+      "sha256": "34993ee3351e69ff40698b3966e1a940215b19c48be10cbf0b17574772fe7f06"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/execution.json",
+      "bytes": 664,
+      "sha256": "c55b331e1cc7c80166d02faf6355f0f8fbe82f0d3ec21fafe20d4dda2b43031d"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/execution.log",
+      "bytes": 31,
+      "sha256": "f2ce9c0b0da4a28b71ad535e2b1519d150c53cec29b5a7ba6a6062d2426a98f5"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-check-failed.png",
+      "bytes": 612149,
+      "sha256": "33245736f98ec84cd52110aa18a6b8b153f700e2981cd770cb4a7ceb18a49c68"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-manager-confirm.png",
+      "bytes": 583299,
+      "sha256": "7d114fb10bcabf7614ff0068b9c6f9c6b345cefbcb4abf92e64cf82b277a5b06"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-manager-downloading.png",
+      "bytes": 597309,
+      "sha256": "00854b495e5ad351b21bab36e29f97fd18c8279a8e07124d7abc0dc47816aba7"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-manager-failed.png",
+      "bytes": 608891,
+      "sha256": "685b7fc3a87f330d4d88ba0f27c60723e02d244743a3543c298f3f7476be2e7c"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-official-backup-failed.png",
+      "bytes": 610304,
+      "sha256": "983b2643cbb30cfaacc97a945b4ad8dc22064a3bbf8ca6a72604d00cd3f7a2e3"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-pending-restart.png",
+      "bytes": 606218,
+      "sha256": "aecc28196742a2140aff83ffe5498edde0c91b92641e4bb0a3a57863de41b0ad"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-restart-refused.png",
+      "bytes": 597038,
+      "sha256": "6c363ae985d619bfbaf8ceabf3f100cc1a57c8c5ae767cdcabcca9946225fc24"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-100-light-high-results.png",
+      "bytes": 619493,
+      "sha256": "f7f3f027303062326d170899dfae94a4ccfa9df564fab6ec611692b176d73c0e"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-check-failed.png",
+      "bytes": 325323,
+      "sha256": "b75b02799d96b29178ade2752bb85767f2ed94d56b9f14c9dde9fa2494051d78"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-manager-confirm.png",
+      "bytes": 318209,
+      "sha256": "7796e197855beaafcc300a12647f155495ca37262c561ccc0f8920dbbeffe346"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-manager-downloading.png",
+      "bytes": 313426,
+      "sha256": "79fbd6da2b514f0ce00c8a1dc3d98f58ff3869a31fb3f216f4ac3e145a71ce60"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-manager-failed.png",
+      "bytes": 320893,
+      "sha256": "e777bb287d404ec46eda981b16d21a8d55a5b8c2b3304b8b466903e7e1f3777c"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-official-backup-failed.png",
+      "bytes": 321559,
+      "sha256": "d91738816fa71beb31758285ab6db191771800a533f5e6f6e66f2232fa78bbcb"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-pending-restart.png",
+      "bytes": 313361,
+      "sha256": "ab630c8effa0cd1039331cf97b6c4e71bdd2536d698271b6c140672d85dc64f1"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-restart-refused.png",
+      "bytes": 320057,
+      "sha256": "85e669d012e729321888e504d74b4199f427fca60781ae0ad0cd943ea3a3aeeb"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-1180-200-dark-mid-results.png",
+      "bytes": 346604,
+      "sha256": "8d8103cebdedafc40abab5492d641baf5eabb08432b7497ed1e8db44244fbe4f"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-check-failed.png",
+      "bytes": 66034,
+      "sha256": "c3a7abaf561c50e1e4f9394ea89fc05547a510c76808074578dc56984217b16d"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-manager-confirm.png",
+      "bytes": 62811,
+      "sha256": "0e8af922bbe23c670669c9761caf3c2d5a0860bca435b7a8ac192bcaa539ed2a"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-manager-downloading.png",
+      "bytes": 52318,
+      "sha256": "99c72c284e4767bcc12181b0c27b74311a9f1850a746766033fbcd525652f6f0"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-manager-failed.png",
+      "bytes": 56312,
+      "sha256": "daf626c7a5a1a4729e5065183420304b4627fdcfa78db80536674a92c36cabe3"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-official-backup-failed.png",
+      "bytes": 56119,
+      "sha256": "64e4ffdc7acec933bc4d415fb481e142cfaf7f88b59429e2b1e19b8108cb588c"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-pending-restart.png",
+      "bytes": 54951,
+      "sha256": "d3b32bf7ee2aa35b0bdbea79b846cc96fe1590edec695da41825c7a097724d9f"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-restart-refused.png",
+      "bytes": 56399,
+      "sha256": "9254b96aaed138d99b58e2bc20347c3e7ff391699ff33e0084afd365976f8897"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/overview-900-100-dark-low-results.png",
+      "bytes": 67570,
+      "sha256": "c8a07eab1049d3572cdd4f7be415c2c257f1786bed8dd2f780f39dd1137876c5"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/report.json",
+      "bytes": 71388,
+      "sha256": "5bd7860e61054a225db44f203680f3c10eaa183328be050dde98c31bed13159a"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-check-failed.png",
+      "bytes": 516696,
+      "sha256": "a585a51f9150358882a8cf7c4c9da4561d0dd3af31c24d7694d21348e74ff703"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-manager-confirm.png",
+      "bytes": 498091,
+      "sha256": "05030dac2cab65ffdc140606608f6c5b79cb9beb4015d307105f8a8b002270d2"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-manager-downloading.png",
+      "bytes": 496221,
+      "sha256": "cdaf52b2a786549d6a7bb4fcb51fd3c2523af447d9218ba193055b6b7a11ba77"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-manager-failed.png",
+      "bytes": 502034,
+      "sha256": "3c3e89906c005020cd831ff577ec06c0334b02181f1e0ac7b61fe5018320a559"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-official-backup-failed.png",
+      "bytes": 501752,
+      "sha256": "a2cf5e804e1e71e5fff4af925d438115fc09b6f914aa11dae9c6025509bd0ab5"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-pending-restart.png",
+      "bytes": 499792,
+      "sha256": "d7eb6dcfcad3cc547d4cdd71f3cb8fcf8375c68f1e4f97e70850704f0e3d1ded"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-restart-refused.png",
+      "bytes": 496042,
+      "sha256": "045d7fa42f34acb2a2d4eca00545613e4d982dc1de9a2252b3b53a35f8cdc23f"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-100-light-high-results.png",
+      "bytes": 520219,
+      "sha256": "3785674155a8390e78166e12bcb3beca5a0cf3c5edfb0f29b3125f39cdce9f83"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-check-failed.png",
+      "bytes": 267836,
+      "sha256": "ac1d41b476691b229602ecf593dddfb278543707912f8e26b57c368a11725ad6"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-manager-confirm.png",
+      "bytes": 263843,
+      "sha256": "9e472104dcee1973314fbf267b95fecab3227fc8817abbe1ee2ee6b6964eb652"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-manager-downloading.png",
+      "bytes": 257622,
+      "sha256": "a1c78f3cb69d088101de2617cb60715b7f1b1fbd0610739573625d60672d3659"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-manager-failed.png",
+      "bytes": 263035,
+      "sha256": "14b23c9316746d71fbb1f3d31fa5610e3871d763b5a6d4ad3ad93eddf468d8be"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-official-backup-failed.png",
+      "bytes": 274277,
+      "sha256": "2c42e028436ef7c5bc0a020a72347019757dee93ceb063f2adfd36073611632d"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-pending-restart.png",
+      "bytes": 256366,
+      "sha256": "2634c97035c971a985530d797e0afd253d6c01036a55900b529d188bfede772e"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-restart-refused.png",
+      "bytes": 261056,
+      "sha256": "cffb9ca83eb56fc2d657ed49987cba407b9a6bf4e645fa4f28860f8d2f6846c9"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-1180-200-dark-mid-results.png",
+      "bytes": 287610,
+      "sha256": "01ec9e35c671eacbc1eda57e30b46d18d509f4dab70138a4b71e71ccfd5c64c4"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-check-failed.png",
+      "bytes": 70571,
+      "sha256": "bbd3829331d5b5ef2276470d30ee90ef2314a540dd3dac70e11bf4979d781e83"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-manager-confirm.png",
+      "bytes": 68838,
+      "sha256": "e3cd126442a4561685f8d0a2308ca47d1ee67c83ad9ababac831ac435fcef022"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-manager-downloading.png",
+      "bytes": 57843,
+      "sha256": "dd5bc3b8fca53ffacf3d6ad285849ebcd285cebcbcdcf629c5cf361dade43eda"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-manager-failed.png",
+      "bytes": 61703,
+      "sha256": "88c0d2ed1828e6fdb1b9be0ef4626d50091b45d9ddc7490e63f787b6d7ec28bc"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-official-backup-failed.png",
+      "bytes": 61506,
+      "sha256": "93b4ac3b109450c7777ee976b3a758bb96cabcf59620696ca1a371610558b6d2"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-pending-restart.png",
+      "bytes": 60043,
+      "sha256": "f7b0eb81f482b8fa929dbb1da7a7f5b8e1ce6cb133e1ce6f81ae88324b982118"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-restart-refused.png",
+      "bytes": 62671,
+      "sha256": "7d27420fc006c31aa38f247f4fd527d966f073aec6b62ac96b40118f189a22bb"
+    },
+    {
+      "path": "reports/update-hosts-chromium-r1/settings-900-100-dark-low-results.png",
+      "bytes": 72871,
+      "sha256": "2ae5ec2c80d2aba6ba416267fb44f43b56de1e3be53823b1727ffed758ff4c9a"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/browser-boundary-and-fonts.json",
+      "bytes": 298984,
+      "sha256": "b8226542b3c66047c25f808c5e64c92c6af524ad2a136c025489d909ac30b098"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/execution.json",
+      "bytes": 658,
+      "sha256": "f1c192dba192355c5406d18c6cabac951db593ce727a7c0d306bc4f648b8c415"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/execution.log",
+      "bytes": 29,
+      "sha256": "cb8c7c376ab475b30660b2307ab31d5f3de477d7a689a05d6c000cdad91615db"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-check-failed.png",
+      "bytes": 1077962,
+      "sha256": "84363de9adf9bdd03e74f3b957a48152ddd0a2b3b27eaee62cd3db2aed30f735"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-manager-confirm.png",
+      "bytes": 1032218,
+      "sha256": "50c03e7eade5652a53c0af3e5cf59bc957b53d801dadf9082743787d1f3fedf1"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-manager-downloading.png",
+      "bytes": 1068596,
+      "sha256": "c8814f2e165804ac0f230a5aeb446e5530159dbe7e132c67ea1106a10df07061"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-manager-failed.png",
+      "bytes": 1077509,
+      "sha256": "85a40b70080f93c42e770d3773db8fa479f783ec289d91e95bdd67e463169b00"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-official-backup-failed.png",
+      "bytes": 1075882,
+      "sha256": "79d5f60eca3f99b8629a7366aad1281dfc91edcb56aca47968355109abd289eb"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-pending-restart.png",
+      "bytes": 1069480,
+      "sha256": "d1026ce408a9fcf9f908f96da9c88f1e100c5a002b53e1194c5a13ee7201e969"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-restart-refused.png",
+      "bytes": 1071694,
+      "sha256": "f811f9e41a9f42b1973f929190bbaff4f1dfc54b67f42749589b9956f7eb0932"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-100-light-high-results.png",
+      "bytes": 1083147,
+      "sha256": "ffb7854fcc36805f7f61f2441f496607e13289a7ce414cd96f27595e60aa33f4"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-check-failed.png",
+      "bytes": 626410,
+      "sha256": "75eb5ba3e2c334310cb3c8435a6364bdbc9e36ec33b2814339f38ee61a401a48"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-manager-confirm.png",
+      "bytes": 569317,
+      "sha256": "33f22f6fff62ca6d72e551f5c3e7f5dc03c8465234e320d0296f9cdc444a822e"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-manager-downloading.png",
+      "bytes": 614072,
+      "sha256": "6c1ee99897f83eff110bfbb6f93cfb29941d20df83d5cacef5911e0befb89ebc"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-manager-failed.png",
+      "bytes": 625582,
+      "sha256": "414f260352fd1da9b66788672b1384620895db4176653b9144e7d8b6c3576cd4"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-official-backup-failed.png",
+      "bytes": 623965,
+      "sha256": "b10c1d3b02bc773df7de117aa38567c2b7ae30d5655e14ec61a22e2f3b5257e6"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-pending-restart.png",
+      "bytes": 609254,
+      "sha256": "4bddb3a1a1c1933aabe0ff7eb0a858b47856afe2bd8d9e19ad7dd7d93e0d89a4"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-restart-refused.png",
+      "bytes": 620019,
+      "sha256": "5a0f96c395a8fd3627d7f72591ec7f97b92b846f36ea9f280f708cf8bc641d2d"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-1180-200-dark-mid-results.png",
+      "bytes": 645972,
+      "sha256": "60b5819b14d5d6d3c6c769e04f0ded86e8675416c99e3b0a63cd82fc62581219"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-check-failed.png",
+      "bytes": 80864,
+      "sha256": "03de46c4bbbb9a89dbe6fe9f81cea4cf5f5c23276313546e68230adf91edd766"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-manager-confirm.png",
+      "bytes": 77510,
+      "sha256": "d5be8f6d8c4869f313651a58c4250ec4afe93dd1e7b2fe2eb1c64ac9ed0d53aa"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-manager-downloading.png",
+      "bytes": 65877,
+      "sha256": "229c4eafa2e5ad1d36a74228feb3b77e6c9994dd505ed4d70ec768a4afb76c38"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-manager-failed.png",
+      "bytes": 70520,
+      "sha256": "e5b8af78c3f0fba95b79da3ab4c0e9af1cc1c04cd49820ef5dbae5339ea8cd78"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-official-backup-failed.png",
+      "bytes": 70758,
+      "sha256": "9408f0daea0c8b8936fc433496ac138e66c9f9bef649ada4f90f85f761fbe0a3"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-pending-restart.png",
+      "bytes": 68139,
+      "sha256": "335bf0d80b9d339ac2633e3b22fcf73c37342e9af96be12f912e9d78a190072c"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-restart-refused.png",
+      "bytes": 70157,
+      "sha256": "0f844335d7465ed0a5a059ce16d2d5259c335a264d16d32ca1e1c7532c0f51dd"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/overview-900-100-dark-low-results.png",
+      "bytes": 83676,
+      "sha256": "b3f3d9a8490e25bf8273ffe4b9470c9cd5b7684fc045b89f7183ddf1c54fb103"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/report.json",
+      "bytes": 71730,
+      "sha256": "0ff33360ec829ea96d8fbd5a4b945a1e823613e9c56da8a93a4c56dd357deb3e"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-check-failed.png",
+      "bytes": 884605,
+      "sha256": "44896c00c6bd16fcf00165d7bd1d74a5d7bc084da58fd3a5debe532c9836652b"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-manager-confirm.png",
+      "bytes": 849988,
+      "sha256": "138dd574d1620c7e00073ee1b9e2fffd3198b27b3a3665cd96f3ccce49798418"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-manager-downloading.png",
+      "bytes": 865183,
+      "sha256": "2f6ad1a5f6e01eac68412b981a91fbb30b8153b1bf7b0022b53e656ebb92749c"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-manager-failed.png",
+      "bytes": 869567,
+      "sha256": "aac265324ad2fdb2e6eeece659670679ba2012145313caa39a31ef8caca38d74"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-official-backup-failed.png",
+      "bytes": 869312,
+      "sha256": "4c161aaa5939aef299f0cb32a45eeb171a6b33de5b730a4c5806fec8a13c2fb1"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-pending-restart.png",
+      "bytes": 868558,
+      "sha256": "d5cf733c3e952315388b37d51364c36ed4f7c6374d95fdeb09b8203dcd25771c"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-restart-refused.png",
+      "bytes": 866418,
+      "sha256": "25660c912a3285db56e9b2f2a723235dca8bedfdce6bb64c92c4dd04e2ee377f"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-100-light-high-results.png",
+      "bytes": 888537,
+      "sha256": "e3fdd224fa12508e99b964a7477699b63a7932befad1cd8dc0c867b45183ddcf"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-check-failed.png",
+      "bytes": 584711,
+      "sha256": "eeb148ac2961e5c28c02049422eabfd6e47569ecccbfc72ef59cc42655ef250a"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-manager-confirm.png",
+      "bytes": 536009,
+      "sha256": "9ea4567c046f6a09cf71a36ba87d316e581e2eea4b4f981b0bae9b03a90ff4ce"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-manager-downloading.png",
+      "bytes": 564202,
+      "sha256": "629a956ada6c67d9a57d23400cdb814d50a0c742eb9ed49c1ba0a88d54309735"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-manager-failed.png",
+      "bytes": 572387,
+      "sha256": "5b80ecfb4f314ea3bf78c717d0aebae67c906fef5e55a1abdd9e3ef9dde7bf2c"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-official-backup-failed.png",
+      "bytes": 540073,
+      "sha256": "03e4338535291879a210928389f2e5a3df0a081d680b6e5569434feb553a0258"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-pending-restart.png",
+      "bytes": 564924,
+      "sha256": "947040f8c9216ea4e157c31930b340e136051d3871891586a7341621c242a366"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-restart-refused.png",
+      "bytes": 572945,
+      "sha256": "2d25caf0fc1a053f417b63bae9f3d72594b137fdddf4f4170aeef53b5d34e80e"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-1180-200-dark-mid-results.png",
+      "bytes": 601888,
+      "sha256": "f3c02c0a0af30948fd8c5c22e4caba92d59b7f29f03f6dcf07789fbb657ff94a"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-check-failed.png",
+      "bytes": 85152,
+      "sha256": "57270c173ae49f901b35dd2295b14553d5762e0a821b795f6b0c1315bf1c6915"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-manager-confirm.png",
+      "bytes": 82965,
+      "sha256": "15bfeab38e169da5ee6cac503f603fafb90c9607c699883124b0e702a1991fc6"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-manager-downloading.png",
+      "bytes": 71162,
+      "sha256": "c7bffeea23a3964df43c9d9ebf52619ed4b35d78393b6051097d9b7fc3d73e6e"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-manager-failed.png",
+      "bytes": 74476,
+      "sha256": "3eef1e3bfc0451fce3eb8445efc5ba86ffd7d65fd6f77b49f3f66a5edc958c90"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-official-backup-failed.png",
+      "bytes": 74743,
+      "sha256": "558f052b233f3c8f11394c7e8ba32b21e258412032b6298f580cc06832439520"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-pending-restart.png",
+      "bytes": 73143,
+      "sha256": "6bf7cd9d6ff59e72d7e056d58b0fd2c76c066b14942d53ff7a93fd8bd21cfe3e"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-restart-refused.png",
+      "bytes": 75926,
+      "sha256": "8d05c1625f9264ccbb8fdd963c427fd6add2a69d2091c382d0f7a9bfcd10a4a8"
+    },
+    {
+      "path": "reports/update-hosts-webkit-r1/settings-900-100-dark-low-results.png",
+      "bytes": 87557,
+      "sha256": "48413efb9dc813b876c1480e6245259b1e02bb55b91b1b539492bde191fb472e"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/browser-boundary-and-fonts.json",
+      "bytes": 149792,
+      "sha256": "353ea82d9489cd7b789b2ea0c6d7f31afcdb87b39ece75c574cb3311ce72d24a"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/execution.json",
+      "bytes": 691,
+      "sha256": "b79f9778fab4cef311d5c0f5c5a4c906082c500946dbdd54c83d0ac27c8ae99d"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/execution.log",
+      "bytes": 763,
+      "sha256": "fa6801be7bb6a765e5147a01b7029b5c8148d6eb833f6e40e2e0822db9de9f8b"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/overview-100.png",
+      "bytes": 82287,
+      "sha256": "65ac28f0cc36b1b5aa3b79d2059fb0996122eb93f2aa6e9dc226401c114d2cb7"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/overview-200.png",
+      "bytes": 65890,
+      "sha256": "a7eee16d8f7d48380c4561033d8a5e344317f3b4db48a3a2c700a267ce3d4bd0"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/report.json",
+      "bytes": 2599,
+      "sha256": "6cc79d3c87bdbe94b7c56d347fc977b9291f54e459429e45d03da673fce28e44"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/settings-100.png",
+      "bytes": 90708,
+      "sha256": "66296d431ce9f88edc19c6c058387da76b09e87375b55dcf3ab7cc3ae4e51bc4"
+    },
+    {
+      "path": "reports/update-scale-contract-chromium-r1/settings-200.png",
+      "bytes": 72892,
+      "sha256": "e648401860f11f21066f9e77546c395d088f2f89b889dd48e162c3b57a54e529"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/browser-boundary-and-fonts.json",
+      "bytes": 149792,
+      "sha256": "ce9c873ba9fee2c67763587f8f20c1b115bbcfc2100160592234869f3b17042d"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/execution.json",
+      "bytes": 685,
+      "sha256": "540f5249b8980cdf823e492ac5af0fcd53ea87f010ca67614f76dc6b4e6a555d"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/execution.log",
+      "bytes": 761,
+      "sha256": "781d476da897126e03c1246a8cc55e6a62340366bfd82e5ab4f46defb902532c"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/overview-100.png",
+      "bytes": 104187,
+      "sha256": "404e0f2d46131f4137013de750aa060401cdacae979d103f61c56580f3021277"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/overview-200.png",
+      "bytes": 87471,
+      "sha256": "f8cb8e84d9fb2367b3e6edc9ecf13b1eec8cde3fea52b45a1b1f519c20a2618a"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/report.json",
+      "bytes": 2597,
+      "sha256": "ccd54987d19ee94beaa7df1e03d104d106149cff751de3c25bca3d53e38dec9d"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/settings-100.png",
+      "bytes": 112988,
+      "sha256": "fea3aa40566439c59ad45927d13662d2381497701614dde84d0a8f3f22c5baa2"
+    },
+    {
+      "path": "reports/update-scale-contract-webkit-r1/settings-200.png",
+      "bytes": 94988,
+      "sha256": "d22465f34b4720933bc8347f05419a48bf95cb866a7223134d5f21b1a7fcebb2"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r1.log",
+      "bytes": 1023,
+      "sha256": "ede6bbdb2cb89d1d9fd2c7fcc0fc4d3e2ef3b9db6ed62c452bf37b28eb961154"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/browser-boundary-and-fonts.json",
+      "bytes": 517238,
+      "sha256": "e672d40e20671b4dd3e01e8dd6026edfb57b829581de002a308a18df3977aa1e"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-100-confirm-refused.png",
+      "bytes": 68072,
+      "sha256": "12264632f11f63b4c482ec8734ad80e60ae59034094e962bb3ed6ca7a5e4a128"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-100-details-long-bottom.png",
+      "bytes": 117536,
+      "sha256": "301aebf428d67931154c8a201d650128cb04797852c2ab544ca6e8a636958161"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-100-details-long-top.png",
+      "bytes": 118867,
+      "sha256": "09a33efae0a5e1176d708ac40ba79f9c086c270019f44a68edc23a99662e2850"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-100-results.png",
+      "bytes": 80729,
+      "sha256": "49bfa5adc749041de8d41a7072ba8eea6e3474b96df281bf3ec51f2144d7b182"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-150-confirm-refused.png",
+      "bytes": 63795,
+      "sha256": "eb28a3085fada4bf01b66e4a15f96467a900f6b5cb5abba4af2a21e01f39a838"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-150-details-long-bottom.png",
+      "bytes": 101723,
+      "sha256": "8daeaeca36b53a0922c09fbe7141baed79b5c3ace187273884130afc84cd19cc"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-150-details-long-top.png",
+      "bytes": 102149,
+      "sha256": "9342ab2bef1ab842e09749a9ec1d25769cbd85e122a9667dc7ddf6060763a654"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-150-results.png",
+      "bytes": 80987,
+      "sha256": "fa56bc7e50842b622b5e62f208bc9fb4aa435cc74a263b137d7ab41788addb26"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-200-confirm-refused.png",
+      "bytes": 59755,
+      "sha256": "76c57cfd34cf3324e5220dcf2b04aedc79d00c453107579c1a4f4c8975986be9"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-200-details-long-bottom.png",
+      "bytes": 68647,
+      "sha256": "1c6ee326ac551380e675cd099d10b66de6945425a18d785ec59400ca5518e53a"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-200-details-long-top.png",
+      "bytes": 74165,
+      "sha256": "9d2ad4866ff54a630e4bea3ec83ba6fdf805bf8c54766611b2d1d732142d8666"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-1180-760-200-results.png",
+      "bytes": 76952,
+      "sha256": "24ee007507e1b3439dcf525c922d985b96e075050efedf6a1796c2cbaaddeb58"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-100-confirm-refused.png",
+      "bytes": 57597,
+      "sha256": "cc88849a8d899286c0a1148a4f301bf6a8c3637e136d0a9ef3270bb9b888be1b"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-100-details-long-bottom.png",
+      "bytes": 94148,
+      "sha256": "4d3bc477c34051590034d48d9dc23f14dcc99517015454f0f3f96bf85f5bf059"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-100-details-long-top.png",
+      "bytes": 91933,
+      "sha256": "34bfa5bede9d10dd9bf823348a96e373585b2d4534f72691191bcd1471155d0d"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-100-results.png",
+      "bytes": 68427,
+      "sha256": "e6eaa7f7ed90a90fd706394213f500bf85d7f1223147de952de5f0e949da43ab"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-150-confirm-refused.png",
+      "bytes": 43045,
+      "sha256": "25b4ff480ac1d761f6ecad69944549a50eef91cc7e3bcc584b6cb414330890e9"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-150-details-long-bottom.png",
+      "bytes": 54953,
+      "sha256": "4ee1c88fa2bd2e12761a834bd583a632f97e2d9206effa5bd6dee88a056e0bec"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-150-details-long-top.png",
+      "bytes": 58567,
+      "sha256": "c9f0c5a7d8ef9361acce5707d3929b9c1a8b1032e5a8d2c1e76f259e4bf46a61"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-150-results.png",
+      "bytes": 59067,
+      "sha256": "f6d92fa125ff892dd85ffc62cb03aeba629499576c4a756231659311f8a2adde"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-200-confirm-refused.png",
+      "bytes": 41365,
+      "sha256": "df4f074e0861cfa71801a9f87f734ff18103fc93a7860bbe8f3e807139e25b4a"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-200-details-long-bottom.png",
+      "bytes": 55864,
+      "sha256": "15c4055f3a77811bd1f0ef7a55dd9ef28248557fbe5095bc45236abf6752c082"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-200-details-long-top.png",
+      "bytes": 50924,
+      "sha256": "10fcf22a904cdb9f6f8178598f35ef30af897303cb517a5d1b0fb1e121d9a652"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/overview-900-600-200-results.png",
+      "bytes": 39729,
+      "sha256": "666f6ee77fe235376560da705632c57af703405ab21d19fa41c61f45427329eb"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/report.json",
+      "bytes": 447650,
+      "sha256": "0d0a0e9093c68e0232aee515aa5ba3f33eacacd6b5f63a8e1c25f67ab9313a2d"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-100-confirm-refused.png",
+      "bytes": 85865,
+      "sha256": "9ad1f3d980cff9c464cbd432a353670d404dd6b18fa5f43eead67419e546c947"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-100-details-long-bottom.png",
+      "bytes": 127620,
+      "sha256": "da7e71896b59c7fc27cf39aec7f1bb5435d7baa56c31c73e99dcddf205ca572f"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-100-details-long-top.png",
+      "bytes": 129267,
+      "sha256": "b4b161ca2ff6f10aaaed261da589bfba1d4f5c9a88438ea6dcd6038f79c7e278"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-100-results.png",
+      "bytes": 97687,
+      "sha256": "0f1d8e006be7f89fe56cde21d92539030cf7eb2e5ee9a0d3642ad13922273d80"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-150-confirm-refused.png",
+      "bytes": 60427,
+      "sha256": "9399f927ebcc734b7f79257afc208006c2db461aaf5fc869ba6d8c16324bf06b"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-150-details-long-bottom.png",
+      "bytes": 104124,
+      "sha256": "fb4f0bd269e6d45ef99e7cf3619f0aa8714727255f81681d97912ff71263d800"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-150-details-long-top.png",
+      "bytes": 104435,
+      "sha256": "83a16ae3fcdb08e4533759dc3746bb2562597c1128d4065e44f958a07dad721c"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-150-results.png",
+      "bytes": 79295,
+      "sha256": "78b0b8291c3b7b72c2d311eeba72f6d44919b2079a7627abfac6d0c01e99c971"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-200-confirm-refused.png",
+      "bytes": 71374,
+      "sha256": "7a0dfd48a9d26a59301c8da2d0ecf1dc5e74d960c83bd02d64e4d057632c3581"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-200-details-long-bottom.png",
+      "bytes": 79851,
+      "sha256": "c810fcad474a2d1a57a1ba880c243513036c7479d1481ae5472599ad266c6794"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-200-details-long-top.png",
+      "bytes": 85245,
+      "sha256": "7b8f8dc37746c32b973494890ba950709cf50d2d34c9cee51d50a2b518a73a60"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-1180-760-200-results.png",
+      "bytes": 88227,
+      "sha256": "641d6406e343a460b2468bc750911bfc8a054ad951ff9e9e1d8b3757d7dae56e"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-100-confirm-refused.png",
+      "bytes": 62993,
+      "sha256": "c3b90247014834b361c0539f1df168ac185af0b5880d7ac7c62cebeee6267ccd"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-100-details-long-bottom.png",
+      "bytes": 95317,
+      "sha256": "bd4356a31e08dbe85d6de21ef4523b756f839afe19ca30ee888035c2255787d0"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-100-details-long-top.png",
+      "bytes": 93448,
+      "sha256": "a637439a0fb833c01a02759add73ae045de3795fb2fc37d6f8ca80b5ecef0f49"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-100-results.png",
+      "bytes": 72913,
+      "sha256": "69c0b56b6d5264c08e548fdfd3cbfc097b7b21468a12c62f641a92bfdb643872"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-150-confirm-refused.png",
+      "bytes": 43584,
+      "sha256": "32493f4e13088085540f39c3ceda933e95be263070f48f3b74d5fa2141362dff"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-150-details-long-bottom.png",
+      "bytes": 55581,
+      "sha256": "cddbf395c1598cffc6beb067fac84b60c4a27ccd4719af733c09226df7db80af"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-150-details-long-top.png",
+      "bytes": 59163,
+      "sha256": "6cf3a928deed1fb4b73d39b37abc9a3094782eeb9f48758cc68812009b003334"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-150-results.png",
+      "bytes": 59661,
+      "sha256": "9e9afdbfdc967164477fefdca086c3a8e267e172fc9e3712fe9b19bd532d3974"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-200-confirm-refused.png",
+      "bytes": 41083,
+      "sha256": "5911c464e8da992b090ae3e891604164d862fd8728d87248b7f2411e5f335991"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-200-details-long-bottom.png",
+      "bytes": 55679,
+      "sha256": "e5d486adfeb72e0b4b381106a559e875b9a35a04d72cdb8a4a2cd4463eeb26f3"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-200-details-long-top.png",
+      "bytes": 50758,
+      "sha256": "f50a25c2199da8d7546467664d26f12a63b57c82fcd251dbb3e518f1d5583ae2"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2/settings-900-600-200-results.png",
+      "bytes": 39587,
+      "sha256": "5759be8952d4fa6532008fed1c900b8110336501056b6af1c23f21e0101b0932"
+    },
+    {
+      "path": "reports/update-scale-expanded-chromium-r2.log",
+      "bytes": 31,
+      "sha256": "cc1746a9fbd8c9ccd9b049130009a870d96c2cf235acaaed98171707097be216"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r1.log",
+      "bytes": 1023,
+      "sha256": "ede6bbdb2cb89d1d9fd2c7fcc0fc4d3e2ef3b9db6ed62c452bf37b28eb961154"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/browser-boundary-and-fonts.json",
+      "bytes": 516744,
+      "sha256": "4d1b07651e673ffc223e80f60a97397c379629c19eaefcda77d3fd222dfd5db8"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-100-confirm-refused.png",
+      "bytes": 91032,
+      "sha256": "3ecc793e080d17edac72514499ea7aa0b266e8db6ce60fa2691155212ab7bfe9"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-100-details-long-bottom.png",
+      "bytes": 137680,
+      "sha256": "1fe514edc09944e98f04056c4ffb0db39e857fba553901270882b2666fb55af2"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-100-details-long-top.png",
+      "bytes": 138573,
+      "sha256": "13d9ca133b19a88a620c07885fa483f00dff75b6c98be38a5b0d85224f0aed78"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-100-results.png",
+      "bytes": 104514,
+      "sha256": "91fc88730c2b65db3b70e98361874cdcabf77c0c7cd2af24b961f70ec1283e59"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-150-confirm-refused.png",
+      "bytes": 85805,
+      "sha256": "67911e403bfcb872c0ed0750416da3982db5f75d8bd1ae18adc4e7db78919400"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-150-details-long-bottom.png",
+      "bytes": 125602,
+      "sha256": "0206e70f0b7f6b11d05f8828010452f2ceecc1e23f547fd93a9ce2967b926135"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-150-details-long-top.png",
+      "bytes": 121069,
+      "sha256": "9e7f7aa4f43b16fdc90777aef0b0192161f5897d86b4e7dff5557834f8bc9477"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-150-results.png",
+      "bytes": 104028,
+      "sha256": "9da4b1f651356bb6dc1a3ea06c20f475b748cbe68832d8b1b01140111236cb05"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-200-confirm-refused.png",
+      "bytes": 77734,
+      "sha256": "ae660d3176141464a748c6dd95809cba7ee15184fa5c3176cf3216c5bd62f1ff"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-200-details-long-bottom.png",
+      "bytes": 90870,
+      "sha256": "e800f39f57bfcae5c829d1d09318fcc5ce346abe21629467c0b6742d8ef46da1"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-200-details-long-top.png",
+      "bytes": 93352,
+      "sha256": "309e8079697d07a0b2c816f9f1c260327c166a0a78f34a4907362e835f577db7"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-1180-760-200-results.png",
+      "bytes": 98276,
+      "sha256": "13bf182a1854b8bb53649f0fb46d4d824b3252463b2643bc3030c64a8e06c758"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-100-confirm-refused.png",
+      "bytes": 71879,
+      "sha256": "19b8e1c7ec8f184c530b6085801a77cc4e53845e06a892ee49369dae5e3a3efa"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-100-details-long-bottom.png",
+      "bytes": 106912,
+      "sha256": "a34a5391da560c8d02aa03a95b15dcd99ea4b9829f8f739ef64fdd5129c82ff3"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-100-details-long-top.png",
+      "bytes": 103287,
+      "sha256": "fea9885be10fb514a5422baeeb5f3032549a29bd7f630e3c18516c9bbbfb207e"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-100-results.png",
+      "bytes": 83889,
+      "sha256": "391d24d3e4410683e8e566f36f9490a365846c38cb0a97933b75d06acfe3ff6b"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-150-confirm-refused.png",
+      "bytes": 54878,
+      "sha256": "27314779fc5dca93a5623f090b8a6561a44769a95625c2ef0bf8dc9d9bdfdd34"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-150-details-long-bottom.png",
+      "bytes": 67813,
+      "sha256": "3c06383197679bb3ed1e605c4da4f5e8c19fb4c964650efbf7724e6d6500e794"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-150-details-long-top.png",
+      "bytes": 69873,
+      "sha256": "08e47861aa28ebd6b008a9dc618f6d5769980945faeff7f319145988667f4d68"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-150-results.png",
+      "bytes": 74180,
+      "sha256": "d35f662b040d894fa4ed7674d228a7cf6b7743c375cf20db1c4f890b97152a76"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-200-confirm-refused.png",
+      "bytes": 54746,
+      "sha256": "d19a60a08e4004971cfd91eedd24114aa27f79d6f50456f7c4a9bd0b793bdb33"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-200-details-long-bottom.png",
+      "bytes": 71595,
+      "sha256": "aaf0899eaaed1fb13d215799bec35a97629321ab4cd9f49448fe7e697bfc122d"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-200-details-long-top.png",
+      "bytes": 65875,
+      "sha256": "a92140d08721ead667f00551fd8720bf244ecfb4a6be8cd2aef8b1ade3a007b9"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/overview-900-600-200-results.png",
+      "bytes": 55244,
+      "sha256": "31246b5f5d4efbef29cce6dd8128383f93f3c33437d3a7fe5b56cead160da0dc"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/report.json",
+      "bytes": 452156,
+      "sha256": "c600c98ea12e6a89e69ec2ff51c1649997ac8d6b76c68a24c347fcad7ee6f107"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-100-confirm-refused.png",
+      "bytes": 107421,
+      "sha256": "1ed592244f1ef4e404937263d14385b454ecc4573151dd4872b9f62bed0c3979"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-100-details-long-bottom.png",
+      "bytes": 148229,
+      "sha256": "6f98aaab604bc3eb79995e39fc30613f4de0b90da6504de08f268cdfea1583f7"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-100-details-long-top.png",
+      "bytes": 148984,
+      "sha256": "0938663b68c73e214ff790df4d924ef6541d67c93b93583d66ab5a6fc9e50f61"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-100-results.png",
+      "bytes": 120547,
+      "sha256": "48bc26cb73be25b6e5d46fdc76f8470d4663a79bdd60cef3266167a3595fd9d9"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-150-confirm-refused.png",
+      "bytes": 80553,
+      "sha256": "eb55e1e73b3dd637ee52fc710247869dba2e56883e4c23e46a37556fa7b180f0"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-150-details-long-bottom.png",
+      "bytes": 127790,
+      "sha256": "9e540c3d32d89279dc5bff4a3b74c62b39987db7f44e26d80e9a9d2b1a6c9b4a"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-150-details-long-top.png",
+      "bytes": 123064,
+      "sha256": "f47ed0a9e2ec0d366d4aba7f6ab2fc367083f41dbb781c86b2161aee9ad13cbf"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-150-results.png",
+      "bytes": 101296,
+      "sha256": "575422edc414724864c5cf3651c8c205bb3e18cbc9e55368e28006b9987626b7"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-200-confirm-refused.png",
+      "bytes": 90842,
+      "sha256": "86eddfc7949a1c826456c476dec71dc3269a92a6dfed63430ed64933ffd94653"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-200-details-long-bottom.png",
+      "bytes": 103304,
+      "sha256": "5cbf0244ae53280b53ad54f6019e8343ee87d2dbc01bae7458c242fb8c69ca05"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-200-details-long-top.png",
+      "bytes": 105588,
+      "sha256": "aafd4a88bebce928da0d02a8dd7935df9a27ae87b49887228cfcfc970147f652"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-1180-760-200-results.png",
+      "bytes": 110625,
+      "sha256": "02d50d006469ea5db808daf2c152034d24f0117a22adce99bb3428993c674eac"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-100-confirm-refused.png",
+      "bytes": 75711,
+      "sha256": "4421ffe8229b5a4f22207db8e5f77db85b12fcc76010d4bcc7dd8b472a6d8a8b"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-100-details-long-bottom.png",
+      "bytes": 108021,
+      "sha256": "d68d1bb2793596a4726e48039e686fcc171759fec5aa2be05e353ed9764bab38"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-100-details-long-top.png",
+      "bytes": 104805,
+      "sha256": "4dc8fcdc1ddd1dbc1ae0d63be0d1b98c95386fd66ac0b31edbf1272826437755"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-100-results.png",
+      "bytes": 88065,
+      "sha256": "b663a3c422742a360419fcdee9786a9e466140e8fa4738e58e71134327efc277"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-150-confirm-refused.png",
+      "bytes": 55369,
+      "sha256": "54861103b72ba1d24c3832ba864555466e37e9d5cb722474c2d524cd5e35c3c6"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-150-details-long-bottom.png",
+      "bytes": 68209,
+      "sha256": "3ed1495e919fadd54a618de060dcf30aa473a6a38c9e00829c7e18a3a3a38ac9"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-150-details-long-top.png",
+      "bytes": 70310,
+      "sha256": "c4df341863224366f28f31deaf066c78ce40f6a6d422b516213e9c678d20e0f4"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-150-results.png",
+      "bytes": 74616,
+      "sha256": "d1f850216abc8dbf2086e2f1d4bdbdc00bb64de28fa2b723a9d2249ae927ded6"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-200-confirm-refused.png",
+      "bytes": 54664,
+      "sha256": "e17a081da22c647fdae261a4f2192971ca6c6e8371ce8155cea9f808759be7be"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-200-details-long-bottom.png",
+      "bytes": 71372,
+      "sha256": "5426e630bcb9b850a9bee325d16a824f2a9acb76b0c8fc4b1e335b91e237cc1d"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-200-details-long-top.png",
+      "bytes": 65698,
+      "sha256": "4b54b4e88fea8fa77190d17c4b71f3e796feaf5860d936529e34abe7f92ae98d"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2/settings-900-600-200-results.png",
+      "bytes": 55086,
+      "sha256": "b77cc9ff966fd3278af9d97b7d98fed48c7d72d4930e508aea9eeb81382dd4d1"
+    },
+    {
+      "path": "reports/update-scale-expanded-webkit-r2.log",
+      "bytes": 29,
+      "sha256": "31f5361a84079b04832cb29335ed549ede1b505f0148824f998b8b2b7089f6f7"
+    },
+    {
+      "path": "sources/UpdateCenter.before.diff",
+      "bytes": 3446,
+      "sha256": "e8c1feca2dbb35dc7c94b91be23827150e99a4b6e4b8484d675edf5658766890"
+    },
+    {
+      "path": "sources/UpdateCenter.before.vue",
+      "bytes": 28545,
+      "sha256": "1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "engine": "chromium",
+  "completed": true,
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "result": "fail",
+  "scope": "Browser-only same viewport/theme/material zoom comparison of real host components; no native bridge. Regression evidence only, product unchanged.",
+  "samples": [
+    {
+      "owner": "overview",
+      "scale": 100,
+      "rootZoom": "1",
+      "shellZoom": "1",
+      "modalZoom": "1",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 34,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 33
+    },
+    {
+      "owner": "overview",
+      "scale": 200,
+      "rootZoom": "2",
+      "shellZoom": "2",
+      "modalZoom": "1",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 34,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 66
+    },
+    {
+      "owner": "settings",
+      "scale": 100,
+      "rootZoom": "1",
+      "shellZoom": "1",
+      "modalZoom": "1",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 34,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 33
+    },
+    {
+      "owner": "settings",
+      "scale": 200,
+      "rootZoom": "2",
+      "shellZoom": "2",
+      "modalZoom": "1",
+      "modalInsideShell": false,
+      "modalParent": "BODY",
+      "buttonHeight": 34,
+      "buttonFont": "12px",
+      "titleFont": "18px",
+      "shellTitleHeight": 66
+    }
+  ],
+  "checks": [
+    {
+      "name": "overview UpdateCenter shares 200% interface scaling",
+      "passed": false,
+      "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+      "actual": {
+        "buttonHeight100": 34,
+        "buttonHeight200": 34,
+        "ratio": 1,
+        "shellTitleHeight100": 33,
+        "shellTitleHeight200": 66,
+        "modalInsideShell": false,
+        "rootZoom": "2",
+        "shellZoom": "2",
+        "modalZoom": "1"
+      }
+    },
+    {
+      "name": "settings UpdateCenter shares 200% interface scaling",
+      "passed": false,
+      "expected": "Control painted height grows with shared interface zoom, as scale.ts declares for dialogs",
+      "actual": {
+        "buttonHeight100": 34,
+        "buttonHeight200": 34,
+        "ratio": 1,
+        "shellTitleHeight100": 33,
+        "shellTitleHeight200": 66,
+        "modalInsideShell": false,
+        "rootZoom": "2",
+        "shellZoom": "2",
+        "modalZoom": "1"
+      }
+    }
+  ]
+}

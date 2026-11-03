@@ -1,0 +1,254 @@
+{
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "connectionConsumers": {
+    "id": "nativeConnectionConsumersFinal",
+    "status": "pass-recorded-macos-final-package-consumers",
+    "evidence": {
+      "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/result.json",
+      "sha256": "c31aeaf1124b210c7aca2a8dc57f82ebca6af5bf2ee0eff4c41b1678b8b727da"
+    },
+    "sourceCommit": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+    "tests": [
+      "new connection missing password validation",
+      "real HTTPS PROPFIND authentication refused",
+      "real HTTPS PROPFIND success without persisting endpoint",
+      "actual save/close to overview",
+      "reopen password empty + retained-placeholder",
+      "blank password reuses exact existing credential for changed directory",
+      "directory persisted with credential identity retained; updated_at legitimately advances",
+      "real filesystem permission refusal retains exact prior file and local input",
+      "candidate catalog with and without password uses real file reader and retained credential",
+      "activation cancellation retains exact active endpoint",
+      "actual candidate activation persists selected directory and returns to form"
+    ],
+    "artifacts": [
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/activated-connection.json",
+        "sha256": "1eee47b9921c764e92f478195da45046ad90f646aff1ff7fbce4fdd6e3f69cc1"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/activation-cancel-verified.txt",
+        "sha256": "6d19c61527650055931f77379feb011b619ffca43dd149ae27a2c2883f3d620e"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/activation-success-ax.txt",
+        "sha256": "1702ac800eee41a9278013f040935ef758fc8f363c6aabd3f515b061e273d424"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/activation-success.jpg",
+        "sha256": "665f0f2f07e6054aafcff11b271c348c13e1ac1138cded33d90d12745a2f2146"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/app-launch.json",
+        "sha256": "c7298133b664eca3b9c3a77597f935da9346cc86891583925f375b2028331b31"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/auth-failure-ax.txt",
+        "sha256": "7cf0911d38b5d9c4b4d2f524e67ec498619a6c2cfa3c4a56ec20cea736ae6e98"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/auth-failure.jpg",
+        "sha256": "b23bb24d2cfe4f5f487cedf0e6f3d1560c2643d24a19326b0c122908ae3beb8e"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/blank-password-success-ax.txt",
+        "sha256": "6c3ef72eca3a800bae4dbd22db189c7304e93034510dd4c634f35ee12fc99adb"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/blank-password-success.jpg",
+        "sha256": "290394ac0766875ebfc34a628fb74028059fd1f4addb4c39c1eb98f78803aab0"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/blocked-mode.json",
+        "sha256": "0a174d9484caa5d416965c207d65bf5ed0b8acab2d6807cedf13d9fc460ee89c"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/config-path.txt",
+        "sha256": "9aaa1c58b21ce064df9b68c592f3f026dedef5233a66f159e680ac9bc0909753"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/first-saved-connection.json",
+        "sha256": "ea4a8264e21933ad165b241057d867a84495a984c3be4c2423e5c79282af9c4c"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/requests.jsonl",
+        "sha256": "594906223fb5a3851c3ac1619efa02d2aa6c2c2cea924584c9b95056ad73495e"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/result.json",
+        "sha256": "c31aeaf1124b210c7aca2a8dc57f82ebca6af5bf2ee0eff4c41b1678b8b727da"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/save-failure-ax.txt",
+        "sha256": "d425c43d67ee3e351bcfac3788258d3ecb915d2e2a5cd072d3ecbd6563b984c6"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/save-failure.jpg",
+        "sha256": "66a500571db4279206899703cdc29f56b4b773eff46f02e01d5bcd2ffa8eac2c"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/second-saved-connection.json",
+        "sha256": "49827b078c9339cc55bedd8e9ec6e5152fa4f205899c47ceab63e66f6c5b51c5"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/seeded-imported-candidates.json",
+        "sha256": "aaa1e1ec6f7f32107c03d8680f3ea1c19045883197fbd45baaa97fcc01bbbac4"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/server.json",
+        "sha256": "78ae88688efba7734bc069b43491f75df5ff24459cd30fdf68c7e53a439cc191"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/test-success-ax.txt",
+        "sha256": "68e2d4dcae3c76eecea9775e8468346131e7a251a64ad20decd62ad64abff81d"
+      },
+      {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/native-connection-consumers/test-success.jpg",
+        "sha256": "d773313c61ec920bc2769f67006aaea6305a9b7ab2b9ef2816f5dc686bec412c"
+      }
+    ],
+    "verifiedStableCredentialFields": [
+      "ref_id",
+      "account_key",
+      "purpose",
+      "created_at",
+      "service_name"
+    ],
+    "credentialCorrection": {
+      "webdavPassword": "macOS legacy local plaintext file backend protected by0600/0700. backend=keychain is historical metadata, not proof of OS keyring.",
+      "contentProtection": "Independent model_config/transfer_protection uses native keyring. Do not generalize connection tests as full system-keychain acceptance.",
+      "source": [
+        {
+          "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/infrastructure/credentials.rs",
+          "lines": [
+            73,
+            75,
+            115,
+            117,
+            166,
+            170
+          ]
+        },
+        {
+          "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/src/modules/model_config/transfer_protection.rs",
+          "lines": [
+            35,
+            50,
+            204
+          ]
+        }
+      ]
+    },
+    "tls": "SSL_CERT_FILE only in owned process, self-created CA/loopback leaf; no TLS verification disabled, no system trust changes",
+    "catalogBoundary": "candidate catalog explicitly seeded; proves activation consumer, not package-transfer import",
+    "realSyncExecuted": false,
+    "executionOwner": "main-thread; review agent read only"
+  },
+  "historyRecoveryDraft": {
+    "id": "historyRecoveryDraftCorrection",
+    "status": "backend-real-files-and-browser-preview-cancel; final-native-UI-accept-not-established",
+    "removeAssociation": "ModelSaveHistory is not TransferBackups. Mixed-resource scope restore does not establish model history recovery-draft acceptance.",
+    "existingActualBackendEvidence": {
+      "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/implementation-20261102/ocx020-precommit-rust.log",
+      "sha256": "50ed6cda30fc1cbd6e0b87f64c006424786d400f1ba0c5080e89fa8ac1fcc4b7",
+      "matchingLines": [
+        {
+          "line": 705,
+          "text": "test modules::model_config::recovery::tests::overlapping_draft_and_changed_confirmation_are_refused_without_runtime_or_library_writes ... ok"
+        },
+        {
+          "line": 706,
+          "text": "test modules::model_config::recovery::tests::restores_only_affected_channels_to_draft_preserves_independent_edits_and_replay_does_not_replace_later_input ... ok"
+        },
+        {
+          "line": 1016,
+          "text": "test modules::sync::config::endpoint_mutation_tests::save_requires_exact_config_and_secret_readback ... ok"
+        },
+        {
+          "line": 1017,
+          "text": "test modules::sync::config::endpoint_mutation_tests::save_retry_keeps_full_intent_and_observes_real_error ... ok"
+        }
+      ],
+      "scope": "Temporary ModelStore/SyncConfigStore actual disk files. Endpoint Credentials is explicit in-memory adapter. Not nativeUI/keyring."
+    },
+    "frozenFinalBackendJobIndex": {
+      "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/final-ci-completed.json",
+      "sha256": "55ed5e1a807eca392132d39bf48e69325a7fd54e4b6d7c62c7729ac6f0eb5180",
+      "scope": "Full workspace backend jobs success onbda; not direct native UI history-accept receipt."
+    },
+    "currentUiEvidence": [
+      {
+        "path": "/tmp/ocx020-final-review-agent/reports/secondary-chromium-r1/report.json",
+        "sha256": "c930994e40441288c238c6c31af6057cba55f726bf6354340ab1d46fbd621037",
+        "suite": "secondary",
+        "engine": "chromium",
+        "result": "pass",
+        "checks": 117,
+        "screens": 36,
+        "scope": "DEV adapters, rendered secondary dialog states; no native adoption",
+        "fontsAndBoundary": {
+          "path": "/tmp/ocx020-final-review-agent/reports/secondary-chromium-r1/browser-boundary-and-fonts.json",
+          "sha256": "8e44c58780b9c12a42d30018fc13f5c94da7fe126ac217c02063f0ee83c8451b"
+        }
+      },
+      {
+        "path": "/tmp/ocx020-final-review-agent/reports/secondary-webkit-r1/report.json",
+        "sha256": "74745113013a09cf6d0659ea4edafc6cb9fc28a7deebb19317eddf9c8655f9d0",
+        "suite": "secondary",
+        "engine": "webkit",
+        "result": "pass",
+        "checks": 117,
+        "screens": 36,
+        "scope": "DEV adapters, rendered secondary dialog states; no native adoption",
+        "fontsAndBoundary": {
+          "path": "/tmp/ocx020-final-review-agent/reports/secondary-webkit-r1/browser-boundary-and-fonts.json",
+          "sha256": "5591bd737ae5b3710cfc05046631bb2b0d0d5568622c7f4f535abecc2f5978e8"
+        }
+      }
+    ],
+    "verifiedUi": [
+      "default pointer restore off",
+      "comparison required",
+      "explicit recovery-draft action",
+      "cancel does not attach recovery",
+      "current-font layout/actions fit"
+    ],
+    "missingEvidence": "No direct final-package UI successful history accept into recovery draft/owner return found in inspected unarchived0.2.20 AX/results/logs. This is an evidence-layer gap, not a demonstrated execution failure.",
+    "action": "Use recovery.rs actual backend tests and browser preview/cancel evidence, retain native-accept unproven unless main thread supplies its direct receipt.",
+    "backendSourceReuse": [
+      {
+        "path": "apps/desktop/tauri/src/modules/model_config/recovery.rs",
+        "bdaSha256": "18e431de399561710bd7a538059c9db333ca7e98650b3b48c31e4f88b70ad0a9",
+        "equal35c06338ToBda": true
+      },
+      {
+        "path": "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "bdaSha256": "cfaeadd6daa0206361a13bf24edeea4aa300d3a03b5e37c4440aa261f54e1565",
+        "equal35c06338ToBda": true
+      },
+      {
+        "path": "apps/desktop/tauri/src/modules/sync/config.rs",
+        "bdaSha256": "f1c6a98cf9e847cddb779a9e354ad2a8a1a7eaa924272ce6c2494d3618709ff9",
+        "equal35c06338ToBda": true
+      },
+      {
+        "path": "apps/desktop/tauri/src/commands/model_config.rs",
+        "bdaSha256": "129bf6ab8f44e20849cdac7f91f5a8e9abf87d7f9d48321732af064c7c74a937",
+        "equal35c06338ToBda": true
+      }
+    ]
+  },
+  "actualOta": [
+    {
+      "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/windows-adjacent-ota-41683704589/summary.json",
+      "sha256": "cefc280ddf0f7d2c4fdd67d7c2291781c75178d8784743fb0644dc2b6c85f6b3",
+      "status": "pass-main-thread-actual-OTA"
+    },
+    {
+      "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/font-final-candidate-bda7c92d/macos-adjacent-ota/ota-result.json",
+      "sha256": "403af5c6af3af26448e133eda57f8ef5314c8f1408032d8ede098c381e3bf4fd",
+      "status": "pass-main-thread-actual-OTA"
+    }
+  ],
+  "stable": "main-thread promotion pending; no publish action here"
+}

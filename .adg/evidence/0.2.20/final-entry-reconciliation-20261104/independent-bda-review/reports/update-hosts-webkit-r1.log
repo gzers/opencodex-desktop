@@ -1,0 +1,45 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('button[aria-label^="查看"]').filter({ hasText: '管理器' })[22m
+[2m    - locator resolved to <button disabled type="button" data-phase="info" data-v-0b6ed94f="" class="mnt-version-row" aria-label="查看桌面管理器更新详情（更新中…）">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    29 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at openTarget (/private/tmp/ocx020-final-review-agent/harness/update-hosts.mjs:28:245)
+    at /private/tmp/ocx020-final-review-agent/harness/update-hosts.mjs:34:331 {
+  log: [
+    `  - waiting for locator('button[aria-label^="查看"]').filter({ hasText: '管理器' })`,
+    '    - locator resolved to <button disabled type="button" data-phase="info" data-v-0b6ed94f="" class="mnt-version-row" aria-label="查看桌面管理器更新详情（更新中…）">…</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not enabled',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not enabled',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    29 × waiting for element to be visible, enabled and stable',
+    '       - element is not enabled',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v26.8.1

@@ -1,0 +1,714 @@
+{
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "allCommandsPreviouslyExecuted": true,
+  "noNewBrowserRunsDuringHandoff": true,
+  "commands": [
+    {
+      "kind": "matrix-orchestrator",
+      "command": "python3 /tmp/ocx020-final-review-agent/harness/run-matrices.py chromium",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/harness/run-matrices.py",
+        "sha256": "258161f9c3d892b704e7f87e91a12b85324ac853d77fa81ef40a98b0d5fcc52d"
+      },
+      "exitCode": 0
+    },
+    {
+      "kind": "matrix-child",
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/harness/model-dialogs.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "envOverrides": {
+        "AUDIT_ENGINE": "chromium",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/reports/model-dialogs-chromium-r1",
+        "AUDIT_SOURCE": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/browser-temp/model-dialogs-chromium"
+      },
+      "executed": true,
+      "exitCode": 0,
+      "executionReceipt": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-chromium-r1/execution.json",
+        "sha256": "14fc9af7e361b48ab16981f355ea0f38c902be44da614f6ac9504273b21fafe6"
+      },
+      "executionLog": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-chromium-r1/execution.log",
+        "sha256": "7d5e78690bef0a7a4023e24ce4acebdfe0c45ae4cd770a848ac809e2f8ba62b9"
+      },
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/harness/model-dialogs.mjs",
+        "sha256": "54977fa8a9b2ac77939e1eb1f84c46fd427cddf6771cd3ee2e268d55b216dc80"
+      }
+    },
+    {
+      "kind": "matrix-child",
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/harness/extensions.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "envOverrides": {
+        "AUDIT_ENGINE": "chromium",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/reports/extensions-chromium-r1",
+        "AUDIT_SOURCE": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/browser-temp/extensions-chromium"
+      },
+      "executed": true,
+      "exitCode": 0,
+      "executionReceipt": {
+        "path": "/tmp/ocx020-final-review-agent/reports/extensions-chromium-r1/execution.json",
+        "sha256": "5723de97833a8e2c66c6f8558156216c51df7ec0ee9eec27f8b3d4345c94cc43"
+      },
+      "executionLog": {
+        "path": "/tmp/ocx020-final-review-agent/reports/extensions-chromium-r1/execution.log",
+        "sha256": "ecc876254ccc7e129fec92bf2c45fed90ef86cbe35d125ec8be97be08cf587cb"
+      },
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/harness/extensions.mjs",
+        "sha256": "5f39f76f770017adcd9877722c2318c3723c252015f741587eab1afb8e732247"
+      }
+    },
+    {
+      "kind": "matrix-child",
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/harness/secondary.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "envOverrides": {
+        "AUDIT_ENGINE": "chromium",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/reports/secondary-chromium-r1",
+        "AUDIT_SOURCE": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/browser-temp/secondary-chromium"
+      },
+      "executed": true,
+      "exitCode": 0,
+      "executionReceipt": {
+        "path": "/tmp/ocx020-final-review-agent/reports/secondary-chromium-r1/execution.json",
+        "sha256": "6277c5b58c2176164cee27005b4129bcfd3c521f5aa749918bcd4c4c26cae674"
+      },
+      "executionLog": {
+        "path": "/tmp/ocx020-final-review-agent/reports/secondary-chromium-r1/execution.log",
+        "sha256": "a93cd1c932e07c65a0d45237c35b4c0c5bbe813951e869ce1fb9102427dcc585"
+      },
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/harness/secondary.mjs",
+        "sha256": "c7ba0a2eb58e339a022ab2fd96563426ea50ce08d122351d615eaff2f800ddac"
+      }
+    },
+    {
+      "kind": "matrix-child",
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/harness/model-completion.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "envOverrides": {
+        "AUDIT_ENGINE": "chromium",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1",
+        "AUDIT_SOURCE": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/browser-temp/model-completion-chromium"
+      },
+      "executed": true,
+      "exitCode": 0,
+      "executionReceipt": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/execution.json",
+        "sha256": "ca686a1ba4bd490ff7f01af65954008e4d0927c86a83b8e54693b6dc28283500"
+      },
+      "executionLog": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/execution.log",
+        "sha256": "3554c9b286b1f24fc9d14f81075560abcf4a4d0c30842ca60e30f207afc20d09"
+      },
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/harness/model-completion.mjs",
+        "sha256": "6f2bf4590310a04c10742d5c3e55fd9d045f402f972fd87f391617a037fe2a14"
+      }
+    },
+    {
+      "kind": "matrix-orchestrator",
+      "command": "python3 /tmp/ocx020-final-review-agent/harness/run-matrices.py webkit",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/harness/run-matrices.py",
+        "sha256": "258161f9c3d892b704e7f87e91a12b85324ac853d77fa81ef40a98b0d5fcc52d"
+      },
+      "exitCode": 0
+    },
+    {
+      "kind": "matrix-child",
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/harness/model-dialogs.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "envOverrides": {
+        "AUDIT_ENGINE": "webkit",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/reports/model-dialogs-webkit-r1",
+        "AUDIT_SOURCE": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/browser-temp/model-dialogs-webkit"
+      },
+      "executed": true,
+      "exitCode": 0,
+      "executionReceipt": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-webkit-r1/execution.json",
+        "sha256": "93dc9ce7d92feeb86d32bb81748b73cb0a11608a677d1e7282751fb727cc8531"
+      },
+      "executionLog": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-dialogs-webkit-r1/execution.log",
+        "sha256": "9ff37a6c4edf14559f08f50b5185ab78308cf918364e815819cff039035752e0"
+      },
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/harness/model-dialogs.mjs",
+        "sha256": "54977fa8a9b2ac77939e1eb1f84c46fd427cddf6771cd3ee2e268d55b216dc80"
+      }
+    },
+    {
+      "kind": "matrix-child",
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/harness/extensions.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "envOverrides": {
+        "AUDIT_ENGINE": "webkit",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/reports/extensions-webkit-r1",
+        "AUDIT_SOURCE": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/browser-temp/extensions-webkit"
+      },
+      "executed": true,
+      "exitCode": 0,
+      "executionReceipt": {
+        "path": "/tmp/ocx020-final-review-agent/reports/extensions-webkit-r1/execution.json",
+        "sha256": "66cdd1260e5d016f3c3f10290701c9600c747bfaf76a952608d627c1107724d5"
+      },
+      "executionLog": {
+        "path": "/tmp/ocx020-final-review-agent/reports/extensions-webkit-r1/execution.log",
+        "sha256": "8ef9611b4c3b21f439a8fcf92ee41a424bf0e5a4236b1ba5370f453cb28fdd5b"
+      },
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/harness/extensions.mjs",
+        "sha256": "5f39f76f770017adcd9877722c2318c3723c252015f741587eab1afb8e732247"
+      }
+    },
+    {
+      "kind": "matrix-child",
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/harness/secondary.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "envOverrides": {
+        "AUDIT_ENGINE": "webkit",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/reports/secondary-webkit-r1",
+        "AUDIT_SOURCE": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/browser-temp/secondary-webkit"
+      },
+      "executed": true,
+      "exitCode": 0,
+      "executionReceipt": {
+        "path": "/tmp/ocx020-final-review-agent/reports/secondary-webkit-r1/execution.json",
+        "sha256": "a550a2540112fe99d093cefad49c8a02cdad1adc50b70eb33988cbef210ea60c"
+      },
+      "executionLog": {
+        "path": "/tmp/ocx020-final-review-agent/reports/secondary-webkit-r1/execution.log",
+        "sha256": "b7dfb025d574208863c8ec86ec33b44a19926d3986def86374895b01450b9671"
+      },
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/harness/secondary.mjs",
+        "sha256": "c7ba0a2eb58e339a022ab2fd96563426ea50ce08d122351d615eaff2f800ddac"
+      }
+    },
+    {
+      "kind": "matrix-child",
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/harness/model-completion.mjs"
+      ],
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "envOverrides": {
+        "AUDIT_ENGINE": "webkit",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/reports/model-completion-webkit-r1",
+        "AUDIT_SOURCE": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/browser-temp/model-completion-webkit"
+      },
+      "executed": true,
+      "exitCode": 0,
+      "executionReceipt": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-completion-webkit-r1/execution.json",
+        "sha256": "6c77f2a53f85cab5ae6583b71b214317bf9b805ebbc7263d3be5be8fa97b96a7"
+      },
+      "executionLog": {
+        "path": "/tmp/ocx020-final-review-agent/reports/model-completion-webkit-r1/execution.log",
+        "sha256": "f3998a830faee2342e73a73fac0b3bec07677a4ccfa3bad230eafc7951fdfb58"
+      },
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/harness/model-completion.mjs",
+        "sha256": "6f2bf4590310a04c10742d5c3e55fd9d045f402f972fd87f391617a037fe2a14"
+      }
+    },
+    {
+      "kind": "browser-direct",
+      "name": "entry-probe-r1",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/entry-probe-r1 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/entry-probe.mjs > /tmp/ocx020-final-review-agent/reports/entry-probe-r1.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "probe-outdated-prototype-tab-selector",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/entry-probe-r1.mjs",
+        "sha256": "41e0818c2338201b6977da3a938490b1a560f0e9b0b84c374e9c95abf187c76f"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/entry-probe-r1.log",
+        "sha256": "e9ed5f965186fc2ae9079b38271170d6b67d0af7027a0effa253f2404cce5863"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/entry-probe-r1",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "entry-probe-r2",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/entry-probe-r2 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/entry-probe.mjs > /tmp/ocx020-final-review-agent/reports/entry-probe-r2.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 0,
+      "meaning": "diagnostic-not-acceptance",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/entry-probe.mjs",
+        "sha256": "69c592fd00b32eaeaa009b264323d89a0a78ecd4d63495bb0d69c625c2b3b575"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/entry-probe-r2.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/entry-probe-r2",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "update-hosts-webkit-r1",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r1 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/update-hosts.mjs > /tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r1.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "probe-used-disabled-version-row-instead-of-progress-entry",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/update-hosts-r1.mjs",
+        "sha256": "d985e6b0a03a6c0fcabb2706f6d95911b611596e75bbe2dbe065013be0ba7087"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r1.log",
+        "sha256": "629aff4ff113b71e176eb6984303b23b300708c6b60291e3dfa600a51730df4c"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r1",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "update-hosts-webkit-r2",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r2 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/update-hosts.mjs > /tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r2.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "probe-check-failure-after-pending-restart-status-priority",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/update-hosts-r2.mjs",
+        "sha256": "898b5944665d4e4ecca1c2ad84cfae353ae7a4b18dd0b3afcd36fddb0d77f742"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r2.log",
+        "sha256": "cf5f2c25275b1794fcfe3dc7b4e915a24f68ae914e3a7d06d8c8824a206cd043"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r2",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "update-hosts-webkit-r3",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r3 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/update-hosts.mjs > /tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r3.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "probe-compared-settings-hash-without-section",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/update-hosts-r3.mjs",
+        "sha256": "8b0bbd3051a275b4113d86ff739f5d3b9ec3c66495f98861b704f8cc7f5d0836"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r3.log",
+        "sha256": "8ae40c572a517c8b4c18952aa199142be6dc2bde802768d88e24f9b755800a23"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r3",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "update-hosts-webkit-r4",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r4 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/update-hosts.mjs > /tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r4.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 0,
+      "meaning": "bounded-state-geometry-pass-not-shared-zoom-pass",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/update-hosts.mjs",
+        "sha256": "3f147d52840b9b5903d511c8acffec199111534373ec55ae8f76506e822fa51a"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r4.log",
+        "sha256": "cb8c7c376ab475b30660b2307ab31d5f3de477d7a689a05d6c000cdad91615db"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r4",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "update-hosts-chromium-r1",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/update-hosts-chromium-r1 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/update-hosts.mjs > /tmp/ocx020-final-review-agent/reports/update-hosts-chromium-r1.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 0,
+      "meaning": "bounded-state-geometry-pass-not-shared-zoom-pass",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/update-hosts.mjs",
+        "sha256": "3f147d52840b9b5903d511c8acffec199111534373ec55ae8f76506e822fa51a"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-chromium-r1.log",
+        "sha256": "f2ce9c0b0da4a28b71ad535e2b1519d150c53cec29b5a7ba6a6062d2426a98f5"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/update-hosts-chromium-r1",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "agent-hosts-chromium-r1",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/agent-hosts-chromium-r1 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/agent-hosts.mjs > /tmp/ocx020-final-review-agent/reports/agent-hosts-chromium-r1.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 0,
+      "meaning": "bounded-states-current-font-layout-pass",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/agent-hosts.mjs",
+        "sha256": "c8228fa4bf69f41c4cd81eadcfac5ce89f861b55735673c56c39cf2b425d010a"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-chromium-r1.log",
+        "sha256": "f3952c5185170d4af6dc940238cf3edbbc8eaf5e3ff0013e56550b88b0e6676e"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/agent-hosts-chromium-r1",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "agent-hosts-webkit-r1",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/agent-hosts-webkit-r1 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/agent-hosts.mjs > /tmp/ocx020-final-review-agent/reports/agent-hosts-webkit-r1.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 0,
+      "meaning": "bounded-states-current-font-layout-pass",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/agent-hosts.mjs",
+        "sha256": "c8228fa4bf69f41c4cd81eadcfac5ce89f861b55735673c56c39cf2b425d010a"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/agent-hosts-webkit-r1.log",
+        "sha256": "e94f1294c845ead50d1113757674d174dfe65501b744e75df90e4cc86f469ca5"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/agent-hosts-webkit-r1",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "prototype-entries-chromium-r1",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r1 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/prototype-entries.mjs > /tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r1.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "probe-settings-button-accessible-name",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/prototype-entries-r1.mjs",
+        "sha256": "63501f5f7d2fb404854e8a78d5c6003de405c81013e6fe53445a5fba02ede696"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r1.log",
+        "sha256": "2c7baa6a896bc17d6a0522178e2653238a7e78da1c42195ef2879c15cd0d906e"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r1",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "prototype-entries-chromium-r2",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r2 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/prototype-entries.mjs > /tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r2.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "probe-wrong-settings-tab-role",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/prototype-entries-r2.mjs",
+        "sha256": "a360c203c95d8242193e382075fc7fa91dad46f886ba30f0f820e8eb6d8b8c03"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r2.log",
+        "sha256": "070b9fdfda4b955c31a122f5ed5a9f9f0235e785deadde9ca165d4c39a8d114a"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r2",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "prototype-entries-chromium-r3",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r3 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/prototype-entries.mjs > /tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r3.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "probe-wrong-update-detail-action-selector",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/prototype-entries-r3.mjs",
+        "sha256": "a650f9f61fc17463d0dc22e11004d4828818ba195c7f159001b6c39a5948af30"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r3.log",
+        "sha256": "37c68553070543591e84d9e71fea98f4b8c368108c4e6793153fb1a7ed16cdc3"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r3",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "prototype-entries-webkit-r3",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r3 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/prototype-entries.mjs > /tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r3.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "probe-wrong-update-detail-action-selector",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/prototype-entries-r3.mjs",
+        "sha256": "a650f9f61fc17463d0dc22e11004d4828818ba195c7f159001b6c39a5948af30"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r3.log",
+        "sha256": "ead897dacb3c5e5fbd1917f7f501a8b15e37921c0e1e4ce4e8158483acdb1a18"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r3",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "prototype-entries-chromium-r4",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r4 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/prototype-entries.mjs > /tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r4.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "viewport900-with-default-prototype-window1180",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/prototype-entries-r4.mjs",
+        "sha256": "1b4042b1df0ea5f7c30328bc802d1606247785415abf9478b1b8ecd3ec370f4a"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r4.log",
+        "sha256": "8e467bbf939001d5b88c285621894d4649c7bdf3b8e5b6b4e95f8ccbeff696bd"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r4",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "prototype-entries-webkit-r4",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r4 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/prototype-entries.mjs > /tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r4.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "viewport900-with-default-prototype-window1180",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/prototype-entries-r4.mjs",
+        "sha256": "1b4042b1df0ea5f7c30328bc802d1606247785415abf9478b1b8ecd3ec370f4a"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r4.log",
+        "sha256": "b4558d42be565be2de32890813a29ead41ec5e5201dcc6ab1d364913184ac442"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r4",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "prototype-entries-chromium-r5",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r5 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/prototype-entries.mjs > /tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r5.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 0,
+      "meaning": "explicit-prototype-product-window-frame-pass",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/prototype-entries.mjs",
+        "sha256": "3000fe19245dfd1bff8eb5dc4daf9a01dcdffa18a82ef3b98748e52c6f7aaf67"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r5.log",
+        "sha256": "bb2b5e14b525929f3f1b9ab2015f1edfe4d785bc6b3c6b6915463ec47ddb4c8a"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r5",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "prototype-entries-webkit-r5",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r5 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/prototype-entries.mjs > /tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r5.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 0,
+      "meaning": "explicit-prototype-product-window-frame-pass",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/prototype-entries.mjs",
+        "sha256": "3000fe19245dfd1bff8eb5dc4daf9a01dcdffa18a82ef3b98748e52c6f7aaf67"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r5.log",
+        "sha256": "514370953762e15814397fc31c428df37ada5f19928c77bd16c8bd630d1e54cc"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r5",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "update-scale-chromium-r1",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/update-scale-chromium-r1 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/update-scale-contract.mjs > /tmp/ocx020-final-review-agent/reports/update-scale-chromium-r1.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "confirmed-product-failure-shared-zoom",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/update-scale-contract.mjs",
+        "sha256": "5d81d30424ae620ea978a62693d899f221d1de71d8f8aef56f39c09d58133016"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-scale-chromium-r1.log",
+        "sha256": "ac9ea17e08dc8b3dec8ea083b112df9076a57d269fab1832f963fb15be14da0b"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/update-scale-chromium-r1",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "update-scale-webkit-r1",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/update-scale-webkit-r1 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/update-scale-contract.mjs > /tmp/ocx020-final-review-agent/reports/update-scale-webkit-r1.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 1,
+      "meaning": "confirmed-product-failure-shared-zoom",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/update-scale-contract.mjs",
+        "sha256": "5d81d30424ae620ea978a62693d899f221d1de71d8f8aef56f39c09d58133016"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-scale-webkit-r1.log",
+        "sha256": "e232d1b4d287e8fb5e8ce35ee1fc9a3f662be6ddff56d49354df56d60322890e"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/update-scale-webkit-r1",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    },
+    {
+      "kind": "browser-direct",
+      "name": "prototype-host-diagnostics-r1",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/reports/prototype-host-diagnostics-r1 AUDIT_SOURCE=bda7c92da4e1f2e02e6bc2c641e0747748b98dd5 TMPDIR=/tmp/ocx020-final-review-agent/browser-temp node /tmp/ocx020-final-review-agent/harness/prototype-host-diagnostics.mjs > /tmp/ocx020-final-review-agent/reports/prototype-host-diagnostics-r1.log 2>&1",
+      "cwd": "/tmp/ocx020-final-review-agent",
+      "executed": true,
+      "exitCode": 0,
+      "meaning": "read-only-layout-host-cause-diagnosis",
+      "preservedExecutionVersion": {
+        "path": "/tmp/ocx020-final-review-agent/harness/prototype-host-diagnostics.mjs",
+        "sha256": "d62b9e4f9ca4925a57d2f1b812b1d98157e267533fd39206bab0bd86effa1506"
+      },
+      "engineWrapper": {
+        "path": "/tmp/ocx020-final-review-agent/harness/engine.mjs",
+        "sha256": "c3e6a8ea7c28637017690c14eb7ef2f6bce8eedffac72f184f73cc8f8d0209b8"
+      },
+      "log": {
+        "path": "/tmp/ocx020-final-review-agent/reports/prototype-host-diagnostics-r1.log",
+        "sha256": "21dba8f80bf836c6ec5850282257b0708d970eef53b55069bf8c94af845852fd"
+      },
+      "reportDirectory": "/tmp/ocx020-final-review-agent/reports/prototype-host-diagnostics-r1",
+      "replayCaution": "Original command referred to the working harness name. Use the preservedExecutionVersion for historical reproducibility, never overwrite original report directories."
+    }
+  ],
+  "nonBrowserWork": "Read-only source/hash evidence assembly and allowed-directory report writes; no build/native/publish actions."
+}

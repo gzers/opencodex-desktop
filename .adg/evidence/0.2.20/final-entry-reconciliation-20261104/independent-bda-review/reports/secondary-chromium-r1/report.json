@@ -1,0 +1,1257 @@
+{
+  "completed": true,
+  "failure": null,
+  "engine": "chromium",
+  "scope": "DEV adapters, rendered secondary dialog states; no native adoption",
+  "checks": [
+    {
+      "key": "1180-light-100",
+      "name": "restore compare failure blocks confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "scope restore failure fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 219,
+        "right": 870,
+        "bottom": 541,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 627,
+            "right": 677,
+            "bottom": 524,
+            "height": 34
+          },
+          {
+            "x": 689,
+            "right": 763,
+            "bottom": 524,
+            "height": 34
+          },
+          {
+            "x": 775,
+            "right": 849,
+            "bottom": 524,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "restore busy prevents closing",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "no restore groups disables confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "restore cancel no adoption",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "restore error visible and remains open",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "history default pointers excluded",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "history comparison required",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "history recovery fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 165,
+        "y": 241.5,
+        "right": 1015,
+        "bottom": 518.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 834,
+            "right": 884,
+            "bottom": 501.5,
+            "height": 34
+          },
+          {
+            "x": 896,
+            "right": 994,
+            "bottom": 501.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "history preview explicit draft action",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "history cancel does not attach recovery",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "missing connection password cannot activate",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "imported connection fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 236.75,
+        "right": 870,
+        "bottom": 523.25,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 713,
+            "right": 763,
+            "bottom": 506.25,
+            "height": 34
+          },
+          {
+            "x": 775,
+            "right": 849,
+            "bottom": 506.25,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "imported confirmation cancel no activation",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "imported cancel retains connection owner",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "import activation error visible",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "result empty fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 230,
+        "y": 272.75,
+        "right": 950,
+        "bottom": 487.25,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 879,
+            "right": 929,
+            "bottom": 470.25,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "empty result no retry",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "result read-error fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 230,
+        "y": 272.75,
+        "right": 950,
+        "bottom": 487.25,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 793,
+            "right": 843,
+            "bottom": 470.25,
+            "height": 34
+          },
+          {
+            "x": 855,
+            "right": 929,
+            "bottom": 470.25,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "read error offers reload",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "result partial fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 230,
+        "y": 121.40625,
+        "right": 950,
+        "bottom": 638.59375,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 769,
+            "right": 819,
+            "bottom": 621.59375,
+            "height": 34
+          },
+          {
+            "x": 831,
+            "right": 929,
+            "bottom": 621.59375,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "retry uses exact original operation",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "partial retains completed and skipped details",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "result stale fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 230,
+        "y": 121.40625,
+        "right": 950,
+        "bottom": 638.59375,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 793,
+            "right": 843,
+            "bottom": 621.59375,
+            "height": 34
+          },
+          {
+            "x": 855,
+            "right": 929,
+            "bottom": 621.59375,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "stale requires new comparison without blind retry",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "result auth-store fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 230,
+        "y": 121.40625,
+        "right": 950,
+        "bottom": 638.59375,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 769,
+            "right": 819,
+            "bottom": 621.59375,
+            "height": 34
+          },
+          {
+            "x": 831,
+            "right": 929,
+            "bottom": 621.59375,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "native credential store error has its own reason",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "notification clear describes pending count",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "clear notifications fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 269.25,
+        "right": 870,
+        "bottom": 490.75,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 713,
+            "right": 763,
+            "bottom": 473.75,
+            "height": 34
+          },
+          {
+            "x": 775,
+            "right": 849,
+            "bottom": 473.75,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "clear cancel preserves item",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "runtime install requires consent",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "runtime bad path blocks install",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "runtime cancel makes no install call",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "extension detail entry retains width",
+      "passed": true,
+      "detail": {
+        "x": 298,
+        "y": 401.5,
+        "width": 323,
+        "height": 59.28125
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "extension detail keeps basic content",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "extension detail labelled modal",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "extension cancel preserves list entry",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "MCP read failure retains list description and transport",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "MCP table scroll stays inside local region",
+      "passed": true,
+      "detail": {
+        "width": 855,
+        "scroll": 855
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "restore compare failure blocks confirmation",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "scope restore failure fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 170,
+        "y": 139,
+        "right": 730,
+        "bottom": 461,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "x": 487,
+            "right": 537,
+            "bottom": 444,
+            "height": 34
+          },
+          {
+            "x": 549,
+            "right": 623,
+            "bottom": 444,
+            "height": 34
+          },
+          {
+            "x": 635,
+            "right": 709,
+            "bottom": 444,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "restore busy prevents closing",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "no restore groups disables confirmation",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "restore cancel no adoption",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "restore error visible and remains open",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "history default pointers excluded",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "history comparison required",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "history recovery fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 25,
+        "y": 161.5,
+        "right": 875,
+        "bottom": 438.5,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "x": 694,
+            "right": 744,
+            "bottom": 421.5,
+            "height": 34
+          },
+          {
+            "x": 756,
+            "right": 854,
+            "bottom": 421.5,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "history preview explicit draft action",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "history cancel does not attach recovery",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "missing connection password cannot activate",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "imported connection fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 170,
+        "y": 156.75,
+        "right": 730,
+        "bottom": 443.25,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "x": 573,
+            "right": 623,
+            "bottom": 426.25,
+            "height": 34
+          },
+          {
+            "x": 635,
+            "right": 709,
+            "bottom": 426.25,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "imported confirmation cancel no activation",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "imported cancel retains connection owner",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "import activation error visible",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "result empty fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 90,
+        "y": 192.75,
+        "right": 810,
+        "bottom": 407.25,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "x": 739,
+            "right": 789,
+            "bottom": 390.25,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "empty result no retry",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "result read-error fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 90,
+        "y": 192.75,
+        "right": 810,
+        "bottom": 407.25,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "x": 653,
+            "right": 703,
+            "bottom": 390.25,
+            "height": 34
+          },
+          {
+            "x": 715,
+            "right": 789,
+            "bottom": 390.25,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "read error offers reload",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "result partial fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 90,
+        "y": 66,
+        "right": 810,
+        "bottom": 534,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "x": 629,
+            "right": 679,
+            "bottom": 517,
+            "height": 34
+          },
+          {
+            "x": 691,
+            "right": 789,
+            "bottom": 517,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "retry uses exact original operation",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "partial retains completed and skipped details",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "result stale fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 90,
+        "y": 66,
+        "right": 810,
+        "bottom": 534,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "x": 653,
+            "right": 703,
+            "bottom": 517,
+            "height": 34
+          },
+          {
+            "x": 715,
+            "right": 789,
+            "bottom": 517,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "stale requires new comparison without blind retry",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "result auth-store fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 90,
+        "y": 66,
+        "right": 810,
+        "bottom": 534,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "x": 629,
+            "right": 679,
+            "bottom": 517,
+            "height": 34
+          },
+          {
+            "x": 691,
+            "right": 789,
+            "bottom": 517,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "native credential store error has its own reason",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "notification clear describes pending count",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "clear notifications fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 170,
+        "y": 189.25,
+        "right": 730,
+        "bottom": 410.75,
+        "width": 900,
+        "height": 600,
+        "actions": [
+          {
+            "x": 573,
+            "right": 623,
+            "bottom": 393.75,
+            "height": 34
+          },
+          {
+            "x": 635,
+            "right": 709,
+            "bottom": 393.75,
+            "height": 34
+          }
+        ]
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "clear cancel preserves item",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "runtime install requires consent",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "runtime bad path blocks install",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "runtime cancel makes no install call",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "extension detail entry retains width",
+      "passed": true,
+      "detail": {
+        "x": 298,
+        "y": 331,
+        "width": 160,
+        "height": 87.53125
+      }
+    },
+    {
+      "key": "900-dark-100",
+      "name": "extension detail keeps basic content",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "extension detail labelled modal",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "extension cancel preserves list entry",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "MCP read failure retains list description and transport",
+      "passed": true
+    },
+    {
+      "key": "900-dark-100",
+      "name": "MCP table scroll stays inside local region",
+      "passed": true,
+      "detail": {
+        "width": 692,
+        "scroll": 692
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "restore compare failure blocks confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "scope restore failure fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 32,
+        "y": 58,
+        "right": 1148,
+        "bottom": 702,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 662,
+            "right": 762,
+            "bottom": 668,
+            "height": 68
+          },
+          {
+            "x": 786,
+            "right": 934,
+            "bottom": 668,
+            "height": 68
+          },
+          {
+            "x": 958,
+            "right": 1106,
+            "bottom": 668,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "restore busy prevents closing",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "no restore groups disables confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "restore cancel no adoption",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "restore error visible and remains open",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "history default pointers excluded",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "history comparison required",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "history recovery fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 32,
+        "y": 103.5,
+        "right": 1148,
+        "bottom": 656.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 786,
+            "right": 886,
+            "bottom": 622.5,
+            "height": 68
+          },
+          {
+            "x": 910,
+            "right": 1106,
+            "bottom": 622.5,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "history preview explicit draft action",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "history cancel does not attach recovery",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "missing connection password cannot activate",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "imported connection fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 32,
+        "y": 93.5,
+        "right": 1148,
+        "bottom": 666.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 834,
+            "right": 934,
+            "bottom": 632.5,
+            "height": 68
+          },
+          {
+            "x": 958,
+            "right": 1106,
+            "bottom": 632.5,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "imported confirmation cancel no activation",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "imported cancel retains connection owner",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "import activation error visible",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "result empty fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 82.59375,
+        "y": 165.5,
+        "right": 1097.390625,
+        "bottom": 594.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 955.390625,
+            "right": 1055.390625,
+            "bottom": 560.5,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "empty result no retry",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "result read-error fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 82.59375,
+        "y": 165.5,
+        "right": 1097.390625,
+        "bottom": 594.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 783.390625,
+            "right": 883.390625,
+            "bottom": 560.5,
+            "height": 68
+          },
+          {
+            "x": 907.390625,
+            "right": 1055.390625,
+            "bottom": 560.5,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "read error offers reload",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "result partial fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 82.59375,
+        "y": 83.59375,
+        "right": 1097.390625,
+        "bottom": 676.390625,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 735.390625,
+            "right": 835.390625,
+            "bottom": 642.390625,
+            "height": 68
+          },
+          {
+            "x": 859.390625,
+            "right": 1055.390625,
+            "bottom": 642.390625,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "retry uses exact original operation",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "partial retains completed and skipped details",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "result stale fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 82.59375,
+        "y": 83.59375,
+        "right": 1097.390625,
+        "bottom": 676.390625,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 783.390625,
+            "right": 883.390625,
+            "bottom": 642.390625,
+            "height": 68
+          },
+          {
+            "x": 907.390625,
+            "right": 1055.390625,
+            "bottom": 642.390625,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "stale requires new comparison without blind retry",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "result auth-store fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 82.59375,
+        "y": 83.59375,
+        "right": 1097.390625,
+        "bottom": 676.390625,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 735.390625,
+            "right": 835.390625,
+            "bottom": 642.390625,
+            "height": 68
+          },
+          {
+            "x": 859.390625,
+            "right": 1055.390625,
+            "bottom": 642.390625,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "native credential store error has its own reason",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "notification clear describes pending count",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "clear notifications fits with visible actions",
+      "passed": true,
+      "detail": {
+        "x": 32,
+        "y": 158.5,
+        "right": 1148,
+        "bottom": 601.5,
+        "width": 1180,
+        "height": 760,
+        "actions": [
+          {
+            "x": 834,
+            "right": 934,
+            "bottom": 567.5,
+            "height": 68
+          },
+          {
+            "x": 958,
+            "right": 1106,
+            "bottom": 567.5,
+            "height": 68
+          }
+        ]
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "clear cancel preserves item",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "runtime install requires consent",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "runtime bad path blocks install",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "runtime cancel makes no install call",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "extension detail entry retains width",
+      "passed": true,
+      "detail": {
+        "x": 216,
+        "y": 246,
+        "width": 320,
+        "height": 175.09375
+      }
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "extension detail keeps basic content",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "extension detail labelled modal",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "extension cancel preserves list entry",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "MCP read failure retains list description and transport",
+      "passed": true
+    },
+    {
+      "key": "1180-dark-200",
+      "name": "MCP table scroll stays inside local region",
+      "passed": true,
+      "detail": {
+        "width": 692,
+        "scroll": 692
+      }
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-light-100-scope-restore-error.png",
+    "1180-light-100-history-recovery-preview.png",
+    "1180-light-100-imported-connection.png",
+    "1180-light-100-result-empty.png",
+    "1180-light-100-result-read-error.png",
+    "1180-light-100-result-partial.png",
+    "1180-light-100-result-stale.png",
+    "1180-light-100-result-auth-store.png",
+    "1180-light-100-notification-clear.png",
+    "1180-light-100-runtime-install-validation.png",
+    "1180-light-100-extension-detail-read-failed.png",
+    "1180-light-100-mcp-detail-read-failed.png",
+    "900-dark-100-scope-restore-error.png",
+    "900-dark-100-history-recovery-preview.png",
+    "900-dark-100-imported-connection.png",
+    "900-dark-100-result-empty.png",
+    "900-dark-100-result-read-error.png",
+    "900-dark-100-result-partial.png",
+    "900-dark-100-result-stale.png",
+    "900-dark-100-result-auth-store.png",
+    "900-dark-100-notification-clear.png",
+    "900-dark-100-runtime-install-validation.png",
+    "900-dark-100-extension-detail-read-failed.png",
+    "900-dark-100-mcp-detail-read-failed.png",
+    "1180-dark-200-scope-restore-error.png",
+    "1180-dark-200-history-recovery-preview.png",
+    "1180-dark-200-imported-connection.png",
+    "1180-dark-200-result-empty.png",
+    "1180-dark-200-result-read-error.png",
+    "1180-dark-200-result-partial.png",
+    "1180-dark-200-result-stale.png",
+    "1180-dark-200-result-auth-store.png",
+    "1180-dark-200-notification-clear.png",
+    "1180-dark-200-runtime-install-validation.png",
+    "1180-dark-200-extension-detail-read-failed.png",
+    "1180-dark-200-mcp-detail-read-failed.png"
+  ]
+}

@@ -21,3 +21,6 @@ Mac实际相邻OTA通过beta安装，原始EXE SHA823a62869ca494acf83ccc955c04ae
 当前剩余为独立全入口与最终字号映射补正，再审阅后晋升同一tag/bytes到stable。本记录未宣称已发布stable。证据根.adg/evidence/0.2.20/font-final-candidate-bda7c92d、final-entry-reconciliation-20261104及原问题清单；正式TASK保持in_progress，最终六项检查与20项AC要形成RuntimeStore RCP/CERT。
 
 兼容与回退：交付平台macOS Apple Silicon、Windows x64。保留v0.2.19原包及签名；必要时手动回退并核对本机备份，不移动已公开tag、不承诺自动降级。安装包沿用既有macOS ad-hoc与Windows无Authenticode方式；更新载荷另有真实密码学签名。连接密码沿用现有本机文件后端（Mac权限保护，Windows DPAPI），内容保护口令才使用独立原生安全存储。OS底层权限失败可能显示系统详细英文原因。没有本轮新增的真实多设备/日常WebDAV适配承诺；用户日常配置、凭据与安装均未修改。
+
+
+2026-11-04发布拦截补正：独立复核确认UpdateCenter漏接共享缩放，S20-19/20未通过，未晋升stable。旧release432929365已撤回为私有draft归档validation/0.2.20-bda7c92d，八原件保留；beta暂指0.2.19原manifest，Latest仍0.2.19。修复PR65/source34a3553f只改更新中心缩放和布局，另补QA/CHANGELOG；本机1122UI/typecheck/build及两引擎200%绘制比例/各156状态通过，正式CI41687967250与新原包/安装/实际OTA继续待验。旧bda实际OTA不能代替新payload验收。

@@ -1,0 +1,82 @@
+{
+  "state": "handed-off-product-fix-owned-by-main-thread",
+  "createdAt": "2026-11-03T17:46:16.169391+00:00",
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "stable": "paused-by-main-thread-until-shared-scale-fix-and-review",
+  "confirmedProductReleaseBlocker": {
+    "id": "FR-020-UPDATE-SCALE",
+    "owners": [
+      "OverviewRoute UpdateCenter",
+      "SettingsRoute UpdateCenter"
+    ],
+    "source": "apps/desktop/ui/src/features/updates/UpdateCenter.vue:225 Teleport to body outside scaled .app-window",
+    "evidence": [
+      {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-scale-chromium-r1/report.json",
+        "sha256": "5acd26334d1c462eb6da6c53d257d1c2e0408f97ae66eccd18916f62657dc051"
+      },
+      {
+        "path": "/tmp/ocx020-final-review-agent/reports/update-scale-webkit-r1/report.json",
+        "sha256": "ccf69c783a21928672ca6727913beb7e8c0c1d7eb7a43a640a6871df1582a19b"
+      }
+    ],
+    "actual": "100%→200% shell heading33→66px while update footer button34→34px, modalZoom1 vs shellZoom2"
+  },
+  "prototypeClassification": "viewport vs frozen .window mismatch; not draggable coordinates; not an actual product release blocker",
+  "prototypeDiagnosis": {
+    "path": "/tmp/ocx020-final-review-agent/prototype-host-diagnosis.json",
+    "sha256": "5eef6c5506670c92dac6476757758e392fd6b2c1962d8969fe4268b921a76465"
+  },
+  "historyRecoveryEvidenceGap": "Backend actualtempfile plus browserpreview/cancel; directfinalnativeUIacceptsuccess not found/claimed. Separate from confirmed producterror.",
+  "connectionEvidence": "Main-thread actualfinalMac consumer included; seededcatalog not transfer; legacyWebDAVfilebackend separate from transfer_protection nativekeyring",
+  "actualDualPlatformOta": "Main-thread pass receipts archived and included, not an outstanding gate",
+  "preservedResults": {
+    "productPassingAssertions": 1680,
+    "productScreenshots": 394,
+    "prototypePassingAssertions": 48,
+    "sourceIdentity": {
+      "path": "/tmp/ocx020-final-review-agent/receipts/source-identity.json",
+      "sha256": "1bc02c0ed8557607c3e5e8ab2a6c70f1cd518a7ed1956aef30b0b9d7d03024ad"
+    },
+    "sourceAfter": {
+      "path": "/tmp/ocx020-final-review-agent/receipts/source-identity-after.json",
+      "sha256": "e4823ded6e150fdc26c1624580429bd40e0040b8df5b0e6f653ae8b2942a23fc"
+    },
+    "index": {
+      "path": "/tmp/ocx020-final-review-agent/reports/index.json",
+      "sha256": "9cae9930111d8ab7d07037f64c1e4d16c57cd1c46584ebf32ef72603ab22255b"
+    },
+    "allFiles": "artifact-manifest.json and SHA256SUMS"
+  },
+  "integration": {
+    "review": {
+      "path": "/tmp/ocx020-final-review-agent/FINAL-REVIEW.md",
+      "sha256": "5612ceeac238bb86b0c602c6cadf334a76eb815ea572b04f2d4e3127ce97c57e"
+    },
+    "mappingCorrection": {
+      "path": "/tmp/ocx020-final-review-agent/entry-evidence-map.corrections.json",
+      "sha256": "3ad1af3809889f6c2f1025b5d8158f05703f98bcc0b01aa75ed214410ec95e36"
+    },
+    "completeProposedMap": {
+      "path": "/tmp/ocx020-final-review-agent/entry-evidence-map.reviewed.json",
+      "sha256": "6a42277134ba60f2d4cf3fe19ade2e0a60fb2881dbe707f73db48a9a0a6db496"
+    },
+    "nativeCorrections": {
+      "path": "/tmp/ocx020-final-review-agent/native-evidence-corrections.json",
+      "sha256": "35a7d5de8be49c22bcce49ddd9305f920bc1cc2d918902294606e848d0f7ad2c"
+    },
+    "exactCommands": {
+      "path": "/tmp/ocx020-final-review-agent/exact-commands.json",
+      "sha256": "15a26b2f880e0560596b718134c4a9be8931c5bc2f7f8794924172ff1351765e"
+    }
+  },
+  "nextReviewOnlyOnUserRequest": {
+    "scope": "Only UpdateCenter in OverviewRoute and SettingsRoute against actual fixed source identity; bothengines,100/200%, sameviewport/theme/material; validate actionreachability, ownerreturn, sharedscaling.",
+    "focusedHarnesses": [
+      "harness/update-scale-contract.mjs",
+      "harness/update-hosts.mjs"
+    ],
+    "mustNotReuseBdaAsFixedSource": "Record fixed commit/sourcehash and verify its servedbytes before calling any fixed-source run passed. Existingbda reports remain unchanged.",
+    "avoid": "Do not rerun model/extension/secondary/Agent/prototype passing matrices or realOTA without a new change/concern requiring them; do not run closeout/publish scripts from this agent."
+  }
+}

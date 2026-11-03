@@ -1,0 +1,11 @@
+import fs from 'node:fs/promises';import path from 'node:path';import {pickEngine} from './engine.mjs'
+const out=process.env.AUDIT_OUT;await fs.mkdir(out,{recursive:true});const engine=await pickEngine(),browser=await engine.launch(),samples=[]
+try{for(const mode of ['raw-browser-900','explicit-900-product-window']){
+ const p=await browser.newPage({viewport:mode==='raw-browser-900'?{width:900,height:600}:{width:1700,height:1000}})
+ await p.goto('http://127.0.0.1:52429/'+encodeURI('docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html')+'?effects=low#models');await p.locator('[data-mp=tab][data-tab=templates]').waitFor()
+ if(mode==='explicit-900-product-window')await p.evaluate(()=>Object.assign(document.querySelector('.window').style,{width:'900px',height:'600px',flex:'none'}))
+ await p.locator('[data-mp=tab][data-tab=templates]').click();await p.locator('#route-models').getByRole('button',{name:'编辑',exact:true}).first().click();await p.locator('#mpTemplateAgentAction').click();await p.locator('#mpAssistantPanel').waitFor()
+ const metrics=await p.evaluate(()=>{const describe=el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return{tag:el.tagName,id:el.id,className:el.className,rect:{x:r.x,y:r.y,right:r.right,bottom:r.bottom,width:r.width,height:r.height},css:{position:s.position,width:s.width,height:s.height,minWidth:s.minWidth,maxWidth:s.maxWidth,maxHeight:s.maxHeight,overflow:s.overflow,transform:s.transform,right:s.right,bottom:s.bottom},offsetParent:el.offsetParent?.id||el.offsetParent?.className||null}};return{viewport:{width:innerWidth,height:innerHeight},window:describe(document.querySelector('.window')),host:describe(document.querySelector('#mpAssistantHost')),panel:describe(document.querySelector('#mpAssistantPanel')),main:describe(document.querySelector('.main')),pageScroll:{width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight}}})
+ samples.push({mode,...metrics});await p.screenshot({path:path.join(out,mode+'.png')});await p.close()
+}}finally{await browser.close();await fs.writeFile(path.join(out,'report.json'),JSON.stringify({engine:engine.name,scope:'Read-only frozen prototype layout-host diagnosis; browser DOM host dimensions in explicit case only. No prototype files modified and no future sources adopted.',samples},null,2))}
+console.log(JSON.stringify(samples))

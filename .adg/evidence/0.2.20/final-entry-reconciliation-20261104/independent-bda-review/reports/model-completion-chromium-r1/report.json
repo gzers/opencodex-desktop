@@ -1,0 +1,385 @@
+{
+  "completed": true,
+  "failure": null,
+  "engine": "chromium",
+  "source": "shared-execution-preference current committed source; report invocation has git receipt",
+  "scope": "production route/dialog handlers with explicit in-memory service and clipboard adapters; no native writes/restarts/model network",
+  "checks": [
+    {
+      "key": "1180-100-high",
+      "name": "settings write busy retains owner",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "settings error remains visible",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "settings saved exact committed model",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "settings did not alter channel policy",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "version delete needs a second explicit confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "delete cancellation keeps both revisions",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "failed version delete preserves saved revisions",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "version delete removes only selected revision",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "usage has actual fixture rows",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "usage filter no mutation",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "stop uses the active run id",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "late stopped report not adopted",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "batch generation failure visible",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "empty batch report cannot save unseen changes",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "activation failure does not copy content",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "external copy only after explicit activation",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "external receipt pending accurate",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "external receipt rejected accurate",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "external receipt saved accurate",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "external receipt failure visible",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "restart cancellation does not run action",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "restart failure once and no lingering confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-100-high",
+      "name": "all model completion flows preserved channel policy",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "settings write busy retains owner",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "settings error remains visible",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "settings saved exact committed model",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "settings did not alter channel policy",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "version delete needs a second explicit confirmation",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "delete cancellation keeps both revisions",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "failed version delete preserves saved revisions",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "version delete removes only selected revision",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "usage has actual fixture rows",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "usage filter no mutation",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "stop uses the active run id",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "late stopped report not adopted",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "batch generation failure visible",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "empty batch report cannot save unseen changes",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "activation failure does not copy content",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "external copy only after explicit activation",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "external receipt pending accurate",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "external receipt rejected accurate",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "external receipt saved accurate",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "external receipt failure visible",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "restart cancellation does not run action",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "restart failure once and no lingering confirmation",
+      "passed": true
+    },
+    {
+      "key": "900-100-low",
+      "name": "all model completion flows preserved channel policy",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "settings write busy retains owner",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "settings error remains visible",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "settings saved exact committed model",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "settings did not alter channel policy",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "version delete needs a second explicit confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "delete cancellation keeps both revisions",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "failed version delete preserves saved revisions",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "version delete removes only selected revision",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "usage has actual fixture rows",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "usage filter no mutation",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "stop uses the active run id",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "late stopped report not adopted",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "batch generation failure visible",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "empty batch report cannot save unseen changes",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "activation failure does not copy content",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "external copy only after explicit activation",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "external receipt pending accurate",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "external receipt rejected accurate",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "external receipt saved accurate",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "external receipt failure visible",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "restart cancellation does not run action",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "restart failure once and no lingering confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-200-mid",
+      "name": "all model completion flows preserved channel policy",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-100-high-agent-settings-error.png",
+    "1180-100-high-version-delete-error.png",
+    "1180-100-high-batch-report.png",
+    "1180-100-high-external-copied.png",
+    "1180-100-high-receipt-pending.png",
+    "1180-100-high-receipt-rejected.png",
+    "1180-100-high-receipt-saved.png",
+    "1180-100-high-receipt-error.png",
+    "1180-100-high-restart-error.png",
+    "900-100-low-agent-settings-error.png",
+    "900-100-low-version-delete-error.png",
+    "900-100-low-batch-report.png",
+    "900-100-low-external-copied.png",
+    "900-100-low-receipt-pending.png",
+    "900-100-low-receipt-rejected.png",
+    "900-100-low-receipt-saved.png",
+    "900-100-low-receipt-error.png",
+    "900-100-low-restart-error.png",
+    "1180-200-mid-agent-settings-error.png",
+    "1180-200-mid-version-delete-error.png",
+    "1180-200-mid-batch-report.png",
+    "1180-200-mid-external-copied.png",
+    "1180-200-mid-receipt-pending.png",
+    "1180-200-mid-receipt-rejected.png",
+    "1180-200-mid-receipt-saved.png",
+    "1180-200-mid-receipt-error.png",
+    "1180-200-mid-restart-error.png"
+  ]
+}

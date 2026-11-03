@@ -1,0 +1,5402 @@
+{
+  "engine": "chromium",
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "allowedOrigins": [
+    "http://127.0.0.1:52422",
+    "http://127.0.0.1:52424",
+    "http://127.0.0.1:52429"
+  ],
+  "scope": "Explicit isolated browser adapters only; no native IPC, real model/remote server operations or daily source. Font samples are computed values at captured actual states.",
+  "blockedExternal": [],
+  "pageErrors": [],
+  "resourceErrors": [],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@vite/client",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/main.ts?t=1793720426244",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/vue.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/pinia.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/App.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/stores/app.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/startup.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/effects.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/glowRender.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/nativeWindow.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/tokens.css?t=1793720426244",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/base.css?t=1793720426242",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/materials.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/effects.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/vue.runtime.esm-bundler-D2wK8Voh.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiButton.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/stores/routes.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/AppSidebar.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/useShellLayout.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/composables/useAppController.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/TrayRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/AppModal.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/SyncDialogHost.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/components/RuntimeInstallDialog.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ToastHost.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/TaskProgressHost.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/components/NotificationCenter.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/store.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@id/__x00__plugin-vue:export-helper",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/config/runtimeDefaults.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/preferences/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/migration/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/modal/store.ts?t=1793711504257",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/lifecycle/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/paths/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/panel/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/about/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/platform/workspace.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/data-root/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_plugin-process.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/webglContext.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_api_core.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_api_event.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/theme.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/navigation/index.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/OverviewRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/PanelRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ExtensionsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/LogsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/SettingsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/BrandMark.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/bootstrap.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/scenarios.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/model.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/actions.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/tray/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/useDiagnosticsController.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/useLifecycleController.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/useUpdateScheduler.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/labels.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/ModalContent.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_plugin-dialog.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/installPath.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/paths.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/components/RuntimeInstallDialog.vue?vue&type=style&index=0&scoped=a461122d&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/FeedbackToast.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/TaskProgressCard.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SaveResultNotice.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/modelSave.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/tasks.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/components/NotificationItem.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@fs/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/config/runtime.defaults.json?import",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/scale.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/preferences/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/migration/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/about/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/version.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/upgrade.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/config/eventRegistry.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/countdown.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/motion.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/contracts/runtimeStatus.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/processAction.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/projection.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/doctor.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/data-root/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/core-2mDn0ICy.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/panel/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/surfaces.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/layoutObserver.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/AppTopbar.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/InformationRow.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiCard.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/UpdateCenter.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ModelTransfer.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/update.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/components/RuntimeMotionMark.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/components/EnvironmentGate.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/states.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/activity.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/projection.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/OverviewRoute.vue?vue&type=style&index=0&scoped=0b6ed94f&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/StickyTabs.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ExtensionDetailModal.vue?t=1793707052819",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientsPanel.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiCardHeader.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/targets.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientIcon.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/clients.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ExtensionsRoute.vue?vue&type=style&index=0&scoped=80c9feb0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/selfCheck.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSwitch.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupManagement.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSelectMenu.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/SettingRow.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSegmented.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentExecutionField.vue?t=1793712394187",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/codex-shim/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/SettingsRoute.vue?vue&type=style&index=0&scoped=d98acdc2&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/logs.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/html.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/scheduler.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiIconButton.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/NotificationCountdown.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@fs/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/config/event-registry.json?import",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDialog.vue?t=1793708423501&vue&type=style&index=0&scoped=f2b1bc8e&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/ReleaseNotes.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/UpdateCenter.vue?vue&type=style&index=0&scoped=c975c606&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/scene.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/meshGlow.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSelectField.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ObjectScopeTree.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ChannelModelScope.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/store.ts?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/modelTransfer.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ModelTransfer.vue?vue&type=style&index=0&scoped=9510aeb3&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ModelTransfer.vue?t=1793715807652&vue&type=style&index=1&scoped=9510aeb3&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/StickyTabs.vue?vue&type=style&index=0&scoped=710133bf&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/MarkdownContent.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ExtensionDetailModal.vue?vue&type=style&index=0&scoped=6b64cdfe&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiStatus.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientsPanel.vue?vue&type=style&index=0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientsPanel.vue?vue&type=style&index=1&scoped=72086ee3&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/clientIcons.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupFiles.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupManagement.vue?vue&type=style&index=0&scoped=84d55e4b&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelPicker.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentExecutionField.vue?vue&type=style&index=0&scoped=5b2f2756&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/releaseDetails.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/ReleaseNotes.vue?vue&type=style&index=0&scoped=80202013&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/logo.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/states.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSelectField.vue?vue&type=style&index=0&scoped=2494b5ac&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiTreeTable.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ObjectScopeTree.vue?vue&type=style&index=0&scoped=bf478f2c&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ChannelModelScope.vue?vue&type=style&index=0&scoped=55208d20&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/modelRows.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/policyEquality.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/markdown.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/saveStates.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiStatus.vue?vue&type=style&index=0&scoped=5956729e&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/treeTable.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupFiles.vue?vue&type=style&index=0&scoped=ba6c0fdd&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelChoiceOptions.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelPicker.vue?vue&type=style&index=0&scoped=33e98c96&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiTreeTable.vue?vue&type=style&index=0&scoped=551e2099&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDiscreteSlider.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelChoiceOptions.vue?vue&type=style&index=0&scoped=88b52f56&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDiscreteSlider.vue?vue&type=style&index=0&scoped=d54d0336&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/dev/auditHarness.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/dev/modelFixtures.ts?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ModelsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/DetailWorkspace.vue?t=1793705744000",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelRuleFields.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelsView.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateComparisonDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateUsageDialog.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ExternalTaskDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentPanel.vue?t=1793712394187",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/agentView.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/BatchAgentDialog.vue?t=1793712394187",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/useViewPosition.ts?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ModelsRoute.vue?vue&type=style&index=0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ModelsRoute.vue?vue&type=style&index=1&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/DetailWorkspace.vue?vue&type=style&index=0&scoped=6e922f0d&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/DetailWorkspace.vue?t=1793705433941&vue&type=style&index=1&scoped=6e922f0d&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelRuleFields.vue?vue&type=style&index=0&scoped=96961807&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/templateChanges.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateComparisonDialog.vue?vue&type=style&index=0&scoped=84ee8af0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelEditor.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelBatchDialog.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelNodeSelect.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NewChannelDialog.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SelectorPreviewDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/saveReview.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/channelActions.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ordering.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/pointerDrag.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelsView.vue?vue&type=style&index=0&scoped=840f478a&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateUsageDialog.vue?vue&type=style&index=0&scoped=bc8c2473&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/proposals.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentPanel.vue?vue&type=style&index=0&scoped=8b1d094b&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/BatchAgentDialog.vue?vue&type=style&index=0&scoped=bb21d366&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelModelTable.vue?t=1793711504257",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NodePicker.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/useNodeMeasurements.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelEditor.vue?vue&type=style&index=0&scoped=85785940&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelBatchDialog.vue?vue&type=style&index=0&scoped=5706ecd6&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelNodeSelect.vue?vue&type=style&index=0&scoped=475b14d4&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NewChannelDialog.vue?vue&type=style&index=0&scoped=e8b32630&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SelectorPreviewDialog.vue?vue&type=style&index=0&scoped=2501785b&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SelectorPreviewDialog.vue?vue&type=style&index=1&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NodePicker.vue?vue&type=style&index=0&scoped=b03a86c9&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelModelTable.vue?vue&type=style&index=0&scoped=6df0b110&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@vite/client",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/main.ts?t=1793720426244",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/vue.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/pinia.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/App.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/stores/app.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/startup.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/effects.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/glowRender.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/nativeWindow.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/tokens.css?t=1793720426244",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/base.css?t=1793720426242",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/materials.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/effects.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/vue.runtime.esm-bundler-D2wK8Voh.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiButton.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/stores/routes.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/AppSidebar.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/useShellLayout.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/composables/useAppController.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/TrayRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/AppModal.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/SyncDialogHost.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/components/RuntimeInstallDialog.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ToastHost.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/TaskProgressHost.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/components/NotificationCenter.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/store.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@id/__x00__plugin-vue:export-helper",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/preferences/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/migration/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/modal/store.ts?t=1793711504257",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/lifecycle/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/paths/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/panel/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/about/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/platform/workspace.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/data-root/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_plugin-process.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/config/runtimeDefaults.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/webglContext.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_api_core.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_api_event.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/theme.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/navigation/index.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/OverviewRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/PanelRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ExtensionsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/LogsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/SettingsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/BrandMark.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/bootstrap.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/scenarios.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/model.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/actions.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/tray/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/useDiagnosticsController.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/useLifecycleController.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/useUpdateScheduler.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/labels.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/ModalContent.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/FeedbackToast.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_plugin-dialog.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/installPath.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/paths.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/components/RuntimeInstallDialog.vue?vue&type=style&index=0&scoped=a461122d&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/TaskProgressCard.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SaveResultNotice.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/modelSave.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/tasks.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/components/NotificationItem.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/scale.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/preferences/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/migration/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/about/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/version.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/upgrade.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/config/eventRegistry.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/countdown.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/motion.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/contracts/runtimeStatus.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/processAction.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/projection.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/doctor.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/data-root/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/core-2mDn0ICy.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@fs/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/config/runtime.defaults.json?import",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/panel/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/surfaces.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/AppTopbar.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/StickyTabs.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/selfCheck.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/layoutObserver.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/InformationRow.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiCard.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/UpdateCenter.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ModelTransfer.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/update.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/components/RuntimeMotionMark.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/components/EnvironmentGate.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/states.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/activity.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/projection.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/OverviewRoute.vue?vue&type=style&index=0&scoped=0b6ed94f&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ExtensionDetailModal.vue?t=1793707052819",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientsPanel.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiCardHeader.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/targets.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientIcon.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/clients.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ExtensionsRoute.vue?vue&type=style&index=0&scoped=80c9feb0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSwitch.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupManagement.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSelectMenu.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/SettingRow.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSegmented.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentExecutionField.vue?t=1793712394187",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/codex-shim/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/SettingsRoute.vue?vue&type=style&index=0&scoped=d98acdc2&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/logs.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/html.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/scheduler.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiIconButton.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/NotificationCountdown.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@fs/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/config/event-registry.json?import",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDialog.vue?t=1793708423501&vue&type=style&index=0&scoped=f2b1bc8e&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/StickyTabs.vue?vue&type=style&index=0&scoped=710133bf&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/ReleaseNotes.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/UpdateCenter.vue?vue&type=style&index=0&scoped=c975c606&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/scene.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/meshGlow.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSelectField.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ObjectScopeTree.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ChannelModelScope.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/store.ts?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/modelTransfer.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ModelTransfer.vue?vue&type=style&index=0&scoped=9510aeb3&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ModelTransfer.vue?t=1793715807652&vue&type=style&index=1&scoped=9510aeb3&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/MarkdownContent.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ExtensionDetailModal.vue?vue&type=style&index=0&scoped=6b64cdfe&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiStatus.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientsPanel.vue?vue&type=style&index=0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientsPanel.vue?vue&type=style&index=1&scoped=72086ee3&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/clientIcons.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupFiles.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupManagement.vue?vue&type=style&index=0&scoped=84d55e4b&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelPicker.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentExecutionField.vue?vue&type=style&index=0&scoped=5b2f2756&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/releaseDetails.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/ReleaseNotes.vue?vue&type=style&index=0&scoped=80202013&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/logo.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/states.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSelectField.vue?vue&type=style&index=0&scoped=2494b5ac&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiTreeTable.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ObjectScopeTree.vue?vue&type=style&index=0&scoped=bf478f2c&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ChannelModelScope.vue?vue&type=style&index=0&scoped=55208d20&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/modelRows.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/policyEquality.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/markdown.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/saveStates.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiStatus.vue?vue&type=style&index=0&scoped=5956729e&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelChoiceOptions.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelPicker.vue?vue&type=style&index=0&scoped=33e98c96&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/treeTable.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupFiles.vue?vue&type=style&index=0&scoped=ba6c0fdd&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiTreeTable.vue?vue&type=style&index=0&scoped=551e2099&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDiscreteSlider.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelChoiceOptions.vue?vue&type=style&index=0&scoped=88b52f56&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDiscreteSlider.vue?vue&type=style&index=0&scoped=d54d0336&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/dev/auditHarness.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/dev/modelFixtures.ts?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ModelsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/DetailWorkspace.vue?t=1793705744000",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelRuleFields.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelsView.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateComparisonDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateUsageDialog.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ExternalTaskDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentPanel.vue?t=1793712394187",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/agentView.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/BatchAgentDialog.vue?t=1793712394187",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/useViewPosition.ts?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ModelsRoute.vue?vue&type=style&index=0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ModelsRoute.vue?vue&type=style&index=1&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/DetailWorkspace.vue?vue&type=style&index=0&scoped=6e922f0d&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/DetailWorkspace.vue?t=1793705433941&vue&type=style&index=1&scoped=6e922f0d&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelRuleFields.vue?vue&type=style&index=0&scoped=96961807&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelEditor.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelBatchDialog.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelNodeSelect.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NewChannelDialog.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SelectorPreviewDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/saveReview.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/channelActions.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ordering.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/pointerDrag.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelsView.vue?vue&type=style&index=0&scoped=840f478a&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/templateChanges.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateComparisonDialog.vue?vue&type=style&index=0&scoped=84ee8af0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateUsageDialog.vue?vue&type=style&index=0&scoped=bc8c2473&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/proposals.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentPanel.vue?vue&type=style&index=0&scoped=8b1d094b&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/BatchAgentDialog.vue?vue&type=style&index=0&scoped=bb21d366&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelModelTable.vue?t=1793711504257",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NodePicker.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/useNodeMeasurements.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelEditor.vue?vue&type=style&index=0&scoped=85785940&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelNodeSelect.vue?vue&type=style&index=0&scoped=475b14d4&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelBatchDialog.vue?vue&type=style&index=0&scoped=5706ecd6&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NewChannelDialog.vue?vue&type=style&index=0&scoped=e8b32630&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SelectorPreviewDialog.vue?vue&type=style&index=0&scoped=2501785b&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SelectorPreviewDialog.vue?vue&type=style&index=1&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NodePicker.vue?vue&type=style&index=0&scoped=b03a86c9&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelModelTable.vue?vue&type=style&index=0&scoped=6df0b110&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@vite/client",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/main.ts?t=1793720426244",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/vue.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/pinia.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/App.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/stores/app.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/startup.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/effects.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/glowRender.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/nativeWindow.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/tokens.css?t=1793720426244",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/base.css?t=1793720426242",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/materials.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/styles/effects.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/vite/dist/client/env.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/vue.runtime.esm-bundler-D2wK8Voh.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiButton.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/stores/routes.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/AppSidebar.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/useShellLayout.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/composables/useAppController.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/TrayRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/AppModal.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/SyncDialogHost.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/components/RuntimeInstallDialog.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ToastHost.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/TaskProgressHost.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/components/NotificationCenter.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/store.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@id/__x00__plugin-vue:export-helper",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/config/runtimeDefaults.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/preferences/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/migration/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/modal/store.ts?t=1793711504257",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/lifecycle/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/paths/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/panel/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/about/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/platform/workspace.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/data-root/store.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_plugin-process.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/webglContext.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_api_core.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_api_event.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/theme.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/navigation/index.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/OverviewRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/PanelRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ExtensionsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/LogsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/SettingsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/BrandMark.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/bootstrap.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/scenarios.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/model.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/actions.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/tray/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/useDiagnosticsController.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/useLifecycleController.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/useUpdateScheduler.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/labels.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/ModalContent.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/@tauri-apps_plugin-dialog.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/installPath.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/paths.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/components/RuntimeInstallDialog.vue?vue&type=style&index=0&scoped=a461122d&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/FeedbackToast.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/TaskProgressCard.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SaveResultNotice.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/modelSave.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/tasks.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/components/NotificationItem.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/notifications/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@fs/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/config/runtime.defaults.json?import",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/appearance/scale.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/preferences/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/migration/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/about/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/version.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/upgrade.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/config/eventRegistry.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/countdown.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/feedback/motion.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/contracts/runtimeStatus.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/processAction.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/projection.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/errors.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/doctor.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/data-root/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/node_modules/.vite/deps/core-2mDn0ICy.js?v=34c248a9",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/panel/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/app/surfaces.ts?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/AppTopbar.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/StickyTabs.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/selfCheck.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/layoutObserver.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/InformationRow.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiCard.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/UpdateCenter.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ModelTransfer.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/update.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/components/RuntimeMotionMark.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/components/EnvironmentGate.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/states.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/activity.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/environment/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/projection.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/OverviewRoute.vue?vue&type=style&index=0&scoped=0b6ed94f&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ExtensionDetailModal.vue?t=1793707052819",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientsPanel.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiCardHeader.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/targets.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientIcon.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/clients.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ExtensionsRoute.vue?vue&type=style&index=0&scoped=80c9feb0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSwitch.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupManagement.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSelectMenu.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/SettingRow.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSegmented.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentExecutionField.vue?t=1793712394187",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/codex-shim/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/SettingsRoute.vue?vue&type=style&index=0&scoped=d98acdc2&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/logs.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/diagnostics/presentation.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/html.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/scheduler.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiIconButton.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/NotificationCountdown.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/@fs/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/config/event-registry.json?import",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDialog.vue?t=1793708423501&vue&type=style&index=0&scoped=f2b1bc8e&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/StickyTabs.vue?vue&type=style&index=0&scoped=710133bf&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/ReleaseNotes.vue?t=1793711504263",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/UpdateCenter.vue?vue&type=style&index=0&scoped=c975c606&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/scene.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/meshGlow.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSelectField.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ObjectScopeTree.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ChannelModelScope.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/store.ts?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/modelTransfer.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ModelTransfer.vue?vue&type=style&index=0&scoped=9510aeb3&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ModelTransfer.vue?t=1793715807652&vue&type=style&index=1&scoped=9510aeb3&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/patterns/MarkdownContent.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ExtensionDetailModal.vue?vue&type=style&index=0&scoped=6b64cdfe&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiStatus.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientsPanel.vue?vue&type=style&index=0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/components/ClientsPanel.vue?vue&type=style&index=1&scoped=72086ee3&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/extensions/clientIcons.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupFiles.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/api.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupManagement.vue?vue&type=style&index=0&scoped=84d55e4b&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelPicker.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentExecutionField.vue?vue&type=style&index=0&scoped=5b2f2756&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/releaseDetails.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/updates/ReleaseNotes.vue?vue&type=style&index=0&scoped=80202013&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/logo.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/runtime/motion/states.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiSelectField.vue?vue&type=style&index=0&scoped=2494b5ac&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiTreeTable.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ObjectScopeTree.vue?vue&type=style&index=0&scoped=bf478f2c&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/sync/ChannelModelScope.vue?vue&type=style&index=0&scoped=55208d20&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/modelRows.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/policyEquality.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/markdown.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/lib/saveStates.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiStatus.vue?vue&type=style&index=0&scoped=5956729e&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/treeTable.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/backup/BackupFiles.vue?vue&type=style&index=0&scoped=ba6c0fdd&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelChoiceOptions.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelPicker.vue?vue&type=style&index=0&scoped=33e98c96&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiTreeTable.vue?vue&type=style&index=0&scoped=551e2099&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDiscreteSlider.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelChoiceOptions.vue?vue&type=style&index=0&scoped=88b52f56&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/ui/UiDiscreteSlider.vue?vue&type=style&index=0&scoped=d54d0336&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/dev/auditHarness.ts?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/dev/modelFixtures.ts?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ModelsRoute.vue?t=1793715807652",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/DetailWorkspace.vue?t=1793705744000",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelRuleFields.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelsView.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateComparisonDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateUsageDialog.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ExternalTaskDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentPanel.vue?t=1793712394187",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/agentView.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/BatchAgentDialog.vue?t=1793712394187",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/useViewPosition.ts?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ModelsRoute.vue?vue&type=style&index=0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/routes/ModelsRoute.vue?vue&type=style&index=1&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/DetailWorkspace.vue?vue&type=style&index=0&scoped=6e922f0d&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/components/layout/DetailWorkspace.vue?t=1793705433941&vue&type=style&index=1&scoped=6e922f0d&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ModelRuleFields.vue?vue&type=style&index=0&scoped=96961807&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/templateChanges.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateComparisonDialog.vue?vue&type=style&index=0&scoped=84ee8af0&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelEditor.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelBatchDialog.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelNodeSelect.vue?t=1793708423498",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NewChannelDialog.vue?t=1793712394184",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SelectorPreviewDialog.vue?t=1793708423501",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/saveReview.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/channelActions.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ordering.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/pointerDrag.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelsView.vue?vue&type=style&index=0&scoped=840f478a&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/TemplateUsageDialog.vue?vue&type=style&index=0&scoped=bc8c2473&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/proposals.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/AgentPanel.vue?vue&type=style&index=0&scoped=8b1d094b&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/BatchAgentDialog.vue?vue&type=style&index=0&scoped=bb21d366&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelModelTable.vue?t=1793711504257",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NodePicker.vue",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/useNodeMeasurements.ts",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelEditor.vue?vue&type=style&index=0&scoped=85785940&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelBatchDialog.vue?vue&type=style&index=0&scoped=5706ecd6&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelNodeSelect.vue?vue&type=style&index=0&scoped=475b14d4&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NewChannelDialog.vue?vue&type=style&index=0&scoped=e8b32630&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SelectorPreviewDialog.vue?vue&type=style&index=0&scoped=2501785b&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/SelectorPreviewDialog.vue?vue&type=style&index=1&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/ChannelModelTable.vue?vue&type=style&index=0&scoped=6df0b110&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/NodePicker.vue?vue&type=style&index=0&scoped=b03a86c9&lang.css",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "url": "http://127.0.0.1:52422/src/features/models/store.ts",
+      "method": "GET",
+      "type": "script"
+    }
+  ],
+  "observations": [
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-100-high-agent-settings-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "Agent 配置",
+          "rect": {
+            "x": 310,
+            "y": 197,
+            "right": 870,
+            "bottom": 563,
+            "width": 560,
+            "height": 366
+          },
+          "headings": [
+            {
+              "text": "Agent 配置",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 799,
+                "y": 214,
+                "right": 849,
+                "bottom": 248,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "取消",
+              "rect": {
+                "x": 689,
+                "y": 512,
+                "right": 739,
+                "bottom": 546,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "保存共用设置",
+              "rect": {
+                "x": 751,
+                "y": 512,
+                "right": 849,
+                "bottom": 546,
+                "width": 98,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-100-high-version-delete-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog wide",
+          "title": "版本管理 · Owned lifecycle template",
+          "rect": {
+            "x": 165,
+            "y": 216.640625,
+            "right": 1015,
+            "bottom": 543.34375,
+            "width": 850,
+            "height": 326.703125
+          },
+          "headings": [
+            {
+              "text": "版本管理 · Owned lifecycle template",
+              "fontSize": "18px"
+            },
+            {
+              "text": "确认删除所选版本？",
+              "fontSize": "15.21px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 944,
+                "y": 233.640625,
+                "right": 994,
+                "bottom": 267.640625,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "取消",
+              "rect": {
+                "x": 858,
+                "y": 492.34375,
+                "right": 908,
+                "bottom": 526.34375,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "确认删除",
+              "rect": {
+                "x": 920,
+                "y": 492.34375,
+                "right": 994,
+                "bottom": 526.34375,
+                "width": 74,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-100-high-batch-report.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog wide",
+          "title": "检查模版更新",
+          "rect": {
+            "x": 165,
+            "y": 131.75,
+            "right": 1015,
+            "bottom": 628.25,
+            "width": 850,
+            "height": 496.5
+          },
+          "headings": [
+            {
+              "text": "检查模版更新",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 944,
+                "y": 148.75,
+                "right": 994,
+                "bottom": 182.75,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "恢复上次建议",
+              "rect": {
+                "x": 614,
+                "y": 577.25,
+                "right": 712,
+                "bottom": 611.25,
+                "width": 98,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 724,
+                "y": 577.25,
+                "right": 774,
+                "bottom": 611.25,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "重新检查",
+              "rect": {
+                "x": 786,
+                "y": 577.25,
+                "right": 860,
+                "bottom": 611.25,
+                "width": 74,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "另存所选建议版本",
+              "rect": {
+                "x": 872,
+                "y": 577.25,
+                "right": 994,
+                "bottom": 611.25,
+                "width": 122,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-100-high-external-copied.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog wide",
+          "title": "外部任务",
+          "rect": {
+            "x": 165,
+            "y": 20,
+            "right": 1015,
+            "bottom": 740,
+            "width": 850,
+            "height": 720
+          },
+          "headings": [
+            {
+              "text": "外部任务",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 944,
+                "y": 37,
+                "right": 994,
+                "bottom": 71,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 810,
+                "y": 689,
+                "right": 860,
+                "bottom": 723,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "再次复制完整任务",
+              "rect": {
+                "x": 872,
+                "y": 689,
+                "right": 994,
+                "bottom": 723,
+                "width": 122,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-100-high-receipt-pending.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 310,
+            "y": 286.5,
+            "right": 870,
+            "bottom": 473.5,
+            "width": 560,
+            "height": 187
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 799,
+                "y": 303.5,
+                "right": 849,
+                "bottom": 337.5,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-100-high-receipt-rejected.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 310,
+            "y": 270.25,
+            "right": 870,
+            "bottom": 489.75,
+            "width": 560,
+            "height": 219.5
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 799,
+                "y": 287.25,
+                "right": 849,
+                "bottom": 321.25,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-100-high-receipt-saved.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 310,
+            "y": 254,
+            "right": 870,
+            "bottom": 506,
+            "width": 560,
+            "height": 252
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 799,
+                "y": 271,
+                "right": 849,
+                "bottom": 305,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-100-high-receipt-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 310,
+            "y": 302.75,
+            "right": 870,
+            "bottom": 457.25,
+            "width": 560,
+            "height": 154.5
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 799,
+                "y": 319.75,
+                "right": 849,
+                "bottom": 353.75,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-100-high-restart-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/900-100-low-agent-settings-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "Agent 配置",
+          "rect": {
+            "x": 170,
+            "y": 117,
+            "right": 730,
+            "bottom": 483,
+            "width": 560,
+            "height": 366
+          },
+          "headings": [
+            {
+              "text": "Agent 配置",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 659,
+                "y": 134,
+                "right": 709,
+                "bottom": 168,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "取消",
+              "rect": {
+                "x": 549,
+                "y": 432,
+                "right": 599,
+                "bottom": 466,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "保存共用设置",
+              "rect": {
+                "x": 611,
+                "y": 432,
+                "right": 709,
+                "bottom": 466,
+                "width": 98,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/900-100-low-version-delete-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog wide",
+          "title": "版本管理 · Owned lifecycle template",
+          "rect": {
+            "x": 25,
+            "y": 136.640625,
+            "right": 875,
+            "bottom": 463.34375,
+            "width": 850,
+            "height": 326.703125
+          },
+          "headings": [
+            {
+              "text": "版本管理 · Owned lifecycle template",
+              "fontSize": "18px"
+            },
+            {
+              "text": "确认删除所选版本？",
+              "fontSize": "15.21px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 804,
+                "y": 153.640625,
+                "right": 854,
+                "bottom": 187.640625,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "取消",
+              "rect": {
+                "x": 718,
+                "y": 412.34375,
+                "right": 768,
+                "bottom": 446.34375,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "确认删除",
+              "rect": {
+                "x": 780,
+                "y": 412.34375,
+                "right": 854,
+                "bottom": 446.34375,
+                "width": 74,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/900-100-low-batch-report.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog wide",
+          "title": "检查模版更新",
+          "rect": {
+            "x": 25,
+            "y": 51.75,
+            "right": 875,
+            "bottom": 548.25,
+            "width": 850,
+            "height": 496.5
+          },
+          "headings": [
+            {
+              "text": "检查模版更新",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 804,
+                "y": 68.75,
+                "right": 854,
+                "bottom": 102.75,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "恢复上次建议",
+              "rect": {
+                "x": 474,
+                "y": 497.25,
+                "right": 572,
+                "bottom": 531.25,
+                "width": 98,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 584,
+                "y": 497.25,
+                "right": 634,
+                "bottom": 531.25,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "重新检查",
+              "rect": {
+                "x": 646,
+                "y": 497.25,
+                "right": 720,
+                "bottom": 531.25,
+                "width": 74,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "另存所选建议版本",
+              "rect": {
+                "x": 732,
+                "y": 497.25,
+                "right": 854,
+                "bottom": 531.25,
+                "width": 122,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/900-100-low-external-copied.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog wide",
+          "title": "外部任务",
+          "rect": {
+            "x": 25,
+            "y": 20,
+            "right": 875,
+            "bottom": 580,
+            "width": 850,
+            "height": 560
+          },
+          "headings": [
+            {
+              "text": "外部任务",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 804,
+                "y": 37,
+                "right": 854,
+                "bottom": 71,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 670,
+                "y": 529,
+                "right": 720,
+                "bottom": 563,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "再次复制完整任务",
+              "rect": {
+                "x": 732,
+                "y": 529,
+                "right": 854,
+                "bottom": 563,
+                "width": 122,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/900-100-low-receipt-pending.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 170,
+            "y": 206.5,
+            "right": 730,
+            "bottom": 393.5,
+            "width": 560,
+            "height": 187
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 659,
+                "y": 223.5,
+                "right": 709,
+                "bottom": 257.5,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/900-100-low-receipt-rejected.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 170,
+            "y": 190.25,
+            "right": 730,
+            "bottom": 409.75,
+            "width": 560,
+            "height": 219.5
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 659,
+                "y": 207.25,
+                "right": 709,
+                "bottom": 241.25,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/900-100-low-receipt-saved.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 170,
+            "y": 174,
+            "right": 730,
+            "bottom": 426,
+            "width": 560,
+            "height": 252
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 659,
+                "y": 191,
+                "right": 709,
+                "bottom": 225,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/900-100-low-receipt-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 170,
+            "y": 222.75,
+            "right": 730,
+            "bottom": 377.25,
+            "width": 560,
+            "height": 154.5
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 659,
+                "y": 239.75,
+                "right": 709,
+                "bottom": 273.75,
+                "width": 50,
+                "height": 34
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/900-100-low-restart-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "zoom": 1,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-200-mid-agent-settings-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 2,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "Agent 配置",
+          "rect": {
+            "x": 32,
+            "y": 40,
+            "right": 1148,
+            "bottom": 720,
+            "width": 1116,
+            "height": 680
+          },
+          "headings": [
+            {
+              "text": "Agent 配置",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 1006,
+                "y": 74,
+                "right": 1106,
+                "bottom": 142,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "取消",
+              "rect": {
+                "x": 786,
+                "y": 618,
+                "right": 886,
+                "bottom": 686,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "保存共用设置",
+              "rect": {
+                "x": 910,
+                "y": 618,
+                "right": 1106,
+                "bottom": 686,
+                "width": 196,
+                "height": 68
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-200-mid-version-delete-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 2,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog wide",
+          "title": "版本管理 · Owned lifecycle template",
+          "rect": {
+            "x": 32,
+            "y": 53.28125,
+            "right": 1148,
+            "bottom": 706.71875,
+            "width": 1116,
+            "height": 653.4375
+          },
+          "headings": [
+            {
+              "text": "版本管理 · Owned lifecycle template",
+              "fontSize": "18px"
+            },
+            {
+              "text": "确认删除所选版本？",
+              "fontSize": "15.21px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 1006,
+                "y": 87.28125,
+                "right": 1106,
+                "bottom": 155.28125,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "取消",
+              "rect": {
+                "x": 834,
+                "y": 604.71875,
+                "right": 934,
+                "bottom": 672.71875,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "确认删除",
+              "rect": {
+                "x": 958,
+                "y": 604.71875,
+                "right": 1106,
+                "bottom": 672.71875,
+                "width": 148,
+                "height": 68
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-200-mid-batch-report.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 2,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog wide",
+          "title": "检查模版更新",
+          "rect": {
+            "x": 32,
+            "y": 40,
+            "right": 1148,
+            "bottom": 720,
+            "width": 1116,
+            "height": 680
+          },
+          "headings": [
+            {
+              "text": "检查模版更新",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 1006,
+                "y": 74,
+                "right": 1106,
+                "bottom": 142,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "恢复上次建议",
+              "rect": {
+                "x": 346,
+                "y": 618,
+                "right": 542,
+                "bottom": 686,
+                "width": 196,
+                "height": 68
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 566,
+                "y": 618,
+                "right": 666,
+                "bottom": 686,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "重新检查",
+              "rect": {
+                "x": 690,
+                "y": 618,
+                "right": 838,
+                "bottom": 686,
+                "width": 148,
+                "height": 68
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "另存所选建议版本",
+              "rect": {
+                "x": 862,
+                "y": 618,
+                "right": 1106,
+                "bottom": 686,
+                "width": 244,
+                "height": 68
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-200-mid-external-copied.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 2,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog wide",
+          "title": "外部任务",
+          "rect": {
+            "x": 32,
+            "y": 40,
+            "right": 1148,
+            "bottom": 720,
+            "width": 1116,
+            "height": 680
+          },
+          "headings": [
+            {
+              "text": "外部任务",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 1006,
+                "y": 74,
+                "right": 1106,
+                "bottom": 142,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 738,
+                "y": 618,
+                "right": 838,
+                "bottom": 686,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            },
+            {
+              "text": "再次复制完整任务",
+              "rect": {
+                "x": 862,
+                "y": 618,
+                "right": 1106,
+                "bottom": 686,
+                "width": 244,
+                "height": 68
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-200-mid-receipt-pending.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 2,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 32,
+            "y": 193,
+            "right": 1148,
+            "bottom": 567,
+            "width": 1116,
+            "height": 374
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 1006,
+                "y": 227,
+                "right": 1106,
+                "bottom": 295,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-200-mid-receipt-rejected.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 2,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 32,
+            "y": 160.5,
+            "right": 1148,
+            "bottom": 599.5,
+            "width": 1116,
+            "height": 439
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 1006,
+                "y": 194.5,
+                "right": 1106,
+                "bottom": 262.5,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-200-mid-receipt-saved.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 2,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 32,
+            "y": 128,
+            "right": 1148,
+            "bottom": 632,
+            "width": 1116,
+            "height": 504
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 1006,
+                "y": 162,
+                "right": 1106,
+                "bottom": 230,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-200-mid-receipt-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 2,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [
+        {
+          "selector": "DIALOG.ui-dialog",
+          "title": "外部任务结果",
+          "rect": {
+            "x": 32,
+            "y": 225.5,
+            "right": 1148,
+            "bottom": 534.5,
+            "width": 1116,
+            "height": 309
+          },
+          "headings": [
+            {
+              "text": "外部任务结果",
+              "fontSize": "18px"
+            }
+          ],
+          "controls": [
+            {
+              "text": "关闭",
+              "rect": {
+                "x": 1006,
+                "y": 259.5,
+                "right": 1106,
+                "bottom": 327.5,
+                "width": 100,
+                "height": 68
+              },
+              "fontSize": "12px"
+            }
+          ]
+        }
+      ],
+      "fontContractPass": true
+    },
+    {
+      "screenshot": "/tmp/ocx020-final-review-agent/reports/model-completion-chromium-r1/1180-200-mid-restart-error.png",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      },
+      "zoom": 2,
+      "bodyFont": "13px",
+      "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, -apple-system, \"system-ui\", \"SF Pro Text\", \"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, sans-serif",
+      "tokens": {
+        "micro": "10px",
+        "caption": "11px",
+        "label": "12px",
+        "control": "12px",
+        "body": "13px",
+        "subtitle": "15px",
+        "title": "18px",
+        "display": "22px"
+      },
+      "surfaces": [],
+      "fontContractPass": true
+    }
+  ]
+}

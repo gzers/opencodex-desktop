@@ -1,0 +1,236 @@
+{
+  "engine": "chromium",
+  "scope": "Read-only frozen prototype layout-host diagnosis; browser DOM host dimensions in explicit case only. No prototype files modified and no future sources adopted.",
+  "samples": [
+    {
+      "mode": "raw-browser-900",
+      "viewport": {
+        "width": 900,
+        "height": 600
+      },
+      "window": {
+        "tag": "DIV",
+        "id": "",
+        "className": "window",
+        "rect": {
+          "x": -140,
+          "y": 0,
+          "right": 1040,
+          "bottom": 760,
+          "width": 1180,
+          "height": 760
+        },
+        "css": {
+          "position": "relative",
+          "width": "1180px",
+          "height": "760px",
+          "minWidth": "0px",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "clip",
+          "transform": "none",
+          "right": "0px",
+          "bottom": "0px"
+        },
+        "offsetParent": "stage"
+      },
+      "host": {
+        "tag": "DIV",
+        "id": "mpAssistantHost",
+        "className": "",
+        "rect": {
+          "x": -139,
+          "y": 1,
+          "right": 1039,
+          "bottom": 759,
+          "width": 1178,
+          "height": 758
+        },
+        "css": {
+          "position": "absolute",
+          "width": "1178px",
+          "height": "758px",
+          "minWidth": "0px",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "transform": "none",
+          "right": "0px",
+          "bottom": "0px"
+        },
+        "offsetParent": "window"
+      },
+      "panel": {
+        "tag": "SECTION",
+        "id": "mpAssistantPanel",
+        "className": "mp-assistant-panel",
+        "rect": {
+          "x": 655,
+          "y": 263,
+          "right": 1015,
+          "bottom": 743,
+          "width": 360,
+          "height": 480
+        },
+        "css": {
+          "position": "absolute",
+          "width": "360px",
+          "height": "480px",
+          "minWidth": "0px",
+          "maxWidth": "calc(100% - 32px)",
+          "maxHeight": "calc(100% - 32px)",
+          "overflow": "hidden",
+          "transform": "none",
+          "right": "24px",
+          "bottom": "16px"
+        },
+        "offsetParent": "mpAssistantHost"
+      },
+      "main": {
+        "tag": "MAIN",
+        "id": "",
+        "className": "main",
+        "rect": {
+          "x": 105,
+          "y": 29,
+          "right": 1039,
+          "bottom": 759,
+          "width": 934,
+          "height": 730
+        },
+        "css": {
+          "position": "static",
+          "width": "934px",
+          "height": "730px",
+          "minWidth": "auto",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "auto",
+          "transform": "none",
+          "right": "auto",
+          "bottom": "auto"
+        },
+        "offsetParent": "window"
+      },
+      "pageScroll": {
+        "width": 1040,
+        "height": 1948
+      }
+    },
+    {
+      "mode": "explicit-900-product-window",
+      "viewport": {
+        "width": 1700,
+        "height": 1000
+      },
+      "window": {
+        "tag": "DIV",
+        "id": "",
+        "className": "window",
+        "rect": {
+          "x": 80,
+          "y": 200,
+          "right": 980,
+          "bottom": 800,
+          "width": 900,
+          "height": 600
+        },
+        "css": {
+          "position": "relative",
+          "width": "900px",
+          "height": "600px",
+          "minWidth": "0px",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "clip",
+          "transform": "none",
+          "right": "0px",
+          "bottom": "0px"
+        },
+        "offsetParent": "stage"
+      },
+      "host": {
+        "tag": "DIV",
+        "id": "mpAssistantHost",
+        "className": "",
+        "rect": {
+          "x": 81,
+          "y": 201,
+          "right": 979,
+          "bottom": 799,
+          "width": 898,
+          "height": 598
+        },
+        "css": {
+          "position": "absolute",
+          "width": "898px",
+          "height": "598px",
+          "minWidth": "0px",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "visible",
+          "transform": "none",
+          "right": "0px",
+          "bottom": "0px"
+        },
+        "offsetParent": "window"
+      },
+      "panel": {
+        "tag": "SECTION",
+        "id": "mpAssistantPanel",
+        "className": "mp-assistant-panel",
+        "rect": {
+          "x": 595,
+          "y": 295,
+          "right": 955,
+          "bottom": 775,
+          "width": 360,
+          "height": 480
+        },
+        "css": {
+          "position": "absolute",
+          "width": "360px",
+          "height": "480px",
+          "minWidth": "0px",
+          "maxWidth": "calc(100% - 32px)",
+          "maxHeight": "calc(100% - 48px)",
+          "overflow": "hidden",
+          "transform": "none",
+          "right": "24px",
+          "bottom": "24px"
+        },
+        "offsetParent": "mpAssistantHost"
+      },
+      "main": {
+        "tag": "MAIN",
+        "id": "",
+        "className": "main",
+        "rect": {
+          "x": 325,
+          "y": 229,
+          "right": 979,
+          "bottom": 799,
+          "width": 654,
+          "height": 570
+        },
+        "css": {
+          "position": "static",
+          "width": "654px",
+          "height": "570px",
+          "minWidth": "auto",
+          "maxWidth": "none",
+          "maxHeight": "none",
+          "overflow": "auto",
+          "transform": "none",
+          "right": "auto",
+          "bottom": "auto"
+        },
+        "offsetParent": "window"
+      },
+      "pageScroll": {
+        "width": 1700,
+        "height": 1000
+      }
+    }
+  ]
+}

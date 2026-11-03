@@ -1,0 +1,2521 @@
+{
+  "engine": "chromium",
+  "completed": true,
+  "failure": null,
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "scope": "Real ModelsRoute AgentPanel existing/new-editor consumers with explicit in-memory model/conversation/settings adapters. No actual generation/research/files/native IPC.",
+  "checks": [
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "existing product assistant is a nonmodal dialog",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "unconfigured send is disabled",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "unconfigured panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 377,
+          "right": 1168,
+          "bottom": 748,
+          "height": 371,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 378,
+          "right": 1167,
+          "bottom": 439,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 526.5,
+          "right": 1167,
+          "bottom": 630,
+          "height": 103.5,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "nested configuration cancel retains assistant",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "collapse restores editor trigger focus",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "reopen preserves unsent input",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "maximized panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 12,
+          "y": 36,
+          "right": 1168,
+          "bottom": 748,
+          "height": 712,
+          "width": 1156
+        },
+        "header": {
+          "x": 13,
+          "y": 37,
+          "right": 1167,
+          "bottom": 98,
+          "height": 61,
+          "width": 1154
+        },
+        "footer": {
+          "x": 13,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 1154
+        },
+        "body": {
+          "x": 13,
+          "y": 185.5,
+          "right": 1167,
+          "bottom": 630,
+          "height": 444.5,
+          "width": 1154
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "busy cannot export another context",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "busy panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 312,
+          "right": 1168,
+          "bottom": 748,
+          "height": 436,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 313,
+          "right": 1167,
+          "bottom": 374,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 461.5,
+          "right": 1167,
+          "bottom": 630,
+          "height": 168.5,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "stop uses exact active run",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "stopped late response not adopted",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "generation failure stays with owner",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "generation-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 187.5,
+          "right": 1168,
+          "bottom": 748,
+          "height": 560.5,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 188.5,
+          "right": 1167,
+          "bottom": 249.5,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 337,
+          "right": 1167,
+          "bottom": 630,
+          "height": 293,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "proposal preview keeps manual buffer",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "proposal panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 36,
+          "right": 1168,
+          "bottom": 748,
+          "height": 712,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 37,
+          "right": 1167,
+          "bottom": 98,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 185.5,
+          "right": 1167,
+          "bottom": 630,
+          "height": 444.5,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "explicit acceptance updates draft only",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "restore failure keeps unsent input",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "restore-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 36,
+          "right": 1168,
+          "bottom": 748,
+          "height": 712,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 37,
+          "right": 1167,
+          "bottom": 98,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 185.5,
+          "right": 1167,
+          "bottom": 630,
+          "height": 444.5,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "explicit restore recovers memory dialogue",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "restored-conversation panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 252.5,
+          "right": 1168,
+          "bottom": 748,
+          "height": 495.5,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 253.5,
+          "right": 1167,
+          "bottom": 314.5,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 402,
+          "right": 1167,
+          "bottom": 630,
+          "height": 228,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "all states leave saved snapshot unchanged",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "name": "completion retains model editor",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "existing product assistant is a nonmodal dialog",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "unconfigured send is disabled",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "unconfigured panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 377,
+          "right": 1168,
+          "bottom": 748,
+          "height": 371,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 378,
+          "right": 1167,
+          "bottom": 439,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 526.5,
+          "right": 1167,
+          "bottom": 630,
+          "height": 103.5,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "nested configuration cancel retains assistant",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "collapse restores editor trigger focus",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "reopen preserves unsent input",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "maximized panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 12,
+          "y": 36,
+          "right": 1168,
+          "bottom": 748,
+          "height": 712,
+          "width": 1156
+        },
+        "header": {
+          "x": 13,
+          "y": 37,
+          "right": 1167,
+          "bottom": 98,
+          "height": 61,
+          "width": 1154
+        },
+        "footer": {
+          "x": 13,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 1154
+        },
+        "body": {
+          "x": 13,
+          "y": 185.5,
+          "right": 1167,
+          "bottom": 630,
+          "height": 444.5,
+          "width": 1154
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "busy cannot export another context",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "busy panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 312,
+          "right": 1168,
+          "bottom": 748,
+          "height": 436,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 313,
+          "right": 1167,
+          "bottom": 374,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 461.5,
+          "right": 1167,
+          "bottom": 630,
+          "height": 168.5,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "stop uses exact active run",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "stopped late response not adopted",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "generation failure stays with owner",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "generation-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 187.5,
+          "right": 1168,
+          "bottom": 748,
+          "height": 560.5,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 188.5,
+          "right": 1167,
+          "bottom": 249.5,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 337,
+          "right": 1167,
+          "bottom": 630,
+          "height": 293,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "proposal preview keeps manual buffer",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "proposal panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 36,
+          "right": 1168,
+          "bottom": 748,
+          "height": 712,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 37,
+          "right": 1167,
+          "bottom": 98,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 185.5,
+          "right": 1167,
+          "bottom": 630,
+          "height": 444.5,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "explicit acceptance updates draft only",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "restore failure keeps unsent input",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "restore-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 36,
+          "right": 1168,
+          "bottom": 748,
+          "height": 712,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 37,
+          "right": 1167,
+          "bottom": 98,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 185.5,
+          "right": 1167,
+          "bottom": 630,
+          "height": 444.5,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "explicit restore recovers memory dialogue",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "restored-conversation panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 768,
+          "y": 252.5,
+          "right": 1168,
+          "bottom": 748,
+          "height": 495.5,
+          "width": 400
+        },
+        "header": {
+          "x": 769,
+          "y": 253.5,
+          "right": 1167,
+          "bottom": 314.5,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 769,
+          "y": 630,
+          "right": 1167,
+          "bottom": 747,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 769,
+          "y": 402,
+          "right": 1167,
+          "bottom": 630,
+          "height": 228,
+          "width": 398
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "all states leave saved snapshot unchanged",
+      "passed": true
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "name": "completion retains model editor",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "existing product assistant is a nonmodal dialog",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "unconfigured send is disabled",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "unconfigured panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 217,
+          "right": 888,
+          "bottom": 588,
+          "height": 371,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 218,
+          "right": 887,
+          "bottom": 279,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 366.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 103.5,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "nested configuration cancel retains assistant",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "collapse restores editor trigger focus",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "reopen preserves unsent input",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "maximized panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 12,
+          "y": 36,
+          "right": 888,
+          "bottom": 588,
+          "height": 552,
+          "width": 876
+        },
+        "header": {
+          "x": 13,
+          "y": 37,
+          "right": 887,
+          "bottom": 98,
+          "height": 61,
+          "width": 874
+        },
+        "footer": {
+          "x": 13,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 874
+        },
+        "body": {
+          "x": 13,
+          "y": 185.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 284.5,
+          "width": 874
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "busy cannot export another context",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "busy panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 152,
+          "right": 888,
+          "bottom": 588,
+          "height": 436,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 153,
+          "right": 887,
+          "bottom": 214,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 301.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 168.5,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "stop uses exact active run",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "stopped late response not adopted",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "generation failure stays with owner",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "generation-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 36,
+          "right": 888,
+          "bottom": 588,
+          "height": 552,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 37,
+          "right": 887,
+          "bottom": 98,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 185.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 284.5,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "proposal preview keeps manual buffer",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "proposal panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 36,
+          "right": 888,
+          "bottom": 588,
+          "height": 552,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 37,
+          "right": 887,
+          "bottom": 98,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 185.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 284.5,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "explicit acceptance updates draft only",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "restore failure keeps unsent input",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "restore-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 36,
+          "right": 888,
+          "bottom": 588,
+          "height": 552,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 37,
+          "right": 887,
+          "bottom": 98,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 185.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 284.5,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "explicit restore recovers memory dialogue",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "restored-conversation panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 92.5,
+          "right": 888,
+          "bottom": 588,
+          "height": 495.5,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 93.5,
+          "right": 887,
+          "bottom": 154.5,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 242,
+          "right": 887,
+          "bottom": 470,
+          "height": 228,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "all states leave saved snapshot unchanged",
+      "passed": true
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "name": "completion retains model editor",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "existing product assistant is a nonmodal dialog",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "unconfigured send is disabled",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "unconfigured panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 217,
+          "right": 888,
+          "bottom": 588,
+          "height": 371,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 218,
+          "right": 887,
+          "bottom": 279,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 366.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 103.5,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "nested configuration cancel retains assistant",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "collapse restores editor trigger focus",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "reopen preserves unsent input",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "maximized panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 12,
+          "y": 36,
+          "right": 888,
+          "bottom": 588,
+          "height": 552,
+          "width": 876
+        },
+        "header": {
+          "x": 13,
+          "y": 37,
+          "right": 887,
+          "bottom": 98,
+          "height": 61,
+          "width": 874
+        },
+        "footer": {
+          "x": 13,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 874
+        },
+        "body": {
+          "x": 13,
+          "y": 185.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 284.5,
+          "width": 874
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "busy cannot export another context",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "busy panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 152,
+          "right": 888,
+          "bottom": 588,
+          "height": 436,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 153,
+          "right": 887,
+          "bottom": 214,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 301.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 168.5,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "stop uses exact active run",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "stopped late response not adopted",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "generation failure stays with owner",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "generation-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 36,
+          "right": 888,
+          "bottom": 588,
+          "height": 552,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 37,
+          "right": 887,
+          "bottom": 98,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 185.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 284.5,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "proposal preview keeps manual buffer",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "proposal panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 36,
+          "right": 888,
+          "bottom": 588,
+          "height": 552,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 37,
+          "right": 887,
+          "bottom": 98,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 185.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 284.5,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "explicit acceptance updates draft only",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "restore failure keeps unsent input",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "restore-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 36,
+          "right": 888,
+          "bottom": 588,
+          "height": 552,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 37,
+          "right": 887,
+          "bottom": 98,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 185.5,
+          "right": 887,
+          "bottom": 470,
+          "height": 284.5,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "explicit restore recovers memory dialogue",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "restored-conversation panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 488,
+          "y": 92.5,
+          "right": 888,
+          "bottom": 588,
+          "height": 495.5,
+          "width": 400
+        },
+        "header": {
+          "x": 489,
+          "y": 93.5,
+          "right": 887,
+          "bottom": 154.5,
+          "height": 61,
+          "width": 398
+        },
+        "footer": {
+          "x": 489,
+          "y": 470,
+          "right": 887,
+          "bottom": 587,
+          "height": 117,
+          "width": 398
+        },
+        "body": {
+          "x": 489,
+          "y": 242,
+          "right": 887,
+          "bottom": 470,
+          "height": 228,
+          "width": 398
+        },
+        "width": 900,
+        "height": 600
+      }
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "all states leave saved snapshot unchanged",
+      "passed": true
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "name": "completion retains model editor",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "existing product assistant is a nonmodal dialog",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "unconfigured send is disabled",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "unconfigured panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "nested configuration cancel retains assistant",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "collapse restores editor trigger focus",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "reopen preserves unsent input",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "maximized panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 24,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 1132
+        },
+        "header": {
+          "x": 26,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 1128
+        },
+        "footer": {
+          "x": 26,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 1128
+        },
+        "body": {
+          "x": 26,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 1128
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "busy cannot export another context",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "busy panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "stop uses exact active run",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "stopped late response not adopted",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "generation failure stays with owner",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "generation-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "proposal preview keeps manual buffer",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "proposal panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "explicit acceptance updates draft only",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "restore failure keeps unsent input",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "restore-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "explicit restore recovers memory dialogue",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "restored-conversation panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "all states leave saved snapshot unchanged",
+      "passed": true
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "name": "completion retains model editor",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "existing product assistant is a nonmodal dialog",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "unconfigured send is disabled",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "unconfigured panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "nested configuration cancel retains assistant",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "collapse restores editor trigger focus",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "reopen preserves unsent input",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "maximized panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 24,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 1132
+        },
+        "header": {
+          "x": 26,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 1128
+        },
+        "footer": {
+          "x": 26,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 1128
+        },
+        "body": {
+          "x": 26,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 1128
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "busy cannot export another context",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "busy panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "stop uses exact active run",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "stopped late response not adopted",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "generation failure stays with owner",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "generation-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "proposal preview keeps manual buffer",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "proposal panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "explicit acceptance updates draft only",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "restore failure keeps unsent input",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "restore-failed panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "explicit restore recovers memory dialogue",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "restored-conversation panel header composer and scrollport fit",
+      "passed": true,
+      "detail": {
+        "panel": {
+          "x": 356,
+          "y": 72,
+          "right": 1156,
+          "bottom": 736,
+          "height": 664,
+          "width": 800
+        },
+        "header": {
+          "x": 358,
+          "y": 74,
+          "right": 1154,
+          "bottom": 196,
+          "height": 122,
+          "width": 796
+        },
+        "footer": {
+          "x": 358,
+          "y": 500,
+          "right": 1154,
+          "bottom": 734,
+          "height": 234,
+          "width": 796
+        },
+        "body": {
+          "x": 358,
+          "y": 371,
+          "right": 1154,
+          "bottom": 500,
+          "height": 129,
+          "width": 796
+        },
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "all states leave saved snapshot unchanged",
+      "passed": true
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "name": "completion retains model editor",
+      "passed": true
+    }
+  ],
+  "screens": [
+    "existing-1180-100-light-high-unconfigured.png",
+    "existing-1180-100-light-high-maximized.png",
+    "existing-1180-100-light-high-busy.png",
+    "existing-1180-100-light-high-generation-failed.png",
+    "existing-1180-100-light-high-proposal.png",
+    "existing-1180-100-light-high-restore-failed.png",
+    "existing-1180-100-light-high-restored-conversation.png",
+    "new-1180-100-light-high-unconfigured.png",
+    "new-1180-100-light-high-maximized.png",
+    "new-1180-100-light-high-busy.png",
+    "new-1180-100-light-high-generation-failed.png",
+    "new-1180-100-light-high-proposal.png",
+    "new-1180-100-light-high-restore-failed.png",
+    "new-1180-100-light-high-restored-conversation.png",
+    "existing-900-100-dark-low-unconfigured.png",
+    "existing-900-100-dark-low-maximized.png",
+    "existing-900-100-dark-low-busy.png",
+    "existing-900-100-dark-low-generation-failed.png",
+    "existing-900-100-dark-low-proposal.png",
+    "existing-900-100-dark-low-restore-failed.png",
+    "existing-900-100-dark-low-restored-conversation.png",
+    "new-900-100-dark-low-unconfigured.png",
+    "new-900-100-dark-low-maximized.png",
+    "new-900-100-dark-low-busy.png",
+    "new-900-100-dark-low-generation-failed.png",
+    "new-900-100-dark-low-proposal.png",
+    "new-900-100-dark-low-restore-failed.png",
+    "new-900-100-dark-low-restored-conversation.png",
+    "existing-1180-200-dark-mid-unconfigured.png",
+    "existing-1180-200-dark-mid-maximized.png",
+    "existing-1180-200-dark-mid-busy.png",
+    "existing-1180-200-dark-mid-generation-failed.png",
+    "existing-1180-200-dark-mid-proposal.png",
+    "existing-1180-200-dark-mid-restore-failed.png",
+    "existing-1180-200-dark-mid-restored-conversation.png",
+    "new-1180-200-dark-mid-unconfigured.png",
+    "new-1180-200-dark-mid-maximized.png",
+    "new-1180-200-dark-mid-busy.png",
+    "new-1180-200-dark-mid-generation-failed.png",
+    "new-1180-200-dark-mid-proposal.png",
+    "new-1180-200-dark-mid-restore-failed.png",
+    "new-1180-200-dark-mid-restored-conversation.png"
+  ],
+  "states": [
+    {
+      "key": "existing-1180-100-light-high",
+      "editor": "existing",
+      "state": "unconfigured",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "editor": "existing",
+      "state": "maximized",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "editor": "existing",
+      "state": "busy",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n资料\n锁定上下文\n停止"
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "editor": "existing",
+      "state": "generation-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\nOwned generation refused; no model network\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "editor": "existing",
+      "state": "proposal",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n说明\n查看前后内容\n接受所选建议\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "editor": "existing",
+      "state": "restore-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n助手\n\n所选建议已放入表单，仍需保存。\n\nOwned conversation restore refused\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-100-light-high",
+      "editor": "existing",
+      "state": "restored-conversation",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n\n本机对话与未发送输入已恢复，当前没有待审建议\n\n在线资料\n你\n\nOwned previous conversation\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "editor": "new",
+      "state": "unconfigured",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "editor": "new",
+      "state": "maximized",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "editor": "new",
+      "state": "busy",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n资料\n锁定上下文\n停止"
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "editor": "new",
+      "state": "generation-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\nOwned generation refused; no model network\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "editor": "new",
+      "state": "proposal",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n说明\n查看前后内容\n接受所选建议\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "editor": "new",
+      "state": "restore-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n助手\n\n所选建议已放入表单，仍需保存。\n\nOwned conversation restore refused\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-100-light-high",
+      "editor": "new",
+      "state": "restored-conversation",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n\n本机对话与未发送输入已恢复，当前没有待审建议\n\n在线资料\n你\n\nOwned previous conversation\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "editor": "existing",
+      "state": "unconfigured",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "editor": "existing",
+      "state": "maximized",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "editor": "existing",
+      "state": "busy",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n资料\n锁定上下文\n停止"
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "editor": "existing",
+      "state": "generation-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\nOwned generation refused; no model network\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "editor": "existing",
+      "state": "proposal",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n说明\n查看前后内容\n接受所选建议\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "editor": "existing",
+      "state": "restore-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n助手\n\n所选建议已放入表单，仍需保存。\n\nOwned conversation restore refused\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-900-100-dark-low",
+      "editor": "existing",
+      "state": "restored-conversation",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n\n本机对话与未发送输入已恢复，当前没有待审建议\n\n在线资料\n你\n\nOwned previous conversation\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "editor": "new",
+      "state": "unconfigured",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "editor": "new",
+      "state": "maximized",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "editor": "new",
+      "state": "busy",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n资料\n锁定上下文\n停止"
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "editor": "new",
+      "state": "generation-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\nOwned generation refused; no model network\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "editor": "new",
+      "state": "proposal",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n说明\n查看前后内容\n接受所选建议\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "editor": "new",
+      "state": "restore-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n助手\n\n所选建议已放入表单，仍需保存。\n\nOwned conversation restore refused\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-900-100-dark-low",
+      "editor": "new",
+      "state": "restored-conversation",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=low#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n\n本机对话与未发送输入已恢复，当前没有待审建议\n\n在线资料\n你\n\nOwned previous conversation\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "editor": "existing",
+      "state": "unconfigured",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "editor": "existing",
+      "state": "maximized",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "editor": "existing",
+      "state": "busy",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n资料\n锁定上下文\n停止"
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "editor": "existing",
+      "state": "generation-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\nOwned generation refused; no model network\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "editor": "existing",
+      "state": "proposal",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n说明\n查看前后内容\n接受所选建议\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "editor": "existing",
+      "state": "restore-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n助手\n\n所选建议已放入表单，仍需保存。\n\nOwned conversation restore refused\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "existing-1180-200-dark-mid",
+      "editor": "existing",
+      "state": "restored-conversation",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n\n本机对话与未发送输入已恢复，当前没有待审建议\n\n在线资料\n你\n\nOwned previous conversation\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "editor": "new",
+      "state": "unconfigured",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "editor": "new",
+      "state": "maximized",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\n尚未选择执行模型 · 请配置执行模型\nAgent 配置\n为什么需要执行模型\n恢复上次对话与建议\n在线资料\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "editor": "new",
+      "state": "busy",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n资料\n锁定上下文\n停止"
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "editor": "new",
+      "state": "generation-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\nOwned generation refused; no model network\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "editor": "new",
+      "state": "proposal",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n说明\n查看前后内容\n接受所选建议\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "editor": "new",
+      "state": "restore-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n在线资料\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n你\n\nOwned unsent correction\n\n助手\n\nOwned proposed description\n\n助手\n\n所选建议已放入表单，仍需保存。\n\nOwned conversation restore refused\n\n资料\n锁定上下文\n发送"
+    },
+    {
+      "key": "new-1180-200-dark-mid",
+      "editor": "new",
+      "state": "restored-conversation",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=dark&effects=mid#models",
+      "text": "模版助手\n模型模版助手 · 本机共用\nNewApi / gpt-demo-0\n未知\n更换执行模型\n执行模型与适用范围\n恢复上次对话与建议\n\n本机对话与未发送输入已恢复，当前没有待审建议\n\n在线资料\n你\n\nOwned previous conversation\n\n资料\n锁定上下文\n发送"
+    }
+  ]
+}

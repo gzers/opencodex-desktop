@@ -1,0 +1,353 @@
+{
+  "productSource": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "scanWorktreeHead": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+  "allScannedSourceBytesEqualProductTag": true,
+  "scope": "static Dialog/Modal tag references and actual AppModal/openInput callers; shared wrappers excluded,not unique window count",
+  "static": [
+    {
+      "file": "apps/desktop/ui/src/App.vue",
+      "component": "AppModal",
+      "line": 79
+    },
+    {
+      "file": "apps/desktop/ui/src/App.vue",
+      "component": "RuntimeInstallDialog",
+      "line": 80
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "component": "UiDialog",
+      "line": 56
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
+      "component": "UiDialog",
+      "line": 18
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/AgentExecutionField.vue",
+      "component": "UiDialog",
+      "line": 88
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+      "component": "UiDialog",
+      "line": 59
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "component": "UiDialog",
+      "line": 85
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "component": "UiDialog",
+      "line": 140
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "component": "UiDialog",
+      "line": 123
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "component": "UiDialog",
+      "line": 126
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "ChannelBatchDialog",
+      "line": 266
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "NewChannelDialog",
+      "line": 267
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "UiDialog",
+      "line": 268
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "SelectorPreviewDialog",
+      "line": 269
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+      "component": "UiDialog",
+      "line": 35
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ModelPicker.vue",
+      "component": "UiDialog",
+      "line": 104
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "component": "UiDialog",
+      "line": 84
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+      "component": "UiDialog",
+      "line": 89
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+      "component": "UiDialog",
+      "line": 130
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+      "component": "UiDialog",
+      "line": 18
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "component": "UiDialog",
+      "line": 14
+    },
+    {
+      "file": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+      "component": "UiDialog",
+      "line": 111
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ConnectionDialog.vue",
+      "component": "UiDialog",
+      "line": 19
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ImportedConnections.vue",
+      "component": "UiDialog",
+      "line": 15
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "component": "UiDialog",
+      "line": 512
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ObjectScopeTree.vue",
+      "component": "UiDialog",
+      "line": 32
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/SyncDialogHost.vue",
+      "component": "ResultDialog",
+      "line": 14
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/SyncDialogHost.vue",
+      "component": "ConnectionDialog",
+      "line": 14
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/SyncResultDialog.vue",
+      "component": "UiDialog",
+      "line": 23
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "component": "ExtensionDetailModal",
+      "line": 865
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "TemplateUsageDialog",
+      "line": 208
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "UiDialog",
+      "line": 209
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "UiDialog",
+      "line": 214
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "UiDialog",
+      "line": 216
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "TemplateComparisonDialog",
+      "line": 217
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "ExternalTaskDialog",
+      "line": 218
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "BatchAgentDialog",
+      "line": 219
+    }
+  ],
+  "dynamic": [
+    {
+      "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "line": 71,
+      "call": "app.openModal(",
+      "titleSource": "title: '正在准备恢复确认',"
+    },
+    {
+      "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "line": 80,
+      "call": "app.openModal(",
+      "titleSource": "title: '影响摘要不可用',"
+    },
+    {
+      "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "line": 128,
+      "call": "app.openModal(",
+      "titleSource": "title: '恢复前确认',"
+    },
+    {
+      "file": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "line": 139,
+      "call": "app.openModal(",
+      "titleSource": "title: '官方恢复引导',"
+    },
+    {
+      "file": "apps/desktop/ui/src/composables/useAppController.ts",
+      "line": 53,
+      "call": "app.openModal(",
+      "titleSource": "title: notification.title,"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+      "line": 72,
+      "call": "app.openModal(",
+      "titleSource": "title: '确认清理备份',"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+      "line": 82,
+      "call": "app.openModal(",
+      "titleSource": "title: '恢复管理器偏好',"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+      "line": 103,
+      "call": "app.openModal(",
+      "titleSource": "title: node.directory ? '打开备份目录' : '打开备份文件',"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+      "line": 98,
+      "call": "app.openModal(",
+      "titleSource": "title: entry.name + ' · 配置说明',"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "line": 88,
+      "call": "useModalStore().open(",
+      "titleSource": "title:'调整模型公开范围',body:value==='all'?'全部当前和未来发现型号将公开，保存时仍核对全局预算。':value==='none'?'当前和未来型号全部隐藏；已有规则和顺序保留。':'改为明确白名单，保留当前已知的启用项，未来新型号不自动公开。',confirmLabel"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "line": 38,
+      "call": "modal.open(",
+      "titleSource": "title:candidate.selection.mode==='none'?'隐藏全部型号':'改为仅公开所选型号',body:candidate.selection.mode==='none'?'此渠道及未来发现型号将全部隐藏，其他配置与顺序保留。':'使用明确白名单保留其他已知型号；未来发现"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "line": 211,
+      "call": "modal.open(",
+      "titleSource": "title:'删除渠道',body:'将 '+values.map(c=>escapeHtml(c.label)).join('、')+' 从草稿移除（包含这些渠道未确认的型号输入）。保存时一并移除对应官方运行渠道及其协议分组；此前可用还原修改撤回。',confirmLabel:'从草稿删除',on"
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "line": 228,
+      "call": "modal.open(",
+      "titleSource": "title: '还原修改', body: models.historicalRecovery?'放弃此历史恢复草稿并重新读取当前配置？已提交的运行写入不会被撤回。':'将全部渠道恢复到最近成功保存的配置？', confirmLabel: '还原修改', onConfirm: async () => "
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 204,
+      "call": "app.openInputModal(",
+      "titleSource": "title: '恢复 Skill',"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 230,
+      "call": "app.openModal(",
+      "titleSource": "title: '卸载 Skill',"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 272,
+      "call": "app.openInputModal(",
+      "titleSource": "title: '新增 MCP 服务器',"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 288,
+      "call": "app.openInputModal(",
+      "titleSource": "title: `编辑 ${server.name}`,"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 307,
+      "call": "app.openModal(",
+      "titleSource": "title: '删除 MCP 服务器',"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "line": 329,
+      "call": "app.openModal(",
+      "titleSource": "title: previous ? '编辑 MCP 服务器' : '新增 MCP 服务器',"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/LogsRoute.vue",
+      "line": 58,
+      "call": "app.openModal(",
+      "titleSource": "title: '清理日志',"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/LogsRoute.vue",
+      "line": 74,
+      "call": "app.openModal(",
+      "titleSource": "title: pending > 0 ? `还有 ${pending} 条未处理通知` : '清理已解决通知',"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/LogsRoute.vue",
+      "line": 91,
+      "call": "app.openModal(",
+      "titleSource": "title: '清理已读通知',"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 94,
+      "call": "modal.open(",
+      "titleSource": "title:'取消新建模版',body:'放弃当前未保存的新建内容？原模版、其他编辑缓冲和渠道草稿保持。',confirmLabel:'放弃新建',onConfirm:()=>{if(models.busy||JSON.stringify(models.draft)!==baseline||mode"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 98,
+      "call": "modal.open(",
+      "titleSource": "title:'还原模版修改',body:'还原当前模版到本次编辑的起点？其他模版与渠道草稿保持。',confirmLabel:'还原修改',onConfirm:()=>{if(JSON.stringify(models.draft)!==baseline||models.draftSession!="
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 133,
+      "call": "modal.open(",
+      "titleSource": "title:'设为默认版本',body:'以后选择采用「'+escapeHtml(t.label)+'」时默认选择 '+versionLabel(r)+'；当前浏览版本、已有渠道和单模型精确引用保持。',confirmLabel:'设为默认',onCancel:()=>{if(reopen)mana"
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+      "line": 247,
+      "call": "app.openModal(",
+      "titleSource": "title: '迁移数据目录',"
+    }
+  ],
+  "correction": "previous25-call inventory omitted inline useModalStore().open inChannelEditor; source always contained it",
+  "limits": "custom runtime/tray/panel/native windows use separate route/native ledger"
+}

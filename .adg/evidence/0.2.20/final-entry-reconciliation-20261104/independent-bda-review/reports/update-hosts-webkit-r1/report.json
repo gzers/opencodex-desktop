@@ -1,0 +1,167 @@
+{
+  "engine": "webkit",
+  "completed": false,
+  "failure": {
+    "key": "overview-1180-100-light-high",
+    "message": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label^=\"查看\"]').filter({ hasText: '管理器' })\u001b[22m\n\u001b[2m    - locator resolved to <button disabled type=\"button\" data-phase=\"info\" data-v-0b6ed94f=\"\" class=\"mnt-version-row\" aria-label=\"查看桌面管理器更新详情（更新中…）\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+  },
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "scope": "Actual OverviewRoute and SettingsRoute consumers. Explicit memory IPC and progress fixtures; no OS installation/restart/download. Not OTA acceptance.",
+  "checks": [
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "two result objects",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "results have no install or backup",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "results modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 179.296875,
+          "right": 980,
+          "bottom": 580.6875,
+          "height": 401.390625
+        },
+        "actions": [
+          {
+            "x": 905.15625,
+            "y": 529.6875,
+            "right": 955,
+            "bottom": 563.6875,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "results do not install",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "details backup defaults on",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "manager-confirm modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 152.90625,
+          "right": 980,
+          "bottom": 607.078125,
+          "height": 454.171875
+        },
+        "actions": [
+          {
+            "x": 823.46875,
+            "y": 556.078125,
+            "right": 873.3125,
+            "bottom": 590.078125,
+            "height": 34
+          },
+          {
+            "x": 881.3125,
+            "y": 556.078125,
+            "right": 955,
+            "bottom": 590.078125,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "cancel never installs",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "exact candidate confirmation",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "manager-downloading modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 167.734375,
+          "right": 980,
+          "bottom": 592.25,
+          "height": 424.515625
+        },
+        "actions": [
+          {
+            "x": 881.3125,
+            "y": 541.25,
+            "right": 955,
+            "bottom": 575.25,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": true
+    }
+  ],
+  "screens": [
+    "overview-1180-100-light-high-results.png",
+    "overview-1180-100-light-high-manager-confirm.png",
+    "overview-1180-100-light-high-manager-downloading.png"
+  ],
+  "states": [
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "results",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "检查更新结果\n\n分别查看更新内容与范围，确认后才会开始更新。\n\n桌面管理器\n有可用更新\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · stable\n\nOwned update explanation; browser fixture only.\n\n查看详情\nOpenCodex 面板\n发现新版本\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n查看本版本更新内容与范围，确认后开始更新。\n\n查看详情\n关闭"
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "manager-confirm",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOwned update explanation; browser fixture only.\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新"
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "manager-downloading",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n正在下载\n50 B / 100 B · 50%\n\n可关闭此窗口，稍后从概览或设置继续查看。\n\n准备\n下载\n校验\n安装与重启\n关闭窗口"
+    }
+  ]
+}

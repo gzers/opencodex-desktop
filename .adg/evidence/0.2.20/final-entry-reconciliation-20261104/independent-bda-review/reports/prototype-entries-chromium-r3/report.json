@@ -1,0 +1,389 @@
+{
+  "engine": "chromium",
+  "completed": false,
+  "failure": {
+    "key": "1180-light-100",
+    "message": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#card-upgrade-manager [data-maint-action=update-detail]')\u001b[22m\n"
+  },
+  "baseline": "cfbd90c4b+1da4cabca+20261103compact-font+low-no-WebGL",
+  "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%.",
+  "checks": [
+    {
+      "key": "1180-light-100",
+      "name": "assistant is adopted nonmodal model editor surface",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "unconfigured prototype send disabled",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "agent-existing actual prototype surface fits",
+      "passed": true,
+      "detail": {
+        "x": 795,
+        "y": 255,
+        "right": 1155,
+        "bottom": 735,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "agent-maximized actual prototype surface fits",
+      "passed": true,
+      "detail": {
+        "x": 1,
+        "y": 1,
+        "right": 1179,
+        "bottom": 759,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "prototype reopen retains input",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "prototype results have two object rows",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "prototype result has no backup or confirmation",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "update-results actual prototype surface fits",
+      "passed": true,
+      "detail": {
+        "x": 200,
+        "y": 168.09375,
+        "right": 980,
+        "bottom": 591.890625,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "prototype backup defaults on in details",
+      "passed": true
+    },
+    {
+      "key": "1180-light-100",
+      "name": "update-overview-confirm actual prototype surface fits",
+      "passed": true,
+      "detail": {
+        "x": 200,
+        "y": 78.703125,
+        "right": 980,
+        "bottom": 681.296875,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "1180-light-100",
+      "name": "prototype cancel retains current version",
+      "passed": true
+    }
+  ],
+  "screens": [
+    "1180-light-100-agent-existing.png",
+    "1180-light-100-agent-maximized.png",
+    "1180-light-100-update-results.png",
+    "1180-light-100-update-overview-confirm.png"
+  ],
+  "states": [
+    {
+      "key": "1180-light-100",
+      "state": "agent-existing",
+      "selector": "#mpAssistantPanel",
+      "url": "http://127.0.0.1:52429/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/01-%E9%A1%B9%E7%9B%AE%E6%94%AF%E6%92%91%E8%B5%84%E6%96%99/01-%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B/%E5%8E%9F%E5%9E%8B/index.html?effects=low#models",
+      "text": "Agent 助手\n本机共用\n选择执行模型\n任务\n自动填充\n描述模型族、匹配规则和配置要求，发送后可继续对话微调。\n资料\n当前资料\n锁定上下文\n发送",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "text": "选择执行模型",
+          "label": "配置执行模型：尚未选择执行模型 · 请配置执行模型",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "label": "放大 Agent 对话",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "label": "收起 Agent 对话",
+          "disabled": false
+        },
+        {
+          "tag": "SELECT",
+          "text": "自动填充更新模型资料",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "自动填充",
+          "label": "任务：自动填充",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "自动填充",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "更新模型资料",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "SELECT",
+          "text": "当前资料公开检索 · 待接入",
+          "label": "参考资料",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "当前资料",
+          "label": "参考资料：当前资料",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "当前资料",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "公开检索 · 待接入",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "label": "导出上下文",
+          "disabled": false
+        },
+        {
+          "tag": "TEXTAREA",
+          "text": "",
+          "label": "对话输入",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "发送",
+          "label": "发送对话",
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "key": "1180-light-100",
+      "state": "agent-maximized",
+      "selector": "#mpAssistantPanel",
+      "url": "http://127.0.0.1:52429/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/01-%E9%A1%B9%E7%9B%AE%E6%94%AF%E6%92%91%E8%B5%84%E6%96%99/01-%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B/%E5%8E%9F%E5%9E%8B/index.html?effects=low#models",
+      "text": "Agent 助手\n本机共用\n选择执行模型\n任务\n自动填充\n描述模型族、匹配规则和配置要求，发送后可继续对话微调。\n资料\n当前资料\n锁定上下文\n发送",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "text": "选择执行模型",
+          "label": "配置执行模型：尚未选择执行模型 · 请配置执行模型",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "label": "还原 Agent 对话",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "label": "收起 Agent 对话",
+          "disabled": false
+        },
+        {
+          "tag": "SELECT",
+          "text": "自动填充更新模型资料",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "自动填充",
+          "label": "任务：自动填充",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "自动填充",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "更新模型资料",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "SELECT",
+          "text": "当前资料公开检索 · 待接入",
+          "label": "参考资料",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "当前资料",
+          "label": "参考资料：当前资料",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "当前资料",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "公开检索 · 待接入",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "label": "导出上下文",
+          "disabled": false
+        },
+        {
+          "tag": "TEXTAREA",
+          "text": "",
+          "label": "对话输入",
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "发送",
+          "label": "发送对话",
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "key": "1180-light-100",
+      "state": "update-results",
+      "selector": "#modal",
+      "url": "http://127.0.0.1:52429/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/01-%E9%A1%B9%E7%9B%AE%E6%94%AF%E6%92%91%E8%B5%84%E6%96%99/01-%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B/%E5%8E%9F%E5%9E%8B/index.html?effects=low#overview",
+      "text": "检查更新结果\n\n分别查看更新内容与范围，确认后才会开始更新。\n\n桌面管理器\n有可用更新\n0.1.9\n→\n0.1.10\n\nstable · 签名更新源（示例）\n\n概览更新入口：检查后集中查看管理器与面板更新，分别确认每个对象的更新范围。概览与设置共用状态，…\n\n查看详情\nOpenCodex 面板\n有可用更新\n2.50.0\n→\n2.51.0\n\n官方 npm 包（示例）\n\n功能改进：优化面板的日常操作反馈，调整配置读取与状态展示。更新后请确认面板能够正常访问。…\n\n查看详情\n关闭",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "text": "查看详情",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "查看详情",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "删除",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "关闭",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "关闭",
+          "label": null,
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "key": "1180-light-100",
+      "state": "update-overview-confirm",
+      "selector": "#modal",
+      "url": "http://127.0.0.1:52429/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/01-%E9%A1%B9%E7%9B%AE%E6%94%AF%E6%92%91%E8%B5%84%E6%96%99/01-%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B/%E5%8E%9F%E5%9E%8B/index.html?effects=low#overview",
+      "text": "桌面管理器更新详情与确认\n\n版本升级\n\n有可用更新\n0.1.9\n→\n0.1.10\n\nstable · 签名更新源（示例） · 安装后需重启管理器\n\n更新内容\n查看官方发布记录 ↗\n概览更新入口\n\n检查后集中查看管理器与面板更新，分别确认每个对象的更新范围。概览与设置共用状态，切换页面后仍可查看当前进度。\n\n更新详情与反馈\n\n更新前阅读版本说明与来源，确认后展示下载、校验和应用阶段。网络中断与校验失败保留当前版本，并提供恢复操作。\n\n备份范围更清晰\n\n更新前可备份管理器偏好、清单与完整性摘要。数据与备份中可查看位置、保留期限、固定项与清理预览。\n\n通知策略\n\n检查触发支持启动、概览切入、到期评估和恢复联网。重复提醒合并，后台检查不会直接开始安装。\n\n界面一致性\n\n标准按钮统一取消顶部高光，保留语义色、悬停和键盘焦点。概览背景光覆盖内容面板的顶部与左右边距。\n\n更新后的确认\n\n管理器安装后需重启，并在重新启动后回读版本确认生效。备份和更新记录保留各自状态，不提前宣告完成。\n\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新",
+      "controls": [
+        {
+          "tag": "INPUT",
+          "text": "",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "删除",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "取消",
+          "label": null,
+          "disabled": false
+        },
+        {
+          "tag": "BUTTON",
+          "text": "确认更新",
+          "label": null,
+          "disabled": false
+        }
+      ]
+    }
+  ]
+}

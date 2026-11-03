@@ -1,0 +1,425 @@
+{
+  "engine": "webkit",
+  "completed": false,
+  "failure": {
+    "key": "settings-1180-100-light-high",
+    "message": "settings-1180-100-light-high Escape returns to original route undefined"
+  },
+  "productSource": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+  "scope": "Actual OverviewRoute and SettingsRoute consumers. Explicit memory IPC and progress fixtures; no OS installation/restart/download. Not OTA acceptance.",
+  "checks": [
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "two result objects",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "results have no install or backup",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "results modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 179.296875,
+          "right": 980,
+          "bottom": 580.6875,
+          "height": 401.390625
+        },
+        "actions": [
+          {
+            "x": 905.15625,
+            "y": 529.6875,
+            "right": 955,
+            "bottom": 563.6875,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "results do not install",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "check failure visible",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "check-failed modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 170.546875,
+          "right": 980,
+          "bottom": 589.4375,
+          "height": 418.890625
+        },
+        "actions": [
+          {
+            "x": 905.15625,
+            "y": 538.4375,
+            "right": 955,
+            "bottom": 572.4375,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "details backup defaults on",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "manager-confirm modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 152.90625,
+          "right": 980,
+          "bottom": 607.078125,
+          "height": 454.171875
+        },
+        "actions": [
+          {
+            "x": 823.46875,
+            "y": 556.078125,
+            "right": 873.3125,
+            "bottom": 590.078125,
+            "height": 34
+          },
+          {
+            "x": 881.3125,
+            "y": 556.078125,
+            "right": 955,
+            "bottom": 590.078125,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "cancel never installs",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "exact candidate confirmation",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "manager-downloading modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 167.734375,
+          "right": 980,
+          "bottom": 592.25,
+          "height": 424.515625
+        },
+        "actions": [
+          {
+            "x": 881.3125,
+            "y": 541.25,
+            "right": 955,
+            "bottom": 575.25,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "inflight survives dismissal",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "failure offers retry",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "manager-failed modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 179.046875,
+          "right": 980,
+          "bottom": 580.9375,
+          "height": 401.890625
+        },
+        "actions": [
+          {
+            "x": 881.3125,
+            "y": 529.9375,
+            "right": 955,
+            "bottom": 563.9375,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "pending restart retains current version",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "pending-restart modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 169.859375,
+          "right": 980,
+          "bottom": 590.140625,
+          "height": 420.28125
+        },
+        "actions": [
+          {
+            "x": 881.3125,
+            "y": 539.140625,
+            "right": 955,
+            "bottom": 573.140625,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "restart-refused modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 156.859375,
+          "right": 980,
+          "bottom": 603.140625,
+          "height": 446.28125
+        },
+        "actions": [
+          {
+            "x": 881.3125,
+            "y": 552.140625,
+            "right": 955,
+            "bottom": 586.140625,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "backup failure blocks official installer",
+      "passed": true
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "official-backup-failed modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 179.046875,
+          "right": 980,
+          "bottom": 580.9375,
+          "height": 401.890625
+        },
+        "actions": [
+          {
+            "x": 881.3125,
+            "y": 529.9375,
+            "right": 955,
+            "bottom": 563.9375,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": true
+    },
+    {
+      "key": "settings-1180-100-light-high",
+      "name": "two result objects",
+      "passed": true
+    },
+    {
+      "key": "settings-1180-100-light-high",
+      "name": "results have no install or backup",
+      "passed": true
+    },
+    {
+      "key": "settings-1180-100-light-high",
+      "name": "results modal and actions fit",
+      "passed": true,
+      "detail": {
+        "modal": {
+          "x": 200,
+          "y": 179.296875,
+          "right": 980,
+          "bottom": 580.6875,
+          "height": 401.390625
+        },
+        "actions": [
+          {
+            "x": 905.15625,
+            "y": 529.6875,
+            "right": 955,
+            "bottom": 563.6875,
+            "height": 34
+          }
+        ],
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "key": "settings-1180-100-light-high",
+      "name": "Escape returns to original route",
+      "passed": false
+    }
+  ],
+  "screens": [
+    "overview-1180-100-light-high-results.png",
+    "overview-1180-100-light-high-check-failed.png",
+    "overview-1180-100-light-high-manager-confirm.png",
+    "overview-1180-100-light-high-manager-downloading.png",
+    "overview-1180-100-light-high-manager-failed.png",
+    "overview-1180-100-light-high-pending-restart.png",
+    "overview-1180-100-light-high-restart-refused.png",
+    "overview-1180-100-light-high-official-backup-failed.png",
+    "settings-1180-100-light-high-results.png"
+  ],
+  "states": [
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "results",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "检查更新结果\n\n分别查看更新内容与范围，确认后才会开始更新。\n\n桌面管理器\n有可用更新\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · stable\n\nOwned update explanation; browser fixture only.\n\n查看详情\nOpenCodex 面板\n发现新版本\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n查看本版本更新内容与范围，确认后开始更新。\n\n查看详情\n关闭"
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "check-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "检查更新结果\n\n分别查看更新内容与范围，确认后才会开始更新。\n\n桌面管理器\n检查失败\n0.2.19\n\nOpenCodex Desktop · stable\n\n更新服务不可用，请检查网络后重试。\n\n查看详情\nOpenCodex 面板\n发现新版本\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n查看本版本更新内容与范围，确认后开始更新。\n\n查看详情\n关闭"
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "manager-confirm",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "桌面管理器更新详情与确认\n版本升级\n有可用更新\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道 · 安装后需重启管理器\n\n更新内容\nOwned update explanation; browser fixture only.\n更新前备份管理器偏好（建议）\n\n保存到当前数据根的 backups。包含管理器偏好、清单与完整性摘要；不包含面板完整配置、会话、登录态或安装包。\n\n取消\n确认更新"
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "manager-downloading",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n正在下载\n50 B / 100 B · 50%\n\n可关闭此窗口，稍后从概览或设置继续查看。\n\n准备\n下载\n校验\n安装与重启\n关闭窗口"
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "manager-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n更新失败，当前版本保留\n\nOwned package write refused\n\n准备\n下载\n校验\n安装与重启\n重试安装\n关闭窗口"
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "pending-restart",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口"
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "restart-refused",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "桌面管理器更新进度\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · 稳定通道\n\n安装就绪，等待重启\n\n当前仍为 0.2.19。重启后核验 0.2.20 是否生效。\n\n重启失败，更新仍待应用；请重试。\n\n准备\n下载\n校验\n安装与重启\n重启并应用更新\n关闭窗口"
+    },
+    {
+      "key": "overview-1180-100-light-high",
+      "owner": "overview",
+      "state": "official-backup-failed",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#overview",
+      "text": "OpenCodex 面板更新进度\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n面板更新失败\n\nOwned backup refused\n\n准备\n下载\n校验\n应用与核验\n重试面板更新\n关闭窗口"
+    },
+    {
+      "key": "settings-1180-100-light-high",
+      "owner": "settings",
+      "state": "results",
+      "url": "http://127.0.0.1:52422/?__audit=1&route=models&env=ready&runtime=running&theme=light&effects=high#settings?section=upgrade",
+      "text": "检查更新结果\n\n分别查看更新内容与范围，确认后才会开始更新。\n\n桌面管理器\n有可用更新\n0.2.19\n→\n0.2.20\n\nOpenCodex Desktop · stable\n\nOwned update explanation; browser fixture only.\n\n查看详情\nOpenCodex 面板\n发现新版本\n2.83.0\n→\n2.84.0\n\n官方项目 · @bitkyc08/opencodex\n\n查看本版本更新内容与范围，确认后开始更新。\n\n查看详情\n关闭"
+    }
+  ]
+}

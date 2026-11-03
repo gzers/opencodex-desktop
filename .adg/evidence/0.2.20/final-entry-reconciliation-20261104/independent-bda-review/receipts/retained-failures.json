@@ -1,0 +1,98 @@
+{
+  "failures": [
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r1/report.json",
+      "sha256": "fb3a4d4588e891dad8f49a5e834b935d514dab5a01a90824a1fac0d3369481b7",
+      "failure": {
+        "key": "1180-light-100",
+        "message": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '版本升级', exact: true })\u001b[22m\n"
+      },
+      "result": null
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r2/report.json",
+      "sha256": "c4ac353b2914e734d5286467d6ef290f55dd850384af5ce72363972396b52ff4",
+      "failure": {
+        "key": "1180-light-100",
+        "message": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#settingsTabs').getByRole('tab', { name: '版本升级', exact: true })\u001b[22m\n"
+      },
+      "result": null
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r3/report.json",
+      "sha256": "081be789d99096622ad3948b49cecfa0afb9fb8e6584fb286d9d079c88b6a8a4",
+      "failure": {
+        "key": "1180-light-100",
+        "message": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#card-upgrade-manager [data-maint-action=update-detail]')\u001b[22m\n"
+      },
+      "result": null
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-chromium-r4/report.json",
+      "sha256": "83f55d2d1f78af2b12e68534272d66b07b828a2ac3a6a606deb70d9d7720b320",
+      "failure": {
+        "key": "900-dark-100",
+        "message": "900-dark-100 agent-existing actual prototype surface fits {\"x\":655,\"y\":263,\"right\":1015,\"bottom\":743,\"width\":900,\"height\":600}"
+      },
+      "result": null
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r3/report.json",
+      "sha256": "bcf7947466d9af7b6c50417c7615da8b13b521023abb858ff85e42708bdab4b9",
+      "failure": {
+        "key": "1180-light-100",
+        "message": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#card-upgrade-manager [data-maint-action=update-detail]')\u001b[22m\n"
+      },
+      "result": null
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/prototype-entries-webkit-r4/report.json",
+      "sha256": "5bc695a17b2969812c8f30cc60f261e2f4a77026cd4b95b8f556230a9c9c968c",
+      "failure": {
+        "key": "900-dark-100",
+        "message": "900-dark-100 agent-existing actual prototype surface fits {\"x\":655,\"y\":263,\"right\":1015,\"bottom\":743,\"width\":900,\"height\":600}"
+      },
+      "result": null
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r1/report.json",
+      "sha256": "2acc147914c5de01442148fee7692e32405ea26924f1453dd5646375fa6bde98",
+      "failure": {
+        "key": "overview-1180-100-light-high",
+        "message": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label^=\"查看\"]').filter({ hasText: '管理器' })\u001b[22m\n\u001b[2m    - locator resolved to <button disabled type=\"button\" data-phase=\"info\" data-v-0b6ed94f=\"\" class=\"mnt-version-row\" aria-label=\"查看桌面管理器更新详情（更新中…）\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+      },
+      "result": null
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r2/report.json",
+      "sha256": "8e1b154d1a8504fc7f72663eb09e51aa51a3e953dc3a72a85bccf2177fe9c8f0",
+      "failure": {
+        "key": "overview-1180-100-light-high",
+        "message": "overview-1180-100-light-high check failure visible undefined"
+      },
+      "result": null
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-hosts-webkit-r3/report.json",
+      "sha256": "e7ef541d2fc0cc57061565c4157b1457a55f4058a4f6ac0cba5e269eba177d93",
+      "failure": {
+        "key": "settings-1180-100-light-high",
+        "message": "settings-1180-100-light-high Escape returns to original route undefined"
+      },
+      "result": null
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-scale-chromium-r1/report.json",
+      "sha256": "5acd26334d1c462eb6da6c53d257d1c2e0408f97ae66eccd18916f62657dc051",
+      "failure": null,
+      "result": "fail"
+    },
+    {
+      "path": "/tmp/ocx020-final-review-agent/reports/update-scale-webkit-r1/report.json",
+      "sha256": "ccf69c783a21928672ca6727913beb7e8c0c1d7eb7a43a640a6871df1582a19b",
+      "failure": null,
+      "result": "fail"
+    }
+  ],
+  "policy": "All first/intermediate failing reports/screens/logs preserved; prototype host corrections distinct from productscale failure."
+}

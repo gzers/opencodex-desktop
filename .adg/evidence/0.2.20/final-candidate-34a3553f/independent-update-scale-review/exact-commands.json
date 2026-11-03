@@ -1,0 +1,135 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/update-scale-fix/harness/update-scale-contract.mjs"
+      ],
+      "envOverrides": {
+        "AUDIT_ENGINE": "chromium",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-contract-chromium-r1",
+        "AUDIT_SOURCE": "working-UpdateCenter-sha256:1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp/update-scale-contract-chromium"
+      },
+      "cwd": "/tmp/ocx020-final-review-agent/update-scale-fix",
+      "startedAt": "2026-11-03T17:47:24.446818+00:00",
+      "exitCode": 0,
+      "finishedAt": "2026-11-03T17:47:27.066287+00:00"
+    },
+    {
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/update-scale-fix/harness/update-hosts.mjs"
+      ],
+      "envOverrides": {
+        "AUDIT_ENGINE": "chromium",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-hosts-chromium-r1",
+        "AUDIT_SOURCE": "working-UpdateCenter-sha256:1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp/update-hosts-chromium"
+      },
+      "cwd": "/tmp/ocx020-final-review-agent/update-scale-fix",
+      "startedAt": "2026-11-03T17:47:27.066868+00:00",
+      "exitCode": 0,
+      "finishedAt": "2026-11-03T17:47:40.151170+00:00"
+    },
+    {
+      "name": "update-scale-expanded-chromium-r1",
+      "cwd": "/tmp/ocx020-final-review-agent/update-scale-fix",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-chromium-r1 AUDIT_SOURCE=working-UpdateCenter-sha256:1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f TMPDIR=/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp node /tmp/ocx020-final-review-agent/update-scale-fix/harness/update-scale-expanded.mjs > /tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-chromium-r1.log 2>&1",
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/update-scale-fix/harness/update-scale-expanded-r1.mjs",
+        "sha256": "1fabba8f34b729dcc3ea88672e8b7ad070295009bae52f9cfacb7bb3ea1799e4"
+      },
+      "exitCode": 1,
+      "note": "r1 failed JS parsing before browser launch; preserved, never a product failure"
+    },
+    {
+      "name": "update-scale-expanded-chromium-r2",
+      "cwd": "/tmp/ocx020-final-review-agent/update-scale-fix",
+      "commandAsExecuted": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-chromium-r2 AUDIT_SOURCE=working-UpdateCenter-sha256:1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f TMPDIR=/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp node /tmp/ocx020-final-review-agent/update-scale-fix/harness/update-scale-expanded.mjs > /tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-chromium-r2.log 2>&1",
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/update-scale-fix/harness/update-scale-expanded.mjs",
+        "sha256": "e58854f0faf9c4b7478b2aa74a7c4ef6648ce0c46c63dd5d77c6af547631064d"
+      },
+      "exitCode": 0,
+      "note": "Expanded real viewport/proportion/geometry/pointer/scroll checks"
+    },
+    {
+      "name": "repo-regression-chromium",
+      "cwd": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes",
+      "command": "AUDIT_ENGINE=chromium AUDIT_OUT=/tmp/ocx020-final-review-agent/update-scale-fix/repo-regression-chromium AUDIT_SOURCE=34a3553f9f014c0d553e16e8c509669a3e64fcd9 TMPDIR=/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp node apps/desktop/ui/qa/update-dialog-scale.mjs > /tmp/ocx020-final-review-agent/update-scale-fix/reports/repo-regression-chromium.log 2>&1",
+      "script": {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/update-dialog-scale.mjs",
+        "sha256": "9fd17dfc7b406119a9a22b7fd7edd6cfa39cca09d75a62c4df549c6c54986895"
+      },
+      "exitCode": 0,
+      "executed": true
+    },
+    {
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/update-scale-fix/harness/update-scale-contract.mjs"
+      ],
+      "envOverrides": {
+        "AUDIT_ENGINE": "webkit",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-contract-webkit-r1",
+        "AUDIT_SOURCE": "working-UpdateCenter-sha256:1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp/update-scale-contract-webkit"
+      },
+      "cwd": "/tmp/ocx020-final-review-agent/update-scale-fix",
+      "startedAt": "2026-11-03T17:47:24.446832+00:00",
+      "exitCode": 0,
+      "finishedAt": "2026-11-03T17:47:28.735493+00:00"
+    },
+    {
+      "argv": [
+        "node",
+        "/tmp/ocx020-final-review-agent/update-scale-fix/harness/update-hosts.mjs"
+      ],
+      "envOverrides": {
+        "AUDIT_ENGINE": "webkit",
+        "AUDIT_OUT": "/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-hosts-webkit-r1",
+        "AUDIT_SOURCE": "working-UpdateCenter-sha256:1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f",
+        "TMPDIR": "/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp/update-hosts-webkit"
+      },
+      "cwd": "/tmp/ocx020-final-review-agent/update-scale-fix",
+      "startedAt": "2026-11-03T17:47:28.736174+00:00",
+      "exitCode": 0,
+      "finishedAt": "2026-11-03T17:47:40.541345+00:00"
+    },
+    {
+      "name": "update-scale-expanded-webkit-r1",
+      "cwd": "/tmp/ocx020-final-review-agent/update-scale-fix",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-webkit-r1 AUDIT_SOURCE=working-UpdateCenter-sha256:1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f TMPDIR=/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp node /tmp/ocx020-final-review-agent/update-scale-fix/harness/update-scale-expanded.mjs > /tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-webkit-r1.log 2>&1",
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/update-scale-fix/harness/update-scale-expanded-r1.mjs",
+        "sha256": "1fabba8f34b729dcc3ea88672e8b7ad070295009bae52f9cfacb7bb3ea1799e4"
+      },
+      "exitCode": 1,
+      "note": "r1 failed JS parsing before browser launch; preserved, never a product failure"
+    },
+    {
+      "name": "update-scale-expanded-webkit-r2",
+      "cwd": "/tmp/ocx020-final-review-agent/update-scale-fix",
+      "commandAsExecuted": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-webkit-r2 AUDIT_SOURCE=working-UpdateCenter-sha256:1b3bb05e8e63a9251baeb3f93fe4aaf19479e865847c683df95d8cfd8d398a7f TMPDIR=/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp node /tmp/ocx020-final-review-agent/update-scale-fix/harness/update-scale-expanded.mjs > /tmp/ocx020-final-review-agent/update-scale-fix/reports/update-scale-expanded-webkit-r2.log 2>&1",
+      "preservedHarness": {
+        "path": "/tmp/ocx020-final-review-agent/update-scale-fix/harness/update-scale-expanded.mjs",
+        "sha256": "e58854f0faf9c4b7478b2aa74a7c4ef6648ce0c46c63dd5d77c6af547631064d"
+      },
+      "exitCode": 0,
+      "note": "Expanded real viewport/proportion/geometry/pointer/scroll checks"
+    },
+    {
+      "name": "repo-regression-webkit",
+      "cwd": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes",
+      "command": "AUDIT_ENGINE=webkit AUDIT_OUT=/tmp/ocx020-final-review-agent/update-scale-fix/repo-regression-webkit AUDIT_SOURCE=34a3553f9f014c0d553e16e8c509669a3e64fcd9 TMPDIR=/tmp/ocx020-final-review-agent/update-scale-fix/browser-temp node apps/desktop/ui/qa/update-dialog-scale.mjs > /tmp/ocx020-final-review-agent/update-scale-fix/reports/repo-regression-webkit.log 2>&1",
+      "script": {
+        "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/qa/update-dialog-scale.mjs",
+        "sha256": "9fd17dfc7b406119a9a22b7fd7edd6cfa39cca09d75a62c4df549c6c54986895"
+      },
+      "exitCode": 0,
+      "executed": true
+    }
+  ],
+  "noTestsOtherThanFocusedUpdateBrowserQa": true
+}
