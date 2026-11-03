@@ -232,7 +232,8 @@ jobs:
       - name: Windows final EXE smoke
         shell: pwsh
         run: |
-          & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup -ManagedInstall
+          & ../../../test/smoke/windows-ordinary-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Record Node24 driver for native version matrix
         id: native_driver
         shell: pwsh
