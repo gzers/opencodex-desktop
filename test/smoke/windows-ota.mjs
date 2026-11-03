@@ -38,7 +38,7 @@ try{
   await evaluate("document.documentElement.style.setProperty('--ui-zoom','1');[...document.querySelectorAll('.nav button')].find(b=>b.textContent.trim()==='设置').click();true")
   let selected=false
   for(let n=0;n<120;n++){
-   selected=await evaluate("(()=>{const tab=[...document.querySelectorAll('[role=tab]')].find(b=>b.textContent.trim()==='版本升级');if(!tab)return false;tab.click();return true})()")
+   selected=await evaluate("(()=>{const tab=[...document.querySelectorAll('.settings-tabs button')].find(b=>b.textContent.trim()==='版本升级'&&b.getClientRects().length>0&&!b.disabled);if(!tab)return false;tab.click();return true})()")
    if(selected)break;await new Promise(resolve=>setTimeout(resolve,100))
   }
   assert(selected,'actual updated Settings version-upgrade tab missing')
