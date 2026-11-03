@@ -1,0 +1,12 @@
+# 字体最终候选与相邻升级准备
+
+
+### 2026-11-04 字体新候选与相邻升级基线
+
+最终产品候选冻结bda7c92da4e1f2e02e6bc2c641e0747748b98dd5（tree1b72afcd13c1b02597ec3b321ccd953e15189eb6），PR64。相对c691产品仅共享字体及概览字号、CHANGELOG改变，后端产品码保持。已验证旧Release任务均终态且草稿432803988未公开，保存快照后删除旧草稿，创建新私有草稿432929365、tag v0.2.20改指bda；唯一Release41671938225已确认Windows打包中/Mac排队，未重复dispatch。完整CI41671607927仍进行；旧db和未格式化75头CI/显式合同已由新源替代并取消，原回执保留，不记通过。公开latest API仍v0.2.19/430987382。
+
+显式官方合同41671597006仍1通过/1失败：本次第一项更早在隐藏后恢复返回credentials_verified/provider_write，不能据上次已过该阶段宣称当前通过。测试守卫将记录任一后段失败的最后官方receipt，单独诊断分支codex/0.2.20-official-diagnostics/644da8f7正在运行，不重建产品或放宽成功门。该诊断源没有产品改动，最终结果需回收。此前file export用错旧运行时身份已改为正常已保存文件catalog；真实导入及后续方向恢复合同尚不能宣称最终通过。
+
+macOS真实相邻OTA准备：已下载公开0.2.19，tag公钥验签与原封包deep/strict签名通过。独立副本仅改bundle ID/name并ad-hoc重签，OPENCODEX_SANDBOX_ROOT位于/tmp/ocx020-macos-adjacent-ota/data，更新通道使用产品已有beta、自动检查关闭，没有改更新URL或公钥。通过旧版真实UI开关渠道并分别确认保存两次，config实写读回启用后停用，合成Key与outsideSentinel保留；两份备份分别逐字节等同初始配置和第一次保存后配置。before-ota-file-hashes记录当前合成文件，完整升级尚未执行。
+
+另以自有无界面小程序按Tauri实际/usr/bin/open -n路径启动，原生子进程回执确认sandbox=1与显式隔离root均继承；只记录这两个测试变量，没有读取/记录用户环境。此结果仅证明隔离重启前提，不代替产品签名下载/应用/自动重启/新版本读回。新资产验签、四安装、Mac包与两平台实际OTA仍须继续，全部required_checks保持in_progress。

@@ -1,6 +1,6 @@
 {
   "status": "active",
-  "source": "Integrated PR64 db371f82b58fe09bf7310165ed053c2470c24708; CI41669791169 and owned official41669619126 running. Product font fromf1579c6f. Old c691 package superseded.",
+  "source": "Product freezebda7c92da4e1f2e02e6bc2c641e0747748b98dd5/PR64; CI41671607927 and Release41671938225 running. Explicit official41671597006 failed provider_write; diagnostic644da8f7 live, product unchanged.",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
@@ -43,7 +43,7 @@
     "official_ci_284": "41658802959:2 explicit tests fail registration_unknown after catalog seeded on clean Mac; no product acceptance; log retained",
     "compact_typography": "1122UI/typecheck/build,64checks/16screens each engine,Macnative100/200% and fullroute428 passed; final complete sync648/engine with0errors",
     "backup_migration_clients": "60checks/12screens per engine; production consumer handlers with explicit mocked IPC, no real mutations",
-    "official_contract": "41666194973:wire test passed;old friendly-name assertion failed. db371f82 aligns tests withUI§29.1;41669619126 live, not yet passed"
+    "official_contract": "41671597006:wirepass, first legacy contract credentials_verified/provider_writefail. Diagnostic644da8f7 retains final receipt and has no product changes."
   },
   "daily_config_writes": false,
   "daily_real_sync": false,
@@ -675,20 +675,20 @@
     }
   },
   "release_candidate": {
-    "source": "c691ce7a3935c7f9162260d616ff13fb6a8f280e",
-    "draft_id": 432803988,
+    "source": "bda7c92da4e1f2e02e6bc2c641e0747748b98dd5",
+    "sourceTree": "1b72afcd13c1b02597ec3b321ccd953e15189eb6",
     "tag": "v0.2.20",
+    "draft_id": 432929365,
     "draft": true,
     "prerelease": true,
-    "release_run": 41654005109,
-    "ci_run": 41653396143,
-    "status": "superseded_by_typographyPR63; old verified package retained as historical evidence",
+    "ci_run": 41671607927,
+    "release_run": 41671938225,
+    "status": "private_building_not_accepted",
     "stable": "v0.2.19",
-    "ota_harness_source": "98e779753032d5755bc6d951c7151a036c797f7c",
-    "independent_installers_run": 41657773386
+    "macAdjacentBaseline": "2 real native UI commits+exact preimages verified; actual OTA not run"
   },
   "release_hold": {
-    "reason": "Integrated CI and explicit official contract pending, then new final package/install/actual OTA acceptance",
+    "reason": "Official failure needs actual receipt and resolution; finalCI/newassets/install/OTA still open",
     "awaitingFontVersionAnswer": false,
     "typographyImplemented": true,
     "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",
