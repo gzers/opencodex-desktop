@@ -53,6 +53,16 @@ function keydown(event: KeyboardEvent) {
   if(!props.manageFocus)return
   const button = trigger()
   const inside = menu.value?.contains(event.target as Node)
+  // AX activation may open a menu while focus stays on its owning dialog.
+  // Escape still belongs to that open menu, independently of listener order.
+  const owner = button?.closest('dialog, .app-window, [data-ui-overlay-root]')
+  if (visible.value && event.key === 'Escape' && !event.defaultPrevented
+    && (inside || event.target === button || owner?.contains(event.target as Node))) {
+    event.preventDefault()
+    event.stopPropagation()
+    close(true)
+    return
+  }
   if (!inside && event.target !== button) return
   if (!visible.value) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
@@ -124,7 +134,7 @@ const id = `select-menu-${Math.random().toString(36).slice(2)}`
 <template>
   <span ref="anchor" hidden></span>
   <Teleport :to="target">
-    <div v-if="visible" :id="id" ref="menu" v-bind="$attrs" class="select-menu select-menu-portal"
+    <div v-if="visible" :id="id" ref="menu" v-bind="$attrs" class="select-menu select-menu-portal" :data-ui-escape-owner="props.manageFocus ? '' : undefined"
       :style="position" @click="props.closeOnSelect !== false && close(true)">
       <slot />
     </div>
