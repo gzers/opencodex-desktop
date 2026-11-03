@@ -704,16 +704,25 @@
       "automaticSameProcessNativeReadback": true
     },
     "actual_windows_ota": {
-      "oldRun": 41693039017,
-      "result": "failed:new probe unavailable idle shortcut; signature/install/restart reached",
-      "retryRun": 41693777042,
-      "status": "in_progress",
-      "testToolHead": "c4ff4c3de460b2f264199eb6e5bf9291786c864e",
-      "productStill": "34a3553f"
+      "result": "pass",
+      "run": 41695170423,
+      "productSource": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
+      "testToolHead": "67db1392de8461453a0eaba5b1b4e5b0941ee926",
+      "nativeScaleHeights": [
+        34,
+        51,
+        68
+      ],
+      "evidence": "final-candidate-34a3553f/windows-adjacent-ota/summary.json",
+      "oldFailedRuns": [
+        41693039017,
+        41693777042,
+        41694465855
+      ]
     }
   },
   "release_hold": {
-    "reason": "New frozen34a Windows fullCI/final actualOTA pending; Mac actualOTA/fourinstallers/source signatures passed, stable notpromoted",
+    "reason": "Mac+Windows actualOTA, four installers, new payload seal/source, per-entry/native-scale passed; product final CI remaining Windowssmoke then PRmerge/stable/governanceclosure",
     "awaitingFontVersionAnswer": false,
     "typographyImplemented": true,
     "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",

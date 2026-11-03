@@ -1,0 +1,54 @@
+{
+  "result": "pass",
+  "engine": "webkit",
+  "source": "actual production SettingsRoute/UpdateCenter with explicit DEV adapters",
+  "before": {
+    "wrongRoleTabs": 0,
+    "realButtons": 1
+  },
+  "checks": [
+    {
+      "scale": 100,
+      "sample": {
+        "buttonHeight": 34,
+        "x": 124,
+        "y": 208.40625,
+        "right": 904,
+        "bottom": 540.59375,
+        "viewportWidth": 1028,
+        "viewportHeight": 749,
+        "buttonBottom": 523.59375
+      },
+      "passed": true
+    },
+    {
+      "scale": 150,
+      "sample": {
+        "buttonHeight": 51,
+        "x": 30,
+        "y": 125.859375,
+        "right": 998,
+        "bottom": 623.140625,
+        "viewportWidth": 1028,
+        "viewportHeight": 749,
+        "buttonBottom": 598.140625
+      },
+      "passed": true
+    },
+    {
+      "scale": 200,
+      "sample": {
+        "buttonHeight": 68,
+        "x": 40,
+        "y": 42.296875,
+        "right": 988,
+        "bottom": 706.6875,
+        "viewportWidth": 1028,
+        "viewportHeight": 749,
+        "buttonBottom": 672.6875
+      },
+      "passed": true
+    }
+  ],
+  "boundary": "browser DOM driver precheck, not native Windows proof; wrong role selector fails, actual button selector opens production window"
+}

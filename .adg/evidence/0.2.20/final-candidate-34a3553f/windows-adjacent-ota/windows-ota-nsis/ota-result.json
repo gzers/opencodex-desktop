@@ -1,0 +1,30 @@
+{
+  "result": "pass",
+  "kind": "nsis",
+  "from": "0.2.19",
+  "to": "0.2.20",
+  "channel": "beta",
+  "baselinePackageSha256": "72e00a1f70e1630fd3f46a66b30ea1b2f89480b2c0a34551e1d727d5128f5d03",
+  "expectedBuiltSha256": "f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060",
+  "installDirectory": "D:\\a\\_temp\\OpenCodeX OTA 中文 nsis 33ae068dbcaa41da82ba897cd1e7cdd1",
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-ota-nsis\\actual-sandbox",
+  "scope": "real production-channel signed updater and published baseline; isolated production model file, synthetic credentials and prewrite backup; no user machine changes",
+  "ordinaryExitPreservedOldVersion": true,
+  "automaticRestartObserved": true,
+  "automaticRestartProcess": {
+    "pid": 2560,
+    "path": "D:\\a\\_temp\\OpenCodeX OTA 中文 nsis 33ae068dbcaa41da82ba897cd1e7cdd1\\opencodex-desktop.exe",
+    "creationDate": "2026-11-03T18:35:43.557685+00:00",
+    "version": "0.2.20"
+  },
+  "readbackMethod": "automatic new process observed by OS; exact updated EXE then relaunched with explicit isolated test environment for Tauri/file readback",
+  "installedExecutableSha256": "0f0db4e674c5bc672e0b961437a2678ec981ab71bf40ed31495d790dd3fdc575",
+  "installedBundleIdentity": {
+    "builtSha256": "f557eb4f1a288b337c52805fe30510fa40083b1f6639494e7d797bd46c9e4060",
+    "expectedSha256": "0f0db4e674c5bc672e0b961437a2678ec981ab71bf40ed31495d790dd3fdc575",
+    "installedSha256": "0f0db4e674c5bc672e0b961437a2678ec981ab71bf40ed31495d790dd3fdc575",
+    "bundleMarkerOffset": 13985877,
+    "bundleMarker": "NSS",
+    "result": "pass"
+  }
+}

@@ -1127,6 +1127,32 @@
       "result": "pass",
       "nativePackageSource": "bda7c92d",
       "productSourceReuse": "all tested modules byte-identical34a"
+    },
+    "final34a-update-scale-webkit": {
+      "path": ".adg/evidence/0.2.20/final-candidate-34a3553f/independent-update-scale-review/reports/update-scale-expanded-webkit-r2/report.json",
+      "sha256": "c600c98ea12e6a89e69ec2ff51c1649997ac8d6b76c68a24c347fcad7ee6f107",
+      "scope": "actual rendered production UpdateCenter two hosts, current source CSS; explicit DEV services, browser not native",
+      "checks": 372,
+      "result": "pass"
+    },
+    "final34a-update-scale-chromium": {
+      "path": ".adg/evidence/0.2.20/final-candidate-34a3553f/independent-update-scale-review/reports/update-scale-expanded-chromium-r2/report.json",
+      "sha256": "0d0a0e9093c68e0232aee515aa5ba3f33eacacd6b5f63a8e1c25f67ab9313a2d",
+      "scope": "actual rendered production UpdateCenter two hosts, current source CSS; explicit DEV services, browser not native",
+      "checks": 372,
+      "result": "pass"
+    },
+    "final34a-update-native-macos": {
+      "path": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-update-scale/result.json",
+      "sha256": "6819b1cd6abcf941f76aac0e02f82a7b87e9bd852857e420dde805d8fff64703",
+      "result": "pass",
+      "scope": "actual final payload native window; precise host boundary in raw result"
+    },
+    "final34a-update-native-windows": {
+      "path": ".adg/evidence/0.2.20/final-candidate-34a3553f/windows-adjacent-ota/summary.json",
+      "sha256": "968026609c318a1387a7e3add4fa519b7c1536bb2ec343d3c1e8187e835264b0",
+      "result": "pass",
+      "scope": "actual final payload native window; precise host boundary in raw result"
     }
   },
   "sourceExclusions": [
@@ -1163,7 +1189,11 @@
       "prototypeReference": "frozen maintenance-ui.js145-207 showUpdates/progressDialog/applyDialog; settings-upgrade apply-dialog",
       "evidenceGroups": [
         "reviewAgent-update-hosts-chromium",
-        "reviewAgent-update-hosts-webkit"
+        "reviewAgent-update-hosts-webkit",
+        "final34a-update-scale-webkit",
+        "final34a-update-scale-chromium",
+        "final34a-update-native-macos",
+        "final34a-update-native-windows"
       ],
       "prototypeEvidence": [
         {
@@ -1183,8 +1213,9 @@
           "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
         }
       ],
-      "status": "state/geometry pass; shared-scale contract fails",
-      "blockingFinding": "FR-020-UPDATE-SCALE"
+      "status": "passed states, strict shared scale and viewport/actions with34a source browser+actual final package native",
+      "historicalBdaStatus": "state/geometry pass; shared-scale contract fails",
+      "resolvedFinding": "FR-020-UPDATE-SCALE"
     },
     {
       "file": "apps/desktop/ui/src/routes/SettingsRoute.vue",
@@ -1194,7 +1225,11 @@
       "prototypeReference": "frozen maintenance-ui.js145-207 showUpdates/progressDialog/applyDialog; settings-upgrade apply-dialog",
       "evidenceGroups": [
         "reviewAgent-update-hosts-chromium",
-        "reviewAgent-update-hosts-webkit"
+        "reviewAgent-update-hosts-webkit",
+        "final34a-update-scale-webkit",
+        "final34a-update-scale-chromium",
+        "final34a-update-native-macos",
+        "final34a-update-native-windows"
       ],
       "prototypeEvidence": [
         {
@@ -1214,8 +1249,9 @@
           "scope": "Complete frozen prototype server. Prototype memory interactions only. Prototype reference screenshots are 100%; no claim of real prototype zoom at 200%."
         }
       ],
-      "status": "state/geometry pass; shared-scale contract fails",
-      "blockingFinding": "FR-020-UPDATE-SCALE"
+      "status": "passed states, strict shared scale and viewport/actions with34a source browser+actual final package native",
+      "historicalBdaStatus": "state/geometry pass; shared-scale contract fails",
+      "resolvedFinding": "FR-020-UPDATE-SCALE"
     },
     {
       "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
@@ -1258,7 +1294,7 @@
       "id": "FR-020-UPDATE-SCALE",
       "priority": "P1",
       "releaseBlocking": false,
-      "status": "resolved by34a in browser; new native package gate pending",
+      "status": "resolved with34a product CSS; final actualMacandWindows installed payload verified",
       "acceptanceIds": [
         "AC-020-19",
         "AC-020-20"
@@ -1367,7 +1403,13 @@
       ],
       "action": "Fix product shared-scale/overlay integration and recheck both hosts, or obtain explicit requirement change. Do not infer scale acceptance from fitting geometry. This agent did not modify product.",
       "originalStatus": "confirmed-product-shared-scale-contract-failure",
-      "resolutionEvidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/independent-update-scale-review/handoff.json"
+      "resolutionEvidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/independent-update-scale-review/handoff.json",
+      "resolutionGroups": [
+        "final34a-update-scale-webkit",
+        "final34a-update-scale-chromium",
+        "final34a-update-native-macos",
+        "final34a-update-native-windows"
+      ]
     }
   ],
   "prototypeHostDiagnosis": {
@@ -1712,7 +1754,7 @@
   "unchangedConsumerReuse": "All Rust/other production UI files equal bda, only UpdateCenter CSS changed; original bda package install/OTA are historical, new payload gates separate.",
   "updateScaleFix": {
     "source": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
-    "status": "twoengine rendered contracts plus actual new formal Mac package both hosts100/200% passed",
+    "status": "passed finalsource browserandactualMac/Windows payload",
     "originalBlockingFinding": "FR-020-UPDATE-SCALE",
     "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/independent-update-scale-review/handoff.json",
     "checksPerEngine": {
@@ -1726,7 +1768,8 @@
       51,
       68
     ],
-    "nativeEvidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-update-scale/result.json"
+    "nativeEvidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-update-scale/result.json",
+    "nativeWindowsEvidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/windows-adjacent-ota/summary.json"
   },
   "finalNativeHistoryRecovery": "passed actual native UI/IPC acceptance and only draft file changed; precise seeded historical-catalog boundary in receipt"
 }
