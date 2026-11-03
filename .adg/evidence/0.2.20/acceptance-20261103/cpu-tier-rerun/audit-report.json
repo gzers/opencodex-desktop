@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-11-03T08:43:47.432Z",
+  "base": "http://127.0.0.1:52431",
+  "total": 4,
+  "passed": 4,
+  "failed": 0,
+  "warnings": [],
+  "performance": [
+    "性能·三档CPU内存 high 3s任务耗时=996ms 脚本=18ms 布局=9ms 堆=11MB（③ 层）",
+    "性能·三档CPU内存 mid 3s任务耗时=33ms 脚本=5ms 布局=0ms 堆=11MB（③ 层）",
+    "性能·三档CPU内存 low 3s任务耗时=79ms 脚本=11ms 布局=0ms 堆=11MB（③ 层）"
+  ],
+  "results": [
+    {
+      "name": "性能·三档CPU内存 三档均有采样",
+      "ok": true,
+      "detail": "n=3"
+    },
+    {
+      "name": "性能·三档CPU内存 中/低档脚本成本低于高档",
+      "ok": true,
+      "detail": "high=18ms others=5/11ms"
+    },
+    {
+      "name": "性能·三档CPU内存 中/低档任务耗时低于高档",
+      "ok": true,
+      "detail": "high=996ms others=33/79ms"
+    },
+    {
+      "name": "性能·三档CPU内存 堆占用不随重复加载单调增长（单页 < 200MB）",
+      "ok": true,
+      "detail": "high:11MB mid:11MB low:11MB"
+    }
+  ]
+}

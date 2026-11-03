@@ -388,6 +388,26 @@
     "evidence": "acceptance-20261103/README.md",
     "matrix_fix_merged": "ce9ea6e51b9d20e9aa7986144edbcfd368e26695",
     "native_preferences_evidence": "acceptance-20261103/native-preferences",
-    "native_preferences_scope": "558b9aec sandbox copy: cancel cleanup, real export, import cancel no write, confirm preference change and exact prewrite backup; extensions group outside visible selection remains under investigation; not final candidate acceptance"
+    "native_preferences_scope": "558b9aec sandbox copy: cancel cleanup, real export, import cancel no write, confirm preference change and exact prewrite backup; extensions group outside visible selection remains under investigation; not final candidate acceptance",
+    "preferences_scope_fix_pr": 47,
+    "preferences_scope_source": "1c2ca000",
+    "preferences_scope_checks": {
+      "focused_ui": 40,
+      "full_ui": 1095,
+      "rust_file_roundtrip": "pass for absent and pre-existing extension file; backup groups only preferences",
+      "typecheck": "pass",
+      "build": "pass",
+      "clippy": "pass",
+      "native_final_candidate": "pending"
+    },
+    "latest_full_browser_audit": {
+      "total": 428,
+      "passed": 427,
+      "failed": 1,
+      "page_errors": 0,
+      "failure": "CPU tier script-time comparison high=11ms vs low=14ms; task totals high539/mid25/low95ms",
+      "bounded_rerun": "4/4 CPU-tier checks passed; high script18ms vs low11ms; retain failed full run",
+      "evidence": "acceptance-20261103/all-routes-after-qa/audit-report.json; acceptance-20261103/cpu-tier-rerun/audit-report.json"
+    }
   }
 }

@@ -55,3 +55,15 @@ PR #45已在全CI通过后合并为ce9ea6e5；PR #46仍待完整Windows CI。安
 ## WebKit模型页复测
 
 models-webkit记录32/32结构断言通过，6张截图，覆盖900/1180/1440宽度、亮暗及150%/200%缩放；仅模型列表，不是全部模型弹窗验收。900宽截图有托盘命令通道不可用toast，属于DEV无原生通道的状态，保留原图，不据32项结构通过宣称完全视觉一致。全路由audit在/tmp/ocx020-all-routes-20261103运行中，尚无最终报告；进程句柄81557待回收。
+
+## S20-03/14范围问题已确认并进入修复（PR #47）
+
+回读冻结cfbd90c4b的sync-config.js第31行，桌面偏好定义为“主题、语言与可移植显示偏好”，字段白名单排除执行绑定与本机操作选择。生产UI却把preferences复选项同时映射至manager.extensions，含整份扩展启用配置；这解释了原生偏好包和范围备份中额外的extensions组。
+
+PR #47/1c2ca000修正新导出及WebDAV的偏好选择，已记住的旧extensions标志不再扩大该范围；普通旧文件/下载如含整份扩展设置，须在确认前重新选择为可见范围，extensions=false。投影失败仍dirty并禁用确认；Skills/MCP继续由实际对象选择。原冻结重试保持原操作意图，不借这项修复重写已开始操作。
+
+两项新增UI回归在改前均失败（旧导出extensions=true，旧文件未重选）；改后40项ModelTransfer定向测试通过，177文件/1095项全UI测试通过，typecheck/build/Clippy/rustfmt通过。真实Rust文件链路读取含preferences+extensions的旧包，再以preferences=true、extensions=false投影、范围备份并采用，验证125%显示偏好写入且backup.groups只含preferences；分别验证目标不存在扩展配置时不创建，目标已有配置时字节完全不变。该用例通过，日志随本目录归档；尚未据此声称新UI的原生文件验收通过，PR CI和最终候选复测仍需执行。
+
+## 全路由审计回收
+
+全量浏览器audit为427/428，0页面异常。唯一失败：三档CPU内存中script-time比较high=11ms、mid=3ms、low=14ms；总task-time则high=539ms、mid=25ms、low=95ms。原报告保留于all-routes-after-qa。相同脚本不改阈值定向复跑该用例4/4通过，script-time为high18/mid5/low11ms，原报告保留于cpu-tier-rerun。两轮都保留，不把后一次局部通过改写为全量428/428。本轮DEV夹具/用户状态修正不等于性能全面验收。
