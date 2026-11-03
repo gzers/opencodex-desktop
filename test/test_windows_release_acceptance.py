@@ -49,6 +49,14 @@ class WindowsReleaseAcceptanceTests(unittest.TestCase):
         self.assertIn("GetValue('InstallDir',$null)", script)
         self.assertIn("registryCleanup", script)
 
+    def test_all_msi_cells_run_before_default_nsis_can_write_a_remembered_path(self):
+        script = (ROOT / "test/smoke/windows-installer.ps1").read_text(encoding="utf-8")
+        self.assertIn("$defaultTaskKinds=if($Kind -ceq 'all'){@('msi')}", script)
+        default_nsis = script.index("if($Mode -cne 'custom' -and $Kind -ceq 'all')")
+        custom_cells = script.index("foreach ($kind in $taskKinds)")
+        self.assertLess(custom_cells, default_nsis)
+        self.assertIn("avoid contaminating MSI AppSearch", script)
+
     def test_installed_packages_start_as_an_ordinary_user_before_admin_uninstall(self):
         script = (ROOT / "test/smoke/windows-installer.ps1").read_text(encoding="utf-8")
         self.assertEqual(script.count("'windows-ordinary-startup.ps1'"), 2)

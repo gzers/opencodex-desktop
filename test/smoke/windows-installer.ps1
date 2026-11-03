@@ -79,8 +79,11 @@ try {
     # No /D or INSTALLDIR override: exercise the installer's actual default/remembered path.
     $taskResult.defaultInstallChecks=@()
     $taskKinds=if($Kind -ceq 'all'){@('msi','nsis')}else{@($Kind)}
+    # Run all MSI cells before any NSIS cell: NSIS writes a per-user remembered
+    # path that Windows Installer AppSearch can observe from loaded user hives.
+    $defaultTaskKinds=if($Kind -ceq 'all'){@('msi')}else{@($Kind)}
     if($Mode -cne 'custom'){
-    foreach($kind in $taskKinds){
+    foreach($kind in $defaultTaskKinds){
         $pattern=if($kind -eq 'nsis'){'*-setup.exe'}else{'*.msi'}
         $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $kind) -Filter $pattern -File)
         if($package.Count -ne 1){throw 'Exact default installer package missing'}
@@ -181,6 +184,22 @@ try {
         }
         $entry.result = 'pass'
     }
+    }
+    if($Mode -cne 'custom' -and $Kind -ceq 'all'){
+        $kind='nsis'
+        $package=@(Get-ChildItem -LiteralPath (Join-Path $taskBundle $kind) -Filter '*-setup.exe' -File)
+        if($package.Count -ne 1){throw 'Exact default NSIS installer package missing'}
+        [void](Invoke-Installer $package[0].FullName '/S')
+        $defaultRoot=Find-DefaultInstalledDirectory
+        try{
+            $defaultExe=Join-Path $defaultRoot 'opencodex-desktop.exe'
+            & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $defaultExe -Node $Node -OutputDirectory (Join-Path $taskOutput 'nsis-default-startup') -ExpectedCommit $taskSource -Mode any
+            if($LASTEXITCODE -ne 0){throw 'Default per-user NSIS EXE failed owner-account startup smoke'}
+            $taskResult.defaultInstallChecks+=@{kind='nsis';result='pass';installDirectory=$defaultRoot;pathOverride=$false;boundary='per-user NSIS is checked after MSI cells to avoid contaminating MSI AppSearch'}
+            foreach($resource in @('LICENSE','THIRD-PARTY-NOTICES.txt')){
+                if(!(Test-Path -LiteralPath (Join-Path $defaultRoot ('resources/'+$resource)))){throw 'Installed local documentation resource missing'}
+            }
+        }finally{[void](Invoke-Installer (Join-Path $defaultRoot 'uninstall.exe') '/S')}
     }
     $taskResult.result = 'pass'
 } catch {
