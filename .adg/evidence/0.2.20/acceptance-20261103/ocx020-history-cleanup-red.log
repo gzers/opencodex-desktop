@@ -1,0 +1,137 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/notification-history-cleanup.test.ts (9 tests | 6 failed) 54ms
+   ❯ notification history cleanup receipts (9)
+     × all failure follows the actual backend result 9ms
+     × all pending follows the actual backend result 5ms
+     × resolved failure follows the actual backend result 2ms
+     × resolved pending follows the actual backend result 2ms
+     × read failure follows the actual backend result 2ms
+     × read pending follows the actual backend result 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/notification-history-cleanup.test.ts > notification history cleanup receipts > all failure follows the actual backend result
+AssertionError: expected "wrappedAction" to be called with arguments: [ StringContaining "失败" ]
+
+Received:
+
+  1st wrappedAction call:
+
+  [
+-   StringContaining "失败",
++   "全部通知已清理。",
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/notification-history-cleanup.test.ts:20:102
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/notification-history-cleanup.test.ts > notification history cleanup receipts > all pending follows the actual backend result
+AssertionError: expected "wrappedAction" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st wrappedAction call:
+
+    Array [
+      "全部通知已清理。",
+    ]
+
+
+Number of calls: 1
+
+ ❯ tests/notification-history-cleanup.test.ts:19:45
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/notification-history-cleanup.test.ts > notification history cleanup receipts > resolved failure follows the actual backend result
+AssertionError: expected "wrappedAction" to be called with arguments: [ StringContaining "失败" ]
+
+Received:
+
+  1st wrappedAction call:
+
+  [
+-   StringContaining "失败",
++   "已清理已解决通知。",
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/notification-history-cleanup.test.ts:20:102
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/notification-history-cleanup.test.ts > notification history cleanup receipts > resolved pending follows the actual backend result
+AssertionError: expected "wrappedAction" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st wrappedAction call:
+
+    Array [
+      "已清理已解决通知。",
+    ]
+
+
+Number of calls: 1
+
+ ❯ tests/notification-history-cleanup.test.ts:19:45
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/notification-history-cleanup.test.ts > notification history cleanup receipts > read failure follows the actual backend result
+AssertionError: expected "wrappedAction" to be called with arguments: [ StringContaining "失败" ]
+
+Received:
+
+  1st wrappedAction call:
+
+  [
+-   StringContaining "失败",
++   "已读通知已清理。",
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/notification-history-cleanup.test.ts:20:102
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/notification-history-cleanup.test.ts > notification history cleanup receipts > read pending follows the actual backend result
+AssertionError: expected "wrappedAction" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st wrappedAction call:
+
+    Array [
+      "已读通知已清理。",
+    ]
+
+
+Number of calls: 1
+
+ ❯ tests/notification-history-cleanup.test.ts:19:45
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 3 passed (9)
+   Start at  20:35:31
+   Duration  1.06s (transform 63%, environment 23%, import 8%, tests 5%)
+

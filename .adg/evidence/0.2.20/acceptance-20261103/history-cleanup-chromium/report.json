@@ -1,0 +1,161 @@
+{
+  "completed": true,
+  "failure": null,
+  "engine": "chromium",
+  "scope": "DEV browser; production history/store failure path; absent native bridge; no disk mutations",
+  "checks": [
+    {
+      "width": 1180,
+      "kind": "all",
+      "name": "failure is visible",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "all",
+      "name": "failed cleanup preserves the list",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "all",
+      "name": "no success result was shown",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "all",
+      "name": "confirmation resolves to original history",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "resolved",
+      "name": "failure is visible",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "resolved",
+      "name": "failed cleanup preserves the list",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "resolved",
+      "name": "no success result was shown",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "resolved",
+      "name": "confirmation resolves to original history",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "read",
+      "name": "failure is visible",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "read",
+      "name": "failed cleanup preserves the list",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "read",
+      "name": "no success result was shown",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "kind": "read",
+      "name": "confirmation resolves to original history",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "all",
+      "name": "failure is visible",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "all",
+      "name": "failed cleanup preserves the list",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "all",
+      "name": "no success result was shown",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "all",
+      "name": "confirmation resolves to original history",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "resolved",
+      "name": "failure is visible",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "resolved",
+      "name": "failed cleanup preserves the list",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "resolved",
+      "name": "no success result was shown",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "resolved",
+      "name": "confirmation resolves to original history",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "read",
+      "name": "failure is visible",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "read",
+      "name": "failed cleanup preserves the list",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "read",
+      "name": "no success result was shown",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "kind": "read",
+      "name": "confirmation resolves to original history",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "screens": [
+    "1180-all.png",
+    "1180-resolved.png",
+    "1180-read.png",
+    "900-all.png",
+    "900-resolved.png",
+    "900-read.png"
+  ]
+}

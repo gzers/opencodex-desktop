@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "a2bbb35ec89e03b15a7e7faaa4ed9ded2ad62eec",
+  "qaExecutableSha256": "4db3a18f6ca73ef3e3d7e3dd920f691b6f9af5105fc008ebcca1e5cbacc4d6b1",
+  "beforeFixtureSha256": {
+    "opencodex-home/config.json": "638096491d445d7595ad7461e2da9fdcef1aa1fc5a89fc0138ccf7d7e91eb7cc",
+    "home/.agents/skills/mixed-fixture/SKILL.md": "0ce3f80a4f18ed7c813e8fd8c0f5ceb95b4bbf7c2ec3f7a1a8350c75ac369992",
+    "home/.agents/skills/mixed-fixture/.env": "103954a63bfbd0fce5b30c13b9238922d22351951422705fcdd3b4a143671e0a",
+    "home/.codex/config.toml": "56cc7477ae4e04ff385bc8ed7a1f82f2ebd6e85c0e1f23cc8973c74c73b74f40",
+    "home/.claude.json": "c4eb76a51910da8fc83cdc00fd81840be246046555dc15184503dd04cb6e6790"
+  },
+  "sandboxRoot": "/tmp/ocx020-mixed-transfer-native-a2bbb35e/data",
+  "bundleId": "com.gzers.opencodex.desktop.mixed20261103",
+  "finalReleaseCandidate": false,
+  "fixtureCorrection": {
+    "path": "home/.claude.json",
+    "initialKey": "mcpServers",
+    "admittedCurrentReaderKey": "mcp_servers",
+    "reason": "Current frozen client reader; actual platform key adaptation belongs to separate multi-agent package",
+    "beforeUserExport": true
+  }
+}

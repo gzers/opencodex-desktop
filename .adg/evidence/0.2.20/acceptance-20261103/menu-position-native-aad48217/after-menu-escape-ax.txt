@@ -1,0 +1,56 @@
+Window: "", App: OpenCodeX Menu Acceptance.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#sync
+			3 container 确认导出
+				4 heading 确认导出, Value: 2
+					5 text 确认导出
+				6 text 保存位置
+				7 保存位置
+					8 container
+						9 radio button 默认导出目录, Value: 1
+						10 text 默认导出目录
+					11 container
+						12 radio button 自定义目录, Value: 0
+						13 text 自定义目录
+				14 container 导出目录结构
+					15 text 生成位置
+					16 text 默认导出目录/
+└── 2026-11-03/
+    └── 备份包-时刻-短码/
+        ├── 本次所选配置
+        ├── 模版与所选版本
+        └── manifest / 校验信息
+					17 text 按日期归组，一次导出一个可独立拷贝的备份包。同日多次导出各自建包，不混写、不覆盖。
+				18 text 21 项配置 · 同一备份包
+				19 text 不含凭据，可直接使用完整性校验。复制整个备份包即可带到另一台设备。
+				20 text 包内按 桌面偏好 / 模型模版 / 渠道与模型 / Skills / MCP 分组，导入时仍按所选范围识别。
+				21 container 同名 MCP 定义不同
+					22 text 同名 MCP 定义不同
+					23 container mixed-fixture 同名定义在 Codex、Claude 中不同（差异字段：command、env），请选择来源 采用来源
+						24 text mixed-fixture 同名定义在 Codex、Claude 中不同（差异字段：command、env），请选择来源
+						25 container
+							26 text 采用来源
+							27 pop up button mixed-fixture 采用来源
+				28 container
+					29 text 21 项配置 · 不含任何凭据 渠道 Key 0 项 / 账户登录态 0 项 / 扩展凭据 0 项 / WebDAV 密码 0 项
+				30 container
+					31 checkbox 加密配置包, Value: 0
+					32 text 加密配置包
+				33 summary ▸ 查看内容清单, Value: off
+					34 text ▸
+					35 text 查看内容清单
+				36 container
+					37 button 取消
+					38 button 生成配置包
+	39 close button
+	40 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	41 minimize button
+42 menu bar
+	43 OpenCodeX Menu Acceptance
+	44 进程
+	45 编辑
+	46 视图
+	47 诊断
+
+The focused UI element is 27 pop up button mixed-fixture 采用来源

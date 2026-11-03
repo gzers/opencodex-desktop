@@ -1,6 +1,6 @@
 {
   "status": "active",
-  "source": "Main through PR49 at3120d90a4; accepted follow-ups PR50 e1674de7, PR51 9ce6672e, PR52 f7d8ca11, PR53 a2bbb35e are under CI and not yet release-tagged. Current draft/tag assets remain old and not accepted.",
+  "source": "Main through PR51 d1004371; follow-up PR52-56 remains under CI. Current code worktree b810aec2; release tag/assets are old and not accepted.",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
@@ -457,7 +457,8 @@
       "fullUiTests": 1104,
       "nativeInputAndMenu": true,
       "nativeConfigUnchanged": true,
-      "finalReleaseCandidate": false
+      "finalReleaseCandidate": false,
+      "merged": "c8c53ac169ad025b8352eba4da026791e83c67a0"
     },
     "model_dialog_rendered": {
       "webkitChecks": 344,
@@ -478,7 +479,8 @@
       "native200Percent": true,
       "nativeConfigBytesUnchanged": true,
       "windowsKeyboardNewChecks": "CI pending",
-      "finalReleaseCandidate": false
+      "finalReleaseCandidate": false,
+      "merged": "d1004371351074d94bc0a4f8e3c8e733270b5665"
     },
     "secondary_dialogs": {
       "pr": 52,
@@ -510,6 +512,72 @@
       41629159210,
       41631035206,
       41631882781
-    ]
+    ],
+    "native_mixed_export": {
+      "source": "codex from explicit MCP picker; code a2bbb35e",
+      "objects": 21,
+      "completed": 21,
+      "syntheticCredentials": 3,
+      "nodeReplExcluded": true,
+      "extensionSettingsExcluded": true,
+      "fixtureBytesUnchanged": true,
+      "finalReleaseCandidate": false
+    },
+    "native_menu_position": {
+      "pr": 55,
+      "source": "aad48217",
+      "browserChecksPerEngine": 48,
+      "modelChecksPerEngine": 352,
+      "secondaryChecksPerEngine": 111,
+      "nativeLowEffects": true,
+      "cancelRemovedPlans": true,
+      "fixtureBytesUnchanged": true,
+      "finalReleaseCandidate": false
+    },
+    "ota_prerelease_acceptance": {
+      "pr": 54,
+      "source": "9a9a84a0",
+      "admittedChannels": [
+        "stable",
+        "beta"
+      ],
+      "default": "stable",
+      "exactInstalledExeHashRequired": true,
+      "toolTests": 16,
+      "publishedAcceptanceTests": 7,
+      "powerShell": "7.5.4 syntax/parameters pass",
+      "actualOTA": "not run"
+    },
+    "latest_all_route_audits": [
+      {
+        "source": "a2bbb35e",
+        "total": 428,
+        "passed": 428,
+        "failed": 0,
+        "pageErrors": 0
+      },
+      {
+        "source": "aad48217",
+        "total": 428,
+        "passed": 428,
+        "failed": 0,
+        "pageErrors": 0
+      }
+    ],
+    "notification_history_cleanup": {
+      "pr": 56,
+      "source": "b810aec2",
+      "red": {
+        "failed": 6,
+        "passed": 3
+      },
+      "newTests": 9,
+      "fullUiTests": 1114,
+      "fullUiFiles": 179,
+      "browserChecksPerEngine": 24,
+      "screenshots": 12,
+      "pageErrors": 0,
+      "realNotificationsDeleted": false
+    }
   }
 }

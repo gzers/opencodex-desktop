@@ -1,0 +1,139 @@
+{
+  "source": "b810aec2",
+  "scope": "all Rust ignore attributes, including platform-only and child helpers; not a list of failed tests or automatic acceptance exclusions",
+  "items": [
+    {
+      "file": "apps/desktop/tauri/src/commands/network.rs",
+      "line": 107,
+      "test": "live_no_proxy_probe_reaches_controlled_url",
+      "defaultIgnoreReason": "hits the network; run explicitly",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/src/modules/about/remote.rs",
+      "line": 547,
+      "test": "live_remote_query_returns_version_and_integrity",
+      "defaultIgnoreReason": "hits the npm registry; run explicitly",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/src/modules/model_config/transfer_protection.rs",
+      "line": 203,
+      "test": "native_secure_store_round_trip_is_isolated_and_metadata_contains_no_password",
+      "defaultIgnoreReason": "requires OPENCODEX_SANDBOX=1 and a native credential store; run explicitly on each OS",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/src/modules/sync/config.rs",
+      "line": 400,
+      "test": "save_endpoint_stores_only_the_webdav_secret",
+      "defaultIgnoreReason": "native credential store; see test comment",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/backup_process_lock.rs",
+      "line": 117,
+      "test": "w2_child",
+      "defaultIgnoreReason": "subprocess helper; run by both parent tests on explicit temporary roots",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/config_sync_webdav_real.rs",
+      "line": 49,
+      "test": "current_file_channel_roundtrips_over_verified_https_and_commits_on_confirmation",
+      "defaultIgnoreReason": "requires the explicit owned HTTPS fixture; writes only temporary local configurations",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/config_sync_webdav_real.rs",
+      "line": 149,
+      "test": "conditional_publish_preserves_remote_objects_and_device_scoped_reception",
+      "defaultIgnoreReason": "needs explicit owned TLS WebDAV fixture and OCXD_CONFIG_WEBDAV_CA for its local CA",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/model_config_official_real.rs",
+      "line": 120,
+      "test": "isolated_official_discovery_save_and_protocol_mapping_readback",
+      "defaultIgnoreReason": "requires explicit OCXD_TEST_OFFICIAL_ENTRY and OCXD_TEST_OFFICIAL_NODE; runs installed official in temporary HOME",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/model_config_official_real.rs",
+      "line": 1729,
+      "test": "isolated_official_saved_protocol_alias_reasoning_and_fast_wire",
+      "defaultIgnoreReason": "requires explicit installed official entry/node; generation requests only hit a temporary loopback fixture",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/model_file_browser.rs",
+      "line": 150,
+      "test": "file_browser_fixture",
+      "defaultIgnoreReason": "explicit loopback browser fixture; see ui/qa/file-save-browser.mjs",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/model_file_live.rs",
+      "line": 16,
+      "test": "installed_configuration_roundtrips_as_an_isolated_file",
+      "defaultIgnoreReason": "requires explicit live source; writes only an isolated temporary clone",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/model_file_live.rs",
+      "line": 113,
+      "test": "real_model_measurements_use_the_backend_without_altering_config",
+      "defaultIgnoreReason": "requires explicit live opt-in; only model-list GET requests",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/model_research_real.rs",
+      "line": 5,
+      "test": "public_text_and_search_return_recorded_sources_without_model_requests",
+      "defaultIgnoreReason": "explicit public-network read/search admission; no model generation",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/provider_auth_native.rs",
+      "line": 75,
+      "test": "native_protection_reference_resolution_rebind_and_missing_key_refusal",
+      "defaultIgnoreReason": "requires explicit OPENCODEX_SANDBOX=1; writes/deletes only random owned native credential fixtures",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/status_snapshot.rs",
+      "line": 69,
+      "test": "managed_collector_is_injected_into_status_command",
+      "defaultIgnoreReason": "Tauri tray setup requires the native main thread",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/windows_runtime.rs",
+      "line": 80,
+      "test": "windows_explicit_sandbox_child",
+      "defaultIgnoreReason": "child entry explicitly executed by the isolated-environment parent",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/windows_runtime.rs",
+      "line": 270,
+      "test": "windows_model_environment_child",
+      "defaultIgnoreReason": "owned child only",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/windows_runtime.rs",
+      "line": 556,
+      "test": "windows_local_discovered_tools_install_upgrade_and_failure_recovery",
+      "defaultIgnoreReason": "explicit local reproduction with discovered tools; installs only into its test root",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    },
+    {
+      "file": "apps/desktop/tauri/tests/windows_runtime.rs",
+      "line": 967,
+      "test": "windows_official_managed_registry_upgrade_and_offline_reinstall",
+      "defaultIgnoreReason": "explicit CI official registry install; no daily profile or generation",
+      "acceptanceMeaning": "explicit opt-in/owned parent runner required; default suite does not prove execution"
+    }
+  ]
+}
