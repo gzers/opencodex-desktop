@@ -1,6 +1,6 @@
 {
   "status": "active",
-  "source": "Main through PR51 d1004371; follow-up PR52-56 remains under CI. Current code worktree b810aec2; release tag/assets are old and not accepted.",
+  "source": "Main includes PR50-53 through3e33ab6c. Current code57239d5a (PR54-59 follow-ups under CI); release tag/assets remain old, not accepted.",
   "required_checks": {
     "prototype-parity": {
       "status": "in_progress",
@@ -9,7 +9,7 @@
     },
     "saved-file-and-backup": {
       "status": "in_progress",
-      "reason": "Native isolated UI+IPC proves preferences export/import cancel and confirm, exact prewrite backup, backup-off metadata, scope exclusion of extensions, selected restore preserving later scale changes, and concurrent restore refusal. Rust file roundtrip and current PR48/49 CI passed. Other resource/credential and final-package matrix remains open.",
+      "reason": "Native isolated mixed package:21objects/3synthetic credentials exported; same-ID import failed safely under temporary process HOME then retried via sandbox native security store,4completed/17unchanged. Actual saved provider/key+Skill+MCP+prefs and one original exact scope backup verified. Real scope restore rejects preview drift then restores original bytes while retaining later independent field. Final package/native and remaining failure combinations pending.",
       "evidence": "implementation-20261102/export-preview-cancellation.md; PR #37 head dff7c75d; seven focused Rust tests; 37 focused ModelTransfer tests; full UI suite 177/1092; local Tauri IPC sandbox; PR CI 41474713948"
     },
     "credential-and-scope-boundaries": {
@@ -34,7 +34,7 @@
     }
   },
   "tests": {
-    "ui_checkpoint": "Current a2bbb35e:178 files/1105 UI tests, typecheck/build pass. Model rendered matrix Chromium/WebKit352 each; secondary111 each; full extension data14 each. Native macOS scoped read/write/restore and200% input/navigation/detail evidence retained; not final candidate acceptance.",
+    "ui_checkpoint": "57239d5a:179files/1120tests, typecheck/build pass; identity10 and secondary117 per engine. Earlier model352/menu48/full-detail14 and fullroute428 evidence bounded to their recorded sources; all failures retained.",
     "rust_checkpoint": "777aa9c5 full cargo test --locked --lib: 1159 passed, 0 failed, 4 ignored; CI 41420204361 passed both backend jobs; initial PR #35 CI 41434514282 had 937 passed and two test-fixture deadline failures; integrated CI 41439302028 passed both affected tests and all Windows backend/native build/smoke matrices.",
     "native_credential": "OPENCODEX_SANDBOX=1 explicit macOS native test passed"
   },
@@ -492,7 +492,8 @@
       "externalRequests": 0,
       "nativeExtensionEntryAndRead": true,
       "nativeFullLayout": "failed, corrected by PR53",
-      "finalReleaseCandidate": false
+      "finalReleaseCandidate": false,
+      "merged": "3ace1df15db770fd3a629527208e06f39e0908bb"
     },
     "extension_full_layout": {
       "pr": 53,
@@ -505,7 +506,8 @@
       "native200PercentBodyAndLastClient": true,
       "nativeFixtureBytesUnchanged": true,
       "fullUiTests": 1105,
-      "finalReleaseCandidate": false
+      "finalReleaseCandidate": false,
+      "merged": "3e33ab6cd605abdde46960a06d6b95afe81380c3"
     },
     "ci_progress_runs": [
       41627531292,
@@ -514,14 +516,15 @@
       41631882781
     ],
     "native_mixed_export": {
-      "source": "codex from explicit MCP picker; code a2bbb35e",
+      "source": "a2bbb35e",
       "objects": 21,
       "completed": 21,
       "syntheticCredentials": 3,
       "nodeReplExcluded": true,
       "extensionSettingsExcluded": true,
       "fixtureBytesUnchanged": true,
-      "finalReleaseCandidate": false
+      "finalReleaseCandidate": false,
+      "selectedMcpSource": "codex"
     },
     "native_menu_position": {
       "pr": 55,
@@ -578,6 +581,42 @@
       "screenshots": 12,
       "pageErrors": 0,
       "realNotificationsDeleted": false
+    },
+    "preferences_scope_merged": "fa5b9e2769627889fa98c8856b64ce12d4725bc3",
+    "restore_dialog_ownership": {
+      "pr": 57,
+      "source": "35c06338",
+      "redFailures": 4,
+      "restoreTests": 8,
+      "fullUiTests": 1118,
+      "browserPerEngine": 14,
+      "realBackupExecuted": false
+    },
+    "native_mixed_import_restore": {
+      "source": "35c06338",
+      "initialFailure": "native keychain unavailable with temporary process HOME; all fixture bytes unchanged",
+      "retrySameId": "b7a0a65b-78e5-44c2-a868-63f7067d24f6",
+      "completed": 4,
+      "unchanged": 17,
+      "scopeBackups": 1,
+      "preimagesExact": true,
+      "restoreConcurrentDriftRejected": true,
+      "scopeRestorePreservedLaterOutsideField": true,
+      "clientMcpUnchanged": true,
+      "nativeSandboxOwnedAccountsCleaned": 2,
+      "finalReleaseCandidate": false
+    },
+    "credential_feedback": {
+      "pr": 59,
+      "source": "57239d5a",
+      "regressions": 2,
+      "fullUiTests": 1120,
+      "uiFiles": 179,
+      "typecheck": "pass",
+      "build": "pass",
+      "identityChecksPerEngine": 10,
+      "secondaryChecksPerEngine": 117,
+      "newNativeLabels": "final package pending"
     }
   }
 }

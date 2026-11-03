@@ -1,0 +1,82 @@
+Window: "", App: OpenCodeX Import Acceptance.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#sync
+			3 container 导入配置
+				4 container
+					5 heading 导入配置, Value: 2
+						6 text 导入配置
+					7 button 关闭
+				8 text 授权恢复安全存储无法读取
+				9 text 配置文件
+				10 button 选择文件
+				11 text /private/tmp/ocx020-mixed-import-native-35c06338/data/import-fixtures/mixed-source.ocxdconf
+				12 text 文件版本：2026-11-03 20:11
+				13 container
+					14 text mixed-fixture 新增配置 新增 mixed-fixture 新增 .env；更新 SKILL.md；移除 old-only.txt 更新 mixed-fixture 新增配置 新增 通用偏好 更新所选桌面偏好 更新
+				15 text 原导入采用范围已冻结，请核对同一操作。
+				16 container
+					17 checkbox (disabled) 采用所选扩展凭据（新本机引用及受保护资源）, Value: 1
+					18 text 采用所选扩展凭据（新本机引用及受保护资源）
+				19 container
+					20 checkbox (disabled) 采用所选渠道的Key与认证配置（1 个渠道）, Value: 1
+					21 text 采用所选渠道的Key与认证配置（1 个渠道）
+				22 container
+					23 checkbox (disabled) mixed-fixture · 凭据, Value: 1
+					24 text mixed-fixture · 凭据
+				25 container
+					26 checkbox (disabled) mixed-fixture · 凭据, Value: 1
+					27 text mixed-fixture · 凭据
+				28 container
+					29 checkbox (disabled) mixed-fixture · 凭据, Value: 1
+					30 text mixed-fixture · 凭据
+				31 container (expanded) Secondary Actions: Collapse
+					32 summary 选择接收范围, Value: on
+						33 text 选择接收范围
+					34 table 接收配置对象
+						35 row (selectable) 选择当前筛选全部配置对象, Value: 配置对象
+范围与凭据
+							36 checkbox (disabled) 选择当前筛选全部配置对象, Value: 1
+						37 row (selectable)
+							38 cell (selectable) Value: 渠道与模型, 选择 渠道与模型
+展开 渠道与模型
+								39 checkbox (disabled) 选择 渠道与模型, Value: 1
+							40 cell (selectable) 1 / 1
+						41 row (selectable)
+							42 cell (selectable) Value: 模型模版, 选择 模型模版
+展开 模型模版
+								43 checkbox (disabled) 选择 模型模版, Value: 1
+							44 cell (selectable) 17 / 17
+						45 row (selectable)
+							46 cell (selectable) Value: Skills, 选择 Skills
+展开 Skills
+								47 checkbox (disabled) 选择 Skills, Value: 1
+							48 cell (selectable) 1 / 1
+						49 row (selectable)
+							50 cell (selectable) Value: MCP, 选择 MCP
+展开 MCP
+								51 checkbox (disabled) 选择 MCP, Value: 1
+							52 cell (selectable) 1 / 1
+						53 row (selectable)
+							54 cell (selectable) Value: 桌面偏好, 选择 桌面偏好
+展开 桌面偏好
+								55 checkbox (disabled) 选择 桌面偏好, Value: 1
+							56 cell (selectable) 1 / 1
+					57 text 所选渠道需要的保存版本会一并接收。
+				58 summary ▸ 查看内容清单, Value: off
+					59 text ▸
+					60 text 查看内容清单
+				61 container
+					62 button 取消
+					63 button 核对原导入
+	64 close button
+	65 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	66 minimize button
+67 menu bar
+	68 OpenCodeX Import Acceptance
+	69 进程
+	70 编辑
+	71 视图
+	72 诊断
+
+The focused UI element is 3 container 导入配置

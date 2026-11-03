@@ -1,0 +1,63 @@
+{
+  "completed": true,
+  "failure": null,
+  "engine": "webkit",
+  "checks": [
+    {
+      "width": 1180,
+      "name": "渠道 credential separately labelled",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "name": "Skill credential separately labelled",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "name": "MCP credential separately labelled",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "name": "other same-name credentials remain selected",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "name": "adoption retains original identities and excludes only MCP",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "渠道 credential separately labelled",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "Skill credential separately labelled",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "MCP credential separately labelled",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "other same-name credentials remain selected",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "adoption retains original identities and excludes only MCP",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "screens": [
+    "1180-same-name-credentials.png",
+    "900-same-name-credentials.png"
+  ],
+  "scope": "DEV in-memory package/adoption only; no native file changes"
+}

@@ -1,0 +1,83 @@
+{
+  "completed": true,
+  "failure": null,
+  "engine": "webkit",
+  "checks": [
+    {
+      "width": 1180,
+      "name": "late true cannot reopen cancelled preparation",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "name": "cancel does not create backup",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "name": "late false cannot reopen cancelled preparation",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "name": "cancel does not create backup",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "name": "late summary preserves newer dialog",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "name": "late backup does not resurrect guidance",
+      "passed": true
+    },
+    {
+      "width": 1180,
+      "name": "owner route retained",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "late true cannot reopen cancelled preparation",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "cancel does not create backup",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "late false cannot reopen cancelled preparation",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "cancel does not create backup",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "late summary preserves newer dialog",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "late backup does not resurrect guidance",
+      "passed": true
+    },
+    {
+      "width": 900,
+      "name": "owner route retained",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "screens": [
+    "1180-late-results-cancelled.png",
+    "900-late-results-cancelled.png"
+  ],
+  "scope": "DEV delayed adapters; production modal handlers; no real backup or config changes"
+}

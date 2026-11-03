@@ -1,0 +1,149 @@
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+stderr | tests/restore.test.ts > official restore guidance > does not reopen a cancelled preparation after late success
+[Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+
+stderr | tests/restore.test.ts > official restore guidance > does not reopen a cancelled preparation after late failure
+[Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+
+stderr | tests/restore.test.ts > official restore guidance > does not replace a newer dialog when the restore summary arrives
+[Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+
+stderr | tests/restore.test.ts > official restore guidance > does not resurrect guidance after a newer dialog was opened and closed while its backup was running
+[Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+[Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+
+ ❯ tests/restore.test.ts (8 tests | 4 failed) 223ms
+   ❯ official restore guidance (8)
+     × does not reopen a cancelled preparation after late success 3ms
+     × does not reopen a cancelled preparation after late failure 1ms
+     × does not replace a newer dialog when the restore summary arrives 1ms
+     × does not resurrect guidance after a newer dialog was opened and closed while its backup was running 103ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/restore.test.ts > official restore guidance > does not reopen a cancelled preparation after late success
+AssertionError: expected { cancelLabel: '稍后处理', …(5) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "body": "<p class=\"modal-lead\">检测到 OpenCodex 启动状态存在风险。继续前请先确认以下信息：</p>
+<ul>
+<li>运行状态：存在风险</li>
+<li>健康状态：降级</li>
+<li>启动状态：存在风险</li>
+<li>启动保护：未开启</li>
+<li>重启安全：否</li>
+<li>系统服务：未配置；启动辅助程序：未配置</li>
+<li>管理器偏好设置：已配置</li>
+<li>扩展配置：已配置</li>
+<li>同步端点：未发现</li>
+<li>数据根目录：<code class=\"local-path\">/tmp/opencodex-data</code></li>
+<li>OPENCODEX_HOME 配置目录：<code class=\"local-path\">/tmp/opencodex-home</code></li>
+</ul>
+<p>本应用不会修改外部配置，只会说明当前影响。你可以先生成备份，再按官方指引执行恢复命令；操作可随时取消。</p>",
+  "cancelLabel": "稍后处理",
+  "confirmLabel": "生成备份",
+  "onConfirm": [Function onConfirm],
+  "title": "恢复前确认",
+  "wide": true,
+}
+
+ ❯ tests/restore.test.ts:108:37
+    106|     expect(app.modal?.title).toBe('正在准备恢复确认');useModalStore().resolve(…
+    107|     if(outcome==='success')resolve(summary);else reject(Error('late fi…
+    108|     await pending;expect(app.modal).toBeNull();expect(invoke).not.toHa…
+       |                                     ^
+    109|   })
+    110|   it('does not replace a newer dialog when the restore summary arrives…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/restore.test.ts > official restore guidance > does not reopen a cancelled preparation after late failure
+AssertionError: expected { cancelLabel: '稍后处理', …(4) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "body": "<p>无法读取当前状态或配置存在性；已保留当前配置，不会进入恢复引导。</p>",
+  "cancelLabel": "稍后处理",
+  "confirmLabel": "重试",
+  "onConfirm": [Function onConfirm],
+  "title": "影响摘要不可用",
+}
+
+ ❯ tests/restore.test.ts:108:37
+    106|     expect(app.modal?.title).toBe('正在准备恢复确认');useModalStore().resolve(…
+    107|     if(outcome==='success')resolve(summary);else reject(Error('late fi…
+    108|     await pending;expect(app.modal).toBeNull();expect(invoke).not.toHa…
+       |                                     ^
+    109|   })
+    110|   it('does not replace a newer dialog when the restore summary arrives…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/restore.test.ts > official restore guidance > does not replace a newer dialog when the restore summary arrives
+AssertionError: expected '恢复前确认' to be 'Newer owned dialog' // Object.is equality
+
+Expected: "Newer owned dialog"
+Received: "恢复前确认"
+
+ ❯ tests/restore.test.ts:114:30
+    112|     const controller=useAppController(),app=useAppStore(),pending=cont…
+    113|     app.openModal({title:'Newer owned dialog',body:'Keep current work'…
+    114|     expect(app.modal?.title).toBe('Newer owned dialog')
+       |                              ^
+    115|   })
+    116|   it('does not resurrect guidance after a newer dialog was opened and …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/restore.test.ts > official restore guidance > does not resurrect guidance after a newer dialog was opened and closed while its backup was running
+AssertionError: expected { cancelLabel: '稍后处理', …(5) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "body": "<p class=\"modal-lead\">备份已生成。请复制下方命令，在终端确认后执行。</p>
+<ul>
+<li>备份 ID：<code>bk_restore_01</code></li>
+<li>备份目录：<code class=\"local-path\">/tmp/opencodex-data/backups/upgrade/bk_restore_01</code></li>
+<li>备份来源：<code class=\"local-path\">/tmp/opencodex-data/manager-state/preferences.json</code></li>
+<li>当前摘要：<code>启动状态存在风险</code></li>
+</ul>
+<pre class=\"modal-code\"><code>ocx restore</code></pre>
+<p>本应用不会代为执行恢复，也不会包装或接管官方恢复命令。</p>",
+  "cancelLabel": "稍后处理",
+  "confirmLabel": "复制命令",
+  "onConfirm": [Function onConfirm],
+  "title": "官方恢复引导",
+  "wide": true,
+}
+
+ ❯ tests/restore.test.ts:120:105
+    118|     const app=useAppStore();await openRestore();useModalStore().resolv…
+    119|     app.openModal({title:'Different work',body:'Do not replace'});useM…
+    120|     await vi.waitFor(()=>expect(app.restoreBusy).toBe(false));await Pr…
+       |                                                                                                         ^
+    121|   })
+    122|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 4 passed (8)
+   Start at  20:44:05
+   Duration  1.27s (transform 55%, environment 20%, tests 18%, import 7%)
+

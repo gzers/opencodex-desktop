@@ -79,43 +79,43 @@ The source has 37 references under the same Dialog/Modal component boundary, exc
 
 | Current file | Component | Line | Evidence and remainder |
 | --- | --- | ---: | --- |
-| App.vue | AppModal | 79 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| App.vue | RuntimeInstallDialog | 80 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/backup/ModelSaveHistory.vue | UiDialog | 56 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/backup/TransferBackups.vue | UiDialog | 18 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/AgentExecutionField.vue | UiDialog | 87 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/BatchAgentDialog.vue | UiDialog | 59 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/ChannelBatchDialog.vue | UiDialog | 85 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/ChannelEditor.vue | UiDialog | 140 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/ChannelModelTable.vue | UiDialog | 123 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/ChannelModelTable.vue | UiDialog | 126 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/ChannelsView.vue | ChannelBatchDialog | 266 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/ChannelsView.vue | NewChannelDialog | 267 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/ChannelsView.vue | UiDialog | 268 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/ChannelsView.vue | SelectorPreviewDialog | 269 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/ExternalTaskDialog.vue | UiDialog | 35 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/ModelPicker.vue | UiDialog | 104 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/NewChannelDialog.vue | UiDialog | 84 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/SaveResultNotice.vue | UiDialog | 89 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/SelectorPreviewDialog.vue | UiDialog | 130 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/TemplateComparisonDialog.vue | UiDialog | 18 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/models/TemplateUsageDialog.vue | UiDialog | 14 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/notifications/components/NotificationCenter.vue | UiDialog | 111 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/sync/ConnectionDialog.vue | UiDialog | 19 | PR #46 browser fields/test/cancel; native persistence/errors pending |
-| features/sync/ImportedConnections.vue | UiDialog | 15 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/sync/ModelTransfer.vue | UiDialog | 508 | PR #46 browser export/import/sync/cancel states; native/business edge states pending |
-| features/sync/ObjectScopeTree.vue | UiDialog | 32 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| features/sync/SyncDialogHost.vue | ResultDialog | 14 | Host reached by export/sync/connection/result browser flows; all native callers pending |
-| features/sync/SyncDialogHost.vue | ConnectionDialog | 14 | Host reached by export/sync/connection/result browser flows; all native callers pending |
-| features/sync/SyncResultDialog.vue | UiDialog | 23 | PR #46 browser export receipt open/close; retry/partial/native states pending |
-| routes/ExtensionsRoute.vue | ExtensionDetailModal | 861 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| routes/ModelsRoute.vue | TemplateUsageDialog | 208 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| routes/ModelsRoute.vue | UiDialog | 209 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| routes/ModelsRoute.vue | UiDialog | 214 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| routes/ModelsRoute.vue | UiDialog | 216 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| routes/ModelsRoute.vue | TemplateComparisonDialog | 217 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| routes/ModelsRoute.vue | ExternalTaskDialog | 218 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
-| routes/ModelsRoute.vue | BatchAgentDialog | 219 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| App.vue | AppModal | 79 | AppModal: unit focus/trap/Escape/input/confirm/cancel plus rendered delete/notification/history consumers; RuntimeInstall: rendered path validation/cancel and Windows real install/failure/recovery smoke. Remaining: dynamic consumer-by-consumer reconciliation and final package native menu/owner checks. |
+| App.vue | RuntimeInstallDialog | 80 | AppModal: unit focus/trap/Escape/input/confirm/cancel plus rendered delete/notification/history consumers; RuntimeInstall: rendered path validation/cancel and Windows real install/failure/recovery smoke. Remaining: dynamic consumer-by-consumer reconciliation and final package native menu/owner checks. |
+| features/backup/ModelSaveHistory.vue | UiDialog | 56 | Rendered default-no-pointer/comparison/cancel; full model-history units. Separate legacy recovery-to-draft contract preserved. Final candidate native saved-history success/error remains to reconcile. |
+| features/backup/TransferBackups.vue | UiDialog | 18 | Rendered compare error/busy Escape/empty scope/cancel/restore failure; native mixed-channel/Skill/MCP/preferences restore from one operation backup, concurrent preview refusal and outside-edit retention. Final candidate repeat pending. |
+| features/models/AgentExecutionField.vue | UiDialog | 87 | Rendered unconfigured/disabled save/nested picker cancel; native unconfigured Chinese guidance and cancel. Model execution remains bounded to owned adapters; final candidate configured choice/error state reconciliation pending. |
+| features/models/BatchAgentDialog.vue | UiDialog | 59 | Rendered/native unconfigured prerequisites, target scope and close; full batch units cover proposal/stale/save guards. Actual configured model request is not established by these UI probes. |
+| features/models/ChannelBatchDialog.vue | UiDialog | 85 | Rendered initial/missing-template/family-not-adopted/error, exact adoption readonly compare, default keep overrides, cancel/Escape; batch contract units. Final candidate native applicable mutation/rollback states pending. |
+| features/models/ChannelEditor.vue | UiDialog | 140 | Rendered manual-empty/duplicate-ID/close; native duplicate-ID refusal and config-byte preservation. Windows native real current-channel save/reopen/scope/key/backup checks passed in PR51; latest package repeat pending. |
+| features/models/ChannelModelTable.vue | UiDialog | 123 | Rendered detail input/menu priority/busy/error/Escape and batch initial/cancel; native input/menu fix and Windows CDP real-key regression passed. Pointer sort/file save PR51 evidence. Latest low-effects positioning check/final package pending. |
+| features/models/ChannelModelTable.vue | UiDialog | 126 | Rendered detail input/menu priority/busy/error/Escape and batch initial/cancel; native input/menu fix and Windows CDP real-key regression passed. Pointer sort/file save PR51 evidence. Latest low-effects positioning check/final package pending. |
+| features/models/ChannelsView.vue | ChannelBatchDialog | 266 | Rendered NewChannel/Copy/Delete cancel/ChannelBatch/SavePreview consumers with unchanged snapshots; Windows real current/global file Save/cancel/exact backup and owner return. Final candidate plus remaining error/late consumers pending. |
+| features/models/ChannelsView.vue | NewChannelDialog | 267 | Rendered NewChannel/Copy/Delete cancel/ChannelBatch/SavePreview consumers with unchanged snapshots; Windows real current/global file Save/cancel/exact backup and owner return. Final candidate plus remaining error/late consumers pending. |
+| features/models/ChannelsView.vue | UiDialog | 268 | Rendered NewChannel/Copy/Delete cancel/ChannelBatch/SavePreview consumers with unchanged snapshots; Windows real current/global file Save/cancel/exact backup and owner return. Final candidate plus remaining error/late consumers pending. |
+| features/models/ChannelsView.vue | SelectorPreviewDialog | 269 | Rendered NewChannel/Copy/Delete cancel/ChannelBatch/SavePreview consumers with unchanged snapshots; Windows real current/global file Save/cancel/exact backup and owner return. Final candidate plus remaining error/late consumers pending. |
+| features/models/ExternalTaskDialog.vue | UiDialog | 35 | Native bounded task bundle preview/current target/default allowNew=false/close; Windows real buffer context bundle and no generation. Copy/action success and task receipt states remain explicit separate coverage. |
+| features/models/ModelPicker.vue | UiDialog | 104 | Rendered unavailable/no-results/disabled confirm/search Escape/return to Agent; native Chinese failure and nested-owner keyboard; full picker units. Final candidate configured/busy/error variants require reconciliation. |
+| features/models/NewChannelDialog.vue | UiDialog | 84 | Rendered two-step validation/discovery error/busy cancel/late result/selection/filter Escape and unchanged saved snapshot; native initial/required validation/cancel. Actual discovery uses owned fixture tests, not daily network. |
+| features/models/SaveResultNotice.vue | UiDialog | 89 | Full saved-feedback/component tests plus Windows native saving and later action; restart confirm cancellation and final native process ownership remain separately checked, not authorized daily Codex restart. |
+| features/models/SelectorPreviewDialog.vue | UiDialog | 130 | Rendered selection/cancel/parse error, readonly preview retains edited buffer; Windows native actual list confirm/cancel/file scope and exact prewrite backup. Final package repeat pending. |
+| features/models/TemplateComparisonDialog.vue | UiDialog | 18 | Rendered modified buffer vs saved version, readonly/Escape/retained buffer; Windows native comparison before save. Final candidate long-content/native error variants pending. |
+| features/models/TemplateUsageDialog.vue | UiDialog | 14 | Rendered search/filter/empty and Escape; native no-reference/zero-known-model state and close; usage/stale/late response units. Final candidate populated references/state reconciliation pending. |
+| features/notifications/components/NotificationCenter.vue | UiDialog | 111 | Rendered pending-count clear confirmation/Escape/no deletion; full feedback/store tests; native center/detail observed. History cleanup pending/error falsely-success fixed by PR56, browser24 each; final package delivery/deletion checks pending. |
+| features/sync/ConnectionDialog.vue | UiDialog | 19 | Rendered fields/test/cancel and imported child confirmation/error; native form/cancel from sync+overview; owned HTTPS transport tests. Final candidate real saved password/blank retention/failed-save and all host states pending. |
+| features/sync/ImportedConnections.vue | UiDialog | 15 | Rendered missing-password disabled, explicit activation initial/cancel no call/error and return to Connection owner. Backend candidate import never activates current endpoint; final candidate native activation lifecycle pending. |
+| features/sync/ModelTransfer.vue | UiDialog | 508 | Rendered file/remote scopes and shared import/decrypt/backup/export states; native encrypted preference import and mixed package21 objects/3 synthetic credentials, same-ID failed import retry, exact saved/backup/restore. Final package plus custom-directory/failure and remaining SY states pending. |
+| features/sync/ObjectScopeTree.vue | UiDialog | 32 | Shared tree component and rendered scopes/selection tests; native node_repl unselected, hidden selection retained and group counts. Object detail/identity/credentials backed by real mixed package. Final per-object detail and final package geometry pending. |
+| features/sync/SyncDialogHost.vue | ResultDialog | 14 | Overview/sync shared rendered host; native result/import close retains owner. Host references are callers, not unique dialogs. Every requested overview completion/scroll state still needs final candidate reconciliation. |
+| features/sync/SyncDialogHost.vue | ConnectionDialog | 14 | Overview/sync shared rendered host; native result/import close retains owner. Host references are callers, not unique dialogs. Every requested overview completion/scroll state still needs final candidate reconciliation. |
+| features/sync/SyncResultDialog.vue | UiDialog | 23 | Rendered empty/read-error/partial original-ID retry/stale compare/native credential-store reason; native export21 complete, import4 complete+17 unchanged and original-ID retry. Custom directory/notification cleanup/final package pending. |
+| routes/ExtensionsRoute.vue | ExtensionDetailModal | 861 | Rendered low-read-error Skill/MCP detail and resource entry geometry, full-data document/body scroll tests; native200% reads real sandbox SKILL.md/config.toml, scroll reaches Hermes, Escape returns and files unchanged. Final candidate internal actions/dynamic consumer ledger pending. |
+| routes/ModelsRoute.vue | TemplateUsageDialog | 208 | Rendered version search/protected delete/usage/comparison/match and batch callers; native200% anchor+preview/Escape, Windows real default pointer confirms/back-to-version/immutable revisions. External task result/persisted delete and final state reconciliation pending. |
+| routes/ModelsRoute.vue | UiDialog | 209 | Rendered version search/protected delete/usage/comparison/match and batch callers; native200% anchor+preview/Escape, Windows real default pointer confirms/back-to-version/immutable revisions. External task result/persisted delete and final state reconciliation pending. |
+| routes/ModelsRoute.vue | UiDialog | 214 | Rendered version search/protected delete/usage/comparison/match and batch callers; native200% anchor+preview/Escape, Windows real default pointer confirms/back-to-version/immutable revisions. External task result/persisted delete and final state reconciliation pending. |
+| routes/ModelsRoute.vue | UiDialog | 216 | Rendered version search/protected delete/usage/comparison/match and batch callers; native200% anchor+preview/Escape, Windows real default pointer confirms/back-to-version/immutable revisions. External task result/persisted delete and final state reconciliation pending. |
+| routes/ModelsRoute.vue | TemplateComparisonDialog | 217 | Rendered version search/protected delete/usage/comparison/match and batch callers; native200% anchor+preview/Escape, Windows real default pointer confirms/back-to-version/immutable revisions. External task result/persisted delete and final state reconciliation pending. |
+| routes/ModelsRoute.vue | ExternalTaskDialog | 218 | Rendered version search/protected delete/usage/comparison/match and batch callers; native200% anchor+preview/Escape, Windows real default pointer confirms/back-to-version/immutable revisions. External task result/persisted delete and final state reconciliation pending. |
+| routes/ModelsRoute.vue | BatchAgentDialog | 219 | Rendered version search/protected delete/usage/comparison/match and batch callers; native200% anchor+preview/Escape, Windows real default pointer confirms/back-to-version/immutable revisions. External task result/persisted delete and final state reconciliation pending. |
 
 ## Native model dialogs follow-up (f1f26d8f)
 
@@ -175,3 +175,17 @@ PR50已全CI通过合并c8c53ac1；PR51全CI通过（包含新增Windows原生Es
 PR50合并c8c53ac1、PR51合并d1004371；pr51-windows目录保存工作流41629159210普通账户及另一原生smoke的键盘/文件保存/读回/备份/原操作导出回执。后续PR52～56尚在CI链路，不能将PR51结果扩展为最终包或后来低档定位检查通过。aad48217全路由新报告同为428/428、0页面异常；b810aec2只新增清理结果行为，已有修复的模型/补充/菜单专项结果保留，不覆盖旧失败轮次。
 
 实际OTA尚未执行，v0.2.20仍非本轮完成候选；公开stable门继续保持未完成。
+
+### 2026-11-03 恢复窗口归属与混合原生导入/恢复（PR57～59）
+
+动态恢复引导四项反例全部在旧代码失败：准备期取消后迟到成功/失败会重开、摘要覆盖较新窗口、备份完成后复活已结束的引导。PR57/35c06338为模态store记录每次打开/resolve代次，异步恢复只在本次归属仍有效时投影；已确认的备份仍按原事务完成，不代执行restore。恢复8项、AppModal/通知定向与179文件1118项UI、typecheck/build通过；双引擎各14项/2截图显示取消/较新窗口保持。仅显式延迟适配器，无真实恢复。
+
+mixed-import-native-35c06338是真实UI+原生文件选择器读取172155字节混合包（来源SHA70433826…）。首次临时进程HOME导致macOS Security.framework读不到原生安全库，原操作回执provider_auth_keychain、17项未变化/4项未完成；所有目标配置/Skill/客户端文件字节保持。该轮不能当成功，也不是产品错误归因定论。源码platform::home_dir已在OPENCODEX_SANDBOX_ROOT/home隔离业务源，安全库服务名固定Sandbox，故按已有native测试合同保留系统进程HOME后重启；期间一次旧进程锁未释放的第二启动exit-6不计通过，原件记录。
+
+从持久结果“重试未完成项→核对原导入”继续相同b7a0a65b操作，真实完成4项、17项未变化；新增渠道及合成Key落已保存config.json，旧provider/Key/顶层sentinel保持；Skill采用所选.env与SKILL.md并移除该Skill旧文件，MCP只写管理器定义源及Sandbox原生秘密引用，未修改客户端config.toml。只有一个同ID backups/transfer-scope范围备份，原渠道/偏好/Skill三组原始字节均精确。初次检查曾误在manager-state找备份得到0，已按实际backups/transfer-scope更正为1并以原件验证，不作无备份结论。
+
+从设置→数据与备份→恢复所选范围实际恢复所有组：第一次预览后新增独立字段导致旧确认被拒绝；重新核对后恢复原provider/Key、Skill及全部旧文件、dark主题，新增MCP管理器源被移除，同时保留afterImportManualSentinel；客户端MCP文件始终未改，原范围before快照不因重试或恢复重写。只结束本轮93617，按日志中的随机账户位删除并验证两项自有Sandbox安全库材料，未读/改日常凭据。
+
+上述实屏发现同名渠道/Skill/MCP三个凭据子项显示完全同名、无法区别，以及安全库失败回执归通用文件权限提示。PR59/57239d5a增加对象类型标签（原ID保持），provider_auth_keychain单独说明本机安全存储；两反例改前失败，改后46项定向、179文件1120项UI及typecheck/build通过。类型检查先发现新测试缺digest，已补正确类型而非跳过校验。双引擎各10项验证同名标签与单独取消MCP仍提交原渠道/Skill身份；补充各117项含原生安全库原因。该新标签/原因仍需最终候选原生复核。
+
+PR58/957d48528补发布说明：首次成功云端目录全选/后续新增不选、便携偏好与后续原生修复；当前为发布说明准备，不是已发布。PR50～53已按各自全CI通过顺序合并；54～59继续CI/合并，最终干净草稿、签名摘要、四安装及相邻实际OTA仍未完成。

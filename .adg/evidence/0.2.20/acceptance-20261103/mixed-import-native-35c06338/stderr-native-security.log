@@ -1,0 +1,62 @@
+sandbox_extension_issue_file_to_process failed for /tmp/ocx020-mixed-import-native-35c06338/OpenCodeX Import Acceptance.app: 1 (Operation not permitted)
+
+thread 'main' (116982627) panicked at /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tauri-2.12.1/src/app.rs:1444:11:
+Failed to setup app: error encountered during setup hook: another application instance is already running
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'main' (116982627) panicked at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/panicking.rs:225:5:
+panic in a function that cannot unwind
+stack backtrace:
+   0:        0x102c61450 - std[bb513d90a5cee88a]::backtrace_rs::backtrace::libunwind::trace
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/../../backtrace/src/backtrace/libunwind.rs:117:9
+   1:        0x102c61450 - std[bb513d90a5cee88a]::backtrace_rs::backtrace::trace_unsynchronized::<std[bb513d90a5cee88a]::sys::backtrace::_print_fmt::{closure#1}>
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/../../backtrace/src/backtrace/mod.rs:66:14
+   2:        0x102c61450 - std[bb513d90a5cee88a]::sys::backtrace::_print_fmt
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/sys/backtrace.rs:74:9
+   3:        0x102c61450 - <<std[bb513d90a5cee88a]::sys::backtrace::BacktraceLock>::print::DisplayBacktrace as core[f63e075e1375d836]::fmt::Display>::fmt
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/sys/backtrace.rs:44:26
+   4:        0x102c77438 - <core[f63e075e1375d836]::fmt::rt::Argument>::fmt
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/fmt/rt.rs:152:76
+   5:        0x102c77438 - core[f63e075e1375d836]::fmt::write
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/fmt/mod.rs:1686:22
+   6:        0x102c661b4 - std[bb513d90a5cee88a]::io::default_write_fmt::<std[bb513d90a5cee88a]::sys::stdio::unix::Stderr>
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/io/mod.rs:639:11
+   7:        0x102c661b4 - <std[bb513d90a5cee88a]::sys::stdio::unix::Stderr as std[bb513d90a5cee88a]::io::Write>::write_fmt
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/io/mod.rs:1994:13
+   8:        0x102c42d30 - <std[bb513d90a5cee88a]::sys::backtrace::BacktraceLock>::print
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/sys/backtrace.rs:47:25
+   9:        0x102c42d30 - std[bb513d90a5cee88a]::panicking::default_hook::{closure#0}
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/panicking.rs:292:27
+  10:        0x102c58cd4 - std[bb513d90a5cee88a]::panicking::default_hook
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/panicking.rs:319:9
+  11:        0x102c58ffc - std[bb513d90a5cee88a]::panicking::panic_with_hook
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/panicking.rs:825:13
+  12:        0x102c42e08 - std[bb513d90a5cee88a]::panicking::panic_handler::{closure#0}
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/panicking.rs:691:13
+  13:        0x102c39e0c - std[bb513d90a5cee88a]::sys::backtrace::__rust_end_short_backtrace::<std[bb513d90a5cee88a]::panicking::panic_handler::{closure#0}, !>
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/sys/backtrace.rs:182:18
+  14:        0x102c439fc - __rustc[b7974e8690430dd9]::rust_begin_unwind
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/panicking.rs:689:5
+  15:        0x102cbca10 - core[f63e075e1375d836]::panicking::panic_nounwind_fmt::runtime
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/panicking.rs:122:22
+  16:        0x102cbca10 - core[f63e075e1375d836]::panicking::panic_nounwind_fmt
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/intrinsics/mod.rs:2447:9
+  17:        0x102cbc998 - core[f63e075e1375d836]::panicking::panic_nounwind
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/panicking.rs:225:5
+  18:        0x102cbcaec - core[f63e075e1375d836]::panicking::panic_cannot_unwind
+                               at /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/core/src/panicking.rs:337:5
+  19:        0x1026085b8 - tao::platform_impl::platform::app_delegate::did_finish_launching::hd12606ff743230df
+                               at /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tao-0.37.1/src/platform_impl/macos/app_delegate.rs:124:1
+  20:        0x18c8871a0 - <unknown>
+  21:        0x18c916394 - <unknown>
+  22:        0x18c9162d8 - <unknown>
+  23:        0x18c8533d0 - <unknown>
+  24:        0x18df4438c - <unknown>
+  25:        0x190e50a14 - <unknown>
+  26:        0x190e507a8 - <unknown>
+  27:        0x190e4ee80 - <unknown>
+  28:        0x190e4ea94 - <unknown>
+  29:        0x18df6d20c - <unknown>
+  30:        0x18df6d004 - <unknown>
+thread caused non-unwinding panic. aborting.
+sandbox_extension_issue_file_to_process failed for /tmp/ocx020-mixed-import-native-35c06338/OpenCodeX Import Acceptance.app: 1 (Operation not permitted)
