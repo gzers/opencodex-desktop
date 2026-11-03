@@ -53,6 +53,16 @@ beforeEach(() => {
 afterEach(() => { wrappers.forEach(w => w.unmount()); wrappers = []; document.body.innerHTML = ''; vi.restoreAllMocks() })
 
 describe('shared production update center', () => {
+  it('shows only the current version when the cached candidate is already installed', async () => {
+    managerUpdateStatus.value = { ...managerUpdateStatus.value!, currentVersion: '0.2.20', availableVersion: '0.2.20' }
+    const wrapper = render({ target: 'manager' }); await flushPromises()
+    expect(wrapper.get('.update-version-hero').text()).toBe('0.2.20')
+    expect(wrapper.get('h3').text()).toBe('桌面管理器更新详情')
+    expect(wrapper.text()).not.toContain('安装后需重启管理器')
+    expect(button(wrapper, '关闭').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="install-manager-update"]').exists()).toBe(false)
+  })
+
   it('retains remote query failure details through close/reopen and clears them after retry', async () => {
     const updates = useUpdatesStore()
     const previous = { ...updates.officialRemote! }

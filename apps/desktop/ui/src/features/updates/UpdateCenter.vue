@@ -83,11 +83,12 @@ const officialNotes = computed<string | null>(() => officialAvailable.value ? '�
 const showingProgress = computed(() => selected.value === 'manager'
   ? managerBusy.value || pendingRestart.value || !!session.managerError || progress.value?.stage === 'failed'
   : selected.value === 'official' && (!!session.officialCandidate || officialBusy.value || officialFailed.value))
-const selectedTitle = computed(() => (selected.value === 'manager' ? '桌面管理器' : 'OpenCodex 面板') + (showingProgress.value ? '更新进度' : '更新详情与确认'))
+const selectedAvailable = computed(() => selected.value === 'manager' ? managerAvailable.value : officialAvailable.value)
+const selectedTitle = computed(() => (selected.value === 'manager' ? '桌面管理器' : 'OpenCodex 面板') + (showingProgress.value ? '更新进度' : selectedAvailable.value ? '更新详情与确认' : '更新详情'))
 const selectedCurrent = computed(() => selected.value === 'manager' ? showingProgress.value && session.managerCurrent || status.value?.currentVersion || app.aboutApp?.version || '未知' : showingProgress.value && session.officialCurrent || app.officialProject?.version || '未知')
 const selectedCandidate = computed(() => selected.value === 'manager'
-  ? showingProgress.value ? progress.value?.candidateVersion || status.value?.pendingRestart || session.managerCandidate || status.value?.availableVersion : status.value?.availableVersion
-  : showingProgress.value ? session.officialCandidate || app.officialRemote?.version : app.officialRemote?.version)
+  ? showingProgress.value ? progress.value?.candidateVersion || status.value?.pendingRestart || session.managerCandidate || status.value?.availableVersion : hasNewerVersion(status.value?.currentVersion ?? null, status.value?.availableVersion ?? null) === false ? null : status.value?.availableVersion
+  : showingProgress.value ? session.officialCandidate || app.officialRemote?.version : hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote?.version ?? null) === false ? null : app.officialRemote?.version)
 
 const selectedSource = computed(() => selected.value === 'manager' ? 'OpenCodex Desktop · ' + (status.value?.channel === 'beta' ? '测试' : '稳定') + '通道' : '官方项目 · @bitkyc08/opencodex')
 const managerUnavailableText = computed(() => session.managerError || progress.value?.stage === 'failed' ? '上次安装未完成，可进入详情重试。' : status.value?.availableVersion && hasNewerVersion(status.value.currentVersion, status.value.availableVersion) === null ? '无法比较版本。' : pendingRestart.value ? '更新已准备就绪，请进入详情重启。' : status.value?.lastCheckedAt ? '当前没有待确认的更新。' : '尚未检查。')
@@ -248,7 +249,7 @@ defineExpose({ check })
           <section v-else class="update-object" :data-testid="selected + '-update-card'">
             <div v-if="!showingProgress" class="update-result-heading"><span>版本升级</span><span class="tag">{{ selected === 'manager' ? managerResult : officialResult }}</span></div>
             <div class="update-version-hero"><span>{{ selectedCurrent }}</span><template v-if="selectedCandidate"><span aria-hidden="true">→</span><strong>{{ selectedCandidate }}</strong></template></div>
-            <p class="update-hint">{{ selectedSource }}<template v-if="!showingProgress"> · {{ selected === 'manager' ? '安装后需重启管理器' : '更新已登记的面板包体' }}</template></p>
+            <p class="update-hint">{{ selectedSource }}<template v-if="!showingProgress && selectedAvailable"> · {{ selected === 'manager' ? '安装后需重启管理器' : '更新已登记的面板包体' }}</template></p>
               <p v-if="selected === 'official' && officialQueryError" class="update-error update-query-error" role="status" data-testid="official-query-error">{{ officialQueryError }}</p>
             <p v-if="selected === 'manager' && (session.managerCheckError || status?.error)" class="update-error update-query-error" role="status">{{ session.managerCheckError || status?.error }}</p>
             <template v-if="!showingProgress">
@@ -274,7 +275,7 @@ defineExpose({ check })
         </div>
         <footer class="update-center-foot">
           <div class="update-object-actions">
-            <UiButton variant="ghost" aria-label="关闭更新中心" @click="close">{{ !selected ? '关闭' : !showingProgress ? '取消' : '关闭窗口' }}</UiButton>
+            <UiButton variant="ghost" aria-label="关闭更新中心" @click="close">{{ !selected || (!showingProgress && !selectedAvailable) ? '关闭' : !showingProgress ? '取消' : '关闭窗口' }}</UiButton>
             <UiButton v-if="selected === 'manager' && !showingProgress && managerAvailable" variant="primary" :disabled="busy" data-testid="install-manager-update" @click="installManager">确认更新</UiButton>
             <UiButton v-if="selected === 'official' && !showingProgress && officialAvailable" variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy" :loading="session.checking" data-testid="install-official-update" @click="installOfficial">备份并更新面板</UiButton>
           </div>
