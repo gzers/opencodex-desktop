@@ -18,6 +18,15 @@ function deferred<T>(){let resolve!:(value:T)=>void;let reject!:(cause:unknown)=
 async function browse(wrapper:ReturnType<typeof render>){await button(wrapper,'更换执行模型').trigger('click');await button(wrapper,'original / old').trigger('click')}
 beforeEach(()=>{vi.clearAllMocks();vi.mocked(modelApi.agentSettings).mockResolvedValue({...saved});vi.mocked(modelApi.executionDirectory).mockResolvedValue(execution());vi.mocked(modelApi.saveAgentSettings).mockImplementation(async value=>value)})
 describe('page state follows the prototype',()=>{
+ it('explains an unconfigured native model directory without exposing the raw English backend message',async()=>{
+  vi.mocked(modelApi.executionDirectory).mockRejectedValueOnce({code:1,message:'application is not configured yet'})
+  const wrapper=render();await flushPromises();await browse(wrapper);await flushPromises()
+  const selector=wrapper.findComponent(picker)
+  expect(selector.props('error')).toBe('运行环境尚未配置，请先在设置的安装配置中指定运行来源。')
+  expect(wrapper.text()).not.toContain('application is not configured yet')
+  expect(modelApi.saveAgentSettings).not.toHaveBeenCalled();wrapper.unmount()
+ })
+
  it('已配置：标题行摘要 + 四项事实 + 适用范围 + 运行配置边界，按钮为「更换执行模型」',async()=>{
   const wrapper=render();await flushPromises()
   expect(wrapper.text()).toContain('模型模版助手 · 本机共用')
