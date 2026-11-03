@@ -1,0 +1,18 @@
+{
+  "result": "pass",
+  "powershell": "7.6.9",
+  "checks": [
+    "rejects-real-three-cell-green-report",
+    "validates-all-all",
+    "validates-all-default",
+    "validates-all-custom",
+    "validates-msi-all",
+    "validates-msi-default",
+    "validates-msi-custom",
+    "validates-nsis-all",
+    "validates-nsis-default",
+    "validates-nsis-custom",
+    "rejects-duplicate-failed-and-unrequested-cells",
+    "production-loops-preserve-requested-kind-and-mode"
+  ]
+}

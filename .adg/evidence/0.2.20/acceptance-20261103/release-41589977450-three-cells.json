@@ -1,0 +1,80 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "efbe46e8184c396f6907372569948f9c297825df",
+  "builtExecutableSha256": "8b5d542e9bd048e7022ac34000ff91a54f323b052a622a4418a663b6189923b4",
+  "version": "0.2.20",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.2.20_x64_en-US.msi",
+      "bytes": 7233536,
+      "sha256": "f3a278feb35ec15eac88c9cf44c700ba7a93cf051b8f0145561b418bb0477506",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-2aad93151fce465c946a90e01b59d8b7",
+      "result": "pass",
+      "registryCleanup": [],
+      "installExitCode": 0,
+      "installedExecutableSha256": "107e0d46abac467b2471ef15aa7a180ebf11b6b1203867c572f5d2773a193a9b",
+      "expectedInstalledExecutableSha256": "107e0d46abac467b2471ef15aa7a180ebf11b6b1203867c572f5d2773a193a9b",
+      "bundleMarker": "MSI",
+      "bundleMarkerOffset": 13984693,
+      "productVersion": "0.2.20",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "startupPointerRemoved": true,
+        "anchorAndActiveRootRemoved": true,
+        "externalHomeUnchanged": true,
+        "applicationRetained": true,
+        "applicationRootBindingTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    },
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.2.20_x64-setup.exe",
+      "bytes": 5163788,
+      "sha256": "cefc22e2b4dcad5885cc6e5d6ef98473c71a95053f36f6c69640a416e866414b",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-4053bf5d9bb346f6bffcc43aafe035f6",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "b9f20acfaa7c0157f93cb75d0dcd0db579a2559ee09f9525e051f517fc96bd56",
+      "expectedInstalledExecutableSha256": "b9f20acfaa7c0157f93cb75d0dcd0db579a2559ee09f9525e051f517fc96bd56",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 13984693,
+      "productVersion": "0.2.20",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "startupPointerRemoved": true,
+        "anchorAndActiveRootRemoved": true,
+        "externalHomeUnchanged": true,
+        "applicationRetained": true,
+        "applicationRootBindingTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    }
+  ],
+  "defaultInstallChecks": [
+    {
+      "boundary": "fresh isolated runner; no earlier installed product or directory override",
+      "kind": "msi",
+      "installDirectory": "C:\\Program Files\\OpenCodeX Desktop\\",
+      "result": "pass",
+      "pathOverride": false
+    }
+  ],
+  "defaultMsiRegistryCleanup": []
+}

@@ -1,0 +1,200 @@
+{
+  "engine": "chromium",
+  "scope": "explicit DEV fixture; no real IPC/config/WebDAV",
+  "prototype": "cfbd90c4b+1da4cabca",
+  "checks": [
+    {
+      "name": "no mandatory review 1180",
+      "passed": true
+    },
+    {
+      "name": "no cancelled clear 1180",
+      "passed": true
+    },
+    {
+      "name": "side by side columns 1180",
+      "passed": true,
+      "detail": {
+        "main": {
+          "x": 268,
+          "y": 257.5,
+          "width": 649,
+          "height": 477.5,
+          "bottom": 735
+        },
+        "aside": {
+          "x": 937,
+          "y": 257.5,
+          "width": 220,
+          "height": 477.5,
+          "bottom": 735
+        },
+        "viewport": 760,
+        "bodyOverflow": false
+      }
+    },
+    {
+      "name": "no horizontal overflow 1180",
+      "passed": true,
+      "detail": {
+        "main": {
+          "x": 268,
+          "y": 257.5,
+          "width": 649,
+          "height": 477.5,
+          "bottom": 735
+        },
+        "aside": {
+          "x": 937,
+          "y": 257.5,
+          "width": 220,
+          "height": 477.5,
+          "bottom": 735
+        },
+        "viewport": 760,
+        "bodyOverflow": false
+      }
+    },
+    {
+      "name": "dialog width matches frozen shared window 1180",
+      "passed": true
+    },
+    {
+      "name": "default plaintext 1180",
+      "passed": true
+    },
+    {
+      "name": "password hidden until enabled 1180",
+      "passed": true
+    },
+    {
+      "name": "no second plaintext modal 1180",
+      "passed": true
+    },
+    {
+      "name": "no page result block 1180",
+      "passed": true
+    },
+    {
+      "name": "no unexpected export cleanup failure 1180",
+      "passed": true
+    },
+    {
+      "name": "snapshot source 1180",
+      "passed": true
+    },
+    {
+      "name": "overview original route 1180",
+      "passed": true
+    },
+    {
+      "name": "overview cancel without cleanup failure 1180",
+      "passed": true
+    },
+    {
+      "name": "no mandatory review 900",
+      "passed": true
+    },
+    {
+      "name": "no cancelled clear 900",
+      "passed": true
+    },
+    {
+      "name": "side by side columns 900",
+      "passed": true,
+      "detail": {
+        "main": {
+          "x": 268,
+          "y": 278.5,
+          "width": 415,
+          "height": 296.5,
+          "bottom": 575
+        },
+        "aside": {
+          "x": 697,
+          "y": 278.5,
+          "width": 180,
+          "height": 296.5,
+          "bottom": 575
+        },
+        "viewport": 600,
+        "bodyOverflow": false
+      }
+    },
+    {
+      "name": "no horizontal overflow 900",
+      "passed": true,
+      "detail": {
+        "main": {
+          "x": 268,
+          "y": 278.5,
+          "width": 415,
+          "height": 296.5,
+          "bottom": 575
+        },
+        "aside": {
+          "x": 697,
+          "y": 278.5,
+          "width": 180,
+          "height": 296.5,
+          "bottom": 575
+        },
+        "viewport": 600,
+        "bodyOverflow": false
+      }
+    },
+    {
+      "name": "dialog width matches frozen shared window 900",
+      "passed": true
+    },
+    {
+      "name": "default plaintext 900",
+      "passed": true
+    },
+    {
+      "name": "password hidden until enabled 900",
+      "passed": true
+    },
+    {
+      "name": "no second plaintext modal 900",
+      "passed": true
+    },
+    {
+      "name": "no page result block 900",
+      "passed": true
+    },
+    {
+      "name": "no unexpected export cleanup failure 900",
+      "passed": true
+    },
+    {
+      "name": "snapshot source 900",
+      "passed": true
+    },
+    {
+      "name": "overview original route 900",
+      "passed": true
+    },
+    {
+      "name": "overview cancel without cleanup failure 900",
+      "passed": true
+    }
+  ],
+  "screens": [
+    "1180-file-scope.png",
+    "1180-export-default.png",
+    "1180-export-encrypted.png",
+    "1180-export-result.png",
+    "1180-connection.png",
+    "1180-webdav-scope.png",
+    "1180-sync-preview.png",
+    "900-file-scope.png",
+    "900-export-default.png",
+    "900-export-encrypted.png",
+    "900-export-result.png",
+    "900-connection.png",
+    "900-webdav-scope.png",
+    "900-sync-preview.png"
+  ],
+  "errors": []
+}

@@ -1,0 +1,192 @@
+{
+  "code_source": "PR #46 52692a54 (application templates unchanged from efbe46e8)",
+  "scope": "static component callsites only; excludes DEV gallery; no runtime or full-state acceptance claim",
+  "callsites": [
+    {
+      "file": "apps/desktop/ui/src/App.vue",
+      "component": "AppModal",
+      "line": 79
+    },
+    {
+      "file": "apps/desktop/ui/src/App.vue",
+      "component": "RuntimeInstallDialog",
+      "line": 80
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "component": "UiDialog",
+      "line": 56
+    },
+    {
+      "file": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
+      "component": "UiDialog",
+      "line": 18
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/AgentExecutionField.vue",
+      "component": "UiDialog",
+      "line": 87
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+      "component": "UiDialog",
+      "line": 59
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "component": "UiDialog",
+      "line": 85
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "component": "UiDialog",
+      "line": 140
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "component": "UiDialog",
+      "line": 123
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "component": "UiDialog",
+      "line": 126
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "ChannelBatchDialog",
+      "line": 266
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "NewChannelDialog",
+      "line": 267
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "UiDialog",
+      "line": 268
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "component": "SelectorPreviewDialog",
+      "line": 269
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+      "component": "UiDialog",
+      "line": 35
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/ModelPicker.vue",
+      "component": "UiDialog",
+      "line": 104
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "component": "UiDialog",
+      "line": 84
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+      "component": "UiDialog",
+      "line": 89
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+      "component": "UiDialog",
+      "line": 130
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+      "component": "UiDialog",
+      "line": 18
+    },
+    {
+      "file": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "component": "UiDialog",
+      "line": 14
+    },
+    {
+      "file": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+      "component": "UiDialog",
+      "line": 111
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ConnectionDialog.vue",
+      "component": "UiDialog",
+      "line": 19
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ImportedConnections.vue",
+      "component": "UiDialog",
+      "line": 15
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "component": "UiDialog",
+      "line": 508
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/ObjectScopeTree.vue",
+      "component": "UiDialog",
+      "line": 32
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/SyncDialogHost.vue",
+      "component": "ResultDialog",
+      "line": 14
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/SyncDialogHost.vue",
+      "component": "ConnectionDialog",
+      "line": 14
+    },
+    {
+      "file": "apps/desktop/ui/src/features/sync/SyncResultDialog.vue",
+      "component": "UiDialog",
+      "line": 23
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "component": "ExtensionDetailModal",
+      "line": 861
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "TemplateUsageDialog",
+      "line": 208
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "UiDialog",
+      "line": 209
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "UiDialog",
+      "line": 214
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "UiDialog",
+      "line": 216
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "TemplateComparisonDialog",
+      "line": 217
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "ExternalTaskDialog",
+      "line": 218
+    },
+    {
+      "file": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "component": "BatchAgentDialog",
+      "line": 219
+    }
+  ],
+  "count": 37
+}

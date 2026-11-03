@@ -19,8 +19,8 @@
     },
     "all-entry-coverage": {
       "status": "in_progress",
-      "reason": "Current full browser audit passes 428/428 with zero page errors; an earlier 411/401/10 report is retained as a superseded failed run. Static inventory has 35 production dialog callsites and 2 dev-gallery references. Native macOS saw bounded navigation/cancel states but remained at missing-Node startup; no production callsite has full state acceptance yet. Each callsite and applicable state must be mapped and evidenced; dynamic modals and native menus remain included.",
-      "evidence": "implementation-20261102/ocx020-all-route-audit-rerun-20261102/audit-report.json; implementation-20261102/ocx020-all-route-audit/audit-report.json (superseded failed run); implementation-20261102/dialog-callsite-ledger.md; prototype-audit-20261102/application-dialog-inventory.json; implementation-20261102/native-release-package-and-ui.md"
+      "reason": "2026-11-03 current static inventory has 37 Dialog/Modal references excluding DEV. Historical 35 include four retired references; six new component/host references are included. PR #46 adds bounded Chromium/WebKit export/WebDAV/import error/preview/cancel checks (104 assertions, 40 screenshots, zero page errors). All native/business states and remaining callsites still require acceptance.",
+      "evidence": "implementation-20261102/dialog-callsite-ledger.md; acceptance-20261103/current-dialog-inventory.json; acceptance-20261103/README.md"
     },
     "macos-windows-native": {
       "status": "in_progress",
@@ -28,9 +28,9 @@
       "evidence": "implementation-20261102/native-release-package-and-ui.md; implementation-20261102/windows-existing-installer-matrix.md; implementation-20261102/dialog-callsite-ledger.md; CI runs 41420204361, 41439302028, 41448593550; Windows installer matrix 41448710359; implementation-20261102/export-preview-cancellation.md; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; PR #37 head 1cbe4a69; CI run 41472954091; PR #37 head dff7c75d; CI 41474713948"
     },
     "release-and-ota": {
-      "status": "pending",
-      "reason": "Draft/prerelease v0.2.20 assets exist at source ca434f7dd. Original release run 41429792658 had custom MSI remembered-path failure; PR #35 merged at f19e5e992 fixed disposable-runner path isolation, accepted v0.2.20 in exact-package verifier, and lengthened only local fixture waits. Existing package four-cell Windows matrix final pass is run 41448710359 (head d35d8ef7): MSI/NSIS × default/custom, immutable original hashes and installed EXE identities verified; earlier diagnostic failures remain preserved in 41446111057/41447323857/41447830049, and MSI default passed on the failed-job rerun. Updater signatures and package digests pass. Actual 0.2.19→0.2.20 OTA is still unrun, consumer-by-consumer dialog parity remains open, and release is still draft. macOS is ad-hoc signed; Windows MSI/NSIS lack OS Authenticode; updater signatures are distinct. Follow-up branch codex/0.2.20-discard-cancelled-export-plan fixes cancellation/startup cleanup for internal frozen preview cache; this production change is not yet merged or in candidate packages and must be tested/repackaged/revalidated before stable. Current tag assets predate the production export-cache lifecycle fix on codex/0.2.20-discard-cancelled-export-plan; if accepted, rebuild/re-sign and repeat installer/OTA verification before promotion. Follow-up production PR #37 (head 0389bcc0) now fixes unattempted preview-cache retention, with native Tauri IPC verification. Current v0.2.20 tag assets predate it; merge/rebuild/re-sign and repeat installer plus adjacent-release OTA acceptance if it is merged. Candidate tag/assets predate production preview-cache cleanup in PR #37 (0389bcc0); merge, rebuild/sign, installer matrix, and adjacent OTA must be rerun before stable. Current PR #37 head dff7c75d changes production frozen-preview cache lifecycle and cleanup fairness. v0.2.20 tag/packages predate this change; if merged, rebuild/sign and repeat installer plus adjacent OTA acceptance.",
-      "evidence": "implementation-20261102/windows-existing-installer-matrix.md; implementation-20261102/native-release-package-and-ui.md; /tmp/ocx020-release-414297-evidence/installer-verification.json; release run 41429792658; installer matrix run 41448710359; diagnostic runs 41446111057, 41447323857, 41447830049; PR #35 merge f19e5e992; .github/workflows/windows-release-acceptance.yml; implementation-20261102/export-preview-cancellation.md; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; implementation-20261102/export-preview-cancellation.md; PR #37 CI 41471655619; PR #37 CI 41474713948"
+      "status": "in_progress",
+      "reason": "2026-11-03 correction: Release 41589977450 was green with only 3 cells; PowerShell $kind overwrote $Kind and skipped NSIS/default. Draft MSI/NSIS SHA256 also differ from the packages tested by that run. PR #45 fixes collision and fails closed on incomplete reports; real macOS/Windows PowerShell contract tests pass. All package/install/OTA gates remain open.",
+      "evidence": "acceptance-20261103/README.md; release-41589977450-three-cells.json; draft-assets-snapshot.json; matrix-contract-macos.json; matrix-contract-windows.json; PR #45"
     }
   },
   "tests": {
@@ -373,5 +373,18 @@
         "backend"
       ]
     }
-  ]
+  ],
+  "acceptance_followups_20261103": {
+    "matrix_root_cause": "PowerShell case-insensitive $kind/$Kind collision; three-cell green report rejected by new gate",
+    "release_run": 41589977450,
+    "report_accepted": false,
+    "draft_matches_tested_assets": false,
+    "matrix_fix_pr": 45,
+    "browser_qa_pr": 46,
+    "browser_assertions_passed": 104,
+    "browser_page_errors": 0,
+    "browser_screenshots": 40,
+    "native_or_ota_acceptance_claimed": false,
+    "evidence": "acceptance-20261103/README.md"
+  }
 }

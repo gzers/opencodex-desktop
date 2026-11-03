@@ -68,3 +68,51 @@ Every production reference below remains **not fully verified**; notes are bound
 ## Separate S20-17 filesystem lifecycle follow-up
 
 Native Tauri IPC verification after the static 35-callsite ledger confirmed that preparing an export writes an internal frozen package before confirmation; Cancel now removes those cache files without creating anything in the user-facing exports directory. The source implementation is PR #37, head 0389bcc04cccc6000b1a90ef784e83c3a7785191, and is not merged into the current v0.2.20 package/tag. See export-preview-cancellation.md. This evidence covers a side effect of the export callsite; it does not turn the export dialog's other states into full parity acceptance.
+
+## 2026-11-03 bounded browser follow-up
+
+PR #46 passes 104 rendered assertions in Chromium/WebKit with 40 screenshots and zero page errors; see ../acceptance-20261103/README.md. Current ModelTransfer.vue has one shared UiDialog at line 508. Historical picker (435), plaintext-confirm (479) and password (483) callsites are consolidated or removed; those historic line numbers describe v0.2.19. Empty/protected/wrong-password/import-preview/default-backup/Escape/reopen now have explicit browser evidence. Export/WebDAV connection/preview/result and overview cancel checks pass after fixing the DEV discard fixture. No native saved-file/backup or whole-callsite acceptance is claimed. A fresh inventory of new/retired references and remaining native states is still required.
+
+### Current source inventory (37 static references)
+
+The source has 37 references under the same Dialog/Modal component boundary, excluding DEV. Compared with the historical 35: three ModelTransfer windows and SyncRoute direct UiDialog are retired; TransferBackups, ObjectScopeTree, ConnectionDialog, SyncResultDialog and two host references are new. A component implementation and its callers are separate references, not unique runtime windows. Source snapshot: ../acceptance-20261103/current-dialog-inventory.json. Every reference retains pending native/state acceptance.
+
+| Current file | Component | Line | Evidence and remainder |
+| --- | --- | ---: | --- |
+| App.vue | AppModal | 79 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| App.vue | RuntimeInstallDialog | 80 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/backup/ModelSaveHistory.vue | UiDialog | 56 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/backup/TransferBackups.vue | UiDialog | 18 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/AgentExecutionField.vue | UiDialog | 87 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/BatchAgentDialog.vue | UiDialog | 59 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/ChannelBatchDialog.vue | UiDialog | 85 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/ChannelEditor.vue | UiDialog | 140 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/ChannelModelTable.vue | UiDialog | 123 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/ChannelModelTable.vue | UiDialog | 126 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/ChannelsView.vue | ChannelBatchDialog | 266 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/ChannelsView.vue | NewChannelDialog | 267 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/ChannelsView.vue | UiDialog | 268 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/ChannelsView.vue | SelectorPreviewDialog | 269 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/ExternalTaskDialog.vue | UiDialog | 35 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/ModelPicker.vue | UiDialog | 104 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/NewChannelDialog.vue | UiDialog | 84 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/SaveResultNotice.vue | UiDialog | 89 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/SelectorPreviewDialog.vue | UiDialog | 130 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/TemplateComparisonDialog.vue | UiDialog | 18 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/models/TemplateUsageDialog.vue | UiDialog | 14 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/notifications/components/NotificationCenter.vue | UiDialog | 111 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/sync/ConnectionDialog.vue | UiDialog | 19 | PR #46 browser fields/test/cancel; native persistence/errors pending |
+| features/sync/ImportedConnections.vue | UiDialog | 15 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/sync/ModelTransfer.vue | UiDialog | 508 | PR #46 browser export/import/sync/cancel states; native/business edge states pending |
+| features/sync/ObjectScopeTree.vue | UiDialog | 32 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| features/sync/SyncDialogHost.vue | ResultDialog | 14 | Host reached by export/sync/connection/result browser flows; all native callers pending |
+| features/sync/SyncDialogHost.vue | ConnectionDialog | 14 | Host reached by export/sync/connection/result browser flows; all native callers pending |
+| features/sync/SyncResultDialog.vue | UiDialog | 23 | PR #46 browser export receipt open/close; retry/partial/native states pending |
+| routes/ExtensionsRoute.vue | ExtensionDetailModal | 861 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| routes/ModelsRoute.vue | TemplateUsageDialog | 208 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| routes/ModelsRoute.vue | UiDialog | 209 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| routes/ModelsRoute.vue | UiDialog | 214 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| routes/ModelsRoute.vue | UiDialog | 216 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| routes/ModelsRoute.vue | TemplateComparisonDialog | 217 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| routes/ModelsRoute.vue | ExternalTaskDialog | 218 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
+| routes/ModelsRoute.vue | BatchAgentDialog | 219 | No new per-reference runtime acceptance in this follow-up; applicable states pending |
