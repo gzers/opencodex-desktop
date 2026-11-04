@@ -6,16 +6,22 @@ use opencodex_desktop_lib::{
     infrastructure::runtime_executable::FixedRuntimeExecutable,
     modules::model_config::schema::ModelResult, state::ProcessContext,
 };
-use serde_json::{json, Value};
+use serde_json::json;
+#[cfg(unix)]
+use serde_json::Value;
+#[cfg(unix)]
+use std::time::Duration;
 use std::{
     collections::BTreeMap,
     path::{Path, PathBuf},
-    time::Duration,
 };
 
 const OLD: &str = "Krill-1/Org/RaW-模型/Version@2026";
+#[cfg(unix)]
 const NEW: &str = "Krill/Org/RaW-模型/Version@2026";
+#[cfg(unix)]
 const REVIEW_OLD: &str = "Krill-1/Review/Original-β/v2";
+#[cfg(unix)]
 const REVIEW_NEW: &str = "Krill/Review/Original-β/v2";
 const BASE: &str = "cli_auth_credentials_store = \"file\"\nweb_search = \"disabled\"\ncheck_for_update_on_startup = false\n[analytics]\nenabled = false\n[feedback]\nenabled = false\n";
 
@@ -83,12 +89,14 @@ impl Fixture {
         std::fs::read(self.codex.join("config.toml")).unwrap()
     }
 
+    #[cfg(unix)]
     fn model(&self) -> String {
         let config: toml::Value =
             toml::from_str(std::str::from_utf8(&self.bytes()).unwrap()).unwrap();
         config["model"].as_str().unwrap().to_owned()
     }
 
+    #[cfg(unix)]
     fn seed_current(&self, model: Option<&str>, review: Option<&str>) {
         let mut config = String::from("# keep this comment\n");
         for (key, value) in [("model", model), ("review_model", review)] {
@@ -100,6 +108,7 @@ impl Fixture {
         std::fs::write(self.codex.join("config.toml"), config).unwrap();
     }
 
+    #[cfg(unix)]
     fn review_model(&self) -> Option<String> {
         let config: toml::Value =
             toml::from_str(std::str::from_utf8(&self.bytes()).unwrap()).unwrap();
