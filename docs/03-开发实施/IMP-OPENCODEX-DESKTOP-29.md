@@ -63,3 +63,9 @@ G0核心放行并进入G2/G3（2026-11-04）：新增原型41项定向、工作�
 
 
 2026-11-04 16:38真实产品链收口：43c6253b5的save_with_context→prepare_saved_rename_restart→fresh Codex无model覆盖→实际Krill provider/原始型号/唯一Responses POST/响应消费全通过，26项证据核对。原服务与本机终点已清理；真实pending保留，未调用全局重启。最后复制夹具的homeBinding/回执字段错误已独立纠正，只重链测试helper，实际生产rlib未变；副本仅完整成功时清理pending，不能称真实GUI重启。详见owned-client-routing-20261104/FINAL-43.md及production-prepare-43-result.json。当前HEAD后续仅测试文件推进，与43产品源一致。Windows严格编译另因Unix测试符号未隔离失败，1cf7a11da已修，不降warnings；CI41800125918及平台原包门继续。
+
+
+2026-11-04 Windows实际绑定发现R21-14（POST-02发布阻断）：41802736384真实官方2.84/Codex0.166默认PATH观察显示npm codex.cmd，settings显示路径还把用户名替换为[USER]。该显示DTO不是可直接执行路径，旧生产准备会拒绝。原生owner的exe门继续保留，主线补已绑定路径唯一用户名恢复和严格官方npm包到同包native解析；不能换绑猜路径或盲执行任意脚本。Windows原始default-settings/receipt在native-harness-20261104/new-native-review/windows-actual-owner/run-41802736384。私有9ed草稿构建41802958580已取消，未创建Release/资产，未改beta/stable；最终版本须重新冻结并补真实原平台owner及完整生效证据，不采用旧候选。此前1cf的Mac完整后端通过，Windows已进入managed-install原生阶段；这不替代新绑定验收。
+
+
+2026-11-04最终候选接续：双平台标准npm入口已修复。Windows13项、Mac7项、父级22项及Clippy通过；Windows实际原生owner 41806371582两项通过。最终发布源6e2197fd0，CI41807738899、Windows owner41807732522与私有构建41807781351继续。Mac默认入口完整链、原包原生、安装、实际升级与stable读回仍待验，不关闭任务。
