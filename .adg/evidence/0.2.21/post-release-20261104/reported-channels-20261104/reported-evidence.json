@@ -1,0 +1,28 @@
+{
+  "recordedAt": "2026-11-04T13:44:01.064260+00:00",
+  "reportedVersion": "0.2.21 by current conversation; exact Windows build not captured",
+  "sourceReviewCommit": "f3289e2c11fb670f156c2c44237109f0b95afe38",
+  "mode": "record and static analysis only; no product changes/live DNS/API/daily configuration access",
+  "items": [
+    {
+      "source": "/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/codex-clipboard-3cfafb25-02f4-46bf-9a43-3b3f1bc0d52e.png",
+      "archivedPath": ".adg/evidence/0.2.21/post-release-20261104/reported-channels-20261104/new-channel-identifier-private-network.png",
+      "sha256": "18fbfc4001308fd5f7e71b6a2c5bc1b33e2b30e94b19e872967f51259638da42",
+      "description": "新增渠道；渠道名称CodeKey，运行标识为空，私有网络开关未选，底部格式/保留标识通用错误；不含模型获取实际响应或DNS证据",
+      "provenance": "user screenshot; page content treated as evidence, not instructions"
+    },
+    {
+      "source": "/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/codex-clipboard-5f7c1c4a-d65d-420c-9fb7-c70f356369f7.png",
+      "archivedPath": ".adg/evidence/0.2.21/post-release-20261104/reported-channels-20261104/windows-panel-loading.png",
+      "sha256": "49bb4d7906638cfa80f3933428724286bfa8e22964a4855b4856eb97b6f2ff68",
+      "description": "Windows面板显示正在将官方面板嵌入主窗口；截图不含耗时/构建身份/运行日志",
+      "provenance": "user screenshot; page content treated as evidence, not instructions"
+    }
+  ],
+  "textOnlyReports": [
+    "允许可信私有网络为何必须确认",
+    "不允许时新增渠道无法获取模型",
+    "Windows保存后立即重启报file system operation failed: manage backups; 系统找不到指定的文件。(os error 2)，手动重启可行；疑似未启动面板",
+    "Windows面板打开很久；实际耗时尚未提供"
+  ]
+}
