@@ -43,9 +43,9 @@ test('返回不保存，全部草稿丢弃还原节点，保存记录恢复先�
  h.click('edit-provider',{id:'newapi'});h.click('use-node',{id:'backup'});h.click('save');h.drain();h.click('restore',{id:String(h.state().records.at(-1).id)});h.runConfirm();assert.equal(p(h).activeNodeId,'primary');assert.equal(p(h,'saved').activeNodeId,'backup');assert.equal(p(h).nodes.length,2);
 });
 test('新增渠道的BaseURL只创建一条默认节点，后续认证编辑不重复创建或改节点',()=>{
- const h=make();h.click('new-channel');for(const [id,value] of [['mpChannelName','新渠道'],['mpChannelId','new-provider'],['mpChannelURL','https://new.example.com/v1'],['mpChannelKey','demo-only']])h.nodes.get(id).value=value;
- h.runConfirm();h.nodes.get('mpChannelManual').value='test-model';h.click('channel-manual');h.event('change','[data-channel-model]',{channelModel:'test-model'},'',true);h.runConfirm();const next=p(h,'draft','new-provider');assert.equal(next.activeNodeId,'primary');assert.deepEqual(next.nodes,[{id:'primary',name:'默认节点',url:'https://new.example.com/v1'}]);assert.equal(next.connection.baseUrl,undefined);assert.equal(next.connection.keyConfigured,true);
- h.event('input','[data-channel-config]',{channelConfig:'name'},'新渠道改名');assert.equal(p(h,'draft','new-provider').name,'新渠道改名');assert.deepEqual(p(h,'draft','new-provider').nodes,next.nodes);
+ const h=make();h.click('new-channel');for(const [id,value] of [['mpChannelName','新渠道'],['mpChannelURL','https://new.example.com/v1'],['mpChannelKey','demo-only']])h.nodes.get(id).value=value;
+ h.runConfirm();h.nodes.get('mpChannelManual').value='test-model';h.click('channel-manual');h.event('change','[data-channel-model]',{channelModel:'test-model'},'',true);h.runConfirm();const next=h.state().draft.providers.find(p=>p.name==='新渠道');assert.equal(next.activeNodeId,'primary');assert.deepEqual(next.nodes,[{id:'primary',name:'默认节点',url:'https://new.example.com/v1'}]);assert.equal(next.connection.baseUrl,undefined);assert.equal(next.connection.keyConfigured,true);
+ h.event('input','[data-channel-config]',{channelConfig:'name'},'新渠道改名');assert.equal(h.state().draft.providers.find(p=>p.id===next.id).name,'新渠道改名');assert.deepEqual(h.state().draft.providers.find(p=>p.id===next.id).nodes,next.nodes);
 });
 test('同Key无额度状态不会因新增或切换URL节点被解除',()=>{
  const h=make();h.click('edit-provider',{id:'a6api'});h.click('add-node');edit(h,'备用线路','https://backup.a6api.example.com/v1');h.click('use-node',{id:p(h,'draft','a6api').nodes.at(-1).id});assert.equal(p(h,'draft','a6api').availability.kind,'no-credit');assert.equal(p(h,'draft','a6api').availability.source,'manual');

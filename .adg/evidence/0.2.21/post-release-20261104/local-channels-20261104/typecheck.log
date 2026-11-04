@@ -1,0 +1,5 @@
+
+> opencodex-desktop-ui@0.2.21 typecheck
+> vue-tsc --noEmit
+
+tests/new-channel-dialog.test.ts(25,37): error TS2339: Property 'mock' does not exist on type '(request: { protocol: string; url: string; apiKey: string | null; credentialRef: null; allowPrivateNetwork?: boolean | undefined; }) => Promise<{ models: DiscoveredModel[]; credentialRef: null; elapsedMs: number; }>'.

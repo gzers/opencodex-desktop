@@ -1,0 +1,54 @@
+{
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-07",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/validation-summary.json; HANDOFF.md; source-final.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-08",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/validation-summary.json; HANDOFF.md; source-final.json",
+      "status": "passed"
+    }
+  ],
+  "checks": [
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/prototype-tests-final.log; 59 affected tests; prototype-chromium.json; prototype-webkit.json",
+      "name": "review:prototype-affected-regression",
+      "status": "passed"
+    }
+  ],
+  "closed_task_summary_digest": "5cad6f65e7f9203b229d54689a7acaeab9dcc7b35d362a284cf8956fb82a8826",
+  "content_digest": "085285165ed3cabb154b9ade02f0610b91a9507466e61528f2592de6d958daf6",
+  "fact_impacts": [
+    {
+      "after_digest": "b02559c948264e63b4ea0878e88ec980a965d0c741e822a718745c6acf6ade21",
+      "path": "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md",
+      "summary": "L2采用范围实现与本机验证通过，W与整版集成发布保留待办",
+      "target": "0"
+    },
+    {
+      "after_digest": "834530f9ae0bfc41455c71e46945091e9d185d59667955c6483f5aac3554e93a",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
+      "summary": "L2采用范围实现与本机验证通过，W与整版集成发布保留待办",
+      "target": "1"
+    },
+    {
+      "after_digest": "73b9d70a5f3f31ab8e027d598d49056486b0ba47b88ada2621d84d51abc92afb",
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+      "summary": "L2采用范围实现与本机验证通过，W与整版集成发布保留待办",
+      "target": "2"
+    }
+  ],
+  "id": "CERT-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104",
+  "kind": "CERT",
+  "receipt_digest": "29331a3f4de7de3d75fc87f4a3d91cfc1c2e53131d02b4f16d60f14357b15590",
+  "receipt_id": "RCP-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104",
+  "result": "succeeded",
+  "revision": 1,
+  "summary_digest": "70599869498ef48907b915ae743b1064d8c3b7a98b7c295d929abf87f9ba5d39",
+  "task_digest_before_close": "28ca79a3bafc1f01f1d9685010d4c14939640cb366f5dc05e5a24b45aaaed01c",
+  "task_id": "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104",
+  "task_summary_digest": "ea7e1485e0b3989852925653de3d5d52e8468cfe9c169417001469698a924ec1",
+  "verified_at": "2026-11-04T14:21:28.748231+00:00"
+}

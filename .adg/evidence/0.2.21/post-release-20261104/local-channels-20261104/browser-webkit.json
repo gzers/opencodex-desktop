@@ -1,0 +1,55 @@
+{
+  "engine": "webkit",
+  "scope": "DEV fixtures, no native IPC/real network; actual Vue new and rename flows",
+  "checks": [
+    {
+      "name": "light no second ID",
+      "passed": true
+    },
+    {
+      "name": "light no private permission",
+      "passed": true
+    },
+    {
+      "name": "light request has no private gate",
+      "passed": true
+    },
+    {
+      "name": "light editor no ID",
+      "passed": true
+    },
+    {
+      "name": "light reserved display name valid",
+      "passed": true
+    },
+    {
+      "name": "light internal key allocated",
+      "passed": true
+    },
+    {
+      "name": "dark no second ID",
+      "passed": true
+    },
+    {
+      "name": "dark no private permission",
+      "passed": true
+    },
+    {
+      "name": "dark request has no private gate",
+      "passed": true
+    },
+    {
+      "name": "dark editor no ID",
+      "passed": true
+    },
+    {
+      "name": "dark reserved display name valid",
+      "passed": true
+    },
+    {
+      "name": "dark internal key allocated",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

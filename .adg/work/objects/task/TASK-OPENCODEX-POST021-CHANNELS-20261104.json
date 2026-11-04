@@ -1,0 +1,81 @@
+{
+  "acceptance_bindings": [
+    {
+      "acceptance_id": "AC-P21-07",
+      "criterion_digest": "be8bc87ef729deb9d8d98fcc9ab71994325fcb4b7bc466235175488fccaab8c7",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-08",
+      "criterion_digest": "e0c2f8154429d231efc8d0f59659f00039ae20b34e1141ddea41a50f3137ddbb",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    }
+  ],
+  "acceptance_ids": [
+    "AC-P21-07",
+    "AC-P21-08"
+  ],
+  "baseline_digest": "0dd749b7e53528544236ab412b0b92c192227cd49d037068d4ce78c18642b3a8",
+  "certificate_digest": "c5f32c69621fba8b27b0d36797fb00e7d54f96b4dac2487ccd5ea6c6a32a82e6",
+  "content_digest": "82e7523389d45eae6c4e3730eb8ae965dda4a0a9dcb3f225c7c1d904edda55f4",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "fact_writeback": {
+    "mode": "required",
+    "targets": [
+      {
+        "before_digest": "8d036ec7434b9f508bbd422a6c0c11bf7ef9e626e0d8c2c70a1431d35c2f3923",
+        "id": "0",
+        "path": "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md"
+      },
+      {
+        "before_digest": "b3e92418be5de46d088d0aeabf517cf37840abba147dd019a27ce98e3d2c1a2b",
+        "id": "1",
+        "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md"
+      },
+      {
+        "before_digest": "7fe430f22a4fd430a45398e947bf94936c19624af49e9102d5b49c2c353d8eb2",
+        "id": "2",
+        "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+      }
+    ]
+  },
+  "id": "TASK-OPENCODEX-POST021-CHANNELS-20261104",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "imported_receipt_digest": "88106161e36467d6b009d287fef4b43a5601f0dc0d7327bc570e8c903dda45cd",
+  "kind": "TASK",
+  "owner": "local-channels-integration",
+  "required_checks": [
+    "review:affected-regression",
+    "review:channel-name-save-readback",
+    "review:macos-native",
+    "review:network-discovery-measurement",
+    "review:prototype-adoption",
+    "review:side-effects"
+  ],
+  "result": "succeeded",
+  "revision": 3,
+  "state": "completed",
+  "summary": "新增/改名无需运行标识，内部键分配；渠道发现/节点检测不以地址类别拦截；独立本机L2验收",
+  "summary_digest": "2b58cc4990a00d8a44fa7e716b5344c4fc61e330aed346854e7d0477d8d6afc8",
+  "title": "渠道名称唯一与取消私网准入",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/**",
+    "apps/desktop/tauri/src/modules/model_config/compiler.rs",
+    "apps/desktop/tauri/src/modules/model_config/config_file_mapping.rs",
+    "apps/desktop/tauri/src/modules/model_config/config_file_rename_tests.rs",
+    "apps/desktop/tauri/src/modules/model_config/discovery.rs",
+    "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs",
+    "apps/desktop/tauri/src/modules/model_config/measurements.rs",
+    "apps/desktop/ui/qa/post021-channels.browser.mjs",
+    "apps/desktop/ui/src/features/models/**",
+    "apps/desktop/ui/tests/**",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post021-channels.test.cjs",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+    "test/smoke/post021-channels-macos.py"
+  ]
+}

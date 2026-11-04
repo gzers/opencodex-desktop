@@ -1,0 +1,57 @@
+
+> opencodex-desktop-ui@0.2.21 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/channel-editor-direct.test.ts (22 tests | 1 failed) 911ms
+   ❯ current-channel Key intent across file refreshes (8)
+     × keeps revealed and emptied input behind origin validation while only explicit clear deletes the Key 25ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/channel-editor-direct.test.ts > current-channel Key intent across file refreshes > keeps revealed and emptied input behind origin validation while only explicit clear deletes the Key
+AssertionError: expected "vi.fn()" to be called with arguments: [ ObjectContaining{…} ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   ObjectContaining {
+-     "allowPrivateNetwork": false,
++   {
+      "apiKey": null,
+      "credentialRef": null,
++     "protocol": "openai-chat",
+      "providerId": "provider-first",
+      "url": "https://changed.example.test",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/channel-editor-direct.test.ts:180:31
+    178|     store.channelDraft!.channels[0]!.connection.nodes[0]!.url='https:/…
+    179|     await button(wrapper,'获取模型列表').trigger('click');await flushPromise…
+    180|     expect(modelApi.discover).toHaveBeenCalledWith(expect.objectContai…
+       |                               ^
+    181|     wrapper.getComponent(NodePicker).vm.$emit('measure',['node']);awai…
+    182|     expect(modelApi.measureNodes).toHaveBeenCalledWith(expect.objectCo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 193 passed (194)
+      Tests  1 failed | 1276 passed (1277)
+   Start at  22:08:34
+   Duration  10.83s (environment 43%, tests 30%, transform 15%, import 11%)
+
+Environment  jsdom was created 194 times · 70.82s total, 43% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

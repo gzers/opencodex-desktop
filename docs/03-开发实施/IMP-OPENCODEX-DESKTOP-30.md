@@ -6,7 +6,7 @@ state: "in_progress"
 completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
-task_ids: ["TASK-OPENCODEX-POST021-LOCAL-20261104"]
+task_ids: ["TASK-OPENCODEX-POST021-LOCAL-20261104", "TASK-OPENCODEX-POST021-CHANNELS-20261104", "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104"]
 summary: "本机同步四项已局部完成，接续渠道/私网获取；Windows承接材质、重启和面板，统一集成发布。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
@@ -86,3 +86,12 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 - W证据继续docs/post021-windows-materials，在原独有证据目录下新增restart-panel/子目录，含HANDOFF、问题映射/环境、阶段耗时、原始失败、前后截图和实际重启/读回。L统一回写原清单、DMD/IMP与索引。
 - L2与W2可并行，依赖适用原型和各自任务绑定；原G3改为等待原W材质、L2、W2及原L交付全部满足后统一合并。同一最终提交补Mac受影响重启/面板及Windows渠道/发现/同步/材质回归，原G4仍最后统一发行，不让一条贡献线独立发布。
 - 本轮不改产品、不自动扩大到日常配置/秘密/真实WebDAV或重启日常Codex。新增功能使用隔离根/测试网络和自有候选验证；不为新决定倒改旧证书，修复版本尚未冻结。
+
+
+2026-11-04 L2已获用户“同意进行，目标模式执行”授权，沿codex/post021-sync-fixes / f3289e2c接续。新增TASK-OPENCODEX-POST021-CHANNELS-20261104绑定AC-P21-07/08；原L任务保持完成，W2与材质独占写集不改。先采用适用原型增量，再完成公共渠道/发现实现和隔离/原生验收，最后提交交接，不独立发版。
+
+
+2026-11-04 L2实现/验证接续：0e604cb2b6be706af767d9937532fe056cac7ca6已推送本机代码线。名称唯一/内部键管理及渠道模型获取/节点检测取消私网门槛已实现；适用原型59项及双引擎各4项，软件双引擎各12项、Vitest1280项、候选Mac原生12检查通过（2次实际loopback模型清单GET、零生成）。Rust全库最终重跑及Clippy最后复核仍在运行；初次旧显示名称不写raw断言已按新合同改为只更新name。详见.adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/。原L任务不重绑，当前两项新任务仅在证据齐备后关闭；W与整版集成发布不在本机局部验收内。
+
+
+2026-11-04 L2最终本机回归通过：代码0e604cb2b6be706af767d9937532fe056cac7ca6已推送，Vitest1280、Rust全库1211/0失败/4原条件忽略、Clippy -D warnings与构建通过；59条适用原型回归、双引擎原型各4/软件各12及Mac实际原生12检查通过。两个L2任务按自身范围关闭，本批DMD/IMP及十项整版仍待W回交/最终同提交集成。远端CI41845962425前端、发布工具、Windows冒烟已通过，双后端仍待结束，不据本机结果代写远端通过。未发布，未操作日常配置或真实渠道/同步。

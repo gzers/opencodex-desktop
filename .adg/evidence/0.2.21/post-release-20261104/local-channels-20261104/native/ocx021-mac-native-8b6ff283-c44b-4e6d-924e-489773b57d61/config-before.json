@@ -1,0 +1,33 @@
+{
+  "providers": {
+    "native021-old": {
+      "adapter": "openai-chat",
+      "baseUrl": "https://native021.invalid/v1",
+      "authMode": "none",
+      "models": [
+        "vendor/a:8b",
+        "vendor-a:8b",
+        "Mixed_Case/V2"
+      ],
+      "selectedModels": [
+        "vendor/a:8b",
+        "vendor-a:8b"
+      ],
+      "newModelPolicy": "off",
+      "note": "Synthetic fixture; never query this endpoint",
+      "enabled": false
+    }
+  },
+  "defaultProvider": "native021-old",
+  "modelPickerOrder": [
+    "native021-old/vendor/a:8b",
+    "native021-old/vendor-a:8b",
+    "native021-old/Mixed_Case/V2"
+  ],
+  "disabledModels": [
+    "native021-old/Mixed_Case/V2"
+  ],
+  "native021Opaque": {
+    "keep": 42
+  }
+}

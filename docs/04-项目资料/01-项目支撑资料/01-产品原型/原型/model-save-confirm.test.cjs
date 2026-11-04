@@ -90,9 +90,9 @@ test('Key编辑在失败时不改已保存值，全局还原回原Key且无局�
 
 test('新渠道加入时Key仅进入内存草稿，页级保存前不改已保存快照，丢弃可全部还原',()=>{
  const h=make(),before=JSON.stringify(h.state().saved);h.click('new-channel');
- for(const [id,value] of [['mpChannelName','离线新渠道'],['mpChannelId','offline-new'],['mpChannelURL','https://offline.example'],['mpChannelKey','demo-new-draft-only']])h.nodes.get(id).value=value;
+ for(const [id,value] of [['mpChannelName','离线新渠道'],['mpChannelURL','https://offline.example'],['mpChannelKey','demo-new-draft-only']])h.nodes.get(id).value=value;
  h.runConfirm();h.nodes.get('mpChannelManual').value='demo-model';h.click('channel-manual');h.event('change','[data-channel-model]',{channelModel:'demo-model'},'',true);h.runConfirm();
- assert.equal(JSON.stringify(h.state().saved),before);assert.equal(h.state().operation,null);assert.ok(h.state().draft.providers.find(p=>p.id==='offline-new').connection.credentialRef);
+ assert.equal(JSON.stringify(h.state().saved),before);assert.equal(h.state().operation,null);assert.ok(h.state().draft.providers.find(p=>p.name==='离线新渠道').connection.credentialRef);
  assert.equal(h.nodes.get('mpChannelInline-key').value,'demo-new-draft-only');assert.doesNotMatch(JSON.stringify(h.state()),/demo-new-draft-only/);
- h.click('back-channels');h.click('discard');h.runConfirm();assert.equal(h.state().draft.providers.some(p=>p.id==='offline-new'),false);assert.equal(JSON.stringify(h.state().saved),before);
+ h.click('back-channels');h.click('discard');h.runConfirm();assert.equal(h.state().draft.providers.some(p=>p.name==='离线新渠道'),false);assert.equal(JSON.stringify(h.state().saved),before);
 });

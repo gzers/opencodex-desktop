@@ -44,7 +44,7 @@ test('部分完成后停止保留已完成结果，未完成项不计为完成�
  while(queue.length)queue.shift()();assert.equal(result(h,'primary').status,'success');assert.equal(result(h,'backup').status,'cancelled');const items=h.state().nodeSpeedRuns.newapi.items;assert.equal(items.filter(i=>i.status==='success').length,1);h.proto.render();assert.match(h.page(),/测速已停止 1 \/ 3/);
 });
 test('删除后重建同ID同URL渠道也不复用旧认证的测速结果或晚回',()=>{
- const h=make();h.click('node-speed-current',{channel:'newapi'});h.click('delete-provider',{id:'newapi'});h.runConfirm();h.click('new-channel');for(const [id,value] of [['mpChannelName','NewApi 重建'],['mpChannelId','newapi'],['mpChannelURL','https://newapi.example.com/v1'],['mpChannelKey','new-demo-key']])h.nodes.get(id).value=value;
+ const h=make();h.click('node-speed-current',{channel:'newapi'});h.click('delete-provider',{id:'newapi'});h.runConfirm();h.click('new-channel');for(const [id,value] of [['mpChannelName','NewApi 重建'],['mpChannelURL','https://newapi.example.com/v1'],['mpChannelKey','new-demo-key']])h.nodes.get(id).value=value;
  h.runConfirm();h.nodes.get('mpChannelManual').value='test-model';h.click('channel-manual');h.event('change','[data-channel-model]',{channelModel:'test-model'},'',true);h.runConfirm();h.drain();assert.equal(h.state().nodeSpeedRuns.newapi.items[0].status,'stale');h.proto.render();assert.match(h.page(),/data-speed-status="untested"/);
 });
 

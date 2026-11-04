@@ -1,0 +1,79 @@
+{
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-07",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/validation-summary.json; HANDOFF.md; source-final.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-08",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/validation-summary.json; HANDOFF.md; source-final.json",
+      "status": "passed"
+    }
+  ],
+  "checks": [
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/vitest-final.log; cargo-lib-final.log; clippy-final.log; native-build.log",
+      "name": "review:affected-regression",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/cargo-lib-final.log; native/ocx021-mac-native-8b6ff283-c44b-4e6d-924e-489773b57d61/report.json",
+      "name": "review:channel-name-save-readback",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/native/ocx021-mac-native-8b6ff283-c44b-4e6d-924e-489773b57d61/report.json",
+      "name": "review:macos-native",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/cargo-lib-final.log; native/ocx021-mac-native-8b6ff283-c44b-4e6d-924e-489773b57d61/model-requests.json",
+      "name": "review:network-discovery-measurement",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/prototype-adoption.json; prototype-tests-final.log; prototype-chromium.json; prototype-webkit.json",
+      "name": "review:prototype-adoption",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/validation-summary.json; native report; real temp-file readback and no-save measurement",
+      "name": "review:side-effects",
+      "status": "passed"
+    }
+  ],
+  "closed_task_summary_digest": "2b58cc4990a00d8a44fa7e716b5344c4fc61e330aed346854e7d0477d8d6afc8",
+  "content_digest": "c5f32c69621fba8b27b0d36797fb00e7d54f96b4dac2487ccd5ea6c6a32a82e6",
+  "fact_impacts": [
+    {
+      "after_digest": "b02559c948264e63b4ea0878e88ec980a965d0c741e822a718745c6acf6ade21",
+      "path": "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md",
+      "summary": "L2采用范围实现与本机验证通过，W与整版集成发布保留待办",
+      "target": "0"
+    },
+    {
+      "after_digest": "834530f9ae0bfc41455c71e46945091e9d185d59667955c6483f5aac3554e93a",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
+      "summary": "L2采用范围实现与本机验证通过，W与整版集成发布保留待办",
+      "target": "1"
+    },
+    {
+      "after_digest": "73b9d70a5f3f31ab8e027d598d49056486b0ba47b88ada2621d84d51abc92afb",
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+      "summary": "L2采用范围实现与本机验证通过，W与整版集成发布保留待办",
+      "target": "2"
+    }
+  ],
+  "id": "CERT-OPENCODEX-POST021-CHANNELS-20261104",
+  "kind": "CERT",
+  "receipt_digest": "88106161e36467d6b009d287fef4b43a5601f0dc0d7327bc570e8c903dda45cd",
+  "receipt_id": "RCP-OPENCODEX-POST021-CHANNELS-20261104",
+  "result": "succeeded",
+  "revision": 1,
+  "summary_digest": "9e14256e846db1ade59c9a20539dd5a2f2b44b5e148f3642937ef4ca4f66d48a",
+  "task_digest_before_close": "7363cca49c17797bff25e683edfa29bc114f9de1c5179363b498e7b9f8f3fd94",
+  "task_id": "TASK-OPENCODEX-POST021-CHANNELS-20261104",
+  "task_summary_digest": "6572f8e24f85d417cc0b7f98febf80ce9d4d4e29ef14b5e5c16ae9a35374d8e2",
+  "verified_at": "2026-11-04T14:21:28.739181+00:00"
+}

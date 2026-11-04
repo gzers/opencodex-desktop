@@ -1,0 +1,86 @@
+{
+  "codeBranch": "codex/post021-sync-fixes",
+  "commit": "0e604cb2b6be706af767d9937532fe056cac7ca6",
+  "baseline": "f3289e2c11fb670f156c2c44237109f0b95afe38",
+  "draftPR": 69,
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file_mapping.rs",
+      "sha256": "7c3b031e8b9f6c026f42a98fd4ec5a407cc4533c9511404c665eb041ad89de04"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file_rename_tests.rs",
+      "sha256": "9b5902dbec6392e15d0a42b4fbe7ef159822a43e93f16cd72d47b380c25a5a7d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/discovery.rs",
+      "sha256": "b08b331f63c4238d4255d47176d16ca1e345fe7d7bb59bf317f79d6449544c6d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs",
+      "sha256": "4d4946274bd0f51be39d7052a74ecabfccb0957d930692899d8db660dd8d9b4c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/measurements.rs",
+      "sha256": "7f775b2bd453d07851d544d1a01b4d225ab3222454582b79b6f4ff4da5fd4594"
+    },
+    {
+      "path": "apps/desktop/ui/qa/post021-channels.browser.mjs",
+      "sha256": "5b3bfcb7247a3935d742d58c9340ac08e888366941bb12cce547caf0767084a9"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "sha256": "b7eae41d970017ec50ea176652217ebef91937834eaf97084208d18387d251cf"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "sha256": "087cd741976598ffbfbd8a42d1f9f4cb65be4e419594dfb390dfb9564d290550"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/api.ts",
+      "sha256": "de027172774d25f9ad07def615877450f379fb42a1b8a5b791ca6618d6330ee9"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/channelRename.ts",
+      "sha256": "8529c84a2f0e9b32c86aac92516b0481f1606f8f537ea5745e94aea523e82393"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/saveReview.ts",
+      "sha256": "0c23605554c11b4d44879bd522e72bfd475401eb60eda55de498cf8c6d07c024"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/useNodeMeasurements.ts",
+      "sha256": "bcf242e0d0417d0128afb3081c6f3199e8054cb3c1067d09059ffc38e8cbde32"
+    },
+    {
+      "path": "apps/desktop/ui/tests/channel-editor-direct.test.ts",
+      "sha256": "4194ee19c0ba4c60db3130aa929911868d70a6107c374ecb483063c3bfddbd82"
+    },
+    {
+      "path": "apps/desktop/ui/tests/channel-rename.test.ts",
+      "sha256": "073d1df29948fb78896bac5c0a6a3e5225a6da5eecd64a7389d8f81570ad1648"
+    },
+    {
+      "path": "apps/desktop/ui/tests/new-channel-dialog.test.ts",
+      "sha256": "e45fa6731a0efeb930a5322dcc3fb337e379dde071e88f51fd89fd1c65aec225"
+    },
+    {
+      "path": "test/smoke/post021-channels-macos.py",
+      "sha256": "ac382e3b927338f4cd12f052d1dc6695862db6d90aac558c3ffeff1f63ebf661"
+    }
+  ],
+  "windowsOwnedProductChanges": [],
+  "candidateNativeCommit": "0e604cb2b6be706af767d9937532fe056cac7ca6",
+  "candidateExeSha256": "d5aaece739edb8a9e8c26c5aa918a6f58cdd8f5139c9339103683429249ed6e4",
+  "releaseVersion": "not frozen; debug .app retains 0.2.21",
+  "prototype": {
+    "baseDocsCommit": "6a3188d6c09a1f25bb0fdeb44b91b5455fd5216f",
+    "adoptedIncrement": {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js",
+      "sha256": "14b0f738cb683c78474d3bd7212b28f1ef1b817b4cce16b4119180c7b0332f8f"
+    },
+    "entry": "/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocxd-l2-prototype-3lqa7iq1/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+    "scope": "name-only new/edit/copy, internal key and no private gate; released prototype plus exact owned delta; concurrent future overview excluded",
+    "mutablePrototype": false
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "new channel has no runtime-ID input",
+      "passed": true
+    },
+    {
+      "name": "local discovery without permission control",
+      "passed": true
+    },
+    {
+      "name": "detail has no second identifier",
+      "passed": true
+    },
+    {
+      "name": "reserved word display name valid",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "scope": "read-only adopted prototype snapshot; memory mock only"
+}

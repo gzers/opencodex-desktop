@@ -1,0 +1,70 @@
+{
+  "acceptance_bindings": [
+    {
+      "acceptance_id": "AC-P21-07",
+      "criterion_digest": "be8bc87ef729deb9d8d98fcc9ab71994325fcb4b7bc466235175488fccaab8c7",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-08",
+      "criterion_digest": "e0c2f8154429d231efc8d0f59659f00039ae20b34e1141ddea41a50f3137ddbb",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    }
+  ],
+  "acceptance_ids": [
+    "AC-P21-07",
+    "AC-P21-08"
+  ],
+  "baseline_digest": "7b452eaf37fcbf1960174212342b9e0232c2c66055308552328f2d50e6125684",
+  "certificate_digest": "085285165ed3cabb154b9ade02f0610b91a9507466e61528f2592de6d958daf6",
+  "content_digest": "da304a1a498fa47e6a84490cdc025534d49eec700cfc3fb139bd96d246185a44",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "fact_writeback": {
+    "mode": "required",
+    "targets": [
+      {
+        "before_digest": "8d036ec7434b9f508bbd422a6c0c11bf7ef9e626e0d8c2c70a1431d35c2f3923",
+        "id": "0",
+        "path": "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md"
+      },
+      {
+        "before_digest": "2defee45bc3adb06e937abd913b499a701d9a50c2ef34fb347b8e1636475c638",
+        "id": "1",
+        "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md"
+      },
+      {
+        "before_digest": "7fe430f22a4fd430a45398e947bf94936c19624af49e9102d5b49c2c353d8eb2",
+        "id": "2",
+        "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+      }
+    ]
+  },
+  "id": "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "imported_receipt_digest": "29331a3f4de7de3d75fc87f4a3d91cfc1c2e53131d02b4f16d60f14357b15590",
+  "kind": "TASK",
+  "owner": "local-channels-integration",
+  "required_checks": [
+    "review:prototype-affected-regression"
+  ],
+  "result": "succeeded",
+  "revision": 3,
+  "state": "completed",
+  "summary": "移除既有原型测试对已退役运行标识输入的依赖，保持复制/节点/保存真实交互断言",
+  "summary_digest": "5cad6f65e7f9203b229d54689a7acaeab9dcc7b35d362a284cf8956fb82a8826",
+  "title": "渠道名称新合同的既有原型回归适配",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/**",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/g0-prototype.test.cjs",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-copy.test.cjs",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-current-channel-save.test.cjs",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-speed.test.cjs",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-save-confirm.test.cjs",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-service-nodes.test.cjs",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+  ]
+}

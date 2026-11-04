@@ -21,7 +21,7 @@ test('渠道复制保留独立节点 / 规则 / 模型顺序，默认停用且�
 });
 test('明确复用Key只复制认证状态，无额度保留；默认生成不同身份，校验重复及过期确认',()=>{
  const h=make();h.click('copy-provider',{id:'a6api'});h.nodes.get('mpCopyProviderKey').checked=true;h.runConfirm();assert.equal(provider(h,'a6api-copy').connection.keyConfigured,true);assert.equal(provider(h,'a6api-copy').availability.kind,'no-credit');assert.equal(provider(h,'a6api-copy').enabled,false);
- h.click('back-channels');h.click('copy-provider',{id:'a6api'});assert.equal(h.nodes.get('mpCopyProviderId').value,'a6api-copy-2');h.nodes.get('mpCopyProviderId').value='a6api';h.runConfirm();assert.match(h.nodes.get('mpCopyProviderError').textContent,/已存在/);h.context.closeModal();h.click('copy-provider',{id:'newapi'});h.click('toggle-provider',{id:'aimami'});h.runConfirm();assert.match(h.nodes.get('mpCopyProviderError').textContent,/已变化/);assert.equal(provider(h,'newapi-copy'),undefined);
+ h.click('back-channels');h.click('copy-provider',{id:'a6api'});h.nodes.get('mpCopyProviderName').value='A6Api';h.runConfirm();assert.match(h.nodes.get('mpCopyProviderError').textContent,/已存在/);h.context.closeModal();h.click('copy-provider',{id:'newapi'});h.click('toggle-provider',{id:'aimami'});h.runConfirm();assert.match(h.nodes.get('mpCopyProviderError').textContent,/已变化/);assert.equal(provider(h,'newapi-copy'),undefined);
 });
 test('复制不带测速结果，保存中拒绝复制，丢弃草稿只删除副本而保留源',()=>{
  const h=make();h.click('node-speed-all',{channel:'newapi'});h.drain();h.click('copy-provider',{id:'newapi'});h.runConfirm();assert.ok(h.state().nodeSpeedResults['newapi::primary']);assert.equal(h.state().nodeSpeedResults['newapi-copy::primary'],undefined);h.click('back-channels');h.click('discard');h.runConfirm();assert.equal(provider(h,'newapi-copy'),undefined);assert.ok(provider(h,'newapi'));

@@ -1,0 +1,9 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-read* (require-all (subpath "/Users/ezio") (require-not (subpath "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app"))))
+(deny file-write* (subpath "/Users/ezio"))
+(deny file-read* file-write* (subpath "/Library/Keychains"))
+(deny mach-lookup (global-name "com.apple.securityd") (global-name "com.apple.secd"))
+
+(allow network-outbound (remote ip "localhost:58595"))

@@ -1,0 +1,50 @@
+{
+  "recordedAt": "2026-11-04T14:19:49.641273+00:00",
+  "scope": [
+    "S21-POST-06",
+    "S21-POST-07",
+    "S21-POST-08"
+  ],
+  "acceptance": [
+    "AC-P21-07",
+    "AC-P21-08"
+  ],
+  "commit": "0e604cb2b6be706af767d9937532fe056cac7ca6",
+  "checks": {
+    "vitest": "1280 passed / 194 files",
+    "cargo-lib": "1211 passed, 0 failed, 4 existing native/live-dependent ignored; 4 test workers",
+    "prototype": "59 affected tests passed; Chromium/WebKit 4 each",
+    "software-browser": "Chromium/WebKit 12 each",
+    "native-macos": {
+      "passed": 12,
+      "report": ".adg/evidence/0.2.21/post-release-20261104/local-channels-20261104/native/ocx021-mac-native-8b6ff283-c44b-4e6d-924e-489773b57d61/report.json",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "authenticated": true
+        },
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "authenticated": true
+        }
+      ]
+    },
+    "typecheck-build": "passed",
+    "clippy": "passed -D warnings, final commit"
+  },
+  "limits": [
+    "No Windows material/restart/panel changes or native verification in L2",
+    "No daily config/real-channel credentials/real WebDAV accesses",
+    "No claim of live CodeKey or Windows DNS/proxy verification",
+    "No installer/OTA/release acceptance; final integrated source and Windows checks remain required"
+  ],
+  "failuresRetained": [
+    "vitest-initial.log: retired allowPrivateNetwork payload assertion",
+    "cargo-lib.log: obsolete assertion that display name never updates official name field",
+    "prototype-tests.log: old test looked up user-chosen ID after identifier input retirement; adapted to actual created object"
+  ],
+  "status": "L2 local implementation and validation complete; Windows and final release pending",
+  "remoteCI": "run 41845962425: frontend/release-tools/windows-smoke-evidence passed; backend and backend-windows pending at checkpoint"
+}
