@@ -13,8 +13,8 @@ try {
     const prefix = [spec.width,spec.theme,spec.effects,spec.scale].join('-'), p = await browser.newPage({ viewport: { width: spec.width, height: spec.height } })
     p.on('pageerror', e => errors.push(e.message))
     await p.route('**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort())
-    await p.goto(origin+'/?__audit=1&route=models&env=ready&runtime=running&effects='+spec.effects+'&theme='+spec.theme)
-    await p.waitForSelector('.channel-table')
+    await p.goto(origin+'/?__audit=1&route=models&env=ready&runtime=running&prefs=local&effects='+spec.effects+'&theme='+spec.theme)
+    await p.waitForSelector('.channel-table'); await p.evaluate(async()=>{(await import('/src/dev/modelFixtures.ts')).installModelFixtures()})
     await p.evaluate(async scale => {
       const { usePreferencesStore } = await import('/src/features/preferences/store.ts')
       const { useSyncStore } = await import('/src/features/sync/store.ts')

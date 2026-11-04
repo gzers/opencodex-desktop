@@ -15,9 +15,10 @@ beforeEach(() => { setActivePinia(createPinia()); localStorage.clear(); vi.clear
 describe('connection observation integration', () => {
   it('tests the saved endpoint and updates the shared state without saving', async () => {
     const w = render(); await flushPromises(); const store = useSyncStore()
-    expect(store.webdavState).toBe('configured'); await click(w, '测试连接')
+    expect(store.webdavState).toBe('configured'); expect(w.text()).toContain('已配置 · 未检测'); await click(w, '测试连接')
     expect(store.webdavState).toBe('connected'); expect(saveSyncEndpoint).not.toHaveBeenCalled()
     await click(w, '取消'); expect(w.emitted('close')).toHaveLength(1); w.unmount()
+    const reopened = render(); await flushPromises(); expect(reopened.text()).toContain('最近检测成功'); expect(reopened.text()).toMatch(/\d{4}\/\d{2}\/\d{2}/); reopened.unmount()
   })
   it('does not leak an unsaved candidate result, then carries exact tested proof through saving', async () => {
     const w = render(); await flushPromises(); const store = useSyncStore()

@@ -1,17 +1,25 @@
 <script setup lang="ts">
-import { defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import { useSyncStore } from './store'
 import { errorText } from '@/features/models/api'
 import { testSyncCandidate, type SaveSyncEndpointRequest } from './api'
 import { formSignature, sameEndpointForm, type ObservationToken } from './observation'
+import { webdavStates } from './states'
 const ImportedConnections = defineAsyncComponent(() => import('./ImportedConnections.vue'))
 const emit = defineEmits<{ close: [] }>()
 const sync = useSyncStore()
 const busy = ref(false), testing = ref(false), message = ref(''), error = ref('')
 const value = ref<SaveSyncEndpointRequest>({ baseUrl: '', remotePath: '', username: '', password: '', conflictPolicy: 'ask' })
 const loading = ref(true), ready = ref(false)
+const formEdited = computed(() => sync.config?.endpoint ? !sameEndpointForm(value.value, sync.config.endpoint) || !!value.value.password : [value.value.baseUrl, value.value.remotePath, value.value.username, value.value.password].some(Boolean))
+const savedObservationText = computed(() => {
+  if (formEdited.value) return '未保存的编辑 · 当前连接观察保持'
+  const observation = sync.observation
+  const time = observation ? new Date(observation.observedAt).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : ''
+  return webdavStates[sync.webdavState].conn + (time ? ' · ' + time : '')
+})
 let disposed = false, generation = 0
 let proof: { signature: string; token: ObservationToken; succeeded: boolean; observedAt: string } | null = null
 let testToken: ObservationToken | null = null
@@ -96,6 +104,7 @@ async function save() {
       <div><UiButton :loading="testing" :disabled="busy || testing || !ready" @click="test">测试连接</UiButton></div>
       <UiButton v-if="!ready && !loading" :disabled="busy || testing" @click="load">重新读取</UiButton>
       <p v-if="message" class="model-muted" role="status">{{ message }}</p>
+      <p v-else-if="ready && !error" class="model-muted" role="status">{{ savedObservationText }}</p>
       <p v-if="error" class="model-error" role="alert">{{ error }}</p>
       <ImportedConnections @activated="load" />
     </div>

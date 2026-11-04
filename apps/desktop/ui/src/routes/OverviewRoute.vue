@@ -290,6 +290,11 @@ function activityText(entry: { time: string; count: number } | undefined, empty:
 const webdavView = computed(() => webdavStates[app.webdavState])
 const remoteVersionTime = computed(() => clockText(syncStore.observation?.remoteTime ?? undefined) || '—')
 const remoteVersionHint = computed(() => syncStore.observation?.remoteTime ? '上次观察' : syncStore.observation?.remoteExists === false ? '上次未发现快照' : '尚未读取')
+const remoteVersionTitle = computed(() => {
+  const observation = syncStore.observation
+  if (!observation) return '尚未读取当前连接的云端版本'
+  return '观察时间：' + new Date(observation.observedAt).toLocaleString('zh-CN') + (observation.remoteTime ? '；保存版本：' + new Date(observation.remoteTime).toLocaleString('zh-CN') : '')
+})
 const webdavConnectionText = computed(() => {
   const time = clockText(syncStore.observation?.observedAt)
   return webdavView.value.conn + (time && !['unconfigured', 'configured', 'unknown', 'connecting', 'syncing'].includes(app.webdavState) ? ' · ' + time : '')
@@ -410,7 +415,7 @@ const mods = computed(() => [
             ><span>{{ row.label }}</span><span class="mnt-version-side"><span v-if="row.word" class="mnt-status" :class="{ danger: row.phase === 'failed' }">{{ row.word }}</span><b class="mnt-version-latest">{{ row.version }}</b><span v-if="row.dot" class="mnt-dot" :class="'is-' + row.dot" aria-hidden="true"></span><span aria-hidden="true">›</span></span></button>
           </template>
           <template v-else><InformationRow v-for="row in mod.rows" :key="row[0]" :label="row[0]" :value="row[1]" /></template>
-          <div v-if="mod.key === 'sync'" class="info-row ov-remote-row" data-testid="overview-remote-version">
+          <div v-if="mod.key === 'sync'" class="info-row ov-remote-row" data-testid="overview-remote-version" :title="remoteVersionTitle">
             <span class="info-row-label">线上版本</span>
             <span class="ov-state-side">
               <span v-if="webdavView.remote" class="ov-state-dot" :class="'is-' + webdavView.remote.dot" aria-hidden="true"></span>
