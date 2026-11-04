@@ -5,7 +5,7 @@ import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {runInNewContext} from 'node:vm'
-import {assert021Admission,assert021RenameReadback,assert021RenameBackups,assert021DetectionLayout,assert021WebdavState,verifyWindows021Probes,close021Dialog,native021Click} from './windows-021-probes.mjs'
+import {assert021Admission,assert021RenameReadback,assert021RenameBackups,assert021DetectionLayout,assert021WebdavState,assert021StartupVersionFailure,verifyWindows021Probes,close021Dialog,native021Click} from './windows-021-probes.mjs'
 import {observe021Ipc,assert021IpcSafety,assert021NoticeTiming,install021NoticeObservation,sample021Notice,install021CandidateObservation} from './windows-021-observer.mjs'
 
 const root='C:\\runner\\owned-sandbox',home=root+'\\opencodex-home'
@@ -60,9 +60,9 @@ test('IPC safety requires a live sentinel and rejects network, restart, keychain
 
 function renameFixture(){
  const from='native021-old',to='native021-new',channelId='stable-id',ids=['vendor/a:8b','vendor-a:8b','Mixed_Case/V2']
- const provider={apiKey:'synthetic-only',models:ids,native021Opaque:{literal:from+'/leave-opaque',keep:42}}
+ const provider={name:from,apiKey:'synthetic-only',models:ids,native021Opaque:{literal:from+'/leave-opaque',keep:42}}
  const before={providers:{[from]:provider,[from+'0']:{apiKey:'synthetic-neighbor'}},defaultProvider:from,modelPickerOrder:[from+'/'+ids[0],from+'0/untouched',from+'/'+ids[1],from+'/'+ids[2]],disabledModels:[from+'/'+ids[2]],futureRoot:{literal:from+'/leave-opaque'}}
- const after=structuredClone(before);after.providers[to]=after.providers[from];delete after.providers[from];after.defaultProvider=to;after.modelPickerOrder=[to+'/'+ids[0],from+'0/untouched',to+'/'+ids[1],to+'/'+ids[2]];after.disabledModels=[to+'/'+ids[2]]
+ const after=structuredClone(before);after.providers[to]=after.providers[from];delete after.providers[from];after.providers[to].name=to;after.defaultProvider=to;after.modelPickerOrder=[to+'/'+ids[0],from+'0/untouched',to+'/'+ids[1],to+'/'+ids[2]];after.disabledModels=[to+'/'+ids[2]]
  const beforeSnapshot={policyDigest:'old-file',policy:{schemaVersion:1,defaultChannelId:channelId,channels:[{id:channelId,label:from,modelOrder:ids,connection:{providerId:from,nodes:[{id:'stable-node',url:'https://fixture.invalid'}],activeNodeId:'stable-node',credentialRef:null}},{id:'neighbor-id',label:from+'0',connection:{providerId:from+'0'}}]}}
  const afterSnapshot=structuredClone(beforeSnapshot);afterSnapshot.policyDigest='new-file';afterSnapshot.policy.channels[0].label=to;afterSnapshot.policy.channels[0].connection.providerId=to
  return {from,to,channelId,before,after,beforeSnapshot,afterSnapshot}
@@ -71,6 +71,8 @@ test('rename readback validates entire real file, exact namespaces, stable IDs, 
  assert.doesNotThrow(()=>assert021RenameReadback(renameFixture()))
  for(const mutate of [
   x=>{x.after.providers[x.to].apiKey='lost-key'},
+  x=>{x.after.providers[x.to].name=x.from},
+  x=>{delete x.after.providers[x.to].name},
   x=>{x.after.providers[x.from]={}},
   x=>{delete x.after.providers[x.from+'0']},
   x=>{x.after.defaultProvider=x.from},
@@ -124,6 +126,11 @@ test('WebDAV configuration proof binds the real revision, untouched observation 
  assert.equal(assert021WebdavState(value,'actual-revision'),'rendered')
  assert.match(assert021WebdavState({...value,card:null,gate:{present:true,settled:true,checks:3}},'actual-revision'),/^environment-gated/)
  for(const change of [{state:'disconnected'},{state:'connected'},{state:'failed'},{revision:'other'},{hasObservation:true},{card:null},{card:{text:'最近检测成功',dots:0}},{card:{text:'已配置 · 未检测',dots:1}},{card:null,gate:{present:true,settled:false,checks:3}},{card:null,gate:{present:true,settled:true,checks:2}}])assert.throws(()=>assert021WebdavState({...value,...change},'actual-revision'))
+})
+test('startup observation requires a real version-check failure and never fabricates an unread/synced snapshot',()=>{
+ const value={state:'failed',revision:'actual',hasObservation:true,observation:{source:'version-check',remoteRead:'failed',remoteTime:null},card:{remote:'读取失败'},gate:{}}
+ assert.equal(assert021StartupVersionFailure(value,'actual'),'rendered startup failure')
+ for(const change of [{state:'configured'},{state:'synced'},{revision:'other'},{hasObservation:false},{observation:{source:'sync',remoteRead:'failed',remoteTime:null}},{observation:{source:'version-check',remoteRead:'present',remoteTime:null}},{observation:{source:'version-check',remoteRead:'failed',remoteTime:'2026-11-05'}},{card:{remote:'尚未读取'}}])assert.throws(()=>assert021StartupVersionFailure({...value,...change},'actual'))
 })
 function nativeDialogFixture(){
  let opened=true;const commands=[],cancelEvents=[]

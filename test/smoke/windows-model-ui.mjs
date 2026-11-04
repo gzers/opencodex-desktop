@@ -142,7 +142,12 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
   throw Error('Native model UI timeout: '+label)
  }
  const visible="e.getClientRects().length>0"
- async function click(text,selector='.models-page'){const done=await evaluate("(()=>{const root=document.querySelector("+JSON.stringify(selector)+");const button=[...root?.querySelectorAll('button')??[]].find(e=>(e.textContent.trim()==="+JSON.stringify(text)+"||e.getAttribute('aria-label')==="+JSON.stringify(text)+")&&"+visible+"&&!e.disabled);if(!button)return false;button.click();return true})()");assert(done,'Native visible action missing: '+text)}
+ async function click(text,selector='.models-page'){
+  // Returning from a public confirmation can reopen its owning native dialog
+  // one frame before the header becomes visible. Keep the same real selector,
+  // visibility and enabled guards under the existing bounded native wait.
+  await wait("(()=>{const root=document.querySelector("+JSON.stringify(selector)+");const button=[...root?.querySelectorAll('button')??[]].find(e=>(e.textContent.trim()==="+JSON.stringify(text)+"||e.getAttribute('aria-label')==="+JSON.stringify(text)+")&&"+visible+"&&!e.disabled);if(!button)return false;button.click();return true})()",'visible action '+text)
+ }
  // Tauri defines invoke as a non-writable property. Inspect it without replacing IPC.
  const invokeDescriptor=await evaluate("(()=>{const d=Object.getOwnPropertyDescriptor(window.__TAURI_INTERNALS__,'invoke');return {type:typeof d?.value,writable:d?.writable,configurable:d?.configurable}})()")
  await writeFile(join(output,'model-ipc-descriptor.json'),JSON.stringify(invokeDescriptor,null,2)+'\n')

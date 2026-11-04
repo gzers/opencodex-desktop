@@ -30,6 +30,7 @@ export function assert021RenameReadback({before,after,beforeSnapshot,afterSnapsh
  assert(Object.hasOwn(before.providers,from)&&!Object.hasOwn(before.providers,to),'021 rename preimage is ambiguous')
  const expected=structuredClone(before)
  expected.providers[to]=expected.providers[from];delete expected.providers[from]
+ expected.providers[to].name=to // L2 name-only contract persists the renamed display name.
  if(expected.defaultProvider===from)expected.defaultProvider=to
  for(const field of ['modelPickerOrder','disabledModels'])if(expected[field])expected[field]=expected[field].map(slug=>slug.startsWith(from+'/')?to+slug.slice(from.length):slug)
  assert.deepEqual(after,expected,'021 rename must migrate exact routed/default references and preserve all other file content/Keys')
@@ -231,7 +232,7 @@ async function verifyDetection(driver,expected,channelId){
 export function inspect021Webdav(){
  const sync=document.querySelector('#app')?.__vue_app__?.config.globalProperties.$pinia?.state.value.sync
  const row=document.querySelector('[data-testid=overview-remote-version]'),card=row?.closest('.mod'),gate=document.querySelector('[data-testid=environment-gate]')
- return {state:sync?.webdavState,revision:sync?.config?.endpoint?.revision,hasObservation:!!sync?.observation,
+ return {state:sync?.webdavState,revision:sync?.config?.endpoint?.revision,hasObservation:!!sync?.observation,observation:sync?.observation?{source:sync.observation.source,remoteRead:sync.observation.remoteRead,remoteTime:sync.observation.remoteTime??null}:null,
   card:card?{text:card.textContent,remote:row.textContent,dots:row.querySelectorAll('.ov-state-dot').length}:null,
   gate:{present:!!gate,settled:!!gate?.querySelector('.overview-gate-count')?.textContent.includes('/ 3'),checks:gate?.querySelectorAll('.overview-checks li').length??0}}
 }
@@ -247,6 +248,17 @@ export function assert021WebdavState(value,revision){
  }
  assert(value.gate.present&&value.gate.settled&&value.gate.checks===3,'021 missing WebDAV card requires the actual settled environment gate')
  return 'environment-gated; production configured state verified; overview label requires a ready native environment'
+}
+export function assert021StartupVersionFailure(value,revision){
+ assert.equal(value.revision,revision,'021 startup observation used another endpoint')
+ assert.equal(value.state,'failed','021 unreachable fixture must report its real startup read failure')
+ assert.equal(value.hasObservation,true,'021 configured restart must perform the adopted readonly observation')
+ assert.equal(value.observation?.source,'version-check','021 startup result must come from readonly version observation')
+ assert.equal(value.observation?.remoteRead,'failed','021 missing upstream cannot fabricate a snapshot')
+ assert.equal(value.observation?.remoteTime,null,'021 failed read must not invent content save time')
+ if(value.card){assert(value.card.remote.includes('读取失败'),'021 overview must distinguish failed from unread');return 'rendered startup failure'}
+ assert(value.gate.present&&value.gate.settled&&value.gate.checks===3,'021 gated startup proof needs a real settled environment gate')
+ return 'environment-gated; actual startup readonly failure verified'
 }
 async function verifyWebdav(driver,expected){
  const {call,invoke,click,evaluate,wait}=driver,{config}=await freshAdmission(invoke,expected),before=await modelFileEvidence(config,expected)
@@ -268,8 +280,8 @@ async function verifyWebdav(driver,expected){
  try{
   await click('概览','.side')
   await wait("!!document.querySelector('[data-testid=overview-remote-version]')||!!document.querySelector('[data-testid=environment-gate] .overview-gate-count')?.textContent.includes('/ 3')",'021 real overview state settled')
-  state=await wait('('+js(inspect021Webdav)+'.state==="configured")&&'+js(inspect021Webdav),'021 actual production configured state')
-  state.presentation=assert021WebdavState(state,saved.endpoint.revision)
+  state=await wait('('+js(inspect021Webdav)+'.state==="failed")&&'+js(inspect021Webdav),'021 actual startup readonly failure for unreachable fixture')
+  state.presentation=assert021StartupVersionFailure(state,saved.endpoint.revision)
   await screenshot(driver,'native021-webdav-configured')
   await click('同步','.side');await wait("!!document.querySelector('.sync-route')",'021 WebDAV settings entry')
   await click('WebDAV 同步','.sync-route');await wait("!!document.querySelector('#sync-webdav-panel')",'021 WebDAV panel')
@@ -292,7 +304,7 @@ async function verifyWebdav(driver,expected){
  assert.deepEqual(await invoke('get_sync_config'),saved,'021 settings observation changed the saved endpoint')
  assert((await readFile(join(expected,'manager-state','sync-endpoints.json'))).equals(stored),'021 cancelled settings changed its actual file')
  const after=await modelFileEvidence(config,expected);assert(after.bytes.equals(before.bytes));assert.deepEqual(after.backups,before.backups)
- return {revision:saved.endpoint.revision,fixture:'production save_sync_endpoint; synthetic sandbox-only DPAPI credential; no test/connection/sync request',state,connection,ipc,modelConfigAndBackupsUnchanged:true,endpointBytesUnchanged:true}
+ return {revision:saved.endpoint.revision,fixture:'production save_sync_endpoint; synthetic sandbox DPAPI credential; adopted startup readonly version request fails at unreachable synthetic host; no sync/publish/download',state,connection,ipc,modelConfigAndBackupsUnchanged:true,endpointBytesUnchanged:true}
 }
 
 export async function verifyWindows021Probes(driver,facts,expected){
