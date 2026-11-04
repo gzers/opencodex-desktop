@@ -1,2 +1,4 @@
 # Preserve the real npm Windows shim bytes for source comparison.
 *.cmd -text whitespace=cr-at-eol
+# The selector is verified against the public npm source's exact bytes.
+*.js -text
