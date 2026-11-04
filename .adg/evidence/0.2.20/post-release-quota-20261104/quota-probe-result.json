@@ -1,0 +1,740 @@
+{
+  "time": "2026-11-04T02:06:53.491279+00:00",
+  "scope": "All configured providers, active API Key and default/current baseUrl only; no alternate-node/key sweep",
+  "network": "GET only; same configured HTTPS origin; redirects disabled; no model requests; no login/admin credentials",
+  "before": {
+    "config.json": "c15f61855f7f26de8124151930d1bb736271f1f3659f8b85b75308a778c6aef4",
+    "model-channel-layout.json": "f501732b609c9f8726e41a6256f785586a0d84985ec4ddd9e072fcd300198d01"
+  },
+  "providers": [
+    {
+      "providerId": "A6api",
+      "label": "A6api",
+      "enabled": true,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        }
+      ],
+      "origin": "https://api.a6api.com",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "AgentRouter-1",
+      "label": "AgentRouter-1",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 404,
+          "curlExit": 0,
+          "state": "http_error",
+          "fields": {},
+          "object": null
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 0,
+          "state": "json",
+          "fields": {
+            "has_payment_method": true,
+            "soft_limit_usd": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "hard_limit_usd": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "system_hard_limit_usd": {
+              "type": "number",
+              "sign": "positive"
+            }
+          },
+          "object": null
+        },
+        {
+          "path": "/v1/dashboard/billing/usage",
+          "http": 200,
+          "curlExit": 0,
+          "state": "json",
+          "fields": {
+            "total_usage": {
+              "type": "number",
+              "sign": "positive"
+            }
+          },
+          "object": "list"
+        }
+      ],
+      "origin": "https://agentrouter.org",
+      "result": "legacy_billing_available",
+      "unit": "USD_limit_usage_unit_requires_validation"
+    },
+    {
+      "providerId": "AgentRouter-2",
+      "label": "AgentRouter-2",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 404,
+          "curlExit": 0,
+          "state": "http_error",
+          "fields": {},
+          "object": null
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 0,
+          "state": "json",
+          "fields": {
+            "has_payment_method": true,
+            "soft_limit_usd": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "hard_limit_usd": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "system_hard_limit_usd": {
+              "type": "number",
+              "sign": "positive"
+            }
+          },
+          "object": null
+        },
+        {
+          "path": "/v1/dashboard/billing/usage",
+          "http": 200,
+          "curlExit": 0,
+          "state": "json",
+          "fields": {
+            "total_usage": {
+              "type": "number",
+              "sign": "positive"
+            }
+          },
+          "object": "list"
+        }
+      ],
+      "origin": "https://agentrouter.org",
+      "result": "legacy_billing_available",
+      "unit": "USD_limit_usage_unit_requires_validation"
+    },
+    {
+      "providerId": "AgentRouter-3",
+      "label": "AgentRouter-3",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 404,
+          "curlExit": 0,
+          "state": "http_error",
+          "fields": {},
+          "object": null
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 0,
+          "state": "json",
+          "fields": {
+            "has_payment_method": true,
+            "soft_limit_usd": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "hard_limit_usd": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "system_hard_limit_usd": {
+              "type": "number",
+              "sign": "positive"
+            }
+          },
+          "object": null
+        },
+        {
+          "path": "/v1/dashboard/billing/usage",
+          "http": 200,
+          "curlExit": 0,
+          "state": "json",
+          "fields": {
+            "total_usage": {
+              "type": "number",
+              "sign": "positive"
+            }
+          },
+          "object": "list"
+        }
+      ],
+      "origin": "https://agentrouter.org",
+      "result": "legacy_billing_available",
+      "unit": "USD_limit_usage_unit_requires_validation"
+    },
+    {
+      "providerId": "Ciii-1",
+      "label": "Ciii-1",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 512,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://codex.ciii.club",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "Ciii-2",
+      "label": "Ciii-2",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 512,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://codex.ciii.club",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "CodeKey",
+      "label": "CodeKey",
+      "enabled": true,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://codekey.ai",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "FeiMao",
+      "label": "FeiMao",
+      "enabled": true,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://api.999555999.com",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "FeiMao-CNM",
+      "label": "FeiMao-CNM",
+      "enabled": true,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://api.999555999.com",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "FeiMao-Claude",
+      "label": "FeiMao-Claude",
+      "enabled": true,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://api.999555999.com",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "GZGG-NewApi",
+      "label": "GZGG-NewApi",
+      "enabled": true,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 200,
+          "curlExit": 0,
+          "state": "json",
+          "fields": {
+            "data.total_available": {
+              "type": "number",
+              "sign": "negative"
+            },
+            "data.total_granted": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "data.total_used": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "data.unlimited_quota": true
+          },
+          "object": null
+        }
+      ],
+      "origin": "https://new-api.guozhigg.top:444",
+      "result": "token_quota_available",
+      "unit": "provider_quota_units",
+      "displayMetadata": {
+        "path": "/api/status",
+        "http": 200,
+        "curlExit": 0,
+        "state": "json",
+        "fields": {
+          "data.display_in_currency": true,
+          "data.quota_display_type": "CNY",
+          "data.quota_per_unit": 500000,
+          "data.usd_exchange_rate": 7.3
+        },
+        "object": null
+      }
+    },
+    {
+      "providerId": "Input-1",
+      "label": "Input-1",
+      "enabled": true,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://input.codes",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "Input-2",
+      "label": "Input-2",
+      "enabled": true,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://ai.input.im",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "JustDoWoker-1",
+      "label": "JustDoWoker-1",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        }
+      ],
+      "origin": "https://api.justwoker.icu",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "JustDoWoker-2",
+      "label": "JustDoWoker-2",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        }
+      ],
+      "origin": "https://api.justwoker.icu",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "Krill-1",
+      "label": "Krill",
+      "enabled": true,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 520,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 520,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://api.kbsfdxc.net",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "Krill-2",
+      "label": "Krill-2",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 0,
+          "curlExit": 6,
+          "state": "dns_error"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 0,
+          "curlExit": 6,
+          "state": "dns_error"
+        }
+      ],
+      "origin": "https://api.krill-code.net",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "MDJK",
+      "label": "MDJK",
+      "enabled": true,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://mdkj.lol",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "Pite",
+      "label": "Pite",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 200,
+          "curlExit": 0,
+          "state": "json",
+          "fields": {
+            "data.total_available": {
+              "type": "number",
+              "sign": "zero"
+            },
+            "data.total_granted": {
+              "type": "number",
+              "sign": "zero"
+            },
+            "data.total_used": {
+              "type": "number",
+              "sign": "zero"
+            },
+            "data.unlimited_quota": true
+          },
+          "object": null
+        }
+      ],
+      "origin": "https://www.piteai.com",
+      "result": "token_quota_available",
+      "unit": "provider_quota_units",
+      "displayMetadata": {
+        "path": "/api/status",
+        "http": 200,
+        "curlExit": 0,
+        "state": "json",
+        "fields": {
+          "data.display_in_currency": true,
+          "data.quota_display_type": "USD",
+          "data.quota_per_unit": 500000,
+          "data.usd_exchange_rate": 7.3
+        },
+        "object": null
+      }
+    },
+    {
+      "providerId": "SeekAi-1",
+      "label": "SeekAi-1",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://seekai.cc",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "SeekAi-2",
+      "label": "SeekAi-2",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://seekai.cc",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "SeekAi-3",
+      "label": "SeekAi-3",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "origin": "https://seekai.cc",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "TokEasy",
+      "label": "TokEasy",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 200,
+          "curlExit": 0,
+          "state": "json",
+          "fields": {
+            "data.total_available": {
+              "type": "number",
+              "sign": "negative"
+            },
+            "data.total_granted": {
+              "type": "number",
+              "sign": "zero"
+            },
+            "data.total_used": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "data.unlimited_quota": true
+          },
+          "object": null
+        }
+      ],
+      "origin": "https://tokeasy.ai",
+      "result": "token_quota_available",
+      "unit": "provider_quota_units",
+      "displayMetadata": {
+        "path": "/api/status",
+        "http": 200,
+        "curlExit": 0,
+        "state": "json",
+        "fields": {
+          "data.display_in_currency": true,
+          "data.quota_display_type": "USD",
+          "data.quota_per_unit": 500000,
+          "data.usd_exchange_rate": 6.82
+        },
+        "object": null
+      }
+    },
+    {
+      "providerId": "Vsllm",
+      "label": "Vsllm",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        },
+        {
+          "path": "/v1/dashboard/billing/subscription",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        }
+      ],
+      "origin": "https://vsllm.com",
+      "result": "standard_query_unavailable"
+    },
+    {
+      "providerId": "YunShu",
+      "label": "YunShu",
+      "enabled": false,
+      "attempts": [
+        {
+          "path": "/api/usage/token/",
+          "http": 200,
+          "curlExit": 0,
+          "state": "json",
+          "fields": {
+            "data.total_available": {
+              "type": "number",
+              "sign": "negative"
+            },
+            "data.total_granted": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "data.total_used": {
+              "type": "number",
+              "sign": "positive"
+            },
+            "data.unlimited_quota": true
+          },
+          "object": null
+        }
+      ],
+      "origin": "https://newapi.plover.store",
+      "result": "token_quota_available",
+      "unit": "provider_quota_units",
+      "displayMetadata": {
+        "path": "/api/status",
+        "http": 200,
+        "curlExit": 0,
+        "state": "json",
+        "fields": {
+          "data.display_in_currency": true,
+          "data.quota_display_type": "USD",
+          "data.quota_per_unit": 500000,
+          "data.usd_exchange_rate": 7.3
+        },
+        "object": null
+      }
+    },
+    {
+      "providerId": "openai",
+      "label": "openai",
+      "enabled": true,
+      "attempts": [],
+      "result": "non_api_key_source"
+    }
+  ],
+  "after": {
+    "config.json": "c15f61855f7f26de8124151930d1bb736271f1f3659f8b85b75308a778c6aef4",
+    "model-channel-layout.json": "f501732b609c9f8726e41a6256f785586a0d84985ec4ddd9e072fcd300198d01"
+  },
+  "dailyConfigUnchanged": true
+}

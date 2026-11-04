@@ -1,0 +1,337 @@
+{
+  "providers": [
+    {
+      "providerId": "A6api",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "Ciii-1",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 28,
+          "state": "timeout"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "Ciii-2",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "CodeKey",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 28,
+          "state": "timeout"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "FeiMao",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 56,
+          "state": "transport_error"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "FeiMao-CNM",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 56,
+          "state": "transport_error"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "FeiMao-Claude",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 56,
+          "state": "transport_error"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "Input-1",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "Input-2",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "JustDoWoker-1",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "JustDoWoker-2",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "Krill-1",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 520,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 520,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "Krill-2",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 0,
+          "curlExit": 6,
+          "state": "dns_error"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 0,
+          "curlExit": 6,
+          "state": "dns_error"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "MDJK",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 404,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 200,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "SeekAi-1",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "SeekAi-2",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "SeekAi-3",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 526,
+          "curlExit": 0,
+          "state": "html_or_non_json"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    },
+    {
+      "providerId": "Vsllm",
+      "attempts": [
+        {
+          "path": "/api/usage/token",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        },
+        {
+          "path": "/dashboard/billing/subscription",
+          "http": 0,
+          "curlExit": 28,
+          "state": "timeout"
+        }
+      ],
+      "result": "additional_standard_paths_unavailable"
+    }
+  ],
+  "before": {
+    "config.json": "c15f61855f7f26de8124151930d1bb736271f1f3659f8b85b75308a778c6aef4",
+    "model-channel-layout.json": "f501732b609c9f8726e41a6256f785586a0d84985ec4ddd9e072fcd300198d01"
+  },
+  "after": {
+    "config.json": "c15f61855f7f26de8124151930d1bb736271f1f3659f8b85b75308a778c6aef4",
+    "model-channel-layout.json": "f501732b609c9f8726e41a6256f785586a0d84985ec4ddd9e072fcd300198d01"
+  },
+  "dailyConfigUnchanged": true
+}

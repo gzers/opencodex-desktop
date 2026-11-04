@@ -15,7 +15,7 @@
 
 .mp-side{min-width:0;display:grid;gap:10px}
 .mp-provider-list{display:grid;gap:4px}
-.mp-provider-table{overflow-x:auto;overscroll-behavior-inline:contain;--mp-provider-columns:36px minmax(130px,1fr) 190px 76px 76px 200px}
+.mp-provider-table{overflow-x:auto;overscroll-behavior-inline:contain;--mp-provider-columns:36px minmax(130px,1fr) 140px 76px 76px 250px}
 .mp-provider,.mp-provider-heading{display:grid;min-width:800px;grid-template-columns:var(--mp-provider-columns);gap:12px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--border-soft)}
 .mp-provider-actions{gap:6px;flex-wrap:nowrap}
 .mp-provider-actions>.mp-mini-pair .mp-mini{min-height:14px;height:14px;font-size:var(--text-caption)}
@@ -640,3 +640,14 @@ html:not([data-route=models]) #mpAssistantHost{display:none}
 .mp-external-findings{padding-left:20px;overflow-wrap:anywhere;font-size:var(--text-label)}
 .mp-external-form [hidden]{display:none!important}
 @container(max-width:500px){.mp-external-options{grid-template-columns:minmax(0,1fr);gap:12px}}
+
+/* 2026-11-04：额度替代列表节点列，检测入口归操作列。 */
+.mp-provider-quota-cell{min-width:0;font-size:var(--text-label)}
+.mp-provider-quota-cell>small{display:block;color:var(--muted);font-size:var(--text-caption);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px}
+.mp-quota-line{display:flex;align-items:center;gap:6px;min-width:0}
+.mp-quota-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums}
+.mp-quota-line>.btn{padding:0 4px;min-height:24px;height:24px;flex:none}
+.mp-quota-preview{margin-block:12px;max-width:300px}
+.mp-quota-preview>small{color:var(--muted);font-size:var(--text-caption)}
+.mp-quota-form{margin-block:12px}
+.mp-provider-actions>#mpNodePicker,.mp-provider-actions>[data-mp=node-picker-open]{flex:none}
