@@ -628,7 +628,7 @@ class NativeRun:
         self.channels(); self.press('编辑')
         self.wait(lambda s: self.matches(s, '渠道名称', ('AXTextField',)))
         self.set_text('渠道名称', target)
-        snap = self.wait(lambda s: any(n.get('value') == target for n in self.matches(s, '运行渠道标识', ('AXTextField',))), name='rename-draft')
+        snap = self.wait(lambda s: any(n.get('value') == target for n in self.matches(s, '渠道名称', ('AXTextField',))), name='rename-draft')
         assert self.matches(snap, '保存渠道草稿')[0]['enabled']
         self.ax('focus')
         nav = self.matches(self.snapshot(), '概览')[0]
@@ -782,7 +782,8 @@ class NativeRun:
         self.channels(); self.press('编辑')
         snap = self.wait(lambda s: self.matches(s, '渠道名称', ('AXTextField',)), name='rename-reopened-' + target)
         assert self.matches(snap, '渠道名称', ('AXTextField',))[0]['value'] == target
-        assert self.matches(snap, '运行渠道标识', ('AXTextField',))[0]['value'] == target
+        runtime_fields = self.matches(snap, '运行渠道标识', ('AXTextField',))
+        assert not runtime_fields or runtime_fields[0]['value'] == target
         assert not self.matches(snap, '保存渠道草稿')[0]['enabled']
         self.capture('rename-reopened-' + target, snap)
         self.press('返回渠道列表')

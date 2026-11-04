@@ -242,10 +242,13 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  }
  await openChannel(otherChannelId,'native-scope-a-original-key')
  assert.equal(await evaluate(detailSaveDisabled),true,'clean detail Save disabled')
- await inputValue('#channel-config label input','Native scope A pending')
- // This existing scenario isolates label/Key/row scope. The 021 provider
- // namespace migration is exercised separately with default/order readback.
- if(contract.publicDialogs)await inputValue('input[aria-label="运行渠道标识"]','native-scope-a-fixture')
+ const hasExplicitProvider=await evaluate("!!document.querySelector('input[aria-label=\"运行渠道标识\"]')")
+ const pendingName=hasExplicitProvider?'Native scope A pending':'Native-scope-A-pending'
+ const pendingProvider=hasExplicitProvider?'native-scope-a-fixture':'Native-scope-A-pending'
+ await inputValue('#channel-config label input',pendingName)
+ // Historical 0.2.21 exposes an explicit key; name-only candidates allocate it.
+ // Both must still prove the same selective-save and pending-Key boundaries.
+ if(hasExplicitProvider)await inputValue('input[aria-label="运行渠道标识"]','native-scope-a-fixture')
  await inputValue('input[aria-label="API Key"]','native-scope-a-pending-key')
  await click('展开编辑','.channel-model-table')
  await inputValue('.model-row-editor input[type=number]','96000')
@@ -296,7 +299,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await click('返回渠道列表');await wait("!!document.querySelector('.channel-table')",'B return')
  await openChannel(otherChannelId,'native-scope-a-pending-key')
  assert.equal(await evaluate(detailSaveDisabled),false,'A remains dirty after B Save')
- assert.equal(await evaluate("document.querySelector('#channel-config label input').value"),'Native scope A pending','A name retained')
+ assert.equal(await evaluate("document.querySelector('#channel-config label input').value"),pendingName,'A name retained')
  assert.equal(await evaluate("document.querySelector('.model-row-editor input[type=number]').value"),'96000','A unconfirmed row input retained')
  assert.equal(await evaluate("!!document.querySelector('tr[data-model=fixture-scope-a][data-pending=true]')"),true,'A pending row retained')
  await click('加入草稿','.model-row-editor')
@@ -307,7 +310,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
   await wait("!![...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('保存预览'))",'global list Preview')
  }
  await openSavePreview()
- assert.equal(await evaluate("(()=>{const d=document.querySelector('dialog[open]');return d.textContent.includes('Native scope A pending')&&d.textContent.includes('Native sort fixture')})()"),true,'list Preview still shows all channels')
+ assert.equal(await evaluate("(()=>{const d=document.querySelector('dialog[open]');return d.textContent.includes("+JSON.stringify(pendingName)+")&&d.textContent.includes('Native sort fixture')})()"),true,'list Preview still shows all channels')
  await click('取消','dialog[open]');await wait("!document.querySelector('dialog[open]')",'cancel list Preview')
  assert((await readFile(configPath)).equals(savedBBytes),'cancel Preview must neither revert B nor write A')
  const canceled=await modelFileEvidence(configPath,expected),canceledSnapshot=await invoke('model_file_snapshot')
@@ -318,13 +321,13 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await wait("!!document.querySelector('.notif-layer .process-progress')",'remaining A file Save result')
  const remainingEvidence=await modelFileEvidence(configPath,expected),remaining=JSON.parse(remainingEvidence.bytes)
  await assertModelFileWrite(writtenEvidence,remainingEvidence,expected)
- assert.equal(remaining.providers['native-scope-a-fixture'].apiKey,'native-scope-a-pending-key','remaining Save commits A Key')
- assert.equal(remaining.providers['native-scope-a-fixture'].modelContextWindows['fixture-scope-a'],96000,'remaining Save commits confirmed A row')
+ assert.equal(remaining.providers[pendingProvider].apiKey,'native-scope-a-pending-key','remaining Save commits A Key')
+ assert.equal(remaining.providers[pendingProvider].modelContextWindows['fixture-scope-a'],96000,'remaining Save commits confirmed A row')
  for(const [providerId,provider] of Object.entries(written.providers))if(providerId!=='native-scope-a-fixture')assert.deepEqual(remaining.providers[providerId],provider,'remaining Save changed saved B or another Key: '+providerId)
  assert.equal(Object.keys(remaining.providers).length,Object.keys(written.providers).length,'remaining Save preserves provider set')
  const remainingSnapshot=await invoke('model_file_snapshot'),remainingA=remainingSnapshot.policy.channels.find(c=>c.id===otherChannelId)
  assert.notEqual(remainingSnapshot.policyDigest,saved.policyDigest,'remaining Save changes real file digest')
- assert.equal(remainingA.label,'Native scope A pending','remaining Save commits A name')
+ assert.equal(remainingA.label,pendingName,'remaining Save commits A name')
  assert.equal(remainingA.overrides['fixture-scope-a'].contextWindow.value,96000,'snapshot reads back confirmed A row')
  assert.deepEqual(remainingSnapshot.policy.channels.find(c=>c.id===channelId),saved.policy.channels.find(c=>c.id===channelId),'remaining Save preserves B snapshot and order')
  await wait("document.querySelector('[data-testid=policy-save]')?.disabled",'remaining changes now clean')
