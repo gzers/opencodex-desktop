@@ -59,6 +59,17 @@ it('uses already loaded persisted preferences and records ready stages on native
  expect(usePanelStore().loadTrace.phases.map(p=>p.phase)).toEqual(expect.arrayContaining(['preferences-ready','status-ready','address-ready','native-request','visible-ready']))
 })
 
+it('keeps navigation ready when Show returns an older snapshot for the same generation',async()=>{
+ let resolveShow!:(value:unknown)=>void
+ invoke.mockImplementation((command:string,args?:{request?:{action?:string}})=>command==='sync_embedded_panel'&&args?.request?.action==='show'?new Promise(resolve=>{resolveShow=resolve}):Promise.resolve({visible:false,panelUrl:null}))
+ await render()
+ window.dispatchEvent(new CustomEvent('ocxd-panel',{detail:{kind:'load',value:'ready',generation:5}}));await flushPromises()
+ resolveShow({visible:true,panelUrl:'http://127.0.0.1:10100/web',ready:false,generation:5});await flushPromises()
+ await vi.advanceTimersByTimeAsync(PANEL_LOAD_NOTICE_MS+1)
+ expect(wrapper!.text()).toContain('官方面板已嵌入主窗口')
+ expect(usePanelStore().loadTrace.outcome).toBe('visible-ready')
+})
+
 it('hides a late show while an overlay is present and restores after the last surface closes',async()=>{
  let resolveShow!:(value:unknown)=>void
  invoke.mockImplementation((command:string,args?:{request?:{action?:string}})=>command==='sync_embedded_panel'&&args?.request?.action==='show'?new Promise(resolve=>{resolveShow=resolve}):Promise.resolve({visible:false,panelUrl:null}))

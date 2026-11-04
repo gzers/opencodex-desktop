@@ -172,6 +172,9 @@ async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
       effects: effects.setting,
     })
     if (disposed || revision !== commandRevision || timedOut) return
+    // Navigation may finish while Show is returning its earlier readiness snapshot.
+    // Only preserve an observed ready event from this generation (or a newer one).
+    const observedReady = panelReady.value && typeof result.generation === 'number' && nativeGeneration >= result.generation
     if (typeof result.generation === 'number') nativeGeneration = Math.max(nativeGeneration, result.generation)
     if (action === 'show') {
       for (const phase of result.timings ?? []) panel.markLoad(currentTrace, 'native:' + phase.phase + ':' + phase.elapsedMs.toFixed(1))
@@ -179,7 +182,7 @@ async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
       if (!result.visible) {
         // 原生视图不存在且未创建：停止「正在嵌入」并按进程事实给出显式失败，不留下悬空的加载态。
         reportLoadFailure()
-      } else if (result.ready ?? app.panelLoaded) {
+      } else if (observedReady || (result.ready ?? app.panelLoaded)) {
         // 视图被复用且本轮已成功加载过：不再等待页面事件，也不启动加载超时。
         clearLoadTimeout()
         panelNotice.value = null
