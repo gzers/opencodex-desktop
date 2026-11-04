@@ -8,6 +8,21 @@ import { Database } from 'bun:sqlite';
 const [official, expectedRoot, oldProxyPort] = process.argv.slice(2);
 const home = resolve(process.env.CODEX_HOME);
 if (!home.startsWith(resolve(expectedRoot) + '/')) throw new Error('non-owned Codex home');
+if (oldProxyPort === '--runtime-selection-only') {
+  // Read the actual unmasked runtime selected by the published resolver under
+  // the same owned env/PATH. No dependency seams, config edits, persistence or
+  // native override. Preserve server settings separately; never replace them.
+  if (process.env.CODEX_CLI_PATH) throw new Error('forced runtime variable in default npm probe');
+  const { resolveCodexRuntime, displayCodexRuntimePath, loadPersistedCodexRuntime } = await import(
+    pathToFileURL(join(official, 'src/codex/runtime.ts')).href);
+  const persistedRuntimeAtRead = loadPersistedCodexRuntime();
+  const selected = resolveCodexRuntime();
+  console.log(JSON.stringify({ actualPublishedResolver: true, seamsInjected: false,
+    persistedByThisProbe: false, resolver: selected,
+    displayPath: displayCodexRuntimePath(selected.runtime.command),
+    rawRuntime: selected.runtime, persistedRuntimeAtRead, controlledPath: process.env.PATH,
+    forcedRuntimeEnvironmentPresent: false }));
+} else {
 const identity = await import(pathToFileURL(join(official, 'src/codex/user-identity.ts')).href);
 const effective = identity.resolveEffectiveUserIdentity();
 const paths = [
@@ -44,4 +59,5 @@ console.log(JSON.stringify({ paths, officialSerialization: outcome,
   oldFixtureSeededByPublishedProducer: true, oldIntegration }));
 if (!oldIntegration.ok || oldIntegration.status !== 'applied' || !oldIntegration.catalogWritten) {
   throw new Error('old integration producer did not confirm catalog/config initialization');
+}
 }

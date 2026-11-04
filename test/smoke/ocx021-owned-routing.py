@@ -46,6 +46,12 @@ CACHE_TARGET = Path('/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/oc
 KEY = 'fixture-owned-ac02-key'
 MARKER = 'OCX021_LOCAL_FIXTURE_OK'
 RAW_MODELS = ['owned-routing-model', 'owned-second-model', 'owned-hidden-model']
+FORCED_CODEX_RUNTIME_ENV = (
+    'CODEX_CLI_PATH', 'CODEX_BINARY_PATH', 'CODEX_NATIVE_PATH', 'CODEX_EXECUTABLE',
+    'CODEX_BIN', 'CODEX_COMMAND', 'CODEX_MANAGED_PACKAGE_ROOT',
+    'CODEX_MANAGED_BY_NPM', 'CODEX_MANAGED_BY_BUN', 'CODEX_MANAGED_BY_PNPM',
+    'CODEX_MANAGED_BY_VITE_PLUS',
+)
 
 # Product inputs only. In particular ui/tests, ui/qa, test/** and CI/native
 # tools may advance independently and cannot invalidate the product identity.
@@ -77,6 +83,73 @@ def sources():
     paths = sorted(set(list((base / 'src').rglob('*.rs')) +
                        [base / p for p in ['Cargo.toml', 'Cargo.lock', 'build.rs', 'tauri.conf.json']]))
     return {str(p.relative_to(CODE)): sha(p) for p in paths if p.is_file()}
+
+def seed_default_npm_client(root, node_source, native_source):
+    """Copy cached official tools only; never execute npm, Node, Codex or a probe.
+
+    The lexical .bin entry is deliberately preserved as a standard npm symlink
+    to the unmodified JS selector. Production, not this fixture, resolves which
+    same-package native binary is safe for the native configuration owner.
+    """
+    root, node_source, native_source = root.resolve(), node_source.resolve(), native_source.resolve()
+    native_package = native_source.parents[3]
+    selector_package = native_package.parent / 'codex'
+    manifest = json.loads((selector_package / 'package.json').read_text())
+    platform = json.loads((native_package / 'package.json').read_text())
+    assert manifest['name'] == platform['name'] == '@openai/codex'
+    assert manifest['version'] == '0.166.0' and platform['version'] == '0.166.0-darwin-arm64'
+    assert platform['os'] == ['darwin'] and platform['cpu'] == ['arm64']
+    assert manifest['type'] == 'module' and manifest['bin'] == {'codex':'bin/codex.js'}
+    assert manifest['optionalDependencies']['@openai/codex-darwin-arm64'] == 'npm:@openai/codex@0.166.0-darwin-arm64'
+    assert native_package.name == 'codex-darwin-arm64'
+    assert native_source.relative_to(native_package).as_posix() == 'vendor/aarch64-apple-darwin/bin/codex'
+    selector = selector_package / 'bin/codex.js'
+    assert selector.read_text().startswith('#!/usr/bin/env node\n')
+    # Upstream display redaction matches nested /home/<segment> as a username.
+    # Install tools outside HOME so the actual settings DTO stays unambiguous.
+    modules = root / 'tools/npm-client/node_modules'
+    assert not modules.exists(), 'default npm fixture must be new, not a pre-existing installation'
+    package_files = []
+    for source in [selector_package, native_package]:
+        for path in source.rglob('*'):
+            assert not path.is_symlink(), 'cached tool package symlinks require explicit review'
+        target = modules / '@openai' / source.name
+        shutil.copytree(source, target)
+        for path in sorted(source.rglob('*')):
+            if not path.is_file(): continue
+            copy = target / path.relative_to(source)
+            original_sha = sha(path)
+            assert sha(copy) == original_sha
+            package_files.append({'source':str(path), 'copy':str(copy),
+                                  'sha256':original_sha, 'bytes':copy.stat().st_size})
+    bin_dir = modules / '.bin'
+    bin_dir.mkdir()
+    launcher = bin_dir / 'codex'
+    launcher.symlink_to('../@openai/codex/bin/codex.js')
+    assert launcher.is_file() and launcher.is_symlink()
+    assert launcher.resolve() == modules / '@openai/codex/bin/codex.js'
+    assert os.access(launcher, os.X_OK), 'cached official selector must retain its executable mode'
+    node = root / 'tools/node/bin/node'
+    node.parent.mkdir(parents=True)
+    shutil.copy2(node_source, node)
+    assert node.is_file() and not node.is_symlink() and sha(node) == sha(node_source)
+    assert os.access(node, os.X_OK)
+    # Only these two new directories and OS system tools appear on PATH. The
+    # host Node directory or cached native bin directory must never be added.
+    controlled = [str(bin_dir),str(node.parent),'/usr/bin','/bin','/usr/sbin','/sbin']
+    path = os.pathsep.join(controlled)
+    assert shutil.which('codex', path=path) == str(launcher)
+    assert shutil.which('node', path=path) == str(node)
+    assert sorted(p.name for p in bin_dir.iterdir()) == ['codex']
+    assert sorted(p.name for p in node.parent.iterdir()) == ['node']
+    return {'mode':'default-npm-client', 'toolInstallation':'copied from exact cached 0.166.0 official packages; no install/download',
+        'launcher':str(launcher), 'launcherSymlinkTarget':os.readlink(launcher),
+        'selector':str(launcher.resolve()), 'selectorSha256':sha(launcher.resolve()),
+        'packageVersion':manifest['version'], 'node':str(node), 'nodeSha256':sha(node),
+        'nodeSource':str(node_source), 'referenceNativeCopy':str(modules / '@openai' / native_package.name / native_source.relative_to(native_package)),
+        'referenceNativeSha256':sha(native_source), 'path':path, 'pathDirectories':controlled,
+        'hostNodeDirectoryOnPath':False, 'hostNativeDirectoryOnPath':False,
+        'packageFiles':package_files, 'executedDuringLayoutCreation':False}
 
 def verify_source_freeze(requested):
     """Read-only exact commit/product check; runs even if HEAD == freeze."""
@@ -154,9 +227,15 @@ def sandbox_policy(root, ports=(), build=False, owned_coordinators=False):
                   'Library/Application Support/com.gzers.opencodex.desktop']:
             lines.append(f'(deny file-read* (subpath {q(Path("/Users/ezio") / p)}))')
     else:
+        # Default npm mode supplies a copied standalone Node inside root, so
+        # its runtime cannot read or discover the host's Node/tool directory.
+        isolated_node = (root / 'tools/node/bin/node').is_file()
+        node_exception = '' if isolated_node else f' (literal {q(Path(shutil.which("node")).resolve())})'
         lines += ['(deny file-read* (subpath "/Users/ezio"))',
-                  f'(allow file-read* (subpath {q(Path(sys.executable).resolve().parents[1])}) (literal {q(Path(shutil.which("node")).resolve())}))',
+                  f'(allow file-read* (subpath {q(Path(sys.executable).resolve().parents[1])}){node_exception})',
                   f'(deny file-read* (literal {q(root / "forbidden-canary")}))']
+        if isolated_node:
+            lines.append('(deny file-read* (subpath "/Applications/ChatGPT.app") (subpath "/Applications/Codex.app"))')
         for port in ports:
             lines += [f'(allow network-outbound (remote ip "localhost:{port}"))',
                       f'(allow network-bind (local ip "localhost:{port}"))',
@@ -210,6 +289,7 @@ class Runner:
             subprocess.check_output(['git', '-c', 'core.fsmonitor=false', 'rev-parse', 'HEAD'], cwd=CODE, text=True).strip())
         self.freeze_product_delta = ''
         self.official, self.codex, self.node = args.official.resolve(), args.codex.resolve(), args.node.resolve()
+        self.cached_native_source, self.cached_node_source = self.codex, self.node
         self.out = args.evidence.resolve() / time.strftime('run-%Y%m%d-%H%M%S')
         if not self.out.is_relative_to(EVIDENCE.resolve()): raise ValueError('evidence outside authorized directory')
         self.out.mkdir(parents=True, exist_ok=False)
@@ -229,10 +309,17 @@ class Runner:
         self.result['automaticClientIntegrationVerified'] = False
         self.result['manualClientSetup'] = args.manual_client
         self.result['automaticChainProbe'] = args.automatic_chain
+        self.default_npm_client = bool(getattr(args, 'default_npm_client', False))
+        self.result['defaultNpmClientMode'] = self.default_npm_client
         self.result['smokeSourceSha256'] = {p.name: sha(p) for p in sorted(Path(__file__).parent.glob('ocx021-owned-routing.*')) if p.is_file()}
         for path in ['home/.codex', 'home/.config', 'home/.cache', 'home/.local/share', 'home/.local/state',
                      'official', 'manager', 'work', 'tmp', 'cargo-home', 'build']:
             (self.root / path).mkdir(parents=True, exist_ok=True)
+        if self.default_npm_client:
+            self.npm_layout = seed_default_npm_client(self.root, self.cached_node_source, self.cached_native_source)
+            self.codex, self.node = Path(self.npm_layout['launcher']), Path(self.npm_layout['node'])
+            dump(self.out / 'default-npm-fixture-provenance.json', self.npm_layout)
+            self.result['clientLaunchMode'] = 'unmodified npm .bin/codex -> bin/codex.js via copied Node on isolated PATH'
         self.env = {
             'HOME': str(self.root / 'home'), 'USERPROFILE': str(self.root / 'home'),
             'CODEX_HOME': str(self.root / 'home/.codex'), 'CODEX_SQLITE_HOME': str(self.root / 'home/.codex'),
@@ -247,20 +334,61 @@ class Runner:
             'OCX021_CONTAINER': str(self.root), 'OTEL_SDK_DISABLED': 'true', 'DO_NOT_TRACK': '1',
             'OCX_TEST_HOME_GUARD': '1', 'OCX_REAL_HOME': '/Users/ezio',
         }
+        if self.default_npm_client:
+            for key in FORCED_CODEX_RUNTIME_ENV: self.env.pop(key, None)
+            self.env['PATH'] = self.npm_layout['path']
+            assert not set(FORCED_CODEX_RUNTIME_ENV).intersection(self.env)
+            self.result['forcedNativeVariablesAbsent'] = list(FORCED_CODEX_RUNTIME_ENV)
+            self.result['clientPathDiscoveryExpectedSource'] = 'path'
         self.sb = self.root / 'runtime.sb'; self.sb.write_text(sandbox_policy(self.root))
         (self.root / 'forbidden-canary').write_text('synthetic forbidden read')
         (self.root / 'home/.codex/config.toml').write_text(
             'cli_auth_credentials_store = "file"\ncheck_for_update_on_startup = false\nweb_search = "disabled"\n'
             '[analytics]\nenabled = false\n[feedback]\nenabled = false\n')
         dump(self.out / 'environment.json', self.env)
-        dump(self.out / 'inventory.json', inventory(self.official, self.codex, self.node))
+        dump(self.out / 'inventory.json', inventory(self.official, self.cached_native_source, self.cached_node_source))
+        if self.default_npm_client:
+            dump(self.out / 'default-npm-client-environment.json', {'environmentSource':'explicit new dictionary; no host inheritance',
+                'path':self.env['PATH'], 'forcedRuntimeEnvironmentPresent':[],
+                'lexicalLauncher':str(self.codex), 'independentNode':str(self.node),
+                'nodeOptionsOrNodePathInherited':False,'nativeExecutableExplicitlyConfigured':False})
         # Wrapper runs the unmodified published launcher, not a replacement runtime.
         # Production cache_refresh intentionally env_clear()s. This explicit
         # owned runtime wrapper must re-establish every temporary client path.
         exports = ''.join('export ' + k + '=' + shlex.quote(v) + '\n' for k, v in self.env.items())
-        (self.root / 'ocx').write_text('#!/bin/sh\n' + exports + 'exec ' + shlex.join([str(self.node), str(self.official / 'bin/ocx.mjs')]) + ' "$@"\n')
+        unset = ('unset ' + ' '.join(FORCED_CODEX_RUNTIME_ENV) + '\n') if self.default_npm_client else ''
+        (self.root / 'ocx').write_text('#!/bin/sh\n' + unset + exports + 'exec ' + shlex.join([str(self.node), str(self.official / 'bin/ocx.mjs')]) + ' "$@"\n')
         (self.root / 'ocx').chmod(0o700)
     def log(self, msg): print(msg, flush=True)
+    def record_default_npm_resolver(self, label, initial=False):
+        if not self.default_npm_client: raise ValueError('default npm trace requested for native-mode run')
+        trace_script = self.root / 'official-runtime-readonly-trace.mjs'
+        shutil.copyfile(Path(__file__).with_name('ocx021-owned-routing.coordinator.mjs'), trace_script)
+        _, stdout, _ = self.command([self.official.parents[1] / 'bun/bin/bun.exe', trace_script,
+            self.official, self.root, '--runtime-selection-only'], label)
+        trace = json.loads(stdout)
+        selected = trace['rawRuntime']
+        assert trace['actualPublishedResolver'] and not trace['seamsInjected']
+        assert not trace['persistedByThisProbe'] and not trace['forcedRuntimeEnvironmentPresent']
+        assert selected['command'] == self.npm_layout['launcher']
+        assert selected['version'] == self.npm_layout['packageVersion']
+        if initial:
+            assert selected['source'] == 'path' and trace['persistedRuntimeAtRead'] is None
+            self.result['initialDefaultNpmRuntime'] = {'command':selected['command'],
+                'source':selected['source'],'version':selected['version'],'persistedStateBeforeDiscovery':None}
+        else:
+            # The official bundled-catalog producer itself may auto-persist a
+            # PATH discovery. This is real upstream behavior, not a test pin.
+            assert selected['source'] in ['path','configured']
+            persisted = trace['persistedRuntimeAtRead']
+            if persisted is not None:
+                assert persisted['origin'] == 'discovered'
+                assert persisted['command'] == self.npm_layout['launcher']
+                assert persisted['source'] in ['path','configured']
+                assert persisted['selectedVersion'] == self.npm_layout['packageVersion']
+            if selected['source'] == 'configured': assert persisted is not None
+        dump(self.out / (label + '.json'), trace)
+        return trace
     def verify_frozen_product(self, label):
         if not self.freeze_identity: return
         actual = verify_source_freeze(self.args.source_freeze_head)
@@ -322,6 +450,8 @@ class Runner:
         self.bundled = catalog
         dump(self.root / 'native-bundled.json', catalog)
         self.command([self.root / 'ocx', '--version'], 'opencodex-version')
+        if self.default_npm_client:
+            self.record_default_npm_resolver('initial-path-default-npm-resolver', initial=True)
         self.command([self.codex, 'app-server', 'generate-json-schema', '--out', self.root / 'schema'], 'app-server-schema')
         for pattern in ['*ModelList*', '*Initialize*']:
             for path in (self.root / 'schema').rglob(pattern):

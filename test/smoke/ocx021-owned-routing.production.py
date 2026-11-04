@@ -8,6 +8,9 @@ mock-restart commit test uses a COPY and retains the actually prepared pending.
 Run only once after parent cargo/check and explicit source freeze.
 --copy-gate-only reruns solely the synthetic restart-ack copy fixture for an
 already completed real production chain. It never repeats save/prepare/turn.
+--default-npm-client exercises standard cached npm .bin/codex with copied
+Node on controlled PATH and no forced native runtime. Production resolves the
+same-package native owner; observers/exec keep invoking the original launcher.
 """
 import argparse
 import importlib.util
@@ -54,13 +57,37 @@ class ProductionParent(base.Runner):
         assert home.is_relative_to(self.root) and codex_home.is_relative_to(home)
         raw = runtime['path']
         assert runtime['version'] and isinstance(raw,str)
-        # Resolve only against this server-bound HOME, never expanduser() or
-        # substitute a manually chosen executable/config/default model.
-        executable = home / raw[2:] if raw.startswith(('~/','~\\')) else Path(raw)
-        assert executable.is_absolute() and '..' not in executable.parts
-        executable = executable.resolve(strict=True)
-        assert executable.is_file()
-        assert base.sha(executable)==self.observer_binary_sha, 'server selected a different/unverified native Codex runtime'
+        if self.default_npm_client:
+            # settings.path is a display DTO and may be redacted. Compare it
+            # against the actual official resolver's display projection, but
+            # preserve both raw returns. Never de-mask/substitute this DTO for
+            # production. Observers use the fixture's lexical npm symlink.
+            trace = self.npm_resolver_trace
+            selected = trace['rawRuntime']
+            assert trace['actualPublishedResolver'] and not trace['seamsInjected']
+            assert self.result['initialDefaultNpmRuntime']['source'] == 'path'
+            assert runtime['source'] in ['path','configured'] and selected['source'] in ['path','configured']
+            if runtime['source'] == 'configured' or selected['source'] == 'configured':
+                persisted = trace['persistedRuntimeAtRead']
+                assert persisted is not None and persisted['origin'] == 'discovered'
+                assert persisted['command'] == self.npm_layout['launcher']
+            assert runtime['version'] == selected['version'] == self.npm_layout['packageVersion']
+            assert raw == trace['displayPath'], 'actual server display path disagrees with unmodified official resolver'
+            executable = Path(selected['command'])
+            assert executable.is_absolute() and '..' not in executable.parts
+            assert str(executable) == self.npm_layout['launcher']
+            assert executable.is_symlink() and executable.resolve() == Path(self.npm_layout['selector'])
+            assert base.sha(executable.resolve()) == self.npm_layout['selectorSha256']
+            assert not set(base.FORCED_CODEX_RUNTIME_ENV).intersection(self.env)
+            assert self.env['PATH'] == self.npm_layout['path']
+        else:
+            # Native-mode historical runs: resolve only against the bound
+            # HOME, never expanduser() or substitute a different config/model.
+            executable = home / raw[2:] if raw.startswith(('~/','~\\')) else Path(raw)
+            assert executable.is_absolute() and '..' not in executable.parts
+            executable = executable.resolve(strict=True)
+            assert executable.is_file()
+            assert base.sha(executable)==self.observer_binary_sha, 'server selected a different/unverified native Codex runtime'
         if hasattr(self,'bound_config'):
             assert config==self.bound_config and executable==self.codex and home==self.bound_home
         self.codex=executable
@@ -69,10 +96,15 @@ class ProductionParent(base.Runner):
         self.result['officialClientBinding']={'rawCodexRuntime':runtime,'rawIntegration':integration,
             'resolvedExecutable':str(executable),'resolvedConfig':str(config),
             'resolvedCodexHome':str(codex_home),'tildeExpansionHome':str(home),
-            'source':'actual attested settings + actual integration; no injected response'}
+            'source':'actual attested settings + actual integration; no injected response',
+            'observerLaunchMode':'unmodified npm selector via PATH Node' if self.default_npm_client else 'explicit native',
+            'settingsDisplayPathReplacedForProduction':False,
+            'nativeConfigurationOwnerResolution':'production prepare only; observer never resolves/replaces native owner'}
     def client_models(self,label):
         if label!='codex-before': return super().client_models(label)
-        self.observer_binary_sha=base.sha(self.codex)
+        if self.default_npm_client:
+            self.npm_resolver_trace=self.record_default_npm_resolver('official-default-npm-runtime-trace')
+        else:self.observer_binary_sha=base.sha(self.codex)
         state=self.helper_json('observe-production-bindings','official-binding-before-rename')
         self.bind_observer(state)
         rpc=base.Rpc(self,'codex-unseeded-current-config')
@@ -175,6 +207,13 @@ class ProductionParent(base.Runner):
             actualPendingPath=str(pending_path),safeRestartCommitCopy=simulated,
             automaticClientIntegrationVerified=True,automaticDirectoryGatePassed=True,
             actualDesktopRestartVerified=False,releaseGatePassed=False)
+        if self.default_npm_client:
+            self.result.update(defaultNpmProductionPreparePassed=True,
+                upstreamInitialRuntimeSource='path',actualObserverAndExecEntry=str(self.codex),
+                upstreamSettingsRuntimeSource=self.result['officialClientBinding']['rawCodexRuntime']['source'],
+                isolatedNode=str(self.node),forcedNativeRuntimeVariablesPresent=False,
+                postRenameClientConfigManuallyRepaired=False,
+                productionOwnerSamePackageNativeResolution='exercised by actual production prepare; no test owner substitution')
 
 def copy_gate_only(evidence,freeze):
     """Fix/rerun only this smoke's copied restart transport fixture.
@@ -279,6 +318,8 @@ def copy_gate_only(evidence,freeze):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run',action='store_true')
+    parser.add_argument('--default-npm-client',action='store_true',
+        help='standard cached npm .bin symlink + JS selector and independent Node, no CODEX_CLI_PATH/native forcing; requires a new explicit product freeze')
     parser.add_argument('--check-source-freeze-only',action='store_true',
         help='read-only commit/product identity check; no temp runtime, build or official command')
     parser.add_argument('--copy-gate-only',type=Path,
@@ -289,6 +330,7 @@ def main():
     if sum([args.run,args.check_source_freeze_only,args.copy_gate_only is not None])>1:
         parser.error('choose identity-only, single real run or independent copy gate')
     if args.copy_gate_only:
+        if args.default_npm_client:parser.error('copy-only uses the archived actual runtime environment; do not change its client mode')
         if not args.source_freeze_head:parser.error('same complete real-run freeze SHA required')
         return copy_gate_only(args.copy_gate_only,args.source_freeze_head)
     if args.check_source_freeze_only:
@@ -298,15 +340,18 @@ def main():
         return 0
     if not args.run:
         print(json.dumps({'status':'ready-explicit-product-freeze-required','helperMode':'production-prepare',
+            'clientMode':'default-npm-client' if args.default_npm_client else 'explicit-native',
             'productionEntry':'cache_refresh::prepare_saved_rename_restart(root,context)',
             'pendingAck':'only copy in safe sync_cache_after_save(true) transport simulation; original retained',
             'sourceFreeze':'explicit complete new SHA; worktree compared even when HEAD equals freeze',
             'testOnlyHeadAdvance':'allowed only when guarded product files still match freeze',
-            'globalRestartAllowed':False,'postRenameTestOnlyOwnerRepairAllowed':False},indent=2));return 0
+            'globalRestartAllowed':False,'postRenameTestOnlyOwnerRepairAllowed':False,
+            'runtimeOrCompilerInvokedByThisMode':False},indent=2));return 0
     if not args.source_freeze_head:parser.error('explicit parent source freeze SHA required')
     options=SimpleNamespace(official=base.OFFICIAL,codex=base.CODEX,node=Path(shutil.which('node')),
         evidence=base.EVIDENCE,source_freeze_head=args.source_freeze_head,automatic_chain=True,
         production_parent=True,manual_client=False,seed_installed_fixture=True,
+        default_npm_client=args.default_npm_client,
         allow_owned_coordinator_files=True,reuse_build=None,cache_target=args.cache_target)
     runner=ProductionParent(options)
     status=0
