@@ -49,3 +49,13 @@ python3 test/smoke/ocx021-macos-ota.py --mode execute \
 证据默认写入 docs 工作树 .adg/evidence/0.2.21/macos-adjacent-ota-20261104/新UUID子轮，含 run-context、准备/执行报告、签名日志、bundle inventories、AX/单窗口截图、两次真实保存前像、发布回执、生产隧道日志、自动进程身份与选择性环境、数据前后摘要及全部 owned 进程清理。首次准备中 macOS Python 3.9 tar filter 兼容和 Seatbelt localhost 语法失败保留，不改写成通过。
 
 --mode execute 缺发布输入在任何根/app/network操作前退出2。实际运行中 fail退出1，blocked退出2；只有完整实际 OTA通过才 report pass。父级的最终021 all/overview验收由父级负责，本 driver 不重复也不替代该验收。
+
+匿名 GitHub API release/tag 元数据因403/429明确限流时，仅这三个公开API类别可经 host 现有 gh api GET 读取：021 release、021 tag ref及其 annotated tag。记录 metadataSource=authenticated gh public metadata，并保存原匿名错误；不冒称匿名API通过。使用正常凭据适配，不读取/打印token，不向candidate环境传凭据。beta manifest和产品tag资产下载没有认证或缓存替代，仍为匿名真实HTTPS/TLS/签名流程；所有原packet/source/旧公钥签名/自动重启/同进程读回断言不变。c6a首轮403原件保留，其旧app未启动、otaExecuted=false，不是产品OTA失败。
+
+5089轮已完成旧UI两次保存及beta选择，但原driver错误地读取扁平偏好字段：真实0.2.20保存的是schema2的updates.app_update_channel。按显式schema1/2读取实际字段，仍必须等于beta，未知schema拒绝，不改写或推断通道。该轮otaExecuted=false，KeyError原件保留。只读monitor对直接启动app可为nil的NSRunningApplication.launchDate，使用同一精确已准入PID的真实OS ps lstart读回；不以观察时刻伪造启动时间，自动新PID仍必须满足同路径、新启动时刻与继承根，并且禁止手动补起。
+
+f7轮真实下载并原位安装后，旧进程AX只返回空根，候选单窗口截图仍为“安装就绪，等待重启”；该阻塞原件保留，未手动启动新版本。对此仅在真实签名handoff存在、旧PID仍运行、原位包逐文件等同目标的条件下，允许现有capwin/Vision对精确PID单窗口证明旧/新版本、等待重启及唯一“重启并应用更新”按钮。重启时再次截屏/OCR定位，monitor严格核对active、未锁屏、最前方命中窗口ID/ownerPID相同，向该PID发送一次真实鼠标点击。没有AX/DOM替代事件、盲坐标或全局点击。自动新PID发现、继承根、原包seal/source和同进程原生业务读回要求全部不变；该截图输入路径不能绕过任何发布/签名/数据断言。
+
+307轮完整下载/安装后，Vision把副标题“等待重启”识别为“等待重后”，语言校正读取同图仍相同。原始图文保留，不改写OCR输出。手接版本只取消副标题冗余短语逐字匹配；仍必须识别0.2.20、0.2.21、“安装就绪”和唯一精确按钮“重启并应用更新”，且按钮点击前原签名handoff/目标整包逐文件相同/active命中窗口准入全部不变。已有307 controller仍运行原已加载逻辑，不热改、不再次启动新根；正常结束后由父级长期session接手。
+
+307已按原360秒观察窗正常结束并清理，未发SIGTERM。该轮后来候选失去active，手接版本在观察/命中测试前仅activate精确已准入PID，再要求其active与唯一窗口命中通过；不隐藏/关闭其它应用。f7和d836的SIGTERM来自assistant显式os.kill自有controller以清理已记录阻塞/失败，不是父级interrupt或工具lifetime；controller-signal-provenance.json保留归因。307已签名安装但无自动新PID，实际OTA仍blocked。手接必须fresh完整执行，不允许启动307已安装021来替代自动重启验收。

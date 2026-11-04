@@ -15,12 +15,14 @@ import select
 import shutil
 import signal
 import socket
+import struct
 import subprocess
 import sys
 import tarfile
 import threading
 import time
 import traceback
+import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
@@ -146,6 +148,7 @@ class OtaRun:
             'XDG_CONFIG_HOME': str(self.home / '.config'), 'XDG_CACHE_HOME': str(self.home / '.cache'),
             'OPENCODEX_SANDBOX': '1', 'OPENCODEX_SANDBOX_ROOT': str(self.root), 'OPENCODEX_SANDBOX_BOUNDARY': str(self.container)}
         self.axbin = self.container / 'ax'; self.monitor = self.container / 'monitor'; self.capwin = self.container / 'capwin'
+        self.ocr = self.container / 'ocr'
         self.report = {'schemaVersion': 1, 'mode': args.mode, 'result': 'incomplete', 'from': '0.2.20', 'to': '0.2.21',
             'channel': 'existing production beta', 'container': str(self.container), 'root': str(self.root), 'environment': self.env,
             'app': str(self.app), 'checks': [], 'otaExecuted': False, 'targetSource': args.source_sha,
@@ -201,7 +204,8 @@ class OtaRun:
         self.app.parent.mkdir(mode=0o700)
         result = cmd(['/usr/bin/ditto', self.baseline, self.app]); assert result.returncode == 0, result.stderr
         assert inventory(self.app) == self.baseline_inventory
-        for source, target in [(HERE / 'ocx021-macos-native.swift', self.axbin), (HERE / 'ocx021-macos-ota.swift', self.monitor), (HERE / 'lib/capwin.swift', self.capwin)]:
+        for source, target in [(HERE / 'ocx021-macos-native.swift', self.axbin), (HERE / 'ocx021-macos-ota.swift', self.monitor),
+                               (HERE / 'lib/capwin.swift', self.capwin), (HERE / 'lib/ocr.swift', self.ocr)]:
             built = cmd(['/usr/bin/xcrun', 'swiftc', source, '-o', target], env=self.env)
             (self.out / (target.name + '-compile.log')).write_text(built.stdout + built.stderr)
             assert built.returncode == 0, 'Helper failed to compile: ' + source.name
@@ -259,12 +263,39 @@ class OtaRun:
         if parsed.scheme != 'https' or parsed.hostname not in NETWORK_HOSTS: raise Blocked('Non-production publication URL refused')
         opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
         request = urllib.request.Request(url, headers={'User-Agent': 'ocx021-owned-native-ota', 'Accept': 'application/json'})
-        with opener.open(request, timeout=30) as response:
-            if urllib.parse.urlparse(response.url).hostname not in NETWORK_HOSTS: raise Blocked('Publication redirect escaped GitHub')
-            raw = response.read(2 * 1024 * 1024 + 1)
+        metadata_source = 'anonymous HTTPS'
+        try:
+            with opener.open(request, timeout=30) as response:
+                if urllib.parse.urlparse(response.url).hostname not in NETWORK_HOSTS: raise Blocked('Publication redirect escaped GitHub')
+                raw = response.read(2 * 1024 * 1024 + 1)
+        except urllib.error.HTTPError as error:
+            body = error.read(4096).decode('utf-8', errors='replace')
+            rate_limited = error.code in [403, 429] and ('rate limit' in body.lower() or error.headers.get('X-RateLimit-Remaining') == '0')
+            allowed_api_path = parsed.path in [
+                '/repos/gzers/opencodex-desktop/releases/tags/v0.2.21',
+                '/repos/gzers/opencodex-desktop/git/ref/tags/v0.2.21'] or bool(re.fullmatch(
+                    r'/repos/gzers/opencodex-desktop/git/tags/[0-9a-f]{40}', parsed.path))
+            dump(self.out / (name + '.anonymous-error.json'), {'url': url, 'httpStatus': error.code,
+                'body': body, 'rateLimited': rate_limited, 'remaining': error.headers.get('X-RateLimit-Remaining')})
+            if not (parsed.hostname == 'api.github.com' and rate_limited and allowed_api_path):
+                raise Blocked('Anonymous production metadata request failed: ' + str(error.code)) from error
+            gh = shutil.which('gh')
+            if not gh: raise Blocked('Anonymous GitHub API quota exhausted and host gh is unavailable') from error
+            # Host's normal credential adapter only. No token read/print, no
+            # environment transfer to the sandboxed candidate, no asset fallback.
+            result = cmd([gh, 'api', '--method', 'GET', parsed.path.lstrip('/')])
+            if result.returncode:
+                raise Blocked('Host gh public metadata adapter failed (exit ' + str(result.returncode) + ')')
+            raw = result.stdout.encode('utf-8')
+            metadata_source = 'authenticated gh public metadata'
         if len(raw) > 2 * 1024 * 1024: raise Blocked('Publication metadata exceeds bound')
+        value = json.loads(raw)
         (self.out / name).write_bytes(raw)
-        return json.loads(raw)
+        self.report.setdefault('publicMetadataReads', []).append({'url': url, 'metadataSource': metadata_source,
+            'evidence': name, 'sha256': hashlib.sha256(raw).hexdigest(), 'at': dt.datetime.now(dt.timezone.utc).isoformat()})
+        dump(self.out / 'public-metadata-sources.json', self.report['publicMetadataReads'])
+        self.flush()
+        return value
 
     def publication(self):
         # This is called only in execute mode, after the parent notification.
@@ -425,7 +456,18 @@ class OtaRun:
         self.press('应用更新通道'); self.press('测试通道')
         self.wait(lambda s: '测试通道' in self.text(s), name='old-beta-channel')
         preferences = json.loads((self.root / 'manager-state/preferences.json').read_text())
-        assert preferences['app_update_channel'] == 'beta'
+        schema = preferences.get('schema_version')
+        if schema == 2:
+            updates = preferences.get('updates', {})
+            if not isinstance(updates, dict): raise Blocked('Malformed actual updates preferences domain')
+            channel = updates.get('app_update_channel', 'stable')
+            channel_path = 'updates.app_update_channel'
+        elif schema == 1:
+            channel = preferences.get('app_update_channel', 'stable')
+            channel_path = 'app_update_channel'
+        else: raise Blocked('Unknown actual old preferences schema; refusing to infer beta')
+        assert channel == 'beta', 'Real old UI did not persist the beta channel'
+        self.check('old-ui-beta-preference-readback', schemaVersion=schema, field=channel_path, value=channel)
         self.capture('old-beta-channel')
         self.business = ['opencodex-home/config.json', 'manager-state/model-channel-layout.json', 'manager-state/preferences.json',
                          'home/.codex/config.toml', 'home/.agents/skills/ota021-preserve/SKILL.md', 'manager-state/data-root.json']
@@ -455,8 +497,29 @@ class OtaRun:
         assert '0.2.20' in text and '0.2.21' in text and '测试通道' in text
         self.capture('production-target-confirm')
         self.press('确认更新')
-        pending = self.wait(lambda s: self.matches(s, '重启并应用更新'), 360, 'signed-installed-pending-restart')
-        assert '0.2.20' in self.text(pending) and '0.2.21' in self.text(pending)
+        self.pending_visual = None
+        deadline = time.monotonic() + 360
+        while time.monotonic() < deadline:
+            pending = self.snapshot()
+            if any(message in self.text(pending) for message in ['更新失败，当前版本保留', '更新安装失败；已保留当前版本。']):
+                self.capture('actual-production-install-failed')
+                raise AssertionError('Actual production updater reported download/install failure; original version retained; no handoff/restart inferred')
+            if self.matches(pending, '重启并应用更新'):
+                assert '0.2.20' in self.text(pending) and '0.2.21' in self.text(pending)
+                dump(self.out / 'signed-installed-pending-restart-ax.json', pending)
+                break
+            # macOS may stop answering old-process AX after its sealed bundle is
+            # replaced. A real signed handoff + candidate-only screen/OCR must
+            # prove the exact same pending UI; no injected state or blind click.
+            if len(pending['nodes']) <= 1 and (self.root / 'manager-state/update-handoff.json').exists():
+                try:
+                    self.pending_visual = self.visual_restart_control(pending)
+                    break
+                except Blocked as error:
+                    with (self.out / 'pending-visual-observations.jsonl').open('a') as log:
+                        log.write(json.dumps({'time': time.monotonic(), 'notYetProved': str(error)}) + '\n')
+            time.sleep(.25)
+        else: raise Blocked('Real signed installed/pending-restart state was not reached')
         self.capture('signed-installed-pending-restart')
         receipt = json.loads((self.root / 'manager-state/update-handoff.json').read_text())
         assert receipt['version'] == '0.2.21' and receipt['identity']['channel'] == 'beta'
@@ -466,11 +529,58 @@ class OtaRun:
         self.verify_bundle(self.app, '0.2.21', self.args.source_sha, 'installed-before-restart')
         assert self.old.poll() is None, 'Old running process ended before explicit restart'
         self.check('production-signed-download-and-inplace-install', wholeBundleExactlyOriginal=True, oldRunningPid=self.old.pid,
-                   handoffProducedBy='production updater only after old-trust verification', changedUpdaterEndpoint=False)
+                   handoffProducedBy='production updater only after old-trust verification', changedUpdaterEndpoint=False,
+                   pendingObservation='candidate-window OCR' if self.pending_visual else 'AX')
+
+    def visual_restart_control(self, snap=None):
+        snap = snap or self.snapshot()
+        if not snap['active']:
+            # Activate only this admitted PID before observing/hit-testing its
+            # real restart control. Never hide/close/focus another application.
+            self.ax('focus')
+            snap = self.wait(lambda s: s['active'], 3, 'pending-restart-owned-pid-active')
+        if not snap['active']: raise Blocked('Owned pending-restart app is not active')
+        windows = [w for w in snap['windows'] if w['onscreen'] and w['layer'] == 0 and w['bounds'].get('Width', 0) > 500]
+        if len(windows) != 1: raise Blocked('Pending restart requires one visible owned main window')
+        window = windows[0]
+        image = self.out / 'pending-restart-visual.png'
+        captured = cmd([self.capwin, window['id'], image], env=self.env)
+        if captured.returncode: raise Blocked('Cannot capture exact owned pending restart window')
+        read = cmd([self.ocr, image], env=self.env)
+        (self.out / 'pending-restart-visual-ocr.txt').write_text(read.stdout + read.stderr)
+        if read.returncode: raise Blocked('Pending-restart OCR unavailable')
+        plain = re.sub(r'\s+', '', read.stdout)
+        # Vision can transcribe the secondary caption's 启 as 后. Do not alter
+        # OCR output or accept a fuzzy button: retain the exact installed stage,
+        # both versions and unique exact restart action. The production signed
+        # handoff and whole target bundle are separately mandatory before input.
+        if not all(value in plain for value in ['0.2.20', '0.2.21', '安装就绪', '重启并应用更新']):
+            raise Blocked('Visible real old->new signed pending-restart screen is not proved')
+        hits = []
+        for line in read.stdout.splitlines():
+            match = re.fullmatch(r'\[(\d+),(\d+),(\d+),(\d+)\]\s*(.+)', line)
+            if match and re.sub(r'\s+', '', match[5]) == '重启并应用更新': hits.append(tuple(int(match[i]) for i in range(1, 5)))
+        if len(hits) != 1: raise Blocked('Exact visible restart control is not unique')
+        width, height = struct.unpack('>II', image.read_bytes()[16:24])
+        box = window['bounds']; x, y, w, h = hits[0]
+        point = {'x': box['X'] + (x + w / 2) * box['Width'] / width,
+                 'y': box['Y'] + (y + h / 2) * box['Height'] / height}
+        observed = {'pid': self.pid, 'windowId': window['id'], 'windowBounds': box, 'imagePixels': [width, height],
+                    'ocrTextRectPixels': list(hits[0]), 'point': point, 'label': '重启并应用更新',
+                    'proof': 'actual owned screenshot + Vision OCR + production signed handoff; old-process AX returned no attributes'}
+        dump(self.out / 'pending-restart-visual.json', observed)
+        return observed
 
     def restart_readback(self):
         started = time.time()
-        self.press('重启并应用更新')
+        if self.pending_visual:
+            visual = self.visual_restart_control()
+            point = visual['point']
+            result = cmd([self.monitor, 'click-restart', self.exe, self.pid, visual['windowId'], point['x'], point['y']], env=self.env)
+            dump(self.out / 'native-visual-restart-click.json', {'returncode': result.returncode, 'stdout': result.stdout, 'stderr': result.stderr,
+                'oneNativeClickOnly': True, 'manualRelaunch': False})
+            if result.returncode: raise Blocked('Exact owned visible restart click refused: ' + result.stdout)
+        else: self.press('重启并应用更新')
         deadline = time.monotonic() + 90
         while time.monotonic() < deadline:
             candidates = [p for p in self.find_apps() if p['pid'] != self.old.pid and p['launchTime'] >= started - 3]
@@ -489,7 +599,13 @@ class OtaRun:
         self.press('模型'); self.press('渠道模型'); self.press('编辑')
         snap = self.wait(lambda s: '渠道配置' in self.text(s), 20, 'same-auto-process-business-readback')
         assert 'ota021-preserve' in self.text(snap) and 'vendor/a:8b' in self.text(snap) and 'Mixed_Case/V2' in self.text(snap)
-        save = self.matches(snap, '保存渠道草稿'); assert len(save) == 1 and not save[0].get('enabled')
+        # A disabled AXButton intentionally has no AXPress action. Observe its
+        # actual role/name/enabled state; do not reuse the actionable matcher.
+        webroots = [n['path'] + '.' for n in snap['nodes'] if n.get('role') == 'AXWebArea']
+        save = [n for n in snap['nodes'] if n.get('role') == 'AXButton'
+                and any(n['path'].startswith(root) for root in webroots)
+                and (n.get('title') == '保存渠道草稿' or n.get('description') == '保存渠道草稿')]
+        assert len(save) == 1 and save[0].get('enabled') is False, 'Readback must be clean and Save must be explicitly disabled'
         self.capture('same-auto-process-business-readback')
         after = {rel: sha(self.root / rel) for rel in self.business}
         dump(self.out / 'after-ota-file-hashes.json', after)
