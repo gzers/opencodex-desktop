@@ -1,0 +1,43 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-RDP-20261105",
+  "title": "接受RDP环境后的材质性能补验",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "用户2026-11-05明确rdp也可以接受了。只改变可接受环境；保留性能预算、旧失败、MSVC与正式Codex重启隔离门。补测静止/滚动/弹窗/后台停绘，独有证据回交，旧冻结TASK不重绑。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-final-chat-01a1a68a",
+  "baseline_digest": "756ed5226acffcc0881ffdb6f316d78f98de13969aff2fb6c723e01fd4d0dc47",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/**"
+  ],
+  "required_checks": [
+    "review:rdp-background",
+    "review:rdp-environment-decision",
+    "review:rdp-isolation",
+    "review:rdp-modal",
+    "review:rdp-static-scroll"
+  ],
+  "acceptance_ids": [
+    "AC-P21-02"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-02",
+      "criterion_digest": "1d31867128ec40d740f0f82f8c32abd17c167b461348ed564e3cbd5931b9c4d6"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 2,
+  "summary_digest": "30ddf3635730fcaf3c97e74094376d75e58d572795e456c8259410b7377be352",
+  "content_digest": "040a1f32cdb658e45eadd80afe0f7a7979424a1dc2cdaba4632176057302660c"
+}
