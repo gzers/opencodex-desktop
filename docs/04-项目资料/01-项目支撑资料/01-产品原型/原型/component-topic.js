@@ -119,7 +119,7 @@
   if(entered&&root.dataset.route==='components')window.modelPickerPrototype?.mount?.($('#ctPickerInline'),pickerOptions());
  }
  const nodeText=n=>state.nodeResults[n.id]||'未检测';
- function nodeMarkup(prefix,close){return window.PrototypeNodeView.picker({titleId:prefix+'Title',title:'NewApi · 服务节点',close:close?button('关闭','node-close','ghost btn-sm'):'' ,all:button(state.nodeRunning?'停止检测':'一键检测',state.nodeRunning?'node-stop':'node-all','ghost btn-sm'),summaryId:prefix+'Summary',summary:state.nodeRunning?'正在检测…':'接口响应耗时 · 不代表生成速度',rows:nodes.map(n=>window.PrototypeNodeView.row({id:n.id,choiceId:prefix+'Choice-'+n.id,choiceAttrs:'data-ct-node="'+n.id+'"',selected:state.nodeSelected===n.id,title:n.url,name:state.long?n.name+' · 备用服务节点长名称':n.name,speedId:prefix+'Speed-'+n.id,speed:esc(nodeText(n)),test:button('检测','node-one','ghost btn-sm','data-node="'+n.id+'" '+(state.nodeRunning?'disabled':''))})).join('')});}
+ function nodeMarkup(prefix,close){return window.PrototypeNodeView.picker({titleId:prefix+'Title',title:'NewApi · 服务节点',close:close?window.PrototypeModal.closeButton('data-ct="node-close"'):'' ,all:button(state.nodeRunning?'停止检测':'一键检测',state.nodeRunning?'node-stop':'node-all','ghost btn-sm'),summaryId:prefix+'Summary',summary:state.nodeRunning?'正在检测…':'接口响应耗时 · 不代表生成速度',rows:nodes.map(n=>window.PrototypeNodeView.row({id:n.id,choiceId:prefix+'Choice-'+n.id,choiceAttrs:'data-ct-node="'+n.id+'"',selected:state.nodeSelected===n.id,title:n.url,name:state.long?n.name+' · 备用服务节点长名称':n.name,speedId:prefix+'Speed-'+n.id,speed:esc(nodeText(n)),test:button('检测','node-one','ghost btn-sm','data-node="'+n.id+'" '+(state.nodeRunning?'disabled':''))})).join('')});}
  function renderNodes(){
   const active=document.activeElement,scope=active?.closest?.('#ctNodeInline,.ct-node-popup'),focusId=scope?active.id:'',focusAction=scope?active.dataset.ct:null,focusNode=scope?active.dataset.node:null;
   $('#ctNodeInline').innerHTML=nodeMarkup('ctInlineNode',false);if(nodePopup)nodePopup.innerHTML=nodeMarkup('ctPopupNode',true);
@@ -146,10 +146,10 @@
  }
  function dialog(kind){
   closeNodePopup();let html,handler=null,confirm='确定';
-  if(kind==='confirm'){html='<p>删除这条示例项目？</p>';handler=()=>{$('#ctDialogResult').textContent='示例项目已删除。';};}
+  if(kind==='confirm'){confirm='删除';html='<p>删除这条示例项目？</p>';handler=()=>{$('#ctDialogResult').textContent='示例项目已删除。';};}
   else if(kind==='detail'){html='<dl><dt>名称</dt><dd>默认工作空间</dd><dt>状态</dt><dd>已启用</dd></dl>';confirm='关闭';}
-  else {html='<div class="prototype-ui ct-demo-dialog"><label class="ui-field">名称<input id="ctDialogName" aria-describedby="ctDialogError" value="示例项目"><small id="ctDialogError" class="ui-error" hidden>请输入名称</small></label><label class="ui-field">处理方式<select id="ctDialogSelect"><option>默认处理</option><option>稍后处理</option></select></label></div>';handler=()=>{const el=$('#ctDialogName'),invalid=!el.value.trim();el.setAttribute('aria-invalid',String(invalid));$('#ctDialogError').hidden=!invalid;if(invalid){el.focus();return;}$('#ctDialogResult').textContent='已保存：'+el.value.trim();closeModal();};}
-  openModal(kind==='confirm'?'删除示例项目':kind==='detail'?'项目内容':'编辑示例项目',html,confirm,handler,{hideNote:true,confirmKeepsOpen:kind==='form'});topicDialog=true;window.prototypeSelect?.enhance($('#modalBody'));window.__modalOnClose=()=>{topicDialog=false;};
+  else {confirm='保存';html='<div class="prototype-ui ct-demo-dialog"><label class="ui-field">名称<input id="ctDialogName" aria-describedby="ctDialogError" value="示例项目"><small id="ctDialogError" class="ui-error" hidden>请输入名称</small></label><label class="ui-field">处理方式<select id="ctDialogSelect"><option>默认处理</option><option>稍后处理</option></select></label></div>';handler=()=>{const el=$('#ctDialogName'),invalid=!el.value.trim();el.setAttribute('aria-invalid',String(invalid));$('#ctDialogError').hidden=!invalid;if(invalid){el.focus();return;}$('#ctDialogResult').textContent='已保存：'+el.value.trim();closeModal();};}
+  openModal(kind==='confirm'?'删除示例项目':kind==='detail'?'项目内容':'编辑示例项目',html,confirm,handler,{mode:kind==='detail'?'view':kind,hideNote:true,confirmKeepsOpen:kind==='form'});topicDialog=true;window.prototypeSelect?.enhance($('#modalBody'));window.__modalOnClose=()=>{topicDialog=false;};
  }
  const tool=document.createElement('div');tool.id='componentTopicDemoCard';tool.className='proto-card component-tool-card';tool.dataset.protoContexts='components';tool.hidden=true;
  tool.innerHTML='<div class="proto-note-title">组件与样式 · 评审条件</div><p class="pctl-hint" id="ctToolSection"></p>'+[

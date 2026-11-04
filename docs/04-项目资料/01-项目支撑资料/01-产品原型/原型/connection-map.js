@@ -249,7 +249,7 @@
    requestAnimationFrame(()=>{if(!active()||document.getElementById('modalMask').style.display==='flex')return;const target=type==='settings'?$('.pv-settings-trigger'):opener?.isConnected?opener:nodeOpener(id);target?.focus({preventScroll:true});});
   };
   renderDialog();
-  requestAnimationFrame(()=>{if(dialog===session)(type==='channels'?document.getElementById('pvChannelSearch'):document.querySelector('#modal .pv-dialog-tabs [aria-selected="true"]')||document.getElementById('modalCancel'))?.focus({preventScroll:true});});
+  requestAnimationFrame(()=>{if(dialog===session)(type==='channels'?document.getElementById('pvChannelSearch'):document.querySelector('#modal .pv-dialog-tabs [aria-selected="true"]')||document.getElementById('modalClose'))?.focus({preventScroll:true});});
  }
  function openNode(id,tab='info'){selected=id;requestFocus=false;render();nodeOpener(id)?.focus({preventScroll:true});openDialog('node',id,tab);}
  function showNotice(text){$('#pvNotice').textContent=text;$('#pvNotice').hidden=false;clearTimeout(showNotice.timer);showNotice.timer=setTimeout(()=>{$('#pvNotice').hidden=true;},2600);}

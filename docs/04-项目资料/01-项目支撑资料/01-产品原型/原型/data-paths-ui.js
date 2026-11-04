@@ -36,7 +36,7 @@
     const p=current(), root=kind==='root';
     openModal(root?'修改数据目录':'修改 OpenCodex 数据目录',
       '<p class="modal-lead">当前位置</p><p class="mnt-path">'+esc(root?p.root:p.home)+'</p><div class="setting-list"><div class="setting-row"><div><div class="setting-title">选择目标并检查</div><p>检查目录可写、剩余空间及已有数据；运行中先停止相关代理，不自动覆盖已有文件。</p></div></div><div class="setting-row"><div><div class="setting-title">确认变更范围</div><p>'+(root?'仅切换引用不搬旧数据；迁移数据需列明管理器配置、备份、托管包体和内置 HOME。外置 HOME 与自定义托管前缀保留，另行确认。':'可沿用数据目录内的 opencodex-home，或选择外置目录；外置目录的已有配置先展示差异，不直接覆盖。')+'</p></div></div><div class="setting-row"><div><div class="setting-title">保护与核验</div><p>备份、复制与校验完成后再切换；失败保留旧目录与引用，成功后重启核验，旧目录清理由用户确认。</p></div></div></div>',
-      '关闭',()=>{}, {cancelLabel:'取消'});
+      '',null, {mode:'view',hideConfirm:true});
   }
   card.addEventListener('click',event=>{
     const button=event.target.closest('button');if(!button||button.disabled)return;

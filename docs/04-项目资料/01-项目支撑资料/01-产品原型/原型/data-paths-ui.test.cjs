@@ -61,12 +61,12 @@ test('外观平台变化可同步路径，其他 body 样式变化不重置手�
   assert.equal(h.win.dataPathsPrototype.current().platform,'macos');
   assert.equal(h.context.installPath,'explicit-existing-prefix');
 });
-test('修改预览展示保护范围，确认和取消不改变目录',()=>{
+test('修改目录只读说明不提供伪确认动作，查看和退出不改变目录',()=>{
   const h=harness(), before=h.win.dataPathsPrototype.current().root;
   h.win.dataPathsPrototype.preview('root');
   assert.ok(h.modal()[1].includes('外置 HOME 与自定义托管前缀保留'));
-  h.modal()[3]();assert.equal(h.win.dataPathsPrototype.current().root,before);
+  assert.equal(h.modal()[3],null);assert.equal(h.modal()[4].mode,'view');assert.equal(h.win.dataPathsPrototype.current().root,before);
   h.win.dataPathsPrototype.preview('home');
   assert.ok(h.modal()[1].includes('外置目录的已有配置先展示差异'));
-  assert.equal(h.modal()[4].cancelLabel,'取消');
+  assert.equal(h.modal()[4].hideConfirm,true);
 });

@@ -1,0 +1,133 @@
+{
+  "calls": [
+    [
+      "index.html",
+      37
+    ],
+    [
+      "maintenance-ui.js",
+      1
+    ],
+    [
+      "model-config.js",
+      42
+    ],
+    [
+      "extension-manager.js",
+      3
+    ],
+    [
+      "data-paths-ui.js",
+      1
+    ],
+    [
+      "model-picker.js",
+      2
+    ],
+    [
+      "component-topic.js",
+      1
+    ],
+    [
+      "connection-map.js",
+      1
+    ],
+    [
+      "conversation-config.js",
+      4
+    ],
+    [
+      "extension-detail.js",
+      1
+    ],
+    [
+      "prototype-notification-publisher.js",
+      2
+    ],
+    [
+      "interactive-collection-demo.js",
+      4
+    ],
+    [
+      "sync-config.js",
+      10
+    ]
+  ],
+  "hosts": [
+    {
+      "file": "index.html",
+      "line": 3026,
+      "excerpt": "  <div class=\"ui-fault-modal\" id=\"uiFaultModal\" role=\"alertdialog\" aria-modal=\"true\" aria-label=\"界面出现异常\" hidden>"
+    },
+    {
+      "file": "index.html",
+      "line": 7100,
+      "excerpt": "    '<div class=\"sysdlg\" role=\"dialog\" aria-modal=\"true\" aria-label=\"选择 Skills 源目录\">'+"
+    },
+    {
+      "file": "annotation-cards.js",
+      "line": 41,
+      "excerpt": "  popover.setAttribute('aria-modal', 'false');"
+    },
+    {
+      "file": "model-config.js",
+      "line": 821,
+      "excerpt": "  const sheet=$('#modal'),previous=Object.fromEntries(['role','aria-modal','aria-labelledby'].map(key=>[key,sheet.getAttribute(key)]));let view;"
+    },
+    {
+      "file": "model-config.js",
+      "line": 828,
+      "excerpt": "  sheet.classList.add('mp-node-detection-modal');sheet.setAttribute('role','dialog');sheet.setAttribute('aria-modal','true');sheet.setAttribute('aria-labelledby','modalTitle');"
+    },
+    {
+      "file": "model-config.js",
+      "line": 1561,
+      "excerpt": "  const src=row.source;closeUpdateDetails();const layer=document.createElement('div');layer.id='mpUpdateDetail';layer.className='mp-update-detail';layer.setAttribute('role','dialog');layer.setAttribute('aria-modal','true');layer.setAttribut"
+    },
+    {
+      "file": "model-config.js",
+      "line": 1618,
+      "excerpt": "  return '<section id=\"mpAssistantPanel\" class=\"mp-assistant-panel\" role=\"dialog\" aria-modal=\"false\" aria-label=\"模版 Agent 助手\">'+header+task+(assistantTask==='update'?updateBody+updateFooter:body+'<footer>'+context+composer+'</footer>')+'</s"
+    },
+    {
+      "file": "component-topic.js",
+      "line": 81,
+      "excerpt": "    '<section class=\"ct-tr-sheet\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"ctTrTitle\">'+"
+    },
+    {
+      "file": "component-topic.js",
+      "line": 349,
+      "excerpt": "  if(nodePopup){closeNodePopup(true);return;}window.prototypeSelect?.close();window.prototypeActionMenu?.close();nodeAnchor=anchor;nodePopup=document.createElement('div');nodePopup.className='mp-node-picker ct-node-popup prototype-ui';nodeP"
+    },
+    {
+      "file": "overview-hero.js",
+      "line": 256,
+      "excerpt": "  '<section class=\"ph-rng\" role=\"dialog\" aria-modal=\"true\" aria-label=\"自定义时间范围\">'+"
+    },
+    {
+      "file": "connection-map.js",
+      "line": 252,
+      "excerpt": "  const modal=document.getElementById('modal');session.modalAttrs=['role','aria-modal','aria-labelledby'].map(name=>[name,modal.getAttribute(name)]);modal.classList.add('pv-dialog');modal.dataset.pvDialog=type;modal.setAttribute('role','dia"
+    },
+    {
+      "file": "extension-detail.js",
+      "line": 52,
+      "excerpt": "  box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-labelledby','modalTitle');"
+    },
+    {
+      "file": "extension-detail.js",
+      "line": 96,
+      "excerpt": "  function cleanup(){if(cleaned)return;cleaned=true;head.removeEventListener('click',action);body.removeEventListener('click',click);body.removeEventListener('input',search);body.removeEventListener('keydown',keydown);box.classList.remove('"
+    },
+    {
+      "file": "interactive-collection-demo.js",
+      "line": 52,
+      "excerpt": "  const box=$('#modal');box.classList.add('modal-wide');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-labelledby','modalTitle');"
+    },
+    {
+      "file": "interactive-collection-demo.js",
+      "line": 53,
+      "excerpt": "  window.__modalOnClose=()=>{detailOpen=false;box.removeAttribute('role');box.removeAttribute('aria-modal');box.removeAttribute('aria-labelledby');if(origin?.isConnected)origin.focus({preventScroll:true});};"
+    }
+  ]
+}

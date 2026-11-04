@@ -1,0 +1,75 @@
+{
+  "scope": "Active maintained prototype only. Count is calls, not unique windows/states.",
+  "sharedCallsBefore": 105,
+  "sharedCallFiles": {
+    "component-topic.js": 1,
+    "connection-map.js": 1,
+    "conversation-config.js": 4,
+    "data-paths-ui.js": 1,
+    "extension-detail.js": 1,
+    "extension-manager.js": 3,
+    "index.html": 36,
+    "interactive-collection-demo.js": 3,
+    "maintenance-ui.js": 1,
+    "model-config.js": 41,
+    "model-picker.js": 2,
+    "prototype-notification-publisher.js": 2,
+    "sync-config.js": 9
+  },
+  "helper": "modal-contract.js resolve + index.html openModal",
+  "migratedConsumers": [
+    "component-topic.js",
+    "connection-map.js",
+    "conversation-config.js",
+    "data-paths-ui.js",
+    "extension-detail.js",
+    "extension-manager.js",
+    "index.html",
+    "interactive-collection-demo.js",
+    "maintenance-ui.js",
+    "model-config.js",
+    "model-picker.js",
+    "prototype-notification-publisher.js",
+    "sync-config.js"
+  ],
+  "independent": [
+    {
+      "file": "component-topic.js",
+      "surface": "Custom time range",
+      "adoption": "shared closeButton, form cancel/apply"
+    },
+    {
+      "file": "overview-hero.js",
+      "surface": "Custom time range",
+      "adoption": "shared closeButton, form cancel/apply"
+    },
+    {
+      "file": "index.html",
+      "surface": "UI fault alert",
+      "adoption": "shared X in header; reload preserved"
+    },
+    {
+      "file": "model-config.js",
+      "surface": "Nested update detail",
+      "adoption": "shared closeButton; parent remains open"
+    }
+  ],
+  "excluded": [
+    {
+      "surface": "System folder picker mock",
+      "reason": "Native platform illustration; existing native semantics"
+    },
+    {
+      "surface": "Nonmodal template assistant",
+      "reason": "Persistent nonmodal panel; collapse not modal close"
+    },
+    {
+      "surface": "Annotations and review side panel",
+      "reason": "Review tool, not product modal"
+    },
+    {
+      "surface": "Field selection and node chooser popovers",
+      "reason": "Nonmodal choices, retain respective close lifecycle"
+    }
+  ]
+}

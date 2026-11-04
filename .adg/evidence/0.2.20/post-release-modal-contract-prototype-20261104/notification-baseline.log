@@ -1,0 +1,28 @@
+✖ 业务通知手动收起只停展示，铃铛保留注册实体，组件重置不清业务计时 (11473.344125ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11598.821084
+
+✖ failing tests:
+
+test at notification-countdown.test.cjs:53:1
+✖ 业务通知手动收起只停展示，铃铛保留注册实体，组件重置不清业务计时 (11473.344125ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+    assert.ok(timer)
+
+      at TestContext.<anonymous> (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/notification-countdown.test.cjs:54:299)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

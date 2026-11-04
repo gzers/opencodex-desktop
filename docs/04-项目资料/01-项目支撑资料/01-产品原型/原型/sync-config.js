@@ -179,7 +179,6 @@
  function showDialog(kind,title,body,confirm,handler,opts={}){
   if(!dialogKind)originFocus=document.activeElement;
   dialogKind=kind;
-  if(['sync-preview','import'].includes(kind))opts={...opts,headActions:'<button class="icon-btn" type="button" data-sx="preview-close" aria-label="关闭" title="关闭"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>'};
   openModal(title,'<div class="sx-dialog">'+body+'<div class="sx-error" id="sxError" role="alert"></div></div>',confirm,handler,{confirmKeepsOpen:true,hideNote:true,...opts});
   const annotation=$('#ann-modal-demo .annotation-source');
   if(opts.annotationText&&annotation)for(const text of [opts.annotationText].flat()){
@@ -266,7 +265,7 @@
    // 未选来源的同名 MCP 本次不同步，其余对象照常更新；不显示也不比较定义值。
    const rows=frozen.rows.map(x=>!x.conflict?x:picked[x.id]?{...x,mcpSource:picked[x.id]}:{...x,direction:'skip',deferred:true,reason:'未选择来源，本次未同步'});
    closeModal();startUpdate('webdav',rows,frozen.secrets,{encrypted:frozen.encrypted},undefined,{backup,source:frozen.source,snapshot:frozen.snapshot,scenario:frozen.scenario});
-  },{cancelLabel:changed?'取消':'关闭',annotationText:'整份快照确定一个新版来源，只覆盖已选范围。此窗口不写文件；确认后先做已勾选备份再更新，取消不备份不写入。所有备份与变化均为内存示例，不连接服务器；同时间或无可靠版本规则仍待生产设计明确。'});
+  },{mode:changed?'confirm':'view',hideConfirm:!changed,cancelLabel:changed?'取消':'关闭',annotationText:'整份快照确定一个新版来源，只覆盖已选范围。此窗口不写文件；确认后先做已勾选备份再更新，取消不备份不写入。所有备份与变化均为内存示例，不连接服务器；同时间或无可靠版本规则仍待生产设计明确。'});
   preview=frozen;$('#modalConfirm').disabled=!changed;
  }
  function directImportRows(kind){

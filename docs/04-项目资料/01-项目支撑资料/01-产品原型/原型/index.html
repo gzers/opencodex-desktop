@@ -309,6 +309,17 @@ button{font:inherit}
 .modal-head h3{flex:1 1 auto;min-width:0;margin:0}
 .modal-head-actions{flex:none;display:flex;align-items:center;gap:6px}
 .modal-head-actions[hidden]{display:none}
+
+/* S20-POST-09：查看型只保留标题栏最右X，表单/确认型底部保留取消与主操作。 */
+.modal-close{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;min-width:34px;min-height:34px;padding:7px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--muted);cursor:pointer}
+.modal-close svg{display:block;width:18px;height:18px;stroke-width:1.6}
+.modal-close:hover:not(:disabled){background:var(--hover);color:var(--text)}
+.modal-close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.modal-close:disabled{opacity:.45;cursor:default}
+.modal-actions[hidden]{display:none!important}
+body.prototype-modal-open #notifHost,body.prototype-modal-open #notificationPanel{visibility:hidden;pointer-events:none}
+.ui-fault-head{display:flex;align-items:center;gap:12px}.ui-fault-head h3{flex:1;margin:0}
+
 .modal-head-actions .icon-btn{min-width:28px;min-height:28px;padding:4px 6px}
 #modalBody{flex:1 1 auto;min-height:0;overflow:auto;padding:0 20px 14px}
 .modal-actions{flex:none;padding:14px 20px 20px;border-top:1px solid var(--border)}
@@ -3022,23 +3033,23 @@ ocx update</code></pre>
   <div class="ui-fault-modal" id="uiFaultModal" role="alertdialog" aria-modal="true" aria-label="界面出现异常" hidden>
     <div class="ui-fault-mask" id="uiFaultMask"></div>
     <div class="ui-fault">
-      <h3>界面出现异常</h3>
+      <div class="ui-fault-head"><h3>界面出现异常</h3><button class="icon-btn modal-close" type="button" id="uiFaultDismiss" aria-label="关闭" title="关闭"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
       <p class="ui-fault-text" id="uiFaultText">界面出现异常，部分功能可能暂时不可用。已记录本次异常，可关闭提示或重新加载界面。</p>
       <div class="ui-fault-actions">
-        <button class="btn ghost" type="button" id="uiFaultDismiss">关闭提示</button>
         <button class="btn" type="button" id="uiFaultReload">重新加载界面</button>
       </div>
     </div>
   </div>
   <div id="mpAssistantHost"></div>
   <div class="modal-mask" id="modalMask">
-    <div class="modal" id="modal">
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
       <div class="modal-head">
         <h3 id="modalTitle"></h3>
         <div class="modal-head-actions" id="modalHeadActions" hidden></div>
+        <button type="button" class="icon-btn modal-close" id="modalClose" aria-label="关闭" title="关闭"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       </div>
       <div id="modalBody"></div>
-      <div class="modal-actions">
+      <div class="modal-actions" id="modalActions">
         <button class="btn ghost" id="modalExtra" hidden></button>
         <button class="btn ghost" id="modalDelete" hidden>删除</button>
         <button class="btn ghost" id="modalCancel">取消</button>
@@ -3752,6 +3763,7 @@ ocx update</code></pre>
 <script src="maintenance-events.js?v=20261015-external-task"></script>
 <script src="notification-countdown.js?v=20261030-component"></script>
 <script src="notification-motion.js?v=20261030-bell"></script>
+<script src="modal-contract.js?v=20261104-close-contract"></script>
 <script>
 const statePill=document.getElementById('statePill');
 const installArea=document.getElementById('installArea');
@@ -4143,6 +4155,7 @@ function syncInstallConfirm(){
   return ready;
 }
 function syncInstallButtons(){
+  setModalMode(installDone?'view':'task');
   if(installDone){
     modalConfirm.textContent='完成';modalConfirm.disabled=false;
     modalCancel.textContent='关闭';modalCancel.disabled=false;
@@ -4153,6 +4166,7 @@ function syncInstallButtons(){
     modalConfirm.textContent='开始安装';modalCancel.textContent='取消';modalCancel.disabled=false;
     syncInstallConfirm();
   }
+  syncModalCloseState();
 }
 function renderInstallModal(){
   const host=document.getElementById('installHost');
@@ -4185,7 +4199,7 @@ function finishInstall(){
   stopInstallTimer();
   installProgress=100;
   installRunning=false;
-  installDone=true;
+  installDone=true;runtimeSource='managed';renderRuntimeSource();
   renderInstallModal();
 }
 function startInstall(){
@@ -4239,7 +4253,7 @@ function openRuntimeInstall(mode){
       if(installMode==='file'&&!(installPick&&installPick.ok)){toast('请先导入官方离线包（文件名与包名都要匹配）。');return}
       startInstall();
     },
-    {cancelLabel:'取消', hideNote:true, confirmKeepsOpen:true});
+    {mode:'task',cancelLabel:'取消',hideNote:true,confirmKeepsOpen:true,canClose:()=>!installRunning,onCancel:()=>{stopInstallTimer();installRunning=false;requestModalClose('cancel-install');}});
   window.__modalOnClose=()=>{stopInstallTimer();installRunning=false;};
   renderInstallModal();
 }
@@ -4413,6 +4427,7 @@ function syncUninstallConfirm(){
   if(btn) btn.disabled=!uninstallAck;
 }
 function syncUninstallButtons(){
+  setModalMode(uninstallDone?'view':'task');
   if(uninstallDone){
     modalConfirm.textContent='完成';modalConfirm.disabled=false;modalCancel.textContent='关闭';modalCancel.disabled=false;
   }else if(uninstallRunning){
@@ -4421,6 +4436,7 @@ function syncUninstallButtons(){
     modalConfirm.textContent='卸载';modalCancel.textContent='取消';modalCancel.disabled=false;
     syncUninstallConfirm();
   }
+  syncModalCloseState();
 }
 function renderUninstallModal(){
   const host=document.getElementById('uninstallHost');
@@ -4476,7 +4492,7 @@ function openRuntimeUninstall(){
       if(ack&&!ack.checked){toast('原型拦截：卸载是破坏性动作，需要先勾选已阅读清单。');return}
       startUninstall();
     },
-    {cancelLabel:'取消', hideNote:true, confirmKeepsOpen:true});
+    {mode:'task',cancelLabel:'取消',hideNote:true,confirmKeepsOpen:true,canClose:()=>!uninstallRunning,onCancel:()=>{stopUninstallTimer();uninstallRunning=false;requestModalClose('cancel-uninstall');}});
   document.getElementById('modal').classList.add('modal-uninstall');
   window.__modalOnClose=()=>{stopUninstallTimer();uninstallRunning=false;};
   renderUninstallModal();
@@ -6295,9 +6311,33 @@ document.addEventListener('click',event=>{
   openNotificationDetail(notification.id);
 });
 
+let modalContract=null,modalCloseGuard=null,modalCancelHandler=null;
+function syncModalViewport(){
+  const surface=modalMask.closest('.window'),bounds=surface?.getBoundingClientRect();if(!bounds?.width||!bounds.height)return;
+  const sx=surface.offsetWidth?bounds.width/surface.offsetWidth:1,sy=surface.offsetHeight?bounds.height/surface.offsetHeight:1;
+  const inset={left:Math.max(0,-bounds.left)/sx,right:Math.max(0,bounds.right-innerWidth)/sx,top:Math.max(0,-bounds.top)/sy,bottom:Math.max(0,bounds.bottom-innerHeight)/sy};
+  for(const [key,value] of Object.entries(inset))modalMask.style[key]=value+'px';
+}
+window.addEventListener('resize',()=>{if(modalMask.style.display==='flex')syncModalViewport();},{passive:true});
+function canCloseModal(){return typeof modalCloseGuard==='function'?modalCloseGuard():modalCloseGuard!==false;}
+function syncModalCloseState(){
+  const close=document.getElementById('modalClose'),actions=document.getElementById('modalActions');
+  close.disabled=!canCloseModal();
+  actions.hidden=![modalCancel,modalConfirm,modalDelete,document.getElementById('modalExtra')].some(button=>!button.hidden);
+}
+function setModalMode(mode,options={}){
+  modalContract={...modalContract,...options,mode};modal.dataset.modalMode=mode;
+  modalCancel.hidden=mode==='view';modalConfirm.hidden=mode==='view'||!modalContract.primary;
+  syncModalCloseState();
+}
+function requestModalClose(reason='close'){
+  if(!canCloseModal())return false;closeModal();return true;
+}
+window.prototypeModal={requestClose:requestModalClose,setMode:setModalMode,refresh:syncModalCloseState};
 function openModal(title,body,confirmText,handler,opts){
   window.prototypeSelect?.close();
   opts=opts||{};
+  const wasOpen=modalMask.style.display==='flex';
   modalTitle.textContent=title;
   // 所有原型说明统一进入共享注释层；hideNote为旧调用兼容参数，不再生成正文脚注。
   const modalAnnotationTitle=logEsc(opts.prototypeAnnotation?.title||'弹窗均为演示交互');
@@ -6310,9 +6350,13 @@ function openModal(title,body,confirmText,handler,opts){
   modalBody.innerHTML=body;
   const annotationHost=document.getElementById('modalAnnotationHost');annotationHost.innerHTML=modalNote;annotationHost.hidden=false;
   window.prototypeAnnotations?.refresh();
-  modalConfirm.textContent=confirmText||'关闭';
-  modalConfirm.hidden=!!opts.hideConfirm;
-  modalCancel.textContent=opts.cancelLabel||'取消';
+  modalContract=window.PrototypeModal.resolve(confirmText,typeof handler==='function',{...opts,closeOnly:handler===closeModal||opts.closeOnly});
+  modalCloseGuard=opts.canClose??null;modalCancelHandler=opts.onCancel||null;
+  modal.dataset.modalMode=modalContract.mode;modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-labelledby','modalTitle');
+  modalConfirm.textContent=confirmText||'确定';
+  modalConfirm.hidden=!modalContract.primary;
+  modalCancel.hidden=!modalContract.cancel;
+  modalCancel.textContent=modalContract.cancelLabel;
   modalDelete.hidden=!opts.onDelete;
   confirmHandler=handler||null;
   confirmKeepsOpen=!!opts.confirmKeepsOpen;
@@ -6325,14 +6369,15 @@ function openModal(title,body,confirmText,handler,opts){
   const headActions=document.getElementById('modalHeadActions');
   headActions.innerHTML=opts.headActions||'';
   headActions.hidden=!opts.headActions;
-  modalMask.style.display='flex';
+  modalMask.style.display='flex';document.body.classList.add('prototype-modal-open');syncModalViewport();
   // 键盘可达性：记录来源焦点，打开后把焦点移入弹窗，关闭后归还。
-  window.__modalReturnFocus=document.activeElement;
-  requestAnimationFrame(()=>{window.prototypeAnnotations?.refresh();(!modalConfirm.hidden?modalConfirm:modalCancel).focus({preventScroll:true});});
+  if(!wasOpen)window.__modalReturnFocus=document.activeElement;
+  syncModalCloseState();
+  requestAnimationFrame(()=>{window.prototypeAnnotations?.refresh();if(modalMask.style.display!=='flex')return;const target=!modalConfirm.hidden&&!modalConfirm.disabled?modalConfirm:modalContract.mode==='view'?document.getElementById('modalClose'):modal.querySelector('input:not(:disabled),textarea:not(:disabled)')||document.getElementById('modalClose');target?.focus({preventScroll:true});});
 }
 function closeModal(){
   window.prototypeSelect?.close();
-  modalMask.style.display='none';
+  modalMask.style.display='none';document.body.classList.remove('prototype-modal-open');
   const annotationHost=document.getElementById('modalAnnotationHost');annotationHost.hidden=true;annotationHost.innerHTML='';
   window.prototypeAnnotations?.refresh();
   modal.classList.remove('modal-wide');
@@ -6341,9 +6386,11 @@ function closeModal(){
   confirmHandler=null;
   confirmKeepsOpen=false;
   deleteHandler=null;
-  modalConfirm.hidden=false;
+  modalConfirm.hidden=false;modalCancel.hidden=false;
   modalDelete.hidden=true;
   modalCancel.textContent='取消';
+  modalContract=null;modalCloseGuard=null;modalCancelHandler=null;
+  document.getElementById('modalClose').disabled=false;document.getElementById('modalActions').hidden=false;
   const extra=document.getElementById('modalExtra');
   extra.hidden=true;extra.textContent='';extraHandler=null;
   const headActions=document.getElementById('modalHeadActions');
@@ -6355,9 +6402,12 @@ function closeModal(){
   if(typeof window.__modalOnClose==='function'){const hook=window.__modalOnClose;window.__modalOnClose=null;try{hook()}catch(e){}}
 }
 // 遮罩点击只允许取消，不得确认；Escape 等价于取消。
-modalMask.addEventListener('click',event=>{if(event.target===modalMask)closeModal();});
+modalMask.addEventListener('click',event=>{if(event.target===modalMask)requestModalClose('backdrop');});
+document.getElementById('modalClose').onclick=()=>requestModalClose('close');
 document.addEventListener('keydown',event=>{
-  if(event.key==='Escape'&&modalMask.style.display==='flex'){event.preventDefault();closeModal();}
+  if(event.defaultPrevented||modalMask.style.display!=='flex')return;
+  if(event.key==='Escape'){event.preventDefault();requestModalClose('escape');return;}
+  if(event.key==='Tab'){const controls=[...modal.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href],[tabindex="0"]')].filter(el=>!el.closest('[hidden]')&&getComputedStyle(el).display!=='none'&&getComputedStyle(el).visibility!=='hidden');const first=controls[0],last=controls.at(-1);if(!first){event.preventDefault();modal.focus();}else if(!modal.contains(document.activeElement)||event.shiftKey&&document.activeElement===first||!event.shiftKey&&document.activeElement===last){event.preventDefault();(event.shiftKey?last:first).focus({preventScroll:true});}}
 });
 // 「名称 + 描述」单元格是 role=button，补 Enter / 空格的键盘等价操作。
 document.addEventListener('keydown',event=>{
@@ -6367,7 +6417,7 @@ document.addEventListener('keydown',event=>{
   event.preventDefault();
   openExtensionDetail(skillInfo.closest('.skill-row'));
 });
-modalCancel.onclick=()=>closeModal();
+modalCancel.onclick=()=>{if(modalCancelHandler)modalCancelHandler();else requestModalClose('cancel');};
 modalConfirm.onclick=()=>{
   const fn=confirmHandler;
   // confirmKeepsOpen：处理器自己负责收尾（安装进度需要留在弹窗里继续走）。

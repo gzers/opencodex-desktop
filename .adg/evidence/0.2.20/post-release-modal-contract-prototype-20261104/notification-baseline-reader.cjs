@@ -1,0 +1,3 @@
+const fs=require('node:fs'),path=require('node:path');
+const root='/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/',before='/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.20/post-release-modal-contract-prototype-20261104/preimage/';
+const read=fs.readFileSync;fs.readFileSync=function(file,...args){const text=typeof file==='string'?file:'';if(text.startsWith(root)&&!text.endsWith('.test.cjs')){const candidate=path.join(before,path.basename(text));if(fs.existsSync(candidate))return read.call(this,candidate,...args);}return read.call(this,file,...args)};

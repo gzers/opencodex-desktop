@@ -1,0 +1,1838 @@
+{
+  "engine": "chromium",
+  "scope": "active total prototype; mock-only; external requests blocked; not production acceptance",
+  "surfaces": [
+    {
+      "name": "1440-component-view",
+      "title": "项目内容",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 300,
+        "top": 358.5,
+        "right": 820,
+        "bottom": 541.5,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-component-confirm",
+      "title": "删除示例项目",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "删除"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 300,
+        "top": 358.75,
+        "right": 820,
+        "bottom": 541.25,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-component-form",
+      "title": "编辑示例项目",
+      "mode": "form",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "保存"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 300,
+        "top": 318,
+        "right": 820,
+        "bottom": 582,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-model-detection",
+      "title": "NewApi · 节点检测",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 395,
+        "top": 272.5,
+        "right": 1045,
+        "bottom": 487.5,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-webdav-connection",
+      "title": "WebDAV 连接",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "保存连接"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 360,
+        "top": 156,
+        "right": 1080,
+        "bottom": 604,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-file-import",
+      "title": "导入配置",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "确认更新"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 360,
+        "top": 244,
+        "right": 1080,
+        "bottom": 516,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-file-export",
+      "title": "确认导出",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "生成配置包"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 360,
+        "top": 99.984375,
+        "right": 1080,
+        "bottom": 660.015625,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-directory-guide",
+      "title": "修改数据目录",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 460,
+        "top": 148.75,
+        "right": 980,
+        "bottom": 611.25,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-update-results",
+      "title": "检查更新结果",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 330,
+        "top": 161.09375,
+        "right": 1110,
+        "bottom": 598.890625,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-backup-confirm",
+      "title": "生成管理器偏好备份",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "打开数据与备份",
+        "取消",
+        "生成示例备份"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 460,
+        "top": 217.5,
+        "right": 980,
+        "bottom": 542.5,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-extension-detail",
+      "title": "示例Skill",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 360,
+        "top": 252.78125,
+        "right": 1080,
+        "bottom": 507.21875,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-template-history",
+      "title": "版本管理 · GPT",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 395,
+        "top": 207.625,
+        "right": 1045,
+        "bottom": 552.375,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-template-update-review",
+      "title": "模型资料更新 · 差异选择",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "保存新版本"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 395,
+        "top": 71.09375,
+        "right": 1045,
+        "bottom": 688.90625,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-install-ready",
+      "title": "安装 OpenCodex",
+      "mode": "task",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "开始安装"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 460,
+        "top": 65,
+        "right": 980,
+        "bottom": 695,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-install-result",
+      "title": "安装 OpenCodex",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 460,
+        "top": 177.5,
+        "right": 980,
+        "bottom": 582.5,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-uninstall-ready",
+      "title": "卸载 OpenCodex",
+      "mode": "task",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "卸载"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 460,
+        "top": 30,
+        "right": 980,
+        "bottom": 730,
+        "width": 1440,
+        "height": 900
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-component-view",
+      "title": "项目内容",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 170,
+        "top": 288.5,
+        "right": 690,
+        "bottom": 471.5,
+        "width": 1180,
+        "height": 760
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-component-confirm",
+      "title": "删除示例项目",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "删除"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 170,
+        "top": 288.75,
+        "right": 690,
+        "bottom": 471.25,
+        "width": 1180,
+        "height": 760
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-component-form",
+      "title": "编辑示例项目",
+      "mode": "form",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "保存"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 170,
+        "top": 248,
+        "right": 690,
+        "bottom": 512,
+        "width": 1180,
+        "height": 760
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-model-detection",
+      "title": "NewApi · 节点检测",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 265,
+        "top": 248.5,
+        "right": 915,
+        "bottom": 463.5,
+        "width": 1180,
+        "height": 760
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-webdav-connection",
+      "title": "WebDAV 连接",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "保存连接"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 230,
+        "top": 132,
+        "right": 950,
+        "bottom": 580,
+        "width": 1180,
+        "height": 760
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-file-import",
+      "title": "导入配置",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "确认更新"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 230,
+        "top": 220,
+        "right": 950,
+        "bottom": 492,
+        "width": 1180,
+        "height": 760
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-file-export",
+      "title": "确认导出",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "生成配置包"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 230,
+        "top": 94.703125,
+        "right": 950,
+        "bottom": 617.296875,
+        "width": 1180,
+        "height": 760
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-component-view",
+      "title": "项目内容",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 50,
+        "top": 233.5,
+        "right": 570,
+        "bottom": 416.5,
+        "width": 900,
+        "height": 650
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-component-confirm",
+      "title": "删除示例项目",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "删除"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 50,
+        "top": 233.75,
+        "right": 570,
+        "bottom": 416.25,
+        "width": 900,
+        "height": 650
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-component-form",
+      "title": "编辑示例项目",
+      "mode": "form",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "保存"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 50,
+        "top": 193,
+        "right": 570,
+        "bottom": 457,
+        "width": 900,
+        "height": 650
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-model-detection",
+      "title": "NewApi · 节点检测",
+      "mode": "view",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": true,
+      "footer": [],
+      "cancelHidden": true,
+      "inside": {
+        "left": 125,
+        "top": 193.5,
+        "right": 775,
+        "bottom": 408.5,
+        "width": 900,
+        "height": 650
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-webdav-connection",
+      "title": "WebDAV 连接",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "保存连接"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 90,
+        "top": 82.59375,
+        "right": 810,
+        "bottom": 519.390625,
+        "width": 900,
+        "height": 650
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-file-import",
+      "title": "导入配置",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "确认更新"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 90,
+        "top": 165,
+        "right": 810,
+        "bottom": 437,
+        "width": 900,
+        "height": 650
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-file-export",
+      "title": "确认导出",
+      "mode": "confirm",
+      "xCount": 1,
+      "mostRight": true,
+      "footerHidden": false,
+      "footer": [
+        "取消",
+        "生成配置包"
+      ],
+      "cancelHidden": false,
+      "inside": {
+        "left": 90,
+        "top": 82.59375,
+        "right": 810,
+        "bottom": 519.390625,
+        "width": 900,
+        "height": 650
+      },
+      "closeStyle": {
+        "width": "34px",
+        "height": "34px"
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "1440-component-view mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "1440-component-view one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-component-view no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "1440-component-view empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "1440-component-view viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 300,
+        "top": 358.5,
+        "right": 820,
+        "bottom": 541.5,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-view Escape exit",
+      "passed": true
+    },
+    {
+      "name": "1440-component-confirm mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "1440-component-confirm one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-component-confirm cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "删除"
+      ]
+    },
+    {
+      "name": "1440-component-confirm viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 300,
+        "top": 358.75,
+        "right": 820,
+        "bottom": 541.25,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-component-form mode",
+      "passed": true,
+      "detail": "form"
+    },
+    {
+      "name": "1440-component-form one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-component-form cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "保存"
+      ]
+    },
+    {
+      "name": "1440-component-form viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 300,
+        "top": 318,
+        "right": 820,
+        "bottom": 582,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-invalid form stays",
+      "passed": true
+    },
+    {
+      "name": "1440-reverse Tab wrap",
+      "passed": true
+    },
+    {
+      "name": "1440-model-detection mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "1440-model-detection one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-model-detection no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "1440-model-detection empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "1440-model-detection viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 395,
+        "top": 272.5,
+        "right": 1045,
+        "bottom": 487.5,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-detect remains same view",
+      "passed": true
+    },
+    {
+      "name": "1440-webdav-connection mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "1440-webdav-connection one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-webdav-connection cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "保存连接"
+      ]
+    },
+    {
+      "name": "1440-webdav-connection viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 360,
+        "top": 156,
+        "right": 1080,
+        "bottom": 604,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-file-import mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "1440-file-import one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-file-import cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "确认更新"
+      ]
+    },
+    {
+      "name": "1440-file-import viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 360,
+        "top": 244,
+        "right": 1080,
+        "bottom": 516,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-no duplicate sync X",
+      "passed": true
+    },
+    {
+      "name": "1440-file-export mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "1440-file-export one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-file-export cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "生成配置包"
+      ]
+    },
+    {
+      "name": "1440-file-export viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 360,
+        "top": 99.984375,
+        "right": 1080,
+        "bottom": 660.015625,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-directory-guide mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "1440-directory-guide one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-directory-guide no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "1440-directory-guide empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "1440-directory-guide viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 460,
+        "top": 148.75,
+        "right": 980,
+        "bottom": 611.25,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-update-results mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "1440-update-results one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-update-results no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "1440-update-results empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "1440-update-results viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 330,
+        "top": 161.09375,
+        "right": 1110,
+        "bottom": 598.890625,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-backup-confirm mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "1440-backup-confirm one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-backup-confirm cancel before primary",
+      "passed": true,
+      "detail": [
+        "打开数据与备份",
+        "取消",
+        "生成示例备份"
+      ]
+    },
+    {
+      "name": "1440-backup-confirm viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 460,
+        "top": 217.5,
+        "right": 980,
+        "bottom": 542.5,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-extension-detail mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "1440-extension-detail one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-extension-detail no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "1440-extension-detail empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "1440-extension-detail viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 360,
+        "top": 252.78125,
+        "right": 1080,
+        "bottom": 507.21875,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-extension business actions retained",
+      "passed": true
+    },
+    {
+      "name": "1440-template-history mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "1440-template-history one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-template-history no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "1440-template-history empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "1440-template-history viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 395,
+        "top": 207.625,
+        "right": 1045,
+        "bottom": 552.375,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-template-update-review mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "1440-template-update-review one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-template-update-review cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "保存新版本"
+      ]
+    },
+    {
+      "name": "1440-template-update-review viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 395,
+        "top": 71.09375,
+        "right": 1045,
+        "bottom": 688.90625,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-nested detail standard X",
+      "passed": true
+    },
+    {
+      "name": "1440-child close keeps parent",
+      "passed": true
+    },
+    {
+      "name": "1440-component range standard X",
+      "passed": true
+    },
+    {
+      "name": "1440-range closes without apply",
+      "passed": true
+    },
+    {
+      "name": "1440-overview range standard X",
+      "passed": true
+    },
+    {
+      "name": "1440-install-ready mode",
+      "passed": true,
+      "detail": "task"
+    },
+    {
+      "name": "1440-install-ready one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-install-ready cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "开始安装"
+      ]
+    },
+    {
+      "name": "1440-install-ready viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 460,
+        "top": 65,
+        "right": 980,
+        "bottom": 695,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-install X guarded",
+      "passed": true
+    },
+    {
+      "name": "1440-install Escape guarded",
+      "passed": true
+    },
+    {
+      "name": "1440-explicit cancel task",
+      "passed": true
+    },
+    {
+      "name": "1440-install-result mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "1440-install-result one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-install-result no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "1440-install-result empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "1440-install-result viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 460,
+        "top": 177.5,
+        "right": 980,
+        "bottom": 582.5,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-uninstall-ready mode",
+      "passed": true,
+      "detail": "task"
+    },
+    {
+      "name": "1440-uninstall-ready one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1440-uninstall-ready cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "卸载"
+      ]
+    },
+    {
+      "name": "1440-uninstall-ready viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 460,
+        "top": 30,
+        "right": 980,
+        "bottom": 730,
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "1440-fault close in header",
+      "passed": true
+    },
+    {
+      "name": "1440-fault dismiss works",
+      "passed": true
+    },
+    {
+      "name": "1180-component-view mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "1180-component-view one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-component-view no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "1180-component-view empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "1180-component-view viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 170,
+        "top": 288.5,
+        "right": 690,
+        "bottom": 471.5,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "name": "1180-view Escape exit",
+      "passed": true
+    },
+    {
+      "name": "1180-component-confirm mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "1180-component-confirm one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-component-confirm cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "删除"
+      ]
+    },
+    {
+      "name": "1180-component-confirm viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 170,
+        "top": 288.75,
+        "right": 690,
+        "bottom": 471.25,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "name": "1180-component-form mode",
+      "passed": true,
+      "detail": "form"
+    },
+    {
+      "name": "1180-component-form one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-component-form cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "保存"
+      ]
+    },
+    {
+      "name": "1180-component-form viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 170,
+        "top": 248,
+        "right": 690,
+        "bottom": 512,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "name": "1180-invalid form stays",
+      "passed": true
+    },
+    {
+      "name": "1180-reverse Tab wrap",
+      "passed": true
+    },
+    {
+      "name": "1180-model-detection mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "1180-model-detection one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-model-detection no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "1180-model-detection empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "1180-model-detection viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 265,
+        "top": 248.5,
+        "right": 915,
+        "bottom": 463.5,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "name": "1180-detect remains same view",
+      "passed": true
+    },
+    {
+      "name": "1180-webdav-connection mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "1180-webdav-connection one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-webdav-connection cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "保存连接"
+      ]
+    },
+    {
+      "name": "1180-webdav-connection viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 230,
+        "top": 132,
+        "right": 950,
+        "bottom": 580,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "name": "1180-file-import mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "1180-file-import one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-file-import cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "确认更新"
+      ]
+    },
+    {
+      "name": "1180-file-import viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 230,
+        "top": 220,
+        "right": 950,
+        "bottom": 492,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "name": "1180-no duplicate sync X",
+      "passed": true
+    },
+    {
+      "name": "1180-file-export mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "1180-file-export one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "1180-file-export cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "生成配置包"
+      ]
+    },
+    {
+      "name": "1180-file-export viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 230,
+        "top": 94.703125,
+        "right": 950,
+        "bottom": 617.296875,
+        "width": 1180,
+        "height": 760
+      }
+    },
+    {
+      "name": "900-component-view mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "900-component-view one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-component-view no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "900-component-view empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "900-component-view viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 50,
+        "top": 233.5,
+        "right": 570,
+        "bottom": 416.5,
+        "width": 900,
+        "height": 650
+      }
+    },
+    {
+      "name": "900-view Escape exit",
+      "passed": true
+    },
+    {
+      "name": "900-component-confirm mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "900-component-confirm one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-component-confirm cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "删除"
+      ]
+    },
+    {
+      "name": "900-component-confirm viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 50,
+        "top": 233.75,
+        "right": 570,
+        "bottom": 416.25,
+        "width": 900,
+        "height": 650
+      }
+    },
+    {
+      "name": "900-component-form mode",
+      "passed": true,
+      "detail": "form"
+    },
+    {
+      "name": "900-component-form one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-component-form cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "保存"
+      ]
+    },
+    {
+      "name": "900-component-form viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 50,
+        "top": 193,
+        "right": 570,
+        "bottom": 457,
+        "width": 900,
+        "height": 650
+      }
+    },
+    {
+      "name": "900-invalid form stays",
+      "passed": true
+    },
+    {
+      "name": "900-reverse Tab wrap",
+      "passed": true
+    },
+    {
+      "name": "900-model-detection mode",
+      "passed": true,
+      "detail": "view"
+    },
+    {
+      "name": "900-model-detection one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-model-detection no bottom dismiss",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "900-model-detection empty footer removed",
+      "passed": true
+    },
+    {
+      "name": "900-model-detection viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 125,
+        "top": 193.5,
+        "right": 775,
+        "bottom": 408.5,
+        "width": 900,
+        "height": 650
+      }
+    },
+    {
+      "name": "900-detect remains same view",
+      "passed": true
+    },
+    {
+      "name": "900-webdav-connection mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "900-webdav-connection one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-webdav-connection cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "保存连接"
+      ]
+    },
+    {
+      "name": "900-webdav-connection viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 90,
+        "top": 82.59375,
+        "right": 810,
+        "bottom": 519.390625,
+        "width": 900,
+        "height": 650
+      }
+    },
+    {
+      "name": "900-file-import mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "900-file-import one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-file-import cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "确认更新"
+      ]
+    },
+    {
+      "name": "900-file-import viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 90,
+        "top": 165,
+        "right": 810,
+        "bottom": 437,
+        "width": 900,
+        "height": 650
+      }
+    },
+    {
+      "name": "900-no duplicate sync X",
+      "passed": true
+    },
+    {
+      "name": "900-file-export mode",
+      "passed": true,
+      "detail": "confirm"
+    },
+    {
+      "name": "900-file-export one rightmost standard X",
+      "passed": true,
+      "detail": {
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "900-file-export cancel before primary",
+      "passed": true,
+      "detail": [
+        "取消",
+        "生成配置包"
+      ]
+    },
+    {
+      "name": "900-file-export viewport fit",
+      "passed": true,
+      "detail": {
+        "left": 90,
+        "top": 82.59375,
+        "right": 810,
+        "bottom": 519.390625,
+        "width": 900,
+        "height": 650
+      }
+    },
+    {
+      "name": "no uncaught browser errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

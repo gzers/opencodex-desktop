@@ -1,0 +1,58 @@
+{
+  "prototypeAdopted": true,
+  "productionImplemented": false,
+  "releasePerformed": false,
+  "network": "browser external requests blocked; no daily configuration accessed",
+  "allTestsFirst": {
+    "total": 500,
+    "passed": 497,
+    "failed": 3,
+    "log": "all-tests-first.log"
+  },
+  "finalTargeted": {
+    "total": 85,
+    "passed": 85,
+    "failed": 0,
+    "skipped": 0,
+    "log": "final-targeted-current.log"
+  },
+  "knownBaselineFailure": {
+    "name": "业务通知手动收起只停展示，铃铛保留注册实体，组件重置不清业务计时",
+    "assertion": "assert.ok(timer)",
+    "preimageAlsoFailed": true,
+    "log": "notification-baseline.log"
+  },
+  "browsers": {
+    "chromium": {
+      "states": 30,
+      "checks": 158,
+      "passed": true
+    },
+    "webkit": {
+      "states": 30,
+      "checks": 158,
+      "passed": true
+    }
+  },
+  "parallelPreservation": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "mergeExit": 2,
+      "status": "own edits rebased; unrelated parallel region kept unstaged; complete current delta in evidence"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.js",
+      "mergeExit": 1,
+      "status": "own edits rebased; unrelated parallel region kept unstaged; complete current delta in evidence"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/overview-hero.js",
+      "mergeExit": null,
+      "status": "pre-existing ignored/untracked parallel source; preserve own working change and delta"
+    }
+  ],
+  "extraBrowser": {
+    "checks": 11,
+    "passed": true
+  }
+}

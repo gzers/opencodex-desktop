@@ -1,0 +1,49 @@
+{
+  "scope": "additional mock browser state checks; external requests blocked",
+  "checks": [
+    {
+      "name": "view has actual copy action only",
+      "passed": true
+    },
+    {
+      "name": "copy action still works",
+      "passed": true
+    },
+    {
+      "name": "model selector common X only",
+      "passed": true
+    },
+    {
+      "name": "picker X cancels picker and returns parent",
+      "passed": true
+    },
+    {
+      "name": "uninstall close guarded",
+      "passed": true
+    },
+    {
+      "name": "uninstall Escape guarded",
+      "passed": true
+    },
+    {
+      "name": "uninstall explicit cancel",
+      "passed": true
+    },
+    {
+      "name": "uninstall completion view no footer",
+      "passed": true
+    },
+    {
+      "name": "update observation no bottom close",
+      "passed": true
+    },
+    {
+      "name": "closing update window preserves job",
+      "passed": true
+    },
+    {
+      "name": "job reaches completion after dismissal",
+      "passed": true
+    }
+  ]
+}
