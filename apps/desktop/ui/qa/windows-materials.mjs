@@ -242,26 +242,39 @@ async function captureDialog(name) {
 async function performanceSample(scroll) {
   return evaluate(async scroll => {
     const p = document.querySelector('#app').__vue_app__.config.globalProperties.$pinia, effects = p._s.get('effects')
-    const main = document.querySelector('.main'), intervals = [], longTasks = [], originalRaf = requestAnimationFrame
+    const main = document.querySelector('.main'), intervals = [], longTasks = [], callbackCosts = [], dispatchDelays = [], scrollPositions = [], originalRaf = requestAnimationFrame
     const observer = new PerformanceObserver(list => longTasks.push(...list.getEntries().map(entry => ({ start: entry.startTime, duration: entry.duration }))))
     observer.observe({ type: 'longtask' })
     const canvas = document.querySelector('.motion-mesh-host canvas'), gl = canvas?.getContext('webgl'), draw = gl?.drawArrays
-    let draws = 0, frame = 0, last = 0, active = true
+    let draws = 0, frame = 0, last = 0, lastScrollSample = -Infinity, active = true
     if (gl) gl.drawArrays = function (...args) { draws++; return draw.apply(this, args) }
     const start = performance.now()
     const tick = time => {
       if (!active) return
+      const entered = performance.now()
+      dispatchDelays.push(Math.max(0, entered - time))
       if (last) intervals.push(time - last)
       last = time
       if (scroll) main.scrollTop = Math.abs(Math.sin((time - start) / 1800)) * 900
+      // Sample real movement once per second; a per-frame geometry read would
+      // perturb the layout/composition cost that this probe is measuring.
+      if (scroll && time - lastScrollSample >= 1000) { scrollPositions.push(main.scrollTop); lastScrollSample = time }
+      callbackCosts.push(performance.now() - entered)
       frame = originalRaf(tick)
     }
     frame = originalRaf(tick)
     try {
       await new Promise(resolve => setTimeout(resolve, 30000))
       const sorted = [...intervals].sort((a, b) => a - b), B = 1000 / 60
+      const distribution = values => {
+        const ordered = [...values].sort((a, b) => a - b)
+        return { samples: ordered.length, p50: ordered[Math.floor(ordered.length * .5)] ?? null, p95: ordered[Math.floor(ordered.length * .95)] ?? null, max: ordered.length ? ordered.at(-1) : null }
+      }
       return { durationMs: performance.now() - start, scroll, B, samples: sorted.length, p50: sorted[Math.floor(sorted.length * .5)], p95: sorted[Math.floor(sorted.length * .95)],
         max: Math.max(...sorted), over6B: sorted.filter(value => value > 6 * B).length, longTasks, draws,
+        diagnostics: { callbackCostMs: distribution(callbackCosts), callbackDispatchDelayMs: distribution(dispatchDelays),
+          actualScrollRange: scrollPositions.length ? { min: Math.min(...scrollPositions), max: Math.max(...scrollPositions), available: main.scrollHeight - main.clientHeight } : null,
+          note: 'Callback cost excludes later style/layout/paint/GPU work; dispatch delay alone cannot identify the bottleneck. Acceptance still uses the original frame-interval budget.' },
         strategy: JSON.parse(JSON.stringify(effects.strategy)), foreground: await window.__TAURI_INTERNALS__.invoke('app_foreground'), intervals }
     } finally { active = false; cancelAnimationFrame(frame); observer.disconnect(); if (gl) gl.drawArrays = draw }
   }, scroll)
