@@ -1,0 +1,119 @@
+{
+  "engine": "webkit",
+  "scope": "active mock prototype; quota deferred and removed; all external requests blocked; WebDAV records only",
+  "checks": [
+    {
+      "name": "1440-four named columns",
+      "passed": true
+    },
+    {
+      "name": "1440-no quota or old node column",
+      "passed": true
+    },
+    {
+      "name": "1440-detection remains in operations",
+      "passed": true
+    },
+    {
+      "name": "1440-columns do not overlap",
+      "passed": true
+    },
+    {
+      "name": "1440-same node detection window",
+      "passed": true
+    },
+    {
+      "name": "1440-detection fits viewport",
+      "passed": true
+    },
+    {
+      "name": "1440-Escape restores detection focus",
+      "passed": true
+    },
+    {
+      "name": "1440-four detail sections no quota",
+      "passed": true
+    },
+    {
+      "name": "1440-nodes retained",
+      "passed": true
+    },
+    {
+      "name": "1180-four named columns",
+      "passed": true
+    },
+    {
+      "name": "1180-no quota or old node column",
+      "passed": true
+    },
+    {
+      "name": "1180-detection remains in operations",
+      "passed": true
+    },
+    {
+      "name": "1180-columns do not overlap",
+      "passed": true
+    },
+    {
+      "name": "1180-same node detection window",
+      "passed": true
+    },
+    {
+      "name": "1180-detection fits viewport",
+      "passed": true
+    },
+    {
+      "name": "1180-Escape restores detection focus",
+      "passed": true
+    },
+    {
+      "name": "1180-four detail sections no quota",
+      "passed": true
+    },
+    {
+      "name": "1180-nodes retained",
+      "passed": true
+    },
+    {
+      "name": "900-four named columns",
+      "passed": true
+    },
+    {
+      "name": "900-no quota or old node column",
+      "passed": true
+    },
+    {
+      "name": "900-detection remains in operations",
+      "passed": true
+    },
+    {
+      "name": "900-columns do not overlap",
+      "passed": true
+    },
+    {
+      "name": "900-same node detection window",
+      "passed": true
+    },
+    {
+      "name": "900-detection fits viewport",
+      "passed": true
+    },
+    {
+      "name": "900-Escape restores detection focus",
+      "passed": true
+    },
+    {
+      "name": "900-four detail sections no quota",
+      "passed": true
+    },
+    {
+      "name": "900-nodes retained",
+      "passed": true
+    },
+    {
+      "name": "no uncaught browser errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

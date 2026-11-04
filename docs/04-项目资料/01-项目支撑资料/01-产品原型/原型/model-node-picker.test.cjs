@@ -3,8 +3,9 @@ const {test}=require('node:test'),assert=require('node:assert/strict');
 const make=require('./model-prototype-test-harness.cjs');
 const p=h=>h.state().draft.providers.find(p=>p.id==='newapi');
 const policy=h=>JSON.stringify({draft:h.state().draft,saved:h.state().saved,records:h.state().records});
-test('列表以额度列替代节点列，操作列检测打开原测试窗口',()=>{
- const h=make();assert.match(h.page(),/<span>渠道<\/span><span>额度<\/span><span>模型<\/span>/);assert.match(h.page(),/mp-provider-actions"><button id="mpChannelNode-newapi"[^>]*>检测<\/button>/);assert.doesNotMatch(h.page(),/mp-provider-node-tools|mp-node-test-actions|data-node-current|data-speed-control/);
+test('列表移除节点列且暂不加额度，操作列检测打开原测试窗口',()=>{
+ const h=make();assert.match(h.page(),/<span>渠道<\/span><span>模型<\/span>/);assert.match(h.page(),/mp-provider-actions"><button id="mpChannelNode-newapi"[^>]*>检测<\/button>/);assert.doesNotMatch(h.page(),/mp-provider-node-tools|mp-node-test-actions|data-node-current|data-speed-control/);
+ assert.doesNotMatch(h.page(),/mp-provider-quota-cell|data-quota-config|额度获取|<span>额度/);
  const name=h.page().match(/<div class="mp-provider-name">([\s\S]*?)<\/div>/)[1];assert.doesNotMatch(name,/mpChannelNode|node-picker|button|select/);
  h.click('node-picker-open',{channel:'newapi'});assert.equal(h.state().nodePickerChannel,'newapi');assert.equal(h.nodes.get('mpNodePicker').getAttribute('role'),'dialog');assert.equal(h.nodes.get('mpChannelNode-newapi').getAttribute('aria-expanded'),'true');assert.equal(h.context.document.activeElement.id,'mpNodePickerChoice-primary');
 });
