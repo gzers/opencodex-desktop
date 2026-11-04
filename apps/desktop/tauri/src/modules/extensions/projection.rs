@@ -39,6 +39,7 @@ pub enum ProjectionError {
     PathEscape,
     Backup,
     AtomicWrite,
+    VersionPending,
     Conflict,
     UnsupportedTarget,
     InvalidArchive,
@@ -88,6 +89,10 @@ impl ProjectionError {
             ),
             Self::Backup => ("backup extension projection", "backup creation failed"),
             Self::AtomicWrite => ("replace extension projection", "atomic write failed"),
+            Self::VersionPending => (
+                "certify saved extensions",
+                "扩展配置已保存，原保存版本回执待恢复；请重新读取核对",
+            ),
             Self::Conflict => (
                 "confirm extension projection",
                 "existing extension content conflicts and requires confirmation",
@@ -201,6 +206,10 @@ pub fn config_path(data_root: &Path) -> PathBuf {
 /// 只给「只读展示 / 只读发现」用（例如解析源目录、投影客户端路径）。写入路径必须走
 /// `execute`，它会把损坏与冲突显式报出来。
 pub fn load_config_lenient(data_root: &Path) -> ExtensionConfig {
+    let _ = crate::modules::model_config::content_versions::owner_saves::recover(
+        data_root,
+        crate::modules::model_config::content_versions::owner_saves::Owner::Extensions,
+    );
     let path = config_path(data_root);
     let Ok(bytes) = std::fs::read(&path) else {
         return ExtensionConfig::default();
@@ -307,7 +316,7 @@ impl<'a> ConfigTransaction<'a> {
 
     pub(crate) fn save(&self, config: &mut ExtensionConfig) -> Result<Vec<u8>, ProjectionError> {
         self.load()?;
-        let saved = save_locked(self.data_root, config, self.targets)?;
+        let saved = save_locked_with_origin(self.data_root, config, self.targets, false)?;
         serde_json::to_vec_pretty(&ExtensionProjectionFile {
             config: saved.config,
             fingerprint: saved.fingerprint,
@@ -1752,6 +1761,13 @@ fn landed_clients(targets: &[ClientTarget], name: &str) -> Vec<ClientId> {
 }
 
 fn read_config_bounded(path: &Path) -> Result<Vec<u8>, ProjectionError> {
+    if let Some(root) = path.parent().and_then(Path::parent) {
+        crate::modules::model_config::content_versions::owner_saves::recover(
+            root,
+            crate::modules::model_config::content_versions::owner_saves::Owner::Extensions,
+        )
+        .map_err(|_| ProjectionError::VersionPending)?;
+    }
     let metadata =
         crate::modules::backup::safety::inspect(path).map_err(|_| ProjectionError::Corrupted)?;
     if metadata.len() > CONFIG_MAX_BYTES {
@@ -1805,6 +1821,14 @@ fn save_locked(
     config: &mut ExtensionConfig,
     targets: &[ClientTarget],
 ) -> Result<ProjectionWriteResult, ProjectionError> {
+    save_locked_with_origin(data_root, config, targets, true)
+}
+fn save_locked_with_origin(
+    data_root: &Path,
+    config: &mut ExtensionConfig,
+    targets: &[ClientTarget],
+    content_save: bool,
+) -> Result<ProjectionWriteResult, ProjectionError> {
     let path = config_path(data_root);
     let previous = if path.exists() {
         let bytes = read_config_bounded(&path)?;
@@ -1825,6 +1849,11 @@ fn save_locked(
     } else {
         None
     };
+    let previous_config = previous
+        .as_deref()
+        .map(|bytes| serde_json::from_slice::<ExtensionProjectionFile>(bytes).map(|p| p.config))
+        .transpose()
+        .map_err(|_| ProjectionError::Corrupted)?;
     let backed_up = if let Some(previous) = previous.as_deref() {
         backup_file(
             data_root,
@@ -1852,12 +1881,33 @@ fn save_locked(
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent).map_err(|_| ProjectionError::AtomicWrite)?;
     }
+    use crate::modules::model_config::{
+        content_versions::owner_saves::{self, Owner},
+        file_objects,
+    };
+    let receipt = if content_save {
+        owner_saves::begin(
+            data_root,
+            Owner::Extensions,
+            &file_objects::extensions_save_state(previous_config.as_ref())
+                .map_err(|_| ProjectionError::Corrupted)?,
+            &file_objects::extensions_save_state(Some(config))
+                .map_err(|_| ProjectionError::Corrupted)?,
+            &bytes,
+        )
+        .map_err(|_| ProjectionError::AtomicWrite)?
+    } else {
+        None
+    };
     crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)
         .map_err(|_| ProjectionError::AtomicWrite)?;
     let actual = crate::modules::backup::safety::read_file(&path, CONFIG_MAX_BYTES)
         .map_err(|_| ProjectionError::AtomicWrite)?;
     if actual != bytes {
         return Err(ProjectionError::AtomicWrite);
+    }
+    if content_save {
+        owner_saves::commit(receipt).map_err(|_| ProjectionError::VersionPending)?;
     }
     let hash = crate::infrastructure::hash::sha256_hex(&bytes);
     Ok(ProjectionWriteResult {

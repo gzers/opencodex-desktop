@@ -312,9 +312,16 @@ pub async fn config_sync_check(
             scope.cloud_binding = Some(binding.into());
             scope.upstream_root = Some(config_home);
             scope.local_home = Some(local_home);
-            let result = tauri::async_runtime::block_on(config_remote::check_source(
-                &root, transport, config, binding, &scope,
-            ))?;
+            let result =
+                tauri::async_runtime::block_on(config_remote::check_source_with_password(
+                    &root,
+                    transport,
+                    config,
+                    binding,
+                    &scope,
+                    read_password.as_deref().map(|p| p.as_str()),
+                    previous.as_deref().map(|p| p.as_str()),
+                ))?;
             unchanged()?;
             Ok(result)
         })
@@ -542,14 +549,7 @@ pub async fn model_transfer_accept(
                                 scope.cloud_binding = Some(active_remote(&root)?.2);
                                 scope.upstream_root = Some(config_home.clone());
                                 scope.local_home = Some(local_home);
-                                let source_time = transfer::read_incoming(&root, &incoming_id)?
-                                    .package
-                                    .created_at;
-                                let (local, key) = config_remote::source_state_with_time(
-                                    &root,
-                                    &scope,
-                                    Some(&source_time),
-                                )?;
+                                let (local, key) = config_remote::source_state(&root, &scope)?;
                                 let binding = active_remote(&root)?.2;
                                 crate::modules::model_config::sync_state::promote_pending_content(
                                     &root,

@@ -46,10 +46,10 @@ pub async fn model_file_save(
 ) -> ModelResult<crate::modules::model_config::config_file::SaveResult> {
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     let root = data_root.0.clone();
-    let home = context.opencodex_home.clone();
+    let context = context.inner().clone();
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
-        crate::modules::model_config::config_file::save(&root, &home, request)
+        crate::modules::model_config::config_file::save_with_context(&root, &context, request)
     })
     .await
     .map_err(|_| {

@@ -4,6 +4,9 @@
 #[cfg(test)]
 #[path = "file_objects_file_tests.rs"]
 mod file_tests;
+#[cfg(test)]
+#[path = "sync_test_credentials.rs"]
+pub(super) mod test_credentials;
 use super::{
     discovery,
     schema::*,
@@ -48,6 +51,8 @@ struct Objects {
     webdav_passwords: SecretValues,
     #[serde(default)]
     assets: Assets,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    content_versions: Vec<super::content_versions::Version>,
 }
 pub(super) trait Credentials {
     fn read(&self, reference: &str) -> ModelResult<Zeroizing<String>>;
@@ -142,6 +147,17 @@ fn validate(objects: &Objects) -> ModelResult<()> {
     {
         return Err(invalid("portable_objects", "不支持的配置对象文档版本"));
     }
+    if objects.content_versions.len() > 30000
+        || objects
+            .content_versions
+            .iter()
+            .map(|v| &v.scope_key)
+            .collect::<BTreeSet<_>>()
+            .len()
+            != objects.content_versions.len()
+    {
+        return Err(invalid("content_version", "保存版本数量或范围身份无效"));
+    }
     transfer::validate_package(&objects.models)?;
     portable_manager::validate(&objects.manager)?;
     portable_assets::validate(&objects.assets)?;
@@ -209,6 +225,7 @@ fn decode(bytes: &[u8]) -> ModelResult<Objects> {
     }
     let objects = if value["format"] == "OCXD_MODEL_CONFIG" {
         Objects {
+            content_versions: Default::default(),
             format: "OCXD_CONFIG_OBJECTS".into(),
             version: 1,
             models: serde_json::from_slice(bytes)?,
@@ -406,6 +423,7 @@ fn seal_scope(
         }
     }
     let mut objects = Objects {
+        content_versions: Default::default(),
         format: "OCXD_CONFIG_OBJECTS".into(),
         version: if authorizations.is_empty() { 1 } else { 2 },
         models: package.clone(),
@@ -461,10 +479,10 @@ fn seal_scope(
     objects.version = object_version(&objects);
     validate(&objects)?;
     if objects.models.payload.candidate.is_none() {
-        let (digest, key) = object_content_identity(&objects)?;
-        let time = saved_source_time(root, scope, &objects)?;
-        objects.models.created_at =
-            super::content_versions::stamp(root, &key, &digest, &time, false)?;
+        objects.content_versions =
+            super::content_versions::observe(root, &object_atoms(&objects)?)?;
+        derive_scoped_versions(root, &mut objects, scope, credentials)?;
+        objects.models.created_at = object_fact(&objects)?.saved_at.unwrap_or_default();
     }
     let count = secret_objects(&objects);
     let plaintext = Zeroizing::new(serde_json::to_vec(&objects)?);
@@ -483,8 +501,9 @@ fn seal_scope(
     summary.conflicts = conflicts;
     Ok((bytes, count, objects.manager, summary))
 }
-fn object_content_identity(objects: &Objects) -> ModelResult<(String, String)> {
+fn normalized_content(objects: &Objects) -> ModelResult<Value> {
     let mut value = serde_json::to_value(objects)?;
+    value.as_object_mut().unwrap().remove("contentVersions");
     if let Some(extension) = value
         .pointer_mut("/manager/extensions")
         .and_then(Value::as_object_mut)
@@ -531,12 +550,16 @@ fn object_content_identity(objects: &Objects) -> ModelResult<(String, String)> {
     {
         channels.sort_by_key(|c| c["id"].as_str().unwrap_or("").to_owned());
     }
-    let mut identity = serde_json::json!({"channels":objects.models.payload.policy.iter().flat_map(|p|&p.channels).map(|c|(&c.id,&c.model_subset,&c.family_scope)).collect::<Vec<_>>(),"global":objects.models.payload.policy.as_ref().is_some_and(|p|p.template_refs.is_some()),"templates":objects.models.payload.templates.iter().map(|t|&t.id).collect::<Vec<_>>(),"accounts":objects.manager.accounts.iter().map(|a|&a.id).collect::<Vec<_>>(),"preferences":objects.manager.preferences.is_some(),"extensions":objects.manager.extensions.is_some(),"webdav":objects.manager.webdav.iter().map(|e|&e.id).collect::<Vec<_>>(),"skills":objects.assets.skills.iter().map(|s|&s.name).collect::<Vec<_>>(),"mcps":objects.assets.mcps.iter().map(|m|&m.name).collect::<Vec<_>>()});
     for pointer in ["/assets/skills", "/assets/mcps"] {
         if let Some(items) = value.pointer_mut(pointer).and_then(Value::as_array_mut) {
             items.sort_by_key(|item| item["name"].as_str().unwrap_or("").to_owned());
         }
     }
+    Ok(value)
+}
+fn object_content_identity(objects: &Objects) -> ModelResult<(String, String)> {
+    let mut value = normalized_content(objects)?;
+    let mut identity = serde_json::json!({"channels":objects.models.payload.policy.iter().flat_map(|p|&p.channels).map(|c|(&c.id,&c.model_subset,&c.family_scope)).collect::<Vec<_>>(),"global":objects.models.payload.policy.as_ref().is_some_and(|p|p.template_refs.is_some()),"templates":objects.models.payload.templates.iter().map(|t|&t.id).collect::<Vec<_>>(),"accounts":objects.manager.accounts.iter().map(|a|&a.id).collect::<Vec<_>>(),"preferences":objects.manager.preferences.is_some(),"extensions":objects.manager.extensions.is_some(),"webdav":objects.manager.webdav.iter().map(|e|&e.id).collect::<Vec<_>>(),"skills":objects.assets.skills.iter().map(|s|&s.name).collect::<Vec<_>>(),"mcps":objects.assets.mcps.iter().map(|m|&m.name).collect::<Vec<_>>()});
     if let Some(fields) = identity.as_object_mut() {
         for key in [
             "channels",
@@ -555,79 +578,491 @@ fn object_content_identity(objects: &Objects) -> ModelResult<(String, String)> {
     super::provider_auth::erase_value(&mut value);
     Ok((digest, super::content_versions::key(&identity)?))
 }
-fn saved_source_time(root: &Path, scope: &ManagerScope, objects: &Objects) -> ModelResult<String> {
-    let mut paths = vec![];
-    if objects.models.payload.policy.is_some() {
-        paths.push(root.join("manager-state/model-channel-layout.json"));
-        paths.push(
-            scope
-                .upstream_root
-                .as_ref()
-                .map(|h| h.join("config.json"))
-                .unwrap_or_else(|| root.join(POLICY_PATH)),
-        )
+/// A projection can inherit a full object's save time only while its complete
+/// source still matches that save receipt. Range selection never uses now().
+fn derive_scoped_versions(
+    root: &Path,
+    objects: &mut Objects,
+    scope: &ManagerScope,
+    credentials: &impl Credentials,
+) -> ModelResult<()> {
+    let channels = objects
+        .models
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+        .filter(|c| c.model_subset.is_some() || c.family_scope.is_some())
+        .map(|c| c.id.clone())
+        .collect::<Vec<_>>();
+    if channels.is_empty() {
+        return Ok(());
     }
-    if !objects.models.payload.templates.is_empty() {
-        paths.push(root.join(LIBRARY_PATH))
-    }
-    if objects.manager.preferences.is_some() {
-        paths.push(root.join("manager-state/preferences.json"))
-    }
-    if objects.manager.extensions.is_some() {
-        paths.push(root.join("manager-state/extension-config.json"))
-    }
-    if !objects.manager.webdav.is_empty() {
-        paths.push(root.join(crate::modules::sync::config::SYNC_ENDPOINTS_RELATIVE_PATH))
-    }
-    if !objects.assets.skills.is_empty() || !objects.assets.mcps.is_empty() {
-        paths.extend(portable_assets::saved_source_paths(
-            root,
-            scope
-                .local_home
-                .as_deref()
-                .ok_or_else(|| invalid("asset_home", "资源保存版本未绑定本机来源"))?,
-            &objects
-                .assets
-                .skills
-                .iter()
-                .map(|s| s.name.clone())
-                .collect::<Vec<_>>(),
-            &objects
-                .assets
-                .mcps
-                .iter()
-                .map(|m| m.name.clone())
-                .collect::<Vec<_>>(),
-            &scope.mcp_sources,
-        )?)
-    }
-    fn modified(path: &Path, depth: usize) -> ModelResult<Option<std::time::SystemTime>> {
-        if depth > 32 {
-            return Err(invalid("content_version", "资源层级超过上限"));
+    let selection = transfer::ExportScope {
+        channel_ids: channels.clone(),
+        include_policy: true,
+        include_global: false,
+        template_refs: vec![],
+        channel_models: Default::default(),
+        channel_families: Default::default(),
+    };
+    let full = if let Some(home) = &scope.upstream_root {
+        super::portable_channels::export_file(root, home, selection)?
+    } else {
+        transfer::export(root, selection)?
+    };
+    let (bytes, _, _, _) = seal_scope(
+        root,
+        &uuid::Uuid::new_v4().to_string(),
+        &full,
+        !objects.channel_keys.0.is_empty() || !objects.channel_authorizations.is_empty(),
+        None,
+        &ManagerScope {
+            credential_ids: scope.credential_ids.clone(),
+            upstream_root: scope.upstream_root.clone(),
+            ..Default::default()
+        },
+        credentials,
+    )?;
+    let bytes = Zeroizing::new(bytes);
+    let (full, _) = remote_objects(&bytes, None)?;
+    let full_atoms = object_atoms(&full)?;
+    let full_versions = bound_versions(&full, &full_atoms);
+    apply_channel_projection_versions(objects, &full_versions)
+}
+fn apply_channel_projection_versions(
+    objects: &mut Objects,
+    parents: &[super::content_versions::Version],
+) -> ModelResult<()> {
+    let atoms = object_atoms(objects)?;
+    for channel in objects
+        .models
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+        .filter(|c| c.model_subset.is_some() || c.family_scope.is_some())
+    {
+        for category in ["channel", "channelKeys", "channelAuthorizations"] {
+            let parent = super::content_versions::key(&serde_json::json!([
+                category, channel.id, null, null
+            ]))?;
+            let projected = super::content_versions::key(&serde_json::json!([
+                category,
+                channel.id,
+                channel.model_subset,
+                channel.family_scope
+            ]))?;
+            let Some(source) = parents.iter().find(|v| {
+                v.scope_key == parent && v.time_kind != super::content_versions::TimeKind::Unknown
+            }) else {
+                continue;
+            };
+            let Some(digest) = atoms.get(&projected) else {
+                continue;
+            };
+            if objects.content_versions.iter().any(|v| {
+                v.scope_key == projected
+                    && v.content_digest == *digest
+                    && v.time_kind != super::content_versions::TimeKind::Unknown
+            }) {
+                continue;
+            }
+            let mut version = source.clone();
+            version.scope_key = projected.clone();
+            version.content_digest = digest.clone();
+            objects
+                .content_versions
+                .retain(|v| v.scope_key != projected);
+            objects.content_versions.push(version);
         }
-        let m = match std::fs::symlink_metadata(path) {
-            Ok(m) => m,
-            Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
-            Err(e) => return Err(e.into()),
-        };
-        if m.file_type().is_symlink() {
-            return Err(invalid("content_version", "保存版本不允许软链接来源"));
+    }
+    objects
+        .content_versions
+        .sort_by(|a, b| a.scope_key.cmp(&b.scope_key));
+    Ok(())
+}
+fn insert_atom(
+    state: &mut super::content_versions::SaveState,
+    identity: impl Serialize,
+    value: &impl Serialize,
+) -> ModelResult<()> {
+    state.insert(
+        super::content_versions::key(&identity)?,
+        super::content_versions::key(value)?,
+    );
+    Ok(())
+}
+/// Independent atoms prevent a preference save from dating a channel or an
+/// unobserved legacy object. Partial channel projections have distinct keys.
+fn object_atoms(objects: &Objects) -> ModelResult<super::content_versions::SaveState> {
+    let mut value = normalized_content(objects)?;
+    let mut out = super::content_versions::SaveState::new();
+    let result = (|| {
+        for channel in value
+            .pointer("/models/payload/policy/channels")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+        {
+            insert_atom(
+                &mut out,
+                serde_json::json!([
+                    "channel",
+                    channel["id"],
+                    channel["modelSubset"],
+                    channel["familyScope"]
+                ]),
+                channel,
+            )?;
         }
-        let mut time = m.modified().ok();
-        if m.is_dir() {
-            for child in std::fs::read_dir(path)? {
-                time = time.max(modified(&child?.path(), depth + 1)?);
+        for template in value
+            .pointer("/models/payload/templates")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+        {
+            for revision in template["revisions"].as_array().into_iter().flatten() {
+                insert_atom(
+                    &mut out,
+                    serde_json::json!(["template", template["id"], revision["id"]]),
+                    revision,
+                )?;
             }
         }
-        Ok(time)
+        if let Some(policy) = value
+            .pointer("/models/payload/policy")
+            .and_then(Value::as_object)
+        {
+            let mut global = policy.clone();
+            global.remove("channels");
+            global.retain(|_, v| !v.is_null() && v.as_array().is_none_or(|a| !a.is_empty()));
+            if !global.is_empty() {
+                insert_atom(&mut out, ["global"], &global)?;
+            }
+        }
+        for category in ["preferences", "extensions"] {
+            let v = &value["manager"][category];
+            if !v.is_null() {
+                insert_atom(&mut out, [category], v)?;
+            }
+        }
+        for category in ["webdav", "accounts"] {
+            for item in value["manager"][category].as_array().into_iter().flatten() {
+                let identity = if category == "accounts" {
+                    let mut identity = item.clone();
+                    if let Some(o) = identity.as_object_mut() {
+                        o.remove("label");
+                        o.remove("email");
+                    }
+                    identity
+                } else {
+                    item["id"].clone()
+                };
+                insert_atom(&mut out, serde_json::json!([category, identity]), item)?;
+            }
+        }
+        for category in ["skills", "mcps"] {
+            for item in value["assets"][category].as_array().into_iter().flatten() {
+                insert_atom(&mut out, serde_json::json!([category, item["name"]]), item)?;
+            }
+        }
+        for category in ["channelKeys", "channelAuthorizations", "webdavPasswords"] {
+            for (id, item) in value[category].as_object().into_iter().flatten() {
+                if category == "webdavPasswords" {
+                    insert_atom(&mut out, [category, id], item)?;
+                } else {
+                    let channel = value
+                        .pointer("/models/payload/policy/channels")
+                        .and_then(Value::as_array)
+                        .and_then(|rows| rows.iter().find(|c| c["id"].as_str() == Some(id)));
+                    let channel = channel
+                        .ok_or_else(|| invalid("credential_scope", "凭据保存版本缺少对应渠道"))?;
+                    insert_atom(
+                        &mut out,
+                        serde_json::json!([
+                            category,
+                            id,
+                            channel["modelSubset"],
+                            channel["familyScope"]
+                        ]),
+                        &serde_json::json!({"channel":channel,"credential":item}),
+                    )?;
+                }
+            }
+        }
+        Ok(out)
+    })();
+    super::provider_auth::erase_value(&mut value);
+    result
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ContentFact {
+    pub scope_key: String,
+    pub content_digest: String,
+    pub saved_at: Option<String>,
+    pub time_kind: super::content_versions::TimeKind,
+    pub empty: bool,
+    pub version_digest: String,
+}
+fn bound_versions(
+    objects: &Objects,
+    atoms: &super::content_versions::SaveState,
+) -> Vec<super::content_versions::Version> {
+    atoms
+        .iter()
+        .map(|(key, digest)| {
+            objects
+                .content_versions
+                .iter()
+                .find(|v| v.scope_key == *key && v.content_digest == *digest)
+                .cloned()
+                .unwrap_or_else(|| super::content_versions::Version::unknown(key, digest))
+        })
+        .collect()
+}
+fn object_fact(objects: &Objects) -> ModelResult<ContentFact> {
+    let atoms = object_atoms(objects)?;
+    let mut versions = bound_versions(objects, &atoms);
+    // A credential-bearing save binds the entire channel+credential content.
+    // It can cover an unchanged public projection for this comparison only;
+    // it never persists a new public-only time when just a Key changed.
+    for channel in objects
+        .models
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+    {
+        let public_key = super::content_versions::key(&serde_json::json!([
+            "channel",
+            channel.id,
+            channel.model_subset,
+            channel.family_scope
+        ]))?;
+        let coverage = ["channelKeys", "channelAuthorizations"]
+            .iter()
+            .map(|category| {
+                super::content_versions::key(&serde_json::json!([
+                    category,
+                    channel.id,
+                    channel.model_subset,
+                    channel.family_scope
+                ]))
+            })
+            .collect::<ModelResult<Vec<_>>>()?;
+        let saved = versions
+            .iter()
+            .filter(|v| coverage.contains(&v.scope_key))
+            .find(|v| v.instant().is_some())
+            .cloned();
+        if let Some(saved) = saved {
+            if let Some(public) = versions
+                .iter_mut()
+                .find(|v| v.scope_key == public_key && v.instant().is_none())
+            {
+                public.saved_at = saved.saved_at;
+                public.time_kind = saved.time_kind;
+            }
+        }
     }
-    let mut time = None;
-    for path in paths {
-        time = time.max(modified(&path, 0)?)
+    let known = !versions.is_empty() && versions.iter().all(|v| v.instant().is_some());
+    let latest = known
+        .then(|| versions.iter().filter_map(|v| v.instant()).max())
+        .flatten();
+    Ok(ContentFact {
+        scope_key: super::content_versions::key(&atoms.keys().collect::<Vec<_>>())?,
+        content_digest: super::content_versions::key(&atoms)?,
+        saved_at: latest.map(|t| t.to_rfc3339()),
+        time_kind: if known {
+            super::content_versions::TimeKind::Saved
+        } else {
+            super::content_versions::TimeKind::Unknown
+        },
+        empty: atoms.is_empty(),
+        version_digest: super::content_versions::key(&versions)?,
+    })
+}
+pub fn content_fact(bytes: &[u8], password: Option<&str>) -> ModelResult<ContentFact> {
+    object_fact(&remote_objects(bytes, password)?.0)
+}
+/// Freeze receipt atoms directly from the owner's already-read-back snapshot.
+/// No snapshot/ModelStore lock is acquired here. Only selected credential
+/// values are resolved, and only their compound content digests are returned.
+pub(super) fn saved_file_atoms(
+    home: &Path,
+    snapshot: &Snapshot,
+    raw: &Value,
+    ids: &[String],
+    global: bool,
+    keys: bool,
+) -> ModelResult<super::content_versions::SaveState> {
+    let ids = ids
+        .iter()
+        .filter(|id| {
+            snapshot.policy.channels.iter().any(|c| {
+                &c.id == *id && !super::compiler::channel_is_native(&c.connection.provider_id)
+            })
+        })
+        .cloned()
+        .collect::<Vec<_>>();
+    let mut package = transfer::export_snapshot(
+        snapshot,
+        transfer::ExportScope {
+            channel_ids: ids.clone(),
+            include_policy: true,
+            include_global: global,
+            template_refs: vec![],
+            channel_models: Default::default(),
+            channel_families: Default::default(),
+        },
+    )?;
+    let mut authorizations = BTreeMap::new();
+    for channel in package
+        .payload
+        .policy
+        .iter_mut()
+        .flat_map(|p| &mut p.channels)
+    {
+        let original = snapshot
+            .policy
+            .channels
+            .iter()
+            .find(|c| c.id == channel.id)
+            .ok_or_else(|| invalid("provider_scope", "保存版本缺少来源渠道"))?;
+        let public = super::provider_fields::public_from_raw(
+            &raw["providers"][&original.connection.provider_id],
+        )?;
+        if let Some(connection) = channel.connection.as_mut() {
+            connection.provider = Some(public.clone());
+        }
+        if keys
+            && !public["authMode"]
+                .as_str()
+                .is_some_and(|mode| ["oauth", "forward"].contains(&mode))
+        {
+            authorizations.insert(
+                channel.id.clone(),
+                super::provider_auth::export_portable_scoped(
+                    home,
+                    &original.connection.provider_id,
+                    &public,
+                    &public,
+                )?,
+            );
+        }
     }
-    Ok(time
-        .map(|t| chrono::DateTime::<chrono::Utc>::from(t).to_rfc3339())
-        .unwrap_or_default())
+    package.format_version = transfer::package_version(&package.payload);
+    package.digest = sha256(&serde_json::to_vec(&package.payload)?);
+    let mut objects = Objects {
+        format: "OCXD_CONFIG_OBJECTS".into(),
+        version: 2,
+        models: snapshot_package(&package, true)?,
+        channel_keys: Default::default(),
+        channel_authorizations: authorizations,
+        manager: Settings::default(),
+        webdav_passwords: Default::default(),
+        assets: Assets::default(),
+        content_versions: vec![],
+    };
+    objects.version = object_version(&objects);
+    validate(&objects)?;
+    object_atoms(&objects)
+}
+pub fn save_state(
+    bytes: &[u8],
+    password: Option<&str>,
+) -> ModelResult<super::content_versions::SaveState> {
+    object_atoms(&remote_objects(bytes, password)?.0)
+}
+pub fn preferences_save_state(
+    value: Option<&crate::modules::preferences::Preferences>,
+) -> ModelResult<super::content_versions::SaveState> {
+    let settings = Settings {
+        preferences: value.cloned(),
+        ..Default::default()
+    };
+    let value = serde_json::to_value(settings)?;
+    let mut out = super::content_versions::SaveState::new();
+    if !value["preferences"].is_null() {
+        insert_atom(&mut out, ["preferences"], &value["preferences"])?;
+    }
+    Ok(out)
+}
+/// Sanitized connection metadata only. Credential receipt digests must be
+/// captured through the protected export/save-state path, never an IPC value.
+fn account_save_state(
+    accounts: &[crate::modules::sync::portable_accounts::AccountInfo],
+) -> ModelResult<super::content_versions::SaveState> {
+    let mut out = super::content_versions::SaveState::new();
+    for account in accounts {
+        let value = crate::modules::sync::portable_accounts::comparison_value(account)?;
+        let mut identity = value.clone();
+        identity.as_object_mut().unwrap().remove("label");
+        identity.as_object_mut().unwrap().remove("email");
+        insert_atom(&mut out, serde_json::json!(["accounts", identity]), &value)?;
+    }
+    Ok(out)
+}
+pub fn webdav_save_state(
+    endpoints: &[crate::modules::sync::portable_manager::Endpoint],
+) -> ModelResult<super::content_versions::SaveState> {
+    let mut out = super::content_versions::SaveState::new();
+    for endpoint in endpoints {
+        insert_atom(
+            &mut out,
+            serde_json::json!(["webdav", endpoint.id]),
+            endpoint,
+        )?;
+    }
+    Ok(out)
+}
+/// Password digests are computed locally with content_versions::key(&password)
+/// after the secure-store readback. IPC and receipts never receive the password.
+pub fn webdav_password_save_state(
+    password_digests: &BTreeMap<String, String>,
+) -> ModelResult<super::content_versions::SaveState> {
+    let mut out = super::content_versions::SaveState::new();
+    for (id, digest) in password_digests {
+        if !digest
+            .strip_prefix("sha256:")
+            .is_some_and(|hash| hash.len() == 64 && hash.bytes().all(|b| b.is_ascii_hexdigit()))
+        {
+            return Err(invalid("content_version", "密码保存版本摘要无效"));
+        }
+        out.insert(
+            super::content_versions::key(&["webdavPasswords", id])?,
+            digest.clone(),
+        );
+    }
+    Ok(out)
+}
+pub fn extensions_save_state(
+    value: Option<&crate::modules::extensions::ExtensionConfig>,
+) -> ModelResult<super::content_versions::SaveState> {
+    let mut out = super::content_versions::SaveState::new();
+    if let Some(config) = value {
+        let mut portable = config.clone();
+        portable.source_store = None;
+        let mut value = serde_json::to_value(portable)?;
+        value.as_object_mut().unwrap().remove("revision");
+        insert_atom(&mut out, ["extensions"], &value)?;
+    }
+    Ok(out)
+}
+pub fn template_save_state(library: &Library) -> ModelResult<super::content_versions::SaveState> {
+    let mut out = super::content_versions::SaveState::new();
+    for template in &library.templates {
+        for revision in &template.revisions {
+            insert_atom(
+                &mut out,
+                serde_json::json!(["template", template.id, revision.id]),
+                revision,
+            )?;
+        }
+    }
+    Ok(out)
 }
 pub fn content_created_at(bytes: &[u8], password: Option<&str>) -> ModelResult<String> {
     let opened = portable_file::open(bytes, password)?;
@@ -808,17 +1243,17 @@ fn snapshot_package(package: &ModelPackage, include_order: bool) -> ModelResult<
     transfer::validate_package(&package)?;
     Ok(package)
 }
+/// A transfer can only inherit provenance carried with matching content. A
+/// legacy bare timestamp is deliberately ignored.
 pub fn inherit_content_time(
     root: &Path,
     bytes: &[u8],
     password: Option<&str>,
-    saved_at: &str,
+    _saved_at: &str,
 ) -> ModelResult<()> {
-    let opened = portable_file::open(bytes, password)?;
-    let objects = decode(&opened.document)?;
-    let (digest, key) = object_content_identity(&objects)?;
-    super::content_versions::stamp(root, &key, &digest, saved_at, true)?;
-    Ok(())
+    let (objects, _) = remote_objects(bytes, password)?;
+    let atoms = object_atoms(&objects)?;
+    super::content_versions::inherit(root, &bound_versions(&objects, &atoms))
 }
 fn cache_path(root: &Path, id: &str, extension: &str) -> ModelResult<PathBuf> {
     require_uuid(id)?;
@@ -957,6 +1392,18 @@ pub fn merge_remote_protection(
             }
         }
     }
+    let local_atoms = object_atoms(&local)?;
+    for version in bound_versions(&local, &local_atoms) {
+        if remote.content_versions.iter().any(|old| {
+            old.scope_key == version.scope_key && old.content_digest == version.content_digest
+        }) {
+            continue;
+        }
+        remote
+            .content_versions
+            .retain(|old| old.scope_key != version.scope_key);
+        remote.content_versions.push(version);
+    }
     remote.models = transfer::merge_packages(remote.models, local.models)?;
     if local.manager.preferences.is_some() {
         remote.manager.preferences = local.manager.preferences;
@@ -1054,6 +1501,7 @@ pub fn merge_remote_protection(
             remote.assets.mcps.push(mcp);
         }
     }
+    remote.models.created_at = object_fact(&remote)?.saved_at.unwrap_or_default();
     validate(&remote)?;
     let document = Zeroizing::new(serde_json::to_vec(&remote)?);
     portable_file::seal(
@@ -1067,6 +1515,143 @@ pub fn merge_remote_protection(
         &document,
         write_password,
     )
+}
+/// Read-only projection of the cloud document into the same participation
+/// range as the local source. It neither receives a plan nor writes business data.
+pub fn projected_fact(
+    bytes: &[u8],
+    password: Option<&str>,
+    models: &transfer::ExportScope,
+    manager: &ManagerScope,
+    include_keys: bool,
+) -> ModelResult<ContentFact> {
+    let (mut objects, _) = remote_objects(bytes, password)?;
+    let parent_versions = bound_versions(&objects, &object_atoms(&objects)?);
+    let channel_ids = objects
+        .models
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+        .filter(|c| models.include_policy && models.channel_ids.contains(&c.id))
+        .map(|c| c.id.clone())
+        .collect::<Vec<_>>();
+    let families = models
+        .channel_families
+        .iter()
+        .filter(|(id, _)| channel_ids.contains(id))
+        .map(|(k, v)| (k.clone(), v.clone()))
+        .collect();
+    transfer::scope_families(&mut objects.models, &families)?;
+    if let Some(policy) = &mut objects.models.payload.policy {
+        policy.channels.retain(|c| channel_ids.contains(&c.id));
+        if !models.include_global {
+            policy.template_refs = None;
+            policy.default_channel_id = None;
+            policy.channel_order = None;
+        }
+        if let Some(order) = &mut policy.channel_order {
+            order.retain(|id| channel_ids.contains(id));
+        }
+    }
+    if !models.include_policy {
+        objects.models.payload.policy = None;
+    }
+    let model_scopes = models
+        .channel_models
+        .iter()
+        .filter(|(id, _)| channel_ids.contains(id))
+        .map(|(k, v)| (k.clone(), v.clone()))
+        .collect();
+    transfer::scope_models(&mut objects.models, &channel_ids, &model_scopes)?;
+    let mut refs = models.template_refs.clone();
+    if let Some(policy) = &objects.models.payload.policy {
+        refs.extend(policy.template_refs.iter().flatten().cloned());
+        for c in &policy.channels {
+            refs.extend(c.template_refs.iter().cloned());
+            refs.extend(c.model_refs.values().cloned());
+        }
+    }
+    for t in &mut objects.models.payload.templates {
+        t.revisions.retain(|r| {
+            refs.iter()
+                .any(|v| v.template_id == t.id && v.revision_id == r.id)
+        });
+        if t.default_revision
+            .as_ref()
+            .is_some_and(|id| !t.revisions.iter().any(|r| &r.id == id))
+        {
+            t.default_revision = None;
+        }
+    }
+    objects
+        .models
+        .payload
+        .templates
+        .retain(|t| !t.revisions.is_empty());
+    objects.models.digest = sha256(&serde_json::to_vec(&objects.models.payload)?);
+    objects.channel_keys.0.retain(|id, _| {
+        include_keys
+            && channel_ids.contains(id)
+            && manager
+                .credential_ids
+                .as_ref()
+                .is_none_or(|ids| ids.contains(&format!("channel:{id}")))
+    });
+    objects.channel_authorizations.retain(|id, _| {
+        include_keys
+            && channel_ids.contains(id)
+            && manager
+                .credential_ids
+                .as_ref()
+                .is_none_or(|ids| ids.contains(&format!("channel:{id}")))
+    });
+    if !manager.preferences {
+        objects.manager.preferences = None;
+    }
+    if !manager.extensions {
+        objects.manager.extensions = None;
+    }
+    objects
+        .manager
+        .accounts
+        .retain(|a| manager.account_ids.contains(&a.id));
+    if !manager.webdav {
+        objects.manager.webdav.clear();
+        objects.webdav_passwords.0.clear();
+    }
+    objects
+        .assets
+        .skills
+        .retain(|s| manager.skill_names.contains(&s.name));
+    objects
+        .assets
+        .mcps
+        .retain(|m| manager.mcp_names.contains(&m.name));
+    for skill in &mut objects.assets.skills {
+        if !manager.extension_credentials
+            || manager
+                .credential_ids
+                .as_ref()
+                .is_some_and(|ids| !ids.contains(&format!("skill:{}", skill.name)))
+        {
+            skill.files.retain(|f| !f.sensitive);
+            skill.contains_secrets = false;
+            skill.digest = sha256(&serde_json::to_vec(&skill.files)?);
+        }
+    }
+    for mcp in &mut objects.assets.mcps {
+        if !manager.extension_credentials
+            || manager
+                .credential_ids
+                .as_ref()
+                .is_some_and(|ids| !ids.contains(&format!("mcp:{}", mcp.name)))
+        {
+            mcp.secrets.0.clear();
+        }
+    }
+    apply_channel_projection_versions(&mut objects, &parent_versions)?;
+    object_fact(&objects)
 }
 pub fn select_remote(
     root: &Path,
@@ -1303,6 +1888,7 @@ fn receive_bound_context(
             policy: None,
         };
         let objects = Objects {
+            content_versions: Default::default(),
             format: "OCXD_CONFIG_OBJECTS".into(),
             version: 1,
             models: ModelPackage {
@@ -2317,8 +2903,8 @@ fn accept_domains(
         ));
     }
     let result = model_result?;
-    if plan.file_home.is_some() && plan.package.payload.candidate.is_none() {
-        inherit_received_version(root, &plan, adopt_keys, adopt_extensions)?;
+    if plan.package.payload.candidate.is_none() {
+        inherit_received_version(root, &plan, adopt_keys, adopt_extensions, passphrase)?;
     }
     record.completed = true;
     atomic_write(&record_path, &serde_json::to_vec(&record)?, 0o600)?;
@@ -2329,7 +2915,23 @@ fn inherit_received_version(
     plan: &IncomingPlan,
     keys: bool,
     extensions: bool,
+    passphrase: Option<&str>,
 ) -> ModelResult<()> {
+    // The old migration container carries no content-save provenance and is
+    // deliberately not reinterpreted as a new-format Objects document.
+    let raw = Zeroizing::new(safety::read_file(
+        &cache_path(root, &plan.id, "ocxdconf")?,
+        portable_file::FILE_LIMIT as u64,
+    )?);
+    let format: Value = serde_json::from_slice(&raw)?;
+    if !["OCXDCONF", "OCXD_CONFIG_OBJECTS", "OCXD_MODEL_CONFIG"]
+        .contains(&format["format"].as_str().unwrap_or_default())
+    {
+        return Ok(());
+    }
+    let source = open_source(root, plan, passphrase)?;
+    let source_atoms = object_atoms(&source)?;
+    let source_versions = bound_versions(&source, &source_atoms);
     let current = transfer::local_for_plan(root, plan)?;
     let channel_ids = plan
         .package
@@ -2391,17 +2993,19 @@ fn inherit_received_version(
     } else {
         None
     };
-    let catalog =
-        crate::modules::sync::portable_accounts::catalog(root, plan.file_home.as_deref().unwrap())?;
-    let account_ids = catalog
-        .iter()
-        .filter(|local| {
-            manager.accounts.iter().any(|source| {
-                crate::modules::sync::portable_accounts::same_identity(&local.account, source)
+    let account_ids = if let Some(home) = &plan.file_home {
+        crate::modules::sync::portable_accounts::catalog(root, home)?
+            .iter()
+            .filter(|local| {
+                manager.accounts.iter().any(|source| {
+                    crate::modules::sync::portable_accounts::same_identity(&local.account, source)
+                })
             })
-        })
-        .map(|a| a.account.id.clone())
-        .collect::<Vec<_>>();
+            .map(|a| a.account.id.clone())
+            .collect::<Vec<_>>()
+    } else {
+        vec![]
+    };
     let mut scope = super::config_remote::Scope {
         channel_ids,
         template_ids: plan
@@ -2443,6 +3047,16 @@ fn inherit_received_version(
             .collect(),
         ..Default::default()
     };
+    if plan.file_home.is_none() && !manager.accounts.is_empty() {
+        let imported = crate::modules::sync::portable_accounts::imported(root)?;
+        let applied = account_save_state(&imported)?;
+        let versions = source_versions
+            .iter()
+            .filter(|v| applied.get(&v.scope_key) == Some(&v.content_digest))
+            .cloned()
+            .collect::<Vec<_>>();
+        super::content_versions::inherit(root, &versions)?;
+    }
     scope.include_keys &= !scope.channel_ids.is_empty();
     if !scope.channel_ids.is_empty()
         || !scope.template_ids.is_empty()
@@ -2452,7 +3066,14 @@ fn inherit_received_version(
         || !scope.skill_names.is_empty()
         || !scope.mcp_names.is_empty()
     {
-        super::config_remote::source_state_with_time(root, &scope, Some(&plan.package.created_at))?;
+        let applied = super::config_remote::capture_save(root, &scope)?;
+        // Only exact selected, applied atoms inherit a source receipt. Kept local
+        // fields, renamed mappings and merged subsets never acquire a false clock.
+        let versions = source_versions
+            .into_iter()
+            .filter(|v| applied.get(&v.scope_key) == Some(&v.content_digest))
+            .collect::<Vec<_>>();
+        super::content_versions::inherit(root, &versions)?;
     }
     Ok(())
 }
@@ -2639,6 +3260,7 @@ mod tests {
     #[test]
     fn protected_original_channel_model_subset_uses_full_source_auth_and_only_selected_public_fields(
     ) {
+        super::test_credentials::install();
         use super::super::upstream::UpstreamSnapshot;
         let source = tempfile::tempdir().unwrap();
         let upstream = tempfile::tempdir().unwrap();
@@ -2740,6 +3362,7 @@ mod tests {
     #[test]
     fn partial_remote_original_config_updates_keep_bound_private_pool_and_refuse_endpoint_retargeting(
     ) {
+        super::test_credentials::install();
         use super::super::upstream::UpstreamSnapshot;
         let root = tempfile::tempdir().unwrap();
         let snapshot = UpstreamSnapshot {
@@ -2781,6 +3404,7 @@ mod tests {
         let key_id = &digest.trim_start_matches("sha256:")[..8];
         let auth:super::super::provider_auth::PortableAuthorization=serde_json::from_value(serde_json::json!({"activeId":key_id,"fields":{"apiKeyPool":[{"id":key_id,"key":key,"label":"original","addedAt":100}],"headers":{"X-Auth":"fixture-header-SECRET"}}})).unwrap();
         let remote = Objects {
+            content_versions: Default::default(),
             format: "OCXD_CONFIG_OBJECTS".into(),
             version: 2,
             models: package.clone(),
@@ -2806,6 +3430,7 @@ mod tests {
         }
         let remote_bytes = bytes(&remote);
         let mut local = Objects {
+            content_versions: Default::default(),
             format: "OCXD_CONFIG_OBJECTS".into(),
             version: 1,
             models: package,
@@ -2854,6 +3479,7 @@ mod tests {
         )
         .unwrap();
         let family_objects = Objects {
+            content_versions: Default::default(),
             format: "OCXD_CONFIG_OBJECTS".into(),
             version: 1,
             models: family_package,
@@ -2923,6 +3549,7 @@ mod tests {
     }
     #[test]
     fn named_asset_conflicts_can_be_remapped_with_settings_without_overwriting_existing_sources() {
+        super::test_credentials::install();
         use crate::modules::{
             extensions::{
                 self,
@@ -3140,6 +3767,7 @@ mod tests {
     }
     #[test]
     fn account_info_round_trip_selects_only_requested_identity_without_login_material() {
+        super::test_credentials::install();
         use crate::modules::sync::portable_accounts;
         let source = tempfile::tempdir().unwrap();
         let upstream = tempfile::tempdir().unwrap();
@@ -3278,6 +3906,7 @@ mod tests {
     }
     #[test]
     fn unified_file_carries_skill_resources_and_mcp_definitions_with_explicit_subset_adoption() {
+        super::test_credentials::install();
         let source = tempfile::tempdir().unwrap();
         let source_home = tempfile::tempdir().unwrap();
         let target = tempfile::tempdir().unwrap();
@@ -3368,6 +3997,7 @@ mod tests {
     }
     #[test]
     fn protected_remote_skill_files_survive_an_upload_that_did_not_select_extension_credentials() {
+        super::test_credentials::install();
         let root = tempfile::tempdir().unwrap();
         let home = tempfile::tempdir().unwrap();
         let skill = home.path().join(".agents/skills/fixture");
@@ -3430,6 +4060,7 @@ mod tests {
     }
     #[test]
     fn a_half_applied_unified_import_resumes_the_same_receipt_and_does_not_duplicate_connections() {
+        super::test_credentials::install();
         let source = tempfile::tempdir().unwrap();
         let target = tempfile::tempdir().unwrap();
         crate::modules::preferences::PreferencesStore::new(source.path())
@@ -3543,6 +4174,7 @@ mod tests {
     }
     #[test]
     fn legacy_plaintext_file_is_read_as_its_actual_categories_without_creating_a_model_library() {
+        super::test_credentials::install();
         let source = tempfile::tempdir().unwrap();
         let target = tempfile::tempdir().unwrap();
         crate::modules::data_root::initialize(source.path()).unwrap();
@@ -3580,6 +4212,7 @@ mod tests {
     }
     #[test]
     fn display_only_legacy_import_keeps_extension_file_and_backup_scope_untouched() {
+        super::test_credentials::install();
         for with_existing_extensions in [false, true] {
             let source = tempfile::tempdir().unwrap();
             let target = tempfile::tempdir().unwrap();
@@ -3681,6 +4314,7 @@ mod tests {
     }
     #[test]
     fn one_protected_manifest_restores_selected_manager_settings_and_inactive_webdav_password() {
+        super::test_credentials::install();
         use crate::modules::sync::config::{
             CredentialRef, SyncConfig, SyncConfigStore, SyncEndpointConfig,
         };
@@ -3797,6 +4431,7 @@ mod tests {
     }
     #[test]
     fn plaintext_manifest_restores_only_selected_inactive_webdav_password() {
+        super::test_credentials::install();
         use crate::modules::sync::config::{
             CredentialRef, SyncConfig, SyncConfigStore, SyncEndpointConfig,
         };
@@ -3905,6 +4540,7 @@ mod tests {
     }
     #[test]
     fn unknown_manager_fields_are_rejected_instead_of_being_truncated() {
+        super::test_credentials::install();
         let root = tempfile::tempdir().unwrap();
         let package = transfer::export(
             root.path(),
@@ -3919,6 +4555,7 @@ mod tests {
         )
         .unwrap();
         let objects = Objects {
+            content_versions: Default::default(),
             format: "OCXD_CONFIG_OBJECTS".into(),
             version: 1,
             models: package,
@@ -3942,6 +4579,7 @@ mod tests {
     }
     #[test]
     fn credential_object_counts_match_capabilities_without_changing_legacy_manifest_counts() {
+        super::test_credentials::install();
         let root = tempfile::tempdir().unwrap();
         let home = tempfile::tempdir().unwrap();
         std::fs::create_dir_all(home.path().join(".codex")).unwrap();
@@ -3993,6 +4631,7 @@ mod tests {
     }
     #[test]
     fn key_only_changes_are_named_without_secret_values_and_count_as_one_changed_object() {
+        super::test_credentials::install();
         let root = tempfile::tempdir().unwrap();
         let id = uuid::Uuid::new_v4().to_string();
         let reference = uuid::Uuid::new_v4().to_string();
@@ -4131,6 +4770,7 @@ mod tests {
     }
     #[test]
     fn mapping_keeps_source_key_out_of_local_connection_and_binds_new_keys_only_to_new_channel() {
+        super::test_credentials::install();
         use transfer::{ChannelMapping, ReceiveScope};
         let source = tempfile::tempdir().unwrap();
         let target = tempfile::tempdir().unwrap();
@@ -4267,6 +4907,7 @@ mod tests {
     }
     #[test]
     fn remote_endpoint_change_without_new_key_never_reuses_the_old_remote_credential() {
+        super::test_credentials::install();
         let source = tempfile::tempdir().unwrap();
         let changed = tempfile::tempdir().unwrap();
         let id = uuid::Uuid::new_v4().to_string();
@@ -4362,6 +5003,7 @@ mod tests {
     }
     #[test]
     fn exported_keys_are_protected_and_explicit_adoption_only_creates_a_new_draft_reference() {
+        super::test_credentials::install();
         let source = tempfile::tempdir().unwrap();
         let target = tempfile::tempdir().unwrap();
         let id = uuid::Uuid::new_v4().to_string();
@@ -4503,6 +5145,7 @@ mod tests {
     }
     #[test]
     fn raw_secret_objects_and_unknown_secret_targets_are_rejected_before_any_cache_write() {
+        super::test_credentials::install();
         let root = tempfile::tempdir().unwrap();
         let package = transfer::export(
             root.path(),
@@ -4517,6 +5160,7 @@ mod tests {
         )
         .unwrap();
         let mut objects = Objects {
+            content_versions: Default::default(),
             format: "OCXD_CONFIG_OBJECTS".into(),
             version: 1,
             models: package,

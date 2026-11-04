@@ -114,6 +114,7 @@ impl Device {
 struct Keys(RefCell<BTreeMap<String, String>>);
 #[test]
 fn selected_channels_carry_their_exact_global_dependencies_without_changing_unselected_channels() {
+    super::test_credentials::install();
     let source = Device::new("source");
     let target = Device::new("local");
     let source_ref = source.custom_template();
@@ -169,6 +170,7 @@ impl Credentials for Keys {
 
 #[test]
 fn file_export_ignores_stale_policy_and_cli_and_carries_current_raw_authorization() {
+    super::test_credentials::install();
     let source = Device::new("source");
     let mut raw = source.raw();
     let key_hash = sha256(b"fixture-current-file-SECRET");
@@ -342,6 +344,7 @@ fn file_export_ignores_stale_policy_and_cli_and_carries_current_raw_authorizatio
 
 #[test]
 fn ordinary_file_accept_and_replay_commit_saved_config_and_preserve_retired_history() {
+    super::test_credentials::install();
     let source = Device::new("source");
     let target = Device::new("local");
     let mut layout = source.snapshot().policy;
@@ -443,6 +446,7 @@ fn ordinary_file_accept_and_replay_commit_saved_config_and_preserve_retired_hist
 }
 #[test]
 fn a_layout_only_edit_after_preview_blocks_adoption_and_scope_backup_without_touching_the_file() {
+    super::test_credentials::install();
     let source = Device::new("source");
     let target = Device::new("local");
     let exported = source.export(source.scope(), false);
@@ -478,6 +482,7 @@ fn a_layout_only_edit_after_preview_blocks_adoption_and_scope_backup_without_tou
 
 #[test]
 fn template_only_file_acceptance_and_legacy_recompare_never_create_a_channel_workspace() {
+    super::test_credentials::install();
     let source = Device::new("source");
     let target = Device::new("local");
     let reference = source.custom_template();
@@ -513,6 +518,7 @@ fn template_only_file_acceptance_and_legacy_recompare_never_create_a_channel_wor
 #[test]
 fn file_acceptance_checks_file_digest_before_installing_plain_keys_and_mapping_keeps_local_connection(
 ) {
+    super::test_credentials::install();
     let source = Device::new("source");
     let target = Device::new("local");
     let mut channel = source.snapshot().policy.channels[0].clone();
@@ -639,6 +645,7 @@ fn file_acceptance_checks_file_digest_before_installing_plain_keys_and_mapping_k
 
 #[test]
 fn memory_export_freezes_supplied_policy_without_an_ordinary_disk_draft() {
+    super::test_credentials::install();
     let device = Device::new("source");
     device.retired_history();
     let baseline = device.snapshot();
@@ -685,6 +692,7 @@ fn memory_export_freezes_supplied_policy_without_an_ordinary_disk_draft() {
 
 #[test]
 fn interrupted_saved_file_commit_resumes_and_rejects_a_modified_receipt() {
+    super::test_credentials::install();
     let source = Device::new("source");
     let target = Device::new("local");
     target.retired_history();
@@ -739,4 +747,164 @@ fn interrupted_saved_file_commit_resumes_and_rejects_a_modified_receipt() {
         "incoming_identity"
     );
     assert_eq!(target.snapshot().policy, first.policy);
+}
+
+#[test]
+fn saved_file_versions_bind_actual_save_and_range_projection_without_using_mtime() {
+    super::test_credentials::install();
+    use super::super::{config_remote, content_versions};
+    let d = Device::new("source");
+    let scope = config_remote::Scope {
+        all_channels: true,
+        preferences: false,
+        extensions: false,
+        include_keys: true,
+        upstream_root: Some(d.home.clone()),
+        ..Default::default()
+    };
+    assert!(config_remote::source_fact(&d.root, &scope)
+        .unwrap()
+        .saved_at
+        .is_none());
+    let before = config_remote::capture_save(&d.root, &scope).unwrap();
+    let initial = d.snapshot();
+    let mut policy = initial.policy.clone();
+    policy.channels[0].connection.nodes[0].url = "https://saved.example.test/v1".into();
+    let result = config_file::save(
+        &d.root,
+        &d.home,
+        config_file::SaveRequest {
+            expected_file: initial.policy_digest,
+            policy,
+            credentials: vec![],
+            scope: None,
+        },
+    )
+    .unwrap();
+    assert!(result.changed);
+    assert_eq!(d.snapshot(), result.snapshot);
+    let after = config_remote::capture_save(&d.root, &scope).unwrap();
+    content_versions::record_save(&d.root, &before, &after).unwrap();
+    let original = config_remote::source_fact(&d.root, &scope).unwrap();
+    assert!(original.saved_at.is_some());
+    let mut subset = scope.clone();
+    subset.include_keys = false;
+    let id = result.snapshot.policy.channels[0].id.clone();
+    subset
+        .channel_models
+        .insert(id.clone(), vec!["vendor/custom-b".into()]);
+    let projected = config_remote::source_fact(&d.root, &subset).unwrap();
+    assert_eq!(
+        projected.saved_at, original.saved_at,
+        "range reselection inherits full save time, not now"
+    );
+    let file = d.export(d.scope(), true);
+    let bytes = transfer::file_bytes(&d.root, &file.id).unwrap();
+    let mut models = d.scope();
+    models
+        .channel_models
+        .insert(id, vec!["vendor/custom-b".into()]);
+    let cloud = projected_fact(&bytes, None, &models, &ManagerScope::default(), false).unwrap();
+    assert_eq!(
+        cloud, projected,
+        "cloud and local projection use the same bound content version"
+    );
+    let file_handle = std::fs::OpenOptions::new()
+        .write(true)
+        .open(d.home.join("config.json"))
+        .unwrap();
+    file_handle
+        .set_times(std::fs::FileTimes::new().set_modified(std::time::SystemTime::now()))
+        .unwrap();
+    assert_eq!(
+        config_remote::source_fact(&d.root, &scope).unwrap(),
+        original
+    );
+    let mut raw = d.raw();
+    raw["providers"]["source"]["apiKey"] = json!("synthetic-key-only-change");
+    d.write(raw);
+    assert!(
+        config_remote::source_fact(&d.root, &scope)
+            .unwrap()
+            .saved_at
+            .is_none(),
+        "unrecorded credential changes invalidate the digest-bound version"
+    );
+    let key_only = Device::new("key-only");
+    let key_scope = config_remote::Scope {
+        upstream_root: Some(key_only.home.clone()),
+        ..scope.clone()
+    };
+    let before = config_remote::capture_save(&key_only.root, &key_scope).unwrap();
+    let mut raw = key_only.raw();
+    raw["providers"]["key-only"]["apiKey"] = json!("synthetic-new-key-only");
+    key_only.write(raw);
+    let after = config_remote::capture_save(&key_only.root, &key_scope).unwrap();
+    content_versions::record_save(&key_only.root, &before, &after).unwrap();
+    assert!(
+        config_remote::source_fact(&key_only.root, &key_scope)
+            .unwrap()
+            .saved_at
+            .is_some(),
+        "a saved credential-bearing object covers its unchanged public fields"
+    );
+    let public_only = config_remote::Scope {
+        include_keys: false,
+        ..key_scope
+    };
+    assert!(
+        config_remote::source_fact(&key_only.root, &public_only)
+            .unwrap()
+            .saved_at
+            .is_none(),
+        "a key-only save cannot date previously unknown public-only content"
+    );
+}
+
+#[test]
+fn post04_review_credential_bearing_subset_inherits_the_same_source_save() {
+    super::test_credentials::install();
+    use super::super::{config_remote, content_versions};
+    let device = Device::new("source");
+    let scope = config_remote::Scope {
+        all_channels: true,
+        include_keys: true,
+        preferences: false,
+        extensions: false,
+        upstream_root: Some(device.home.clone()),
+        ..Default::default()
+    };
+    let before = config_remote::capture_save(&device.root, &scope).unwrap();
+    let mut raw = device.raw();
+    raw["providers"]["source"]["note"] = json!("newly-saved");
+    device.write(raw);
+    let after = config_remote::capture_save(&device.root, &scope).unwrap();
+    content_versions::record_save(&device.root, &before, &after).unwrap();
+    let full = config_remote::source_fact(&device.root, &scope).unwrap();
+    assert!(full.saved_at.is_some());
+    let id = device.snapshot().policy.channels[0].id.clone();
+    let mut subset = scope.clone();
+    subset
+        .channel_models
+        .insert(id.clone(), vec!["vendor/custom-b".into()]);
+    let selected = config_remote::source_fact(&device.root, &subset).unwrap();
+    assert_eq!(
+        selected.saved_at, full.saved_at,
+        "credential-bearing scope projection lost its source version"
+    );
+    let exported = device.export(device.scope(), true);
+    let bytes = transfer::file_bytes(&device.root, &exported.id).unwrap();
+    let mut models = device.scope();
+    models.include_global = false;
+    models
+        .channel_models
+        .insert(id, vec!["vendor/custom-b".into()]);
+    let cloud = projected_fact(&bytes, None, &models, &ManagerScope::default(), true).unwrap();
+    assert_eq!(cloud.saved_at, full.saved_at);
+    assert_eq!(cloud.content_digest, selected.content_digest);
+    assert_eq!(
+        config_remote::source_fact(&device.root, &scope).unwrap(),
+        full,
+        "scope reselection must not advance any source time"
+    );
 }

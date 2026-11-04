@@ -71,6 +71,10 @@ pub struct Check {
     pub last_synced_at: Option<String>,
     #[serde(default)]
     pub reason: String,
+    #[serde(default)]
+    pub local_saved_at: Option<String>,
+    #[serde(default)]
+    pub remote_saved_at: Option<String>,
 }
 
 /// 同步预览中的一项变化。
@@ -186,31 +190,17 @@ pub fn promote_pending(root: &Path, plan_id: &str) -> ModelResult<bool> {
     Ok(true)
 }
 
-/// 判断本次同步方向：远端未变化或为空时以本机为新版，否则以云端为新版。
+/// Compatibility entry point uses the same content comparison as the UI.
+#[cfg(test)]
 pub async fn check<T: WebDavTransport>(
     root: &Path,
     transport: &T,
     config: &WebDavConfig,
     binding: &str,
 ) -> ModelResult<Check> {
-    let head = remote::pointer_for(remote::CONFIG, transport, config).await?;
-    let last = read_state::<Last>(root, LAST).filter(|last| last.binding == binding);
-    let local = match (&head, &last) {
-        (None, _) => true,
-        (Some(head), Some(last)) => head.pointer == last.pointer,
-        _ => false,
-    };
-    Ok(Check {
-        source: if local { "local" } else { "remote" }.into(),
-        has_remote: head.is_some(),
-        last_synced_at: last.map(|last| last.synced_at),
-        reason: if local {
-            "local_or_empty"
-        } else {
-            "remote_or_unknown"
-        }
-        .into(),
-    })
+    let mut scope = super::config_remote::load_scope(root)?;
+    scope.cloud_binding = Some(binding.into());
+    super::config_remote::check_source(root, transport, config, binding, &scope).await
 }
 pub(super) fn record_synced_content(
     root: &Path,
@@ -231,46 +221,49 @@ pub(super) fn record_synced_content(
         },
     )
 }
-fn direction(
-    has_remote: bool,
-    has_common: bool,
-    remote_changed: bool,
-    local_changed: bool,
-) -> (&'static str, &'static str) {
-    match (has_remote, has_common, remote_changed, local_changed) {
-        (false, _, _, _) => ("local", "no_remote"),
-        (true, false, _, _) => ("remote", "no_common_baseline"),
-        (true, true, false, false) => ("local", "unchanged"),
-        (true, true, false, true) => ("local", "local_changed"),
-        (true, true, true, false) => ("remote", "remote_changed"),
-        (true, true, true, true) => ("remote", "both_changed_remote_commit"),
-    }
-}
-pub(super) async fn check_content<T: WebDavTransport>(
-    root: &Path,
-    transport: &T,
-    config: &WebDavConfig,
-    binding: &str,
-    local: &str,
-    scope: &str,
-) -> ModelResult<Check> {
-    let head = remote::pointer_for(remote::CONFIG, transport, config).await?;
-    let last = read_state::<Last>(root, LAST).filter(|last| last.binding == binding);
-    let common = last
-        .as_ref()
-        .is_some_and(|last| last.scope.as_deref() == Some(scope) && last.local_content.is_some());
-    let remote_changed = match (&head, &last) {
-        (Some(h), Some(l)) => h.pointer != l.pointer,
-        _ => true,
+/// Direction is derived from selected content and reliable save provenance,
+/// never from a device revision, last-sync record or pointer ordering.
+pub(super) fn compare_content(
+    local: &super::file_objects::ContentFact,
+    remote: Option<&super::file_objects::ContentFact>,
+) -> Check {
+    let (source, reason) = match remote {
+        None if local.empty => ("unchanged", "both_empty"),
+        None => ("local", "no_remote"),
+        Some(r) if local.content_digest == r.content_digest => ("unchanged", "same_content"),
+        Some(r) if local.empty && r.empty => ("unchanged", "both_empty"),
+        Some(r) if r.empty => ("local", "remote_selection_empty"),
+        Some(_) if local.empty => ("remote", "local_selection_empty"),
+        Some(r) => {
+            let instant = |f: &super::file_objects::ContentFact| {
+                if f.time_kind != super::content_versions::TimeKind::Saved {
+                    return None;
+                }
+                f.saved_at
+                    .as_deref()
+                    .and_then(|s| chrono::DateTime::parse_from_rfc3339(s).ok())
+            };
+            match (instant(local), instant(r)) {
+                (Some(l), Some(r)) if l > r => ("local", "local_saved_later"),
+                (Some(l), Some(r)) if l < r => ("remote", "remote_saved_later"),
+                (Some(_), Some(_)) => ("undetermined", "same_instant_different_content"),
+                _ => ("undetermined", "unreliable_save_time"),
+            }
+        }
     };
-    let local_changed = last.as_ref().and_then(|last| last.local_content.as_deref()) != Some(local);
-    let (source, reason) = direction(head.is_some(), common, remote_changed, local_changed);
-    Ok(Check {
+    Check {
         source: source.into(),
         reason: reason.into(),
-        has_remote: head.is_some(),
-        last_synced_at: last.map(|l| l.synced_at),
-    })
+        has_remote: remote.is_some(),
+        last_synced_at: None,
+        local_saved_at: local.saved_at.clone(),
+        remote_saved_at: remote.and_then(|r| r.saved_at.clone()),
+    }
+}
+pub(super) fn last_synced_at(root: &Path, binding: &str) -> Option<String> {
+    read_state::<Last>(root, LAST)
+        .filter(|l| l.binding == binding)
+        .map(|l| l.synced_at)
 }
 pub fn promote_pending_content(
     root: &Path,
@@ -301,6 +294,7 @@ pub(super) fn rebind_pending(root: &Path, original: &str, selected: &str) -> Mod
     if p.plan_id != original {
         return Err(invalid("sync_plan", "原下载已被其它操作替换，请重新同步"));
     }
+    super::config_remote::rebind_download_guard(root, original, selected)?;
     p.plan_id = selected.into();
     write_state(root, PENDING, &p)
 }
@@ -316,6 +310,7 @@ pub async fn verify_pending<T: WebDavTransport>(
     if p.plan_id != id || p.binding != binding {
         return Err(invalid("sync_plan", "下载来源或范围已变化，请重新同步"));
     }
+    super::config_remote::verify_download_source(root, id, binding)?;
     let head = remote::pointer_for(remote::CONFIG, transport, config).await?;
     if head.as_ref().map(|h| &h.pointer) != Some(&p.pointer) {
         return Err(invalid(
@@ -681,24 +676,37 @@ mod content_direction_tests {
         );
     }
     #[test]
-    fn baseline_decisions_are_clock_independent_and_converge() {
-        assert_eq!(direction(false, false, false, true), ("local", "no_remote"));
+    fn saved_time_decisions_are_symmetric_and_unknown_never_selects_remote() {
+        use super::super::{content_versions::TimeKind, file_objects::ContentFact};
+        let fact = |digest: &str, time: Option<&str>| ContentFact {
+            scope_key: "scope".into(),
+            content_digest: digest.into(),
+            saved_at: time.map(str::to_owned),
+            time_kind: TimeKind::Saved,
+            empty: false,
+            version_digest: digest.into(),
+        };
+        let local = fact("local", Some("2026-11-04T00:00:00Z"));
+        let remote = fact("remote", Some("2026-10-30T00:00:00Z"));
+        assert_eq!(compare_content(&local, Some(&remote)).source, "local");
+        assert_eq!(compare_content(&remote, Some(&local)).source, "remote");
+        assert_eq!(compare_content(&local, Some(&local)).source, "unchanged");
+        for unknown in [None, Some("broken"), Some("2026-11-04T00:00:00")] {
+            assert_eq!(
+                compare_content(&fact("other", unknown), Some(&local)).source,
+                "undetermined"
+            );
+        }
         assert_eq!(
-            direction(true, false, true, true),
-            ("remote", "no_common_baseline")
+            compare_content(
+                &fact("other", Some("2026-11-04T08:00:00+08:00")),
+                Some(&local)
+            )
+            .source,
+            "undetermined"
         );
-        assert_eq!(
-            direction(true, true, false, true),
-            ("local", "local_changed")
-        );
-        assert_eq!(
-            direction(true, true, true, false),
-            ("remote", "remote_changed")
-        );
-        assert_eq!(
-            direction(true, true, true, true),
-            ("remote", "both_changed_remote_commit")
-        );
-        assert_eq!(direction(true, true, false, false), ("local", "unchanged"));
+        let mut mtime = remote.clone();
+        mtime.time_kind = TimeKind::LegacyMtime;
+        assert_eq!(compare_content(&local, Some(&mtime)).source, "undetermined");
     }
 }

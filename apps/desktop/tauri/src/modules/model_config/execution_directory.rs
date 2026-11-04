@@ -285,6 +285,16 @@ fn connection_binding(
     provider: &str,
 ) -> ModelResult<String> {
     let row = &snapshot.providers["providers"][provider];
+    connection_binding_for_raw(context, provider, row)
+}
+
+/// Shared by directory consumers and the file-save rename transaction. This
+/// needs no runtime command or network access.
+pub(super) fn connection_binding_for_raw(
+    context: &ProcessContext,
+    provider: &str,
+    row: &Value,
+) -> ModelResult<String> {
     Ok(sha256(&serde_json::to_vec(&(
         super::runtime::runtime_binding(context)?,
         provider,
