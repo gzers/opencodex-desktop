@@ -75,12 +75,15 @@
     "acceptance": "pending actual Windows evidence"
   },
   "macosCI": {
-    "run": 41868797161,
-    "frontend": "cancelled before runner acquired",
-    "backend": "cancelled before runner acquired",
-    "cause": "The job was not acquired by Runner of type hosted even after multiple attempts",
-    "retry": "single-job rerun rejected while parent still active; retry after terminal",
-    "evidence": "ci-capacity/review.json"
+    "run": 41879603626,
+    "checkedMerge": "8d764df0b7034aa61e719d1121533f6d354b9db1",
+    "head": "f9def3300640f0871a93b6bbcec55de646e00567",
+    "appsTreeMatches": true,
+    "frontendSteps": "all success including Complete job; protocol61/Vitest1289/typecheck/build",
+    "frontendJobStatus": "API job list still in_progress; complete log confirms executed checks",
+    "backend": "remaining workspace regression in_progress",
+    "evidence": "ci-final-f9def3300/frontend-review.json",
+    "oldCapacityFailure": "ci-capacity/review.json retained"
   },
   "windowsFinalContribution": {
     "code": "faf8dd9268bcee1f121129de5c7399dcee0fcd5f",

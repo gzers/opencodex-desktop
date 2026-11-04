@@ -143,3 +143,6 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05 CI队列整理：最终f9def3300 / run41879603626完整五项CI保留。核对三个祖先提交3aa789a6e、9850dbbae、be337d5b3的runs41878328232/41878677161/41879180603及全部jobs均为queued、无steps后，提交取消请求清理过时重复排队；API返回取消请求已受理，但后续查询仍queued，尚不称已取消。没有终止最终运行或把取消计为通过，未修改运行器/工作流和测试范围。回执ci-capacity/superseded-queue-cleanup.json。Windows最终原始报告/性能与正式adapter证据仍未收到，代码分支仍faf8dd926，待真实回交。
+
+
+2026-11-05最终源Mac前端远端检查已有实际通过证据：run41879603626 / job126748378977，检出PR合并提交8d764df0b7034aa61e719d1121533f6d354b9db1（父7a8441f7e、f9def3300），已fetch验证apps树与最终head完全一致。61协议、197文件/1289 Vitest、typecheck/build与Complete job步骤均success，日志于17:44:23Z结束；job列表仍延迟显示in_progress，因此只确认这些已执行检查，不据此写整轮CI绿。证据ci-final-f9def3300/frontend-review.json及原始解码日志。最终Mac后端剩余workspace和Windows后端回归仍执行，Windows实机原始报告未到，整版仍待验。旧缺容取消保留，未更换运行器或降范围。
