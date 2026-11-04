@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Real .app/PID/WKWebView/AX acceptance; never launches or quits a daily app."""
 import argparse
+import ctypes
 import datetime as dt
 import hashlib
 import json
@@ -52,6 +53,144 @@ def tree_inventory(root):
             result[key] = {'symlink': os.readlink(path)}
         elif path.is_file(): result[key] = {'sha256': sha(path), 'size': path.stat().st_size}
     return result
+
+def notice_clock_bounds(samples, exits):
+    """Conservative native observation intervals, never input-call durations.
+
+    Each AX state was read somewhere between request begin and response end.
+    A transition is therefore bracketed by the previous state's request begin
+    and the next state's response end. Keep that uncertainty in the verdict.
+    """
+    first = next((i for i, s in enumerate(samples) if s['notice'] and not s['dialogs']), None)
+    if first is None or first == 0:
+        raise Blocked('Notice appearance lacks an observed absent->present boundary')
+    final_present = max(i for i, s in enumerate(samples) if s['notice'] and not s['dialogs'])
+    after = next((i for i in range(final_present + 1, len(samples)) if not samples[i]['notice'] and not samples[i]['dialogs']), None)
+    if after is None: raise Blocked('Notice disappearance was not observed')
+    if any(not s['active'] for s in samples[first:after + 1]):
+        raise Blocked('Candidate lost foreground during notice observation')
+    start = [samples[first - 1]['readBegin'], samples[first]['readEnd']]
+    end = [samples[final_present]['readBegin'], samples[after]['readEnd']]
+    segments, opening = [], None
+    for i in range(first, after + 1):
+        present = '重启 Codex' in samples[i]['dialogs']
+        previous = '重启 Codex' in samples[i - 1]['dialogs'] if i else False
+        if present and not previous: opening = i
+        if previous and not present:
+            if opening is None: raise Blocked('Missing observed confirmation opening')
+            segments.append((opening, i)); opening = None
+    if opening is not None or len(segments) != len(exits):
+        raise Blocked('Observed confirmation transitions do not match the exercised exits')
+    pauses = []
+    for how, (opened, closed) in zip(exits, segments):
+        appearance = [samples[opened - 1]['readBegin'], samples[opened]['readEnd']]
+        disappearance = [samples[closed - 1]['readBegin'], samples[closed]['readEnd']]
+        duration = [max(0, disappearance[0] - appearance[1]), disappearance[1] - appearance[0]]
+        pauses.append({'exit': how, 'appearanceInterval': appearance, 'disappearanceInterval': disappearance,
+                       'durationInterval': duration, 'firstPresentSample': opened, 'firstAbsentSample': closed})
+    elapsed = [end[0] - start[1], end[1] - start[0]]
+    active = [elapsed[0] - sum(p['durationInterval'][1] for p in pauses),
+              elapsed[1] - sum(p['durationInterval'][0] for p in pauses)]
+    return {'appearanceInterval': start, 'disappearanceInterval': end, 'elapsedIntervalSeconds': elapsed,
+            'activeIntervalSeconds': active, 'activeMidpointSeconds': sum(active) / 2, 'confirmationPauses': pauses,
+            'boundaryMethod': 'AX read-begin/read-end brackets around actual notice/dialog state transitions; no input-call subtraction',
+            'thresholdSeconds': [6.7, 9.3], 'intervalMustFitThreshold': True}
+
+class NoticeAxReader:
+    """Read only the owned application's AX notice/dialog presence in process.
+
+    No input, focus, clock, DOM, product state or Swift helper is changed. Avoid
+    launching a full-tree/layout exporter for every subsecond timer observation.
+    """
+    def __init__(self, pid):
+        ref = ctypes.c_void_p
+        self.cf = ctypes.CDLL('/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation')
+        self.ax = ctypes.CDLL('/System/Library/Frameworks/ApplicationServices.framework/ApplicationServices')
+        def declare(lib, name, restype, argtypes):
+            f = getattr(lib, name); f.restype = restype; f.argtypes = argtypes; return f
+        self.release = declare(self.cf, 'CFRelease', None, [ref])
+        self.retain = declare(self.cf, 'CFRetain', ref, [ref])
+        self.make_string = declare(self.cf, 'CFStringCreateWithCString', ref, [ref, ctypes.c_char_p, ctypes.c_uint32])
+        self.string_bytes = declare(self.cf, 'CFStringGetCString', ctypes.c_bool, [ref, ctypes.c_char_p, ctypes.c_long, ctypes.c_uint32])
+        self.type_id = declare(self.cf, 'CFGetTypeID', ctypes.c_ulong, [ref])
+        self.string_type = declare(self.cf, 'CFStringGetTypeID', ctypes.c_ulong, [])()
+        self.array_type = declare(self.cf, 'CFArrayGetTypeID', ctypes.c_ulong, [])()
+        self.boolean_type = declare(self.cf, 'CFBooleanGetTypeID', ctypes.c_ulong, [])()
+        self.boolean = declare(self.cf, 'CFBooleanGetValue', ctypes.c_bool, [ref])
+        self.count = declare(self.cf, 'CFArrayGetCount', ctypes.c_long, [ref])
+        self.at = declare(self.cf, 'CFArrayGetValueAtIndex', ref, [ref, ctypes.c_long])
+        self.copy = declare(self.ax, 'AXUIElementCopyAttributeValue', ctypes.c_int, [ref, ref, ctypes.POINTER(ref)])
+        self.create = declare(self.ax, 'AXUIElementCreateApplication', ref, [ctypes.c_int])
+        self.timeout = declare(self.ax, 'AXUIElementSetMessagingTimeout', ctypes.c_int, [ref, ctypes.c_float])
+        self.keys = {key: self.make_string(None, key.encode(), 0x08000100) for key in [
+            'AXRole', 'AXSubrole', 'AXTitle', 'AXDescription', 'AXChildren', 'AXWindows', 'AXFrontmost']}
+        self.app, self.web = self.create(pid), None
+        self.timeout(self.app, .75)
+        self.web = self.find_web(self.app)
+        if not self.web:
+            self.close(); raise Blocked('Owned AXWebArea is unavailable for timing observation')
+
+    def attr(self, element, key):
+        value = ctypes.c_void_p()
+        if self.copy(element, self.keys[key], ctypes.byref(value)) != 0: return None
+        return value.value
+
+    def text(self, element, key):
+        value = self.attr(element, key)
+        if not value: return ''
+        try:
+            if self.type_id(value) != self.string_type: return ''
+            buffer = ctypes.create_string_buffer(2048)
+            return buffer.value.decode('utf-8') if self.string_bytes(value, buffer, len(buffer), 0x08000100) else ''
+        finally: self.release(value)
+
+    def find_web(self, element, depth=0):
+        if depth > 8: return None
+        role = self.text(element, 'AXRole')
+        if role == 'AXWebArea': return self.retain(element)
+        if role.startswith('AXMenu'): return None
+        children = self.attr(element, 'AXWindows' if depth == 0 else 'AXChildren')
+        if not children: return None
+        try:
+            if self.type_id(children) != self.array_type: return None
+            for i in range(min(self.count(children), 100)):
+                found = self.find_web(self.at(children, i), depth + 1)
+                if found: return found
+        finally: self.release(children)
+
+    def sample(self):
+        active = self.attr(self.app, 'AXFrontmost')
+        if not active: raise Blocked('Candidate AX frontmost observation unavailable')
+        try: front = self.type_id(active) == self.boolean_type and self.boolean(active)
+        finally: self.release(active)
+        if self.text(self.web, 'AXRole') != 'AXWebArea': raise Blocked('Owned AXWebArea was invalidated')
+        notice, dialogs, visited = False, [], 0
+        def walk(element, depth):
+            nonlocal notice, visited
+            visited += 1
+            if depth > 30 or visited > 2000: raise Blocked('Timing AX traversal bound exceeded')
+            role = self.text(element, 'AXRole')
+            if role.startswith('AXMenu'): return
+            if role == 'AXGroup' and self.text(element, 'AXSubrole') in ['AXApplicationDialog', 'AXApplicationAlertDialog']:
+                dialogs.append(self.text(element, 'AXTitle')); return
+            if role in ['AXButton', 'AXPopUpButton']:
+                if self.text(element, 'AXTitle') == '立即重启 Codex' or self.text(element, 'AXDescription') == '立即重启 Codex': notice = True
+                return
+            if role in ['AXStaticText', 'AXImage', 'AXTextField', 'AXCheckBox', 'AXHeading', 'AXRadioButton']: return
+            children = self.attr(element, 'AXChildren')
+            if not children: return
+            try:
+                if self.type_id(children) != self.array_type: return
+                for i in range(self.count(children)): walk(self.at(children, i), depth + 1)
+            finally: self.release(children)
+        walk(self.web, 0)
+        return {'active': front, 'notice': notice, 'dialogs': dialogs, 'focused': [], 'axNodesVisited': visited}
+
+    def close(self):
+        if self.web: self.release(self.web); self.web = None
+        if self.app: self.release(self.app); self.app = None
+        for value in self.keys.values(): self.release(value)
+        self.keys = {}
 
 class NativeRun:
     def __init__(self, args):
@@ -496,30 +635,79 @@ class NativeRun:
         self.ax('move', nav['path'], '概览')
         snap = self.snapshot()
         if not snap.get('active'): raise Blocked('Candidate could not remain foreground for timing')
-        self.press('保存渠道草稿')
-        return self.wait(lambda s: self.matches(s, '立即重启 Codex'), name='save-notice-first')
+        # Begin read-only sampling before Save: the previous clock started only
+        # after Save's wait/AX round trips and lost part of the real countdown.
+        self.start_notice_observation()
+        try:
+            self.press('保存渠道草稿')
+            return self.wait(lambda s: self.matches(s, '立即重启 Codex'), name='save-notice-first')
+        except BaseException:
+            self.stop_notice_observation()
+            raise
+
+    def start_notice_observation(self):
+        self.notice_reader = NoticeAxReader(self.proc.pid)
+        self.notice_origin = time.monotonic()
+        self.notice_samples, self.notice_error = [], None
+        self.notice_stop = threading.Event()
+        sampled = threading.Event()
+        def observe():
+            try:
+                while not self.notice_stop.is_set():
+                    begin = time.monotonic()
+                    state = self.notice_reader.sample()
+                    end = time.monotonic()
+                    self.notice_samples.append({'readBegin': begin - self.notice_origin, 'readEnd': end - self.notice_origin,
+                        'monotonicReadBegin': begin, 'monotonicReadEnd': end, 'time': end - self.notice_origin,
+                        **state})
+                    sampled.set()
+                    self.notice_stop.wait(.01)
+            except BaseException as error:
+                self.notice_error = error
+                sampled.set()
+        self.notice_thread = threading.Thread(target=observe, daemon=True)
+        self.notice_thread.start()
+        if not sampled.wait(timeout=10):
+            self.stop_notice_observation(); raise Blocked('No initial notice timing sample')
+        if self.notice_error:
+            self.stop_notice_observation(); raise self.notice_error
+        if self.notice_samples[-1]['notice']:
+            self.stop_notice_observation(); raise Blocked('A prior notice was already present before the measured Save')
+
+    def stop_notice_observation(self):
+        self.notice_stop.set()
+        self.notice_thread.join(timeout=10)
+        if self.notice_thread.is_alive(): raise Blocked('Timing observer did not stop')
+        if self.notice_reader:
+            self.notice_reader.close(); self.notice_reader = None
 
     def notice_timing(self, confirm=False):
-        trace, pauses = [], []
-        start = time.monotonic()
-        snap = self.snapshot('notice-start-' + str(confirm))
-        assert '8秒' in self.text(snap)
-        assert not any(n.get('focused') and n.get('title') in ('立即重启 Codex', '稍后') for n in snap['nodes']), 'Save notice stole focus'
-        self.capture('notice-start-' + str(confirm), snap)
+        operations, exits, measurement = [], [], None
+        start = self.notice_origin
+        try:
+            snap = self.snapshot('notice-start-' + str(confirm))
+            assert '8秒' in self.text(snap)
+            assert not any(n.get('focused') and n.get('title') in ('立即重启 Codex', '稍后') for n in snap['nodes']), 'Save notice stole focus'
+            self.capture('notice-start-' + str(confirm), snap)
+        except BaseException:
+            self.stop_notice_observation()
+            raise
         def sample():
+            if self.notice_error: raise self.notice_error
             s = self.snapshot()
             if not s.get('active'): raise Blocked('Candidate lost foreground; eight-second elapsed result is invalid')
             if s.get('locked'): raise Blocked('Screen locked during notice timing')
-            trace.append({'time': time.monotonic() - start, 'active': s['active'],
-                          'notice': bool(self.matches(s, '立即重启 Codex')), 'dialogs': [n.get('title') for n in self.dialogs(s)],
-                          'focused': [n.get('title') for n in s['nodes'] if n.get('focused')]})
             return s
         try:
             if confirm:
-                until = start + 1.6
+                # Consume real time relative to the observed appearance, not a
+                # late timer-method entry. The observer keeps sampling during AX.
+                first = next(s for s in self.notice_samples if s['notice'])
+                until = start + first['readEnd'] + 1.6
                 while time.monotonic() < until: sample(); time.sleep(.1)
                 for how in ['x', 'escape', 'cancel']:
                     pause_start = time.monotonic()
+                    actual_exit = how
                     self.press('立即重启 Codex')
                     self.wait(lambda s: any(d.get('title') == '重启 Codex' for d in self.dialogs(s)), name='restart-confirm-' + how)
                     self.capture('restart-confirm-' + how)
@@ -536,27 +724,48 @@ class NativeRun:
                         self.capture('restart-confirm-escape-unclosed')
                         self.check('save-notice-confirm-escape', 'fail', reason='PID-directed Escape did not close the real restart confirmation within 8 seconds; captured before recovery with header X. No restart was confirmed.')
                         self.dismiss('x')
+                        actual_exit = 'header-X-recovery-after-Escape-timeout'
                     resumed = sample()
                     assert self.matches(resumed, '立即重启 Codex'), 'Cancel lost the saved notification'
-                    pauses.append({'exit': how, 'start': pause_start - start, 'end': time.monotonic() - start})
+                    operations.append({'requestedExit': how, 'actualExit': actual_exit, 'start': pause_start - start, 'end': time.monotonic() - start,
+                                       'usedAsPausedDuration': False})
+                    exits.append(actual_exit)
                     # No blur/focus/move after cancellation: the product must resume itself.
             while time.monotonic() - start < 45:
                 s = sample()
                 if not self.matches(s, '立即重启 Codex'): break
                 time.sleep(.1)
             else: raise AssertionError('Saved notification failed to collapse after confirmation cancellation')
-            elapsed = time.monotonic() - start
-            paused = sum(p['end'] - p['start'] for p in pauses)
-            active = elapsed - paused
-            # AX round trips and the real leave animation bound the observation;
-            # no virtual clock, injected state, DOM event, blur or time override.
-            assert 6.7 <= active <= 9.3, 'Unexpected eight-second active time: ' + str(active)
+            # Ensure the read-only observer itself recorded the disappearance;
+            # its brackets, not this slower action-side poll, determine the end.
+            until = time.monotonic() + 3
+            while time.monotonic() < until:
+                tail = self.notice_samples[-2:]
+                if len(tail) == 2 and all(not s['notice'] and not s['dialogs'] for s in tail): break
+                time.sleep(.02)
+            self.stop_notice_observation()
+            if self.notice_error: raise self.notice_error
+            measurement = notice_clock_bounds(self.notice_samples, exits)
+            low, high = measurement['activeIntervalSeconds']
+            if not (6.7 <= low <= high <= 9.3):
+                if high < 6.7 or low > 9.3:
+                    raise AssertionError('Native countdown interval is outside 6.7..9.3 seconds: ' + str([low, high]))
+                raise Blocked('Native timing uncertainty crosses unchanged 6.7..9.3 threshold: ' + str([low, high]))
+            elapsed = sum(measurement['elapsedIntervalSeconds']) / 2
+            active = measurement['activeMidpointSeconds']
             self.check('save-notice-confirm-cancel-remainder' if confirm else 'save-notice-eight-seconds', 'pass',
-                       elapsedSeconds=elapsed, estimatedActiveSeconds=active, confirmationPauses=pauses,
-                       clock='real monotonic time + foreground AX samples; includes native IPC/leave-animation uncertainty',
+                       elapsedSeconds=elapsed, estimatedActiveSeconds=active, confirmationPauses=measurement['confirmationPauses'],
+                       confirmationExitResults=operations,
+                       measurement=measurement, clock='real monotonic AX observation brackets; full active interval fits unchanged threshold',
                        restartConfirmed=False, manualBlurAfterCancel=False, trace='notice-trace-' + str(confirm) + '.json')
         finally:
-            write_json(self.out / ('notice-trace-' + str(confirm) + '.json'), {'samples': trace, 'pauses': pauses})
+            self.stop_notice_observation()
+            write_json(self.out / ('notice-trace-' + str(confirm) + '.json'), {'schemaVersion': 2,
+                'monotonicOrigin': start, 'samples': self.notice_samples, 'inputOperationSpans': operations,
+                'measurement': measurement, 'observerError': str(self.notice_error) if self.notice_error else None,
+                'legacyOperationSpansAreNotDialogPauses': True,
+                'observationMethod': 'read-only in-process native AX attributes; no frames/screenshots/process launch in the sampler',
+                'remainingCounterExposedByAx': False})
 
     def renamed_readback(self, original, target):
         config = self.root / 'opencodex-home/config.json'

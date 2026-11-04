@@ -87,11 +87,24 @@ if verb == "focus" { emit(["ok": app.activate(options: [])]); exit(0) }
 if verb == "key" {
     guard args.count >= 5, let code = CGKeyCode(args[4]) else { exit(2) }
     let flags = args.count > 5 && args[5] == "cmd" ? CGEventFlags.maskCommand : []
+    var posts = [[String: Any]]()
     for down in [true, false] {
+        // Real held key, same target/code/flags. Exactly one down and one up;
+        // no event retry, DOM event, focus change or product timeout change.
+        if !down { Thread.sleep(forTimeInterval: 0.050) }
         let event = CGEvent(keyboardEventSource: nil, virtualKey: code, keyDown: down)!
-        event.flags = flags; event.postToPid(pid)
+        event.flags = flags
+        let before = DispatchTime.now().uptimeNanoseconds
+        event.postToPid(pid)
+        let after = DispatchTime.now().uptimeNanoseconds
+        posts.append(["keyDown": down, "targetPid": pid, "keyCode": code, "flags": flags.rawValue,
+                      "monotonicBeforePostNanoseconds": before, "monotonicAfterPostNanoseconds": after,
+                      "eventTimestampNanoseconds": event.timestamp])
     }
-    emit(["ok": true]); exit(0)
+    // Keep the sender alive after release, allowing the native dispatch to drain.
+    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.020))
+    Thread.sleep(forTimeInterval: 0.020)
+    emit(["ok": true, "posts": posts, "requestedHoldMilliseconds": 50, "postCount": 2]); exit(0)
 }
 guard args.count >= 5, let e = element(root, args[4]) else { emit(["error": "AX path missing"]); exit(5) }
 guard isWebViewDescendant(root, args[4]), attr(e, kAXSubroleAttribute) as? String != "AXCloseButton",
