@@ -54,6 +54,7 @@ let currentTrace = 0
 let timedOut = false
 let loadInFlight = false
 let timedOutBeforeShow = false
+let pendingShow: { reload: boolean } | null = null
 
 const embedded = computed(() => app.preferences?.panelMode !== 'browser')
 
@@ -156,11 +157,18 @@ function getBounds(): PanelBounds | null {
 }
 
 async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
+  if (action !== 'hide' && (disposed || timedOut)) return
   if (action !== 'hide' && !embedded.value) return
-  if (syncBusy.value && action !== 'hide') return
+  if (syncBusy.value && action !== 'hide') {
+    // Hide can still be returning when the last overlay closes. Preserve the
+    // latest desired Show rather than losing the only restoration request.
+    if (action === 'show') pendingShow = { reload: reload || !!pendingShow?.reload }
+    return
+  }
   const bounds = action === 'hide' ? undefined : getBounds()
   if (action !== 'hide' && !bounds) return
-  const revision = action === 'hide' ? ++commandRevision : commandRevision
+  const revision = ++commandRevision
+  if (action === 'show') pendingShow = null
   syncBusy.value = true
   if (action === 'show') panel.markLoad(currentTrace, 'native-request')
   try {
@@ -208,7 +216,14 @@ async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
     // 布局同步失败不改变已展示的面板。
     if (action === 'show' && !disposed && revision === commandRevision && !timedOut) reportLoadFailure()
   } finally {
-    if (revision === commandRevision) syncBusy.value = false
+    if (revision === commandRevision) {
+      syncBusy.value = false
+      if (pendingShow && !disposed && !timedOut && !requiredOverlays.value && !panelNotice.value) {
+        const pending = pendingShow
+        pendingShow = null
+        void syncPanel('show', pending.reload)
+      }
+    }
   }
 }
 
@@ -323,6 +338,7 @@ async function loadPanel() {
   panelNotice.value = null
   if (!panelReady.value) panelLoading.value = true
   await nextTick()
+  if (disposed || revision !== loadRevision || timedOut) return
   await syncPanel('show')
   if (requiredOverlays.value && !panelHiddenForSurface) {
     // 进入面板路由时已经有表面在显示：直接收敛，避免表面被原生面板盖住。
@@ -373,6 +389,7 @@ watch(() => panel.reloadToken, () => {
 
 onBeforeUnmount(() => {
   disposed = true
+  pendingShow = null
   loadRevision++
   commandRevision++
   clearLoadTimeout()

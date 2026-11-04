@@ -90,3 +90,36 @@ it('hides a late show while an overlay is present and restores after the last su
  useNotificationsStore().panelOpen=false;await flushPromises()
  expect(wrapper!.text()).toContain('官方面板已嵌入主窗口')
 })
+
+it('restores the panel when the last overlay closes before native Hide returns',async()=>{
+ let resolveHide!:(value:unknown)=>void
+ let shows=0
+ invoke.mockImplementation((command:string,args?:{request?:{action?:string}})=>{
+  if(command!=='sync_embedded_panel')return Promise.resolve(undefined)
+  if(args?.request?.action==='hide')return new Promise(resolve=>{resolveHide=resolve})
+  shows++;return Promise.resolve({visible:true,panelUrl:'http://127.0.0.1:10100/web',ready:true,generation:shows*2})
+ })
+ await render();expect(shows).toBe(1)
+ useNotificationsStore().panelOpen=true;await flushPromises();expect(resolveHide).toBeTypeOf('function')
+ useNotificationsStore().panelOpen=false;await flushPromises()
+ resolveHide({visible:false,panelUrl:null,ready:true,generation:3});await flushPromises()
+ expect(shows).toBe(2)
+ expect(wrapper!.text()).toContain('官方面板已嵌入主窗口')
+})
+
+it('does not replay a queued restoration after leaving the panel route',async()=>{
+ const hides:((value:unknown)=>void)[]=[]
+ let shows=0
+ invoke.mockImplementation((command:string,args?:{request?:{action?:string}})=>{
+  if(command!=='sync_embedded_panel')return Promise.resolve(undefined)
+  if(args?.request?.action==='hide')return new Promise(resolve=>hides.push(resolve))
+  shows++;return Promise.resolve({visible:true,panelUrl:'http://127.0.0.1:10100/web',ready:true,generation:2})
+ })
+ await render()
+ useNotificationsStore().panelOpen=true;await flushPromises()
+ useNotificationsStore().panelOpen=false;await flushPromises()
+ wrapper!.unmount();wrapper=undefined
+ for(const resolve of hides)resolve({visible:false,panelUrl:null,generation:3})
+ await flushPromises()
+ expect(shows).toBe(1)
+})

@@ -22,6 +22,7 @@ pub struct PanelLifetime(
     AtomicU64,
     AtomicBool,
     AtomicU64,
+    AtomicU64,
 );
 const PANEL_COMMAND_TIMEOUT: Duration = Duration::from_secs(8);
 #[derive(Default)]
@@ -348,6 +349,15 @@ fn navigation_allowed(url: &tauri::Url, origin: &tauri::Url) -> bool {
         && (url.path() == "/web" || url.path().starts_with("/web/"))
 }
 
+fn current_panel_load(
+    active_view: u64,
+    callback_view: u64,
+    url: &tauri::Url,
+    origin: &tauri::Url,
+) -> bool {
+    active_view == callback_view && navigation_allowed(url, origin)
+}
+
 /// 面板嵌入的排障记录（S18-02）：进程状态、Show 请求与页面加载各记一行，
 /// 便于把「页面没加载」与「进程没启动」分开判断。只写来源（scheme://host:port），
 /// 不写路径、片段或查询；写日志失败不影响面板本身。
@@ -518,6 +528,9 @@ pub async fn sync_embedded_panel(
             view
         } else {
             lifetime.2.store(false, Ordering::Release);
+            // A retired view may finish navigation after its replacement is
+            // created. Its callback must never mark the replacement ready.
+            let view_epoch = lifetime.4.fetch_add(1, Ordering::AcqRel).wrapping_add(1);
             let mut url = url.clone().ok_or(AppError::NotConfigured)?;
             if !request.reload {
                 if !idle.path.is_empty() {
@@ -531,6 +544,7 @@ pub async fn sync_embedded_panel(
             let restore_once = std::sync::atomic::AtomicBool::new(true);
             let origin = url.clone();
             let origin_label = origin.origin().ascii_serialization();
+            let load_origin = origin.clone();
             let navigation_app = app.clone();
             let load_app = app.clone();
             let builder = tauri::webview::WebviewBuilder::new(
@@ -557,6 +571,15 @@ pub async fn sync_embedded_panel(
             })
             .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
             .on_page_load(move |view, payload| {
+                let lifetime = load_app.state::<PanelLifetime>();
+                if !current_panel_load(
+                    lifetime.4.load(Ordering::Acquire),
+                    view_epoch,
+                    payload.url(),
+                    &load_origin,
+                ) {
+                    return;
+                }
                 if matches!(payload.event(), tauri::webview::PageLoadEvent::Finished)
                     && restore_once.swap(false, std::sync::atomic::Ordering::AcqRel)
                 {
@@ -575,7 +598,6 @@ pub async fn sync_embedded_panel(
                         payload.url().origin().ascii_serialization()
                     ),
                 );
-                let lifetime = load_app.state::<PanelLifetime>();
                 lifetime.2.store(status == "ready", Ordering::Release);
                 let load_generation = lifetime.3.load(Ordering::Acquire);
                 notify_main_generation(&load_app, "load", status, Some(load_generation));
@@ -733,6 +755,27 @@ fn panel_state_detail(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn load_callbacks_require_the_current_view_and_owned_navigation() {
+        let origin = validate_panel_url("http://127.0.0.1:10100/web").unwrap();
+        assert!(current_panel_load(3, 3, &origin, &origin));
+        assert!(!current_panel_load(4, 3, &origin, &origin));
+        for url in [
+            "about:blank",
+            "http://127.0.0.1:10101/web",
+            "http://127.0.0.1:10100/api/status",
+            "https://example.com/web",
+        ] {
+            assert!(!current_panel_load(3, 3, &url.parse().unwrap(), &origin));
+        }
+        assert!(current_panel_load(
+            4,
+            4,
+            &"http://127.0.0.1:10100/web/models#details".parse().unwrap(),
+            &origin,
+        ));
+    }
 
     #[test]
     fn repeated_show_before_navigation_keeps_origin_and_resume_state() {
