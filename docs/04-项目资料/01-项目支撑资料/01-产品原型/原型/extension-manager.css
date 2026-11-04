@@ -1,4 +1,23 @@
 /* COL-LOCAL-20261014-01 · only active in the extensions design scope. */
+
+/* COL-LOCAL-20261014-01 · Extensions business two-view shell. */
+.xp3-page{min-width:0;display:grid;gap:12px}
+.xp3-page[hidden],.xp3-page [hidden]{display:none!important}
+.xp3-mode{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:10px;container-type:inline-size}
+.xp3-switch{display:inline-flex;padding:3px;gap:2px;background:var(--rail);border-radius:8px;flex:none}
+.xp3-switch button{border:0;border-radius:5px;background:transparent;font:inherit;font-size:var(--text-label);color:var(--muted);padding:6px 12px;cursor:pointer}
+.xp3-switch button[aria-pressed=true]{background:var(--panel);color:var(--text);box-shadow:0 1px 3px #0002;font-weight:600}
+.xp3-types{display:flex;gap:14px;margin:0;flex:none}
+.xp3-types button{border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);font:inherit;font-size:var(--text-label);padding:6px 0;cursor:pointer}
+.xp3-types button[aria-pressed=true]{color:var(--text);border-bottom-color:var(--text);font-weight:600}
+.xp3-tools{display:flex;gap:8px;margin-left:auto;flex:none}
+.xp3-tools .btn{min-height:30px;padding:4px 10px;font-size:var(--text-label)}
+.xp3-note{font-size:var(--text-caption);color:var(--muted)}
+.xp3-workbench{margin:0}
+.xp3-tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.xp3-tool-grid .btn{justify-content:flex-start;text-align:left}
+@media(max-width:900px){.xp3-mode{gap:6px;flex-wrap:wrap}.xp3-types{gap:10px}.xp3-tools{width:auto;margin-left:auto}.xp3-switch{margin-left:auto}.xp3-tool-grid{grid-template-columns:1fr}}
+@container(max-width:680px){.xp3-tools{margin-left:auto}.xp3-switch{margin-left:auto}}
 .xp-page{min-width:0;display:grid;gap:16px}
 .xp-page[hidden],.xp-page [hidden]{display:none!important}
 .xp-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:0}
@@ -85,3 +104,32 @@
  .xp-plan-row{grid-template-columns:46px minmax(0,1fr) 94px;gap:8px}
  .xp-toolbar .select{max-width:180px}.xp-dialog-tools .select{max-width:165px}
 }
+
+.xp3-head h2{margin:0;font-size:var(--text-title)}
+.xp3-head p{margin:4px 0 0;color:var(--muted);font-size:var(--text-caption)}
+.xp3-mode-btn,.xp3-kind-btn{appearance:none}
+.xp3-mode-btn{fl:left}
+
+/* COL-LOCAL-20261014-01 · 2026-11-01 right table: no checkbox column, header bulk enable / stop. */
+.xp3-page .ic-context{height:24px}
+#xp3RightContext .xp3-bulk{margin-left:auto;display:flex;gap:6px;flex:none}
+#xp3RightContext .xp3-bulk-item{display:inline-flex}
+#xp3RightContext .xp3-bulk .btn{box-sizing:border-box;min-height:24px;height:24px;padding:0 9px;line-height:22px;font-size:var(--text-caption);color:var(--text);background:var(--raised-ghost);border:1px solid transparent;border-radius:var(--radius-xs)}
+#xp3RightContext .xp3-bulk .btn:hover{background:var(--raised-ghost-hover)}
+#xp3RightContext .xp3-bulk .btn:disabled{color:var(--muted)}
+
+/* COL-LOCAL-20261014-01 · 2026-11-01 extensions page fills the window; normally only the two lists scroll.
+   Overrides the 100vh-based .xp3-page rules in interactive-collection.css, which ignore the prototype window size.
+   Minimum list height (2026-11-01 minh): both lists keep at least --xp3-list-min = 168px, enough for two full rows
+   (right table: 34px header + 2 x 64px rows = 162px; left list: 2 x 73px rows = 146px). At the 900x600 minimum window
+   the lists get 200px, or 172px with a one-line notice. When a wrapped notice or taller future content would push them
+   below the floor, .main shows its vertical scrollbar instead of shrinking the lists further. */
+html[data-route="extensions"] .main:has(#extensionManagerContent:not([hidden])){display:flex;flex-direction:column;overflow-x:hidden;overflow-y:auto}
+html[data-route="extensions"] .main:has(#extensionManagerContent:not([hidden]))>.topbar{flex:none;width:100%}
+html[data-route="extensions"] .main:has(#extensionManagerContent:not([hidden]))>#route-extensions{flex:1 1 auto;min-height:auto;width:100%;grid-template-rows:minmax(0,1fr)}
+#route-extensions .xp3-page{--xp3-list-min:168px;display:flex;flex-direction:column;gap:12px;min-height:0;max-height:none;overflow:visible;padding-right:0}
+#route-extensions .xp3-page>:is(.xp3-mode,.xp3-note){flex:none}
+#route-extensions .xp3-workbench{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+#route-extensions .xp3-page .ic-panes{flex:1 1 auto;height:auto;min-height:0;grid-template-rows:minmax(0,1fr)}
+#route-extensions .xp3-page .ic-collection{flex:1 1 var(--xp3-list-min);min-height:var(--xp3-list-min)}
+#route-extensions .xp3-page .ic-footer{flex:none}
