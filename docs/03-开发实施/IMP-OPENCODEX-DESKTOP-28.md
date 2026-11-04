@@ -2,12 +2,12 @@
 id: "IMP-OPENCODEX-DESKTOP-28"
 object_kind: "implementation.change"
 title: "0.2.20 原型对齐与同步链路实施"
-state: "in_progress"
+state: "completed"
 dmd_refs: ["DMD-OPENCODEX-UI-020"]
-summary: "实现与原型复核已有分层证据；最终包、双平台实际OTA与稳定发布收口仍进行中。"
+summary: "0.2.20冻结源码与原包已完成全部适用验收并公开stable；保留原始失败、模拟/原生边界及未来包排除。"
 demand_ids: ["DMD-OPENCODEX-UI-020"]
 task_ids: ["TASK-OPENCODEX-UI020-CLOSEOUT-20261104"]
-completion_summary: null
+completion_summary: "全部20项AC与六项审阅门有分层证据；冻结b175源码、Windows四安装、Mac/MSI/NSIS实际相邻更新及公开stable完成，原型/消费者遗漏和证据错挂已纠正。"
 ---
 
 # 0.2.20 原型对齐与同步链路实施
@@ -33,7 +33,10 @@ completion_summary: null
 
 ## 实际状态
 
-正在实施，尚未完成正式验收/发布；具体改动和剩余工作回写0.2.20-bugs.md第9节，本文件不另持有第二份问题状态。证据目录.adg/evidence/0.2.20/implementation-20261102，TASK.required_checks及RCP逐检查记录结果，保留所有失败轮次。未达到DMD完整验收前保持active。
+已完成本版适用范围验收并公开v0.2.20 stable；具体逐项结论和历史失败保留在0.2.20-bugs.md第9节，本文件不另持有第二份问题状态。证据目录.adg/evidence/0.2.20/implementation-20261102，TASK.required_checks及RCP逐检查记录结果，保留所有失败轮次。未达到DMD完整验收前保持active。
 
 
 2026-11-03 用户追加100%缩放正常、标准字体偏大：共享字体增量采用body13/control12/subtitle15/title18/display22，micro/caption/label10/11/12保留。叠加冻结cfbd90c4b+1da4cabca，当前并行未来模块不纳入。实现及通过/失败回写原0.2.20-bugs；原型漏上级共享依赖已补正，不能把旧缺依赖截图作为完整视觉一致性证据。最终包/Windows/OTA按最后源码重新验收，整体继续active。
+
+
+2026-11-04最终收口：全部20项AC与六项审阅门有分层证据；冻结b175源码、Windows四安装、Mac/MSI/NSIS实际相邻更新及公开stable完成，原型/消费者遗漏和证据错挂已纠正。 PR67 merge 28d7f62e994beed57d291c904ab2c775491bc928与tag b175源码tree相同。详情见REL-OPENCODEX-DESKTOP-23及原问题清单；正式关闭由RuntimeStore的TASK/RCP/CERT承接。

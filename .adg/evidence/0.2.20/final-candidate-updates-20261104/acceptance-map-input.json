@@ -1,0 +1,229 @@
+{
+  "sourceCommit": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "adoptedPrototype": [
+    "cfbd90c4b",
+    "1da4cabca",
+    "user-confirmed shared typography: body13/control12/subtitle15/title18/display22"
+  ],
+  "status": "pending final entry/font review and stable promotion",
+  "criteria": [
+    {
+      "id": "AC-020-01",
+      "s20": "S20-01",
+      "evidence": [
+        "implementation-20261102/assets-no-review.log",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "UI and Rust manual-review gates removed; final native mixed Skill/MCP export reaches preview without old control; structural path/file/identity/credential checks retained."
+    },
+    {
+      "id": "AC-020-02",
+      "s20": "S20-02",
+      "evidence": [
+        "implementation-20261102/first-failing-s20-ui.log",
+        "integration-20261104/ocx020-compact-sync-css-low-final-webkit/report.json",
+        "integration-20261104/ocx020-compact-sync-css-low-final-chromium-r2/report.json"
+      ],
+      "basis": "Removed preset/clear controls; current filtered header selection, hidden choices, indeterminate/empty/disabled states checked through production tree."
+    },
+    {
+      "id": "AC-020-03",
+      "s20": "S20-03",
+      "evidence": [
+        "implementation-20261102/ocx020-choice-family.log",
+        "implementation-20261102/ocx020-context-scope.log",
+        "acceptance-20261103/native-scope-1c2ca000",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "Explicit object IDs replace hidden legacy all flags; dependency/order projection and preferences-only four-field allowlist preserve unselected resources."
+    },
+    {
+      "id": "AC-020-04",
+      "s20": "S20-04",
+      "evidence": [
+        "implementation-20261102/ocx020-new-device.log",
+        "implementation-20261102/ocx020-cloud-ui-test.log",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "File/WebDAV/import choices independently persisted; first successful catalog on new device selects all then-existing objects, subsequent additions remain unchecked; failed reads never initialize."
+    },
+    {
+      "id": "AC-020-05",
+      "s20": "S20-05",
+      "evidence": [
+        "implementation-20261102/choice-boundaries-ui.log",
+        "acceptance-20261103/mixed-import-native-35c06338",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "Credentials bind object identity/source, same names remain distinct; unselected secrets excluded and receiver existing fields preserved. Browser credential-label matrix separately covers final labels."
+    },
+    {
+      "id": "AC-020-06",
+      "s20": "S20-06",
+      "evidence": [
+        "acceptance-20261103/native-scope-1c2ca000",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "Always defaults plaintext; opt-in matching passwords protect frozen preview without a second confirmation. Real custom directory, two independent same-day package UUIDs and Finder open verified."
+    },
+    {
+      "id": "AC-020-07",
+      "s20": "S20-07",
+      "evidence": [
+        "implementation-20261102/ocx020-native-secure-store.log",
+        "implementation-20261102/ocx020-remote-protection-rotate.log",
+        "font-final-candidate-bda7c92d/final-ci-completed.json"
+      ],
+      "basis": "Content-encryption decision/password independent from connection credentials; transfer_protection Native keyring stores only opaque refs in metadata, including rotation and disabling future encryption while reading old content. Legacy WebDAV connection-password backend is a distinct preexisting contract."
+    },
+    {
+      "id": "AC-020-08",
+      "s20": "S20-08",
+      "evidence": [
+        "acceptance-20261103/native-integrated-f1f26d8f",
+        "acceptance-20261103/mixed-import-native-35c06338",
+        "font-final-candidate-bda7c92d/native-evidence-source-reuse.json"
+      ],
+      "basis": "Common file picker/decryption/range/change/backup dialog; ordinary saved-file adoption directly commits; source=draft and old operation recovery explicitly retain their separate compatibility semantics. Successful decryption residual-picker defect fixed and verified."
+    },
+    {
+      "id": "AC-020-09",
+      "s20": "S20-09",
+      "evidence": [
+        "font-final-candidate-bda7c92d/native-connection-consumers/result.json",
+        "acceptance-20261103/ocx020-final-owned-https-6b2ea6d4.log"
+      ],
+      "basis": "Final native form, actual TLS/authentication probe success/failure, save/reopen/blank password, real permission refusal and candidate activation/cancel/disabled verified against loopback only; seeded candidate consumer distinct from transfer import."
+    },
+    {
+      "id": "AC-020-10",
+      "s20": "S20-10",
+      "evidence": [
+        "integration-20261104/ocx020-compact-sync-css-low-final-webkit/report.json",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json",
+        "font-final-candidate-bda7c92d/native-connection-consumers/result.json"
+      ],
+      "basis": "Overview/common synchronization host retains route on open/cancel/Escape/complete and result reopening; final native directory/export/connection operations return to overview."
+    },
+    {
+      "id": "AC-020-11",
+      "s20": "S20-11",
+      "evidence": [
+        "implementation-20261102/ocx020-event-registry-integration.log",
+        "implementation-20261102/ocx020-notification-registry.log",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json",
+        "acceptance-20261103/mixed-import-native-35c06338"
+      ],
+      "basis": "Persisted per-operation receipts distinguish complete/partial/no-change/failure, same-ID retry and original backup, cancellation/notification history cleanup; final native two packages reopen matching results and custom actual directory."
+    },
+    {
+      "id": "AC-020-12",
+      "s20": "S20-12",
+      "evidence": [
+        "implementation-20261102/ocx020-file-object-preview.log",
+        "implementation-20261102/ocx020-key-preview.log",
+        "implementation-20261102/ocx020-comparison-check.log",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "Unknown changes block confirmation; credentials redacted, Skill file changes explicit, both source directions and unselected MCP source skip counted accurately; native Codex source changes package command exclusively."
+    },
+    {
+      "id": "AC-020-13",
+      "s20": "S20-13",
+      "evidence": [
+        "acceptance-20261103/final-file-browser-6b2ea6d4",
+        "acceptance-20261103/mixed-import-native-35c06338",
+        "font-final-candidate-bda7c92d/final-ci-native-reports"
+      ],
+      "basis": "Real production-file writing and reopened provider/key/Skill/MCP/preferences with exact backup; direct file import needs no second save; unsaved edits rebased and preserved, stale previews rejected; explicit draft remains separate."
+    },
+    {
+      "id": "AC-020-14",
+      "s20": "S20-14",
+      "evidence": [
+        "implementation-20261102/ocx020-backup-fuller.log",
+        "acceptance-20261103/native-integrated-f1f26d8f",
+        "acceptance-20261103/mixed-import-native-35c06338",
+        "font-final-candidate-bda7c92d/native-evidence-source-reuse.json"
+      ],
+      "basis": "Actual selected-resource backup and permissions/digests, same-operation original preimages survive retry; actual grouped restore rejects drift and preserves later unrelated manual field. Disabled backup never falsely claims protected contents."
+    },
+    {
+      "id": "AC-020-15",
+      "s20": "S20-15",
+      "evidence": [
+        "implementation-20261102/ocx020-convergence-red.log",
+        "implementation-20261102/ocx020-convergence-time.log",
+        "implementation-20261102/ocx020-source-test.log",
+        "acceptance-20261103/ocx020-final-owned-https-6b2ea6d4.log"
+      ],
+      "basis": "Source decision table and two independent file roots/conditional HTTPS fixtures prove content-base convergence, no clock-induced freshness inflation, bounded unselected scope. Not claimed as daily real-device/server synchronization."
+    },
+    {
+      "id": "AC-020-16",
+      "s20": "S20-16",
+      "evidence": [
+        "implementation-20261102/ocx020-context-scope.log",
+        "acceptance-20261103/native-scope-1c2ca000",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json",
+        "font-final-candidate-bda7c92d/native-connection-consumers/result.json"
+      ],
+      "basis": "Four portable display preferences; account/source mapping, logged-in/device/active connection retained; transferred endpoint candidate needs explicit activation. Real client MCP key-path/platform adaptation remains future multi-agent package."
+    },
+    {
+      "id": "AC-020-17",
+      "s20": "S20-17",
+      "evidence": [
+        "implementation-20261102/export-preview-cancellation.md",
+        "acceptance-20261103/mixed-import-native-35c06338",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "Cancel clears unattempted frozen plan/payload without export destination or business overwrite; attempted plan survives for exact-ID retry. Failure, partial completion, independent modifications and stale restore protected through real files."
+    },
+    {
+      "id": "AC-020-18",
+      "s20": "S20-18",
+      "evidence": [
+        "implementation-20261102/first-failing-s20-ui.log",
+        "acceptance-20261103/explicit-test-admissions.json",
+        "font-final-candidate-bda7c92d/final-ci-completed.json",
+        "font-final-candidate-bda7c92d/official-contract-frozen-attempt2/run.json",
+        "final-candidate-updates-20261104/final-ci-completed.json"
+      ],
+      "basis": "Old failing behavior retained, current full mandatory CI plus explicitly admitted official/native/HTTPS cases passed; platform child-process/owned-external admissions documented individually; cancellation, skips and partial matrices never counted as passing substitutes."
+    },
+    {
+      "id": "AC-020-19",
+      "s20": "S20-19",
+      "evidence": [
+        "integration-20261104/ocx020-compact-sync-css-low-final-webkit/report.json",
+        "integration-20261104/ocx020-compact-sync-css-low-final-chromium-r2/report.json",
+        "compact-typography-20261103/ocx020-compact-type-final-webkit/report.json",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json",
+        "final-candidate-34a3553f/independent-update-scale-review/handoff.json",
+        "final-candidate-34a3553f/native-update-scale/result.json",
+        "final-candidate-34a3553f/windows-adjacent-ota/summary.json",
+        "final-candidate-updates-20261104/independent-current-version-review/handoff.json",
+        "final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json",
+        "final-candidate-updates-20261104/windows-adjacent-ota/summary.json"
+      ],
+      "basis": "Current shared typography body13/control12/subtitle15/title18/display22 and final UpdateCenter same/lower/latest details align adopted prototype; complete frozen dependencies, explicit UI state/layout/scroll/keyboard checks, final b175 native Mac Overview/Settings100/200% and Windows installed34/51/68px growth directly verified."
+    },
+    {
+      "id": "AC-020-20",
+      "s20": "S20-20",
+      "evidence": [
+        "final-entry-reconciliation-20261104/current-callsite-inventory.json",
+        "final-entry-reconciliation-20261104/entry-evidence-map.json",
+        "font-final-candidate-bda7c92d/final-ci-native-reports",
+        "final-candidate-34a3553f/current-callsite-inventory.json",
+        "final-candidate-34a3553f/native-model-history-consumer/result.json",
+        "final-candidate-updates-20261104/independent-current-version-review/handoff.json",
+        "final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json",
+        "final-candidate-updates-20261104/windows-adjacent-ota/summary.json"
+      ],
+      "basis": "37 component references +26 dynamic callers +3 custom UpdateCenter/AgentPanel references reconciled. Missing inline scope/agent/update consumers included, historical recovery-draft actual native success distinguished from scope restore; exact source exclusions and all relevant native/package states linked, no future mock modules adopted."
+    }
+  ],
+  "nativeEvidenceReuse": "final-candidate-updates-20261104/unchanged-consumer-source-reuse.json"
+}

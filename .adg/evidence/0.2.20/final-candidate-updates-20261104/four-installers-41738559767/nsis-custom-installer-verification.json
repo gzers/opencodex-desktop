@@ -1,0 +1,41 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "builtExecutableSha256": "7f6788eb996e9ff5ed3a2283650567b35ccabcf24bb747fd40cc1a2c3afaed77",
+  "version": "0.2.20",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX.Desktop_0.2.20_x64-setup.exe",
+      "bytes": 5163225,
+      "sha256": "c9102f535bc925574e6c7d8ea419dbc3069524865d7c599f955603d15a296870",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-fd5ecff5485e450ab6da41a23ec42ffb",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "5b99aa5cebf0d1644dae57e45356a2d47db88c7e6987c81d21bb0353207b0457",
+      "expectedInstalledExecutableSha256": "5b99aa5cebf0d1644dae57e45356a2d47db88c7e6987c81d21bb0353207b0457",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 13985957,
+      "productVersion": "0.2.20",
+      "firstScreen": "pass",
+      "explicitCleanupHelper": {
+        "scope": "disposable runner real installed helper with dedicated seeded roots; no native UI root selection",
+        "unconfirmedExitCode": 2,
+        "confirmedExitCode": 0,
+        "startupPointerRemoved": true,
+        "anchorAndActiveRootRemoved": true,
+        "externalHomeUnchanged": true,
+        "applicationRetained": true,
+        "applicationRootBindingTested": false,
+        "hostAcceptanceClaimed": false
+      },
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true,
+      "defaultUninstallRetainedData": true
+    }
+  ],
+  "defaultInstallChecks": []
+}

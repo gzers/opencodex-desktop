@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 2,
+  "collectedAtUtc": "2026-11-03T19:19:50.0921361Z",
+  "rootPid": 8288,
+  "cdpPort": 59737,
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 7372,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-11-03T19:19:04.4202100Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-03T19:19:05.8876618Z"
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 8288,
+    "executable": "C:\\Program Files\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-11-03T19:19:05.8944942Z",
+    "elevated": false,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-11-03T19:19:05.9062270Z"
+  },
+  "processes": [
+    {
+      "ProcessId": 8288,
+      "ParentProcessId": 7372,
+      "Name": "opencodex-desktop.exe",
+      "ExecutablePath": "C:\\Program Files\\OpenCodeX Desktop\\opencodex-desktop.exe",
+      "CommandLine": "\"C:\\Program Files\\OpenCodeX Desktop\\opencodex-desktop.exe\""
+    },
+    {
+      "ProcessId": 6180,
+      "ParentProcessId": 8288,
+      "Name": "msedgewebview2.exe",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe\" --embedded-browser-webview=1 --webview-exe-name=opencodex-desktop.exe --webview-exe-version=0.2.20 --user-data-dir=\"D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\release-windows-installer\\msi-default-startup\\startup\\sandbox-a1282324e2ff41f483f45ce7dd8c4276\\EBWebView\\EBWebView\" --noerrdialogs --embedded-browser-webview-dpi-awareness=2 --disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --remote-debugging-address=127.0.0.1 --remote-debugging-port=59737 --lang=en-US --mojo-named-platform-channel-pipe=8288.8084.10613631075674616624 /pfhostedapp:e44c660eb073dea27f2702eb7e6ee0e28a12d5e6"
+    },
+    {
+      "ProcessId": 8920,
+      "ParentProcessId": 6180,
+      "Name": "msedgewebview2.exe",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe\" --type=crashpad-handler --user-data-dir=D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\release-windows-installer\\msi-default-startup\\startup\\sandbox-a1282324e2ff41f483f45ce7dd8c4276\\EBWebView\\EBWebView /prefetch:4 /pfhostedapp:e44c660eb073dea27f2702eb7e6ee0e28a12d5e6 --monitor-self-annotation=ptype=crashpad-handler --user-stream-region=324,65568 --database=D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\release-windows-installer\\msi-default-startup\\startup\\sandbox-a1282324e2ff41f483f45ce7dd8c4276\\EBWebView\\EBWebView\\Crashpad --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=156.0.8078.49 \"--annotation=exe=C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe\" --annotation=plat=Win64 \"--annotation=prod=Edge WebView2\" --annotation=ver=156.0.4314.50 --initial-client-data=0x18c,0x190,0x194,0x188,0x19c,0x7ff897a37470,0x7ff897a37480,0x7ff897a37490"
+    },
+    {
+      "ProcessId": 1648,
+      "ParentProcessId": 6180,
+      "Name": "msedgewebview2.exe",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --noerrdialogs --user-data-dir=\"D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\release-windows-installer\\msi-default-startup\\startup\\sandbox-a1282324e2ff41f483f45ce7dd8c4276\\EBWebView\\EBWebView\" --webview-exe-name=opencodex-desktop.exe --webview-exe-version=0.2.20 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2336,i,14791476718732243186,8975255425716375102,524288 --field-trial-handle=2116,i,4205006027616163232,9311707662848604086,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=2144,i,1938076979150696634,194954920333811695,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2416 /prefetch:11 /pfhostedapp:e44c660eb073dea27f2702eb7e6ee0e28a12d5e6"
+    },
+    {
+      "ProcessId": 8492,
+      "ParentProcessId": 6180,
+      "Name": "msedgewebview2.exe",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe\" --type=gpu-process --gpu-recent-crash-count=0 --noerrdialogs --user-data-dir=\"D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\release-windows-installer\\msi-default-startup\\startup\\sandbox-a1282324e2ff41f483f45ce7dd8c4276\\EBWebView\\EBWebView\" --webview-exe-name=opencodex-desktop.exe --webview-exe-version=0.2.20 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --gpu-preferences=WAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAAEAAAAAIAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --startup-read-main-dll --metrics-shmem-handle=2076,i,2268335217961200005,1488122202356642347,262144 --field-trial-handle=2116,i,4205006027616163232,9311707662848604086,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=2144,i,1938076979150696634,194954920333811695,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=2108 /prefetch:2 /pfhostedapp:e44c660eb073dea27f2702eb7e6ee0e28a12d5e6"
+    },
+    {
+      "ProcessId": 6532,
+      "ParentProcessId": 6180,
+      "Name": "msedgewebview2.exe",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe\" --type=utility --utility-sub-type=storage.mojom.StorageService --lang=en-US --service-sandbox-type=service --noerrdialogs --user-data-dir=\"D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\release-windows-installer\\msi-default-startup\\startup\\sandbox-a1282324e2ff41f483f45ce7dd8c4276\\EBWebView\\EBWebView\" --webview-exe-name=opencodex-desktop.exe --webview-exe-version=0.2.20 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --startup-read-main-dll --metrics-shmem-handle=2712,i,15725648950278344943,6100900474381300215,524288 --field-trial-handle=2116,i,4205006027616163232,9311707662848604086,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=2144,i,1938076979150696634,194954920333811695,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2724 /prefetch:13 /pfhostedapp:e44c660eb073dea27f2702eb7e6ee0e28a12d5e6"
+    },
+    {
+      "ProcessId": 8632,
+      "ParentProcessId": 6180,
+      "Name": "msedgewebview2.exe",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\156.0.4314.50\\msedgewebview2.exe\" --type=renderer --noerrdialogs --user-data-dir=\"D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\release-windows-installer\\msi-default-startup\\startup\\sandbox-a1282324e2ff41f483f45ce7dd8c4276\\EBWebView\\EBWebView\" --webview-exe-name=opencodex-desktop.exe --webview-exe-version=0.2.20 --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=2 --remote-debugging-port=59737 --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1 --num-raster-threads=2 --enable-main-frame-before-activation --renderer-client-id=5 --ssd-no-pressure-read-main-dll --launch-time-ticks=1189567934 --metrics-shmem-handle=3932,i,2235874377962342492,16887702941319078852,1048576 --field-trial-handle=2116,i,4205006027616163232,9311707662848604086,262144 --disable-features=msPdfOOUI,msSmartScreenProtection,msWebOOUI --variations-seed-version --pseudonymization-salt-handle=2144,i,1938076979150696634,194954920333811695,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=3952 /pfhostedapp:e44c660eb073dea27f2702eb7e6ee0e28a12d5e6 /prefetch:1"
+    }
+  ],
+  "listeners": [
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 59737,
+      "OwningProcess": 6180
+    }
+  ]
+}

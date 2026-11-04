@@ -1,0 +1,13 @@
+file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-model-ui.mjs:52
+  throw Error('Native model UI timeout: '+label)
+        ^
+
+Error: Native model UI timeout: native inner select open
+    at wait (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-model-ui.mjs:52:9)
+    at async verifyWindowsModelUi (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-model-ui.mjs:154:3)
+    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-webview.mjs:101:56
+
+Node.js v24.22.2
+WebView smoke failed: 1
+at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-startup.ps1: line 131
+at <ScriptBlock>, D:\a\opencodex-desktop\opencodex-desktop\test\out\release-windows-installer\msi-default-startup\ordinary-child.ps1: line 65

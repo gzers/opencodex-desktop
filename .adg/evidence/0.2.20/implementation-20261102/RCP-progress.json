@@ -1,36 +1,30 @@
 {
-  "status": "active",
-  "source": "Product freezebda7c92da4e1f2e02e6bc2c641e0747748b98dd5/PR64; CI41671607927 and Release41671938225 running. Explicit official41671597006 failed provider_write; diagnostic644da8f7 live, product unchanged.",
+  "status": "succeeded",
+  "source": "Final frozen b1750f5cf78b294b2edb34b9674d8c707ef8f810 / PR67 merged28d7f62e; fullCI41699143981success; exact8assets433103683 and3signatures pass; MacactualOTA +Windows41739113409 +fourinstallers41738559767pass; publicstableLatest0.2.20verified. Official2/2 bda contract reused only foridenticalRustsource, earlierfailure retained.",
   "required_checks": {
-    "prototype-parity": {
-      "status": "in_progress",
-      "reason": "Full frozen dependencies corrected; shared user font increment and low-effects CSS host. Chromium/WebKit648each/96screens,0errors; font64each,Mac100/200%,allroute428 pass. Final packages/remaining entry acceptance pending.",
-      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
-    },
-    "saved-file-and-backup": {
-      "status": "in_progress",
-      "reason": "Native isolated mixed package:21objects/3synthetic credentials exported; same-ID import failed safely under temporary process HOME then retried via sandbox native security store,4completed/17unchanged. Actual saved provider/key+Skill+MCP+prefs and one original exact scope backup verified. Real scope restore rejects preview drift then restores original bytes while retaining later independent field. Final package/native and remaining failure combinations pending.",
-      "evidence": "implementation-20261102/export-preview-cancellation.md; PR #37 head dff7c75d; seven focused Rust tests; 37 focused ModelTransfer tests; full UI suite 177/1092; local Tauri IPC sandbox; PR CI 41474713948"
+    "all-entry-coverage": {
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/final-acceptance-map.json; .adg/evidence/0.2.20/final-entry-reconciliation-20261104/final-independent-review.json"
     },
     "credential-and-scope-boundaries": {
-      "status": "in_progress",
-      "reason": "scope regressions passed locally; CI run 41420204361 passed Windows backend/native credential/managed install coverage. PR #35 run 41434514282 exposed two fixture-only deadlines; test-only waits now allow Node startup under suite load while the dedicated production timeout stays 2 seconds. Integrated CI 41439302028 passed both fixtures plus all Windows backend/native credentials/managed install/offline reinstall/dependency diagnostics/release build/final EXE/Node24 and Node22.20 matrices/recovery/path/ordinary-account checks; macOS/backend/frontend/release tools also passed. PR #35 merged as f19e5e99210db8eea1500bd2d1b4daf1b3af3382.",
-      "evidence": "native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028; code commit 490a4ce8"
-    },
-    "all-entry-coverage": {
-      "status": "in_progress",
-      "reason": "37static+25dynamic callsites layered evidence; adds actual backup/migration/client consumers60/engine,extensions/log48/engine,model completion69/engine. Explicit official wire passed; old name test aligned with confirmed spec. Final CI/native packages/OTA and final reconciliation pending.",
-      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/final-acceptance-map.json; .adg/evidence/0.2.20/final-entry-reconciliation-20261104/final-independent-review.json"
     },
     "macos-windows-native": {
-      "status": "in_progress",
-      "reason": "PR55/60 CI passed/merged including Windows native keyboard/menu geometry/ordinary-account. Mac native shared preference and logical height passed; blank app/old height failures retained. Final packages/install/OTA pending.",
-      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/final-acceptance-map.json; .adg/evidence/0.2.20/final-entry-reconciliation-20261104/final-independent-review.json"
+    },
+    "prototype-parity": {
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/final-acceptance-map.json; .adg/evidence/0.2.20/final-entry-reconciliation-20261104/final-independent-review.json"
     },
     "release-and-ota": {
-      "status": "in_progress",
-      "reason": "Clean draft432803988/tagc691 replace obsolete unpublished assets. Single Release41654005109 building. PR62 marker-aware hash10 tests/pwsh parser passed; fresh bytes/signatures/four installs/Mac package/OTA not accepted.",
-      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/public-stable-verification.json; macos-adjacent-ota/ota-result.json; windows-adjacent-ota/summary.json"
+    },
+    "saved-file-and-backup": {
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/final-acceptance-map.json; .adg/evidence/0.2.20/final-entry-reconciliation-20261104/final-independent-review.json"
     }
   },
   "tests": {
@@ -45,11 +39,12 @@
     "backup_migration_clients": "60checks/12screens per engine; production consumer handlers with explicit mocked IPC, no real mutations",
     "official_contract": "41672846917 undertest-only644da8f7:2/2passed in563.97s. Product code and assertions identical tobda; added failure logging only. Earlier41671597006failure preserved, unproven root cause not rewritten.",
     "final_entry_inventory": "37static references+26dynamic callers; inlineChannelEditor previouslyomitted,33scope and51local confirms perengine passed",
-    "final_package_assets": "8actualassetbytes/3signatures+sidecars/5platformmanifest/Macsource+seal+license/DMG passed"
+    "final_package_assets": "8actualassetbytes/3signatures+sidecars/5platformmanifest/Macsource+seal+license/DMG passed",
+    "official_contract_final": "Exact bda run41671597006 attempt2,2/2 passed; earlier failed rounds remain historical."
   },
   "daily_config_writes": false,
   "daily_real_sync": false,
-  "published": false,
+  "published": true,
   "ci_runs": [
     {
       "run": 41439302028,
@@ -679,22 +674,31 @@
   "release_candidate": {
     "source": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
     "pr": 67,
-    "status": "final current-version-details browserreview/local1123 pass;newpayload/CI/native/actualOTA pending",
-    "stable": "v0.2.19",
+    "status": "published stable, same frozen assets",
+    "stable": "v0.2.20",
     "ci_run": 41699143981,
     "release_run": 41699584553,
     "draft_id": 433103683,
-    "draft": true,
-    "prerelease": true
+    "draft": false,
+    "prerelease": false,
+    "ci_status": "fullsuccess",
+    "assets": "8actual bytes/3signatures+sidecars/Macseal/source/resources/DMGpass",
+    "windowsBuiltExeSha256": "7f6788eb996e9ff5ed3a2283650567b35ccabcf24bb747fd40cc1a2c3afaed77",
+    "macExeSha256": "544de246de1a498b8c681c0bd6ce254c7043ffe4b5fe754d67d3477a8fe4370b",
+    "firstReleaseInstallerCheck": "Original Windows Release postuploadinnerselecttimeout retained asfailure; sameuploadedbytes independent4cells41738559767passed andfinalCIordinarynativepassed. Rootcauseunproven, no thresholdorassetchange.",
+    "actual_windows_ota": {
+      "run": 41739113409,
+      "result": "pass",
+      "evidence": "final-candidate-updates-20261104/windows-adjacent-ota/summary.json"
+    },
+    "actual_macos_ota": {
+      "result": "pass",
+      "evidence": "final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json",
+      "sameAutomaticProcessReadback": true
+    },
+    "independent_installer_cells": "MSI/NSIS x default/custom4/4pass, exactsourceandbuiltSHAverified"
   },
-  "release_hold": {
-    "reason": "new496 product displaychange requires final source/packaging/native/actualOTA/fullCI before stable; previouspassed package retainedhistorical",
-    "awaitingFontVersionAnswer": false,
-    "typographyImplemented": true,
-    "prototypeFullMatrix": "648/engine,96screens,zero errors; complete frozen dependencies + user font + low CSS host correction",
-    "evidence": "integration-20261104",
-    "actualOta": "passed; explicit environment/readback boundaries in receipts"
-  },
+  "release_hold": null,
   "formal_task": ".adg/work/objects/task/TASK-OPENCODEX-UI020-CLOSEOUT-20261104.json",
   "formal_task_digest": "05900c538996b6111920e6f6659e122788896fcf035040f1d6133bcb81122b7d",
   "purpose": "progress/evidence index only; formal closure requires stored TASK/RCP/CERT and source Markdown",
@@ -778,5 +782,40 @@
         41694465855
       ]
     }
-  }
+  },
+  "prior_required_checks_before_closeout": {
+    "prototype-parity": {
+      "status": "in_progress",
+      "reason": "Full frozen dependencies corrected; shared user font increment and low-effects CSS host. Chromium/WebKit648each/96screens,0errors; font64each,Mac100/200%,allroute428 pass. Final packages/remaining entry acceptance pending.",
+      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
+    },
+    "saved-file-and-backup": {
+      "status": "in_progress",
+      "reason": "Native isolated mixed package:21objects/3synthetic credentials exported; same-ID import failed safely under temporary process HOME then retried via sandbox native security store,4completed/17unchanged. Actual saved provider/key+Skill+MCP+prefs and one original exact scope backup verified. Real scope restore rejects preview drift then restores original bytes while retaining later independent field. Final package/native and remaining failure combinations pending.",
+      "evidence": "implementation-20261102/export-preview-cancellation.md; PR #37 head dff7c75d; seven focused Rust tests; 37 focused ModelTransfer tests; full UI suite 177/1092; local Tauri IPC sandbox; PR CI 41474713948"
+    },
+    "credential-and-scope-boundaries": {
+      "status": "in_progress",
+      "reason": "scope regressions passed locally; CI run 41420204361 passed Windows backend/native credential/managed install coverage. PR #35 run 41434514282 exposed two fixture-only deadlines; test-only waits now allow Node startup under suite load while the dedicated production timeout stays 2 seconds. Integrated CI 41439302028 passed both fixtures plus all Windows backend/native credentials/managed install/offline reinstall/dependency diagnostics/release build/final EXE/Node24 and Node22.20 matrices/recovery/path/ordinary-account checks; macOS/backend/frontend/release tools also passed. PR #35 merged as f19e5e99210db8eea1500bd2d1b4daf1b3af3382.",
+      "evidence": "native-candidate-509cb996-build.json; CI runs 41420204361, 41434514282, 41439071945, 41439302028; code commit 490a4ce8"
+    },
+    "all-entry-coverage": {
+      "status": "in_progress",
+      "reason": "37static+25dynamic callsites layered evidence; adds actual backup/migration/client consumers60/engine,extensions/log48/engine,model completion69/engine. Explicit official wire passed; old name test aligned with confirmed spec. Final CI/native packages/OTA and final reconciliation pending.",
+      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
+    },
+    "macos-windows-native": {
+      "status": "in_progress",
+      "reason": "PR55/60 CI passed/merged including Windows native keyboard/menu geometry/ordinary-account. Mac native shared preference and logical height passed; blank app/old height failures retained. Final packages/install/OTA pending.",
+      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
+    },
+    "release-and-ota": {
+      "status": "in_progress",
+      "reason": "Clean draft432803988/tagc691 replace obsolete unpublished assets. Single Release41654005109 building. PR62 marker-aware hash10 tests/pwsh parser passed; fresh bytes/signatures/four installs/Mac package/OTA not accepted.",
+      "evidence": "acceptance-20261103/README.md; implementation-20261102/dialog-callsite-ledger.md; release-candidate-c691ce7a/source-freeze.json"
+    }
+  },
+  "historical_source_before_final_closeout": "Product freezebda7c92da4e1f2e02e6bc2c641e0747748b98dd5/PR64; CI41671607927 and Release41671938225 running. Explicit official41671597006 failed provider_write; diagnostic644da8f7 live, product unchanged.",
+  "formal_receipt": "RCP-OPENCODEX-UI020-CLOSEOUT-20261104",
+  "formal_certificate": "CERT-OPENCODEX-UI020-CLOSEOUT-20261104"
 }

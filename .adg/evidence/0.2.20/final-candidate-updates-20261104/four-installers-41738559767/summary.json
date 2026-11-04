@@ -1,0 +1,42 @@
+{
+  "result": "pass",
+  "run": 41738559767,
+  "sourceCommit": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "exactCells": 4,
+  "cells": [
+    {
+      "kind": "msi",
+      "mode": "default",
+      "result": "pass",
+      "source": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+      "built": "7f6788eb996e9ff5ed3a2283650567b35ccabcf24bb747fd40cc1a2c3afaed77",
+      "report": "msi-default-installer-verification.json"
+    },
+    {
+      "kind": "msi",
+      "mode": "custom",
+      "result": "pass",
+      "source": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+      "built": "7f6788eb996e9ff5ed3a2283650567b35ccabcf24bb747fd40cc1a2c3afaed77",
+      "report": "msi-custom-installer-verification.json"
+    },
+    {
+      "kind": "nsis",
+      "mode": "default",
+      "result": "pass",
+      "source": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+      "built": "7f6788eb996e9ff5ed3a2283650567b35ccabcf24bb747fd40cc1a2c3afaed77",
+      "report": "nsis-default-installer-verification.json"
+    },
+    {
+      "kind": "nsis",
+      "mode": "custom",
+      "result": "pass",
+      "source": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+      "built": "7f6788eb996e9ff5ed3a2283650567b35ccabcf24bb747fd40cc1a2c3afaed77",
+      "report": "nsis-custom-installer-verification.json"
+    }
+  ],
+  "scope": "actual same uploaded final installer bytes, MSI/NSIS x default/custom; nativefirstscreen/non-elevated startup/uninstall/dataretention. OTA explicitly skipped andtrackedseparately",
+  "supersedes": "original release installer validation nativeinnerselect timeout, sourceandthresholdsunchanged, originalfailure retained"
+}

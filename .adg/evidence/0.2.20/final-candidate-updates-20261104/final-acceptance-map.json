@@ -1,0 +1,524 @@
+{
+  "sourceCommit": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "adoptedPrototype": [
+    "cfbd90c4b",
+    "1da4cabca",
+    "user-confirmed shared typography: body13/control12/subtitle15/title18/display22"
+  ],
+  "status": "passed",
+  "criteria": [
+    {
+      "id": "AC-020-01",
+      "s20": "S20-01",
+      "evidence": [
+        "implementation-20261102/assets-no-review.log",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "UI and Rust manual-review gates removed; final native mixed Skill/MCP export reaches preview without old control; structural path/file/identity/credential checks retained.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-02",
+      "s20": "S20-02",
+      "evidence": [
+        "implementation-20261102/first-failing-s20-ui.log",
+        "integration-20261104/ocx020-compact-sync-css-low-final-webkit/report.json",
+        "integration-20261104/ocx020-compact-sync-css-low-final-chromium-r2/report.json"
+      ],
+      "basis": "Removed preset/clear controls; current filtered header selection, hidden choices, indeterminate/empty/disabled states checked through production tree.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-03",
+      "s20": "S20-03",
+      "evidence": [
+        "implementation-20261102/ocx020-choice-family.log",
+        "implementation-20261102/ocx020-context-scope.log",
+        "acceptance-20261103/native-scope-1c2ca000",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "Explicit object IDs replace hidden legacy all flags; dependency/order projection and preferences-only four-field allowlist preserve unselected resources.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-04",
+      "s20": "S20-04",
+      "evidence": [
+        "implementation-20261102/ocx020-new-device.log",
+        "implementation-20261102/ocx020-cloud-ui-test.log",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "File/WebDAV/import choices independently persisted; first successful catalog on new device selects all then-existing objects, subsequent additions remain unchecked; failed reads never initialize.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-05",
+      "s20": "S20-05",
+      "evidence": [
+        "implementation-20261102/choice-boundaries-ui.log",
+        "acceptance-20261103/mixed-import-native-35c06338",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "Credentials bind object identity/source, same names remain distinct; unselected secrets excluded and receiver existing fields preserved. Browser credential-label matrix separately covers final labels.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-06",
+      "s20": "S20-06",
+      "evidence": [
+        "acceptance-20261103/native-scope-1c2ca000",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "Always defaults plaintext; opt-in matching passwords protect frozen preview without a second confirmation. Real custom directory, two independent same-day package UUIDs and Finder open verified.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-07",
+      "s20": "S20-07",
+      "evidence": [
+        "implementation-20261102/ocx020-native-secure-store.log",
+        "implementation-20261102/ocx020-remote-protection-rotate.log",
+        "font-final-candidate-bda7c92d/final-ci-completed.json"
+      ],
+      "basis": "Content-encryption decision/password independent from connection credentials; transfer_protection Native keyring stores only opaque refs in metadata, including rotation and disabling future encryption while reading old content. Legacy WebDAV connection-password backend is a distinct preexisting contract.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-08",
+      "s20": "S20-08",
+      "evidence": [
+        "acceptance-20261103/native-integrated-f1f26d8f",
+        "acceptance-20261103/mixed-import-native-35c06338",
+        "font-final-candidate-bda7c92d/native-evidence-source-reuse.json"
+      ],
+      "basis": "Common file picker/decryption/range/change/backup dialog; ordinary saved-file adoption directly commits; source=draft and old operation recovery explicitly retain their separate compatibility semantics. Successful decryption residual-picker defect fixed and verified.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-09",
+      "s20": "S20-09",
+      "evidence": [
+        "font-final-candidate-bda7c92d/native-connection-consumers/result.json",
+        "acceptance-20261103/ocx020-final-owned-https-6b2ea6d4.log"
+      ],
+      "basis": "Final native form, actual TLS/authentication probe success/failure, save/reopen/blank password, real permission refusal and candidate activation/cancel/disabled verified against loopback only; seeded candidate consumer distinct from transfer import.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-10",
+      "s20": "S20-10",
+      "evidence": [
+        "integration-20261104/ocx020-compact-sync-css-low-final-webkit/report.json",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json",
+        "font-final-candidate-bda7c92d/native-connection-consumers/result.json"
+      ],
+      "basis": "Overview/common synchronization host retains route on open/cancel/Escape/complete and result reopening; final native directory/export/connection operations return to overview.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-11",
+      "s20": "S20-11",
+      "evidence": [
+        "implementation-20261102/ocx020-event-registry-integration.log",
+        "implementation-20261102/ocx020-notification-registry.log",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json",
+        "acceptance-20261103/mixed-import-native-35c06338"
+      ],
+      "basis": "Persisted per-operation receipts distinguish complete/partial/no-change/failure, same-ID retry and original backup, cancellation/notification history cleanup; final native two packages reopen matching results and custom actual directory.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-12",
+      "s20": "S20-12",
+      "evidence": [
+        "implementation-20261102/ocx020-file-object-preview.log",
+        "implementation-20261102/ocx020-key-preview.log",
+        "implementation-20261102/ocx020-comparison-check.log",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "Unknown changes block confirmation; credentials redacted, Skill file changes explicit, both source directions and unselected MCP source skip counted accurately; native Codex source changes package command exclusively.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-13",
+      "s20": "S20-13",
+      "evidence": [
+        "acceptance-20261103/final-file-browser-6b2ea6d4",
+        "acceptance-20261103/mixed-import-native-35c06338",
+        "font-final-candidate-bda7c92d/final-ci-native-reports"
+      ],
+      "basis": "Real production-file writing and reopened provider/key/Skill/MCP/preferences with exact backup; direct file import needs no second save; unsaved edits rebased and preserved, stale previews rejected; explicit draft remains separate.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-14",
+      "s20": "S20-14",
+      "evidence": [
+        "implementation-20261102/ocx020-backup-fuller.log",
+        "acceptance-20261103/native-integrated-f1f26d8f",
+        "acceptance-20261103/mixed-import-native-35c06338",
+        "font-final-candidate-bda7c92d/native-evidence-source-reuse.json"
+      ],
+      "basis": "Actual selected-resource backup and permissions/digests, same-operation original preimages survive retry; actual grouped restore rejects drift and preserves later unrelated manual field. Disabled backup never falsely claims protected contents.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-15",
+      "s20": "S20-15",
+      "evidence": [
+        "implementation-20261102/ocx020-convergence-red.log",
+        "implementation-20261102/ocx020-convergence-time.log",
+        "implementation-20261102/ocx020-source-test.log",
+        "acceptance-20261103/ocx020-final-owned-https-6b2ea6d4.log"
+      ],
+      "basis": "Source decision table and two independent file roots/conditional HTTPS fixtures prove content-base convergence, no clock-induced freshness inflation, bounded unselected scope. Not claimed as daily real-device/server synchronization.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-16",
+      "s20": "S20-16",
+      "evidence": [
+        "implementation-20261102/ocx020-context-scope.log",
+        "acceptance-20261103/native-scope-1c2ca000",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json",
+        "font-final-candidate-bda7c92d/native-connection-consumers/result.json"
+      ],
+      "basis": "Four portable display preferences; account/source mapping, logged-in/device/active connection retained; transferred endpoint candidate needs explicit activation. Real client MCP key-path/platform adaptation remains future multi-agent package.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-17",
+      "s20": "S20-17",
+      "evidence": [
+        "implementation-20261102/export-preview-cancellation.md",
+        "acceptance-20261103/mixed-import-native-35c06338",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json"
+      ],
+      "basis": "Cancel clears unattempted frozen plan/payload without export destination or business overwrite; attempted plan survives for exact-ID retry. Failure, partial completion, independent modifications and stale restore protected through real files.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-18",
+      "s20": "S20-18",
+      "evidence": [
+        "implementation-20261102/first-failing-s20-ui.log",
+        "acceptance-20261103/explicit-test-admissions.json",
+        "font-final-candidate-bda7c92d/final-ci-completed.json",
+        "font-final-candidate-bda7c92d/official-contract-frozen-attempt2/run.json",
+        "final-candidate-updates-20261104/final-ci-completed.json"
+      ],
+      "basis": "Old failing behavior retained, current full mandatory CI plus explicitly admitted official/native/HTTPS cases passed; platform child-process/owned-external admissions documented individually; cancellation, skips and partial matrices never counted as passing substitutes.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-19",
+      "s20": "S20-19",
+      "evidence": [
+        "integration-20261104/ocx020-compact-sync-css-low-final-webkit/report.json",
+        "integration-20261104/ocx020-compact-sync-css-low-final-chromium-r2/report.json",
+        "compact-typography-20261103/ocx020-compact-type-final-webkit/report.json",
+        "font-final-candidate-bda7c92d/native-final-macos-package/result.json",
+        "final-candidate-34a3553f/independent-update-scale-review/handoff.json",
+        "final-candidate-34a3553f/native-update-scale/result.json",
+        "final-candidate-34a3553f/windows-adjacent-ota/summary.json",
+        "final-candidate-updates-20261104/independent-current-version-review/handoff.json",
+        "final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json",
+        "final-candidate-updates-20261104/windows-adjacent-ota/summary.json",
+        "final-entry-reconciliation-20261104/final-independent-review.json"
+      ],
+      "basis": "Current shared typography body13/control12/subtitle15/title18/display22 and final UpdateCenter same/lower/latest details align adopted prototype; complete frozen dependencies, explicit UI state/layout/scroll/keyboard checks, final b175 native Mac Overview/Settings100/200% and Windows installed34/51/68px growth directly verified.",
+      "status": "passed"
+    },
+    {
+      "id": "AC-020-20",
+      "s20": "S20-20",
+      "evidence": [
+        "final-entry-reconciliation-20261104/current-callsite-inventory.json",
+        "final-entry-reconciliation-20261104/entry-evidence-map.json",
+        "font-final-candidate-bda7c92d/final-ci-native-reports",
+        "final-candidate-34a3553f/current-callsite-inventory.json",
+        "final-candidate-34a3553f/native-model-history-consumer/result.json",
+        "final-candidate-updates-20261104/independent-current-version-review/handoff.json",
+        "final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json",
+        "final-candidate-updates-20261104/windows-adjacent-ota/summary.json",
+        "final-entry-reconciliation-20261104/final-independent-review.json"
+      ],
+      "basis": "37 component references +26 dynamic callers +3 custom UpdateCenter/AgentPanel references reconciled. Missing inline scope/agent/update consumers included, historical recovery-draft actual native success distinguished from scope restore; exact source exclusions and all relevant native/package states linked, no future mock modules adopted.",
+      "status": "passed"
+    }
+  ],
+  "nativeEvidenceReuse": "final-candidate-updates-20261104/unchanged-consumer-source-reuse.json and final-candidate-34a3553f/native-model-history-consumer/native-launch.json explicitly bind unchanged consumer modules to prior bda evidence; new payload gates are separate.",
+  "finalIndependentReview": "final-entry-reconciliation-20261104/final-independent-review.json",
+  "publicStable": "final-candidate-updates-20261104/public-stable-verification.json",
+  "scopeLimits": [
+    "Adopted cfbd90c4b + MCP1da4cabca + user typography only; future mock modules excluded by exact source.",
+    "Browser state consumers use explicit fixtures; real file/native/credential/install/OTA evidence is separately identified.",
+    "Mac OTA requires exact new payload automatic restart with sandbox, original bundle identity and process-local restoration handling explicitly recorded.",
+    "Legacy WebDAV connection passwords retain existing local backend; content-protection passphrase uses separate native keyring.",
+    "No daily real WebDAV/multi-device synchronization or future client MCP key-path adaptation is claimed."
+  ],
+  "syncEntries": [
+    {
+      "id": "SY-01",
+      "entry": "文件同步首屏及有/无对象",
+      "acceptanceIds": [
+        "AC-020-01",
+        "AC-020-02",
+        "AC-020-19"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-02",
+      "entry": "WebDAV首屏、已记范围、有Skill/MCP",
+      "acceptanceIds": [
+        "AC-020-01",
+        "AC-020-03",
+        "AC-020-04"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-03",
+      "entry": "搜索/半选/表头全选/隐藏勾选/分组计数",
+      "acceptanceIds": [
+        "AC-020-02",
+        "AC-020-19"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-04",
+      "entry": "文件/WebDAV/每个导入包的范围记忆",
+      "acceptanceIds": [
+        "AC-020-04"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-05",
+      "entry": "账户平台筛选、支持/不支持登录来源",
+      "acceptanceIds": [
+        "AC-020-05",
+        "AC-020-16",
+        "AC-020-19"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-06",
+      "entry": "Key/扩展子项，未选/部分选/全部选",
+      "acceptanceIds": [
+        "AC-020-05"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-07",
+      "entry": "文件WebDAV配置带/不带密码、接收后未启用",
+      "acceptanceIds": [
+        "AC-020-05",
+        "AC-020-09",
+        "AC-020-16"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-08",
+      "entry": "导出确认：无凭据、含凭据、默认位置",
+      "acceptanceIds": [
+        "AC-020-06",
+        "AC-020-19"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-09",
+      "entry": "导出：自定义目录/取消选择/无权限/同日多包",
+      "acceptanceIds": [
+        "AC-020-11",
+        "AC-020-17"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-10",
+      "entry": "导出：关闭加密/开启、短口令/不一致、额外明文窗",
+      "acceptanceIds": [
+        "AC-020-06"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-11",
+      "entry": "MCP导出/上传选择来源与node_repl默认",
+      "acceptanceIds": [
+        "AC-020-01",
+        "AC-020-05",
+        "AC-020-12"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-12",
+      "entry": "导入：选择文件/取消、选包、明文/加密",
+      "acceptanceIds": [
+        "AC-020-08"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-13",
+      "entry": "导入：包内范围/凭据默认、重选、自动比较",
+      "acceptanceIds": [
+        "AC-020-05",
+        "AC-020-08"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-14",
+      "entry": "同身份渠道/新渠道/映射/SkillMCP改名",
+      "acceptanceIds": [
+        "AC-020-08",
+        "AC-020-13",
+        "AC-020-16"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-15",
+      "entry": "文件/下载确认后的已保存文件与编辑缓冲",
+      "acceptanceIds": [
+        "AC-020-13",
+        "AC-020-17"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-16",
+      "entry": "WebDAV本机新版/云端新版共享预览",
+      "acceptanceIds": [
+        "AC-020-07",
+        "AC-020-12"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-17",
+      "entry": "内容一致/没有远端/首次/双端修改/无版本",
+      "acceptanceIds": [
+        "AC-020-12",
+        "AC-020-15"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-18",
+      "entry": "无法比较变化",
+      "acceptanceIds": [
+        "AC-020-12"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-19",
+      "entry": "下载/导入默认备份、关备份、失败、重试与恢复",
+      "acceptanceIds": [
+        "AC-020-14",
+        "AC-020-17"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-20",
+      "entry": "WebDAV连接：测试/保存/留空保密码/失败/删除",
+      "acceptanceIds": [
+        "AC-020-09",
+        "AC-020-17"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-21",
+      "entry": "文件导入连接：未启用/确认启用/缺密码",
+      "acceptanceIds": [
+        "AC-020-09",
+        "AC-020-16"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-22",
+      "entry": "概览：同步/导出/连接设置/结果原位",
+      "acceptanceIds": [
+        "AC-020-08",
+        "AC-020-10"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-23",
+      "entry": "文件导出/导入/同步成功结果、部分失败、按项重试",
+      "acceptanceIds": [
+        "AC-020-11",
+        "AC-020-17"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-24",
+      "entry": "旧计划恢复/重比/受保护凭据/兼容包/显式draft",
+      "acceptanceIds": [
+        "AC-020-08",
+        "AC-020-13",
+        "AC-020-17"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-25",
+      "entry": "三档材质/亮暗/1180与900/滚动/50～200%缩放/键盘",
+      "acceptanceIds": [
+        "AC-020-19"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    },
+    {
+      "id": "SY-26",
+      "entry": "取消/关闭/Escape/重新打开/后台变化/重复点击",
+      "acceptanceIds": [
+        "AC-020-04",
+        "AC-020-10",
+        "AC-020-17"
+      ],
+      "status": "passed",
+      "evidence": "final-acceptance-map.json:criteria"
+    }
+  ]
+}

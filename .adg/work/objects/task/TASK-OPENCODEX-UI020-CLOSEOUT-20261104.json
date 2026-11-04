@@ -124,8 +124,8 @@
     "AC-020-20"
   ],
   "baseline_digest": "28a4ea3cc1c5f988755de7c002eac7f4a063a160af8fd0ad77f631ca1548a0a9",
-  "certificate_digest": null,
-  "content_digest": "05900c538996b6111920e6f6659e122788896fcf035040f1d6133bcb81122b7d",
+  "certificate_digest": "ce6cd33df55271e4a2f4a67bfb347f1949a6ef9d7a39e515f4b94a06b1295f9b",
+  "content_digest": "ba1a73f8926f889834632e127e874bcce28b91bc7f561e2f031f6fdf819f9b33",
   "demand_ids": [
     "DMD-OPENCODEX-UI-020"
   ],
@@ -156,7 +156,7 @@
   },
   "id": "TASK-OPENCODEX-UI020-CLOSEOUT-20261104",
   "implementation_id": "IMP-OPENCODEX-DESKTOP-28",
-  "imported_receipt_digest": null,
+  "imported_receipt_digest": "972e5f38e66cb1ca646533707ec057ddac7571ccc9f6cf26e70d2a6a1218dc41",
   "kind": "TASK",
   "owner": "current-chat-integration",
   "required_checks": [
@@ -167,11 +167,11 @@
     "review:release-and-ota",
     "review:saved-file-and-backup"
   ],
-  "result": "pending",
-  "revision": 2,
-  "state": "in_progress",
+  "result": "succeeded",
+  "revision": 3,
+  "state": "completed",
   "summary": "承接全部S20及字体规则；冻结六项审阅门与20项验收，真实原包/OTA/stable未完成前保持开放。",
-  "summary_digest": "24045f2bd3a4fcd92093491c3266a470d0a447c6549991aa2f0cb684c526c0d9",
+  "summary_digest": "e6fb6aa3b1f01cfdebfd5481c6eca11f7ec0880c309aae4d56afc9236a799ec8",
   "title": "0.2.20全范围验收与发布收口",
   "write_scope": [
     ".adg/evidence/0.2.20/**",

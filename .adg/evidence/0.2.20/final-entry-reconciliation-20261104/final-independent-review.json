@@ -1,5 +1,5 @@
 {
-  "result": "in_progress",
+  "result": "pass",
   "sourceCommit": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
   "reviewer": "independent subagent 01a1a26d-432c-7f73-850d-0498cf452511 + integration actual native/package receipts",
   "entryScope": {
@@ -9,7 +9,7 @@
   },
   "resolvedProductFinding": {
     "source": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
-    "status": "browser pass; final native package pending",
+    "status": "resolved in source34a, strictbrowsercontinuousreuse plusfinalb175Mac/Windowsnativepayload passed",
     "originalBlockingFinding": "FR-020-UPDATE-SCALE",
     "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/independent-update-scale-review/handoff.json",
     "checksPerEngine": {
@@ -22,27 +22,28 @@
       34,
       51,
       68
-    ]
+    ],
+    "finalSource": "b1750f5cf78b294b2edb34b9674d8c707ef8f810"
   },
   "originalBdaReports": ".adg/evidence/0.2.20/final-entry-reconciliation-20261104/independent-bda-review/review-summary.json",
   "currentMap": ".adg/evidence/0.2.20/final-entry-reconciliation-20261104/entry-evidence-map.json",
-  "remaining": "Final b175 new payload signature/install/native/actualOTA/fullCI/stable. Previous actual34a payload receipts historical, not final payload pass.",
+  "remaining": "Required acceptance and public stable promotion verified; only final human fact writeback and formal RuntimeStoreclosure recorded separately.",
   "prototypeProbeCorrection": "browser viewport was not prototype product window; actual measured900x600 window in existing1700x1000 reviewcanvas passes; not draggable coordinates; no source mutation",
   "sourceExclusions": "future mock multi-agent/conversation/connection-map only; adopted existing AgentPanel included",
   "nativeHistoryRecovery": {
     "result": "pass",
     "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-model-history-consumer/result.json",
     "actualNativeUiAndIpc": true,
-    "nativePackage": "bda with unchanged history modules/font relative34a",
+    "nativePackage": "bda formal package, testedhistory/store/dialog/font/Rust modules byte-identical through finalb175, proofunchanged-consumer-source-reuse.json",
     "noRuntimeSaveClaimed": true
   },
   "changedUpdateCenterNative": {
     "result": "pass",
-    "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-update-scale/result.json"
+    "evidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json"
   },
   "actualFinalWindowsNativeScale": {
     "result": "pass",
-    "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/windows-adjacent-ota/summary.json",
+    "evidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/windows-adjacent-ota/summary.json",
     "host": "Settings UpdateCenter",
     "samples": [
       34,
@@ -54,5 +55,26 @@
   "latestStateBrowser": {
     "result": "pass",
     "evidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/independent-current-version-review/handoff.json"
+  },
+  "finalNativeCurrentVersionDetails": {
+    "source": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+    "macos": ".adg/evidence/0.2.20/final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json",
+    "windows": ".adg/evidence/0.2.20/final-candidate-updates-20261104/windows-adjacent-ota/summary.json",
+    "allPassed": true
+  },
+  "historicalPreNativeFindingStatus": "browser pass; final native package pending",
+  "historical34aWindowsNativeScale": {
+    "result": "pass",
+    "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/windows-adjacent-ota/summary.json",
+    "host": "Settings UpdateCenter",
+    "samples": [
+      34,
+      51,
+      68
+    ]
+  },
+  "historical34aUpdateNative": {
+    "result": "pass",
+    "evidence": ".adg/evidence/0.2.20/final-candidate-34a3553f/native-update-scale/result.json"
   }
 }

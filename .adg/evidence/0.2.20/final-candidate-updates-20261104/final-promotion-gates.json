@@ -1,0 +1,65 @@
+{
+  "result": "pass",
+  "sourceCommit": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "releaseId": 433103683,
+  "productCi": {
+    "run": 41699143981,
+    "conclusion": "success",
+    "source": "b1750f5cf78b294b2edb34b9674d8c707ef8f810"
+  },
+  "releaseBuild": {
+    "run": 41699584553,
+    "Mac": "success",
+    "Windows": "assets built/signed/uploaded; postupload installermenuclick timeout retained",
+    "independentReplacementAcceptance": 41738559767,
+    "exactUploadedOriginalAssetsRetained": true
+  },
+  "fourInstallers": {
+    "run": 41738559767,
+    "result": "pass",
+    "exactCells": 4
+  },
+  "macActualOta": "macos-adjacent-ota/ota-result.json",
+  "windowsActualOta": {
+    "run": 41739113409,
+    "result": "pass",
+    "exactInstalledPayload": true
+  },
+  "assetVerification": "asset-verification.json",
+  "anonymousVerification": "anonymous-public-asset-verification.json",
+  "sourceReuse": "unchanged-consumer-source-reuse.json",
+  "requiredChecks": [
+    {
+      "name": "review:all-entry-coverage",
+      "status": "passed",
+      "evidence": "final-acceptance-map.json + final-entry-reconciliation-20261104/final-independent-review.json"
+    },
+    {
+      "name": "review:credential-and-scope-boundaries",
+      "status": "passed",
+      "evidence": "final-acceptance-map.json + final-entry-reconciliation-20261104/final-independent-review.json"
+    },
+    {
+      "name": "review:macos-windows-native",
+      "status": "passed",
+      "evidence": "final-acceptance-map.json + final-entry-reconciliation-20261104/final-independent-review.json"
+    },
+    {
+      "name": "review:prototype-parity",
+      "status": "passed",
+      "evidence": "final-acceptance-map.json + final-entry-reconciliation-20261104/final-independent-review.json"
+    },
+    {
+      "name": "review:release-and-ota",
+      "status": "passed",
+      "evidence": "final-acceptance-map.json + final-entry-reconciliation-20261104/final-independent-review.json"
+    },
+    {
+      "name": "review:saved-file-and-backup",
+      "status": "passed",
+      "evidence": "final-acceptance-map.json + final-entry-reconciliation-20261104/final-independent-review.json"
+    }
+  ],
+  "mergeCommit": "28d7f62e994beed57d291c904ab2c775491bc928",
+  "scope": "finalsource/payload/per-entry acceptance before stable promotion. Originalbuildinstallercheck failure is not counted as passing; independentexactpayload4cells andfullCIfinalEXE establish gate."
+}

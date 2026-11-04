@@ -288,3 +288,13 @@ Windows第三轮41694465855两格都已签名/安装/自动重启，实际prefli
 2026-11-04最终冻结补记：4961751c基础再补“无候选不渲染空ReleaseNotes说明块”，当前唯一源码b1750f5cf78b294b2edb34b9674d8c707ef8f810，PR67，CI41699143981，唯一新Release41699584553，私有draft433103683。两引擎最终各212项实际latestbody核验，same/lower/none只当前版本与关闭，unknownCurrent仍有远端说明且无确认；前一版本286项、宿主156项、strictscale2/expanded372项以明确1行v-if差异及CSS不变证明连续复用，非假称全数在同字节重新跑。最终UpdateCenter SHA627cbb18…与b175一致，0实际失败、无新阻塞。179文件1123UI/type/build通过。37+26已重新按b175源码逐文件扫描，另3自定义宿主不变。
 
 旧PR65/66已更新为被PR67覆盖并关闭，不声称已入main；父链确认所有提交均为b175祖先。旧CI只在确认41699143981真实存活后请求取消，取消不是通过，原普通账户启动失败保留，不据最终新源掩盖旧结果。新草稿create后的即时release-list有短暂不一致而触发assert后停止；新鲜REST读取已确认仅一个正确draft433103683和唯一打包任务，没有重复创建/dispatch。
+
+
+2026-11-04最终b175完整CI41699143981全部必需job成功，包含普通账户原生启动来源/Token、原生键盘/菜单、真实文件导入、Node24/22.20与恢复路径、真实官方托管升级/离线重装；不是用已取消34a的CI结果代替。当前八资产已核对实际bytes/API摘要/长度、三份tag公钥签名与sidecar、五平台manifest、Mac原封deep/strict/嵌入b175/许可资源与DMG，全部通过。Mac EXE SHA544de246de1a498b8c681c0bd6ce254c7043ffe4b5fe754d67d3477a8fe4370b；Windows原始EXE SHA7f6788eb996e9ff5ed3a2283650567b35ccabcf24bb747fd40cc1a2c3afaed77。
+
+Release41699584553的打包/签名/上传已完成，Macjob成功，Windows后置安装验证failed：实际MSI-default普通账户在native inner select open超时，不能把整Release写成功或单据resultfail当四格通过。原始log、trigger/timeout/截图保留于release-installers-first-failed；独立下载同八资产的四格41738559767正在运行，产品代码和阈值不变。若后续通过，将以独立原包验收替代这次失败的安装验证结论，同时原失败不删除，不为其重建已上传字节。
+
+
+## 2026-11-04 最终状态
+
+采用范围入口与字体最后补证通过；详见final-entry-reconciliation-20261104/final-independent-review.json及final-candidate-updates-20261104/final-acceptance-map.json。0.2.20已公开stable/Latest，同一b175原包完成安装与实际相邻OTA。历史段落仅为当时记录，当前以正式TASK/RCP/CERT为准。

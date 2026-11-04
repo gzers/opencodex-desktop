@@ -1774,12 +1774,20 @@
   "finalNativeHistoryRecovery": "passed actual native UI/IPC acceptance and only draft file changed; precise seeded historical-catalog boundary in receipt",
   "previousSourceBeforeLatestStateFix": "34a3553f9f014c0d553e16e8c509669a3e64fcd9",
   "finalCurrentVersionDetails": {
-    "result": "browser pass, new payload native gate pending",
+    "result": "pass finalbrowser+actualMacupgradedpayload,Windowsactualupdated100/150/200",
     "source": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
     "handoff": ".adg/evidence/0.2.20/final-candidate-updates-20261104/independent-current-version-review/handoff.json",
     "currentBodyAssertionsPerEngine": 212,
     "priorStateAssertionsPerEngine": 286,
     "sourceContinuousReuse": ".adg/evidence/0.2.20/final-candidate-updates-20261104/independent-current-version-review/continuous-source-reuse.json",
-    "meaning": "actual latest same/lower/no candidate current-only display; unknown local version still permits remote notes without install; pending frozen progress unchanged; no empty notes inlatest"
+    "meaning": "actual latest same/lower/no candidate current-only display; unknown local version still permits remote notes without install; pending frozen progress unchanged; no empty notes inlatest",
+    "nativeMacEvidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json",
+    "nativeWindowsEvidence": ".adg/evidence/0.2.20/final-candidate-updates-20261104/windows-adjacent-ota/summary.json"
+  },
+  "finalPackageScopes": {
+    "source": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+    "nativeMac": ".adg/evidence/0.2.20/final-candidate-updates-20261104/macos-adjacent-ota/ota-result.json",
+    "nativeWindows": ".adg/evidence/0.2.20/final-candidate-updates-20261104/windows-adjacent-ota/summary.json",
+    "sourceReuse": ".adg/evidence/0.2.20/final-candidate-updates-20261104/unchanged-consumer-source-reuse.json"
   }
 }
