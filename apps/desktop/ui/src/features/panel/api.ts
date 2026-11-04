@@ -23,6 +23,9 @@ export interface PanelRequest {
 export interface PanelResult {
   visible: boolean
   panelUrl: string | null
+  ready?: boolean
+  generation?: number
+  timings?: {phase: string; elapsedMs: number}[]
 }
 
 export async function syncEmbeddedPanel(request: PanelRequest): Promise<PanelResult> {
