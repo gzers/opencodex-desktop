@@ -176,3 +176,6 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05性能原始数据续审：RDP滚动场景背景draws=0仍p95=144ms，三场景longTasks为空，尚不能定位为背景着色器或JS长任务。7c2559055仅给原生采样器补rAF回调成本、时间戳到入口延迟和每秒实际滚动范围；原30秒/B/p95≤2B/over6B/前台及渲染档位均保持。语法与diff检查通过，没有声称新RDP结果；ui/src与tauri/src同31a28bfb4，既有产品候选身份仍准确记录。下一步按新增指标/必要合成GPU trace定位，再做经原生证据验证的修复，不降玻璃或预算。证据performance-followup-20261105/analysis.json。
+
+
+2026-11-05新面板产品Mac远端回归已通过：run41904417657的frontend126835126378及backend126835127037均success，前端63协议/1291 Vitest/类型/构建，后端库1216通过/0失败/4原忽略/1已单跑进程守卫排除、其余workspace均通过。原始日志与review见ci-panel-followup-31a28bfb4。检出合并87d5137（父7a8441f7e、31a28bfb4），已核验完整tauri子树及ui/src与当前7c2559055一致，后续只有QA采样器差异；不据此把当前7c全轮CI或Windows计为通过。直接no-cache任务查询先确认终态，run列表延迟仍保留为观察限制。Windows当前仍后端回归、无MSVC候选，RDP性能及正式客户端重启/发行门保持未完。

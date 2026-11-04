@@ -1,0 +1,36 @@
+{
+  "run": 41904417657,
+  "associatedHead": "31a28bfb4f0decd151269ce896f2a7364fb5b186",
+  "checkedMerge": "87d5137311c716ebadb1c88cc4477ff6fc8a7195",
+  "parents": [
+    "7a8441f7e647e4b3540d5907e44ac4f186f90998",
+    "31a28bfb4f0decd151269ce896f2a7364fb5b186"
+  ],
+  "currentHead": "7c25590550eeac18988f44c027d9d517baae8dae",
+  "sourceComparison": "Verified complete Rust/tauri subtree and ui/src equal for merge, validated head and current head; current later diff only QA performance sampler. Does not turn pending current run into success.",
+  "frontend": {
+    "job": 126835126378,
+    "result": "success",
+    "protocol": 63,
+    "vitestFiles": 197,
+    "vitestTests": 1291,
+    "typecheck": "pass",
+    "build": "pass",
+    "log": "frontend-126835126378.log"
+  },
+  "backend": {
+    "job": 126835127037,
+    "result": "success",
+    "libraryPassed": 1216,
+    "failed": 0,
+    "ignored": 4,
+    "filtered": 1,
+    "filteredScope": "bounded metadata process-tree fixture already executed separately and passed",
+    "workspace": "remaining integration suites and doctests passed",
+    "log": "backend-126835127037.log",
+    "jobMetadata": "backend-job.json"
+  },
+  "observation": "Direct GitHub job request with Cache-Control:no-cache confirms backend completed success while connector run list lagged. Missing logs while job running were not treated as failure.",
+  "windows": "backend regression in_progress; no candidate artifact yet",
+  "releaseReady": false
+}
