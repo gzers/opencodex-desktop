@@ -27,6 +27,7 @@ $taskEnvironment.LOCALAPPDATA=Join-Path $taskEnvironment.HOME 'AppData/Local'
 $taskEnvironment.TEMP=Join-Path $taskRoot 'temp';$taskEnvironment.TMP=$taskEnvironment.TEMP
 $taskEnvironment.PATH=(Join-Path $taskRoot 'installation/node_modules/.bin')+';'+(Split-Path -Parent $taskNode)+';'+(Join-Path $env:SystemRoot 'System32')+';'+$env:SystemRoot
 $taskEnvironment.OCX_WINDOWS_ACTUAL_OWNER='1'
+$taskEnvironment.OCX_WINDOWS_OWNER_NODE=$taskNode
 $taskEnvironment.OPENCODEX_SANDBOX='1';$taskEnvironment.OPENCODEX_SANDBOX_ROOT=$taskRoot
 $taskEnvironment.DO_NOT_TRACK='1';$taskEnvironment.BUN_CONFIG_NO_CLEAR_TERMINAL='1'
 $taskEnvironment.npm_config_registry='https://registry.npmjs.org/'
@@ -107,6 +108,7 @@ finally{
   $taskObserved=Get-Content -LiteralPath $taskBinding -Raw|ConvertFrom-Json
   $taskReport.codexRuntime=$taskObserved.codexRuntime
   $taskReport.admission=$taskObserved.admission
+  $taskReport.machineObservation=$taskObserved.machineObservation
   $taskReport.bindingEvidence='default-settings.json'
  }
  foreach($taskJob in $taskJobs){$taskJob.Dispose()}
