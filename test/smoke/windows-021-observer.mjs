@@ -18,10 +18,11 @@ const reads=new Set([
  'transfer_choices','transfer_protection','transfer_result','import_credential_choices',
  'portable_channel_catalog','portable_account_catalog','portable_extension_catalog','portable_latest_incoming',
 ])
-export function assert021IpcSafety(commands,writes=[]){
+export function assert021IpcSafety(commands,writes=[],extraReads=[]){
  assert(Array.isArray(commands)&&commands.length>0,'021 IPC observation must be live, not an empty assertion')
  assert(commands.includes('app_about'),'021 IPC observer sentinel missing')
- const allowed=new Set([...reads,...writes])
+ assert(extraReads.every(command=>command==='config_sync_observe'),'Only the adopted readonly version check can extend legacy observation')
+ const allowed=new Set([...reads,...writes,...extraReads])
  for(const command of commands)assert(allowed.has(command),'Unexpected native command in bounded 021 probe: '+command)
 }
 export async function observe021Ipc({call,evaluate,invoke}){
@@ -45,12 +46,12 @@ export async function observe021Ipc({call,evaluate,invoke}){
  }
  let closed=false
  return {
-  async finish(writes=[]){
+  async finish(writes=[],extraReads=[]){
    assert(!closed,'021 IPC observer already finished');closed=true
    try{
     const observation=await evaluate('({commands:globalThis.'+TRACE+'.commands,unchanged:globalThis.'+TRACE+'.invoke===window.__TAURI_INTERNALS__.invoke})')
     assert(observation.unchanged,'021 probe replaced real IPC')
-    assert021IpcSafety(observation.commands,writes)
+    assert021IpcSafety(observation.commands,writes,extraReads)
     return {method:'non-pausing CDP function breakpoint; real-command sentinel',commands:observation.commands,invokeUnchanged:true}
    }finally{
     await call('Debugger.removeBreakpoint',{breakpointId})

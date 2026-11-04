@@ -114,6 +114,23 @@ test('eight-second notice timing subtracts actual confirmation pauses and reject
  assert.equal(assert021NoticeTiming(value).runningMs,8000)
  for(const change of [{phases:[{phase:'running',at:100},{phase:'elapsed',at:7100}]},{phases:[{phase:'running',at:100},{phase:'elapsed',at:7900}]},{phases:[{phase:'running',at:100},{phase:'elapsed',at:8900}]},{shownAt:null},{removedAt:null},{focusOnAnchor:false},{phases:[]}])assert.throws(()=>assert021NoticeTiming({...value,...change}))
 })
+test('adopted startup version probe admits only readonly IPC and requires the real failed observation',()=>{
+ assert.doesNotThrow(()=>assert021IpcSafety(['app_about','config_sync_observe'],[],['config_sync_observe']))
+ assert.throws(()=>assert021IpcSafety(['app_about','config_sync_observe']))
+ for(const command of ['config_sync_publish','config_sync_download','config_sync_check','test_sync_connection']){
+  assert.throws(()=>assert021IpcSafety(['app_about',command],[],['config_sync_observe']))
+  assert.throws(()=>assert021IpcSafety(['app_about',command],[],[command]))
+ }
+ const revision='actual-revision',value={state:'failed',revision,hasObservation:true,checkingVersion:false,observation:{revision,source:'version-check',remoteRead:'failed',remoteTime:null,remoteObservedAt:'2026-11-05T00:00:00Z'},card:{text:'WebDAV 同步 最近检测失败',remote:'— · 读取失败',dots:0},gate:{}}
+ assert.equal(assert021WebdavState(value,revision,{startupVersionCheck:true}),'rendered')
+ for(const mutate of [
+  x=>{x.state='connected'},x=>{x.checkingVersion=true},x=>{x.hasObservation=false},
+  x=>{x.observation.revision='other'},x=>{x.observation.source='sync'},
+  x=>{x.observation.remoteRead='present'},x=>{x.observation.remoteObservedAt='invalid'},
+  x=>{x.observation.remoteTime='2026-11-01T00:00:00Z'},
+  x=>{x.card.text='WebDAV 同步 最近同步成功'},x=>{x.card.remote='尚未读取'},x=>{x.card.dots=1},
+ ]){const changed=structuredClone(value);mutate(changed);assert.throws(()=>assert021WebdavState(changed,revision,{startupVersionCheck:true}))}
+})
 test('notice DOM observation measures real mutations/focus without installing any timers or app state',()=>{
  let present=false,time=10,mutation,focused,phase='running',transform='scaleX(0.75)'
  const anchor={textContent:'模型',focus(){focused=anchor}},listeners=new Map()
