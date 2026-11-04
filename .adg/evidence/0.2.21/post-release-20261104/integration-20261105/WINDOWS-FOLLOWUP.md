@@ -1,5 +1,16 @@
 # Windows最终补验提示词
 
+## 68c034362回交后的定向补验
+
+原始证据已接收，审计见windows-final-code-review/evidence-audit.json。继续已有Windows贡献分支，先合入最新集成源f9def3300；不重新创建同名分支，不以旧探针超时报告作最终通过。
+
+1. 使用用户已确认可用的本地Windows控制台完成物理桌面性能/MSVC补验；当前回交仍为RDP。记录Git/apps树、MSVC与SDK、EXE构建commit、复制前后SHA及实际启动日志；不能只从旧feature目录取EXE后声明同源。
+2. 正式Codex默认adapter采用一次性Windows测试账号/独立登录会话，先证明目标进程owner和祖先链都属于可丢弃实例，并确认官方adapter的当前用户过滤。从独立PowerShell/测试管理器执行，不能停止日常Codex。listProcesses=null需记录原始exec异常/超时，不能当无实例；不能证明隔离则继续只读停点，不伪造默认adapter返回值或以OwnedClient替代。
+3. 用独立expected-first-scope.json重新验证首次本地+云端独有渠道/模版完整集合、已有范围及后续新增不扩选；旧结果0渠道17模版不证明完整并集。账户/Skill/MCP按本轮夹具另补对应证据。
+4. 完整模型UI/节点弹窗/保存取消与同步流程重跑至终态，使用已修名称/版本探针。补已知/未知保存时间、无快照、失败状态及HTTP请求/业务文件不变证据；来件只有失败版本状态，缺记录重启截图来自人工showSaved。
+5. 材质性能保留原预算和同场景前后矩阵，记录物理/RDP、GPU、DPI、WebView2和制品身份；旧RDP高档两项仅作观察。
+6. 原RCP的MSVC/物理性能/正式重启checks与正文矛盾，已被隔离。原件保留，新回执或合法修订逐项填真实结果，不把缺验统一标passed，不生成完成证书。回交原始证据与明确未完，由本机统一收口。
+
 用户已确认有本地Windows环境，继续由Windows对话补验（2026-11-05）。本机工具未连接Windows宿主，尚未实际发往该对话；请粘贴以下内容。
 
 继续gzers/opencodex-desktop本批集成验收。先fetch并读取代码origin/codex/post021-sync-fixes（f9def3300640f0871a93b6bbcec55de646e00567，产品源234405094；已集成faf8dd926补验驱动，保留严格名称/版本合同及不可变根准入，须使用该最终探针），文档origin/docs/governance-main的IMP-30、DMD-POST021及0.2.21-bugs.md第8.7节。由集成分支另开codex/post021-windows-final，避免用原W分支替代L/L2；文档证据另开docs/post021-windows-final，仅写独有证据/新TASK回执，原冻结任务不重绑。

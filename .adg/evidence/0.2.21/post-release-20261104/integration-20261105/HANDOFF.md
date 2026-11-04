@@ -1,5 +1,7 @@
 # 双线集成交接（未发布）
 
+Windows最终原始回交68c034362已接收，46原始blob/40manifest项SHA一致。详细采用边界见windows-final-code-review/evidence-audit.json。仍为RDP/GNU，正式默认adapter未重启；首次范围0渠道/17模版只能证明部分选择，主模型流程以旧WebDAV断言超时结束。Rust17个Node环境失败均被18定向重跑覆盖，不记为全workspace单次通过。来件RCP总体failed，却把MSVC/物理性能/正式重启checks误标passed，与正文冲突；原件隔离到received-runtime，不采用权威回执、不关闭AC。EXE启动脚本从另一checkout复制，缺原始内嵌commit及哈希拷贝链，运行身份待补。四个新TASK仍in_progress，无新CERT。
+
 代码codex/post021-sync-fixes / c71a8cf1eef28db5de9ba82b5b599bdc1336678f，PR #69草稿。产品源23440509452fc1241324a8ba02ebdd6e52822c18；后续HEAD仅增加两份smoke脚本，apps树0eec77398bbd1cbe49f88dd3bd5e8046266e14c1一致。文档采用仍以DMD-POST021与IMP-30为准，未来原型脏文件未纳入。
 
 Windows代码4b0c357b1已合入；文档911d51514的328独有路径字节导入，原manifest177+137项SHA一致，六TASK/六RCP保留失败及未完。材质恢复的根因与原生截图保留，不把性能失败改成通过。

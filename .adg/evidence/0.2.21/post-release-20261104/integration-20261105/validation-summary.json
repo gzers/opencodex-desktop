@@ -89,10 +89,12 @@
     "code": "faf8dd9268bcee1f121129de5c7399dcee0fcd5f",
     "integration": "be337d5b365f2c83d0c08111dd7e4b16f5c249f6",
     "review": "windows-final-code-review/review.json",
-    "docsEvidence": "not yet received",
+    "docsEvidence": "46 original blobs imported; manifest40 exact; contradictory RCP quarantined",
     "tests": "60 protocol + driver syntax passed",
-    "acceptance": "pending native evidence; no new product change",
+    "acceptance": "partial only; physical/MSVC/packaged restart, complete native scope and runtime EXE binding still missing",
     "followupHead": "f9def3300640f0871a93b6bbcec55de646e00567",
-    "guard": "Independent fixture union file and clean device required; native execution pending"
+    "guard": "Independent fixture union file and clean device required; native execution pending",
+    "docsCommit": "68c034362a8c2c6e5afce46b52758642e7c27051",
+    "evidenceAudit": "windows-final-code-review/evidence-audit.json"
   }
 }

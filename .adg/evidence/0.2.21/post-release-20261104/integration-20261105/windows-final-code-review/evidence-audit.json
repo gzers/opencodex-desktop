@@ -1,0 +1,88 @@
+{
+  "docsCommit": "68c034362a8c2c6e5afce46b52758642e7c27051",
+  "codeCommit": "faf8dd9268bcee1f121129de5c7399dcee0fcd5f",
+  "adoptedHead": "f9def3300640f0871a93b6bbcec55de646e00567",
+  "manifest": {
+    "entries": 40,
+    "hashMismatches": 0,
+    "importedOriginalBlobs": 46
+  },
+  "staticSource": {
+    "rustSourceTree": "d55e6064c113a267b5f0d81c36e1c62476377acc",
+    "appsTree": "0eec77398bbd1cbe49f88dd3bd5e8046266e14c1",
+    "equalCommits": [
+      "bd7c0fe8c",
+      "faf8dd926",
+      "f9def3300"
+    ],
+    "runtimeLimit": "launch.py copies EXE from feature-0.2.19-fixes while gnu-build.log names post021-windows-materials. Original embedded-commit startup log and source/destination copy hashes missing. Static equality alone does not prove candidate execution identity."
+  },
+  "receipt": {
+    "adopted": false,
+    "quarantine": "received-runtime/RCP-OPENCODEX-POST021-WINDOWS-FINAL-20261105.json",
+    "reason": "Overall failed and all AC failed, but MSVC, physical performance and packaged default restart checks incorrectly say passed despite HANDOFF/source manifest explicitly missing each. Original bytes retained, not authority receipt."
+  },
+  "partialEvidence": [
+    "Rendered address has one slash boundary.",
+    "Startup and manual readonly failure text in owned WebView2; successful known/unknown/absent remote states not supplied.",
+    "Missing-runtime error/retry/config invariant from direct showSaved UI fixture; not actual model Save or packaged adapter restart.",
+    "Frontend1289, probe44 and GNU build logs pass.",
+    "17 initial Node-env failures all covered by 18 targeted passing reruns."
+  ],
+  "findings": [
+    {
+      "id": "WF-AUD-01",
+      "kind": "blocking",
+      "issue": "Receipt checks contradict missing work; quarantined, cannot close."
+    },
+    {
+      "id": "WF-AUD-02",
+      "kind": "missing-proof",
+      "issue": "First scope has channelIds0/templateIds17. sum>0/some checked cannot prove full known local/cloud union."
+    },
+    {
+      "id": "WF-AUD-03",
+      "kind": "incomplete",
+      "issue": "native/model-final.log ends old configured-state timeout, not full UI pass."
+    },
+    {
+      "id": "WF-AUD-04",
+      "kind": "incomplete",
+      "issue": "RDP only, GNU only, no physical/MSVC. Default adapter discovery only; processes=null means unknown enumeration, not absent. Daily MSIX processes were not stopped."
+    },
+    {
+      "id": "WF-AUD-05",
+      "kind": "missing-proof",
+      "issue": "Need actual EXE embedded build commit/startup/copy hash binding."
+    }
+  ],
+  "rustRepair": {
+    "initialPassed": 981,
+    "initialFailed": 17,
+    "initialIgnored": 4,
+    "rerunPassed": 18,
+    "failedNotCovered": [],
+    "singleFullWorkspacePass": false
+  },
+  "performance": {
+    "physical": false,
+    "environment": "RDP Server2025 build26100, WebView2 156, UHD770, DPI192/200%",
+    "cases": [
+      {
+        "name": "static-overview-high",
+        "p95": 31.5,
+        "max": 62.7,
+        "over6B": 0
+      },
+      {
+        "name": "scroll-detail-high",
+        "p95": 28.8,
+        "max": 31.3,
+        "over6B": 0
+      }
+    ],
+    "scope": "Two high-setting foreground RDP observations; not matching physical before/after matrix."
+  },
+  "result": "partial contribution; no AC closure, certificate or release",
+  "next": "Follow WINDOWS-FOLLOWUP.md audit delta; preserve original receipt and supply truthful corrected successor."
+}

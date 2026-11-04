@@ -1,0 +1,12 @@
+file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-model-ui.mjs:142
+  throw Error('Native model UI timeout: '+label)
+        ^
+
+Error: Native model UI timeout: 021 actual production configured state
+    at wait (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-model-ui.mjs:142:9)
+    at async verifyWebdav (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-021-probes.mjs:272:9)
+    at async verifyWindows021Probes (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-021-probes.mjs:306:17)
+    at async verifyWindowsModelUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-model-ui.mjs:394:13)
+    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-webview.mjs:101:56
+
+Node.js v24.22.1

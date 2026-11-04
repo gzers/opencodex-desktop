@@ -1,0 +1,43 @@
+{
+  "codeCommit": "faf8dd9268bcee1f121129de5c7399dcee0fcd5f",
+  "sourceTree": "d55e6064c113a267b5f0d81c36e1c62476377acc",
+  "requestedSource": "bd7c0fe8ccecfa39e0706c885dc233f3854dab74",
+  "docsSource": "59b319cf5cac0462985dd969d929f0f8fa8a6168",
+  "productExeSha256": "76dc1049f4b6c3995993b2c1457ae06e1d3627669e20bd8c62ffdd98054b778a",
+  "productExeBuild": "GNU debug custom-protocol candidate; MSVC unavailable",
+  "changedCodeFiles": [
+    "test/smoke/post021-windows-final/native-regression.mjs",
+    "test/smoke/windows-021-probes.mjs",
+    "test/smoke/windows-021-probes.test.mjs",
+    "test/smoke/windows-model-ui.mjs"
+  ],
+  "runnableNativeSources": [
+    "test/smoke/post021-windows-final/native-regression.mjs",
+    "test/smoke/windows-021-probes.mjs",
+    "test/smoke/windows-model-ui.mjs"
+  ],
+  "physicalDesktop": {
+    "remoteSession": true,
+    "remoteControl": false,
+    "physicalDesktopGatePassed": false
+  },
+  "msvc": {
+    "clFound": false,
+    "linkFound": false,
+    "windowsSdkFound": false,
+    "result": "not_available"
+  },
+  "formalCodexAdapter": {
+    "mode": "read-only unmodified official Windows default adapter discover/list; no restart requested",
+    "install": {
+      "id": "OpenAI.Codex_2p2nqsd0c76g0",
+      "root": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1027.3384.0_x64__2p2nqsd0c76g0",
+      "relaunch": "OpenAI.Codex_2p2nqsd0c76g0!App"
+    },
+    "processes": null,
+    "defaultSelectionScope": "current-user package install root; no CODEX_HOME/USERPROFILE admission",
+    "relaunchMechanism": "shell:AppsFolder AUMID; no isolated user-data argument",
+    "blocked": false,
+    "reason": "No isolated packaged desktop normal restart proven"
+  }
+}

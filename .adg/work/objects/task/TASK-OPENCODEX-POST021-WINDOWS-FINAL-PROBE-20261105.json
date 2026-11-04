@@ -1,0 +1,94 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-FINAL-PROBE-20261105",
+  "title": "Windows原生探针等待实际可见动作",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "最终源原生失败表明公共确认返回父版本管理层时控件尚在过渡；只补有界可见动作等待，不降低备份/改名/取消/相邻对象断言。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-final-chat-01a1a68a",
+  "baseline_digest": "756ed5226acffcc0881ffdb6f316d78f98de13969aff2fb6c723e01fd4d0dc47",
+  "write_scope": [
+    "test/smoke/windows-model-ui.mjs"
+  ],
+  "required_checks": [
+    "review:native-action-settle",
+    "review:probe-regression"
+  ],
+  "acceptance_ids": [
+    "AC-P21-01",
+    "AC-P21-02",
+    "AC-P21-03",
+    "AC-P21-04",
+    "AC-P21-05",
+    "AC-P21-06",
+    "AC-P21-07",
+    "AC-P21-08",
+    "AC-P21-09",
+    "AC-P21-10"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-01",
+      "criterion_digest": "93e234ff42d457bc7cb7212117d3f35e700907a36ecd39f1d9b356cf784187b4"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-02",
+      "criterion_digest": "1d31867128ec40d740f0f82f8c32abd17c167b461348ed564e3cbd5931b9c4d6"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-03",
+      "criterion_digest": "a4bc5eac52d104f36218759cb75dd0d0e0af120221fc09f96b3d51b979ea9a79"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-04",
+      "criterion_digest": "8406c4a930d3dcdf46ffbb7f1b60973475489124bba8b2e0660bff996c003b3d"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-05",
+      "criterion_digest": "751b494ac36609953e6a5da400f644d79f6a3443edc8b95a58c3a2fb768c40bb"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-06",
+      "criterion_digest": "74e1bb24932a1f55e73be8bbe648c32570ffcbe763fc754ac1072f9363ae61e4"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-07",
+      "criterion_digest": "be8bc87ef729deb9d8d98fcc9ab71994325fcb4b7bc466235175488fccaab8c7"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-08",
+      "criterion_digest": "e0c2f8154429d231efc8d0f59659f00039ae20b34e1141ddea41a50f3137ddbb"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-09",
+      "criterion_digest": "be98e9a1cf0b6c4c728b3cfd000b64aa4a83099905281d671d7958bf80f74f59"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-10",
+      "criterion_digest": "1b2d3994f43aa133222bd4f37bb0a50ca85e9c222390330a19fdd703fb782de3"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 2,
+  "summary_digest": "d9deabeb21b0e7eb80a2f0b471a85951b0001e1090f076d297cafc6a2b9ed553",
+  "content_digest": "36f57c6d5caff281caa93ba3c6180f79fd00f03037d3710ed287433979a1d907"
+}
