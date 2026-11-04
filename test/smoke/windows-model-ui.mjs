@@ -30,6 +30,10 @@ export function modelConfigPath(facts,expected){
  assert.equal(normalize(facts.dataRoot.opencodexHome),normalize(home),'saved model home escaped admitted sandbox')
  return win32.join(home,'config.json')
 }
+export function nativeModelKeyboardChecksRequired(version){
+ assert(['0.2.16','0.2.17','0.2.18','0.2.19','0.2.20','0.2.21'].includes(version),'Unsupported native model UI acceptance version')
+ return ['0.2.20','0.2.21'].includes(version)
+}
 export async function modelFileEvidence(configPath,root){
  let backups
  try{backups=(await readdir(join(root,'backups','model-config'))).sort()}catch(error){if(error.code!=='ENOENT')throw error;backups=[]}
@@ -44,6 +48,7 @@ export async function assertModelFileWrite(before,after,root){
 }
 export async function verifyWindowsModelUi(call,output,facts,expected){
  const configPath=modelConfigPath(facts,expected)
+ const checkNativeKeyboard=nativeModelKeyboardChecksRequired(facts.about.version)
  async function evaluate(expression){const result=await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});assert(!result.exceptionDetails,JSON.stringify(result.exceptionDetails));return result.result.value}
  const invoke=(command,args={})=>evaluate('window.__TAURI_INTERNALS__.invoke('+JSON.stringify(command)+','+JSON.stringify(args)+')')
  async function wait(expression,label){
@@ -128,9 +133,9 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  async function inputValue(selector,value){await evaluate("(()=>{const input=document.querySelector("+JSON.stringify(selector)+");if(!input)throw Error('native input missing');input.value="+JSON.stringify(value)+";input.dispatchEvent(new Event('input',{bubbles:true}));return true})()")}
  const detailSaveDisabled="document.querySelector('button[aria-label=\"保存渠道草稿\"]').disabled"
  await wait("document.querySelector('[data-testid=policy-save]')?.disabled",'clean list Save disabled')
- // The previous public version remains the OTA baseline, so only the 0.2.20
- // candidate owns this newly corrected keyboard contract.
- if(facts.about.version==='0.2.20'){
+ // Keep the corrected native keyboard/menu contract mandatory for both 0.2.20
+ // and 0.2.21. Older admitted OTA images retain their original baseline checks.
+ if(checkNativeKeyboard){
   const escape=async()=>{for(const type of ['keyDown','keyUp'])await call('Input.dispatchKeyEvent',{type,key:'Escape',code:'Escape',windowsVirtualKeyCode:27,nativeVirtualKeyCode:27})}
   const originalPreferences=await invoke('get_preferences')
   await invoke('save_preferences',{preferences:{...originalPreferences,visualEffects:'low'}})

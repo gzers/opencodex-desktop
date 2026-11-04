@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
-import {modelFileEvidence,assertModelFileWrite,assertModelSandbox,assertModelExportPath,modelConfigPath,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
+import {modelFileEvidence,assertModelFileWrite,assertModelSandbox,assertModelExportPath,modelConfigPath,nativeModelKeyboardChecksRequired,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
 import {overviewScene} from './windows-ui-alignment.mjs'
 test('overview accepts either complete cards or the real settled setup gate, never an empty or partial page',()=>{
  assert.equal(overviewScene(Array(6).fill({}),{}),'ready')
@@ -22,6 +22,27 @@ test('writes require the exact admitted immutable and saved sandbox, never a rel
 })
 test('invalid native roots are rejected before invoking any application command',async()=>{
  let invoked=false;await assert.rejects(verifyWindowsModelUi(async()=>{invoked=true},'.',facts,'C:\\other'));assert.equal(invoked,false)
+})
+test('020 and 021 require the native keyboard/menu checks while older admitted images retain baseline behavior',()=>{
+ for(const version of ['0.2.20','0.2.21'])assert.equal(nativeModelKeyboardChecksRequired(version),true,version)
+ for(const version of ['0.2.16','0.2.17','0.2.18','0.2.19'])assert.equal(nativeModelKeyboardChecksRequired(version),false,version)
+ for(const version of ['0.2.22','0.2.210','0.3.0','1.0.0','v0.2.21','0.2.021','0.2.21-rc.1','0.2.21 ','',null,undefined,21,{}]){
+  assert.throws(()=>nativeModelKeyboardChecksRequired(version),/Unsupported native model UI acceptance version/)
+ }
+})
+test('native acceptance rejects unadmitted versions before IPC, while 020 and 021 enter the CDP driver',async()=>{
+ const home=root+'\\opencodex-home'
+ const bound={...facts,dataRoot:{...facts.dataRoot,opencodexHomeMode:'inside',currentOpencodexHome:home,opencodexHome:home}}
+ for(const version of ['0.2.22','0.3.0','0.2.21-rc.1']){
+  let calls=0
+  await assert.rejects(verifyWindowsModelUi(async()=>{calls++},'.',{...bound,about:{...bound.about,version}},root),/Unsupported native model UI acceptance version/)
+  assert.equal(calls,0,version)
+ }
+ for(const version of ['0.2.20','0.2.21']){
+  const reached=new Error('admitted native CDP driver reached');let calls=0
+  await assert.rejects(verifyWindowsModelUi(async method=>{calls++;assert.equal(method,'Runtime.evaluate');throw reached},'.',{...bound,about:{...bound.about,version}},root),error=>error===reached)
+  assert.equal(calls,1,version)
+ }
 })
 test('native file writes require both saved and immutable model homes inside the admitted sandbox',()=>{
  const home=root+'\\opencodex-home'
