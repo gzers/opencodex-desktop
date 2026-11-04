@@ -1,0 +1,221 @@
+{
+  "engine": "chromium",
+  "scope": "mock-only prototype; shared modal, no external requests",
+  "checks": [
+    {
+      "name": "1440shared modal host",
+      "passed": true
+    },
+    {
+      "name": "1440no anchored popover",
+      "passed": true
+    },
+    {
+      "name": "1440centered on product",
+      "passed": true,
+      "detail": {
+        "dx": 0,
+        "dy": 0,
+        "left": 395,
+        "right": 1045,
+        "top": 238,
+        "bottom": 522,
+        "w": 1440,
+        "h": 900
+      }
+    },
+    {
+      "name": "1440dialog fits viewport",
+      "passed": true
+    },
+    {
+      "name": "1440measurement retains dialog and focus",
+      "passed": true
+    },
+    {
+      "name": "1440measurement preserves config",
+      "passed": true
+    },
+    {
+      "name": "1440stop remains in dialog",
+      "passed": true
+    },
+    {
+      "name": "1440Tab wraps within modal",
+      "passed": true
+    },
+    {
+      "name": "1440ShiftTab wraps within modal",
+      "passed": true
+    },
+    {
+      "name": "1440scroll does not dismiss",
+      "passed": true
+    },
+    {
+      "name": "1440Escape dismisses and restores focus",
+      "passed": true
+    },
+    {
+      "name": "1440modal attrs cleaned",
+      "passed": true
+    },
+    {
+      "name": "1440shared close button restores trigger",
+      "passed": true
+    },
+    {
+      "name": "1440selection remains draft-only",
+      "passed": true
+    },
+    {
+      "name": "1440shared mask dismisses",
+      "passed": true
+    },
+    {
+      "name": "1180shared modal host",
+      "passed": true
+    },
+    {
+      "name": "1180no anchored popover",
+      "passed": true
+    },
+    {
+      "name": "1180centered on product",
+      "passed": true,
+      "detail": {
+        "dx": 0,
+        "dy": 0,
+        "left": 265,
+        "right": 915,
+        "top": 238,
+        "bottom": 522,
+        "w": 1180,
+        "h": 900
+      }
+    },
+    {
+      "name": "1180dialog fits viewport",
+      "passed": true
+    },
+    {
+      "name": "1180measurement retains dialog and focus",
+      "passed": true
+    },
+    {
+      "name": "1180measurement preserves config",
+      "passed": true
+    },
+    {
+      "name": "1180stop remains in dialog",
+      "passed": true
+    },
+    {
+      "name": "1180Tab wraps within modal",
+      "passed": true
+    },
+    {
+      "name": "1180ShiftTab wraps within modal",
+      "passed": true
+    },
+    {
+      "name": "1180scroll does not dismiss",
+      "passed": true
+    },
+    {
+      "name": "1180Escape dismisses and restores focus",
+      "passed": true
+    },
+    {
+      "name": "1180modal attrs cleaned",
+      "passed": true
+    },
+    {
+      "name": "1180shared close button restores trigger",
+      "passed": true
+    },
+    {
+      "name": "1180selection remains draft-only",
+      "passed": true
+    },
+    {
+      "name": "1180shared mask dismisses",
+      "passed": true
+    },
+    {
+      "name": "900shared modal host",
+      "passed": true
+    },
+    {
+      "name": "900no anchored popover",
+      "passed": true
+    },
+    {
+      "name": "900centered on product",
+      "passed": true,
+      "detail": {
+        "dx": 0,
+        "dy": 0,
+        "left": 125,
+        "right": 775,
+        "top": 159,
+        "bottom": 443,
+        "w": 900,
+        "h": 650
+      }
+    },
+    {
+      "name": "900dialog fits viewport",
+      "passed": true
+    },
+    {
+      "name": "900measurement retains dialog and focus",
+      "passed": true
+    },
+    {
+      "name": "900measurement preserves config",
+      "passed": true
+    },
+    {
+      "name": "900stop remains in dialog",
+      "passed": true
+    },
+    {
+      "name": "900Tab wraps within modal",
+      "passed": true
+    },
+    {
+      "name": "900ShiftTab wraps within modal",
+      "passed": true
+    },
+    {
+      "name": "900scroll does not dismiss",
+      "passed": true
+    },
+    {
+      "name": "900Escape dismisses and restores focus",
+      "passed": true
+    },
+    {
+      "name": "900modal attrs cleaned",
+      "passed": true
+    },
+    {
+      "name": "900shared close button restores trigger",
+      "passed": true
+    },
+    {
+      "name": "900selection remains draft-only",
+      "passed": true
+    },
+    {
+      "name": "900shared mask dismisses",
+      "passed": true
+    },
+    {
+      "name": "no browser errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

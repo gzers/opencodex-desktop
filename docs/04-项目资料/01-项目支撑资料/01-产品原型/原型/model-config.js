@@ -807,31 +807,26 @@
   return '<button id="mpChannelNode-'+esc(p.id)+'" class="btn btn-sm" data-mp="node-picker-open" data-channel="'+esc(p.id)+'" aria-haspopup="dialog" aria-expanded="false" aria-label="检测 '+esc(p.name)+' 服务节点" title="打开节点测试窗口" '+(blocked||!nodes.length?'disabled':'')+'>检测</button>';
  }
  function nodePickerHTML(p){
-  const blocked=busy();
-  return window.PrototypeNodeView.picker({titleId:'mpNodePickerTitle',title:p.name+' · 节点检测',close:button('关闭','node-picker-close','aria-label="关闭节点选择器"'),all:nodeSpeedButton(p,'',true,true),summaryId:'mpNodeSpeedSummary-'+p.id,summary:nodeSpeedSummaryHTML(p),rows:serviceNodes(p).map(n=>window.PrototypeNodeView.row({id:n.id,choiceId:'mpNodePickerChoice-'+n.id,choiceAttrs:'data-mp="node-picker-choose" data-channel="'+esc(p.id)+'" data-id="'+esc(n.id)+'"',selected:n.id===p.activeNodeId,title:n.name+' · '+n.url,disabled:blocked,name:n.name,speedId:'mpNodePickerSpeed-'+n.id,speed:nodeSpeedStatusHTML(p,n,true),test:nodeSpeedButton(p,n.id,false,true)})).join('')});
+  const rows=serviceNodes(p).map(n=>window.PrototypeNodeView.row({id:n.id,choiceId:'mpNodePickerChoice-'+n.id,choiceAttrs:'data-mp="node-picker-choose" data-channel="'+esc(p.id)+'" data-id="'+esc(n.id)+'"',selected:n.id===p.activeNodeId,title:n.name+' · '+n.url,disabled:busy(),name:n.name,speedId:'mpNodePickerSpeed-'+n.id,speed:nodeSpeedStatusHTML(p,n,true),test:nodeSpeedButton(p,n.id,false,true)})).join('');
+  return '<div id="mpNodePicker" class="mp-node-detection"><div class="mp-node-picker-toolbar">'+nodeSpeedButton(p,'',true,true)+'<div id="mpNodeSpeedSummary-'+p.id+'" role="status">'+nodeSpeedSummaryHTML(p)+'</div></div><div class="mp-node-picker-list" role="group" aria-label="选择节点与单节点检测">'+rows+'</div></div>';
  }
  function closeNodePicker(focus=false){
-  if(!nodePicker)return;const {element,anchor,pid}=nodePicker;nodePicker=null;
-  try{if(element.matches?.(':popover-open'))element.hidePopover();}catch(_){}
-  element.remove();anchor?.setAttribute('aria-expanded','false');
+  if(!nodePicker)return;const {pid}=nodePicker;closeModal();
   if(focus)$('#mpChannelNode-'+pid,host)?.focus({preventScroll:true});
- }
- function positionNodePicker(){
-  if(!nodePicker)return;const {element,anchor}=nodePicker,rect=anchor.getBoundingClientRect();
-  const viewport={left:0,top:0,right:window.innerWidth||1280,bottom:window.innerHeight||800,width:window.innerWidth||1280,height:window.innerHeight||800};
-  const windowBounds=$('.window')?.getBoundingClientRect()||viewport,bounds={left:Math.max(viewport.left,windowBounds.left),top:Math.max(viewport.top,windowBounds.top),right:Math.min(viewport.right,windowBounds.right),bottom:Math.min(viewport.bottom,windowBounds.bottom)};bounds.width=bounds.right-bounds.left;const width=Math.max(160,Math.min(400,bounds.width-16)),maxHeight=Math.max(120,bounds.bottom-bounds.top-16);
-  element.style.width=width+'px';element.style.maxHeight=maxHeight+'px';
-  const size=element.getBoundingClientRect(),left=Math.max(bounds.left+8,Math.min(rect.left||bounds.left,bounds.right-width-8)),top=rect.bottom+4+size.height<=bounds.bottom-8?rect.bottom+4:Math.max(bounds.top+8,rect.top-size.height-4);
-  element.style.left=left+'px';element.style.top=top+'px';
  }
  function openNodePicker(pid,anchor=$('#mpChannelNode-'+pid,host)){
   const p=draft.providers.find(p=>p.id===pid);if(!p||p.id==='native'||!anchor||anchor.disabled||busy())return;
-  if(nodePicker?.pid===pid){closeNodePicker(true);return;}
+  if(nodePicker?.pid===pid)return;
   closeNodePicker();window.prototypeActionMenu?.close();window.prototypeSelect?.close();
-  const element=document.createElement('div');element.id='mpNodePicker';element.className='mp-node-picker';element.setAttribute('role','dialog');element.setAttribute('aria-modal','false');element.setAttribute('aria-labelledby','mpNodePickerTitle');element.innerHTML=nodePickerHTML(p);document.body.appendChild(element);
-  nodePicker={pid,anchor,element};anchor.setAttribute('aria-controls','mpNodePicker');anchor.setAttribute('aria-expanded','true');
-  if(typeof element.showPopover==='function'){element.setAttribute('popover','manual');try{element.showPopover();}catch(_){element.removeAttribute('popover');}}
-  positionNodePicker();element.querySelector('[data-mp="node-picker-choose"][aria-pressed="true"]')?.focus({preventScroll:true});
+  const sheet=$('#modal'),previous=Object.fromEntries(['role','aria-modal','aria-labelledby'].map(key=>[key,sheet.getAttribute(key)]));let view;
+  modal(p.name+' · 节点检测',nodePickerHTML(p),'',null,{hideConfirm:true,cancelLabel:'关闭',onClose:()=>{
+   if(nodePicker===view)nodePicker=null;anchor.setAttribute('aria-expanded','false');sheet.classList.remove('mp-node-detection-modal');
+   for(const [key,value] of Object.entries(previous))if(value===null)sheet.removeAttribute(key);else sheet.setAttribute(key,value);
+   if(anchor.isConnected!==false)anchor.focus({preventScroll:true});
+  }});
+  view={pid,anchor,element:$('#mpNodePicker'),sheet};nodePicker=view;view.element.setAttribute('tabindex','-1');
+  sheet.classList.add('mp-node-detection-modal');sheet.setAttribute('role','dialog');sheet.setAttribute('aria-modal','true');sheet.setAttribute('aria-labelledby','modalTitle');
+  anchor.setAttribute('aria-controls','modal');anchor.setAttribute('aria-expanded','true');
  }
  function chooseNodeFromPicker(pid,nid){
   if(nodePicker?.pid!==pid)return;
@@ -842,7 +837,7 @@
   const transport='<button type="button" class="btn ghost btn-sm" data-tp="open-settings" aria-label="打开全局对话策略" title="全局设置 · 对话策略">对话策略</button>';
   if(p.id==='native')return '<div class="mp-toolbar"><h3>服务节点</h3><div class="mp-actions">'+transport+'</div></div><p class="mp-muted">官方 / 原生连接由 Codex 管理。</p>';
   const nodes=serviceNodes(p),locked=busy();
-  return '<div class="mp-toolbar"><h3>服务节点</h3><div class="mp-actions">'+transport+nodeSpeedButton(p,'',true)+button('新增节点','add-node',locked?'disabled':'')+'</div></div><p class="mp-muted">所有节点共用渠道认证与 API Key；模型统一使用当前节点。</p><div id="mpNodeSpeedSummary-'+esc(p.id)+'" role="status">'+nodeSpeedSummaryHTML(p)+'</div>'+nodes.map(n=>'<div class="mp-service-node-row"><div><strong>'+esc(n.name)+(n.id===p.activeNodeId?' <span class="mp-template-state info">当前使用</span>':'')+'</strong><small>'+esc(n.url||'待配置地址')+'</small><div id="mpNodeSpeed-'+esc(p.id)+'-'+esc(n.id)+'" role="status">'+nodeSpeedStatusHTML(p,n)+'</div></div><div class="mp-actions">'+nodeSpeedButton(p,n.id)+(n.id===p.activeNodeId?'':button('设为当前','use-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':'')))+button('编辑','edit-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':''))+button('删除','delete-node','data-id="'+esc(n.id)+'" '+(locked||n.id===p.activeNodeId||nodes.length<=1?'disabled':'') ,false,true)+'</div></div>').join('')+(nodes.length?'':'<p class="mp-alert">尚无服务节点，请添加地址。</p>')+mpAnn('06','服务节点、测速与协议的边界','一个渠道维护一份认证和 Key，节点仅含名称及 URL。新增渠道的 Base URL 自动成为默认节点；后续地址只在这里编辑。<br>列表不再单独显示服务节点列；操作列的“检测”按钮打开原节点测试窗口，窗口内逐节点展示检测结果 / 单独检测，顶部一键检测 / 停止。选节点与检测动作独立，检测不自动选择。详情支持单节点 / 一键测速。接口响应耗时以 ms 显示，不代表模型生成速度、模型能力或额度。测速结果仅本机会话，分别显示等待 / 测速中 / 成功 / 失败 / 超时 / 停止。<br>本原型使用确定性 mock，不请求网络、不读取或发出真实 Key；结果场景在右侧工具板设置。一键测速最多两个模拟任务并行，可停止，结果不自动切节点。节点地址、协议或认证变化后旧结果失效，晚回不会覆盖新配置。<br>节点切换加入全渠道草稿，保存确认展示地址变化，成功后只在既有通知宿主提示一次；稍后即结束。节点不复制模型清单或凭据，不为每个模型分别指定。当前节点不可直接删除，至少保留一条；字段直接进入当前编辑。测速与获取模型清单共用同源路径归一化：根地址自动补 /v1/models，保留版本路径 / 完整清单地址 / 自定义前缀；HTML 或路径不存在才有限回退。认证、DNS、TLS、超时不重试路径，仅有效模型清单算成功。基址保持原样。全部为内存 mock，不代表真实连接验收。');
+  return '<div class="mp-toolbar"><h3>服务节点</h3><div class="mp-actions">'+transport+nodeSpeedButton(p,'',true)+button('新增节点','add-node',locked?'disabled':'')+'</div></div><p class="mp-muted">所有节点共用渠道认证与 API Key；模型统一使用当前节点。</p><div id="mpNodeSpeedSummary-'+esc(p.id)+'" role="status">'+nodeSpeedSummaryHTML(p)+'</div>'+nodes.map(n=>'<div class="mp-service-node-row"><div><strong>'+esc(n.name)+(n.id===p.activeNodeId?' <span class="mp-template-state info">当前使用</span>':'')+'</strong><small>'+esc(n.url||'待配置地址')+'</small><div id="mpNodeSpeed-'+esc(p.id)+'-'+esc(n.id)+'" role="status">'+nodeSpeedStatusHTML(p,n)+'</div></div><div class="mp-actions">'+nodeSpeedButton(p,n.id)+(n.id===p.activeNodeId?'':button('设为当前','use-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':'')))+button('编辑','edit-node','data-id="'+esc(n.id)+'" '+(locked?'disabled':''))+button('删除','delete-node','data-id="'+esc(n.id)+'" '+(locked||n.id===p.activeNodeId||nodes.length<=1?'disabled':'') ,false,true)+'</div></div>').join('')+(nodes.length?'':'<p class="mp-alert">尚无服务节点，请添加地址。</p>')+mpAnn('06','服务节点、测速与协议的边界','一个渠道维护一份认证和 Key，节点仅含名称及 URL。新增渠道的 Base URL 自动成为默认节点；后续地址只在这里编辑。<br>列表不再单独显示服务节点列；操作列的“检测”按钮打开居中的公共模态弹窗，窗口内逐节点展示检测结果 / 单独检测，顶部一键检测 / 停止。选节点与检测动作独立，检测不自动选择。详情支持单节点 / 一键测速。接口响应耗时以 ms 显示，不代表模型生成速度、模型能力或额度。测速结果仅本机会话，分别显示等待 / 测速中 / 成功 / 失败 / 超时 / 停止。<br>本原型使用确定性 mock，不请求网络、不读取或发出真实 Key；结果场景在右侧工具板设置。一键测速最多两个模拟任务并行，可停止，结果不自动切节点。节点地址、协议或认证变化后旧结果失效，晚回不会覆盖新配置。<br>节点切换加入全渠道草稿，保存确认展示地址变化，成功后只在既有通知宿主提示一次；稍后即结束。节点不复制模型清单或凭据，不为每个模型分别指定。当前节点不可直接删除，至少保留一条；字段直接进入当前编辑。测速与获取模型清单共用同源路径归一化：根地址自动补 /v1/models，保留版本路径 / 完整清单地址 / 自定义前缀；HTML 或路径不存在才有限回退。认证、DNS、TLS、超时不重试路径，仅有效模型清单算成功。基址保持原样。全部为内存 mock，不代表真实连接验收。');
  }
  // 测速是会话级观察，独立于策略、保存和连接验证；任何晚回都核对测量对象。
  function nodeSpeedUI(){
@@ -860,11 +855,17 @@
    el.setAttribute('aria-label',p.name+' · '+(all?(running?'停止全部节点测速':'全部节点测速'):(n?.name||'当前节点')+'测速'));
    el.disabled=all?(!running&&(busy()||!serviceNodes(p).length)):busy()||running||!n;
   });
+  const focus=nodePicker?.measurementFocus,run=nodePicker&&nodeSpeedRuns[nodePicker.pid];
+  if(focus&&run?.id===focus.runId){
+   if(run.status==='running'&&focus.element.disabled&&(document.activeElement===focus.element||document.activeElement===document.body))nodePicker.element.focus({preventScroll:true});
+   else if(run.status!=='running'){if(document.activeElement===nodePicker.element&&!focus.element.disabled)focus.element.focus({preventScroll:true});delete nodePicker.measurementFocus;}
+  }
  }
  function startNodeSpeed(pid,nid=''){
   const p=draft.providers.find(p=>p.id===pid);if(!p||p.id==='native'||busy()||nodeSpeedRuns[pid]?.status==='running')return;
   const targets=nid?serviceNodes(p).filter(n=>n.id===nid):serviceNodes(p);if(!targets.length)return;
   const run={id:++nodeSpeedSerial,status:'running',scene:nodeSpeedScene,items:targets.map(n=>({nodeId:n.id,url:n.url,fingerprint:nodeSpeedFingerprint(p,n),status:'waiting'}))};nodeSpeedRuns[pid]=run;
+  if(nodePicker?.pid===pid&&nodePicker.element.contains(document.activeElement)&&document.activeElement?.dataset.speedControl)nodePicker.measurementFocus={runId:run.id,element:document.activeElement};
   run.items.forEach(item=>nodeSpeedResults[nodeSpeedKey(pid,item.nodeId)]={status:'waiting',fingerprint:item.fingerprint});
   let cursor=0,inflight=0;
   const pump=()=>{
@@ -2088,7 +2089,6 @@
  let gesture=null;
  document.addEventListener('selectstart',e=>{if(gesture?.dragging&&e.target.closest?.('.mp-page'))e.preventDefault();},true);
  document.addEventListener('pointerdown',e=>{
-  if(nodePicker&&!nodePicker.element.contains(e.target)&&!nodePicker.anchor.contains(e.target))closeNodePicker();
   const target=e.target.closest?.('.mp-page .mp-grip,.mp-page .mp-provider-actions,.mp-page .mp-model-actions,.mp-page .mp-template-tools,.mp-page .mp-nav-item');
   gesture=target?{target,dragging:!!e.target.closest?.('.mp-grip'),selectable:false}:null;
  },true);
@@ -2097,15 +2097,13 @@
  document.addEventListener('pointerup',()=>{gesture=null;},true);
  document.addEventListener('pointercancel',()=>{gesture=null;},true);
  window.addEventListener?.('blur',()=>{gesture=null;});
- document.addEventListener('focusin',e=>{if(nodePicker&&!nodePicker.element.contains(e.target)&&!nodePicker.anchor.contains(e.target))closeNodePicker();});
  document.addEventListener('keydown',e=>{
   if(!nodePicker)return;if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();closeNodePicker(true);return;}
+  if(e.key==='Tab'){const controls=$$('button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',nodePicker.sheet).filter(el=>!el.hidden&&el.getClientRects?.().length);const first=controls[0],last=controls.at(-1);if(first&&(!nodePicker.sheet.contains(document.activeElement)||e.shiftKey&&document.activeElement===first||!e.shiftKey&&document.activeElement===last)){e.preventDefault();(e.shiftKey?last:first).focus({preventScroll:true});}return;}
   if(!['ArrowDown','ArrowUp','Home','End'].includes(e.key)||!nodePicker.element.contains(e.target))return;
   const choices=$$('[data-mp="node-picker-choose"]:not(:disabled)',nodePicker.element);if(!choices.length)return;e.preventDefault();
   const index=choices.indexOf(document.activeElement),next=e.key==='Home'?0:e.key==='End'?choices.length-1:e.key==='ArrowDown'?(index+1)%choices.length:(index-1+choices.length)%choices.length;choices[next]?.focus({preventScroll:true});
  },true);
- document.addEventListener('scroll',e=>{if(nodePicker&&!nodePicker.element.contains(e.target))closeNodePicker();},true);
- window.addEventListener?.('resize',()=>closeNodePicker(),{passive:true});
  window.addEventListener?.('hashchange',()=>closeNodePicker());
  document.addEventListener('scroll',e=>{if(e.target===host.closest('.main'))syncDetailSection();},{capture:true,passive:true});
  window.addEventListener?.('resize',syncDetailSection,{passive:true});

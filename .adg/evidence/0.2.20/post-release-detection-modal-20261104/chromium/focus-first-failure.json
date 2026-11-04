@@ -1,0 +1,37 @@
+{
+  "engine": "chromium",
+  "scope": "mock-only prototype; shared modal, no external requests",
+  "checks": [
+    {
+      "name": "1440shared modal host",
+      "passed": true
+    },
+    {
+      "name": "1440no anchored popover",
+      "passed": true
+    },
+    {
+      "name": "1440centered on product",
+      "passed": true,
+      "detail": {
+        "dx": 0,
+        "dy": 0,
+        "left": 395,
+        "right": 1045,
+        "top": 238,
+        "bottom": 522,
+        "w": 1440,
+        "h": 900
+      }
+    },
+    {
+      "name": "1440dialog fits viewport",
+      "passed": true
+    },
+    {
+      "name": "1440measurement retains dialog and focus",
+      "passed": false
+    }
+  ],
+  "errors": []
+}
