@@ -43,7 +43,7 @@ export async function confirmNativeTemplateDefault({wait,click},version){
  const {publicDialogs,confirmation}=nativeModelUiContract(version)
  await click('设为默认','dialog[open]')
  await wait(publicDialogs
-  ? "document.querySelectorAll('dialog[open]').length===1&&!!document.querySelector('dialog.app-modal-dialog[open] .ui-dialog-header h2')?.textContent.includes('设为默认版本')"
+  ? "(()=>{const layers=[...document.querySelectorAll('dialog[open]')],confirmations=[...document.querySelectorAll('dialog.app-modal-dialog[open]')],parents=[...document.querySelectorAll('dialog.model-version-manager[open]')];return layers.length===2&&confirmations.length===1&&parents.length===1&&confirmations[0]!==parents[0]&&confirmations[0] instanceof HTMLDialogElement&&parents[0] instanceof HTMLDialogElement&&confirmations[0].querySelector(':scope > .ui-dialog-header h2')?.textContent.trim()==='设为默认版本'&&/^版本管理 · .+/.test(parents[0].querySelector(':scope > .ui-dialog-header h2')?.textContent.trim()??'')&&!document.querySelector('.modal-mask')})()"
   : "document.querySelectorAll('dialog[open]').length===0&&!!document.querySelector('.modal-mask')",'application confirmation above version manager')
  await click('设为默认',confirmation)
 }
@@ -322,7 +322,8 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  }
  const result={result:'pass',scope:'native template, direct current-channel file Save/reopen, remaining global Preview/cancel/confirm, exact transfer; isolated config writes, no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:!contract.publicDialogs,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,nativeFileScopeVerified:true,otherChannelMemoryRetained:true,otherProviderAndKeysPreserved:true,canceledListPreviewPreservedFile:true,remainingGlobalFileSave:true,channelReopen:true,existingKeyEye:true,readonlyComparison:true,externalContextBundle:true}
  result.confirmationHost=contract.confirmation
- result.versionManagerSuspendedForConfirmation=true
+ result.versionManagerSuspendedForConfirmation=!contract.publicDialogs
+ result.versionManagerRetainedUnderConfirmation=contract.publicDialogs
  result.nativeModelKeyboardChecks=checkNativeKeyboard
  if(probes021)result.probes021=probes021
  await writeFile(join(output,'model-ui.json'),JSON.stringify(result,null,2)+'\n');return result

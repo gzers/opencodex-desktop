@@ -51,24 +51,60 @@ test('021 uses public native AppModal/header X; the 020 upgrade image keeps its 
  for(const version of ['0.2.19','0.2.18','0.2.17','0.2.16'])assert.equal(nativeModelUiContract(version).publicDialogs,false)
  assert.throws(()=>nativeModelUiContract('0.2.22'))
 })
-for(const version of ['0.2.20','0.2.21'])test(version+' default confirmation runs the actual driver transition without confusing the version manager',async()=>{
- let state='manager',committed=false;const clicks=[]
- const document={
-  querySelectorAll:selector=>{assert.equal(selector,'dialog[open]');return state==='manager'||state==='native-confirmation'?[{}]:[]},
-  querySelector:selector=>selector==='.modal-mask'&&state==='old-confirmation'?{}:selector==='dialog.app-modal-dialog[open] .ui-dialog-header h2'&&state==='native-confirmation'?{textContent:'设为默认版本'}:null,
+function defaultConfirmationFixture(version,mutate=()=>{}){
+ class Dialog {
+  constructor(classes,title){this.classes=new Set(classes);this.title=title;this.open=true}
+  querySelector(selector){assert.equal(selector,':scope > .ui-dialog-header h2');return this.title===null?null:{textContent:this.title}}
  }
- await confirmNativeTemplateDefault({
-  click:async(text,selector)=>{clicks.push({text,selector});assert.equal(text,'设为默认');if(state==='manager'){assert.equal(selector,'dialog[open]');state=version==='0.2.21'?'native-confirmation':'old-confirmation'}else{assert.equal(selector,nativeModelUiContract(version).confirmation);state='manager';committed=true}},
-  wait:async expression=>assert.equal(runInNewContext(expression,{document}),true),
- },version)
- assert(committed);assert.equal(state,'manager');assert.equal(clicks.length,2)
+ const parent=new Dialog(['model-version-manager'],'版本管理 · Native fixture'),confirmation=new Dialog(['app-modal-dialog'],'设为默认版本')
+ const scene={dialogs:[parent],mask:false,commits:0,clicks:[],observed:[]}
+ const document={
+  querySelectorAll:selector=>{
+   const match=/^dialog(?:[.]([a-z-]+))?\[open\]$/.exec(selector);assert(match,'Unsupported fixture selector: '+selector)
+   return scene.dialogs.filter(d=>d.open&&(!match[1]||d.classes.has(match[1])))
+  },
+  querySelector:selector=>{assert.equal(selector,'.modal-mask');return scene.mask?{}:null},
+ }
+ const driver={
+  click:async(text,selector)=>{
+   scene.clicks.push({text,selector});assert.equal(text,'设为默认')
+   if(scene.clicks.length===1){
+    assert.equal(selector,'dialog[open]')
+    if(version==='0.2.21')scene.dialogs.push(confirmation)
+    else {parent.open=false;scene.mask=true}
+    mutate(scene,{parent,confirmation,Dialog})
+   }else{
+    assert.equal(selector,version==='0.2.21'?'dialog.app-modal-dialog[open]':'.modal-mask')
+    scene.commits++;confirmation.open=false;scene.mask=false;parent.open=true
+   }
+  },
+  wait:async expression=>{scene.observed.push(scene.dialogs.filter(d=>d.open));assert.equal(runInNewContext(expression,{document,HTMLDialogElement:Dialog}),true)},
+ }
+ return {driver,scene,parent,confirmation,document,Dialog}
+}
+for(const version of ['0.2.20','0.2.21'])test(version+' executes the actual default-confirmation driver through its real layer transition',async()=>{
+ const {driver,scene,parent,confirmation}=defaultConfirmationFixture(version)
+ await confirmNativeTemplateDefault(driver,version)
+ assert.equal(scene.commits,1);assert.equal(scene.clicks.length,2)
+ assert.deepEqual(scene.observed[0],version==='0.2.21'?[parent,confirmation]:[],'021 keeps the exact parent while 020 suspends it')
+ assert.deepEqual(scene.dialogs.filter(d=>d.open),[parent],'confirmation must return to the same single version-manager parent')
 })
-test('021 refuses a leftover legacy mask or a different native dialog before confirming any default',async()=>{
- for(const scene of ['legacy-mask','wrong-title','two-native-dialogs']){
-  let clicks=0
-  const document={querySelectorAll:()=>Array(scene==='two-native-dialogs'?2:scene==='legacy-mask'?0:1).fill({}),querySelector:selector=>selector==='.modal-mask'?{}:scene==='wrong-title'?{textContent:'版本管理'}:null}
-  await assert.rejects(confirmNativeTemplateDefault({click:async()=>{clicks++},wait:async expression=>assert.equal(runInNewContext(expression,{document}),true)},'0.2.21'))
-  assert.equal(clicks,1,'wrong host must never receive the commit click')
+test('021 refuses a third layer, incorrect parent/child, duplicate AppModal or any legacy mask before committing',async()=>{
+ const malformed=[
+  ['third native layer',(s,{Dialog})=>s.dialogs.push(new Dialog(['other-dialog'],'额外层'))],
+  ['wrong child title',(s,{confirmation})=>{confirmation.title='版本管理'}],
+  ['title only contains expected substring',(s,{confirmation})=>{confirmation.title='其它 · 设为默认版本'}],
+  ['wrong parent title',(s,{parent})=>{parent.title='其它查看窗口'}],
+  ['missing parent header',(s,{parent})=>{parent.title=null}],
+  ['wrong parent class',(s,{parent})=>{parent.classes.clear()}],
+  ['parent was closed',(s,{parent})=>{parent.open=false}],
+  ['two AppModals',(s,{parent})=>{parent.classes=new Set(['app-modal-dialog']);parent.title='设为默认版本'}],
+  ['legacy mask under valid native layers',s=>{s.mask=true}],
+ ]
+ for(const [name,mutate] of malformed){
+  const {driver,scene}=defaultConfirmationFixture('0.2.21',mutate)
+  await assert.rejects(confirmNativeTemplateDefault(driver,'0.2.21'),undefined,name)
+  assert.equal(scene.commits,0,name);assert.equal(scene.clicks.length,1,'wrong host must never receive the commit click: '+name)
  }
 })
 test('native file writes require both saved and immutable model homes inside the admitted sandbox',()=>{
