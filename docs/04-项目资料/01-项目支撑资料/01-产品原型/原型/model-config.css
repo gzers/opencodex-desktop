@@ -15,7 +15,7 @@
 
 .mp-side{min-width:0;display:grid;gap:10px}
 .mp-provider-list{display:grid;gap:4px}
-.mp-provider-table{overflow-x:auto;overscroll-behavior-inline:contain;--mp-provider-columns:36px minmax(130px,1fr) 76px 76px 250px}
+.mp-provider-table{overflow-x:auto;overscroll-behavior-inline:contain;--mp-provider-columns:36px minmax(160px,220px) minmax(100px,1fr) minmax(90px,1fr) 250px}
 .mp-provider,.mp-provider-heading{display:grid;min-width:800px;grid-template-columns:var(--mp-provider-columns);gap:12px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--border-soft)}
 .mp-provider-actions{gap:6px;flex-wrap:nowrap}
 .mp-provider-actions>.mp-mini-pair .mp-mini{min-height:14px;height:14px;font-size:var(--text-caption)}
