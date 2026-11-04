@@ -112,6 +112,21 @@ html.glow-mesh .stage>.mesh-glow-canvas{position:absolute;inset:0;width:100%;hei
 html.glow-mesh body.dark .stage>.mesh-glow-canvas{opacity:var(--mesh-glow-alpha-dark,.52)}
 html.embed-nolight .mesh-glow-canvas{display:none!important}
 
+
+/* 可选空间布局：Logo与光场分别定位，未提供坐标的旧嵌入保持原样。 */
+html.hero-embed.spatial-embed .stage{padding:0}
+html.hero-embed.spatial-embed #hero{position:absolute;left:var(--embedded-mark-x);top:var(--embedded-mark-y);transform:translate(-50%,-50%)}
+html.hero-embed.spatial-embed .stage>.mesh-glow-canvas{mask-image:radial-gradient(ellipse closest-side at center,#000 25%,transparent 100%)}
+html.hero-embed.spatial-embed .stage{background:transparent!important;box-shadow:none!important}
+html.hero-embed.spatial-embed body.dark{color-scheme:dark;background:transparent!important}
+html.hero-embed.spatial-embed .embedded .stage{background:transparent!important}
+html.hero-embed.spatial-embed .stage::after{background:none!important;opacity:0!important}
+html.hero-embed.spatial-embed .ambient{inset:0;width:100%;height:100%;mask-image:radial-gradient(ellipse at center,#000 15%,transparent 72%)}
+html.hero-embed.spatial-embed .cloud-a{top:calc(50% - 330px)}
+html.hero-embed.spatial-embed .cloud-b{top:calc(50% - 260px)}
+html.hero-embed.spatial-embed .cloud-c{top:calc(50% - 380px)}
+html.hero-embed.spatial-embed .energy{top:calc(50% - 400px)}
+html.hero-embed.spatial-embed .light-floor{top:calc(50% - 110px)}
 </style>
 <link rel="stylesheet" href="../../../../../../../01-项目支撑资料/01-产品原型/topic-header.css">
 <link rel="stylesheet" href="../../../../../../../01-项目支撑资料/01-产品原型/proto-controls.css">
@@ -166,8 +181,8 @@ html.embed-nolight .mesh-glow-canvas{display:none!important}
   </section>
 </main>
 <script src="./logo-geometry.js"></script>
-<script src="./mesh-glow.js"></script>
-<script src="./morph.js"></script>
+<script src="./mesh-glow.js?v=20261028-spatial"></script>
+<script src="./morph.js?v=20261028-spatial"></script>
 
 <style>
 /* 设计去向徽标：让「研究页里的每样东西是否已进生产」一眼可见。 */

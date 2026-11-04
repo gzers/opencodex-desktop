@@ -32,14 +32,14 @@
        底部同理。两端都用长缓坡，光场就不会出现可辨认的硬边。 */
     float fade(float y){ return sqrt(smoothstep(0.0,0.24,y)) * (1.0 - smoothstep(0.70,1.10,y)); }`;
   const FRAG = `precision highp float;uniform vec2 u_res;uniform float u_time;
-    uniform vec3 u_ca;uniform vec3 u_cb;uniform vec3 u_cc;uniform float u_grain;uniform float u_gain;uniform float u_sat;uniform float u_cy;
+    uniform vec3 u_ca;uniform vec3 u_cb;uniform vec3 u_cc;uniform float u_grain;uniform float u_gain;uniform float u_sat;uniform float u_cy;uniform float u_cx;
     ${NOISE}${ORBIT_GLSL}
     void main(){
       /* gl_FragCoord.y 自下而上；统一换成「自上而下」的 uv，中心才落在 Logo 上，纵向渐隐方向也才与 CSS 一致。 */
       vec2 uv = vec2(gl_FragCoord.x/u_res.x, 1.0 - gl_FragCoord.y/u_res.y);
       float px = u_res.x/889.0;
       /* 中心取 logo 实际位置的比例：就绪/准备的舞台高度与 logo 上边距不同，写死 173/660 会把光场整体压低。 */
-      vec2 p = (uv - vec2(0.5,u_cy)) * u_res.xy / px;
+      vec2 p = (uv - vec2(u_cx,u_cy)) * u_res.xy / px;
       float phase = u_time * (6.2831853/6.0);
       vec3 l1 = light(p,phase,0.0, 42.0, u_ca) * 0.62;
       vec3 l2 = light(p,phase,LX,-33.0, u_cb) * 0.62;
@@ -93,7 +93,7 @@
     const loc = { res: gl.getUniformLocation(prog,'u_res'), time: gl.getUniformLocation(prog,'u_time'),
       ca: gl.getUniformLocation(prog,'u_ca'), cb: gl.getUniformLocation(prog,'u_cb'), cc: gl.getUniformLocation(prog,'u_cc'),
       grain: gl.getUniformLocation(prog,'u_grain'), gain: gl.getUniformLocation(prog,'u_gain'), sat: gl.getUniformLocation(prog,'u_sat'),
-      cy: gl.getUniformLocation(prog,'u_cy') };
+      cy: gl.getUniformLocation(prog,'u_cy'),cx: gl.getUniformLocation(prog,'u_cx') };
     let dark = !!o.dark, colors = ['#B1A7FF','#7A9DFF','#3941FF'], reduced = false;
     function applyLook(){
       const c = colors.map(rgb);
@@ -108,7 +108,10 @@
       const dpr = Math.min(1.6, window.devicePixelRatio || 1);
       canvas.width = Math.max(1, Math.round(r.width*dpr)); canvas.height = Math.max(1, Math.round(r.height*dpr));
       gl.viewport(0,0,canvas.width,canvas.height);
-      gl.uniform1f(loc.cy, centerFraction(r));
+      const style=getComputedStyle(host);
+      const cx=style.getPropertyValue('--embedded-glow-x').trim(),cy=style.getPropertyValue('--embedded-glow-y').trim();
+      gl.uniform1f(loc.cx,cx!==''&&Number.isFinite(Number(cx))?Number(cx):.5);
+      gl.uniform1f(loc.cy,cy!==''&&Number.isFinite(Number(cy))?Number(cy):centerFraction(r));
     }
     /* logo 中心在容器内的纵向比例；量不到就回落到设计稿基准（889×660 的 y=173）。 */
     function centerFraction(rect){
@@ -131,7 +134,7 @@
     const ro = ('ResizeObserver' in window) ? new ResizeObserver(resize) : null;
     if (ro) ro.observe(host);
     return {
-      ok:true,
+      ok:true,refresh:resize,
       setTheme(d){ dark = !!d; applyLook(); },
       setColors(list){ if (Array.isArray(list) && list.length >= 3) { colors = list.slice(0,3); applyLook(); } },
       setReduced(v){ if (v) frozen = (performance.now()-t0)/1000; reduced = !!v; },

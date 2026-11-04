@@ -42,7 +42,7 @@
     $('#protoGroupMeta').textContent = name;
     $('#protoContextHint').textContent = '仅展示' + name + '的测试场景；全局评审条件在上方折叠区。';
     side.querySelectorAll('[data-proto-contexts]').forEach(card => {
-      card.hidden = card.id === 'conversationDemoCard' && !['conversations','capabilities'].includes(window.conversationPrototype?.scope()) || !card.dataset.protoContexts.split(/\s+/).some(value => value === context.page || value === key);
+      card.hidden = card.id === 'conversationDemoCard' && window.conversationPrototype?.scope() !== 'conversations' || !card.dataset.protoContexts.split(/\s+/).some(value => value === context.page || value === key);
       if(context.page==='settings'&&context.tab==='dialog-policy'&&card.dataset.policyParts)card.hidden=card.hidden||!card.dataset.policyParts.split(/\s+/).includes(window.dialogPolicyPrototype?.state().part||'models');
       if (context.page === 'extensions') {
         const extended = window.extensionPrototype?.active();

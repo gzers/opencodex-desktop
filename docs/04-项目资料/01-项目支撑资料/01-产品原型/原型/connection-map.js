@@ -52,20 +52,21 @@
   const wanted=[...new Set([temporary,...required,...preferences.pins,...recent,...(preferences.backup?['newapi','krill','aimami']:['newapi'])].filter(Boolean))].filter(id=>all.some(c=>c.id===id));
   const budget=(canvas.clientWidth||host.clientWidth||880)<680?2:3;
   const visibleChannels=wanted.slice(0,budget).map(id=>all.find(c=>c.id===id));
-  // 适配目标放在下方，与 Desktop 支路对齐；仅改变画面顺序，不改选路。
+  // 适配渠道在Desktop附近展示，普通渠道仍位于服务右侧；不改变路由。
   visibleChannels.sort((a,b)=>scene==='direct'?visibleClients.findIndex(c=>c.target===a.id)-visibleClients.findIndex(c=>c.target===b.id):adapterConfigured&&a.id==='krill'?1:adapterConfigured&&b.id==='krill'?-1:a.id===temporary?-1:b.id===temporary?1:all.indexOf(a)-all.indexOf(b));
   const adapter=adapterConfigured&&visibleChannels.some(c=>c.id==='krill')&&(!actualRequest||livePhase||targetOnly||target==='krill');
   return {known,running,observed,budget,visibleClients,hiddenClients,visibleChannels,hiddenChannels:all.filter(c=>!visibleChannels.some(v=>v.id===c.id)),focused,target,actualRequest,livePhase,flowing,usage:livePhase?{input:livePhase==='sending'?null:12840,output:livePhase==='sending'?null:livePhase==='completed'?1286:trafficOutput}:null,adapter,adapterConfigured,targetOnly,direct:scene==='direct',status:!known?'正在确认':running?'运行中':'未运行',motion:!known?'stale':running?'running':'stopped'};
  }
  function mark(kind,text){return '<span class="pv-state '+kind+'"><i></i>'+esc(text)+'</span>';}
  function clientNode(c,i,total,s){
-  const y=s.direct?34+i*(42/Math.max(total-1,1)):total===1?39:19+i*(54/Math.max(total-1,1));
+  const y=s.direct?49+i*(36/Math.max(total-1,1)):total===1?58:27+i*(46/Math.max(total-1,1));
   const pending=s.targetOnly||s.adapterConfigured&&c.target==='krill';
   return '<section class="pv-node pv-client '+(selected===c.id?'is-selected':'')+'" data-node="'+c.id+'" style="--x:10%;--y:'+y+'%"><button type="button" class="pv-node-main" data-pv="node" data-id="'+c.id+'" aria-label="查看 '+c.name+'" aria-haspopup="dialog"><span class="pv-tile">'+icon(c.icon)+'</span><strong>'+c.name+'</strong></button><div class="pv-node-info"><span>v'+c.version+'</span><span>'+(!c.connected?'未接入':s.livePhase&&c.id===s.focused?.id?({sending:'发送中',streaming:'生成中',completed:'已完成',cancelled:'已取消',failed:'已中断'}[s.livePhase]):s.direct?'配置直连':pending?'适配配置':s.observed?'近期请求':'已配置')+'</span></div>'+(preferences.detail?'<small>'+c.evidence+'</small>':'')+'</section>';
  }
  function channelNode(c,i,total,s){
   const directIndex=s.visibleClients.findIndex(cl=>cl.target===c.id);
-  const y=s.direct?34+Math.max(0,directIndex)*(42/Math.max(s.visibleClients.length-1,1)):total===1?31:total===2?19+i*47:19+i*27;
+  const adapted=s.adapter&&c.id==='krill',ordinary=s.visibleChannels.filter(ch=>!(s.adapter&&ch.id==='krill')),ordinaryIndex=ordinary.findIndex(ch=>ch.id===c.id);
+  const y=s.direct?49+Math.max(0,directIndex)*(36/Math.max(s.visibleClients.length-1,1)):adapted?13:ordinary.length===1?58:49+ordinaryIndex*23;
   const pending=s.targetOnly||s.adapterConfigured&&c.id==='krill';
   const isAttempt=scene==='fallback'&&['krill','newapi'].includes(c.id),used=!pending&&s.observed&&(s.actualRequest?[s.target,...(scene==='fallback'?['krill']:[])].includes(c.id):s.visibleClients.some(cl=>cl.connected&&cl.target===c.id));
   return '<section class="pv-node pv-channel '+(selected===c.id?'is-selected':'')+'" data-node="'+c.id+'" style="--x:87%;--y:'+y+'%"><button type="button" class="pv-node-main" data-pv="node" data-id="'+c.id+'" aria-label="查看渠道 '+c.name+'" aria-haspopup="dialog"><span class="pv-tile pv-provider '+c.color+'">'+c.glyph+'</span><strong>'+c.name+'</strong></button><div class="pv-node-info"><span>'+c.node+'</span>'+mark(isAttempt&&c.id==='krill'?'warning':used?'success':'',s.livePhase&&c.id===s.target?({sending:'等待响应',streaming:'生成中',completed:'已完成',cancelled:'已取消',failed:'已中断'}[s.livePhase]):isAttempt&&c.id==='krill'?'首次超时':pending?'适配待观察':used?'近期采用':'已配置')+'</div><small>'+esc(modelPreviews[c.id]?.label||c.model)+'</small>'+(preferences.detail?'<small>连接探测 '+c.probe+'</small>':'')+'</section>';
@@ -77,7 +78,7 @@
  function render(){
   const s=state();layoutBudget=s.budget;
   host.dataset.scene=scene;host.dataset.detail=String(preferences.detail);
-  host.dataset.flowing=String(s.flowing&&preferences.flow);
+  host.dataset.flowing=String(s.flowing&&preferences.flow);host.dataset.traffic=String(!!s.livePhase);
   $('#pvNodes').innerHTML=
    s.visibleClients.map((c,i)=>clientNode(c,i,s.visibleClients.length,s)).join('')+
    (s.hiddenClients.length?'<button type="button" class="pv-more-clients" data-pv="clients">其他客户端 <span>'+s.hiddenClients.length+'</span> '+icon('chevron')+'</button>':'')+
@@ -96,7 +97,7 @@
  }
  function connections(){
   const s=state(),lines=[];
-  if(preferences.management&&['desktop','proxy'].includes(selected)&&!s.livePhase)lines.push({from:'desktop',to:'proxy',kind:'manage',vertical:true});
+  if(preferences.management&&!s.direct)lines.push({from:'desktop',to:'proxy',kind:'manage',vertical:true});
   for(const c of s.visibleClients){
    if(!c.connected)continue;
    if(s.actualRequest&&!s.livePhase&&c.id!==s.focused?.id)continue;
@@ -154,19 +155,22 @@
    const dir=b.y>a.y?1:-1,radius=Math.max(1,Math.min(18,Math.abs(b.y-a.y)/2,(rail-a.x)/2,(b.x-rail)/2));
    return 'M '+a.x+' '+a.y+' H '+(rail-radius)+' Q '+rail+' '+a.y+' '+rail+' '+(a.y+dir*radius)+' V '+(b.y-dir*radius)+' Q '+rail+' '+b.y+' '+(rail+radius)+' '+b.y+' H '+b.x;
   }
-  const edges=connections(),svg=$('.pv-edges',canvas);svg.setAttribute('viewBox','0 0 '+width+' '+height);
+  const edges=connections();
+  const svg=$('.pv-edges',canvas);svg.setAttribute('viewBox','0 0 '+width+' '+height);
   svg.innerHTML='<defs>'+['observed','config','warning','return'].map(kind=>'<marker id="pv-arrow-'+kind+'" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M1 1L7 4L1 7Z" class="pv-arrow '+kind+'"/></marker>').join('')+'</defs>'+edges.map(e=>{
+   const adaptationIn=e.from==='proxy'&&e.to==='desktop'&&e.kind!=='manage';
    const port=(e.port-(e.count-1)/2)*(width<680?12:16)||0;
-   const a=point(e.from,e.vertical?'t':'r',e.from==='proxy'?e.to==='desktop'?18:port:0),b=point(e.to,e.vertical?'b':'l',e.to==='proxy'?port:0);if(!a||!b)return '';
+   const a=point(adaptationIn?'proxy':e.from,adaptationIn?'t':e.vertical?'b':'r',e.from==='proxy'&&!adaptationIn?port:0),b=point(e.to,adaptationIn?'b':e.vertical?'t':'l',e.to==='proxy'&&!e.vertical?port:0);if(!a||!b)return '';
+   if(e.vertical){const el=$('[data-node="desktop"]'),box=el.getBoundingClientRect();a.y=(box.bottom-r.top)/sy+8;}
    let d;
-   if(e.vertical){const x=width*.22;d='M '+a.x+' '+a.y+' H '+x+' V '+b.y+' H '+b.x;}
+   if(e.vertical)d='M '+a.x+' '+a.y+' V '+b.y;
    else if(e.bypass){const rail=width*(.42+e.port*.06);d=elbow(a,b,rail);}
    else if(e.to==='proxy'){
-    const labelHalf=width<680?80:95,maxRail=width*.37-labelHalf-14;
+    const labelHalf=width<680?80:95,maxRail=width*.48-labelHalf-14;
     const rail=Math.max(a.x+12,Math.min(maxRail,width*.255)-(e.count-1-e.port)*10);
     d=elbow(a,b,rail);
-   }else if(e.to==='desktop')d=elbow(a,b,b.x-24);
-   else if(e.from==='desktop')d=elbow(a,b,(a.x+b.x)/2);
+   }else if(adaptationIn){d='M '+a.x+' '+a.y+' V '+b.y;}
+   else if(e.from==='desktop')d=elbow(a,b,width*.73);
    else d=elbow(a,b,width*(.67+e.port*.025));
    const cls=(e.dim?' is-dim':'')+(e.live?' is-live':'')+(e.live&&e.reverse?' is-return':'');
    const flow=e.live&&preferences.flow?'<g class="pv-flow '+(e.reverse?'is-return':'is-send')+'" data-flow-from="'+(e.reverse?e.to:e.from)+'" data-flow-to="'+(e.reverse?e.from:e.to)+'">'+[0,1,2].map(i=>'<path class="pv-flow-pulse" pathLength="1000" d="'+d+'" style="--delay:-'+(i*.9)+'s"/>').join('')+'</g>':'';
@@ -176,12 +180,14 @@
  function syncFrame(){
   const on=active(),effects=root.dataset.effects||'high',renderer=root.dataset.glowRender||'css',key=effects+'|'+renderer;
   if(!on&&!frameKey)return;
-  if(on&&key!==frameKey){const url=new URL(frameSource);url.search='?embed=1&layout=hero&effects='+effects+'&render='+renderer;frame.src=url.href;frameKey=key;ready=false;payloadKey='';}
-  const w=canvas.clientWidth||880,h=canvas.clientHeight||530,size=w<680?68:86;
-  // 动态聚合云仅表示Desktop产品形象；OpenCodex服务另用自身静态图标。
-  const logoX=w*.64,logoY=h*(scene==='direct'?.10:w<680?.66:.73);
-  frame.style.width=(w+100)+'px';frame.style.height=(h+180)+'px';frame.style.left=(logoX-(w+100)/2)+'px';frame.style.top='-60px';
-  const payload={type:'opencodex-motion-preview',state:state().motion,theme:root.dataset.theme,active:on,presentation:{size,padding:logoY+60-size/2}},serial=JSON.stringify(payload);
+  if(on&&key!==frameKey){const url=new URL(frameSource);url.search='?embed=1&layout=hero&effects='+effects+'&render='+renderer+'&v=20261029-reference';frame.src=url.href;frameKey=key;ready=false;payloadKey='';}
+  const w=canvas.clientWidth||880,h=canvas.clientHeight||530;
+  const bounds=canvas.getBoundingClientRect(),mark=$('.pv-desktop-logo-hit').getBoundingClientRect();
+  const scaleX=bounds.width/w||1,scaleY=bounds.height/h||1;
+  const size=mark.width/scaleX||86,x=(mark.left+mark.width/2-bounds.left)/scaleX,y=(mark.top+mark.height/2-bounds.top)/scaleY;
+  // 光场始终占满可视画布；只将动态图形放到Desktop节点，不能平移整个背景。
+  frame.style.width=w+'px';frame.style.height=h+'px';frame.style.left='0px';frame.style.top='0px';
+  const payload={type:'opencodex-motion-preview',state:state().motion,theme:root.dataset.theme,active:on,presentation:{size,x,y,glowX:.5,glowY:.5}},serial=JSON.stringify(payload);
   if(ready&&serial!==payloadKey){frame.contentWindow?.postMessage(payload,location.protocol==='file:'?'*':location.origin);payloadKey=serial;}
   host.dataset.active=String(on);
  }
@@ -204,7 +210,7 @@
  function settingsBody(){
   if(dialog.tab==='clients')return description('只选择已确认存在的本机客户端。显示调整不改变客户端接入。')+'<div class="pv-option-list">'+clients.map(c=>'<label class="pv-option '+(!c.installed?'is-disabled':'')+'"><input type="checkbox" data-client="'+c.id+'" '+(draft.clients.includes(c.id)?'checked':'')+' '+(!c.installed?'disabled':'')+'><span>'+c.name+'<small>'+c.evidence+(!c.connected&&c.installed?' · 未接入':'')+'</small></span></label>').join('')+'</div>';
   if(dialog.tab==='channels')return description('固定常用渠道，其他项仍可搜索展开。默认窗口显示三项，窄窗两项；只调整展示，不修改选路。')+'<div class="pv-pin-options">'+channels.map(c=>'<label><input type="checkbox" data-pin="'+c.id+'" '+(draft.pins.includes(c.id)?'checked':'')+'>'+c.name+'</label>').join('')+'</div>';
-  return description('主题、背景光和特效档位沿用全局设置。管理关系在选中相关节点时展示。后台适配与同步状态归入 Desktop 节点。')+'<div class="pv-option-list">'+[['detail','详细节点信息'],['management','选中时显示管理关系'],['sync','配置同步'],['backup','备用渠道'],['flow','请求流动效果'],['usage','本次 token 用量']].map(([id,name])=>'<label class="pv-option"><input type="checkbox" data-option="'+id+'" '+(draft[id]?'checked':'')+'>'+name+'</label>').join('')+'</div>'+button('恢复默认显示','settings-reset','','pv-reset');
+  return description('主题、背景光和特效档位沿用全局设置。管理关系以中轴点线显示；适配渠道靠近同一个Desktop节点，后台适配的完整路径在此节点详情中查看，同步状态归入 Desktop 节点。')+'<div class="pv-option-list">'+[['detail','详细节点信息'],['management','管理关系'],['sync','配置同步'],['backup','备用渠道'],['flow','请求流动效果'],['usage','本次 token 用量']].map(([id,name])=>'<label class="pv-option"><input type="checkbox" data-option="'+id+'" '+(draft[id]?'checked':'')+'>'+name+'</label>').join('')+'</div>'+button('恢复默认显示','settings-reset','','pv-reset');
  }
  function nodeBody(){
   const id=dialog.id,tab=dialog.tab,s=state(),c=clients.find(c=>c.id===id),channel=directory().find(c=>c.id===id);

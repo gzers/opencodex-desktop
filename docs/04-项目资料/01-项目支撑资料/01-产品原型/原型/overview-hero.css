@@ -1,0 +1,636 @@
+/* 概览 · 流量全景（Desktop 主角）：只使用内存样例；类名统一 ph- 前缀，颜色变量统一 --ph-。
+   就绪态下运行状态与启停压成顶部一行，流量全景是概览主体；环境门禁态整段隐藏，状态区恢复原样。 */
+#route-overview{position:relative;
+ --ph-bg:var(--bg);--ph-ink:var(--text);--ph-ink2:color-mix(in srgb,var(--text) 70%,var(--bg));--ph-ink3:var(--muted);
+ --ph-line:color-mix(in srgb,var(--text) 9%,transparent);
+ --ph-card:color-mix(in srgb,var(--panel) 78%,transparent);--ph-card-hi:color-mix(in srgb,var(--panel) 96%,transparent);
+ --ph-shadow:0 1px 2px rgba(16,24,40,.05),0 10px 28px -16px rgba(48,64,140,.30);
+ --ph-stage:color-mix(in srgb,var(--panel) 18%,transparent);--ph-grid:rgba(40,52,90,.09);--ph-orb-bg:color-mix(in srgb,var(--panel) 82%,transparent);
+ --ph-newapi:#3b78ff;--ph-krill:#9461ff;--ph-a6:#e8578a;--ph-or:#14a3a3;--ph-ds:#4f6fd8;--ph-sf:#c08a1e;--ph-ol:#8a6a52;--ph-more:#8a92a6;
+ --ph-codex:#4a52ff;--ph-claude:#d4734f;--ph-opencode:#3b4254;--ph-cli:#64748e;--ph-gemini:#3a86f4;
+ --ph-core:#5f6bff;--ph-ok:#16a571;--ph-amber:#ee9822;--ph-bad:#e5484d
+}
+html[data-theme=dark] #route-overview{
+ --ph-shadow:0 16px 36px -18px rgba(0,0,0,.9);
+ --ph-stage:color-mix(in srgb,var(--bg) 30%,transparent);--ph-grid:rgba(160,180,255,.08);--ph-orb-bg:color-mix(in srgb,var(--bg) 82%,transparent);
+ --ph-newapi:#4d8dff;--ph-krill:#a675ff;--ph-a6:#ff6fa0;--ph-or:#2cc8c8;--ph-ds:#7d97ff;--ph-sf:#e0a93a;--ph-ol:#b08f75;--ph-more:#8e97ad;
+ --ph-codex:#6b73ff;--ph-claude:#ff8a5c;--ph-opencode:#8e98b0;--ph-cli:#7f8daa;--ph-gemini:#5aa0ff;
+ --ph-core:#7d88ff;--ph-ok:#2be0a0;--ph-amber:#ffb340;--ph-bad:#ff5c63
+}
+
+/* 工具条：统计窗口、暂停、全屏 */
+.ph-tools[hidden]{display:none!important}
+.ph-tools{display:flex;align-items:center;gap:6px;margin-left:auto}
+.ph-tools button{font:inherit;color:inherit;cursor:pointer}
+.ph-seg{display:flex;gap:2px;padding:2px;border-radius:9px;background:var(--ph-card);border:1px solid var(--ph-line)}
+.ph-seg button{appearance:none;border:0;background:none;padding:3px 9px;border-radius:7px;font-size:11px;line-height:16px;color:var(--ph-ink2);font-variant-numeric:tabular-nums}
+.ph-seg button:hover{background:var(--hover)}
+.ph-seg button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.ph-ibtn{appearance:none;flex:none;width:26px;height:26px;display:grid;place-items:center;border-radius:8px;background:var(--ph-card);border:1px solid var(--ph-line);color:var(--ph-ink2);padding:0}
+.ph-ibtn:hover{background:var(--hover);color:var(--ph-ink)}
+.ph-ibtn svg{width:13px;height:13px}
+.ph-tools button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+
+/* 主体 */
+.ov-hero{container:ph/inline-size;position:relative;display:flex;flex-direction:column;min-width:0;gap:10px;color:var(--ph-ink);font-size:12.5px;line-height:1.45}
+.ov-hero button{font:inherit;color:inherit}
+
+/* KPI 条 */
+/* KPI 条：并入标题行的一条细分隔条，不再是五张卡 */
+.ph-kpis{flex:1 1 auto;min-width:0;display:flex;align-items:center;justify-content:flex-start;height:28px;overflow:hidden}
+.ph-kpi{display:flex;align-items:baseline;gap:6px;padding:0 14px;white-space:nowrap;cursor:default}
+.ph-kpi:first-child{padding-left:0}
+.ph-kpi+.ph-kpi{border-left:1px solid var(--ph-line)}
+.ph-kl{font-size:11px;color:var(--ph-ink3)}
+.ph-kpi b{font-size:14px;line-height:20px;font-weight:680;letter-spacing:-.1px;font-variant-numeric:tabular-nums}
+.ph-kpi b small{margin-left:2px;font-size:11px;font-weight:500;color:var(--ph-ink3)}
+
+/* 舞台 */
+.ph-stage{position:relative;flex:1 1 0;height:auto;min-height:220px;container:phs/size;border-radius:18px;border:1px solid var(--ph-line);background:var(--ph-stage);overflow:hidden;--ph-colw:164px;isolation:isolate}
+.ph-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(var(--ph-grid) 1px,transparent 1.3px);background-size:20px 20px;-webkit-mask-image:radial-gradient(72% 72% at 50% 50%,#000 35%,transparent 100%);mask-image:radial-gradient(72% 72% at 50% 50%,#000 35%,transparent 100%)}
+.ph-motion{position:absolute;z-index:0;left:0;top:0;width:100%;height:100%;border:0;pointer-events:none;background:transparent;color-scheme:normal}
+.ph-wires{position:absolute;inset:0;z-index:1;width:100%;height:100%;overflow:visible;pointer-events:none}
+/* 未运行只保留整体：隐藏具体流量对象及连线，数据仍可用于顶部历史汇总。 */
+.ph-stage.ph-overview-only>.ph-clients,.ph-stage.ph-overview-only>.ph-channels,.ph-stage.ph-overview-only>#phAdapter,.ph-stage.ph-overview-only>.ph-wires,.ph-stage.ph-overview-only>.ph-gen{visibility:hidden;pointer-events:none}
+.ph-colh{display:flex;justify-content:space-between;padding:0 2px 7px;font-size:10.5px;font-weight:600;letter-spacing:.6px;color:var(--ph-ink3)}
+.ph-clients,.ph-channels{position:absolute;z-index:2;top:12px;bottom:var(--ph-colb,12px);width:var(--ph-colw);display:flex;flex-direction:column;justify-content:center}
+.ph-clients{left:max(24px,calc(50% - 680px))}
+.ph-channels{right:max(24px,calc(50% - 680px))}
+.ph-clients .ph-colh{flex-direction:row-reverse}
+.ph-grp{position:relative;display:flex;flex-direction:column;gap:18px}
+.ph-tag{display:inline-block;padding:0 6px;border-radius:999px;font-size:10px;font-weight:600;line-height:16px;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.ph-tag.ph-gray{--c:var(--ph-ink3)}
+
+/* 中枢：动态 Logo 由背景 iframe 绘制，这里只叠成功率外环 */
+.ph-hub{position:absolute;z-index:3;left:var(--ph-mid,50%);top:var(--ph-cy,50%);width:var(--ph-hub,150px);height:var(--ph-hub,150px);border-radius:50%;transform:translate(-50%,-50%);cursor:pointer}
+.ph-hub .ph-hubring{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ph-hub.ph-locked .ph-track{stroke:color-mix(in srgb,var(--ph-core) 45%,transparent)}
+/* 外环分段 = 各渠道 Token 占比；彗星扫光沿外环旋转，转速随请求速率 */
+.ph-track{stroke:var(--ph-line)}
+.ph-arc{stroke-linecap:butt;transition:stroke .4s,opacity .4s,stroke-width .15s}
+.ph-arc{stroke:var(--ac,var(--ph-more))}
+.ph-arc.ph-flash{stroke-width:7.5}
+.ph-sweep{position:absolute;inset:4%;border-radius:50%;pointer-events:none;
+ background:conic-gradient(from 0deg,transparent 0 62%,color-mix(in srgb,#80E9CD 70%,transparent) 82%,#3BAED1 94%,#5861E8 99%,transparent 99.6%);
+ -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5.5px),#000 calc(100% - 5px),#000 100%,transparent 100%);mask:radial-gradient(farthest-side,transparent calc(100% - 5.5px),#000 calc(100% - 5px),#000 100%,transparent 100%);
+ filter:drop-shadow(0 0 4px rgba(59,174,209,.55));animation:ph-spin var(--ph-sweep-dur,2.6s) linear infinite;transition:opacity .4s}
+.ov-hero[data-tone=amber] .ph-arc{stroke:var(--ph-amber)}
+.ov-hero[data-tone=bad] .ph-arc{stroke:var(--ph-bad)}
+.ov-hero[data-tone=bad] .ph-sweep{opacity:0;animation-play-state:paused}
+.ov-hero[data-tone=idle] .ph-arc{stroke:var(--ph-ink3);opacity:.5}
+.ov-hero[data-tone=idle] .ph-sweep{opacity:0;animation-play-state:paused}
+.ph-hub:focus-visible{outline:2px solid var(--ph-core);outline-offset:3px}
+.ph-cap{position:absolute;z-index:3;left:var(--ph-mid,50%);transform:translateX(-50%);text-align:center;white-space:nowrap}
+.ph-cap b{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:680;letter-spacing:.2px}
+.ph-cap>span{font-size:10.5px;color:var(--ph-ink3)}
+.ph-dot{flex:none;width:6px;height:6px;border-radius:50%;background:var(--ph-stc,var(--ph-ok));box-shadow:0 0 0 3px color-mix(in srgb,var(--ph-stc,var(--ph-ok)) 20%,transparent)}
+.ph-st-cap{font-style:normal;font-weight:600;color:var(--ph-stc,var(--ph-ok))}
+
+/* 中枢下方控制区：运行状态一行 + 进程操作图标，替代顶部状态卡的摘要行 */
+.ph-hubctl{position:absolute;z-index:4;left:var(--ph-mid,50%);transform:translateX(-50%);display:flex;align-items:center;gap:6px;white-space:nowrap}
+/* 状态已由标题前的圆点与“· 已停止”表达，操作条里不再放状态点或文字；整块只留给读屏 */
+.ph-cst{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.ph-cdot{width:7px;height:7px;border-radius:50%;background:var(--ph-ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ph-ok) 18%,transparent);flex:none}
+.ph-cdot.busy{background:var(--ph-core);box-shadow:0 0 0 3px color-mix(in srgb,var(--ph-core) 18%,transparent)}
+.ph-cdot.warn{background:var(--ph-amber);box-shadow:0 0 0 3px color-mix(in srgb,var(--ph-amber) 20%,transparent)}
+.ph-cdot.bad{background:var(--ph-bad);box-shadow:0 0 0 3px color-mix(in srgb,var(--ph-bad) 20%,transparent)}
+.ph-cbtns{display:flex;align-items:center;gap:4px;padding:3px;border-radius:11px;background:var(--ph-card);border:1px solid var(--ph-line);box-shadow:0 6px 18px -12px rgba(20,28,60,.5)}
+.ph-cbtn{appearance:none;display:grid;place-items:center;width:24px;height:24px;padding:0;border:0;border-radius:8px;background:none;color:var(--ph-ink2);cursor:pointer}
+.ph-cbtn svg{width:13px;height:13px}
+.ph-cbtn:hover{background:var(--hover);color:var(--ph-ink)}
+.ph-cbtn:focus-visible{outline:2px solid var(--ph-core);outline-offset:1px}
+.ph-cbtn[data-ph-mirror=stop]:hover{background:color-mix(in srgb,var(--ph-bad) 12%,transparent);color:var(--ph-bad)}
+.ph-cbtn:disabled{opacity:.38;cursor:default}
+.ph-cbtn[hidden]{display:none}
+
+/* 线上标签与汇合点 */
+.ph-wl{position:absolute;z-index:2;transform:translate(-50%,-50%);padding:1px 7px;border-radius:999px;background:var(--ph-card-hi);border:1px solid var(--ph-line);font-size:10.5px;line-height:16px;color:var(--ph-ink2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ph-wl b{color:var(--ph-ink);font-weight:650}
+.ph-wl.ph-ghost{background:transparent;border-color:transparent;color:var(--ph-ink3)}
+.ph-merge{position:absolute;z-index:2;width:12px;height:12px;border-radius:50%;transform:translate(-50%,-50%);background:var(--ph-bg);border:3px solid var(--ph-codex);box-shadow:0 0 0 5px color-mix(in srgb,var(--ph-codex) 14%,transparent)}
+
+/* 焦点态与详情浮层 */
+.ph-dimmable{transition:opacity .3s}
+.ph-stage.ph-focusing .ph-dimmable.ph-dim{opacity:.18}
+.ph-stage.ph-focusing .ph-node.ph-dim{opacity:.38}
+/* 玻璃详情卡：半透明底 + 背景模糊 + 高光描边，所有节点共用同一套观感 */
+.ph-pop{--pc:var(--ph-krill);position:absolute;z-index:20;display:none;flex-direction:column;width:236px;padding:12px 13px 11px;border-radius:16px;font-size:12.5px;line-height:1.45;color:var(--ph-ink);
+ background:color-mix(in srgb,var(--ph-card-hi) 58%,transparent);
+ border:1px solid color-mix(in srgb,var(--pc) 26%,var(--ph-line));
+ box-shadow:0 18px 44px -18px rgba(24,18,66,.42),inset 0 1px 0 color-mix(in srgb,#fff 55%,transparent);
+ -webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);
+ transition:opacity .12s ease-out}
+html[data-theme=dark] .ph-pop{background:color-mix(in srgb,var(--ph-card-hi) 42%,transparent);
+ border-color:color-mix(in srgb,var(--pc) 30%,transparent);
+ box-shadow:0 0 0 1px color-mix(in srgb,var(--pc) 20%,transparent),0 0 42px -14px var(--pc),0 18px 44px -18px #000,inset 0 1px 0 rgba(255,255,255,.08)}
+/* 悬停详情可选字、复制和点击；保持逻辑由节点与弹窗的共同悬停区处理。 */
+.ph-pop{pointer-events:auto;user-select:text;-webkit-user-select:text}
+.ph-pop.ph-visible{display:flex}
+.ph-pop .ph-pl,.ph-pop .ph-pr{display:contents}
+.ph-pop h4{display:flex;align-items:center;gap:7px;margin:0;font-size:13px;font-weight:680}
+.ph-pop h4 .ph-tag{--c:var(--pc)}
+.ph-pop p{margin:3px 0 9px;font-size:11px;color:var(--ph-ink3)}
+.ph-pop dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0 0 9px;font-size:11px}
+.ph-pop dl div{display:contents}
+.ph-pop dt{color:var(--ph-ink3)}
+.ph-pop dd{margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.ph-bars{display:flex;align-items:flex-end;gap:2px;height:26px;margin-bottom:10px}
+.ph-bars i{flex:1;border-radius:1.5px;background:color-mix(in srgb,var(--pc) 70%,transparent)}
+.ph-acts{order:9;display:flex;gap:6px}
+.ph-acts button{appearance:none;flex:1;padding:4px 0;border:0;border-radius:8px;text-align:center;font-size:11px;font-weight:600;background:color-mix(in srgb,var(--pc) 12%,transparent);color:var(--pc);cursor:pointer}
+.ph-acts button:hover{background:color-mix(in srgb,var(--pc) 20%,transparent)}
+.ph-acts button[aria-disabled=true]{cursor:default;opacity:.55}
+.ph-acts button[aria-disabled=true]:hover{background:color-mix(in srgb,var(--pc) 12%,transparent)}
+.ph-acts button:focus-visible{outline:2px solid var(--pc);outline-offset:1px}
+/* 停靠：中枢标题下方空位放得下时，详情横向停在这里，不遮渠道卡 */
+.ph-pop.ph-dock{flex-direction:row;gap:18px;padding:13px 15px 12px;animation:ph-tin .25s ease-out}
+.ph-pop.ph-dock .ph-pl{display:flex;flex-direction:column;flex:0 0 148px;min-width:0}
+.ph-pop.ph-dock h4{flex-wrap:wrap;gap:4px 7px;white-space:nowrap}
+.ph-pop.ph-dock .ph-pr{display:flex;flex-direction:column;flex:1;min-width:0}
+.ph-pop.ph-dock .ph-acts{margin-top:auto;flex-direction:column;gap:5px}
+.ph-pop.ph-dock dl{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 12px;margin-bottom:10px}
+.ph-pop.ph-dock dl div{display:flex;flex-direction:column;min-width:0}
+.ph-pop.ph-dock dt{font-size:10.5px}
+.ph-pop.ph-dock dd{overflow:hidden;text-align:left;white-space:nowrap;text-overflow:ellipsis;font-size:14px;font-weight:680}
+.ph-pop.ph-dock .ph-bars{height:30px;margin:auto 0 0}
+.ph-pop.ph-mini{gap:10px;align-items:center;padding:6px 14px}
+.ph-pop.ph-mini .ph-pl{flex-basis:100px}
+.ph-pop.ph-mini p,.ph-pop.ph-mini .ph-acts,.ph-pop.ph-mini .ph-bars,.ph-pop.ph-mini dl div:nth-child(n+5){display:none}
+.ph-pop.ph-mini h4{font-size:12.5px}
+.ph-pop.ph-mini .ph-pr{justify-content:center}
+.ph-pop.ph-mini dl{grid-template-columns:repeat(4,auto);justify-content:space-between;gap:0 8px;margin:0}
+.ph-pop.ph-mini dt{font-size:10px}
+.ph-pop.ph-mini dd{font-size:12px}
+
+/* 节点：圆形本体 + 两行信息；客户端镜像排列，数值靠外侧 */
+.ph-node{position:relative;display:flex;align-items:center;gap:11px;min-height:34px;transition:opacity .3s}
+.ph-node.ph-client{flex-direction:row-reverse}
+.ph-node[data-f]{cursor:pointer}
+.ph-node[data-f]:focus-visible{outline:none}
+.ph-node[data-f]:focus-visible>.ph-orb{outline:2px solid var(--ph-core);outline-offset:5px}
+.ph-nl{flex:1;min-width:0}
+.ph-l1,.ph-l2{display:flex;align-items:baseline;justify-content:space-between;gap:8px;white-space:nowrap}
+/* 客户端节点在图标左侧，文字右对齐到图标；两行内部顺序与渠道一致（名称 → Token → 异常） */
+.ph-client .ph-l1,.ph-client .ph-l2{flex-direction:row;justify-content:flex-end}
+.ph-l1 b{overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:620}
+.ph-l1 b em{margin-left:4px;font-style:normal;font-size:10.5px;font-weight:500;color:var(--ph-ink3)}
+.ph-v{flex:none;font-size:13.5px;font-weight:680;font-variant-numeric:tabular-nums}
+.ph-v small{font-size:10.5px;font-weight:500;color:var(--ph-ink3)}
+.ph-l2{margin-top:1px;font-size:11px;color:var(--ph-ink2);font-variant-numeric:tabular-nums}
+.ph-l2>span{overflow:hidden;text-overflow:ellipsis}
+.ph-l2 small{flex:none;font-size:10.5px;color:var(--ph-ink3)}
+/* 低成功率提示：只在出问题时出现，用琥珀色和节点外环呼应 */
+.ph-l2.ph-low{color:var(--ph-amber);font-weight:650}
+.ph-orb{position:relative;flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;color:var(--c);font-size:11px;--rc:var(--c);font-weight:700;letter-spacing:-.3px;
+ background:color-mix(in srgb,var(--c) 11%,var(--ph-orb-bg));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 24%,transparent),0 6px 16px -9px color-mix(in srgb,var(--c) 60%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:box-shadow .5s}
+html[data-theme=dark] .ph-orb{background:color-mix(in srgb,var(--c) 15%,var(--ph-orb-bg))}
+html[data-theme=dark] .ph-chan .ph-orb{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 34%,transparent),0 0 24px -6px var(--c)}
+.ph-orb.ph-warn{--rc:var(--ph-amber)}
+.ph-orb .ph-ring{position:absolute;inset:-4px;border-radius:50%;pointer-events:none;background:var(--rc);
+ -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px))}
+.ph-ico{width:16px;height:16px;fill:currentColor}
+.ph-img{width:70%;height:70%;border-radius:50%;object-fit:cover}
+/* 多渠道收纳：“+N 其他”节点用完整细实线外环（不做虚线断口），被收纳渠道有低成功率时整圈变琥珀；列底一行统计空闲 / 停用渠道，点击进入渠道设置 */
+.ph-more .ph-orb .ph-ring{background:none;border:1.5px solid color-mix(in srgb,var(--rc) 70%,transparent);-webkit-mask:none;mask:none}
+/* 渠道列底部的“另有空闲 / 停用”长句已去掉，只留一个不可见的统计点承接无障碍信息 */
+.ph-chstat{position:absolute;right:2px;top:100%;margin-top:8px;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+/* 运行状态文字只供读屏：画面上已由标题前的圆点与“· 已停止”表达 */
+ .ph-cst #phCstT{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.ph-mlist{list-style:none;display:flex;flex-direction:column;gap:4px;margin:0 0 9px;padding:0;font-size:11px}
+.ph-mlist li{display:flex;align-items:baseline;gap:6px;min-width:0}
+.ph-mlist i{flex:none;align-self:center;width:7px;height:7px;border-radius:50%}
+.ph-mlist span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ph-mlist b{font-weight:650;font-variant-numeric:tabular-nums}
+.ph-mlist small{color:var(--ph-ink3);font-variant-numeric:tabular-nums}
+.ph-mlist .ph-low small{color:var(--ph-amber)}
+.ph-mlist .ph-mrest span{color:var(--ph-ink3)}
+.ph-pop.ph-mini .ph-mlist{margin:0}
+.ph-pop.ph-mini .ph-mlist small,.ph-pop.ph-mini .ph-mlist li:nth-child(n+3){display:none}
+
+/* 中枢详情：舞台中部只剩圆环上方的空隙，用紧凑横向卡放在那里，避免盖住圆环与控制区 */
+.ph-pop.ph-hubc{width:348px;max-width:calc(100% - 24px);padding:11px 13px 12px}
+/* 左栏承载标题、说明与操作，右栏承载指标；两栏纵向各自排 */
+.ph-pop.ph-hubc .ph-pl{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ph-pop.ph-hubc h4{font-size:12.5px;flex-wrap:wrap;gap:2px 6px;white-space:normal}
+.ph-pop.ph-hubc h4 .ph-tag{margin-left:2px;flex:none}
+.ph-pop.ph-hubc p{margin:3px 0 0;font-size:10.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ph-pop.ph-hubc .ph-pr{margin:0}
+.ph-pop.ph-hubc dl{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px 8px;margin:9px 0 0;font-size:10px}
+.ph-pop.ph-hubc dl div{display:flex;flex-direction:column;gap:1px;min-width:0}
+.ph-pop.ph-hubc dt{font-size:9.5px;white-space:nowrap}
+.ph-pop.ph-hubc dd{text-align:left;font-size:12px;font-weight:650;white-space:nowrap;overflow:visible}
+.ph-pop.ph-hubc dl div{overflow:visible}
+.ph-pop.ph-hubc[data-cols="5"] dl{grid-template-columns:repeat(5,minmax(0,1fr))}
+.ph-pop.ph-hubc[data-cols="3"] dl{grid-template-columns:repeat(3,minmax(0,1fr))}
+.ph-pop.ph-hubc[data-cols="2"] dl{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ph-pop.ph-hubc[data-cols="1"] dl{grid-template-columns:1fr}
+.ph-pop.ph-hubc .ph-bars{display:none}
+.ph-pop.ph-hubc .ph-acts{display:flex;gap:6px;margin:10px 0 0;flex:none}
+.ph-pop.ph-hubc .ph-acts button{flex:1;padding:4px 8px;font-size:10.5px}
+/* 矮舞台：描述收成一行、指标留四项，内容仍在卡内不溢出 */
+.ph-pop.ph-hubc.ph-flat{padding:9px 11px 10px}
+.ph-pop.ph-hubc.ph-flat p{display:none}
+.ph-pop.ph-hubc.ph-flat dl{margin-top:7px}
+.ph-pop.ph-hubc.ph-flat .ph-acts{margin-top:8px}
+/* compact：舞台最矮时去掉说明，指标两行排完，卡片高度压到最小但仍保留全部数值 */
+.ph-pop.ph-hubc.ph-compact p{display:none}
+.ph-pop.ph-hubc.ph-compact dl{margin-top:7px}
+.ph-pop.ph-hubc.ph-compact .ph-acts{margin-top:7px}
+.ph-pop.ph-hubc.ph-compact h4{font-size:12px}
+/* 超紧凑档：舞台很矮时标题与指标并成一排，按钮一行，保证卡片能放进两列之间 */
+.ph-pop.ph-hubc.ph-tiny{padding:5px 8px 6px}
+.ph-pop.ph-hubc.ph-tiny h4{font-size:10.5px;line-height:1.3}
+.ph-pop.ph-hubc.ph-tiny .ph-tag{font-size:8.5px;line-height:13px;padding:0 4px}
+.ph-pop.ph-hubc.ph-tiny dl{margin-top:3px;gap:1px 5px}
+.ph-pop.ph-hubc.ph-tiny dt{font-size:8px}
+.ph-pop.ph-hubc.ph-tiny dd{font-size:10.5px}
+.ph-pop.ph-hubc.ph-tiny .ph-acts{margin-top:4px;gap:4px}
+.ph-pop.ph-hubc.ph-tiny .ph-acts button{padding:1px 4px;font-size:9px}
+/* 横条档：舞台矮到圆环上方只剩几十像素时，标题 / 指标 / 操作并成一行，高度约 34px */
+.ph-pop.ph-hubc.ph-bar{flex-direction:row;align-items:center;gap:10px;padding:6px 10px;border-radius:12px}
+.ph-pop.ph-hubc.ph-bar .ph-pl{flex:none;flex-direction:row;align-items:center;gap:0}
+.ph-pop.ph-hubc.ph-bar h4{font-size:11px;white-space:nowrap}
+.ph-pop.ph-hubc.ph-bar p,.ph-pop.ph-hubc.ph-bar h4 .ph-tag,.ph-pop.ph-hubc.ph-bar .ph-mlist{display:none}
+.ph-pop.ph-hubc.ph-bar .ph-pr{flex:1 1 auto;min-width:0;margin:0}
+.ph-pop.ph-hubc.ph-bar dl{grid-template-columns:repeat(5,minmax(0,1fr));gap:0 8px;margin:0}
+.ph-pop.ph-hubc.ph-bar dt{font-size:8px}
+.ph-pop.ph-hubc.ph-bar dd{font-size:10.5px}
+.ph-pop.ph-hubc.ph-bar .ph-acts{margin:0;flex:none;gap:4px}
+.ph-pop.ph-hubc.ph-bar .ph-acts button{padding:1px 6px;font-size:9px}
+/* 横条档遇到收纳卡（没有指标表）时，用一句合计代替列表，数字不至于丢 */
+.ph-pop.ph-hubc.ph-bar.ph-haslist p{display:block;margin:0;font-size:9.5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 收纳列表在紧凑档只留两行，避免“+N”卡片比别的卡片高出一截 */
+.ph-pop.ph-hubc.ph-flat .ph-mlist,.ph-pop.ph-hubc.ph-compact .ph-mlist,.ph-pop.ph-hubc.ph-tiny .ph-mlist{margin:3px 0 0}
+.ph-pop.ph-hubc.ph-compact .ph-mlist li:nth-child(n+3),.ph-pop.ph-hubc.ph-tiny .ph-mlist li:nth-child(n+3){display:none}
+/* 窄舞台：两列收窄，给中间详情卡留位置 */
+@container phs (max-width:700px){
+/* 窄舞台：两列再收一点，中间空档要放得下详情卡与中枢图标 */
+ .ph-clients,.ph-channels{width:128px}
+ .ph-clients{left:12px}
+ .ph-channels{right:12px}
+ .ph-pop.ph-hubc{width:268px;padding:8px 10px 9px}
+ .ph-pop.ph-hubc dt{font-size:9px}
+ .ph-pop.ph-hubc dd{font-size:11.5px}
+ .ph-pop.ph-hubc h4{font-size:12px}
+ .ph-pop.ph-hubc dl{gap:4px 6px;margin-top:6px}
+ .ph-pop.ph-hubc .ph-acts{margin-top:7px}
+ .ph-pop.ph-hubc .ph-acts button{padding:2px 6px;font-size:10px}}
+/* 请求到达：节点泛起一圈涟漪 */
+.ph-ripple{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--c);pointer-events:none;animation:ph-rip .7s ease-out forwards}
+.ph-unsplit .ph-orb .ph-ring{background:none;-webkit-mask:none;mask:none;border:1.5px solid color-mix(in srgb,var(--ph-ink3) 40%,transparent)}
+.ph-node.ph-locked>.ph-orb{outline:2px solid color-mix(in srgb,var(--c) 70%,transparent);outline-offset:5px}
+
+/* Krill 线路上的 Desktop 实时适配节点 */
+.ph-node.ph-adapter{position:absolute;z-index:3;flex-direction:column-reverse;gap:5px;min-height:0}
+.ph-adapter .ph-orb{width:34px;height:34px;background:var(--ph-card-hi);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ph-krill) 55%,transparent),0 0 0 5px color-mix(in srgb,var(--ph-krill) 9%,transparent)}
+html[data-theme=dark] .ph-adapter .ph-orb{background:var(--ph-card-hi);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ph-krill) 60%,transparent),0 0 22px -4px var(--ph-krill)}
+.ph-adapter .ph-orb svg{width:15px;height:15px}
+.ph-pulse{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--ph-krill);animation:ph-ping 2.2s ease-out infinite;pointer-events:none}
+.ph-adapter .ph-nl{flex:none;text-align:center;white-space:nowrap;line-height:1.3}
+.ph-adapter .ph-nl>b{display:block;font-size:11.5px;font-weight:650;color:var(--ph-krill)}
+.ph-adapter .ph-nl>span{font-size:10.5px;color:var(--ph-ink3)}
+.ph-live-n{color:var(--ph-krill);font-weight:650}
+
+/* 概览布局：流量全景紧跟状态条，维护卡与最近事件在下方 */
+#route-overview #ovHero{order:0}
+.ov-hero[hidden]{display:none!important}
+.ov-hero-head{flex:none;display:flex;align-items:center;gap:12px;height:30px;padding:0;min-width:0;position:relative}
+.ov-hero-head h2{display:flex;align-items:baseline;gap:8px;margin:0;font-size:14px;font-weight:650;white-space:nowrap}
+.ov-hero-head h2 small{font-size:11px;font-weight:500;color:var(--ph-ink3)}
+.ov-hero-note{position:relative;flex:none;width:max-content;height:24px;margin-left:auto}
+.ov-hero-note .proto-annotation{left:auto;right:0;top:0;position:absolute}
+.annotations-muted .ov-hero-note{width:0}
+.ov-hero:fullscreen{background:var(--bg);padding:16px}
+.ov-hero:fullscreen .ph-stage{flex:1;height:auto;min-height:0}
+html[data-overview-size=compact] .ov-hero{gap:8px}
+
+/* 网关未运行：线路变淡，中枢外环与适配脉冲停转，光点已由脚本清空 */
+.ov-hero.ov-idle .ph-wires,.ov-hero.ov-idle .ph-wl,.ov-hero.ov-idle .ph-merge{opacity:.45}
+.ov-hero.ov-idle .ph-hub .ph-hubring{opacity:.55}
+.ov-hero.ov-idle .ph-pulse,.ov-hero.ov-idle:not([data-tone=amber]) .ph-sweep{animation-play-state:paused}
+.ov-hero.ov-idle .ph-pulse{opacity:0}
+
+/* 就绪态状态条：Logo 背景层让位，状态文字、副标题与启停按钮收成一行 */
+#route-overview:not([data-mode=setup]) .motion-backdrop{display:none}
+#route-overview:not([data-mode=setup]) #card-overview-status .ovb-summary{display:flex;align-items:center;justify-content:space-between;gap:16px;height:auto;min-height:0;padding:2px 2px 0}
+#route-overview:not([data-mode=setup]) .motion-identity{width:auto;min-width:0;text-align:left}
+#route-overview:not([data-mode=setup]) .motion-heading{justify-content:flex-start}
+#route-overview:not([data-mode=setup]) .motion-detail-icon{padding:2px 4px;margin-left:-4px}
+#route-overview:not([data-mode=setup]) .motion-mainline{font-size:17px;line-height:1.35}
+#route-overview:not([data-mode=setup]) .motion-caption{margin:1px 0 0;padding:0;max-width:none;min-height:18px;line-height:18px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:var(--text-caption)}
+#route-overview:not([data-mode=setup]) #card-overview-status .ovb-actions{flex:none;width:auto;justify-content:flex-end;padding-top:0;min-height:0;gap:8px}
+#route-overview:not([data-mode=setup]) #card-overview-status .ovb-actions>.btn{min-height:32px}
+html[data-overview-size=compact] #route-overview:not([data-mode=setup]) #card-overview-status .ovb-summary{height:auto;min-height:0}
+html[data-overview-size=compact] #route-overview:not([data-mode=setup]) .motion-mainline{font-size:16px}
+html[data-overview-size=compact] #route-overview:not([data-mode=setup]) #card-overview-status .ovb-actions{gap:6px}
+html[data-overview-size=compact] #route-overview:not([data-mode=setup]) #card-overview-status .ovb-actions>.btn{min-height:30px}
+
+/* 就绪态：运行状态与操作已并入中枢下方，顶部状态卡让出整行高度给舞台；环境门禁态仍用原卡。 */
+#route-overview:not([data-mode=setup])>#card-overview-status{display:none}
+
+@keyframes ph-spin{to{transform:rotate(360deg)}}
+@keyframes ph-tin{from{opacity:0;transform:translateY(-5px)}}
+@keyframes ph-rip{from{opacity:.7;transform:scale(1)}to{opacity:0;transform:scale(1.9)}}
+@keyframes ph-ping{0%{opacity:.75;transform:scale(1)}80%,100%{opacity:0;transform:scale(1.75)}}
+.ov-hero.ph-paused .ph-pulse,.ov-hero.ph-paused .ph-sweep{animation-play-state:paused}
+html[data-effects=low] .ov-hero .ph-pulse,html[data-effects=low] .ov-hero .ph-sweep{animation:none}
+
+/* 窄窗：按视图宽度收起次要指标；矮舞台收紧节点 */
+@container ph (max-width:1024px){.ph-kpi:nth-child(5){display:none}}
+@container ph (max-width:860px){.ph-kpi:nth-child(n+4){display:none}.ph-kpi{padding:0 10px}}
+@container ph (max-width:720px){.ph-kpi:nth-child(n+3){display:none}}
+@container ph (max-width:820px){
+ .ph-stage{--ph-colw:146px}
+ .ph-grp{gap:14px}
+ .ph-node{min-height:30px}
+ .ph-orb{width:30px;height:30px;font-size:10.5px}
+ .ph-v{font-size:12.5px}
+ .ph-l2.ph-note{display:none}
+}
+/* 矮舞台：适配节点只留图标（说明在 title 里），把圆环上方空间让给中枢详情 */
+@container phs (max-height:340px){
+ #phAdapter .ph-nl{display:none}
+ .ph-grp{gap:12px}
+ .ph-node{min-height:30px}
+ .ph-orb{width:30px;height:30px;font-size:10.5px}
+ .ph-orb .ph-ring{inset:-3.5px}
+ .ph-l2.ph-note{display:none}
+ .ph-colh{padding-bottom:4px}
+}
+@container phs (max-height:230px){
+ .ph-colh{display:none}
+ .ph-grp{gap:8px}
+ .ph-node{min-height:28px}
+ .ph-orb{width:28px;height:28px;font-size:10px}
+ .ph-ico{width:14px;height:14px}
+ .ph-chfoot{display:none}
+}
+
+/* ===== 概览一页化（2026-11-01）：就绪态整页不滚动 =====
+   main 改为纵向 flex，路线区占满剩余高度；状态条、维护卡与最近事件定高，流量全景舞台吃掉剩余空间。
+   背景光层 .ph-glow 由脚本铺满 main 可视区并以中枢为中心，放在所有卡片之后。 */
+html[data-route=overview] .main:has(#route-overview.active:not([data-mode=setup])){display:flex;flex-direction:column;overflow:hidden;position:relative;isolation:isolate}
+html[data-route=overview] .main:has(#route-overview.active:not([data-mode=setup]))>.topbar{flex:none}
+#route-overview.active:not([data-mode=setup]){display:flex;flex-direction:column;flex:1 1 auto;min-height:0;gap:10px;width:100%}
+#route-overview:not([data-mode=setup])>#card-overview-status{order:0;flex:none}
+#route-overview:not([data-mode=setup])>#ovHero{order:1;flex:1 1 0;min-height:0}
+#route-overview:not([data-mode=setup])>#mods{order:2;flex:none}
+#route-overview:not([data-mode=setup])>#card-overview-events{order:3;flex:none}
+.ov-hero:fullscreen{isolation:isolate}
+.ph-glow{position:absolute;z-index:-1;left:0;top:0;width:0;height:0;overflow:hidden;pointer-events:none}
+.ph-glow[hidden]{display:none}
+
+/* 三张维护卡：标题 + 动作同一行，状态一行两项，卡高约 88px */
+#route-overview:not([data-mode=setup]) #mods{gap:12px}
+#route-overview:not([data-mode=setup]) #mods .mod{min-height:0;padding:10px 12px 10px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"h a g" "s s s";gap:8px 8px;align-items:center}
+#route-overview:not([data-mode=setup]) #mods .mod-head{display:contents}
+#route-overview:not([data-mode=setup]) #mods .mod-head h3{grid-area:h;margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:var(--text-control)}
+#route-overview:not([data-mode=setup]) #mods .mod-head>.tag{display:none}
+#route-overview:not([data-mode=setup]) #mods .mod-go{grid-area:g}
+#route-overview:not([data-mode=setup]) #mods .mod-actions{grid-area:a;display:flex;gap:6px;margin:0;padding:0;border:0}
+#route-overview:not([data-mode=setup]) #mods .mod-actions .btn{width:auto;min-height:26px;padding:3px 10px;font-size:var(--text-caption);white-space:nowrap}
+#route-overview:not([data-mode=setup]) #mods .mod-status{grid-area:s;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 14px;padding-top:8px;border-top:1px solid var(--border-soft);font-size:var(--text-caption)}
+#route-overview:not([data-mode=setup]) #mods .mod-status>span{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:1px;min-width:0;line-height:16px;color:var(--muted)}
+#route-overview:not([data-mode=setup]) #mods .mod-status>span>b,#route-overview:not([data-mode=setup]) #mods .mod-status>span>.ov-state-side{max-width:100%;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+
+/* 最近事件：压成一行，标题 · 最新一条 · 入口 */
+#route-overview:not([data-mode=setup]) #card-overview-events{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;padding:6px 12px 6px 14px}
+#route-overview:not([data-mode=setup]) .recent-events-head{display:contents}
+#route-overview:not([data-mode=setup]) .recent-events-head h2{grid-column:1;grid-row:1;white-space:nowrap}
+#route-overview:not([data-mode=setup]) .recent-events-head .btn{grid-column:3;grid-row:1}
+#route-overview:not([data-mode=setup]) .recent-events-head .proto-annotation{position:absolute}
+#route-overview:not([data-mode=setup]) .recent-events-list{grid-column:2;grid-row:1;min-width:0;display:block}
+#route-overview:not([data-mode=setup]) .recent-events-list li{display:flex;gap:10px;padding:0;min-width:0;white-space:nowrap;overflow:hidden}
+#route-overview:not([data-mode=setup]) .recent-events-list li>*:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
+#route-overview:not([data-mode=setup]) .recent-events-list li:nth-child(n+2){display:none}
+#route-overview:not([data-mode=setup]) .recent-events-list time{flex:none;width:auto}
+
+/* 紧凑窗 */
+html[data-overview-size=compact] #route-overview.active:not([data-mode=setup]){gap:8px}
+html[data-overview-size=compact] .ph-stage{min-height:170px}
+html[data-overview-size=compact] #route-overview:not([data-mode=setup]) #mods{gap:8px}
+html[data-overview-size=compact] #route-overview:not([data-mode=setup]) #mods .mod{min-height:0;padding:8px 10px 8px 12px;gap:6px 6px;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"h a" "s s"}
+html[data-overview-size=compact] #route-overview:not([data-mode=setup]) #mods .mod-go{display:none}
+html[data-overview-size=compact] #route-overview:not([data-mode=setup]) #mods .mod-status{padding-top:6px}
+html[data-overview-size=compact] #route-overview:not([data-mode=setup]) #mods .mod-actions .btn{min-height:24px;padding:2px 8px}
+html[data-overview-size=compact] #route-overview:not([data-mode=setup]) #card-overview-events{padding:4px 10px 4px 12px}
+/* 紧凑窗页头副标题保持一行，避免折行把页头撑高 */
+html[data-route=overview][data-overview-size=compact] .main:has(#route-overview.active:not([data-mode=setup]))>.topbar .page-title{flex:1 1 auto;min-width:0}
+html[data-route=overview][data-overview-size=compact] .main:has(#route-overview.active:not([data-mode=setup]))>.topbar .page-title p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 注释 03：锚点脚本给最近事件的首个子元素加了复制按钮，落进了标记里把它撑宽；概览内隐藏，并把标记移到入口按钮左侧 */
+#card-overview-events .proto-annotation .anchor-btn{display:none}
+#card-overview-events .proto-annotation .card-head-title{display:contents}
+#route-overview:not([data-mode=setup]) #card-overview-events .recent-events-head .proto-annotation{right:118px;top:-13px}
+
+/* 模型明细表：渠道 / 客户端 / 中枢的悬停卡共用 */
+.ph-mt{margin-top:9px;border-top:1px solid var(--ph-line);padding-top:7px;display:grid;gap:4px;font-variant-numeric:tabular-nums}
+.ph-mt-h,.ph-mt-r{display:grid;grid-template-columns:minmax(0,1fr) 44px 78px;align-items:center;gap:8px}
+.ph-mt-h{font-size:9px;color:var(--ph-ink3);letter-spacing:.2px}
+.ph-mt-r{font-size:10.5px}
+.ph-mt-n{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ph-ink2)}
+.ph-mt-q{text-align:right;color:var(--ph-ink3);font-size:10px}
+.ph-mt-s{display:flex;align-items:center;gap:5px;justify-content:flex-end}
+.ph-mb{flex:1 1 auto;height:4px;min-width:16px;border-radius:2px;background:color-mix(in srgb,var(--pc) 16%,transparent);overflow:hidden}
+.ph-mb>i{display:block;height:100%;border-radius:2px;background:var(--pc)}
+.ph-mt-s b{font-size:10.5px;font-weight:650;color:var(--ph-ink)}
+.ph-mt-s small{font-size:8.5px;color:var(--ph-ink3)}
+/* 紧凑档隐藏模型表中的请求列，保留速度 */
+.ph-pop.ph-flat .ph-mt-h,.ph-pop.ph-compact .ph-mt-h,.ph-pop.ph-tiny .ph-mt-h{grid-template-columns:minmax(0,1fr) 72px}
+.ph-pop.ph-flat .ph-mt-h span:nth-child(2),.ph-pop.ph-compact .ph-mt-h span:nth-child(2),.ph-pop.ph-tiny .ph-mt-h span:nth-child(2){display:none}
+.ph-pop.ph-flat .ph-mt-h span:nth-child(3),.ph-pop.ph-compact .ph-mt-h span:nth-child(3),.ph-pop.ph-tiny .ph-mt-h span:nth-child(3){text-align:right}
+.ph-pop.ph-flat .ph-mt-q,.ph-pop.ph-compact .ph-mt-q,.ph-pop.ph-tiny .ph-mt-q{display:none}
+.ph-pop.ph-flat .ph-mt-h,.ph-pop.ph-flat .ph-mt-r{grid-template-columns:minmax(0,1fr) 72px}
+.ph-pop.ph-compact .ph-mt-h,.ph-pop.ph-compact .ph-mt-r,.ph-pop.ph-tiny .ph-mt-h,.ph-pop.ph-tiny .ph-mt-r{grid-template-columns:minmax(0,1fr) 66px}
+.ph-pop.ph-bar .ph-mt{display:none}
+/* 带模型表的卡片最小宽度：模型名 + 请求 + 速度三列要能并排 */
+.ph-pop.ph-hubc.ph-hasm{min-width:238px}
+.ph-pop.ph-hubc.ph-hasm.ph-tiny{min-width:226px}
+/* 所有节点详情统一规格，碰撞只改变位置，不改变宽度、字号或内容密度。 */
+.ph-pop.ph-hubc.ph-near{width:360px;min-width:0;max-width:calc(100% - 20px);padding:10px 14px;font-size:12.5px;line-height:1.45}
+.ph-pop.ph-hubc.ph-near h4{font-size:13px}
+.ph-pop.ph-hubc.ph-near p{font-size:11px}
+.ph-pop.ph-hubc.ph-near dl{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 12px;margin-top:9px}
+.ph-pop.ph-hubc.ph-near dt{font-size:10px;line-height:12px}
+.ph-pop.ph-hubc.ph-near dd{font-size:12px;line-height:16px}
+.ph-pop.ph-hubc.ph-near .ph-acts{margin-top:10px}
+.ph-pop.ph-hubc.ph-near .ph-acts button{font-size:10.5px;padding:4px 8px}
+/* 边缘特效：客户端节点外环加一圈随速度变化的呼吸光；渠道节点只保留原有成功率外环 */
+.ph-node.ph-client>.ph-orb::after{content:"";position:absolute;inset:-7px;border-radius:50%;pointer-events:none;
+ border:1px solid color-mix(in srgb,var(--c) 45%,transparent);opacity:0;
+ box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 10%,transparent),0 0 14px -2px color-mix(in srgb,var(--c) 60%,transparent);
+ animation:ph-edge calc(2.6s / var(--ph-gear,1)) ease-in-out infinite}
+.ph-node.ph-client>.ph-orb::before{content:"";position:absolute;inset:-3px;border-radius:50%;pointer-events:none;
+ background:conic-gradient(from 0deg,transparent 0deg,color-mix(in srgb,var(--c) 70%,transparent) 60deg,transparent 120deg);
+ -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1.5px));
+ mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1.5px));
+ animation:ph-spin calc(4.2s / var(--ph-gear,1)) linear infinite;opacity:.75}
+.ph-node.ph-client.ph-dim>.ph-orb::before,.ph-node.ph-client.ph-dim>.ph-orb::after{animation-play-state:paused}
+.ov-hero.ov-idle .ph-node.ph-client>.ph-orb::before,.ov-hero.ov-idle .ph-node.ph-client>.ph-orb::after{animation-play-state:paused;opacity:.25}
+@keyframes ph-edge{0%,100%{opacity:.28}50%{opacity:.62}}
+.ph-paused .ph-node.ph-client>.ph-orb::before,.ph-paused .ph-node.ph-client>.ph-orb::after{animation-play-state:paused}
+html[data-effects=low] .ph-node.ph-client>.ph-orb::after,html[data-effects=low] .ph-node.ph-client>.ph-orb::before{display:none}
+@media (prefers-reduced-motion: reduce){.ph-node.ph-client>.ph-orb::before,.ph-node.ph-client>.ph-orb::after{animation:none;opacity:.25}}
+
+
+/* 两行节点：第一行名称，第二行 Token；渠道的 Token 靠右对齐到列尾，客户端靠左与图标对齐 */
+.ph-chan .ph-l2{justify-content:flex-start;gap:6px;color:var(--ph-ink3)}
+.ph-chan .ph-l2 .ph-tok{font-size:11.5px;font-weight:600;color:var(--ph-ink2);font-variant-numeric:tabular-nums}
+/* 异常百分比紧跟 Token，不推到列尾；渠道列右端留给“另一列”式的对齐会让两行对不齐 */
+.ph-chan .ph-l2 .ph-low{margin-left:2px;font-size:10.5px;font-weight:650;color:var(--ph-amber)}
+/* 渠道第二行的输出速度：常态用次要色，低于 98% 成功率时与百分比同色，异常仍然突出 */
+/* 速度紧跟 Token，不再推到列尾，读起来是“0.58M · 58 t/s” */
+.ph-chan .ph-l2 .ph-spd{margin-left:6px;font-size:10.5px;font-weight:600;color:var(--ph-ink3);font-variant-numeric:tabular-nums}
+.ph-chan .ph-l2 .ph-spd.ph-low{color:var(--ph-amber)}
+@container phs (max-width:700px){
+ .ph-chan .ph-l2{gap:4px}
+ .ph-chan .ph-l2 .ph-tok,.ph-chan .ph-l2 .ph-spd{flex:none}
+ .ph-chan .ph-l2 .ph-spd{margin-left:0}
+}
+.ph-client .ph-l2{justify-content:flex-end;gap:6px}
+.ph-client .ph-nl{min-width:0;text-align:right}
+.ph-client .ph-l2 .ph-tok{font-size:11px;color:var(--ph-ink3);font-variant-numeric:tabular-nums}
+.ph-client .ph-l2 .ph-low{font-size:11px;font-weight:650;color:var(--ph-amber)}
+/* 列头在渠道侧仍是“名称 … Token”，两行节点让 Token 落在第二行，列头只留名称，避免重复 */
+.ph-channels .ph-colh span:last-child{visibility:hidden}
+
+
+/* 概览自定义时间范围：玻璃浮层，尺寸适配概览 */
+.ph-cal{display:flex;flex-direction:column;gap:6px;min-height:0;flex:1 1 auto}
+.ph-rng-host{position:absolute;inset:0;z-index:60;display:grid;place-items:center;padding:10px}
+.ph-rng-mask{position:absolute;inset:0;background:color-mix(in srgb,#0b1020 26%,transparent);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.ph-rng{position:relative;width:min(560px,100%);max-height:100%;overflow:hidden;display:flex;flex-direction:column;gap:8px;padding:12px 14px 10px;border-radius:14px;font-size:11.5px;
+ background:color-mix(in srgb,var(--ph-panel,var(--panel)) 40%,transparent);border:1px solid color-mix(in srgb,var(--ph-ink) 14%,transparent);
+ -webkit-backdrop-filter:saturate(1.7) blur(28px);backdrop-filter:saturate(1.7) blur(28px);
+ box-shadow:0 26px 60px -24px rgba(18,16,52,.55),inset 0 1px 0 rgba(255,255,255,.35)}
+.ph-rng-h{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.ph-rng-h h3{margin:0;font-size:14px;font-weight:680}
+.ph-rng-h p{margin:3px 0 0;font-size:11px;color:var(--ph-ink3)}
+.ph-rng-x{appearance:none;border:0;background:none;color:var(--ph-ink3);width:24px;height:24px;border-radius:7px;cursor:pointer}
+.ph-rng-x:hover{background:var(--hover);color:var(--ph-ink)}
+.ph-rng-f{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ph-rng-dt{display:grid;grid-template-columns:minmax(0,1fr) 62px;gap:5px;min-width:0}
+.ph-rng-dt label{display:grid;gap:4px;font-size:10.5px;color:var(--ph-ink3)}
+.ph-rng-dt input{width:100%;min-width:0;box-sizing:border-box;min-height:26px;padding:4px 6px;border-radius:7px;font:inherit;font-size:11px;color:var(--ph-ink);
+ background:color-mix(in srgb,var(--ph-panel,var(--panel)) 62%,transparent);border:1px solid color-mix(in srgb,var(--ph-ink) 14%,transparent)}
+.ph-rng-chips{display:flex;gap:6px;flex-wrap:wrap}
+.ph-rng-chips button{appearance:none;font:inherit;font-size:11px;padding:3px 9px;border-radius:999px;cursor:pointer;color:var(--ph-ink);
+ background:color-mix(in srgb,var(--ph-panel,var(--panel)) 55%,transparent);border:1px solid color-mix(in srgb,var(--ph-ink) 12%,transparent)}
+.ph-rng-chips button:hover{background:color-mix(in srgb,var(--ph-ink) 8%,transparent)}
+.ph-cal-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10.5px;color:var(--ph-ink3)}
+.ph-cal-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.ph-cal-pair{flex:1 1 auto;min-height:0;max-height:min(24vh,190px);overflow:auto;align-content:start}
+/* 窄舞台：日历只显示一个月，表单竖排，保证弹窗不出舞台 */
+@container phs (max-width:620px){
+ .ph-cal-pair{grid-template-columns:1fr}
+ .ph-cal-pair .ph-cal-m:nth-child(2){display:none}
+ .ph-rng-f{grid-template-columns:1fr}
+}
+.ph-cal-m{display:grid;gap:5px}
+.ph-cal-h{text-align:center;font-size:11.5px;font-weight:650;color:var(--ph-ink)}
+.ph-cal-w{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:9.5px;color:var(--ph-ink3);text-align:center}
+.ph-cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.ph-cal-d{appearance:none;border:0;background:none;font:inherit;font-size:11px;height:25px;border-radius:7px;color:var(--ph-ink);cursor:pointer;padding:0}
+.ph-cal-d.is-empty{pointer-events:none}
+.ph-cal-d:hover:not(.is-empty){background:color-mix(in srgb,var(--ph-ink) 10%,transparent)}
+.ph-cal-d.is-in{background:color-mix(in srgb,var(--ph-core) 15%,transparent);border-radius:0}
+.ph-cal-d.is-start,.ph-cal-d.is-end{background:var(--ph-core);color:#fff;font-weight:650;border-radius:7px}
+.ph-rng-fo{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:9px;border-top:1px solid color-mix(in srgb,var(--ph-ink) 10%,transparent)}
+.ph-rng-note{display:flex;align-items:center;min-height:18px;font-size:11.5px;color:var(--ph-ink3);min-width:0}
+.ph-rng-err{display:none;color:var(--ph-bad);font-size:11.5px}
+.ph-rng-err:not([hidden]){display:block}
+.ph-rng-note [data-rng-sum]:has(+ .ph-rng-err:not([hidden])){display:none}
+.ph-rng-bt{display:flex;gap:6px;flex:none}
+.ph-rng-bt .btn{min-height:30px;padding:0 14px;border-radius:9px;font-size:12px}
+.ph-rng-tpop{position:fixed;z-index:70;display:grid;grid-template-columns:repeat(2,54px);gap:3px;padding:6px;border-radius:11px;
+.ph-rng-tpop .ph-tp-now-bar{grid-column:1/-1}
+ background:color-mix(in srgb,var(--ph-panel,var(--panel)) 55%,transparent);border:1px solid color-mix(in srgb,var(--ph-ink) 14%,transparent);
+ -webkit-backdrop-filter:saturate(1.6) blur(20px);backdrop-filter:saturate(1.6) blur(20px);box-shadow:0 18px 40px -18px rgba(18,16,52,.5)}
+.ph-rng-tpop .ph-tp-col{display:grid;gap:1px;max-height:200px;overflow:auto}
+.ph-rng-tpop .ph-tp-col button{appearance:none;border:0;background:none;font:inherit;font-size:11.5px;height:24px;border-radius:6px;color:var(--ph-ink);cursor:pointer}
+.ph-rng-tpop .ph-tp-col button:hover{background:color-mix(in srgb,var(--ph-ink) 10%,transparent)}
+.ph-rng-tpop .ph-tp-col button[aria-selected=true]{background:var(--ph-core);color:#fff;font-weight:650}
+.ph-ibtn.ph-calbtn[aria-expanded=true]{background:var(--ph-core);color:#fff}
+
+
+/* 窄舞台兜底：日历单月 + 更矮的行，保证弹窗完整落在舞台内 */
+@container phs (max-height:340px){
+ .ph-cal-pair{max-height:150px;grid-template-columns:1fr}
+ .ph-cal-pair .ph-cal-m:nth-child(2){display:none}
+ .ph-rng{padding:9px 11px 8px;gap:6px}
+ .ph-rng-h p{display:none}
+ .ph-rng-chips button{padding:2px 8px;font-size:10px}
+ .ph-cal-d{height:20px}
+ .ph-rng-fo{padding-top:6px}
+}
+
+
+/* 弹窗自身不滚动：头部/表单/快捷区间/底栏固定，只有日历区在小窗时可缩 */
+.ph-rng>*{flex:none}
+.ph-rng .ph-cal{flex:1 1 auto;min-height:0}
+.ph-rng .ph-rng-fo{flex:none;margin-top:auto}
+.ph-rng-f{min-width:0}
+.ph-rng-dt label{min-width:0}
+
+
+/* 日历不再裁切：按内容高度展示；窗口不够时整体缩字号，而不是切掉底行 */
+.ph-cal-pair{max-height:none;overflow:visible;align-content:start}
+.ph-cal{flex:0 0 auto}
+.ph-rng.is-narrow{font-size:11px}
+
+
+/* is-tight：窗口很矮时的最后一档压缩，保证无滚动条 */
+.ph-rng.is-tight{font-size:10.5px;gap:5px;padding:9px 11px 8px}
+.ph-rng.is-tight .ph-cal-d{height:19px;font-size:10px}
+.ph-rng.is-tight .ph-cal-h{font-size:10.5px}
+.ph-rng.is-tight .ph-rng-dt input{min-height:24px;font-size:10.5px}
+.ph-rng.is-tight .ph-rng-chips button{padding:1px 7px;font-size:9.5px}
+
+
+/* 窄/矮模式：日历单月时压到最小，仍保持可读 */
+.ph-rng.is-narrow .ph-cal-d{height:22px;font-size:10.5px}
+.ph-rng.is-narrow .ph-cal-w{font-size:9px}
+.ph-rng.is-narrow .ph-rng-dt input{min-height:24px}
+.ph-rng.is-narrow .ph-rng-chips{margin-top:-2px}
+.ph-rng.is-narrow .ph-cal{gap:4px}
+.ph-rng.is-narrow .ph-rng-h p{display:none}
+
+
+/* 900×600：标题与表单各让一步，把日历留完整 */
+.ph-rng.is-tight .ph-rng-h{display:none}
+.ph-rng.is-tight .ph-rng-f{gap:4px}
+.ph-rng.is-tight .ph-rng-dt label{font-size:9.5px;gap:2px}
+.ph-rng.is-tight .ph-rng-chips{display:none}
+.ph-rng.is-tight .ph-cal-bar{font-size:9.5px}
+.ph-rng.is-tight .ph-cal-d{height:18px}
+.ph-rng.is-tight .ph-rng-fo{padding-top:4px}
+.ph-rng.is-tight .ph-rng-x{width:20px;height:20px}
+
+
+/* is-ultra：极矮窗口的最后一档，保留日期选择与底部操作 */
+.ph-rng.is-ultra .ph-rng-chips{display:none}
+.ph-rng.is-ultra .ph-cal-d{height:17px;font-size:9.5px}
+.ph-rng.is-ultra .ph-rng-dt label{font-size:9px}
+.ph-rng.is-ultra{gap:4px;padding:8px 10px 7px}
+.ph-rng.is-ultra .ph-rng-h{display:none}
+.ph-rng.is-ultra .ph-cal-m{gap:3px}
+
+
+/* 舞台过矮时按比例整体缩放内容，避免日历与底栏互相压住 */
+.ph-rng-host .ph-rng.scaled{transform-origin:center center}
+.ph-rng .ph-cal{overflow:hidden}
+
+
+/* 概览浮层：每月各自翻页；时间弹层点外部即关 */
+.ph-cal-h{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.ph-cal-h b{flex:1 1 auto;text-align:center;font-size:11.5px;font-weight:650}
+.ph-cal-nav{width:18px;height:18px;font-size:11px;line-height:1}
+.ph-cal-nav:hover{background:var(--hover);color:var(--ph-ink)}
+.ph-rng-tpop .ph-tp-col{scrollbar-width:thin}
+
+
+/* 时间面板底部的“此刻” */
+.ph-tp-now-bar{display:flex;justify-content:flex-end;margin-top:6px;padding-top:6px;border-top:1px solid color-mix(in srgb,var(--ph-ink) 10%,transparent)}
+.ph-tp-now{appearance:none;border:1px solid color-mix(in srgb,var(--ph-ink) 14%,transparent);background:none;font:inherit;font-size:10.5px;
+ height:24px;padding:0 10px;border-radius:7px;color:var(--ph-ink);cursor:pointer}
+.ph-tp-now:hover{background:color-mix(in srgb,var(--ph-ink) 8%,transparent)}

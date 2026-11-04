@@ -129,7 +129,7 @@ html[data-effects=low] .pv-tile{background:var(--bg);backdrop-filter:none;-webki
 @media(max-height:650px){#modal.pv-dialog{height:min(420px,calc(100% - 12px))}}
 
 /* 品牌身份：动态图形只属于Desktop，OpenCodex服务使用独立的既有标识。 */
-.pv-desktop-main{position:absolute;left:64%;top:73%;transform:translate(-50%,-43px);display:flex;flex-direction:column;align-items:center;width:250px;z-index:2;text-align:center}
+.pv-desktop-main{position:absolute;left:48%;top:12%;transform:translate(-50%,-43px);display:flex;flex-direction:column;align-items:center;width:250px;z-index:2;text-align:center}
 .pv-desktop-logo-hit{width:86px;height:86px;border:0;border-radius:38%;background:transparent;cursor:pointer;padding:0}
 .pv-desktop-logo-hit:hover{outline:1px solid color-mix(in srgb,var(--brand) 20%,transparent);outline-offset:3px}
 .pv-desktop-title{font:inherit;font-size:16px;line-height:22px;font-weight:600;color:var(--text);border:0;border-radius:5px;background:none;padding:5px 0 2px;display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap}
@@ -137,7 +137,7 @@ html[data-effects=low] .pv-tile{background:var(--bg);backdrop-filter:none;-webki
 .pv-desktop-meta{display:flex;align-items:center;justify-content:center;gap:8px;font-size:10px;line-height:17px;color:var(--muted)}
 .pv-desktop-meta .pv-update{font-size:9px;padding:1px 4px;min-height:19px;line-height:16px}
 .pv-update{font:inherit;font-size:9px;line-height:15px;min-height:19px;padding:1px 6px;border-radius:10px;border:0;cursor:pointer;background:color-mix(in srgb,var(--blue) 9%,transparent);color:color-mix(in srgb,var(--blue) 75%,var(--text))}
-.pv-service{left:37%;top:31%;width:190px;max-width:190px;gap:4px}
+.pv-service{left:48%;top:58%;width:190px;max-width:190px;gap:4px}
 .pv-service .pv-node-main{gap:8px}
 .pv-service .pv-node-main strong{font-size:14px;line-height:20px}
 .pv-service-mark{position:relative}
@@ -158,7 +158,7 @@ html[data-theme=dark] .pv-service-mark>img.pv-service-logo-dark{display:block}
 .pv-desktop-main [hidden]{display:none}
 html[data-theme=dark] .pv-tile{background:linear-gradient(145deg,#ffffff15,transparent 60%),var(--glass-fill);box-shadow:inset 0 1px 1px #ffffff2e,0 6px 18px #0003}
 html[data-effects=low] .pv-tile{background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
-@container (max-width:680px){.pv-desktop-main{top:66%;width:210px;transform:translate(-50%,-34px)}.pv-desktop-logo-hit{width:68px;height:68px}.pv-desktop-title{font-size:14px;line-height:20px}.pv-desktop-meta{font-size:9px;gap:5px}.pv-service{width:160px;max-width:160px}.pv-service-mark>img{width:33px;height:33px}.pv-service .pv-node-main strong{font-size:13px}.pv-desktop-capability,.pv-desktop-sync{font-size:9px;line-height:15px;min-height:17px}}
+@container (max-width:680px){.pv-desktop-main{top:13%;width:210px;transform:translate(-50%,-34px)}.pv-desktop-logo-hit{width:68px;height:68px}.pv-desktop-title{font-size:14px;line-height:20px}.pv-desktop-meta{font-size:9px;gap:5px}.pv-service{top:62%;width:160px;max-width:160px}.pv-service-mark>img{width:33px;height:33px}.pv-service .pv-node-main strong{font-size:13px}.pv-desktop-capability,.pv-desktop-sync{font-size:9px;line-height:15px;min-height:17px}}
 
 /* 圆角折线为关系骨架；只有当前请求叠加定向数据脉冲。 */
 .pv-wire.is-live{stroke:var(--blue);stroke-width:2.4;opacity:1}
@@ -167,7 +167,7 @@ html[data-effects=low] .pv-tile{background:var(--bg);backdrop-filter:none;-webki
 .pv-flow.is-return .pv-flow-pulse{stroke:var(--green);animation-name:pv-return}
 @keyframes pv-send{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
 @keyframes pv-return{from{stroke-dashoffset:0}to{stroke-dashoffset:1000}}
-.pv-activity{position:absolute;left:0;right:0;top:8px;display:flex;justify-content:center;align-items:center;gap:16px;font-size:11px;line-height:20px;color:var(--muted);white-space:nowrap;z-index:3}
+.pv-activity{position:absolute;left:0;right:0;bottom:0;top:auto;display:flex;justify-content:center;align-items:center;gap:16px;font-size:11px;line-height:20px;color:var(--muted);white-space:nowrap;z-index:3}
 .pv-activity[hidden]{display:none}
 .pv-activity-state{display:flex;align-items:center;gap:6px;font-weight:550;color:var(--text)}
 .pv-activity-state i{width:5px;height:5px;background:var(--blue);border-radius:50%}
@@ -182,14 +182,14 @@ html[data-effects=mid] .pv-flow-pulse{filter:none;stroke-width:2.8}
 html[data-effects=mid] .pv-flow-pulse:nth-child(3){display:none}
 html[data-effects=low] .pv-flow{display:none}
 @media(prefers-reduced-motion:reduce){.pv-flow{display:none}}
-@container (max-width:680px){.pv-activity{font-size:10px;gap:9px;top:0;flex-wrap:wrap;row-gap:0}.pv-activity-path{display:none}.pv-flow-pulse{stroke-width:2.8}}
+@container (max-width:680px){.pv-activity{font-size:10px;gap:9px;top:auto;bottom:0;flex-wrap:wrap;row-gap:0}.pv-activity-path{display:none}.pv-flow-pulse{stroke-width:2.8}}
 
 .pv-arrow.return{fill:var(--green)}
 .pv-wire.is-live.is-return{stroke:color-mix(in srgb,var(--green) 65%,var(--blue))}
 
 /* 直连时本地服务退到上方管理区，直连线不穿过任何本地节点。 */
 #connectionMapPage[data-scene=direct] .pv-desktop-main{top:10%}
-#connectionMapPage[data-scene=direct] .pv-service{top:10%}
+#connectionMapPage[data-scene=direct] .pv-service{top:32%}
 #connectionMapPage[data-scene=direct] .pv-service-state,#connectionMapPage[data-scene=direct] .pv-service>small,#connectionMapPage[data-scene=direct] .pv-service>.pv-update{display:none}
 
 #connectionMapPage[data-scene=direct] :is(.pv-client,.pv-channel){gap:2px}
@@ -197,3 +197,17 @@ html[data-effects=low] .pv-flow{display:none}
 #connectionMapPage[data-scene=direct] :is(.pv-client,.pv-channel) strong{line-height:16px}
 #connectionMapPage[data-scene=direct] :is(.pv-client,.pv-channel) .pv-node-info{font-size:9px;line-height:14px}
 #connectionMapPage[data-scene=direct] .pv-channel>small,#connectionMapPage[data-scene=direct] .pv-desktop-meta,#connectionMapPage[data-scene=direct] .pv-desktop-sync{display:none}
+
+/* Desktop唯一产品节点同时承载管理和后台适配。 */
+@container (max-width:680px){#connectionMapPage[data-scene=direct] .pv-service{top:32%}}
+
+#connectionMapPage[data-traffic=true] .pv-service>.pv-update{display:none}
+#connectionMapPage[data-scene=direct] .pv-desktop-logo-hit{width:52px;height:52px}
+#connectionMapPage[data-scene=direct] .pv-desktop-main{transform:translate(-50%,-26px)}
+#connectionMapPage[data-scene=direct] .pv-service>.pv-node-info{display:none}
+
+/* 嵌入页的 WEBGL 光场在暗色下会把透明 iframe 合成为浅色矩形；
+   现有全景使用稳定的主题背景层，避免遮住深色画布。 */
+html[data-theme=dark] .pv-canvas{background:radial-gradient(ellipse 58% 72% at 49% 48%,color-mix(in srgb,var(--brand) 18%,transparent),transparent 76%),radial-gradient(ellipse 50% 55% at 56% 28%,color-mix(in srgb,var(--blue) 12%,transparent),transparent 72%)}
+html[data-theme=dark] .pv-backdrop{display:none}
+html[data-theme=dark] .pv-canvas .pv-edge{filter:none}

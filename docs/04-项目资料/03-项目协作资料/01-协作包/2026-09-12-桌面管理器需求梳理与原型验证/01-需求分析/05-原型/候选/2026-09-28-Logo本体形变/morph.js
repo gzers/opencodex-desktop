@@ -91,6 +91,8 @@ let selected=1,frame=0,current=[...STATES[1].shape],from=[...current],transition
 let paused=false,original=false,strength=1.25,demoTimer=null,demoStep=0;
 // calm：「关于」页小图标用——保留内结构形变与配色过渡，去掉整体漂浮/自转与过期淡出，避免图标在 40px 框里「挪出去进来」。
 let calm=false;
+// orbit：概览中枢用——整体漂浮改成环内随机游走（多个互质周期的正弦叠加，再限幅在一个圆内），像反应堆里悬浮的核心。
+let orbit=false;
 let currentColors=paletteOf(1),fromColors=currentColors.map(c=>[...c]);
 const media=matchMedia('(prefers-reduced-motion: reduce)');
 // 特效档（父页 iframe 协议）：mid → 光场静止；low → 无光场 + 静态 logo（都复用 reduced 路径：
@@ -128,7 +130,38 @@ let floatPose=[0,0],floatFrom=[0,0],staleShape=[0,1,0,0];
 // 悬浮纵向带「重力感」：上升慢、下落快（相位非线性，波形仍连续可导、周期不变）。
 // 注意纵向位移取 +1 = 屏幕下方，故下降段用「相位推进更快」的一侧。
 function gravity(phase){return Math.sin(phase+.45*Math.sin(phase))}
+// 环内游走：x / y 各取三个周期互不成整数比的正弦，轨迹长时间不重复；按半径 r 限幅，保证不碰到外环。
+function wander(t,r,k){
+ const s=k||1,x=.55*Math.sin(t*s*.861+.4)+.30*Math.sin(t*s*.528+1.9)+.15*Math.sin(t*s*.367+4.1),
+  y=.55*Math.sin(t*s*.731+2.3)+.30*Math.sin(t*s*.457+.7)+.15*Math.sin(t*s*.403+5.2),m=Math.hypot(x,y);
+ return m>1?[x/m*r,y/m*r]:[x*r,y*r];
+}
+// ORBIT_K：环内游走整体放大系数；orbit 模式下 Logo 同时缩到 ORBIT_SCALE，给游走留出环内空间。
+const ORBIT_K=1.8,ORBIT_SCALE=.86;
+function orbitTarget(id,time,age){const p=orbitBase(id,time,age);return [p[0]*ORBIT_K,p[1]*ORBIT_K]}
+// 环内游走统一以圆心为基准：所有状态都不加固定偏移。orbitClock 按 orbitSpeed 推进（平滑过渡，不跳帧），
+// 速度 = 静止基线 3.4 + 4.6 × tempo；tempo 由父页按圆环扫光转速传入（运行约 1、启动 / 待确认约 1/3、静止 0）。
+// 中枢标识的游走明显快于线路上的光点：标识只是“核心在动”，光点才代表流量。
+let orbitClock=0,orbitSpeed=3.4,orbitTempo=null;
+const ORBIT_BOB=1.52;
+function orbitTempoOf(id){if(orbitTempo!=null)return orbitTempo;return id==='running'?1:id==='starting'||id==='confirming'?1/3:0}
+function orbitStep(id,dt){orbitSpeed+=(3.4+4.6*orbitTempoOf(id)-orbitSpeed)*(1-Math.exp(-dt*2));orbitClock+=orbitSpeed*dt}
+function orbitBase(id,time,age){
+ const c=orbitClock,bob=.25*Math.sin(c*ORBIT_BOB);
+ switch(id){
+ case 'running':return wander(c,1.45,1);
+ case 'starting':return wander(c,.90,1);
+ case 'confirming':return wander(c,.80,1);
+ case 'problem':return wander(c,.95,1);
+ case 'not_ready':return wander(c,.70,1);
+ case 'stopping':{const w=wander(c,.9*Math.exp(-Math.max(0,age)/.8),1);return [w[0],w[1]+bob*(1-Math.exp(-Math.max(0,age)/.8))]}
+ case 'stopped':return [0,bob];
+ case 'failed':{const j=.30*Math.exp(-Math.max(0,age)/1.2);return [j*Math.sin(time*23),bob+j*.6*Math.sin(time*17.3)]}
+ default:return wander(c,.50,1);
+ }
+}
 function floatTarget(id,time,age){
+ if(orbit)return orbitTarget(id,time,age);
  const phase=motionPhase,g=gravity(phase),gc=gravity(phase+Math.PI/2);
  switch(id){
  case 'starting':return [.30*Math.sin(phase),-.30-1.05*Math.pow((1-Math.cos(phase))/2,2)];
@@ -221,7 +254,7 @@ function draw(){
   tint(mark,colors,motionPhase,flowing());
   const moving=!original&&!reduced();
   const outer=moving&&!calm, drift=outer?floatPose:[0,0];
-  mark.svg.style.transform=`translate(${drift[0]/24*100}%,${drift[1]/24*100}%) rotate(${outer?outerAngle:0}deg)`;
+  mark.svg.style.transform=`translate(${drift[0]/24*100}%,${drift[1]/24*100}%) rotate(${outer?outerAngle:0}deg)${orbit?` scale(${ORBIT_SCALE})`:''}`;
   mark.core.setAttribute('transform',`rotate(${moving?innerAngle:0} ${CENTER.x} ${CENTER.y})`);
   if(original){mark.gradient.setAttribute('x1','12');mark.gradient.setAttribute('x2','12')}
   mark.svg.style.filter=`saturate(${original?1:appearance[0]})`;mark.svg.style.opacity=String(original?1:appearance[1]);
@@ -238,6 +271,7 @@ function tick(now){
   let target=liveShape(s,clock/1000);
   if(s.id==='stopping'&&age<1)target[2]+=.12*Math.sin(Math.PI*age)**2;
   current=track('shape',current,target,dt);
+  if(orbit)orbitStep(s.id,dt);
   floatPose=track('float',floatPose,floatTarget(s.id,clock/1000,age),dt,8);
   currentColors=currentColors.map((c,i)=>track('color'+i,c,paletteOf(selected)[i],dt,8));
   appearance=track('appearance',appearance,s.id==='stale'&&!calm?[.15,.62]:[1,1],dt,8);
@@ -306,6 +340,7 @@ const embedParams=new URLSearchParams(location.search);
 if(embedParams.has('embed')){
  // cycle=1：「关于」页本应用图标——按顺序循环全部 9 个状态，套用同一套形变/取色插值（不新增效果、无背景光）。
  calm=embedParams.has('calm');
+ orbit=embedParams.has('orbit');
  if(embedParams.has('cycle')){
   setInterval(()=>{if(!paused&&!document.hidden)setState((selected+1)%STATES.length)},2600);
  }
@@ -314,10 +349,19 @@ if(embedParams.has('embed')){
   if(location.protocol!=='file:'&&e.origin!==location.origin)return;
   const msg=e.data,index=STATES.findIndex(s=>s.id===msg.state);
   paletteHint=typeof msg.palette==='string'?msg.palette:'';
+  if(Number.isFinite(msg.tempo))orbitTempo=Math.max(0,Math.min(3,msg.tempo));
   // 原型概览只调整装饰层尺寸，内部形变幅度和状态来源保持原值。
   if(msg.presentation&&typeof msg.presentation==='object'){
-   const {size,padding}=msg.presentation;
+   const {size,padding,x,y,glowX,glowY}=msg.presentation;
    if(Number.isFinite(size))document.documentElement.style.setProperty('--embedded-mark-size',Math.max(64,Math.min(140,size))+'px');
+   if(Number.isFinite(x)&&Number.isFinite(y)){
+    document.documentElement.classList.add('spatial-embed');
+    document.documentElement.style.setProperty('--embedded-mark-x',x+'px');
+    document.documentElement.style.setProperty('--embedded-mark-y',y+'px');
+    if(Number.isFinite(glowX))document.documentElement.style.setProperty('--embedded-glow-x',Math.max(0,Math.min(1,glowX)));
+    if(Number.isFinite(glowY))document.documentElement.style.setProperty('--embedded-glow-y',Math.max(0,Math.min(1,glowY)));
+    meshGlow?.refresh();
+   }
    // 概览向上扩展光层时同步补偿 Logo；旧 120px 上限会让 Logo 随 iframe 上移。
    if(Number.isFinite(padding))document.documentElement.style.setProperty('--embedded-padding',Math.max(24,Math.min(Math.max(120,innerHeight-140),padding))+'px');
   }

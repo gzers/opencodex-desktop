@@ -1732,6 +1732,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="../glass-components.css">
 <link rel="stylesheet" href="../glass-effects.css">
 <link rel="stylesheet" href="../overview-dual.css">
+<link rel="stylesheet" href="overview-hero.css?v=20261104-platform-scene">
+<link rel="stylesheet" href="overview-journey.css?v=20261104-platform-scene">
 <link rel="stylesheet" href="../proto-controls.css">
 <link rel="stylesheet" href="action-menu.css?v=20261014-channel-actions">
 <link rel="stylesheet" href="model-config.css?v=20261027-0214">
@@ -1739,14 +1741,16 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="conversation-config.css?v=20261028-model-picker">
 <link rel="stylesheet" href="transport-config.css?v=20261027-dialog-policy">
 <link rel="stylesheet" href="dialog-policy.css?v=20261027">
-<link rel="stylesheet" href="extension-manager.css?v=20261014-col-extensions">
+<link rel="stylesheet" href="extension-manager.css?v=20261101-minh">
 <link rel="stylesheet" href="model-picker.css?v=20261015-note-layer">
-<link rel="stylesheet" href="connection-map.css?v=20261028-flow-layout">
+<link rel="stylesheet" href="connection-map.css?v=20261029-reference">
+<link rel="stylesheet" href="connection-map-reference.css?v=20261029-superba-lanes">
 <link rel="stylesheet" href="windows-window.css">
 <link rel="stylesheet" href="annotation-cards.css?v=20261015-zero-flow">
 <link rel="stylesheet" href="maintenance-ui.css?v=2">
 <link rel="stylesheet" href="notification-countdown.css?v=20261030-component">
 <link rel="stylesheet" href="tree-table.css?v=1">
+<link rel="stylesheet" href="interactive-collection.css?v=20261031-detail-compact">
 <link rel="stylesheet" href="tree-navigation.css?v=20261027-shared-panel">
 <link rel="stylesheet" href="sticky-tabs.css?v=20261020-shared-material">
 <link rel="stylesheet" href="prototype-ui.css?v=20261015">
@@ -1867,8 +1871,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             <div class="ovb-result" data-b="opresult" hidden></div>
           </div>
           <div class="ovb-actions">
-            <div class="proto-annotation" id="ann-ov-status" data-annotation-number="01" data-annotation-title="概览只做运行摘要" data-annotation-category="页面导览 · 概览">
-              <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：概览只做运行摘要"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
+            <div class="proto-annotation" id="ann-ov-status" data-annotation-number="02" data-annotation-title="概览只做运行摘要" data-annotation-category="页面导览 · 概览">
+              <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 02：概览只做运行摘要"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">02</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
               <div class="annotation-source" hidden><p>本页只做运行摘要与快捷操作：状态文字打开运行详情，进程按钮随运行状态渲染；前置环境未就绪时整页切换为环境门禁卡，仅保留刷新。详细排障在诊断中心。</p><div class="annotation-footer">页面导览 · 概览</div></div>
             </div>
             <button class="btn primary" data-control="start" data-act="start">启动 OpenCodex</button>
@@ -1905,8 +1909,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 
       <section class="card recent-events" id="card-overview-events" aria-labelledby="recentEventsTitle">
         <div class="recent-events-head">
-          <div class="proto-annotation" id="ann-ov-events" data-annotation-number="02" data-annotation-title="最近事件是轻量摘要" data-annotation-category="页面导览 · 概览">
-            <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 02：最近事件是轻量摘要"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">02</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
+          <div class="proto-annotation" id="ann-ov-events" data-annotation-number="03" data-annotation-title="最近事件是轻量摘要" data-annotation-category="页面导览 · 概览">
+            <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 03：最近事件是轻量摘要"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">03</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
             <div class="annotation-source" hidden><p>标准窗最多展示 2 条、紧凑窗 1 条，仅作轻量提醒；完整排障与日志流进诊断中心。该卡随运行详情展开联动，环境门禁态下隐藏。</p><div class="annotation-footer">页面导览 · 概览</div></div>
           </div>
           <h2 id="recentEventsTitle">最近事件</h2>
@@ -1918,8 +1922,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       <div class="mods" id="mods">
         <article class="card mod" data-mod-section="upgrade" id="card-overview-upgrade">
           <div class="mod-head">
-            <div class="proto-annotation" id="ann-ov-upgrade" data-annotation-number="03" data-annotation-title="0.1.10 共享升级流程（原型）" data-annotation-category="实现边界 · 概览">
-              <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 03：0.1.10 共享升级流程（原型）"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">03</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
+            <div class="proto-annotation" id="ann-ov-upgrade" data-annotation-number="04" data-annotation-title="0.1.10 共享升级流程（原型）" data-annotation-category="实现边界 · 概览">
+              <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 04：0.1.10 共享升级流程（原型）"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">04</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
               <div class="annotation-source" hidden><p>0.1.10 候选：概览与设置共用检查、版本与事务状态，管理器和面板分开查看与确认；检查后点击各状态行，升级前备份在确认步骤中选择。事件支持启动、概览切入、定时与恢复等多个触发源，缓存与互斥合并请求。全部为内存示例，不读取更新源或执行真实更新。</p><div class="annotation-footer">实现边界 · 概览</div></div>
             </div>
             <h3>版本升级</h3>
@@ -1937,8 +1941,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 
         <article class="card mod" data-mod-section="migration" id="card-overview-migration">
           <div class="mod-head">
-            <div class="proto-annotation" id="ann-ov-migration" data-annotation-number="04" data-annotation-title="文件同步为内存演示" data-annotation-category="实现边界 · 概览">
-              <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 04：文件同步为内存演示"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">04</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
+            <div class="proto-annotation" id="ann-ov-migration" data-annotation-number="05" data-annotation-title="文件同步为内存演示" data-annotation-category="实现边界 · 概览">
+              <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 05：文件同步为内存演示"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">05</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
               <div class="annotation-source" hidden><p><strong>加密示例包的解密口令：</strong><code>demo-sync</code>。打开“导入”并选择示例文件后，在“解密口令”框填写；不加密的示例包无需口令。</p><p>卡片只显示最近一次导入 / 导出（时间 + 项数），首次为“尚未导入 / 尚未导出”。导入、导出都用上次记住的范围直接执行，导入与取消后停留在概览；不再在卡片正文写“导出范围 / 凭据”这类固定规则，规则见同步页“原型”标签。全流程在内存里演示，不读写真实文件。</p><div class="annotation-footer">实现边界 · 概览</div></div>
             </div>
             <h3>文件同步</h3>
@@ -1956,8 +1960,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 
         <article class="card mod" data-mod-section="sync" id="card-overview-sync">
           <div class="mod-head">
-            <div class="proto-annotation" id="ann-ov-sync" data-annotation-number="05" data-annotation-title="WebDAV 连接为演示数据" data-annotation-category="实现边界 · 概览">
-              <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 05：WebDAV 连接为演示数据"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">05</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
+            <div class="proto-annotation" id="ann-ov-sync" data-annotation-number="06" data-annotation-title="WebDAV 连接为演示数据" data-annotation-category="实现边界 · 概览">
+              <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 06：WebDAV 连接为演示数据"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">06</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
               <div class="annotation-source" hidden><p>卡片只显示连接、云端版本时间与更新状态。点击同步在概览原位打开同步预览，来源按整份快照新旧确定；确认才更新，取消不写。下载与导入默认勾选更新前备份。连接配置、测试连接与同步结果均为演示数据，真实网络请求不在原型内发起。</p><div class="annotation-footer">实现边界 · 概览</div></div>
             </div>
             <h3>WebDAV 同步</h3>
@@ -2329,7 +2333,7 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
         <button type="button" data-settings-section="backup" data-anchor="backup" aria-label="数据与备份，查看锚点">数据与备份<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="extensions" data-anchor="extensions" aria-label="扩展管理，查看锚点">扩展管理<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="models" data-anchor="models">Agent 配置</button>
-        <button type="button" data-settings-section="dialog-policy" data-anchor="dialog-policy">对话策略</button>
+        <button type="button" data-settings-section="dialog-policy" data-anchor="dialog-policy" data-conversation-feature hidden>对话策略</button>
         <button type="button" data-settings-section="cleanup" data-anchor="cleanup" aria-label="日志与通知，查看锚点">日志与通知<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="cli" data-anchor="cli" aria-label="CLI 控制面，查看锚点">CLI 控制面<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="upgrade" data-anchor="upgrade" aria-label="版本升级，查看锚点">版本升级<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
@@ -3299,7 +3303,8 @@ ocx update</code></pre>
       <span class="proto-group-meta" id="protoGroupMeta">当前页面与 Tab</span>
     </summary>
     <div class="proto-group-body">
-    <p class="pctl-hint" id="protoContextHint">只展示当前页面与 Tab 的场景。</p>
+    <p class="pctl-hint" id="protoContextHint">只展示当前页面与 Tab 的场景；概览页先给「流量数据」，再按环境、同步、通知分组。</p>
+    <div class="pctl-sub mock-group" data-proto-contexts="overview">流量</div>
     <div class="proto-card" id="notifDemoCard" data-proto-contexts="notify">
       <div class="proto-note-title">通知与反馈专题</div>
       <div class="pctl-chips" id="notifCats"></div>
@@ -3325,6 +3330,25 @@ ocx update</code></pre>
         <button type="button" id="notifExit">返回原型菜单</button>
       </div>
     </div>
+    <div class="proto-card" id="flowDemoCard" data-proto-contexts="overview">
+      <div class="proto-note-title">流量全景 · 数据与速度</div>
+      <div class="pctl-sub">场景</div>
+      <div class="pctl-grid" role="group" aria-label="流量场景">
+        <button type="button" data-flow-scene="normal">常态</button>
+        <button type="button" data-flow-scene="slow">全线变慢</button>
+        <button type="button" data-flow-scene="fast">小渠道加速</button>
+        <button type="button" data-flow-scene="fail">单个渠道失败</button>
+      </div>
+      <div class="pctl-sub">全站速度档位 <b id="flowGearReadout">1.00×</b> <span id="flowGearHint" style="font-weight:400">— 圆环与光点同步</span></div>
+      <label class="proto-mock-field"><span>速度倍率</span>
+        <input type="range" id="flowGearRange" min="50" max="200" value="100" step="5" aria-label="全站速度倍率">
+      </label>
+      <label class="proto-mock-field"><span>请求速率</span>
+        <input type="range" id="flowRateRange" min="10" max="300" value="100" step="5" aria-label="请求速率倍率">
+      </label>
+      <p class="pctl-hint">只改内存里的样例：速度倍率影响圆环扫光、Logo 游走、光点与涟漪；请求速率影响光点生成密度。不写配置、不调用真实命令。</p>
+    </div>
+    <div class="pctl-sub mock-group" data-proto-contexts="overview">通知</div>
     <div class="proto-card" id="overviewNotificationDemoCard" data-proto-contexts="overview" hidden>
       <div class="proto-note-title">通知收起 · 铃铛动画</div>
       <div class="pctl-grid" role="group" aria-label="概览通知动画模拟">
@@ -3394,6 +3418,7 @@ ocx update</code></pre>
       <p class="pctl-hint">状态切换只驱动托盘图标点、菜单标题与可用提示；不写入真实偏好。托盘只讲进程事实：<b>存在风险 / 外部接管</b> 在托盘标题里显示为「未运行」，结论与说明句留在概览 / 通知中心，不写进托盘。</p>
     </div>
 
+    <div class="pctl-sub mock-group" data-proto-contexts="overview">同步</div>
     <div class="proto-card" data-proto-contexts="overview">
       <div class="proto-note-title">WebDAV 状态（mock 投影）</div>
       <div id="webdavStates">
@@ -3417,6 +3442,7 @@ ocx update</code></pre>
       </div>
       <p class="pctl-hint">卡片显示连接与版本状态；本机新版/云端新版仅是工具板场景，软件不显示双向模式。点击同步先在原页预览变化，确认后才更新；下载默认勾选备份。所有数据与备份均为内存示例。</p>
     </div>
+    <div class="pctl-sub mock-group" data-proto-contexts="overview">环境与进程</div>
     <div class="proto-card" data-proto-contexts="overview settings:installation">
       <div class="proto-note-title">环境前置条件（mock 投影）</div>
       <div id="envStates">
@@ -3799,7 +3825,7 @@ const routes={
   sync:{title:'同步',subtitle:'按范围导入、导出与同步 OpenCodex 配置；凭据和登录状态独立选择。'},
   models:{title:'模型配置',subtitle:'管理渠道模型、族模版与选择器顺序。'},
   conversations:{title:'Codex 对话配置',subtitle:'管理项目与对话的专属配置，沿用或覆盖全局对话策略。'},
-  overview:{title:'概览',subtitle:'一行运行摘要、页内折叠的运行详情与常用动作入口；参数型配置保留在设置页。'},
+  overview:{title:'概览',subtitle:''},
   tray:{title:'托盘',subtitle:'系统托盘状态菜单的跨平台原型；控制动作走管理器自有域。'},
   panel:{title:'面板',subtitle:'窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。'},
   logs:{title:'诊断中心',subtitle:'环境诊断、日志历史与通知历史分 Tab 管理；日志支持清理与自动保留策略。'},
@@ -4873,7 +4899,10 @@ function setRoute(route, replace=false){
   });
   const meta=routes[next]||{title:'OpenCodex 运行概览',subtitle:'发现安装、切换数据目录、托管官方启停子进程并观察状态。'};
   document.getElementById('routeTitle').textContent=meta.title;
-  document.getElementById('routeSubtitle').textContent=meta.subtitle;
+  /* 页面标题下的副标题统一不再展示：菜单标题本身已经说明这是哪一页 */
+  var sub=document.getElementById('routeSubtitle');
+  sub.textContent=meta.subtitle||'';
+  sub.hidden=true;
   if(next==='tray') renderTray();
   if(aboutRedirect) showSettingsSection('about');
   if(next!=='panel') document.body.classList.remove('panel-mode');
@@ -5337,6 +5366,8 @@ function showSettingsSection(section){
   const allowed=['general','installation','backup','extensions','models','dialog-policy','transport','cleanup','cli','upgrade','about'];
   const requested=allowed.includes(section)?section:(section?undefined:hashParams?.get('section'))||parseRouteHash(location.hash).params.get('section')||'general';
   const next=requested==='transport'?'dialog-policy':allowed.includes(requested)?requested:'general';
+  // 对话策略只属于“Codex 对话策略与渠道能力”选项；从其它选项进入时先切到该选项。
+  if(next==='dialog-policy'&&window.conversationPrototype&&window.conversationPrototype.scope()!=='conversations')window.conversationPrototype.setScope('conversations');
   document.querySelectorAll('#settingsTabs button').forEach(button=>{
     button.classList.toggle('active',button.dataset.settingsSection===next);
   });
@@ -5785,66 +5816,19 @@ function openMcpDelete(name){
   openModal('删除 MCP','<p class="modal-warning"><strong>警告：</strong><span>将从所有已启用客户端配置节点移除，操作不可撤销</span></p><p>删除 '+logEsc(target)+' 会同步移除对应客户端里的 MCP 配置节点；建议先确认客户端已停止。</p>','删除',()=>toast('原型拦截：不会删除真实 MCP 配置。'));
 }
 function openExtensionDetail(row){
-  const info=row&&row.querySelector('.skill-info');
-  if(!info) return;
-  // Skills 与 MCP 的行结构一致，差异只在信息字段与标题动作，这里按所在列表判断。
-  const isMcp=!!(row.closest&&row.closest('#mcpList'));
-  const name=(info.querySelector('.skill-title h3')||{}).textContent?.trim()||(isMcp?'未命名 MCP':'未命名 Skill');
-  const tag=(info.querySelector('.skill-title .tag')||{}).textContent?.trim()||'本地';
-  const meta=[...info.querySelectorAll('.skill-meta span')].map(el=>el.textContent.trim()).filter(Boolean);
-  const desc=(info.querySelector('p')||{}).textContent?.trim()||'';
-  const version=meta.find(item=>/^v[\d.]/i.test(item))||'—';
-  const updated=(meta.find(item=>item.startsWith('更新'))||'').replace(/^更新\s*/,'')||'—';
-  const mock=isMcp?(MCP_DETAIL_MOCK[name]||{}):(SKILL_DETAIL_FACTS[name]||{files:'—',size:'—'});
-  // 描述面板 = 列表里那段完整描述 + 条目正文摘要：列表与详情读的是同一段文字，详情再多给正文的 Markdown 结构。
-  const markdown=desc+(mock.md?'\n\n'+mock.md:'');
-  // span2 = 整行；scroll = 取值区自带内部滚动（长名单，例如 MCP 环境变量键名）。
-  const fact=(label,value,span2,scroll)=>'<div'+(span2?' class="span-2"':'')+'><b>'+label+'</b><span'+(scroll?' class="scrollable"':'')+'>'+value+'</span></div>';
-  const mono=value=>'<span class="mono">'+logEsc(value)+'</span>';
-  // 信息字段按条目类型给：Skills 关心源目录与体量，MCP 关心命令、参数与配置落点。
-  const factsHtml=isMcp
-    ?fact('类型',logEsc(tag))+fact('版本',logEsc(version))+fact('更新时间',logEsc(updated))
-      +fact('命令',mono(mock.command||'—'))+fact('参数',mono(mock.args||'—'))
-      +fact('环境变量',mono(mock.env||'—'),true,true)
-      +fact('配置落点',mono(mock.landing||'—'),true)
-    :fact('来源',logEsc(tag))+fact('版本',logEsc(version))+fact('更新时间',logEsc(updated))
-      +fact('入口文件',mono('SKILL.md'))+fact('文件数',logEsc(mock.files))+fact('体量',logEsc(mock.size))
-      +fact('源目录',mono('~/.agents/skills/'+name),true);
-  // 标题动作对齐各自行内已有的动作：Skills 是检查 / 更新与卸载，MCP 是编辑与删除。
+  const info=row&&row.querySelector('.skill-info');if(!info)return;
+  const isMcp=!!row.closest('#mcpList'),name=info.querySelector('.skill-title h3')?.textContent.trim()||(isMcp?'未命名 MCP':'未命名 Skill');
+  const meta=[...info.querySelectorAll('.skill-meta span')].map(el=>el.textContent.trim());
+  const data={kind:isMcp?'mcp':'skills',name,description:info.querySelector('p')?.textContent.trim()||'',source:info.querySelector('.skill-title .tag')?.textContent.trim()||'本地',version:meta.find(item=>/^v[\d.]/i.test(item))||'—',updated:(meta.find(item=>item.startsWith('更新'))||'').replace(/^更新\s*/,'')||'—',facts:PrototypeExtensionDetail.sample(isMcp?'mcp':'skills',name)};
   const headActions=isMcp
-    ?'<button class="icon-btn" type="button" data-prototype-action="mcp-edit" title="编辑" aria-label="编辑 '+logEsc(name)+'">'+ICON_EDIT+'</button>'
-      +'<button class="icon-btn danger" type="button" data-prototype-action="mcp-delete" title="删除" aria-label="删除 '+logEsc(name)+'">'+ICON_TRASH+'</button>'
-    :'<button class="icon-btn" type="button" data-prototype-action="skill-detail-update" title="检查 / 更新" aria-label="检查 / 更新 '+logEsc(name)+'">'+ICON_REFRESH+'</button>'
-      +'<button class="icon-btn danger" type="button" data-prototype-action="skill-detail-uninstall" title="卸载" aria-label="卸载 '+logEsc(name)+'">'+ICON_TRASH+'</button>';
-  const targets=[...row.querySelectorAll('.skill-targets .target-icon')].map((button,index)=>{
-    const label=button.getAttribute('title')||button.getAttribute('aria-label')||'客户端';
-    const on=button.getAttribute('aria-checked')==='true';
-    const icon=(button.querySelector('use')?.getAttribute('href')||'').replace(/^#/,'');
-    return '<li'+(on?' class="on"':'')+'>'
-      +'<button class="skill-detail-target" type="button" data-sync-target="'+index+'" aria-pressed="'+on+'" aria-label="'+logEsc(label)+'：'+(on?'已同步，点击关闭同步':'未同步，点击同步')+'">'
-      +(icon?'<svg class="target-svg" aria-hidden="true"><use href="#'+logEsc(icon)+'"/></svg>':'')
-      +'<span>'+logEsc(label)+'</span><em>'+(on?'已同步':'未同步')+'</em></button></li>';
+    ?'<button class="icon-btn" type="button" data-prototype-action="mcp-edit" title="编辑" aria-label="编辑 '+logEsc(name)+'">'+ICON_EDIT+'</button><button class="icon-btn danger" type="button" data-prototype-action="mcp-delete" title="删除" aria-label="删除 '+logEsc(name)+'">'+ICON_TRASH+'</button>'
+    :'<button class="icon-btn" type="button" data-prototype-action="skill-detail-update" title="检查 / 更新" aria-label="检查 / 更新 '+logEsc(name)+'">'+ICON_REFRESH+'</button><button class="icon-btn danger" type="button" data-prototype-action="skill-detail-uninstall" title="卸载" aria-label="卸载 '+logEsc(name)+'">'+ICON_TRASH+'</button>';
+  const targetsHTML=[...row.querySelectorAll('.skill-targets .target-icon')].map((button,index)=>{
+    const label=button.title||button.getAttribute('aria-label')||'客户端',on=button.getAttribute('aria-checked')==='true',icon=(button.querySelector('use')?.getAttribute('href')||'').replace(/^#/,'');
+    return '<li'+(on?' class="on"':'')+'><button class="skill-detail-target" type="button" data-sync-target="'+index+'" aria-pressed="'+on+'" aria-label="'+logEsc(label)+'：'+(on?'已同步，点击关闭同步':'未同步，点击同步')+'">'+(icon?'<svg class="target-svg" aria-hidden="true"><use href="#'+logEsc(icon)+'"/></svg>':'')+'<span>'+logEsc(label)+'</span><em>'+(on?'已同步':'未同步')+'</em></button></li>';
   }).join('');
-  // 弹窗里的目标开关要能写回列表那一行，避免同一份状态出现两个说法。
   window.__extDetailRow=row;
-  openModal(
-    name,
-    // 弹窗的主要目的是读完整描述（列表里只露两行），所以描述排在最前，其次是信息与同步目标。
-    // 来源 / 版本 / 更新时间原本单占一行，现并入信息区，省一行高度、也少一层视觉分组。
-    // 「描述」「同步目标」两个小标题按用户要求去掉：面板与目标网格自身已说明内容，标题只是多占一行。
-    '<div class="skill-detail-block skill-detail-doc"><div class="skill-detail-md">'+renderSkillMarkdown(markdown)+'</div></div>'
-      +'<div class="skill-detail-block"><div class="skill-detail-facts">'
-      +factsHtml
-      +'</div></div>'
-      +(targets?'<div class="skill-detail-block"><ul class="skill-detail-targets">'+targets+'</ul></div>':''),
-    '',
-    null,
-    {hideConfirm:true,cancelLabel:'关闭',hideNote:true,headActions}
-  );
-  // 长描述需要更宽的阅读宽度；沿用既有 .modal-wide（三段式不变，只有正文滚动）。
-  // modal-tall 只放宽这一个弹窗的高度上限，避免为看完整描述就出现内部滚动条。
-  document.querySelector('#modal').classList.add('modal-wide');
-  document.querySelector('#modal').classList.add('modal-tall');
+  PrototypeExtensionDetail.open(data,{headActions,targetsHTML});
 }
 
 // 目标格子：点一下在「同步 / 关闭同步」之间切换，并同步写回列表那一行的开关。
@@ -7907,6 +7891,9 @@ window.addEventListener('prototype:data-paths',event=>{
 });
 </script>
 <script src="../overview-dual.js"></script>
+<script src="overview-platform-data.js?v=20261104-platform-scene"></script>
+<script src="overview-journey.js?v=20261104-platform-scene"></script>
+<script src="overview-hero.js?v=20261104-platform-scene"></script>
 <script src="../proto-controls.js"></script>
 <script src="select-component.js"></script>
 <script src="tree-table.js?v=1"></script>
@@ -7921,7 +7908,6 @@ window.addEventListener('prototype:data-paths',event=>{
 <script src="g0-contracts.js?v=20261104-g0"></script>
 <script src="model-config.js?v=20261027-transport-node-entry"></script>
 <script src="conversation-config.js?v=20261028-model-picker"></script>
-<script src="extension-manager.js?v=20261014-col-extensions"></script>
 <script src="sync-account-capabilities.js?v=20261020-multi-account-platform"></script>
 <script src="sync-config.js?v=20261101-mcp-source"></script>
 <script src="windows-window.js"></script>
@@ -7935,11 +7921,16 @@ window.addEventListener('prototype:data-paths',event=>{
 <script src="maintenance-ui.js?v=2"></script>
 <script src="data-paths-ui.js"></script>
 <script src="model-picker.js?v=20261013-responsive-effort"></script>
-<script src="connection-map.js?v=20261028-flow-layout"></script>
+<script src="connection-map.js?v=20261029-reference"></script>
+<script src="connection-map-reference.js?v=20261029-superba-lanes"></script>
 <script src="sticky-tabs.js?v=20261014-common-tabs"></script>
-<script src="component-catalog.js?v=20261027-conversation-adopted"></script>
+<script src="component-catalog.js?v=20261030-interactive-collections"></script>
 <script src="tree-navigation-demo.js?v=20261027-conversation-adopted"></script>
 <script src="prototype-notification-publisher.js?v=20261031-snapshot-preview"></script>
-<script src="component-topic.js?v=20261027-tree-navigation"></script>
+<script src="extension-detail.js?v=20261031-detail-compact"></script>
+<script src="interactive-collection.js?v=20261031-enable"></script>
+<script src="interactive-collection-demo.js?v=20261031-comment1"></script>
+<script src="extension-manager.js?v=20261101-bulk2"></script>
+<script src="component-topic.js?v=20261030-interactive-collections"></script>
 </body>
 </html>

@@ -85,3 +85,106 @@ test('流动和用量的展示偏好取消不生效，应用只改变专题投�
  h.click('[data-pv="settings"]');tab(h,'display');h.change('[data-option="flow"]',false);h.change('[data-option="usage"]',false);h.click('#modalConfirm');await h.settle();
  assert.equal(d.querySelectorAll('.pv-flow').length,0);assert.equal(d.querySelector('#pvActivity .pv-token-count'),null);assert.equal(w.connectionMapPrototype.state().flowing,true);assert.equal(JSON.stringify(w.modelPrototype.state().saved),saved);clean(h);
 });
+
+
+test('Desktop与OpenCodex共用垂直产品轴，适配渠道连接唯一Desktop节点',async t=>{
+ const h=await make('#connection-map'),{w,document:d}=h;t.after(()=>h.dispose());
+ assert.equal(d.querySelectorAll('[data-node="desktop"]').length,1);assert.equal(d.querySelectorAll('[data-node="proxy"]').length,1);
+ const desktop=d.querySelector('[data-node="desktop"]'),proxy=d.querySelector('[data-node="proxy"]');
+ assert.equal(desktop.dataset.node,'desktop');assert.match(proxy.className,/pv-service/);
+ assert.equal(d.querySelector('#pvAdapterTag'),null);assert.equal(d.querySelector('[data-node="adapter"]'),null);
+ const s=w.connectionMapPrototype.state();assert.ok(s.connections.some(e=>e.from==='desktop'&&e.to==='proxy'&&e.kind==='manage'));assert.ok(s.connections.some(e=>e.from==='desktop'&&e.to==='krill'&&e.kind==='config'));assert.equal(s.connections.some(e=>e.from==='proxy'&&e.to==='krill'),false);
+ h.click('[data-pv="node"][data-id="desktop"]');assert.equal(s.dialog,null);assert.equal(w.connectionMapPrototype.state().dialog.id,'desktop');h.click('#modalCancel');clean(h);
+});
+
+
+test('Desktop适配入口从OpenCodex垂直直达Desktop，Desktop到渠道保持直线',async t=>{
+ const h=await make('#connection-map'),{document:d}=h;t.after(()=>h.dispose());
+ const paths=[...d.querySelectorAll('.pv-wire')];
+ const ingress=paths.find(e=>e.dataset.from==='proxy'&&e.dataset.to==='desktop');
+ const egress=paths.find(e=>e.dataset.from==='desktop'&&e.dataset.to==='krill');
+ assert.ok(ingress);assert.ok(egress);
+ assert.match(ingress.getAttribute('d'),/^M [^ ]+ [^ ]+ V [^ ]+$/);
+ assert.match(egress.getAttribute('d'),/^M [^ ]+ [^ ]+ L [^ ]+ [^ ]+$/);
+ assert.equal(d.querySelectorAll('[data-node="desktop"]').length,1);assert.equal(d.querySelectorAll('[data-node="adapter"]').length,0);clean(h);
+});
+
+
+test('Superba参照实验与现有全景并列，默认不改写业务与现有视图',async t=>{
+ const h=await make('#connection-map'),{w,document:d}=h;t.after(()=>h.dispose());
+ assert.equal(w.connectionMapReferencePrototype.state().view,'current');
+ assert.equal(d.querySelector('#pvReference').hidden,true);
+ assert.equal(d.querySelector('#pv-view-reference').getAttribute('aria-selected'),'false');
+ h.click('#pv-view-reference');await h.settle();
+ const s=w.connectionMapReferencePrototype.state();
+ assert.equal(s.view,'reference');assert.equal(d.querySelector('#pvReference').hidden,false);
+ assert.equal(d.documentElement.getAttribute('data-connection-view'),'reference');
+ assert.equal(d.querySelectorAll('.pv-ref-node').length,4);
+ assert.equal(d.querySelectorAll('.pv-ref-panel').length,5);
+ assert.equal(d.querySelectorAll('[data-pv-view]').length,3);
+ assert.equal(d.querySelectorAll('.pv-ref-heat-cell').length,168);
+ assert.match(d.querySelector('.pv-ref-footnote').textContent,/mock/i);
+ h.click('#pv-view-current');await h.settle();
+ assert.equal(w.connectionMapReferencePrototype.state().view,'current');
+ assert.equal(d.querySelector('#pvReference').hidden,true);
+ clean(h);
+});
+
+test('Superba参照实验三态只改mock关系：路由/直连虚影/上游异常',async t=>{
+ const h=await make('#connection-map'),{w,document:d}=h;t.after(()=>h.dispose());
+ h.click('#pv-view-reference');await h.settle();
+ h.click('[data-ref-mode="direct"]');
+ let ref=w.connectionMapReferencePrototype.state();
+ assert.equal(ref.mode,'direct');
+ assert.ok(d.querySelector('[data-ref-node="router"]').classList.contains('is-ghost'));
+ assert.match(d.querySelector('[data-ref-node="router"] small').textContent,/未开启/);
+ assert.equal(d.querySelector('#pvRefEdge').childElementCount>=0,true);
+ h.click('[data-ref-mode="failed"]');
+ ref=w.connectionMapReferencePrototype.state();
+ assert.equal(ref.mode,'failed');
+ assert.match(d.querySelector('#pvRefLatency').textContent,/超时/);
+ assert.ok(d.querySelector('[data-ref-node="provider"]').classList.contains('has-error'));
+ assert.match(d.querySelector('[data-ref-node="provider"] small').textContent,/已保留配置/);
+ assert.equal(d.querySelectorAll('[data-ref-node="provider"] .pv-ref-marker').length,1);
+ h.click('[data-ref-mode="routed"]');
+ assert.ok(!d.querySelector('[data-ref-node="router"]').classList.contains('is-ghost'));
+ assert.equal(d.querySelector('[data-ref-node="router"] small').textContent,'运行中 · 本地路由');
+ assert.equal(w.connectionMapReferencePrototype.state().mode,'routed');
+ clean(h);
+});
+
+
+test('多工具泳道复刻共享路由、直连绕过与折叠工具，关闭路由只改实验态',async t=>{
+ const h=await make('#connection-map'),{w,document:d}=h;t.after(()=>h.dispose());
+ h.click('#pv-view-lanes');await h.settle();
+ const s=w.connectionMapReferencePrototype.state();
+ assert.equal(s.view,'lanes');assert.equal(s.laneMode,'on');
+ assert.equal(d.querySelector('#pvLanes').hidden,false);
+ assert.equal(d.querySelectorAll('.pv-lane-row').length,4);
+ assert.equal(d.querySelectorAll('[data-lane-tool]').length,4);
+ assert.equal(d.querySelectorAll('#pvLaneRouter').length,1);
+ assert.equal(d.querySelectorAll('[data-lane-tool="codex"]').length,1);
+ assert.equal(d.querySelectorAll('[data-lane-tool="claude"]').length,1);
+ assert.equal(d.querySelectorAll('[data-lane-tool="opencode"]').length,1);
+ assert.equal(d.querySelectorAll('[data-lane-tool="gemini"]').length,1);
+ assert.match(d.querySelector('#pvLaneRouter').textContent,/OpenCodex/);
+ assert.ok(d.querySelector('.pv-lane-desktop'));
+ assert.match(d.querySelector('.pv-lane-desktop').textContent,/OpenCodeX Desktop|OpenCodex Desktop/);
+ h.click('[data-lane-mode="off"]');await h.settle();
+ assert.equal(w.connectionMapReferencePrototype.state().laneMode,'off');
+ assert.equal(d.querySelector('#pvLanes').dataset.mode,'off');
+ assert.ok(d.querySelector('#pvLaneRouter').classList.contains('is-off'));
+ assert.match(d.querySelector('[data-lane-tool="codex"] small').textContent,/路由未开启/);
+ assert.equal(d.querySelector('#pvLanes').dataset.flow,'true');
+ assert.ok(d.querySelectorAll('.pv-lane-pulse').length>0);
+ h.click('[data-lane-flow]');await h.settle();
+ assert.equal(w.connectionMapReferencePrototype.state().laneFlow,false);
+ assert.equal(d.querySelectorAll('.pv-lane-pulse').length,0);
+ h.click('[data-lane-flow]');await h.settle();
+ assert.equal(w.connectionMapReferencePrototype.state().laneFlow,true);
+ assert.ok(d.querySelectorAll('.pv-lane-pulse').length>0);
+ h.click('[data-lane-mode="on"]');await h.settle();
+ assert.equal(w.connectionMapReferencePrototype.state().laneMode,'on');
+ assert.ok(!d.querySelector('#pvLaneRouter').classList.contains('is-off'));
+ clean(h);
+});
