@@ -137,6 +137,19 @@ test('native version observer materializes scalar facts instead of returning a r
  assert.equal(value.revision,fact.revision)
  assert.equal(value.checkingVersion,false)
 })
+test('actual V8 returnByValue preserves projected observation scalars while a raw Proxy serializes empty',async()=>{
+ const session=new Session();session.connect()
+ try{
+  const raw=await session.post('Runtime.evaluate',{expression:'({observation:new Proxy({revision:"fixture-revision"},{})})',returnByValue:true})
+  assert.deepEqual(raw.result.value,{observation:{}})
+  const expression='(()=>{const observation=new Proxy({revision:"fixture-revision",source:"version-check",remoteRead:"failed",remoteTime:null,remoteObservedAt:"2026-11-05T00:00:00Z"},{});const app={__vue_app__:{config:{globalProperties:{$pinia:{state:{value:{sync:{webdavState:"failed",config:{endpoint:{revision:"fixture-revision"}},observation,checkingVersion:false}}}}}}}};const document={querySelector:s=>s==="#app"?app:null};return ('+inspect021Webdav.toString()+')()})()'
+  const projected=await session.post('Runtime.evaluate',{expression,returnByValue:true})
+  assert.equal(projected.exceptionDetails,undefined)
+  assert.equal(projected.result.value.observation.revision,'fixture-revision')
+  assert.equal(projected.result.value.observation.source,'version-check')
+  assert.equal(projected.result.value.observation.remoteObservedAt,'2026-11-05T00:00:00Z')
+ }finally{session.disconnect()}
+})
 test('adopted startup version probe admits only readonly IPC and requires the real failed observation',()=>{
  assert.doesNotThrow(()=>assert021IpcSafety(['app_about','config_sync_observe'],[],['config_sync_observe']))
  assert.throws(()=>assert021IpcSafety(['app_about','config_sync_observe']))
