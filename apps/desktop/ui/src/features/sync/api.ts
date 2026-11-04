@@ -12,6 +12,8 @@ export interface SyncCredentialRefDto {
 
 export interface SyncEndpointDto {
   endpointId: string
+  /** Opaque saved endpoint/credential revision; never a password-derived value. */
+  revision?: string
   url: string
   remotePath: string
   username: string
@@ -31,6 +33,7 @@ export interface SaveSyncEndpointRequest {
   username: string
   password: string
   conflictPolicy: SyncConflictPolicy
+  expectedRevision?: string
 }
 
 export type SyncConnectionState =

@@ -22,4 +22,24 @@ describe('node measurements remain tied to their connection inputs',()=>{
   finish({runId:originalRun,stopped:false,results:[{nodeId:'one',elapsedMs:1,modelCount:7,error:null}]});await waiting
   expect(state.results.value).toEqual({});expect(state.run.value).toBe('');scope.stop()
  })
+ it('invalidates a request when the running provider changes, preserving node and model identity',async()=>{
+  const value=reactive(channel()),scope=effectScope(),state=scope.run(()=>useNodeMeasurements(()=>value,()=>''))!
+  let finish!:(value:NodeMeasurementSet)=>void
+  vi.mocked(modelApi.measureNodes).mockReturnValueOnce(new Promise(resolve=>{finish=resolve}))
+  const waiting=state.measure(['one']),id=state.run.value
+  value.connection.providerId='renamed-provider';await nextTick()
+  expect(modelApi.stopNodeMeasurement).toHaveBeenCalledWith(id)
+  finish({runId:id,stopped:false,results:[{nodeId:'one',elapsedMs:4,modelCount:1,error:null}]});await waiting
+  expect(state.results.value).toEqual({});expect(value.connection.activeNodeId).toBe('one');scope.stop()
+ })
+ it('ignores a late stop error after invalidation and a new request',async()=>{
+  const value=reactive(channel()),scope=effectScope(),state=scope.run(()=>useNodeMeasurements(()=>value,()=>''))!
+  let rejectStop!:(cause:Error)=>void
+  vi.mocked(modelApi.measureNodes).mockImplementation(()=>new Promise(()=>{}))
+  vi.mocked(modelApi.stopNodeMeasurement).mockImplementationOnce(()=>new Promise((_resolve,reject)=>{rejectStop=reject}))
+  void state.measure(['one']);const stopping=state.stop()
+  value.connection.nodes[0]!.url='https://changed.example.test';await nextTick();void state.measure(['two'])
+  const current=state.run.value;rejectStop(new Error('旧停止请求失败'));await stopping
+  expect(state.run.value).toBe(current);expect(state.error.value).toBe('');scope.stop()
+ })
 })

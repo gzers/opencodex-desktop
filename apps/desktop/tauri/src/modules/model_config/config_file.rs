@@ -21,6 +21,10 @@ use zeroize::{Zeroize, Zeroizing};
 
 const MAX_CONFIG: u64 = 16 * 1024 * 1024;
 const METADATA: &str = "manager-state/model-channel-layout.json";
+#[path = "channel_rename.rs"]
+mod channel_rename;
+#[path = "rename_effects.rs"]
+pub(crate) mod rename_effects;
 pub(super) fn metadata_digest(root: &Path) -> ModelResult<String> {
     let path = root.join(METADATA);
     safety::check_path(root, &path, true)?;
@@ -223,6 +227,8 @@ fn runtime_only_change(expected_file: &str, current: &Value) -> bool {
     base == manager_view_digest(current)
 }
 pub fn snapshot(root: &Path, home: &Path) -> ModelResult<Snapshot> {
+    let _versions = super::content_versions::file_saves::admit(root, home)?;
+    let _rename = channel_rename::admit(root, home)?;
     // Readers share the save lock order and cannot observe a half-published
     // raw/layout pair during a live transaction or its compensation.
     let _lock = TargetFileLock::lock(&config_path(home)?)?;
@@ -475,11 +481,11 @@ fn scoped_policy(before: &Policy, requested: &Policy, scope: &SaveScope) -> Mode
         return Err(invalid("save_scope", "所选保存渠道身份重复"));
     }
     if before.channels.iter().any(|old| {
-        (old.id == channel.id) != (old.connection.provider_id == channel.connection.provider_id)
+        old.id != channel.id && old.connection.provider_id == channel.connection.provider_id
     }) {
         return Err(invalid(
             "provider_identity",
-            "已有渠道的运行绑定或管理身份不能修改",
+            "目标运行标识已属于其它渠道，不能更换管理身份",
         ));
     }
     let mut intended = before.clone();
@@ -612,8 +618,45 @@ fn scope_picker(
     }
 }
 pub fn save(root: &Path, home: &Path, request: SaveRequest) -> ModelResult<SaveResult> {
-    save_observed(root, home, request, |_, _| Ok(()))
+    let event = super::content_versions::file_saves::begin(root, home, &request)?;
+    let result = save_internal(
+        root,
+        home,
+        request,
+        None,
+        None,
+        |_, _| Ok(()),
+        |snapshot, raw| {
+            super::content_versions::file_saves::acknowledge(root, home, &event, snapshot, raw)
+        },
+    )?;
+    super::content_versions::file_saves::finish(root, home, event, &result)?;
+    Ok(result)
 }
+/// IPC may provide the actual runtime identity so an existing Agent selection
+/// receives its exact new connection digest within the same file transaction.
+pub fn save_with_context(
+    root: &Path,
+    context: &crate::state::ProcessContext,
+    request: SaveRequest,
+) -> ModelResult<SaveResult> {
+    let home = &context.opencodex_home;
+    let event = super::content_versions::file_saves::begin(root, home, &request)?;
+    let result = save_internal(
+        root,
+        &context.opencodex_home,
+        request,
+        None,
+        Some(context),
+        |_, _| Ok(()),
+        |snapshot, raw| {
+            super::content_versions::file_saves::acknowledge(root, home, &event, snapshot, raw)
+        },
+    )?;
+    super::content_versions::file_saves::finish(root, home, event, &result)?;
+    Ok(result)
+}
+#[cfg(test)]
 pub(super) fn save_observed(
     root: &Path,
     home: &Path,
@@ -629,6 +672,27 @@ pub(super) fn save_observed_checked(
     expected_metadata: Option<&str>,
     before_commit: impl FnOnce(&[u8], &Policy) -> ModelResult<()>,
 ) -> ModelResult<SaveResult> {
+    save_internal(
+        root,
+        home,
+        request,
+        expected_metadata,
+        None,
+        before_commit,
+        |_, _| Ok(()),
+    )
+}
+fn save_internal(
+    root: &Path,
+    home: &Path,
+    request: SaveRequest,
+    expected_metadata: Option<&str>,
+    context: Option<&crate::state::ProcessContext>,
+    before_commit: impl FnOnce(&[u8], &Policy) -> ModelResult<()>,
+    after_readback: impl FnOnce(&Snapshot, &Value) -> ModelResult<()>,
+) -> ModelResult<SaveResult> {
+    let _versions = super::content_versions::file_saves::admit(root, home)?;
+    let _rename = channel_rename::admit(root, home)?;
     let path = config_path(home)?;
     let _lock = TargetFileLock::lock(&path)?;
     let before_existed = path.exists();
@@ -666,7 +730,12 @@ pub(super) fn save_observed_checked(
     } else {
         request.policy
     };
-    let original_picker = config.get("modelPickerOrder").cloned();
+    let original_config = config.clone();
+    let renames = config_file_mapping::provider_renames(&config, &before, &intended)?;
+    let mut original_picker = config.get("modelPickerOrder").cloned();
+    if let Some(order) = &mut original_picker {
+        config_file_mapping::rename_routed(order, &renames);
+    }
     let (library, _) = ModelStore::new(root).library_only()?;
     if request.scope.is_some() {
         // Compile the full merged candidate: unrelated unsaved channels and
@@ -682,7 +751,8 @@ pub(super) fn save_observed_checked(
     let mapping_before = seed_imports(root, &mut config, &before, &intended)?;
     config_file_mapping::write_policy(&mut config, &mapping_before, &intended, &library)?;
     if let Some(scope) = &request.scope {
-        scope_picker(&mut config, original_picker, &before, &intended, scope);
+        let normalized = config_file_mapping::renamed_policy(&before, &renames);
+        scope_picker(&mut config, original_picker, &normalized, &intended, scope);
     }
     // Legacy portable single-Key entries are adopted only at explicit Save.
     // A local-mapping import has no source reference and cannot replace its Key.
@@ -702,6 +772,18 @@ pub(super) fn save_observed_checked(
         }
     }
     apply_credentials(&mut config, &intended, &request.credentials)?;
+    let mut rename_transaction = if renames.is_empty() {
+        None
+    } else {
+        Some(channel_rename::Transaction::prepare(
+            root,
+            home,
+            &original_config,
+            &config,
+            &renames,
+            context,
+        )?)
+    };
     let old: Value = serde_json::from_slice(&before_bytes)
         .map_err(|_| invalid("config_document", "模型配置文件格式不正确"))?;
     let changed = old != config;
@@ -720,6 +802,42 @@ pub(super) fn save_observed_checked(
     } else {
         Zeroizing::new(before_bytes.to_vec())
     };
+    if let Some(transaction) = &mut rename_transaction {
+        // Preserve legacy UUID references in the stored layout rather than
+        // recreating credentials when only the provider namespace changes.
+        let mut next_layout = layout_policy(&intended);
+        let metadata_path = root.join(METADATA);
+        let original_layout: Value = if metadata_path.exists() {
+            serde_json::from_slice(&safety::read_file(&metadata_path, MAX_CONFIG)?)?
+        } else {
+            json!({"channels":[]})
+        };
+        for channel in &mut next_layout.channels {
+            if let Some(reference) = original_layout["channels"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .find(|c| c["id"] == channel.id)
+                .and_then(|c| c["connection"]["credentialRef"].as_str())
+            {
+                if require_uuid(reference).is_ok() {
+                    channel.connection.credential_ref = Some(reference.to_owned());
+                }
+            }
+        }
+        let layout_bytes = serde_json::to_vec(&next_layout)?;
+        transaction.files(&before_bytes, &bytes, &layout_bytes)?;
+        before_commit(&bytes, &intended)?;
+        let snapshot = transaction.commit(|| {
+            let (actual, actual_bytes) = read(home)?;
+            let persisted: Policy =
+                serde_json::from_slice(&safety::read_file(&root.join(METADATA), MAX_CONFIG)?)?;
+            let snapshot = snapshot_value(root, &actual, &actual_bytes, &persisted)?;
+            after_readback(&snapshot, &actual)?;
+            Ok(snapshot)
+        })?;
+        return Ok(SaveResult { snapshot, changed });
+    }
     before_commit(&bytes, &intended)?;
     let mut raw_written = false;
     let committed = (|| {
@@ -749,7 +867,9 @@ pub(super) fn save_observed_checked(
         }
         // Only persisted, read-back metadata may acknowledge an edit. In
         // particular, changed=false never implies a layout write succeeded.
-        snapshot_value(root, &actual, &actual_bytes, &layout.policy()?)
+        let snapshot = snapshot_value(root, &actual, &actual_bytes, &layout.policy()?)?;
+        after_readback(&snapshot, &actual)?;
+        Ok(snapshot)
     })();
     match committed {
         Ok(snapshot) => Ok(SaveResult { snapshot, changed }),
@@ -784,6 +904,8 @@ pub(super) fn finish_recorded(
     policy: &Policy,
     before_metadata: Option<&str>,
 ) -> ModelResult<Snapshot> {
+    let _versions = super::content_versions::file_saves::admit(root, home)?;
+    let _rename = channel_rename::admit(root, home)?;
     let path = config_path(home)?;
     let _lock = TargetFileLock::lock(&path)?;
     let (value, bytes) = read(home)?;
@@ -1286,3 +1408,7 @@ mod tests {
 #[cfg(test)]
 #[path = "config_file_scoped_tests.rs"]
 mod scoped_tests;
+
+#[cfg(test)]
+#[path = "config_file_rename_tests.rs"]
+mod rename_tests;

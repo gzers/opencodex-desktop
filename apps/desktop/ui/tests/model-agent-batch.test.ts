@@ -1,13 +1,15 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { beforeEach,describe,expect,it,vi } from 'vitest'
 import { mount,flushPromises } from '@vue/test-utils'
 import { createPinia,setActivePinia } from 'pinia'
 import { defineComponent,onMounted } from 'vue'
+import UiDialog from '@/components/ui/UiDialog.vue'
 import BatchAgentDialog from '@/features/models/BatchAgentDialog.vue'
 import { emptyContent,emptyRules,modelApi,type ModelSnapshot,type Submission } from '@/features/models/api'
 import { useModelsStore } from '@/features/models/store'
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{generate:vi.fn(),acceptAgentReview:vi.fn(),stopGeneration:vi.fn(),latestAgentResult:vi.fn()}}))
 const settings=defineComponent({emits:['update:modelValue'],setup(_,{emit}){onMounted(()=>emit('update:modelValue',{providerId:'fixture',modelId:'fixture-model',reasoningEffort:null,fast:null}));return()=>null}})
-const dialog={template:'<div><slot/><slot name="actions"/></div>'}
+const dialog={template:'<div><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></div>'}
 function snapshot():ModelSnapshot{return {library:{schemaVersion:1,templates:['one','two'].map(id=>({id,label:id,source:'user' as const,defaultRevision:id+'-v',revisions:[{id:id+'-v',createdAt:'2026-10-13T00:00:00Z',savedLabel:id,content:emptyContent(),digest:id,baseRevision:null,changes:[]}]}))},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'base',policyDigest:'policy',workspaceDigest:'workspace',workspace:null}}
 function result(base:ModelSnapshot):Submission{return {submissionId:'fixture-run',contractVersion:1,report:'两个模版有建议',proposals:base.library.templates.map(t=>({templateId:t.id,baseRevision:t.revisions[0]!.id,label:t.label,content:{...emptyContent(),description:'建议说明'}}))}}
 beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks()})
@@ -74,4 +76,35 @@ describe('internal batch suggestions require review',()=>{
   const wrapper=render(base);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='恢复上次建议')!.trigger('click');await flushPromises()
   expect(modelApi.latestAgentResult).toHaveBeenCalledExactlyOnceWith(null);expect(wrapper.text()).toContain('建议说明');expect(modelApi.generate).not.toHaveBeenCalled();expect(modelApi.acceptAgentReview).not.toHaveBeenCalled();wrapper.unmount()
  })
+})
+
+
+describe('POST-09 batch generation observation', () => {
+ it('closing and unmounting an in-flight observer do not stop generation or apply late suggestions',async()=>{
+  const base=snapshot();let finish!:(value:Submission)=>void
+  vi.mocked(modelApi.generate).mockReturnValue(new Promise(resolve=>{finish=resolve}))
+  const wrapper=render(base);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='检查更新')!.trigger('click');await flushPromises()
+  wrapper.findComponent(UiDialog).vm.$emit('close');expect(wrapper.emitted('close')).toHaveLength(1)
+  wrapper.unmount();finish(result(base));await flushPromises()
+  expect(modelApi.stopGeneration).not.toHaveBeenCalled();expect(modelApi.acceptAgentReview).not.toHaveBeenCalled();expect(useModelsStore().snapshot).toEqual(base)
+ })
+ it('only the explicit stop action cancels the generated run',async()=>{
+  const base=snapshot();vi.mocked(modelApi.generate).mockReturnValue(new Promise(()=>{}));vi.mocked(modelApi.stopGeneration).mockResolvedValue(undefined)
+  const wrapper=render(base);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='检查更新')!.trigger('click');await flushPromises()
+  const id=vi.mocked(modelApi.generate).mock.calls[0]![0]
+  await wrapper.findAll('button').find(b=>b.text()==='停止检查')!.trigger('click');await flushPromises()
+  expect(modelApi.stopGeneration).toHaveBeenCalledExactlyOnceWith(id);expect(wrapper.emitted('close')).toBeUndefined();wrapper.unmount()
+ })
+})
+
+
+it('shows a saved batch result as a view without an empty or exit footer',async()=>{
+ installNativeDialogStub();const base=snapshot();useModelsStore().snapshot=base
+ vi.mocked(modelApi.generate).mockResolvedValue(result(base));vi.mocked(modelApi.acceptAgentReview).mockResolvedValue({snapshot:base,outcomes:[{templateId:'one',revisionId:'new',changed:true}]})
+ const wrapper=mount(BatchAgentDialog,{props:{open:true,snapshot:base,selected:[],versions:{}},global:{stubs:{AgentExecutionField:settings}},attachTo:document.body})
+ try{
+  await flushPromises();(document.querySelector('dialog footer .primary') as HTMLButtonElement).click();await flushPromises()
+  const save=[...document.querySelectorAll('dialog footer button')].find(b=>b.textContent?.includes('另存所选建议版本')) as HTMLButtonElement
+  save.click();await flushPromises();expect(document.querySelector('dialog[open] footer')).toBeNull();expect(document.querySelector('dialog[open] header .modal-close')).not.toBeNull()
+ }finally{wrapper.unmount();document.body.innerHTML=''}
 })

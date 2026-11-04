@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, watch, onBeforeUnmount, nextTick } from 'vue'
+import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import { open } from '@tauri-apps/plugin-dialog'
 import UiButton from '@/components/ui/UiButton.vue'
+import UiDialog from '@/components/ui/UiDialog.vue'
 import { useAppStore } from '@/stores/app'
 import { useRuntimeStore } from '@/features/runtime/store'
 import { useEffectsStore } from '@/app/appearance/effects'
@@ -12,25 +13,13 @@ import { displayPath } from '@/lib/paths'
 import { installPhaseLabel, offlineSteps, phaseShowsCommandLine, proxyMaskLabel } from '@/features/runtime/presentation'
 const app = useAppStore()
 const runtimeProtection = useRuntimeStore()
-const installDialog = ref<HTMLElement | null>(null)
-let origin: HTMLElement | null = null
-function onDialogKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape') { event.stopPropagation(); event.preventDefault(); closeInstallModal(); return }
-  if (event.key !== 'Tab') return
-  const list = Array.from(installDialog.value?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), select:not(:disabled), summary, [href]') ?? [])
-  const first = list[0], last = list.at(-1)
-  if (event.shiftKey ? document.activeElement === first || document.activeElement === installDialog.value : document.activeElement === last || document.activeElement === installDialog.value) {
-    event.preventDefault(); (event.shiftKey ? last : first)?.focus()
-  }
-}
 const offlineReading = ref(false)
 let dropLease = '', dropEpoch = 0
 const installOpen = ref(false)
-watch(installOpen, async value => {
-  if (value) { origin = document.activeElement instanceof HTMLElement ? document.activeElement : null; await nextTick(); installDialog.value?.focus() }
-  else { origin?.focus(); origin = null; installProxy.value.secret = ''; clearDrop() }
+watch(installOpen, value => {
+  if (!value) { installProxy.value.secret = ''; clearDrop() }
 })
-onBeforeUnmount(() => { origin?.focus(); installProxy.value.secret = '' })
+onBeforeUnmount(() => { installProxy.value.secret = '' })
 const installStep = ref(1)
 const installPrefix = ref('')
 const installSource = ref<InstallSourceKind>('registry')
@@ -102,6 +91,7 @@ function installProofReset() {
 function closeInstallModal() {
   if (app.runtimeInstalling) return
   installOpen.value = false
+  if (installCompleted.value && app.runtimeInstallOutcome?.version) app.showToast('OpenCodex ' + app.runtimeInstallOutcome.version + ' 已就绪。')
 }
 
 async function chooseInstallPrefix() {
@@ -181,13 +171,6 @@ async function cancelInstall() {
   closeInstallModal()
 }
 
-function finishInstall() {
-  if (!installCompleted.value) return
-  const version = app.runtimeInstallOutcome?.version
-  installOpen.value = false
-  if (version) app.showToast(`OpenCodex ${version} 已就绪。`)
-}
-
 watch(() => app.installModalRequest, value => {
   if (!value) return
   const source = app.consumeInstallModalRequest()
@@ -199,9 +182,7 @@ function formatBytes(size: number) {
 }
 </script>
 <template>
-  <div v-if="installOpen" class="modal-mask" data-testid="runtime-install-modal">
-    <div ref="installDialog" class="modal modal-wide wiz runtime-install-dialog" tabindex="-1" @keydown="onDialogKeydown" role="dialog" aria-modal="true" aria-labelledby="wiz-title">
-      <h3 id="wiz-title">安装 OpenCodex</h3>
+  <UiDialog :open="installOpen" title="安装 OpenCodex" wide :busy="app.runtimeInstalling" panel-class="wiz runtime-install-dialog" data-testid="runtime-install-modal" @close="closeInstallModal">
       <ol class="wiz-steps" aria-label="安装步骤">
         <li v-for="(label, index) in ['安装位置', '安装源', '确认', '安装进度']" :key="label" :class="{ active: installStep < 4 ? index < 2 || index === 2 && installConfirmed : index === 3, done: installStep === 4 && index < 3 }"><span>{{ index + 1 }}</span>{{ label }}</li>
       </ol>
@@ -279,27 +260,22 @@ function formatBytes(size: number) {
         </p>
       </div>
 
-      <div class="wiz-foot">
-        <UiButton class="btn ghost" type="button" @click="cancelInstall()">{{ app.runtimeInstalling ? '取消安装' : installStep < 4 ? '取消' : '关闭' }}</UiButton>
-        <UiButton v-if="installStep < 4" class="btn primary" type="button" :disabled="!installCanAdvance" @click="advanceInstall()">开始安装</UiButton>
-        <template v-else-if="app.runtimeInstallError">
-          <UiButton class="btn primary" type="button" :disabled="!app.runtimeInstallScriptsRequired || app.runtimeInstalling" data-testid="wiz-allow-scripts" @click="installAllowScripts = true; runInstall()">允许安装脚本并重试</UiButton>
-        </template>
-        <UiButton v-else class="btn primary" type="button" :disabled="!installCompleted" data-testid="wiz-finish" @click="finishInstall()">完成</UiButton>
-      </div>
-    </div>
-  </div>
-
+    <template v-if="installStep < 4 || app.runtimeInstalling || app.runtimeInstallError && app.runtimeInstallScriptsRequired" #actions="{ close: requestClose }">
+      <UiButton v-if="installStep < 4" variant="ghost" type="button" @click="requestClose">取消</UiButton>
+      <UiButton v-if="app.runtimeInstalling" variant="ghost" type="button" @click="cancelInstall">取消安装</UiButton>
+      <UiButton v-if="installStep < 4" variant="primary" type="button" :disabled="!installCanAdvance" @click="advanceInstall">开始安装</UiButton>
+      <UiButton v-else-if="app.runtimeInstallError && app.runtimeInstallScriptsRequired" variant="primary" type="button" :disabled="app.runtimeInstalling" data-testid="wiz-allow-scripts" @click="installAllowScripts = true; runInstall()">允许安装脚本并重试</UiButton>
+    </template>
+  </UiDialog>
 </template>
 
 <style scoped>
-.runtime-install-dialog { width:min(520px,calc(100% - 40px)); max-height:min(calc(88vh / var(--ui-zoom)),calc(100% - 40px)); display:flex; flex-direction:column; overflow:hidden; }
+:global(dialog.ui-dialog.runtime-install-dialog.wide) { width:min(520px,calc(100vw / var(--ui-zoom) - 40px)); max-height:calc(100vh / var(--ui-zoom) - 40px); }
 .wiz-body { overflow:auto; min-height:0; padding-right:4px; gap:14px; margin:0; }
 .wiz-steps { flex-wrap:wrap; flex:none; gap:6px; margin:0 0 14px; }
 .wiz-steps li {padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius-pill);font-size:var(--text-caption)}
 .wiz-steps li.active {border-color:var(--accent);color:var(--text);background:color-mix(in srgb,var(--accent) 8%,var(--panel))}
 .wiz-steps li span {width:16px;height:16px;background:var(--raised);font-size:10px;border:0;}
-.wiz-foot { flex:none; justify-content:flex-end; margin:14px -20px -20px; padding:14px 20px 20px; border-top:1px solid var(--border); }
 .wiz-block { display:grid; gap:8px; }
 .wiz-label { color:var(--muted); font-size:var(--text-label); }
 .install-source-choice { border:1px solid var(--border); border-radius:var(--radius-sm); padding:11px 12px; background:var(--panel); }

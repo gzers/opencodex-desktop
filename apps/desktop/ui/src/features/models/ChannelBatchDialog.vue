@@ -82,7 +82,7 @@ function accept(){
 onBeforeUnmount(()=>{disposed=true;generation++})
 </script>
 <template>
- <UiDialog :open="true" :title="mode==='family'?'按族批量配置':'套用模版精确版本'" wide :busy="busy" @close="emit('close')">
+ <UiDialog :open="true" :title="mode==='family'?'按族批量配置':'套用模版精确版本'" wide @close="emit('close')">
   <p v-if="error" role="alert" class="model-error">{{ error }}</p>
   <p>当前所选 {{ frozenTargets.length }} 个渠道（包含搜索外所选）：{{ frozenTargets.map(c=>c.label).join('、') }}</p>
   <UiSelectField v-model="templateId" label="模型族 / 模版" :options="[{value:'',label:'选择已保存模版'},...(models.snapshot?.library.templates??[]).map(t=>({value:t.id,label:t.label}))]" :disabled="busy" />
@@ -99,7 +99,7 @@ onBeforeUnmount(()=>{disposed=true;generation++})
    <ModelRuleFields v-if="fields.some(([key])=>modes[key]==='custom')" v-model="rules" :disabled="busy" />
   </template>
   <div v-if="review&&review.settings===settings()" class="model-batch-review"><h3>确认本次范围</h3><p v-if="!review.changes.length">与当前草稿一致，没有配置变化。</p><details v-else><summary>完整字段差异（{{ review.changes.length }} 项）</summary><article v-for="change in review.changes" :key="change.field"><strong>{{ change.field }}</strong><pre>当前：{{ JSON.stringify(change.before,null,2) }}</pre><pre>拟修改：{{ JSON.stringify(change.after,null,2) }}</pre></article></details><p>完整草稿激活数 {{ review.projection.knownActiveModels }} / 100；实际目录 {{ review.projection.exactCatalogCount??'保存前核对' }}。这里只加入草稿，运行配置在页级保存时写入。</p><details v-for="item in review.matches" :key="item.channel"><summary>{{ item.channel }} · {{ item.ids.length }} 个型号</summary><code v-for="id in item.ids" :key="id">{{ id }}</code></details><p v-if="mode==='adopt'">精确版本：{{ revisionId }}；{{ scope==='global'?'全局族默认':'所选渠道' }}；{{ clearOverrides?'明确清除匹配型号规则覆盖':'保留单模型例外' }}</p></div>
-  <template #actions><UiButton v-if="busy" @click="stop">停止比较</UiButton><UiButton :disabled="busy||!templateId" :loading="busy" @click="compare">比较本次修改</UiButton><UiButton variant="primary" :disabled="busy||!review||review.settings!==settings()" @click="accept">加入草稿</UiButton></template>
+  <template #actions="{ close: requestClose }"><UiButton variant="ghost" @click="requestClose">取消</UiButton><UiButton v-if="busy" @click="stop">停止比较</UiButton><UiButton :disabled="busy||!templateId" :loading="busy" @click="compare">比较本次修改</UiButton><UiButton variant="primary" :disabled="busy||!review||review.settings!==settings()" @click="accept">加入草稿</UiButton></template>
  </UiDialog>
 </template>
 <style scoped>

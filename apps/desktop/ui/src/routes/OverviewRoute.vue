@@ -14,6 +14,7 @@ import { useAppStore } from '@/stores/app'
 import { useAppController } from '@/composables/useAppController'
 import AppTopbar from '@/components/AppTopbar.vue'
 import UiButton from '@/components/ui/UiButton.vue'
+import UiDialog from '@/components/ui/UiDialog.vue'
 import InformationRow from '@/components/patterns/InformationRow.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
@@ -53,17 +54,6 @@ const compact = ref(false)
 function onVisibilityChange() {
   documentVisible.value = document.visibilityState !== 'hidden'
 }
-function onKeydown(event: KeyboardEvent) {
-  if (event.key !== 'Escape') return
-  if (detailOpen.value) {
-    event.preventDefault()
-    detailOpen.value = false
-  } else if (envOpen.value) {
-    event.preventDefault()
-    envOpen.value = false
-  }
-}
-
 let sizeObserver: ReturnType<typeof layoutObserver> = undefined
 function updateSize() {
   const win = document.querySelector('.app-window')
@@ -78,7 +68,6 @@ function updateSize() {
 
 onMounted(() => {
   document.addEventListener('visibilitychange', onVisibilityChange)
-  window.addEventListener('keydown', onKeydown)
   updateSize()
   if (typeof ResizeObserver !== 'undefined') {
     const win = document.querySelector('.app-window')
@@ -90,7 +79,6 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', onVisibilityChange)
-  window.removeEventListener('keydown', onKeydown)
   sizeObserver?.disconnect()
   sizeObserver = undefined
   document.documentElement.removeAttribute('data-overview-size')
@@ -298,9 +286,19 @@ function activityText(entry: { time: string; count: number } | undefined, empty:
   const time = clockText(entry?.time)
   return entry && time ? time + ' · ' + entry.count + ' 项' : empty
 }
-// S18-01：WebDAV 卡片按 0.2.18 原型 webdavStates 渲染；线上版本时间来自本机最近一次同步记录。
+// Last observations belong to the saved endpoint revision, never to a draft form.
 const webdavView = computed(() => webdavStates[app.webdavState])
-const remoteVersionTime = computed(() => webdavView.value.remote ? clockText(syncActivity.value.sync?.remoteTime) || '—' : '—')
+const remoteVersionTime = computed(() => clockText(syncStore.observation?.remoteTime ?? undefined) || '—')
+const remoteVersionHint = computed(() => syncStore.observation?.remoteTime ? '上次观察' : syncStore.observation?.remoteExists === false ? '上次未发现快照' : '尚未读取')
+const remoteVersionTitle = computed(() => {
+  const observation = syncStore.observation
+  if (!observation) return '尚未读取当前连接的云端版本'
+  return '观察时间：' + new Date(observation.observedAt).toLocaleString('zh-CN') + (observation.remoteTime ? '；保存版本：' + new Date(observation.remoteTime).toLocaleString('zh-CN') : '')
+})
+const webdavConnectionText = computed(() => {
+  const time = clockText(syncStore.observation?.observedAt)
+  return webdavView.value.conn + (time && !['unconfigured', 'configured', 'unknown', 'connecting', 'syncing'].includes(app.webdavState) ? ' · ' + time : '')
+})
 const mods = computed(() => [
   {
     key: 'upgrade',
@@ -327,7 +325,7 @@ const mods = computed(() => [
       { label: '导出', cls: 'btn', run: () => { overviewTransfer.value='file';syncStore.requestAction('export') } },
     ],
   },
-  { key: 'sync', title: 'WebDAV 同步', tag: '', rows: [['连接状态', webdavView.value.conn]], actions: webdavView.value.actions.map(a => ({ label: a.label, cls: a.cls, disabled: !!a.disabled, run: () => { if(a.act==='result')syncStore.openResult();else if(a.act==='connection')syncStore.openConnection();else{overviewTransfer.value='webdav';syncStore.requestAction(a.act)} } })) },
+  { key: 'sync', title: 'WebDAV 同步', tag: '', rows: [['连接状态', webdavConnectionText.value]], actions: webdavView.value.actions.map(a => ({ label: a.label, cls: a.cls, disabled: !!a.disabled, run: () => { if(a.act==='result')syncStore.openResult();else if(a.act==='connection')syncStore.openConnection();else{overviewTransfer.value='webdav';syncStore.requestAction(a.act)} } })) },
 ])
 </script>
 
@@ -417,12 +415,12 @@ const mods = computed(() => [
             ><span>{{ row.label }}</span><span class="mnt-version-side"><span v-if="row.word" class="mnt-status" :class="{ danger: row.phase === 'failed' }">{{ row.word }}</span><b class="mnt-version-latest">{{ row.version }}</b><span v-if="row.dot" class="mnt-dot" :class="'is-' + row.dot" aria-hidden="true"></span><span aria-hidden="true">›</span></span></button>
           </template>
           <template v-else><InformationRow v-for="row in mod.rows" :key="row[0]" :label="row[0]" :value="row[1]" /></template>
-          <div v-if="mod.key === 'sync'" class="info-row ov-remote-row" data-testid="overview-remote-version">
+          <div v-if="mod.key === 'sync'" class="info-row ov-remote-row" data-testid="overview-remote-version" :title="remoteVersionTitle">
             <span class="info-row-label">线上版本</span>
             <span class="ov-state-side">
               <span v-if="webdavView.remote" class="ov-state-dot" :class="'is-' + webdavView.remote.dot" aria-hidden="true"></span>
               <b>{{ remoteVersionTime }}</b>
-              <template v-if="webdavView.remote"><span class="ov-state-sep" aria-hidden="true">·</span><span class="ov-state-text" :class="'is-' + webdavView.remote.dot">{{ webdavView.remote.text }}</span></template>
+              <span class="ov-state-sep" aria-hidden="true">·</span><span class="ov-state-text">{{ remoteVersionHint }}</span>
             </span>
           </div>
         </div>
@@ -452,14 +450,8 @@ const mods = computed(() => [
       </ul>
     </UiCard>
 
-    <!-- 运行详情弹窗（三段式：标题 / 正文滚动 / 底部关闭）；上部两列进程与环境，下部整宽来源目录。 -->
-    <div v-if="detailOpen" class="modal-mask" @click.self="detailOpen = false">
-      <div class="modal motion-modal motion-runtime-modal" role="dialog" aria-modal="true" aria-label="运行详情">
-        <div class="motion-modal-head">
-          <h3>运行详情</h3>
-          <UiButton class="btn ghost motion-modal-close" type="button" aria-label="关闭" @click="detailOpen = false">✕</UiButton>
-        </div>
-        <div class="motion-modal-body">
+    <!-- 观察窗口复用公共模态；退出不停止运行或环境检查。 -->
+    <UiDialog :open="detailOpen" title="运行详情" wide panel-class="motion-runtime-modal overview-runtime-dialog" @close="detailOpen = false">
           <div class="motion-runtime-grid">
             <section aria-labelledby="runtimeProcessTitle">
               <h4 class="motion-section-title" id="runtimeProcessTitle">进程与就绪</h4>
@@ -500,23 +492,13 @@ const mods = computed(() => [
               </div>
             </dl>
           </section>
-        </div>
-        <div class="motion-modal-actions">
-          <UiButton class="btn ghost" type="button" @click="app.openOverviewDataRoot()">打开数据目录</UiButton>
-          <UiButton class="btn ghost" type="button" @click="app.openOverviewOpencodexHome()">打开 OPENCODEX_HOME</UiButton>
-          <UiButton class="btn primary" type="button" @click="detailOpen = false">关闭</UiButton>
-        </div>
-      </div>
-    </div>
+      <template #actions>
+        <UiButton variant="ghost" type="button" @click="app.openOverviewDataRoot()">打开数据目录</UiButton>
+        <UiButton variant="ghost" type="button" @click="app.openOverviewOpencodexHome()">打开 OPENCODEX_HOME</UiButton>
+      </template>
+    </UiDialog>
 
-    <!-- 完整环境指引弹窗（可独立从准备卡打开；与运行详情共用三段式框架）。 -->
-    <div v-if="envOpen" class="modal-mask" @click.self="envOpen = false">
-      <div class="modal motion-modal" role="dialog" aria-modal="true" aria-label="运行环境">
-        <div class="motion-modal-head">
-          <h3>运行环境</h3>
-          <UiButton class="btn ghost motion-modal-close" type="button" aria-label="关闭" @click="envOpen = false">✕</UiButton>
-        </div>
-        <div class="motion-modal-body">
+    <UiDialog :open="envOpen" title="运行环境" panel-class="overview-environment-dialog" @close="envOpen = false">
           <p class="motion-modal-sub">{{ environment.title }}</p>
           <ol class="motion-check-list">
             <li v-for="(check, index) in envChecks" :key="check.name">
@@ -533,22 +515,22 @@ const mods = computed(() => [
               <button class="cli-copy-btn" :class="{ copied: copiedCommand === item.command }" type="button" @click="copyCommand(item.command)"><code>{{ item.command }}</code></button>
             </div>
           </template>
-        </div>
-        <div class="motion-modal-actions">
+      <template #actions>
           <template v-if="environment.state === 'missing_ocx'">
             <UiButton class="btn primary" type="button" @click="installManaged('registry')">安装 OpenCodex</UiButton>
             <UiButton class="btn" type="button" @click="installManaged('offline')">导入离线包</UiButton>
           </template>
           <UiButton class="btn ghost" type="button" @click="guide">查看安装指引</UiButton>
           <UiButton class="btn ghost" type="button" @click="recheckEnvironment">重新检查</UiButton>
-          <UiButton class="btn primary" type="button" @click="envOpen = false">关闭</UiButton>
-        </div>
-      </div>
-    </div>
+      </template>
+    </UiDialog>
   </section>
 </template>
 
 <style scoped>
+:global(dialog.ui-dialog.overview-runtime-dialog.wide) { width:min(760px,calc(100vw / var(--ui-zoom) - 32px)); }
+:global(dialog.ui-dialog.overview-environment-dialog) { width:min(580px,calc(100vw / var(--ui-zoom) - 32px)); }
+
 /* 原型 .mnt-version-row / .mnt-status：版本、阶段与箭头同一行垂直居中，窄卡也不拆行。 */
 /* S18-09：原型 maintenance-ui.css 版本行左名右值同字号同字重400、同 --text。 */
 .mnt-version-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; min-width: 0; min-height: 18px; padding: 0; border: 0; background: transparent; color: var(--text); font: inherit; font-weight: 400; line-height: inherit; text-align: left; white-space: nowrap; cursor: pointer; }

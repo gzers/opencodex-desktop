@@ -99,7 +99,7 @@ try {
     sandboxDataRootInitialized: true,
   }, null, 2) + '\n')
   if(modelSandbox){diagnostics.phase='model-native-ui';await verifyWindowsModelUi(call,output,facts,modelSandbox)}
-  if(modelSandbox){diagnostics.phase='runtime-install-ui';await verifyWindowsInstallUi(call,output,installMode==='managed-install')}
+  if(modelSandbox){diagnostics.phase='runtime-install-ui';await verifyWindowsInstallUi(call,output,installMode==='managed-install',modelSandbox)}
   diagnostics.result = 'pass'
   diagnostics.phase = 'complete'
   await saveDiagnostics(diagnostics)

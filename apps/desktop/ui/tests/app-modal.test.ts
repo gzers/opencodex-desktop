@@ -1,6 +1,7 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { mount, type VueWrapper } from '@vue/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { DOMWrapper, mount, type VueWrapper } from '@vue/test-utils'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import AppModal from '@/components/AppModal.vue'
 import App from '@/App.vue'
 import { useAppStore } from '@/stores/app'
@@ -16,8 +17,12 @@ Object.defineProperty(window, 'matchMedia', {
   value: () => ({ matches: false, addEventListener: () => {}, removeEventListener: () => {} }),
 })
 
+const mounted: VueWrapper[] = []
+afterEach(() => { mounted.splice(0).forEach(wrapper => wrapper.unmount()); document.body.innerHTML = '' })
 function mountModal() {
-  return mount(AppModal, { global: { plugins: [createPinia()] }, attachTo: document.body })
+  const wrapper = mount(AppModal, { global: { plugins: [createPinia()] }, attachTo: document.body })
+  mounted.push(wrapper)
+  return wrapper
 }
 
 async function flush(wrapper: VueWrapper) {
@@ -42,6 +47,7 @@ function open(confirmable = true) {
 
 describe('app modal', () => {
   beforeEach(() => {
+    installNativeDialogStub()
     setActivePinia(createPinia())
     invoke.mockReset()
     invoke.mockResolvedValue(undefined)
@@ -53,13 +59,13 @@ describe('app modal', () => {
     const { app } = open()
     await flush(wrapper)
 
-    const dialog = wrapper.find('.modal')
+    const dialog = new DOMWrapper(document.body).find('dialog.app-modal-dialog')
     expect(dialog.attributes('role')).toBe('dialog')
     expect(dialog.attributes('aria-modal')).toBe('true')
     const labelledBy = dialog.attributes('aria-labelledby')
     expect(labelledBy).toBeTruthy()
-    expect(wrapper.find('h3').attributes('id')).toBe(labelledBy)
-    expect(wrapper.find('h3').text()).toBe('确认操作')
+    expect(new DOMWrapper(document.body).find('h2').attributes('id')).toBe(labelledBy)
+    expect(new DOMWrapper(document.body).find('h2').text()).toBe('确认操作')
     app.resolveModal('cancel')
   })
 
@@ -74,7 +80,7 @@ describe('app modal', () => {
     expect(app.modal).toBeNull()
     expect(onCancel).toHaveBeenCalledTimes(1)
     expect(onConfirm).not.toHaveBeenCalled()
-    expect(wrapper.find('.modal').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).find('dialog.app-modal-dialog').attributes('open')).toBeUndefined()
   })
 
   it('ignores Escape when no modal is open', async () => {
@@ -87,10 +93,10 @@ describe('app modal', () => {
     const { onConfirm, onCancel } = open()
     await flush(wrapper)
 
-    await wrapper.find('.modal').trigger('click')
+    await new DOMWrapper(document.body).find('dialog.app-modal-dialog').trigger('click')
     expect(onCancel).not.toHaveBeenCalled()
 
-    await wrapper.find('.modal-mask').trigger('click')
+    await new DOMWrapper(document.body).find('dialog.app-modal-dialog').trigger('click', { clientX: -10, clientY: -10 })
     await flush(wrapper)
     expect(onCancel).toHaveBeenCalledTimes(1)
     expect(onConfirm).not.toHaveBeenCalled()
@@ -106,9 +112,9 @@ describe('app modal', () => {
     const { app } = open()
     await flush(wrapper)
 
-    const primary = wrapper.find('.modal .btn.primary').element
+    const primary = new DOMWrapper(document.body).find('dialog.app-modal-dialog .btn.primary').element
     expect(document.activeElement).toBe(primary)
-    expect(wrapper.find('.modal').element.contains(document.activeElement)).toBe(true)
+    expect(new DOMWrapper(document.body).find('dialog.app-modal-dialog').element.contains(document.activeElement)).toBe(true)
 
     app.resolveModal('confirm')
     await flush(wrapper)
@@ -121,7 +127,7 @@ describe('app modal', () => {
     open()
     await flush(wrapper)
 
-    const buttons = wrapper.findAll('.modal .btn')
+    const buttons = new DOMWrapper(document.body).findAll('dialog.app-modal-dialog button')
     expect(buttons.length).toBeGreaterThan(1)
     const first = buttons[0].element as HTMLElement
     const last = buttons[buttons.length - 1].element as HTMLElement
@@ -150,7 +156,7 @@ describe('app modal', () => {
     })
     await flush(wrapper)
 
-    const inputs = wrapper.findAll('.modal-field input')
+    const inputs = new DOMWrapper(document.body).findAll('.modal-field input')
     expect(inputs.length).toBe(2)
     expect((inputs[0].element as HTMLInputElement).value).toBe('')
     expect((inputs[1].element as HTMLInputElement).value).toBe('npx -y existing')
@@ -158,7 +164,7 @@ describe('app modal', () => {
     expect(document.activeElement).toBe(inputs[0].element)
 
     await inputs[0].setValue('audit-mcp')
-    await wrapper.find('.modal .btn.primary').trigger('click')
+    await new DOMWrapper(document.body).find('dialog.app-modal-dialog .btn.primary').trigger('click')
     await expect(pending).resolves.toEqual({ name: 'audit-mcp', command: 'npx -y existing' })
     expect(app.modal).toBeNull()
   })
@@ -183,6 +189,7 @@ describe('app modal', () => {
 
 describe('notification layer vs modal stacking', () => {
   beforeEach(() => {
+    installNativeDialogStub()
     setActivePinia(createPinia())
     invoke.mockReset()
     invoke.mockResolvedValue(undefined)
@@ -194,7 +201,7 @@ describe('notification layer vs modal stacking', () => {
   it('drops the notification layer below the modal mask while a dialog is open', async () => {
     const pinia = createPinia()
     setActivePinia(pinia)
-    const wrapper = mount(App, { global: { plugins: [pinia] } })
+    const wrapper = mount(App, { global: { plugins: [pinia] } }); mounted.push(wrapper)
     await new Promise(resolve => setTimeout(resolve, 0))
     await wrapper.vm.$nextTick()
     const layer = wrapper.find('.notif-layer')

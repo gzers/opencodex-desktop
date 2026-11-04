@@ -5,6 +5,10 @@ const mocks = vi.hoisted(() => ({ listBackups: vi.fn(), getBackupPolicy: vi.fn()
 vi.mock('../src/features/backup/api', () => mocks)
 vi.mock('../src/stores/app', () => ({ useAppStore: () => mocks }))
 vi.mock('../src/features/updates/update', () => ({ getUpdateStatus: mocks.getUpdateStatus }))
+// Their own suites exercise these independent recovery panels. Keep transaction
+// tests from starting async route/model imports after this test has torn down.
+vi.mock('../src/features/backup/ModelSaveHistory.vue', () => ({ __esModule: true, default: { template: '<section />' } }))
+vi.mock('../src/features/backup/TransferBackups.vue', () => ({ __esModule: true, default: { template: '<section />' } }))
 const policy = { schema_version: 1, mode: 'manual', keep_recent: 10, keep_days: 30 }
 const preview = { token: 'owned-preview', createdAt: '2026-10-10', candidateIds: ['old'], candidateBytes: 500, retainedCount: 10, keepRecent: 10, keepDays: 30 }
 async function setup() { const w = mount(BackupManagement, { global: { stubs: { BackupFiles: true, ModelSaveHistory: true } } }); await flushPromises(); return w }

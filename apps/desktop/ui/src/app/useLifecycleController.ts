@@ -138,6 +138,7 @@ export function useLifecycleController(deps: { runDoctor: () => void | Promise<v
           const summaryState = target === 'external_takeover' ? '配置外部接管' : '启动状态存在风险'
           app.openModal({
             title: '官方恢复引导',
+            mode: 'view',
             body: `<p class="modal-lead">备份已生成。请复制下方命令，在终端确认后执行。</p>
 <ul>
 <li>备份 ID：<code>${backup.backupId}</code></li>

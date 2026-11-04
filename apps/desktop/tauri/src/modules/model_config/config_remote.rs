@@ -580,6 +580,17 @@ fn scope_digest(scope: &Scope) -> ModelResult<String> {
 }
 fn local_manager(root: &Path, scope: &Scope) -> ModelResult<ManagerScope> {
     let mut m = scope.manager();
+    // In-memory defaults are not saved content. A missing file is genuinely
+    // empty; an unreadable existing file still fails in the normal exporter.
+    if !root.join("manager-state/preferences.json").exists() {
+        m.preferences = false;
+    }
+    if !root
+        .join(crate::modules::extensions::projection::CONFIG_RELATIVE_PATH)
+        .exists()
+    {
+        m.extensions = false;
+    }
     if let Some(home) = scope.local_home.as_ref().filter(|_| {
         !scope.skill_names.is_empty()
             || !scope.mcp_names.is_empty()
@@ -590,7 +601,11 @@ fn local_manager(root: &Path, scope: &Scope) -> ModelResult<ManagerScope> {
         m.skill_names.retain(|n| catalog.skills.contains(n));
         m.mcp_names.retain(|n| catalog.mcps.contains(n));
     }
-    if let Some(home) = &scope.upstream_root {
+    if let Some(home) = scope
+        .upstream_root
+        .as_ref()
+        .filter(|_| !m.account_ids.is_empty())
+    {
         let accounts = crate::modules::sync::portable_accounts::catalog(root, home)?;
         m.account_ids
             .retain(|id| accounts.iter().any(|a| a.account.id == *id));
@@ -599,21 +614,30 @@ fn local_manager(root: &Path, scope: &Scope) -> ModelResult<ManagerScope> {
 }
 /// Fingerprint the currently saved selection. This never stages a business
 /// import or writes an export file; temporary secret bytes are zeroized.
-pub fn source_state(root: &Path, scope: &Scope) -> ModelResult<(String, String)> {
-    source_state_with_time(root, scope, None)
-}
-pub fn source_state_with_time(
-    root: &Path,
-    scope: &Scope,
-    inherited: Option<&str>,
-) -> ModelResult<(String, String)> {
+fn source_bytes(root: &Path, scope: &Scope) -> ModelResult<zeroize::Zeroizing<Vec<u8>>> {
+    let _saved_event = scope
+        .upstream_root
+        .as_deref()
+        .map(|home| super::content_versions::file_saves::admit(root, home))
+        .transpose()?;
     scope.validate()?;
+    if scope.extensions {
+        super::content_versions::owner_saves::recover(
+            root,
+            super::content_versions::owner_saves::Owner::Extensions,
+        )?;
+    }
     let export = scope.export(root)?;
-    let package = if let Some(home) = &scope.upstream_root {
+    let no_models = !export.include_policy && export.template_refs.is_empty();
+    let mut package = if let Some(home) = &scope.upstream_root {
         super::portable_channels::export_file(root, home, export)?
     } else {
         transfer::export(root, export)?
     };
+    if no_models {
+        package.payload.templates.clear();
+        package.digest = sha256(&serde_json::to_vec(&package.payload)?);
+    }
     let mut manager = local_manager(root, scope)?;
     if scope.all_skills || scope.all_mcps {
         let c = crate::modules::sync::portable_assets::catalog(
@@ -650,14 +674,205 @@ pub fn source_state_with_time(
         None,
         &manager,
     )?;
-    let bytes = zeroize::Zeroizing::new(bytes);
-    if let Some(time) = inherited {
-        file_objects::inherit_content_time(root, &bytes, None, time)?;
+    Ok(zeroize::Zeroizing::new(bytes))
+}
+
+pub fn source_state(root: &Path, scope: &Scope) -> ModelResult<(String, String)> {
+    let fact = source_fact(root, scope)?;
+    Ok((fact.content_digest, scope_digest(scope)?))
+}
+/// Compatibility reader. A bare transfer timestamp has no digest/provenance
+/// binding and cannot create or replace a content-save receipt.
+pub fn source_state_with_time(
+    root: &Path,
+    scope: &Scope,
+    _inherited: Option<&str>,
+) -> ModelResult<(String, String)> {
+    source_state(root, scope)
+}
+pub fn source_fact(root: &Path, scope: &Scope) -> ModelResult<file_objects::ContentFact> {
+    file_objects::content_fact(&source_bytes(root, scope)?, None)
+}
+/// Capture before a save and again after successful read-back, then call
+/// content_versions::record_save. Do not call while holding a ModelStore lock.
+pub fn capture_save(root: &Path, scope: &Scope) -> ModelResult<super::content_versions::SaveState> {
+    file_objects::save_state(&source_bytes(root, scope)?, None)
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct Comparison {
+    binding: String,
+    scope_digest: String,
+    local: file_objects::ContentFact,
+    remote: Option<file_objects::ContentFact>,
+    baseline: Option<Baseline>,
+}
+impl Comparison {
+    fn check(&self, root: &Path) -> super::sync_state::Check {
+        let mut check = super::sync_state::compare_content(&self.local, self.remote.as_ref());
+        check.last_synced_at = super::sync_state::last_synced_at(root, &self.binding);
+        check
     }
-    Ok((
-        file_objects::content_digest(&bytes, None)?,
-        scope_digest(scope)?,
-    ))
+    fn matches(&self, other: &Self) -> ModelResult<bool> {
+        Ok(self.binding == other.binding
+            && self.scope_digest == other.scope_digest
+            && self.local == other.local
+            && self.remote == other.remote
+            && super::content_versions::key(&self.baseline)?
+                == super::content_versions::key(&other.baseline)?)
+    }
+}
+const OBSERVATION: &str = "manager-state/config-sync-comparison.json";
+fn remote_projection(
+    bytes: &[u8],
+    password: Option<&str>,
+    scope: &Scope,
+) -> ModelResult<file_objects::ContentFact> {
+    let summary = file_objects::remote_summary(bytes, password)?;
+    let channels = summary
+        .package
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+        .filter(|c| scope.all_channels || scope.channel_ids.contains(&c.id))
+        .map(|c| c.id.clone())
+        .collect::<Vec<_>>();
+    let mut manager = scope.manager();
+    manager.account_ids = remote_account_ids(scope, &summary.manager.accounts);
+    if scope.all_skills {
+        manager.skill_names = summary
+            .assets
+            .skills
+            .iter()
+            .map(|s| s.name.clone())
+            .collect();
+    }
+    if scope.all_mcps {
+        manager.mcp_names = summary
+            .assets
+            .mcps
+            .iter()
+            .filter(|m| {
+                crate::modules::sync::portable_assets::default_included_mcp(&m.name)
+                    || scope.mcp_names.contains(&m.name)
+            })
+            .map(|m| m.name.clone())
+            .collect();
+    }
+    let refs = summary
+        .package
+        .payload
+        .templates
+        .iter()
+        .filter(|t| scope.all_templates || scope.template_ids.contains(&t.id))
+        .flat_map(|t| {
+            t.revisions.iter().map(|r| TemplateRef {
+                template_id: t.id.clone(),
+                revision_id: r.id.clone(),
+            })
+        })
+        .collect();
+    file_objects::projected_fact(
+        bytes,
+        password,
+        &ExportScope {
+            channel_ids: channels.clone(),
+            channel_families: scope
+                .channel_families
+                .iter()
+                .filter(|(id, _)| channels.contains(id))
+                .map(|(k, v)| (k.clone(), v.clone()))
+                .collect(),
+            channel_models: scope
+                .channel_models
+                .iter()
+                .filter(|(id, _)| channels.contains(id))
+                .map(|(k, v)| (k.clone(), v.clone()))
+                .collect(),
+            include_policy: scope.include_global || !channels.is_empty(),
+            template_refs: refs,
+            include_global: scope.include_global,
+        },
+        &manager,
+        scope.include_keys,
+    )
+}
+async fn compare_source<T: WebDavTransport>(
+    root: &Path,
+    transport: &T,
+    config: &WebDavConfig,
+    binding: &str,
+    scope: &Scope,
+    password: Option<&str>,
+    previous: Option<&str>,
+) -> ModelResult<Comparison> {
+    let local = source_fact(root, scope)?;
+    let baseline = remote::pointer_for(remote::CONFIG, transport, config).await?;
+    let remote = if let Some(head) = &baseline {
+        let bytes = zeroize::Zeroizing::new(
+            remote::fetch_for(remote::CONFIG, transport, config, &head.pointer).await?,
+        );
+        Some(match remote_projection(&bytes, password, scope) {
+            Err(e)
+                if previous.is_some()
+                    && ["passphrase_required", "portable_authentication"]
+                        .contains(&e.code.as_str()) =>
+            {
+                remote_projection(&bytes, previous, scope)?
+            }
+            other => other?,
+        })
+    } else {
+        None
+    };
+    if super::content_versions::key(&baseline)?
+        != super::content_versions::key(
+            &remote::pointer_for(remote::CONFIG, transport, config).await?,
+        )?
+        || local != source_fact(root, scope)?
+    {
+        return Err(invalid(
+            "sync_preview_changed",
+            "比较期间两端保存版本改变，请重新读取",
+        ));
+    }
+    Ok(Comparison {
+        binding: binding.into(),
+        scope_digest: scope_digest(scope)?,
+        local,
+        remote,
+        baseline,
+    })
+}
+fn verify_observation(root: &Path, fresh: &Comparison) -> ModelResult<()> {
+    let p = root.join(OBSERVATION);
+    safety::check_path(root, &p, true)?;
+    if p.exists() {
+        let old: Comparison = serde_json::from_slice(&safety::read_file(&p, 128 * 1024)?)?;
+        if !old.matches(fresh)? {
+            return Err(invalid(
+                "sync_preview_changed",
+                "检查后两端版本、连接或范围改变，请重新读取；未采用新方向",
+            ));
+        }
+    }
+    Ok(())
+}
+fn require_direction(comparison: &Comparison, root: &Path, expected: &str) -> ModelResult<()> {
+    let check = comparison.check(root);
+    match check.source.as_str() {
+        "undetermined" => Err(invalid(
+            "sync_undetermined",
+            "保存时间未知、不可靠或同刻异内容，未写入；请核对来源",
+        )),
+        "unchanged" => Err(invalid("sync_unchanged", "所选内容一致，无需更新")),
+        source if source == expected => Ok(()),
+        _ => Err(invalid(
+            "sync_direction_changed",
+            "保存版本指向另一来源，请重新读取同步预览",
+        )),
+    }
 }
 pub async fn check_source<T: WebDavTransport>(
     root: &Path,
@@ -666,16 +881,42 @@ pub async fn check_source<T: WebDavTransport>(
     binding: &str,
     scope: &Scope,
 ) -> ModelResult<super::sync_state::Check> {
-    let (local, key) = source_state(root, scope)?;
-    super::sync_state::check_content(root, transport, config, binding, &local, &key).await
+    let password = super::transfer_protection::read_password(root)?;
+    let previous = super::transfer_protection::previous_password(root)?;
+    check_source_with_password(
+        root,
+        transport,
+        config,
+        binding,
+        scope,
+        password.as_deref().map(|p| p.as_str()),
+        previous.as_deref().map(|p| p.as_str()),
+    )
+    .await
+}
+pub async fn check_source_with_password<T: WebDavTransport>(
+    root: &Path,
+    transport: &T,
+    config: &WebDavConfig,
+    binding: &str,
+    scope: &Scope,
+    password: Option<&str>,
+    previous: Option<&str>,
+) -> ModelResult<super::sync_state::Check> {
+    let comparison =
+        compare_source(root, transport, config, binding, scope, password, previous).await?;
+    let p = root.join(OBSERVATION);
+    safety::check_path(root, &p, true)?;
+    atomic_write(&p, &serde_json::to_vec(&comparison)?, 0o600)?;
+    Ok(comparison.check(root))
 }
 pub fn verify_upload_source(root: &Path, id: &str, scope: &Scope) -> ModelResult<()> {
     let p: Plan = serde_json::from_slice(&safety::read_file(&path(root, id)?, 64 * 1024 * 1024)?)?;
     if p.view.phase == "published" {
         return Ok(());
     }
-    let (local, key) = source_state(root, scope)?;
-    if p.local_content.as_deref() != Some(local.as_str()) || p.scope_digest != key {
+    let local = source_fact(root, scope)?;
+    if p.local_fact.as_ref() != Some(&local) || p.scope_digest != scope_digest(scope)? {
         return Err(invalid(
             "sync_source_changed",
             "预览后已保存内容改变，未上传旧快照；请重新读取",
@@ -712,6 +953,12 @@ struct Plan {
     local_content: Option<String>,
     #[serde(default)]
     local_plan: Option<transfer::FileExportPlan>,
+    #[serde(default)]
+    local_fact: Option<file_objects::ContentFact>,
+    #[serde(default)]
+    source_home: Option<PathBuf>,
+    #[serde(default)]
+    local_home: Option<PathBuf>,
 }
 fn path(root: &Path, id: &str) -> ModelResult<PathBuf> {
     require_uuid(id)?;
@@ -787,6 +1034,27 @@ pub async fn prepare_with_protection<T: WebDavTransport, F: Fn() -> ModelResult<
     if scope_digest(&load_scope(root)?)? != scope_digest(&scope)? {
         return Err(invalid("sync_scope", "先明确保存本设备范围，再准备上传"));
     }
+    let compared = compare_source(
+        root,
+        transport,
+        config,
+        binding,
+        &scope,
+        read_password,
+        previous_password,
+    )
+    .await?;
+    verify_observation(root, &compared)?;
+    let content_unchanged = compared.check(root).source == "unchanged";
+    if content_unchanged && compared.local.empty {
+        return Err(invalid(
+            "sync_unchanged",
+            "所选范围没有已保存内容，无需更新",
+        ));
+    }
+    if !content_unchanged {
+        require_direction(&compared, root, "local")?;
+    }
     let export = scope.export(root)?;
     let mut manager = local_manager(root, &scope)?;
     if scope.all_skills || scope.all_mcps {
@@ -816,6 +1084,14 @@ pub async fn prepare_with_protection<T: WebDavTransport, F: Fn() -> ModelResult<
     let local = transfer::prepare_file_scope(root, export, write_password, include_keys, &manager)?;
     let local_bytes = transfer::file_bytes(root, &local.id)?;
     let baseline = remote::pointer_for(remote::CONFIG, transport, config).await?;
+    if super::content_versions::key(&baseline)? != super::content_versions::key(&compared.baseline)?
+        || file_objects::content_fact(&local_bytes, write_password)? != compared.local
+    {
+        return Err(invalid(
+            "sync_preview_changed",
+            "准备期间两端版本改变，请重新读取",
+        ));
+    }
     unchanged()?;
     let id = uuid::Uuid::new_v4().to_string();
     let remote_bytes = match &baseline {
@@ -840,6 +1116,17 @@ pub async fn prepare_with_protection<T: WebDavTransport, F: Fn() -> ModelResult<
     } else {
         read_password
     };
+    if content_unchanged {
+        let protection_changed = remote_bytes.as_ref().is_some_and(|bytes| {
+            file_objects::remote_summary(bytes, effective_read).is_ok_and(|r| {
+                r.protected != write_password.is_some()
+                    || r.protected && effective_read != write_password
+            })
+        });
+        if !protection_changed {
+            return Err(invalid("sync_unchanged", "所选内容已一致，无需发布"));
+        }
+    }
     let payload = match &remote_bytes {
         Some(rb) => file_objects::merge_remote_protection(
             rb,
@@ -899,13 +1186,32 @@ pub async fn prepare_with_protection<T: WebDavTransport, F: Fn() -> ModelResult<
         scope_digest: scope_digest(&scope)?,
         baseline,
         file_digest: sha256(&payload),
-        local_content: Some(file_objects::content_digest(&local_bytes, write_password)?),
+        local_content: Some(compared.local.content_digest.clone()),
+        local_fact: Some(compared.local.clone()),
+        source_home: scope.upstream_root.clone(),
+        local_home: scope.local_home.clone(),
         local_plan: Some(local),
     };
     if scope_digest(&load_scope(root)?)? != plan.scope_digest {
         return Err(invalid(
             "sync_scope_changed",
             "准备期间本设备范围改变，未发布",
+        ));
+    }
+    let final_comparison = compare_source(
+        root,
+        transport,
+        config,
+        binding,
+        &scope,
+        effective_read,
+        None,
+    )
+    .await?;
+    if !compared.matches(&final_comparison)? {
+        return Err(invalid(
+            "sync_preview_changed",
+            "准备结束前两端版本改变，请重新读取",
         ));
     }
     unchanged()?;
@@ -950,6 +1256,10 @@ pub async fn publish<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         return Err(invalid("sync_unchanged", "所选内容已一致，无需发布"));
     }
     let expected_scope = plan.scope_digest.clone();
+    let expected_fact = plan.local_fact.clone();
+    let source_home = plan.source_home.clone();
+    let local_home = plan.local_home.clone();
+    let already_published = plan.view.phase == "published";
     let current = || {
         unchanged()?;
         if scope_digest(&load_scope(root)?)? != expected_scope {
@@ -957,6 +1267,18 @@ pub async fn publish<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
                 "sync_scope_changed",
                 "设备范围已变化，原上传不能继续",
             ));
+        }
+        if !already_published {
+            let mut scope = load_scope(root)?;
+            scope.cloud_binding = Some(binding.into());
+            scope.upstream_root = source_home.clone();
+            scope.local_home = local_home.clone();
+            if expected_fact.as_ref() != Some(&source_fact(root, &scope)?) {
+                return Err(invalid(
+                    "sync_source_changed",
+                    "预览后本机保存版本改变，请重新读取",
+                ));
+            }
         }
         Ok(())
     };
@@ -985,7 +1307,7 @@ pub async fn publish<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         current,
     )
     .await?;
-    // 同步记录失败只影响下次方向判断（会按云端为新版重新比较），不回退已完成的发布。
+    // 同步记录失败不回退已完成的条件发布；下次仍重新比较保存事实。
     if let Some(local) = &plan.local_content {
         super::sync_state::record_synced_content(
             root,
@@ -1073,6 +1395,22 @@ pub async fn download_sync<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     binding: &str,
     unchanged: F,
 ) -> ModelResult<IncomingPlan> {
+    let mut selected_scope = load_scope(root)?;
+    selected_scope.cloud_binding = Some(binding.into());
+    selected_scope.upstream_root = Some(config_home.into());
+    selected_scope.local_home = local_home.map(Path::to_path_buf);
+    let compared = compare_source(
+        root,
+        transport,
+        config,
+        binding,
+        &selected_scope,
+        passphrase,
+        None,
+    )
+    .await?;
+    verify_observation(root, &compared)?;
+    require_direction(&compared, root, "remote")?;
     let (mut plan, pointer) = download_pointed(
         root,
         transport,
@@ -1083,6 +1421,15 @@ pub async fn download_sync<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         unchanged,
     )
     .await?;
+    if compared.baseline.as_ref().map(|b| &b.pointer) != Some(&pointer)
+        || source_fact(root, &selected_scope)? != compared.local
+    {
+        return Err(invalid(
+            "sync_preview_changed",
+            "准备下载期间两端版本改变，请重新读取",
+        ));
+    }
+    write_download_guard(root, &plan.id, &compared, &selected_scope)?;
     let changes = plan
         .comparison
         .as_ref()
@@ -1101,7 +1448,7 @@ pub async fn download_sync<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         let mut scope = load_scope(root)?;
         scope.upstream_root = Some(config_home.into());
         scope.local_home = local_home.map(Path::to_path_buf);
-        let (local, key) = source_state_with_time(root, &scope, Some(&plan.package.created_at))?;
+        let (local, key) = source_state(root, &scope)?;
         super::sync_state::record_synced_content(root, binding, &pointer, &local, &key)?;
     }
     plan.sync = Some(super::sync_state::SyncPreview {
@@ -1115,6 +1462,77 @@ pub async fn download_sync<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     }
     transfer::write_incoming(root, &plan)?;
     Ok(plan)
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct DownloadGuard {
+    comparison: Comparison,
+    source_home: Option<PathBuf>,
+    local_home: Option<PathBuf>,
+}
+fn guard_path(root: &Path, id: &str) -> ModelResult<PathBuf> {
+    require_uuid(id)?;
+    let p = root
+        .join("manager-state/config-download-guards")
+        .join(format!("{id}.json"));
+    safety::check_path(root, &p, true)?;
+    Ok(p)
+}
+fn write_download_guard(
+    root: &Path,
+    id: &str,
+    comparison: &Comparison,
+    scope: &Scope,
+) -> ModelResult<()> {
+    atomic_write(
+        &guard_path(root, id)?,
+        &serde_json::to_vec(&DownloadGuard {
+            comparison: comparison.clone(),
+            source_home: scope.upstream_root.clone(),
+            local_home: scope.local_home.clone(),
+        })?,
+        0o600,
+    )?;
+    Ok(())
+}
+pub(super) fn rebind_download_guard(
+    root: &Path,
+    original: &str,
+    selected: &str,
+) -> ModelResult<()> {
+    let p = guard_path(root, original)?;
+    if p.exists() {
+        atomic_write(
+            &guard_path(root, selected)?,
+            &safety::read_file(&p, 128 * 1024)?,
+            0o600,
+        )?;
+    }
+    Ok(())
+}
+pub(super) fn verify_download_source(root: &Path, id: &str, binding: &str) -> ModelResult<()> {
+    let p = guard_path(root, id)?;
+    if !p.exists() {
+        return Err(invalid(
+            "sync_preview_changed",
+            "旧下载计划缺少保存版本，请重新同步",
+        ));
+    }
+    let guard: DownloadGuard = serde_json::from_slice(&safety::read_file(&p, 128 * 1024)?)?;
+    let mut scope = load_scope(root)?;
+    scope.cloud_binding = Some(binding.into());
+    scope.upstream_root = guard.source_home;
+    scope.local_home = guard.local_home;
+    if guard.comparison.binding != binding
+        || guard.comparison.scope_digest != scope_digest(&scope)?
+        || guard.comparison.local != source_fact(root, &scope)?
+    {
+        return Err(invalid(
+            "sync_source_changed",
+            "预览后本机保存版本、连接或范围改变，请重新同步",
+        ));
+    }
+    require_direction(&guard.comparison, root, "remote")
 }
 /// 上传预览：只比较本机所选条目与当前云端内容；冲突 MCP 单独列为「选择来源」。
 fn upload_preview(
@@ -1516,6 +1934,7 @@ mod tests {
     use super::*;
     #[test]
     fn existing_scope_is_not_expanded_during_first_catalog_migration() {
+        file_objects::test_credentials::install();
         let root = tempfile::tempdir().unwrap();
         let home = tempfile::tempdir().unwrap();
         let saved = save_scope(
@@ -1558,6 +1977,7 @@ mod tests {
     #[tokio::test]
     async fn new_device_lists_remote_objects_without_expanding_scope_and_can_explicitly_select_them(
     ) {
+        file_objects::test_credentials::install();
         let source = tempfile::tempdir().unwrap();
         let source_home = tempfile::tempdir().unwrap();
         let target = tempfile::tempdir().unwrap();
@@ -1749,7 +2169,11 @@ mod tests {
     }
     #[tokio::test]
     async fn protection_can_rotate_or_disable_without_changing_saved_content_time() {
+        file_objects::test_credentials::install();
         let root = tempfile::tempdir().unwrap();
+        crate::modules::preferences::PreferencesStore::new(root.path())
+            .save(&Default::default())
+            .unwrap();
         let remote = Memory::default();
         let scope = save_scope(
             root.path(),
@@ -1865,6 +2289,7 @@ mod tests {
     }
     #[tokio::test]
     async fn file_channels_use_the_same_export_and_webdav_source_without_retired_policy_or_cli() {
+        file_objects::test_credentials::install();
         use super::super::{config_file, portable_channels};
         use serde_json::json;
         let remote = Memory::default();
@@ -1901,6 +2326,13 @@ mod tests {
                 upstream_root: Some(source_home.path().into()),
                 ..Default::default()
             },
+        )
+        .unwrap();
+        super::super::content_versions::record_at(
+            source.path(),
+            &Default::default(),
+            &capture_save(source.path(), &source_scope).unwrap(),
+            "2026-10-30T00:00:00Z",
         )
         .unwrap();
         assert_eq!(
@@ -1982,7 +2414,7 @@ mod tests {
             .await
             .unwrap()
             .reason,
-            "unchanged"
+            "same_content"
         );
         let mut target_scope = load_scope(target.path()).unwrap();
         target_scope.upstream_root = Some(target_home.path().into());
@@ -2029,7 +2461,7 @@ mod tests {
             .await
             .unwrap()
             .reason,
-            "unchanged"
+            "same_content"
         );
         let same = download_sync(
             target.path(),
@@ -2042,22 +2474,39 @@ mod tests {
             || Ok(()),
         )
         .await
-        .unwrap();
-        assert_eq!(
-            same.sync.unwrap().changes,
-            Some(vec![]),
-            "same saved content must converge without another write"
-        );
+        .unwrap_err();
+        assert_eq!(same.code, "sync_unchanged");
         assert_eq!(
             std::fs::read(target.path().join(DRAFT_PATH)).unwrap(),
             b"retired broken draft"
         );
+        let before_save = capture_save(source.path(), &source_scope).unwrap();
         raw["providers"]["source"]["note"] = json!("file-only-later");
         std::fs::write(
             source_home.path().join("config.json"),
             serde_json::to_vec(&raw).unwrap(),
         )
         .unwrap();
+        super::super::content_versions::record_at(
+            source.path(),
+            &before_save,
+            &capture_save(source.path(), &source_scope).unwrap(),
+            "2026-11-04T00:00:00Z",
+        )
+        .unwrap();
+        assert_eq!(
+            check_source(
+                source.path(),
+                &remote,
+                &config(),
+                "file-bound",
+                &source_scope
+            )
+            .await
+            .unwrap()
+            .source,
+            "local"
+        );
         let next = prepare(
             source.path(),
             &remote,
@@ -2080,7 +2529,7 @@ mod tests {
             .await
             .unwrap()
             .reason,
-            "local_changed"
+            "local_saved_later"
         );
         verify_upload_source(source.path(), &next.id, &source_scope).unwrap();
         publish(
@@ -2104,7 +2553,7 @@ mod tests {
             .await
             .unwrap()
             .reason,
-            "remote_changed"
+            "remote_saved_later"
         );
         let mut target_raw: serde_json::Value =
             serde_json::from_slice(&std::fs::read(target_home.path().join("config.json")).unwrap())
@@ -2127,7 +2576,7 @@ mod tests {
             .await
             .unwrap()
             .reason,
-            "both_changed_remote_commit"
+            "unreliable_save_time"
         );
         let source_id = portable_channels::catalog_file(source.path(), source_home.path())
             .unwrap()
@@ -2146,6 +2595,7 @@ mod tests {
     }
     #[tokio::test]
     async fn account_only_sync_is_reviewed_and_preserves_an_existing_local_login_store() {
+        file_objects::test_credentials::install();
         use crate::modules::sync::portable_accounts;
         let remote = Memory::default();
         let first = tempfile::tempdir().unwrap();
@@ -2229,6 +2679,7 @@ mod tests {
     }
     #[test]
     fn account_participation_matches_subject_across_devices_and_never_matches_email() {
+        file_objects::test_credentials::install();
         use crate::modules::sync::portable_accounts::AccountInfo;
         let local = AccountInfo {
             id: uuid::Uuid::new_v4().to_string(),
@@ -2280,6 +2731,7 @@ mod tests {
     #[tokio::test]
     async fn actual_skill_resources_follow_saved_device_scope_and_remain_pending_until_asset_adoption(
     ) {
+        file_objects::test_credentials::install();
         let transport = Memory::default();
         let source = tempfile::tempdir().unwrap();
         let source_home = tempfile::tempdir().unwrap();
@@ -2365,7 +2817,7 @@ mod tests {
             password: "fixture-transport-password".into(),
         }
     }
-    fn create(root: &Path, label: &str) -> String {
+    pub(super) fn create(root: &Path, label: &str) -> String {
         let store = ModelStore::new(root);
         let snapshot = store.load().unwrap();
         let mut content = TemplateContent::default();
@@ -2385,13 +2837,18 @@ mod tests {
             .template_id
     }
     #[tokio::test]
-    async fn sync_direction_follows_last_synced_pointer_and_preview_lists_only_changes() {
+    async fn sync_direction_compares_saved_content_and_preview_lists_only_changes() {
+        file_objects::test_credentials::install();
         use super::super::sync_state;
         let remote = Memory::default();
         let first = tempfile::tempdir().unwrap();
         let first_home = tempfile::tempdir().unwrap();
         let a = create(first.path(), "sync-a");
+        crate::modules::preferences::PreferencesStore::new(first.path())
+            .save(&Default::default())
+            .unwrap();
         let scope = Scope {
+            extensions: false,
             template_ids: vec![a.clone()],
             ..Default::default()
         };
@@ -2426,14 +2883,21 @@ mod tests {
         let first_check = sync_state::check(first.path(), &remote, &config(), "bound")
             .await
             .unwrap();
-        assert_eq!(first_check.source, "local");
+        assert_eq!(first_check.source, "unchanged");
         assert!(first_check.has_remote && first_check.last_synced_at.is_some());
         assert_eq!(
             sync_state::check(first.path(), &remote, &config(), "other-binding")
                 .await
                 .unwrap()
                 .source,
-            "remote"
+            "unchanged"
+        );
+        assert_eq!(
+            sync_state::check(first.path(), &remote, &config(), "bound")
+                .await
+                .unwrap()
+                .source,
+            "unchanged"
         );
         let again = prepare(
             first.path(),
@@ -2445,11 +2909,14 @@ mod tests {
             || Ok(()),
         )
         .await
-        .unwrap();
-        assert_eq!(again.sync.unwrap().changes, Some(vec![]));
+        .unwrap_err();
+        assert_eq!(again.code, "sync_unchanged");
 
         let second = tempfile::tempdir().unwrap();
         let second_home = tempfile::tempdir().unwrap();
+        refresh_catalog(second.path(), &remote, &config(), "bound", None, None)
+            .await
+            .unwrap();
         save_scope(second.path(), scope).unwrap();
         assert_eq!(
             sync_state::check(second.path(), &remote, &config(), "bound")
@@ -2492,7 +2959,7 @@ mod tests {
                 .await
                 .unwrap()
                 .source,
-            "local"
+            "unchanged"
         );
         let same = download_sync(
             first.path(),
@@ -2505,19 +2972,20 @@ mod tests {
             || Ok(()),
         )
         .await
-        .unwrap();
-        assert_eq!(same.sync.unwrap().changes, Some(vec![]));
+        .unwrap_err();
+        assert_eq!(same.code, "sync_unchanged");
         assert_eq!(
             sync_state::check(first.path(), &remote, &config(), "bound")
                 .await
                 .unwrap()
                 .source,
-            "local"
+            "unchanged"
         );
     }
     #[tokio::test]
     async fn partial_remote_upload_preserves_other_objects_and_saved_device_scope_bounds_reception()
     {
+        file_objects::test_credentials::install();
         let remote = Memory::default();
         let first = tempfile::tempdir().unwrap();
         let a = create(first.path(), "remote-a");
@@ -2625,8 +3093,12 @@ mod tests {
     }
     #[tokio::test]
     async fn lost_pointer_reply_reuses_original_configuration_plan_and_does_not_republish() {
+        file_objects::test_credentials::install();
         let remote = Memory::default();
         let root = tempfile::tempdir().unwrap();
+        crate::modules::preferences::PreferencesStore::new(root.path())
+            .save(&Default::default())
+            .unwrap();
         let scope = save_scope(root.path(), Scope::default()).unwrap();
         let plan = prepare(
             root.path(),
@@ -2685,8 +3157,12 @@ mod tests {
     #[tokio::test]
     async fn protected_remote_requires_content_password_and_scope_change_cannot_publish_an_old_plan(
     ) {
+        file_objects::test_credentials::install();
         let remote = Memory::default();
         let root = tempfile::tempdir().unwrap();
+        crate::modules::preferences::PreferencesStore::new(root.path())
+            .save(&Default::default())
+            .unwrap();
         let scope = save_scope(
             root.path(),
             Scope {
@@ -2752,3 +3228,7 @@ mod tests {
         assert!(incoming.manager.as_ref().unwrap().preferences.is_some());
     }
 }
+
+#[cfg(test)]
+#[path = "sync_version_tests.rs"]
+mod version_tests;

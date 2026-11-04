@@ -1,5 +1,6 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { mount } from '@vue/test-utils'
+import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import SettingsRoute from '@/routes/SettingsRoute.vue'
@@ -31,7 +32,7 @@ function expectNoAutoText(input: { attributes: (name: string) => string | undefi
 }
 
 describe('technical text inputs disable OS auto-capitalization', () => {
-  beforeEach(() => setActivePinia(createPinia()))
+  beforeEach(() => { installNativeDialogStub(); setActivePinia(createPinia()) })
 
   it('sync endpoint fields (url / path / username) are not auto-capitalized', async () => {
     const pinia = createPinia()
@@ -67,9 +68,10 @@ describe('technical text inputs disable OS auto-capitalization', () => {
       fields: [{ key: 'value', label: '口令' }],
     })
     const wrapper = mount(AppModal)
-    await nextTick()
-    const input = wrapper.find('.modal-field input')
+    await flushPromises()
+    const input = new DOMWrapper(document.body).find('.modal-field input')
     expect(input.exists()).toBe(true)
     expectNoAutoText(input)
+    wrapper.unmount()
   })
 })

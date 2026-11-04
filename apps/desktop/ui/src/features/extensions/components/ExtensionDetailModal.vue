@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import UiButton from '@/components/ui/UiButton.vue'
-import { nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
+import UiDialog from '@/components/ui/UiDialog.vue'
+import UiIconButton from '@/components/ui/UiIconButton.vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {layoutObserver} from '@/lib/layoutObserver'
 import ClientIcon from './ClientIcon.vue'
 import MarkdownContent from '@/components/patterns/MarkdownContent.vue'
@@ -41,17 +42,16 @@ const emit = defineEmits<{
   (event: 'action', key: string): void
 }>()
 
-const titleId = `ext-detail-title-${useId()}`
-const dialog = ref<HTMLElement | null>(null)
+const body = ref<HTMLElement | null>(null)
 const constrained=ref(false)
 let observer:ReturnType<typeof layoutObserver>,disposed=false
 function measure(){
- const body=dialog.value?.querySelector<HTMLElement>('.ext-detail-body')
- const facts=dialog.value?.querySelector<HTMLElement>('.ext-detail-facts')
- const targets=dialog.value?.querySelector<HTMLElement>('.ext-detail-targets')
- if(!body||!facts||!targets)return
- const gap=Number.parseFloat(getComputedStyle(body).gap)||0
- constrained.value=body.clientHeight<facts.offsetHeight+targets.offsetHeight+gap*2+96
+ const element=body.value
+ const facts=element?.querySelector<HTMLElement>('.ext-detail-facts')
+ const targets=element?.querySelector<HTMLElement>('.ext-detail-targets')
+ if(!element||!facts||!targets)return
+ const gap=Number.parseFloat(getComputedStyle(element).gap)||0
+ constrained.value=element.clientHeight<facts.offsetHeight+targets.offsetHeight+gap*2+96
 }
 
 const clientOrder = skillClientOrder
@@ -75,43 +75,19 @@ function close() {
   emit('close')
 }
 
-onMounted(() => {dialog.value?.focus();measure();observer=layoutObserver(measure);if(dialog.value)for(const e of dialog.value.querySelectorAll('.ext-detail-body,.ext-detail-facts,.ext-detail-targets'))observer?.observe(e)})
+onMounted(() => {measure();observer=layoutObserver(measure);if(body.value)for(const e of [body.value,...body.value.querySelectorAll('.ext-detail-facts,.ext-detail-targets')])observer?.observe(e)})
 watch(()=>[props.markdown,props.facts],()=>{void nextTick().then(()=>{if(!disposed)measure()})})
 onBeforeUnmount(()=>{disposed=true;observer?.disconnect()})
 </script>
 
 <template>
-  <div class="modal-mask" @click.self="close">
-    <div
-      ref="dialog"
-      class="modal modal-wide modal-tall ext-detail"
-      :class="{'ext-detail-constrained':constrained}"
-      role="dialog"
-      aria-modal="true"
-      :aria-labelledby="titleId"
-      tabindex="-1"
-      @keydown.esc.stop.prevent="close"
-    >
-      <div class="modal-head">
-        <h3 :id="titleId">{{ title }}</h3>
-        <div v-if="actions.length" class="modal-head-actions">
-          <button
-            v-for="action in actions"
-            :key="action.key"
-            type="button"
-            class="icon-btn"
-            :class="{ danger: action.danger }"
-            :title="action.title"
-            :aria-label="action.title"
-            @click="emit('action', action.key)"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path v-for="(d, index) in actionIcon(action)" :key="index" :d="d" />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <div class="ext-detail-body">
+  <UiDialog :open="true" :title="title" wide panel-class="ext-detail" initial-focus="dialog" @close="close">
+    <template #header-actions>
+      <UiIconButton v-for="action in actions" :key="action.key" :label="action.title" :title="action.title" :variant="action.danger ? 'danger' : 'default'" :disabled="busy" @click="emit('action', action.key)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path v-for="(d, index) in actionIcon(action)" :key="index" :d="d" /></svg>
+      </UiIconButton>
+    </template>
+      <div ref="body" class="ext-detail-body" :class="{ 'ext-detail-constrained': constrained }">
         <section class="ext-detail-doc" aria-label="完整内容">
           <MarkdownContent v-if="markdown" class="ext-detail-md" :source="markdown" />
           <p v-else class="ext-detail-empty">暂无正文内容。</p>
@@ -140,17 +116,16 @@ onBeforeUnmount(()=>{disposed=true;observer?.disconnect()})
           </li>
         </ul>
       </div>
-      <div class="modal-actions">
-        <UiButton type="button" class="btn" @click="close">关闭</UiButton>
-      </div>
-    </div>
-  </div>
+  </UiDialog>
 </template>
 <style scoped>
+:global(dialog.ui-dialog.ext-detail.wide) { width:min(720px,calc(100vw / var(--ui-zoom) - 32px)); }
+:global(dialog.ui-dialog.ext-detail > .ui-dialog-content) { display:flex; flex-direction:column; overflow:hidden; }
+
 /* In short/zoomed windows metadata must not erase the document or targets.
    Keep the normal document-only scroll, then share one body scrollport when
    that layout no longer has room for a readable document. */
-.ext-detail-constrained .ext-detail-body{overflow:auto;overscroll-behavior:contain}
+.ext-detail-body.ext-detail-constrained{overflow:auto;overscroll-behavior:contain}
 .ext-detail-constrained .ext-detail-doc{flex:none;min-height:96px}
 .ext-detail-constrained .ext-detail-md{flex:none;overflow:visible}
 </style>

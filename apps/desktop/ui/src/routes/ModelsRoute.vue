@@ -75,6 +75,9 @@ const sampleModel = ref('')
 const preview = ref<MatchPreview | null>(null)
 const previewError = ref('')
 const previewBusy = ref(false)
+let previewSequence = 0
+function closeMatchPreview() { previewOpen.value = false; previewSequence++; previewBusy.value = false }
+function closeReceipt() { receiptOpen.value = false; receiptSequence++ }
 const kinds = [{ value: 'prefix', label: '前缀' }, { value: 'exact', label: '精确' }, { value: 'glob', label: '通配符' }]
 let stopChanges: (() => void) | undefined
 let disposed = false
@@ -86,7 +89,7 @@ onMounted(async () => {
     if (disposed) stop(); else stopChanges = stop
   } catch { /* Explicit IPC errors remain visible through the saved-state read. */ }
 })
-onBeforeUnmount(() => { disposed = true; stopChanges?.() })
+onBeforeUnmount(() => { disposed = true; previewSequence++; receiptSequence++; stopChanges?.() })
 function edit(t?: Template, revisionId?: string, copy = false) { if(models.busy)return;models.edit(t, revisionId, copy);models.view.templatePosition=models.draftSession;models.view.templateEditor=true;managerId.value='' }
 function cancelNewTemplate(){
  if(!draft.value||draft.value.templateId||models.busy)return
@@ -116,6 +119,8 @@ function choices(t: Template) {
   return [...t.revisions].reverse().filter(r => ids.has(r.id)).map(r => ({ value: r.id, label: versionLabel(r,t.source==='builtin'&&r===t.revisions[0])+(t.defaultRevision===r.id&&!(t.source==='builtin'&&r===t.revisions[0])?' · 默认':'') })).concat([{value:'__manage__',label:'版本管理…'}])
 }
 function manage(t: Template) { managerId.value = t.id; selectedIds.value = []; historySearch.value = ''; confirmDelete.value = false; deletion.value = null; historyError.value = '' }
+function cancelDelete() { if (!models.busy) { confirmDelete.value = false; deletion.value = null } }
+function closeVersionManager() { if (!models.busy) { cancelDelete(); managerId.value = '' } }
 const commonLocks=computed(()=>draft.value?.content.lockedFields.filter(key=>key.startsWith('rules.')).map(key=>key.slice(6))??[])
 function setCommonLocks(values:string[]){if(draft.value)draft.value.content.lockedFields=[...draft.value.content.lockedFields.filter(key=>!key.startsWith('rules.')),...values.map(key=>'rules.'+key)]}
 function contentLock(field:string){if(!draft.value)return;const fields=draft.value.content.lockedFields;draft.value.content.lockedFields=fields.includes(field)?fields.filter(key=>key!==field):[...fields,field]}
@@ -129,12 +134,12 @@ function protectedReason(t: Template, r: Revision) {
 async function makeDefault(t:Template,r:Revision){
  if(!models.snapshot||models.busy)return
  const baseline=models.snapshot.libraryDigest,template=t.id,revision=r.id
- const reopen=managerId.value===template;managerId.value='';await nextTick()
- modal.open({title:'设为默认版本',body:'以后选择采用「'+escapeHtml(t.label)+'」时默认选择 '+versionLabel(r)+'；当前浏览版本、已有渠道和单模型精确引用保持。',confirmLabel:'设为默认',onCancel:()=>{if(reopen)managerId.value=template},onConfirm:async()=>{
-  if(!models.snapshot||models.snapshot.libraryDigest!==baseline||!models.snapshot.library.templates.some(t=>t.id===template&&t.revisions.some(r=>r.id===revision))){historyError.value='默认版本确认已过期，请重新核对';if(reopen)managerId.value=template;return}
+ // Native AppModal nests above the manager; cancellation retains its selection and trigger.
+ modal.open({title:'设为默认版本',body:'以后选择采用「'+escapeHtml(t.label)+'」时默认选择 '+versionLabel(r)+'；当前浏览版本、已有渠道和单模型精确引用保持。',confirmLabel:'设为默认',onConfirm:async()=>{
+  if(!models.snapshot||models.snapshot.libraryDigest!==baseline||!models.snapshot.library.templates.some(t=>t.id===template&&t.revisions.some(r=>r.id===revision))){historyError.value='默认版本确认已过期，请重新核对';return}
   if(models.busy)return
   models.busy=true;historyError.value=''
-  try{models.snapshot=await modelApi.setDefault(baseline,template,revision)}catch(cause){historyError.value=errorText(cause)}finally{models.busy=false;if(reopen)managerId.value=template}
+  try{models.snapshot=await modelApi.setDefault(baseline,template,revision)}catch(cause){historyError.value=errorText(cause)}finally{models.busy=false}
  }})
 }
 async function remove() {
@@ -153,14 +158,18 @@ async function remove() {
   } catch (e) { historyError.value = errorText(e) } finally { models.busy = false }
 }
 async function checkMatch() {
-  if (!draft.value) return
+  if (!draft.value || previewBusy.value) return
+  const request = ++previewSequence
   previewBusy.value = true; previewError.value = ''; preview.value = null
-  try { preview.value = await modelApi.preview(JSON.parse(JSON.stringify(draft.value.content)), sampleChannel.value, sampleModel.value) }
-  catch (e) { previewError.value = errorText(e) } finally { previewBusy.value = false }
+  try {
+    const result = await modelApi.preview(JSON.parse(JSON.stringify(draft.value.content)), sampleChannel.value, sampleModel.value)
+    if (!disposed && request === previewSequence && previewOpen.value) preview.value = result
+  } catch (e) { if (!disposed && request === previewSequence && previewOpen.value) previewError.value = errorText(e) }
+  finally { if (!disposed && request === previewSequence) previewBusy.value = false }
 }
 function addVariant() { draft.value?.content.variants.push({ id: crypto.randomUUID(), name: '', suffix: '', rules: emptyRules(), lockedFields: [] }) }
 function prepareDelete() {
-  if (!models.snapshot || !manager.value) return
+  if (!models.snapshot || !manager.value || models.busy || !selectedIds.value.length) return
   deletion.value = { library: models.snapshot.libraryDigest, policy: models.snapshot.policyDigest, workspace: models.snapshot.workspaceDigest, template: manager.value.id, ids: [...selectedIds.value] }
   confirmDelete.value = true
 }
@@ -206,14 +215,19 @@ function prepareDelete() {
       </div></DetailWorkspace>
     </template>
     <TemplateUsageDialog v-if="usage" :template-id="usage.templateId" :revision-id="usage.revisionId" @close="usage=undefined" />
-    <UiDialog :open="!!manager" :title="`版本管理 · ${manager?.label ?? ''}`" :busy="models.busy" wide @close="managerId = ''"><template v-if="manager">
+    <UiDialog :open="!!manager" :title="'版本管理 · ' + (manager?.label ?? '')" :busy="models.busy" wide panel-class="model-version-manager" @close="closeVersionManager"><template v-if="manager">
       <p v-if="historyError" role="alert" class="model-error">{{ historyError }}</p>
-      <template v-if="confirmDelete"><h3>确认删除所选版本？</h3><ul><li v-for="r in selectedVersions" :key="r.id">{{ versionLabel(r) }}</li></ul><p>确认后删除这些版本，已有依赖会再次核对。</p></template>
-      <template v-else><div class="model-toolbar"><input class="input" v-model="historySearch" type="search" placeholder="搜索时间、标识或变更字段" aria-label="搜索版本" @keydown.esc.prevent.stop="!models.busy && (managerId = '')" /><span>已选 {{ selectedIds.length }} 项</span></div><article v-for="r in versions" :key="r.id" class="model-version"><label><input v-model="selectedIds" type="checkbox" :value="r.id" :disabled="!!protectedReason(manager, r) || models.busy" /><span>{{ versionLabel(r, manager.source === 'builtin' && r === manager.revisions[0]) }}<small>{{ protectedReason(manager,r) || r.changes.map(c => c.field).join('、') || '内容变更依据缺失' }}</small></span></label><div class="model-inline"><UiButton size="sm" :disabled="models.busy" @click="edit(manager, r.id)">编辑</UiButton><UiButton size="sm" :disabled="models.busy || manager.defaultRevision === r.id" @click="makeDefault(manager,r)">{{ manager.defaultRevision === r.id ? '当前默认' : '设为默认' }}</UiButton></div></article></template>
-    </template><template #actions><UiButton v-if="confirmDelete" :disabled="models.busy" @click="confirmDelete = false; deletion = null">取消</UiButton><UiButton variant="danger" :disabled="!selectedIds.length" :loading="models.busy" @click="confirmDelete ? remove() : prepareDelete()">{{ confirmDelete ? '确认删除' : '删除所选版本' }}</UiButton></template></UiDialog>
-    <UiDialog :open="previewOpen" title="匹配预览" @close="previewOpen = false"><div class="model-form"><label>渠道ID<input class="input" v-model="sampleChannel" /></label><label>原始模型ID<input class="input" v-model="sampleModel" /></label><p v-if="previewError" class="model-error" role="alert">{{ previewError }}</p><p v-if="preview" role="status">{{ preview.reason }}{{ preview.variantId ? ' · 已叠加最长后缀规则' : '' }}</p></div><template #actions><UiButton variant="primary" :loading="previewBusy" :disabled="!sampleModel" @click="checkMatch">检查匹配</UiButton></template></UiDialog>
+      <div class="model-toolbar"><input class="input" v-model="historySearch" type="search" placeholder="搜索时间、标识或变更字段" aria-label="搜索版本" /><span>已选 {{ selectedIds.length }} 项</span></div>
+      <article v-for="r in versions" :key="r.id" class="model-version"><label><input v-model="selectedIds" type="checkbox" :value="r.id" :disabled="!!protectedReason(manager, r) || models.busy" /><span>{{ versionLabel(r, manager.source === 'builtin' && r === manager.revisions[0]) }}<small>{{ protectedReason(manager,r) || r.changes.map(c => c.field).join('、') || '内容变更依据缺失' }}</small></span></label><div class="model-inline"><UiButton size="sm" :disabled="models.busy" @click="edit(manager, r.id)">编辑</UiButton><UiButton size="sm" :disabled="models.busy || manager.defaultRevision === r.id" @click="makeDefault(manager,r)">{{ manager.defaultRevision === r.id ? '当前默认' : '设为默认' }}</UiButton></div></article>
+    </template><template #actions><UiButton variant="danger" :disabled="!selectedIds.length" :loading="models.busy" @click="prepareDelete">删除所选版本</UiButton></template></UiDialog>
+    <UiDialog :open="confirmDelete && !!manager" title="确认删除所选版本？" :busy="models.busy" panel-class="model-version-delete" @close="cancelDelete">
+      <ul><li v-for="r in selectedVersions" :key="r.id">{{ versionLabel(r) }}</li></ul><p>确认后删除这些版本，已有依赖会再次核对。</p>
+      <p v-if="historyError" role="alert" class="model-error">{{ historyError }}</p>
+      <template #actions="{ close }"><UiButton variant="ghost" :disabled="models.busy" @click="close">取消</UiButton><UiButton variant="danger" :loading="models.busy" @click="remove">确认删除</UiButton></template>
+    </UiDialog>
+    <UiDialog :open="previewOpen" title="匹配预览" panel-class="model-match-preview" @close="closeMatchPreview"><div class="model-form"><label>渠道ID<input class="input" v-model="sampleChannel" aria-label="渠道ID" /></label><label>原始模型ID<input class="input" v-model="sampleModel" aria-label="原始模型ID" /></label><p v-if="previewError" class="model-error" role="alert">{{ previewError }}</p><p v-if="preview" role="status">{{ preview.reason }}{{ preview.variantId ? ' · 已叠加最长后缀规则' : '' }}</p></div><template #actions><UiButton variant="primary" :loading="previewBusy" :disabled="!sampleModel" @click="checkMatch">检查匹配</UiButton></template></UiDialog>
     <AgentPanel v-if="models.snapshot && models.draft" :key="models.draftSession" v-show="agentVisible" :draft="models.draft" :snapshot="models.snapshot" :active="agentVisible" :view-context="agentView" @close="closeAgent" @apply="models.draft = $event" @external="openExternalContext" />
-    <UiDialog :open="receiptOpen" title="外部任务结果" @close="receiptOpen = false"><p v-if="receiptError" class="model-error" role="alert">{{ receiptError }}</p><template v-if="receiptResult"><p>目标：{{ receiptResult.task.targets.map(t => t.label).join('、') || '新建模版' }}</p><p>状态：{{ !receiptResult.receipt ? '结果待核对' : ({saved:'已保存',unchanged:'无内容变化',report:'检查报告',rejected:'提交被拒绝，未保存'}[receiptResult.receipt.state] ?? '待核对') }}</p><p v-if="receiptResult.receipt?.report" class="model-task-report">{{ receiptResult.receipt.report }}</p><p v-for="outcome in receiptResult.receipt?.outcomes ?? []" :key="outcome.revisionId">保存版本 · {{ outcome.revisionId }}</p></template></UiDialog>
+    <UiDialog :open="receiptOpen" title="外部任务结果" panel-class="model-task-result" @close="closeReceipt"><p v-if="receiptError" class="model-error" role="alert">{{ receiptError }}</p><template v-if="receiptResult"><p>目标：{{ receiptResult.task.targets.map(t => t.label).join('、') || '新建模版' }}</p><p>状态：{{ !receiptResult.receipt ? '结果待核对' : ({saved:'已保存',unchanged:'无内容变化',report:'检查报告',rejected:'提交被拒绝，未保存'}[receiptResult.receipt.state] ?? '待核对') }}</p><p v-if="receiptResult.receipt?.report" class="model-task-report">{{ receiptResult.receipt.report }}</p><p v-for="outcome in receiptResult.receipt?.outcomes ?? []" :key="outcome.revisionId">保存版本 · {{ outcome.revisionId }}</p></template></UiDialog>
     <TemplateComparisonDialog :open="compareOpen" :template="compareTemplate" :draft="draft" :library-digest="models.snapshot?.libraryDigest??''" @close="compareOpen=false" />
     <ExternalTaskDialog v-if="models.snapshot" :open="externalOpen" :snapshot="models.snapshot" :draft="externalDraft??models.draft" :dirty="!!externalDraft||models.dirty" :selected="selectedTemplates" @close="externalOpen = false" />
     <BatchAgentDialog v-if="models.snapshot" :open="batchOpen" :snapshot="models.snapshot" :selected="selectedTemplates" :versions="models.selected" @close="batchOpen=false" />

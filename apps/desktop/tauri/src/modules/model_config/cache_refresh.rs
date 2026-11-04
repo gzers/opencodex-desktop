@@ -10,6 +10,380 @@ use serde::{Deserialize, Serialize};
 #[cfg(test)]
 use std::path::Path;
 use std::time::Duration;
+#[path = "client_npm_runtime.rs"]
+pub mod client_npm_runtime;
+#[path = "client_selection_rename.rs"]
+pub mod client_selection_rename;
+#[path = "saved_runtime_reconcile.rs"]
+pub mod saved_runtime_reconcile;
+
+#[derive(Clone)]
+struct RenamePreparation {
+    id: String,
+    file_digest: String,
+    mapping: std::collections::BTreeMap<String, String>,
+}
+fn read_rename_preparation(
+    root: &std::path::Path,
+    context: &ProcessContext,
+) -> ModelResult<Option<RenamePreparation>> {
+    use super::config_file::{self, rename_effects};
+    let Some(pending) = rename_effects::load(root, &context.opencodex_home)? else {
+        return Ok(None);
+    };
+    let snapshot = config_file::snapshot(root, &context.opencodex_home)?;
+    Ok(Some(RenamePreparation {
+        id: pending.id.clone(),
+        file_digest: snapshot.policy_digest,
+        mapping: rename_effects::current_map(&pending, &snapshot.policy)?,
+    }))
+}
+fn verify_rename_preparation(
+    root: &std::path::Path,
+    context: &ProcessContext,
+    preparation: &RenamePreparation,
+) -> ModelResult<()> {
+    let now = read_rename_preparation(root, context)?;
+    if now.as_ref().is_none_or(|now| {
+        now.id != preparation.id
+            || now.file_digest != preparation.file_digest
+            || now.mapping != preparation.mapping
+    }) {
+        return Err(invalid(
+            "rename_activation_changed",
+            "重启准备期间保存配置又有变化，未重启；请重新核对",
+        ));
+    }
+    Ok(())
+}
+async fn verify_rename_preparation_worker(
+    root: &std::path::Path,
+    context: &ProcessContext,
+    preparation: &RenamePreparation,
+) -> ModelResult<()> {
+    let root = root.to_path_buf();
+    let context = context.clone();
+    let preparation = preparation.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        verify_rename_preparation(&root, &context, &preparation)
+    })
+    .await
+    .map_err(|_| invalid("rename_activation_worker", "改名准备核对中断，未确认完成"))?
+}
+struct ClientBinding {
+    executable: std::path::PathBuf,
+    home: std::path::PathBuf,
+    codex_home: std::path::PathBuf,
+}
+// The upstream settings DTO deliberately displays C:\Users\[USER] (and
+// /Users/[USER]) instead of its machine path. Restore only the username
+// component proved by this already-bound client's unredacted paths. Never
+// expand a masked arbitrary segment, another drive, or an ambiguous identity.
+fn bound_runtime_display_path(raw: &str, anchors: &[&str]) -> Option<String> {
+    if raw.contains("[REDACTED]") || raw.chars().any(char::is_control) {
+        return None;
+    }
+    let Some(at) = raw.find("[USER]") else {
+        return Some(raw.to_owned());
+    };
+    if raw.matches("[USER]").count() != 1 {
+        return None;
+    }
+    let prefix = &raw[..at];
+    let suffix = &raw[at + "[USER]".len()..];
+    let windows = prefix.len() == 9
+        && prefix.as_bytes()[0].is_ascii_alphabetic()
+        && prefix[1..].eq_ignore_ascii_case(r":\Users\");
+    if !(windows || matches!(prefix, "/Users/" | "/home/"))
+        || !suffix.starts_with(if windows { '\\' } else { '/' })
+    {
+        return None;
+    }
+    let mut user = None;
+    for anchor in anchors {
+        let head = anchor.get(..prefix.len());
+        let same = head.is_some_and(|head| {
+            if windows {
+                head.eq_ignore_ascii_case(prefix)
+            } else {
+                head == prefix
+            }
+        });
+        if !same {
+            continue;
+        }
+        let value = anchor[prefix.len()..]
+            .split(if windows { '\\' } else { '/' })
+            .next()?;
+        if value.is_empty() || value.contains(['[', ']', '/', '\\']) {
+            return None;
+        }
+        if user.is_some_and(|before: &str| {
+            if windows {
+                !before.eq_ignore_ascii_case(value)
+            } else {
+                before != value
+            }
+        }) {
+            return None;
+        }
+        user = Some(value);
+    }
+    Some(format!("{prefix}{}{suffix}", user?))
+}
+fn verify_client_route(binding: &ClientBinding, management_base: &str) -> ModelResult<String> {
+    #[derive(Deserialize, Default)]
+    struct Provider {
+        base_url: Option<String>,
+    }
+    #[derive(Deserialize, Default)]
+    struct Routing {
+        openai_base_url: Option<String>,
+        model_provider: Option<String>,
+        #[serde(default)]
+        model_providers: std::collections::BTreeMap<String, Provider>,
+    }
+    let fail = || {
+        invalid(
+            "rename_client_route",
+            "当前Codex配置未绑定此运行实例，未改写当前选择；请核对客户端来源",
+        )
+    };
+    let path = binding.codex_home.join("config.toml");
+    crate::modules::backup::safety::check_path(&binding.codex_home, &path, false)?;
+    let bytes = zeroize::Zeroizing::new(crate::modules::backup::safety::read_file(
+        &path,
+        2 * 1024 * 1024,
+    )?);
+    let routing: Routing =
+        toml::from_str(std::str::from_utf8(&bytes).map_err(|_| fail())?).map_err(|_| fail())?;
+    let selected = routing.model_provider.as_deref().unwrap_or("openai");
+    let raw = if let Some(provider) = routing.model_providers.get(selected) {
+        provider.base_url.as_deref()
+    } else if selected == "openai" {
+        routing.openai_base_url.as_deref()
+    } else {
+        None
+    }
+    .ok_or_else(fail)?;
+    let actual = reqwest::Url::parse(raw).map_err(|_| fail())?;
+    let expected = reqwest::Url::parse(management_base).map_err(|_| fail())?;
+    if actual.scheme() != "http"
+        || actual.host_str() != expected.host_str()
+        || actual.port_or_known_default() != expected.port_or_known_default()
+        || actual.path().trim_end_matches('/') != "/v1"
+        || !actual.username().is_empty()
+        || actual.password().is_some()
+        || actual.query().is_some()
+        || actual.fragment().is_some()
+    {
+        return Err(fail());
+    }
+    Ok(super::store::sha256(&bytes))
+}
+fn client_binding(
+    settings: &serde_json::Value,
+    integration: &serde_json::Value,
+) -> ModelResult<Option<ClientBinding>> {
+    use std::path::{Component, Path, PathBuf};
+    let invalid_binding = || {
+        invalid(
+            "rename_client_binding",
+            "官方客户端路径或运行身份不明确，未更新当前选择，请核对Codex安装",
+        )
+    };
+    if integration["clientId"] != "codex" {
+        return Err(invalid_binding());
+    }
+    let config_path = PathBuf::from(
+        integration["configPath"]
+            .as_str()
+            .ok_or_else(invalid_binding)?,
+    );
+    if !config_path.is_absolute()
+        || config_path.file_name() != Some(std::ffi::OsStr::new("config.toml"))
+        || config_path
+            .components()
+            .any(|c| matches!(c, Component::ParentDir))
+    {
+        return Err(invalid_binding());
+    }
+    if !config_path.try_exists().map_err(|_| invalid_binding())? {
+        return Ok(None);
+    }
+    if !matches!(integration["state"].as_str(), Some("current" | "stale"))
+        || integration["installed"] != true
+    {
+        return Err(invalid(
+            "rename_client_ownership",
+            "当前Codex配置来源未确认或有外部冲突，未改写当前选择",
+        ));
+    }
+    let codex_home = config_path
+        .parent()
+        .ok_or_else(invalid_binding)?
+        .to_path_buf();
+    let home = if codex_home.file_name() == Some(std::ffi::OsStr::new(".codex")) {
+        codex_home.parent().map(Path::to_path_buf)
+    } else {
+        platform::home_dir()
+    }
+    .ok_or_else(invalid_binding)?;
+    let runtime = &settings["codexRuntime"];
+    if runtime["version"].as_str().is_none_or(|v| v.is_empty()) {
+        return Err(invalid_binding());
+    }
+    let raw = runtime["path"].as_str().ok_or_else(invalid_binding)?;
+    let raw = bound_runtime_display_path(
+        raw,
+        &[
+            home.to_str().ok_or_else(invalid_binding)?,
+            config_path.to_str().ok_or_else(invalid_binding)?,
+        ],
+    )
+    .ok_or_else(invalid_binding)?;
+    let executable =
+        if let Some(relative) = raw.strip_prefix("~/").or_else(|| raw.strip_prefix("~\\")) {
+            home.join(relative)
+        } else {
+            PathBuf::from(raw)
+        };
+    if !executable.is_absolute()
+        || executable
+            .components()
+            .any(|c| matches!(c, Component::ParentDir))
+        || !executable.is_file()
+    {
+        return Err(invalid_binding());
+    }
+    let npm_windows = cfg!(windows)
+        && executable
+            .extension()
+            .is_some_and(|extension| extension.eq_ignore_ascii_case("cmd"));
+    let npm_macos = cfg!(target_os = "macos")
+        && std::fs::symlink_metadata(&executable)
+            .is_ok_and(|metadata| metadata.file_type().is_symlink())
+        && dunce::canonicalize(&executable)
+            .is_ok_and(|path| path.extension().is_some_and(|extension| extension == "js"));
+    let executable = if npm_windows || npm_macos {
+        client_npm_runtime::resolve_npm_native(
+            &executable,
+            runtime["version"].as_str().ok_or_else(invalid_binding)?,
+        )?
+    } else {
+        executable
+    };
+    Ok(Some(ClientBinding {
+        executable,
+        home,
+        codex_home,
+    }))
+}
+/// Preparation for the existing explicit restart action. This never invokes the
+/// global desktop restart itself, so isolated acceptance can test real owners.
+/// Pending is cleared only by sync_cache_after_save after confirmed restart.
+pub async fn prepare_saved_rename_restart(
+    root: &std::path::Path,
+    context: &ProcessContext,
+) -> ModelResult<Option<String>> {
+    let owned_root = root.to_path_buf();
+    let owned_context = context.clone();
+    let preparation = tauri::async_runtime::spawn_blocking(move || {
+        read_rename_preparation(&owned_root, &owned_context)
+    })
+    .await
+    .map_err(|_| invalid("rename_activation_worker", "读取改名准备中断，未重启Codex"))??;
+    let Some(preparation) = preparation else {
+        return Ok(None);
+    };
+    let management = Management::bind(context).await?;
+    let selection = if preparation.mapping.is_empty() {
+        None
+    } else {
+        let settings = management.public_settings().await?;
+        let integration = management.codex_integration().await?;
+        let binding = client_binding(&settings, &integration)?;
+        match binding {
+            None => None,
+            Some(binding) => {
+                let plan = client_selection_rename::preflight_current_selection(
+                    context,
+                    &binding.executable,
+                    &binding.home,
+                    &binding.codex_home,
+                    &binding.home,
+                    None,
+                    &preparation.mapping,
+                )
+                .await?;
+                if plan.has_changes() {
+                    verify_client_route(&binding, management.base_url())?;
+                }
+                Some((plan, binding))
+            }
+        }
+    };
+    verify_rename_preparation_worker(root, context, &preparation).await?;
+    saved_runtime_reconcile::reconcile(&management, context, &preparation.mapping).await?;
+    verify_rename_preparation_worker(root, context, &preparation).await?;
+    if let Some((selection, binding)) = selection {
+        if selection.has_changes() {
+            let raw_digest = verify_client_route(&binding, management.base_url())?;
+            selection.apply_with_file_snapshot(raw_digest).await?;
+        } else {
+            selection.apply().await?;
+        }
+    }
+    verify_rename_preparation_worker(root, context, &preparation).await?;
+    management.verify_binding()?;
+    Ok(Some(preparation.id))
+}
+/// File success and activation/restart are distinct. Failure keeps the exact
+/// intent for a later explicit retry; cache-only remains unchanged.
+pub async fn sync_cache_after_save(
+    root: &std::path::Path,
+    context: &ProcessContext,
+    restart_codex: bool,
+) -> ModelResult<CacheRefresh> {
+    if !restart_codex {
+        return sync_cache(context, false).await;
+    }
+    let prepared = prepare_saved_rename_restart(root, context)
+        .await
+        .map_err(|mut error| {
+            error.message = format!(
+                "渠道配置已写入，但当前引用准备未完成，尚未重启Codex：{}",
+                error.message
+            );
+            error
+        })?;
+    let result = sync_cache(context, true).await?;
+    if result.success && result.restarted {
+        if let Some(id) = prepared {
+            let owned_root = root.to_path_buf();
+            let home = context.opencodex_home.clone();
+            let acknowledged = tauri::async_runtime::spawn_blocking(move || {
+                super::config_file::rename_effects::acknowledge(&owned_root, &home, &id)
+            })
+            .await
+            .map_err(|_| {
+                invalid(
+                    "rename_activation_ack",
+                    "Codex已重启，改名准备结果待核对，请稍后重试",
+                )
+            })??;
+            if !acknowledged {
+                return Ok(CacheRefresh {
+                    restarted: true,
+                    success: false,
+                    summary: "Codex已重启，但期间又有改名保存，请核对最新配置后再重启".into(),
+                    reason: Some("rename_activation_changed".into()),
+                });
+            }
+        }
+    }
+    Ok(result)
+}
 
 /// 重启 Codex 会结束正在进行的对话，界面必须先说清这一点。
 pub const RESTART_WARNING: &str = "会结束当前正在进行的 Codex 对话";

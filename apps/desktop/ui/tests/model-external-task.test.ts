@@ -2,13 +2,38 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import ExternalTaskDialog from '@/features/models/ExternalTaskDialog.vue'
 import { modelApi, type ModelSnapshot, type TaskBundle } from '@/features/models/api'
+import { installNativeDialogStub } from './helpers/nativeDialog'
 vi.mock('@/features/models/api', async original => ({ ...await original<object>(), modelApi: { external: vi.fn(), activate: vi.fn() } }))
 const snapshot: ModelSnapshot = { library: { schemaVersion: 1, templates: [] }, policy: { schemaVersion: 1, templateRefs: [], channels: [] }, libraryDigest: 'baseline', policyDigest: 'policy', workspace: null, workspaceDigest: 'workspace' }
 const bundle = { taskId: 'task', content: '完整指令 + 同源字段契约 + 目标', grant: { task: { id: 'task', contractVersion: 1, scene: 'from_sources', targets: [], allowNew: true, requirements: '', expectedLibrary: 'baseline', expiresAt: '2026-10-25', revoked: false }, token: 'capability' } } as TaskBundle
 beforeEach(() => { vi.useFakeTimers(); vi.clearAllMocks(); vi.mocked(modelApi.external).mockResolvedValue(bundle); vi.mocked(modelApi.activate).mockResolvedValue() })
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals() })
-const dialog = { template: '<div><slot/><slot name="actions"/></div>' }
+const dialog = { template: '<div><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></div>' }
 describe('single external-task dialog', () => {
+  it.each(['x', 'escape', 'backdrop', 'cancel'])('guards %s while an explicitly requested copy activates its grant', async channel => {
+    installNativeDialogStub()
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    vi.stubGlobal('navigator', { clipboard: { writeText } })
+    let finish!: () => void
+    vi.mocked(modelApi.activate).mockImplementation(() => new Promise<void>(resolve => { finish = resolve }))
+    const wrapper = mount(ExternalTaskDialog, { props: { open: false, snapshot }, attachTo: document.body })
+    try {
+      await wrapper.setProps({ open: true }); await vi.advanceTimersByTimeAsync(250); await flushPromises()
+      ;([...document.querySelectorAll('dialog footer button')].find(b => b.textContent?.includes('复制完整任务')) as HTMLButtonElement).click()
+      await flushPromises()
+      const dialog = document.querySelector<HTMLDialogElement>('dialog[open]')!
+      if (channel === 'x') (dialog.querySelector('header .modal-close') as HTMLButtonElement).click()
+      if (channel === 'escape') dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+      if (channel === 'backdrop') dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: -10, clientY: -10 }))
+      if (channel === 'cancel') ([...dialog.querySelectorAll('footer button')].find(b => b.textContent?.includes('取消')) as HTMLButtonElement).click()
+      await flushPromises()
+      expect(wrapper.emitted('close')).toBeUndefined(); expect(writeText).not.toHaveBeenCalled()
+      finish(); await flushPromises()
+      expect(writeText).toHaveBeenCalledExactlyOnceWith(bundle.content)
+      expect(modelApi.activate).toHaveBeenCalledExactlyOnceWith(bundle.grant)
+    } finally { wrapper.unmount(); document.body.innerHTML = '' }
+  })
+
   it('prepares locally without activation, then copies one complete payload', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     vi.stubGlobal('navigator', { clipboard: { writeText } })

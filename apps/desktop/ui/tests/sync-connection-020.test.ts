@@ -5,7 +5,7 @@ import {defineComponent} from 'vue'
 import ConnectionDialog from '@/features/sync/ConnectionDialog.vue'
 import {getSyncConfig,saveSyncEndpoint,testSyncCandidate} from '@/features/sync/api'
 vi.mock('@/features/sync/api',async original=>({...await original<typeof import('@/features/sync/api')>(),getSyncConfig:vi.fn(),saveSyncEndpoint:vi.fn(),testSyncCandidate:vi.fn()}))
-const dialog=defineComponent({props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'})
+const dialog=defineComponent({props:['open'],emits:['close'],template:'<section v-if="open"><slot/><slot name="actions" :close="()=> $emit(\'close\')"/></section>'})
 const render=()=>mount(ConnectionDialog,{global:{stubs:{UiDialog:dialog}}})
 beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(getSyncConfig).mockResolvedValue({endpoint:null})})
 describe('unsaved WebDAV connection form',()=>{

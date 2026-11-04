@@ -1,5 +1,6 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { flushPromises, mount } from '@vue/test-utils'
+import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import SettingsRoute from '@/features/runtime/components/RuntimeInstallDialog.vue'
 import { useRuntimeStore } from '@/features/runtime/store'
@@ -25,6 +26,7 @@ const outcome: RuntimeInstallOutcomeDto = {
 }
 const mounted: Array<ReturnType<typeof mount>> = []
 beforeEach(() => {
+  installNativeDialogStub()
   invoke.mockReset()
   invoke.mockImplementation(async command => {
     if (command === 'runtime_protection_status') return { state: 'none', version: null, backupId: null }
@@ -40,11 +42,11 @@ async function wizard(sourceKind: 'registry' | 'offline' = 'registry') {
   const runtime = useRuntimeStore()
   runtime.source = source
   useRouteStore().go('settings', { section: 'installation' })
-  const page = mount(SettingsRoute, { global: { plugins: [pinia], stubs: { teleport: true } } })
+  const page = mount(SettingsRoute, { global: { plugins: [pinia] } })
   mounted.push(page)
   await flushPromises()
   runtime.requestInstallModal('registry'); await flushPromises()
-  const modal = page.get('[data-testid="runtime-install-modal"]')
+  const modal = new DOMWrapper(document.body).get('[data-testid="runtime-install-modal"]')
   const next = () => modal.findAll('button').find(button => button.text() === '开始安装')!
   if (sourceKind === 'offline') {
     await modal.get('input[value="offline"]').setValue(true)
@@ -95,7 +97,7 @@ describe('installation wizard factual progress', () => {
       expect(modal.get('[data-testid="wiz-error"]').text()).not.toContain('managed runtime')
       expect(modal.find('[data-testid="wiz-substeps"]').exists()).toBe(false)
       expect(runtime.installLastPhase).toBe(phase)
-      expect(modal.get('[data-testid="wiz-allow-scripts"]').attributes('disabled')).toBeDefined()
+      expect(modal.find('[data-testid="wiz-allow-scripts"]').exists()).toBe(false)
     },
   )
 
@@ -133,11 +135,13 @@ describe('installation wizard factual progress', () => {
     runtime.markInstallDone()
     await flushPromises()
     expect(modal.get('[role="progressbar"]').attributes('aria-valuenow')).toBeUndefined()
-    expect(modal.get('[data-testid="wiz-finish"]').attributes('disabled')).toBeDefined()
+    expect(modal.get('header button[aria-label="关闭"]').attributes('disabled')).toBeDefined()
     runtime.finishInstall()
     await flushPromises()
     expect(modal.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('100')
-    expect(modal.get('[data-testid="wiz-finish"]').attributes('disabled')).toBeUndefined()
+    expect(modal.get('header button[aria-label="关闭"]').attributes('disabled')).toBeUndefined()
+    expect(modal.find('footer').exists()).toBe(false)
+    expect(modal.find('[data-testid="wiz-finish"]').exists()).toBe(false)
     expect(modal.get('[data-testid="wiz-status"]').text()).toContain('安装完成')
     expect(modal.get('[data-testid="wiz-outcome"]').text()).toContain('重启后生效')
     expect(modal.get('[data-testid="wiz-outcome"]').text()).toContain('备份仍保留')
@@ -168,5 +172,33 @@ describe('installation wizard factual progress', () => {
     effects.setForeground(true)
     await flushPromises()
     expect(modal.get('.wiz-progress-bar').classes()).toContain('is-animated')
+  })
+})
+
+
+describe('POST-09 restricted installation representative', () => {
+  it.each(['x', 'escape', 'native-cancel', 'backdrop'])('blocks %s during an actual pending install without requesting task cancellation', async channel => {
+    const { modal, runtime, reject } = await wizard()
+    const element = modal.element
+    if (channel === 'x') await modal.get('header button[aria-label="关闭"]').trigger('click')
+    if (channel === 'escape') element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+    if (channel === 'native-cancel') element.dispatchEvent(new Event('cancel', { cancelable: true }))
+    if (channel === 'backdrop') await modal.trigger('click', { clientX: -10, clientY: -10 })
+    await flushPromises()
+    expect(element.hasAttribute('open')).toBe(true)
+    expect(runtime.installing).toBe(true)
+    expect(invoke.mock.calls.filter(([command]) => command === 'cancel_runtime_install')).toHaveLength(0)
+    reject({ message: 'fixture pending operation ended' }); await flushPromises()
+    await modal.get('header button[aria-label="关闭"]').trigger('click'); await flushPromises()
+    expect(element.hasAttribute('open')).toBe(false)
+  })
+
+  it('cancels the task only through its explicit action and keeps the observer open', async () => {
+    const { modal, reject } = await wizard()
+    await modal.findAll('button').find(button => button.text() === '取消安装')!.trigger('click')
+    await flushPromises()
+    expect(invoke.mock.calls.filter(([command]) => command === 'cancel_runtime_install')).toHaveLength(1)
+    expect(modal.element.hasAttribute('open')).toBe(true)
+    reject({ message: 'fixture cancellation acknowledged' }); await flushPromises()
   })
 })

@@ -1,0 +1,89 @@
+{
+  "generator": "npm cmd-shim 8.0.0",
+  "generatorIndexSha256": "ec89ec47d22e7012336aa41cea1216b497aecd36f7802b30eebf3b8e6a298b12",
+  "fixtures": {
+    "npm-local-codex.cmd": "2b3dd1940b0bedfcb54528a42694a6a85fdac196ea877115419a25381ed1005f",
+    "package.json": "e554d18c0a7c06bb9d81d5c154e869f6d4e55ad7906e2dd2de0258750861d0f6",
+    "npm-global-codex.cmd": "c54db6755e710c39703f7c37512f9e35ed41042d8080558d2b84b8d2694323c3",
+    "codex-0.166.0.js": "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af"
+  },
+  "publicPackages": {
+    "0.166.0": {
+      "url": "https://registry.npmmirror.com/@openai/codex/-/codex-0.166.0.tgz",
+      "officialRegistryUrl": "https://registry.npmjs.org/@openai/codex/-/codex-0.166.0.tgz",
+      "integrity": "sha512-2Szlp1l1cz5TX1ccpX4Zok3DZrot9xeZe0km+6/1v8JmqxADwyJxKBJah4dBymkwtS25j/u6dipJusTOI97Z8Q==",
+      "matchesWindowsArtifactLock": true,
+      "tgzBytes": 4992,
+      "files": {
+        "package.json": {
+          "sha256": "e554d18c0a7c06bb9d81d5c154e869f6d4e55ad7906e2dd2de0258750861d0f6",
+          "bytes": 1082
+        },
+        "bin/codex.js": {
+          "sha256": "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af",
+          "bytes": 9154
+        }
+      }
+    },
+    "0.166.0-win32-x64": {
+      "url": "https://registry.npmmirror.com/@openai/codex/-/codex-0.166.0-win32-x64.tgz",
+      "officialRegistryUrl": "https://registry.npmjs.org/@openai/codex/-/codex-0.166.0-win32-x64.tgz",
+      "integrity": "sha512-NS8Ps5oG5r19pCrMCUXwUqOui6odnUIoBlQkrjCJ+h1k6KiwCzC/+mI9d3nSZCqFoVONPBTmqyq8NYq3YaFGyA==",
+      "matchesWindowsArtifactLock": true,
+      "tgzBytes": 180706795,
+      "files": {
+        "package.json": {
+          "sha256": "e099edf7636d3a7878f4485a71ad6ec35bd473b93daef0ce6a3476b45d54045a",
+          "bytes": 511
+        },
+        "vendor/x86_64-pc-windows-msvc/bin/codex.exe": {
+          "sha256": "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42",
+          "bytes": 371735856
+        }
+      }
+    },
+    "0.166.0-win32-arm64": {
+      "url": "https://registry.npmmirror.com/@openai/codex/-/codex-0.166.0-win32-arm64.tgz",
+      "officialRegistryUrl": "https://registry.npmjs.org/@openai/codex/-/codex-0.166.0-win32-arm64.tgz",
+      "integrity": "sha512-LWO1cyGlxbKgeUM7QJ1a6QMSsJi++3PqgIi6BmIUBoj/kzZqRIR69UDMQgeU/9izzJFYMSbwt++lHnUFyjQXlA==",
+      "matchesWindowsArtifactLock": true,
+      "tgzBytes": 168971160,
+      "files": {
+        "package.json": {
+          "sha256": "28f9c38ea93a38ba757488bf54c6b321ff3a8be767d6b03cdfdd4641dea26871",
+          "bytes": 515
+        },
+        "vendor/aarch64-pc-windows-msvc/bin/codex.exe": {
+          "sha256": "d92bb6a3259980a742049882f396eb09eb26734589accc7f2c5173b7ab926138",
+          "bytes": 313027888
+        }
+      }
+    }
+  },
+  "license": {
+    "codex": "Apache-2.0",
+    "cmd-shim": "ISC"
+  },
+  "windowsActualTrace": {
+    "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-owner/run-41804287942",
+    "files": {
+      "codex.cmd": {
+        "sha256": "2b3dd1940b0bedfcb54528a42694a6a85fdac196ea877115419a25381ed1005f",
+        "matchesFixture": true
+      },
+      "codex-launcher.js": {
+        "sha256": "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af",
+        "matchesFixture": true
+      },
+      "codex-package.json": {
+        "sha256": "e554d18c0a7c06bb9d81d5c154e869f6d4e55ad7906e2dd2de0258750861d0f6",
+        "matchesFixture": true
+      },
+      "optional-package.json": {
+        "sha256": "e099edf7636d3a7878f4485a71ad6ec35bd473b93daef0ce6a3476b45d54045a",
+        "matchesFixture": true
+      }
+    },
+    "nativeObservedSha256": "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42"
+  }
+}

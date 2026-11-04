@@ -30,6 +30,81 @@ export function modelConfigPath(facts,expected){
  assert.equal(normalize(facts.dataRoot.opencodexHome),normalize(home),'saved model home escaped admitted sandbox')
  return win32.join(home,'config.json')
 }
+export function nativeModelKeyboardChecksRequired(version){
+ assert(['0.2.16','0.2.17','0.2.18','0.2.19','0.2.20','0.2.21'].includes(version),'Unsupported native model UI acceptance version')
+ return ['0.2.20','0.2.21'].includes(version)
+}
+export function nativeModelUiContract(version){
+ nativeModelKeyboardChecksRequired(version)
+ const publicDialogs=version==='0.2.21'
+ return {publicDialogs,confirmation:publicDialogs?'dialog.app-modal-dialog[open]':'.modal-mask',close:publicDialogs?'dialog[open] > .ui-dialog-header':'dialog[open]'}
+}
+export async function confirmNativeTemplateDefault({wait,click},version){
+ const {publicDialogs,confirmation}=nativeModelUiContract(version)
+ await click('设为默认','dialog[open]')
+ await wait(publicDialogs
+  ? "(()=>{const layers=[...document.querySelectorAll('dialog[open]')],confirmations=[...document.querySelectorAll('dialog.app-modal-dialog[open]')],parents=[...document.querySelectorAll('dialog.model-version-manager[open]')];return layers.length===2&&confirmations.length===1&&parents.length===1&&confirmations[0]!==parents[0]&&confirmations[0] instanceof HTMLDialogElement&&parents[0] instanceof HTMLDialogElement&&confirmations[0].querySelector(':scope > .ui-dialog-header h2')?.textContent.trim()==='设为默认版本'&&/^版本管理 · .+/.test(parents[0].querySelector(':scope > .ui-dialog-header h2')?.textContent.trim()??'')&&!document.querySelector('.modal-mask')})()"
+  : "document.querySelectorAll('dialog[open]').length===0&&!!document.querySelector('.modal-mask')",'application confirmation above version manager')
+ await click('设为默认',confirmation)
+}
+// Serialized into the actual WebView. Observe real frames and trusted input;
+// never adjust coordinates by a guessed DPI/chrome offset or replace a click.
+function installNativeModelMenuObservation(){
+ if(globalThis.__ocxModelMenuInput)throw Error('native model menu observation already active')
+ const selector='dialog[open] button[aria-label="Fast支持"]',button=document.querySelector(selector)
+ if(!button)throw Error('native Fast select absent')
+ const describe=e=>e?{tag:e.tagName,label:e.getAttribute?.('aria-label')??null}:null
+ const trace={frames:[],changes:[],events:[],stages:[],frame:0}
+ function sample(point){
+  const r=button.getBoundingClientRect(),x=point?.x??r.x+r.width/2,y=point?.y??r.y+r.height/2,hit=document.elementFromPoint(x,y),scroll=[]
+  for(let e=button.parentElement;e;e=e.parentElement)scroll.push({top:e.scrollTop,left:e.scrollLeft})
+  const v=window.visualViewport
+  return {at:performance.now(),x,y,top:r.top,bottom:r.bottom,rect:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height},
+   viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio,screenX:window.screenX,screenY:window.screenY,outerWidth:outerWidth,outerHeight:outerHeight,visual:v?{width:v.width,height:v.height,offsetLeft:v.offsetLeft,offsetTop:v.offsetTop,pageLeft:v.pageLeft,pageTop:v.pageTop,scale:v.scale}:null},scroll,
+   sameTarget:document.querySelector(selector)===button,hit:!button.disabled&&r.width>0&&r.height>0&&x>0&&y>0&&x<innerWidth&&y<innerHeight&&button.contains(hit),hitTarget:describe(hit),focused:document.hasFocus(),hidden:document.hidden,activeElement:describe(document.activeElement)}
+ }
+ const same=(a,b)=>JSON.stringify([a.rect,a.viewport,a.scroll])===JSON.stringify([b.rect,b.viewport,b.scroll])
+ let frameId
+ function frame(){
+  const value={...sample(),frame:++trace.frame},previous=trace.frames.at(-1)
+  if(!previous||!same(previous,value)||previous.hit!==value.hit){trace.changes.push(value);if(trace.changes.length>60)trace.changes.shift()}
+  trace.frames.push(value);if(trace.frames.length>120)trace.frames.shift()
+  frameId=requestAnimationFrame(frame)
+ }
+ trace.ready=()=>{const frames=trace.frames.slice(-3);return frames.length===3&&frames.every(f=>f.sameTarget&&f.hit&&same(f,frames[0]))?{...frames[2],stableFrames:frames.map(f=>f.frame)}:null}
+ trace.check=point=>{const current=sample(point),value={sameGeometry:same(current,point),sameHit:current.sameTarget&&current.hit,current};trace.stages.push(value);return value}
+ const events=['pointerdown','pointerup','mousedown','mouseup','click']
+ const record=event=>trace.events.push({type:event.type,trusted:event.isTrusted,target:describe(event.target),targetWithinButton:button.contains(event.target),...sample({x:event.clientX,y:event.clientY})})
+ for(const type of events)document.addEventListener(type,record,true)
+ trace.dispose=()=>{cancelAnimationFrame(frameId);for(const type of events)document.removeEventListener(type,record,true)}
+ globalThis.__ocxModelMenuInput=trace
+ button.scrollIntoView({block:'center'})
+ frameId=requestAnimationFrame(frame)
+ return true
+}
+export async function clickNativeModelMenu({evaluate,wait,call},output){
+ let point,error,installed=false
+ try{
+  installed=await evaluate('('+installNativeModelMenuObservation.toString()+')()')
+  point=await wait('globalThis.__ocxModelMenuInput.ready()','native menu trigger is stable across frames and hit-testable')
+  await call('Input.dispatchMouseEvent',{type:'mouseMoved',x:point.x,y:point.y})
+  const guard=await evaluate('globalThis.__ocxModelMenuInput.check('+JSON.stringify(point)+')')
+  assert(guard.sameGeometry&&guard.sameHit,'Native model menu target moved or became occluded before pointer input')
+  // No filesystem/CDP diagnostics between the immediate hit check and press.
+  await call('Input.dispatchMouseEvent',{type:'mousePressed',x:point.x,y:point.y,button:'left',buttons:1,clickCount:1})
+  await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x,y:point.y,button:'left',buttons:0,clickCount:1})
+  await wait("!!document.querySelector('dialog[open] [data-ui-escape-owner]')",'native inner select open')
+ }catch(cause){error=cause;throw cause}
+ finally{
+  if(installed){
+   try{
+    const trace=await evaluate('(()=>{const t=globalThis.__ocxModelMenuInput;try{return {frames:t.frames,changes:t.changes,events:t.events,stages:t.stages}}finally{t.dispose();delete globalThis.__ocxModelMenuInput}})()')
+    await writeFile(join(output,'model-menu-trigger-native.json'),JSON.stringify(point??null,null,2)+'\n')
+    await writeFile(join(output,'model-menu-input-native.json'),JSON.stringify({result:error?'fail':'pass',error:error?.message,point,...trace},null,2)+'\n')
+   }catch(diagnosticError){if(!error)throw diagnosticError;error.nativeMenuDiagnosticError=diagnosticError.message}
+  }
+ }
+}
 export async function modelFileEvidence(configPath,root){
  let backups
  try{backups=(await readdir(join(root,'backups','model-config'))).sort()}catch(error){if(error.code!=='ENOENT')throw error;backups=[]}
@@ -44,6 +119,8 @@ export async function assertModelFileWrite(before,after,root){
 }
 export async function verifyWindowsModelUi(call,output,facts,expected){
  const configPath=modelConfigPath(facts,expected)
+ const checkNativeKeyboard=nativeModelKeyboardChecksRequired(facts.about.version)
+ const contract=nativeModelUiContract(facts.about.version)
  async function evaluate(expression){const result=await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});assert(!result.exceptionDetails,JSON.stringify(result.exceptionDetails));return result.result.value}
  const invoke=(command,args={})=>evaluate('window.__TAURI_INTERNALS__.invoke('+JSON.stringify(command)+','+JSON.stringify(args)+')')
  async function wait(expression,label){
@@ -69,14 +146,14 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await click('与版本比较')
  const comparison=await wait("(()=>{const dialog=[...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('与版本比较'));return dialog&&dialog.textContent.includes("+JSON.stringify(firstDescription)+")&&dialog.textContent.includes("+JSON.stringify(secondDescription)+")?{rows:dialog.querySelectorAll('.model-comparison-row').length}:null})()",'native readonly comparison shows source and current buffer')
  assert.equal(comparison.rows,1)
- await click('关闭','dialog[open]')
+ await click('关闭',contract.close)
  const beforeSave=await invoke('model_file_snapshot');assert.equal(beforeSave.library.templates.find(t=>t.id===created.templateId).revisions.length,1,'comparison must not save')
  await click('Agent自动填充')
  await wait("!!document.querySelector('.model-agent-panel [aria-label=\"导出上下文\"]')",'assistant context tools visible')
  await click('导出上下文','.model-agent-panel')
  const externalContext=await wait("(()=>{const dialog=[...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('外部任务')),text=dialog?.querySelector('textarea[readonly]')?.value;if(!text||!text.includes('discoveryFile'))return null;const pack=("+parseTaskContent.toString()+")(text);return {targets:pack.task.targets.map(t=>({templateId:t.templateId,revisionId:t.revision.id,description:t.buffer?.content.description})),scopeNew:pack.task.allowNew,contract:!!pack.contract,hasTransport:!!pack.transport,hasPrivateChat:Object.hasOwn(pack,'conversation')}})()",'actual external task bundle from current buffer')
  assert.deepEqual(externalContext.targets,[{templateId:created.templateId,revisionId:created.revisionId,description:secondDescription}]);assert.equal(externalContext.scopeNew,false);assert.equal(externalContext.contract,true);assert.equal(externalContext.hasTransport,true);assert.equal(externalContext.hasPrivateChat,false)
- await click('关闭','dialog[open]')
+ await click('关闭',contract.close)
  await evaluate("(()=>{document.querySelector('.model-agent-panel button[aria-label=\"收起\"]').click();return true})()")
  await writeFile(join(output,'model-editor-context-native.json'),JSON.stringify({result:'pass',comparisonRows:comparison.rows,comparisonDidNotSave:true,externalCurrentTargetCount:externalContext.targets.length,exactBufferDescription:true,includesSharedContractAndTransport:true,privateChatExcluded:true,taskActivated:false,generationRequests:0},null,2)+'\n')
  await click('保存')
@@ -89,13 +166,11 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await evaluate("(()=>{const row=[...document.querySelectorAll('.model-table tbody tr')].find(e=>e.textContent.includes("+JSON.stringify(label)+"));[...row.querySelectorAll('button')].find(e=>e.textContent.trim()==='版本管理').click();return true})()")
  await wait("!![...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('版本管理'))",'version manager')
  // The newest saved revision is shown first; this is the target we just saved.
- await click('设为默认','dialog[open]')
- await wait("document.querySelectorAll('dialog[open]').length===0&&!!document.querySelector('.modal-mask')",'application confirmation above native dialog')
- await click('设为默认','.modal-mask')
+ await confirmNativeTemplateDefault({wait,click},facts.about.version)
  const pointed=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_file_snapshot');return s.library.templates.find(t=>t.id==="+JSON.stringify(created.templateId)+")?.defaultRevision==="+JSON.stringify(revision.id)+"?s:null})()",'default pointer committed')
  assert.deepEqual(pointed.policy,before.policy,'default pointer must not upgrade adoption')
- await wait("document.querySelectorAll('dialog[open]').length===1",'return to version manager')
- await click('关闭','dialog[open]')
+ await wait("document.querySelectorAll('dialog[open]').length===1&&!!document.querySelector('dialog[open] h2')?.textContent.includes('版本管理')",'return to version manager')
+ await click('关闭',contract.close)
  const scope={includePolicy:false,channelIds:[],includeGlobal:false,templateRefs:[{templateId:created.templateId,revisionId:revision.id}]}
  const plan=await invoke('model_transfer_prepare',{scope,passphrase:null,includeKeys:false,managerScope:{preferences:false,extensions:false,webdav:false,webdavPasswords:false}})
  assert.equal(plan.package.payload.templates.length,1)
@@ -128,9 +203,9 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  async function inputValue(selector,value){await evaluate("(()=>{const input=document.querySelector("+JSON.stringify(selector)+");if(!input)throw Error('native input missing');input.value="+JSON.stringify(value)+";input.dispatchEvent(new Event('input',{bubbles:true}));return true})()")}
  const detailSaveDisabled="document.querySelector('button[aria-label=\"保存渠道草稿\"]').disabled"
  await wait("document.querySelector('[data-testid=policy-save]')?.disabled",'clean list Save disabled')
- // The previous public version remains the OTA baseline, so only the 0.2.20
- // candidate owns this newly corrected keyboard contract.
- if(facts.about.version==='0.2.20'){
+ // Keep the corrected native keyboard/menu contract mandatory for both 0.2.20
+ // and 0.2.21. Older admitted OTA images retain their original baseline checks.
+ if(checkNativeKeyboard){
   const escape=async()=>{for(const type of ['keyDown','keyUp'])await call('Input.dispatchKeyEvent',{type,key:'Escape',code:'Escape',windowsVirtualKeyCode:27,nativeVirtualKeyCode:27})}
   const originalPreferences=await invoke('get_preferences')
   await invoke('save_preferences',{preferences:{...originalPreferences,visualEffects:'low'}})
@@ -145,13 +220,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
   assert.equal(await evaluate("document.querySelector('input[aria-label=\"fixture-alpha路由别名\"]').value"),'','cancel must discard detail alias')
   await click('编辑明细','.channel-model-table')
   await wait("!!document.querySelector('dialog[open]')",'reopen native model detail')
-  const menuTrigger=await evaluate("(()=>{const b=document.querySelector('dialog[open] button[aria-label=\"Fast支持\"]');if(!b)throw Error('native Fast select absent');b.scrollIntoView({block:'center'});return true})()")
-  assert(menuTrigger)
-  const triggerPoint=await wait("(()=>{const b=document.querySelector('dialog[open] button[aria-label=\"Fast支持\"]');if(!b)return null;const r=b.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2;return x>0&&y>0&&x<innerWidth&&y<innerHeight&&b.contains(document.elementFromPoint(x,y))?{x,y,top:r.top,bottom:r.bottom}:null})()",'native menu trigger is visible and hit-testable')
-  await writeFile(join(output,'model-menu-trigger-native.json'),JSON.stringify(triggerPoint,null,2)+'\n')
-  await call('Input.dispatchMouseEvent',{type:'mousePressed',x:triggerPoint.x,y:triggerPoint.y,button:'left',buttons:1,clickCount:1})
-  await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:triggerPoint.x,y:triggerPoint.y,button:'left',buttons:0,clickCount:1})
-  await wait("!!document.querySelector('dialog[open] [data-ui-escape-owner]')",'native inner select open')
+  await clickNativeModelMenu({evaluate,wait,call},output)
   const menuPosition=await wait("(()=>{const d=document.querySelector('dialog[open]'),t=d?.querySelector('button[aria-label=\"Fast支持\"]'),m=d?.querySelector('[data-ui-escape-owner]');if(!t||!m)return null;const a=t.getBoundingClientRect(),b=m.getBoundingClientRect(),zoom=Number(getComputedStyle(d).zoom)||1;return b.width&&b.height?{trigger:{left:a.left,right:a.right,top:a.top,bottom:a.bottom},menu:{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width},zoom,width:innerWidth,height:innerHeight}:null})()",'native menu geometry')
   const idealLeft=Math.max(12*menuPosition.zoom,Math.min(menuPosition.trigger.right-menuPosition.menu.width,menuPosition.width-menuPosition.menu.width-12*menuPosition.zoom))
   await writeFile(join(output,'model-menu-position-native.json'),JSON.stringify(menuPosition,null,2)+'\n')
@@ -174,6 +243,9 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await openChannel(otherChannelId,'native-scope-a-original-key')
  assert.equal(await evaluate(detailSaveDisabled),true,'clean detail Save disabled')
  await inputValue('#channel-config label input','Native scope A pending')
+ // This existing scenario isolates label/Key/row scope. The 021 provider
+ // namespace migration is exercised separately with default/order readback.
+ if(contract.publicDialogs)await inputValue('input[aria-label="运行渠道标识"]','native-scope-a-fixture')
  await inputValue('input[aria-label="API Key"]','native-scope-a-pending-key')
  await click('展开编辑','.channel-model-table')
  await inputValue('.model-row-editor input[type=number]','96000')
@@ -294,7 +366,17 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await new Promise(resolve=>setTimeout(resolve,100))
  const tasks=await evaluate("[...document.querySelectorAll('.model-operation-task,.model-operation-card')].filter(e=>e.getClientRects().length).map(e=>e.textContent)")
  const screenshot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model-template-native.png'),Buffer.from(screenshot.data,'base64'))
- await verifyUiAlignment({call,evaluate,wait,click,output,templateLabel:label})
- const result={result:'pass',scope:'native template, direct current-channel file Save/reopen, remaining global Preview/cancel/confirm, exact transfer; isolated config writes, no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,nativeFileScopeVerified:true,otherChannelMemoryRetained:true,otherProviderAndKeysPreserved:true,canceledListPreviewPreservedFile:true,remainingGlobalFileSave:true,channelReopen:true,existingKeyEye:true,readonlyComparison:true,externalContextBundle:true}
+ await verifyUiAlignment({call,evaluate,wait,click,output,templateLabel:label,publicDialogs:contract.publicDialogs})
+ let probes021
+ if(contract.publicDialogs){
+  const {verifyWindows021Probes}=await import('./windows-021-probes.mjs')
+  probes021=await verifyWindows021Probes({call,evaluate,wait,click,invoke,output},facts,expected)
+ }
+ const result={result:'pass',scope:'native template, direct current-channel file Save/reopen, remaining global Preview/cancel/confirm, exact transfer; isolated config writes, no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:!contract.publicDialogs,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,nativeFileScopeVerified:true,otherChannelMemoryRetained:true,otherProviderAndKeysPreserved:true,canceledListPreviewPreservedFile:true,remainingGlobalFileSave:true,channelReopen:true,existingKeyEye:true,readonlyComparison:true,externalContextBundle:true}
+ result.confirmationHost=contract.confirmation
+ result.versionManagerSuspendedForConfirmation=!contract.publicDialogs
+ result.versionManagerRetainedUnderConfirmation=contract.publicDialogs
+ result.nativeModelKeyboardChecks=checkNativeKeyboard
+ if(probes021)result.probes021=probes021
  await writeFile(join(output,'model-ui.json'),JSON.stringify(result,null,2)+'\n');return result
 }

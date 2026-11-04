@@ -9,6 +9,34 @@ use std::{
     path::Path,
 };
 const PATH: &str = "manager-state/model-protocol-mappings.json";
+pub(super) fn rename_guard_path(root: &Path) -> std::path::PathBuf {
+    root.join(PATH)
+}
+
+pub(super) fn validate_rename_targets(
+    bytes: Option<&[u8]>,
+    renames: &[super::config_file_mapping::ProviderRename],
+) -> ModelResult<()> {
+    let mappings: Vec<Mapping> = bytes
+        .map(serde_json::from_slice)
+        .transpose()?
+        .unwrap_or_default();
+    for rename in renames {
+        if mappings.iter().any(|m| m.provider_id == rename.from) {
+            return Err(invalid(
+                "protected_provider",
+                "协议分组的运行标识由稳定协议身份维护，不能直接改名",
+            ));
+        }
+        if mappings.iter().any(|m| m.provider_id == rename.to) {
+            return Err(invalid(
+                "provider_identity",
+                "目标运行标识已属于协议分组，未覆盖",
+            ));
+        }
+    }
+    Ok(())
+}
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Mapping {
@@ -806,6 +834,29 @@ mod tests {
             next.channels[1].connection.nodes[0].url,
             "https://other.example.test/v1"
         );
+    }
+    #[test]
+    fn parent_rename_reuses_stable_protocol_partition_and_keeps_credentials() {
+        let root = tempfile::tempdir().unwrap();
+        let (library, mut policy, snapshot) = fixture();
+        let original = mappings(root.path(), &library, &policy).unwrap();
+        let bytes = std::fs::read(root.path().join(PATH)).unwrap();
+        let id = policy.channels[0].id.clone();
+        let credential = policy.channels[0].connection.credential_ref.clone();
+        policy.channels[0].connection.provider_id = "Renamed".into();
+        policy.channels[0].label = "Renamed".into();
+        let after = mappings(root.path(), &library, &policy).unwrap();
+        assert_eq!(after[0].id, original[0].id);
+        assert_eq!(after[0].channel_id, id);
+        assert_eq!(after[0].provider_id, original[0].provider_id);
+        assert_eq!(std::fs::read(root.path().join(PATH)).unwrap(), bytes);
+        let expanded = expand(&snapshot, &library, &policy, &after).unwrap();
+        assert_eq!(expanded.channels[1].connection.credential_ref, credential);
+        assert_eq!(
+            expanded.channels[1].connection.provider_id,
+            original[0].provider_id
+        );
+        assert_eq!(expanded.channels[0].connection.provider_id, "Renamed");
     }
     #[test]
     fn adopted_channel_filters_are_resolved_once_before_partitioning() {

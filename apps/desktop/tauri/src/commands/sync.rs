@@ -20,6 +20,9 @@ use crate::state::{SharedDataRoot, SharedHomeDir, SharedNotificationStore, Share
 #[serde(rename_all = "camelCase")]
 pub struct SyncEndpointDto {
     pub endpoint_id: String,
+    /// Opaque identity for observations, including the owned credential revision.
+    /// It contains no password or password-derived digest.
+    pub revision: String,
     pub url: String,
     pub remote_path: String,
     pub username: String,
@@ -44,6 +47,8 @@ pub struct SaveSyncEndpointRequest {
     pub username: String,
     pub password: String,
     pub conflict_policy: String,
+    #[serde(default)]
+    pub expected_revision: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -58,8 +63,22 @@ pub struct SyncOperationResultDto {
 }
 
 fn project_endpoint(endpoint: &SyncEndpointConfig) -> SyncEndpointDto {
+    use sha2::{Digest, Sha256};
+    let public_identity = serde_json::json!([
+        endpoint.endpoint_id,
+        endpoint.url,
+        endpoint.remote_path,
+        endpoint.username,
+        endpoint.credential_ref.ref_id,
+        endpoint.credential_ref.updated_at,
+        endpoint.tls_policy
+    ]);
     SyncEndpointDto {
         endpoint_id: endpoint.endpoint_id.clone(),
+        revision: format!(
+            "{:x}",
+            Sha256::digest(public_identity.to_string().as_bytes())
+        ),
         url: endpoint.url.clone(),
         remote_path: endpoint.remote_path.clone(),
         username: endpoint.username.clone(),
@@ -74,6 +93,24 @@ pub fn project_config(config: &SyncConfig) -> SyncConfigDto {
     SyncConfigDto {
         endpoint: config.active().map(project_endpoint),
     }
+}
+
+fn verify_endpoint_revision(config: &SyncConfig, expected: Option<&str>) -> AppResult<()> {
+    if let Some(expected) = expected {
+        let current = config
+            .active()
+            .map(project_endpoint)
+            .map(|e| e.revision)
+            .unwrap_or_default();
+        if current != expected {
+            return Err(AppError::FileSystem {
+                operation: "verify saved WebDAV connection".into(),
+                detail: "连接配置已在其它地方修改；请重新读取后再测试或保存，当前输入已保留。"
+                    .into(),
+            });
+        }
+    }
+    Ok(())
 }
 
 fn config_store(data_root: &SharedDataRoot) -> SyncConfigStore {
@@ -174,6 +211,7 @@ pub async fn save_sync_endpoint(
     data_root: State<'_, SharedDataRoot>,
     app: tauri::AppHandle,
 ) -> AppResult<SyncConfigDto> {
+    let expected_revision = request.expected_revision;
     let input = SyncEndpointInput {
         base_url: request.base_url,
         remote_path: request.remote_path,
@@ -184,6 +222,7 @@ pub async fn save_sync_endpoint(
     let root = data_root.inner().0.clone();
     let endpoint = run_owned_sync("save sync endpoint", move || {
         let store = SyncConfigStore::new(&root);
+        verify_endpoint_revision(&store.load()?, expected_revision.as_deref())?;
         store.save_endpoint_observed(&input, |candidate, succeeded| {
             publish_endpoint_result(&app, &root, "sync-endpoint-save", candidate, succeeded);
         })
@@ -204,6 +243,10 @@ pub async fn test_sync_candidate(
 ) -> AppResult<SyncOperationResultDto> {
     let root = data_root.inner().0.clone();
     run_owned_sync("test unsaved sync connection", move || {
+        verify_endpoint_revision(
+            &SyncConfigStore::new(&root).load()?,
+            request.expected_revision.as_deref(),
+        )?;
         let input = SyncEndpointInput {
             base_url: request.base_url,
             remote_path: request.remote_path,
@@ -826,6 +869,45 @@ impl SnakeCase for String {
 mod tests {
     use super::*;
     use crate::modules::sync::config::{CredentialRef, SyncEndpointConfig};
+
+    #[test]
+    fn endpoint_projection_binds_observations_to_connection_and_credential_revision() {
+        let original = endpoint();
+        let revision = |endpoint: &SyncEndpointConfig| {
+            let value = serde_json::to_value(project_endpoint(endpoint)).unwrap();
+            assert!(value["revision"].as_str().is_some_and(|v| v.len() == 64));
+            assert!(value.get("password").is_none());
+            value["revision"].as_str().unwrap().to_owned()
+        };
+        let initial = revision(&original);
+        assert_eq!(revision(&original.clone()), initial);
+        for change in 0..4 {
+            let mut changed = original.clone();
+            match change {
+                0 => changed.url = "https://other.example.test".into(),
+                1 => changed.remote_path = "other-scope".into(),
+                2 => changed.username = "another-user".into(),
+                _ => changed.credential_ref.updated_at = "2026-11-04T04:59:00.000000001Z".into(),
+            }
+            assert_ne!(revision(&changed), initial);
+        }
+    }
+
+    #[test]
+    fn stale_form_revision_refuses_reusing_a_replaced_saved_credential() {
+        let mut config = SyncConfig {
+            schema_version: 1,
+            endpoints: vec![endpoint()],
+        };
+        let expected = project_endpoint(config.active().unwrap()).revision;
+        verify_endpoint_revision(&config, Some(&expected)).unwrap();
+        config.endpoints[0].credential_ref.updated_at = "2026-11-04T05:00:00Z".into();
+        assert!(verify_endpoint_revision(&config, Some(&expected)).is_err());
+        assert!(verify_endpoint_revision(&config, Some("")).is_err());
+        config.endpoints.clear();
+        verify_endpoint_revision(&config, Some("")).unwrap();
+        assert!(verify_endpoint_revision(&config, Some(&expected)).is_err());
+    }
 
     pub(super) fn endpoint() -> SyncEndpointConfig {
         SyncEndpointConfig {

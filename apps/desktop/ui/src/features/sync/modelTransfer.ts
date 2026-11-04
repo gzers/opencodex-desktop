@@ -44,9 +44,9 @@ export interface ModelPackage { format: string; formatVersion: number; schemaVer
 export interface CredentialCounts {channelKeys:number;extensions:number;webdavPasswords:number}
 export interface FilePlan {credentialCounts?:CredentialCounts|null; id: string; package: ModelPackage;protected?:boolean;fileDigest?:string;credentialCount?:number;manager?:ManagerSettings|null;assets?:AssetSummary|null }
 /** S18-01：设备间同步方向。local 表示本机较新、上传；remote 表示云端较新、下载。 */
-export interface SyncCheck {source:'local'|'remote';reason?:string;hasRemote:boolean;lastSyncedAt?:string}
+export interface SyncCheck {source:'local'|'remote'|'unchanged'|'undetermined';reason?:string;hasRemote:boolean;lastSyncedAt?:string;localSavedAt?:string|null;remoteSavedAt?:string|null}
 export interface SyncChange {kind:string;id:string;label:string;mark:'new'|'update'|'conflict';version?:number;before?:number;after?:number;clients?:string[];filesAdded?:string[];filesUpdated?:string[];filesRemoved?:string[];fields?:string[]}
-/** changes 为 null 表示无法比较变化，仍允许确认。 */
+/** changes 为 null 表示无法比较变化，不能确认写入。 */
 export interface SyncPreview {source:'local'|'remote'|'file';changes:SyncChange[]|null;unchanged:number;createdAt:string}
 export interface UploadPlan extends FilePlan { phase: string;sync?:SyncPreview|null }
 export interface IncomingPlan extends FilePlan { comparison?:SyncPreview|null;modelsAccepted?:boolean;sync?:SyncPreview|null;expectedLibrary: string; expectedPolicy: string; expectedWorkspace: string; mergedPolicy?:ModelPolicy|null; notices: string[];previewError?:string|null;availableKeys?:string[];availableWebdavPasswords?:string[];availableExtensionIds?:string[];availableExtensionCredentials?:boolean;assetMappings?:AssetNameMappings;channelBindings?:Record<string,{targetId:string;keepLocalConnection:boolean;label:string|null}>;adoption?:{keys:boolean;webdav:boolean;completed:boolean;extensionCredentials?:boolean}|null }

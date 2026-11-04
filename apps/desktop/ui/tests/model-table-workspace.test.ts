@@ -9,7 +9,7 @@ import {createModelRowsState,pendingModelRows,rowFields,writeRow} from '@/featur
 import {emptyRules,modelApi,type ChannelPolicy,type DraftProjection} from '@/features/models/api'
 import {useModelsStore} from '@/features/models/store'
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{project:vi.fn()}}))
-const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'}
+const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></section>'}
 const fixture=():ChannelPolicy=>reactive({id:'channel',label:'测试渠道',connection:{providerId:'provider',protocol:'openai-chat',nodes:[{id:'node',name:'主站',url:'https://example.test'}],activeNodeId:'node',credentialRef:null,enabled:true,allowPrivateNetwork:false},selection:{mode:'whitelist',models:['raw/a']},modelOrder:['raw/a','missing','raw/b'],discovered:['raw/a','raw/b'].map(id=>({id,label:id,rules:emptyRules()})),templateRefs:[],modelRefs:{},defaults:emptyRules(),overrides:{},familyOverrides:{}})
 const result=():DraftProjection=>({rows:[],knownActiveModels:0,exactCatalogCount:null,notices:[]})
 const button=(wrapper:ReturnType<typeof mount>,name:string)=>wrapper.findAll('button').find(b=>b.text()===name)!

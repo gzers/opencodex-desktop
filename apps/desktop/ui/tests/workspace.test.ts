@@ -6,6 +6,7 @@ const { invoke } = vi.hoisted(() => ({ invoke: vi.fn() }))
 vi.mock('@tauri-apps/api/core', () => ({ invoke }))
 
 import { useAppStore } from '@/stores/app'
+import { useSyncStore } from '@/features/sync/store'
 
 describe('workspace settings contracts', () => {
   beforeEach(() => {
@@ -38,6 +39,7 @@ describe('workspace settings contracts', () => {
 
   it('runs sync once and projects status without losing local content on failure', async () => {
     const app = useAppStore()
+    useSyncStore().adoptConfig({ endpoint: { endpointId: 'default', revision: 'a'.repeat(64), url: 'https://dav.example.test', remotePath: 'scope', username: 'fixture', credentialRefId: 'opaque', tlsPolicy: 'verify_required', payloadProtection: 'integrity_only', conflictPolicy: 'ask' } })
     invoke.mockRejectedValueOnce(new Error('offline'))
     await expect(app.runSyncNow()).resolves.toBe(false)
     expect(app.syncRunning).toBe(false)

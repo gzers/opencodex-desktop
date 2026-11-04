@@ -51,6 +51,7 @@ function askClear() {
   if (!clearCount.value) return
   confirming.value = true
 }
+function closeConfirmation() { confirming.value = false }
 async function confirmClear() {
   confirming.value = false
   if (await controller.clearAllNotifications()) operations.clearFinished()
@@ -108,10 +109,10 @@ async function confirmClear() {
       <div v-if="visibleList.length === 0 && visibleTasks.length === 0" class="notification-empty">当前分类没有通知。</div>
     </div>
   </div>
-  <UiDialog :open="confirming" title="清理全部通知" @close="confirming = false">
+  <UiDialog :open="confirming" title="清理全部通知" @close="closeConfirmation">
     <p>将清理全部 {{ clearCount }} 条通知<span v-if="pendingCount">（其中 {{ pendingCount }} 条未处理）</span>。正在执行的任务继续运行。</p>
-    <template #actions>
-      <UiButton variant="ghost" @click="confirming = false">取消</UiButton>
+    <template #actions="{ close: requestClose }">
+      <UiButton variant="ghost" @click="requestClose">取消</UiButton>
       <UiButton variant="danger" @click="confirmClear">确认清理</UiButton>
     </template>
   </UiDialog>

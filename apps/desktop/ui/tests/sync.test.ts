@@ -6,11 +6,13 @@ import { useSyncStore } from '@/features/sync/store'
 
 const invoke = vi.hoisted(() => vi.fn())
 vi.mock('@tauri-apps/api/core', () => ({ invoke }))
+const savedConfig = (): SyncConfigDto => ({endpoint:{endpointId:'default',revision:'a'.repeat(64),url:'https://dav.example.test',remotePath:'scope',username:'fixture',credentialRefId:'opaque',tlsPolicy:'verify_required',payloadProtection:'integrity_only',conflictPolicy:'ask'}})
 
 describe('WebDAV sync contract', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     invoke.mockReset()
+    localStorage.clear();useSyncStore().adoptConfig(savedConfig())
   })
 
   it('loads endpoint config and masks password', async () => {
@@ -32,7 +34,7 @@ describe('WebDAV sync contract', () => {
     expect(invoke).toHaveBeenCalledWith('get_sync_config')
     expect(app.syncConfig?.endpoint?.url).toBe('https://dav.example.test')
     expect(app.syncConfig?.endpoint).not.toHaveProperty('password')
-    expect(app.webdavState).toBe('disconnected')
+    expect(app.webdavState).toBe('configured')
   })
 
   it('tests connection and drives connection state', async () => {
@@ -73,6 +75,7 @@ describe('sync conflict notification refresh', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     invoke.mockReset()
+    localStorage.clear();useSyncStore().adoptConfig(savedConfig())
   })
 
   it('reloads notifications after a sync run', async () => {
@@ -106,6 +109,7 @@ describe('sync terminal result is not command acknowledgement', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     invoke.mockReset()
+    localStorage.clear();useSyncStore().adoptConfig(savedConfig())
   })
 
   it.each([
@@ -120,7 +124,7 @@ describe('sync terminal result is not command acknowledgement', () => {
     invoke.mockImplementation((command: string) => Promise.resolve(command === 'run_sync_now' ? result : undefined))
     const app = useAppStore()
     expect(await app.runSyncNow()).toBe(expected)
-    expect(app.webdavState).toBe(connectionState)
+    expect(app.webdavState).toBe(operationState==='validating'?'connected':connectionState)
     expect(app.syncStatus?.message).toBe(result.message)
     expect(useSyncStore().running).toBe(false)
     await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('list_notifications'))

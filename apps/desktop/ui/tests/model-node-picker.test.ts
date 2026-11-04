@@ -22,6 +22,6 @@ describe('pure node selection view',()=>{
   const wrapper=mount(NodePicker,{props:{nodes,activeId:'one',measuring:true,pending:['two'],stopped:true,results:{one:{nodeId:'one',elapsedMs:12,modelCount:8,error:null}}}})
   expect(wrapper.text()).toContain('已完成结果保留');expect(wrapper.text()).toContain('12 ms')
   expect(wrapper.get('button[aria-label="检测节点2"]').attributes('disabled')).toBeDefined()
-  await wrapper.findAll('button').find(b=>b.text()==='取消检测')!.trigger('click');expect(wrapper.emitted('stop')).toEqual([[]])
+  await wrapper.findAll('button').find(b=>b.text()==='停止')!.trigger('click');expect(wrapper.emitted('stop')).toEqual([[]])
  })
 })

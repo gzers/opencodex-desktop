@@ -64,7 +64,7 @@ describe('渠道确认保存到全局结果宿主的完整点击链（模拟文�
     expect(wrapper.find('main .process-progress').exists()).toBe(false)
     expect(wrapper.find('main .save-result').exists()).toBe(false)
     expect(useModelsStore().channelDirty).toBe(false)
-    expect(document.activeElement?.textContent?.trim()).toBe('立即重启 Codex')
+    expect(document.activeElement?.textContent?.trim()).not.toBe('立即重启 Codex')
     await wrapper.findAll('.notif-layer button').find(node => node.text() === '稍后')!.trigger('click')
     expect(useModelSaveFeedback().open).toBe(false)
     expect(wrapper.find('.notif-layer .process-progress').exists()).toBe(false)

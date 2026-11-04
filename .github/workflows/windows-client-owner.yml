@@ -1,0 +1,88 @@
+name: Windows actual Codex client owner
+on:
+  push:
+    branches:
+      - codex/0.2.21-fixes
+    paths:
+      - .github/workflows/windows-client-owner.yml
+      - test/smoke/windows-021-client-owner.ps1
+      - test/smoke/windows-021-client-owner.mjs
+      - test/smoke/windows-021-client-owner.test.mjs
+      - apps/desktop/tauri/tests/windows_client_selection_owner.rs
+  workflow_dispatch:
+    inputs:
+      product_tree:
+        description: Exact apps/desktop/tauri/src tree from the frozen source
+        required: true
+        default: ccc6cc45044f94b9cd2f0e944b374fc32d49eab8
+        type: string
+permissions:
+  contents: read
+jobs:
+  actual-default-binding:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Capture default official settings from fixed public npm packages
+        shell: pwsh
+        env:
+          OCX_EXPECTED_PRODUCT_TREE: ${{ inputs.product_tree || 'ccc6cc45044f94b9cd2f0e944b374fc32d49eab8' }}
+        run: |
+          $taskNode = (Get-Command node).Source
+          $taskNpm = Join-Path (Split-Path -Parent $taskNode) 'node_modules/npm/bin/npm-cli.js'
+          & ./test/smoke/windows-021-client-owner.ps1 -Node $taskNode -NpmCli $taskNpm -OutputDirectory test/out/windows-actual-owner -ExpectedProductTree $env:OCX_EXPECTED_PRODUCT_TREE
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve actual binding and blocked outcomes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-actual-codex-binding-${{ github.sha }}
+          if-no-files-found: error
+          path: test/out/windows-actual-owner
+  actual-native-owner:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          shared-key: windows-client-owner
+      - name: Build exact product-linked owner integration without running a matrix
+        shell: pwsh
+        working-directory: apps/desktop/tauri
+        run: |
+          npm --prefix ../ui ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm --prefix ../ui run build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --test windows_client_selection_owner --no-run --message-format=json > ../../../test/windows-client-owner-build.jsonl
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Real published binding, production npm resolver and two native owner cases
+        shell: pwsh
+        env:
+          OCX_EXPECTED_PRODUCT_TREE: ${{ inputs.product_tree || 'ccc6cc45044f94b9cd2f0e944b374fc32d49eab8' }}
+        run: |
+          $taskArtifacts = Get-Content -LiteralPath test/windows-client-owner-build.jsonl | ForEach-Object { $_ | ConvertFrom-Json } | Where-Object { $_.reason -eq 'compiler-artifact' -and $_.target.name -eq 'windows_client_selection_owner' -and $_.executable }
+          if (@($taskArtifacts).Count -ne 1) { throw 'Exactly one product-linked owner test EXE required' }
+          $taskNode = (Get-Command node).Source
+          $taskNpm = Join-Path (Split-Path -Parent $taskNode) 'node_modules/npm/bin/npm-cli.js'
+          & ./test/smoke/windows-021-client-owner.ps1 -Node $taskNode -NpmCli $taskNpm -OutputDirectory test/out/windows-actual-native-owner -ExpectedProductTree $env:OCX_EXPECTED_PRODUCT_TREE -TestExecutable $taskArtifacts.executable
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve actual owner outcomes including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-actual-native-owner-${{ github.sha }}
+          if-no-files-found: error
+          path: |
+            test/out/windows-actual-native-owner
+            test/windows-client-owner-build.jsonl

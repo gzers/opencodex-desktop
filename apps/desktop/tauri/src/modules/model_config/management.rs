@@ -44,6 +44,43 @@ impl Management {
     pub fn verify_binding(&self) -> ModelResult<()> {
         self.unchanged()
     }
+    /// Read only the official public settings projection after attestation.
+    pub async fn public_settings(&self) -> ModelResult<Value> {
+        let request = self.authenticated_request(reqwest::Method::GET, "/api/settings")?;
+        self.receive(request).await
+    }
+    /// Public editor DTO, not a secret-bearing config.json round trip.
+    pub async fn public_config(&self) -> ModelResult<Value> {
+        let request = self.authenticated_request(reqwest::Method::GET, "/api/config")?;
+        self.receive(request).await
+    }
+    pub async fn codex_integration(&self) -> ModelResult<Value> {
+        let request =
+            self.authenticated_request(reqwest::Method::GET, "/api/native-integrations")?;
+        let value = self.receive(request).await?;
+        let clients = value["clients"]
+            .as_array()
+            .ok_or_else(|| invalid("rename_client_binding", "官方未返回原生客户端路径绑定"))?;
+        let mut rows = clients.iter().filter(|row| row["clientId"] == "codex");
+        let row = rows
+            .next()
+            .ok_or_else(|| invalid("rename_client_binding", "官方未返回Codex路径绑定"))?;
+        if rows.next().is_some() {
+            return Err(invalid("rename_client_binding", "官方Codex路径绑定重复"));
+        }
+        Ok(row.clone())
+    }
+    /// A deliberate no-op persisted editor commit asks the official owner to
+    /// reconcile its complete live provider roster/default from saved content.
+    /// Strict server baseline comparison owns validation and secrets stay there.
+    pub async fn adopt_saved_provider_editor(&self, editor: Value) -> ModelResult<Value> {
+        self.request(
+            reqwest::Method::PUT,
+            "/api/providers",
+            Some(serde_json::json!({"baseline":editor,"next":editor})),
+        )
+        .await
+    }
     pub async fn bind(context: &ProcessContext) -> ModelResult<Self> {
         let record = read_record(context)?;
         let secret = record

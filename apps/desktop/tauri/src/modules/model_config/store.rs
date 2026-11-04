@@ -224,6 +224,10 @@ impl ModelStore {
         self.load_library_unlocked()
     }
     fn load_library_unlocked(&self) -> ModelResult<Snapshot> {
+        super::content_versions::owner_saves::recover(
+            &self.root,
+            super::content_versions::owner_saves::Owner::Templates,
+        )?;
         let bytes = self.bytes(LIBRARY_PATH)?;
         let library = match &bytes {
             Some(bytes) => serde_json::from_slice(bytes)?,
@@ -313,6 +317,10 @@ impl ModelStore {
         }
     }
     fn load_unlocked(&self) -> ModelResult<(Snapshot, Policy)> {
+        super::content_versions::owner_saves::recover(
+            &self.root,
+            super::content_versions::owner_saves::Owner::Templates,
+        )?;
         self.recover_pending()?;
         let bytes = self.bytes(LIBRARY_PATH)?;
         let library = match &bytes {
@@ -741,11 +749,26 @@ impl ModelStore {
                 },
             );
         }
+        use super::content_versions::owner_saves::{self, Owner};
+        let before_versions = super::file_objects::template_save_state(&snapshot.library)?;
+        let receipt = owner_saves::begin(
+            &self.root,
+            Owner::Templates,
+            &before_versions,
+            &super::file_objects::template_save_state(&library)?,
+            &serde_json::to_vec_pretty(&library)?,
+        )?;
         let snapshot = if submission.is_some() || outcomes.iter().any(|v| v.changed) {
             self.persist_in_scope(&library, &snapshot, SnapshotScope::Library)?
         } else {
             snapshot
         };
+        owner_saves::commit(receipt).map_err(|_| {
+            invalid(
+                "saved_content_version_unconfirmed",
+                "模版已保存，原保存版本回执待恢复；请重新读取核对",
+            )
+        })?;
         Ok(BatchCommit { snapshot, outcomes })
     }
     pub fn commit_runtime_policy(

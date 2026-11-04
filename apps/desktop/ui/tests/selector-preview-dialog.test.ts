@@ -3,7 +3,7 @@ import {describe,expect,it,vi} from 'vitest'
 import SelectorPreviewDialog from '@/features/models/SelectorPreviewDialog.vue'
 import {emptyRules,type DraftProjection,type ModelPolicy} from '@/features/models/api'
 
-const dialog={props:['open'],template:'<div v-if="open"><slot/><slot name="actions"/></div>'}
+const dialog={props:['open'],template:'<div v-if="open"><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></div>'}
 
 function row(channelId:string,modelId:string,selected=true){
   return {channelId,providerId:channelId,modelId,label:modelId,enabled:true,selected,discovered:true,templateRef:null,rules:emptyRules(),source:{}}

@@ -384,6 +384,7 @@ pub enum PreferencesError {
     NotConfigured,
     Corrupted,
     Io,
+    VersionPending,
 }
 
 /// 出站代理策略（U-05）：由偏好决定，不含凭据；System 表示沿用系统代理。
@@ -467,11 +468,56 @@ impl PreferencesStore {
     }
 
     pub fn load(&self) -> Result<Preferences, PreferencesError> {
+        if !self.data_root.is_absolute() {
+            return Err(PreferencesError::NotConfigured);
+        }
+        let _guard = crate::infrastructure::locking::TargetFileLock::lock(&self.path())
+            .map_err(|_| PreferencesError::Io)?;
+        crate::modules::model_config::content_versions::owner_saves::recover(
+            &self.data_root,
+            crate::modules::model_config::content_versions::owner_saves::Owner::Preferences,
+        )
+        .map_err(|_| PreferencesError::VersionPending)?;
         load_preferences(&self.path())
     }
 
     pub fn save(&self, value: &Preferences) -> Result<Preferences, PreferencesError> {
-        save_preferences(&self.path(), value)
+        if !self.data_root.is_absolute() {
+            return Err(PreferencesError::NotConfigured);
+        }
+        use crate::modules::model_config::{
+            content_versions::owner_saves::{self, Owner},
+            file_objects,
+        };
+        let _guard = crate::infrastructure::locking::TargetFileLock::lock(&self.path())
+            .map_err(|_| PreferencesError::Io)?;
+        owner_saves::recover(&self.data_root, Owner::Preferences)
+            .map_err(|_| PreferencesError::VersionPending)?;
+        validate(value)?;
+        let before = if self.path().exists() {
+            Some(load_preferences(&self.path())?)
+        } else {
+            None
+        };
+        let mut document = document_from_preferences(value);
+        preserve_model_agent(&self.path(), &mut document)?;
+        let bytes = serde_json::to_vec_pretty(&document).map_err(|_| PreferencesError::Io)?;
+        let receipt = owner_saves::begin(
+            &self.data_root,
+            Owner::Preferences,
+            &file_objects::preferences_save_state(before.as_ref())
+                .map_err(|_| PreferencesError::Io)?,
+            &file_objects::preferences_save_state(Some(value)).map_err(|_| PreferencesError::Io)?,
+            &bytes,
+        )
+        .map_err(|_| PreferencesError::Io)?;
+        crate::infrastructure::atomic_write::atomic_write(&self.path(), &bytes, 0o600)
+            .map_err(|_| PreferencesError::Io)?;
+        if std::fs::read(self.path()).map_err(|_| PreferencesError::Io)? != bytes {
+            return Err(PreferencesError::Io);
+        }
+        owner_saves::commit(receipt).map_err(|_| PreferencesError::VersionPending)?;
+        Ok(value.clone())
     }
 }
 
@@ -664,6 +710,10 @@ impl PreferencesError {
                 operation: "read or validate preferences".to_string(),
                 detail: "preferences file is corrupted or contains an unsupported value"
                     .to_string(),
+            },
+            Self::VersionPending => AppError::FileSystem {
+                operation: "certify saved preferences".into(),
+                detail: "偏好已保存，原保存版本回执待恢复；请重新读取核对".into(),
             },
             Self::Io => AppError::FileSystem {
                 operation: "read or write preferences".to_string(),

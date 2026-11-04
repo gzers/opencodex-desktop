@@ -89,7 +89,7 @@ async fn current_file_channel_roundtrips_over_verified_https_and_commits_on_conf
         &transport,
         &config,
         "isolated-tls",
-        scope,
+        scope.clone(),
         None,
         || Ok(()),
     )
@@ -193,7 +193,17 @@ async fn conditional_publish_preserves_remote_objects_and_device_scoped_receptio
     .await
     .unwrap();
     let competing = tempfile::tempdir().unwrap();
-    let concurrent_scope = config_remote::save_scope(competing.path(), Scope::default()).unwrap();
+    let competing_template = template(competing.path(), "fixture-competing");
+    let concurrent_scope = config_remote::save_scope(
+        competing.path(),
+        Scope {
+            template_ids: vec![competing_template],
+            preferences: false,
+            extensions: false,
+            ..Default::default()
+        },
+    )
+    .unwrap();
     let competitor = config_remote::prepare(
         competing.path(),
         &transport,
@@ -221,6 +231,57 @@ async fn conditional_publish_preserves_remote_objects_and_device_scoped_receptio
     );
     assert!(
         matches!(config_remote::publish(competing.path(),&transport,&config,&competitor.id,"test-binding",||Ok(())).await,Err(error) if error.code=="remote_changed")
+    );
+    let first_scope = config_remote::load_scope(first.path()).unwrap();
+    assert_eq!(
+        config_remote::check_source(
+            first.path(),
+            &transport,
+            &config,
+            "test-binding",
+            &first_scope
+        )
+        .await
+        .unwrap()
+        .source,
+        "unchanged"
+    );
+    PreferencesStore::new(first.path())
+        .save(&Preferences {
+            interface_scale: 150,
+            ..Default::default()
+        })
+        .unwrap();
+    let newer = config_remote::check_source(
+        first.path(),
+        &transport,
+        &config,
+        "test-binding",
+        &first_scope,
+    )
+    .await
+    .unwrap();
+    assert_eq!(newer.source, "local");
+    assert!(newer.local_saved_at.is_some() && newer.remote_saved_at.is_some());
+    // Direction preview performs real TLS reads but never publishes the newer local edit.
+    PreferencesStore::new(first.path())
+        .save(&Preferences {
+            interface_scale: 125,
+            ..Default::default()
+        })
+        .unwrap();
+    assert_eq!(
+        config_remote::check_source(
+            first.path(),
+            &transport,
+            &config,
+            "test-binding",
+            &first_scope
+        )
+        .await
+        .unwrap()
+        .source,
+        "unchanged"
     );
     let second = tempfile::tempdir().unwrap();
     let b = template(second.path(), "fixture-b");

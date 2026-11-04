@@ -3,7 +3,7 @@ import { mount,flushPromises } from '@vue/test-utils'
 import ImportedConnections from '@/features/sync/ImportedConnections.vue'
 import {listImportedConnections,activateImportedConnection} from '@/features/sync/api'
 vi.mock('@/features/sync/api',()=>({listImportedConnections:vi.fn(),activateImportedConnection:vi.fn()}))
-const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'}
+const dialog={props:['open'],emits:['close'],template:'<section v-if="open"><slot/><slot name="actions" :close="()=> $emit(\'close\')"/></section>'}
 const fixture=()=>({baseline:'frozen-active',items:[{id:'candidate',endpoint:{id:'source-default',url:'https://fixture.example.test',remotePath:'portable',username:'fixture',conflictPolicy:'ask'},hasPassword:true}]})
 beforeEach(()=>{vi.clearAllMocks();vi.mocked(listImportedConnections).mockResolvedValue(fixture())})
 describe('inactive imported connections',()=>{

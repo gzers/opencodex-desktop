@@ -40,8 +40,9 @@ async function generate(){
  }catch(cause){if(current===sequence)error.value=errorText(cause)}finally{if(current===sequence){busy.value=false;run.value=''}}
 }
 async function stop(){const id=run.value;if(!id)return;sequence++;run.value='';busy.value=false;try{await modelApi.stopGeneration(id)}catch(cause){error.value=errorText(cause)}}
-function close(){if(saving.value)return;if(run.value)void stop();emit('close')}
-onBeforeUnmount(()=>{sequence++;if(run.value)void modelApi.stopGeneration(run.value)})
+// Closing observes only; generation persists its recoverable result in the backend.
+function close(){if(!saving.value)emit('close')}
+onBeforeUnmount(()=>{sequence++})
 async function save(){
  if(saving.value||busy.value||saved.value)return
  if(!review.value){if(stale.value||!frozen.value||!selectedCount.value)return;const proposals=items.value.filter(item=>chosen.value[item.id]?.length).map(item=>{const accepted=acceptProposal(item.base,item.fields,chosen.value[item.id]??[]);return{templateId:accepted.templateId,baseRevision:accepted.baseRevision,label:accepted.label,content:accepted.content}});review.value={runId:resultRun.value,expectedLibrary:frozen.value.libraryDigest,proposals}}
@@ -61,11 +62,11 @@ async function save(){
    <div class="model-inline"><label><input v-model="scope" type="radio" value="all" :disabled="busy||!!review" />全部已保存模版</label><label><input v-model="scope" type="radio" value="selected" :disabled="busy||!!review||!selected.length" />已勾选 {{ selected.length }} 项</label><span>{{ targets.length }} 个目标</span></div>
    <label>补充要求<textarea v-model="requirements" class="input" rows="3" :disabled="busy||!!review" /></label>
    <details><summary>在线资料</summary><div class="model-inline"><input v-model="query" class="input" type="search" aria-label="批量更新资料关键词" placeholder="官方资料关键词" :disabled="busy||!!review" /><UiButton :loading="reading" :disabled="!query.trim()||busy||!!review" @click="research">检索</UiButton></div><p v-for="source in sources" :key="source.url" class="model-muted">{{ source.url }}</p></details>
-   <p v-if="report" class="batch-agent-report">{{ report }}</p><p v-if="stale&&!saved" role="alert" class="model-error">本机已保存内容已变化，当前建议保留；请按新基准重新检查。</p>
+   <p v-if="busy" role="status">检查正在进行；关闭窗口后任务继续，可通过“恢复上次建议”查看结果。</p><p v-if="report" class="batch-agent-report">{{ report }}</p><p v-if="stale&&!saved" role="alert" class="model-error">本机已保存内容已变化，当前建议保留；请按新基准重新检查。</p>
    <article v-for="item in items" :key="item.id" class="batch-agent-result"><h3>{{ item.proposal.label }}</h3><label v-for="field in item.fields" :key="field.path.join('.')"><input v-model="chosen[item.id]" type="checkbox" :value="field.path.join('.')" :disabled="field.locked||busy||!!review" />{{ field.label }}{{ field.locked?' · 人工锁':'' }}<details><summary>查看差异</summary><pre>{{ JSON.stringify(field.before,null,2) }}</pre><pre>{{ JSON.stringify(field.after,null,2) }}</pre></details></label><p v-if="!item.fields.length" class="model-muted">未提出内容变化</p></article>
    <p v-if="error" role="alert" class="model-error">{{ error }}</p>
   </div>
-  <template #actions><UiButton :disabled="busy||saving||!!review" @click="restore">恢复上次建议</UiButton><UiButton v-if="busy" @click="stop">停止</UiButton><UiButton :disabled="saving" @click="close">关闭</UiButton><UiButton v-if="!review" :disabled="!settings||!targets.length||reading" :loading="busy" @click="generate">{{ result?'重新检查':'检查更新' }}</UiButton><UiButton v-if="result&&!saved" variant="primary" :loading="saving" :disabled="busy||(!review&&(!selectedCount||!!stale))" @click="save">{{ review?'核对原保存结果':'另存所选建议版本' }}</UiButton></template>
+  <template #actions="{ close: requestClose }"><UiButton v-if="!saved" :disabled="busy||saving||!!review" @click="restore">恢复上次建议</UiButton><UiButton v-if="busy" @click="stop">停止检查</UiButton><UiButton v-if="!busy&&!saved" :disabled="saving" @click="requestClose">取消</UiButton><UiButton v-if="!review&&!saved" :variant="result ? 'default' : 'primary'" :disabled="!settings||!targets.length||reading" :loading="busy" @click="generate">{{ result?'重新检查':'检查更新' }}</UiButton><UiButton v-if="result&&!saved" variant="primary" :loading="saving" :disabled="busy||(!review&&(!selectedCount||!!stale))" @click="save">{{ review?'核对原保存结果':'另存所选建议版本' }}</UiButton></template>
  </UiDialog>
 </template>
 <style scoped>

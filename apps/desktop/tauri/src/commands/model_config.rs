@@ -46,10 +46,10 @@ pub async fn model_file_save(
 ) -> ModelResult<crate::modules::model_config::config_file::SaveResult> {
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     let root = data_root.0.clone();
-    let home = context.opencodex_home.clone();
+    let context = context.inner().clone();
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
-        crate::modules::model_config::config_file::save(&root, &home, request)
+        crate::modules::model_config::config_file::save_with_context(&root, &context, request)
     })
     .await
     .map_err(|_| {
@@ -229,8 +229,14 @@ pub async fn model_policy_history(
 pub async fn model_policy_refresh_cache(
     restart_codex: bool,
     context: tauri::State<'_, crate::state::SharedProcessContext>,
+    data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<crate::modules::model_config::cache_refresh::CacheRefresh> {
-    crate::modules::model_config::cache_refresh::sync_cache(&context, restart_codex).await
+    crate::modules::model_config::cache_refresh::sync_cache_after_save(
+        &data_root.0,
+        &context,
+        restart_codex,
+    )
+    .await
 }
 #[tauri::command]
 pub async fn model_policy_abandon(

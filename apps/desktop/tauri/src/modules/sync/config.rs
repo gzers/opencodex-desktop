@@ -150,7 +150,19 @@ impl SyncConfigStore {
     ) -> Result<SyncEndpointConfig, AppError> {
         validate_input(input)?;
         let mut config = self.load()?;
-        let now = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
+        // Two saves within a second must invalidate the earlier observation too.
+        // Keep this revision monotonic if the system clock moved backwards.
+        let instant = chrono::Utc::now();
+        let instant = config
+            .active()
+            .and_then(|endpoint| {
+                chrono::DateTime::parse_from_rfc3339(&endpoint.credential_ref.updated_at).ok()
+            })
+            .map(|previous| previous.with_timezone(&chrono::Utc))
+            .filter(|previous| *previous >= instant)
+            .and_then(|previous| previous.checked_add_signed(chrono::Duration::nanoseconds(1)))
+            .unwrap_or(instant);
+        let now = instant.to_rfc3339_opts(chrono::SecondsFormat::Nanos, true);
         let ref_id = config
             .active()
             .map(|endpoint| endpoint.credential_ref.ref_id.clone())
@@ -580,6 +592,33 @@ mod endpoint_mutation_tests {
         assert!(!std::fs::read_to_string(store.path())
             .unwrap()
             .contains("private-password"));
+    }
+
+    #[test]
+    fn credential_revision_changes_on_rapid_saves_and_after_clock_rollback() {
+        let root = tempfile::tempdir().unwrap();
+        let store = SyncConfigStore::new(root.path());
+        let credentials = Credentials::default();
+        let first = save(&store, &credentials);
+        let second = save(&store, &credentials);
+        assert_eq!(first.credential_ref.ref_id, second.credential_ref.ref_id);
+        let first_time =
+            chrono::DateTime::parse_from_rfc3339(&first.credential_ref.updated_at).unwrap();
+        let second_time =
+            chrono::DateTime::parse_from_rfc3339(&second.credential_ref.updated_at).unwrap();
+        assert!(second_time > first_time);
+        let mut config = store.load().unwrap();
+        config.endpoints[0].credential_ref.updated_at = "2099-01-01T00:00:00Z".into();
+        store.save_config(&config).unwrap();
+        let after_rollback = save(&store, &credentials);
+        assert_eq!(
+            after_rollback.credential_ref.updated_at,
+            "2099-01-01T00:00:00.000000001Z"
+        );
+        assert_eq!(
+            after_rollback.credential_ref.created_at,
+            first.credential_ref.created_at
+        );
     }
 
     #[test]

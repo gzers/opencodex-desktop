@@ -29,6 +29,7 @@ pub struct AgentSettings {
     pub connection_digest: Option<String>,
 }
 pub fn settings(root: &Path) -> ModelResult<Option<AgentSettings>> {
+    let _transaction = crate::modules::backup::manager::acquire_preferences_transaction(root)?;
     let path = root.join(preferences::PREFERENCES_RELATIVE_PATH);
     safety::check_path(root, &path, true)?;
     if !path.exists() {
@@ -41,6 +42,49 @@ pub fn settings(root: &Path) -> ModelResult<Option<AgentSettings>> {
         .map(serde_json::from_value)
         .transpose()
         .map_err(Into::into)
+}
+
+pub(super) fn rename_settings_document(
+    document: &mut Value,
+    renames: &[super::config_file_mapping::ProviderRename],
+    config: &Value,
+    context: Option<&ProcessContext>,
+) -> ModelResult<()> {
+    preferences::preferences_from_document(document)
+        .map_err(|_| invalid("preferences", "现有偏好文档无效，未覆盖"))?;
+    let Some(value) = document.get_mut(preferences::MODEL_AGENT_LOCAL_NAMESPACE) else {
+        return Ok(());
+    };
+    let mut settings: AgentSettings = serde_json::from_value(value.clone())?;
+    let Some(rename) = renames.iter().find(|r| r.from == settings.provider_id) else {
+        return Ok(());
+    };
+    if settings
+        .channel_id
+        .as_ref()
+        .is_some_and(|id| id != &rename.channel_id)
+    {
+        return Err(invalid(
+            "agent_binding",
+            "执行选择的稳定渠道身份不同，请重新核对",
+        ));
+    }
+    settings.provider_id = rename.to.clone();
+    settings.channel_id = Some(rename.channel_id.clone());
+    // Contextless file/import callers invalidate the old cached digest. The
+    // existing bind() consumer re-establishes it from the actual runtime. IPC
+    // saves supply context and persist the exact new digest in this transaction.
+    settings.connection_digest = context
+        .map(|ctx| {
+            super::execution_directory::connection_binding_for_raw(
+                ctx,
+                &rename.to,
+                &config["providers"][&rename.to],
+            )
+        })
+        .transpose()?;
+    *value = serde_json::to_value(settings)?;
+    Ok(())
 }
 pub fn save_settings(root: &Path, settings: AgentSettings) -> ModelResult<AgentSettings> {
     if settings.provider_id.is_empty()

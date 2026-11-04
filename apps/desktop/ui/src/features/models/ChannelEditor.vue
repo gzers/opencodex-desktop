@@ -15,6 +15,7 @@ import {useModalStore} from '@/app/modal/store'
 import {protectedChannel} from './channelActions'
 import { nodeMeasurementError, useNodeMeasurements } from './useNodeMeasurements'
 import {useModelsStore} from './store'
+import {channelRenameIntent,channelRenameError,channelRenamePreview,renameChannelLabel,renameChannelProvider,type ChannelRenameIntent} from './channelRename'
 import { emptyRules, modelApi, errorText, type ChannelPolicy, type Template, type TemplateRef, type ModelProjection, type ModelPolicy } from './api'
 const props = defineProps<{ channel: ChannelPolicy; templates: Template[]; busy?: boolean;existing?:boolean;globalRefs?:TemplateRef[];projection?:ModelProjection[];projectionBusy?:boolean;projectionError?:string;policy?:ModelPolicy;rowState?:ModelRowsState;navigation?:{collapsed:boolean;activeId:string};channels?:ChannelPolicy[];saveDisabled?:boolean;dirty?:boolean;saveStatus?:string;saveTone?:StatusTone;activeCount?:number;viewState?:{search:string;selectedOnly:boolean;family:string} }>()
 const emit = defineEmits<{ close: [];switch:[string];save:[] }>()
@@ -23,15 +24,25 @@ const sections=[{id:'channel-config',label:'渠道配置'},{id:'channel-nodes',l
 const defaultsOpen=ref(false);
 const apiKey=ref('');const discovering=ref(false);const discoveryError=ref('');let generation=0
 const models=useModelsStore()
+const savedChannel=computed(()=>models.snapshot?.policy.channels.find(c=>c.id===props.channel.id))
+const credentialProvider=computed(()=>savedChannel.value?.connection.providerId??props.channel.connection.providerId)
+const renameIntents=new Map<string,ChannelRenameIntent>()
+const renameIntent=()=>{let intent=renameIntents.get(props.channel.id);if(!intent){intent=channelRenameIntent(props.channel,savedChannel.value);renameIntents.set(props.channel.id,intent)}return intent}
+const renameError=computed(()=>channelRenameError(props.channel,models.snapshot?.policy.channels??[],props.policy?.channels??props.channels??models.channelDraft?.channels??[]))
+const renamePreview=computed(()=>channelRenamePreview(props.channel,savedChannel.value))
+const renameProtected=computed(()=>protectedChannel(savedChannel.value??props.channel))
+function editName(event:Event){renameChannelLabel(props.channel,(event.target as HTMLInputElement).value,renameIntent())}
+function editProvider(event:Event){renameChannelProvider(props.channel,(event.target as HTMLInputElement).value,renameIntent())}
+function saveChannel(){if(!renameError.value)emit('save')}
 const keyOriginal=ref(''),keyVisible=ref(false),keyLoading=ref(false),keySource=ref(''),keyError=ref('')
 const keyExplicit=ref(false)
 let keySequence=0
-watch([()=>props.channel.id,()=>props.channel.connection.providerId,()=>models.snapshot?.policyDigest],async()=>{
+watch([()=>props.channel.id,credentialProvider,()=>models.snapshot?.policyDigest],async()=>{
  const sequence=++keySequence,channelId=props.channel.id
  const restoreEdit=(savedValue='')=>{const edit=models.credentialEdits[channelId];apiKey.value=edit?(edit.value??''):savedValue;keyExplicit.value=edit?.action==='replace'}
  keyVisible.value=false;keyError.value='';keySource.value='';keyLoading.value=true;keyOriginal.value='';restoreEdit()
  try{
-  const saved=await modelApi.credential(props.channel.connection.providerId)
+  const saved=await modelApi.credential(credentialProvider.value)
   if(sequence!==keySequence)return
   keyOriginal.value=saved.value;keySource.value=saved.source
   restoreEdit(saved.value)
@@ -53,7 +64,7 @@ onBeforeUnmount(()=>{generation++;keySequence++;apiKey.value='';keyOriginal.valu
 async function discover(){
  const node=props.channel.connection.nodes.find(n=>n.id===props.channel.connection.activeNodeId);if(!node)return
  const sequence=++generation;discovering.value=true;discoveryError.value=''
- try{const result=await modelApi.discover({protocol:props.channel.connection.protocol,url:node.url,apiKey:probeKey.value||null,credentialRef:props.channel.connection.credentialRef,allowPrivateNetwork:props.channel.connection.allowPrivateNetwork,providerId:props.channel.connection.providerId})
+ try{const result=await modelApi.discover({protocol:props.channel.connection.protocol,url:node.url,apiKey:probeKey.value||null,credentialRef:props.channel.connection.credentialRef,allowPrivateNetwork:props.channel.connection.allowPrivateNetwork,providerId:credentialProvider.value})
   if(sequence!==generation){if(result.credentialRef&&result.credentialRef!==props.channel.connection.credentialRef)void modelApi.forgetCredential(result.credentialRef);return}
   const previousModels=props.channel.discovered
   props.channel.discovered=result.models.map(model=>{const previous=props.channel.discovered.find(item=>item.id===model.id);return previous?{...model,label:previous.label}:model})
@@ -62,7 +73,7 @@ async function discover(){
  }catch(cause){if(sequence===generation)discoveryError.value=errorText(cause)}finally{if(sequence===generation)discovering.value=false}
 }
 const selectionMode = computed(() => props.channel.selection.mode)
-const measurement=reactive(useNodeMeasurements(()=>props.channel,()=>probeKey.value))
+const measurement=reactive(useNodeMeasurements(()=>({...props.channel,connection:{...props.channel.connection,providerId:credentialProvider.value}}),()=>probeKey.value))
 /** 已选型号数；与原型 selected(p).length 同口径（all 模式取全部发现项）。 */
 const selectedCount=computed(()=>props.channel.selection.mode==='all'?props.channel.discovered.length:props.channel.selection.mode==='whitelist'?props.channel.selection.models.length:0)
 /**
@@ -122,9 +133,14 @@ function adopt(t: Template, revision: string) {
       用户看不出保存状态与连接状态，故拆回四枚徽标 + 计数。
     -->
     <template #header><span class="channel-detail-back"><UiButton size="sm" variant="ghost" aria-label="返回渠道列表" title="返回渠道列表" @click="emit('close')"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></UiButton></span><div class="channel-detail-heading"><strong class="channel-detail-name">{{ channel.label || '新渠道' }}</strong><div class="channel-detail-status" role="status"><UiStatus :tone="saveTone ?? 'muted'" :label="saveStatus" data-status-scope="current-channel" :hint="'当前渠道的保存状态'" /><UiStatus v-if="protectedChannel(channel)" tone="muted" label="官方管理" data-channel-managed /><template v-else><UiStatus :tone="channel.connection.enabled?'running':'muted'" :label="channel.connection.enabled?'已启用':'已停用'" :data-channel-enabled="channel.connection.enabled" /><UiStatus :tone="connectionState.tone" :label="connectionState.label" :data-channel-availability="connectionState.label" /></template><UiStatus v-if="discoveryState" :tone="discoveryState.tone" :label="discoveryState.label" /><span class="channel-detail-count">已选 {{ selectedCount }} / 发现 {{ channel.discovered.length }}</span></div></div><UiSelectField v-if="channels?.length" :model-value="channel.id" :options="channels.map(c=>({value:c.id,label:c.label||'未命名渠道'}))" label="切换渠道" :disabled="busy" @update:model-value="emit('switch',$event)" /></template>
-    <template #primary="{collapsed}"><UiButton size="sm" variant="primary" :disabled="busy||saveDisabled||dirty===false" title="保存当前渠道，成功后返回渠道列表；其它渠道修改保留" data-save-scope="current-channel" aria-label="保存渠道草稿" @click="emit('save')"><svg v-if="collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><template v-else>保存</template></UiButton></template>
+    <template #primary="{collapsed}"><UiButton size="sm" variant="primary" :disabled="busy||saveDisabled||dirty===false||!!renameError" title="保存当前渠道，成功后返回渠道列表；其它渠道修改保留" data-save-scope="current-channel" aria-label="保存渠道草稿" @click="saveChannel"><svg v-if="collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><template v-else>保存</template></UiButton></template>
     <div class="model-form">
-    <section id="channel-config" tabindex="-1"><h2>渠道配置</h2><div class="channel-config-grid"><label>渠道名称<input class="input" v-model="channel.label" maxlength="80" :disabled="busy" /></label><label>渠道标识<input class="input" :value="channel.connection.providerId" readonly aria-label="渠道标识" /><span class="model-muted">标识固定，名称可修改。</span></label><label>默认接口协议<UiSelectField :model-value="channel.connection.protocol" label="默认接口协议" :disabled="busy" :options="[{value:'openai-responses',label:'openai-responses'},{value:'openai-chat',label:'openai-chat'},{value:'anthropic',label:'anthropic'},{value:'ollama-native',label:'ollama-native'}]" @update:model-value="channel.connection.protocol=$event" /></label><label>认证方式<UiSelectField :model-value="authMode" label="认证方式" :options="authOptions" :disabled="busy" @update:model-value="authMode=$event as 'key'|'none'" /></label><label v-if="authMode==='key'" class="channel-key">API Key<span class="channel-key-input"><input class="input" :type="keyVisible?'text':'password'" autocomplete="off" v-model="apiKey" aria-label="API Key" :placeholder="keyLoading?'正在读取…':'API Key'" :disabled="busy||keyLoading||protectedChannel(channel)" @input="keyChanged" /><UiIconButton :label="keyVisible?'隐藏 API Key':'显示 API Key'" :disabled="keyLoading||!apiKey" :aria-pressed="keyVisible" @click="keyVisible=!keyVisible"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/><path v-if="keyVisible" d="M3 3l18 18"/></svg></UiIconButton><UiButton size="sm" :disabled="busy||keyLoading||protectedChannel(channel)" @click="clearKey">清空 Key</UiButton></span><span class="model-muted">{{ keyIntent }}</span><span v-if="keySource" class="model-muted">{{ keySource }}</span><span v-if="keyError" class="model-muted" role="status">{{ keyError }}</span></label></div>
+    <section id="channel-config" tabindex="-1"><h2>渠道配置</h2><div class="channel-config-grid"><label>渠道名称<input class="input" :value="channel.label" @input="editName" maxlength="80" :disabled="busy||renameProtected" :aria-invalid="!!renameError" aria-describedby="channel-rename-error" /></label><label>运行渠道标识<input class="input" :value="channel.connection.providerId" @input="editProvider" maxlength="128" aria-label="运行渠道标识" :disabled="busy||renameProtected" :aria-invalid="!!renameError" aria-describedby="channel-rename-error" spellcheck="false" /><span class="model-muted">随名称改名；也可明确填写合法目标标识。</span></label><label>默认接口协议<UiSelectField :model-value="channel.connection.protocol" label="默认接口协议" :disabled="busy" :options="[{value:'openai-responses',label:'openai-responses'},{value:'openai-chat',label:'openai-chat'},{value:'anthropic',label:'anthropic'},{value:'ollama-native',label:'ollama-native'}]" @update:model-value="channel.connection.protocol=$event" /></label><label>认证方式<UiSelectField :model-value="authMode" label="认证方式" :options="authOptions" :disabled="busy" @update:model-value="authMode=$event as 'key'|'none'" /></label><label v-if="authMode==='key'" class="channel-key">API Key<span class="channel-key-input"><input class="input" :type="keyVisible?'text':'password'" autocomplete="off" v-model="apiKey" aria-label="API Key" :placeholder="keyLoading?'正在读取…':'API Key'" :disabled="busy||keyLoading||protectedChannel(channel)" @input="keyChanged" /><UiIconButton :label="keyVisible?'隐藏 API Key':'显示 API Key'" :disabled="keyLoading||!apiKey" :aria-pressed="keyVisible" @click="keyVisible=!keyVisible"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/><path v-if="keyVisible" d="M3 3l18 18"/></svg></UiIconButton><UiButton size="sm" :disabled="busy||keyLoading||protectedChannel(channel)" @click="clearKey">清空 Key</UiButton></span><span class="model-muted">{{ keyIntent }}</span><span v-if="keySource" class="model-muted">{{ keySource }}</span><span v-if="keyError" class="model-muted" role="status">{{ keyError }}</span></label></div>
+      <p v-if="renameError" id="channel-rename-error" class="model-error" role="alert">{{ renameError }}</p>
+      <div v-if="renamePreview" class="channel-rename-preview" data-channel-rename-preview>
+        <dl><dt>保存名称</dt><dd>{{ renamePreview.fromLabel }} → {{ renamePreview.toLabel }}</dd><dt>运行标识</dt><dd>{{ renamePreview.fromProvider }} → {{ renamePreview.toProvider }}</dd><dt>重启后选择器</dt><dd>{{ renamePreview.selector }}</dd></dl>
+        <p class="model-muted">保存后需重启 Codex 生效。当前配置引用一起更新；渠道身份、节点、模型及认证内容保持。</p>
+      </div>
       <p class="model-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。</p>
       <label class="model-inline"><input v-model="channel.connection.enabled" type="checkbox" :disabled="busy" />启用渠道</label>
     </section>
@@ -137,13 +153,14 @@ function adopt(t: Template, revision: string) {
       <p v-if="projectionBusy" role="status" class="model-muted">正在解析当前草稿，筛选暂用上次结果…</p><p v-else-if="projectionError" role="alert" class="model-error">{{ projectionError }}；有效值暂不可确定，筛选暂用上次结果。</p>
       <ChannelModelTable :key="channel.id+':'+rowsVersion" :channel="channel" :policy="policy" :models="visibleModels" :templates="templates" :projection="projection" :projection-busy="projectionBusy||!!projectionError" :disabled="busy||discovering" :filtered="!!modelSearch.trim()||familyFilter!=='all'||selectedOnly" :state="rowsState" />
       <p class="model-footer-note">{{ channel.connection.enabled?'复选框仅用于批量选择；启停独立控制。别名不改变上游 ID，行编辑加入草稿后统一保存。':'渠道已停用，模型配置仍可编辑；启用渠道后恢复计划选择器。' }}</p>
-      <UiDialog :open="manualOpen" title="手动添加精确型号" :busy="busy" @close="manualOpen=false"><label>原始模型ID<input v-model="manualId" class="input" autocapitalize="off" spellcheck="false" /></label><p>新增型号保持未启用，能力未知；当前为全部模型时改为保留已知型号的明确白名单。添加不会发送生成请求。</p><p v-if="manualError" role="alert" class="model-error">{{ manualError }}</p><template #actions><UiButton @click="manualOpen=false">取消</UiButton><UiButton variant="primary" :disabled="busy||!manualId" @click="addExactModel">添加型号</UiButton></template></UiDialog>
+      <UiDialog :open="manualOpen" title="手动添加精确型号" :busy="busy" @close="manualOpen=false"><label>原始模型ID<input v-model="manualId" class="input" autocapitalize="off" spellcheck="false" /></label><p>新增型号保持未启用，能力未知；当前为全部模型时改为保留已知型号的明确白名单。添加不会发送生成请求。</p><p v-if="manualError" role="alert" class="model-error">{{ manualError }}</p><template #actions="{ close }"><UiButton :disabled="busy" @click="close">取消</UiButton><UiButton variant="primary" :disabled="busy||!manualId" @click="addExactModel">添加型号</UiButton></template></UiDialog>
     </section>
   </div>
   </DetailWorkspace>
 </template>
 
 <style scoped>
+.channel-rename-preview dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:var(--space-2);font-size:var(--text-control)}.channel-rename-preview dt{color:var(--muted)}.channel-rename-preview dd{margin:0;overflow-wrap:anywhere}
 .channel-key-input{display:flex;align-items:center;gap:var(--space-2);min-width:0}.channel-key-input .input{flex:1;min-width:0}.channel-key-input svg{width:16px;height:16px}
 
 .channel-default-summary{display:grid;grid-template-columns:max-content 1fr;gap:var(--space-2);font-size:var(--text-control)}.channel-default-summary dt{color:var(--muted)}.channel-default-summary dd{margin:0;overflow-wrap:anywhere}

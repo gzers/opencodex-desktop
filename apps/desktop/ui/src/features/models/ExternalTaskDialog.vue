@@ -39,6 +39,6 @@ async function copy() {
       <label>完整任务内容<textarea ref="output" readonly :value="bundle?.content ?? ''" rows="15" class="input mono" :aria-busy="preparing" /></label>
       <p v-if="error" class="model-error" role="alert">{{ error }}</p>
     </div>
-    <template #actions><UiButton @click="emit('close')">关闭</UiButton><UiButton variant="primary" :disabled="!bundle || preparing" :loading="copying" @click="copy">{{ copied ? '再次复制完整任务' : '复制完整任务' }}</UiButton></template>
+    <template #actions="{ close: requestClose }"><UiButton :disabled="copying" @click="requestClose">取消</UiButton><UiButton variant="primary" :disabled="!bundle || preparing" :loading="copying" @click="copy">{{ copied ? '再次复制完整任务' : '复制完整任务' }}</UiButton></template>
   </UiDialog>
 </template>

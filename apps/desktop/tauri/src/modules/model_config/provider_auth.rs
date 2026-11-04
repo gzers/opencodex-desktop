@@ -379,6 +379,53 @@ fn referenced_strings<'a>(value: &'a serde_json::Value, values: &mut Vec<&'a Str
         _ => {}
     }
 }
+
+/// Only the exact provider or its slash-delimited account namespace is owned.
+/// Environment references and UUID-owned manager credentials are not renamed.
+pub(super) fn owned_account<'a>(raw: &'a str, provider: &str) -> ModelResult<Option<&'a str>> {
+    let Some(account) = raw.strip_prefix("keychain:") else {
+        return Ok(None);
+    };
+    if account.is_empty()
+        || account.len() > 1024
+        || account.chars().any(char::is_control)
+        || account != provider && !account.starts_with(&format!("{provider}/"))
+    {
+        return Err(invalid(
+            "provider_auth_reference",
+            "凭据引用不属于当前渠道，未读取或迁移",
+        ));
+    }
+    Ok(Some(account))
+}
+
+pub(super) fn rename_owned_references(
+    value: &mut serde_json::Value,
+    from: &str,
+    to: &str,
+) -> ModelResult<()> {
+    match value {
+        serde_json::Value::String(raw) => {
+            if let Some(account) = owned_account(raw, from)? {
+                let next = format!("keychain:{to}{}", &account[from.len()..]);
+                raw.zeroize();
+                *raw = next;
+            }
+        }
+        serde_json::Value::Array(values) => {
+            for value in values {
+                rename_owned_references(value, from, to)?;
+            }
+        }
+        serde_json::Value::Object(values) => {
+            for value in values.values_mut() {
+                rename_owned_references(value, from, to)?;
+            }
+        }
+        _ => (),
+    }
+    Ok(())
+}
 fn resolve_nested(value: &mut serde_json::Value, provider: &str) -> ModelResult<()> {
     match value {
         serde_json::Value::String(s) if s.starts_with('$') || s.starts_with("keychain:") => {

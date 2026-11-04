@@ -685,6 +685,7 @@ fn read_projection_hash(data_root: &Path) -> Result<String, AppError> {
 
 pub fn projection_error(error: projection::ProjectionError) -> AppError {
     match error {
+        projection::ProjectionError::VersionPending => error.as_app_error(),
         projection::ProjectionError::NotConfigured => AppError::NotConfigured,
         projection::ProjectionError::TooLarge => AppError::FileSystem {
             operation: "validate extension projection".to_string(),

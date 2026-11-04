@@ -7,8 +7,8 @@ import { emptyRules, type ModelProjection } from '@/features/models/api'
 import { mergeUpstream } from '@/features/models/upstream'
 const row = (id: string): ModelProjection => ({ channelId: 'channel', providerId: 'provider', modelId: id, label: id, enabled: true, selected: true, discovered: true, templateRef: null, rules: { ...emptyRules(), fast: { mode: 'custom', value: true }, reasoningEfforts: { mode: 'custom', value: ['none','high'] } }, source: {} })
 const menu = { props: ['open'], template: '<div v-if="open"><slot/></div>' }
-const dialog = { template: '<div><slot/><slot name="actions"/></div>' }
-const titledDialog = { props: ['open', 'title'], template: '<div><h2>{{ title }}</h2><slot/><slot name="actions"/></div>' }
+const dialog = { template: '<div><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></div>' }
+const titledDialog = { props: ['open', 'title'], template: '<div><h2>{{ title }}</h2><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></div>' }
 describe('public model selection', () => {
   // N-MPK-1：原型 model-picker.js:263 的默认标题是「选择模型」；执行模型场景仍由调用方覆写。
   it('uses the prototype default title and keeps the caller override', async () => {

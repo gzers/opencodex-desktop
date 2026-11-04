@@ -4,7 +4,7 @@
 //! `reasoning-effort.ts::modelRecordValue`, `types/tools.ts::modelInList`, and
 //! `providers/slug-codec.ts`. No registry, discovery or generated catalog is consulted.
 use super::{matching, schema::*};
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::{json, Map, Value};
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
@@ -642,6 +642,199 @@ fn discovered_delta(
 
 /// The mutation is transactional in memory. Only changed Policy fields authorize
 /// set/remove; opaque JSON, credentials, unchanged maps and wire values survive.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub(super) struct ProviderRename {
+    pub channel_id: String,
+    pub from: String,
+    pub to: String,
+}
+
+/// Resolve renames by stable management identity against the complete locked
+/// provider map. A removed channel still occupies its old provider identity:
+/// rename must never become an implicit replacement or a swap.
+pub(super) fn provider_renames(
+    config: &Value,
+    before: &Policy,
+    after: &Policy,
+) -> ModelResult<Vec<ProviderRename>> {
+    let mut ids = BTreeSet::new();
+    let mut providers = BTreeSet::new();
+    let mut result = vec![];
+    for channel in &after.channels {
+        if !ids.insert(&channel.id) || !providers.insert(&channel.connection.provider_id) {
+            return Err(invalid("channel_identity", "渠道身份或运行绑定重复"));
+        }
+        let target = &channel.connection.provider_id;
+        if before
+            .channels
+            .iter()
+            .any(|c| c.id != channel.id && c.connection.provider_id == *target)
+        {
+            return Err(invalid(
+                "provider_identity",
+                "目标运行标识已属于其它渠道，未覆盖",
+            ));
+        }
+        let Some(old) = before.channels.iter().find(|c| c.id == channel.id) else {
+            continue;
+        };
+        if old.connection.provider_id == *target {
+            continue;
+        }
+        if channel.label.trim().is_empty() || channel.label.trim().chars().count() > 80 {
+            return Err(invalid("channel_name", "请填写 1–80 字的渠道名称"));
+        }
+        require_uuid(&channel.id)?;
+        if target.is_empty()
+            || target.len() > 64
+            || !target
+                .as_bytes()
+                .first()
+                .is_some_and(u8::is_ascii_alphanumeric)
+            || !target
+                .as_bytes()
+                .last()
+                .is_some_and(u8::is_ascii_alphanumeric)
+            || ["policy", "__proto__", "prototype", "constructor"]
+                .contains(&target.to_ascii_lowercase().as_str())
+            || !target
+                .bytes()
+                .all(|c| c.is_ascii_alphanumeric() || c == b'-' || c == b'_')
+        {
+            return Err(invalid(
+                "provider",
+                "运行渠道标识须为 1–64 位字母、数字、连字符或下划线，以字母或数字开头和结尾，且不可使用系统保留标识",
+            ));
+        }
+        let source = config["providers"]
+            .get(&old.connection.provider_id)
+            .and_then(Value::as_object)
+            .ok_or_else(document_error)?;
+        if protected(&old.connection.provider_id, source)
+            || protected(&target.to_ascii_lowercase(), source)
+            || matches!(
+                channel.connection.auth_mode.as_deref(),
+                Some("oauth" | "forward")
+            )
+        {
+            return Err(invalid(
+                "protected_provider",
+                "官方认证或转发渠道不能通过改名改变运行身份",
+            ));
+        }
+        if config["providers"].get(target).is_some() {
+            return Err(invalid("provider_identity", "目标运行标识已存在，未覆盖"));
+        }
+        if after.channels.iter().chain(&before.channels).any(|c| {
+            c.id != channel.id
+                && c.label.trim().to_lowercase() == channel.label.trim().to_lowercase()
+        }) {
+            return Err(invalid("channel_name", "渠道名称已存在，请使用其它名称"));
+        }
+        if channel.connection.imported_config.is_some() {
+            return Err(invalid(
+                "provider_import_scope",
+                "改名后原导入材料已过期，请重新核对",
+            ));
+        }
+        result.push(ProviderRename {
+            channel_id: channel.id.clone(),
+            from: old.connection.provider_id.clone(),
+            to: target.clone(),
+        });
+    }
+    Ok(result)
+}
+
+pub(super) fn renamed_policy(before: &Policy, renames: &[ProviderRename]) -> Policy {
+    let mut result = before.clone();
+    for channel in &mut result.channels {
+        if let Some(rename) = renames.iter().find(|r| r.channel_id == channel.id) {
+            channel.connection.provider_id = rename.to.clone();
+        }
+    }
+    result
+}
+
+pub(super) fn rename_routed(value: &mut Value, renames: &[ProviderRename]) {
+    if let Some(rows) = value.as_array_mut() {
+        for row in rows {
+            if let Some((provider, suffix)) = row.as_str().and_then(|s| s.split_once('/')) {
+                if let Some(rename) = renames.iter().find(|r| r.from == provider) {
+                    *row = serde_json::json!(format!("{}/{}", rename.to, suffix));
+                }
+            }
+        }
+    }
+}
+
+pub(super) fn rewrite_provider_references(
+    config: &mut Value,
+    renames: &[ProviderRename],
+) -> ModelResult<()> {
+    for field in ["modelPickerOrder", "disabledModels"] {
+        if let Some(value) = config.get_mut(field) {
+            rename_routed(value, renames);
+        }
+    }
+    for rename in renames {
+        if config["defaultProvider"] == rename.from {
+            config["defaultProvider"] = serde_json::json!(rename.to);
+        }
+        // These are current provider-keyed runtime observations, not history.
+        for field in ["knownModels", "recentArrivals"] {
+            if let Some(map) = config
+                .get_mut("modelDiscovery")
+                .and_then(|v| v.get_mut(field))
+                .and_then(Value::as_object_mut)
+            {
+                if map.contains_key(&rename.from) {
+                    if map.contains_key(&rename.to) {
+                        return Err(invalid(
+                            "provider_identity",
+                            "目标标识已有清单引用，请刷新后重试",
+                        ));
+                    }
+                    let value = map.remove(&rename.from).unwrap();
+                    map.insert(rename.to.clone(), value);
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+fn apply_renames(
+    config: &mut Value,
+    after: &Policy,
+    renames: &[ProviderRename],
+) -> ModelResult<()> {
+    for rename in renames {
+        let mut raw = config["providers"]
+            .as_object_mut()
+            .ok_or_else(document_error)?
+            .remove(&rename.from)
+            .ok_or_else(document_error)?;
+        for field in super::provider_fields::PRIVATE {
+            if let Some(value) = raw.get_mut(*field) {
+                super::provider_auth::rename_owned_references(value, &rename.from, &rename.to)?;
+            }
+        }
+        if raw.get("name").is_some() {
+            raw["name"] = serde_json::json!(
+                after
+                    .channels
+                    .iter()
+                    .find(|c| c.id == rename.channel_id)
+                    .unwrap()
+                    .label
+            );
+        }
+        config["providers"][&rename.to] = raw;
+    }
+    rewrite_provider_references(config, renames)
+}
+
 pub(super) fn write_policy(
     config: &mut Value,
     before: &Policy,
@@ -649,7 +842,10 @@ pub(super) fn write_policy(
     library: &Library,
 ) -> ModelResult<()> {
     let mut next = config.clone();
-    write_inner(&mut next, before, after, library)?;
+    let renames = provider_renames(&next, before, after)?;
+    apply_renames(&mut next, after, &renames)?;
+    let normalized = renamed_policy(before, &renames);
+    write_inner(&mut next, &normalized, after, library)?;
     *config = next;
     Ok(())
 }
@@ -1981,13 +2177,20 @@ mod tests {
         let before = read(&config);
         let mut after = before.clone();
         after.channels[0].connection.provider_id = "changed".into();
+        write_policy(&mut config, &before, &after, &library()).unwrap();
+        assert!(config["providers"].get("demo").is_none());
+        assert!(config["providers"].get("changed").is_some());
+        let reread = read_policy(&config, &after).unwrap();
         assert_eq!(
-            write_policy(&mut config, &before, &after, &library())
-                .unwrap_err()
-                .code,
-            "provider_identity"
+            reread
+                .channels
+                .iter()
+                .find(|c| c.connection.provider_id == "changed")
+                .unwrap()
+                .id,
+            after.channels[0].id
         );
-        assert!(config == original);
+        config = original.clone();
         let mut after = before.clone();
         after.channels[0]
             .overrides

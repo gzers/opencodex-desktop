@@ -1,5 +1,6 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { mount, flushPromises, type VueWrapper } from '@vue/test-utils'
+import { DOMWrapper, mount, flushPromises, type VueWrapper } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
 import { managerUpdateStatus, managerInstallProgress, type UpdateProgress } from '@/features/updates/update'
@@ -23,12 +24,12 @@ Object.defineProperty(window, 'matchMedia', { writable: true, value: () => ({ ma
 let wrappers: VueWrapper[] = []
 let pinia: ReturnType<typeof createPinia>
 function render(props = {}) {
-  const wrapper = mount(UpdateCenter, { props: { open: true, ...props }, global: { plugins: [pinia], stubs: { teleport: true } }, attachTo: document.body })
+  const wrapper = mount(UpdateCenter, { props: { open: true, ...props }, global: { plugins: [pinia] }, attachTo: document.body })
   wrappers.push(wrapper)
   return wrapper
 }
-function button(wrapper: VueWrapper, label: string) {
-  const found = wrapper.findAll('button').find(item => item.text() === label)
+function button(_wrapper: VueWrapper, label: string) {
+  const found = new DOMWrapper(document.body).findAll('button').find(item => item.text() === label)
   expect(found, label).toBeDefined()
   return found!
 }
@@ -36,6 +37,7 @@ function progress(overrides: Partial<UpdateProgress> = {}): UpdateProgress {
   return { operationId: 'op-1', target: 'manager', channel: 'stable', candidateVersion: '0.1.10', generation: 1, sequence: 1, stage: 'downloading', downloadedBytes: 50, totalBytes: null, ...overrides }
 }
 beforeEach(() => {
+  installNativeDialogStub()
   vi.clearAllMocks()
   mocks.install.mockResolvedValue(undefined)
   mocks.restart.mockResolvedValue(undefined)
@@ -55,13 +57,14 @@ afterEach(() => { wrappers.forEach(w => w.unmount()); wrappers = []; document.bo
 describe('shared production update center', () => {
   it('shows only the current version when the cached candidate is already installed', async () => {
     managerUpdateStatus.value = { ...managerUpdateStatus.value!, currentVersion: '0.2.20', availableVersion: '0.2.20' }
-    const wrapper = render({ target: 'manager' }); await flushPromises()
-    expect(wrapper.get('.update-version-hero').text()).toBe('0.2.20')
-    expect(wrapper.get('h3').text()).toBe('桌面管理器更新详情')
-    expect(wrapper.text()).not.toContain('安装后需重启管理器')
-    expect(wrapper.find('.release-notes').exists()).toBe(false)
-    expect(button(wrapper, '关闭').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="install-manager-update"]').exists()).toBe(false)
+    render({ target: 'manager' }); await flushPromises()
+    expect(new DOMWrapper(document.body).get('.update-version-hero').text()).toBe('0.2.20')
+    expect(new DOMWrapper(document.body).get('header h2').text()).toBe('桌面管理器更新详情')
+    expect(new DOMWrapper(document.body).text()).not.toContain('安装后需重启管理器')
+    expect(new DOMWrapper(document.body).find('.release-notes').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).find('dialog header button[aria-label="关闭"]').exists()).toBe(true)
+    expect(new DOMWrapper(document.body).find('dialog footer').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).find('[data-testid="install-manager-update"]').exists()).toBe(false)
   })
 
   it('retains remote query failure details through close/reopen and clears them after retry', async () => {
@@ -79,43 +82,43 @@ describe('shared production update center', () => {
     expect(updates.officialRemote).toEqual(previous)
     expect(updates.officialRemoteError).toBe(true)
     const wrapper = render(); await flushPromises()
-    expect(wrapper.get('[data-testid="official-update-row"]').text()).toContain('npm view 以退出码 1')
-    await wrapper.get('[data-testid="official-update-detail"]').trigger('click')
-    const detail = wrapper.get('[data-testid="official-query-error"]')
+    expect(new DOMWrapper(document.body).get('[data-testid="official-update-row"]').text()).toContain('npm view 以退出码 1')
+    await new DOMWrapper(document.body).get('[data-testid="official-update-detail"]').trigger('click')
+    const detail = new DOMWrapper(document.body).get('[data-testid="official-query-error"]')
     expect(detail.text()).toContain('EQUERYFIXTURE <script>')
     expect(detail.text()).toContain('D:\\Query 中文 Spaces\\npm-view.log')
     expect(detail.text()).not.toContain('official metadata query failed')
     expect(detail.find('script').exists()).toBe(false)
-    expect(wrapper.find('[data-testid="install-official-update"]').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).find('[data-testid="install-official-update"]').exists()).toBe(false)
     await wrapper.setProps({ open: false }); await wrapper.setProps({ open: true, target: 'official' })
-    expect(wrapper.get('[data-testid="official-query-error"]').text()).toContain('EQUERYFIXTURE')
+    expect(new DOMWrapper(document.body).get('[data-testid="official-query-error"]').text()).toContain('EQUERYFIXTURE')
     mocks.invoke.mockImplementation(async (command, args) => command === 'official_remote_latest' ? previous : base(command, args))
     await updates.loadRemoteLatest(); await flushPromises()
     expect(updates.officialRemoteErrorDetail).toBe('')
     expect(updates.officialRemoteError).toBe(false)
-    expect(wrapper.find('[data-testid="official-query-error"]').exists()).toBe(false)
-    expect(wrapper.get('[data-testid="install-official-update"]').attributes('disabled')).toBeUndefined()
+    expect(new DOMWrapper(document.body).find('[data-testid="official-query-error"]').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).get('[data-testid="install-official-update"]').attributes('disabled')).toBeUndefined()
   })
   it('keeps a manager check failure visible from the direct detail entry', async () => {
     managerUpdateStatus.value={...managerUpdateStatus.value!,availableVersion:null,error:'signed update source unavailable'}
-    const wrapper=render({target:'manager'});await flushPromises()
-    expect(wrapper.get('[data-testid="manager-update-card"]').text()).toContain('signed update source unavailable')
-    expect(wrapper.find('[data-testid="install-manager-update"]').exists()).toBe(false)
+    render({target:'manager'});await flushPromises()
+    expect(new DOMWrapper(document.body).get('[data-testid="manager-update-card"]').text()).toContain('signed update source unavailable')
+    expect(new DOMWrapper(document.body).find('[data-testid="install-manager-update"]').exists()).toBe(false)
     expect(mocks.install).not.toHaveBeenCalled()
   })
   it('opens without a network check, backup or installation and presents both objects', async () => {
     const wrapper = render(); await flushPromises()
     // 结果页每个对象只占一行，安装与备份留在各自的确认页。
-    expect(wrapper.find('[data-testid="manager-update-row"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="official-update-row"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="install-manager-update"]').exists()).toBe(false)
-    expect(wrapper.find('input[type="checkbox"]').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).find('[data-testid="manager-update-row"]').exists()).toBe(true)
+    expect(new DOMWrapper(document.body).find('[data-testid="official-update-row"]').exists()).toBe(true)
+    expect(new DOMWrapper(document.body).find('[data-testid="install-manager-update"]').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).find('input[type="checkbox"]').exists()).toBe(false)
     // 结果页不出现可展开的“更新内容”区块；说明只在单对象确认页。
-    expect(wrapper.find('.update-result-row details').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).find('.update-result-row details').exists()).toBe(false)
     expect(mocks.check).not.toHaveBeenCalled()
     expect(mocks.install).not.toHaveBeenCalled()
     expect(mocks.invoke.mock.calls.some(call => call[0] === 'create_upgrade_backup')).toBe(false)
-    expect(wrapper.findAll('button').filter(item => item.text() === '重新检查更新')).toHaveLength(0)
+    expect(new DOMWrapper(document.body).findAll('button').filter(item => item.text() === '重新检查更新')).toHaveLength(0)
     wrapper.vm.check(); await flushPromises()
     expect(mocks.check).toHaveBeenCalledOnce()
   })
@@ -125,42 +128,42 @@ describe('shared production update center', () => {
       : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'ready',
         notes: managerUpdateStatus.value!.notes, notesSource: 'updater', releaseUrl: 'https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10', fetchedAt: 100, publishedAt: '2026-10-10', cached: false } : null)
     const open = vi.spyOn(useAppStore(), 'openExternalLink').mockResolvedValue(true)
-    const wrapper = render(); await flushPromises()
-    await wrapper.get('[data-testid="manager-update-detail"]').trigger('click')
-    await vi.waitFor(async () => { await flushPromises(); expect(wrapper.find('.release-notes-body').exists()).toBe(true) }, { timeout: 3000 })
+    render(); await flushPromises()
+    await new DOMWrapper(document.body).get('[data-testid="manager-update-detail"]').trigger('click')
+    await vi.waitFor(async () => { await flushPromises(); expect(new DOMWrapper(document.body).find('.release-notes-body').exists()).toBe(true) }, { timeout: 3000 })
     // 完整说明只在单对象确认页出现；结果页不展开说明。
-    expect(wrapper.find('img').exists()).toBe(false)
-    expect(wrapper.get('.release-notes-body').text()).toContain('<img src=x onerror=alert(1)>')
-    await wrapper.get('.release-notes-head a').trigger('click')
+    expect(new DOMWrapper(document.body).find('img').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).get('.release-notes-body').text()).toContain('<img src=x onerror=alert(1)>')
+    await new DOMWrapper(document.body).get('.release-notes-head a').trigger('click')
     expect(open).toHaveBeenCalledWith('https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10')
     for (const releaseUrl of ['javascript:alert(1)', 'http://example.com', 'https://user:secret@example.com', String.raw`https://example.com\evil`, 'file:///tmp/release', 'https://']) {
       managerUpdateStatus.value = { ...managerUpdateStatus.value!, releaseUrl }
       await flushPromises()
       // 旧元数据里的 URL 永不被读取；链接只来自独立核验过的说明。
-      expect(wrapper.text()).toContain('查看官方发布记录 ↗')
+      expect(new DOMWrapper(document.body).text()).toContain('查看官方发布记录 ↗')
     }
   })
   it('locks the confirmed manager candidate and backup choice, and observes byte progress after remount', async () => {
     let finish!: () => void
     mocks.install.mockImplementationOnce(() => new Promise<void>(resolve => { finish = resolve }))
     const wrapper = render(); await flushPromises()
-    await wrapper.get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
-    await wrapper.get('input[type="checkbox"]').setValue(false)
-    await wrapper.get('[data-testid="install-manager-update"]').trigger('click')
+    await new DOMWrapper(document.body).get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
+    await new DOMWrapper(document.body).get('input[type="checkbox"]').setValue(false)
+    await new DOMWrapper(document.body).get('[data-testid="install-manager-update"]').trigger('click')
     expect(mocks.install).toHaveBeenCalledWith({ candidateVersion: '0.1.10', channel: 'stable', backup: false })
     managerInstallProgress.value = progress()
     await wrapper.setProps({ open: false })
     wrapper.unmount(); wrappers = []
     const reopened = render(); await flushPromises()
-    await reopened.get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
-    expect(reopened.get('progress[aria-label="管理器更新进度"]').attributes('value')).toBeUndefined()
-    expect(reopened.find('[data-testid="install-manager-update"]').exists()).toBe(false)
+    await new DOMWrapper(document.body).get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
+    expect(new DOMWrapper(document.body).get('progress[aria-label="管理器更新进度"]').attributes('value')).toBeUndefined()
+    expect(new DOMWrapper(document.body).find('[data-testid="install-manager-update"]').exists()).toBe(false)
     managerInstallProgress.value = progress({ totalBytes: 200 }); await reopened.vm.$nextTick()
-    expect(reopened.get('progress[aria-label="管理器更新进度"]').attributes('value')).toBe('25')
-    expect(reopened.text()).toContain('25%')
+    expect(new DOMWrapper(document.body).get('progress[aria-label="管理器更新进度"]').attributes('value')).toBe('25')
+    expect(new DOMWrapper(document.body).text()).toContain('25%')
     managerInstallProgress.value = progress({ stage: 'pending_restart' }); finish(); await flushPromises()
-    expect(reopened.text()).toContain('安装就绪，等待重启')
-    expect(reopened.text()).not.toContain('已安装')
+    expect(new DOMWrapper(document.body).text()).toContain('安装就绪，等待重启')
+    expect(new DOMWrapper(document.body).text()).not.toContain('已安装')
     expect(mocks.restart).not.toHaveBeenCalled()
     await button(reopened, '重启并应用更新').trigger('click'); await flushPromises()
     expect(mocks.restart).toHaveBeenCalledOnce()
@@ -171,11 +174,11 @@ describe('shared production update center', () => {
       throw new Error('download interrupted')
     })
     const wrapper = render(); await flushPromises()
-    await wrapper.get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
-    await wrapper.get('[data-testid="install-manager-update"]').trigger('click'); await flushPromises()
-    expect(wrapper.text()).toContain('download interrupted')
-    expect(wrapper.get('[data-testid="manager-update-progress"]').text()).toContain('更新失败，当前版本保留')
-    expect(wrapper.find('progress[aria-label="管理器更新进度"]').exists()).toBe(false)
+    await new DOMWrapper(document.body).get('[data-testid="manager-update-detail"]').trigger('click'); await flushPromises()
+    await new DOMWrapper(document.body).get('[data-testid="install-manager-update"]').trigger('click'); await flushPromises()
+    expect(new DOMWrapper(document.body).text()).toContain('download interrupted')
+    expect(new DOMWrapper(document.body).get('[data-testid="manager-update-progress"]').text()).toContain('更新失败，当前版本保留')
+    expect(new DOMWrapper(document.body).find('progress[aria-label="管理器更新进度"]').exists()).toBe(false)
     expect(button(wrapper, '重试安装').attributes('disabled')).toBeUndefined()
     await button(wrapper, '重试安装').trigger('click'); await flushPromises()
     expect(mocks.install).toHaveBeenCalledTimes(2)
@@ -185,18 +188,18 @@ describe('shared production update center', () => {
     const updates = useUpdatesStore()
     const backup = vi.spyOn(updates, 'createUpgradeBackup').mockResolvedValueOnce(null)
     const apply = vi.spyOn(useAppStore(), 'applyOfficialUpdate').mockResolvedValue(true)
-    const wrapper = render(); await flushPromises()
-    await wrapper.get('[data-testid="official-update-detail"]').trigger('click'); await flushPromises()
-    await wrapper.get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
+    render(); await flushPromises()
+    await new DOMWrapper(document.body).get('[data-testid="official-update-detail"]').trigger('click'); await flushPromises()
+    await new DOMWrapper(document.body).get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
     expect(apply).not.toHaveBeenCalled()
-    expect(wrapper.text()).toContain('备份失败')
+    expect(new DOMWrapper(document.body).text()).toContain('备份失败')
     let finish!: (value: { backupId: string; directory: string; targetPath: string }) => void
     backup.mockImplementationOnce(() => new Promise(resolve => { finish = resolve }))
     useRuntimeStore().install = { phase: 'installing', percent: 65, line: null }
     useRuntimeStore().installLines = ['previous install output']
-    await wrapper.get('[data-testid="install-official-update"]').trigger('click')
-    expect(wrapper.text()).toContain('正在备份配置')
-    expect(wrapper.text()).not.toContain('previous install output')
+    await new DOMWrapper(document.body).get('[data-testid="install-official-update"]').trigger('click')
+    expect(new DOMWrapper(document.body).text()).toContain('正在备份配置')
+    expect(new DOMWrapper(document.body).text()).not.toContain('previous install output')
     updates.officialRemote!.version = '2.52.0'
     finish({ backupId: 'fresh', directory: '/backup', targetPath: '/config' }); await flushPromises()
     expect(apply).toHaveBeenCalledWith('2.51.0')
@@ -205,9 +208,9 @@ describe('shared production update center', () => {
   it('uses indeterminate panel progress despite the runtime phase percentage', async () => {
     useUpdatesStore().officialUpdateBusy = true
     useRuntimeStore().install = { phase: 'installing', percent: 65, line: null }
-    const wrapper = render({ target: 'official' }); await flushPromises()
-    expect(wrapper.get('progress[aria-label="面板更新进度"]').attributes('value')).toBeUndefined()
-    expect(wrapper.text()).not.toContain('65%')
+    render({ target: 'official' }); await flushPromises()
+    expect(new DOMWrapper(document.body).get('progress[aria-label="面板更新进度"]').attributes('value')).toBeUndefined()
+    expect(new DOMWrapper(document.body).text()).not.toContain('65%')
   })
   it('keeps this panel update output visible after failure and reopen, without stale output on backup failure', async () => {
     const updates = useUpdatesStore(), runtime = useRuntimeStore()
@@ -221,18 +224,18 @@ describe('shared production update center', () => {
       return false
     })
     const wrapper = render({ target: 'official' }); await flushPromises()
-    await wrapper.get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
-    expect(wrapper.get('pre[aria-label="面板安装输出"]').text()).toContain('npm error E404')
-    expect(wrapper.text()).toContain('面板更新失败')
+    await new DOMWrapper(document.body).get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
+    expect(new DOMWrapper(document.body).get('pre[aria-label="面板安装输出"]').text()).toContain('npm error E404')
+    expect(new DOMWrapper(document.body).text()).toContain('面板更新失败')
     runtime.beginInstall()
     runtime.observeInstallProgress({ phase: 'downloading', percent: 0, line: 'another installation output' })
     runtime.finishInstall()
     await wrapper.setProps({ open: false }); await wrapper.setProps({ open: true })
-    expect(wrapper.get('pre[aria-label="面板安装输出"]').text()).toContain('D:\\Update 中文 Spaces\\npm.log')
-    expect(wrapper.text()).not.toContain('another installation output')
+    expect(new DOMWrapper(document.body).get('pre[aria-label="面板安装输出"]').text()).toContain('D:\\Update 中文 Spaces\\npm.log')
+    expect(new DOMWrapper(document.body).text()).not.toContain('another installation output')
     backup.mockResolvedValueOnce(null)
-    await wrapper.get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
-    expect(wrapper.find('pre[aria-label="面板安装输出"]').exists()).toBe(false)
+    await new DOMWrapper(document.body).get('[data-testid="install-official-update"]').trigger('click'); await flushPromises()
+    expect(new DOMWrapper(document.body).find('pre[aria-label="面板安装输出"]').exists()).toBe(false)
   })
   it('keeps the original version in completed panel progress after the live facts refresh', async () => {
     const updates=useUpdatesStore()
@@ -241,50 +244,72 @@ describe('shared production update center', () => {
       updates.officialProject={displayName:'OpenCodex',version:'2.51.0',rawVersion:'2.51.0',truncated:false}
       return true
     })
-    const wrapper=render({target:'official'});await flushPromises()
-    await wrapper.get('[data-testid="install-official-update"]').trigger('click');await flushPromises()
-    expect(wrapper.get('.update-version-hero').text()).toContain('2.50.0')
-    expect(wrapper.get('.update-version-hero').text()).toContain('2.51.0')
+    render({target:'official'});await flushPromises()
+    await new DOMWrapper(document.body).get('[data-testid="install-official-update"]').trigger('click');await flushPromises()
+    expect(new DOMWrapper(document.body).get('.update-version-hero').text()).toContain('2.50.0')
+    expect(new DOMWrapper(document.body).get('.update-version-hero').text()).toContain('2.51.0')
     expect(updates.officialProject?.version).toBe('2.51.0')
-    expect(wrapper.find('.release-notes').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).find('.release-notes').exists()).toBe(false)
   })
   it('traps keyboard focus and restores the opener when hidden', async () => {
     const opener = document.createElement('button'); document.body.append(opener); opener.focus()
     const wrapper = render(); await flushPromises()
-    expect(document.activeElement).toBe(wrapper.get('[role="dialog"]').element)
+    expect(document.activeElement).toBe(new DOMWrapper(document.body).get('[role="dialog"]').element)
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }))
-    expect(document.activeElement).toBe(wrapper.findAll('button')[0].element)
+    expect(document.activeElement).toBe(new DOMWrapper(document.body).findAll('dialog button')[0].element)
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
     expect(wrapper.emitted('update:open')).toEqual([[false]])
-    await wrapper.setProps({ open: false })
+    await wrapper.setProps({ open: false }); await flushPromises()
     expect(document.activeElement).toBe(opener)
   })
   it.each(['manager', 'official'] as const)('keeps focus inside when a %s detail opener is replaced', async target => {
-    const wrapper = render(); await flushPromises()
-    const opener=wrapper.get('[data-testid="'+target+'-update-detail"]')
+    render(); await flushPromises()
+    const opener=new DOMWrapper(document.body).get('[data-testid="'+target+'-update-detail"]')
     ;(opener.element as HTMLButtonElement).focus()
     await opener.trigger('click'); await flushPromises()
-    expect(wrapper.get('[role="dialog"]').element.contains(document.activeElement)).toBe(true)
-    expect(wrapper.findAll('h3')).toHaveLength(1)
-    expect(wrapper.find('.update-back').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).get('[role="dialog"]').element.contains(document.activeElement)).toBe(true)
+    expect(new DOMWrapper(document.body).findAll('dialog header h2')).toHaveLength(1)
+    expect(new DOMWrapper(document.body).find('.update-back').exists()).toBe(false)
     expect(mocks.install).not.toHaveBeenCalled()
   })
   it('preserves an existing dialog control focus when the selected target changes', async () => {
     const wrapper = render({ target: 'manager' }); await flushPromises()
-    const close = wrapper.get('button[aria-label="关闭更新中心"]')
+    const close = new DOMWrapper(document.body).get('button[aria-label="关闭"]')
     ;(close.element as HTMLButtonElement).focus()
     expect(document.activeElement).toBe(close.element)
     await wrapper.setProps({ target: 'official' }); await flushPromises()
-    expect(document.activeElement).toBe(wrapper.get('button[aria-label="关闭更新中心"]').element)
+    expect(document.activeElement).toBe(new DOMWrapper(document.body).get('button[aria-label="关闭"]').element)
   })
   it('settings reuses the component and does not back up merely by entering', async () => {
     useRouteStore().go('settings', { section: 'upgrade' })
     const backup = vi.spyOn(useUpdatesStore(), 'createUpgradeBackup')
-    const wrapper = mount(SettingsRoute, { global: { plugins: [pinia], stubs: { teleport: true } } }); wrappers.push(wrapper)
+    const wrapper = mount(SettingsRoute, { global: { plugins: [pinia] }, attachTo: document.body }); wrappers.push(wrapper)
     await flushPromises()
     expect(backup).not.toHaveBeenCalled()
     await button(wrapper, '查看管理器更新').trigger('click'); await flushPromises()
     expect(wrapper.findComponent(UpdateCenter).props('open')).toBe(true)
-    expect(wrapper.get('[role="dialog"]').text()).toContain('桌面管理器更新')
+    expect(new DOMWrapper(document.body).get('[role="dialog"]').text()).toContain('桌面管理器更新')
+  })
+})
+
+
+describe('POST-09 update observation exception', () => {
+  it.each(['x', 'escape', 'native-cancel', 'backdrop'])('allows %s while a confirmed manager update continues', async channel => {
+    let finish!: () => void
+    mocks.install.mockImplementation(() => new Promise<void>(resolve => { finish = resolve }))
+    const wrapper = render({ target: 'manager' }); await flushPromises()
+    await new DOMWrapper(document.body).get('[data-testid="install-manager-update"]').trigger('click'); await flushPromises()
+    const dialog = new DOMWrapper(document.body).get('dialog.update-center')
+    expect(dialog.find('footer').exists()).toBe(false)
+    expect(dialog.get('header .modal-close').attributes('disabled')).toBeUndefined()
+    if (channel === 'x') await dialog.get('header .modal-close').trigger('click')
+    if (channel === 'escape') dialog.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+    if (channel === 'native-cancel') dialog.element.dispatchEvent(new Event('cancel', { cancelable: true }))
+    if (channel === 'backdrop') await dialog.trigger('click', { clientX: -10, clientY: -10 })
+    expect(wrapper.emitted('update:open')).toEqual([[false]])
+    expect(mocks.install).toHaveBeenCalledTimes(1); expect(mocks.restart).not.toHaveBeenCalled()
+    await wrapper.setProps({ open: false }); await flushPromises()
+    finish(); await flushPromises()
+    expect(mocks.install).toHaveBeenCalledTimes(1)
   })
 })

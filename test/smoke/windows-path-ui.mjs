@@ -2,6 +2,16 @@
 import assert from 'node:assert/strict'
 import {writeFile} from 'node:fs/promises'
 import {join, win32} from 'node:path'
+import {nativeModelUiContract} from './windows-model-ui.mjs'
+
+export async function confirmNativeBackupDirectory({wait,click},version){
+ const {publicDialogs,confirmation}=nativeModelUiContract(version)
+ const selector=confirmation+(publicDialogs?'':' [role=dialog]')
+ await wait('(()=>{const d=document.querySelector('+JSON.stringify(selector)+');return !!d&&d.textContent.includes("打开备份目录")'+(publicDialogs?'&&d instanceof HTMLDialogElement&&d.open&&document.querySelectorAll("dialog[open]").length===1':'')+'})()')
+ await click('继续打开',selector)
+ await wait('!document.querySelector('+JSON.stringify(selector)+')')
+ return {version,selector,confirmed:true}
+}
 
 export async function verifyWindowsPathUi(call, output, sandbox){
   async function evaluate(expression){
@@ -27,6 +37,8 @@ export async function verifyWindowsPathUi(call, output, sandbox){
   const ordinary=value=>win32.normalize(value).replace(/^\\\\\?\\UNC\\/i,'\\\\').replace(/^\\\\\?\\(?=[a-z]:\\)/i,'')
   const config=await evaluate("window.__TAURI_INTERNALS__.invoke('get_data_root_config')")
   assert.equal(ordinary(config.currentDataRoot).toLowerCase(),ordinary(sandbox).toLowerCase())
+  const about=await evaluate("window.__TAURI_INTERNALS__.invoke('app_about')")
+  nativeModelUiContract(about.version)
   const source=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')")
   const pathTargets=await evaluate("window.__TAURI_INTERNALS__.invoke('get_managed_path_targets')")
   const report={result:'fail',checks:[],rawDataRoot:config.currentDataRoot}
@@ -72,8 +84,7 @@ export async function verifyWindowsPathUi(call, output, sandbox){
     await click('生成备份')
     await wait("!!document.querySelector('.backup-records li')")
     await click('打开目录','.backup-files tbody')
-    await wait("[...document.querySelectorAll('[role=dialog]')].some(e=>e.textContent.includes('打开备份目录'))")
-    await click('继续打开','.modal-mask [role=dialog]')
+    report.backupConfirmation=await confirmNativeBackupDirectory({wait,click},about.version)
     report.openedTargets.push(win32.join(config.currentDataRoot,'backups'))
     report.checks.push('backup root readable, actual backup generated, production open action uses original target')
     await screenshot('paths-backup-created')

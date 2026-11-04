@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import {createServer} from 'node:http'
 import {readFile, readdir, writeFile, unlink} from 'node:fs/promises'
 import {join, win32} from 'node:path'
+import {closeNativeUpdateCenter,updateCenterHost} from './windows-021-public-hosts.mjs'
 
 export async function verifyWindowsQueryUi(call, output, sandbox) {
   const report = {result:'fail', checks:[], requests:[]}
@@ -54,6 +55,10 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
   try {
     const config=await evaluate("window.__TAURI_INTERNALS__.invoke('get_data_root_config')")
     assert.equal(ordinary(config.currentDataRoot).toLowerCase(),ordinary(sandbox).toLowerCase())
+    const about=await evaluate("window.__TAURI_INTERNALS__.invoke('app_about')")
+    const updateHost=updateCenterHost(about.version)
+    report.about=about
+    const inUpdate=fn=>'('+fn.toString()+')('+JSON.stringify(updateHost.selector)+')'
     const source=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')")
     const entryBytes=await readFile(source.managedEntry)
     const manifestPath=join(source.managedPrefix,'.runtime-manifest.json')
@@ -68,13 +73,13 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     report.failureRegistry=registry
     await click('版本升级')
     await click('检查更新')
-    await wait("document.querySelector('[data-testid=official-update-row]')?.textContent.includes('检查失败')")
-    await wait("!document.querySelector('[data-testid=manager-update-row]')?.textContent.includes('正在检查')")
-    await evaluate("document.querySelector('[data-testid=official-update-detail]').click()")
-    const error=await wait("document.querySelector('[data-testid=official-query-error]')?.textContent")
+    await wait(inUpdate(root=>document.querySelector(root+' [data-testid=official-update-row]')?.textContent.includes('检查失败')))
+    await wait(inUpdate(root=>!document.querySelector(root+' [data-testid=manager-update-row]')?.textContent.includes('正在检查')))
+    await evaluate(inUpdate(root=>document.querySelector(root+' [data-testid=official-update-detail]').click()))
+    const error=await wait(inUpdate(root=>document.querySelector(root+' [data-testid=official-query-error]')?.textContent))
     assert(error.includes('npm view')&&error.includes('退出码 1')&&error.includes('E404')&&error.includes('日志：'),error)
     assert(!error.includes('official metadata query failed'))
-    const typography=await evaluate("({font:getComputedStyle(document.querySelector('[data-testid=official-query-error]')).fontFamily,hasWon:document.querySelector('[data-testid=official-query-error]').textContent.includes(String.fromCharCode(0x20a9))})")
+    const typography=await evaluate(inUpdate(root=>{const error=document.querySelector(root+' [data-testid=official-query-error]');return {font:getComputedStyle(error).fontFamily,hasWon:error.textContent.includes(String.fromCharCode(0x20a9))}}))
     assert(typography.font.startsWith('Consolas')&&!typography.hasWon,JSON.stringify(typography))
     report.typography=typography
     assert(report.requests.some(request=>request.url.includes('opencodex')),'real npm did not contact the local fixture registry')
@@ -98,29 +103,29 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     assert.equal(stdout.complete,true);assert.equal(stderr.complete,true)
     report.failureLog=failure
     report.checks.push('real npm E404 from isolated loopback registry; actual argv/cwd/selected HOME/cache/native COMSPEC and both streams recorded')
-    await click('关闭更新中心','[data-testid=update-center]')
+    await closeNativeUpdateCenter({wait,click},about.version)
     // Opening existing details performs no new check and preserves the error.
     await click('查看面板更新')
-    await wait("document.querySelector('[data-testid=official-query-error]')?.textContent.includes('E404')")
+    await wait(inUpdate(root=>document.querySelector(root+' [data-testid=official-query-error]')?.textContent.includes('E404')))
     report.checks.push('close/reopen retains query stderr and command log reference')
-    await click('关闭更新中心','[data-testid=update-center]')
+    await closeNativeUpdateCenter({wait,click},about.version)
     mode='install-failure'
     await click('检查更新')
-    await wait("document.querySelector('[data-testid=official-update-row]')?.textContent.includes('999.0.0-ocx-native-failure')")
-    await wait("!document.querySelector('[data-testid=manager-update-row]')?.textContent.includes('正在检查')")
-    await evaluate("document.querySelector('[data-testid=official-update-detail]').click()")
-    await click('备份并更新面板','[data-testid=update-center]')
-    const failedUpdate=await wait("(()=>{const d=document.querySelector('[data-testid=official-update-card]');const e=d?.querySelector('[role=alert]')?.textContent;const c=d?.querySelector('pre[aria-label=\"面板安装输出\"]')?.textContent;return e&&c?{error:e,console:c,text:d.textContent}:false})()",120_000)
+    await wait(inUpdate(root=>document.querySelector(root+' [data-testid=official-update-row]')?.textContent.includes('999.0.0-ocx-native-failure')))
+    await wait(inUpdate(root=>!document.querySelector(root+' [data-testid=manager-update-row]')?.textContent.includes('正在检查')))
+    await evaluate(inUpdate(root=>document.querySelector(root+' [data-testid=official-update-detail]').click()))
+    await click('备份并更新面板',updateHost.selector)
+    const failedUpdate=await wait(inUpdate(root=>{const d=document.querySelector(root+' [data-testid=official-update-card]'),e=d?.querySelector('[role=alert]')?.textContent,c=d?.querySelector('pre[aria-label="面板安装输出"]')?.textContent;return e&&c?{error:e,console:c,text:d.textContent}:false}),120_000)
     assert(failedUpdate.error.includes('npm pack')&&failedUpdate.error.includes('日志：'),JSON.stringify(failedUpdate))
     assert(failedUpdate.console.includes('E404')&&failedUpdate.text.includes('面板更新失败'),JSON.stringify(failedUpdate))
     assert(!failedUpdate.error.includes('managed runtime operation failed'))
     await screenshot('update-failure-retains-output')
     report.failedUpdate=failedUpdate
-    await click('关闭更新中心','[data-testid=update-center]')
+    await closeNativeUpdateCenter({wait,click},about.version)
     await click('查看面板更新')
-    await wait("document.querySelector('pre[aria-label=\"面板安装输出\"]')?.textContent.includes('E404')")
+    await wait(inUpdate(root=>document.querySelector(root+' pre[aria-label="面板安装输出"]')?.textContent.includes('E404')))
     report.checks.push('real npm pack tarball failure after production backup; failed update retains console through close/reopen')
-    await click('关闭更新中心','[data-testid=update-center]')
+    await closeNativeUpdateCenter({wait,click},about.version)
     await restoreNpmrc()
     // The query and manager check share the center's checking state. Allow the
     // admitted check to finish before explicitly requesting recovery.
@@ -130,9 +135,9 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     // the known fixture version before treating recovery as complete.
     const after=await wait("(async()=>{const value=await window.__TAURI_INTERNALS__.invoke('official_remote_cache');return value&&value.version!=='999.0.0-ocx-native-failure'?value:false})()")
     assert.equal(after.version,before.version,'recovered metadata did not return to the actual registry version')
-    await wait("(()=>{const row=document.querySelector('[data-testid=official-update-row]');return row&&!row.textContent.includes('999.0.0-ocx-native-failure')})()")
-    await evaluate("document.querySelector('[data-testid=official-update-detail]').click()")
-    assert(!await evaluate("!!document.querySelector('[data-testid=official-query-error]')"),'stale query failure remained after recovery')
+    await wait(inUpdate(root=>{const row=document.querySelector(root+' [data-testid=official-update-row]');return row&&!row.textContent.includes('999.0.0-ocx-native-failure')}))
+    await evaluate(inUpdate(root=>document.querySelector(root+' [data-testid=official-update-detail]').click()))
+    assert(!await evaluate(inUpdate(root=>!!document.querySelector(root+' [data-testid=official-query-error]'))),'stale query failure remained after recovery')
     assert(/^\d/.test(after.version))
     const sourceAfter=await evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')")
     assert.equal(sourceAfter.path,source.path)
@@ -143,7 +148,7 @@ export async function verifyWindowsQueryUi(call, output, sandbox) {
     report.after=after
     report.checks.push('actual registry metadata recovery clears failure; installed runtime source unchanged')
     await screenshot('query-recovered')
-    await click('关闭更新中心','[data-testid=update-center]')
+    await closeNativeUpdateCenter({wait,click},about.version)
     await click('安装配置')
     report.result='pass'
     return report
