@@ -11,6 +11,20 @@ summary: "L/L2与W/W2已集成；Mac原生复验发现面板空URL崩溃并修�
 ---
 # 0.2.21发布后双线修复与集成发布计划
 
+## 2026-11-05恢复接续：Windows补充回交与本机修复
+
+用户在本对话重新启动目标，并明确“接受 RDP，保留原性能预算”。本批材质验收允许RDP，替代下文历史物理桌面前置；不豁免p95≤2B、长帧、背景停绘/恢复、MSVC真实制品、正式客户端默认adapter和发行门。MSVC证据可来自同源CI，不额外要求在本地安装cl；需要取得同一原包候选并完成原生复验，CI编译本身不代表安装/升级或性能通过。
+
+接收代码b2cb82cde与文档54932fe8a，版本化保存196份原始资料，主manifest189项及RDP清单20项SHA均一致，未覆盖68c034362旧原件。更正RCP revision4将isolation/MSVC/native/default-restart/performance真实标为failed，原矛盾回执继续保留；新回执先作为收到的运行资料，不据局部结果关闭原任务。完整模型UI、改名备份/镜像、版本四态及渠道真实清单/保存/重开有新增证据。首次范围仅本地1渠道17模版、remoteObjects=0，仍未证明云端独有对象并集；本机保留独立expected-first-scope清单校验，未采用来件按kind字段解析云目录的弱断言。
+
+RDP高档30秒静止/滚动/弹窗p95约162.6/144/171.7ms，均超33.33ms；后台停绘及恢复通过，性能仍失败。面板60444切60446且10/30ms快速路由返回时失败，真实重试后恢复，根因尚不能直接归于空URL。报告披露固定PID清理误停日常安装目录Bun PID30196，后观察新服务66908；本对话已明确披露，缺越界前后日常配置字节，不能认证零副作用，未执行补偿重启/日常配置改写。后续清理必须同时证明测试路径、PID、创建时间和归属。
+
+本机在原实现新增测试，复现“浮层关闭先于原生Hide返回，恢复Show被busy判断丢弃”。697b9e382保留最后一次待恢复Show、每命令独立revision、离开页面不重放，并过滤非当前子视图/非受限origin/about:blank的加载回调。该复现解释相关恢复竞态，不冒称完整Windows切源失败已解决。原生Windows需新候选重验。cb423a9df修正上轮探针直接返回Vue Proxy导致CDP取回空对象的问题，保留revision/source/time等严格断言；真实V8接口复现并回归。6a3c7ef2d集成渠道/面板驱动，保留独立首次范围合同。
+
+当前交付31a28bfb4，产品apps树ab09d800b27ce13e17c46ce68f9ae38f7d4fc21a。前端197文件/1291测试、类型/构建、63协议测试、Rust面板12及Clippy通过，旧失败日志保留。Mac原生候选6a3c7ef2d与最终apps树一致，官方原包子WKWebView加载/重开15检查通过；不代替Windows切源或注入浮层竞态。Rust全库复验1217通过、0失败、4按原条件忽略，原始日志已留。CI新增windows-msvc-candidate，构建后留原EXE副本、原/复制SHA、构建commit/请求head/apps树/target；不是安装器或更新签名，不发布。
+
+证据：integration-20261105/windows-final-followup-54932fe8a/integration-audit.json与local-panel-followup-20261105/validation-summary.json。下一步先交付新MSVC候选做Windows切源/浮层恢复、RDP性能剖析、正式客户端在一次性账号中的默认重启；其后再冻结发行版本和原包验收。整批TASK/DMD/IMP保持in_progress，未生成整版证书。
+
 ## 2026-11-05最新Windows回交审计
 
 已接收文档68c034362的46个原始blob，40项manifest校验全部一致。静态apps树与f9def3300一致；报告中的d55e6064是Rust src子树。启动脚本从另一checkout复制EXE，缺内嵌commit原始启动日志和复制前后SHA链，运行身份仍待补。

@@ -1,0 +1,14 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-read* (require-all (subpath "/Users/ezio") (require-not (subpath "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app"))))
+(deny file-write* (subpath "/Users/ezio"))
+(deny file-read* file-write* (subpath "/Library/Keychains"))
+(deny mach-lookup (global-name "com.apple.securityd") (global-name "com.apple.secd"))
+(deny file-write* (subpath "/private/tmp/ocx021-mac-native-529ad7b6-9bc8-4597-92ea-5d20cb6f3f2b/root/tools"))
+
+(allow network-outbound (remote ip "localhost:57548"))
+(allow network-inbound (local ip "localhost:57548"))
+(allow network-bind (local ip "localhost:57548"))
+
+(allow network-outbound (literal "/private/var/run/mDNSResponder"))

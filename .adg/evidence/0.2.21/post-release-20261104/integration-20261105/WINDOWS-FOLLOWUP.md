@@ -1,3 +1,18 @@
+# 最新Windows接续：31a28bfb4
+
+在本对话用户已确认：接受RDP，保留原预算。以下为当前有效补验，下面旧提示词仅保留交接历史。
+
+- 先fetch并合入codex/post021-sync-fixes@31a28bfb4f0decd151269ce896f2a7364fb5b186及docs/governance-main最新IMP-30，沿已有Windows分支继续。新产品树ab09d800b27ce13e17c46ce68f9ae38f7d4fc21a；旧bd7c0fe8c二进制不能代验新面板修复。CI增加windows-msvc-candidate，取该最终源构建候选并核对candidate.json、run/commit/apps树、EXE SHA与运行启动日志。可用同源MSVC CI构建复验，不强制本机安装MSVC；仍不等于发行安装器/升级/签名通过。
+- 重点复测60444→60446切源、首次导航未完成即离开/重开、浮层打开后快速关闭与Hide交错、正常重开和失败重试。697b9e382修相关丢失Show和过时/about:blank回调；本机测试及Mac面板已通过，Windows原竞态仍需实测，不提前写已解决。保留请求时序/当前trace/原生日志和失败帧，不以延长超时换通过。
+- RDP性能沿B=16.667ms、p95≤2B等原预算，静止/滚动/弹窗至少30秒、前后台恢复。54932fe8a三项失败保留；记录CPU/GPU/DWM/RDP合成负载与主线程/合成/绘制trace，先区分宿主资源争用、远程帧投递、着色器与滤镜成本，再修实际瓶颈，不偷偷改低档、减弱玻璃或调整预算。新候选与原包在同会话同数据/尺寸/档位比较。
+- 首次范围用UI开工前独立expected-first-scope.json，含本地及云端独有渠道/模版完整ID并集。来件remoteObjects=0只证明本地首次选中；补后续新增不扩选及已有范围保持。当前驱动拒绝缺项/多项/重复，不回退到kind解析或any/some判通过。
+- 正式MSIX默认重启只在能证明一次性Windows账号/会话/进程owner和祖先链归属时执行；listProcesses=null为未知，不能当无进程。不能在日常同包范围直接测试或用OwnedClient代替。若仍无独立实例就报告缺验。
+- 误停日常Bun PID30196事件和修订RCP4保留。清理每次匹配测试路径、PID、创建时间/归属，不能固定PID盲清理；不自行补偿重启/改配置。旧原件不覆写，新证据和回执逐项真实，未通过仍failed，无整版CERT。
+
+本机已保存windows-final-followup-54932fe8a完整版本化资料，主189/独立RDP20项manifest SHA一致；新产品验证见local-panel-followup-20261105/。不发布、不合并main、不跑真实WebDAV/推理、不改日常配置。
+
+---
+
 # Windows最终补验提示词
 
 ## 68c034362回交后的定向补验

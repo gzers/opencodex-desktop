@@ -1,0 +1,29 @@
+{
+  "codeHead": "31a28bfb4f0decd151269ce896f2a7364fb5b186",
+  "appsTree": "ab09d800b27ce13e17c46ce68f9ae38f7d4fc21a",
+  "result": "in_progress",
+  "releaseReady": false,
+  "nativeMac": "local-panel-followup-20261105/native/ready/ocx021-mac-native-529ad7b6-9bc8-4597-92ea-5d20cb6f3f2b/report.json",
+  "checks": {
+    "vitest": 1291,
+    "protocol": 63,
+    "rustPanel": 12,
+    "clippy": "pass",
+    "typecheckBuild": "pass",
+    "rustFull": {
+      "passed": 1217,
+      "failed": 0,
+      "ignored": 4,
+      "log": "local-panel-followup-20261105/rust-full.log",
+      "sourceAppsTree": "ab09d800b27ce13e17c46ce68f9ae38f7d4fc21a"
+    },
+    "workflowYaml": "parsed",
+    "workflowRelatedTests": 13
+  },
+  "failuresPreserved": [
+    "frontend-race-before.log",
+    "old-final-windows-ci.log"
+  ],
+  "scopeLimit": "Dropped overlay restoration reproduced and fixed; native callback filtering verified. Exact Windows changed-origin rapid route scenario and new RDP profile still required.",
+  "audit": "../windows-final-followup-54932fe8a/integration-audit.json"
+}

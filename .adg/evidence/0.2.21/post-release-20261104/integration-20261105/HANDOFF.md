@@ -1,3 +1,7 @@
+# 最新接续状态（2026-11-05）
+
+用户恢复目标并接受RDP、预算不变。代码31a28bfb4已完成本机面板恢复/加载来源修复、Vue Proxy探针标量投影、Windows驱动合并及MSVC候选留存。产品apps树ab09d800b27ce13e17c46ce68f9ae38f7d4fc21a与Mac原生6a3c7ef2d一致；63协议、1291前端、Rust面板12/Clippy/构建及Mac原生15通过，Rust全库1217通过/0失败/4原条件忽略。Windows新源切端口竞态未验证，RDP性能三项失败保留，正式默认重启仍缺。新回交54932fe8a已版本化保存，corrected RCP4将缺验及隔离失败真实标明；保留旧矛盾原件。报告披露误停日常服务PID30196，缺前后字节，不能宣称零副作用；本机未执行补偿操作。最新事实见IMP-30及两份audit/validation summary；下面为历史阶段交接，不覆盖本段。
+
 # 双线集成交接（未发布）
 
 Windows最终原始回交68c034362已接收，46原始blob/40manifest项SHA一致。详细采用边界见windows-final-code-review/evidence-audit.json。仍为RDP/GNU，正式默认adapter未重启；首次范围0渠道/17模版只能证明部分选择，主模型流程以旧WebDAV断言超时结束。Rust17个Node环境失败均被18定向重跑覆盖，不记为全workspace单次通过。来件RCP总体failed，却把MSVC/物理性能/正式重启checks误标passed，与正文冲突；原件隔离到received-runtime，不采用权威回执、不关闭AC。EXE启动脚本从另一checkout复制，缺原始内嵌commit及哈希拷贝链，运行身份待补。四个新TASK仍in_progress，无新CERT。

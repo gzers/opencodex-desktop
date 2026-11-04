@@ -1,0 +1,41 @@
+
+> opencodex-desktop-ui@0.2.21 test
+> vitest --run tests/post10-panel.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/post10-panel.test.ts (7 tests | 1 failed) 78ms
+   × restores the panel when the last overlay closes before native Hide returns 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/post10-panel.test.ts > restores the panel when the last overlay closes before native Hide returns
+AssertionError: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/post10-panel.test.ts:106:16
+    104|  useNotificationsStore().panelOpen=false;await flushPromises()
+    105|  resolveHide({visible:false,panelUrl:null,ready:true,generation:3});aw…
+    106|  expect(shows).toBe(2)
+       |                ^
+    107|  expect(wrapper!.text()).toContain('官方面板已嵌入主窗口')
+    108| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  03:59:26
+   Duration  4.27s (transform 78%, environment 16%, import 5%, tests 2%)
+
+  Transform  transforming modules took 3.21s · 78% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
