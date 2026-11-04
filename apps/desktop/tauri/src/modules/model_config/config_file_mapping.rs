@@ -841,6 +841,23 @@ pub(super) fn write_policy(
     after: &Policy,
     library: &Library,
 ) -> ModelResult<()> {
+    // Names are the user-facing identity. Metadata-only rename and new objects
+    // must receive the same uniqueness check as a runtime-key rename.
+    for channel in &after.channels {
+        let changed = before
+            .channels
+            .iter()
+            .find(|c| c.id == channel.id)
+            .is_none_or(|old| old.label != channel.label);
+        if changed
+            && after.channels.iter().chain(&before.channels).any(|other| {
+                other.id != channel.id
+                    && other.label.trim().to_lowercase() == channel.label.trim().to_lowercase()
+            })
+        {
+            return Err(invalid("channel_name", "渠道名称已存在，请使用其它名称"));
+        }
+    }
     let mut next = config.clone();
     let renames = provider_renames(&next, before, after)?;
     apply_renames(&mut next, after, &renames)?;
@@ -939,6 +956,11 @@ fn write_inner(
             .get_mut(provider)
             .and_then(Value::as_object_mut)
             .ok_or_else(document_error)?;
+        if old.is_none()
+            || old.is_some_and(|c| c.label != channel.label) && raw.contains_key("name")
+        {
+            raw.insert("name".into(), json!(channel.label));
+        }
         let url_changed = old.map(active_url).transpose()? != Some(active_url(channel)?);
         let protocol_changed =
             old.is_none_or(|c| c.connection.protocol != channel.connection.protocol);
@@ -1660,7 +1682,7 @@ mod tests {
     }
 
     #[test]
-    fn noop_or_metadata_label_save_preserves_every_json_field_even_with_stale_adoption() {
+    fn noop_preserves_every_field_and_name_edit_updates_only_existing_display_name() {
         let mut config = fixture();
         let original = config.clone();
         let mut before = read(&config);
@@ -1673,7 +1695,10 @@ mod tests {
         let mut after = before.clone();
         after.channels[0].label = "Renamed label".into();
         save(&mut config, &before, &after);
-        assert!(config == original);
+        let mut expected = original;
+        expected["providers"][&after.channels[0].connection.provider_id]["name"] =
+            json!("Renamed label");
+        assert_eq!(config, expected);
     }
 
     #[test]

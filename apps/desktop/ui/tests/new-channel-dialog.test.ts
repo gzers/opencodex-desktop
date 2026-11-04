@@ -11,11 +11,21 @@ const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="a
 function render(){return mount(NewChannelDialog,{global:{stubs:{UiDialog:dialog,UiSelectField:true}}})}
 function button(wrapper:ReturnType<typeof render>,name:string){return wrapper.findAll('button').find(b=>b.text()===name)!}
 async function fill(wrapper:ReturnType<typeof render>,label:string,value:string){await wrapper.findAll('label').find(l=>l.text()===label)!.get('input').setValue(value)}
-async function firstStep(wrapper:ReturnType<typeof render>){await fill(wrapper,'渠道名称','独立渠道');await fill(wrapper,'运行渠道标识','custom-new');await fill(wrapper,'服务基地址','https://example.test/v1');await fill(wrapper,'API Key','fixture-new-SECRET');await button(wrapper,'下一步').trigger('click');await flushPromises()}
+async function firstStep(wrapper:ReturnType<typeof render>){await fill(wrapper,'渠道名称','独立渠道');await fill(wrapper,'服务基地址','https://example.test/v1');await fill(wrapper,'API Key','fixture-new-SECRET');await button(wrapper,'下一步').trigger('click');await flushPromises()}
 let pinia:ReturnType<typeof createPinia>
 beforeEach(()=>{pinia=createPinia();setActivePinia(pinia);vi.clearAllMocks();const snapshot={policy:{schemaVersion:1,templateRefs:[],channels:[]},workspace:null,workspaceDigest:'w',policyDigest:'p',libraryDigest:'l',library:{schemaVersion:1,templates:[]}} as ModelSnapshot;useModelsStore().acceptTransfer(snapshot)})
 afterEach(()=>pinia._s.forEach(store=>store.$dispose()))
 describe('new channel two-step buffer',()=>{
+ it.each(['中文 渠道 / one','openai','with space'])('creates %s without runtime-ID or private-network fields, and fetches before joining',async name=>{
+  const w=render();await flushPromises();await fill(w,'渠道名称',name);await fill(w,'服务基地址','http://127.0.0.1:11434/v1');await fill(w,'API Key','synthetic-key');
+  expect(w.text()).not.toContain('运行渠道标识');expect(w.text()).not.toContain('允许访问可信私有网络');
+  vi.mocked(modelApi.previewNewChannel).mockResolvedValue({models:[{id:'raw/model',label:'raw/model',rules:emptyRules()}],credentialRef:null,elapsedMs:2});
+  await button(w,'下一步').trigger('click');await button(w,'获取模型列表').trigger('click');await flushPromises();
+  expect(modelApi.previewNewChannel).toHaveBeenCalledWith(expect.objectContaining({url:'http://127.0.0.1:11434/v1'}));
+  expect(vi.mocked(modelApi.previewNewChannel).mock.calls[0]![0]).not.toHaveProperty('allowPrivateNetwork');
+  await w.get('input[aria-label="选择新渠道型号 raw/model"]').setValue(true);await button(w,'加入草稿').trigger('click');await flushPromises();
+  const channel=useModelsStore().channelDraft!.channels[0]!;expect(channel.label).toBe(name);expect(channel.connection.providerId).toMatch(/^channel-/);expect(channel.selection).toEqual({mode:'whitelist',models:['raw/model']});w.unmount();
+ })
  it.each([[30,17],[104,32]])('retains a full %i-row discovery while explicitly adding only %i selected IDs',async(total,count)=>{
   const rows=Array.from({length:total},(_,i)=>({id:'exact/'+i.toString().padStart(3,'0'),label:'Model '+i,rules:emptyRules()}));vi.mocked(modelApi.previewNewChannel).mockResolvedValue({models:rows,credentialRef:null,elapsedMs:3})
   const wrapper=render();await flushPromises();await firstStep(wrapper);await button(wrapper,'获取模型列表').trigger('click');await flushPromises()

@@ -16,7 +16,7 @@ fn request(port: u16, protocol: &str, path: &str, key: Option<&str>) -> Discover
         url: format!("http://127.0.0.1:{port}{path}"),
         api_key: key.map(str::to_owned),
         credential_ref: None,
-        allow_private_network: true,
+        allow_private_network: false,
         provider_id: None,
         home: None,
     }
@@ -694,7 +694,7 @@ async fn canceling_measurement_during_fallback_drops_the_request_and_keeps_tempo
         }],
         api_key: Some("fixture-secret".into()),
         credential_ref: None,
-        allow_private_network: true,
+        allow_private_network: false,
         provider_id: None,
         home: Some(home.path().to_owned()),
     }));

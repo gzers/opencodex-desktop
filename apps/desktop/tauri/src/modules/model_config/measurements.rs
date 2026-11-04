@@ -12,6 +12,8 @@ pub struct Request {
     pub nodes: Vec<ServiceNode>,
     pub api_key: Option<String>,
     pub credential_ref: Option<String>,
+    /// Accepted for old callers; discovery ignores this retired setting.
+    #[serde(default)]
     pub allow_private_network: bool,
     /// 渠道身份（官方 provider id）；用于回落到该渠道已配置的 Key。
     #[serde(default)]
@@ -149,7 +151,7 @@ mod tests {
                 .collect(),
             api_key: Some("temporary-fixture-key".into()),
             credential_ref: None,
-            allow_private_network: true,
+            allow_private_network: false,
             provider_id: None,
             home: None,
         })
@@ -206,7 +208,7 @@ mod tests {
                 }],
                 api_key: None,
                 credential_ref: None,
-                allow_private_network: true,
+                allow_private_network: false,
                 provider_id: None,
                 home: None,
             })
@@ -275,7 +277,7 @@ mod tests {
             }],
             api_key: None,
             credential_ref: None,
-            allow_private_network: true,
+            allow_private_network: false,
             provider_id: Some("demo".into()),
             home: Some(home.path().to_path_buf()),
         })
@@ -327,7 +329,7 @@ mod tests {
             }],
             api_key: None,
             credential_ref: None,
-            allow_private_network: true,
+            allow_private_network: false,
             provider_id: Some("demo".into()),
             home: Some(home.path().to_path_buf()),
         })

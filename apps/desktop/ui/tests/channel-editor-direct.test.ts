@@ -177,7 +177,7 @@ describe('current-channel Key intent across file refreshes',()=>{
     expect(key.attributes('type')).toBe('text');expect(store.credentialEdits).toEqual({})
     store.channelDraft!.channels[0]!.connection.nodes[0]!.url='https://changed.example.test'
     await button(wrapper,'获取模型列表').trigger('click');await flushPromises()
-    expect(modelApi.discover).toHaveBeenCalledWith(expect.objectContaining({url:'https://changed.example.test',apiKey:null,providerId:'provider-first',credentialRef:null,allowPrivateNetwork:false}))
+    expect(modelApi.discover).toHaveBeenCalledWith(expect.objectContaining({url:'https://changed.example.test',apiKey:null,providerId:'provider-first',credentialRef:null}))
     wrapper.getComponent(NodePicker).vm.$emit('measure',['node']);await flushPromises()
     expect(modelApi.measureNodes).toHaveBeenCalledWith(expect.objectContaining({apiKey:null,providerId:'provider-first',nodes:[expect.objectContaining({url:'https://changed.example.test'})]}))
     await key.setValue('fixture-replacement-key');await key.setValue('')
