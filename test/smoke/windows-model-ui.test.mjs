@@ -3,8 +3,8 @@ import assert from 'node:assert/strict'
 import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
-import {runInNewContext} from 'node:vm'
-import {modelFileEvidence,assertModelFileWrite,assertModelSandbox,assertModelExportPath,modelConfigPath,nativeModelKeyboardChecksRequired,nativeModelUiContract,confirmNativeTemplateDefault,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
+import {createContext,runInContext,runInNewContext} from 'node:vm'
+import {modelFileEvidence,assertModelFileWrite,assertModelSandbox,assertModelExportPath,modelConfigPath,nativeModelKeyboardChecksRequired,nativeModelUiContract,confirmNativeTemplateDefault,clickNativeModelMenu,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
 import {overviewScene} from './windows-ui-alignment.mjs'
 test('overview accepts either complete cards or the real settled setup gate, never an empty or partial page',()=>{
  assert.equal(overviewScene(Array(6).fill({}),{}),'ready')
@@ -156,4 +156,65 @@ test('native Save evidence requires changed file bytes and one exact backup with
  const canceled=await modelFileEvidence(config,directory)
  assert(canceled.bytes.equals(final.bytes));assert.deepEqual(canceled.backups,final.backups)
  assert((await readFile(config)).equals(final.bytes))
+})
+
+function nativeMenuFixture({tops=[535.25,499.25,356.25,356.25,356.25],afterMove=()=>{},opens=true}={}){
+ const scene={frame:0,top:tops[0],occluded:false,open:false,scrollCalls:0},commands=[],listeners=new Map(),frames=new Map()
+ let nextFrame=0
+ const icon={tagName:'svg',getAttribute:()=>null},overlay={tagName:'DIV',getAttribute:()=>null},scroller={scrollTop:0,scrollLeft:0,parentElement:null}
+ const button={tagName:'BUTTON',disabled:false,parentElement:scroller,getAttribute:()=> 'Fast支持',contains:e=>e===button||e===icon,scrollIntoView:()=>{scene.scrollCalls++},getBoundingClientRect:()=>({x:515.5,y:scene.top,left:515.5,right:903,top:scene.top,bottom:scene.top+34,width:387.5,height:34})}
+ const document={hidden:false,activeElement:button,hasFocus:()=>true,querySelector:selector=>selector.includes('[data-ui-escape-owner]')?(scene.open?{}:null):button,
+  elementFromPoint:(x,y)=>scene.occluded?overlay:x>=515.5&&x<=903&&y>=scene.top&&y<=scene.top+34?icon:null,
+  addEventListener:(type,fn)=>listeners.set(type,fn),removeEventListener:type=>listeners.delete(type)}
+ const context=createContext({document,window:{screenX:0,screenY:0,visualViewport:{width:1028,height:749,offsetLeft:0,offsetTop:0,pageLeft:0,pageTop:0,scale:1}},innerWidth:1028,innerHeight:749,outerWidth:1044,outerHeight:788,devicePixelRatio:1,performance:{now:()=>scene.frame*16},requestAnimationFrame:fn=>{frames.set(++nextFrame,fn);return nextFrame},cancelAnimationFrame:id=>frames.delete(id)})
+ const evaluate=async expression=>runInContext(expression,context)
+ function advance(){scene.top=tops[Math.min(scene.frame++,tops.length-1)];const current=[...frames.values()];frames.clear();for(const fn of current)fn(scene.frame*16)}
+ const driver={evaluate,wait:async(expression,label)=>{for(let n=0;n<12;n++){advance();const value=await evaluate(expression);if(value)return value}throw Error('Native model UI timeout: '+label)},
+  call:async(method,args)=>{
+   assert.equal(method,'Input.dispatchMouseEvent');commands.push(args)
+   if(args.type==='mouseMoved'){afterMove(scene);return}
+   const types=args.type==='mousePressed'?['pointerdown','mousedown']:['pointerup','mouseup','click']
+   for(const type of types)listeners.get(type)?.({type,isTrusted:true,target:document.elementFromPoint(args.x,args.y),clientX:args.x,clientY:args.y})
+   if(args.type==='mouseReleased'&&opens&&!scene.occluded&&button.contains(document.elementFromPoint(args.x,args.y)))scene.open=true
+  }}
+ return {driver,scene,commands,context,frames,listeners}
+}
+test('actual native menu driver waits through moving frames, rechecks a composite hit, then sends exactly one pointer click',async t=>{
+ const output=await mkdtemp(join(tmpdir(),'ocx-menu-frames-'));t.after(()=>rm(output,{recursive:true,force:true}))
+ const f=nativeMenuFixture();await clickNativeModelMenu(f.driver,output)
+ assert.equal(f.scene.scrollCalls,1);assert.deepEqual(f.commands.map(c=>c.type),['mouseMoved','mousePressed','mouseReleased'])
+ assert(f.commands.every(c=>c.x===709.25&&c.y===373.25),'must not click the earlier y552.25 or y516.25 samples')
+ const trace=JSON.parse(await readFile(join(output,'model-menu-input-native.json'),'utf8'))
+ assert.equal(trace.result,'pass');assert.deepEqual(trace.point.stableFrames,[3,4,5]);assert.deepEqual(trace.changes.map(f=>f.y),[552.25,516.25,373.25])
+ assert.equal(trace.point.viewport.dpr,1);assert.equal(trace.point.viewport.visual.scale,1)
+ assert(trace.stages[0].sameGeometry&&trace.stages[0].sameHit);assert.equal(trace.stages[0].current.hitTarget.tag,'svg')
+ assert.deepEqual(trace.events.map(e=>e.type),['pointerdown','mousedown','pointerup','mouseup','click']);assert(trace.events.every(e=>e.trusted&&e.targetWithinButton))
+ assert.equal(f.context.__ocxModelMenuInput,undefined);assert.equal(f.frames.size,0);assert.equal(f.listeners.size,0)
+})
+test('native menu driver refuses movement or occlusion after stable frames before pressing, retaining the failed guard',async t=>{
+ const output=await mkdtemp(join(tmpdir(),'ocx-menu-guard-'));t.after(()=>rm(output,{recursive:true,force:true}))
+ for(const afterMove of [s=>{s.top-=36},s=>{s.occluded=true}]){
+  const f=nativeMenuFixture({afterMove})
+  await assert.rejects(clickNativeModelMenu(f.driver,output),/moved or became occluded/)
+  assert.deepEqual(f.commands.map(c=>c.type),['mouseMoved'])
+  const trace=JSON.parse(await readFile(join(output,'model-menu-input-native.json'),'utf8'))
+  assert.equal(trace.result,'fail');assert(!trace.stages[0].sameGeometry||!trace.stages[0].sameHit);assert.deepEqual(trace.events,[])
+  assert.equal(f.frames.size,0);assert.equal(f.listeners.size,0)
+ }
+})
+test('continually moving menu geometry never receives pointer input',async t=>{
+ const output=await mkdtemp(join(tmpdir(),'ocx-menu-moving-'));t.after(()=>rm(output,{recursive:true,force:true}))
+ const f=nativeMenuFixture({tops:Array.from({length:12},(_,n)=>535.25-n)})
+ await assert.rejects(clickNativeModelMenu(f.driver,output),/stable across frames/)
+ assert.deepEqual(f.commands,[]);assert.equal(f.context.__ocxModelMenuInput,undefined);assert.equal(f.frames.size,0)
+ const trace=JSON.parse(await readFile(join(output,'model-menu-input-native.json'),'utf8'));assert.equal(trace.result,'fail');assert.equal(trace.frames.length,12)
+})
+test('a real pointer click that does not open the inner menu retains the original failure and never retries',async t=>{
+ const output=await mkdtemp(join(tmpdir(),'ocx-menu-unopened-'));t.after(()=>rm(output,{recursive:true,force:true}))
+ const f=nativeMenuFixture({opens:false})
+ await assert.rejects(clickNativeModelMenu(f.driver,output),{message:'Native model UI timeout: native inner select open'})
+ assert.deepEqual(f.commands.map(c=>c.type),['mouseMoved','mousePressed','mouseReleased'])
+ const trace=JSON.parse(await readFile(join(output,'model-menu-input-native.json'),'utf8'))
+ assert.equal(trace.error,'Native model UI timeout: native inner select open');assert(trace.events.some(e=>e.type==='pointerdown'&&e.targetWithinButton))
+ assert.equal(f.context.__ocxModelMenuInput,undefined);assert.equal(f.frames.size,0);assert.equal(f.listeners.size,0)
 })

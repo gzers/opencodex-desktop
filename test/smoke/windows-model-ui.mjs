@@ -47,6 +47,64 @@ export async function confirmNativeTemplateDefault({wait,click},version){
   : "document.querySelectorAll('dialog[open]').length===0&&!!document.querySelector('.modal-mask')",'application confirmation above version manager')
  await click('设为默认',confirmation)
 }
+// Serialized into the actual WebView. Observe real frames and trusted input;
+// never adjust coordinates by a guessed DPI/chrome offset or replace a click.
+function installNativeModelMenuObservation(){
+ if(globalThis.__ocxModelMenuInput)throw Error('native model menu observation already active')
+ const selector='dialog[open] button[aria-label="Fast支持"]',button=document.querySelector(selector)
+ if(!button)throw Error('native Fast select absent')
+ const describe=e=>e?{tag:e.tagName,label:e.getAttribute?.('aria-label')??null}:null
+ const trace={frames:[],changes:[],events:[],stages:[],frame:0}
+ function sample(point){
+  const r=button.getBoundingClientRect(),x=point?.x??r.x+r.width/2,y=point?.y??r.y+r.height/2,hit=document.elementFromPoint(x,y),scroll=[]
+  for(let e=button.parentElement;e;e=e.parentElement)scroll.push({top:e.scrollTop,left:e.scrollLeft})
+  const v=window.visualViewport
+  return {at:performance.now(),x,y,top:r.top,bottom:r.bottom,rect:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height},
+   viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio,screenX:window.screenX,screenY:window.screenY,outerWidth:outerWidth,outerHeight:outerHeight,visual:v?{width:v.width,height:v.height,offsetLeft:v.offsetLeft,offsetTop:v.offsetTop,pageLeft:v.pageLeft,pageTop:v.pageTop,scale:v.scale}:null},scroll,
+   sameTarget:document.querySelector(selector)===button,hit:!button.disabled&&r.width>0&&r.height>0&&x>0&&y>0&&x<innerWidth&&y<innerHeight&&button.contains(hit),hitTarget:describe(hit),focused:document.hasFocus(),hidden:document.hidden,activeElement:describe(document.activeElement)}
+ }
+ const same=(a,b)=>JSON.stringify([a.rect,a.viewport,a.scroll])===JSON.stringify([b.rect,b.viewport,b.scroll])
+ let frameId
+ function frame(){
+  const value={...sample(),frame:++trace.frame},previous=trace.frames.at(-1)
+  if(!previous||!same(previous,value)||previous.hit!==value.hit){trace.changes.push(value);if(trace.changes.length>60)trace.changes.shift()}
+  trace.frames.push(value);if(trace.frames.length>120)trace.frames.shift()
+  frameId=requestAnimationFrame(frame)
+ }
+ trace.ready=()=>{const frames=trace.frames.slice(-3);return frames.length===3&&frames.every(f=>f.sameTarget&&f.hit&&same(f,frames[0]))?{...frames[2],stableFrames:frames.map(f=>f.frame)}:null}
+ trace.check=point=>{const current=sample(point),value={sameGeometry:same(current,point),sameHit:current.sameTarget&&current.hit,current};trace.stages.push(value);return value}
+ const events=['pointerdown','pointerup','mousedown','mouseup','click']
+ const record=event=>trace.events.push({type:event.type,trusted:event.isTrusted,target:describe(event.target),targetWithinButton:button.contains(event.target),...sample({x:event.clientX,y:event.clientY})})
+ for(const type of events)document.addEventListener(type,record,true)
+ trace.dispose=()=>{cancelAnimationFrame(frameId);for(const type of events)document.removeEventListener(type,record,true)}
+ globalThis.__ocxModelMenuInput=trace
+ button.scrollIntoView({block:'center'})
+ frameId=requestAnimationFrame(frame)
+ return true
+}
+export async function clickNativeModelMenu({evaluate,wait,call},output){
+ let point,error,installed=false
+ try{
+  installed=await evaluate('('+installNativeModelMenuObservation.toString()+')()')
+  point=await wait('globalThis.__ocxModelMenuInput.ready()','native menu trigger is stable across frames and hit-testable')
+  await call('Input.dispatchMouseEvent',{type:'mouseMoved',x:point.x,y:point.y})
+  const guard=await evaluate('globalThis.__ocxModelMenuInput.check('+JSON.stringify(point)+')')
+  assert(guard.sameGeometry&&guard.sameHit,'Native model menu target moved or became occluded before pointer input')
+  // No filesystem/CDP diagnostics between the immediate hit check and press.
+  await call('Input.dispatchMouseEvent',{type:'mousePressed',x:point.x,y:point.y,button:'left',buttons:1,clickCount:1})
+  await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x,y:point.y,button:'left',buttons:0,clickCount:1})
+  await wait("!!document.querySelector('dialog[open] [data-ui-escape-owner]')",'native inner select open')
+ }catch(cause){error=cause;throw cause}
+ finally{
+  if(installed){
+   try{
+    const trace=await evaluate('(()=>{const t=globalThis.__ocxModelMenuInput;try{return {frames:t.frames,changes:t.changes,events:t.events,stages:t.stages}}finally{t.dispose();delete globalThis.__ocxModelMenuInput}})()')
+    await writeFile(join(output,'model-menu-trigger-native.json'),JSON.stringify(point??null,null,2)+'\n')
+    await writeFile(join(output,'model-menu-input-native.json'),JSON.stringify({result:error?'fail':'pass',error:error?.message,point,...trace},null,2)+'\n')
+   }catch(diagnosticError){if(!error)throw diagnosticError;error.nativeMenuDiagnosticError=diagnosticError.message}
+  }
+ }
+}
 export async function modelFileEvidence(configPath,root){
  let backups
  try{backups=(await readdir(join(root,'backups','model-config'))).sort()}catch(error){if(error.code!=='ENOENT')throw error;backups=[]}
@@ -162,13 +220,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
   assert.equal(await evaluate("document.querySelector('input[aria-label=\"fixture-alpha路由别名\"]').value"),'','cancel must discard detail alias')
   await click('编辑明细','.channel-model-table')
   await wait("!!document.querySelector('dialog[open]')",'reopen native model detail')
-  const menuTrigger=await evaluate("(()=>{const b=document.querySelector('dialog[open] button[aria-label=\"Fast支持\"]');if(!b)throw Error('native Fast select absent');b.scrollIntoView({block:'center'});return true})()")
-  assert(menuTrigger)
-  const triggerPoint=await wait("(()=>{const b=document.querySelector('dialog[open] button[aria-label=\"Fast支持\"]');if(!b)return null;const r=b.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2;return x>0&&y>0&&x<innerWidth&&y<innerHeight&&b.contains(document.elementFromPoint(x,y))?{x,y,top:r.top,bottom:r.bottom}:null})()",'native menu trigger is visible and hit-testable')
-  await writeFile(join(output,'model-menu-trigger-native.json'),JSON.stringify(triggerPoint,null,2)+'\n')
-  await call('Input.dispatchMouseEvent',{type:'mousePressed',x:triggerPoint.x,y:triggerPoint.y,button:'left',buttons:1,clickCount:1})
-  await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:triggerPoint.x,y:triggerPoint.y,button:'left',buttons:0,clickCount:1})
-  await wait("!!document.querySelector('dialog[open] [data-ui-escape-owner]')",'native inner select open')
+  await clickNativeModelMenu({evaluate,wait,call},output)
   const menuPosition=await wait("(()=>{const d=document.querySelector('dialog[open]'),t=d?.querySelector('button[aria-label=\"Fast支持\"]'),m=d?.querySelector('[data-ui-escape-owner]');if(!t||!m)return null;const a=t.getBoundingClientRect(),b=m.getBoundingClientRect(),zoom=Number(getComputedStyle(d).zoom)||1;return b.width&&b.height?{trigger:{left:a.left,right:a.right,top:a.top,bottom:a.bottom},menu:{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width},zoom,width:innerWidth,height:innerHeight}:null})()",'native menu geometry')
   const idealLeft=Math.max(12*menuPosition.zoom,Math.min(menuPosition.trigger.right-menuPosition.menu.width,menuPosition.width-menuPosition.menu.width-12*menuPosition.zoom))
   await writeFile(join(output,'model-menu-position-native.json'),JSON.stringify(menuPosition,null,2)+'\n')
