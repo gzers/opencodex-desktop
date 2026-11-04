@@ -5,7 +5,7 @@ import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {runInNewContext} from 'node:vm'
-import {assert021Admission,assert021RenameReadback,assert021RenameBackups,assert021DetectionLayout,assert021WebdavState,verifyWindows021Probes,close021Dialog,native021Click} from './windows-021-probes.mjs'
+import {assert021Admission,assert021RenameReadback,assert021RenameBackups,assert021DetectionLayout,assert021WebdavState,inspect021Webdav,verifyWindows021Probes,close021Dialog,native021Click} from './windows-021-probes.mjs'
 import {observe021Ipc,assert021IpcSafety,assert021NoticeTiming,install021NoticeObservation,sample021Notice,install021CandidateObservation} from './windows-021-observer.mjs'
 import {assertFirstScopeSelection} from './post021-windows-final/scope-proof.mjs'
 
@@ -124,6 +124,18 @@ test('eight-second notice timing subtracts actual confirmation pauses and reject
  const value={shownAt:100,removedAt:13600,leavingAt:13200,focusOnAnchor:true,phases:[{phase:'running',at:100},{phase:'paused',at:1100},{phase:'running',at:6200},{phase:'elapsed',at:13200}]}
  assert.equal(assert021NoticeTiming(value).runningMs,8000)
  for(const change of [{phases:[{phase:'running',at:100},{phase:'elapsed',at:7100}]},{phases:[{phase:'running',at:100},{phase:'elapsed',at:7900}]},{phases:[{phase:'running',at:100},{phase:'elapsed',at:8900}]},{shownAt:null},{removedAt:null},{focusOnAnchor:false},{phases:[]}])assert.throws(()=>assert021NoticeTiming({...value,...change}))
+})
+test('native version observer materializes scalar facts instead of returning a reactive Proxy',()=>{
+ const fact={revision:'bound-revision',source:'version-check',remoteRead:'failed',remoteTime:null,remoteObservedAt:'2026-11-05T00:00:00Z'}
+ const observation=new Proxy(fact,{ownKeys:()=>[]})
+ assert.deepEqual(JSON.parse(JSON.stringify(observation)),{})
+ const sync={webdavState:'failed',config:{endpoint:{revision:fact.revision}},observation,checkingVersion:false}
+ const app={__vue_app__:{config:{globalProperties:{$pinia:{state:{value:{sync}}}}}}}
+ const inspected=runInNewContext('('+inspect021Webdav.toString()+')()',{document:{querySelector:s=>s==='#app'?app:null}})
+ const value=JSON.parse(JSON.stringify(inspected))
+ assert.deepEqual(value.observation,fact)
+ assert.equal(value.revision,fact.revision)
+ assert.equal(value.checkingVersion,false)
 })
 test('adopted startup version probe admits only readonly IPC and requires the real failed observation',()=>{
  assert.doesNotThrow(()=>assert021IpcSafety(['app_about','config_sync_observe'],[],['config_sync_observe']))

@@ -235,7 +235,10 @@ async function verifyDetection(driver,expected,channelId){
 export function inspect021Webdav(){
  const sync=document.querySelector('#app')?.__vue_app__?.config.globalProperties.$pinia?.state.value.sync
  const row=document.querySelector('[data-testid=overview-remote-version]'),card=row?.closest('.mod'),gate=document.querySelector('[data-testid=environment-gate]')
- return {state:sync?.webdavState,revision:sync?.config?.endpoint?.revision,hasObservation:!!sync?.observation,observation:sync?.observation??null,checkingVersion:!!sync?.checkingVersion,
+ const observation=sync?.observation
+ // CDP returnByValue does not materialize Vue Proxy own properties. Read only
+ // the explicit scalar facts, never return a live store object to the driver.
+ return {state:sync?.webdavState,revision:sync?.config?.endpoint?.revision,hasObservation:!!observation,observation:observation?{revision:observation.revision,source:observation.source,remoteRead:observation.remoteRead,remoteTime:observation.remoteTime??null,remoteObservedAt:observation.remoteObservedAt}:null,checkingVersion:!!sync?.checkingVersion,
   card:card?{text:card.textContent,remote:row.textContent,dots:row.querySelectorAll('.ov-state-dot').length}:null,
   gate:{present:!!gate,settled:!!gate?.querySelector('.overview-gate-count')?.textContent.includes('/ 3'),checks:gate?.querySelectorAll('.overview-checks li').length??0}}
 }
