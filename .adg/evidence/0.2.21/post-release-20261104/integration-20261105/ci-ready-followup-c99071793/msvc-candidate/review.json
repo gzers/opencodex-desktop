@@ -1,0 +1,35 @@
+{
+  "result": "candidate identity verified",
+  "run": 41913003716,
+  "attempt": 1,
+  "associatedHead": "c990717931aa37ed66ca99e42bf5cf4f470069bb",
+  "checkedCommit": "127543d2d0d9c2725f1a357710cd43bc69e3c44d",
+  "parents": [
+    "7a8441f7e647e4b3540d5907e44ac4f186f90998",
+    "c990717931aa37ed66ca99e42bf5cf4f470069bb"
+  ],
+  "appsTree": "8c34bbc8de7cb8d6202c7c870ead4397bbfc44c1",
+  "target": "x86_64-pc-windows-msvc",
+  "zipSha256": "abf87a793d96ace994e16f458c42719a58aaedf8e19dfcff9a49f6087367a438",
+  "artifactId": 13366782216,
+  "executableSha256": "dd6f37cf2f6094cf9254ead08217cf8456e190cb213d3198c1b528172f1a0184",
+  "executableBytes": 15293440,
+  "pe": "PE32+ AMD64",
+  "embeddedCheckedCommitFound": true,
+  "candidateManifest": {
+    "schemaVersion": 1,
+    "runId": "41913003716",
+    "runAttempt": "1",
+    "requestedHead": "c990717931aa37ed66ca99e42bf5cf4f470069bb",
+    "checkedCommit": "127543d2d0d9c2725f1a357710cd43bc69e3c44d",
+    "appsTree": "8c34bbc8de7cb8d6202c7c870ead4397bbfc44c1",
+    "target": "x86_64-pc-windows-msvc",
+    "profile": "release; custom-protocol",
+    "executable": "opencodex-desktop.exe",
+    "sha256": "dd6f37cf2f6094cf9254ead08217cf8456e190cb213d3198c1b528172f1a0184",
+    "bytes": 15293440,
+    "scope": "Native validation candidate only; not an installer, signed updater or release acceptance result"
+  },
+  "executed": false,
+  "scope": "Build/copy/provenance integrity only; does not prove native smoke, RDP performance, packaged Codex restart, installer/upgrade/updater or release acceptance."
+}

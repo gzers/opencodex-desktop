@@ -39,12 +39,12 @@
     "fullCdpProtocol": "61 passed; includes independent exact channel/template first union guard"
   },
   "pending": [
-    "Windows new-source CI/native including source-change race",
-    "RDP material performance original budgets",
-    "Official packaged Codex default restart in owned disposable account/session",
-    "Exact remote-only first scope union and followup-added no-expand",
-    "new version freeze, release installer/upgrade/updater signatures and rollback",
-    "public release"
+    "New-candidate Windows native changed-origin fast-route and overlay restoration",
+    "RDP material performance original budget (still failed in received report)",
+    "Formal packaged Codex default restart in owned disposable account/session",
+    "Independent remote-only first scope union and no expansion native proof",
+    "New release version freeze, exact installer/upgrade/signed updater and rollback",
+    "Public release after all required gates"
   ],
   "boundaries": "No daily config/keychain/real WebDAV/Codex restart. Debug candidates remain 0.2.21; no new release assigned.",
   "reuse": {
@@ -151,6 +151,18 @@
       "head": "c990717931aa37ed66ca99e42bf5cf4f470069bb",
       "result": "completed success",
       "review": "ci-ready-followup-c99071793/backend-review.json"
+    },
+    "fullLatestCI": {
+      "run": 41913003716,
+      "head": "c990717931aa37ed66ca99e42bf5cf4f470069bb",
+      "result": "completed success",
+      "windowsReview": "ci-ready-followup-c99071793/windows-review.json",
+      "macBackend": "ci-ready-followup-c99071793/backend-review.json",
+      "frontend": "ci-ready-followup-c99071793/review.json",
+      "nativeArtifact": 13367191554,
+      "candidateArtifact": 13366782216,
+      "candidateSha256": "dd6f37cf2f6094cf9254ead08217cf8456e190cb213d3198c1b528172f1a0184",
+      "scope": "CI native/Node22/ordinary account passed, not manual RDP/performance/default-client/release proof"
     }
   },
   "performanceDiagnostics": "performance-followup-20261105/analysis.json"

@@ -7,9 +7,18 @@ completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
 task_ids: ["TASK-OPENCODEX-POST021-LOCAL-20261104", "TASK-OPENCODEX-POST021-CHANNELS-20261104", "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104", "TASK-OPENCODEX-POST021-INTEGRATION-20261105", "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104", "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104", "TASK-OPENCODEX-POST021-WINDOWS-PANEL-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104", "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-RENAME-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-SYNC-PROBE-20261105"]
-summary: "L/L2与W/W2已集成；Mac原生复验发现面板空URL崩溃并修复，Windows性能及正式客户端adapter等发布门未通过。"
+summary: "双线已集成且最新完整CI通过；仍待Windows切源实屏、RDP性能、正式客户端默认重启及发行原包门。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
+
+## 2026-11-05完整CI已通过，实测与发行门仍保留
+
+run41913003716 / head c99071793已completed/success。Windows126865197400全部必需步骤成功，唯一跳过的是不适用的旧ETW诊断分支准备。后端、原生凭据、官方运行包升级重装、MSVC构建、首轮EXE、安装失败/恢复/路径、原始Node22.20同流程、最终普通账号EXE均通过。真实普通账号令牌未提权，启动commit及EXE哈希一致；WebDAV恢复后使用真实version-check失败观察，source/revision/time/可见ready卡片与managed来源保护均通过。旧探针失败及相应原件保留，不抹历史。
+
+新候选artifact13366782216原ZIP SHA abf87a793d96ace994e16f458c42719a58aaedf8e19dfcff9a49f6087367a438；EXE dd6f37cf2f6094cf9254ead08217cf8456e190cb213d3198c1b528172f1a0184、PE32+ AMD64、15,293,440字节，内嵌构建127543d/head c99071793/apps8c34bbc8均已核验。原始报告归档13367191554摘要bca61b2a…d7b9c76a，175文件逐项SHA核对，174证据原字节保存，一个测试EXE仅记哈希不入仓。Mac前后端同源已通过，Windows完整结果与候选review见ci-ready-followup-c99071793/windows-review.json及msvc-candidate/review.json。
+
+自动化检查缺验现已闭合，但整版AC-P21-06尚未完成：RDP原预算性能仍失败，切端口快速路由/浮层恢复新候选实屏复验、正式MSIX默认重启可丢弃实例、云端独有首次范围、版本冻结/发行安装器/升级/更新签名/回退及发布仍待。旧隔离事件不作零副作用认证。采用WINDOWS-FOLLOWUP.md顶部新候选，后续取得真实证据再推进G3/G4，集成TASK/DMD/IMP保持in_progress，无整版CERT或发布。
+
 
 ## 2026-11-05 MSVC原候选已取得（仍非整版通过）
 

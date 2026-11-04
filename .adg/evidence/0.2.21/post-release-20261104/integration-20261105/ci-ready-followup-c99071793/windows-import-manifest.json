@@ -1,0 +1,887 @@
+{
+  "run": 41913003716,
+  "artifactId": 13367191554,
+  "zipSha256": "bca61b2a05d1a1edd174b094fe3ce0ea45fd3ed611476b48c70d0941d7b9c76a",
+  "zipBytes": 28596907,
+  "zipAndExtractedHashesVerified": true,
+  "files": [
+    {
+      "path": "out/windows-backend/cargo-metadata.json",
+      "bytes": 2861498,
+      "sha256": "33e5f63de538c0ebd253ab2fb9d169a2c57be86bac6b58a24f292c3bc110c033"
+    },
+    {
+      "path": "out/windows-backend/cargo-tree.txt",
+      "bytes": 93550,
+      "sha256": "88c84f5bf28d847a21369f5db2d6e81f87faf719ef8c395239b32b26274e2bc7"
+    },
+    {
+      "path": "out/windows-backend/environment.json",
+      "bytes": 282,
+      "sha256": "89622cef2112daee724baaed0659a6fbf9718d0559f8002fedfe9791762fb63c"
+    },
+    {
+      "path": "out/windows-backend/managed-live.json",
+      "bytes": 319,
+      "sha256": "8b29e75817152c379bab548c6c4ba8f06c36ae4987d3383389658045f01c3cc9"
+    },
+    {
+      "path": "out/windows-backend/test-executable-dependents.txt",
+      "bytes": 1035,
+      "sha256": "a905de9240c1e2db2b4af762c8d846de75282546004ef73ce26a8df86222d4ec"
+    },
+    {
+      "path": "out/windows-backend/test-executable-headers.txt",
+      "bytes": 6014,
+      "sha256": "b5024138c40fb808583596f0d2f2c06e21ae7115597e3cabb02050ac5dcb4396"
+    },
+    {
+      "path": "out/windows-backend/test-executable-imports.txt",
+      "bytes": 23230,
+      "sha256": "633b447f883ba2a0684a175a96353ca6ffb0c8e8e5741121fa7b3c2ffcde04e7"
+    },
+    {
+      "path": "out/windows-backend/test-executable-manifest.txt",
+      "bytes": 96,
+      "sha256": "beb0abee1639448c0502ae80a899beed519dbf7812c4ecf0bdbba0f518494681"
+    },
+    {
+      "path": "out/windows-backend/test-executable-sha256.json",
+      "bytes": 255,
+      "sha256": "dd6f9a3e8d859c97a8077abb54e6c280fc3d2476c43585fa49bbee90fb18414c"
+    },
+    {
+      "path": "out/windows-backend/test-executable.manifest.xml",
+      "bytes": 680,
+      "sha256": "7bc7e2845396a0c4ae519f5d315f2a315e97f29b6ad47558325c6b23a991fc59"
+    },
+    {
+      "path": "out/windows-backend/webview2-registry.json",
+      "bytes": 298,
+      "sha256": "469e7a60394668844574514958c681dcb9a3bfeb79ba68a84b71cc15b4bc2b0d"
+    },
+    {
+      "path": "out/windows-backend/webview2-runtime-files.txt",
+      "bytes": 113,
+      "sha256": "239d3cb94b6a58d2ce5c0ada910d372763d42d64ade50098c74ec608003c852b"
+    },
+    {
+      "path": "out/windows-native-018/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/windows-native-018/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/windows-native-018/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/windows-native-018/failure-retains-output.png",
+      "bytes": 179745,
+      "sha256": "327b32714d8101b99ca23d1b80b00a32778b90cc2982b7387a3b8a080f1f9346"
+    },
+    {
+      "path": "out/windows-native-018/installed-2.91.0.png",
+      "bytes": 156274,
+      "sha256": "35200ae2721768ffe040faaf843b1c398f724f6dbd115b528c5e91f2d3170143"
+    },
+    {
+      "path": "out/windows-native-018/launcher.json",
+      "bytes": 1111,
+      "sha256": "5a5480c34a650177e32232641fa78ece767324bad1effbe25ba77caa6353f8fc"
+    },
+    {
+      "path": "out/windows-native-018/native-install-recovery.json",
+      "bytes": 10628,
+      "sha256": "42395ff841d116bce64c62144d311af05dc279ba1dcd10a0126fa4dfeb9a31d8"
+    },
+    {
+      "path": "out/windows-native-018/native-query-recovery.json",
+      "bytes": 10803,
+      "sha256": "4c7980d82f557848938f0accf1af7168ff7b564192cd4c9669e65171c565e69c"
+    },
+    {
+      "path": "out/windows-native-018/native021-ready-webdav-recovery-installed.json",
+      "bytes": 5929,
+      "sha256": "0983197b71db0aeeaac2d0885e1c6239714953c9b124e279f79ffa78c5b780a4"
+    },
+    {
+      "path": "out/windows-native-018/native021-ready-webdav-recovery-installed.png",
+      "bytes": 67405,
+      "sha256": "780e88a2bf203bda08f2047d6104baafb57ce030ed69cacbabb1336c9bd70d93"
+    },
+    {
+      "path": "out/windows-native-018/offline-drop-host.json",
+      "bytes": 692,
+      "sha256": "76918ab491ac1a9303f6525fe317f5da59998d7792f62f60ef940c6002523d38"
+    },
+    {
+      "path": "out/windows-native-018/offline-drop-preview.png",
+      "bytes": 163015,
+      "sha256": "b60c6ad85368d12ead6c326531c30f652441d3fb0eb2cca5dbdfcae8ddb1e32f"
+    },
+    {
+      "path": "out/windows-native-018/offline-drop.json",
+      "bytes": 445,
+      "sha256": "591c9d9407a2e359067d3206b61d575110055f560ef17e01118f535124bf7975"
+    },
+    {
+      "path": "out/windows-native-018/overview-import-dialog.png",
+      "bytes": 96697,
+      "sha256": "7d8e20cb951ae2d6607c8aa73e3e82a2c6b2f3c55a606e5d38267c597900bf92"
+    },
+    {
+      "path": "out/windows-native-018/paths-backup-before.png",
+      "bytes": 113698,
+      "sha256": "c88220987023ab19f2342f7e8394edf95e5640eb21d21a4f9ce15c7344d03240"
+    },
+    {
+      "path": "out/windows-native-018/paths-backup-created.png",
+      "bytes": 99186,
+      "sha256": "964a1204c95d7069e9f6053b60bf6837723d8cb130c48ee2e44d998164fe872f"
+    },
+    {
+      "path": "out/windows-native-018/paths-extension-directories.png",
+      "bytes": 102610,
+      "sha256": "180930a26940c6dc7fa0c25e2fb2f3634608cdac40dd49c92cb8b47638b6e786"
+    },
+    {
+      "path": "out/windows-native-018/query-failure-details.png",
+      "bytes": 144526,
+      "sha256": "cb8602576cb136b9ec85351344b030226ae6bb09daf88ebade195a30fb98973c"
+    },
+    {
+      "path": "out/windows-native-018/query-recovered.png",
+      "bytes": 125148,
+      "sha256": "31dd56d78cf2fb2b4f032c362f962d08e3a8f7fa96736f906a8001ed5915c9fb"
+    },
+    {
+      "path": "out/windows-native-018/recovered-upgraded-2.93.0.png",
+      "bytes": 159820,
+      "sha256": "73254c12105c7eea0c50318cd6353c90923cd3bc4d6ebb7473e1fe54b0272516"
+    },
+    {
+      "path": "out/windows-native-018/runtime-install-ready-webdav.json",
+      "bytes": 158,
+      "sha256": "c9881c90ab4f213f70270601bb620f7d81613b79b79cf1f54bce90133cdc3960"
+    },
+    {
+      "path": "out/windows-native-018/runtime-install-ui.json",
+      "bytes": 421,
+      "sha256": "f353a45370d56969437ea0b6e3153c46c563037b68d66d0d4557770f601943e0"
+    },
+    {
+      "path": "out/windows-native-018/update-failure-retains-output.png",
+      "bytes": 125512,
+      "sha256": "ad5b666c0a285b0e3326c13464cacce3268f46dc3178b8b16fd2a3f1ba09128b"
+    },
+    {
+      "path": "out/windows-native-018/windows-path-ui.json",
+      "bytes": 1377,
+      "sha256": "1aec67a575e98c530d298d643bd9c6b42bec7de10609b68acec7a9041bfe8f93"
+    },
+    {
+      "path": "out/windows-native-018-node22/application-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/windows-native-018-node22/application-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/windows-native-018-node22/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/windows-native-018-node22/failure-retains-output.png",
+      "bytes": 181932,
+      "sha256": "2f47a54a37cca69bd47c0d00c61cccf5ce09fa23a1d0495dbc588cf969bb091d"
+    },
+    {
+      "path": "out/windows-native-018-node22/installed-2.91.0.png",
+      "bytes": 157179,
+      "sha256": "9a8525339d2acec2121f39bf9ca4d59cbc669b48176dcbeae94558cdcb2be490"
+    },
+    {
+      "path": "out/windows-native-018-node22/launcher.json",
+      "bytes": 1118,
+      "sha256": "fadbddcf35e0e90caa4d6c05f8d4926fcf88c7788e212c1236ee4ca701dc6499"
+    },
+    {
+      "path": "out/windows-native-018-node22/native-install-recovery.json",
+      "bytes": 10827,
+      "sha256": "1d725a8e57e699aaa6709dba1917b1cb45b42524b3b9bdda7c1921e0315ab9dc"
+    },
+    {
+      "path": "out/windows-native-018-node22/native-query-recovery.json",
+      "bytes": 10678,
+      "sha256": "5fa4a034a914aa69089163b5d0d54ad8930fe030eaeb33b6067a970c5e2ec6ef"
+    },
+    {
+      "path": "out/windows-native-018-node22/native021-ready-webdav-recovery-installed.json",
+      "bytes": 6062,
+      "sha256": "f796daa103cec7027dd65ac53b88aa3d6dd5316a4fe83817e67dfa6d35e72f76"
+    },
+    {
+      "path": "out/windows-native-018-node22/native021-ready-webdav-recovery-installed.png",
+      "bytes": 67417,
+      "sha256": "ece105befc5a282f72dc3b225554a5e33840ee2d80d4db09582fe2d7bf42b307"
+    },
+    {
+      "path": "out/windows-native-018-node22/offline-drop-host.json",
+      "bytes": 692,
+      "sha256": "76918ab491ac1a9303f6525fe317f5da59998d7792f62f60ef940c6002523d38"
+    },
+    {
+      "path": "out/windows-native-018-node22/offline-drop-preview.png",
+      "bytes": 163020,
+      "sha256": "34e2e33498ea16c5b01965aae3b12d5639af719fb4f12165a58ea1d4bbf975a1"
+    },
+    {
+      "path": "out/windows-native-018-node22/offline-drop.json",
+      "bytes": 445,
+      "sha256": "591c9d9407a2e359067d3206b61d575110055f560ef17e01118f535124bf7975"
+    },
+    {
+      "path": "out/windows-native-018-node22/overview-import-dialog.png",
+      "bytes": 97047,
+      "sha256": "2132d9bb4d31828db889f40b3de9db9a14cfee53498ce36cb1888cae8f52bde0"
+    },
+    {
+      "path": "out/windows-native-018-node22/paths-backup-before.png",
+      "bytes": 98569,
+      "sha256": "be7298793719d25551d02051ccb90f679a32bacc1e2c03db889c3aee1fb8d2fd"
+    },
+    {
+      "path": "out/windows-native-018-node22/paths-backup-created.png",
+      "bytes": 99412,
+      "sha256": "14e06361c71fb2b8d356573dd808165c1e63bec06c46d3f4efda1fa5a1859420"
+    },
+    {
+      "path": "out/windows-native-018-node22/paths-extension-directories.png",
+      "bytes": 102659,
+      "sha256": "5e0b2208138567ff31d394728e7051092e666d287dc36738444c5d91e765adff"
+    },
+    {
+      "path": "out/windows-native-018-node22/query-failure-details.png",
+      "bytes": 141561,
+      "sha256": "a9a8c2ffa436aa33cd850a7ba05f713f3f0a3fc23a6c8f05ef1f9b1782b31682"
+    },
+    {
+      "path": "out/windows-native-018-node22/query-recovered.png",
+      "bytes": 123269,
+      "sha256": "4d32f603dc2152040f524ed7ab94db34a87994f2a84611422454cbfbf86499eb"
+    },
+    {
+      "path": "out/windows-native-018-node22/recovered-upgraded-2.93.0.png",
+      "bytes": 160309,
+      "sha256": "8eb7002c796eebbb4e4210c592b2cb9261472b1c2657b6a21f1324d28215c88a"
+    },
+    {
+      "path": "out/windows-native-018-node22/runtime-install-ready-webdav.json",
+      "bytes": 158,
+      "sha256": "c9881c90ab4f213f70270601bb620f7d81613b79b79cf1f54bce90133cdc3960"
+    },
+    {
+      "path": "out/windows-native-018-node22/runtime-install-ui.json",
+      "bytes": 421,
+      "sha256": "f353a45370d56969437ea0b6e3153c46c563037b68d66d0d4557770f601943e0"
+    },
+    {
+      "path": "out/windows-native-018-node22/update-failure-retains-output.png",
+      "bytes": 123510,
+      "sha256": "37e7edd3e36acf1ae8d9fd1549e5f4d6718078acc66c723f714dcb9f0df0b851"
+    },
+    {
+      "path": "out/windows-native-018-node22/windows-path-ui.json",
+      "bytes": 1398,
+      "sha256": "69f2784a276119af671e0d469ce7bee9615c331a1a5de575cc6e4e3dad7b3db0"
+    },
+    {
+      "path": "out/windows-ordinary/ordinary-child.ps1",
+      "bytes": 4958,
+      "sha256": "8cd68be919182b752647291a1b14df90f7c78c15efbb1cf7923035e6979139f7"
+    },
+    {
+      "path": "out/windows-ordinary/ordinary-input.json",
+      "bytes": 545,
+      "sha256": "e88d0c24f62acfe1224d1c503f8860c2f745c882c311d7418585b1f564d15db1"
+    },
+    {
+      "path": "out/windows-ordinary/ordinary-known-folders.json",
+      "bytes": 262,
+      "sha256": "1c354e20261dad7d33e9c14597f20dabbde5d4fa1a689057473c8255da2b2296"
+    },
+    {
+      "path": "out/windows-ordinary/ordinary-profile.json",
+      "bytes": 448,
+      "sha256": "91e5095b48d7158daf05f15b12c110ada88a127eeccaa5452488c31da4350e3d"
+    },
+    {
+      "path": "out/windows-ordinary/ordinary-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/windows-ordinary/ordinary-stdout.log",
+      "bytes": 71,
+      "sha256": "bae6c2a6bb43e87697dcd469f1fbd863a97d66287e436aa7c6e8a3d7a6324a0f"
+    },
+    {
+      "path": "out/windows-ordinary/ordinary-summary.json",
+      "bytes": 408,
+      "sha256": "46e5b93985ded9903673662596c7f488fc113bacd5e8d4157135af35a864d439"
+    },
+    {
+      "path": "out/windows-ordinary/startup/cdp-diagnostics.json",
+      "bytes": 1779,
+      "sha256": "92501c7321301235897fe8de3570b1c331f6f380969c8d9904056aa245308519"
+    },
+    {
+      "path": "out/windows-ordinary/startup/main-window.png",
+      "bytes": 508571,
+      "sha256": "0f031cf37eee9ee21400868e74a9641945481e93520b59d844cd1a2746801879"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-dialog-keyboard-native.json",
+      "bytes": 617,
+      "sha256": "2eb2abb80739dc1ea34b99a0f3bc3ad7264d66a7aa6e83a1a56e05dcbf57db30"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-editor-context-native.json",
+      "bytes": 277,
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-export-boundary.json",
+      "bytes": 446,
+      "sha256": "741e0969d488be48f9a6c3283c71137ff4768e5866a235836e9c4f90bacdad07"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-ipc-descriptor.json",
+      "bytes": 71,
+      "sha256": "78b7eb7d71df0db435ba38a648b1ae08591bb0ca8d5b15135e3d34699290de46"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-menu-input-native.json",
+      "bytes": 24990,
+      "sha256": "a5f72b4410835eb68c955ba3d3aa99d98adf0e55321a77bbfe5f0633de2bd0e0"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-menu-position-native.json",
+      "bytes": 261,
+      "sha256": "c454c7aa0f7a80b205f000933c0b7a1dabc4f42122b300c5cd2331f0fc5d4114"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-menu-trigger-native.json",
+      "bytes": 1157,
+      "sha256": "8260ff53bd931942a72f64791aaf9b9f395365827f56206ac8dc905ecc679c39"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-sort-native.json",
+      "bytes": 726,
+      "sha256": "7af6caf97aafa3bee44cfc735c303acbac9dc1be42879dff054ab9e1d3093c1b"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-sort-pointer.json",
+      "bytes": 218,
+      "sha256": "5663633bc16a390ba5516ce684508ba03f4da814838475c3ca582ade66863aa2"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-template-native.png",
+      "bytes": 84785,
+      "sha256": "0f49c16028445b4fb03cf8a9dbee344a1bc28cf2324c4715bf620738f6bbb3e8"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-transfer-native.json",
+      "bytes": 308,
+      "sha256": "1bfddd3e5a854832503cae100a50a270b70da872dbaf6942ec53eab04a548e6b"
+    },
+    {
+      "path": "out/windows-ordinary/startup/model-ui.json",
+      "bytes": 15838,
+      "sha256": "3f9c42aa0c679954da2b86dfeb2b6b7fead2313e703a9d6fb7bfa4ea745ff5d8"
+    },
+    {
+      "path": "out/windows-ordinary/startup/native021-behavior.json",
+      "bytes": 13781,
+      "sha256": "3652ade3c67f5e3ca111a6c432bb0454959b8a2601963b58b448c3ae666385ab"
+    },
+    {
+      "path": "out/windows-ordinary/startup/native021-channel-rename.png",
+      "bytes": 81781,
+      "sha256": "753d90791bd7df04b0560675010cfc71a505bb674e347b77ce720a8b32e6c534"
+    },
+    {
+      "path": "out/windows-ordinary/startup/native021-node-detection.png",
+      "bytes": 166799,
+      "sha256": "610a8448c43f87d1a56bed37e4810788586848f0761961383b2b43fa04208d05"
+    },
+    {
+      "path": "out/windows-ordinary/startup/native021-notice-trace.json",
+      "bytes": 2779,
+      "sha256": "eb509bc8f3a24798c48c1a6d610b6948d23c3e7ab555bd6c9a892d0c5c9d0d62"
+    },
+    {
+      "path": "out/windows-ordinary/startup/native021-webdav-configured.png",
+      "bytes": 573429,
+      "sha256": "cd6bddbc92bb8fc9fe78d2e07de12afd3b81b2c03796960f458a80225e2d043a"
+    },
+    {
+      "path": "out/windows-ordinary/startup/native021-webdav-empty-candidates.png",
+      "bytes": 130937,
+      "sha256": "448d52cfe48f25e9f8f809a3c95fb23424853a3304da5c0deef960a09b6f8612"
+    },
+    {
+      "path": "out/windows-ordinary/startup/offline-drop-host.json",
+      "bytes": 692,
+      "sha256": "76918ab491ac1a9303f6525fe317f5da59998d7792f62f60ef940c6002523d38"
+    },
+    {
+      "path": "out/windows-ordinary/startup/offline-drop-preview.png",
+      "bytes": 175670,
+      "sha256": "c099071314e7190abffabc11249f3532e753779c401f9e55a26887c823dcf989"
+    },
+    {
+      "path": "out/windows-ordinary/startup/offline-drop.json",
+      "bytes": 445,
+      "sha256": "591c9d9407a2e359067d3206b61d575110055f560ef17e01118f535124bf7975"
+    },
+    {
+      "path": "out/windows-ordinary/startup/runtime-install-ready-webdav.json",
+      "bytes": 158,
+      "sha256": "c9881c90ab4f213f70270601bb620f7d81613b79b79cf1f54bce90133cdc3960"
+    },
+    {
+      "path": "out/windows-ordinary/startup/runtime-install-ui.json",
+      "bytes": 422,
+      "sha256": "2a3efb3e2b89f0e49f9ec83f8b76f409137b2d5ee1d13acfc05af8a329352cc9"
+    },
+    {
+      "path": "out/windows-ordinary/startup/startup-diagnostics.json",
+      "bytes": 8988,
+      "sha256": "4a53d58b4cc1fd35952d3e1cfcd23ae4cbe6f46517282ea9639c2ce93a01a6ee"
+    },
+    {
+      "path": "out/windows-ordinary/startup/startup-stderr.log",
+      "bytes": 1498,
+      "sha256": "bf067e0e22c9e939235167fcfb67e9015bc2428b893818ee02f50d04cc18600d"
+    },
+    {
+      "path": "out/windows-ordinary/startup/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "out/windows-ordinary/startup/startup.json",
+      "bytes": 1449,
+      "sha256": "37c2c7ec625123c9c6d2c55b212af1ce5121946b7d595ce9f01e1b7abdfc069a"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-agent-settings.png",
+      "bytes": 50427,
+      "sha256": "8f7397016d4af2b4158bc4163bef6e0fc80742e39f2e0bc8d9e5291069169a96"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-alignment.json",
+      "bytes": 3397,
+      "sha256": "c6840b11913fc88627056ad05872744f3aaa17cbb01a3f5a35c6b0980a3a264c"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-channel-detail.png",
+      "bytes": 84785,
+      "sha256": "0f49c16028445b4fb03cf8a9dbee344a1bc28cf2324c4715bf620738f6bbb3e8"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-channels.png",
+      "bytes": 78088,
+      "sha256": "cbd67d291e26057a3bef26ec31a903437aafaa5c3e3c5b5f4bdb68bac3b1520b"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-connection-dialog.png",
+      "bytes": 116186,
+      "sha256": "c3f6cf6a11f913fb19a5a2c0e3f72ba810ac81b30da1923d2b6bafc4ebe8e48b"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-dark-high.png",
+      "bytes": 126480,
+      "sha256": "85ba33d440652d193e3404ca54c74666dac6b9b0fab5ba60eb57c170adc25492"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-dark-low.png",
+      "bytes": 122997,
+      "sha256": "a4be030a5c8b53e4d15f40b8c4dc1cb1182bc472df64abfc78f7c7c9d2cd31dc"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-dark-mid.png",
+      "bytes": 122418,
+      "sha256": "7376d83114323cfebbc5dd06ef93dc1dc46f8e9199ae242e906b7e2bdb2d6ef9"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-file-scope.png",
+      "bytes": 74546,
+      "sha256": "3472e51121b3512af86abaed20fbb99df6b76859099ce19b37731d72d36d3c57"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-light-high.png",
+      "bytes": 116184,
+      "sha256": "4738dd711926b801af9f8ab3cf3cb31e06dd51b12d8341df82db7c16bab18595"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-light-low.png",
+      "bytes": 111994,
+      "sha256": "a08d3ad367d2826f212bfc768fb42d47e30a241f5930cb5539f40f244a9e7eea"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-light-mid.png",
+      "bytes": 112376,
+      "sha256": "842a6c5d7e3916475d1d3def22a40f74567ce071295faa1673365fa9aa5f7f59"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-overview.png",
+      "bytes": 548769,
+      "sha256": "42257aa70d0b0959096bd2aac86e15dfff11951515515a4a1b25bdb1bc82291e"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-template-detail.png",
+      "bytes": 103632,
+      "sha256": "bd2846b2830a967b5b68918c5ca338b0d355cbda37cbd88d298cef5b88162570"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-template-zoom-100.png",
+      "bytes": 105733,
+      "sha256": "9edb45852963768c15dc895e3ea38fad9b71bf8f5d80c54c0d9a10bbcbba592f"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-template-zoom-150.png",
+      "bytes": 93354,
+      "sha256": "5b0e9f43cafa5b1ececb1d86d9a1e8883fe5457feaf53abcd97b9cee289cc738"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-template-zoom-200.png",
+      "bytes": 127365,
+      "sha256": "96c6703a6cdb82c24f7e14ce4eb10189fb7ca593f7bcfc8c45ed1747d073e7a5"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-template-zoom-50.png",
+      "bytes": 88910,
+      "sha256": "932b5941b2a1654b61beb6dc8ea60d49d2d035cbe5b218308134166661c7cef6"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-templates.png",
+      "bytes": 131595,
+      "sha256": "8cbf098cf22e45cabd250076313c5772eeeb445c05cef4c1ee5642c8c9f201e4"
+    },
+    {
+      "path": "out/windows-ordinary/startup/ui021-webdav-scope.png",
+      "bytes": 76819,
+      "sha256": "f1003fced32af71c102ae538690b42e5882bba06ec06db05025cb946f09d8761"
+    },
+    {
+      "path": "out/windows-ordinary/startup/webview.json",
+      "bytes": 698,
+      "sha256": "9d414c9d10b468c519b8f8549d780f7d0176229f8a0a21d0016845c85a863996"
+    },
+    {
+      "path": "out/windows-startup/ordinary-child.ps1",
+      "bytes": 4958,
+      "sha256": "8cd68be919182b752647291a1b14df90f7c78c15efbb1cf7923035e6979139f7"
+    },
+    {
+      "path": "out/windows-startup/ordinary-input.json",
+      "bytes": 544,
+      "sha256": "cb4095d881ce7857b4cef3a02891730685644e5e96bb4cb53284fd4ada4b7d80"
+    },
+    {
+      "path": "out/windows-startup/ordinary-known-folders.json",
+      "bytes": 262,
+      "sha256": "5a2924d59f513effe7dbb0f3544118a7f24c0f7ac7ccb2acf520a8e29615c658"
+    },
+    {
+      "path": "out/windows-startup/ordinary-profile.json",
+      "bytes": 448,
+      "sha256": "97904beb8584396a77058e45b98223e9e3d18f3285bdbdfae283a3a4f52a6969"
+    },
+    {
+      "path": "out/windows-startup/ordinary-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/windows-startup/ordinary-stdout.log",
+      "bytes": 71,
+      "sha256": "bae6c2a6bb43e87697dcd469f1fbd863a97d66287e436aa7c6e8a3d7a6324a0f"
+    },
+    {
+      "path": "out/windows-startup/ordinary-summary.json",
+      "bytes": 408,
+      "sha256": "9e95b24902d3e4da854b41d4321191c396a0d46c79155d73ddafd113b7eec75a"
+    },
+    {
+      "path": "out/windows-startup/startup/cdp-diagnostics.json",
+      "bytes": 1779,
+      "sha256": "c251e1f0042888eb089c78d0f74f0d72c8ed2f2610fdc24dc7f606e09de4d392"
+    },
+    {
+      "path": "out/windows-startup/startup/main-window.png",
+      "bytes": 564193,
+      "sha256": "1f3cd1aeca92c283ec105faeb49b1bf7cda9d2072d6564b651ed498b3e1a831e"
+    },
+    {
+      "path": "out/windows-startup/startup/model-dialog-keyboard-native.json",
+      "bytes": 617,
+      "sha256": "2eb2abb80739dc1ea34b99a0f3bc3ad7264d66a7aa6e83a1a56e05dcbf57db30"
+    },
+    {
+      "path": "out/windows-startup/startup/model-editor-context-native.json",
+      "bytes": 277,
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "out/windows-startup/startup/model-export-boundary.json",
+      "bytes": 444,
+      "sha256": "49fbef9eaf79ede8994387ef64c25d91072960af7fdb8867a66b88849854e99c"
+    },
+    {
+      "path": "out/windows-startup/startup/model-ipc-descriptor.json",
+      "bytes": 71,
+      "sha256": "78b7eb7d71df0db435ba38a648b1ae08591bb0ca8d5b15135e3d34699290de46"
+    },
+    {
+      "path": "out/windows-startup/startup/model-menu-input-native.json",
+      "bytes": 24952,
+      "sha256": "9d2c18beb4d5cd326d3f8a511886d96b08813f36fce59ae1ed9f07be96a33dc3"
+    },
+    {
+      "path": "out/windows-startup/startup/model-menu-position-native.json",
+      "bytes": 261,
+      "sha256": "c454c7aa0f7a80b205f000933c0b7a1dabc4f42122b300c5cd2331f0fc5d4114"
+    },
+    {
+      "path": "out/windows-startup/startup/model-menu-trigger-native.json",
+      "bytes": 1156,
+      "sha256": "a06ddf15c0f92f3c13960d6e2543698db64260865f162c0b821575b29f70360a"
+    },
+    {
+      "path": "out/windows-startup/startup/model-sort-native.json",
+      "bytes": 726,
+      "sha256": "18babd20c079145aa30298060acfc71276ad4a13c30fe77c5309e41d8269e4df"
+    },
+    {
+      "path": "out/windows-startup/startup/model-sort-pointer.json",
+      "bytes": 218,
+      "sha256": "5663633bc16a390ba5516ce684508ba03f4da814838475c3ca582ade66863aa2"
+    },
+    {
+      "path": "out/windows-startup/startup/model-template-native.png",
+      "bytes": 84785,
+      "sha256": "0f49c16028445b4fb03cf8a9dbee344a1bc28cf2324c4715bf620738f6bbb3e8"
+    },
+    {
+      "path": "out/windows-startup/startup/model-transfer-native.json",
+      "bytes": 308,
+      "sha256": "1bfddd3e5a854832503cae100a50a270b70da872dbaf6942ec53eab04a548e6b"
+    },
+    {
+      "path": "out/windows-startup/startup/model-ui.json",
+      "bytes": 15800,
+      "sha256": "bed8244783cec270249c91123cf05743045d3fbd277f1f3660ee394512bf876c"
+    },
+    {
+      "path": "out/windows-startup/startup/native021-behavior.json",
+      "bytes": 13743,
+      "sha256": "5eee4ec52b99790ebcac362fa9842340e02965f27702976baf755d46924ac30e"
+    },
+    {
+      "path": "out/windows-startup/startup/native021-channel-rename.png",
+      "bytes": 81964,
+      "sha256": "e295a6e257125b1f9e4fd3d0fbe09e6c8749019349d0528936a355d52c4ff1f0"
+    },
+    {
+      "path": "out/windows-startup/startup/native021-node-detection.png",
+      "bytes": 166679,
+      "sha256": "dc9c913321100629eb225430df464b89c9eefc4e9a567c05d79f133a022feb1b"
+    },
+    {
+      "path": "out/windows-startup/startup/native021-notice-trace.json",
+      "bytes": 2724,
+      "sha256": "1840acc02948e4353a3a2d81fae4bab0f3eeb97bbb0df5f60b308d0e8accf992"
+    },
+    {
+      "path": "out/windows-startup/startup/native021-webdav-configured.png",
+      "bytes": 573617,
+      "sha256": "06e8916e193a6278450afb80c7d388f9c137a8bc027d18c8bae3f9971fdfc08f"
+    },
+    {
+      "path": "out/windows-startup/startup/native021-webdav-empty-candidates.png",
+      "bytes": 130814,
+      "sha256": "d3ba32fd902208e741fbe20d7d9ee97fa2b1a5d6042c6aa89433359c7aa69239"
+    },
+    {
+      "path": "out/windows-startup/startup/offline-drop-host.json",
+      "bytes": 692,
+      "sha256": "76918ab491ac1a9303f6525fe317f5da59998d7792f62f60ef940c6002523d38"
+    },
+    {
+      "path": "out/windows-startup/startup/offline-drop-preview.png",
+      "bytes": 175685,
+      "sha256": "a13ad0e4dc5d23527707edec10583fc5118b9e9514e107c284ca253e2cb5d7be"
+    },
+    {
+      "path": "out/windows-startup/startup/offline-drop.json",
+      "bytes": 445,
+      "sha256": "591c9d9407a2e359067d3206b61d575110055f560ef17e01118f535124bf7975"
+    },
+    {
+      "path": "out/windows-startup/startup/runtime-install-ready-webdav.json",
+      "bytes": 158,
+      "sha256": "c9881c90ab4f213f70270601bb620f7d81613b79b79cf1f54bce90133cdc3960"
+    },
+    {
+      "path": "out/windows-startup/startup/runtime-install-ui.json",
+      "bytes": 422,
+      "sha256": "2a3efb3e2b89f0e49f9ec83f8b76f409137b2d5ee1d13acfc05af8a329352cc9"
+    },
+    {
+      "path": "out/windows-startup/startup/startup-diagnostics.json",
+      "bytes": 8998,
+      "sha256": "df739e6605798814d292e97514e58a1c0d8a1c3d160a322369476b5e96bea41b"
+    },
+    {
+      "path": "out/windows-startup/startup/startup-stderr.log",
+      "bytes": 1498,
+      "sha256": "bf067e0e22c9e939235167fcfb67e9015bc2428b893818ee02f50d04cc18600d"
+    },
+    {
+      "path": "out/windows-startup/startup/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": "out/windows-startup/startup/startup.json",
+      "bytes": 1449,
+      "sha256": "7355ba66586063fdb97a2b0ecc08d62a6ee1962c506ce9b9dd676dfbed105636"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-agent-settings.png",
+      "bytes": 50453,
+      "sha256": "ad33c5f060a6634487e77632e7b4cd07483ab5b68234bf19862f0c5e506191b1"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-alignment.json",
+      "bytes": 3397,
+      "sha256": "c6840b11913fc88627056ad05872744f3aaa17cbb01a3f5a35c6b0980a3a264c"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-channel-detail.png",
+      "bytes": 84785,
+      "sha256": "0f49c16028445b4fb03cf8a9dbee344a1bc28cf2324c4715bf620738f6bbb3e8"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-channels.png",
+      "bytes": 78088,
+      "sha256": "cbd67d291e26057a3bef26ec31a903437aafaa5c3e3c5b5f4bdb68bac3b1520b"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-connection-dialog.png",
+      "bytes": 116318,
+      "sha256": "5e66ca4d7d9b928b1f28a042bc691540ddad9f5c0e4cc3233a9e1432e7fd50ff"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-dark-high.png",
+      "bytes": 126377,
+      "sha256": "1c14b3c393392161426c3ee4c1417f43c886dcfb653437c2b811ee4f13ad812a"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-dark-low.png",
+      "bytes": 122997,
+      "sha256": "a4be030a5c8b53e4d15f40b8c4dc1cb1182bc472df64abfc78f7c7c9d2cd31dc"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-dark-mid.png",
+      "bytes": 122040,
+      "sha256": "a92e9d044659104fcffc8a24295c427d51ebb42d87980b808338a1b4b3021922"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-file-scope.png",
+      "bytes": 74551,
+      "sha256": "4f417d4105b72f2bf2cd030c5584aba8710e7e7aef3af965893c8455aa164b67"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-light-high.png",
+      "bytes": 116227,
+      "sha256": "081cf158db2f4696bdb25d8d5cf58cd22317b38ec7e48e1179cfc82a9917a0cf"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-light-low.png",
+      "bytes": 111994,
+      "sha256": "a08d3ad367d2826f212bfc768fb42d47e30a241f5930cb5539f40f244a9e7eea"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-light-mid.png",
+      "bytes": 112387,
+      "sha256": "502158cbc4d8d5ec7414334ea778319a8dfd2d4196239393b43af5a104130631"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-overview.png",
+      "bytes": 549147,
+      "sha256": "2259d0cbc081ed05628f5f7b77c3c72a11fb1070da0f8853ac5f686085e10e86"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-template-detail.png",
+      "bytes": 103530,
+      "sha256": "8427d6fb2f3feb9c4b78c031243b81731d8d463398274cfe51088036279878c8"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-template-zoom-100.png",
+      "bytes": 105469,
+      "sha256": "7df61644d0dc5d19ab0aaca8f43052cc7565c8cc2f7b3f4dcfb5ac47631312f0"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-template-zoom-150.png",
+      "bytes": 93480,
+      "sha256": "81cb54d899f675f9c03ec89f5a2d71fb537bb397a2110db40319a2026c9729ff"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-template-zoom-200.png",
+      "bytes": 128124,
+      "sha256": "6811a78ce0ae7a0980efd0281ca647ac47de9f584213bece5a4e76d57d258b59"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-template-zoom-50.png",
+      "bytes": 88994,
+      "sha256": "3344d7d5e8dffc2610a2aeb88ca7c1f467902310ba4d3816858407dad710646d"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-templates.png",
+      "bytes": 131591,
+      "sha256": "3277698375a9cc6c5c1d4893bb1cebe71eeaf256a14d61985510c5e74389914a"
+    },
+    {
+      "path": "out/windows-startup/startup/ui021-webdav-scope.png",
+      "bytes": 76819,
+      "sha256": "f1003fced32af71c102ae538690b42e5882bba06ec06db05025cb946f09d8761"
+    },
+    {
+      "path": "out/windows-startup/startup/webview.json",
+      "bytes": 698,
+      "sha256": "9d414c9d10b468c519b8f8549d780f7d0176229f8a0a21d0016845c85a863996"
+    }
+  ],
+  "omittedBinaries": [
+    {
+      "path": "out/windows-backend/opencodex_desktop_lib-43bd8719b87bdbe5.exe",
+      "bytes": 59875840,
+      "sha256": "657ff61f5480befbfb8d5b0836194943dc1f4aa1497fde0bf0266a782b6349c0"
+    }
+  ],
+  "method": "Original extracted evidence bytes copied; no ZIP/EXE committed. Credentials-pattern scan no hits; all supplied app fixtures synthetic."
+}

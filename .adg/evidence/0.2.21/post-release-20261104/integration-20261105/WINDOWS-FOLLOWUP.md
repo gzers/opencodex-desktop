@@ -1,3 +1,25 @@
+# 当前Windows接续：完整CI通过后的实际缺验
+
+最新代码c990717931aa37ed66ca99e42bf5cf4f470069bb，CI run41913003716已completed/success，Mac前后端、Windows完整安装恢复/Node22.20/普通账号矩阵都通过。以下为最新有效入口，下面旧候选和失败历史仅留溯源。
+
+候选：windows-msvc-candidate，artifact13366782216。
+下载：https://github.com/gzers/opencodex-desktop/actions/runs/41913003716/artifacts/13366782216
+新独立临时目录命令：gh run download 41913003716 -R gzers/opencodex-desktop -n windows-msvc-candidate
+ZIP SHA-256：abf87a793d96ace994e16f458c42719a58aaedf8e19dfcff9a49f6087367a438。
+EXE SHA-256：dd6f37cf2f6094cf9254ead08217cf8456e190cb213d3198c1b528172f1a0184（15,293,440字节，PE32+ AMD64）。
+内嵌/清单构建提交127543d2d0d9c2725f1a357710cd43bc69e3c44d，PR head c99071793，apps树8c34bbc8de7cb8d6202c7c870ead4397bbfc44c1。原ZIP/EXE/复制哈希、构建及源码树均已核验；两条普通账号进程令牌及Node24/22安装恢复实际启动报告与同一EXE哈希一致。不要重建后冒称这份候选，也不要覆盖日常安装。
+
+剩余工作按原授权在隔离环境执行：
+1. 此新候选实屏复测服务60444切60446、首次加载快速离开/重开、浮层Hide尚未返回即关闭、正常重开和重试。CI通过不证明该手工竞态已解决；保留当前trace/原生日志/配置字节和截图。
+2. RDP已被用户接受，预算保持。performance/performance-modal原30秒采样及后台停绘恢复，保留新增callbackCostMs/dispatchDelay/实际滚动范围；同环境同数据比较前后，采合成/GPU/RDP主线程trace后修瓶颈，不降档/降玻璃/改预算。
+3. 用独立expected-first-scope.json证明本地+云端独有渠道/模版完整并集，已有范围保持及新增不扩选；已有remoteObjects0只能证明本地首次。
+4. 正式MSIX默认adapter重启只在可证明一次性Windows账号/会话与进程owner/祖先链均为验收实例时执行；枚举null为未知，无法隔离继续只读停点，不用OwnedClient替代。
+5. 固定PID清理误停日常Bun事件及更正失败回执保持原件。清理只匹配测试路径/PID/创建时间和归属，不补偿性重启或改日常配置；新回执逐项真实，未通过不生成完成证书。
+
+本机接收原始证据后统一冻结发行版本、验原安装器/升级/更新签名/回退并发布。当前仍不合并main、不发布、不跑真实WebDAV/推理、不操作日常Codex配置。完整绿CI只关闭自动化缺验，不代替上述实测与发行门。
+
+---
+
 最新验收脚本接续c99071793：产品代码不变，仍使用下述已核验31a28bfb4 MSVC原候选，不必为工具更新重建产品。安装恢复后的就绪WebDAV消费者也已对齐启动只读检测：合成.invalid地址应真实失败，不再强要求configured。原首轮EXE冒烟已通过；整轮CI在该旧消费者断言失败，后续Node22/普通账号矩阵被跳过，仍待实测。71协议测试通过，该消费者测试已纳入CI。Windows完整安装恢复/后续矩阵请使用新脚本复验，原失败证据保留；不把新纯测试当原生成功。
 
 ## 已取得的MSVC原候选（下一轮Windows优先使用）
