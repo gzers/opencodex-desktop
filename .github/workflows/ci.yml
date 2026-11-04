@@ -234,6 +234,39 @@ jobs:
           Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\EdgeUpdate\Clients\*" -ErrorAction SilentlyContinue |
             Select-Object name, pv, version | ConvertTo-Json | Add-Content (Join-Path $outputDirectory "webview2-registry.json")
       - run: cargo build --locked --release --features custom-protocol --bins
+      - name: Preserve exact MSVC application candidate for native followup
+        shell: pwsh
+        env:
+          OCX_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          $taskCandidateDir = [IO.Path]::GetFullPath('../../../test/out/windows-msvc-candidate')
+          New-Item -ItemType Directory -Force $taskCandidateDir | Out-Null
+          $taskOriginal = (Resolve-Path -LiteralPath target/release/opencodex-desktop.exe).Path
+          $taskCopy = Join-Path $taskCandidateDir 'opencodex-desktop.exe'
+          Copy-Item -LiteralPath $taskOriginal -Destination $taskCopy
+          $taskOriginalHash = (Get-FileHash -LiteralPath $taskOriginal -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ((Get-FileHash -LiteralPath $taskCopy -Algorithm SHA256).Hash.ToLowerInvariant() -cne $taskOriginalHash) { throw 'Candidate copy does not match the original build' }
+          $taskHost = (rustc -vV | Select-String '^host: ').ToString().Substring(6).Trim()
+          if ($taskHost -cne 'x86_64-pc-windows-msvc') { throw 'Candidate is not the expected MSVC build' }
+          [ordered]@{
+            schemaVersion = 1
+            runId = $env:GITHUB_RUN_ID
+            runAttempt = $env:GITHUB_RUN_ATTEMPT
+            requestedHead = $env:OCX_CANDIDATE_HEAD
+            checkedCommit = (git rev-parse HEAD).Trim()
+            appsTree = (git rev-parse HEAD:apps).Trim()
+            target = $taskHost
+            profile = 'release; custom-protocol'
+            executable = 'opencodex-desktop.exe'
+            sha256 = $taskOriginalHash
+            bytes = (Get-Item -LiteralPath $taskCopy).Length
+            scope = 'Native validation candidate only; not an installer, signed updater or release acceptance result'
+          } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskCandidateDir 'candidate.json') -Encoding utf8
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-msvc-candidate
+          path: test/out/windows-msvc-candidate
+          if-no-files-found: error
       - name: Windows final EXE smoke
         shell: pwsh
         run: |
