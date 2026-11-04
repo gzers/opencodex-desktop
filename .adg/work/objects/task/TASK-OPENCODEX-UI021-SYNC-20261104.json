@@ -1,0 +1,66 @@
+{
+  "acceptance_bindings": [
+    {
+      "acceptance_id": "AC-021-03",
+      "criterion_digest": "14a65d49f87d2c2dde44af069c51f9ae63976034c7faa768854f30c5c23fd06c",
+      "demand_id": "DMD-OPENCODEX-UI-021"
+    }
+  ],
+  "acceptance_ids": [
+    "AC-021-03"
+  ],
+  "baseline_digest": "c92fd83fe99563086ee00270ebb4f48ea308ca5c91c5129b448843c69c739d2e",
+  "certificate_digest": null,
+  "content_digest": "b511e1f9a662d5d202e57b4711d2d6daabe42e2f71d22e16530121ed5f3c9594",
+  "demand_ids": [
+    "DMD-OPENCODEX-UI-021"
+  ],
+  "fact_writeback": {
+    "mode": "required",
+    "targets": [
+      {
+        "before_digest": "9c180f8b221580bcbb1941b536aec5046f28baa3a169055e60f014b9f7bb3404",
+        "id": "demand",
+        "path": "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md"
+      },
+      {
+        "before_digest": "47f06548010621882620cbae3dec61cce4e9db12c79bd9bf928cdcf0f2ed4926",
+        "id": "implementation",
+        "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md"
+      },
+      {
+        "before_digest": "3dd389cc9490b0e0b8b570c1595598d809a7549234e1e09e20e599b55c8f917f",
+        "id": "issues",
+        "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+      }
+    ]
+  },
+  "id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-29",
+  "imported_receipt_digest": null,
+  "kind": "TASK",
+  "owner": "current-chat-sync-integration",
+  "required_checks": [
+    "review:prototype-adoption",
+    "review:save-time-lifecycle",
+    "review:sync-native",
+    "review:sync-side-effects",
+    "review:sync-version-direction"
+  ],
+  "result": "pending",
+  "revision": 2,
+  "state": "in_progress",
+  "summary": "可靠保存时间及内容摘要绑定，实际后端比较与确认重验；未知时间不自动选新。",
+  "summary_digest": "bcb62d06695c81b9a10dbb7619a27cabe2506c9b7b07843f8d104026e9fadfbc",
+  "title": "0.2.21保存版本生命周期及同步取新修复",
+  "write_scope": [
+    ".adg/evidence/0.2.21/**",
+    "apps/desktop/tauri/src/**",
+    "apps/desktop/tauri/tests/**",
+    "apps/desktop/ui/src/features/sync/**",
+    "apps/desktop/ui/tests/**",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+  ]
+}

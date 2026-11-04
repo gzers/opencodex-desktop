@@ -1,0 +1,103 @@
+{
+  "result": "pass",
+  "checks": 20,
+  "productionImplemented": false,
+  "scope": "temporary files and pure data-contract feasibility only",
+  "cases": [
+    {
+      "case": "both_empty",
+      "result": "unchanged",
+      "passed": true
+    },
+    {
+      "case": "no_remote",
+      "result": "upload",
+      "passed": true
+    },
+    {
+      "case": "local_empty",
+      "result": "download",
+      "passed": true
+    },
+    {
+      "case": "same_content_unknown_time",
+      "result": "unchanged",
+      "passed": true
+    },
+    {
+      "case": "local_newer_without_baseline",
+      "result": "upload",
+      "passed": true
+    },
+    {
+      "case": "remote_newer_without_baseline",
+      "result": "download",
+      "passed": true
+    },
+    {
+      "case": "both_modified_local_newer",
+      "result": "upload",
+      "passed": true
+    },
+    {
+      "case": "both_modified_remote_newer",
+      "result": "download",
+      "passed": true
+    },
+    {
+      "case": "equal_instants_different_offsets",
+      "result": "undetermined",
+      "passed": true
+    },
+    {
+      "case": "unknown_local",
+      "result": "undetermined",
+      "passed": true
+    },
+    {
+      "case": "unknown_remote",
+      "result": "undetermined",
+      "passed": true
+    },
+    {
+      "case": "legacy_mtime",
+      "result": "undetermined",
+      "passed": true
+    },
+    {
+      "case": "invalid_time",
+      "result": "undetermined",
+      "passed": true
+    },
+    {
+      "case": "naive_time",
+      "result": "undetermined",
+      "passed": true
+    },
+    {
+      "case": "known_clock_problem",
+      "result": "undetermined",
+      "passed": true
+    },
+    {
+      "case": "no_op_save_keeps_time",
+      "passed": true
+    },
+    {
+      "case": "mtime_touch_not_a_save",
+      "passed": true
+    },
+    {
+      "case": "transfer_inherits",
+      "passed": true
+    },
+    {
+      "case": "legacy_copy_unknown",
+      "passed": true
+    },
+    {
+      "case": "confirmation_race_recompare",
+      "passed": true
+    }
+  ]
+}

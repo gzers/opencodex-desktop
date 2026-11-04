@@ -2,11 +2,11 @@
 id: "IMP-OPENCODEX-DESKTOP-29"
 object_kind: "implementation.change"
 title: "0.2.21 七项修复与开发前置计划"
-state: "planned"
+state: "in_progress"
 dmd_refs: ["DMD-OPENCODEX-UI-021"]
 demand_ids: ["DMD-OPENCODEX-UI-021"]
-task_ids: []
-summary: "开发前计划；产品范围已明确，先补原型与时间/改名隔离验证，本轮不启动软件开发。"
+task_ids: ["TASK-OPENCODEX-UI021-MODALS-20261104", "TASK-OPENCODEX-UI021-SYNC-20261104"]
+summary: "0.2.21目标模式已授权至发布；G0执行中，代码分支codex/0.2.21-fixes复用正式0.2.20主线。"
 completion_summary: null
 ---
 
@@ -41,4 +41,13 @@ completion_summary: null
 
 隔离验证应有旧实现反例和修复后正常/异常路径：改名事务与路由使用临时根/夹具服务；判新使用双隔离目录和测试传输；所有结果读回实际隔离文件。浏览器模拟、目录生成、隔离客户端重启加载与原生系统安全凭据能力分别记证据，不运行日常同步或改日常配置。
 
-本轮状态为planned；开发前审计完成不自动进入软件实现或发布阶段。
+审计阶段为planned；用户随后明确授权治理、开发、测试和发布的目标模式，现为in_progress，按G0至G5顺序执行，不跳过前置或验收。
+
+
+2026-11-04启动：代码复用ocx-0219-fixes，已从origin/main的28d7f62e994beed57d291c904ab2c775491bc928建立codex/0.2.21-fixes；其tree与v0.2.20/b1750f5完全相同。G0原型、改名隔离技术探针及发布机制可用性盘点并行；主线维护治理与保存时间合同。保留其它对话脏改动，仅提交本版自身增量。
+
+
+按适用项放行说明（2026-11-04）：POST-05/09已有冻结原型与本轮可复现定向证据，G0新增原型工作不阻塞这两项已有合同。先为公共弹窗POST-09建立独立软件TASK，绑定AC-021-07；其它新状态仍先完成各自G0再绑定软件TASK。此调整只落实G1“适用原型完成”依赖，不扩大产品范围或提前通过全版G0。共同交付验收AC-021-08留给后续集成TASK。
+
+
+POST-04后端按项放行：G0 checkpoint及20项数据探针已固定，建立TASK-OPENCODEX-UI021-SYNC-20261104绑定AC-021-03，先保存版本生命周期及后端方向/确认重验；新原型双引擎继续由原型线补证，软件界面接入待对应状态定向检查完成。
