@@ -65,5 +65,11 @@
     "productChanged": false,
     "nativeRecheck": "pending",
     "evidence": "ci-rename-probe/analysis.json"
+  },
+  "windowsHandoff": {
+    "userDecision": "local Windows available; continue in Windows chat",
+    "delivery": "prompt updated, local app lists local host only; not sent to Windows thread",
+    "prompt": "WINDOWS-FOLLOWUP.md",
+    "acceptance": "pending actual Windows evidence"
   }
 }

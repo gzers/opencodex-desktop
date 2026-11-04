@@ -8,4 +8,7 @@ Windows代码4b0c357b1已合入；文档911d51514的328独有路径字节导入�
 
 保留失败：100ms Rust超时测试初次并发请求未到服务，单项和低并发完整复验通过，未放宽deadline；亮低初次无WebArea；测试server stdout放在日常home禁读范围导致Node启动失败；缩写build SHA拒绝；通知入口/默认路由假设失败。最关键的实际产品失败是Mac首次导航前重开读取nil URL崩溃，cf412c336/234405094已修并补原生面板。另一个加载失败来自测试沙箱屏蔽系统mDNSResponder Unix socket：最小WK程序NSPOSIXErrorDomain1，同规则仅放行该socket即成功；最终产品也已独立通过，不用最小程序代验。所有尝试独立UUID根且保留原始报告。
 
-发布门仍未齐：Windows最终同源CI/原生回归、RDP未通过的材质性能（需要物理桌面和MSVC候选包补验）、正式打包Codex桌面默认重启adapter、新版本冻结和原包安装升级/签名/更新通道/回退。没有发行版号变更、main合并、tag/发布、真实WebDAV或日常配置/Codex重启。当前TASK/DMD/IMP仍in_progress，无整版证书。Windows接续用WINDOWS-FOLLOWUP.md；此前可用物理Windows环境询问尚待用户回答，不据等待时间推定允许跳过。
+发布门仍未齐：Windows最终同源CI/原生回归、RDP未通过的材质性能（需要物理桌面和MSVC候选包补验）、正式打包Codex桌面默认重启adapter、新版本冻结和原包安装升级/签名/更新通道/回退。没有发行版号变更、main合并、tag/发布、真实WebDAV或日常配置/Codex重启。当前TASK/DMD/IMP仍in_progress，无整版证书。Windows接续用WINDOWS-FOLLOWUP.md；用户已确认有本地Windows环境，采用继续交Windows对话补验；当前宿主工具仅列本机对话，未连接Windows宿主，未实际发送。提示词交由用户粘贴，不据此宣称Windows已开工。
+
+
+最新交付代码bd7c0fe8ccecfa39e0706c885dc233f3854dab74仍为同产品apps树，仅校正改名保存的恢复日志/写入前备份探针。35测试通过；Windows实际重跑待证。Windows最终交接以WINDOWS-FOLLOWUP.md新HEAD为准，旧CI失败保留。
