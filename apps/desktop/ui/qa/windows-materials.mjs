@@ -150,6 +150,13 @@ async function injectUnsupportedFallback() {
     const style = document.createElement('style')
     style.dataset.windowsMaterialsFixture = 'unsupported-filter-injection'
     style.textContent = bodies.join('\n'); document.documentElement.append(style)
+    // The control probe adds an artificial stripe to its task backdrop root to
+    // measure the control's own filter. During fallback that parent must instead
+    // use the actual production task fill, which becomes opaque through tokens.
+    document.querySelector('[data-material-probe="task-control"]')?.parentElement.style.removeProperty('background')
+    // Start existing background transitions before the caller's settling delay;
+    // the first computed-style read must not start them at screenshot time.
+    void document.body.offsetHeight
     return { mode: 'explicit isolated injection of production @supports-not branch bodies', branches: bodies.length, root: { ...document.documentElement.dataset }, css: style.textContent }
   })
 }
