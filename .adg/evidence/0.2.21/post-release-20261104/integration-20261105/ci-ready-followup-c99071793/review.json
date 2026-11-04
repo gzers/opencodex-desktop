@@ -1,0 +1,21 @@
+{
+  "run": 41913003716,
+  "job": 126865197605,
+  "head": "c990717931aa37ed66ca99e42bf5cf4f470069bb",
+  "checkedMerge": "127543d2d0d9c2725f1a357710cd43bc69e3c44d",
+  "status": "completed",
+  "conclusion": "success",
+  "protocolTests": 71,
+  "vitestTests": 1291,
+  "vitestFiles": 197,
+  "typecheck": "pass",
+  "build": "pass",
+  "scope": "Latest install-recovery WebDAV consumer tests actually included in frontend CI; does not prove new native Windows recovery matrix passed.",
+  "remaining": [
+    "Windows native install-recovery with current probe",
+    "Node22 and ordinary-account matrix",
+    "Windows changed-port native race on verified candidate",
+    "RDP performance budget",
+    "formal default client restart, installer/upgrade/release"
+  ]
+}

@@ -190,3 +190,6 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05原候选全轮CI终态已核对：run41904417657/backend-windows126835127187为completed/failure，MSVC构建/候选留存及首轮实际EXE冒烟success；后续windows-install-recovery在ready WebDAV旧configured断言失败，实际failed是采用后的合成无效端点启动只读结果。8fc5d179c修剩余ready消费者，按真实检测版本动作区分历史/当前，等待已保存修订对应的真实观察；不改环境ready/managed来源/可见卡片/UI异常/无写入合同。c99071793将该消费者回归纳入CI，八套71测试通过；完整tauri及ui/src与候选源31a28bfb4一致，可用原MSVC EXE配新驱动复验。失败原件及后续Node22/普通账号跳过保留，不能将构建或首轮通过扩大为全轮绿。最新Windows下载/哈希和脚本接续在WINDOWS-FOLLOWUP.md，审计ci-panel-followup-31a28bfb4/install-recovery-old-contract/review.json。
+
+
+2026-11-05安装恢复消费者最新前端CI已通过：run41913003716/job126865197605，head c99071793、测试合并127543d，八套71协议、197文件1291前端测试、typecheck/build及完成步骤全部success，原始日志和job元数据保存于ci-ready-followup-c99071793。此项证明新消费者测试已纳入并运行，不替代Windows原生安装恢复/后续Node22普通账号矩阵；双后端仍在执行，原MSVC候选身份和RDP/正式重启/发行缺验维持。
