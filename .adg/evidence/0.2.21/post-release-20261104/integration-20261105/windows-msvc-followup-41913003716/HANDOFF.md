@@ -29,3 +29,12 @@
 恢复RDP后先重新核对会话状态、唯一原生窗口、候选SHA及实际foreground，再启动隔离perf/panel/target。不得把当前background样本或CDP截图当实屏通过。追踪器最多60秒/256MiB，仅诊断，不拥有验收通过结论。先保留失败，再在证据支持下修性能，产品改动须另建真实同源候选。
 
 本轮TASK保持in_progress，RCP总体failed，仅候选身份与本轮清理检查passed；所有完整AC仍failed，不生成CERT。正式治理事实由集成线统一回写。本分支仅新增独有证据、TASK与回执，未覆盖旧证据或IMP/DMD。
+
+
+## 2026-11-05 只读夹具服务补充
+
+代码已追加推送b42d03e03（完整SHA见https-server-preflight/metadata.json）。新增服务仅监听127.0.0.1，核对已知指针/文档摘要与强ETag后提供两阶段固定对象，凭据只匹配合成Basic，不记录Authorization。每次新建请求日志，不覆盖旧证据；未知阶段503、错误路径404、未授权401，PUT/DELETE等方法405。
+
+本轮9次TLS预检通过：初始/后续指针和对象各2个GET成功、未授权401、PUT405、DELETE405、越界404、未知阶段503；全部对象原始字节不变。测试服务线程实际退出。requests.jsonl里的PUT/DELETE为预检故意发送的拒绝反例，非产品请求或真实同步。没有上传私钥，没有改系统信任。
+
+产品链路核对：ModelTransfer进入时调用config_sync_scope；open_scope会刷新远端目录，config_sync_catalog单独只读缓存。后续新增复测必须重新进入并等待完整目录就绪，不能只比较旧缓存或只点版本观察。仅后台服务器预检通过，原生解析、首次并集、后续新增不扩选、已有范围、面板、性能和正式默认重启仍未完成。RDP会话2仍Disc，未继续任何实屏操作。RCP更新为revision2，前一版原字节另存，TASK保持in_progress，无CERT。

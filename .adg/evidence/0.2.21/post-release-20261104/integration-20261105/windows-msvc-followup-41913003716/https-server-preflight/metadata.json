@@ -1,0 +1,13 @@
+{
+  "codeHead": "b42d03e03784d2c3868be4f0f678d8a1799e9c87",
+  "sourcePath": "test/smoke/post021-windows-final/cloud-readonly-server.py",
+  "sourceSha256": "a4e5931133de8d85f88dbc49b1fa84142a8c11b293659c85b9198171d53ce26e",
+  "result": "fixture-infrastructure-preflight-passed",
+  "nativeAcceptance": false,
+  "productAppRequests": 0,
+  "deniedMutationProbes": "PUT405 and DELETE405 are deliberate preflight requests, not successful mutations or product sync",
+  "payloadBytesUnchanged": true,
+  "privateKeysUploaded": false,
+  "tlsTrust": "process-only fixture CA; no system trust change",
+  "at": "2026-11-04T23:54:35.292474+00:00"
+}
