@@ -192,23 +192,28 @@ impl ClientSelectionRenamePlan {
     pub async fn apply(self) -> ModelResult<ClientSelectionRename> {
         self.apply_checked(None).await
     }
-    /// Bind the CAS to the exact post-producer file whose routing owner the
-    /// caller verified. Later unrelated changes must not silently rebind it.
-    pub async fn apply_at_version(self, version: String) -> ModelResult<ClientSelectionRename> {
-        if !version_token(&version) {
+    /// Verify exact post-producer raw bytes before and after native config/read.
+    /// The native CAS token is always taken from that actual owner read; raw
+    /// digests and native semantic versions are deliberately separate domains.
+    pub async fn apply_with_file_snapshot(
+        self,
+        raw_digest: String,
+    ) -> ModelResult<ClientSelectionRename> {
+        if !version_token(&raw_digest) {
             return Err(failure("changed"));
         }
-        self.apply_checked(Some(version)).await
+        self.apply_checked(Some(raw_digest)).await
     }
     async fn apply_checked(
         self,
-        expected_version: Option<String>,
+        expected_file_digest: Option<String>,
     ) -> ModelResult<ClientSelectionRename> {
         let Some(intent) = self.intent else {
             return Ok(ClientSelectionRename::Unchanged);
         };
         let target = self.target.ok_or_else(|| failure("paths"))?;
         target.validate()?;
+        verify_file_snapshot(&target, &intent, expected_file_digest.as_deref())?;
         let mut owner = Owner::spawn(&target)?;
         let mut written_version: Option<String> = None;
         let result = tokio::time::timeout(OPERATION_TIMEOUT, async {
@@ -232,12 +237,9 @@ impl ClientSelectionRenamePlan {
                 version = Some(current.version);
             }
             let version = version.ok_or_else(|| failure("source"))?;
-            if expected_version
-                .as_ref()
-                .is_some_and(|expected| expected != &version)
-            {
-                return Err(failure("changed"));
-            }
+            // The native owner token is opaque. Anchor its read to the same
+            // raw file that the caller verified, then let native CAS own the write.
+            verify_file_snapshot(&target, &intent, expected_file_digest.as_deref())?;
             let receipt = owner.write(&version, &intent, false).await?;
             // A valid receipt is necessary for compensation. Never replace this
             // token with an external edit's version during rollback.
@@ -307,6 +309,28 @@ fn failure(reason: &str) -> ModelError {
         _ => "Codex 当前模型引用引用更新未完成，请检查后重试",
     };
     invalid(&format!("client_selection_{reason}"), message)
+}
+
+fn verify_file_snapshot(
+    target: &Target,
+    intent: &SelectionIntent,
+    expected: Option<&str>,
+) -> ModelResult<()> {
+    let Some(expected) = expected else {
+        return Ok(());
+    };
+    let root = dunce::canonicalize(&target.codex_home).map_err(|_| failure("source"))?;
+    let file = intent.file();
+    crate::modules::backup::safety::check_path(&root, file, false)
+        .map_err(|_| failure("source"))?;
+    let bytes = zeroize::Zeroizing::new(
+        crate::modules::backup::safety::read_file(file, 2 * 1024 * 1024)
+            .map_err(|_| failure("source"))?,
+    );
+    if crate::modules::model_config::store::sha256(&bytes) != expected {
+        return Err(failure("changed"));
+    }
+    Ok(())
 }
 
 impl Target {

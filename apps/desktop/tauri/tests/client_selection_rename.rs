@@ -216,6 +216,7 @@ for line in sys.stdin:
    layers.append({'name':root_source,'version':root_version,'config':{'model':main}})
   if behavior=='all_origins_missing':origins={}
   selected_profile='active' if behavior=='unbound_profile' else None
+  if behavior=='routing_drift_during_read':file.write_text(file.read_text()+'# external routing edit during native read\n')
   reply(ident,{'config':dict(current,profile=selected_profile),'origins':origins,'layers':layers});continue
  assert method in ['config/value/write','config/batchWrite'],method
  assert params['filePath']==str(file)
@@ -553,22 +554,24 @@ async fn batch_cas_failure_keeps_both_and_compensation_cannot_clobber_an_externa
 
 #[cfg(unix)]
 #[tokio::test]
-async fn caller_verified_routing_version_cannot_be_rebound_after_an_external_change() {
+async fn caller_verified_routing_snapshot_rejects_drift_before_or_during_native_read() {
     use sha2::{Digest, Sha256};
-    for drift in [false, true] {
+    for drift in ["none", "before", "during"] {
         let fixture = Fixture::new(OLD);
         let owner = fixture.fake("normal", "user");
         let plan = fixture.plan(&owner, None).await.unwrap();
         let before = fixture.bytes();
         let version = format!("sha256:{:x}", Sha256::digest(&before));
-        if drift {
+        if drift == "before" {
             let mut bytes = before.clone();
             bytes.extend_from_slice(b"\n# external routing change\n");
             std::fs::write(fixture.codex.join("config.toml"), &bytes).unwrap();
+        } else if drift == "during" {
+            fixture.fake("routing_drift_during_read", "user");
         }
-        let result = plan.apply_at_version(version).await;
-        if drift {
-            assert!(result.is_err());
+        let result = plan.apply_with_file_snapshot(version).await;
+        if drift != "none" {
+            assert_eq!(result.unwrap_err().code, "client_selection_changed");
             assert_eq!(fixture.model(), OLD);
             assert!(!fixture
                 .requests()
@@ -1009,6 +1012,7 @@ mod real {
     #[tokio::test]
     #[ignore = "requires explicit official 0.166 binary and OS-isolated tmp HOME/network"]
     async fn real_owner_root_and_fresh_default_thread_follow_the_rename() {
+        use sha2::{Digest, Sha256};
         let binary = binary();
         let fixture = Fixture::new(OLD);
         fixture.seed_current(Some(OLD), Some(REVIEW_OLD));
@@ -1028,7 +1032,26 @@ mod real {
             ),
         )
         .unwrap();
-        assert_eq!(plan.apply().await.unwrap(), ClientSelectionRename::Updated);
+        let raw_digest = format!("sha256:{:x}", Sha256::digest(fixture.bytes()));
+        let mut before_client = Client::start(&fixture, &binary).await;
+        let before_read = before_client
+            .call(
+                "config/read",
+                json!({"cwd":fixture.work,"includeLayers":true}),
+            )
+            .await;
+        let native_version = before_read["origins"]["model"]["version"].clone();
+        assert_ne!(
+            native_version, raw_digest,
+            "raw bytes and native version must stay separate"
+        );
+        before_client.close().await;
+        assert_eq!(
+            plan.apply_with_file_snapshot(raw_digest.clone())
+                .await
+                .unwrap(),
+            ClientSelectionRename::Updated
+        );
         assert_eq!(fixture.model(), NEW);
         let parsed: toml::Value =
             toml::from_str(std::str::from_utf8(&fixture.bytes()).unwrap()).unwrap();
@@ -1049,7 +1072,7 @@ mod real {
         assert_eq!(thread["model"], NEW);
         evidence(
             "real-root-default",
-            json!({"passed":true,"model":read["config"]["model"],"reviewModel":read["config"]["review_model"],"origin":read["origins"]["model"],"reviewOrigin":read["origins"]["review_model"],"threadStartRequest":request,"threadStartModel":thread["model"],"suffixPreserved":true,"historyUnchanged":true,"injectionVersionChangeAccepted":true}),
+            json!({"passed":true,"model":read["config"]["model"],"reviewModel":read["config"]["review_model"],"origin":read["origins"]["model"],"reviewOrigin":read["origins"]["review_model"],"threadStartRequest":request,"threadStartModel":thread["model"],"suffixPreserved":true,"historyUnchanged":true,"injectionVersionChangeAccepted":true,"beforeRawDigest":raw_digest,"beforeNativeVersion":native_version,"rawAndNativeDomainsSeparated":true}),
         );
         client.close().await;
         let saved = fixture.bytes();

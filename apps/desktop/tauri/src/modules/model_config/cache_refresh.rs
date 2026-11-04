@@ -245,8 +245,8 @@ pub async fn prepare_saved_rename_restart(
     verify_rename_preparation_worker(root, context, &preparation).await?;
     if let Some((selection, binding)) = selection {
         if selection.has_changes() {
-            let version = verify_client_route(&binding, management.base_url())?;
-            selection.apply_at_version(version).await?;
+            let raw_digest = verify_client_route(&binding, management.base_url())?;
+            selection.apply_with_file_snapshot(raw_digest).await?;
         } else {
             selection.apply().await?;
         }
