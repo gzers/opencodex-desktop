@@ -3,7 +3,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { defineComponent } from 'vue'
 import ModelTransfer from '@/features/sync/ModelTransfer.vue'
-import { modelTransferApi,transferChoiceApi,transferProtectionApi,importCredentialChoiceApi, scopeFor, remoteScope, type ModelPackage } from '@/features/sync/modelTransfer'
+import { modelTransferApi,cloudCatalogApi,transferChoiceApi,transferProtectionApi,importCredentialChoiceApi, scopeFor, remoteScope, type ModelPackage } from '@/features/sync/modelTransfer'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ObjectScopeTree from '@/features/sync/ObjectScopeTree.vue'
 import { useModelsStore } from '@/features/models/store'
@@ -35,6 +35,21 @@ async function customExportScope(wrapper:ReturnType<typeof render>){
 
 beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();localStorage.clear();vi.mocked(getSyncConfig).mockResolvedValue({endpoint:{endpointId:'default',revision:'a'.repeat(64),url:'https://dav.example.test',remotePath:'scope',username:'fixture',credentialRefId:'opaque',tlsPolicy:'verify_required',payloadProtection:'integrity_only',conflictPolicy:'ask'}});vi.mocked(transferChoiceApi.load).mockResolvedValue(null);vi.mocked(transferChoiceApi.save).mockImplementation(async(_remote,choice)=>choice);vi.mocked(transferProtectionApi.load).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(transferProtectionApi.save).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(importCredentialChoiceApi.load).mockResolvedValue({keys:true,extensions:true});vi.mocked(modelTransferApi.discardUnattempted).mockResolvedValue(true);vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
 describe('model transfer review', () => {
+  it('keeps a cloud-only template selected through the actual first range save/check flow', async () => {
+    useModelsStore().snapshot!.library.templates=[]
+    vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:['cloud-template'],channelIds:[],includeGlobal:false,preferences:true,extensions:false,includeKeys:false})
+    const catalogue=vi.spyOn(cloudCatalogApi,'load').mockResolvedValue({binding:'fixture',createdAt:'',credentialIds:[],objects:[{id:JSON.stringify(['templates','cloud-template']),category:'templates',categoryLabel:'模型模版',label:'仅云端模版',detail:'云端已保存内容 · 本机尚无',mark:'云端配置'}]})
+    vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
+    vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'unchanged',hasRemote:true})
+    const wrapper=render(true);await flushPromises()
+    await wrapper.get('input[aria-label="搜索配置对象"]').setValue('仅云端模版')
+    expect((wrapper.get('input[aria-label="选择 仅云端模版"]').element as HTMLInputElement).checked).toBe(true)
+    await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledWith(expect.objectContaining({templateIds:['cloud-template']}))
+    expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(modelTransferApi.download).not.toHaveBeenCalled()
+    wrapper.unmount();catalogue.mockRestore()
+  })
+
   it('distinguishes same-name channel, Skill and MCP credential choices without changing their source identities',async()=>{
     const packageValue=pack();packageValue.payload.policy={templateRefs:null,channelOrder:null,channels:[{id:'channel',label:'same-name',selection:{mode:'none'}}]}
     const plan={id:'same-name-incoming',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:packageValue,notices:[],availableKeys:['channel'],availableExtensionIds:['skill:same-name','mcp:same-name'],availableExtensionCredentials:true,assets:{skills:[{name:'same-name',digest:'fixture-skill',files:1,bytes:10,warnings:[],protected:true}],mcps:[{name:'same-name',digest:'fixture-mcp',secretFields:['/env/API_KEY'],warnings:[]}]}}
