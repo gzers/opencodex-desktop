@@ -1,0 +1,44 @@
+name: Windows actual Codex client owner
+on:
+  push:
+    branches:
+      - codex/0.2.21-fixes
+    paths:
+      - .github/workflows/windows-client-owner.yml
+      - test/smoke/windows-021-client-owner.ps1
+      - test/smoke/windows-021-client-owner.mjs
+      - test/smoke/windows-021-client-owner.test.mjs
+  workflow_dispatch:
+    inputs:
+      product_tree:
+        description: Exact apps/desktop/tauri/src tree from the frozen source
+        required: true
+        default: 5cda9608674b35b65e1bba937f778848c9cb3624
+        type: string
+permissions:
+  contents: read
+jobs:
+  actual-default-binding:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Capture default official settings from fixed public npm packages
+        shell: pwsh
+        env:
+          OCX_EXPECTED_PRODUCT_TREE: ${{ inputs.product_tree || '5cda9608674b35b65e1bba937f778848c9cb3624' }}
+        run: |
+          $taskNode = (Get-Command node).Source
+          $taskNpm = Join-Path (Split-Path -Parent $taskNode) 'node_modules/npm/bin/npm-cli.js'
+          & ./test/smoke/windows-021-client-owner.ps1 -Node $taskNode -NpmCli $taskNpm -OutputDirectory test/out/windows-actual-owner -ExpectedProductTree $env:OCX_EXPECTED_PRODUCT_TREE
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Preserve actual binding and blocked outcomes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-actual-codex-binding-${{ github.sha }}
+          if-no-files-found: error
+          path: test/out/windows-actual-owner
