@@ -468,6 +468,9 @@ impl PreferencesStore {
     }
 
     pub fn load(&self) -> Result<Preferences, PreferencesError> {
+        if !self.data_root.is_absolute() {
+            return Err(PreferencesError::NotConfigured);
+        }
         let _guard = crate::infrastructure::locking::TargetFileLock::lock(&self.path())
             .map_err(|_| PreferencesError::Io)?;
         crate::modules::model_config::content_versions::owner_saves::recover(
@@ -479,6 +482,9 @@ impl PreferencesStore {
     }
 
     pub fn save(&self, value: &Preferences) -> Result<Preferences, PreferencesError> {
+        if !self.data_root.is_absolute() {
+            return Err(PreferencesError::NotConfigured);
+        }
         use crate::modules::model_config::{
             content_versions::owner_saves::{self, Owner},
             file_objects,

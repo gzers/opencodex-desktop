@@ -3,6 +3,33 @@ use super::*;
 use serde_json::json;
 use std::cell::RefCell;
 
+#[test]
+fn saved_content_receipts_use_v4_and_legacy_v3_remains_readable_without_trusted_time() {
+    super::test_credentials::install();
+    let device = Device::new("wire-version");
+    let plan = device.export(device.scope(), false);
+    let bytes = transfer::file_bytes(&device.root, &plan.id).unwrap();
+    let opened = portable_file::open(&bytes, None).unwrap();
+    let current = decode(&opened.document).unwrap();
+    assert_eq!(current.version, 4);
+    assert!(!current.content_versions.is_empty());
+    let mut document = serde_json::to_value(&current).unwrap();
+    document["version"] = json!(3);
+    assert_eq!(
+        decode(&serde_json::to_vec(&document).unwrap())
+            .err()
+            .unwrap()
+            .code,
+        "portable_objects"
+    );
+    document.as_object_mut().unwrap().remove("contentVersions");
+    let legacy = decode(&serde_json::to_vec(&document).unwrap()).unwrap();
+    assert!(legacy.content_versions.is_empty());
+    assert!(object_fact(&legacy).unwrap().saved_at.is_none());
+    document["version"] = json!(5);
+    assert!(decode(&serde_json::to_vec(&document).unwrap()).is_err());
+}
+
 struct Device {
     _temp: tempfile::TempDir,
     root: PathBuf,

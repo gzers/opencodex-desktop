@@ -132,7 +132,9 @@ fn sections(objects: &Objects) -> Vec<String> {
     names
 }
 fn object_version(objects: &Objects) -> u32 {
-    if objects.manager.accounts.iter().any(|a| a.origin.is_some()) {
+    if !objects.content_versions.is_empty() {
+        4
+    } else if objects.manager.accounts.iter().any(|a| a.origin.is_some()) {
         3
     } else if !objects.channel_authorizations.is_empty() {
         2
@@ -142,7 +144,7 @@ fn object_version(objects: &Objects) -> u32 {
 }
 fn validate(objects: &Objects) -> ModelResult<()> {
     if objects.format != "OCXD_CONFIG_OBJECTS"
-        || ![1, 2, 3].contains(&objects.version)
+        || ![1, 2, 3, 4].contains(&objects.version)
         || objects.version < object_version(objects)
     {
         return Err(invalid("portable_objects", "不支持的配置对象文档版本"));
@@ -484,6 +486,8 @@ fn seal_scope(
         derive_scoped_versions(root, &mut objects, scope, credentials)?;
         objects.models.created_at = object_fact(&objects)?.saved_at.unwrap_or_default();
     }
+    objects.version = object_version(&objects);
+    validate(&objects)?;
     let count = secret_objects(&objects);
     let plaintext = Zeroizing::new(serde_json::to_vec(&objects)?);
     let bytes = portable_file::seal(
@@ -3803,7 +3807,7 @@ mod tests {
         assert!(!String::from_utf8_lossy(&bytes).contains("NEVER-EXPORT-SECRET"));
         let opened = portable_file::open(&bytes, None).unwrap();
         let mut objects: Objects = serde_json::from_slice(&opened.document).unwrap();
-        assert_eq!(objects.version, 3);
+        assert_eq!(objects.version, 4);
         assert_eq!(
             objects.manager.accounts[0]
                 .origin
@@ -3820,7 +3824,7 @@ mod tests {
                 .code,
             "portable_objects"
         );
-        objects.version = 3;
+        objects.version = 4;
         objects.manager.accounts[0].origin.as_mut().unwrap().owner = "platform-native".into();
         let mut manifest = opened.manifest;
         manifest.id = uuid::Uuid::new_v4().to_string();
