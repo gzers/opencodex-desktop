@@ -173,3 +173,6 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05最终源Mac后端CI也已completed/success（run41879603626/job126748379204），检出同一PR合并8d764df、apps树与f9def3300一致。格式/Clippy、单独有界元数据进程守卫及剩余workspace回归通过；库1215通过/0失败/4原条件忽略/1已单跑排除。原始日志与backend-review.json已保存。Mac前端任务也已completed/success，最终Mac远端检查齐备；不据此关闭Windows原生/性能/正式默认adapter和发行门。
+
+
+2026-11-05性能原始数据续审：RDP滚动场景背景draws=0仍p95=144ms，三场景longTasks为空，尚不能定位为背景着色器或JS长任务。7c2559055仅给原生采样器补rAF回调成本、时间戳到入口延迟和每秒实际滚动范围；原30秒/B/p95≤2B/over6B/前台及渲染档位均保持。语法与diff检查通过，没有声称新RDP结果；ui/src与tauri/src同31a28bfb4，既有产品候选身份仍准确记录。下一步按新增指标/必要合成GPU trace定位，再做经原生证据验证的修复，不降玻璃或预算。证据performance-followup-20261105/analysis.json。

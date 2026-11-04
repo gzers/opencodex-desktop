@@ -1,3 +1,5 @@
+最新诊断补充7c2559055：只改apps/desktop/ui/qa/windows-materials.mjs，ui/src与tauri/src均与MSVC候选源31a28bfb4相同。对已核对同源的原生候选继续跑performance与performance-modal原30秒采样，保留失败JSON。新增diagnostics.callbackCostMs、callbackDispatchDelayMs及每秒实际滚动范围，避免“无WebGL draws也超预算”被错误归因为背景动画。回调成本不包含后续布局/绘制/GPU，延迟也不能单独定因；必要时继续采集合成/GPU trace。预算、档位、玻璃和通过条件均未改，此工具更新不是性能通过。详见performance-followup-20261105/analysis.json。
+
 # 最新Windows接续：31a28bfb4
 
 在本对话用户已确认：接受RDP，保留原预算。以下为当前有效补验，下面旧提示词仅保留交接历史。

@@ -1,0 +1,54 @@
+{
+  "head": "7c25590550eeac18988f44c027d9d517baae8dae",
+  "validatedProductAndCandidateSource": "31a28bfb4f0decd151269ce896f2a7364fb5b186",
+  "changedFile": "apps/desktop/ui/qa/windows-materials.mjs",
+  "changedScope": "Diagnostics only; no renderer/runtime source change",
+  "verifiedSubtrees": {
+    "uiSource": "038a482766b7d8fe0432b8522590cf8976a64db4",
+    "rustSource": "cb2549ce89beb6f4d3a5ea08a7ae53bce3053779",
+    "sameAs31a28bfb4": true
+  },
+  "currentRdpEvidence": {
+    "static": {
+      "p50": 77.4,
+      "p95": 162.6,
+      "draws": 384,
+      "over6B": 140
+    },
+    "scroll": {
+      "p50": 28.4,
+      "p95": 144,
+      "draws": 0,
+      "over6B": 107
+    },
+    "modal": {
+      "p50": 103.3,
+      "p95": 171.7,
+      "draws": 313,
+      "over6B": 159
+    },
+    "longTasks": "none recorded in all three",
+    "scope": "Foreground true, high setting, 30 seconds, Windows26100/WebView2156/Intel UHD770/DPR2/RDP"
+  },
+  "finding": "All scenes fail budget, including scroll scene with no background WebGL draws. Existing data cannot isolate background shader as sole cause or prove script bottleneck.",
+  "addedMeasurements": [
+    "Per-rAF script callback cost distribution",
+    "rAF timestamp to callback-entry delay distribution",
+    "Actual scroll position sampled once per second and available scroll range"
+  ],
+  "limits": [
+    "Callback cost does not include subsequent style/layout/paint/GPU work.",
+    "Dispatch delay alone cannot distinguish main-loop starvation from frame/compositor delivery.",
+    "Sampler measures its own scroll callback, not whole renderer workload.",
+    "No native RDP result from these new diagnostics yet."
+  ],
+  "unchangedAcceptance": {
+    "durationMs": 30000,
+    "B": 16.666666666666668,
+    "p95MaxMs": 33.333333333333336,
+    "over6B": 0,
+    "nativeForegroundRequired": true
+  },
+  "validation": "node --check and git diff --check pass; original numeric acceptance expressions unchanged",
+  "next": "Run performance and performance-modal phases on exact MSVC candidate in owned sandbox, retain failed JSON and callback diagnostics, compare baseline/candidate in same RDP session. Collect compositor/GPU trace if callback metrics do not explain missing frames. Do not reduce tier/blur or budget."
+}
