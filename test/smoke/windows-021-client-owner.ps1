@@ -2,7 +2,8 @@ param(
  [Parameter(Mandatory=$true)][string]$Node,
  [Parameter(Mandatory=$true)][string]$NpmCli,
  [Parameter(Mandatory=$true)][string]$OutputDirectory,
- [Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedProductTree
+ [Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedProductTree,
+ [string]$TestExecutable=''
 )
 $ErrorActionPreference='Stop'
 if(!$IsWindows -or $PSVersionTable.PSVersion.Major -ne 7 -or $env:GITHUB_ACTIONS -cne 'true'){throw 'Disposable GitHub Windows runner and PowerShell 7 required'}
@@ -101,6 +102,22 @@ try{
  $taskReport.codexRuntime=$taskFacts.codexRuntime;$taskReport.nativeOwnerAdmitted=$taskFacts.admission.admitted
  $taskReport.productBlocked=!$taskFacts.admission.admitted
  $taskReport.bindingEvidence='default-settings.json';$taskReport.result='binding-captured'
+ if($TestExecutable){
+  $taskTest=(Resolve-Path -LiteralPath $TestExecutable).Path
+  if([IO.Path]::GetExtension($taskTest) -ine '.exe'){throw 'Actual Windows Rust test EXE required'}
+  $taskEnvironment.OCX_WINDOWS_OWNER_ROOT=$taskRoot
+  $taskEnvironment.OCX_WINDOWS_OWNER_WORK=Join-Path $taskRoot 'work'
+  $taskEnvironment.OCX_WINDOWS_OWNER_BINDING=$taskBinding
+  $taskEnvironment.OCX_WINDOWS_OWNER_EVIDENCE=$taskOutput
+  $taskReport.ownerTestExecutable=$taskTest
+  $taskReport.ownerTestSha256=(Get-FileHash -LiteralPath $taskTest -Algorithm SHA256).Hash.ToLowerInvariant()
+  Invoke-Owned 'actual-native-owner' $taskTest @('actual::windows_actual_','--ignored','--test-threads=1','--nocapture') $false 180
+  foreach($taskReceipt in @('windows-actual-owner-dual.json','windows-actual-owner-external-refusal.json')){
+   $taskOwner=Get-Content -LiteralPath (Join-Path $taskOutput $taskReceipt) -Raw|ConvertFrom-Json
+   if($taskOwner.result -cne 'pass'){throw 'Actual native owner case did not pass'}
+  }
+  $taskReport.result='native-owner-passed';$taskReport.nativeOwnerIntegration=$true
+ }
 }catch{$taskReport.error=$_.Exception.Message;throw}
 finally{
  if(Test-Path -LiteralPath $taskBinding){
