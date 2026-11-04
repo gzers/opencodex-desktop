@@ -8,7 +8,7 @@ import { useUpdatesStore } from '@/features/updates/store'
 import { useRouteStore } from '@/stores/routes'
 import { managerUpdateStatus } from '@/features/updates/update'
 import { useSyncStore } from '@/features/sync/store'
-import { recordRemoteVersion, recordSyncActivity, syncActivity } from '@/features/sync/activity'
+import { recordSyncActivity, syncActivity } from '@/features/sync/activity'
 
 const invoke = vi.fn()
 
@@ -157,15 +157,15 @@ describe('overview module cards', () => {
     const card = () => wrapper.findAll('.mods .mod')[2]
     expect(card().find('.mod-head .tag').exists()).toBe(false)
     expect(card().find('.info-row').text()).toBe('连接状态未配置')
-    expect(card().find('[data-testid=overview-remote-version]').text()).toBe('线上版本—')
+    expect(card().find('[data-testid=overview-remote-version]').text()).toBe('线上版本—·尚未读取')
     expect(card().find('.ov-state-dot').exists()).toBe(false)
     expect(card().findAll('.mod-actions button').map(b => b.text())).toEqual(['配置 WebDAV'])
     const sync = useSyncStore(wrapper.vm.$pinia)
-    recordRemoteVersion('2026-11-01T11:02:00')
-    sync.setWebdavState('synced'); await wrapper.vm.$nextTick()
+    sync.adoptConfig({endpoint:{endpointId:'default',revision:'a'.repeat(64),url:'https://dav.example.test',remotePath:'scope',username:'fixture',credentialRefId:'opaque',tlsPolicy:'verify_required',payloadProtection:'integrity_only',conflictPolicy:'ask'}})
+    sync.recordObservation(sync.observationToken(),'synced',{observedAt:'2026-11-01T11:03:00',remoteTime:'2026-11-01T11:02:00',remoteExists:true,source:'sync'}); await wrapper.vm.$nextTick()
     expect(card().find('.mod-head .tag').exists()).toBe(false)
-    expect(card().find('.info-row').text()).toBe('连接状态已连接')
-    expect(card().find('[data-testid=overview-remote-version]').text().replace(/\s+/g, '')).toBe('线上版本11:02·已一致')
+    expect(card().find('.info-row').text()).toBe('连接状态最近同步成功 · 11:03')
+    expect(card().find('[data-testid=overview-remote-version]').text().replace(/\s+/g, '')).toBe('线上版本11:02·上次观察')
     expect(card().find('.ov-state-dot').classes()).toContain('is-idle')
     sync.setWebdavState('syncing'); await wrapper.vm.$nextTick()
     const busy = card().findAll('.mod-actions button')

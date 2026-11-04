@@ -286,9 +286,14 @@ function activityText(entry: { time: string; count: number } | undefined, empty:
   const time = clockText(entry?.time)
   return entry && time ? time + ' · ' + entry.count + ' 项' : empty
 }
-// S18-01：WebDAV 卡片按 0.2.18 原型 webdavStates 渲染；线上版本时间来自本机最近一次同步记录。
+// Last observations belong to the saved endpoint revision, never to a draft form.
 const webdavView = computed(() => webdavStates[app.webdavState])
-const remoteVersionTime = computed(() => webdavView.value.remote ? clockText(syncActivity.value.sync?.remoteTime) || '—' : '—')
+const remoteVersionTime = computed(() => clockText(syncStore.observation?.remoteTime ?? undefined) || '—')
+const remoteVersionHint = computed(() => syncStore.observation?.remoteTime ? '上次观察' : syncStore.observation?.remoteExists === false ? '上次未发现快照' : '尚未读取')
+const webdavConnectionText = computed(() => {
+  const time = clockText(syncStore.observation?.observedAt)
+  return webdavView.value.conn + (time && !['unconfigured', 'configured', 'unknown', 'connecting', 'syncing'].includes(app.webdavState) ? ' · ' + time : '')
+})
 const mods = computed(() => [
   {
     key: 'upgrade',
@@ -315,7 +320,7 @@ const mods = computed(() => [
       { label: '导出', cls: 'btn', run: () => { overviewTransfer.value='file';syncStore.requestAction('export') } },
     ],
   },
-  { key: 'sync', title: 'WebDAV 同步', tag: '', rows: [['连接状态', webdavView.value.conn]], actions: webdavView.value.actions.map(a => ({ label: a.label, cls: a.cls, disabled: !!a.disabled, run: () => { if(a.act==='result')syncStore.openResult();else if(a.act==='connection')syncStore.openConnection();else{overviewTransfer.value='webdav';syncStore.requestAction(a.act)} } })) },
+  { key: 'sync', title: 'WebDAV 同步', tag: '', rows: [['连接状态', webdavConnectionText.value]], actions: webdavView.value.actions.map(a => ({ label: a.label, cls: a.cls, disabled: !!a.disabled, run: () => { if(a.act==='result')syncStore.openResult();else if(a.act==='connection')syncStore.openConnection();else{overviewTransfer.value='webdav';syncStore.requestAction(a.act)} } })) },
 ])
 </script>
 
@@ -410,7 +415,7 @@ const mods = computed(() => [
             <span class="ov-state-side">
               <span v-if="webdavView.remote" class="ov-state-dot" :class="'is-' + webdavView.remote.dot" aria-hidden="true"></span>
               <b>{{ remoteVersionTime }}</b>
-              <template v-if="webdavView.remote"><span class="ov-state-sep" aria-hidden="true">·</span><span class="ov-state-text" :class="'is-' + webdavView.remote.dot">{{ webdavView.remote.text }}</span></template>
+              <span class="ov-state-sep" aria-hidden="true">·</span><span class="ov-state-text">{{ remoteVersionHint }}</span>
             </span>
           </div>
         </div>

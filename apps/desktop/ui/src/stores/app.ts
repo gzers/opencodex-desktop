@@ -536,8 +536,7 @@ export const useAppStore = defineStore("app", {
     },
     // —— 同步功能切片（features/sync/store.ts）的动作委托（webdavState/Toast 仍由根壳编排） ——
     async loadSyncConfig() {
-      const config = await useSyncStore().loadConfig()
-      useSyncStore().setWebdavState(config?.endpoint ? "disconnected" : "unconfigured")
+      await useSyncStore().loadConfig()
     },
     async saveSyncEndpoint(request: SaveSyncEndpointRequest) {
       const ok = await useSyncStore().saveEndpoint(request)
@@ -545,7 +544,6 @@ export const useAppStore = defineStore("app", {
         this.showToast("WebDAV 端点保存失败；已保留原配置。")
         return
       }
-      useSyncStore().setWebdavState(useSyncStore().config?.endpoint ? "disconnected" : "unconfigured")
       this.showToast("WebDAV 端点已保存。")
     },
     async deleteSyncEndpoint(deleteCredentials: boolean) {
@@ -554,12 +552,10 @@ export const useAppStore = defineStore("app", {
         this.showToast("WebDAV 端点删除失败；已保留原配置。")
         return
       }
-      useSyncStore().setWebdavState(useSyncStore().config?.endpoint ? "disconnected" : "unconfigured")
       this.showToast("WebDAV 端点已删除。")
     },
     async testSyncConnection() {
       const status = await useSyncStore().testConnection()
-      useSyncStore().setWebdavState(status.connectionState)
       this.showToast(status.message || "WebDAV 连接已测试。")
     },
     // —— 受管路径投影（app/paths/store.ts）的动作委托 ——
@@ -588,8 +584,6 @@ export const useAppStore = defineStore("app", {
     },
     async runSyncNow() {
       const ok = await useSyncStore().runNow()
-      const status = useSyncStore().status
-      useSyncStore().setWebdavState(status?.connectionState ?? "failed")
       // 成功、冲突和失败都可能发布终态通知；命令返回不代表同步成功。
       void this.loadNotifications()
       return ok

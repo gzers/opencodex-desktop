@@ -2,7 +2,6 @@
 import {computed,ref} from 'vue'
 import UiTreeTable from '@/components/ui/UiTreeTable.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
-import UiButton from '@/components/ui/UiButton.vue'
 import type {TreeTableNode} from '@/components/ui/treeTable'
 export interface ScopeObject {id:string;category:string;categoryLabel:string;label:string;detail?:string;mark?:string;disabled?:boolean}
 const props=defineProps<{objects:ScopeObject[];visibleIds?:string[];selectedIds:string[];label:string;nameLabel?:string;disabled?:boolean;query?:string}>()
@@ -29,7 +28,7 @@ function count(id:string){const items=matching.value.filter(o=>'category:'+o.cat
  <section class="scope-object-tree">
  <p v-if="hidden" class="scope-tree-summary" role="status">已选 {{ selectedIds.length }} 个对象<span v-if="hidden"> · 当前筛选外仍有 {{ hidden }} 个已选对象</span></p>
  <UiTreeTable :nodes="nodes" :expanded-ids="openIds" :initial-expanded-depth="0" :label="label" name-label="配置对象" :columns="[{key:'details',label:'范围与凭据'}]" @update:expanded-ids="expanded=$event" @select="choose" @activate="activate"><template #name-header><label class="scope-select-all"><input type="checkbox" aria-label="选择当前筛选全部配置对象" :checked="state(selectable)===true" :indeterminate="state(selectable)==='mixed'" :aria-checked="state(selectable)" :disabled="disabled||!selectable.length" @change="choose('all',($event.target as HTMLInputElement).checked)" />{{ nameLabel??'配置对象' }}</label></template><template #name="{node}"><template v-if="object(node.id)"><span class="scope-object-name">{{ object(node.id)!.label }}</span><small v-if="object(node.id)!.detail" class="scope-object-detail">{{ object(node.id)!.detail }}</small></template><span v-else>{{ node.label }}</span></template><template #group-controls="{node}"><slot name="group-options" :category="node.id.slice(9)" /></template><template #cell-details="{node}"><span v-if="object(node.id)" class="scope-mark" :class="{secret:(object(node.id)!.mark??'').includes('含'),warn:object(node.id)!.mark==='暂不支持'}">{{ object(node.id)!.mark ?? '配置' }}</span><span v-else class="scope-group-count">{{ count(node.id) }}</span></template></UiTreeTable>
- <UiDialog hide-close wide panel-class="scope-detail-dialog" :open="!!detail" :title="detail?.label??'配置详情'" @close="detailId=''"><template v-if="detail"><p class="scope-detail-note">配置对象详情 · 敏感值不展示</p><p>{{ detail.detail }}</p><p>{{ detail.mark??'配置' }}</p><slot name="options" :object="detail" /></template><template #actions><UiButton @click="detailId=''">关闭</UiButton></template></UiDialog>
+ <UiDialog wide panel-class="scope-detail-dialog" :open="!!detail" :title="detail?.label??'配置详情'" @close="detailId=''"><template v-if="detail"><p class="scope-detail-note">配置对象详情 · 敏感值不展示</p><p>{{ detail.detail }}</p><p>{{ detail.mark??'配置' }}</p><slot name="options" :object="detail" /></template></UiDialog>
  </section>
 </template>
 <style scoped>

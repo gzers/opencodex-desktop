@@ -9,15 +9,17 @@ import ObjectScopeTree from '@/features/sync/ObjectScopeTree.vue'
 import { useModelsStore } from '@/features/models/store'
 import { emptyContent, emptyRules, type ChannelPolicy, type ModelSnapshot } from '@/features/models/api'
 vi.mock('@tauri-apps/plugin-dialog', () => ({ open: vi.fn().mockResolvedValue('/fixture/models.json') }))
+vi.mock('@/features/sync/api', async original => ({...await original<typeof import('@/features/sync/api')>(),getSyncConfig:vi.fn().mockResolvedValue({endpoint:{endpointId:'default',revision:'a'.repeat(64),url:'https://dav.example.test',remotePath:'scope',username:'fixture',credentialRefId:'opaque',tlsPolicy:'verify_required',payloadProtection:'integrity_only',conflictPolicy:'ask'}})}))
 vi.mock('@/features/backup/api', async original => ({ ...await original<typeof import('@/features/backup/api')>(), createBackup: vi.fn().mockResolvedValue({ id: 'backup-1' }) }))
 import { createBackup } from '@/features/backup/api'
 import { useSyncStore } from '@/features/sync/store'
+import {getSyncConfig} from '@/features/sync/api'
 vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), transferChoiceApi:{load:vi.fn(),save:vi.fn()},transferProtectionApi:{load:vi.fn(),save:vi.fn()},importCredentialChoiceApi:{load:vi.fn(),save:vi.fn()},modelTransferApi: {protect:vi.fn(),discardUnattempted:vi.fn(),prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),checkSync:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()} }))
 function snapshot(): ModelSnapshot {
   return { library:{schemaVersion:1,templates:[{id:'family',label:'测试族',source:'user',defaultRevision:null,revisions:[{id:'revision-1',createdAt:'2026-10-18T00:00:00Z',savedLabel:'测试族',content:emptyContent(),digest:'digest',baseRevision:null,changes:[]}]}]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspace:null,workspaceDigest:'workspace' }
 }
 const pack = (): ModelPackage => ({format:'OCXD_MODEL_CONFIG',formatVersion:1,schemaVersion:1,createdAt:'2026-10-18T00:00:00Z',digest:'frozen-digest',payload:{templates:snapshot().library.templates,policy:null}})
-const dialog = defineComponent({ props:['open'], template:'<section v-if="open"><slot/><slot name="actions"/></section>' })
+const dialog = defineComponent({ props:['open','busy'], emits:['close'], template:'<section v-if="open"><button aria-label="关闭" :disabled="busy" @click="$emit(\'close\')">×</button><slot/><slot name="actions" :close="()=> $emit(\'close\')"/></section>' })
 function render(remote = false,source:'saved'|'draft'='saved') { return mount(ModelTransfer, {props:{remote,source},global:{stubs:{UiDialog:dialog,UiSelectField:true}}}) }
 async function chooseExport(wrapper:ReturnType<typeof render>,name:string,selected=true){await flushPromises();const search=wrapper.get('input[aria-label="搜索配置对象"]');await search.setValue(name);await wrapper.get('input[aria-label="选择 '+name+'"]').setValue(selected);await search.setValue('')}
 
@@ -31,7 +33,7 @@ async function customExportScope(wrapper:ReturnType<typeof render>){
 }
 
 
-beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();localStorage.clear();vi.mocked(transferChoiceApi.load).mockResolvedValue(null);vi.mocked(transferChoiceApi.save).mockImplementation(async(_remote,choice)=>choice);vi.mocked(transferProtectionApi.load).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(transferProtectionApi.save).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(importCredentialChoiceApi.load).mockResolvedValue({keys:true,extensions:true});vi.mocked(modelTransferApi.discardUnattempted).mockResolvedValue(true);vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
+beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();localStorage.clear();vi.mocked(getSyncConfig).mockResolvedValue({endpoint:{endpointId:'default',revision:'a'.repeat(64),url:'https://dav.example.test',remotePath:'scope',username:'fixture',credentialRefId:'opaque',tlsPolicy:'verify_required',payloadProtection:'integrity_only',conflictPolicy:'ask'}});vi.mocked(transferChoiceApi.load).mockResolvedValue(null);vi.mocked(transferChoiceApi.save).mockImplementation(async(_remote,choice)=>choice);vi.mocked(transferProtectionApi.load).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(transferProtectionApi.save).mockResolvedValue({enabled:false,hasPassword:false});vi.mocked(importCredentialChoiceApi.load).mockResolvedValue({keys:true,extensions:true});vi.mocked(modelTransferApi.discardUnattempted).mockResolvedValue(true);vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
 describe('model transfer review', () => {
   it('distinguishes same-name channel, Skill and MCP credential choices without changing their source identities',async()=>{
     const packageValue=pack();packageValue.payload.policy={templateRefs:null,channelOrder:null,channels:[{id:'channel',label:'same-name',selection:{mode:'none'}}]}
@@ -432,16 +434,37 @@ describe('model transfer review', () => {
     expect(createBackup).not.toHaveBeenCalled();expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('remote-in',expect.objectContaining({backupBeforeUpdate:true}))
     wrapper.unmount()
   })
-  it('disables 确认更新 and offers 关闭 when the selected range is already the same',async()=>{
+  it('uses only the shared header X when the selected range is already the same',async()=>{
     vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
     vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'remote',hasRemote:true})
     vi.mocked(modelTransferApi.download).mockResolvedValue({id:'same',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],sync:{source:'remote',changes:[],unchanged:4,createdAt:'2026-11-01T11:02:00Z'}})
     const wrapper=render(true);await flushPromises();await flushPromises();await chooseExport(wrapper,'测试族')
     await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
     expect(wrapper.text()).toContain('所选内容已一致，无需更新。');expect(wrapper.findAll('label').some(l=>l.text()==='更新前备份')).toBe(false)
-    expect(wrapper.findAll('button').find(b=>b.text()==='确认更新')!.attributes('disabled')).toBeDefined()
-    await wrapper.findAll('button').find(b=>b.text()==='关闭')!.trigger('click');await flushPromises()
+    expect(wrapper.findAll('button').find(b=>b.text()==='确认更新')).toBeUndefined()
+    await wrapper.find('button[aria-label="关闭"]').trigger('click');await flushPromises()
     expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(useSyncStore().webdavState).toBe('synced');wrapper.unmount()
+  })
+  it.each(['unreliable_save_time','same_instant_different_content'])('blocks every write when direction is undetermined: %s',async reason=>{
+    vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
+    vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'undetermined',reason,hasRemote:true,localSavedAt:'2026-11-04T04:00:00Z',remoteSavedAt:reason==='same_instant_different_content'?'2026-11-04T12:00:00+08:00':null})
+    const wrapper=render(true);await flushPromises();await chooseExport(wrapper,'测试族')
+    await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
+    expect(wrapper.text()).toContain('无法判定新版');expect(wrapper.text()).toContain('本机保存时间')
+    expect(wrapper.findAll('button').find(b=>b.text()==='确认更新')!.attributes('disabled')).toBeDefined()
+    expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(modelTransferApi.download).not.toHaveBeenCalled();expect(modelTransferApi.publish).not.toHaveBeenCalled();expect(modelTransferApi.accept).not.toHaveBeenCalled()
+    expect(useSyncStore().webdavState).toBe('connected')
+    await wrapper.find('button[aria-label="关闭"]').trigger('click');await flushPromises()
+    expect(wrapper.text()).not.toContain('本机保存时间');wrapper.unmount()
+  })
+  it('uses the unchanged check directly without staging upload or download',async()=>{
+    vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
+    vi.mocked(modelTransferApi.checkSync).mockResolvedValue({source:'unchanged',reason:'same_content',hasRemote:true,remoteSavedAt:'2026-11-04T04:00:00Z'})
+    const wrapper=render(true);await flushPromises();await chooseExport(wrapper,'测试族')
+    await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
+    expect(wrapper.text()).toContain('所选内容已一致，无需更新。');expect(wrapper.findAll('button').find(b=>b.text()==='确认更新')).toBeUndefined()
+    expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(modelTransferApi.download).not.toHaveBeenCalled();expect(useSyncStore().webdavState).toBe('synced')
+    expect(useSyncStore().observation?.remoteTime).toBe('2026-11-04T04:00:00Z');wrapper.unmount()
   })
   it('asks for the MCP source inside the sync preview and skips an unpicked conflict',async()=>{
     vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
