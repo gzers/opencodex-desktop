@@ -1,0 +1,410 @@
+{
+  "phase": "hub",
+  "expectation": "fixed",
+  "target": {
+    "id": "5D4E9AECAB0DF27B2785B4F8C368A0DC",
+    "url": "http://tauri.localhost/#settings?section=upgrade"
+  },
+  "cases": [
+    {
+      "theme": "light",
+      "tier": "high",
+      "surfaces": {
+        "#ocxd-panel-hub .hub-menu": [
+          {
+            "classes": "hub-menu",
+            "rect": {
+              "x": 988,
+              "y": 556.5,
+              "width": 172,
+              "height": 139.5,
+              "top": 556.5,
+              "right": 1160,
+              "bottom": 696,
+              "left": 988
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false,
+            "contrast": 0.017759562841530054
+          }
+        ],
+        "#ocxd-panel-hub .hub-toggle": [
+          {
+            "classes": "hub-toggle",
+            "rect": {
+              "x": 1122,
+              "y": 704,
+              "width": 38,
+              "height": 38,
+              "top": 704,
+              "right": 1160,
+              "bottom": 742,
+              "left": 1122
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixture": "Exact injected overlay source in the native manager WebView2, not a running official child panel."
+    },
+    {
+      "theme": "light",
+      "tier": "mid",
+      "surfaces": {
+        "#ocxd-panel-hub .hub-menu": [
+          {
+            "classes": "hub-menu",
+            "rect": {
+              "x": 988,
+              "y": 556.5,
+              "width": 172,
+              "height": 139.5,
+              "top": 556.5,
+              "right": 1160,
+              "bottom": 696,
+              "left": 988
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false,
+            "contrast": 0.017759562841530054
+          }
+        ],
+        "#ocxd-panel-hub .hub-toggle": [
+          {
+            "classes": "hub-toggle",
+            "rect": {
+              "x": 1122,
+              "y": 704,
+              "width": 38,
+              "height": 38,
+              "top": 704,
+              "right": 1160,
+              "bottom": 742,
+              "left": 1122
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(244, 245, 249, 0.52)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixture": "Exact injected overlay source in the native manager WebView2, not a running official child panel."
+    },
+    {
+      "theme": "light",
+      "tier": "low",
+      "surfaces": {
+        "#ocxd-panel-hub .hub-menu": [
+          {
+            "classes": "hub-menu",
+            "rect": {
+              "x": 988,
+              "y": 556.5,
+              "width": 172,
+              "height": 139.5,
+              "top": 556.5,
+              "right": 1160,
+              "bottom": 696,
+              "left": 988
+            },
+            "blur": "none",
+            "background": "rgb(244, 245, 249)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false,
+            "contrast": 0
+          }
+        ],
+        "#ocxd-panel-hub .hub-toggle": [
+          {
+            "classes": "hub-toggle",
+            "rect": {
+              "x": 1122,
+              "y": 704,
+              "width": 38,
+              "height": 38,
+              "top": 704,
+              "right": 1160,
+              "bottom": 742,
+              "left": 1122
+            },
+            "blur": "none",
+            "background": "rgb(244, 245, 249)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixture": "Exact injected overlay source in the native manager WebView2, not a running official child panel."
+    },
+    {
+      "theme": "dark",
+      "tier": "high",
+      "surfaces": {
+        "#ocxd-panel-hub .hub-menu": [
+          {
+            "classes": "hub-menu",
+            "rect": {
+              "x": 988,
+              "y": 556.5,
+              "width": 172,
+              "height": 139.5,
+              "top": 556.5,
+              "right": 1160,
+              "bottom": 696,
+              "left": 988
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false,
+            "contrast": 0.03083528493364559
+          }
+        ],
+        "#ocxd-panel-hub .hub-toggle": [
+          {
+            "classes": "hub-toggle",
+            "rect": {
+              "x": 1122,
+              "y": 704,
+              "width": 38,
+              "height": 38,
+              "top": 704,
+              "right": 1160,
+              "bottom": 742,
+              "left": 1122
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixture": "Exact injected overlay source in the native manager WebView2, not a running official child panel."
+    },
+    {
+      "theme": "dark",
+      "tier": "mid",
+      "surfaces": {
+        "#ocxd-panel-hub .hub-menu": [
+          {
+            "classes": "hub-menu",
+            "rect": {
+              "x": 988,
+              "y": 556.5,
+              "width": 172,
+              "height": 139.5,
+              "top": 556.5,
+              "right": 1160,
+              "bottom": 696,
+              "left": 988
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false,
+            "contrast": 0.03083528493364559
+          }
+        ],
+        "#ocxd-panel-hub .hub-toggle": [
+          {
+            "classes": "hub-toggle",
+            "rect": {
+              "x": 1122,
+              "y": 704,
+              "width": 38,
+              "height": 38,
+              "top": 704,
+              "right": 1160,
+              "bottom": 742,
+              "left": 1122
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixture": "Exact injected overlay source in the native manager WebView2, not a running official child panel."
+    },
+    {
+      "theme": "dark",
+      "tier": "low",
+      "surfaces": {
+        "#ocxd-panel-hub .hub-menu": [
+          {
+            "classes": "hub-menu",
+            "rect": {
+              "x": 988,
+              "y": 556.5,
+              "width": 172,
+              "height": 139.5,
+              "top": 556.5,
+              "right": 1160,
+              "bottom": 696,
+              "left": 988
+            },
+            "blur": "none",
+            "background": "rgb(34, 36, 42)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false,
+            "contrast": 0
+          }
+        ],
+        "#ocxd-panel-hub .hub-toggle": [
+          {
+            "classes": "hub-toggle",
+            "rect": {
+              "x": 1122,
+              "y": 704,
+              "width": 38,
+              "height": 38,
+              "top": 704,
+              "right": 1160,
+              "bottom": 742,
+              "left": 1122
+            },
+            "blur": "none",
+            "background": "rgb(34, 36, 42)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false
+          }
+        ]
+      },
+      "fixture": "Exact injected overlay source in the native manager WebView2, not a running official child panel."
+    },
+    {
+      "theme": "dark",
+      "tier": "high",
+      "fallback": true,
+      "surfaces": {
+        "#ocxd-panel-hub .hub-menu": [
+          {
+            "classes": "hub-menu",
+            "rect": {
+              "x": 988,
+              "y": 556.5,
+              "width": 172,
+              "height": 139.5,
+              "top": 556.5,
+              "right": 1160,
+              "bottom": 696,
+              "left": 988
+            },
+            "blur": "none",
+            "background": "rgb(34, 36, 42)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false,
+            "contrast": 0
+          }
+        ],
+        "#ocxd-panel-hub .hub-toggle": [
+          {
+            "classes": "hub-toggle",
+            "rect": {
+              "x": 1122,
+              "y": 704,
+              "width": 38,
+              "height": 38,
+              "top": 704,
+              "right": 1160,
+              "bottom": 742,
+              "left": 1122
+            },
+            "blur": "none",
+            "background": "rgb(34, 36, 42)",
+            "font": "16px",
+            "parent": "DIV.open",
+            "nativeDialog": false
+          }
+        ]
+      }
+    }
+  ],
+  "binding": {
+    "activeDataRoot": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-materials/candidate/sandbox",
+    "opencodexHomeMode": "inside",
+    "opencodexHome": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-materials/candidate/sandbox\\opencodex-home",
+    "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-materials\\candidate\\sandbox",
+    "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-materials\\candidate\\sandbox\\opencodex-home",
+    "runtimeActive": true
+  },
+  "environment": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "dpr": 2,
+    "viewport": {
+      "width": 1180,
+      "height": 760
+    },
+    "gpu": {
+      "vendor": "Google Inc. (Intel)",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "supports": true,
+    "webkitSupports": false,
+    "root": {
+      "effects": "high",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "settings"
+    }
+  },
+  "injection": {
+    "mode": "explicit isolated injection of production @supports-not branch bodies",
+    "branches": 4,
+    "root": {
+      "effects": "high",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "settings"
+    },
+    "css": ".sticky-page-tabs[data-stuck=\"true\"][data-v-d7e77756] { background: var(--panel); }\n:root { --glass-fill: var(--panel); --glass-blur-notif: none; --glass-blur: none; --surface-page-bg: var(--panel); --surface-panel-bg: var(--panel); --surface-panel-blur: none; --surface-control-bg: var(--raised); --surface-control-blur: none; --surface-notification-control-blur: none; --surface-control-bg-hover: var(--raised-hover); --surface-overlay-bg: var(--panel); --surface-overlay-blur: none; }\n.detail-workspace-head[data-v-376f02c6] { background: var(--panel); }\n#ocxd-panel-hub .hub-menu, #ocxd-panel-hub .hub-toggle, #ocxd-panel-hub .hub-toggle:hover { background: rgb(244, 245, 249); backdrop-filter: none; }\n#ocxd-panel-hub[data-theme=\"dark\"] .hub-menu, #ocxd-panel-hub[data-theme=\"dark\"] .hub-toggle, #ocxd-panel-hub[data-theme=\"dark\"] .hub-toggle:hover { background: rgb(34, 36, 42); }"
+  },
+  "result": "passed"
+}

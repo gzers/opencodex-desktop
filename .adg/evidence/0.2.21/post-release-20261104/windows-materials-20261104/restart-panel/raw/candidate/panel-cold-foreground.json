@@ -1,0 +1,123 @@
+{
+  "trace": {
+    "id": 1,
+    "startedAt": 29102.799999713898,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.3000001907348633
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.3000001907348633
+      },
+      {
+        "phase": "address-ready",
+        "elapsedMs": 0.3000001907348633
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 3.3000001907348633
+      },
+      {
+        "phase": "navigation-start",
+        "elapsedMs": 170
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 170.2000002861023
+      },
+      {
+        "phase": "native:owner-lock:9.0",
+        "elapsedMs": 170.2000002861023
+      },
+      {
+        "phase": "native:runtime-address:20.0",
+        "elapsedMs": 170.2000002861023
+      },
+      {
+        "phase": "native:browser-environment:29.0",
+        "elapsedMs": 170.30000019073486
+      },
+      {
+        "phase": "native:native-view:137.0",
+        "elapsedMs": 170.30000019073486
+      },
+      {
+        "phase": "native:visible:146.0",
+        "elapsedMs": 170.30000019073486
+      },
+      {
+        "phase": "navigation-ready",
+        "elapsedMs": 250.90000009536743
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 250.90000009536743
+      }
+    ]
+  },
+  "readyAt": 312.2999997138977,
+  "events": [
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPanelUrl",
+      "startMs": 4.599999904632568,
+      "endMs": 4.599999904632568,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "native",
+      "detail": {
+        "generation": 1,
+        "kind": "load",
+        "value": "loading"
+      },
+      "atMs": 174.2999997138977
+    },
+    {
+      "kind": "native",
+      "detail": {
+        "generation": 1,
+        "kind": "load",
+        "value": "ready"
+      },
+      "atMs": 255.09999990463257
+    }
+  ],
+  "polls": [
+    {
+      "ms": 110,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 210.5,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 312.2999997138977,
+      "loaded": true,
+      "text": "官方面板已嵌入主窗口"
+    }
+  ],
+  "final": {
+    "root": {
+      "effects": "mid",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "panel"
+    },
+    "loaded": true,
+    "error": "",
+    "text": "官方面板已嵌入主窗口"
+  }
+}

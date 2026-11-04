@@ -1,0 +1,91 @@
+{
+  "source": "684e85c29f76584de4ab53026dcc315e34b57c62",
+  "checks": [
+    {
+      "name": "review:surface-inventory",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/surface-inventory.json",
+      "detail": "30 material selectors and 37 actual public UiDialog declarations enumerated; 16 material probes, production scenes and explicitly excluded shell/page/performance simulations."
+    },
+    {
+      "name": "review:windows-native-matrix",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/COVERAGE.json",
+      "detail": "Native WebView2 foreground six theme/tier cases, real production hosts, scale and reopen; exact environment only."
+    },
+    {
+      "name": "review:readable-fallback",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/fallback/fallback.json",
+      "detail": "High tier unsupported branch injection after correcting :root specificity; opaque surfaces with no blur, plus low tier and hub fallback."
+    },
+    {
+      "name": "review:modal-guards",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/inputs",
+      "detail": "OS mouse/keys verify X/Escape/backdrop, menu priority, Tab wrap, nested guard/busy/input retention and 200% native wheel scrolling. UiDialog/DetailWorkspace script and template hashes unchanged."
+    },
+    {
+      "name": "review:performance",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/PERFORMANCE.json",
+      "detail": "Existing p95<=2B gate fails for baseline and candidate in the remote session. Background draw pause passes. Local display/MSVC release performance remains required."
+    },
+    {
+      "name": "review:source-scope",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/source-manifest.json",
+      "detail": "Nine code/test paths only; sync, font tokens, layout scripts/templates, native configuration, versions/dependencies and shared docs unchanged."
+    },
+    {
+      "name": "frontend:full",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/checks/frontend-full.log",
+      "detail": "194 files / 1275 tests"
+    },
+    {
+      "name": "frontend:typecheck-build",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/checks/frontend-build.log",
+      "detail": "vue-tsc and Vite production build; existing chunk/dynamic import warnings retained."
+    },
+    {
+      "name": "backend:panel",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/checks/backend-panel-tests.log",
+      "detail": "10 passed, local GNU test binary with isolated Common Controls manifest adaptation."
+    },
+    {
+      "name": "backend:rustfmt",
+      "status": "skipped",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/checks/cargo-fmt-unavailable.log",
+      "detail": "rustfmt component unavailable in existing stable GNU toolchain; no toolchain mutation and no Rust source changed."
+    },
+    {
+      "name": "review:sticky-production-material",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/gallery-matrix/gallery-matrix.json",
+      "detail": "Two affected detail selectors restore blur in the built chunk; unchanged layout and script hashes."
+    },
+    {
+      "name": "review:sticky-native",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/production-matrix/production-matrix.json",
+      "detail": "Actual detail sticky header/collapse plus real scroll and six theme/tier cases."
+    },
+    {
+      "name": "review:hub-fallback",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/hub/hub.json",
+      "detail": "High/mid blur and low/injected unsupported opaque fills incl hover selector."
+    },
+    {
+      "name": "review:hub-native",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/hub/hub.json",
+      "detail": "Exact injected source in native manager WebView2; child host runtime not claimed."
+    }
+  ],
+  "overall": "contribution-ready-with-open-acceptance",
+  "acceptance": "AC-P21-02 not closed: physical Windows release performance and final Mac integration remain."
+}

@@ -1,0 +1,1 @@
+(async()=>{const m=document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('modal');m.current.busy=false;m.current.beforeClose=()=>true;await new Promise(r=>setTimeout(r,200));return{value:document.querySelector('input[aria-label="验收输入"]').value,dialogs:document.querySelectorAll('dialog[open]').length}})()

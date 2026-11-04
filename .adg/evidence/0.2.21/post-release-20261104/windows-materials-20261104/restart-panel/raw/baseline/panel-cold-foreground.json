@@ -1,0 +1,191 @@
+{
+  "trace": null,
+  "readyAt": 2419.199999809265,
+  "events": [
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPreferences",
+      "startMs": 3.5,
+      "endMs": 9.299999713897705,
+      "elapsedMs": 5.799999713897705
+    },
+    {
+      "kind": "action",
+      "store": "preferences",
+      "name": "load",
+      "startMs": 3.5,
+      "endMs": 9.299999713897705,
+      "elapsedMs": 5.799999713897705
+    },
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPanelUrl",
+      "startMs": 9.299999713897705,
+      "endMs": 9.400000095367432,
+      "elapsedMs": 0.10000038146972656
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "setStatusSnapshot",
+      "startMs": 1520.0999999046326,
+      "endMs": 1520.0999999046326,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "syncProcessProgress",
+      "startMs": 1520.0999999046326,
+      "endMs": 1520.0999999046326,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "native",
+      "detail": {
+        "kind": "load",
+        "value": "loading"
+      },
+      "atMs": 2324
+    },
+    {
+      "kind": "native",
+      "detail": {
+        "kind": "load",
+        "value": "ready"
+      },
+      "atMs": 2411.7999997138977
+    }
+  ],
+  "polls": [
+    {
+      "ms": 115,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 223.69999980926514,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 326.90000009536743,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 429.5,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 530.2999997138977,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 636,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 738.0999999046326,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 843.7999997138977,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 953.2999997138977,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1061.1999998092651,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1171.7999997138977,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1282.2999997138977,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1390.4000000953674,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1491.7999997138977,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1602.7999997138977,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1703,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1803.4000000953674,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1904,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 2004.6999998092651,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 2105.4000000953674,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 2218,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 2318.4000000953674,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 2419.199999809265,
+      "loaded": true,
+      "text": "官方面板已嵌入主窗口"
+    }
+  ],
+  "final": {
+    "root": {
+      "effects": "mid",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "panel"
+    },
+    "loaded": true,
+    "error": "",
+    "text": "官方面板已嵌入主窗口"
+  }
+}

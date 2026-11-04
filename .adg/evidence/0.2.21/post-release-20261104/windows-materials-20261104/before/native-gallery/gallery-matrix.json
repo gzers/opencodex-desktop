@@ -1,0 +1,1720 @@
+{
+  "phase": "gallery-matrix",
+  "target": {
+    "id": "BDE742E57EA590B41A1C39686FA2A2FB",
+    "url": "http://tauri.localhost/#sync?tab=webdav"
+  },
+  "cases": [
+    {
+      "theme": "light",
+      "tier": "high",
+      "surfaces": [
+        {
+          "name": "notification",
+          "rect": {
+            "x": 24,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 298,
+            "bottom": 164,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "rect": {
+            "x": 310,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 584,
+            "bottom": 164,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "rect": {
+            "x": 596,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 870,
+            "bottom": 164,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "rect": {
+            "x": 882,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 1156,
+            "bottom": 164,
+            "left": 882
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "rect": {
+            "x": 24,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 298,
+            "bottom": 316,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "rect": {
+            "x": 310,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 584,
+            "bottom": 316,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "rect": {
+            "x": 596,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 870,
+            "bottom": 316,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "rect": {
+            "x": 882,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 1156,
+            "bottom": 316,
+            "left": 882
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "rect": {
+            "x": 24,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 298,
+            "bottom": 468,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "rect": {
+            "x": 310,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 584,
+            "bottom": 468,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "rect": {
+            "x": 596,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 870,
+            "bottom": 468,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 30.102040816326532
+        },
+        {
+          "name": "detail-collapse",
+          "rect": {
+            "x": 882,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 1156,
+            "bottom": 468,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 30.102040816326532
+        },
+        {
+          "name": "overlay-card",
+          "rect": {
+            "x": 24,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 298,
+            "bottom": 620,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "rect": {
+            "x": 310,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 584,
+            "bottom": 620,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "rect": {
+            "x": 596,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 870,
+            "bottom": 620,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "rect": {
+            "x": 883,
+            "y": 481,
+            "width": 272,
+            "height": 138,
+            "top": 481,
+            "right": 1155,
+            "bottom": 619,
+            "left": 883
+          },
+          "blur": "none",
+          "background": "rgba(13, 13, 13, 0.06)",
+          "dpr": 2,
+          "contrast": 59.27835051546392
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "tier": "mid",
+      "surfaces": [
+        {
+          "name": "notification",
+          "rect": {
+            "x": 24,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 298,
+            "bottom": 164,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "rect": {
+            "x": 310,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 584,
+            "bottom": 164,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "rect": {
+            "x": 596,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 870,
+            "bottom": 164,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "rect": {
+            "x": 882,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 1156,
+            "bottom": 164,
+            "left": 882
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "rect": {
+            "x": 24,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 298,
+            "bottom": 316,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "rect": {
+            "x": 310,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 584,
+            "bottom": 316,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "rect": {
+            "x": 596,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 870,
+            "bottom": 316,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "rect": {
+            "x": 882,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 1156,
+            "bottom": 316,
+            "left": 882
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "rect": {
+            "x": 24,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 298,
+            "bottom": 468,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "rect": {
+            "x": 310,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 584,
+            "bottom": 468,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "rect": {
+            "x": 596,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 870,
+            "bottom": 468,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 30.102040816326532
+        },
+        {
+          "name": "detail-collapse",
+          "rect": {
+            "x": 882,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 1156,
+            "bottom": 468,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 30.102040816326532
+        },
+        {
+          "name": "overlay-card",
+          "rect": {
+            "x": 24,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 298,
+            "bottom": 620,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "rect": {
+            "x": 310,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 584,
+            "bottom": 620,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "rect": {
+            "x": 596,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 870,
+            "bottom": 620,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "rect": {
+            "x": 883,
+            "y": 481,
+            "width": 272,
+            "height": 138,
+            "top": 481,
+            "right": 1155,
+            "bottom": 619,
+            "left": 883
+          },
+          "blur": "none",
+          "background": "rgba(13, 13, 13, 0.06)",
+          "dpr": 2,
+          "contrast": 59.27835051546392
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "tier": "low",
+      "surfaces": [
+        {
+          "name": "notification",
+          "rect": {
+            "x": 24,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 298,
+            "bottom": 164,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "rect": {
+            "x": 310,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 584,
+            "bottom": 164,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "rect": {
+            "x": 596,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 870,
+            "bottom": 164,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "rect": {
+            "x": 882,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 1156,
+            "bottom": 164,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "rect": {
+            "x": 24,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 298,
+            "bottom": 316,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "rect": {
+            "x": 310,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 584,
+            "bottom": 316,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "rect": {
+            "x": 596,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 870,
+            "bottom": 316,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(244, 244, 244)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "rect": {
+            "x": 882,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 1156,
+            "bottom": 316,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgb(244, 244, 244)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "rect": {
+            "x": 24,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 298,
+            "bottom": 468,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(244, 244, 244)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "rect": {
+            "x": 310,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 584,
+            "bottom": 468,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "rect": {
+            "x": 596,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 870,
+            "bottom": 468,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "detail-collapse",
+          "rect": {
+            "x": 882,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 1156,
+            "bottom": 468,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "overlay-card",
+          "rect": {
+            "x": 24,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 298,
+            "bottom": 620,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "rect": {
+            "x": 310,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 584,
+            "bottom": 620,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "rect": {
+            "x": 596,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 870,
+            "bottom": 620,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "rect": {
+            "x": 883,
+            "y": 481,
+            "width": 272,
+            "height": 138,
+            "top": 481,
+            "right": 1155,
+            "bottom": 619,
+            "left": 883
+          },
+          "blur": "none",
+          "background": "rgba(13, 13, 13, 0.06)",
+          "dpr": 2,
+          "contrast": 0
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "tier": "high",
+      "surfaces": [
+        {
+          "name": "notification",
+          "rect": {
+            "x": 24,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 298,
+            "bottom": 164,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "rect": {
+            "x": 310,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 584,
+            "bottom": 164,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "rect": {
+            "x": 596,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 870,
+            "bottom": 164,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "rect": {
+            "x": 882,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 1156,
+            "bottom": 164,
+            "left": 882
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "rect": {
+            "x": 24,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 298,
+            "bottom": 316,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "rect": {
+            "x": 310,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 584,
+            "bottom": 316,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "rect": {
+            "x": 596,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 870,
+            "bottom": 316,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "rect": {
+            "x": 882,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 1156,
+            "bottom": 316,
+            "left": 882
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "rect": {
+            "x": 24,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 298,
+            "bottom": 468,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "rect": {
+            "x": 310,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 584,
+            "bottom": 468,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "rect": {
+            "x": 596,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 870,
+            "bottom": 468,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 27.551020408163264
+        },
+        {
+          "name": "detail-collapse",
+          "rect": {
+            "x": 882,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 1156,
+            "bottom": 468,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 27.551020408163264
+        },
+        {
+          "name": "overlay-card",
+          "rect": {
+            "x": 24,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 298,
+            "bottom": 620,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "rect": {
+            "x": 310,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 584,
+            "bottom": 620,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "rect": {
+            "x": 596,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 870,
+            "bottom": 620,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "rect": {
+            "x": 883,
+            "y": 481,
+            "width": 272,
+            "height": 138,
+            "top": 481,
+            "right": 1155,
+            "bottom": 619,
+            "left": 883
+          },
+          "blur": "none",
+          "background": "rgba(255, 255, 255, 0.1)",
+          "dpr": 2,
+          "contrast": 56.95876288659794
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "tier": "mid",
+      "surfaces": [
+        {
+          "name": "notification",
+          "rect": {
+            "x": 24,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 298,
+            "bottom": 164,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "rect": {
+            "x": 310,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 584,
+            "bottom": 164,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "rect": {
+            "x": 596,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 870,
+            "bottom": 164,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "rect": {
+            "x": 882,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 1156,
+            "bottom": 164,
+            "left": 882
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "rect": {
+            "x": 24,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 298,
+            "bottom": 316,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "rect": {
+            "x": 310,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 584,
+            "bottom": 316,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "rect": {
+            "x": 596,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 870,
+            "bottom": 316,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "rect": {
+            "x": 882,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 1156,
+            "bottom": 316,
+            "left": 882
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "rect": {
+            "x": 24,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 298,
+            "bottom": 468,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "rect": {
+            "x": 310,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 584,
+            "bottom": 468,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "rect": {
+            "x": 596,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 870,
+            "bottom": 468,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 27.551020408163264
+        },
+        {
+          "name": "detail-collapse",
+          "rect": {
+            "x": 882,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 1156,
+            "bottom": 468,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 27.551020408163264
+        },
+        {
+          "name": "overlay-card",
+          "rect": {
+            "x": 24,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 298,
+            "bottom": 620,
+            "left": 24
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "rect": {
+            "x": 310,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 584,
+            "bottom": 620,
+            "left": 310
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "rect": {
+            "x": 596,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 870,
+            "bottom": 620,
+            "left": 596
+          },
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "rect": {
+            "x": 883,
+            "y": 481,
+            "width": 272,
+            "height": 138,
+            "top": 481,
+            "right": 1155,
+            "bottom": 619,
+            "left": 883
+          },
+          "blur": "none",
+          "background": "rgba(255, 255, 255, 0.1)",
+          "dpr": 2,
+          "contrast": 56.95876288659794
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "tier": "low",
+      "surfaces": [
+        {
+          "name": "notification",
+          "rect": {
+            "x": 24,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 298,
+            "bottom": 164,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "rect": {
+            "x": 310,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 584,
+            "bottom": 164,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "rect": {
+            "x": 596,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 870,
+            "bottom": 164,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "rect": {
+            "x": 882,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 1156,
+            "bottom": 164,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "rect": {
+            "x": 24,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 298,
+            "bottom": 316,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "rect": {
+            "x": 310,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 584,
+            "bottom": 316,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "rect": {
+            "x": 596,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 870,
+            "bottom": 316,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(48, 48, 48)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "rect": {
+            "x": 882,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 1156,
+            "bottom": 316,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgb(48, 48, 48)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "rect": {
+            "x": 24,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 298,
+            "bottom": 468,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(48, 48, 48)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "rect": {
+            "x": 310,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 584,
+            "bottom": 468,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "rect": {
+            "x": 596,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 870,
+            "bottom": 468,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "detail-collapse",
+          "rect": {
+            "x": 882,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 1156,
+            "bottom": 468,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "overlay-card",
+          "rect": {
+            "x": 24,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 298,
+            "bottom": 620,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "rect": {
+            "x": 310,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 584,
+            "bottom": 620,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "rect": {
+            "x": 596,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 870,
+            "bottom": 620,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "rect": {
+            "x": 883,
+            "y": 481,
+            "width": 272,
+            "height": 138,
+            "top": 481,
+            "right": 1155,
+            "bottom": 619,
+            "left": 883
+          },
+          "blur": "none",
+          "background": "rgba(255, 255, 255, 0.1)",
+          "dpr": 2,
+          "contrast": 0
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "dpr": 2,
+    "viewport": {
+      "width": 1180,
+      "height": 760
+    },
+    "gpu": {
+      "vendor": "Google Inc. (Intel)",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "supports": true,
+    "webkitSupports": false,
+    "root": {
+      "effects": "high",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "sync"
+    }
+  }
+}

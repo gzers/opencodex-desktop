@@ -1,0 +1,17 @@
+
+> opencodex-desktop-ui@0.2.21 test
+> vitest --run tests/panel.test.ts tests/post10-panel.test.ts tests/panel-idle.test.ts tests/panel-update-progress.test.ts tests/post09-restart.test.ts tests/post01-save-notice.test.ts
+
+
+ RUN  v5.0.0 D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/apps/desktop/ui
+
+
+ Test Files  6 passed (6)
+      Tests  33 passed (33)
+   Start at  22:23:09
+   Duration  3.80s (environment 39%, transform 36%, tests 16%, import 9%)
+
+  Transform  transforming modules took 4.06s · 36% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

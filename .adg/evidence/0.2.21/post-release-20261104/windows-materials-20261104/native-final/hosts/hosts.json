@@ -1,0 +1,238 @@
+{
+  "phase": "hosts",
+  "expectation": "fixed",
+  "target": {
+    "id": "5D4E9AECAB0DF27B2785B4F8C368A0DC",
+    "url": "http://tauri.localhost/#sync?tab=webdav"
+  },
+  "cases": [
+    {
+      "name": "app-modal-view",
+      "surfaces": {
+        "dialog[open]": [
+          {
+            "classes": "ui-dialog app-modal-dialog",
+            "rect": {
+              "x": 310,
+              "y": 303.25,
+              "width": 560,
+              "height": 153.5,
+              "top": 303.25,
+              "right": 870,
+              "bottom": 456.75,
+              "left": 310
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "BODY.",
+            "nativeDialog": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "file-import",
+      "surfaces": {
+        "dialog[open]": [
+          {
+            "classes": "ui-dialog transfer-review wide",
+            "rect": {
+              "x": 230,
+              "y": 237,
+              "width": 720,
+              "height": 286,
+              "top": 237,
+              "right": 950,
+              "bottom": 523,
+              "left": 230
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "BODY.",
+            "nativeDialog": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "file-export-preview",
+      "surfaces": {
+        "dialog[open]": [
+          {
+            "classes": "ui-dialog transfer-review wide",
+            "rect": {
+              "x": 230,
+              "y": 87.2734375,
+              "width": 720,
+              "height": 585.453125,
+              "top": 87.2734375,
+              "right": 950,
+              "bottom": 672.7265625,
+              "left": 230
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "BODY.",
+            "nativeDialog": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "new-channel",
+      "surfaces": {
+        "dialog[open]": [
+          {
+            "classes": "ui-dialog wide",
+            "rect": {
+              "x": 165,
+              "y": 161.75,
+              "width": 850,
+              "height": 436.5,
+              "top": 161.75,
+              "right": 1015,
+              "bottom": 598.25,
+              "left": 165
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "BODY.",
+            "nativeDialog": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "node-detection-view",
+      "surfaces": {
+        "dialog[open]": [
+          {
+            "classes": "ui-dialog channel-node-dialog",
+            "rect": {
+              "x": 310,
+              "y": 248,
+              "width": 560,
+              "height": 264,
+              "top": 248,
+              "right": 870,
+              "bottom": 512,
+              "left": 310
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "BODY.",
+            "nativeDialog": true
+          }
+        ]
+      },
+      "fixture": "One in-memory disabled channel at materials.invalid; no measurement command is invoked."
+    },
+    {
+      "name": "runtime-install-view",
+      "surfaces": {
+        "dialog[open]": [
+          {
+            "classes": "ui-dialog wiz runtime-install-dialog wide",
+            "rect": {
+              "x": 330,
+              "y": 20,
+              "width": 520,
+              "height": 720,
+              "top": 20,
+              "right": 850,
+              "bottom": 740,
+              "left": 330
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "BODY.",
+            "nativeDialog": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "update-center-view",
+      "surfaces": {
+        "dialog[open]": [
+          {
+            "classes": "ui-dialog update-center wide",
+            "rect": {
+              "x": 200,
+              "y": 277.796875,
+              "width": 780,
+              "height": 204.3984375,
+              "top": 277.796875,
+              "right": 980,
+              "bottom": 482.1953125,
+              "left": 200
+            },
+            "blur": "saturate(1.5) blur(8px)",
+            "background": "rgba(34, 36, 42, 0.56)",
+            "font": "13px",
+            "parent": "BODY.",
+            "nativeDialog": true
+          }
+        ]
+      }
+    }
+  ],
+  "binding": {
+    "activeDataRoot": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-materials/candidate/sandbox",
+    "opencodexHomeMode": "inside",
+    "opencodexHome": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-materials/candidate/sandbox\\opencodex-home",
+    "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-materials\\candidate\\sandbox",
+    "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-materials\\candidate\\sandbox\\opencodex-home",
+    "runtimeActive": true
+  },
+  "environment": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "dpr": 2,
+    "viewport": {
+      "width": 1180,
+      "height": 760
+    },
+    "gpu": {
+      "vendor": "Google Inc. (Intel)",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "supports": true,
+    "webkitSupports": false,
+    "root": {
+      "effects": "high",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "sync"
+    }
+  },
+  "result": "passed"
+}

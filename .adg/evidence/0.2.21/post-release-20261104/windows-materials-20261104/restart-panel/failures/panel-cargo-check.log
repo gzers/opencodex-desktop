@@ -1,0 +1,39 @@
+   Compiling tauri v2.12.1
+   Compiling opencodex-desktop v0.2.21 (D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\post021-windows-materials\apps\desktop\tauri)
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-dialog v2.8.1
+error[E0277]: `NonNull<c_void>` cannot be sent between threads safely
+     --> src\commands\panel.rs:484:35
+      |
+  484 |                     .with_webview(move |platform| { let _ = send.send(platform.environment()); })?;
+      |                      ------------ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `NonNull<c_void>` cannot be sent between threads safely
+      |                      |
+      |                      required by a bound introduced by this call
+      |
+      = help: within `webview2_com_sys::Microsoft::Web::WebView2::Win32::ICoreWebView2Environment`, the trait `std::marker::Send` is not implemented for `NonNull<c_void>`
+note: required because it appears within the type `windows_core::unknown::IUnknown`
+     --> D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\cargo\registry\src\index.crates.io-1949cf8c6b5b557f\windows-core-0.62.2\src\unknown.rs:12:12
+      |
+   12 | pub struct IUnknown(NonNull<c_void>);
+      |            ^^^^^^^^
+note: required because it appears within the type `webview2_com_sys::Microsoft::Web::WebView2::Win32::ICoreWebView2Environment`
+     --> D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\cargo\registry\src\index.crates.io-1949cf8c6b5b557f\webview2-com-sys-0.39.1\src\bindings.rs:14415:5
+      |
+14415 |     ICoreWebView2Environment,
+      |     ^^^^^^^^^^^^^^^^^^^^^^^^
+      = note: required for `SyncSender<webview2_com_sys::Microsoft::Web::WebView2::Win32::ICoreWebView2Environment>` to implement `std::marker::Send`
+note: required because it's used within this closure
+     --> src\commands\panel.rs:484:35
+      |
+  484 |                     .with_webview(move |platform| { let _ = send.send(platform.environment()); })?;
+      |                                   ^^^^^^^^^^^^^^^
+note: required by a bound in `tauri::Webview::<R>::with_webview`
+     --> D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tauri-2.12.1\src\webview\mod.rs:1857:52
+      |
+ 1857 |   pub fn with_webview<F: FnOnce(PlatformWebview) + Send + 'static>(
+      |                                                    ^^^^ required by this bound in `Webview::<R>::with_webview`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error

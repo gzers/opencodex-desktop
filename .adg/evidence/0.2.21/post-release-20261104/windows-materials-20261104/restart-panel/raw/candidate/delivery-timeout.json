@@ -1,0 +1,32 @@
+{
+  "mode": "explicit isolated pending address dependency before Show; real native shell timers and recovery UI; not an OS stall",
+  "elapsedMs": 8304.199999809265,
+  "text": "官方面板加载失败\nOpenCodex 正在运行，内嵌页面未能加载。\n重试加载\n浏览器打开",
+  "trace": {
+    "id": 3,
+    "startedAt": 148066.39999961853,
+    "outcome": "timeout",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "load-failed",
+        "elapsedMs": 8010.900000095367
+      },
+      {
+        "phase": "timeout",
+        "elapsedMs": 8010.900000095367
+      }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "at": "2026-11-04T13:32:31.381Z",
+  "root": {
+    "effects": "high",
+    "glowRender": "mesh",
+    "theme": "dark",
+    "nativeMaterial": "mica",
+    "route": "models"
+  },
+  "focus": {
+    "tag": "BUTTON",
+    "label": "关闭",
+    "text": "",
+    "classes": "icon-btn ui-icon-control modal-close"
+  },
+  "dialogs": [
+    {
+      "title": "新增渠道",
+      "rect": {
+        "x": 165,
+        "y": 161.75,
+        "width": 850,
+        "height": 436.5,
+        "top": 161.75,
+        "right": 1015,
+        "bottom": 598.25,
+        "left": 165
+      },
+      "blur": "saturate(1.5) blur(8px)",
+      "background": "rgba(34, 36, 42, 0.56)",
+      "focusInside": true,
+      "native": true,
+      "closeDisabled": false,
+      "footer": true,
+      "buttons": [
+        "关闭",
+        "新渠道默认协议",
+        "取消",
+        "下一步"
+      ]
+    }
+  ],
+  "menus": []
+}

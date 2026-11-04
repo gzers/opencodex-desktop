@@ -1,0 +1,4 @@
+{"name":"standardThenPrefix","input":".surface{backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur)}","output":".surface{-webkit-backdrop-filter:var(--blur)}"}
+{"name":"prefixThenStandard","input":".surface{-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}","output":".surface{backdrop-filter:var(--blur)}"}
+{"name":"differentFallback","input":".surface{-webkit-backdrop-filter:var(--blur,none);backdrop-filter:var(--blur)}","output":".surface{backdrop-filter:var(--blur)}"}
+{"name":"supportsSeparated","input":"@supports(-webkit-backdrop-filter:blur(1px)){.surface{-webkit-backdrop-filter:var(--blur)}}@supports(backdrop-filter:blur(1px)){.surface{backdrop-filter:var(--blur)}}","output":"@supports ((-webkit-backdrop-filter:blur(1px))){.surface{-webkit-backdrop-filter:var(--blur)}}@supports (backdrop-filter:blur(1px)){.surface{backdrop-filter:var(--blur)}}"}

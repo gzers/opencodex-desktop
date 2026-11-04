@@ -1,0 +1,200 @@
+{
+  "base": "7a8441f7e647e4b3540d5907e44ac4f186f90998",
+  "head": "684e85c29f76584de4ab53026dcc315e34b57c62",
+  "docsBase": "c6f0a3f29ae59f6384f61f25dea773061f41bf11",
+  "commits": [
+    "684e85c29f76584de4ab53026dcc315e34b57c62 test(materials): 按真实父面和稳定帧校验实底回退",
+    "a5b431d228d6b8d85f59bb93587ef5d8ecdb8754 fix(materials): 修正无模糊能力时实底回退的优先级",
+    "56671d50fe9042c29791844a3921d367074fb0da test(materials): 验证生产压缩与Windows原生材质矩阵",
+    "8cb16415d8e0b4735716482a67f141f0b5141476 fix(materials): 恢复Windows玻璃滤镜并补齐实底回退"
+  ],
+  "files": [
+    {
+      "path": "apps/desktop/tauri/assets/panel-hub.js",
+      "sha256": "e9d5526b49efdddd2cba4f9ba4493de31d729f5a6adc13e0043a9bbff100e1a8"
+    },
+    {
+      "path": "apps/desktop/ui/qa/materials-build.mjs",
+      "sha256": "0d8e7c6b1c65f5b35546b51697a91e4c210c8b912358ecfd5e31e2c1056b9dc8"
+    },
+    {
+      "path": "apps/desktop/ui/qa/windows-materials.mjs",
+      "sha256": "eb18142e9991794e490ea857fed237c423eb0b3c10740ed9fe9c559e0a6d4d37"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/layout/DetailWorkspace.vue",
+      "sha256": "efd16d86898e5603ca9b5ab95449a1a9cbd2c4d11461653f8373794c4368fd93"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiDialog.vue",
+      "sha256": "5336d199b593c127a8f1477bfec3827e1dd7a4af3412050dad9ed66e576b6563"
+    },
+    {
+      "path": "apps/desktop/ui/src/styles/base.css",
+      "sha256": "ef5a5d18051a19fa28c4b6e540310aa4a425bd6d1670c332a9a3692243f0b036"
+    },
+    {
+      "path": "apps/desktop/ui/src/styles/effects.css",
+      "sha256": "92470dd30d769dfe7807d6cbc33934b828f344538ff9adf946aa9b9cc80e86e7"
+    },
+    {
+      "path": "apps/desktop/ui/src/styles/materials.css",
+      "sha256": "39803aaf6391c7e0bd23c2a140c3a63cadb2418adb726d0802e48100fea94860"
+    },
+    {
+      "path": "apps/desktop/ui/tests/materials-production.test.ts",
+      "sha256": "6295091f3d497cb0113947fda18115cfd504aecd9e3599c27480aea8cb508ea1"
+    }
+  ],
+  "dist": [
+    {
+      "path": "apps/desktop/ui/dist/assets/ConnectionDialog-BKg8FI3T.css",
+      "sha256": "48f9f9d06277be51e94073f0708df6960121d73853669a36082918e86723d224",
+      "bytes": 472
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ConnectionDialog-Dfdsh8LG.js",
+      "sha256": "4a8d1fda04368ad41de1699ecbab4228c159695be8a02a196dfbdb3e305dc789",
+      "bytes": 6493
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/core-DNNVStWM.js",
+      "sha256": "7d9e0edd6b7063dfc4c1504111ad683b49566ce3dce2a032f736168f1881a961",
+      "bytes": 2853
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ImportedConnections-Bw10PPf4.css",
+      "sha256": "3a4a47996c19238d9f2671cd12ae8f8097e64e5f55fedb0d113794a2c6e933f4",
+      "bytes": 481
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ImportedConnections-CcINVtfi.js",
+      "sha256": "f3bc23395df223e4409b2e1f352e78c100ff59ffef95b4ee11205e5937f03bfb",
+      "bytes": 3123
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/index-BhNpTFZx.css",
+      "sha256": "9153c378aa86d8de29715bef0228689eb062382560a9070dc12fdf539c50eb82",
+      "bytes": 143523
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/index-DhkNYcKh.js",
+      "sha256": "4590d651241eca15779cb3305964dab6935e2307d5451373aacede8062b394ec",
+      "bytes": 554184
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ModelSaveHistory-Dbk6KLBL.js",
+      "sha256": "25b30e711ff34dcfecc47400cbdcdacb2466d8689a398f9a89acf3d0b9e32ab9",
+      "bytes": 7530
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ModelSaveHistory-DezS8UFG.css",
+      "sha256": "a5eb5636572f8ce52f11544f490365cc82a94512d223d3a70f83c8d545462e28",
+      "bytes": 1532
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ModelsRoute-DPu3bVSD.js",
+      "sha256": "c65d0a1b80af0759f4750e0d76d45b2419ff070671a80bd142bbf51b1afce683",
+      "bytes": 186313
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ModelsRoute-dpWVgX0p.css",
+      "sha256": "8f5556166456e81cf5cb700044d5f636843c129b97cabedecf1d1091811c686a",
+      "bytes": 34045
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/pinia-C4iH66Q-.js",
+      "sha256": "a4cb0cb539c7e9efa0adf6465a40f6629914031b0519fffc98ce485ac6dd9fbd",
+      "bytes": 5994
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/preload-helper-BZ1Pz5am.js",
+      "sha256": "8820987e6a8afb54d776f21e305917e1ecf83cef678b4db38c2e5a405d04a8bf",
+      "bytes": 1218
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/reactivity.esm-bundler-CiLpcgQX.js",
+      "sha256": "d4ced50ea3fca567a1ff21a1d795a9adebd3e09d059a3050a53f4fe439b4f645",
+      "bytes": 20907
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/rolldown-runtime-DK3Fl9T5.js",
+      "sha256": "a526d1bb3288ef04d001028843220a24b0867a4edf8c685b69506d6525af36ff",
+      "bytes": 158
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/runtime-core.esm-bundler-CpVKdqe5.js",
+      "sha256": "e411887a8a2c67008830610b88796881daadb45a844aa92e811593b1973534db",
+      "bytes": 43456
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/store-BDgNd0ts.js",
+      "sha256": "ae5cbc8d4895d1368c4010244fc42191888509ed85dd9902d410e80055b0bd75",
+      "bytes": 27981
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/SyncResultDialog-CUXVcfpp.js",
+      "sha256": "7585f5c95f96e2c288c619d5662f9d175ddd85d5c6950c1f0627970e15ebacae",
+      "bytes": 5456
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/SyncResultDialog-WG1Uaqwd.css",
+      "sha256": "49340596b54b4d4dd99f98d35866ad661179fb3021a0c642f05d782fcdf3e3bf",
+      "bytes": 978
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/SyncRoute-CNYjgcNY.css",
+      "sha256": "23960dc47d86e6bbc0515bedeb46f85ce5bce0f291bd78e6e0f869d1b37f857f",
+      "bytes": 1458
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/SyncRoute-DTYa_N1N.js",
+      "sha256": "4ea1f60c4f12e05fb486f6f79c96a8975e7958d4ffec5f0db346e4ffd8e72a3f",
+      "bytes": 2956
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/TransferBackups-DakQKB8o.js",
+      "sha256": "203601276985a5f5f4cd714905a99af377aea88e6e7a3449f5b2ebcccb1d05c2",
+      "bytes": 3867
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/TransferBackups-DfKMEOSi.css",
+      "sha256": "0328e8288061f321c8d1d1991b04e4b964c55a8516f3d51480790814a8451c56",
+      "bytes": 738
+    },
+    {
+      "path": "apps/desktop/ui/dist/index.html",
+      "sha256": "c53cbe7e431c28ad7f1b42ba63ce5a1bb622ed3cba20abe3406f2d664ecb0c39",
+      "bytes": 1003
+    }
+  ],
+  "unchangedInteractionContracts": {
+    "apps/desktop/ui/src/components/ui/UiDialog.vue": {
+      "scripts": {
+        "unchanged": true,
+        "beforeSha256": "9f4608acda4e88ca20f425ac0de799ad91a82313f42166151dbc3d41f536c300",
+        "afterSha256": "9f4608acda4e88ca20f425ac0de799ad91a82313f42166151dbc3d41f536c300"
+      },
+      "template": {
+        "unchanged": true,
+        "beforeSha256": "31ef9c159d774dd48afee145fcd006e75dde270fd390348648e6af1ee3abac46",
+        "afterSha256": "31ef9c159d774dd48afee145fcd006e75dde270fd390348648e6af1ee3abac46"
+      }
+    },
+    "apps/desktop/ui/src/components/layout/DetailWorkspace.vue": {
+      "scripts": {
+        "unchanged": true,
+        "beforeSha256": "a746161017150f9f8a6dc58cfb27d6ea732c3cc5a93e7ca5d99c6b8791666648",
+        "afterSha256": "a746161017150f9f8a6dc58cfb27d6ea732c3cc5a93e7ca5d99c6b8791666648"
+      },
+      "template": {
+        "unchanged": true,
+        "beforeSha256": "a62baf4480acb678303c083f8bd19359ed873cbd7c09403d14260eac2b642691",
+        "afterSha256": "a62baf4480acb678303c083f8bd19359ed873cbd7c09403d14260eac2b642691"
+      }
+    }
+  },
+  "tokensUnchanged": true,
+  "syncBusinessUnchanged": true,
+  "nativeConfigurationUnchanged": true
+}

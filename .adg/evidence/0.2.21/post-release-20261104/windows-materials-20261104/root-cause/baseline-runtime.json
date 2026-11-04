@@ -1,0 +1,223 @@
+{
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.21",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "native": {
+    "platform": "Windows",
+    "material": "mica",
+    "reason": "mica",
+    "theme": "dark",
+    "build": 26100,
+    "transparency": true,
+    "highContrast": false,
+    "composition": true,
+    "active": true,
+    "nativeCaption": true,
+    "backdropAttribute": 2,
+    "dwmResult": 0
+  },
+  "root": {
+    "effects": "high",
+    "glowRender": "mesh",
+    "theme": "dark",
+    "nativeMaterial": "mica",
+    "route": "sync"
+  },
+  "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+  "viewport": {
+    "width": 1180,
+    "height": 760,
+    "dpr": 2
+  },
+  "stores": [
+    "app",
+    "effects",
+    "glowRender",
+    "preferences",
+    "theme",
+    "lifecycle",
+    "feedback",
+    "routes",
+    "notifications",
+    "data-root",
+    "updates",
+    "modal",
+    "sync",
+    "environment",
+    "runtime",
+    "about",
+    "model-config",
+    "operation-tasks",
+    "model-save-feedback",
+    "extensions"
+  ],
+  "surfaces": [
+    {
+      "tag": "BUTTON",
+      "classes": "btn primary",
+      "rect": {
+        "x": 1108,
+        "y": 169.5,
+        "width": 50,
+        "height": 34,
+        "top": 169.5,
+        "right": 1158,
+        "bottom": 203.5,
+        "left": 1108
+      },
+      "bg": "rgb(236, 236, 236)",
+      "blur": "none",
+      "filter": "none",
+      "opacity": "1",
+      "zoom": "1",
+      "vars": {
+        "--glass-fill": "#22242a8f",
+        "--glass-fill-glass": "#22242a8f",
+        "--glass-blur-notif": "saturate(1.5) blur(8px)",
+        "--surface-overlay-bg": "#22242a8f",
+        "--surface-overlay-blur": "saturate(1.5) blur(8px)"
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "classes": "btn",
+      "rect": {
+        "x": 1084,
+        "y": 221,
+        "width": 74,
+        "height": 34,
+        "top": 221,
+        "right": 1158,
+        "bottom": 255,
+        "left": 1084
+      },
+      "bg": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)",
+      "filter": "none",
+      "opacity": "1",
+      "zoom": "1",
+      "vars": {
+        "--glass-fill": "#22242a8f",
+        "--glass-fill-glass": "#22242a8f",
+        "--glass-blur-notif": "saturate(1.5) blur(8px)",
+        "--surface-overlay-bg": "#22242a8f",
+        "--surface-overlay-blur": "saturate(1.5) blur(8px)"
+      }
+    },
+    {
+      "tag": "DIALOG",
+      "classes": "ui-dialog sync-connection-dialog",
+      "rect": {
+        "x": 230,
+        "y": 129,
+        "width": 720,
+        "height": 502,
+        "top": 129,
+        "right": 950,
+        "bottom": 631,
+        "left": 230
+      },
+      "bg": "rgba(34, 36, 42, 0.56)",
+      "blur": "none",
+      "filter": "none",
+      "opacity": "1",
+      "zoom": "1",
+      "vars": {
+        "--glass-fill": "#22242a8f",
+        "--glass-fill-glass": "#22242a8f",
+        "--glass-blur-notif": "saturate(1.5) blur(8px)",
+        "--surface-overlay-bg": "#22242a8f",
+        "--surface-overlay-blur": "saturate(1.5) blur(8px)"
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "classes": "btn",
+      "rect": {
+        "x": 251,
+        "y": 447.5,
+        "width": 74,
+        "height": 34,
+        "top": 447.5,
+        "right": 325,
+        "bottom": 481.5,
+        "left": 251
+      },
+      "bg": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)",
+      "filter": "none",
+      "opacity": "1",
+      "zoom": "1",
+      "vars": {
+        "--glass-fill": "#22242a8f",
+        "--glass-fill-glass": "#22242a8f",
+        "--glass-blur-notif": "saturate(1.5) blur(8px)",
+        "--surface-overlay-bg": "#22242a8f",
+        "--surface-overlay-blur": "saturate(1.5) blur(8px)"
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "classes": "btn",
+      "rect": {
+        "x": 793,
+        "y": 580,
+        "width": 50,
+        "height": 34,
+        "top": 580,
+        "right": 843,
+        "bottom": 614,
+        "left": 793
+      },
+      "bg": "rgba(34, 36, 42, 0.56)",
+      "blur": "saturate(1.5) blur(8px)",
+      "filter": "none",
+      "opacity": "1",
+      "zoom": "1",
+      "vars": {
+        "--glass-fill": "#22242a8f",
+        "--glass-fill-glass": "#22242a8f",
+        "--glass-blur-notif": "saturate(1.5) blur(8px)",
+        "--surface-overlay-bg": "#22242a8f",
+        "--surface-overlay-blur": "saturate(1.5) blur(8px)"
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "classes": "btn primary",
+      "rect": {
+        "x": 855,
+        "y": 580,
+        "width": 74,
+        "height": 34,
+        "top": 580,
+        "right": 929,
+        "bottom": 614,
+        "left": 855
+      },
+      "bg": "rgb(236, 236, 236)",
+      "blur": "none",
+      "filter": "none",
+      "opacity": "1",
+      "zoom": "1",
+      "vars": {
+        "--glass-fill": "#22242a8f",
+        "--glass-fill-glass": "#22242a8f",
+        "--glass-blur-notif": "saturate(1.5) blur(8px)",
+        "--surface-overlay-bg": "#22242a8f",
+        "--surface-overlay-blur": "saturate(1.5) blur(8px)"
+      }
+    }
+  ],
+  "styles": [
+    "http://tauri.localhost/assets/index-CCOMTbHb.css",
+    "http://tauri.localhost/assets/SyncRoute-CNYjgcNY.css",
+    "http://tauri.localhost/assets/ConnectionDialog-BKg8FI3T.css",
+    "http://tauri.localhost/assets/ImportedConnections-Bw10PPf4.css"
+  ]
+}

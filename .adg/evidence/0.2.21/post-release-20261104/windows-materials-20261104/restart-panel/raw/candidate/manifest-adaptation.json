@@ -1,0 +1,6 @@
+{
+  "reason": "Local GNU driver needs the same Common Controls v6 manifest that build.rs links for the production MSVC target. Only PE resource 24/1 is added; product source and frontend assets unchanged.",
+  "beforeSha256": "2ed51c9705fc28e1faed551e65376c35a7b645cf6a973da6f5f2dd34ea68ec37",
+  "afterSha256": "1776c1e4a0bce08729db758cc98dad0d7bdb02c7a63a88cc181a3c44600e1aeb",
+  "manifest": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<assembly xmlns=\"urn:schemas-microsoft-com:asm.v1\" manifestVersion=\"1.0\">\n  <dependency>\n    <dependentAssembly>\n      <assemblyIdentity type=\"win32\" name=\"Microsoft.Windows.Common-Controls\" version=\"6.0.0.0\" processorArchitecture=\"*\" publicKeyToken=\"6595b64144ccf1df\" language=\"*\"/>\n    </dependentAssembly>\n  </dependency>\n</assembly>\r\n"
+}

@@ -1,0 +1,5 @@
+(async()=>{
+ const pinia=document.querySelector('#app').__vue_app__.config.globalProperties.$pinia;
+ const style=selector=>[...document.querySelectorAll(selector)].filter(e=>e.getClientRects().length).map(e=>{const s=getComputedStyle(e);return {tag:e.tagName,classes:e.className,rect:e.getBoundingClientRect().toJSON(),bg:s.backgroundColor,blur:s.backdropFilter,filter:s.filter,opacity:s.opacity,zoom:s.zoom,vars:Object.fromEntries(['--glass-fill','--glass-fill-glass','--glass-blur-notif','--surface-overlay-bg','--surface-overlay-blur'].map(k=>[k,s.getPropertyValue(k)]))}});
+ return {about:await window.__TAURI_INTERNALS__.invoke('app_about'),native:await window.__TAURI_INTERNALS__.invoke('window_appearance'),root:{...document.documentElement.dataset},ua:navigator.userAgent,viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio},stores:[...pinia._s.keys()],surfaces:style('dialog[open],.notification-panel,.toast,.process-progress,.select-menu,.card,.setting-row,.btn,.env-gate'),styles:[...document.styleSheets].map(s=>s.href)}
+})()

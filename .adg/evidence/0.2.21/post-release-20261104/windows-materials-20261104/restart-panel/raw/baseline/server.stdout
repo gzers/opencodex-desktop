@@ -1,0 +1,9 @@
+🚀 opencodex proxy running on http://localhost:60435
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+READY {"pid":68132,"port":60435,"home":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-restart-panel\\baseline\\sandbox\\opencodex-home"}
+🔐 Claude intercept proxy active on http://127.0.0.1:60535 (CONNECT api.anthropic.com → local TLS)
+[catalog-auto-refresh] served model set changed; running Codex sessions keep the old list until restarted (ocx sync --restart-codex)

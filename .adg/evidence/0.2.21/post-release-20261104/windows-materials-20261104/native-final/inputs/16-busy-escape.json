@@ -1,0 +1,64 @@
+{
+  "at": "2026-11-04T13:40:09.935Z",
+  "root": {
+    "effects": "high",
+    "glowRender": "mesh",
+    "theme": "dark",
+    "nativeMaterial": "mica",
+    "route": "models"
+  },
+  "focus": {
+    "tag": "DIALOG",
+    "label": null,
+    "text": "隔离退出守卫仅验证关闭、焦点和输入保留，不执行任何业务操作。验收输入取消本地验收",
+    "classes": "ui-dialog app-modal-dialog"
+  },
+  "dialogs": [
+    {
+      "title": "隔离退出守卫",
+      "rect": {
+        "x": 310,
+        "y": 250.25,
+        "width": 560,
+        "height": 259.5,
+        "top": 250.25,
+        "right": 870,
+        "bottom": 509.75,
+        "left": 310
+      },
+      "blur": "saturate(1.5) blur(8px)",
+      "background": "rgba(34, 36, 42, 0.56)",
+      "focusInside": true,
+      "native": true,
+      "closeDisabled": true,
+      "footer": false,
+      "buttons": []
+    },
+    {
+      "title": "新增渠道",
+      "rect": {
+        "x": 165,
+        "y": 161.75,
+        "width": 850,
+        "height": 436.5,
+        "top": 161.75,
+        "right": 1015,
+        "bottom": 598.25,
+        "left": 165
+      },
+      "blur": "saturate(1.5) blur(8px)",
+      "background": "rgba(34, 36, 42, 0.56)",
+      "focusInside": false,
+      "native": true,
+      "closeDisabled": false,
+      "footer": true,
+      "buttons": [
+        "关闭",
+        "新渠道默认协议",
+        "取消",
+        "下一步"
+      ]
+    }
+  ],
+  "menus": []
+}

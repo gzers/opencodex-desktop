@@ -1,0 +1,80 @@
+{
+  "at": "2026-11-04T13:33:37.870Z",
+  "root": {
+    "effects": "high",
+    "glowRender": "mesh",
+    "theme": "dark",
+    "nativeMaterial": "mica",
+    "route": "models"
+  },
+  "focus": {
+    "tag": "BUTTON",
+    "label": "新渠道默认协议",
+    "text": "openai-responses",
+    "classes": "select-trigger"
+  },
+  "dialogs": [
+    {
+      "title": "新增渠道",
+      "rect": {
+        "x": 165,
+        "y": 161.75,
+        "width": 850,
+        "height": 436.5,
+        "top": 161.75,
+        "right": 1015,
+        "bottom": 598.25,
+        "left": 165
+      },
+      "blur": "saturate(1.5) blur(8px)",
+      "background": "rgba(34, 36, 42, 0.56)",
+      "focusInside": true,
+      "native": true,
+      "closeDisabled": false,
+      "footer": true,
+      "buttons": [
+        "关闭",
+        "新渠道默认协议",
+        "取消",
+        "下一步",
+        "openai-responses",
+        "openai-chat",
+        "anthropic",
+        "google",
+        "ollama-native"
+      ]
+    }
+  ],
+  "menus": [
+    {
+      "rect": {
+        "x": 238,
+        "y": 408.75,
+        "width": 140.0625,
+        "height": 160,
+        "top": 408.75,
+        "right": 378.0625,
+        "bottom": 568.75,
+        "left": 238
+      },
+      "position": "absolute",
+      "blur": "saturate(1.5) blur(8px)",
+      "parent": "DIALOG",
+      "parentClass": "ui-dialog wide",
+      "owner": {
+        "x": 238,
+        "y": 368.75,
+        "width": 140.0625,
+        "height": 34,
+        "top": 368.75,
+        "right": 378.0625,
+        "bottom": 402.75,
+        "left": 238
+      },
+      "viewport": {
+        "width": 1180,
+        "height": 760
+      }
+    }
+  ]
+}

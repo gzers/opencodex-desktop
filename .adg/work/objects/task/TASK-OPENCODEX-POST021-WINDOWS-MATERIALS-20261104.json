@@ -1,0 +1,55 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104",
+  "title": "Windows 全局玻璃材质根因与原生验证",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "S21-POST-02 W线贡献；按IMP-30独占材质写集，恢复既有配方，不改字体布局或退出合同；最终集成与权威回写由L负责。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-materials-chat-01a1a68a",
+  "baseline_digest": "5bacf018d787bf82a1c0e49666777ece8d3d10cb836e2010fe446727d6997a4a",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/**",
+    "apps/desktop/ui/qa/**",
+    "apps/desktop/ui/src/app/appearance/effects.ts",
+    "apps/desktop/ui/src/components/AppModal.vue",
+    "apps/desktop/ui/src/components/patterns/ModalContent.vue",
+    "apps/desktop/ui/src/components/ui/UiDialog.vue",
+    "apps/desktop/ui/src/components/ui/UiSelectMenu.vue",
+    "apps/desktop/ui/src/styles/base.css",
+    "apps/desktop/ui/src/styles/effects.css",
+    "apps/desktop/ui/src/styles/materials.css",
+    "apps/desktop/ui/src/styles/tokens.css",
+    "apps/desktop/ui/tests/**"
+  ],
+  "required_checks": [
+    "review:modal-guards",
+    "review:performance",
+    "review:readable-fallback",
+    "review:source-scope",
+    "review:surface-inventory",
+    "review:windows-native-matrix"
+  ],
+  "acceptance_ids": [
+    "AC-P21-02"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-02",
+      "criterion_digest": "1d31867128ec40d740f0f82f8c32abd17c167b461348ed564e3cbd5931b9c4d6"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 2,
+  "summary_digest": "9dedee1dc0efc724ba2070b4fe96e3e9a3ccced100843f6053d2ff87620a0aff",
+  "content_digest": "11caa4ba62898c0ea63365eec6b50939cb31fdabc20da1b93b179b3524e71c46"
+}

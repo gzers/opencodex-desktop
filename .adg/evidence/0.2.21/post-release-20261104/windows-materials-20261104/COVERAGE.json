@@ -1,0 +1,1533 @@
+{
+  "source": "684e85c29f76584de4ab53026dcc315e34b57c62",
+  "environment": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "dpr": 2,
+    "viewport": {
+      "width": 1180,
+      "height": 760
+    },
+    "gpu": {
+      "vendor": "Google Inc. (Intel)",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "supports": true,
+    "webkitSupports": false,
+    "root": {
+      "effects": "high",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "sync"
+    }
+  },
+  "expectedThemes": [
+    "light",
+    "dark"
+  ],
+  "expectedTiers": [
+    "high",
+    "mid",
+    "low"
+  ],
+  "dialog": [
+    {
+      "theme": "light",
+      "tier": "high",
+      "blur": "saturate(1.5) blur(8px)",
+      "background": "rgba(244, 245, 249, 0.52)",
+      "contrast": 0,
+      "font": "13px",
+      "titleFont": "18px",
+      "rect": {
+        "x": 230,
+        "y": 129,
+        "width": 720,
+        "height": 502,
+        "top": 129,
+        "right": 950,
+        "bottom": 631,
+        "left": 230
+      }
+    },
+    {
+      "theme": "light",
+      "tier": "mid",
+      "blur": "saturate(1.5) blur(8px)",
+      "background": "rgba(244, 245, 249, 0.52)",
+      "contrast": 0,
+      "font": "13px",
+      "titleFont": "18px",
+      "rect": {
+        "x": 230,
+        "y": 129,
+        "width": 720,
+        "height": 502,
+        "top": 129,
+        "right": 950,
+        "bottom": 631,
+        "left": 230
+      }
+    },
+    {
+      "theme": "light",
+      "tier": "low",
+      "blur": "none",
+      "background": "rgb(255, 255, 255)",
+      "contrast": 0,
+      "font": "13px",
+      "titleFont": "18px",
+      "rect": {
+        "x": 230,
+        "y": 129,
+        "width": 720,
+        "height": 502,
+        "top": 129,
+        "right": 950,
+        "bottom": 631,
+        "left": 230
+      }
+    },
+    {
+      "theme": "dark",
+      "tier": "high",
+      "blur": "saturate(1.5) blur(8px)",
+      "background": "rgba(34, 36, 42, 0.56)",
+      "contrast": 0,
+      "font": "13px",
+      "titleFont": "18px",
+      "rect": {
+        "x": 230,
+        "y": 129,
+        "width": 720,
+        "height": 502,
+        "top": 129,
+        "right": 950,
+        "bottom": 631,
+        "left": 230
+      }
+    },
+    {
+      "theme": "dark",
+      "tier": "mid",
+      "blur": "saturate(1.5) blur(8px)",
+      "background": "rgba(34, 36, 42, 0.56)",
+      "contrast": 0,
+      "font": "13px",
+      "titleFont": "18px",
+      "rect": {
+        "x": 230,
+        "y": 129,
+        "width": 720,
+        "height": 502,
+        "top": 129,
+        "right": 950,
+        "bottom": 631,
+        "left": 230
+      }
+    },
+    {
+      "theme": "dark",
+      "tier": "low",
+      "blur": "none",
+      "background": "rgb(38, 38, 38)",
+      "contrast": 0,
+      "font": "13px",
+      "titleFont": "18px",
+      "rect": {
+        "x": 230,
+        "y": 129,
+        "width": 720,
+        "height": 502,
+        "top": 129,
+        "right": 950,
+        "bottom": 631,
+        "left": 230
+      }
+    }
+  ],
+  "gallery": [
+    {
+      "theme": "light",
+      "tier": "high",
+      "surfaces": [
+        {
+          "name": "notification",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-collapse",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "overlay-card",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "blur": "blur(6px)",
+          "background": "rgba(13, 13, 13, 0.06)",
+          "contrast": 0
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "tier": "mid",
+      "surfaces": [
+        {
+          "name": "notification",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-collapse",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "overlay-card",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(244, 245, 249, 0.52)",
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "blur": "blur(6px)",
+          "background": "rgba(13, 13, 13, 0.06)",
+          "contrast": 0
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "tier": "low",
+      "surfaces": [
+        {
+          "name": "notification",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "blur": "none",
+          "background": "rgb(244, 244, 244)",
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "blur": "none",
+          "background": "rgb(244, 244, 244)",
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "blur": "none",
+          "background": "rgb(244, 244, 244)",
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-collapse",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0
+        },
+        {
+          "name": "overlay-card",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "blur": "none",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "blur": "none",
+          "background": "rgba(13, 13, 13, 0.06)",
+          "contrast": 0
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "tier": "high",
+      "surfaces": [
+        {
+          "name": "notification",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-collapse",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "overlay-card",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "blur": "blur(6px)",
+          "background": "rgba(255, 255, 255, 0.1)",
+          "contrast": 0.25773195876288657
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "tier": "mid",
+      "surfaces": [
+        {
+          "name": "notification",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-collapse",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "overlay-card",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "blur": "saturate(1.5) blur(8px)",
+          "background": "rgba(34, 36, 42, 0.56)",
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "blur": "blur(6px)",
+          "background": "rgba(255, 255, 255, 0.1)",
+          "contrast": 0.25773195876288657
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "tier": "low",
+      "surfaces": [
+        {
+          "name": "notification",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "blur": "none",
+          "background": "rgb(48, 48, 48)",
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "blur": "none",
+          "background": "rgb(48, 48, 48)",
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "blur": "none",
+          "background": "rgb(48, 48, 48)",
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0
+        },
+        {
+          "name": "detail-collapse",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0
+        },
+        {
+          "name": "overlay-card",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "blur": "none",
+          "background": "rgba(255, 255, 255, 0.1)",
+          "contrast": 0
+        }
+      ]
+    }
+  ],
+  "actualConsumers": {
+    "cases": 6,
+    "evidence": "native-final/production-matrix/production-matrix.json",
+    "includes": [
+      "settings rows",
+      "notification center",
+      "Toast",
+      "save notice",
+      "operation task card",
+      "detail sticky header",
+      "detail collapse",
+      "real teleported select"
+    ]
+  },
+  "unsupportedFallback": {
+    "result": "passed",
+    "mode": "explicit isolated injection of unchanged production @supports-not branch bodies while tier stays high",
+    "evidence": "native-final/fallback/fallback.json"
+  },
+  "panelHub": {
+    "cases": 7,
+    "result": "passed",
+    "evidence": "native-final/hub/hub.json",
+    "boundary": "Exact production injection source is mounted in the manager native WebView2. Official child WebView hosting remains an integration check."
+  },
+  "scales": [
+    {
+      "scale": 50,
+      "tier": "high",
+      "panel": {
+        "classes": "ui-dialog sync-connection-dialog",
+        "rect": {
+          "x": 410,
+          "y": 254.5,
+          "width": 360,
+          "height": 251,
+          "top": 254.5,
+          "right": 770,
+          "bottom": 505.5,
+          "left": 410
+        },
+        "blur": "saturate(1.5) blur(8px)",
+        "background": "rgba(34, 36, 42, 0.56)",
+        "font": "13px",
+        "parent": "BODY.",
+        "nativeDialog": true
+      }
+    },
+    {
+      "scale": 50,
+      "tier": "low",
+      "panel": {
+        "classes": "ui-dialog sync-connection-dialog",
+        "rect": {
+          "x": 410,
+          "y": 254.5,
+          "width": 360,
+          "height": 251,
+          "top": 254.5,
+          "right": 770,
+          "bottom": 505.5,
+          "left": 410
+        },
+        "blur": "none",
+        "background": "rgb(38, 38, 38)",
+        "font": "13px",
+        "parent": "BODY.",
+        "nativeDialog": true
+      }
+    },
+    {
+      "scale": 100,
+      "tier": "high",
+      "panel": {
+        "classes": "ui-dialog sync-connection-dialog",
+        "rect": {
+          "x": 230,
+          "y": 129,
+          "width": 720,
+          "height": 502,
+          "top": 129,
+          "right": 950,
+          "bottom": 631,
+          "left": 230
+        },
+        "blur": "saturate(1.5) blur(8px)",
+        "background": "rgba(34, 36, 42, 0.56)",
+        "font": "13px",
+        "parent": "BODY.",
+        "nativeDialog": true
+      }
+    },
+    {
+      "scale": 100,
+      "tier": "low",
+      "panel": {
+        "classes": "ui-dialog sync-connection-dialog",
+        "rect": {
+          "x": 230,
+          "y": 129,
+          "width": 720,
+          "height": 502,
+          "top": 129,
+          "right": 950,
+          "bottom": 631,
+          "left": 230
+        },
+        "blur": "none",
+        "background": "rgb(38, 38, 38)",
+        "font": "13px",
+        "parent": "BODY.",
+        "nativeDialog": true
+      }
+    },
+    {
+      "scale": 200,
+      "tier": "high",
+      "panel": {
+        "classes": "ui-dialog sync-connection-dialog",
+        "rect": {
+          "x": 82.6015625,
+          "y": 83.6015625,
+          "width": 1014.796875,
+          "height": 592.796875,
+          "top": 83.6015625,
+          "right": 1097.3984375,
+          "bottom": 676.3984375,
+          "left": 82.6015625
+        },
+        "blur": "saturate(1.5) blur(8px)",
+        "background": "rgba(34, 36, 42, 0.56)",
+        "font": "13px",
+        "parent": "BODY.",
+        "nativeDialog": true
+      }
+    },
+    {
+      "scale": 200,
+      "tier": "low",
+      "panel": {
+        "classes": "ui-dialog sync-connection-dialog",
+        "rect": {
+          "x": 82.6015625,
+          "y": 83.6015625,
+          "width": 1014.796875,
+          "height": 592.796875,
+          "top": 83.6015625,
+          "right": 1097.3984375,
+          "bottom": 676.3984375,
+          "left": 82.6015625
+        },
+        "blur": "none",
+        "background": "rgb(38, 38, 38)",
+        "font": "13px",
+        "parent": "BODY.",
+        "nativeDialog": true
+      }
+    }
+  ],
+  "dialogMenu": {
+    "cases": [
+      {
+        "theme": "light",
+        "tier": "high",
+        "scale": 100,
+        "reopened": true,
+        "menu": {
+          "x": 238,
+          "y": 408.75,
+          "width": 140.0625,
+          "height": 160,
+          "top": 408.75,
+          "right": 378.0625,
+          "bottom": 568.75,
+          "left": 238
+        },
+        "anchor": {
+          "x": 238,
+          "y": 368.75,
+          "width": 140.0625,
+          "height": 34,
+          "top": 368.75,
+          "right": 378.0625,
+          "bottom": 402.75,
+          "left": 238
+        },
+        "parent": "DIALOG",
+        "position": "absolute",
+        "blur": "saturate(1.5) blur(8px)",
+        "background": "rgba(244, 245, 249, 0.52)",
+        "dialogBlur": "saturate(1.5) blur(8px)",
+        "viewport": {
+          "width": 1180,
+          "height": 760
+        },
+        "root": {
+          "effects": "high",
+          "glowRender": "mesh",
+          "theme": "light",
+          "nativeMaterial": "mica",
+          "route": "models"
+        },
+        "passed": true
+      },
+      {
+        "theme": "light",
+        "tier": "mid",
+        "scale": 100,
+        "reopened": true,
+        "menu": {
+          "x": 238,
+          "y": 408.75,
+          "width": 140.0625,
+          "height": 160,
+          "top": 408.75,
+          "right": 378.0625,
+          "bottom": 568.75,
+          "left": 238
+        },
+        "anchor": {
+          "x": 238,
+          "y": 368.75,
+          "width": 140.0625,
+          "height": 34,
+          "top": 368.75,
+          "right": 378.0625,
+          "bottom": 402.75,
+          "left": 238
+        },
+        "parent": "DIALOG",
+        "position": "absolute",
+        "blur": "saturate(1.5) blur(8px)",
+        "background": "rgba(244, 245, 249, 0.52)",
+        "dialogBlur": "saturate(1.5) blur(8px)",
+        "viewport": {
+          "width": 1180,
+          "height": 760
+        },
+        "root": {
+          "effects": "mid",
+          "glowRender": "mesh",
+          "theme": "light",
+          "nativeMaterial": "mica",
+          "route": "models"
+        },
+        "passed": true
+      },
+      {
+        "theme": "light",
+        "tier": "low",
+        "scale": 100,
+        "reopened": true,
+        "menu": {
+          "x": 238,
+          "y": 408.75,
+          "width": 140.0625,
+          "height": 160,
+          "top": 408.75,
+          "right": 378.0625,
+          "bottom": 568.75,
+          "left": 238
+        },
+        "anchor": {
+          "x": 238,
+          "y": 368.75,
+          "width": 140.0625,
+          "height": 34,
+          "top": 368.75,
+          "right": 378.0625,
+          "bottom": 402.75,
+          "left": 238
+        },
+        "parent": "DIALOG",
+        "position": "absolute",
+        "blur": "none",
+        "background": "rgb(255, 255, 255)",
+        "dialogBlur": "none",
+        "viewport": {
+          "width": 1180,
+          "height": 760
+        },
+        "root": {
+          "effects": "low",
+          "glowRender": "mesh",
+          "theme": "light",
+          "nativeMaterial": "mica",
+          "route": "models"
+        },
+        "passed": true
+      },
+      {
+        "theme": "dark",
+        "tier": "high",
+        "scale": 100,
+        "reopened": true,
+        "menu": {
+          "x": 238,
+          "y": 408.75,
+          "width": 140.0625,
+          "height": 160,
+          "top": 408.75,
+          "right": 378.0625,
+          "bottom": 568.75,
+          "left": 238
+        },
+        "anchor": {
+          "x": 238,
+          "y": 368.75,
+          "width": 140.0625,
+          "height": 34,
+          "top": 368.75,
+          "right": 378.0625,
+          "bottom": 402.75,
+          "left": 238
+        },
+        "parent": "DIALOG",
+        "position": "absolute",
+        "blur": "saturate(1.5) blur(8px)",
+        "background": "rgba(34, 36, 42, 0.56)",
+        "dialogBlur": "saturate(1.5) blur(8px)",
+        "viewport": {
+          "width": 1180,
+          "height": 760
+        },
+        "root": {
+          "effects": "high",
+          "glowRender": "mesh",
+          "theme": "dark",
+          "nativeMaterial": "mica",
+          "route": "models"
+        },
+        "passed": true
+      },
+      {
+        "theme": "dark",
+        "tier": "mid",
+        "scale": 100,
+        "reopened": true,
+        "menu": {
+          "x": 238,
+          "y": 408.75,
+          "width": 140.0625,
+          "height": 160,
+          "top": 408.75,
+          "right": 378.0625,
+          "bottom": 568.75,
+          "left": 238
+        },
+        "anchor": {
+          "x": 238,
+          "y": 368.75,
+          "width": 140.0625,
+          "height": 34,
+          "top": 368.75,
+          "right": 378.0625,
+          "bottom": 402.75,
+          "left": 238
+        },
+        "parent": "DIALOG",
+        "position": "absolute",
+        "blur": "saturate(1.5) blur(8px)",
+        "background": "rgba(34, 36, 42, 0.56)",
+        "dialogBlur": "saturate(1.5) blur(8px)",
+        "viewport": {
+          "width": 1180,
+          "height": 760
+        },
+        "root": {
+          "effects": "mid",
+          "glowRender": "mesh",
+          "theme": "dark",
+          "nativeMaterial": "mica",
+          "route": "models"
+        },
+        "passed": true
+      },
+      {
+        "theme": "dark",
+        "tier": "low",
+        "scale": 100,
+        "reopened": true,
+        "menu": {
+          "x": 238,
+          "y": 408.75,
+          "width": 140.0625,
+          "height": 160,
+          "top": 408.75,
+          "right": 378.0625,
+          "bottom": 568.75,
+          "left": 238
+        },
+        "anchor": {
+          "x": 238,
+          "y": 368.75,
+          "width": 140.0625,
+          "height": 34,
+          "top": 368.75,
+          "right": 378.0625,
+          "bottom": 402.75,
+          "left": 238
+        },
+        "parent": "DIALOG",
+        "position": "absolute",
+        "blur": "none",
+        "background": "rgb(38, 38, 38)",
+        "dialogBlur": "none",
+        "viewport": {
+          "width": 1180,
+          "height": 760
+        },
+        "root": {
+          "effects": "low",
+          "glowRender": "mesh",
+          "theme": "dark",
+          "nativeMaterial": "mica",
+          "route": "models"
+        },
+        "passed": true
+      },
+      {
+        "theme": "dark",
+        "tier": "high",
+        "scale": 50,
+        "reopened": true,
+        "menu": {
+          "x": 414,
+          "y": 394.25,
+          "width": 69.78125,
+          "height": 80,
+          "top": 394.25,
+          "right": 483.78125,
+          "bottom": 474.25,
+          "left": 414
+        },
+        "anchor": {
+          "x": 414,
+          "y": 374.25,
+          "width": 69.78125,
+          "height": 17,
+          "top": 374.25,
+          "right": 483.78125,
+          "bottom": 391.25,
+          "left": 414
+        },
+        "parent": "DIALOG",
+        "position": "absolute",
+        "blur": "saturate(1.5) blur(8px)",
+        "background": "rgba(34, 36, 42, 0.56)",
+        "dialogBlur": "saturate(1.5) blur(8px)",
+        "viewport": {
+          "width": 1180,
+          "height": 760
+        },
+        "root": {
+          "effects": "high",
+          "glowRender": "mesh",
+          "theme": "dark",
+          "nativeMaterial": "mica",
+          "route": "models"
+        },
+        "passed": true
+      },
+      {
+        "theme": "dark",
+        "tier": "low",
+        "scale": 50,
+        "reopened": true,
+        "menu": {
+          "x": 414,
+          "y": 394.25,
+          "width": 69.78125,
+          "height": 80,
+          "top": 394.25,
+          "right": 483.78125,
+          "bottom": 474.25,
+          "left": 414
+        },
+        "anchor": {
+          "x": 414,
+          "y": 374.25,
+          "width": 69.78125,
+          "height": 17,
+          "top": 374.25,
+          "right": 483.78125,
+          "bottom": 391.25,
+          "left": 414
+        },
+        "parent": "DIALOG",
+        "position": "absolute",
+        "blur": "none",
+        "background": "rgb(38, 38, 38)",
+        "dialogBlur": "none",
+        "viewport": {
+          "width": 1180,
+          "height": 760
+        },
+        "root": {
+          "effects": "low",
+          "glowRender": "mesh",
+          "theme": "dark",
+          "nativeMaterial": "mica",
+          "route": "models"
+        },
+        "passed": true
+      },
+      {
+        "theme": "dark",
+        "tier": "high",
+        "scale": 200,
+        "reopened": true,
+        "menu": {
+          "x": 178,
+          "y": 126,
+          "width": 280.1328125,
+          "height": 320,
+          "top": 126,
+          "right": 458.1328125,
+          "bottom": 446,
+          "left": 178
+        },
+        "anchor": {
+          "x": 178,
+          "y": 454,
+          "width": 280.1328125,
+          "height": 68,
+          "top": 454,
+          "right": 458.1328125,
+          "bottom": 522,
+          "left": 178
+        },
+        "parent": "DIALOG",
+        "position": "absolute",
+        "blur": "saturate(1.5) blur(8px)",
+        "background": "rgba(34, 36, 42, 0.56)",
+        "dialogBlur": "saturate(1.5) blur(8px)",
+        "viewport": {
+          "width": 1180,
+          "height": 760
+        },
+        "root": {
+          "effects": "high",
+          "glowRender": "mesh",
+          "theme": "dark",
+          "nativeMaterial": "mica",
+          "route": "models"
+        },
+        "passed": true
+      },
+      {
+        "theme": "dark",
+        "tier": "low",
+        "scale": 200,
+        "reopened": true,
+        "menu": {
+          "x": 178,
+          "y": 126,
+          "width": 280.1328125,
+          "height": 320,
+          "top": 126,
+          "right": 458.1328125,
+          "bottom": 446,
+          "left": 178
+        },
+        "anchor": {
+          "x": 178,
+          "y": 454,
+          "width": 280.1328125,
+          "height": 68,
+          "top": 454,
+          "right": 458.1328125,
+          "bottom": 522,
+          "left": 178
+        },
+        "parent": "DIALOG",
+        "position": "absolute",
+        "blur": "none",
+        "background": "rgb(38, 38, 38)",
+        "dialogBlur": "none",
+        "viewport": {
+          "width": 1180,
+          "height": 760
+        },
+        "root": {
+          "effects": "low",
+          "glowRender": "mesh",
+          "theme": "dark",
+          "nativeMaterial": "mica",
+          "route": "models"
+        },
+        "passed": true
+      }
+    ],
+    "result": "passed",
+    "mode": "actual UiSelectMenu in native UiDialog; close/reopen around isolated preference changes"
+  },
+  "reopen": {
+    "high": {
+      "root": {
+        "effects": "high",
+        "glowRender": "mesh",
+        "theme": "dark",
+        "nativeMaterial": "mica",
+        "route": "overview",
+        "overviewSize": "standard"
+      },
+      "native": {
+        "platform": "Windows",
+        "material": "mica",
+        "reason": "mica",
+        "theme": "dark",
+        "build": 26100,
+        "transparency": true,
+        "highContrast": false,
+        "composition": true,
+        "active": true,
+        "nativeCaption": true,
+        "backdropAttribute": 2,
+        "dwmResult": 0
+      },
+      "preferences": {
+        "theme": "dark",
+        "visualEffects": "high",
+        "interfaceScale": 100
+      },
+      "dialog": {
+        "blur": "saturate(1.5) blur(8px)",
+        "bg": "rgba(34, 36, 42, 0.56)",
+        "font": "13px",
+        "titleFont": "18px",
+        "rect": {
+          "x": 230,
+          "y": 129,
+          "width": 720,
+          "height": 502,
+          "top": 129,
+          "right": 950,
+          "bottom": 631,
+          "left": 230
+        },
+        "focusInside": true
+      }
+    },
+    "mid": {
+      "root": {
+        "effects": "mid",
+        "glowRender": "mesh",
+        "theme": "dark",
+        "nativeMaterial": "mica",
+        "route": "overview",
+        "overviewSize": "standard"
+      },
+      "native": {
+        "platform": "Windows",
+        "material": "mica",
+        "reason": "mica",
+        "theme": "dark",
+        "build": 26100,
+        "transparency": true,
+        "highContrast": false,
+        "composition": true,
+        "active": true,
+        "nativeCaption": true,
+        "backdropAttribute": 2,
+        "dwmResult": 0
+      },
+      "preferences": {
+        "theme": "dark",
+        "visualEffects": "mid",
+        "interfaceScale": 100
+      },
+      "dialog": {
+        "blur": "saturate(1.5) blur(8px)",
+        "bg": "rgba(34, 36, 42, 0.56)",
+        "font": "13px",
+        "titleFont": "18px",
+        "rect": {
+          "x": 230,
+          "y": 129,
+          "width": 720,
+          "height": 502,
+          "top": 129,
+          "right": 950,
+          "bottom": 631,
+          "left": 230
+        },
+        "focusInside": true
+      }
+    },
+    "low": {
+      "root": {
+        "effects": "low",
+        "glowRender": "mesh",
+        "theme": "light",
+        "nativeMaterial": "mica",
+        "route": "overview",
+        "overviewSize": "standard"
+      },
+      "native": {
+        "platform": "Windows",
+        "material": "mica",
+        "reason": "mica",
+        "theme": "light",
+        "build": 26100,
+        "transparency": true,
+        "highContrast": false,
+        "composition": true,
+        "active": true,
+        "nativeCaption": true,
+        "backdropAttribute": 2,
+        "dwmResult": 0
+      },
+      "preferences": {
+        "theme": "light",
+        "visualEffects": "low",
+        "interfaceScale": 100
+      },
+      "dialog": {
+        "blur": "none",
+        "bg": "rgb(255, 255, 255)",
+        "font": "13px",
+        "titleFont": "18px",
+        "rect": {
+          "x": 230,
+          "y": 129,
+          "width": 720,
+          "height": 502,
+          "top": 129,
+          "right": 950,
+          "bottom": 631,
+          "left": 230
+        },
+        "focusInside": true
+      }
+    }
+  },
+  "pixelComparison": {
+    "before": 12.5,
+    "after": 0,
+    "sameBackground": true,
+    "sameOpacity": true,
+    "sameDialogGeometry": true
+  },
+  "hostCoverage": {
+    "staticPublicHosts": 37,
+    "actualRepresentativeDialogs": 7,
+    "evidence": "native-final/hosts/hosts.json",
+    "syncPreviewBoundary": "No remote endpoint is configured and no real sync is performed. The exact shared UiDialog host and existing transfer import/export preview hosts are checked; real sync preview plus L fixes remains final integration."
+  }
+}

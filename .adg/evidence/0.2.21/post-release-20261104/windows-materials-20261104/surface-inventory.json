@@ -1,0 +1,1444 @@
+{
+  "groups": {
+    "panel": [
+      "card",
+      "setting-row",
+      "install-row",
+      "agent-path-row",
+      "skill-row",
+      "repo-item",
+      "backup-item",
+      "about-hero",
+      "about-panel",
+      "mcp-form-card",
+      "choice",
+      "modal",
+      "select-menu",
+      "notice",
+      "menu-hint",
+      "ui-fault"
+    ],
+    "control": [
+      "btn",
+      "tag",
+      "select-trigger",
+      "notif-ctl"
+    ],
+    "overlay": [
+      "ui-dialog",
+      "notification-panel",
+      "toast",
+      "process-progress",
+      "card-overlay",
+      "env-gate",
+      "model-agent-panel"
+    ],
+    "sticky": [
+      "sticky-page-tabs",
+      "detail-workspace-head",
+      "detail-collapse"
+    ]
+  },
+  "surfaces": [
+    {
+      "material": "panel",
+      "class": "card",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/LogsRoute.vue",
+          "line": 108
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 894
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 901
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 906
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 939
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 958
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 979
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 987
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 999
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1007
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1016
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1017
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1021
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1033
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1071
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1083
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/TrayRoute.vue",
+          "line": 64
+        },
+        {
+          "path": "apps/desktop/ui/src/features/sync/WebDavConnection.vue",
+          "line": 42
+        },
+        {
+          "path": "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue",
+          "line": 104
+        }
+      ],
+      "count": 19,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "setting-row",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 868
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 869
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 870
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 871
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 872
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 878
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 879
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 885
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 886
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 887
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 888
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 889
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 890
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 894
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 908
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 989
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 990
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 991
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 992
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1001
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1002
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1003
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1004
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1009
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1010
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1011
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1012
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1013
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1023
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1024
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1025
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1026
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1035
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1037
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1038
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1039
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1040
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1074
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1075
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1076
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1077
+        },
+        {
+          "path": "apps/desktop/ui/src/components/patterns/SettingRow.vue",
+          "line": 3
+        },
+        {
+          "path": "apps/desktop/ui/src/components/patterns/SettingRow.vue",
+          "line": 13
+        },
+        {
+          "path": "apps/desktop/ui/src/features/sync/WebDavConnection.vue",
+          "line": 52
+        },
+        {
+          "path": "apps/desktop/ui/src/features/sync/WebDavConnection.vue",
+          "line": 53
+        },
+        {
+          "path": "apps/desktop/ui/src/features/sync/WebDavConnection.vue",
+          "line": 54
+        }
+      ],
+      "count": 46,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "install-row",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 904
+        }
+      ],
+      "count": 1,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "agent-path-row",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1016
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1017
+        }
+      ],
+      "count": 2,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "skill-row",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 721
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 803
+        }
+      ],
+      "count": 2,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "repo-item",
+      "sourceConsumers": [],
+      "count": 0,
+      "applicability": "legacy or dynamically composed selector; no static production template hit"
+    },
+    {
+      "material": "panel",
+      "class": "backup-item",
+      "sourceConsumers": [],
+      "count": 0,
+      "applicability": "legacy or dynamically composed selector; no static production template hit"
+    },
+    {
+      "material": "panel",
+      "class": "about-hero",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1084
+        }
+      ],
+      "count": 1,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "about-panel",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1107
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1128
+        }
+      ],
+      "count": 2,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "mcp-form-card",
+      "sourceConsumers": [],
+      "count": 0,
+      "applicability": "legacy or dynamically composed selector; no static production template hit"
+    },
+    {
+      "material": "panel",
+      "class": "choice",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/features/models/ModelChoiceOptions.vue",
+          "line": 29
+        },
+        {
+          "path": "apps/desktop/ui/src/features/models/ModelPicker.vue",
+          "line": 120
+        }
+      ],
+      "count": 2,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "modal",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/App.vue",
+          "line": 55
+        },
+        {
+          "path": "apps/desktop/ui/src/components/AppModal.vue",
+          "line": 26
+        },
+        {
+          "path": "apps/desktop/ui/src/components/patterns/ModalContent.vue",
+          "line": 9
+        },
+        {
+          "path": "apps/desktop/ui/src/components/patterns/ModalContent.vue",
+          "line": 10
+        },
+        {
+          "path": "apps/desktop/ui/src/components/patterns/ModalContent.vue",
+          "line": 11
+        },
+        {
+          "path": "apps/desktop/ui/src/components/patterns/ModalContent.vue",
+          "line": 13
+        },
+        {
+          "path": "apps/desktop/ui/src/components/patterns/ModalContent.vue",
+          "line": 16
+        }
+      ],
+      "count": 7,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "select-menu",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/components/ui/UiSelectMenu.vue",
+          "line": 141
+        }
+      ],
+      "count": 1,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "notice",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/dev/component-gallery/FoundationExamples.vue",
+          "line": 37
+        },
+        {
+          "path": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+          "line": 61
+        },
+        {
+          "path": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+          "line": 583
+        },
+        {
+          "path": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+          "line": 155
+        }
+      ],
+      "count": 4,
+      "applicability": "production"
+    },
+    {
+      "material": "panel",
+      "class": "menu-hint",
+      "sourceConsumers": [],
+      "count": 0,
+      "applicability": "legacy or dynamically composed selector; no static production template hit"
+    },
+    {
+      "material": "panel",
+      "class": "ui-fault",
+      "sourceConsumers": [],
+      "count": 0,
+      "applicability": "legacy or dynamically composed selector; no static production template hit"
+    },
+    {
+      "material": "control",
+      "class": "btn",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 692
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 693
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 694
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 695
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 696
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 697
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 698
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 762
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 763
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 765
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 766
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 778
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 779
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 780
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 844
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 845
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 847
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 848
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/LogsRoute.vue",
+          "line": 112
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/LogsRoute.vue",
+          "line": 120
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/LogsRoute.vue",
+          "line": 142
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/LogsRoute.vue",
+          "line": 143
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/LogsRoute.vue",
+          "line": 144
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/LogsRoute.vue",
+          "line": 153
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/LogsRoute.vue",
+          "line": 154
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+          "line": 381
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+          "line": 442
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+          "line": 475
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+          "line": 520
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+          "line": 521
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+          "line": 523
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+          "line": 524
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 890
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 895
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 901
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 907
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 916
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 917
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 929
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 930
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 931
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 932
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 933
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 934
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 943
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 944
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 954
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 955
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 966
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 967
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 968
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 981
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 987
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 999
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1001
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1002
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1007
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1010
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1016
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1017
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1028
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1040
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1072
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1074
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1075
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1076
+        },
+        {
+          "path": "apps/desktop/ui/src/components/ui/UiButton.vue",
+          "line": 8
+        },
+        {
+          "path": "apps/desktop/ui/src/components/ui/UiTreeTable.vue",
+          "line": 130
+        },
+        {
+          "path": "apps/desktop/ui/src/features/backup/BackupFiles.vue",
+          "line": 44
+        },
+        {
+          "path": "apps/desktop/ui/src/features/backup/BackupFiles.vue",
+          "line": 54
+        },
+        {
+          "path": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+          "line": 119
+        },
+        {
+          "path": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+          "line": 130
+        },
+        {
+          "path": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+          "line": 131
+        },
+        {
+          "path": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+          "line": 134
+        },
+        {
+          "path": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+          "line": 144
+        },
+        {
+          "path": "apps/desktop/ui/src/features/sync/WebDavConnection.vue",
+          "line": 53
+        },
+        {
+          "path": "apps/desktop/ui/src/features/sync/WebDavConnection.vue",
+          "line": 55
+        },
+        {
+          "path": "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue",
+          "line": 136
+        },
+        {
+          "path": "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue",
+          "line": 138
+        },
+        {
+          "path": "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue",
+          "line": 139
+        },
+        {
+          "path": "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue",
+          "line": 140
+        },
+        {
+          "path": "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue",
+          "line": 143
+        },
+        {
+          "path": "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue",
+          "line": 144
+        },
+        {
+          "path": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+          "line": 122
+        },
+        {
+          "path": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+          "line": 183
+        },
+        {
+          "path": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+          "line": 189
+        },
+        {
+          "path": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+          "line": 198
+        },
+        {
+          "path": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+          "line": 199
+        },
+        {
+          "path": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+          "line": 206
+        },
+        {
+          "path": "apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue",
+          "line": 191
+        },
+        {
+          "path": "apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue",
+          "line": 207
+        }
+      ],
+      "count": 91,
+      "applicability": "production"
+    },
+    {
+      "material": "control",
+      "class": "tag",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 733
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+          "line": 815
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+          "line": 187
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+          "line": 193
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+          "line": 396
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 890
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 894
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 924
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 969
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 970
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 971
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 972
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 973
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 974
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 989
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1091
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1114
+        },
+        {
+          "path": "apps/desktop/ui/src/dev/component-gallery/FoundationExamples.vue",
+          "line": 35
+        },
+        {
+          "path": "apps/desktop/ui/src/features/sync/WebDavConnection.vue",
+          "line": 54
+        },
+        {
+          "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+          "line": 215
+        },
+        {
+          "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+          "line": 229
+        }
+      ],
+      "count": 21,
+      "applicability": "production"
+    },
+    {
+      "material": "control",
+      "class": "select-trigger",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 869
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 885
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 886
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1002
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1023
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1024
+        },
+        {
+          "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+          "line": 1076
+        },
+        {
+          "path": "apps/desktop/ui/src/components/ui/UiSelectField.vue",
+          "line": 12
+        },
+        {
+          "path": "apps/desktop/ui/src/dev/component-gallery/FoundationExamples.vue",
+          "line": 36
+        },
+        {
+          "path": "apps/desktop/ui/src/features/models/ModelChoiceOptions.vue",
+          "line": 26
+        },
+        {
+          "path": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+          "line": 135
+        }
+      ],
+      "count": 11,
+      "applicability": "production"
+    },
+    {
+      "material": "control",
+      "class": "notif-ctl",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/components/TaskProgressHost.vue",
+          "line": 77
+        },
+        {
+          "path": "apps/desktop/ui/src/components/TaskProgressHost.vue",
+          "line": 80
+        },
+        {
+          "path": "apps/desktop/ui/src/dev/component-gallery/FoundationExamples.vue",
+          "line": 37
+        },
+        {
+          "path": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+          "line": 85
+        },
+        {
+          "path": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+          "line": 86
+        }
+      ],
+      "count": 5,
+      "applicability": "production"
+    },
+    {
+      "material": "overlay",
+      "class": "ui-dialog",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/components/ui/UiDialog.vue",
+          "line": 151
+        }
+      ],
+      "count": 1,
+      "applicability": "production"
+    },
+    {
+      "material": "overlay",
+      "class": "notification-panel",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+          "line": 62
+        }
+      ],
+      "count": 1,
+      "applicability": "production"
+    },
+    {
+      "material": "overlay",
+      "class": "toast",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/components/ToastHost.vue",
+          "line": 15
+        },
+        {
+          "path": "apps/desktop/ui/src/components/patterns/FeedbackToast.vue",
+          "line": 9
+        }
+      ],
+      "count": 2,
+      "applicability": "production"
+    },
+    {
+      "material": "overlay",
+      "class": "process-progress",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/components/patterns/TaskProgressCard.vue",
+          "line": 9
+        }
+      ],
+      "count": 1,
+      "applicability": "production"
+    },
+    {
+      "material": "overlay",
+      "class": "card-overlay",
+      "sourceConsumers": [],
+      "count": 0,
+      "applicability": "legacy or dynamically composed selector; no static production template hit"
+    },
+    {
+      "material": "overlay",
+      "class": "env-gate",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue",
+          "line": 104
+        }
+      ],
+      "count": 1,
+      "applicability": "production"
+    },
+    {
+      "material": "overlay",
+      "class": "model-agent-panel",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+          "line": 195
+        },
+        {
+          "path": "apps/desktop/ui/src/features/models/AgentPanel.vue",
+          "line": 93
+        }
+      ],
+      "count": 2,
+      "applicability": "production"
+    },
+    {
+      "material": "sticky",
+      "class": "sticky-page-tabs",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/components/layout/StickyTabs.vue",
+          "line": 68
+        }
+      ],
+      "count": 1,
+      "applicability": "production"
+    },
+    {
+      "material": "sticky",
+      "class": "detail-workspace-head",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/components/layout/DetailWorkspace.vue",
+          "line": 75
+        }
+      ],
+      "count": 1,
+      "applicability": "production"
+    },
+    {
+      "material": "sticky",
+      "class": "detail-collapse",
+      "sourceConsumers": [
+        {
+          "path": "apps/desktop/ui/src/components/layout/DetailWorkspace.vue",
+          "line": 79
+        }
+      ],
+      "count": 1,
+      "applicability": "production"
+    }
+  ],
+  "publicDialogHostCount": 37,
+  "publicDialogHosts": [
+    {
+      "path": "apps/desktop/ui/src/App.vue",
+      "line": 36,
+      "titles": [
+        "界面出现异常"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/components/AppModal.vue",
+      "line": 26,
+      "titles": [
+        "modal?.title ?? ''"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 218,
+      "titles": [
+        "'版本管理 · ' + (manager?.label ?? '')"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 223,
+      "titles": [
+        "确认删除所选版本？"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 228,
+      "titles": [
+        "匹配预览"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "line": 230,
+      "titles": [
+        "外部任务结果"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+      "line": 454,
+      "titles": [
+        "运行详情"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+      "line": 501,
+      "titles": [
+        "运行环境"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+      "line": 1145,
+      "titles": [
+        "卸载 OpenCodex"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue",
+      "line": 79,
+      "titles": [
+        "组件弹窗"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/component-gallery/NodeExamples.vue",
+      "line": 22,
+      "titles": [
+        "应用确认内容样例"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "line": 56,
+      "titles": [
+        "恢复模型配置到草稿"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
+      "line": 19,
+      "titles": [
+        "恢复更新前备份"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/AgentExecutionField.vue",
+      "line": 90,
+      "titles": [
+        "Agent 配置"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+      "line": 60,
+      "titles": [
+        "检查模版更新"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "line": 85,
+      "titles": [
+        "mode==='family'?'按族批量配置':'套用模版精确版本'"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "line": 156,
+      "titles": [
+        "手动添加精确型号"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "line": 123,
+      "titles": [
+        "模型编辑明细"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "line": 126,
+      "titles": [
+        "确认批量型号修改"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelNodeDialog.vue",
+      "line": 31,
+      "titles": [
+        "channel.label + ' · 节点检测'"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "line": 272,
+      "titles": [
+        "复制渠道"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+      "line": 35,
+      "titles": [
+        "外部任务"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ModelPicker.vue",
+      "line": 105,
+      "titles": [
+        "title??'选择模型'"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "line": 84,
+      "titles": [
+        "original?'编辑渠道连接':'新增渠道'"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+      "line": 90,
+      "titles": [
+        "重启 Codex"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+      "line": 130,
+      "titles": [
+        "保存预览"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+      "line": 17,
+      "titles": [
+        "与版本比较"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "line": 14,
+      "titles": [
+        "匹配与使用"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ConnectionDialog.vue",
+      "line": 96,
+      "titles": [
+        "WebDAV 连接"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ImportedConnections.vue",
+      "line": 52,
+      "titles": [
+        "启用导入的WebDAV连接"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "line": 537,
+      "titles": [
+        "remote?'同步预览':pickOpen||passwordOpen||incoming?'导入配置':'确认导出'"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ObjectScopeTree.vue",
+      "line": 31,
+      "titles": [
+        "detail?.label??'配置详情'"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/SyncResultDialog.vue",
+      "line": 23,
+      "titles": [
+        "title"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+      "line": 208,
+      "titles": [
+        "selected ? selectedTitle : '检查更新结果'"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/components/ExtensionDetailModal.vue",
+      "line": 84,
+      "titles": [
+        "title"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+      "line": 112,
+      "titles": [
+        "清理全部通知"
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue",
+      "line": 185,
+      "titles": [
+        "安装 OpenCodex"
+      ]
+    }
+  ]
+}

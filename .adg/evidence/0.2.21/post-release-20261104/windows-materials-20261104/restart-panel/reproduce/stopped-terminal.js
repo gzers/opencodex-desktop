@@ -1,0 +1,1 @@
+(async()=>{const p=document.querySelector('#app').__vue_app__.config.globalProperties.$pinia;await p._s.get('app').loadStatusSnapshot();p._s.get('routes').go('panel');await new Promise(r=>setTimeout(r,300));return JSON.parse(JSON.stringify({text:document.querySelector('.panel-frame')?.innerText,trace:p._s.get('panel').loadTrace,loaded:p._s.get('panel').loaded}))})()

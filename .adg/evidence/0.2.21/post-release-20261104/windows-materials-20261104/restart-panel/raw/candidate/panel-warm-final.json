@@ -1,0 +1,195 @@
+{
+  "trace": {
+    "id": 2,
+    "startedAt": 176189.80000019073,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "address-ready",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 1
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 71.89999961853027
+      },
+      {
+        "phase": "native:owner-lock:12.0",
+        "elapsedMs": 72
+      },
+      {
+        "phase": "native:runtime-address:23.0",
+        "elapsedMs": 72.09999990463257
+      },
+      {
+        "phase": "native:native-view:35.0",
+        "elapsedMs": 72.19999980926514
+      },
+      {
+        "phase": "native:visible:45.0",
+        "elapsedMs": 72.19999980926514
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 72.19999980926514
+      }
+    ]
+  },
+  "readyAt": 101.59999990463257,
+  "events": [
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "beginLoad",
+      "startMs": 3.4000000953674316,
+      "endMs": 3.5,
+      "elapsedMs": 0.09999990463256836
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.5,
+      "endMs": 3.5,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.5,
+      "endMs": 3.5,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.5,
+      "endMs": 3.5,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPanelUrl",
+      "startMs": 3.5,
+      "endMs": 3.5,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "loadUrl",
+      "startMs": 3.5,
+      "endMs": 3.5,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.5,
+      "endMs": 3.5,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 4.400000095367432,
+      "endMs": 4.400000095367432,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 75.19999980926514,
+      "endMs": 75.40000009536743,
+      "elapsedMs": 0.20000028610229492
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 75.40000009536743,
+      "endMs": 75.40000009536743,
+      "elapsedMs": 0.09999990463256836
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 75.5,
+      "endMs": 75.59999990463257,
+      "elapsedMs": 0.09999990463256836
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 75.59999990463257,
+      "endMs": 75.59999990463257,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 75.59999990463257,
+      "endMs": 75.59999990463257,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "finishLoad",
+      "startMs": 75.59999990463257,
+      "endMs": 75.59999990463257,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 75.59999990463257,
+      "endMs": 75.59999990463257,
+      "elapsedMs": 0
+    }
+  ],
+  "polls": [
+    {
+      "ms": 101.59999990463257,
+      "loaded": true,
+      "text": "官方面板已嵌入主窗口"
+    }
+  ],
+  "final": {
+    "root": {
+      "effects": "mid",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "panel"
+    },
+    "loaded": true,
+    "error": "",
+    "text": "官方面板已嵌入主窗口"
+  }
+}

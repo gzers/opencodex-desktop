@@ -1,0 +1,35 @@
+{
+  "frontend": {
+    "files": 196,
+    "tests": 1283,
+    "result": "passed",
+    "evidence": "checks/frontend-final.log"
+  },
+  "backend": {
+    "tests": 38,
+    "filters": {
+      "cache_refresh": 25,
+      "management": 3,
+      "panel": 10
+    },
+    "zeroMatchFiltersExcluded": 2,
+    "result": "passed",
+    "evidence": "checks/backend"
+  },
+  "build": {
+    "result": "passed",
+    "evidence": "checks/delivery-build.log"
+  },
+  "frontendBuildAndTypecheck": {
+    "result": "passed",
+    "evidence": "checks/frontend-build-final.log"
+  },
+  "fmt": {
+    "result": "passed",
+    "evidence": "checks/fmt-final.log"
+  },
+  "clippyAllTargetsDenyWarnings": {
+    "result": "passed",
+    "evidence": "checks/clippy-final.log"
+  }
+}

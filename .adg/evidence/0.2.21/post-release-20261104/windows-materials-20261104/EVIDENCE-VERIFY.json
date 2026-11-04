@@ -1,0 +1,58 @@
+{
+  "result": "passed",
+  "checks": [
+    "JSON parse",
+    "handoff relative links",
+    "6 sealed TASK/RCP contracts",
+    "native input sequence assertions",
+    "exact authored write set"
+  ],
+  "jsonFiles": 67,
+  "handoffLinks": 27,
+  "controls": [
+    {
+      "path": ".adg/work/objects/task/TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104.json",
+      "id": "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104",
+      "state": "in_progress",
+      "result": "pending",
+      "sha256": "ffc076fe9bdf7a2effbb291922df6d30efc82f5096faae050a00372d7a03dbf0"
+    },
+    {
+      "path": ".adg/work/objects/task/TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104.json",
+      "id": "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104",
+      "state": "in_progress",
+      "result": "pending",
+      "sha256": "62e98bfabe5106af8f95b1c54b4b4c2b34cdb05fd618e12352955bff84ce43f0"
+    },
+    {
+      "path": ".adg/work/objects/task/TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104.json",
+      "id": "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104",
+      "state": "in_progress",
+      "result": "pending",
+      "sha256": "ff3170902f62c629a0e61ae7b0fefd792b911ec2c7cd9378191c619a91388f5f"
+    },
+    {
+      "path": ".adg/work/objects/rcp/RCP-OPENCODEX-POST021-WINDOWS-HUB-20261104.json",
+      "id": "RCP-OPENCODEX-POST021-WINDOWS-HUB-20261104",
+      "state": null,
+      "result": "succeeded",
+      "sha256": "bf49b44654478cea36b6041e26200cf3d24def341355ad8588f569ba19531901"
+    },
+    {
+      "path": ".adg/work/objects/rcp/RCP-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104.json",
+      "id": "RCP-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104",
+      "state": null,
+      "result": "failed",
+      "sha256": "59171fb5639c1260b65b0414d366dbe5f6ff6a5d96726e7ec328e14530ce43cf"
+    },
+    {
+      "path": ".adg/work/objects/rcp/RCP-OPENCODEX-POST021-WINDOWS-STICKY-20261104.json",
+      "id": "RCP-OPENCODEX-POST021-WINDOWS-STICKY-20261104",
+      "state": null,
+      "result": "succeeded",
+      "sha256": "fb33e894f96fa800055edcb8380d888eb9ead7c14aea81ee777ca4df46555b5e"
+    }
+  ],
+  "code": "684e85c29f76584de4ab53026dcc315e34b57c62",
+  "acceptanceStatus": "open-performance-budget-failed"
+}

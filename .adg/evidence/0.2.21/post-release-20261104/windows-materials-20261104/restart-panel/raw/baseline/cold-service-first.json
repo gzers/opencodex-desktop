@@ -1,0 +1,57 @@
+{
+  "trace": null,
+  "readyAt": 101.2000002861023,
+  "events": [
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPreferences",
+      "startMs": 2.5999999046325684,
+      "endMs": 8.599999904632568,
+      "elapsedMs": 6
+    },
+    {
+      "kind": "action",
+      "store": "preferences",
+      "name": "load",
+      "startMs": 2.5999999046325684,
+      "endMs": 8.599999904632568,
+      "elapsedMs": 6
+    },
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPanelUrl",
+      "startMs": 8.599999904632568,
+      "endMs": 8.800000190734863,
+      "elapsedMs": 0.20000028610229492
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "loadUrl",
+      "startMs": 8.599999904632568,
+      "endMs": 8.800000190734863,
+      "elapsedMs": 0.20000028610229492
+    }
+  ],
+  "polls": [
+    {
+      "ms": 101.2000002861023,
+      "loaded": true,
+      "text": "正在将官方面板嵌入主窗口…"
+    }
+  ],
+  "final": {
+    "root": {
+      "effects": "mid",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "panel"
+    },
+    "loaded": true,
+    "error": "",
+    "text": "正在将官方面板嵌入主窗口…"
+  }
+}

@@ -1,0 +1,83 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: [
+  {
+    "file": "index-CCOMTbHb.css",
+    "selector": ".ui-dialog[data-v-4b63f804]",
+    "reason": "prefixed filter has no standard declaration"
+  },
+  {
+    "file": "index-CCOMTbHb.css",
+    "selector": ".process-progress .notif-ctl",
+    "reason": "prefixed filter has no standard declaration"
+  },
+  {
+    "file": "ModelsRoute-IV3TMecb.css",
+    "selector": ".detail-workspace-head[data-v-dbca2de6]",
+    "reason": "prefixed filter has no standard declaration"
+  },
+  {
+    "file": "ModelsRoute-IV3TMecb.css",
+    "selector": ".detail-collapse[data-v-dbca2de6]",
+    "reason": "prefixed filter has no standard declaration"
+  }
+]
++ actual - expected
+
++ [
++   {
++     file: 'index-CCOMTbHb.css',
++     reason: 'prefixed filter has no standard declaration',
++     selector: '.ui-dialog[data-v-4b63f804]'
++   },
++   {
++     file: 'index-CCOMTbHb.css',
++     reason: 'prefixed filter has no standard declaration',
++     selector: '.process-progress .notif-ctl'
++   },
++   {
++     file: 'ModelsRoute-IV3TMecb.css',
++     reason: 'prefixed filter has no standard declaration',
++     selector: '.detail-workspace-head[data-v-dbca2de6]'
++   },
++   {
++     file: 'ModelsRoute-IV3TMecb.css',
++     reason: 'prefixed filter has no standard declaration',
++     selector: '.detail-collapse[data-v-dbca2de6]'
++   }
++ ]
+- []
+
+    at file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/apps/desktop/ui/qa/materials-build.mjs:27:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [
+    {
+      file: 'index-CCOMTbHb.css',
+      selector: '.ui-dialog[data-v-4b63f804]',
+      reason: 'prefixed filter has no standard declaration'
+    },
+    {
+      file: 'index-CCOMTbHb.css',
+      selector: '.process-progress .notif-ctl',
+      reason: 'prefixed filter has no standard declaration'
+    },
+    {
+      file: 'ModelsRoute-IV3TMecb.css',
+      selector: '.detail-workspace-head[data-v-dbca2de6]',
+      reason: 'prefixed filter has no standard declaration'
+    },
+    {
+      file: 'ModelsRoute-IV3TMecb.css',
+      selector: '.detail-collapse[data-v-dbca2de6]',
+      reason: 'prefixed filter has no standard declaration'
+    }
+  ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

@@ -1,0 +1,37 @@
+{
+  "mode": "real Windows fixture shell through unmodified official restart ladder; not the daily Codex desktop app",
+  "before": [
+    {
+      "pid": 92812,
+      "parentPid": 56428,
+      "createdAt": "/Date(1793803298377)/",
+      "executable": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-restart-panel\\candidate\\OwnedClient.exe"
+    }
+  ],
+  "after": [
+    {
+      "pid": 59060,
+      "parentPid": 56428,
+      "createdAt": "/Date(1793803528593)/",
+      "executable": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-restart-panel\\candidate\\OwnedClient.exe"
+    }
+  ],
+  "result": {
+    "attempted": true,
+    "stopped": [
+      92812
+    ],
+    "surviving": [],
+    "relaunch": "started"
+  },
+  "launches": [
+    38716,
+    92812,
+    59060
+  ],
+  "stops": [
+    38716,
+    92812
+  ],
+  "readbackSha256": "6dcead50ed021a08e4fa68b731c5a07a87af77f05ecb2a766356cbe2f1b2f9d9"
+}
