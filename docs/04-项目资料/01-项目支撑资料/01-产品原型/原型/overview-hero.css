@@ -5,14 +5,14 @@
  --ph-line:color-mix(in srgb,var(--text) 9%,transparent);
  --ph-card:color-mix(in srgb,var(--panel) 78%,transparent);--ph-card-hi:color-mix(in srgb,var(--panel) 96%,transparent);
  --ph-shadow:0 1px 2px rgba(16,24,40,.05),0 10px 28px -16px rgba(48,64,140,.30);
- --ph-stage:color-mix(in srgb,var(--panel) 18%,transparent);--ph-grid:rgba(40,52,90,.09);--ph-orb-bg:color-mix(in srgb,var(--panel) 82%,transparent);
+ --ph-grid:rgba(40,52,90,.09);--ph-orb-bg:color-mix(in srgb,var(--panel) 82%,transparent);
  --ph-newapi:#3b78ff;--ph-krill:#9461ff;--ph-a6:#e8578a;--ph-or:#14a3a3;--ph-ds:#4f6fd8;--ph-sf:#c08a1e;--ph-ol:#8a6a52;--ph-more:#8a92a6;
  --ph-codex:#4a52ff;--ph-claude:#d4734f;--ph-opencode:#3b4254;--ph-cli:#64748e;--ph-gemini:#3a86f4;
  --ph-core:#5f6bff;--ph-ok:#16a571;--ph-amber:#ee9822;--ph-bad:#e5484d
 }
 html[data-theme=dark] #route-overview{
  --ph-shadow:0 16px 36px -18px rgba(0,0,0,.9);
- --ph-stage:color-mix(in srgb,var(--bg) 30%,transparent);--ph-grid:rgba(160,180,255,.08);--ph-orb-bg:color-mix(in srgb,var(--bg) 82%,transparent);
+ --ph-grid:rgba(160,180,255,.08);--ph-orb-bg:color-mix(in srgb,var(--bg) 82%,transparent);
  --ph-newapi:#4d8dff;--ph-krill:#a675ff;--ph-a6:#ff6fa0;--ph-or:#2cc8c8;--ph-ds:#7d97ff;--ph-sf:#e0a93a;--ph-ol:#b08f75;--ph-more:#8e97ad;
  --ph-codex:#6b73ff;--ph-claude:#ff8a5c;--ph-opencode:#8e98b0;--ph-cli:#7f8daa;--ph-gemini:#5aa0ff;
  --ph-core:#7d88ff;--ph-ok:#2be0a0;--ph-amber:#ffb340;--ph-bad:#ff5c63
@@ -45,9 +45,9 @@ html[data-theme=dark] #route-overview{
 .ph-kpi b{font-size:14px;line-height:20px;font-weight:680;letter-spacing:-.1px;font-variant-numeric:tabular-nums}
 .ph-kpi b small{margin-left:2px;font-size:11px;font-weight:500;color:var(--ph-ink3)}
 
-/* 舞台 */
-.ph-stage{position:relative;flex:1 1 0;height:auto;min-height:220px;container:phs/size;border-radius:18px;border:0;background:var(--ph-stage);overflow:hidden;--ph-colw:164px;isolation:isolate}
-.ph-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(var(--ph-grid) 1px,transparent 1.3px);background-size:20px 20px;-webkit-mask-image:radial-gradient(72% 72% at 50% 50%,#000 35%,transparent 100%);mask-image:radial-gradient(72% 72% at 50% 50%,#000 35%,transparent 100%)}
+/* 透明舞台共用主内容区环境光，只有点阵层向四边淡出；前景对象不做整层遮罩。 */
+.ph-stage{position:relative;flex:1 1 0;height:auto;min-height:220px;container:phs/size;border-radius:0;border:0;background:transparent;overflow:hidden;--ph-colw:164px;isolation:isolate}
+.ph-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(var(--ph-grid) 1px,transparent 1.3px);background-size:20px 20px;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 30%,transparent 96%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 30%,transparent 96%)}
 .ph-motion{position:absolute;z-index:0;left:0;top:0;width:100%;height:100%;border:0;pointer-events:none;background:transparent;color-scheme:normal}
 .ph-wires{position:absolute;inset:0;z-index:1;width:100%;height:100%;overflow:visible;pointer-events:none}
 /* 未运行只保留整体：隐藏具体流量对象及连线，数据仍可用于顶部历史汇总。 */
