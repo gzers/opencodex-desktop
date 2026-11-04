@@ -7,7 +7,7 @@ completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
 task_ids: ["TASK-OPENCODEX-POST021-LOCAL-20261104"]
-summary: "Windows修复全局玻璃材质，本机修复同步四项；双线交付后统一集成、跨平台回归与发布。"
+summary: "本机同步四项已局部完成，接续渠道/私网获取；Windows承接材质、重启和面板，统一集成发布。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
 
@@ -70,3 +70,19 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 2026-11-04本机L线验证回写：产品提交f8c34cfcc04ffd9f2b1aa8c035986eae5b6887c3已推送codex/post021-sync-fixes，草稿PR #69。首次目录先初始化及云端独有模版ID保留、ETag发布后只读确认、地址分隔与版本只读观察四项已实现。Vitest1279、Rust全库1209通过/4按原条件忽略、Clippy/构建及3项启动/层边界通过；软件双引擎各16、原型各7项，最终Mac候选原生27项通过，14次GET/零远端写、业务摘要保持。根因与验证限制以.adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/validation-summary.json和HANDOFF.md为准。原始失败已保留并按原因修正或复验，未降低保护；用户真实Windows现场与真实服务响应头仍未采集。远端CI当时待运行完成。本机局部验证完成不关闭五项整版反馈；Windows材质及最终同提交双端/版本/原包安装升级/发布门继续待办，DMD/IMP保持in_progress。
 
 本机最终交接HEAD f3289e2c11fb670f156c2c44237109f0b95afe38仅补实际挂载范围流程的测试，产品源与原生f8c34cfcc相同；49项受影响测试通过。L线验收回执按本批TASK关闭，DMD/IMP与五项整版问题保持待集成；不包含W材质和AC-P21-06。
+
+
+## 新五项执行分工与依赖（2026-11-04，当前采用）
+
+范围取DMD-POST021新增AC-P21-07至10，逐项状态仍写0.2.21清单8.4/8.5。用户本轮要求先回写及提供Windows提示词，尚未进行新实现。以下是对原双线责任的明确扩大，优先于上文旧“W不改业务”在新增责任路径内的限制；原同步/材质分工其余部分保持。
+
+| 接续线 | 新问题 / 验收 | 允许写集与交接边界 |
+| --- | --- | --- |
+| L2 本机渠道与发现 | S21-POST-06/07/08，AC-P21-07/08 | NewChannelDialog/ChannelEditor及渠道命名/校验、compiler/config_file_mapping中适用内部身份逻辑、discovery/measurements及对应API/错误映射和测试；移除用户运行标识门槛与渠道私网准入。沿本机代码线接续，原本机同步TASK已关闭，不重开或改绑定；开工另建TASK。公共材质仍不改，涉及共享入口由集成统一处理。 |
+| W2 Windows重启与面板 | S21-POST-09/10，AC-P21-09/10 | 沿codex/post021-windows-materials接续但提交与原材质问题分开。允许修改cache_refresh及必要management/client重启相关路径、SaveResultNotice、commands/panel.rs、PanelRoute、features/panel及专属测试/原生驱动。模型命名/发现/同步范围与版本逻辑仍由L独占；app根store、入口/默认配置等共享文件先回交最小补丁，由L集成。 |
+
+- W2开工从docs/governance-main读取本节和新AC，另建独有TASK绑定AC-P21-09/10；不得修改原W材质或已关闭L任务的冻结验收。普通保存/改名、服务未运行/运行但未开面板/已开面板、运行记录缺失/过期须分别复现，核对实际错误路径；不凭用户猜测断定“未打开面板导致”。
+- 重启修复与面板性能分笔提交、分开报告根因及验证。面板先采点击至可见的阶段耗时，覆盖建子WebView的show返回前等待；修复后用相同条件比较，不只加长超时或重启服务。Windows原生实际运行身份、前后证据与恢复验证齐全后回交。
+- W证据继续docs/post021-windows-materials，在原独有证据目录下新增restart-panel/子目录，含HANDOFF、问题映射/环境、阶段耗时、原始失败、前后截图和实际重启/读回。L统一回写原清单、DMD/IMP与索引。
+- L2与W2可并行，依赖适用原型和各自任务绑定；原G3改为等待原W材质、L2、W2及原L交付全部满足后统一合并。同一最终提交补Mac受影响重启/面板及Windows渠道/发现/同步/材质回归，原G4仍最后统一发行，不让一条贡献线独立发布。
+- 本轮不改产品、不自动扩大到日常配置/秘密/真实WebDAV或重启日常Codex。新增功能使用隔离根/测试网络和自有候选验证；不为新决定倒改旧证书，修复版本尚未冻结。
