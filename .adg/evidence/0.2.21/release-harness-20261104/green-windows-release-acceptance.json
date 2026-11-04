@@ -1,0 +1,19 @@
+{
+  "startedAtUtc": "2026-11-04T04:51:16.403316+00:00",
+  "finishedAtUtc": "2026-11-04T04:51:16.442350+00:00",
+  "command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "test",
+    "-p",
+    "test_windows_release_acceptance.py",
+    "-v"
+  ],
+  "cwd": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes",
+  "exitCode": 0,
+  "log": "green-windows-release-acceptance.log"
+}

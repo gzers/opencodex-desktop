@@ -1,0 +1,145 @@
+{
+  "task": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+  "acceptance": "AC-021-02",
+  "scope": "production rename implementation, owned files only",
+  "status": "production core ready for integration; acceptance owned by mainline",
+  "code_root": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes",
+  "code_branch": "codex/0.2.21-fixes",
+  "code_head": "f7866c762fdd755a7549ea7a54ebfead22e363f2",
+  "production_core_ready": true,
+  "g0_spike_used_as_completion": false,
+  "changed_files": [
+    "apps/desktop/tauri/src/modules/model_config/config_file.rs",
+    "apps/desktop/tauri/src/modules/model_config/config_file_mapping.rs",
+    "apps/desktop/tauri/src/modules/model_config/provider_auth.rs",
+    "apps/desktop/tauri/src/modules/model_config/agent.rs",
+    "apps/desktop/tauri/src/modules/model_config/execution_directory.rs",
+    "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs",
+    "apps/desktop/tauri/src/modules/model_config/channel_rename.rs",
+    "apps/desktop/tauri/src/modules/model_config/config_file_rename_tests.rs",
+    "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+    "apps/desktop/ui/src/features/models/channelRename.ts",
+    "apps/desktop/ui/tests/channel-rename.test.ts"
+  ],
+  "backend_entry": "config_file::save_with_context(root, context, request)",
+  "mod_rs_registration_needed": false,
+  "rust_suites": [
+    {
+      "scope": "modules::model_config::config_file::",
+      "passed": 33,
+      "exit_code": 0,
+      "log": "logs/rust--10.log",
+      "binary_sha256": "f971d1f33acc86f9f36b2cc4e8d18dc930816ee084d8d0064b152b8e0163fdd8",
+      "elapsed_seconds": 14.617
+    },
+    {
+      "scope": "modules::model_config::config_file_mapping::tests",
+      "passed": 20,
+      "exit_code": 0,
+      "log": "logs/rust-tests-6.log",
+      "binary_sha256": "f971d1f33acc86f9f36b2cc4e8d18dc930816ee084d8d0064b152b8e0163fdd8",
+      "elapsed_seconds": 0.072
+    },
+    {
+      "scope": "modules::model_config::provider_auth::tests",
+      "passed": 13,
+      "exit_code": 0,
+      "log": "logs/rust-tests-7.log",
+      "binary_sha256": "f971d1f33acc86f9f36b2cc4e8d18dc930816ee084d8d0064b152b8e0163fdd8",
+      "elapsed_seconds": 8.647
+    },
+    {
+      "scope": "modules::model_config::execution_directory::tests",
+      "passed": 6,
+      "exit_code": 0,
+      "log": "logs/rust-tests-8.log",
+      "binary_sha256": "f971d1f33acc86f9f36b2cc4e8d18dc930816ee084d8d0064b152b8e0163fdd8",
+      "elapsed_seconds": 0.415
+    },
+    {
+      "scope": "modules::model_config::protocol_groups::tests",
+      "passed": 6,
+      "exit_code": 0,
+      "log": "logs/rust-tests-9.log",
+      "binary_sha256": "f971d1f33acc86f9f36b2cc4e8d18dc930816ee084d8d0064b152b8e0163fdd8",
+      "elapsed_seconds": 0.1
+    }
+  ],
+  "rust_tests_passed": 78,
+  "production_transaction_cases": [
+    "actual-process-exit-recovery",
+    "scoped-current-only",
+    "all-page",
+    "rollback-prepared",
+    "rollback-credential:0",
+    "rollback-credential:1",
+    "rollback-credential:2",
+    "rollback-before_file:0",
+    "rollback-file:0",
+    "rollback-file:1",
+    "rollback-file:2",
+    "rollback-file:3",
+    "rollback-readback",
+    "journal-recover-credential:0",
+    "journal-recover-file:0",
+    "journal-recover-file:1",
+    "journal-recover-file:3",
+    "journal-recover-readback",
+    "journal-recover-committed",
+    "credential-failure-source-read",
+    "credential-failure-destination-put",
+    "reject-occupied",
+    "reject-invalid",
+    "reject-reserved",
+    "reject-oauth",
+    "reject-forward",
+    "reject-derived",
+    "reject-foreign-reference",
+    "reject-occupied-account",
+    "external-drift-not-overwritten",
+    "preview-preferences-drift",
+    "cancel-zero-business-write",
+    "committed-credential-cleanup-replay",
+    "compound-rule-and-key-keep",
+    "compound-rule-and-key-replace",
+    "compound-rule-and-key-clear",
+    "portable-import-stable-object-keeps-local-provider-and-keys",
+    "actual-file-write-permission-failure"
+  ],
+  "ui_tests": {
+    "passed": 103,
+    "exit_code": 0,
+    "log": "logs/ui-tests.log"
+  },
+  "ui_build": {
+    "exit_code": 2,
+    "status": "blocked by out-of-scope unused declarations",
+    "log": "logs/ui-build.log",
+    "errors": [
+      "src/features/sync/ObjectScopeTree.vue(5,1): unused UiButton",
+      "tests/overview-mods.test.ts(11,10): unused recordRemoteVersion"
+    ]
+  },
+  "runtime_boundary": {
+    "tempfile_only": true,
+    "credential_backend": "process-local memory builder",
+    "network": "denied by sandbox-exec",
+    "daily_config_or_keychain_access": false,
+    "daily_client_restarted": false
+  },
+  "process_interruption": {
+    "actual_exit_code": 86,
+    "recovered_before_first_snapshot": true,
+    "credential_interruption_replay": "memory fixture plus durable journal",
+    "power_loss_tested": false
+  },
+  "mainline_remaining": [
+    "commands/model_config.rs model_file_save may call save_with_context to persist exact current runtime digest; original save invalidates stale digest safely",
+    "saved-content version event hook via syncworker interface, no invented timestamp scheme",
+    "ChannelsView/save notice integration owned by other workers",
+    "fix two out-of-scope UI build errors",
+    "isolated official-client restart and native cross-platform acceptance"
+  ],
+  "commit_or_push": false,
+  "code_branch_docs_adg_delta": ""
+}

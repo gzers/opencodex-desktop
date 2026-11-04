@@ -5,7 +5,7 @@ title: "0.2.21 七项修复与开发前置计划"
 state: "in_progress"
 dmd_refs: ["DMD-OPENCODEX-UI-021"]
 demand_ids: ["DMD-OPENCODEX-UI-021"]
-task_ids: ["TASK-OPENCODEX-UI021-MODALS-20261104", "TASK-OPENCODEX-UI021-SYNC-20261104"]
+task_ids: ["TASK-OPENCODEX-UI021-MODALS-20261104", "TASK-OPENCODEX-UI021-SYNC-20261104", "TASK-OPENCODEX-UI021-INTEGRATION-20261104"]
 summary: "0.2.21目标模式已授权至发布；G0执行中，代码分支codex/0.2.21-fixes复用正式0.2.20主线。"
 completion_summary: null
 ---
@@ -51,3 +51,6 @@ completion_summary: null
 
 
 POST-04后端按项放行：G0 checkpoint及20项数据探针已固定，建立TASK-OPENCODEX-UI021-SYNC-20261104绑定AC-021-03，先保存版本生命周期及后端方向/确认重验；新原型双引擎继续由原型线补证，软件界面接入待对应状态定向检查完成。
+
+
+G0核心放行并进入G2/G3（2026-11-04）：新增原型41项定向、工作区双引擎各106项、改名隔离63项及旧规则2项均有证据。INTEGRATION任务绑定余下AC-021-01/02/04/05/06/08，负责渠道直接改名、通知/检测/概览候选和最终交付共同门。原型自身增量仍需从并行工作区中定向冻结重放，全量harness的未来概览缺依赖保留，不视作本版业务通过。所有任务保持in_progress直至实际门禁/原生/发布证据满足。

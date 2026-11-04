@@ -1,0 +1,136 @@
+{
+  "capturedAt": "2026-11-04T13:52:55+08:00",
+  "sourceRoot": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes",
+  "branch": "codex/0.2.21-fixes",
+  "head": "f7866c762fdd755a7549ea7a54ebfead22e363f2",
+  "consumerFiles": 8,
+  "sharedContractFiles": 1,
+  "testFiles": 12,
+  "files": [
+    {
+      "path": "apps/desktop/ui/src/App.vue",
+      "beforeSha256": "f89018c0a9978326458dbe0bcce4c6b1b8d1e08c30344d15b7f3712c5dc5ea44",
+      "sha256": "1f2de0b489aaf422e85165fbbc8f42311e49cc14c3c0bd7afdd502adf0b6133b",
+      "kind": "modal source; source-local portions only"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+      "beforeSha256": "efb1e2a119086ed883a7c86e25781ee0838447a2a7fcfe769dbeff9d0832de11",
+      "sha256": "d3d972b7d3a68a0b3a39def2e04ebaef039e66502aef882079f5153ab252b73a",
+      "kind": "modal source; source-local portions only"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+      "beforeSha256": "2229674e586563e39187675fd8f95863656bb440ab276608346c65fbe4e95ea0",
+      "sha256": "a192544284d43c4eef78b19fb093dedcc64ba2cf312b9416624d346e895273ad",
+      "kind": "modal source; source-local portions only"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "beforeSha256": "c89f086edb456e499f0111986cd736c75e1766486ffb8994c0b10afd08f2f394",
+      "sha256": "62b98a1eeec18218a128b1c8fe865d495c6cb93e59c8bce9bdebaa49e9ddba78",
+      "kind": "modal source; source-local portions only"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "beforeSha256": "8ec386283ad583a856ec0576794eba676cb5ebc07deacfa5e9308bfc9c28f2bf",
+      "sha256": "7b383362d359835edb9dbd98e70c11ff662084179a5d433dd6e86f0fb2cd1284",
+      "kind": "modal source; source-local portions only"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/AgentExecutionField.vue",
+      "beforeSha256": "d9a57f6f4cb5040b131ca513d4f705b48463baef76f5583c53db33654d066e60",
+      "sha256": "051f491c6a4b6af8c38a0dc15eb5249b1bc2165efb53cbec233e024b600b652b",
+      "kind": "modal source; source-local portions only"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ModelPicker.vue",
+      "beforeSha256": "e477ef90d71e22dcc855aa9454a83d8b3971fb555c9d28733747316912a223a2",
+      "sha256": "3f13ccf4199f95f85e1b35c2b16899d07a9e0ef7aa53b78456db606b17744f33",
+      "kind": "modal source; source-local portions only"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "beforeSha256": "7252e921ddbf4696fb510b245cbc81c87c41fa5bb2ddeaacef6f8db74428dab6",
+      "sha256": "c572c1019daa09df21423a2d7d33547b37e0b13a06fdc393a142ab2f5a2de248",
+      "kind": "modal source; source-local portions only"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiDialog.vue",
+      "beforeSha256": "af4696b58ca84085c65e20131722bcf7b9266218bfb448c4b9fe3ceba8f53ee5",
+      "sha256": "242f6d304c2a353d88d1f23d4199d6b76811707803c9cdee2d7bdfad626e94b0",
+      "kind": "modal source; source-local portions only"
+    },
+    {
+      "path": "apps/desktop/ui/tests/post09-remaining-representative.test.ts",
+      "sha256": "6480fd20b25abaeda731a59300c68cedd0f116ed3e2b174c820e22f72de2a2f8",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/post09-remaining-model-hosts.test.ts",
+      "sha256": "246f06d6e4e3176d795170f7140a9fe3276464b6db96b1398cf82d5c27b86893",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/post09-remaining-editors.test.ts",
+      "sha256": "7315b8c80e1081b746a0f29ad1c4892246be74af2ef711bae141f7b6902df975",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/post09-remaining-overview.test.ts",
+      "sha256": "80157129441fb60853a3f8081bf8d0f28c78b70ff93c77b9b1612705c8d5b05f",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/settings-uninstall.test.ts",
+      "sha256": "e1d782187c350dfd80b4b14544b0d92dcb1824e16972557eb2a49ddb99ed420f",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/update-release-details-flow.test.ts",
+      "sha256": "dff0c885abd92b51097af464ceacf83a48bfc78b8aae4399fd3b0283256665ad",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-template-version-context.test.ts",
+      "sha256": "78bcf73812c8e1b58c80e0c655c42eafe0109d25697de6fc91d4a613a53c538c",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-table-workspace.test.ts",
+      "sha256": "a8e4d2fb8307e52bb1a540b260dd40e59c907f68e675a0148aff86ad091f10de",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-execution-field.test.ts",
+      "sha256": "3a1b182795f6f69d493c093e7290b7bcb694b66e262d93156b7e6b668603644e",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-selection.test.ts",
+      "sha256": "9818f51e12c12cab5e8db432360015d5a1446fb5da010b9aa68b07870a2be749",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/restore.test.ts",
+      "sha256": "9e2621e75bc9720df74e2e7b96d6ac435bfef6bb643a4595e390caf7ad2fb7e4",
+      "kind": "corresponding test"
+    },
+    {
+      "path": "apps/desktop/ui/tests/overview-status-announce.test.ts",
+      "sha256": "0eec3aff434742ceba73bb80aa8a1419138119bf6c0d6c555e4189722a63a3a9",
+      "kind": "corresponding test"
+    }
+  ],
+  "excludedNotEdited": [
+    "features/sync/**",
+    "features/models/ChannelEditor.vue",
+    "features/models/ChannelsView.vue",
+    "features/models/SaveResultNotice.vue",
+    "features/models/ChannelNodeSelect.vue",
+    "features/models/NodePicker.vue",
+    "stores/app.ts",
+    "types/ui.ts",
+    "global CSS"
+  ]
+}

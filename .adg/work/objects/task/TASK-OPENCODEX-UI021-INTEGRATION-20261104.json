@@ -1,0 +1,105 @@
+{
+  "acceptance_bindings": [
+    {
+      "acceptance_id": "AC-021-01",
+      "criterion_digest": "8adbc30c9988e6c9e5ae29b07707b7ef688388370fb794c9609f8c5f57551540",
+      "demand_id": "DMD-OPENCODEX-UI-021"
+    },
+    {
+      "acceptance_id": "AC-021-02",
+      "criterion_digest": "39ae9d76e067221e87d305c7fc90ecbb765dd43c46f7fd911ba49a5db70011d0",
+      "demand_id": "DMD-OPENCODEX-UI-021"
+    },
+    {
+      "acceptance_id": "AC-021-04",
+      "criterion_digest": "581924481f114cbd5c8e48de77fb8146429258183abbb6e4aa8f2a4a80281e6f",
+      "demand_id": "DMD-OPENCODEX-UI-021"
+    },
+    {
+      "acceptance_id": "AC-021-05",
+      "criterion_digest": "151acecf080bbbc7aafff1d6d6f0fe0b860efb953108906411154f9a74d7d4d9",
+      "demand_id": "DMD-OPENCODEX-UI-021"
+    },
+    {
+      "acceptance_id": "AC-021-06",
+      "criterion_digest": "e654ce2c0646887102f91b67f14a558fd9363bd6fddfbbea92adfebf06ee786f",
+      "demand_id": "DMD-OPENCODEX-UI-021"
+    },
+    {
+      "acceptance_id": "AC-021-08",
+      "criterion_digest": "a06da6b729fdfa94be8e091a455e6c1b670fb609cb647b6577ec797b9135c93c",
+      "demand_id": "DMD-OPENCODEX-UI-021"
+    }
+  ],
+  "acceptance_ids": [
+    "AC-021-01",
+    "AC-021-02",
+    "AC-021-04",
+    "AC-021-05",
+    "AC-021-06",
+    "AC-021-08"
+  ],
+  "baseline_digest": "9bad254fc05136d7c841177656e06e154a64bce407e36ef664c6cf1d454baf46",
+  "certificate_digest": null,
+  "content_digest": "da3723895a377eb048d45ee4be6711c064cdd32f0c7dc88ad19a8d2d37c1abe2",
+  "demand_ids": [
+    "DMD-OPENCODEX-UI-021"
+  ],
+  "fact_writeback": {
+    "mode": "required",
+    "targets": [
+      {
+        "before_digest": "88c09bf79068519e3617d5cf139e413c53f43685489cf739df088b937d30f6ab",
+        "id": "demand",
+        "path": "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md"
+      },
+      {
+        "before_digest": "7a8bdff41b7717e8ea873718976f9107429ea0b362c24a51991679a314373daf",
+        "id": "implementation",
+        "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md"
+      },
+      {
+        "before_digest": "457d136d9ef857ea78a27a08d14a6d42289e1532117ebe47f7ab81d76fdcd32b",
+        "id": "issues",
+        "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+      },
+      {
+        "before_digest": "3a98b1d14e7b6a14e6988b22ec8bf5645954997cd31154979c98ba2491cfaa49",
+        "id": "release",
+        "path": "docs/03-开发实施/REL-OPENCODEX-DESKTOP-24.md"
+      }
+    ]
+  },
+  "id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-29",
+  "imported_receipt_digest": null,
+  "kind": "TASK",
+  "owner": "current-chat-integration",
+  "required_checks": [
+    "review:full-regression",
+    "review:macos-windows-native",
+    "review:notifications-detection",
+    "review:prototype-adoption",
+    "review:release-and-ota",
+    "review:rename-references",
+    "review:saved-side-effects",
+    "review:webdav-observation-candidates"
+  ],
+  "result": "pending",
+  "revision": 2,
+  "state": "in_progress",
+  "summary": "五项剩余修复和共同交付门；不复用旧关闭证书，不以原型/spike通过替代真实生产验收。",
+  "summary_digest": "e2b689accdffa72bcde142494ca87d4ace6f5c3351978654163b5e7f3263ccd5",
+  "title": "0.2.21剩余修复集成、完整验收与发布",
+  "write_scope": [
+    ".adg/evidence/0.2.21/**",
+    ".github/**",
+    "CHANGELOG.md",
+    "apps/**",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md",
+    "docs/03-开发实施/REL-OPENCODEX-DESKTOP-24.md",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+    "test/**"
+  ]
+}

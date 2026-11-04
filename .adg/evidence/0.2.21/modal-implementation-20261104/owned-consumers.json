@@ -1,0 +1,104 @@
+{
+  "prototypeRevision": "cf5b50b4fb86e12b64cad209440813159ee06241",
+  "acceptance": "AC-021-07",
+  "representativeOrder": [
+    "features/models/TemplateUsageDialog.vue",
+    "features/models/NewChannelDialog.vue",
+    "features/runtime/components/RuntimeInstallDialog.vue"
+  ],
+  "consumers": [
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "states": "view",
+      "contract": "读取与失败不锁退出；保留重新读取；无底部关闭",
+      "evidence": "template-usage.test.ts; post09-modal-contract.test.ts"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+      "states": "view",
+      "contract": "无footer；版本菜单先消费Escape",
+      "evidence": "template-comparison.test.ts; browser-check.mjs"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "states": "edit",
+      "contract": "取消走slot.close；busy仅加入草稿阶段；关闭失效晚回并清空当前Key",
+      "evidence": "new-channel-dialog.test.ts; post09-modal-contract.test.ts"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue",
+      "states": "edit -> restricted task -> view",
+      "contract": "安装中busy统一阻止X/Escape/cancel/backdrop；显式取消安装独立；完成/无可重试失败不留footer",
+      "evidence": "settings-install-feedback.test.ts; settings-install-path.test.ts; browser-check.mjs"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+      "states": "view -> confirm -> observation",
+      "contract": "确认页取消+主操作；更新中可关观察、后台继续；保留重试/重启业务动作；无空操作栏",
+      "evidence": "update-center.test.ts; settings-update-retry.test.ts; browser-check.mjs"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/components/ExtensionDetailModal.vue",
+      "states": "view",
+      "contract": "标题业务图标在X左；正文同步操作busy不锁只读观察；无footer",
+      "evidence": "extension-detail.test.ts; post09-owned-consumers.test.ts; browser-check.mjs"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+      "states": "confirm (panel nonmodal)",
+      "contract": "仅清理确认接模态合同；取消不清理任务；通知面板收起生命周期保留",
+      "evidence": "notification-center.test.ts; post09-owned-consumers.test.ts"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "states": "edit/confirm -> view",
+      "contract": "恢复读取/写入busy同守卫；成功后移除取消，仅保留前往模型页保存",
+      "evidence": "model-history.test.ts"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
+      "states": "confirm",
+      "contract": "预览基线/恢复busy同守卫；取消走slot.close并清理选择/基线；不恢复任何内容",
+      "evidence": "post09-owned-consumers.test.ts"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+      "states": "edit",
+      "contract": "生成预览可关；明确复制激活grant时busy限制全部退出；复制业务动作保留",
+      "evidence": "model-external-task.test.ts"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+      "states": "edit -> observation -> confirm -> view",
+      "contract": "关闭/卸载观察不stopGeneration；仅停止检查取消；saving锁退出；保存结果无footer",
+      "evidence": "model-agent-batch.test.ts"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "states": "edit/confirm",
+      "contract": "只读比较不锁退出，停止比较独立；取消走slot.close；仍只显式加入草稿",
+      "evidence": "channel-batch.test.ts"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+      "states": "edit/confirm",
+      "contract": "busy解析允许退出；saving才锁全部退出；取消走slot.close，不确认保存",
+      "evidence": "selector-preview-dialog.test.ts; post09-owned-consumers.test.ts; browser-check.mjs"
+    }
+  ],
+  "additionalOwnedConsumers": [
+    {
+      "path": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+      "sourceChanged": false,
+      "states": "清理/恢复/打开系统文件三条动态确认",
+      "contract": "自动消费AppModal/ModalContent；原确认副作用保持",
+      "evidence": "backup-management.test.ts; post09-app-modal.test.ts"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/BackupFiles.vue",
+      "sourceChanged": false,
+      "states": "无自有模态，系统文件打开归属原生",
+      "evidence": "backup-files.test.ts"
+    }
+  ]
+}

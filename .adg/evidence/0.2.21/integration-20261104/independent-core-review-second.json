@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-04",
+  "reviewerAgentId": "01a1a502-8c31-7c50-96ea-bd2b7cd119ec",
+  "scope": "read-only follow-up on R21-01..04 fixes",
+  "result": "changes-required",
+  "originalFindingDisposition": {
+    "R21-01": "direct scenario fixed; trusted-floor retained",
+    "R21-02": "original A/B channel finalizer race closed by admission",
+    "R21-03": "original version-lock timeout replay preserves original saved_at",
+    "R21-04": "credential subset projection fixed"
+  },
+  "findings": [
+    {
+      "id": "R21-05",
+      "priority": "P1",
+      "path": "file_save_versions.rs:168 / store.rs:678,750",
+      "finding": "Version lock -> snapshot -> model-library lock conflicts with template save library lock -> version lock. Must remove inverse ordering; add controlled concurrent fixture."
+    },
+    {
+      "id": "R21-06",
+      "priority": "P1",
+      "path": "file_save_versions.rs:116,137,150",
+      "finding": "Pending after=None permits recovery to capture a later changed K2 keychain value under old event time t0 when raw/layout unchanged. Freeze credential digest at commit; recovery only validates exact before-frozen content."
+    }
+  ],
+  "disposition": "Sent to sync owner; release remains blocked until counterexamples fixed and independently rechecked."
+}

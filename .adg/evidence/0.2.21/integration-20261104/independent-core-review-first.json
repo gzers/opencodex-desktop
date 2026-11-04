@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-04",
+  "reviewerAgentId": "01a1a502-8c31-7c50-96ea-bd2b7cd119ec",
+  "scope": "current uncommitted rename/save-version implementation; static read-only; no tests/network/daily config",
+  "result": "changes-required",
+  "findings": [
+    {
+      "id": "R21-01",
+      "priority": "P1",
+      "path": "content_versions.rs:131",
+      "finding": "After clock rollback, second save loses ClockUnreliable because previous instant() is None; retain anomaly and trusted lower bound."
+    },
+    {
+      "id": "R21-02",
+      "priority": "P1",
+      "path": "file_save_versions.rs:147",
+      "finding": "An earlier save finalizer can overwrite a later save version after last snapshot check; serialize validation and version commit or conditionally commit."
+    },
+    {
+      "id": "R21-03",
+      "priority": "P1",
+      "path": "config_file.rs:640",
+      "finding": "Rename can commit and clean credentials before version finish fails due to version lock; noop retry cannot reconstruct receipt. Need durable replay or transaction integration."
+    },
+    {
+      "id": "R21-04",
+      "priority": "P2",
+      "path": "file_objects.rs:645/778",
+      "finding": "Credentials of a model subset receive a different atom key and lose reliable version; derive same-source projected receipt without advancing clock."
+    }
+  ],
+  "disposition": "Sent to sync implementation owner; P1 findings block release; follow-up actual counterexamples and independent recheck required."
+}

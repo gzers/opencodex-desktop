@@ -1,0 +1,904 @@
+{
+  "completed": true,
+  "failure": null,
+  "engine": "chromium",
+  "scope": "production Vue consumers, explicit DEV in-memory API; not native release acceptance",
+  "checks": [
+    {
+      "variant": "1180-light-100",
+      "name": "selection plus channel/model/enabled/actions only",
+      "passed": true,
+      "detail": [
+        "",
+        "渠道",
+        "模型",
+        "启用",
+        "操作"
+      ]
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "channel 160–220px, actions 250px, selection retained",
+      "passed": true,
+      "detail": {
+        "channel": 195.578125,
+        "actions": 250,
+        "choices": true
+      }
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "two character detection in actions cell",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "native public modal is centered and fits viewport",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 20,
+        "right": 870,
+        "bottom": 740,
+        "centerX": 590,
+        "centerY": 380,
+        "viewportX": 590,
+        "viewportY": 380,
+        "width": 1180,
+        "height": 760,
+        "footer": false,
+        "scroll": true
+      }
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "view has no footer or dropdown menu, content scrolls",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 20,
+        "right": 870,
+        "bottom": 740,
+        "centerX": 590,
+        "centerY": 380,
+        "viewportX": 590,
+        "viewportY": 380,
+        "width": 1180,
+        "height": 760,
+        "footer": false,
+        "scroll": true
+      }
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "Tab loops from last action to header X",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "Shift+Tab loops from header X to last action",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "selection has no permanent fill or bold",
+      "passed": true,
+      "detail": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400"
+        }
+      ]
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "resize, window and content scroll preserve modal",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "result updates same modal and choice DOM with focus",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "measurement leaves selected draft and snapshot alone",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "Escape closes only observation and returns trigger",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "X closes running observer without stopping",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "reopen preserves error and successful results",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "explicit stop, one run id; completed results retained",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "choice only changes draft and restores trigger focus",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "reopen reflects chosen draft",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "filtering the row does not cancel measurement",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "result survives filtering and reopen",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "detail node section remains; navigation does not stop observer task",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "result survives detail navigation and reopen",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "new save does not take focus",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "X confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "X only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "Escape confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "Escape only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "backdrop confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "backdrop only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "cancel confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "cancel only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "remaining time resumes without reset",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "expiry collapses without restart",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "old countdown cannot collapse new card",
+      "passed": true
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "later collapses without restart",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "selection plus channel/model/enabled/actions only",
+      "passed": true,
+      "detail": [
+        "",
+        "渠道",
+        "模型",
+        "启用",
+        "操作"
+      ]
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "channel 160–220px, actions 250px, selection retained",
+      "passed": true,
+      "detail": {
+        "channel": 160,
+        "actions": 250,
+        "choices": true
+      }
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "two character detection in actions cell",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "native public modal is centered and fits viewport",
+      "passed": true,
+      "detail": {
+        "x": 170,
+        "y": 20,
+        "right": 730,
+        "bottom": 580,
+        "centerX": 450,
+        "centerY": 300,
+        "viewportX": 450,
+        "viewportY": 300,
+        "width": 900,
+        "height": 600,
+        "footer": false,
+        "scroll": true
+      }
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "view has no footer or dropdown menu, content scrolls",
+      "passed": true,
+      "detail": {
+        "x": 170,
+        "y": 20,
+        "right": 730,
+        "bottom": 580,
+        "centerX": 450,
+        "centerY": 300,
+        "viewportX": 450,
+        "viewportY": 300,
+        "width": 900,
+        "height": 600,
+        "footer": false,
+        "scroll": true
+      }
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "Tab loops from last action to header X",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "Shift+Tab loops from header X to last action",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "selection has no permanent fill or bold",
+      "passed": true,
+      "detail": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400"
+        }
+      ]
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "resize, window and content scroll preserve modal",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "result updates same modal and choice DOM with focus",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "measurement leaves selected draft and snapshot alone",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "Escape closes only observation and returns trigger",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "X closes running observer without stopping",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "reopen preserves error and successful results",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "explicit stop, one run id; completed results retained",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "choice only changes draft and restores trigger focus",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "reopen reflects chosen draft",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "filtering the row does not cancel measurement",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "result survives filtering and reopen",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "detail node section remains; navigation does not stop observer task",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "result survives detail navigation and reopen",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "new save does not take focus",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "X confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "X only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "Escape confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "Escape only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "backdrop confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "backdrop only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "cancel confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "cancel only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "remaining time resumes without reset",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "expiry collapses without restart",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "old countdown cannot collapse new card",
+      "passed": true
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "later collapses without restart",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "selection plus channel/model/enabled/actions only",
+      "passed": true,
+      "detail": [
+        "",
+        "渠道",
+        "模型",
+        "启用",
+        "操作"
+      ]
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "channel 160–220px, actions 250px, selection retained",
+      "passed": true,
+      "detail": {
+        "channel": 160,
+        "actions": 250,
+        "choices": true
+      }
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "two character detection in actions cell",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "native public modal is centered and fits viewport",
+      "passed": true,
+      "detail": {
+        "x": 32,
+        "y": 40,
+        "right": 1148,
+        "bottom": 720,
+        "centerX": 590,
+        "centerY": 380,
+        "viewportX": 590,
+        "viewportY": 380,
+        "width": 1180,
+        "height": 760,
+        "footer": false,
+        "scroll": true
+      }
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "view has no footer or dropdown menu, content scrolls",
+      "passed": true,
+      "detail": {
+        "x": 32,
+        "y": 40,
+        "right": 1148,
+        "bottom": 720,
+        "centerX": 590,
+        "centerY": 380,
+        "viewportX": 590,
+        "viewportY": 380,
+        "width": 1180,
+        "height": 760,
+        "footer": false,
+        "scroll": true
+      }
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "Tab loops from last action to header X",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "Shift+Tab loops from header X to last action",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "selection has no permanent fill or bold",
+      "passed": true,
+      "detail": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400"
+        }
+      ]
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "resize, window and content scroll preserve modal",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "result updates same modal and choice DOM with focus",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "measurement leaves selected draft and snapshot alone",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "Escape closes only observation and returns trigger",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "X closes running observer without stopping",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "reopen preserves error and successful results",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "explicit stop, one run id; completed results retained",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "choice only changes draft and restores trigger focus",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "reopen reflects chosen draft",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "filtering the row does not cancel measurement",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "result survives filtering and reopen",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "detail node section remains; navigation does not stop observer task",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "result survives detail navigation and reopen",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "new save does not take focus",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "X confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "X only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "Escape confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "Escape only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "backdrop confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "backdrop only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "cancel confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "cancel only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "remaining time resumes without reset",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "expiry collapses without restart",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "old countdown cannot collapse new card",
+      "passed": true
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "later collapses without restart",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "selection plus channel/model/enabled/actions only",
+      "passed": true,
+      "detail": [
+        "",
+        "渠道",
+        "模型",
+        "启用",
+        "操作"
+      ]
+    },
+    {
+      "variant": "900-light-50",
+      "name": "channel 160–220px, actions 250px, selection retained",
+      "passed": true,
+      "detail": {
+        "channel": 220,
+        "actions": 250,
+        "choices": true
+      }
+    },
+    {
+      "variant": "900-light-50",
+      "name": "two character detection in actions cell",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "native public modal is centered and fits viewport",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 10,
+        "right": 590,
+        "bottom": 590,
+        "centerX": 450,
+        "centerY": 300,
+        "viewportX": 450,
+        "viewportY": 300,
+        "width": 900,
+        "height": 600,
+        "footer": false,
+        "scroll": true
+      }
+    },
+    {
+      "variant": "900-light-50",
+      "name": "view has no footer or dropdown menu, content scrolls",
+      "passed": true,
+      "detail": {
+        "x": 310,
+        "y": 10,
+        "right": 590,
+        "bottom": 590,
+        "centerX": 450,
+        "centerY": 300,
+        "viewportX": 450,
+        "viewportY": 300,
+        "width": 900,
+        "height": 600,
+        "footer": false,
+        "scroll": true
+      }
+    },
+    {
+      "variant": "900-light-50",
+      "name": "Tab loops from last action to header X",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "Shift+Tab loops from header X to last action",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "selection has no permanent fill or bold",
+      "passed": true,
+      "detail": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400"
+        }
+      ]
+    },
+    {
+      "variant": "900-light-50",
+      "name": "resize, window and content scroll preserve modal",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "result updates same modal and choice DOM with focus",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "measurement leaves selected draft and snapshot alone",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "Escape closes only observation and returns trigger",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "X closes running observer without stopping",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "reopen preserves error and successful results",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "explicit stop, one run id; completed results retained",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "choice only changes draft and restores trigger focus",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "reopen reflects chosen draft",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "filtering the row does not cancel measurement",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "result survives filtering and reopen",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "detail node section remains; navigation does not stop observer task",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "result survives detail navigation and reopen",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "new save does not take focus",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "X confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "X only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "Escape confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "Escape only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "backdrop confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "backdrop only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "cancel confirmation pauses notice",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "cancel only closes confirmation",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "remaining time resumes without reset",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "expiry collapses without restart",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "old countdown cannot collapse new card",
+      "passed": true
+    },
+    {
+      "variant": "900-light-50",
+      "name": "later collapses without restart",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "screens": [
+    "1180-light-100-list.png",
+    "1180-light-100-detection-result.png",
+    "1180-light-100-notification.png",
+    "900-dark-100-list.png",
+    "900-dark-100-detection-result.png",
+    "900-dark-100-notification.png",
+    "1180-dark-200-list.png",
+    "1180-dark-200-detection-result.png",
+    "1180-dark-200-notification.png",
+    "900-light-50-list.png",
+    "900-light-50-detection-result.png",
+    "900-light-50-notification.png"
+  ]
+}

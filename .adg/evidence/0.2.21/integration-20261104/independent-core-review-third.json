@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-04",
+  "reviewerAgentId": "01a1a502-8c31-7c50-96ea-bd2b7cd119ec",
+  "result": "changes-required",
+  "closedScenarios": [
+    "R21-05 version/model-store lock inversion removed",
+    "R21-06 commit freezes after-state and recovery does not certify later K2"
+  ],
+  "findings": [
+    {
+      "id": "R21-07",
+      "priority": "P1",
+      "path": "content_versions.rs:171",
+      "finding": "Digest-only idempotency confuses new explicit save back to historical content with receipt replay. A Oct30 -> external B -> new save A Nov4 must get Nov4, not Oct30. Distinguish same event from new save."
+    },
+    {
+      "id": "R21-08",
+      "priority": "P1",
+      "path": "owner_save_versions.rs:122 / channel_rename.rs:332",
+      "finding": "Unrelated Agent reference update during rename changes whole preferences file, discarding pending portable-preferences receipt. Replay must respect semantic owner or precede writer."
+    }
+  ],
+  "disposition": "Sent to implementation owner for exact new red/green cases; source freeze remains held."
+}

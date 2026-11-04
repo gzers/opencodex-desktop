@@ -1,0 +1,542 @@
+{
+  "completed": true,
+  "failure": null,
+  "engine": "webkit",
+  "sourceRevision": "cf5b50b4fb86e12b64cad209440813159ee06241",
+  "referenceSourceFilesVerified": 119,
+  "scope": "POST05 adopted source to production geometry; mock only",
+  "checks": [
+    {
+      "variant": "1180-light-100",
+      "name": "same selection + four business columns",
+      "passed": true,
+      "detail": {
+        "reference": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "implementation": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ]
+      }
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "both channel widths in adopted 160–220 logical px interval",
+      "passed": true,
+      "detail": {
+        "reference": 220,
+        "implementation": 195.578125
+      }
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "both action columns exactly 250 logical px",
+      "passed": true,
+      "detail": {
+        "reference": 250,
+        "implementation": 250
+      }
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "same detection/edit/copy/delete/order controls",
+      "passed": true,
+      "detail": {
+        "reference": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "implementation": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ]
+      }
+    },
+    {
+      "variant": "1180-light-100",
+      "name": "both use centered labelled modal and no footer close",
+      "passed": true,
+      "detail": {
+        "referenceModal": {
+          "role": "dialog",
+          "modal": "true",
+          "x": 590,
+          "y": 380,
+          "width": 1180,
+          "height": 760,
+          "footerClose": false
+        },
+        "softwareModal": {
+          "role": "dialog",
+          "modal": "true",
+          "x": 590,
+          "y": 380,
+          "width": 1180,
+          "height": 760,
+          "footerClose": false
+        }
+      }
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "same selection + four business columns",
+      "passed": true,
+      "detail": {
+        "reference": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "implementation": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ]
+      }
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "both channel widths in adopted 160–220 logical px interval",
+      "passed": true,
+      "detail": {
+        "reference": 220,
+        "implementation": 160
+      }
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "both action columns exactly 250 logical px",
+      "passed": true,
+      "detail": {
+        "reference": 250,
+        "implementation": 250
+      }
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "same detection/edit/copy/delete/order controls",
+      "passed": true,
+      "detail": {
+        "reference": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "implementation": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ]
+      }
+    },
+    {
+      "variant": "900-dark-100",
+      "name": "both use centered labelled modal and no footer close",
+      "passed": true,
+      "detail": {
+        "referenceModal": {
+          "role": "dialog",
+          "modal": "true",
+          "x": 450,
+          "y": 300,
+          "width": 900,
+          "height": 600,
+          "footerClose": false
+        },
+        "softwareModal": {
+          "role": "dialog",
+          "modal": "true",
+          "x": 450,
+          "y": 300,
+          "width": 900,
+          "height": 600,
+          "footerClose": false
+        }
+      }
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "same selection + four business columns",
+      "passed": true,
+      "detail": {
+        "reference": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "implementation": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ]
+      }
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "both channel widths in adopted 160–220 logical px interval",
+      "passed": true,
+      "detail": {
+        "reference": 220,
+        "implementation": 219.5546875
+      }
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "both action columns exactly 250 logical px",
+      "passed": true,
+      "detail": {
+        "reference": 250,
+        "implementation": 250
+      }
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "same detection/edit/copy/delete/order controls",
+      "passed": true,
+      "detail": {
+        "reference": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "implementation": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ]
+      }
+    },
+    {
+      "variant": "1180-dark-200",
+      "name": "both use centered labelled modal and no footer close",
+      "passed": true,
+      "detail": {
+        "referenceModal": {
+          "role": "dialog",
+          "modal": "true",
+          "x": 590,
+          "y": 380,
+          "width": 1180,
+          "height": 760,
+          "footerClose": false
+        },
+        "softwareModal": {
+          "role": "dialog",
+          "modal": "true",
+          "x": 590,
+          "y": 380,
+          "width": 1180,
+          "height": 760,
+          "footerClose": false
+        }
+      }
+    },
+    {
+      "variant": "900-light-50",
+      "name": "same selection + four business columns",
+      "passed": true,
+      "detail": {
+        "reference": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "implementation": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ]
+      }
+    },
+    {
+      "variant": "900-light-50",
+      "name": "both channel widths in adopted 160–220 logical px interval",
+      "passed": true,
+      "detail": {
+        "reference": 220,
+        "implementation": 165.65625
+      }
+    },
+    {
+      "variant": "900-light-50",
+      "name": "both action columns exactly 250 logical px",
+      "passed": true,
+      "detail": {
+        "reference": 250,
+        "implementation": 250.03125
+      }
+    },
+    {
+      "variant": "900-light-50",
+      "name": "same detection/edit/copy/delete/order controls",
+      "passed": true,
+      "detail": {
+        "reference": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "implementation": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ]
+      }
+    },
+    {
+      "variant": "900-light-50",
+      "name": "both use centered labelled modal and no footer close",
+      "passed": true,
+      "detail": {
+        "referenceModal": {
+          "role": "dialog",
+          "modal": "true",
+          "x": 450,
+          "y": 300,
+          "width": 900,
+          "height": 600,
+          "footerClose": false
+        },
+        "softwareModal": {
+          "role": "dialog",
+          "modal": "true",
+          "x": 450,
+          "y": 300,
+          "width": 900,
+          "height": 600,
+          "footerClose": false
+        }
+      }
+    }
+  ],
+  "samples": [
+    {
+      "variant": "1180-light-100",
+      "reference": {
+        "channel": 220,
+        "actions": 250,
+        "columns": 5,
+        "headers": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "actionsText": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "detectionDialog": "dialog"
+      },
+      "implementation": {
+        "channel": 195.578125,
+        "actions": 250,
+        "columns": 5,
+        "headers": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "actionsText": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "detectionDialog": "dialog"
+      }
+    },
+    {
+      "variant": "900-dark-100",
+      "reference": {
+        "channel": 220,
+        "actions": 250,
+        "columns": 5,
+        "headers": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "actionsText": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "detectionDialog": "dialog"
+      },
+      "implementation": {
+        "channel": 160,
+        "actions": 250,
+        "columns": 5,
+        "headers": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "actionsText": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "detectionDialog": "dialog"
+      }
+    },
+    {
+      "variant": "1180-dark-200",
+      "reference": {
+        "channel": 220,
+        "actions": 250,
+        "columns": 5,
+        "headers": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "actionsText": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "detectionDialog": "dialog"
+      },
+      "implementation": {
+        "channel": 219.5546875,
+        "actions": 250,
+        "columns": 5,
+        "headers": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "actionsText": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "detectionDialog": "dialog"
+      }
+    },
+    {
+      "variant": "900-light-50",
+      "reference": {
+        "channel": 220,
+        "actions": 250,
+        "columns": 5,
+        "headers": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "actionsText": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "detectionDialog": "dialog"
+      },
+      "implementation": {
+        "channel": 165.65625,
+        "actions": 250.03125,
+        "columns": 5,
+        "headers": [
+          "",
+          "渠道",
+          "模型",
+          "启用",
+          "操作"
+        ],
+        "actionsText": [
+          "检测",
+          "编辑",
+          "复制",
+          "删除",
+          "↑",
+          "↓"
+        ],
+        "detectionDialog": "dialog"
+      }
+    }
+  ],
+  "errors": [],
+  "blocked": []
+}

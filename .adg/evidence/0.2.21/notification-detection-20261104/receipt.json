@@ -1,0 +1,199 @@
+{
+  "schema": "notification-detection-worker-receipt-v1",
+  "recordedAt": "2026-11-04T05:25:46.309405+00:00",
+  "worktree": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes",
+  "branch": "codex/0.2.21-fixes",
+  "observedSharedHead": "f7866c762fdd755a7549ea7a54ebfead22e363f2",
+  "task": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+  "acceptanceIds": [
+    "AC-021-01",
+    "AC-021-04"
+  ],
+  "localResult": "implemented-and-scoped-checks-passed",
+  "formalTaskState": "left to integration owner; not closed by this receipt",
+  "prototypeAdoption": {
+    "POST05_POST09": "cf5b50b4fb86e12b64cad209440813159ee06241",
+    "sourceFilesVerified": 119,
+    "scope": [
+      "POST05 list and detection",
+      "POST09 shared exit contract for existing consumers"
+    ],
+    "G0_POST01_checkpoint": ".adg/evidence/0.2.21/g0-prototype-20261104/checkpoints/g0-core/manifest.json",
+    "G0_manifest_sha256": "bc1eef10f02d69658c5bd38203e886b03bfab4226ef58101cd38435f331adfa5",
+    "wholeDirtyPrototypeAdopted": false
+  },
+  "files": [
+    {
+      "path": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+      "sha256": "f321cebee369dd5a8974a51ceb4b27a9636913498725eab3ce4cbe01136ce185",
+      "bytes": 4104
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "51234ebdda380238e60cb111f6039f3c95aefeff9c75efaab3dd6e0590f70682",
+      "bytes": 29514
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelNodeSelect.vue",
+      "sha256": "be0d203c3b439648b74c11d0b7b8de96f37dde20093f1a4ed7b6a3ef4a71beea",
+      "bytes": 1499
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelNodeDialog.vue",
+      "sha256": "70066ec345349f8f8a9e43b267c55dddaca09db0feaab2033f6d6bccef550578",
+      "bytes": 5395
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NodePicker.vue",
+      "sha256": "3c722219be330a3f39a22ef94d791dc44c16fda85223c0147e4f4f55fc97031e",
+      "bytes": 4266
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/useNodeMeasurements.ts",
+      "sha256": "523dbadea9b2602c04b7ae679085082543e5afd0d153e40e8f53820303e38944",
+      "bytes": 2993
+    },
+    {
+      "path": "apps/desktop/ui/tests/post01-save-notice.test.ts",
+      "sha256": "e4201ee9cb1adfda7b93e11b88e460fce90b9d21534584c3f58799f038b7a30f",
+      "bytes": 7050
+    },
+    {
+      "path": "apps/desktop/ui/tests/post05-node-detection.test.ts",
+      "sha256": "fedd335262cc2371f4be725b5960dd8f87c12c89bbffc3bf8380172f771c8d47",
+      "bytes": 9065
+    },
+    {
+      "path": "apps/desktop/ui/tests/post05-channel-list.test.ts",
+      "sha256": "3d518a9e54bd44450abf27521a5e15e0d0e1a6ecb57760f5c67a272722106c41",
+      "bytes": 7939
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-save-feedback.test.ts",
+      "sha256": "38d1e775d8067ed4fb5e06eb9c758123d0404d2fb6504c6ccc5c2693e2afd1bf",
+      "bytes": 10713
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-save-result-flow.test.ts",
+      "sha256": "f895058ed6bbd2ff1a257a2332155c0626ff3c46f596db1acb7cfd37a39f1426",
+      "bytes": 4777
+    },
+    {
+      "path": "apps/desktop/ui/tests/channel-node-select.test.ts",
+      "sha256": "fc8d4346ce38d4bbb1aade5f2e23b0b4607c465a3a663e028901d71e93594052",
+      "bytes": 2593
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-node-picker.test.ts",
+      "sha256": "ca6ae55b3aa71f0d4f2abe17acc14d7f4ffb16e23db6242295508d249d75ac5a",
+      "bytes": 2636
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-node-measurements.test.ts",
+      "sha256": "05ee78aad3fc47229343d2b077dd114991d94132c3aff66c4e47a8a8ef231735",
+      "bytes": 4195
+    },
+    {
+      "path": "apps/desktop/ui/qa/geometry-visual.mjs",
+      "sha256": "1fda267541cb223b0d995c55599cf33361d9cca6aab9d5cb505fbfe36daca757",
+      "bytes": 12615
+    }
+  ],
+  "checks": [
+    {
+      "name": "production interaction",
+      "engine": "chromium",
+      "passed": true,
+      "checks": 136,
+      "evidence": "chromium/report.json"
+    },
+    {
+      "name": "adopted prototype to production geometry",
+      "engine": "chromium",
+      "passed": true,
+      "checks": 20,
+      "evidence": "chromium/prototype-parity/report.json"
+    },
+    {
+      "name": "existing table/model geometry regression",
+      "engine": "chromium",
+      "passed": true,
+      "checks": 47,
+      "evidence": "geometry-chromium.log"
+    },
+    {
+      "name": "production interaction",
+      "engine": "webkit",
+      "passed": true,
+      "checks": 136,
+      "evidence": "webkit/report.json"
+    },
+    {
+      "name": "adopted prototype to production geometry",
+      "engine": "webkit",
+      "passed": true,
+      "checks": 20,
+      "evidence": "webkit/prototype-parity/report.json"
+    },
+    {
+      "name": "existing table/model geometry regression",
+      "engine": "webkit",
+      "passed": true,
+      "checks": 47,
+      "evidence": "geometry-webkit.log"
+    },
+    {
+      "name": "affected Vue/unit/component registry regression",
+      "passed": true,
+      "files": 19,
+      "checks": 177,
+      "evidence": "affected-regression-final.log"
+    },
+    {
+      "name": "vue-tsc --noEmit",
+      "passed": true,
+      "evidence": "typecheck-final.log"
+    },
+    {
+      "name": "vite build",
+      "passed": true,
+      "evidence": "vite-build-final.log"
+    },
+    {
+      "name": "owned diff whitespace",
+      "passed": true
+    }
+  ],
+  "counterexamples": [
+    "old-counterexamples.log",
+    "old-list-counterexamples.log",
+    "old-measurement-races.log",
+    "row-lifecycle-counterexamples.log",
+    "rename-credential-counterexample.log"
+  ],
+  "readonlyPolicy": {
+    "commonDialog": "readonly blocks draft selection; measurementDisabled independently controls model-list reads",
+    "standaloneSelector": "existing readonly gallery has no IPC by default; explicit measurementDisabled=false permits read-only detection",
+    "productionProtectedChannel": "preserves existing protectedChannel provider ids openai/chatgpt/openai-multi/combo and oauth/forward; no new mutation or generic measurement privileges"
+  },
+  "boundaries": {
+    "realChannelRequests": 0,
+    "dailyCredentialReads": 0,
+    "dailyConfigWrites": 0,
+    "dailyCodexRestarts": 0,
+    "gitMutationCommandsPerformed": [],
+    "sharedModalOrBackendOrSyncFilesEdited": []
+  },
+  "openIntegrationWork": [
+    "main owner runs final whole UI/backend regression once against integrated source",
+    "native macOS/Windows and isolated real save/restart acceptance belong to integration/release owner",
+    "shared DMD/IMP/TASK writeback and final release closure remain with integration owner"
+  ],
+  "historicalFullRegression": {
+    "evidence": "ui-regression.log",
+    "passedTests": 1197,
+    "failedTests": 10,
+    "unhandledErrors": 3,
+    "note": "One earlier shared-workspace snapshot before integration test migrations completed; not the final full-regression result. No repeat full suite after user asked main owner to run it centrally."
+  }
+}

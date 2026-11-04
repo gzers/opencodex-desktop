@@ -1,0 +1,206 @@
+{
+  "capturedAt": "2026-11-04T13:14:55+08:00",
+  "sourceRoot": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes",
+  "sourceRevision": "28d7f62e994beed57d291c904ab2c775491bc928",
+  "branch": "codex/0.2.21-fixes",
+  "sourceFiles": 18,
+  "testFiles": 21,
+  "files": [
+    {
+      "path": "apps/desktop/ui/src/app/modal/store.ts",
+      "sha256": "abf02761e41235bc2cfe614c03d81dabb963887f756a4d8350b0f434aeeb7ecb",
+      "bytes": 2176
+    },
+    {
+      "path": "apps/desktop/ui/src/components/AppModal.vue",
+      "sha256": "f2ebb17d1d5fbc139c0248a4d665b1e82013d461b52efca1ee5f7fae7146ac09",
+      "bytes": 1488
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/ModalContent.vue",
+      "sha256": "bd04459c5f86b31a1c7ae12102878eefb262ee55d9882e528e55a58b88073054",
+      "bytes": 2027
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/modalContent.ts",
+      "sha256": "597a8dad3f85041f74f5527bb6cf3d13710e1d8224d5f5e5c532a4a5fa9ff438",
+      "bytes": 1361
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiDialog.vue",
+      "sha256": "af4696b58ca84085c65e20131722bcf7b9266218bfb448c4b9fe3ceba8f53ee5",
+      "bytes": 8857
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "sha256": "93efbf94fdea1e6151ee0a579b2dd66f9ad7339bf6f27bad6843894b09829d26",
+      "bytes": 9434
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
+      "sha256": "90146a17c0581779e39f2d01ed7201a464639e7ac18e4410f3f0f6c04b399016",
+      "bytes": 4604
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/components/ExtensionDetailModal.vue",
+      "sha256": "4bcc722bea0141fad90273824cf50f1754aa3d380aa7ac8bdd9ca1e5fbe4f946",
+      "bytes": 5588
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+      "sha256": "6760d95ab328547a6a73e4966c9ae61adc3044e77030574d97355b5e0ed07569",
+      "bytes": 9796
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "sha256": "521d694f758848818768348a49bbf9fa68f8883e4469559314a93ba7aeafc50f",
+      "bytes": 12195
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+      "sha256": "f7f9efd9fb2686f8b88d7197e8801d14040df315c42da6d506be85ce43be1526",
+      "bytes": 5042
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "sha256": "02497a67ed8675f1ab9105142d9c7fde9120d009a65168e0b6c3952d7a39c3e5",
+      "bytes": 13171
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+      "sha256": "8e97779f7e063e5305208b29063e86e8e8a2cf09c46a6c41b970a4fded578697",
+      "bytes": 19953
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+      "sha256": "6e769ccf7870ded0bda6f00afa27f20eadc39e6379533317bb69aa4b9c787a14",
+      "bytes": 3095
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "sha256": "70423e1b04cfe712b1d87365eadac188a1ba80f42c2a7b961adc03ddbb505709",
+      "bytes": 3811
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+      "sha256": "c6472463d992d5c85ef51d4a65ff17cfcf7b706e560d592a9064604dd3216aa5",
+      "bytes": 5725
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue",
+      "sha256": "e7105ff642035d976441e9dc3e17fecb259d4418afb65128e9218160b2b18b7a",
+      "bytes": 18502
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+      "sha256": "91849a16e4c2ad6f579b58b410d82a7fe4d62d79e5d60f649ee51c21314bc3e7",
+      "bytes": 27108
+    },
+    {
+      "path": "apps/desktop/ui/tests/app-modal.test.ts",
+      "sha256": "264687a0890acd63e8b566786c60e6d79dd4b69b3984996ac46b6d051f79411e",
+      "bytes": 8186
+    },
+    {
+      "path": "apps/desktop/ui/tests/backup-management.test.ts",
+      "sha256": "b100b61b25042b305d048c86af6f63612796a2faeb2db645f89f3eedc8df14dc",
+      "bytes": 6064
+    },
+    {
+      "path": "apps/desktop/ui/tests/channel-batch.test.ts",
+      "sha256": "2b1a4f61db67ee91cc11aa15b4833bf86eee851447f1f3328101b8137fc39e37",
+      "bytes": 9549
+    },
+    {
+      "path": "apps/desktop/ui/tests/extension-detail.test.ts",
+      "sha256": "7cbb55eacd7996c4dc8afd1f1fe4c110e10cdb6469b0b9a9a3b8d71353dfcb99",
+      "bytes": 14093
+    },
+    {
+      "path": "apps/desktop/ui/tests/extensions-clients.test.ts",
+      "sha256": "3e411d87c2842f993e55cba041d6724d9a2d08b7d4ee241fd654fabaf85f0af5",
+      "bytes": 10542
+    },
+    {
+      "path": "apps/desktop/ui/tests/helpers/nativeDialog.ts",
+      "sha256": "3fd76efb44199811c13938db05e0c1f9088a54478381dd2bdce5d50f0dfcda7d",
+      "bytes": 325
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-agent-batch.test.ts",
+      "sha256": "d1f57b95969a4ec244a1c6b300423a03c764b3414a7c7b70aa162043190c074e",
+      "bytes": 11935
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-external-task.test.ts",
+      "sha256": "e0edac6fedbe81a4b3668a8b94de09928018d12e66761a178d0a5a02c7a4a6b2",
+      "bytes": 4858
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-history.test.ts",
+      "sha256": "eaa9a39d547c4dbace9d1bbdd1c9664ff57a05f5e31c4afff955d37951fe3747",
+      "bytes": 7129
+    },
+    {
+      "path": "apps/desktop/ui/tests/new-channel-dialog.test.ts",
+      "sha256": "19e68fe2ffb9855e0a4bd7276976cb9a4d34b7643c60d0ba27953a77952c7a7d",
+      "bytes": 11043
+    },
+    {
+      "path": "apps/desktop/ui/tests/notification-center.test.ts",
+      "sha256": "d1b943c3d300c60afe88cec2d6a9b2808218571b6071d84f611d8ae6ce5cfa28",
+      "bytes": 6673
+    },
+    {
+      "path": "apps/desktop/ui/tests/post09-app-modal.test.ts",
+      "sha256": "3dc1bcfca0329f947a4a8c4a42c075eabbde916f7c84220a1b20ca4593550cf7",
+      "bytes": 5373
+    },
+    {
+      "path": "apps/desktop/ui/tests/post09-modal-contract.test.ts",
+      "sha256": "260412cfb3b92386464b804481b3e8cdbcedf60b82187c0b3fa4fc6c61900219",
+      "bytes": 9141
+    },
+    {
+      "path": "apps/desktop/ui/tests/post09-owned-consumers.test.ts",
+      "sha256": "ed6c142d9ba83b036f3c05073b4f30a5e629fe4ef912e7eac13a2d3bf1c76d32",
+      "bytes": 5573
+    },
+    {
+      "path": "apps/desktop/ui/tests/selector-preview-dialog.test.ts",
+      "sha256": "2d758b37fade9f4f6d1e630e9a05335f494cc02a7f3b3c1621c133ccd097dae0",
+      "bytes": 9980
+    },
+    {
+      "path": "apps/desktop/ui/tests/settings-data-root-migration.test.ts",
+      "sha256": "8c03972da8dad8b17e1a80542a0f015ae356e6424f92bd60ab8452c70a206b8c",
+      "bytes": 7695
+    },
+    {
+      "path": "apps/desktop/ui/tests/settings-install-feedback.test.ts",
+      "sha256": "aca33adf39707b7a9d0d526df37590ac8adc4ff3045ba8cc5e740a5b3657fc40",
+      "bytes": 11542
+    },
+    {
+      "path": "apps/desktop/ui/tests/settings-install-path.test.ts",
+      "sha256": "14816e954d662af75eb047602003b30568a1ef522a0f793d903e6c4f9f3d390e",
+      "bytes": 10362
+    },
+    {
+      "path": "apps/desktop/ui/tests/settings-update-retry.test.ts",
+      "sha256": "da52a915ba8fab3d48f638e311d4a7c89583fb2217eccb0f14b3333a9c484464",
+      "bytes": 5097
+    },
+    {
+      "path": "apps/desktop/ui/tests/technical-input-autocapitalize.test.ts",
+      "sha256": "7b09c6824cfbbcee0a4c522b49dae663cf16838eb8da1cc10cd0d5c49b118e8a",
+      "bytes": 3197
+    },
+    {
+      "path": "apps/desktop/ui/tests/update-center.test.ts",
+      "sha256": "5d0190ff5e61d974848d98a942026de034faaa57a0fa920b89464d4b9b9703dc",
+      "bytes": 23093
+    }
+  ],
+  "scopeNote": "Only this contributor write set. Concurrent main/backend changes are not included."
+}
