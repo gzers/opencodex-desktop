@@ -35,6 +35,17 @@ pub struct PanelIdle {
     scroll: f64,
 }
 impl PanelIdle {
+    fn update_origin(&mut self, origin: String) -> bool {
+        if self.origin == origin {
+            return false;
+        }
+        self.origin = origin;
+        self.path.clear();
+        self.fragment.clear();
+        self.scroll = 0.0;
+        true
+    }
+
     fn accepts(&self, generation: u64) -> bool {
         self.hidden
             && self.generation == generation
@@ -485,17 +496,14 @@ pub async fn sync_embedded_panel(
         };
         mark_panel_phase(&app, started, "runtime-address", &mut timings);
 
-        if let Some(url) = url.as_ref() {
-            let origin = url.origin().ascii_serialization();
-            if idle.origin != origin {
-                idle.origin = origin;
-                idle.path.clear();
-                idle.fragment.clear();
-                idle.scroll = 0.0;
-            }
-        }
-        if let (Some(existing), Some(url)) = (app.get_webview(PANEL_VIEW_LABEL), url.as_ref()) {
-            if existing.url()?.origin() != url.origin() {
+        // Navigation is restricted to this owned origin. Compare its recorded
+        // identity rather than querying the native page: WKWebView.URL is nil
+        // before initial navigation, and wry's URL getter panics in that state.
+        let origin_changed = url
+            .as_ref()
+            .is_some_and(|url| idle.update_origin(url.origin().ascii_serialization()));
+        if origin_changed {
+            if let Some(existing) = app.get_webview(PANEL_VIEW_LABEL) {
                 existing.close()?;
                 lifetime.2.store(false, Ordering::Release);
             }
@@ -722,6 +730,23 @@ fn panel_state_detail(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn repeated_show_before_navigation_keeps_origin_and_resume_state() {
+        let mut idle = PanelIdle::default();
+        assert!(idle.update_origin("http://127.0.0.1:10100".into()));
+        idle.path = "/web/models".into();
+        idle.fragment = "selected".into();
+        idle.scroll = 180.0;
+        assert!(!idle.update_origin("http://127.0.0.1:10100".into()));
+        assert_eq!(idle.path, "/web/models");
+        assert_eq!(idle.fragment, "selected");
+        assert_eq!(idle.scroll, 180.0);
+        assert!(idle.update_origin("http://127.0.0.1:10101".into()));
+        assert!(idle.path.is_empty());
+        assert!(idle.fragment.is_empty());
+        assert_eq!(idle.scroll, 0.0);
+    }
 
     #[test]
     fn corner_radius_follows_interface_scale() {
