@@ -1,11 +1,11 @@
 /* 0.2.21 G0：纯内存的校验与判新合同；不访问命令、网络或配置。 */
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.G0Contracts=api;})(typeof window==='object'?window:typeof globalThis==='object'?globalThis:this,function(){
  'use strict';
- const reserved=new Set(['native','openai','chatgpt','openai-multi','combo']);
+ const reserved=new Set(['native','openai','chatgpt','openai-multi','combo','policy','__proto__','constructor','prototype']);
  function providerError(channel,others=[],occupied=[]){
   const id=channel.providerId??channel.id,base=channel.originalProviderId??channel.id;
   if(channel.id==='native'||['oauth','forward'].includes(channel.connection?.auth)||channel.managed){return id!==base?'官方或受保护来源不能改运行标识':'';}
-  if(!/^[A-Za-z0-9_-]{1,128}$/.test(id))return '运行标识需为 1–128 位字母、数字、连字符或下划线；请明确填写合法目标';
+  if(!/^[A-Za-z0-9](?:[A-Za-z0-9_-]{0,62}[A-Za-z0-9])?$/.test(id))return '运行标识需为 1–64 位字母、数字、连字符或下划线，并以字母或数字开头和结尾；请明确填写合法目标';
   if(reserved.has(id.toLowerCase()))return '该运行标识由官方保留，请换一个标识';
   const keys=p=>[p.providerId??p.id,...(p.derivedProviderIds||[])].map(x=>x.toLowerCase());
   const targets=keys(channel);

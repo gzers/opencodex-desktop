@@ -1,0 +1,22 @@
+{
+  "result": "pass",
+  "productSource": "43c6253b582c3fe19ba67c8d1ccfeb4adabd7068",
+  "rawAndNativeVersionDomains": "separate; raw snapshot checks before/after native config/read, native CAS uses opaque owner version",
+  "realNativeTests": 26,
+  "parentCompositionTests": 21,
+  "clippy": "passed",
+  "realOwner": "39acf979729dd290f9a24ee38b2914e036c91b65952872e28ae2a6b88a7db7c1",
+  "rootBeforeRawDigest": "sha256:53ba02a468e686adce1c7a967e78a94224dea16b4450f6ca6a4e8defe926f86a",
+  "rootBeforeNativeVersion": "sha256:68bb7afd945648f560603d295f9e4656feedb4a7c0eb314fa985562699682b9a",
+  "noModelOverride": true,
+  "externalRoutingDrift": "refused before and during native read",
+  "dailyConfigAccess": false,
+  "completeProductChain": "actual prepare success at162210; later test copy gate under independent repair, not yet acceptance",
+  "files": {
+    ".adg/evidence/0.2.21/client-default-fix-20261104/native-domain-separated/verification.json": "1182c65873a6339c27ff66779aec4ce9743fd1f83947a734e2aa1d33c5353d17",
+    ".adg/evidence/0.2.21/client-default-fix-20261104/native-domain-separated/real-root-default.json": "7473c37f962b72deca7b0e695d20d87a5195728c2dd55bf541fef38e37b4c118",
+    ".adg/evidence/0.2.21/client-default-fix-20261104/native-domain-separated/tests.stdout": "b4f9efa06079ca35a26e8e4ada1bc7e29a4115e540b284575f22a55484fbd869",
+    ".adg/evidence/0.2.21/current-reference-fix-20261104/native-domain-parent-tests.log": "942cffbd3c719db45ac4aa9b1aa4572984e85b4a0e87d1d79298ebe8c4a846c0",
+    ".adg/evidence/0.2.21/current-reference-fix-20261104/native-domain-clippy.log": "548784e5e8d7e8fc019bdc77024a849b02a32da0eae83dbb7a04b69c05cafb70"
+  }
+}

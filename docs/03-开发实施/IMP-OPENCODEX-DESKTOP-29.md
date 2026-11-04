@@ -6,7 +6,7 @@ state: "in_progress"
 dmd_refs: ["DMD-OPENCODEX-UI-021"]
 demand_ids: ["DMD-OPENCODEX-UI-021"]
 task_ids: ["TASK-OPENCODEX-UI021-MODALS-20261104", "TASK-OPENCODEX-UI021-SYNC-20261104", "TASK-OPENCODEX-UI021-INTEGRATION-20261104"]
-summary: "0.2.21目标模式已授权至发布；G0执行中，代码分支codex/0.2.21-fixes复用正式0.2.20主线。"
+summary: "七项实现及原型已集成至codex/0.2.21-fixes；本地完整检查通过，进行最终原生、CI和同原包发布门禁。"
 completion_summary: null
 ---
 
@@ -54,3 +54,9 @@ POST-04后端按项放行：G0 checkpoint及20项数据探针已固定，建立T
 
 
 G0核心放行并进入G2/G3（2026-11-04）：新增原型41项定向、工作区双引擎各106项、改名隔离63项及旧规则2项均有证据。INTEGRATION任务绑定余下AC-021-01/02/04/05/06/08，负责渠道直接改名、通知/检测/概览候选和最终交付共同门。原型自身增量仍需从并行工作区中定向冻结重放，全量harness的未来概览缺依赖保留，不视作本版业务通过。所有任务保持in_progress直至实际门禁/原生/发布证据满足。
+
+
+2026-11-04阶段接续：原型G0自身增量已在Git基线上重放，七项软件实现按语义分笔提交；核心复核R21-01～08已关闭。当前PR68最终源码9f91f755a运行CI41786824638，Mac/Windows原生及真实客户端自动目录链继续验收；原始失败与修正保留。先前“仅审计/未开发”段落保留历史时点，当前不据其推断任务仍未执行。没有完成证书或stable发布。
+
+
+2026-11-04 16:24接续：43c6253b5修正真实客户端的版本域误用；原生config/read返回opaque版本不能与raw文件SHA直接比较。现分开校验路由原始快照及原生CAS，实际0.166 owner全26项、父级编排21项及Clippy通过，包含model/review_model批量写入、无覆盖新对话及读取前/中外部变化拒绝。原1313失败保留；完整production prepare本身已成功，后续复制夹具模拟门仍在复验，不提前计整链验收。最终CI41798940600/PR68继续，同原包原生/安装/OTA及stable仍待完成。证据current-reference-fix-20261104/native-domain-result.json。
