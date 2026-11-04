@@ -11,10 +11,16 @@ Windows代码4b0c357b1已合入；文档911d51514的328独有路径字节导入�
 发布门仍未齐：Windows最终同源CI/原生回归、RDP未通过的材质性能（需要物理桌面和MSVC候选包补验）、正式打包Codex桌面默认重启adapter、新版本冻结和原包安装升级/签名/更新通道/回退。没有发行版号变更、main合并、tag/发布、真实WebDAV或日常配置/Codex重启。当前TASK/DMD/IMP仍in_progress，无整版证书。Windows接续用WINDOWS-FOLLOWUP.md；用户已确认有本地Windows环境，采用继续交Windows对话补验；当前宿主工具仅列本机对话，未连接Windows宿主，未实际发送。提示词交由用户粘贴，不据此宣称Windows已开工。
 
 
-最新交付代码9850dbbaeaa3e95b10c3f37ecab5bda7e96f29c5仍为同产品apps树，仅校正改名保存的恢复日志/写入前备份探针。35测试通过；Windows实际重跑待证。Windows最终交接以WINDOWS-FOLLOWUP.md新HEAD为准，旧CI失败保留。
+最新交付代码f9def3300640f0871a93b6bbcec55de646e00567仍为同产品apps树，仅校正改名保存的恢复日志/写入前备份探针。35测试通过；Windows实际重跑待证。Windows最终交接以WINDOWS-FOLLOWUP.md新HEAD为准，旧CI失败保留。
 
 
 接续CI显示名称旧合同失败：bd7c0fe8c实际原生已过剩余A保存及备份、排序/转移/对齐，再于021改名raw.name旧值断言失败。3aa789a6e仅适配name-only的持久化名称，整组59测试通过；产品apps树仍不变。原生重跑、后续未执行检查、Mac runner补跑和Windows实机仍未齐，详见ci-display-name-probe/analysis.json。旧source身份保留在原始证据，最新交付以WINDOWS-FOLLOWUP.md为准。
 
 
 最终探针接续HEAD9850dbbae：原生新失败为持久化显示名称旧断言，3aa789a6e已修；继续逐项审计发现尚未执行的WebDAV旧探针与本轮启动只读检测冲突，9850dbbae按采用合同预先适配。新build必须有真实失败观察/修订/时间，只有config_sync_observe可额外准入，仍拒上传/下载/应用。历史独立运行ID界面保持旧预期。完整60测试通过，Windows实际重跑仍待，不把源码审计预测写成已复现。产品apps树与234405094不变。
+
+
+补验注意：新增native-regression.mjs的restart-missing直接调用showSaved，仅能证明人工通知场景下的具体错误/重试，不能当实际保存或正式客户端adapter证据；首次范围脚本当前any/some断言也不能单独证明完整目录首次全选，需要报告精确预期对象集合及读回。原门禁继续，不据代码分支推送视为补验通过。
+
+
+首次范围驱动已加固：sync-setup前在独立root放expected-first-scope.json，格式{"channelIds":["夹具本地渠道ID","夹具云端独有渠道ID"],"templateIds":["夹具本地模版ID","夹具云端独有模版ID"]}。必须由已知本地/云端夹具生成，不能从待验scope反推；起始scope/initialized文件必须不存在。新驱动逐一比较完整并集、拒少选/多选/重复，并保留读回及期望输入。此驱动覆盖渠道/模版；账户/Skill/MCP仍须对应证据。61协议测试通过，实机执行结果待交回。

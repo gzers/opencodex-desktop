@@ -134,3 +134,9 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05同批探针消费者审计：尚未实际执行的旧WebDAV探针要求启动无观察且IPC不得config_sync_observe，与已采用L线bootstrap只读检测冲突。9850dbbae按已核对的原型/产品合同预先适配，历史独立ID界面仍验旧预期；当前name-only界面必须产生合成.invalid端点的真实读取失败、正确revision/source/观察时间、零伪造保存时间。观察器只显式额外放行config_sync_observe，上传/下载/应用及测试连接继续拒绝；未注入store/替换IPC。完整60协议测试通过。这是源码审计发现而非新原生失败复现，最终同源原生仍待。Windows交接已指向9850dbbae，产品树与234405094相同，原失败/局部通过均保留。
+
+
+2026-11-05接收Windows最终补验代码faf8dd926（源自bd7c0fe8c），合并为be337d5b3：有界可见/启用动作等待及新原生回归驱动已采用；重叠显示名称与启动版本检查保留本机历史/当前双合同及较严格revision/settled/time保护，没有退回无条件更名或弱状态校验。驱动补assertModelSandbox不可变根准入，人工showSaved通知场景写明边界。60协议测试及语法通过，apps树仍与234405094一致。Windows文档/原生报告分支尚未取到，不计补验完成。审计另记：人工保存通知不能证明真实保存/正式adapter；首次范围any/some检查不足以证明完整并集，回交须有精确对象集合证据。详见windows-final-code-review/review.json。新提示词指向be337d5b3，材质性能、正式重启、最终源原生/CI和发行门继续待办。
+
+
+2026-11-05补验驱动审计处置：f9def3300将新设备首次范围检查由any/some补为独立夹具完整channelIds/templateIds并集比较，要求UI开工前无scope和initialized，并读入expected-first-scope.json；缺项/多项/重复均拒，期望文件不变。61协议项通过，原生仍待执行；不把仅渠道/模版范围的驱动扩称账户/Skill/MCP全部通过。产品apps未变；新交接说明已给出夹具清单格式，人工showSaved和正式adapter缺验证据边界保留。

@@ -1,7 +1,7 @@
 {
   "status": "in_progress",
   "releaseReady": false,
-  "codeHead": "9850dbbaeaa3e95b10c3f37ecab5bda7e96f29c5",
+  "codeHead": "f9def3300640f0871a93b6bbcec55de646e00567",
   "productCommit": "23440509452fc1241324a8ba02ebdd6e52822c18",
   "appsTree": "0eec77398bbd1cbe49f88dd3bd5e8046266e14c1",
   "native": {
@@ -36,7 +36,7 @@
     "build": "UI typecheck/build and debug app passed; adhoc, not release installer",
     "windowsProbeUnits": "35 passed after backup/recovery-journal distinction",
     "windowsCI": "41868797161 final EXE smoke failed old raw.name expectation; backup probe passed. Display-name probe fixed in 3aa789a6e, native recheck pending.",
-    "fullCdpProtocol": "60 passed on 9850dbbae; seven suites; name-only and startup readonly contracts tested separately from native"
+    "fullCdpProtocol": "61 passed; includes independent exact channel/template first union guard"
   },
   "pending": [
     "Windows final-source native and CI",
@@ -81,5 +81,15 @@
     "cause": "The job was not acquired by Runner of type hosted even after multiple attempts",
     "retry": "single-job rerun rejected while parent still active; retry after terminal",
     "evidence": "ci-capacity/review.json"
+  },
+  "windowsFinalContribution": {
+    "code": "faf8dd9268bcee1f121129de5c7399dcee0fcd5f",
+    "integration": "be337d5b365f2c83d0c08111dd7e4b16f5c249f6",
+    "review": "windows-final-code-review/review.json",
+    "docsEvidence": "not yet received",
+    "tests": "60 protocol + driver syntax passed",
+    "acceptance": "pending native evidence; no new product change",
+    "followupHead": "f9def3300640f0871a93b6bbcec55de646e00567",
+    "guard": "Independent fixture union file and clean device required; native execution pending"
   }
 }
