@@ -73,6 +73,56 @@ struct ClientBinding {
     home: std::path::PathBuf,
     codex_home: std::path::PathBuf,
 }
+fn verify_client_route(binding: &ClientBinding, management_base: &str) -> ModelResult<String> {
+    #[derive(Deserialize, Default)]
+    struct Provider {
+        base_url: Option<String>,
+    }
+    #[derive(Deserialize, Default)]
+    struct Routing {
+        openai_base_url: Option<String>,
+        model_provider: Option<String>,
+        #[serde(default)]
+        model_providers: std::collections::BTreeMap<String, Provider>,
+    }
+    let fail = || {
+        invalid(
+            "rename_client_route",
+            "当前Codex配置未绑定此运行实例，未改写当前选择；请核对客户端来源",
+        )
+    };
+    let path = binding.codex_home.join("config.toml");
+    crate::modules::backup::safety::check_path(&binding.codex_home, &path, false)?;
+    let bytes = zeroize::Zeroizing::new(crate::modules::backup::safety::read_file(
+        &path,
+        2 * 1024 * 1024,
+    )?);
+    let routing: Routing =
+        toml::from_str(std::str::from_utf8(&bytes).map_err(|_| fail())?).map_err(|_| fail())?;
+    let selected = routing.model_provider.as_deref().unwrap_or("openai");
+    let raw = if let Some(provider) = routing.model_providers.get(selected) {
+        provider.base_url.as_deref()
+    } else if selected == "openai" {
+        routing.openai_base_url.as_deref()
+    } else {
+        None
+    }
+    .ok_or_else(fail)?;
+    let actual = reqwest::Url::parse(raw).map_err(|_| fail())?;
+    let expected = reqwest::Url::parse(management_base).map_err(|_| fail())?;
+    if actual.scheme() != "http"
+        || actual.host_str() != expected.host_str()
+        || actual.port_or_known_default() != expected.port_or_known_default()
+        || actual.path().trim_end_matches('/') != "/v1"
+        || !actual.username().is_empty()
+        || actual.password().is_some()
+        || actual.query().is_some()
+        || actual.fragment().is_some()
+    {
+        return Err(fail());
+    }
+    Ok(format!("sha256:{}", super::store::sha256(&bytes)))
+}
 fn client_binding(
     settings: &serde_json::Value,
     integration: &serde_json::Value,
@@ -172,8 +222,8 @@ pub async fn prepare_saved_rename_restart(
         let binding = client_binding(&settings, &integration)?;
         match binding {
             None => None,
-            Some(binding) => Some(
-                client_selection_rename::preflight_current_selection(
+            Some(binding) => {
+                let plan = client_selection_rename::preflight_current_selection(
                     context,
                     &binding.executable,
                     &binding.home,
@@ -182,15 +232,24 @@ pub async fn prepare_saved_rename_restart(
                     None,
                     &preparation.mapping,
                 )
-                .await?,
-            ),
+                .await?;
+                if plan.has_changes() {
+                    verify_client_route(&binding, management.base_url())?;
+                }
+                Some((plan, binding))
+            }
         }
     };
     verify_rename_preparation_worker(root, context, &preparation).await?;
     saved_runtime_reconcile::reconcile(&management, context, &preparation.mapping).await?;
     verify_rename_preparation_worker(root, context, &preparation).await?;
-    if let Some(selection) = selection {
-        selection.apply().await?;
+    if let Some((selection, binding)) = selection {
+        if selection.has_changes() {
+            let version = verify_client_route(&binding, management.base_url())?;
+            selection.apply_at_version(version).await?;
+        } else {
+            selection.apply().await?;
+        }
     }
     verify_rename_preparation_worker(root, context, &preparation).await?;
     management.verify_binding()?;

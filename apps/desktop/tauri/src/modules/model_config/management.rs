@@ -56,8 +56,19 @@ impl Management {
     }
     pub async fn codex_integration(&self) -> ModelResult<Value> {
         let request =
-            self.authenticated_request(reqwest::Method::GET, "/api/client-integrations/codex")?;
-        self.receive(request).await
+            self.authenticated_request(reqwest::Method::GET, "/api/native-integrations")?;
+        let value = self.receive(request).await?;
+        let clients = value["clients"]
+            .as_array()
+            .ok_or_else(|| invalid("rename_client_binding", "官方未返回原生客户端路径绑定"))?;
+        let mut rows = clients.iter().filter(|row| row["clientId"] == "codex");
+        let row = rows
+            .next()
+            .ok_or_else(|| invalid("rename_client_binding", "官方未返回Codex路径绑定"))?;
+        if rows.next().is_some() {
+            return Err(invalid("rename_client_binding", "官方Codex路径绑定重复"));
+        }
+        Ok(row.clone())
     }
     /// A deliberate no-op persisted editor commit asks the official owner to
     /// reconcile its complete live provider roster/default from saved content.

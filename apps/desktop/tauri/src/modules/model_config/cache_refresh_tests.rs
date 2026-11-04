@@ -56,6 +56,29 @@ fn current_client_binding_requires_owned_absolute_paths_and_validated_runtime() 
     assert!(client_binding(&settings, &integration).unwrap().is_none());
 }
 
+#[test]
+fn current_selection_never_moves_a_same_named_external_route_to_our_provider() {
+    let root = tempfile::tempdir().unwrap();
+    let home = root.path().join("home");
+    let codex = home.join(".codex");
+    std::fs::create_dir_all(&codex).unwrap();
+    let binding = ClientBinding {
+        executable: root.path().join("not-run"),
+        home,
+        codex_home: codex.clone(),
+    };
+    let config = codex.join("config.toml");
+    std::fs::write(
+        &config,
+        "model = 'Old/raw'\nopenai_base_url = 'http://127.0.0.1:45100/v1'\n",
+    )
+    .unwrap();
+    verify_client_route(&binding, "http://127.0.0.1:45100").unwrap();
+    for text in ["openai_base_url = 'http://127.0.0.1:45101/v1'", "openai_base_url = 'https://external.example.test/v1'", "model_provider = 'elsewhere'\nopenai_base_url = 'http://127.0.0.1:45100/v1'", "model_provider = 'openai'\nopenai_base_url = 'http://127.0.0.1:45100/v1'\n[model_providers.openai]\nbase_url = 'https://external.example.test/v1'", "openai_base_url = 'http://secret@127.0.0.1:45100/v1'", "openai_base_url = 'http://127.0.0.1:45100/v1?key=secret'"] {
+        std::fs::write(&config,text).unwrap();assert!(verify_client_route(&binding,"http://127.0.0.1:45100").is_err());assert_eq!(std::fs::read_to_string(&config).unwrap(),text);
+    }
+}
+
 #[derive(Clone)]
 struct RuntimeFixture {
     pid: u32,
@@ -321,7 +344,7 @@ async fn explicit_restart_reconciles_exact_pending_and_clears_only_after_verifie
         let expected_public = disk["providers"].clone();
         let router=Router::new().route("/healthz",get(health))
             .route("/api/settings",get(||async{Json(json!({"codexRuntime":{"path":null,"version":null}}))}))
-            .route("/api/client-integrations/codex",get(move||{let file=client_home.join("config.toml");async move{Json(json!({"clientId":"codex","state":"absent","installed":false,"configPath":file}))}}))
+            .route("/api/native-integrations",get(move||{let file=client_home.join("config.toml");async move{Json(json!({"clients":[{"clientId":"codex","state":"absent","installed":false,"configPath":file}]}))}}))
             .route("/api/providers/reload",post(move|headers:HeaderMap,body:Bytes|{let c=reload_counts.clone();async move{assert!(headers.get(header::AUTHORIZATION).is_none());assert!(body.is_empty());c.lock().unwrap().0+=1;Json(json!({"success":true}))}}))
             .route("/api/config",get(move||{let c=read_counts.clone();let p=read_public.clone();async move{let adopted=c.lock().unwrap().1>0;let mut providers=p.as_object().unwrap().clone();if !adopted&&!providers.contains_key("Old"){providers.insert("Old".into(),providers["New"].clone());}Json(json!({"providers":providers,"defaultProvider":if adopted{"New"}else{"Old"}}))}}))
             .route("/api/providers",put(move|headers:HeaderMap,Json(body):Json<Value>|{let c=put_counts.clone();let p=expected_public.clone();async move{assert!(headers.get(header::AUTHORIZATION).is_some());assert_eq!(body["baseline"],body["next"]);assert_eq!(body["next"],json!({"providers":p,"defaultProvider":"New"}));c.lock().unwrap().1+=1;Json(json!({"success":true,"catalogRefresh":{"status":"committed","changed":true,"degraded":false,"notices":[]}}))}}))

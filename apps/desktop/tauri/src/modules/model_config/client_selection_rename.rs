@@ -181,10 +181,29 @@ pub async fn preflight_current_selection(
 }
 
 impl ClientSelectionRenamePlan {
+    pub fn has_changes(&self) -> bool {
+        self.intent
+            .as_ref()
+            .is_some_and(|intent| !intent.edits.is_empty())
+    }
     /// Run after the producer. Injection may change unrelated fields and the
     /// file version, but a changed source/profile/model invalidates this intent.
     /// The write uses the latest observed owner version, not preflight's token.
     pub async fn apply(self) -> ModelResult<ClientSelectionRename> {
+        self.apply_checked(None).await
+    }
+    /// Bind the CAS to the exact post-producer file whose routing owner the
+    /// caller verified. Later unrelated changes must not silently rebind it.
+    pub async fn apply_at_version(self, version: String) -> ModelResult<ClientSelectionRename> {
+        if !version_token(&version) {
+            return Err(failure("changed"));
+        }
+        self.apply_checked(Some(version)).await
+    }
+    async fn apply_checked(
+        self,
+        expected_version: Option<String>,
+    ) -> ModelResult<ClientSelectionRename> {
         let Some(intent) = self.intent else {
             return Ok(ClientSelectionRename::Unchanged);
         };
@@ -213,6 +232,12 @@ impl ClientSelectionRenamePlan {
                 version = Some(current.version);
             }
             let version = version.ok_or_else(|| failure("source"))?;
+            if expected_version
+                .as_ref()
+                .is_some_and(|expected| expected != &version)
+            {
+                return Err(failure("changed"));
+            }
             let receipt = owner.write(&version, &intent, false).await?;
             // A valid receipt is necessary for compensation. Never replace this
             // token with an external edit's version during rollback.

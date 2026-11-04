@@ -553,6 +553,37 @@ async fn batch_cas_failure_keeps_both_and_compensation_cannot_clobber_an_externa
 
 #[cfg(unix)]
 #[tokio::test]
+async fn caller_verified_routing_version_cannot_be_rebound_after_an_external_change() {
+    use sha2::{Digest, Sha256};
+    for drift in [false, true] {
+        let fixture = Fixture::new(OLD);
+        let owner = fixture.fake("normal", "user");
+        let plan = fixture.plan(&owner, None).await.unwrap();
+        let before = fixture.bytes();
+        let version = format!("sha256:{:x}", Sha256::digest(&before));
+        if drift {
+            let mut bytes = before.clone();
+            bytes.extend_from_slice(b"\n# external routing change\n");
+            std::fs::write(fixture.codex.join("config.toml"), &bytes).unwrap();
+        }
+        let result = plan.apply_at_version(version).await;
+        if drift {
+            assert!(result.is_err());
+            assert_eq!(fixture.model(), OLD);
+            assert!(!fixture
+                .requests()
+                .iter()
+                .any(|row| row["method"] == "config/value/write"
+                    || row["method"] == "config/batchWrite"));
+        } else {
+            assert_eq!(result.unwrap(), ClientSelectionRename::Updated);
+            assert_eq!(fixture.model(), NEW);
+        }
+    }
+}
+
+#[cfg(unix)]
+#[tokio::test]
 async fn noop_preserves_bytes_and_matches_only_the_complete_provider() {
     for model in [
         "Krill/model",
