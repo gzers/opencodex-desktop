@@ -4,6 +4,7 @@ import {mkdir,writeFile,readFile} from 'node:fs/promises'
 import {join,win32} from 'node:path'
 import {discoverMainTarget} from '../windows-cdp.mjs'
 import {assertModelSandbox} from '../windows-model-ui.mjs'
+import {assertFirstScopeSelection} from './scope-proof.mjs'
 const [endpoint,root,output,scenario,argument]=process.argv.slice(2)
 assert(endpoint&&root&&output&&scenario);assert.equal(new URL(endpoint).hostname,'127.0.0.1')
 assert(win32.isAbsolute(root)&&root.includes('post021-windows-final'),'explicit isolated Windows root required')
@@ -28,6 +29,9 @@ try{
  const normalize=s=>win32.resolve(s).toLowerCase()
  check('real isolated Tauri binding',report.facts.about.platform==='Windows'&&normalize(report.facts.dataRoot.activeDataRoot)===normalize(root))
  if(scenario==='sync-setup'){
+  const expectedScopeBytes=await readFile(join(root,'expected-first-scope.json'))
+  report.expectedScope=JSON.parse(expectedScopeBytes)
+  for(const name of ['config-sync-scope.json','config-sync-initialized.json'])await assert.rejects(readFile(join(root,'manager-state',name)),error=>error.code==='ENOENT','First-scope scenario requires a fresh device with no saved range or initialized marker')
   report.environment=await invoke('discover_environment',{request:null})
   check('real controlled Node/npm/ocx available',report.environment.gate==='ready')
   await click('同步','.side');await click('WebDAV 同步','.sync-route');await click('连接设置','.sync-route');await wait("!!document.querySelector('dialog[open]')",'connection dialog')
@@ -37,9 +41,11 @@ try{
   check('one boundary slash',report.address==='https://127.0.0.1:60441/native021-only')
   await wait("document.querySelectorAll('#sync-webdav-panel input[type=checkbox]').length>0",'actual scope controls')
   let scopeBytes;for(let n=0;n<30;n++){try{scopeBytes=await readFile(join(root,'manager-state/config-sync-scope.json'),'utf8');break}catch{await new Promise(r=>setTimeout(r,200))}}assert(scopeBytes,'scope file missing after bounded wait');report.scope=JSON.parse(scopeBytes)
-  check('first full catalogue selects channels and templates',report.scope.channelIds.length+report.scope.templateIds.length>0)
+  assertFirstScopeSelection(report.scope,report.expectedScope)
+  check('first full catalogue selects exact local/cloud fixture union',true)
   report.nativeScope=await evaluate("[...document.querySelectorAll('#sync-webdav-panel input[type=checkbox]')].map(e=>({label:e.getAttribute('aria-label'),checked:e.checked}))")
   check('actual scope checkboxes selected',report.nativeScope.some(x=>x.checked))
+  check('fixture expectations unchanged',expectedScopeBytes.equals(await readFile(join(root,'expected-first-scope.json'))))
  }else if(scenario==='sync-version'){
   await click('概览','.side');await wait("!!document.querySelector('[data-testid=overview-remote-version]')",'ready native overview')
   await click('检测版本','.mods')

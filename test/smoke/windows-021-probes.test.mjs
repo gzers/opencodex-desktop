@@ -7,6 +7,17 @@ import {join} from 'node:path'
 import {runInNewContext} from 'node:vm'
 import {assert021Admission,assert021RenameReadback,assert021RenameBackups,assert021DetectionLayout,assert021WebdavState,verifyWindows021Probes,close021Dialog,native021Click} from './windows-021-probes.mjs'
 import {observe021Ipc,assert021IpcSafety,assert021NoticeTiming,install021NoticeObservation,sample021Notice,install021CandidateObservation} from './windows-021-observer.mjs'
+import {assertFirstScopeSelection} from './post021-windows-final/scope-proof.mjs'
+
+test('first-device native scope requires the complete independent fixture union, not one selected object',()=>{
+ const expected={channelIds:['local-channel','cloud-only-channel'],templateIds:['local-template','cloud-only-template']}
+ assert.doesNotThrow(()=>assertFirstScopeSelection(structuredClone(expected),expected))
+ assert.doesNotThrow(()=>assertFirstScopeSelection({channelIds:[...expected.channelIds].reverse(),templateIds:[...expected.templateIds].reverse()},expected))
+ for(const mutate of [x=>x.channelIds.pop(),x=>x.templateIds.pop(),x=>x.channelIds.push('unrelated'),x=>x.templateIds.push(x.templateIds[0]),x=>{x.channelIds=[]}]){
+  const actual=structuredClone(expected);mutate(actual);assert.throws(()=>assertFirstScopeSelection(actual,expected))
+ }
+ assert.throws(()=>assertFirstScopeSelection(expected,{channelIds:[],templateIds:expected.templateIds}))
+})
 
 const root='C:\\runner\\owned-sandbox',home=root+'\\opencodex-home'
 const facts={about:{platform:'Windows',version:'0.2.21'},dataRoot:{currentDataRoot:root,activeDataRoot:root,runtimeActive:true,opencodexHomeMode:'inside',currentOpencodexHome:home,opencodexHome:home}}
