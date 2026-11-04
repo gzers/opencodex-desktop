@@ -1,0 +1,38 @@
+
+> opencodex-desktop-ui@0.2.21 test
+> vitest --run tests/panel.test.ts tests/panel-idle.test.ts tests/panel-update-progress.test.ts
+
+
+ RUN  v5.0.0 D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/apps/desktop/ui
+
+ ❯ tests/panel.test.ts (14 tests | 1 failed) 2065ms
+   ❯ official panel embedding (14)
+     × turns a load timeout while running into a page failure without touching the process 1017ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/panel.test.ts > official panel embedding > turns a load timeout while running into a page failure without touching the process
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'sync_embedded_panel', …(1) ]
+
+Number of calls: 0
+
+ ❯ tests/panel.test.ts:395:45
+    393|       invoke.mockClear()
+    394|       window.dispatchEvent(new CustomEvent('ocxd-panel', { detail: { k…
+    395|       await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith(
+       |                                             ^
+    396|         'sync_embedded_panel',
+    397|         expect.objectContaining({ request: expect.objectContaining({ a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 17 passed (18)
+   Start at  22:19:37
+   Duration  6.09s (environment 45%, transform 27%, tests 24%, import 4%)
+
+  Transform  transforming modules took 2.41s · 27% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

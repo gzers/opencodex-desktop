@@ -1,0 +1,57 @@
+{
+  "trace": null,
+  "readyAt": 101.19999980926514,
+  "events": [
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPreferences",
+      "startMs": 3.0999999046325684,
+      "endMs": 11.599999904632568,
+      "elapsedMs": 8.5
+    },
+    {
+      "kind": "action",
+      "store": "preferences",
+      "name": "load",
+      "startMs": 3.0999999046325684,
+      "endMs": 11.599999904632568,
+      "elapsedMs": 8.5
+    },
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPanelUrl",
+      "startMs": 11.599999904632568,
+      "endMs": 11.599999904632568,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "loadUrl",
+      "startMs": 11.599999904632568,
+      "endMs": 11.599999904632568,
+      "elapsedMs": 0
+    }
+  ],
+  "polls": [
+    {
+      "ms": 101.19999980926514,
+      "loaded": true,
+      "text": "官方面板已嵌入主窗口"
+    }
+  ],
+  "final": {
+    "root": {
+      "effects": "mid",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "solid",
+      "route": "panel"
+    },
+    "loaded": true,
+    "error": "",
+    "text": "官方面板已嵌入主窗口"
+  }
+}

@@ -1,0 +1,998 @@
+{
+  "trace": {
+    "id": 6,
+    "startedAt": 1447047,
+    "outcome": "loading",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.19999980926513672
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.19999980926513672
+      }
+    ]
+  },
+  "readyAt": null,
+  "events": [
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "beginLoad",
+      "startMs": 3.6000003814697266,
+      "endMs": 3.8000001907348633,
+      "elapsedMs": 0.19999980926513672
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.8000001907348633,
+      "endMs": 3.9000000953674316,
+      "elapsedMs": 0.09999990463256836
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.9000000953674316,
+      "endMs": 3.9000000953674316,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.9000000953674316,
+      "endMs": 3.9000000953674316,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPanelUrl",
+      "startMs": 3.9000000953674316,
+      "endMs": 3.9000000953674316,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "loadUrl",
+      "startMs": 3.9000000953674316,
+      "endMs": 3.9000000953674316,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "setStatusSnapshot",
+      "startMs": 440.40000009536743,
+      "endMs": 440.40000009536743,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "syncProcessProgress",
+      "startMs": 440.40000009536743,
+      "endMs": 440.40000009536743,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "setStatusSnapshot",
+      "startMs": 3446.4000000953674,
+      "endMs": 3446.5,
+      "elapsedMs": 0.09999990463256836
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "syncProcessProgress",
+      "startMs": 3446.5,
+      "endMs": 3446.5,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "setStatusSnapshot",
+      "startMs": 5745.400000095367,
+      "endMs": 5745.5,
+      "elapsedMs": 0.09999990463256836
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "syncProcessProgress",
+      "startMs": 5745.5,
+      "endMs": 5745.5,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "setStatusSnapshot",
+      "startMs": 6415.400000095367,
+      "endMs": 6415.400000095367,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "syncProcessProgress",
+      "startMs": 6415.400000095367,
+      "endMs": 6415.400000095367,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "setStatusSnapshot",
+      "startMs": 9465,
+      "endMs": 9465,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "syncProcessProgress",
+      "startMs": 9465,
+      "endMs": 9465,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "setStatusSnapshot",
+      "startMs": 12476.800000190735,
+      "endMs": 12476.800000190735,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "syncProcessProgress",
+      "startMs": 12476.800000190735,
+      "endMs": 12476.800000190735,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "setStatusSnapshot",
+      "startMs": 15481.200000286102,
+      "endMs": 15481.200000286102,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "lifecycle",
+      "name": "syncProcessProgress",
+      "startMs": 15481.200000286102,
+      "endMs": 15481.200000286102,
+      "elapsedMs": 0
+    }
+  ],
+  "polls": [
+    {
+      "ms": 101.30000019073486,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 201.80000019073486,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 306.2000002861023,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 415.80000019073486,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 516.9000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 630.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 738.6000003814697,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 853.6000003814697,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 957,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 1069.1000003814697,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 1170.3000001907349,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 1274.9000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 1375.4000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 1478.8000001907349,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 1580.4000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 1681,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 1795.6000003814697,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 1899.4000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 2000.1000003814697,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 2100.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 2202.4000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 2306.1000003814697,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 2407.4000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 2508.2000002861023,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 2609.4000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 2710.4000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 2810.7000002861023,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 2911.9000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 3019.1000003814697,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 3127.7000002861023,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 3228.1000003814697,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 3328.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 3429.6000003814697,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 3531.6000003814697,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 3635,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 3743.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 3851,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 3961.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 4071.4000000953674,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 4171.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 4275.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 4385.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 4492.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 4592.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 4693.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 4806.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 4911.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 5015.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 5116.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 5221.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 5329.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 5433.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 5534,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 5634.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 5735.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 5839.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 5939.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 6050.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 6150.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 6250.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 6351.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 6461.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 6561.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 6662.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 6762.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 6863.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 6966.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 7067.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 7167.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 7268.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 7369.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 7470.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 7570.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 7678.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 7779.700000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 7879.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 7980.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 8081,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 8181.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 8281.700000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 8382,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 8483,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 8583.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 8684.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 8785.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 8886.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 8987.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 9101.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 9202,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 9305.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 9412.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 9514.700000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 9627.700000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 9728,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 9841.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 9950.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 10055.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 10163.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 10272.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 10374,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 10478.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 10579.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 10684,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 10790,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 10900.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 11009.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 11112.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 11212.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 11320.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 11429.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 11529.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 11634.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 11739.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 11850.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 11962.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 12071.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 12172.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 12275.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 12375.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 12476.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 12578,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 12680,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 12790.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 12900.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 13010.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 13119.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 13226.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 13328.60000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 13430.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 13531.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 13639.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 13740.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 13853.5,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 13963.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 14070.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 14181.900000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 14291,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 14402.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 14513.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 14624.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 14725,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 14837.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 14951.300000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 15054.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 15166.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 15274.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 15383.700000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 15484.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 15592.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 15693.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 15798.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 15899.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 16000.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 16104.800000190735,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 16206.700000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 16307.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 16408.10000038147,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 16508.700000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 16620.200000286102,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    },
+    {
+      "ms": 16720.400000095367,
+      "loaded": true,
+      "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+    }
+  ],
+  "final": {
+    "root": {
+      "effects": "mid",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "panel"
+    },
+    "loaded": true,
+    "error": "官方面板需要 OpenCodex 处于运行且健康可用状态；请先启动服务。",
+    "text": "OpenCodex 未运行\n请从概览启动 OpenCodex 后再打开面板。\n返回概览"
+  }
+}

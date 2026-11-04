@@ -1,0 +1,39 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104",
+  "title": "Windows重启反馈回归合同对齐",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "补充原重启TASK未覆盖的既有反馈测试路径；失败后保留已保存卡片和重试，成功重启才结束。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-restart-panel-chat-01a1a68a",
+  "baseline_digest": "b6ab46a250b957db05c4bcf45fd578048526129a14f91b3ca154a1b6e5be7a19",
+  "write_scope": [
+    "apps/desktop/ui/tests/model-save-feedback.test.ts"
+  ],
+  "required_checks": [
+    "review:restart-feedback-tests"
+  ],
+  "acceptance_ids": [
+    "AC-P21-09"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-09",
+      "criterion_digest": "be98e9a1cf0b6c4c728b3cfd000b64aa4a83099905281d671d7958bf80f74f59"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 2,
+  "summary_digest": "46901804d57cc6d1d636f8eacaca824af5c39703fa347d1f3b61458b42166e96",
+  "content_digest": "706e5c5ece6bc9ca946989bc38f7005fd2955cce73ff40c2690995bccf2226c1"
+}

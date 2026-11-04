@@ -1,0 +1,32 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104",
+  "task_digest": "706e5c5ece6bc9ca946989bc38f7005fd2955cce73ff40c2690995bccf2226c1",
+  "task_summary_digest": "46901804d57cc6d1d636f8eacaca824af5c39703fa347d1f3b61458b42166e96",
+  "baseline_digest": "b6ab46a250b957db05c4bcf45fd578048526129a14f91b3ca154a1b6e5be7a19",
+  "result": "succeeded",
+  "changed_paths": [
+    "apps/desktop/ui/tests/model-save-feedback.test.ts"
+  ],
+  "checks": [
+    {
+      "name": "review:restart-feedback-tests",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/CHECKS.json"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-04T15:23:50.983667+00:00",
+  "summary": "W2隔离贡献检查通过，代码4b0c357b12d331de8dd49f8209056394e93a728d。真实自有Windows壳重启读回与官方面板原生验证见HANDOFF；正式打包壳默认adapter及最终同提交跨端/发布门仍由L验收，不生成最终证书、不关闭共享DMD/IMP。",
+  "revision": 1,
+  "summary_digest": "5d8a5b0c39ee0b6c425cb8a4fa550c7b997bd65116a3d66762d8107908f153f7",
+  "content_digest": "ef4b3465f436693adaef85777bd323792d77305c3eec04ea3e5a6f397cbe796b"
+}

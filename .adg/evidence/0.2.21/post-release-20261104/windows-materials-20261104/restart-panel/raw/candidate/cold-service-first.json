@@ -1,0 +1,115 @@
+{
+  "trace": {
+    "id": 2,
+    "startedAt": 352822.2999997139,
+    "outcome": "loading",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "address-ready",
+        "elapsedMs": 0.20000028610229492
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 1.1000003814697266
+      }
+    ]
+  },
+  "readyAt": 103,
+  "events": [
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "beginLoad",
+      "startMs": 3.4000000953674316,
+      "endMs": 3.6000003814697266,
+      "elapsedMs": 0.20000028610229492
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.6000003814697266,
+      "endMs": 3.6000003814697266,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.6000003814697266,
+      "endMs": 3.6000003814697266,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.6000003814697266,
+      "endMs": 3.6000003814697266,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPanelUrl",
+      "startMs": 3.6000003814697266,
+      "endMs": 3.700000286102295,
+      "elapsedMs": 0.09999990463256836
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "loadUrl",
+      "startMs": 3.6000003814697266,
+      "endMs": 3.700000286102295,
+      "elapsedMs": 0.09999990463256836
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 3.700000286102295,
+      "endMs": 3.700000286102295,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "markLoad",
+      "startMs": 4.600000381469727,
+      "endMs": 4.600000381469727,
+      "elapsedMs": 0
+    }
+  ],
+  "polls": [
+    {
+      "ms": 103,
+      "loaded": true,
+      "text": "正在将官方面板嵌入主窗口…"
+    }
+  ],
+  "final": {
+    "root": {
+      "effects": "mid",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "panel"
+    },
+    "loaded": true,
+    "error": "",
+    "text": "正在将官方面板嵌入主窗口…"
+  }
+}

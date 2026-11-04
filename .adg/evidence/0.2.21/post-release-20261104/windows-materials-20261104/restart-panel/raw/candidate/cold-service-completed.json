@@ -1,0 +1,92 @@
+{
+  "route": "panel",
+  "trace": {
+    "id": 2,
+    "startedAt": 352822.2999997139,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.10000038146972656
+      },
+      {
+        "phase": "address-ready",
+        "elapsedMs": 0.20000028610229492
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 1.1000003814697266
+      },
+      {
+        "phase": "navigation-start",
+        "elapsedMs": 193.2000002861023
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 193.5
+      },
+      {
+        "phase": "native:owner-lock:9.0",
+        "elapsedMs": 193.5
+      },
+      {
+        "phase": "native:runtime-address:19.0",
+        "elapsedMs": 193.5
+      },
+      {
+        "phase": "native:browser-environment:28.0",
+        "elapsedMs": 193.5
+      },
+      {
+        "phase": "native:native-view:161.0",
+        "elapsedMs": 193.5
+      },
+      {
+        "phase": "native:visible:170.0",
+        "elapsedMs": 193.5
+      },
+      {
+        "phase": "navigation-ready",
+        "elapsedMs": 321
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 321.30000019073486
+      }
+    ]
+  },
+  "loaded": true,
+  "status": {
+    "matrix": {
+      "runtime": "running",
+      "connection": "unconfigured",
+      "operation": "idle"
+    },
+    "facts": {
+      "health": "healthy",
+      "runtime_label": null,
+      "opencodex_home": null,
+      "data_root": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-restart-panel\\candidate\\sandbox\\opencodex-home",
+      "protection": "none",
+      "reboot_safe": false,
+      "service_present": false,
+      "shim_present": false,
+      "version_drift": null,
+      "startup_status": null
+    },
+    "port": 60434,
+    "pid": "8620",
+    "can_start": false,
+    "can_stop": true,
+    "can_restart": true,
+    "source": "live"
+  }
+}

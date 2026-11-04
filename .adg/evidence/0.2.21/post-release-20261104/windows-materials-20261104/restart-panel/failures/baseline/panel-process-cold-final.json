@@ -1,0 +1,203 @@
+{
+  "readyAt": 2505.800000190735,
+  "events": [
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPreferences",
+      "startMs": 11.099999904632568,
+      "endMs": 19.90000009536743,
+      "elapsedMs": 8.800000190734863
+    },
+    {
+      "kind": "action",
+      "store": "preferences",
+      "name": "load",
+      "startMs": 11.099999904632568,
+      "endMs": 19.90000009536743,
+      "elapsedMs": 8.800000190734863
+    },
+    {
+      "kind": "action",
+      "store": "app",
+      "name": "loadPanelUrl",
+      "startMs": 19.90000009536743,
+      "endMs": 19.90000009536743,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "loadUrl",
+      "startMs": 19.90000009536743,
+      "endMs": 19.90000009536743,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "native",
+      "detail": {
+        "kind": "load",
+        "value": "loading"
+      },
+      "atMs": 2311.300000190735
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "setLoaded",
+      "startMs": 2311.300000190735,
+      "endMs": 2311.300000190735,
+      "elapsedMs": 0
+    },
+    {
+      "kind": "native",
+      "detail": {
+        "kind": "load",
+        "value": "ready"
+      },
+      "atMs": 2455.300000190735
+    },
+    {
+      "kind": "action",
+      "store": "panel",
+      "name": "setLoaded",
+      "startMs": 2455.300000190735,
+      "endMs": 2455.4000000953674,
+      "elapsedMs": 0.09999990463256836
+    }
+  ],
+  "polls": [
+    {
+      "ms": 110.80000019073486,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 212.90000009536743,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 313.09999990463257,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 413.80000019073486,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 515,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 625.9000000953674,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 734.6999998092651,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 845.4000000953674,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 945.8000001907349,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1047.9000000953674,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1149.5999999046326,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1250.6999998092651,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1352.8000001907349,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1453.3000001907349,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1562,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1671.0999999046326,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1771.3000001907349,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1875.5,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 1984.1999998092651,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 2092.5,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 2200.5,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 2300.699999809265,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 2405.5,
+      "loaded": false,
+      "text": "正在将官方面板嵌入主窗口…"
+    },
+    {
+      "ms": 2505.800000190735,
+      "loaded": true,
+      "text": "官方面板已嵌入主窗口"
+    }
+  ],
+  "final": {
+    "root": {
+      "effects": "mid",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "solid",
+      "route": "panel"
+    },
+    "loaded": true,
+    "error": "",
+    "text": "官方面板已嵌入主窗口"
+  }
+}

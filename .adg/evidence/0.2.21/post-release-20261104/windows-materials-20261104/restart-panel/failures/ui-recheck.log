@@ -1,0 +1,244 @@
+
+> opencodex-desktop-ui@0.2.21 test
+> vitest --run tests/model-save-feedback.test.ts tests/post09-restart.test.ts tests/post10-panel.test.ts tests/panel.test.ts
+
+
+ RUN  v5.0.0 D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/apps/desktop/ui
+
+ ❯ tests/model-save-feedback.test.ts (10 tests | 3 failed) 685ms
+   ❯ 一次保存反馈的真实组件交互（模拟 API，不代表真机重启） (8)
+     × 确认后如实显示返回 summary：Codex 未重新启动：官方返回拒绝。 57ms
+     × 确认后如实显示返回 summary：缓存已同步；未执行桌面重启。 41ms
+     × 接口异常保留已保存反馈、真实错误和重试入口 46ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-save-feedback.test.ts > 一次保存反馈的真实组件交互（模拟 API，不代表真机重启） > 确认后如实显示返回 summary：Codex 未重新启动：官方返回拒绝。
+Error: Unable to get [role=alert] within: <div>
+  <header class="topbar topbar-compact">
+    <!--v-if-->
+    <div class="topbar-actions">
+      <div class="theme-seg" role="group" aria-label="主题"><button class="" title="浅色" aria-label="浅色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg></button><button class="" title="深色" aria-label="深色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg></button><button class="active" title="跟随系统" aria-label="跟随系统"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2.5" y="4" width="19" height="13" rx="2"></rect>
+            <path d="M8.5 20.5h7M12 17v3.5"></path>
+          </svg></button></div>
+      <!--v-if--><button type="button" class="icon-btn ui-icon-control icon-btn topbar-refresh" aria-label="刷新状态" aria-busy="false" title="刷新状态"><svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"></path>
+          <path d="M18.2 3.4v3.3h-3.3"></path>
+        </svg></button>
+      <div class="notification-wrap"><button class="notification-btn" data-notification-bell="" aria-expanded="false" title="通知"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"></path>
+            <path d="M10.3 20a2 2 0 0 0 3.4 0"></path>
+          </svg><span class="notification-dot">0</span></button></div>
+    </div>
+  </header>
+  <div class="notif-layer">
+    <div class="notification-panel" role="dialog" aria-label="通知中心">
+      <div class="notification-head">
+        <h3>通知中心</h3>
+        <div class="notification-head-actions"><button class="notification-clear">历史</button><button class="notification-clear">全部已读</button><button class="notification-clear" disabled="">清理</button><button class="notify-min" type="button" title="收起到铃铛" aria-label="收起通知中心到铃铛"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"></path>
+              <path d="M10.3 20a2 2 0 0 0 3.4 0"></path>
+            </svg></button></div>
+      </div>
+      <div class="notification-cats" role="tablist" aria-label="通知分类"><button role="tab" aria-selected="true" class="active">全部 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">运行 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">同步 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">更新 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">系统 <span class="n-count">0</span></button></div>
+      <div class="notification-list">
+        <div class="notification-empty">当前分类没有通知。</div>
+      </div>
+    </div>
+    <!--teleport start-->
+    <!--teleport end-->
+    <section class="process-progress done has-notification-countdown" role="status" aria-live="polite" aria-atomic="true" data-notification-key="model-save:v-1" aria-describedby="notificationCountdownHelp-v-2">
+      <div class="process-progress-head"><span class="process-progress-result done" aria-hidden="true">✓</span>
+        <div>
+          <h3>已写入</h3>
+          <p>配置已保存；重启尚未完成，仍可重试。</p>
+        </div>
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+      <!--v-if-->
+      <div class="process-progress-actions"><button class="btn notif-ctl" type="button">
+          <!--v-if--><span class="btn-content">立即重启 Codex</span>
+        </button><button class="btn ghost notif-ctl" type="button">
+          <!--v-if--><span class="btn-content">稍后</span>
+        </button></div>
+      <div class="notification-countdown" data-tone="success" aria-hidden="true" data-phase="paused"><span class="notification-countdown-fill" style="transform: scaleX(0.999105975);"></span></div><span id="notificationCountdownHelp-v-2" class="notification-countdown-help">本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。</span>
+    </section>
+    <!--teleport start-->
+    <!--teleport end-->
+    <!--v-if-->
+  </div>
+</div>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/model-save-feedback.test.ts:109:22
+    107|     } else {
+    108|       expect(toast).not.toHaveBeenCalled()
+    109|       expect(wrapper.get('[role=alert]').text()).toContain(result.summ…
+       |                      ^
+    110|       expect(useModelSaveFeedback().open).toBe(true)
+    111|       expect(button('重试重启').attributes('disabled')).toBeUndefined()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/model-save-feedback.test.ts > 一次保存反馈的真实组件交互（模拟 API，不代表真机重启） > 确认后如实显示返回 summary：缓存已同步；未执行桌面重启。
+Error: Unable to get [role=alert] within: <div>
+  <header class="topbar topbar-compact">
+    <!--v-if-->
+    <div class="topbar-actions">
+      <div class="theme-seg" role="group" aria-label="主题"><button class="" title="浅色" aria-label="浅色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg></button><button class="" title="深色" aria-label="深色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg></button><button class="active" title="跟随系统" aria-label="跟随系统"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2.5" y="4" width="19" height="13" rx="2"></rect>
+            <path d="M8.5 20.5h7M12 17v3.5"></path>
+          </svg></button></div>
+      <!--v-if--><button type="button" class="icon-btn ui-icon-control icon-btn topbar-refresh" aria-label="刷新状态" aria-busy="false" title="刷新状态"><svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"></path>
+          <path d="M18.2 3.4v3.3h-3.3"></path>
+        </svg></button>
+      <div class="notification-wrap"><button class="notification-btn" data-notification-bell="" aria-expanded="false" title="通知"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"></path>
+            <path d="M10.3 20a2 2 0 0 0 3.4 0"></path>
+          </svg><span class="notification-dot">0</span></button></div>
+    </div>
+  </header>
+  <div class="notif-layer">
+    <div class="notification-panel" role="dialog" aria-label="通知中心">
+      <div class="notification-head">
+        <h3>通知中心</h3>
+        <div class="notification-head-actions"><button class="notification-clear">历史</button><button class="notification-clear">全部已读</button><button class="notification-clear" disabled="">清理</button><button class="notify-min" type="button" title="收起到铃铛" aria-label="收起通知中心到铃铛"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"></path>
+              <path d="M10.3 20a2 2 0 0 0 3.4 0"></path>
+            </svg></button></div>
+      </div>
+      <div class="notification-cats" role="tablist" aria-label="通知分类"><button role="tab" aria-selected="true" class="active">全部 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">运行 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">同步 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">更新 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">系统 <span class="n-count">0</span></button></div>
+      <div class="notification-list">
+        <div class="notification-empty">当前分类没有通知。</div>
+      </div>
+    </div>
+    <!--teleport start-->
+    <!--teleport end-->
+    <section class="process-progress done has-notification-countdown" role="status" aria-live="polite" aria-atomic="true" data-notification-key="model-save:v-1" aria-describedby="notificationCountdownHelp-v-2">
+      <div class="process-progress-head"><span class="process-progress-result done" aria-hidden="true">✓</span>
+        <div>
+          <h3>已写入</h3>
+          <p>配置已保存；重启尚未完成，仍可重试。</p>
+        </div>
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+      <!--v-if-->
+      <div class="process-progress-actions"><button class="btn notif-ctl" type="button">
+          <!--v-if--><span class="btn-content">立即重启 Codex</span>
+        </button><button class="btn ghost notif-ctl" type="button">
+          <!--v-if--><span class="btn-content">稍后</span>
+        </button></div>
+      <div class="notification-countdown" data-tone="success" aria-hidden="true" data-phase="paused"><span class="notification-countdown-fill" style="transform: scaleX(0.9990362749999999);"></span></div><span id="notificationCountdownHelp-v-2" class="notification-countdown-help">本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。</span>
+    </section>
+    <!--teleport start-->
+    <!--teleport end-->
+    <!--v-if-->
+  </div>
+</div>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/model-save-feedback.test.ts:109:22
+    107|     } else {
+    108|       expect(toast).not.toHaveBeenCalled()
+    109|       expect(wrapper.get('[role=alert]').text()).toContain(result.summ…
+       |                      ^
+    110|       expect(useModelSaveFeedback().open).toBe(true)
+    111|       expect(button('重试重启').attributes('disabled')).toBeUndefined()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/model-save-feedback.test.ts > 一次保存反馈的真实组件交互（模拟 API，不代表真机重启） > 接口异常保留已保存反馈、真实错误和重试入口
+Error: Unable to get [role=alert] within: <div>
+  <header class="topbar topbar-compact">
+    <!--v-if-->
+    <div class="topbar-actions">
+      <div class="theme-seg" role="group" aria-label="主题"><button class="" title="浅色" aria-label="浅色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg></button><button class="" title="深色" aria-label="深色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg></button><button class="active" title="跟随系统" aria-label="跟随系统"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2.5" y="4" width="19" height="13" rx="2"></rect>
+            <path d="M8.5 20.5h7M12 17v3.5"></path>
+          </svg></button></div>
+      <!--v-if--><button type="button" class="icon-btn ui-icon-control icon-btn topbar-refresh" aria-label="刷新状态" aria-busy="false" title="刷新状态"><svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"></path>
+          <path d="M18.2 3.4v3.3h-3.3"></path>
+        </svg></button>
+      <div class="notification-wrap"><button class="notification-btn" data-notification-bell="" aria-expanded="false" title="通知"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"></path>
+            <path d="M10.3 20a2 2 0 0 0 3.4 0"></path>
+          </svg><span class="notification-dot">0</span></button></div>
+    </div>
+  </header>
+  <div class="notif-layer">
+    <div class="notification-panel" role="dialog" aria-label="通知中心">
+      <div class="notification-head">
+        <h3>通知中心</h3>
+        <div class="notification-head-actions"><button class="notification-clear">历史</button><button class="notification-clear">全部已读</button><button class="notification-clear" disabled="">清理</button><button class="notify-min" type="button" title="收起到铃铛" aria-label="收起通知中心到铃铛"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"></path>
+              <path d="M10.3 20a2 2 0 0 0 3.4 0"></path>
+            </svg></button></div>
+      </div>
+      <div class="notification-cats" role="tablist" aria-label="通知分类"><button role="tab" aria-selected="true" class="active">全部 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">运行 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">同步 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">更新 <span class="n-count">0</span></button><button role="tab" aria-selected="false" class="">系统 <span class="n-count">0</span></button></div>
+      <div class="notification-list">
+        <div class="notification-empty">当前分类没有通知。</div>
+      </div>
+    </div>
+    <!--teleport start-->
+    <!--teleport end-->
+    <section class="process-progress done has-notification-countdown" role="status" aria-live="polite" aria-atomic="true" data-notification-key="model-save:v-1" aria-describedby="notificationCountdownHelp-v-2">
+      <div class="process-progress-head"><span class="process-progress-result done" aria-hidden="true">✓</span>
+        <div>
+          <h3>已写入</h3>
+          <p>配置已保存；重启尚未完成，仍可重试。</p>
+        </div>
+        <!--v-if-->
+      </div>
+      <!--v-if-->
+      <!--v-if-->
+      <div class="process-progress-actions"><button class="btn notif-ctl" type="button">
+          <!--v-if--><span class="btn-content">立即重启 Codex</span>
+        </button><button class="btn ghost notif-ctl" type="button">
+          <!--v-if--><span class="btn-content">稍后</span>
+        </button></div>
+      <div class="notification-countdown" data-tone="success" aria-hidden="true" data-phase="paused"><span class="notification-countdown-fill" style="transform: scaleX(0.9991500375000001);"></span></div><span id="notificationCountdownHelp-v-2" class="notification-countdown-help">本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。</span>
+    </section>
+    <!--teleport start-->
+    <!--teleport end-->
+    <!--v-if-->
+  </div>
+</div>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/model-save-feedback.test.ts:122:20
+    120|     dialogButton('确认重启').click()
+    121|     await flushPromises()
+    122|     expect(wrapper.get('[role=alert]').text()).toContain('本机重启连接断开')
+       |                    ^
+    123|     expect(useModelSaveFeedback().open).toBe(true)
+    124|     expect(button('重试重启').attributes('disabled')).toBeUndefined()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  3 failed | 28 passed (31)
+   Start at  22:35:29
+   Duration  4.50s (transform 49%, environment 26%, tests 16%, import 10%)
+
+  Transform  transforming modules took 6.59s · 49% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

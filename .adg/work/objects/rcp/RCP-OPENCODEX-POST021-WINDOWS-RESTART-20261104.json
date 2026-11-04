@@ -1,0 +1,59 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-RESTART-20261104",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-RESTART-20261104",
+  "task_digest": "e3717ddb05f45065186cd2c637db55a531f1bea89612fc940c30e5ab4b1426a9",
+  "task_summary_digest": "475ffe1d2797b7b3900fb32ac698e8232f85a2c6b84a68206ce6400c24e221fb",
+  "baseline_digest": "b6ab46a250b957db05c4bcf45fd578048526129a14f91b3ca154a1b6e5be7a19",
+  "result": "succeeded",
+  "changed_paths": [
+    "apps/desktop/tauri/src/modules/model_config/cache_refresh.rs",
+    "apps/desktop/tauri/src/modules/model_config/cache_refresh_tests.rs",
+    "apps/desktop/tauri/src/modules/model_config/management.rs",
+    "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+    "apps/desktop/ui/tests/post09-restart.test.ts",
+    "test/smoke/post021-restart/OwnedClient.cs",
+    "test/smoke/post021-restart/README.md",
+    "test/smoke/post021-restart/owned-desktop.ts"
+  ],
+  "checks": [
+    {
+      "name": "review:restart-isolation",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    },
+    {
+      "name": "review:restart-native",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    },
+    {
+      "name": "review:restart-recovery",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    },
+    {
+      "name": "review:restart-root-cause",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    },
+    {
+      "name": "review:restart-tests",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/CHECKS.json"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-04T15:23:50.978588+00:00",
+  "summary": "W2隔离贡献检查通过，代码4b0c357b12d331de8dd49f8209056394e93a728d。真实自有Windows壳重启读回与官方面板原生验证见HANDOFF；正式打包壳默认adapter及最终同提交跨端/发布门仍由L验收，不生成最终证书、不关闭共享DMD/IMP。",
+  "revision": 1,
+  "summary_digest": "9318d730146484059c8516be77e1296721654e2290d6f29e82597b02fd5b1c57",
+  "content_digest": "dc4ea7fabaebf6fbc1a8fd517e2cfcd159387ca666d047f3b2252eea80bdac97"
+}

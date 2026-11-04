@@ -1,0 +1,49 @@
+{
+  "scope": "W2 isolated Windows contribution; final integrated release acceptance remains with L",
+  "restart": [
+    "record-missing",
+    "record-corrupt",
+    "stale-listener",
+    "actual-service-stopped",
+    "management-token-missing",
+    "saved-config-missing-with-pending",
+    "ordinary-save-without-ever-opening-panel",
+    "ordinary-save-after-opening-panel",
+    "rename-selection-prepare-and-restart-readback",
+    "saved-file-drift-rejected-and-retry"
+  ],
+  "panel": [
+    "foreground-first-create",
+    "warm-reopen",
+    "service-new-process-and-origin-change",
+    "overlay-hide-and-restore",
+    "pre-show-dependency-timeout-native-shell",
+    "late-result-ignored-and-retry-native-shell",
+    "pending-show-race-unit-test",
+    "same-generation-ready-before-result-unit-test"
+  ],
+  "timing": {
+    "baselineClickToLoadReadySampleMs": 2419.199999809265,
+    "candidateClickToLoadReadySampleMs": 302.80000019073486,
+    "candidateTraceReadyMs": 275.3,
+    "candidateNativeViewMs": 144,
+    "candidateNativeVisibleMs": 153,
+    "conditions": "foreground, mid, same Windows host, first child view in manager process, official GUI 2.84.0; 100ms sampling; not optical first-pixel timing",
+    "evidence": [
+      "raw/baseline/panel-cold-foreground.json",
+      "raw/candidate/delivery-panel-cold.json"
+    ]
+  },
+  "nativeRestartBoundary": "real owned Windows GUI process and real Codex native current-selection writer; official restart ladder with exact-owned desktop adapter, not installed packaged Codex desktop discovery",
+  "unverifiedIntegrationGates": [
+    "official packaged Codex default desktop adapter in authorized isolation",
+    "same final commit Mac and Windows integration regression",
+    "new package installation upgrade signing update and rollback",
+    "previous materials RDP performance failure remains unchanged"
+  ],
+  "falseSamples": [
+    "cold-service-first.json cached loaded did not imply current frame ready; use completed trace instead",
+    "early no-panel samples auto-opened panel; excluded",
+    "first native screenshot after activation can lag; require stable target frame"
+  ]
+}

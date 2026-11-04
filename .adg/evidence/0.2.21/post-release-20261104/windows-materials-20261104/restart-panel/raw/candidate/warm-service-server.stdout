@@ -1,0 +1,17 @@
+🚀 opencodex proxy running on http://localhost:60432
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+READY {"pid":21076,"port":60432,"home":"D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-restart-panel\\candidate\\sandbox\\opencodex-home"}
+🔐 Claude intercept proxy active on http://127.0.0.1:60532 (CONNECT api.anthropic.com → local TLS)
+   + 1 models appended to Codex catalog (D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-restart-panel\candidate\home\.codex\opencodex-catalog.json)
+Pointed Codex's built-in openai provider at the opencodex proxy (openai_base_url + realtime sideband override).
+  Codex model catalog: D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-restart-panel\candidate\home\.codex\opencodex-catalog.json
+  Codex resume history: no backed-up metadata pending; untracked routed history left unchanged.
+  All models now route through opencodex proxy (like OpenRouter).
+  OpenAI models (gpt-5.5, etc.) are passed through to OpenAI.
+  Custom models route to their configured providers.
+  Fallback reference: D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-restart-panel\candidate\home\.codex\opencodex.config.toml
+   Target Codex home: D:\Users\[USER]\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-restart-panel\candidate\home\.codex

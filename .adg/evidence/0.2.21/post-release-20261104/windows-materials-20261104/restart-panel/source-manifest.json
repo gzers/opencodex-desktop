@@ -1,0 +1,184 @@
+{
+  "codeCommit": "4b0c357b12d331de8dd49f8209056394e93a728d",
+  "buildCommit": "4b0c357b12d331de8dd49f8209056394e93a728d",
+  "docsSource": "6a3188d6c09a1f25bb0fdeb44b91b5455fd5216f",
+  "baselineCode": "684e85c29f76584de4ab53026dcc315e34b57c62",
+  "productSourceEquivalentSupplementalBuild": "cc62887fc5f5d3024d3665dc9f7e1892706a62ea",
+  "changedPaths": [
+    {
+      "path": "apps/desktop/tauri/src/commands/panel.rs",
+      "blob": "e3c40742f292469c66e20569d6ac2326053d3d18",
+      "sha256": "82e724052e809f0721177d84f2a588322ec84c1e5b6ed263abbf9cc1fefe91f6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/cache_refresh.rs",
+      "blob": "e39dfce083f4de21893b1aae210fbbb955ef7aab",
+      "sha256": "708878f73c594374493cbc2dad01bb44f50c9d96fba55db59f6855e0f79c0093"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/cache_refresh_tests.rs",
+      "blob": "d9c0f963ae8657c6d8538c6ed30d4f643923315f",
+      "sha256": "e9f1d99cd8948db18791205c6e49793083b915862861ce37bd0a4a7d9ba46d29"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/management.rs",
+      "blob": "6cee04a66a20b8fe860df66cd73a81d381f23ded",
+      "sha256": "7562c5bbd4219a337b0b92811c0d188151651694c5f29e516a2b9ade6d15cbb3"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+      "blob": "ea7dc5f0c86e8fcc94b683d84d513948dcbf7e65",
+      "sha256": "ebe11d2f2ceaed6f58cc1914e89c20ea52d0219691a532657d3aca2e91e54286"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/panel/api.ts",
+      "blob": "3a194d1a86bcbb66258a333fa0b8834f2d293497",
+      "sha256": "b9aeb4a3d5e2951410189d27591faad8b04d215d0c0b37ab36909008d4eeb2d1"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/panel/store.ts",
+      "blob": "41870132b5b9d5fd4e86ae3aaec098835c4279f4",
+      "sha256": "3ce0cd8e0a96623850beae89799f6054b9d4d820a9ffcb50ae84502cb70d2fff"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/PanelRoute.vue",
+      "blob": "a13d64b5b5ac7f0d12f363050c1edb7949a97722",
+      "sha256": "13525de72d3e5e1d1b39bc2fc049b4468544f69f047d1c8a8416b283f67a5f2f"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-save-feedback.test.ts",
+      "blob": "242e35873b93deda1d4b982b5547a10047423740",
+      "sha256": "feb9742d885505e1b1e40fb53afe67f7b15f57cc8c14dd048077cc5b8374f0cd"
+    },
+    {
+      "path": "apps/desktop/ui/tests/post09-restart.test.ts",
+      "blob": "aa4f4728480f5dfdff846c87a832c25c61a19c90",
+      "sha256": "2e963c34cef26ccc916666a6c3a89a98836f67c0fa20e48402be98a5a70bf6c3"
+    },
+    {
+      "path": "apps/desktop/ui/tests/post10-panel.test.ts",
+      "blob": "dfbc725ea0973109fd8a59a3899b7c47d457098d",
+      "sha256": "c49892ef9c721c2b210d865de935dd1193a08be3c223158a784d4f35714824df"
+    },
+    {
+      "path": "test/smoke/post021-restart/OwnedClient.cs",
+      "blob": "0305f6cbd03a7bc6131ec5b5381c9899a392a226",
+      "sha256": "a4cea8966e20801474de315120b80934d4744a539de95d71a7a24a600119585f"
+    },
+    {
+      "path": "test/smoke/post021-restart/README.md",
+      "blob": "1f076f91cd991fccf315de0e83553400fee8beed",
+      "sha256": "f51c75c12dd8be197995639f6799a294be874680cd37fa26b8f92c1f31570376"
+    },
+    {
+      "path": "test/smoke/post021-restart/owned-desktop.ts",
+      "blob": "64da3fd2db488fba843cd02188ef63c6e7c74073",
+      "sha256": "b1ce7abd1103a979a409e434ed5e347729281733cf37be5395bd28a48fc74aa8"
+    }
+  ],
+  "frontendAssets": [
+    {
+      "path": "apps/desktop/ui/dist/index.html",
+      "sha256": "5b2138fe3339fd4968bc6676b0cc1e0f049675e7838171ec48817f9ec06dd312"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ConnectionDialog-BKg8FI3T.css",
+      "sha256": "48f9f9d06277be51e94073f0708df6960121d73853669a36082918e86723d224"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ConnectionDialog-om4a6aZY.js",
+      "sha256": "d40cb157b47c8af1f8562eb9c460afab090a4e996e34c613c9e91b8b623a13d7"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/core-DNNVStWM.js",
+      "sha256": "7d9e0edd6b7063dfc4c1504111ad683b49566ce3dce2a032f736168f1881a961"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ImportedConnections-Bw10PPf4.css",
+      "sha256": "3a4a47996c19238d9f2671cd12ae8f8097e64e5f55fedb0d113794a2c6e933f4"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ImportedConnections-D2_lCcuA.js",
+      "sha256": "8f6c6a9b8e50d611b6851bde4963e38a61e30bbf084068869b41f4565575fc22"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/index-BhNpTFZx.css",
+      "sha256": "9153c378aa86d8de29715bef0228689eb062382560a9070dc12fdf539c50eb82"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/index-BkrRJTjA.js",
+      "sha256": "4e7c42abc41f7300b9203d79451ebb682ebf5685d001d395a7e3733fe1b7cd3d"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ModelSaveHistory-D8Wajqsk.js",
+      "sha256": "7545cd1495e55fbfe12dea50fe54e5aad123bd337679f7881421bcc128d11895"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ModelSaveHistory-DezS8UFG.css",
+      "sha256": "a5eb5636572f8ce52f11544f490365cc82a94512d223d3a70f83c8d545462e28"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ModelsRoute-BDK4ljB9.js",
+      "sha256": "6c3cd2cba1d48699b5c6c6199be2a706da118ec0aaf8e2aab7ff3a8d31d277f5"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/ModelsRoute-dpWVgX0p.css",
+      "sha256": "8f5556166456e81cf5cb700044d5f636843c129b97cabedecf1d1091811c686a"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/pinia-C4iH66Q-.js",
+      "sha256": "a4cb0cb539c7e9efa0adf6465a40f6629914031b0519fffc98ce485ac6dd9fbd"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/preload-helper-BZ1Pz5am.js",
+      "sha256": "8820987e6a8afb54d776f21e305917e1ecf83cef678b4db38c2e5a405d04a8bf"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/reactivity.esm-bundler-CiLpcgQX.js",
+      "sha256": "d4ced50ea3fca567a1ff21a1d795a9adebd3e09d059a3050a53f4fe439b4f645"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/rolldown-runtime-DK3Fl9T5.js",
+      "sha256": "a526d1bb3288ef04d001028843220a24b0867a4edf8c685b69506d6525af36ff"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/runtime-core.esm-bundler-CpVKdqe5.js",
+      "sha256": "e411887a8a2c67008830610b88796881daadb45a844aa92e811593b1973534db"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/store-BDgNd0ts.js",
+      "sha256": "ae5cbc8d4895d1368c4010244fc42191888509ed85dd9902d410e80055b0bd75"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/SyncResultDialog-iGGmrb2r.js",
+      "sha256": "f3c51def22734c7edcedfa24920d0018d548ce8dfa1ec741fa9127700f76cc1a"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/SyncResultDialog-WG1Uaqwd.css",
+      "sha256": "49340596b54b4d4dd99f98d35866ad661179fb3021a0c642f05d782fcdf3e3bf"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/SyncRoute-Cku2ET85.js",
+      "sha256": "c7cc86b9e8e89ed5509eaacb81151e384d8b34d6217397be950b7ab2b27915c0"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/SyncRoute-CNYjgcNY.css",
+      "sha256": "23960dc47d86e6bbc0515bedeb46f85ce5bce0f291bd78e6e0f869d1b37f857f"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/TransferBackups-DfKMEOSi.css",
+      "sha256": "0328e8288061f321c8d1d1991b04e4b964c55a8516f3d51480790814a8451c56"
+    },
+    {
+      "path": "apps/desktop/ui/dist/assets/TransferBackups-DSLkMQ4R.js",
+      "sha256": "737455faba217ea265d47f6b400cad69b4278ed32e4c669181d664f65395bf34"
+    }
+  ],
+  "nativeExeSha256": "1776c1e4a0bce08729db758cc98dad0d7bdb02c7a63a88cc181a3c44600e1aeb",
+  "exePublished": false,
+  "productionChangesAfterSupplementalBuild": true,
+  "sourceDifferencesAfterSupplementalBuild": [
+    "apps/desktop/ui/src/routes/PanelRoute.vue"
+  ],
+  "backendProductionSourceEquivalent": true
+}

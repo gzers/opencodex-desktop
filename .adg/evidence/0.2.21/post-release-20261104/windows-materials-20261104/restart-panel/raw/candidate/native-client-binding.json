@@ -1,0 +1,59 @@
+{
+  "status": 200,
+  "body": {
+    "ok": true,
+    "clientId": "codex",
+    "changed": false,
+    "state": "current",
+    "desiredEnabled": true,
+    "message": "Codex now routes through opencodex"
+  },
+  "integration": {
+    "clients": [
+      {
+        "clientId": "claude",
+        "state": "current",
+        "installed": true,
+        "configPath": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-restart-panel\\candidate\\sandbox\\opencodex-home\\config.json",
+        "desiredEnabled": true,
+        "disableBlocked": null
+      },
+      {
+        "clientId": "grok",
+        "state": "absent",
+        "installed": false,
+        "configPath": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-restart-panel\\candidate\\home\\.grok\\config.toml",
+        "desiredEnabled": true,
+        "disableBlocked": null
+      },
+      {
+        "clientId": "codex",
+        "state": "current",
+        "installed": true,
+        "configPath": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-restart-panel\\candidate\\home\\.codex\\config.toml",
+        "desiredEnabled": true,
+        "disableBlocked": null
+      },
+      {
+        "clientId": "claude-desktop",
+        "state": "absent",
+        "installed": false,
+        "configPath": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-restart-panel\\candidate\\home\\AppData\\Local\\Claude-3p\\configLibrary",
+        "desiredEnabled": true,
+        "disableBlocked": null
+      }
+    ]
+  },
+  "codexRuntime": {
+    "path": "D:\\Users\\[USER]\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-restart-panel\\tools\\node_modules\\.bin\\codex.cmd",
+    "version": "0.166.0",
+    "source": "configured",
+    "newerAvailable": null,
+    "catalogClamp": {
+      "active": false,
+      "removedEfforts": [],
+      "runtimeVersion": null
+    },
+    "warning": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "before": "官方面板加载失败\nOpenCodex 正在运行，内嵌页面未能加载。\n重试加载\n浏览器打开",
+  "text": "官方面板已嵌入主窗口",
+  "trace": {
+    "id": 4,
+    "startedAt": 174286.59999990463,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "native-request",
+        "elapsedMs": 0.5
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 55
+      },
+      {
+        "phase": "native:owner-lock:8.0",
+        "elapsedMs": 55
+      },
+      {
+        "phase": "native:runtime-address:17.0",
+        "elapsedMs": 55
+      },
+      {
+        "phase": "native:native-view:25.0",
+        "elapsedMs": 55
+      },
+      {
+        "phase": "native:visible:42.0",
+        "elapsedMs": 55
+      },
+      {
+        "phase": "navigation-start",
+        "elapsedMs": 73.59999990463257
+      },
+      {
+        "phase": "navigation-ready",
+        "elapsedMs": 96.59999990463257
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 96.69999980926514
+      }
+    ]
+  }
+}

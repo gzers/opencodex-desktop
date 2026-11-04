@@ -1,0 +1,56 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-PANEL-20261104",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-PANEL-20261104",
+  "task_digest": "08886164918eee66cc2473de66d5bb8c6703e82ee6377e4e6ae2840f9bf26ace",
+  "task_summary_digest": "6a877c872f7073065a6055968c8d4c85bfcefc3aa17ad8b86d6259eeaacd39ed",
+  "baseline_digest": "b6ab46a250b957db05c4bcf45fd578048526129a14f91b3ca154a1b6e5be7a19",
+  "result": "succeeded",
+  "changed_paths": [
+    "apps/desktop/tauri/src/commands/panel.rs",
+    "apps/desktop/ui/src/features/panel/api.ts",
+    "apps/desktop/ui/src/features/panel/store.ts",
+    "apps/desktop/ui/src/routes/PanelRoute.vue",
+    "apps/desktop/ui/tests/post10-panel.test.ts"
+  ],
+  "checks": [
+    {
+      "name": "review:panel-isolation",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    },
+    {
+      "name": "review:panel-native",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    },
+    {
+      "name": "review:panel-recovery",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    },
+    {
+      "name": "review:panel-root-cause",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    },
+    {
+      "name": "review:panel-tests",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/CHECKS.json"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-10",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/HANDOFF.md"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-04T15:23:50.982217+00:00",
+  "summary": "W2隔离贡献检查通过，代码4b0c357b12d331de8dd49f8209056394e93a728d。真实自有Windows壳重启读回与官方面板原生验证见HANDOFF；正式打包壳默认adapter及最终同提交跨端/发布门仍由L验收，不生成最终证书、不关闭共享DMD/IMP。",
+  "revision": 1,
+  "summary_digest": "eb9a1233c3784b8fe66e1d1657fab42b77dc915985835c0f3c94273f962a752e",
+  "content_digest": "6dc82b728053fcf8c706547733c1148400ca75bc5c1420b8bc74e83f6bb31715"
+}

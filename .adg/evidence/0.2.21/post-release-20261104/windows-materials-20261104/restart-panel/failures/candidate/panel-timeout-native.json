@@ -1,0 +1,52 @@
+{
+  "mode": "explicit isolated pending address dependency before Show; real native shell timers and recovery UI; not an OS stall",
+  "elapsedMs": 8301.200000286102,
+  "text": "官方面板已嵌入主窗口",
+  "trace": {
+    "id": 2,
+    "startedAt": 98790.69999980927,
+    "outcome": "visible-ready",
+    "phases": [
+      {
+        "phase": "preferences-start",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "preferences-ready",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "status-ready",
+        "elapsedMs": 0.09999990463256836
+      },
+      {
+        "phase": "native-request",
+        "elapsedMs": 16.699999809265137
+      },
+      {
+        "phase": "native:queued:0.0",
+        "elapsedMs": 69
+      },
+      {
+        "phase": "native:owner-lock:8.0",
+        "elapsedMs": 69
+      },
+      {
+        "phase": "native:runtime-address:17.0",
+        "elapsedMs": 69
+      },
+      {
+        "phase": "native:native-view:27.0",
+        "elapsedMs": 69.09999990463257
+      },
+      {
+        "phase": "native:visible:36.0",
+        "elapsedMs": 69.09999990463257
+      },
+      {
+        "phase": "visible-ready",
+        "elapsedMs": 69.09999990463257
+      }
+    ]
+  }
+}

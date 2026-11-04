@@ -1,0 +1,50 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-PANEL-20261104",
+  "title": "Windows面板阶段耗时与有界恢复",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "IMP-30新W2接续，来源6a3188d6c09a1f25bb0fdeb44b91b5455fd5216f；只写专属实现/测试和restart-panel证据，保持隔离数据/服务/客户端；不改共享入口、命名/发现或同步，不独立合并发布。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-restart-panel-chat-01a1a68a",
+  "baseline_digest": "b6ab46a250b957db05c4bcf45fd578048526129a14f91b3ca154a1b6e5be7a19",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/restart-panel/**",
+    "apps/desktop/tauri/src/commands/panel.rs",
+    "apps/desktop/ui/src/features/panel/**",
+    "apps/desktop/ui/src/routes/PanelRoute.vue",
+    "apps/desktop/ui/tests/panel-idle.test.ts",
+    "apps/desktop/ui/tests/panel.test.ts",
+    "apps/desktop/ui/tests/post10-panel.test.ts",
+    "test/smoke/post021-panel/**"
+  ],
+  "required_checks": [
+    "review:panel-isolation",
+    "review:panel-native",
+    "review:panel-recovery",
+    "review:panel-root-cause",
+    "review:panel-tests"
+  ],
+  "acceptance_ids": [
+    "AC-P21-10"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-10",
+      "criterion_digest": "1b2d3994f43aa133222bd4f37bb0a50ca85e9c222390330a19fdd703fb782de3"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 2,
+  "summary_digest": "6a877c872f7073065a6055968c8d4c85bfcefc3aa17ad8b86d6259eeaacd39ed",
+  "content_digest": "08886164918eee66cc2473de66d5bb8c6703e82ee6377e4e6ae2840f9bf26ace"
+}
