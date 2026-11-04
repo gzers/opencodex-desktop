@@ -499,13 +499,16 @@ pub async fn sync_embedded_panel(
         // Navigation is restricted to this owned origin. Compare its recorded
         // identity rather than querying the native page: WKWebView.URL is nil
         // before initial navigation, and wry's URL getter panics in that state.
-        let origin_changed = url
-            .as_ref()
-            .is_some_and(|url| idle.update_origin(url.origin().ascii_serialization()));
-        if origin_changed {
-            if let Some(existing) = app.get_webview(PANEL_VIEW_LABEL) {
-                existing.close()?;
-                lifetime.2.store(false, Ordering::Release);
+        if let Some(url) = url.as_ref() {
+            let origin = url.origin().ascii_serialization();
+            if idle.origin != origin {
+                if let Some(existing) = app.get_webview(PANEL_VIEW_LABEL) {
+                    existing.close()?;
+                    lifetime.2.store(false, Ordering::Release);
+                }
+                // Keep the previous identity if close fails, so a retry cannot
+                // reuse a view belonging to the previous service origin.
+                idle.update_origin(origin);
             }
         }
         if request.action == PanelAction::Show {
