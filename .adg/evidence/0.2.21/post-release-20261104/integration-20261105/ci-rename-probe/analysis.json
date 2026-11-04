@@ -1,0 +1,11 @@
+{
+  "run": 41862893068,
+  "job": 126689321750,
+  "source": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+  "failure": "assertModelFileWrite expected one added directory, observed two after remaining A provider rename",
+  "evidence": "Failure at windows-model-ui.mjs:323; renamed provider save uses config_file prewrite and channel_rename::Transaction commit recovery images in separate rename-UUID folder. Native artifact has no sandbox backup images, so source plus failed count does not alone prove both actual image contents. Fixed probe will verify exact pre/post bytes in final Windows rerun.",
+  "change": "Default exactly one prewrite and no recovery journal; only expected provider rename requires exactly one recovery journal as well, numeric images only, exact config before/after retained. Earlier backups and cancel assertions unchanged.",
+  "tests": "35 passed, including rename opt-in and invalid postimage/unexpected-file negatives",
+  "nativeRecheck": "pending; do not declare old Windows failure resolved on native evidence yet",
+  "productChanged": false
+}

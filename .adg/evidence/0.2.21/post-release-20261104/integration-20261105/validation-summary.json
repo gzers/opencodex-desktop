@@ -1,7 +1,7 @@
 {
   "status": "in_progress",
   "releaseReady": false,
-  "codeHead": "c71a8cf1eef28db5de9ba82b5b599bdc1336678f",
+  "codeHead": "bd7c0fe8ccecfa39e0706c885dc233f3854dab74",
   "productCommit": "23440509452fc1241324a8ba02ebdd6e52822c18",
   "appsTree": "0eec77398bbd1cbe49f88dd3bd5e8046266e14c1",
   "native": {
@@ -34,7 +34,7 @@
     "panelFinal": "11 passed; origin identity and resume reset contract",
     "clippyFinal": "passed all-targets integration-test -D warnings",
     "build": "UI typecheck/build and debug app passed; adhoc, not release installer",
-    "windowsProbeUnits": "34 passed",
+    "windowsProbeUnits": "35 passed after backup/recovery-journal distinction",
     "windowsCI": "queued; not passed"
   },
   "pending": [
@@ -55,5 +55,15 @@
       "apps/desktop/tauri/src/commands/panel.rs"
     ],
     "reason": "Only native panel lifecycle changed; UI material/channel/sync product paths byte-identical. Final native panel and sync plus targeted panel regression and Clippy supplement reused unaffected checks. No claim of a new full suite on final commit."
+  },
+  "latestWindowsFailure": {
+    "source": "aa54d4b2a",
+    "run": 41862893068,
+    "step": "Windows final EXE smoke",
+    "assertion": "Save exactly one added directory; rename added prewrite plus recovery journal",
+    "fixCommit": "bd7c0fe8ccecfa39e0706c885dc233f3854dab74",
+    "productChanged": false,
+    "nativeRecheck": "pending",
+    "evidence": "ci-rename-probe/analysis.json"
   }
 }
