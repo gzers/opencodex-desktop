@@ -6,11 +6,16 @@ import { getSyncConfig, remoteVersionApi, type SyncConfigDto } from '@/features/
 import { remoteVersionHint } from '@/features/sync/observation'
 import { primeAppData } from '@/app/bootstrap'
 import SyncRoute from '@/routes/SyncRoute.vue'
+import {remoteScope} from '@/features/sync/modelTransfer'
 vi.mock('@/features/sync/api', async original => ({ ...await original<typeof import('@/features/sync/api')>(), getSyncConfig: vi.fn(), remoteVersionApi: { read: vi.fn() } }))
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn().mockResolvedValue(undefined) }))
 const config = (revision = 'a'.repeat(64)): SyncConfigDto => ({ endpoint: { endpointId: 'default', revision, url: 'https://dav.example.test/base', remotePath: 'device/nested', username: 'fixture', credentialRefId: 'opaque', tlsPolicy: 'verify_required', payloadProtection: 'integrity_only', conflictPolicy: 'ask' } })
 beforeEach(() => { setActivePinia(createPinia()); localStorage.clear(); vi.clearAllMocks(); vi.mocked(getSyncConfig).mockResolvedValue(config()) })
 describe('post021 remote observations', () => {
+  it('keeps explicitly selected cloud-only templates when the local library has no revisions', () => {
+    const value = remoteScope({channelIds:[],templateRefs:[],includePolicy:false,includeGlobal:false}, {templateIds:['cloud-only-template'],preferences:true,extensions:false,includeKeys:false})
+    expect(value.templateIds).toEqual(['cloud-only-template'])
+  })
   it('startup reads an already configured snapshot once without running a sync', async () => {
     const store = useSyncStore()
     vi.mocked(remoteVersionApi.read).mockResolvedValue({ remoteExists: true, remoteRevision: 'snapshot-one', remoteSavedAt: null })

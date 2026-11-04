@@ -68,7 +68,7 @@ class Run(native.NativeRun):
         self.server_thread = threading.Thread(target=self.server.serve_forever,daemon=True); self.server_thread.start()
         self.env['SSL_CERT_FILE'] = str(ca)
         empty_ca_dir = tls / 'empty'; empty_ca_dir.mkdir(); self.env['SSL_CERT_DIR'] = str(empty_ca_dir)
-        self.profile.write_text(self.profile.read_text() + '\n(allow network-outbound (remote ip "127.0.0.1:' + str(port) + '"))\n')
+        self.profile.write_text(self.profile.read_text() + '\n(allow network-outbound (remote ip "localhost:' + str(port) + '"))\n')
         shutil.copyfile(self.profile,self.out / 'candidate.sb')
         denied = native.command(['/usr/bin/sandbox-exec','-f',self.profile,'/usr/bin/nc','-v','-G','1','-z','192.0.2.1','443'],env=self.env)
         assert 'Operation not permitted' in denied.stderr and denied.returncode != 0
