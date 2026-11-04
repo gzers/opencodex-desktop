@@ -5,9 +5,9 @@ export function nodeMeasurementError(code:string):string{return nodeErrors[code]
 export function useNodeMeasurements(channel:()=>ChannelPolicy,key:()=>string){
  const run=ref('');const pending=ref<string[]>([]);const results=ref<Record<string,NodeMeasurement>>({});const error=ref('');const stopped=ref(false)
  let sequence=0
- const binding=computed(()=>JSON.stringify({protocol:channel().connection.protocol,credentialRef:channel().connection.credentialRef,private:channel().connection.allowPrivateNetwork,nodes:channel().connection.nodes.map(n=>({id:n.id,url:n.url})),key:key()}))
+ const binding=computed(()=>JSON.stringify({channelId:channel().id,providerId:channel().connection.providerId,protocol:channel().connection.protocol,credentialRef:channel().connection.credentialRef,private:channel().connection.allowPrivateNetwork,nodes:channel().connection.nodes.map(n=>({id:n.id,url:n.url})),key:key()}))
  function invalidate(){sequence++;const id=run.value;if(id)void modelApi.stopNodeMeasurement(id).catch(()=>{});run.value='';pending.value=[];results.value={};error.value='';stopped.value=false}
- watch(binding,invalidate)
+ watch(binding,invalidate,{flush:'sync'})
  onScopeDispose(invalidate)
  async function measure(ids:string[]){
   if(run.value)return
@@ -17,6 +17,6 @@ export function useNodeMeasurements(channel:()=>ChannelPolicy,key:()=>string){
   catch(cause){if(current===sequence)error.value=errorText(cause)}
   finally{if(current===sequence){run.value='';pending.value=[]}}
  }
- async function stop(){if(run.value)try{await modelApi.stopNodeMeasurement(run.value)}catch(cause){error.value=errorText(cause)}}
+ async function stop(){const id=run.value,current=sequence;if(id)try{await modelApi.stopNodeMeasurement(id)}catch(cause){if(current===sequence&&run.value===id)error.value=errorText(cause)}}
  return {run,pending,results,error,stopped,measure,stop}
 }

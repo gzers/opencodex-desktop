@@ -26,6 +26,7 @@ const models = useModelsStore(); const modal = useModalStore()
 const search = toRef(models.view,'channelSearch'); const editorId = toRef(models.view,'channelEditor'); const error = ref('')
 const editor = computed(() => models.channelDraft?.channels.find(c => c.id === editorId.value))
 watch(editorId,id=>{if(id){models.view.channelFilters[id]??={search:'',selectedOnly:false,family:'all'};models.modelRows[id]??=createModelRowsState();models.view.navigation['channel:'+id]??={collapsed:false,activeId:'channel-config'}}},{immediate:true,flush:'sync'})
+const detectionId = ref('')
 const previewOpen = ref(false);const previewProjection = ref<DraftProjection|null>(null);const previewBusy = ref(false);const previewError = ref('')
 /**
  * 系统占用（原型 model-config.js:518 的「系统占用 只读」分组）：官方目录里已存在、
@@ -67,6 +68,7 @@ onBeforeUnmount(()=>{disposed=true;detailSequence++;if(detailTimer)clearTimeout(
 /** 列表保存先预览全部剩余修改；详情保存独立按当前渠道提交（UI 规范 §47）。 */
 const saveReviewBaseline=ref<{saved:string;library:string;recovery:string|null}|null>(null),saveConfirming=ref(false)
 watch(()=>[editorId.value,props.active],()=>{
+  detectionId.value=''
   previewSequence++;previewRefreshSequence++;previewBusy.value=false;previewOpen.value=false;previewProjection.value=null;saveReviewBaseline.value=null
 })
 async function prepareSave(){
@@ -261,23 +263,25 @@ function dragChannel(event:PointerEvent,id:string){draggedOver.value='';channelD
     <p v-if="error || models.channelError" class="model-error" role="alert">{{ error || models.channelError }}</p>
     <div v-if="selected.length&&!editor" class="model-inline"><span>已选 {{ selected.length }} 个渠道<span v-if="selected.some(c=>!channels.some(row=>row.id===c.id))">（含搜索外 {{ selected.filter(c=>!channels.some(row=>row.id===c.id)).length }} 个）</span></span><UiButton size="sm" :disabled="editingLocked" @click="enableSelected(true)">启用</UiButton><UiButton size="sm" :disabled="editingLocked" @click="enableSelected(false)">停用</UiButton><UiButton size="sm" variant="danger" :disabled="editingLocked" @click="deleteChannels(selected)">删除所选渠道</UiButton><UiButton size="sm" :disabled="editingLocked||!!models.pendingRows.length" @click="batchChannels={mode:'family',ids:selected.map(c=>c.id)}">按族批量配置</UiButton><UiButton size="sm" :disabled="editingLocked||!!models.pendingRows.length" @click="batchChannels={mode:'adopt',ids:selected.map(c=>c.id)}">套用模版</UiButton><UiButton size="sm" variant="ghost" @click="selectedIds=[]">清除选择</UiButton></div>
     <ChannelEditor v-if="editor" :key="editor.id" :navigation="models.view.navigation['channel:'+editor.id]" :channels="models.channelDraft?.channels" @switch="editorId=$event" @save="saveDetail" :dirty="detailDirty||!!detailPending.length" :save-status="detailStatus.label" :save-tone="detailStatus.tone" :save-disabled="!detailDirty&&!detailPending.length||models.busy||saving||saveConfirming||!!models.historicalRecovery" :active-count="detailProjection?.knownActiveModels" :view-state="models.view.channelFilters[editor.id]" :row-state="models.modelRows[editor.id]" :policy="models.channelDraft??undefined" :existing="models.snapshot?.policy.channels.some(c=>c.id===editorId)" :channel="editor" :global-refs="models.channelDraft?.templateRefs??[]" :projection="detailProjection?.rows.filter(row=>row.channelId===editorId)??[]" :projection-busy="detailProjectionBusy" :projection-error="detailProjectionError" :templates="models.snapshot?.library.templates ?? []" :busy="editingLocked||protectedChannel(editor)" @close="editorId = ''" />
-    <template v-else><div class="model-table-scroll"><table class="model-table ui-table ui-table-fixed channel-table"><colgroup><col class="ui-selection-col"/><col class="channel-name-col"/><col class="channel-node-col"/><col class="channel-count-col"/><col class="channel-enable-col"/><col class="channel-actions-col"/></colgroup><thead><tr><th class="ui-selection-cell"><input type="checkbox" aria-label="选择当前结果中的可编辑渠道" :checked="allSelected" :indeterminate="someSelected" @change="selectAll" /></th><th>渠道</th><th>服务节点</th><th>模型</th><th>启用</th><th>操作</th></tr></thead><tbody><tr v-for="(c,channelIndex) in channels" :key="c.id" :data-channel="c.id" :class="{dragging:draggedChannel===c.id,'drag-over':draggedOver===c.id}" @pointerdown="dragChannel($event,c.id)"><td class="ui-selection-cell"><input type="checkbox" :aria-label="'选择渠道 '+c.label" :checked="selectedIds.includes(c.id)" :disabled="protectedChannel(c)||editingLocked" @change="selectOne(c.id)" /></td><td><strong>{{ c.label || '未命名渠道' }}</strong><small>{{ c.connection.nodes.length }} 节点 · {{ c.connection.enabled ? '启用' : '停用' }}</small></td><td><ChannelNodeSelect :channel="c" :disabled="editingLocked" :readonly="protectedChannel(c)" /></td><td class="ui-nowrap"><span class="channel-model-count">{{ c.selection.mode === 'all' ? c.discovered.length : c.selection.mode === 'whitelist' ? c.selection.models.length : 0 }} / {{ c.discovered.length }}</span><small class="channel-model-count-hint">已选 / 发现</small></td><td><span v-if="protectedChannel(c)">官方管理</span><div v-else class="channel-enable-cell"><UiSwitch :model-value="c.connection.enabled" :label="c.label+'渠道启用状态'" :disabled="editingLocked" @update:model-value="c.connection.enabled=$event" /><span>{{ c.connection.enabled?'启用':'停用' }}</span></div></td><td><div class="channel-row-actions" :class="{'is-readonly':protectedChannel(c)}"><UiButton size="sm" :data-model-focus="'channel:'+c.id" @click="editorId = c.id">{{ protectedChannel(c)?'查看':'编辑' }}</UiButton><UiButton size="sm" :disabled="protectedChannel(c)||editingLocked" @click="beginCopy(c)">复制</UiButton><UiButton size="sm" variant="danger" :disabled="protectedChannel(c)||editingLocked" @click="deleteChannels([c])">删除</UiButton><span class="channel-order" role="group" :aria-label="c.label+'排序'"><button type="button" class="channel-order-button" :disabled="!reorderAllowed||channelIndex===0" :aria-label="c.label+'上移'" :title="c.label+'上移'" @click="move(c.id,-1)">↑</button><button type="button" class="channel-order-button" :disabled="!reorderAllowed||channelIndex===channels.length-1" :aria-label="c.label+'下移'" :title="c.label+'下移'" @click="move(c.id,1)">↓</button></span></div></td></tr></tbody></table></div><p v-if="!channels.length" class="model-empty">暂无渠道</p>
+    <template v-else><div class="model-table-scroll"><table class="model-table ui-table ui-table-fixed channel-table"><colgroup><col class="ui-selection-col"/><col class="channel-name-col"/><col class="channel-count-col"/><col class="channel-enable-col"/><col class="channel-actions-col"/></colgroup><thead><tr><th class="ui-selection-cell"><input type="checkbox" aria-label="选择当前结果中的可编辑渠道" :checked="allSelected" :indeterminate="someSelected" @change="selectAll" /></th><th>渠道</th><th>模型</th><th>启用</th><th>操作</th></tr></thead><tbody><tr v-for="(c,channelIndex) in channels" :key="c.id" :data-channel="c.id" :class="{dragging:draggedChannel===c.id,'drag-over':draggedOver===c.id}" @pointerdown="dragChannel($event,c.id)"><td class="ui-selection-cell"><input type="checkbox" :aria-label="'选择渠道 '+c.label" :checked="selectedIds.includes(c.id)" :disabled="protectedChannel(c)||editingLocked" @change="selectOne(c.id)" /></td><td><strong>{{ c.label || '未命名渠道' }}</strong><small>{{ c.connection.nodes.length }} 节点 · {{ c.connection.enabled ? '启用' : '停用' }}</small></td><td class="ui-nowrap"><span class="channel-model-count">{{ c.selection.mode === 'all' ? c.discovered.length : c.selection.mode === 'whitelist' ? c.selection.models.length : 0 }} / {{ c.discovered.length }}</span><small class="channel-model-count-hint">已选 / 发现</small></td><td><span v-if="protectedChannel(c)">官方管理</span><div v-else class="channel-enable-cell"><UiSwitch :model-value="c.connection.enabled" :label="c.label+'渠道启用状态'" :disabled="editingLocked" @update:model-value="c.connection.enabled=$event" /><span>{{ c.connection.enabled?'启用':'停用' }}</span></div></td><td><div class="channel-row-actions" :class="{'is-readonly':protectedChannel(c)}"><UiButton size="sm" class="channel-node-detect" :aria-label="'检测 '+c.label+' 服务节点'" aria-haspopup="dialog" :aria-expanded="detectionId===c.id" :disabled="editingLocked||props.active===false||!c.connection.nodes.length" @click="detectionId=c.id">检测</UiButton><UiButton size="sm" :data-model-focus="'channel:'+c.id" @click="editorId = c.id">{{ protectedChannel(c)?'查看':'编辑' }}</UiButton><UiButton size="sm" :disabled="protectedChannel(c)||editingLocked" @click="beginCopy(c)">复制</UiButton><UiButton size="sm" variant="danger" :disabled="protectedChannel(c)||editingLocked" @click="deleteChannels([c])">删除</UiButton><span class="channel-order" role="group" :aria-label="c.label+'排序'"><button type="button" class="channel-order-button" :disabled="!reorderAllowed||channelIndex===0" :aria-label="c.label+'上移'" :title="c.label+'上移'" @click="move(c.id,-1)">↑</button><button type="button" class="channel-order-button" :disabled="!reorderAllowed||channelIndex===channels.length-1" :aria-label="c.label+'下移'" :title="c.label+'下移'" @click="move(c.id,1)">↓</button></span></div></td></tr></tbody></table></div><p v-if="!channels.length" class="model-empty">暂无渠道</p>
   <p class="model-footer-note">启用开关修改当前编辑；停用保留已选模型与配置。拖动渠道调整整组顺序。</p></template>
+    <!-- 所有渠道的观察状态保留在列表外，搜索和详情切换不会停止检测。 -->
+    <ChannelNodeSelect v-for="c in models.channelDraft?.channels" :show-trigger="false" :key="c.id" :channel="c" :open="detectionId===c.id" :disabled="editingLocked" :readonly="protectedChannel(c)" :measurement-disabled="protectedChannel(c)" :credential-provider-id="models.snapshot?.policy.channels.find(saved=>saved.id===c.id)?.connection.providerId" @close="detectionId=''" />
     <ChannelBatchDialog v-if="batchChannels" :mode="batchChannels.mode" :targets="batchChannels.ids" @close="batchChannels=undefined" />
     <NewChannelDialog v-if="newChannelOpen" @close="newChannelOpen=false" @added="editorId=$event" />
-    <UiDialog :open="!!copySource" title="复制渠道" :busy="copyBusy" @close="copySource=null"><label>副本名称<input v-model="copyName" class="input" maxlength="256" :disabled="copyBusy" /></label><label><input v-model="reuseCopyKey" type="checkbox" :disabled="copyBusy" />副本复用此本机渠道Key</label><p>副本采用独立渠道和节点身份，保持停用。模版匹配结果可在保存预览中查看。</p><p v-if="error" class="model-error" role="alert">{{ error }}</p><template #actions><UiButton :disabled="copyBusy" @click="copySource=null">取消</UiButton><UiButton variant="primary" :disabled="!copyName.trim()||copyBusy" :loading="copyBusy" @click="confirmCopy">建立副本草稿</UiButton></template></UiDialog>
+    <UiDialog :open="!!copySource" title="复制渠道" :busy="copyBusy" @close="copySource=null"><label>副本名称<input v-model="copyName" class="input" maxlength="256" :disabled="copyBusy" /></label><label><input v-model="reuseCopyKey" type="checkbox" :disabled="copyBusy" />副本复用此本机渠道Key</label><p>副本采用独立渠道和节点身份，保持停用。模版匹配结果可在保存预览中查看。</p><p v-if="error" class="model-error" role="alert">{{ error }}</p><template #actions="{ close }"><UiButton :disabled="copyBusy" @click="close">取消</UiButton><UiButton variant="primary" :disabled="!copyName.trim()||copyBusy" :loading="copyBusy" @click="confirmCopy">建立副本草稿</UiButton></template></UiDialog>
     <SelectorPreviewDialog :open="previewOpen" :system-rows="systemRows" :projection="previewProjection" :saved="models.snapshot?.policy??null" :other-changes="saveReviewChanges" :channels="(models.channelDraft?.channels ?? []).map(c=>({id:c.id,label:c.label||c.id,enabled:c.connection.enabled,protected:protectedChannel(c)}))" :busy="previewBusy" :saving="saveConfirming" :error="previewError||undefined" @toggle-channel="togglePreviewChannel" @toggle-model="togglePreviewModel" @confirm="confirmSave" @close="previewOpen = false" />
   </div>
 </template>
 
 <style scoped>
-/* 列宽对齐原型 .mp-provider-columns：36px 选择 + 弹性名称 + 190/76/76/200 固定列。 */
-.channel-table{min-width:800px}.channel-name-col{width:auto}.channel-node-col{width:190px}.channel-count-col{width:76px}.channel-enable-col{width:76px}.channel-actions-col{width:200px}
-.channel-table strong{overflow-wrap:anywhere}.channel-table td:nth-child(5) .model-inline{flex-wrap:nowrap}
+/* POST05：选择列 + 160–220px 渠道 + 弹性模型/启用 + 250px 操作。窄窗横向滚动。 */
+.channel-table{min-width:800px}.channel-name-col{width:clamp(160px,22cqi,220px)}.channel-count-col,.channel-enable-col{width:auto}.channel-actions-col{width:250px}
+.channel-table strong{overflow-wrap:anywhere}
 /* WP-40：与原型一致，模型列在数值下给出“已选 / 发现”说明，避免 12/12 含义不明。 */
 .channel-model-count{display:block;font-variant-numeric:tabular-nums}
 .channel-model-count-hint{display:block;color:var(--muted);font-size:var(--text-caption);font-weight:400;white-space:nowrap}
-/* WP-40：编辑 / 复制 / 删除 + 竖排 ↑↓ 的迷你按钮对；整组贴右且不超出 200px 列。 */
+/* 检测 / 编辑 / 复制 / 删除与竖排排序按钮保持在操作列内。 */
 .channel-row-actions{display:flex;align-items:center;justify-content:flex-end;gap:var(--space-1);flex-wrap:nowrap;min-width:0;max-width:100%}
 .channel-row-actions .btn{white-space:nowrap}
 /* 原型 .mp-mini-pair：14px 高的迷你箭头，两个叠起仍小于行内按钮，不撑高行。 */
@@ -291,23 +295,7 @@ function dragChannel(event:PointerEvent,id:string){draggedOver.value='';channelD
 .channel-table tbody>tr.dragging{opacity:.45}
 .channel-table tbody>tr.drag-over{outline:2px solid var(--accent);outline-offset:-2px}
 :global(html.ocx-pointer-drag),:global(html.ocx-pointer-drag *){-webkit-user-select:none!important;user-select:none!important}
-/* WP-40：启用列 76px 内横排开关与文字；竖排会撑高整行。 */
+/* 启用开关和文字保持同行。 */
 .channel-enable-cell{display:flex;align-items:center;gap:var(--space-1);flex-wrap:nowrap;white-space:nowrap;min-width:0}
 .channel-enable-cell>span{font-size:var(--text-label);white-space:nowrap}
-/* 窄窗：操作组两行排布（编辑/复制 + 删除 + 箭头），行内留白而不是挤到列外。 */
-@container(max-width:860px){
- .channel-table{min-width:0}
- .channel-node-col{width:140px}
- .channel-count-col{width:60px}
- .channel-enable-col{width:60px}
- .channel-actions-col{width:160px}
- .channel-row-actions{flex-wrap:wrap;justify-content:flex-end;gap:var(--space-1);row-gap:2px}
- .channel-enable-cell span{display:none}
- .channel-table td:last-child{padding-block:var(--space-1)}
-}
-@container(max-width:700px){
- .channel-node-col{width:132px}
- .channel-actions-col{width:auto}
- .channel-row-actions{justify-content:flex-start}
-}
 </style>

@@ -1,9 +1,9 @@
-// 渠道与模型行的几何验收（WP-40 / 41 / 47）：在真实渲染里量列宽、裁切与基线。
+// 渠道与模型行的几何验收（POST05 / WP-40 / 47）：量列宽、裁切和公共检测模态。
 import fs from 'fs'; import path from 'path'; import os from 'os'; import net from 'net'
 import { spawn } from 'child_process'; import { fileURLToPath } from 'url'; import { createRequire } from 'module'
 import {pickEngine, Blocked} from './engine.mjs'
 const here = path.dirname(fileURLToPath(import.meta.url)), uiDir = path.resolve(here, '..')
-const PORT = 5199, BASE = 'http://127.0.0.1:' + PORT
+const PORT = Number(process.env.AUDIT_GEOMETRY_PORT || 5199), BASE = 'http://127.0.0.1:' + PORT
 function pw(){const n=path.join(os.homedir(),'.npm','_npx');if(fs.existsSync(n))for(const d of fs.readdirSync(n)){const c=path.join(n,d,'node_modules','playwright-core');if(fs.existsSync(path.join(c,'package.json')))return c}return null}
 function exe(){const b=path.join(os.homedir(),'Library','Caches','ms-playwright');if(!fs.existsSync(b))return null;for(const d of fs.readdirSync(b).filter(x=>x.startsWith('chromium_headless_shell-')).sort().reverse()){const p=path.join(b,d,'chrome-headless-shell-mac-arm64','chrome-headless-shell');if(fs.existsSync(p))return p}return null}
 const engine=await pickEngine()
@@ -40,7 +40,7 @@ async function main(){
         // 相邻列不重叠
         let overlap=0
         for(let i=1;i<cells.length;i++) if(cells[i].l < cells[i-1].r-1) overlap++
-        const acts=row?.children[5]
+        const acts=row?.children[4]
         const ab=acts?acts.getBoundingClientRect():null
         const buttons=acts?[...acts.querySelectorAll('button')].map(b=>{const r=b.getBoundingClientRect();return {l:Math.round(r.left),r:Math.round(r.right)}}):[]
         const maxRight=buttons.length?Math.max(...buttons.map(b=>b.r)):0
@@ -63,23 +63,21 @@ async function main(){
       await page.close()
     }
 
-    // —— WP-41 节点下拉基线 + WP-47 模型行列宽 ——
+    // POST05 取代旧节点下拉；检测入口必须打开真正居中的公共观察窗。
     const {page,errors}=await open(browser,1180,760,'light')
-    const trigger=await page.evaluate(()=>{
-      const t=document.querySelector('.channel-node-select .select-trigger')
-      if(!t) return null
-      const label=t.querySelector('.node-current-label > span')
-      const small=t.querySelector('.node-current-label small')
-      if(!label||!small) return null
-      const a=label.getBoundingClientRect(), b=small.getBoundingClientRect()
-      const fs1=parseFloat(getComputedStyle(label).fontSize), fs2=parseFloat(getComputedStyle(small).fontSize)
-      return {nameBottom:Math.round(a.bottom), statusBottom:Math.round(b.bottom), delta:Math.abs(Math.round(a.bottom)-Math.round(b.bottom)), nameFont:fs1, statusFont:fs2}
+    const trigger=page.locator('.channel-table tbody tr').first().locator('.channel-node-detect')
+    check('POST05 检测位于操作列',await trigger.count()===1 && await trigger.innerText()==='检测')
+    await trigger.click()
+    const detection=page.locator('dialog[open]')
+    await detection.waitFor()
+    const geometry=await detection.evaluate(e=>{
+      const r=e.getBoundingClientRect()
+      return {public:e.classList.contains('ui-dialog'),footer:!!e.querySelector('footer'),dx:Math.abs((r.left+r.right)/2-innerWidth/2),dy:Math.abs((r.top+r.bottom)/2-innerHeight/2)}
     })
-    check('WP41 节点触发器存在',!!trigger)
-    if(trigger){
-      check('WP41 名称与状态字号一致',trigger.nameFont===trigger.statusFont,'name='+trigger.nameFont+' status='+trigger.statusFont)
-      check('WP41 文字基线对齐',trigger.delta<=1,'delta='+trigger.delta)
-    }
+    check('POST05 公共居中检测无底部关闭',geometry.public&&!geometry.footer&&geometry.dx<=2&&geometry.dy<=2,JSON.stringify(geometry))
+    await page.keyboard.press('Escape')
+    await detection.waitFor({state:'hidden'})
+    check('POST05 Esc归还检测入口焦点',await trigger.evaluate(e=>document.activeElement===e))
     // 进入渠道详情量模型列
     const editBtn=page.locator('.channel-table tbody tr').first().locator('button', {hasText:'编辑'}).first()
     if(await editBtn.count()) await editBtn.click()

@@ -44,11 +44,11 @@ async function openRestart() { await showSaved(); await button('立即重启 Cod
 function dialogButton(text: string) { return Array.from(document.querySelectorAll<HTMLButtonElement>('dialog[open] button')).find(node => node.textContent?.trim() === text)! }
 
 describe('一次保存反馈的真实组件交互（模拟 API，不代表真机重启）', () => {
-  it('结果在全局宿主使用原型任务卡，默认聚焦立即；稍后结束且铃铛不复活', async () => {
+  it('结果在全局宿主使用原型任务卡且不抢焦点；稍后结束且铃铛不复活', async () => {
     await showSaved()
     expect(wrapper.findAll('.notif-layer .process-progress')).toHaveLength(1)
     expect(wrapper.find('.save-result').exists()).toBe(false)
-    expect(document.activeElement).toBe(button('立即重启 Codex').element)
+    expect(document.activeElement).not.toBe(button('立即重启 Codex').element)
     expect(wrapper.get('.process-progress').find('.notify-min').exists()).toBe(false)
     await button('稍后').trigger('click')
     expect(useModelSaveFeedback().open).toBe(false)
@@ -71,7 +71,7 @@ describe('一次保存反馈的真实组件交互（模拟 API，不代表真机
     expect(useNotificationsStore().list).toHaveLength(0)
   })
 
-  it('重启前只打开公共确认弹窗，取消不调用接口；确认弹窗 Esc 彻底关闭反馈', async () => {
+  it('重启前只打开公共确认弹窗，取消不调用接口；确认弹窗 Esc 只关闭确认', async () => {
     const refresh = vi.spyOn(modelApi, 'refreshCache')
     await openRestart()
     expect(document.querySelector('dialog.ui-dialog[open]')?.textContent).toContain('立即结束当前正在进行的 Codex 对话')
@@ -84,7 +84,7 @@ describe('一次保存反馈的真实组件交互（模拟 API，不代表真机
     await flushPromises()
     document.querySelector('dialog[open]')!.dispatchEvent(new Event('cancel', { cancelable: true }))
     await flushPromises()
-    expect(useModelSaveFeedback().open).toBe(false)
+    expect(useModelSaveFeedback().open).toBe(true)
     expect(refresh).not.toHaveBeenCalled()
   })
 
