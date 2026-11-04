@@ -1,0 +1,203 @@
+{
+  "observedDescendants": [
+    {
+      "pid": 91039,
+      "ppid": 91028,
+      "pgid": 91039,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/node"
+    },
+    {
+      "pid": 91040,
+      "ppid": 91039,
+      "pgid": 91039,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/bun"
+    },
+    {
+      "pid": 91056,
+      "ppid": 91028,
+      "pgid": 91056,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/node"
+    },
+    {
+      "pid": 91058,
+      "ppid": 91056,
+      "pgid": 91056,
+      "command": "(bun)"
+    },
+    {
+      "pid": 91060,
+      "ppid": 91058,
+      "pgid": 91056,
+      "command": "(codex)"
+    },
+    {
+      "pid": 91070,
+      "ppid": 91028,
+      "pgid": 91028,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/node"
+    },
+    {
+      "pid": 91072,
+      "ppid": 91070,
+      "pgid": 91028,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/bun"
+    },
+    {
+      "pid": 91148,
+      "ppid": 91028,
+      "pgid": 91148,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/node"
+    },
+    {
+      "pid": 91149,
+      "ppid": 91148,
+      "pgid": 91148,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/bun"
+    },
+    {
+      "pid": 91206,
+      "ppid": 91028,
+      "pgid": 91206,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/node"
+    },
+    {
+      "pid": 91208,
+      "ppid": 91206,
+      "pgid": 91206,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/bun"
+    },
+    {
+      "pid": 91253,
+      "ppid": 91028,
+      "pgid": 91253,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/node"
+    },
+    {
+      "pid": 91255,
+      "ppid": 91253,
+      "pgid": 91253,
+      "command": "(bun)"
+    },
+    {
+      "pid": 91257,
+      "ppid": 91255,
+      "pgid": 91253,
+      "command": "(bash)"
+    },
+    {
+      "pid": 91259,
+      "ppid": 91257,
+      "pgid": 91253,
+      "command": "(bash)"
+    },
+    {
+      "pid": 91260,
+      "ppid": 91259,
+      "pgid": 91253,
+      "command": "(bash)"
+    },
+    {
+      "pid": 91261,
+      "ppid": 91260,
+      "pgid": 91253,
+      "command": "(dirname)"
+    },
+    {
+      "pid": 91296,
+      "ppid": 91028,
+      "pgid": 91296,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/node"
+    },
+    {
+      "pid": 91297,
+      "ppid": 91296,
+      "pgid": 91296,
+      "command": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/bun"
+    }
+  ],
+  "groups": [
+    {
+      "pgid": 91296,
+      "remaining": []
+    },
+    {
+      "pgid": 91206,
+      "remaining": []
+    },
+    {
+      "pgid": 91148,
+      "remaining": []
+    },
+    {
+      "pgid": 91056,
+      "remaining": []
+    },
+    {
+      "pgid": 91253,
+      "remaining": []
+    },
+    {
+      "pgid": 91039,
+      "remaining": []
+    }
+  ],
+  "directVersionProbes": [
+    {
+      "pid": 90996,
+      "pgid": 90996,
+      "label": "node-version",
+      "argv": [
+        "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/bin/node",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "v26.8.1",
+      "stderr": "",
+      "remaining": []
+    },
+    {
+      "pid": 91000,
+      "pgid": 91000,
+      "label": "npm-version",
+      "argv": [
+        "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/bin/npm",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "11.19.0",
+      "stderr": "",
+      "remaining": []
+    },
+    {
+      "pid": 91004,
+      "pgid": 91004,
+      "label": "bun-version",
+      "argv": [
+        "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/bin/bun",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "1.4.2",
+      "stderr": "",
+      "remaining": []
+    },
+    {
+      "pid": 91007,
+      "pgid": 91007,
+      "label": "ocx-version",
+      "argv": [
+        "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/bin/ocx",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "opencodex 2.84.0",
+      "stderr": "",
+      "remaining": []
+    },
+    {
+      "pid": 91013,
+      "pgid": 91013,
+      "label": "owned-unmodified-official-server"
+    }
+  ]
+}

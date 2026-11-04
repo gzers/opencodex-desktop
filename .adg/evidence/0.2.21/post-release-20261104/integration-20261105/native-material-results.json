@@ -1,0 +1,48 @@
+{
+  "originalMatrix": "native-material-matrix.json",
+  "runs": [
+    {
+      "report": "native-materials/dark-high/ocx021-mac-native-2441bbb3-186a-4aa1-9465-753fbfab6acc/report.json",
+      "result": "pass",
+      "build": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+      "checks": 12
+    },
+    {
+      "report": "native-materials/dark-low/ocx021-mac-native-d84c7480-013b-491f-948b-8998b2e77389/report.json",
+      "result": "pass",
+      "build": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+      "checks": 11
+    },
+    {
+      "report": "native-materials/dark-mid/ocx021-mac-native-e351225e-01ef-4aa8-a762-d5d30d39286b/report.json",
+      "result": "pass",
+      "build": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+      "checks": 11
+    },
+    {
+      "report": "native-materials/light-high/ocx021-mac-native-7e3394db-8248-46d5-88c9-349be16e245b/report.json",
+      "result": "pass",
+      "build": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+      "checks": 11
+    },
+    {
+      "report": "native-materials/light-low/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/report.json",
+      "result": "fail",
+      "build": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+      "checks": 10
+    },
+    {
+      "report": "native-materials/light-mid/ocx021-mac-native-4b906f88-5759-401d-90f9-527ba1eb88cb/report.json",
+      "result": "pass",
+      "build": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+      "checks": 11
+    },
+    {
+      "report": "native-materials-recheck/light-low/ocx021-mac-native-f691fa00-09fe-4b4c-8251-598037622a86/report.json",
+      "result": "pass",
+      "build": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+      "checks": 11
+    }
+  ],
+  "notes": "Five original scenes pass. First light-low had no AXWebArea before actions; fresh root recheck passes. Both retained. This is Mac native visual/interaction evidence, not Windows performance."
+}

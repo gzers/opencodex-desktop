@@ -1,0 +1,36 @@
+{
+  "gate": "ready",
+  "producer": "candidate discover_environment(request=null)",
+  "observationMethod": "production response rendered as three AX found rows; raw DTO is not exported by AX",
+  "checks": [
+    {
+      "name": "Node.js",
+      "value": "已发现"
+    },
+    {
+      "name": "npm",
+      "value": "已发现"
+    },
+    {
+      "name": "OpenCodex",
+      "value": "已发现"
+    }
+  ],
+  "sourceFallbackUsed": false,
+  "runtimeSource": {
+    "schema_version": 1,
+    "source": "discovered",
+    "path": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/bin/ocx",
+    "resolved_version": "2.84.0",
+    "resolved_at": "2026-11-04T16:18:59Z",
+    "history": []
+  },
+  "runtimeSourceSeeded": false,
+  "discoveryDirectory": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/bin",
+  "realVersions": {
+    "node": "v26.8.1",
+    "npm": "11.19.0",
+    "bun": "1.4.2",
+    "ocx": "opencodex 2.84.0"
+  }
+}

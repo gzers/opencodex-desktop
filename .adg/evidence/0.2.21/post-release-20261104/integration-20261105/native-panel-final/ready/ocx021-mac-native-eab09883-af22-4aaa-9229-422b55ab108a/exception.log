@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 92, in main
+    try:run.prepare();run.launch();run.verify()
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 64, in verify
+    snap=self.wait(lambda s:'通知中心' in self.text(s),name='panel-overlay')
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/ocx021-macos-native.py", line 526, in wait
+    raise AssertionError('Native AX target/state not reached: ' + (name or str(predicate)))
+AssertionError: Native AX target/state not reached: panel-overlay

@@ -1,0 +1,12 @@
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `npm --prefix ui run build`
+npm error code ENOENT
+npm error syscall open
+npm error path /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/ui/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui/ui/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /Users/ezio/.npm/_logs/2026-11-04T16_06_51_108Z-debug-0.log
+beforeBuildCommand `npm --prefix ui run build` failed with exit code 254
+       Error beforeBuildCommand `npm --prefix ui run build` failed with exit code 254

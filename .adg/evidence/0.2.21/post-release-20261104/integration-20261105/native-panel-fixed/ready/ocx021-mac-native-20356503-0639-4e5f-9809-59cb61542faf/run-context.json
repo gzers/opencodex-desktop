@@ -1,0 +1,181 @@
+{
+  "stage": "debug-preverify",
+  "result": "fail",
+  "app": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app",
+  "executable": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "pid": 84191,
+  "processGroup": 84191,
+  "root": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root",
+  "boundary": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf",
+  "rootSource": "Fresh UUID root; explicit process environment; startup-bound boundary; no daily data inspection",
+  "environment": {
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "USER": "ezio",
+    "LOGNAME": "ezio",
+    "HOME": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/home",
+    "CFFIXED_USER_HOME": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/home",
+    "TMP": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tmp",
+    "TMPDIR": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tmp/",
+    "TEMP": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tmp",
+    "XDG_CONFIG_HOME": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/home/.config",
+    "XDG_CACHE_HOME": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/home/.cache",
+    "OPENCODEX_SANDBOX": "1",
+    "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root",
+    "OPENCODEX_SANDBOX_BOUNDARY": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf",
+    "OPENCODEX_HOME": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/opencodex-home",
+    "CODEX_HOME": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/home/.codex"
+  },
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "binarySha256Before": "77bde7a5155d358a0698a7df70edddcafc9dae5f0c292f4a7e508a8219b3c6fb",
+  "codesign": "Executable=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop\nIdentifier=com.gzers.opencodex.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=228860 flags=0x10002(adhoc,runtime) hashes=7145+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=1769472\nHash type=sha256 size=32\nCandidateCDHash sha256=061ea17140d29d7e71c5b188895e4d1f6719a972\nCandidateCDHashFull sha256=061ea17140d29d7e71c5b188895e4d1f6719a9727aeea329097ec8e7e256b4aa\nHash choices=sha256\nCMSDigest=061ea17140d29d7e71c5b188895e4d1f6719a9727aeea329097ec8e7e256b4aa\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=61652992\nExecutable Segment flags=0x1\nPage size=16384\nCDHash=061ea17140d29d7e71c5b188895e4d1f6719a972\nSignature=adhoc\nInfo.plist entries=14\nTeamIdentifier=not set\nRuntime Version=27.0.0\nSealed Resources version=2 rules=13 files=4\nInternal requirements count=0 size=12\nTotal signatures=1\nChosen signature=1\n",
+  "sourceHeadAtRun": "cf412c33660c87f1a39d6159fe77d1e4227ffa74",
+  "startupBuildCommit": "cf412c33660c87f1a39d6159fe77d1e4227ffa74",
+  "signedFinalCommitClaimed": false,
+  "scope": "overview",
+  "readyMode": true,
+  "toolInputs": {
+    "node": {
+      "requested": "/Users/ezio/.hermes/node/bin/node",
+      "path": "/Users/ezio/.hermes/node/bin/node",
+      "sha256": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+      "size": 145803984
+    },
+    "npm_cli": {
+      "requested": "/Users/ezio/.hermes/node/lib/node_modules/npm/bin/npm-cli.js",
+      "path": "/Users/ezio/.hermes/node/lib/node_modules/npm/bin/npm-cli.js",
+      "sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+      "size": 54,
+      "packageVersion": "11.19.0"
+    },
+    "official_entry": {
+      "requested": "/private/tmp/ocx020-owned-official-284/installation/node_modules/@bitkyc08/opencodex/bin/ocx.mjs",
+      "path": "/private/tmp/ocx020-owned-official-284/installation/node_modules/@bitkyc08/opencodex/bin/ocx.mjs",
+      "sha256": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+      "size": 59088,
+      "packageVersion": "2.84.0"
+    },
+    "bun": {
+      "requested": "/private/tmp/ocx020-owned-official-284/installation/node_modules/bun/bin/bun.exe",
+      "path": "/private/tmp/ocx020-owned-official-284/installation/node_modules/bun/bin/bun.exe",
+      "sha256": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5",
+      "size": 61884464
+    }
+  },
+  "realToolVersions": {
+    "node": "v26.8.1",
+    "npm": "11.19.0",
+    "bun": "1.4.2",
+    "ocx": "opencodex 2.84.0"
+  },
+  "nativeEnvironmentGate": null,
+  "checks": [
+    {
+      "name": "native-permissions",
+      "status": "pass",
+      "axTrusted": true,
+      "locked": false,
+      "onConsole": true,
+      "screenCaptureAllowed": true
+    },
+    {
+      "name": "kernel-network-denial",
+      "status": "pass",
+      "returncode": 1,
+      "error": "nc: connectx to 192.0.2.1 port 443 (tcp) failed: Operation not permitted"
+    },
+    {
+      "name": "ready-real-tool-versions",
+      "status": "pass",
+      "versions": {
+        "node": "v26.8.1",
+        "npm": "11.19.0",
+        "bun": "1.4.2",
+        "ocx": "opencodex 2.84.0"
+      },
+      "codeBytesUnmodified": true,
+      "proof": "Original binaries/CLI copied with equal SHA; fixed-environment wrappers; OS network denied; no service commands"
+    },
+    {
+      "name": "integrated-official-server-owned",
+      "status": "pass",
+      "pid": 84163,
+      "port": 56443,
+      "network": "one owned loopback port; external denied",
+      "packageUnmodified": true
+    },
+    {
+      "name": "process-sandbox-admission",
+      "status": "pass",
+      "pid": 84191,
+      "pgid": 84191,
+      "required": [
+        "HOME",
+        "TMP",
+        "TMPDIR",
+        "OPENCODEX_SANDBOX",
+        "OPENCODEX_SANDBOX_ROOT",
+        "OPENCODEX_SANDBOX_BOUNDARY"
+      ]
+    },
+    {
+      "name": "native-window",
+      "status": "pass",
+      "windows": [
+        {
+          "bounds": {
+            "Height": 760,
+            "Width": 1180,
+            "X": 1010,
+            "Y": 262
+          },
+          "id": 104169,
+          "layer": 0,
+          "onscreen": true
+        }
+      ],
+      "axNodes": 29
+    },
+    {
+      "name": "integrated-panel-native",
+      "status": "fail",
+      "reason": "Embedded startup build commit differs from the expected final commit"
+    },
+    {
+      "name": "owned-process-group-cleanup",
+      "status": "pass",
+      "pgid": 84191,
+      "remaining": []
+    },
+    {
+      "name": "owned-tool-descendants-cleanup",
+      "status": "pass",
+      "remaining": []
+    },
+    {
+      "name": "ready-original-tools-unchanged",
+      "status": "pass",
+      "copiedHashes": {
+        "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tools/node": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+        "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tools/npm/bin/npm-cli.js": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+        "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tools/official/node_modules/@bitkyc08/opencodex/bin/ocx.mjs": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+        "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tools/bun": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5"
+      },
+      "sourceInputHashes": {
+        "node": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+        "npm_cli": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+        "official_entry": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+        "bun": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5"
+      }
+    },
+    {
+      "name": "candidate-identity-unchanged",
+      "status": "pass"
+    }
+  ]
+}

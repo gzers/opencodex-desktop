@@ -1,0 +1,62 @@
+{
+  "inputs": {
+    "node": {
+      "requested": "/Users/ezio/.hermes/node/bin/node",
+      "path": "/Users/ezio/.hermes/node/bin/node",
+      "sha256": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+      "size": 145803984
+    },
+    "npm_cli": {
+      "requested": "/Users/ezio/.hermes/node/lib/node_modules/npm/bin/npm-cli.js",
+      "path": "/Users/ezio/.hermes/node/lib/node_modules/npm/bin/npm-cli.js",
+      "sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+      "size": 54,
+      "packageVersion": "11.19.0"
+    },
+    "official_entry": {
+      "requested": "/private/tmp/ocx020-owned-official-284/installation/node_modules/@bitkyc08/opencodex/bin/ocx.mjs",
+      "path": "/private/tmp/ocx020-owned-official-284/installation/node_modules/@bitkyc08/opencodex/bin/ocx.mjs",
+      "sha256": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+      "size": 59088,
+      "packageVersion": "2.84.0"
+    },
+    "bun": {
+      "requested": "/private/tmp/ocx020-owned-official-284/installation/node_modules/bun/bin/bun.exe",
+      "path": "/private/tmp/ocx020-owned-official-284/installation/node_modules/bun/bin/bun.exe",
+      "sha256": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5",
+      "size": 61884464
+    }
+  },
+  "discoveryDirectory": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/bin",
+  "fixedEnvironment": {
+    "LANG": "en_US.UTF-8",
+    "HOME": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home",
+    "CFFIXED_USER_HOME": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home",
+    "TMP": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tmp",
+    "TMPDIR": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tmp/",
+    "TEMP": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tmp",
+    "XDG_CONFIG_HOME": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.config",
+    "XDG_CACHE_HOME": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.cache",
+    "OPENCODEX_HOME": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/opencodex-home",
+    "CODEX_HOME": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.codex",
+    "PATH": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "XDG_DATA_HOME": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/share",
+    "XDG_STATE_HOME": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/state",
+    "npm_config_userconfig": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/empty-user.npmrc",
+    "npm_config_globalconfig": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/empty-global.npmrc",
+    "npm_config_cache": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/npm-cache",
+    "npm_config_update_notifier": "false",
+    "OPENCODEX_BUN_PATH": "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/bun"
+  },
+  "copiedHashes": {
+    "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/node": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+    "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/npm/bin/npm-cli.js": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+    "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/official/node_modules/@bitkyc08/opencodex/bin/ocx.mjs": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+    "/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/bun": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5"
+  },
+  "npmWrapper": "#!/bin/sh\nexec /usr/bin/env -i LANG=en_US.UTF-8 HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home CFFIXED_USER_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home TMP=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tmp TMPDIR=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tmp/ TEMP=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tmp XDG_CONFIG_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.config XDG_CACHE_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.cache OPENCODEX_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/opencodex-home CODEX_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.codex PATH=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin XDG_DATA_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/share XDG_STATE_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/state npm_config_userconfig=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/empty-user.npmrc npm_config_globalconfig=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/empty-global.npmrc npm_config_cache=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/npm-cache npm_config_update_notifier=false OPENCODEX_BUN_PATH=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/bun /private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/node /private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/npm/bin/npm-cli.js \"$@\"\n",
+  "officialWrapper": "#!/bin/sh\nexec /usr/bin/env -i LANG=en_US.UTF-8 HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home CFFIXED_USER_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home TMP=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tmp TMPDIR=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tmp/ TEMP=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tmp XDG_CONFIG_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.config XDG_CACHE_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.cache OPENCODEX_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/opencodex-home CODEX_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.codex PATH=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin XDG_DATA_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/share XDG_STATE_HOME=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/home/.local/state npm_config_userconfig=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/empty-user.npmrc npm_config_globalconfig=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/empty-global.npmrc npm_config_cache=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/npm-cache npm_config_update_notifier=false OPENCODEX_BUN_PATH=/private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/bun /private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/node /private/tmp/ocx021-mac-native-e81d746f-4c11-4c06-abfa-f693d4b3d110/root/tools/official/node_modules/@bitkyc08/opencodex/bin/ocx.mjs \"$@\"\n",
+  "runtimeSourceSeeded": false,
+  "packagesInstalled": false,
+  "sourceTreesUnmodified": true
+}

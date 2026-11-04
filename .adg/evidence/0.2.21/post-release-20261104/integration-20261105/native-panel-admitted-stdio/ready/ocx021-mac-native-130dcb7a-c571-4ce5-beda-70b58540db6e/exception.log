@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 84, in main
+    try:run.prepare();run.launch();run.verify()
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 52, in verify
+    snap=self.wait(lambda s:'官方面板已嵌入主窗口' in self.text(s),name='integrated-panel-'+scene)
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/ocx021-macos-native.py", line 518, in wait
+    snap = self.snapshot()
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/ocx021-macos-native.py", line 501, in snapshot
+    result = self.ax('snapshot')
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/ocx021-macos-native.py", line 497, in ax
+    if result.returncode: raise Blocked('AX ' + verb + ': ' + result.stdout + result.stderr)
+owned_native.Blocked: AX snapshot: {"error":"PID\/executable admission failed"}
+

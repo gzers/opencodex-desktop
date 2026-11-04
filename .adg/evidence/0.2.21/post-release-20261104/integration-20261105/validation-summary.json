@@ -1,0 +1,59 @@
+{
+  "status": "in_progress",
+  "releaseReady": false,
+  "codeHead": "c71a8cf1eef28db5de9ba82b5b599bdc1336678f",
+  "productCommit": "23440509452fc1241324a8ba02ebdd6e52822c18",
+  "appsTree": "0eec77398bbd1cbe49f88dd3bd5e8046266e14c1",
+  "native": {
+    "native-panel-user-entry": {
+      "path": "native-panel-user-entry/ready/ocx021-mac-native-87cb1d41-1985-4325-9e68-45f6287d5385/report.json",
+      "result": "pass",
+      "checks": 15,
+      "build": "23440509452fc1241324a8ba02ebdd6e52822c18",
+      "error": null
+    },
+    "native-channels": {
+      "path": "native-channels/ocx021-mac-native-f1be5f35-bff6-4eb0-b91e-42144b5a378d/report.json",
+      "result": "pass",
+      "checks": 12,
+      "build": "cf412c33660c87f1a39d6159fe77d1e4227ffa74",
+      "error": null
+    },
+    "native-sync": {
+      "path": "native-sync/ready/ocx021-mac-native-ae0d9b2b-11d8-4ba8-a821-1ee9067d98f5/report.json",
+      "result": "pass",
+      "checks": 27,
+      "build": "23440509452fc1241324a8ba02ebdd6e52822c18",
+      "error": null
+    }
+  },
+  "materialReports": "native-material-results.json",
+  "checks": {
+    "vitest": "197 files / 1289 passed",
+    "rustFullIntegrated": "1215 passed / 4 original ignores at aa54 product; 100ms original failure and isolated/bounded rechecks retained",
+    "panelFinal": "11 passed; origin identity and resume reset contract",
+    "clippyFinal": "passed all-targets integration-test -D warnings",
+    "build": "UI typecheck/build and debug app passed; adhoc, not release installer",
+    "windowsProbeUnits": "34 passed",
+    "windowsCI": "queued; not passed"
+  },
+  "pending": [
+    "Windows final-source native and CI",
+    "material performance budget: contribution RDP baseline and candidate failed",
+    "official packaged Codex desktop default restart adapter, isolated instance",
+    "new version freeze and signed release artifacts, installation and upgrade, update channel and rollback",
+    "public release"
+  ],
+  "boundaries": "No daily config/keychain/real WebDAV/Codex restart. Debug candidates remain 0.2.21; no new release assigned.",
+  "reuse": {
+    "materialsAndFullRustFrom": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+    "appsChangedSince": [
+      "apps/desktop/tauri/src/commands/panel.rs"
+    ],
+    "channelNativeFrom": "cf412c33660c87f1a39d6159fe77d1e4227ffa74",
+    "appsChangedSinceChannel": [
+      "apps/desktop/tauri/src/commands/panel.rs"
+    ],
+    "reason": "Only native panel lifecycle changed; UI material/channel/sync product paths byte-identical. Final native panel and sync plus targeted panel regression and Clippy supplement reused unaffected checks. No claim of a new full suite on final commit."
+  }
+}

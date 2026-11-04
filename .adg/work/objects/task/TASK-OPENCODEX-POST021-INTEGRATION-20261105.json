@@ -1,0 +1,126 @@
+{
+  "acceptance_bindings": [
+    {
+      "acceptance_id": "AC-P21-01",
+      "criterion_digest": "93e234ff42d457bc7cb7212117d3f35e700907a36ecd39f1d9b356cf784187b4",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-02",
+      "criterion_digest": "1d31867128ec40d740f0f82f8c32abd17c167b461348ed564e3cbd5931b9c4d6",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-03",
+      "criterion_digest": "a4bc5eac52d104f36218759cb75dd0d0e0af120221fc09f96b3d51b979ea9a79",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-04",
+      "criterion_digest": "8406c4a930d3dcdf46ffbb7f1b60973475489124bba8b2e0660bff996c003b3d",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-05",
+      "criterion_digest": "751b494ac36609953e6a5da400f644d79f6a3443edc8b95a58c3a2fb768c40bb",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-06",
+      "criterion_digest": "74e1bb24932a1f55e73be8bbe648c32570ffcbe763fc754ac1072f9363ae61e4",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-07",
+      "criterion_digest": "be8bc87ef729deb9d8d98fcc9ab71994325fcb4b7bc466235175488fccaab8c7",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-08",
+      "criterion_digest": "e0c2f8154429d231efc8d0f59659f00039ae20b34e1141ddea41a50f3137ddbb",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-09",
+      "criterion_digest": "be98e9a1cf0b6c4c728b3cfd000b64aa4a83099905281d671d7958bf80f74f59",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-10",
+      "criterion_digest": "1b2d3994f43aa133222bd4f37bb0a50ca85e9c222390330a19fdd703fb782de3",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    }
+  ],
+  "acceptance_ids": [
+    "AC-P21-01",
+    "AC-P21-02",
+    "AC-P21-03",
+    "AC-P21-04",
+    "AC-P21-05",
+    "AC-P21-06",
+    "AC-P21-07",
+    "AC-P21-08",
+    "AC-P21-09",
+    "AC-P21-10"
+  ],
+  "baseline_digest": "d388916ae615d5b75c1947b6f4c43a4bd4c2b681e08dbbc61f5dcc935d1817c5",
+  "certificate_digest": null,
+  "content_digest": "d20179e1d2af2c21ecefbcfb7bb1d177c474716e0319500ebd4ffb30e7c52cf0",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "fact_writeback": {
+    "mode": "required",
+    "targets": [
+      {
+        "before_digest": "b02559c948264e63b4ea0878e88ec980a965d0c741e822a718745c6acf6ade21",
+        "id": "0",
+        "path": "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md"
+      },
+      {
+        "before_digest": "0d565bfa37a3b886dcaf25bd1fdd4a8226cd2f77d59b812cf4ddb9d012970d19",
+        "id": "1",
+        "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md"
+      },
+      {
+        "before_digest": "73b9d70a5f3f31ab8e027d598d49056486b0ba47b88ada2621d84d51abc92afb",
+        "id": "2",
+        "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+      }
+    ]
+  },
+  "id": "TASK-OPENCODEX-POST021-INTEGRATION-20261105",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "imported_receipt_digest": null,
+  "kind": "TASK",
+  "owner": "local-final-integration",
+  "required_checks": [
+    "review:contribution-evidence",
+    "review:integrated-regression",
+    "review:macos-native",
+    "review:material-performance",
+    "review:packaged-client-restart",
+    "review:public-release",
+    "review:release-artifacts-upgrade",
+    "review:windows-native"
+  ],
+  "result": "pending",
+  "revision": 2,
+  "state": "in_progress",
+  "summary": "接收W/W2证据，融合L/L2，修旧原生探针，最终源双端/材质性能/正式客户端adapter/发行原包门齐备才发布",
+  "summary_digest": "091c219f3e5433f4248395585f5ec968858022cbf8087260e28d1a782484d99e",
+  "title": "双线最终集成与发布门核对",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/**",
+    ".github/**",
+    "CHANGELOG.md",
+    "apps/desktop/tauri/**",
+    "apps/desktop/ui/qa/**",
+    "apps/desktop/ui/src/**",
+    "apps/desktop/ui/tests/**",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+    "test/smoke/**"
+  ]
+}

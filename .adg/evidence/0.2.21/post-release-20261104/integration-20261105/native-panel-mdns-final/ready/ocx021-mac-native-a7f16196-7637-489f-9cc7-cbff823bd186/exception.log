@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 87, in main
+    try:run.prepare();run.launch();run.verify()
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 62, in verify
+    self.press('通知')
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/ocx021-macos-native.py", line 536, in press
+    snap = self.wait(lambda s: len(self.matches(s, label)) > index, name='target')
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/ocx021-macos-native.py", line 526, in wait
+    raise AssertionError('Native AX target/state not reached: ' + (name or str(predicate)))
+AssertionError: Native AX target/state not reached: target

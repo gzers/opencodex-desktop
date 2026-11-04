@@ -6,8 +6,8 @@ state: "in_progress"
 completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
-task_ids: ["TASK-OPENCODEX-POST021-LOCAL-20261104", "TASK-OPENCODEX-POST021-CHANNELS-20261104", "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104"]
-summary: "本机同步四项已局部完成，接续渠道/私网获取；Windows承接材质、重启和面板，统一集成发布。"
+task_ids: ["TASK-OPENCODEX-POST021-LOCAL-20261104", "TASK-OPENCODEX-POST021-CHANNELS-20261104", "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104", "TASK-OPENCODEX-POST021-INTEGRATION-20261105", "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104", "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104", "TASK-OPENCODEX-POST021-WINDOWS-PANEL-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104", "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104"]
+summary: "L/L2与W/W2已集成；Mac原生复验发现面板空URL崩溃并修复，Windows性能及正式客户端adapter等发布门未通过。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
 
@@ -95,3 +95,24 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-04 L2最终本机回归通过：代码0e604cb2b6be706af767d9937532fe056cac7ca6已推送，Vitest1280、Rust全库1211/0失败/4原条件忽略、Clippy -D warnings与构建通过；59条适用原型回归、双引擎原型各4/软件各12及Mac实际原生12检查通过。两个L2任务按自身范围关闭，本批DMD/IMP及十项整版仍待W回交/最终同提交集成。远端CI41845962425前端、发布工具、Windows冒烟已通过，双后端仍待结束，不据本机结果代写远端通过。未发布，未操作日常配置或真实渠道/同步。
+
+
+2026-11-05集成接收：用户报告Windows已推送；已取代码4b0c357b1和文档911d51514。W交接明确材质性能失败（远程Server原包也超预算），真实正式Codex打包壳默认adapter尚未验；不据用户“完成”覆盖这些缺验。代码两线无冲突合入本机集成分支；328份Windows独有文档/证据按字节导入，未stash/reset并行原型。PR69 Windows失败实际为旧探针寻找已退役运行标识，需适配后重跑最终源CI。正式集成任务TASK-OPENCODEX-POST021-INTEGRATION-20261105承接全部采用AC及发布门，未完成。
+
+
+## 2026-11-05最终集成复核
+
+- 实际代码：W/W2 4b0c357b12d331de8dd49f8209056394e93a728d无冲突合入L/L2，合并提交56acb5a59；aa54d4b2a修正退役运行标识的Windows/Mac原生探针，不降低配置读回/相邻对象保护。用户报告已推送不等于贡献验收全通过。
+- 实际文档：从W文档911d51514按原始字节导入328个独有路径，提交ba61be83e；材质manifest177项和W2 manifest137项全部SHA一致。六TASK/六RCP合同有效，原失败/未完成保留，无CERT伪造；未合并或暂存并行原型内容。
+- Mac首轮集成aa54d4b2a：亮暗×高中低六场景原生观察完成，节点居中弹窗X/Escape、详情、保存通知与缺runtime-port.json具体错误/重试已验。亮色低档首次无AXWebArea，保留失败后同包新根复验通过。Vitest197文件/1289项、类型/构建/生产滤镜检查、Windows探针34项通过。
+- Rust首次全库1214通过/1失败/4忽略，100ms端点超时测试在并发压力下请求未到自有服务；单项复验通过，未改100ms与路径断言；同产品源低并发全库1215通过/4原条件忽略，保留原始失败。
+- 新增Mac面板阻断：实际候选在首次导航未完成时再Show读取existing.url()，触发wry-0.57.0对WKWebView.URL为nil的unwrap并退出。cf412c336改用已限定的服务origin身份；234405094补齐旧view关闭失败时保留归属，防重试误复用；面板11项通过。官方页面加载被测试沙箱拒绝的现象另行隔离，不把它冒称产品修复：最小WK程序在同规则下NSPOSIXErrorDomain=1，放行单一系统mDNSResponder Unix socket后加载成功，公网IP仍拒绝。实际管理器最终原生重跑结果见同源证据，不据最小程序替代。
+- 发布停点：W材质远程Server性能预算明确失败（原包亦失败），缺可用物理桌面/MSVC正式包补验；W2只验证自有GUI壳，正式Codex打包桌面默认发现/退出/启动adapter未验。最终源Windows材质/同步/新建发现/面板回归、CI、版本冻结、新原包安装/升级/签名/更新清单/回退仍待。新Mac面板修复也需Windows受影响复验。G3/G4、DMD/IMP及集成TASK保持in_progress，未合并main、未发布。
+
+证据统一在.adg/evidence/0.2.21/post-release-20261104/integration-20261105/；原始运行身份及失败不可覆盖。L旧已关闭任务/证书不重绑，W冻结回执不改写为通过。下一步先完成可执行Mac最终复验，再交Windows按集成源补缺项；不得用历史0.2.21发行证书代替本批。
+
+
+2026-11-05 Mac面板最终补验：产品源23440509452fc1241324a8ba02ebdd6e52822c18的实际候选通过15检查（native-panel-user-entry/），含官方2.84原包子WKWebView加载、两次离开/重开、双WebArea和配置不变。返回路由至AX就绪约410/353ms，均为复用返回，不冒称冷启动/首像素。Mac通知中心在侧栏路由点击后按现有合同收起，未注入store制造带浮层场景，Mac该原生覆盖未计；Windows既有证据与最终同源补验继续保留。两次错误的通知触发假设和首次默认路由假设失败均保留。Clippy最终源通过，面板11定向项通过。交付HEAD c71a8cf1e只新增两份验收脚本，apps树与原生234405094逐字相同；不重新构建冒充新产品。后续Windows交接详见integration-20261105/WINDOWS-FOLLOWUP.md。
+
+
+2026-11-05最终同步原生复验也已通过27检查：候选234405094，真实UI首次全选、只读版本各状态与连接显示有证据，隔离HTTPS14次GET、零远端写、业务摘要保持。详见integration-20261105/validation-summary.json；同HEAD仅验收脚本变化不影响产品身份。材质/渠道及全库检查按已核对未变路径复用，最终面板/同步及定向11/Clippy补齐受影响项，不宣称所有检查重新跑在c71a8cf1e。远端CI仍按实际状态，Windows及发行缺验未关闭。

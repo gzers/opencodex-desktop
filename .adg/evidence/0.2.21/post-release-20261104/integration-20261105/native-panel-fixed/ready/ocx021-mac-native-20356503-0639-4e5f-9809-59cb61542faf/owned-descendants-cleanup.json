@@ -1,0 +1,109 @@
+{
+  "observedDescendants": [
+    {
+      "pid": 84204,
+      "ppid": 84191,
+      "pgid": 84204,
+      "command": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tools/node"
+    },
+    {
+      "pid": 84206,
+      "ppid": 84204,
+      "pgid": 84204,
+      "command": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tools/bun"
+    },
+    {
+      "pid": 84226,
+      "ppid": 84191,
+      "pgid": 84226,
+      "command": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tools/node"
+    },
+    {
+      "pid": 84227,
+      "ppid": 84226,
+      "pgid": 84226,
+      "command": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tools/bun"
+    },
+    {
+      "pid": 84239,
+      "ppid": 84191,
+      "pgid": 84191,
+      "command": "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/tools/node"
+    },
+    {
+      "pid": 84244,
+      "ppid": 84239,
+      "pgid": 84191,
+      "command": "(bun)"
+    }
+  ],
+  "groups": [
+    {
+      "pgid": 84226,
+      "remaining": []
+    },
+    {
+      "pgid": 84204,
+      "remaining": []
+    }
+  ],
+  "directVersionProbes": [
+    {
+      "pid": 84125,
+      "pgid": 84125,
+      "label": "node-version",
+      "argv": [
+        "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/home/.local/bin/node",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "v26.8.1",
+      "stderr": "",
+      "remaining": []
+    },
+    {
+      "pid": 84129,
+      "pgid": 84129,
+      "label": "npm-version",
+      "argv": [
+        "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/home/.local/bin/npm",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "11.19.0",
+      "stderr": "",
+      "remaining": []
+    },
+    {
+      "pid": 84142,
+      "pgid": 84142,
+      "label": "bun-version",
+      "argv": [
+        "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/home/.local/bin/bun",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "1.4.2",
+      "stderr": "",
+      "remaining": []
+    },
+    {
+      "pid": 84156,
+      "pgid": 84156,
+      "label": "ocx-version",
+      "argv": [
+        "/private/tmp/ocx021-mac-native-20356503-0639-4e5f-9809-59cb61542faf/root/home/.local/bin/ocx",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "opencodex 2.84.0",
+      "stderr": "",
+      "remaining": []
+    },
+    {
+      "pid": 84163,
+      "pgid": 84163,
+      "label": "owned-unmodified-official-server"
+    }
+  ]
+}

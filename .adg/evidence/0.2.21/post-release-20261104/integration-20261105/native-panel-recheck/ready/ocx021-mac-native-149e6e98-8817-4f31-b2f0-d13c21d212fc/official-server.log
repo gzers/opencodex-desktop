@@ -1,0 +1,7 @@
+----- Native stack trace -----
+
+ 1: 0x1025ea0e8 node::(anonymous namespace)::DefaultAbortHandler(char const*, char const*) [/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tools/node]
+ 2: 0x104ab5dd0 node::InitializeOncePerProcessInternal(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&, node::ProcessInitializationFlags::Flags) (.cold.1) [/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tools/node]
+ 3: 0x1025a5cb4 node::InitializeOncePerProcessInternal(std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&, node::ProcessInitializationFlags::Flags) [/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tools/node]
+ 4: 0x1025a6bac node::Start(int, char**) [/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tools/node]
+ 5: 0x18c3fbe80 start [/usr/lib/dyld]

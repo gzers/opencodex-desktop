@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 92, in main
+    finally:run.close()
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 64, in verify
+    # The panel has no top bar; overview notifications close on route click.
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/ocx021-macos-native.py", line 526, in wait
+    raise AssertionError('Native AX target/state not reached: ' + (name or str(predicate)))
+AssertionError: Native AX target/state not reached: panel-overlay

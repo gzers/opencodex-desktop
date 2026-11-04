@@ -1,0 +1,11 @@
+# 双线集成交接（未发布）
+
+代码codex/post021-sync-fixes / c71a8cf1eef28db5de9ba82b5b599bdc1336678f，PR #69草稿。产品源23440509452fc1241324a8ba02ebdd6e52822c18；后续HEAD仅增加两份smoke脚本，apps树0eec77398bbd1cbe49f88dd3bd5e8046266e14c1一致。文档采用仍以DMD-POST021与IMP-30为准，未来原型脏文件未纳入。
+
+Windows代码4b0c357b1已合入；文档911d51514的328独有路径字节导入，原manifest177+137项SHA一致，六TASK/六RCP保留失败及未完。材质恢复的根因与原生截图保留，不把性能失败改成通过。
+
+本机结果详见validation-summary.json。集成前后端1289/1215及定向11、Clippy和构建通过。Mac六材质场景、渠道12、最终同步27与面板15检查通过；同步仅隔离HTTPS GET，业务状态摘要保持；面板为官方2.84原包真实子WKWebView，无脚本替换响应。返回面板410/353ms是复用返回观察，不是冷启动或首像素。Mac管理器通知中心会随外部侧栏点击收起，跨路由带通知的假设不成立；该原生覆盖未宣称通过，Windows既有/最终补验仍负责相应场景。
+
+保留失败：100ms Rust超时测试初次并发请求未到服务，单项和低并发完整复验通过，未放宽deadline；亮低初次无WebArea；测试server stdout放在日常home禁读范围导致Node启动失败；缩写build SHA拒绝；通知入口/默认路由假设失败。最关键的实际产品失败是Mac首次导航前重开读取nil URL崩溃，cf412c336/234405094已修并补原生面板。另一个加载失败来自测试沙箱屏蔽系统mDNSResponder Unix socket：最小WK程序NSPOSIXErrorDomain1，同规则仅放行该socket即成功；最终产品也已独立通过，不用最小程序代验。所有尝试独立UUID根且保留原始报告。
+
+发布门仍未齐：Windows最终同源CI/原生回归、RDP未通过的材质性能（需要物理桌面和MSVC候选包补验）、正式打包Codex桌面默认重启adapter、新版本冻结和原包安装升级/签名/更新通道/回退。没有发行版号变更、main合并、tag/发布、真实WebDAV或日常配置/Codex重启。当前TASK/DMD/IMP仍in_progress，无整版证书。Windows接续用WINDOWS-FOLLOWUP.md；此前可用物理Windows环境询问尚待用户回答，不据等待时间推定允许跳过。

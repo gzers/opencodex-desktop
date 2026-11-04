@@ -1,0 +1,12 @@
+{
+  "original": "wk-probe.log",
+  "negativeChecks": [
+    "netsrc.log",
+    "bind.log",
+    "ip-scope.log",
+    "sysnetwork.log"
+  ],
+  "diagnosticBroadUnix": "unix.log",
+  "boundedFix": "mdns-only.log",
+  "conclusion": "WKWebView minimal native probe failed with NSPOSIXErrorDomain 1 under original sandbox. Allowing only network-outbound literal /private/var/run/mDNSResponder completed same owned official /web. No product injection; no public IP admission; caller daily home/keychains remain denied. Actual product must still pass separately."
+}

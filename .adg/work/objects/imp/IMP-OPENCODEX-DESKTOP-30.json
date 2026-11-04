@@ -1,22 +1,29 @@
 {
   "completion_summary": null,
-  "content_digest": "ac415f27c329ca3da03b77d536c548e407a12362d00cdd71a430099268244d2b",
+  "content_digest": "9e577166f40af61fb9ce3e40d0b54fd2314efd53e92b2efb7912ce696ca2f1cd",
   "demand_ids": [
     "DMD-OPENCODEX-POST021"
   ],
   "id": "IMP-OPENCODEX-DESKTOP-30",
   "kind": "IMP",
-  "revision": 6,
-  "source_digest": "834530f9ae0bfc41455c71e46945091e9d185d59667955c6483f5aac3554e93a",
+  "revision": 10,
+  "source_digest": "03c95cdd5c9e01a9bc3aa20de9919eb5d063c5fcfc50f445dff348a2f460c2b2",
   "source_path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
-  "source_revision": 6,
+  "source_revision": 10,
   "state": "in_progress",
-  "summary": "本机同步四项已局部完成，接续渠道/私网获取；Windows承接材质、重启和面板，统一集成发布。",
-  "summary_digest": "1f246b6bc691b3332cf78c65ed0589c025d5972572a7274d9ad0a427f4e80983",
+  "summary": "L/L2与W/W2已集成；Mac原生复验发现面板空URL崩溃并修复，Windows性能及正式客户端adapter等发布门未通过。",
+  "summary_digest": "a844302b714c68e5fb17e2e7a38503920171f2074b8ad61263cd6f5e09e2e968",
   "task_ids": [
     "TASK-OPENCODEX-POST021-LOCAL-20261104",
     "TASK-OPENCODEX-POST021-CHANNELS-20261104",
-    "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104"
+    "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104",
+    "TASK-OPENCODEX-POST021-INTEGRATION-20261105",
+    "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104",
+    "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104",
+    "TASK-OPENCODEX-POST021-WINDOWS-PANEL-20261104",
+    "TASK-OPENCODEX-POST021-WINDOWS-RESTART-20261104",
+    "TASK-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104",
+    "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104"
   ],
   "title": "0.2.21发布后双线修复与集成发布计划"
 }

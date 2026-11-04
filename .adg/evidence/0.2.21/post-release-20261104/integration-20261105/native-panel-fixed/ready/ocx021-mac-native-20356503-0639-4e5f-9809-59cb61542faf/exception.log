@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 84, in main
+    try:run.prepare();run.launch();run.verify()
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/ocx021-macos-native.py", line 479, in launch
+    assert self.report.get('startupBuildCommit') == self.args.expected_build_commit, 'Embedded startup build commit differs from the expected final commit'
+AssertionError: Embedded startup build commit differs from the expected final commit

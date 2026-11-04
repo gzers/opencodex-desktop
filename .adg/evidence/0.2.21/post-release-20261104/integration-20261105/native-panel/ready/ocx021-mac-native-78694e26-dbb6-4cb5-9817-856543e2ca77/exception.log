@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 80, in main
+    try:run.prepare();run.launch();run.verify()
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/test/smoke/post021-panel-macos.py", line 35, in prepare
+    if self.server.poll() is not None:raise RuntimeError('Owned official server exited; see original log')
+RuntimeError: Owned official server exited; see original log

@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "stage": "debug-preverify",
+  "result": "fail",
+  "app": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app",
+  "executable": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "bundleInfo": {
+    "CFBundleDevelopmentRegion": "English",
+    "CFBundleDisplayName": "OpenCodeX Desktop",
+    "CFBundleExecutable": "opencodex-desktop",
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleInfoDictionaryVersion": "6.0",
+    "CFBundleName": "OpenCodeX Desktop",
+    "CFBundlePackageType": "APPL",
+    "CFBundleShortVersionString": "0.2.21",
+    "CFBundleVersion": "0.2.21",
+    "CSResourcesFileMapped": true,
+    "LSMinimumSystemVersion": "10.13",
+    "CFBundleIconFile": "icon.icns",
+    "LSRequiresCarbon": true,
+    "NSHighResolutionCapable": true
+  },
+  "binarySha256Before": "5026ff967dd1278bed07f7626a3a9da9f88c66718d859c5eb03bb9d9a9a991c3",
+  "bundleInfoSha256Before": "934509c29cdda40a9244044c143be74a6be75fd967a1bdeb8911c066eaa6f972",
+  "root": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root",
+  "boundary": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79",
+  "environment": {
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "USER": "ezio",
+    "LOGNAME": "ezio",
+    "HOME": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root/home",
+    "CFFIXED_USER_HOME": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root/home",
+    "TMP": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root/tmp",
+    "TMPDIR": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root/tmp/",
+    "TEMP": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root/tmp",
+    "XDG_CONFIG_HOME": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root/home/.config",
+    "XDG_CACHE_HOME": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root/home/.cache",
+    "OPENCODEX_SANDBOX": "1",
+    "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root",
+    "OPENCODEX_SANDBOX_BOUNDARY": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79",
+    "OPENCODEX_HOME": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root/opencodex-home",
+    "CODEX_HOME": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root/home/.codex"
+  },
+  "rootSource": "Fresh UUID root; explicit process environment; startup-bound boundary; no daily data inspection",
+  "sourceHeadAtRun": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+  "sourceDirtyAtRun": "",
+  "scope": "all",
+  "readyMode": false,
+  "expectedBuildCommit": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+  "scriptSha256": "f99818d7faf972696801bdfb3adc04b39ff36e1b0ea35f233c270bdcaaf7ab17",
+  "axHelperSourceSha256": "83b125f54b1d0bb9280a96bb84907955276d8ff2991dd001abe908950b5a5eb1",
+  "signedFinalCommitClaimed": false,
+  "scopeCompleted": false,
+  "checks": [
+    {
+      "name": "native-permissions",
+      "status": "pass",
+      "axTrusted": true,
+      "locked": false,
+      "onConsole": true,
+      "screenCaptureAllowed": true
+    },
+    {
+      "name": "kernel-network-denial",
+      "status": "pass",
+      "returncode": 1,
+      "error": "nc: connectx to 192.0.2.1 port 443 (tcp) failed: Operation not permitted"
+    },
+    {
+      "name": "process-sandbox-admission",
+      "status": "pass",
+      "pid": 75622,
+      "pgid": 75622,
+      "required": [
+        "HOME",
+        "TMP",
+        "TMPDIR",
+        "OPENCODEX_SANDBOX",
+        "OPENCODEX_SANDBOX_ROOT",
+        "OPENCODEX_SANDBOX_BOUNDARY"
+      ]
+    },
+    {
+      "name": "native-window",
+      "status": "blocked",
+      "windows": [
+        {
+          "bounds": {
+            "Height": 760,
+            "Width": 1180,
+            "X": 1010,
+            "Y": 262
+          },
+          "id": 104093,
+          "layer": 0,
+          "onscreen": true
+        }
+      ],
+      "axNodes": 8
+    },
+    {
+      "name": "expected-build-commit",
+      "status": "pass",
+      "expected": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac"
+    },
+    {
+      "name": "startup-root-binding",
+      "status": "pass",
+      "binding": {
+        "structure_version": "1"
+      },
+      "resolvedActiveRoot": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root",
+      "resolvedOfficialHome": "/private/tmp/ocx021-mac-native-bdc1e2e1-1601-4229-86e6-d6edeb110e79/root/opencodex-home",
+      "startup": "2026-11-04T15:58:06.602Z [manager] startup version=0.2.21 commit=aa54d4b2ac7b0eaae66cff949d0d83baae7aefac"
+    },
+    {
+      "name": "integrated-native-run",
+      "status": "fail",
+      "reason": "Native AX target/state not reached: target"
+    },
+    {
+      "name": "owned-process-group-cleanup",
+      "status": "pass",
+      "pgid": 75622,
+      "remaining": []
+    },
+    {
+      "name": "startup-root-source-unchanged",
+      "status": "pass",
+      "source": "Process environment + startup binding; no root rebind invoked",
+      "bindingSha256": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25"
+    },
+    {
+      "name": "candidate-identity-unchanged",
+      "status": "pass"
+    }
+  ],
+  "startedAt": "2026-11-04T15:58:05.369524+00:00",
+  "codesign": "Executable=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop\nIdentifier=com.gzers.opencodex.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=228924 flags=0x10002(adhoc,runtime) hashes=7147+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=1769472\nHash type=sha256 size=32\nCandidateCDHash sha256=6c38a1b3ed354ec5fcdcaee9e328acd35a88fa06\nCandidateCDHashFull sha256=6c38a1b3ed354ec5fcdcaee9e328acd35a88fa066d0deac5bf403ecf55c20efe\nHash choices=sha256\nCMSDigest=6c38a1b3ed354ec5fcdcaee9e328acd35a88fa066d0deac5bf403ecf55c20efe\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=61669376\nExecutable Segment flags=0x1\nPage size=16384\nCDHash=6c38a1b3ed354ec5fcdcaee9e328acd35a88fa06\nSignature=adhoc\nInfo.plist entries=14\nTeamIdentifier=not set\nRuntime Version=27.0.0\nSealed Resources version=2 rules=13 files=4\nInternal requirements count=0 size=12\nTotal signatures=1\nChosen signature=1\n",
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "pid": 75622,
+  "processGroup": 75622,
+  "startupEvent": "2026-11-04T15:58:06.602Z [manager] startup version=0.2.21 commit=aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+  "startupBuildCommit": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+  "error": "Native AX target/state not reached: target",
+  "errorKind": "fail",
+  "ownedProcessExit": -15,
+  "binarySha256After": "5026ff967dd1278bed07f7626a3a9da9f88c66718d859c5eb03bb9d9a9a991c3",
+  "bundleInfoSha256After": "934509c29cdda40a9244044c143be74a6be75fd967a1bdeb8911c066eaa6f972",
+  "finishedAt": "2026-11-04T15:58:42.067667+00:00",
+  "sourceHeadAtEnd": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac"
+}

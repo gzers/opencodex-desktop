@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "stage": "debug-preverify",
+  "result": "fail",
+  "app": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app",
+  "executable": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "bundleInfo": {
+    "CFBundleDevelopmentRegion": "English",
+    "CFBundleDisplayName": "OpenCodeX Desktop",
+    "CFBundleExecutable": "opencodex-desktop",
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleInfoDictionaryVersion": "6.0",
+    "CFBundleName": "OpenCodeX Desktop",
+    "CFBundlePackageType": "APPL",
+    "CFBundleShortVersionString": "0.2.21",
+    "CFBundleVersion": "0.2.21",
+    "CSResourcesFileMapped": true,
+    "LSMinimumSystemVersion": "10.13",
+    "CFBundleIconFile": "icon.icns",
+    "LSRequiresCarbon": true,
+    "NSHighResolutionCapable": true
+  },
+  "binarySha256Before": "5026ff967dd1278bed07f7626a3a9da9f88c66718d859c5eb03bb9d9a9a991c3",
+  "bundleInfoSha256Before": "934509c29cdda40a9244044c143be74a6be75fd967a1bdeb8911c066eaa6f972",
+  "root": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root",
+  "boundary": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc",
+  "environment": {
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "USER": "ezio",
+    "LOGNAME": "ezio",
+    "HOME": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/home",
+    "CFFIXED_USER_HOME": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/home",
+    "TMP": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tmp",
+    "TMPDIR": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tmp/",
+    "TEMP": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tmp",
+    "XDG_CONFIG_HOME": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/home/.config",
+    "XDG_CACHE_HOME": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/home/.cache",
+    "OPENCODEX_SANDBOX": "1",
+    "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root",
+    "OPENCODEX_SANDBOX_BOUNDARY": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc",
+    "OPENCODEX_HOME": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/opencodex-home",
+    "CODEX_HOME": "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/home/.codex"
+  },
+  "rootSource": "Fresh UUID root; explicit process environment; startup-bound boundary; no daily data inspection",
+  "sourceHeadAtRun": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+  "sourceDirtyAtRun": "",
+  "scope": "overview",
+  "readyMode": true,
+  "expectedBuildCommit": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac",
+  "scriptSha256": "f99818d7faf972696801bdfb3adc04b39ff36e1b0ea35f233c270bdcaaf7ab17",
+  "axHelperSourceSha256": "83b125f54b1d0bb9280a96bb84907955276d8ff2991dd001abe908950b5a5eb1",
+  "signedFinalCommitClaimed": false,
+  "scopeCompleted": false,
+  "checks": [
+    {
+      "name": "native-permissions",
+      "status": "pass",
+      "axTrusted": true,
+      "locked": false,
+      "onConsole": true,
+      "screenCaptureAllowed": true
+    },
+    {
+      "name": "kernel-network-denial",
+      "status": "pass",
+      "returncode": 1,
+      "error": "nc: connectx to 192.0.2.1 port 443 (tcp) failed: Operation not permitted"
+    },
+    {
+      "name": "ready-real-tool-versions",
+      "status": "pass",
+      "versions": {
+        "node": "v26.8.1",
+        "npm": "11.19.0",
+        "bun": "1.4.2",
+        "ocx": "opencodex 2.84.0"
+      },
+      "codeBytesUnmodified": true,
+      "proof": "Original binaries/CLI copied with equal SHA; fixed-environment wrappers; OS network denied; no service commands"
+    },
+    {
+      "name": "integrated-panel-native",
+      "status": "fail",
+      "reason": "Owned official server exited; see original log"
+    },
+    {
+      "name": "owned-tool-descendants-cleanup",
+      "status": "pass",
+      "remaining": []
+    },
+    {
+      "name": "ready-original-tools-unchanged",
+      "status": "pass",
+      "copiedHashes": {
+        "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tools/node": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+        "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tools/npm/bin/npm-cli.js": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+        "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tools/official/node_modules/@bitkyc08/opencodex/bin/ocx.mjs": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+        "/private/tmp/ocx021-mac-native-149e6e98-8817-4f31-b2f0-d13c21d212fc/root/tools/bun": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5"
+      },
+      "sourceInputHashes": {
+        "node": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+        "npm_cli": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+        "official_entry": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+        "bun": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5"
+      }
+    },
+    {
+      "name": "candidate-identity-unchanged",
+      "status": "pass"
+    }
+  ],
+  "startedAt": "2026-11-04T16:03:38.576216+00:00",
+  "codesign": "Executable=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop\nIdentifier=com.gzers.opencodex.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=228924 flags=0x10002(adhoc,runtime) hashes=7147+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=1769472\nHash type=sha256 size=32\nCandidateCDHash sha256=6c38a1b3ed354ec5fcdcaee9e328acd35a88fa06\nCandidateCDHashFull sha256=6c38a1b3ed354ec5fcdcaee9e328acd35a88fa066d0deac5bf403ecf55c20efe\nHash choices=sha256\nCMSDigest=6c38a1b3ed354ec5fcdcaee9e328acd35a88fa066d0deac5bf403ecf55c20efe\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=61669376\nExecutable Segment flags=0x1\nPage size=16384\nCDHash=6c38a1b3ed354ec5fcdcaee9e328acd35a88fa06\nSignature=adhoc\nInfo.plist entries=14\nTeamIdentifier=not set\nRuntime Version=27.0.0\nSealed Resources version=2 rules=13 files=4\nInternal requirements count=0 size=12\nTotal signatures=1\nChosen signature=1\n",
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "toolInputs": {
+    "node": {
+      "requested": "/Users/ezio/.hermes/node/bin/node",
+      "path": "/Users/ezio/.hermes/node/bin/node",
+      "sha256": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+      "size": 145803984
+    },
+    "npm_cli": {
+      "requested": "/Users/ezio/.hermes/node/lib/node_modules/npm/bin/npm-cli.js",
+      "path": "/Users/ezio/.hermes/node/lib/node_modules/npm/bin/npm-cli.js",
+      "sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+      "size": 54,
+      "packageVersion": "11.19.0"
+    },
+    "official_entry": {
+      "requested": "/private/tmp/ocx020-owned-official-284/installation/node_modules/@bitkyc08/opencodex/bin/ocx.mjs",
+      "path": "/private/tmp/ocx020-owned-official-284/installation/node_modules/@bitkyc08/opencodex/bin/ocx.mjs",
+      "sha256": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+      "size": 59088,
+      "packageVersion": "2.84.0"
+    },
+    "bun": {
+      "requested": "/private/tmp/ocx020-owned-official-284/installation/node_modules/bun/bin/bun.exe",
+      "path": "/private/tmp/ocx020-owned-official-284/installation/node_modules/bun/bin/bun.exe",
+      "sha256": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5",
+      "size": 61884464
+    }
+  },
+  "realToolVersions": {
+    "node": "v26.8.1",
+    "npm": "11.19.0",
+    "bun": "1.4.2",
+    "ocx": "opencodex 2.84.0"
+  },
+  "error": "Owned official server exited; see original log",
+  "errorKind": "fail",
+  "binarySha256After": "5026ff967dd1278bed07f7626a3a9da9f88c66718d859c5eb03bb9d9a9a991c3",
+  "bundleInfoSha256After": "934509c29cdda40a9244044c143be74a6be75fd967a1bdeb8911c066eaa6f972",
+  "finishedAt": "2026-11-04T16:03:45.955120+00:00",
+  "sourceHeadAtEnd": "aa54d4b2ac7b0eaae66cff949d0d83baae7aefac"
+}

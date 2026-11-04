@@ -1,0 +1,52 @@
+   Compiling objc2-exception-helper v0.1.1
+   Compiling objc2 v0.6.4
+   Compiling ring v0.17.14
+   Compiling opencodex-desktop v0.2.21 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri)
+   Compiling block2 v0.6.2
+   Compiling objc2-core-foundation v0.3.2
+   Compiling objc2-foundation v0.3.2
+   Compiling dispatch2 v0.3.1
+   Compiling wry v0.57.0
+   Compiling rustls-webpki v0.103.15
+   Compiling rustls v0.23.45
+   Compiling objc2-core-graphics v0.3.2
+   Compiling tokio-rustls v0.26.6
+   Compiling rustls-platform-verifier v0.7.1
+   Compiling hyper-rustls v0.27.10
+   Compiling reqwest v0.13.5
+   Compiling reqwest v0.12.28
+   Compiling objc2-quartz-core v0.3.2
+   Compiling objc2-app-kit v0.3.2
+   Compiling objc2-web-kit v0.3.2
+   Compiling muda v0.20.0
+   Compiling tao v0.37.1
+   Compiling window-vibrancy v0.8.1
+   Compiling objc2-osa-kit v0.3.2
+   Compiling rfd v0.16.0
+   Compiling osakit v0.3.1
+   Compiling tauri-runtime v2.12.1
+   Compiling tray-icon v0.25.1
+   Compiling tauri-runtime-wry v2.12.1
+   Compiling tauri v2.12.1
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-dialog v2.8.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 31.82s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-b0644f1dff90c839)
+
+running 11 tests
+test commands::panel::tests::bounds_follow_shell_zoom_instead_of_fixed_sidebar_width ... ok
+test commands::panel::tests::bounds_never_cover_shell_controls_or_escape_window ... ok
+test commands::panel::tests::corner_radius_follows_interface_scale ... ok
+test commands::panel::tests::native_caption_panel_starts_at_client_top_without_covering_macos_overlay ... ok
+test commands::panel::tests::navigation_cannot_escape_the_panel_origin ... ok
+test commands::panel::tests::only_runtime_local_panel_urls_are_accepted ... ok
+test commands::panel::tests::panel_state_detail_normalizes_theme_and_keeps_scale ... ok
+test commands::panel::tests::repeated_show_before_navigation_keeps_origin_and_resume_state ... ok
+test commands::panel::tests::idle_reclaim_requires_same_generation_hidden_view_and_elapsed_deadline ... ok
+test commands::panel::tests::show_rejection_reason_names_runtime_and_missing_port ... ok
+test commands::panel::tests::theme_setting_syncs_through_the_official_storage_key ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1209 filtered out; finished in 0.00s
+

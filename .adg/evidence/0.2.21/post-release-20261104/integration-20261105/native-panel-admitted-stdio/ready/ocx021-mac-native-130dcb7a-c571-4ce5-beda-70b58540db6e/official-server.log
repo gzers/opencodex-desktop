@@ -1,0 +1,13 @@
+🚀 opencodex proxy running on http://localhost:55095
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+⚠ Claude intercept proxy could not start: Failed to start server. Is port 0 in use?
+[opencodex] Codex write refused (service-home): this proxy could not prove it owns the installed service homes, so catalog sync and Codex config injection were skipped. POST /api/sync returns the specific reason.
+[opencodex] Provider model discovery for "native021-old" threw DestinationDnsResolutionError [urlClass=provider-models, fallback=configured].
+[opencodex] slug alias collision on "native021-old/vendor-a:8b": multiple native ids encode to the same Codex-facing slug; the plain-hyphen native id is cataloged, the slash id remains callable via its raw selector.
+Client startup work complete.
+
+🛑 Shutting down opencodex proxy...
