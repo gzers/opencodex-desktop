@@ -84,8 +84,12 @@ function stopStatusWait() {
 function showNotice(kind: PanelNoticeKind) {
   panelLoading.value = false
   panelReady.value = false
+  panel.setLoaded(false)
   panelNotice.value = NOTICES[kind]
-  if (kind !== 'waiting') clearLoadTimeout()
+  if (kind !== 'waiting') {
+    clearLoadTimeout()
+    panel.finishLoad(currentTrace, kind)
+  }
 }
 
 // 依据当前快照说明面板为何不能嵌入；不把「页面没加载」与「进程没启动」混为一谈。

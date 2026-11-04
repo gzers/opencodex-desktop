@@ -59,6 +59,16 @@ it('uses already loaded persisted preferences and records ready stages on native
  expect(usePanelStore().loadTrace.phases.map(p=>p.phase)).toEqual(expect.arrayContaining(['preferences-ready','status-ready','address-ready','native-request','visible-ready']))
 })
 
+it('records a terminal stopped-service outcome and clears readiness from an earlier visit',async()=>{
+ usePanelStore().loaded=true
+ useLifecycleStore().statusSnapshot={...snapshot,matrix:{...snapshot.matrix,runtime:'stopped'},port:null}
+ await render()
+ expect(wrapper!.text()).toContain('OpenCodex 未运行')
+ expect(usePanelStore().loaded).toBe(false)
+ expect(usePanelStore().loadTrace.outcome).toBe('not-running')
+ expect(invoke.mock.calls.some(([cmd,args])=>cmd==='sync_embedded_panel'&&args.request.action==='show')).toBe(false)
+})
+
 it('keeps navigation ready when Show returns an older snapshot for the same generation',async()=>{
  let resolveShow!:(value:unknown)=>void
  invoke.mockImplementation((command:string,args?:{request?:{action?:string}})=>command==='sync_embedded_panel'&&args?.request?.action==='show'?new Promise(resolve=>{resolveShow=resolve}):Promise.resolve({visible:false,panelUrl:null}))
