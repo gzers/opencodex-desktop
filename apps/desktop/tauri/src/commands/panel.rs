@@ -609,7 +609,10 @@ pub async fn sync_embedded_panel(
             window
                 .add_child(
                     builder,
-                    tauri::LogicalPosition::new(bounds.x, bounds.y),
+                    // add_child initially shows its native view. Keep it clipped
+                    // outside the parent until the request generation is checked,
+                    // so an overlay/timeout cannot expose a late-created page.
+                    tauri::LogicalPosition::new(-bounds.width - 1.0, -bounds.height - 1.0),
                     tauri::LogicalSize::new(bounds.width, bounds.height),
                 )
                 .inspect_err(|error| {
