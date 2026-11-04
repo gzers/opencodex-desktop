@@ -14,7 +14,7 @@ on:
       product_tree:
         description: Exact apps/desktop/tauri/src tree from the frozen source
         required: true
-        default: 3ed5e085216cdb55103f3631ff84adaa762a55cc
+        default: ccc6cc45044f94b9cd2f0e944b374fc32d49eab8
         type: string
 permissions:
   contents: read
@@ -30,7 +30,7 @@ jobs:
       - name: Capture default official settings from fixed public npm packages
         shell: pwsh
         env:
-          OCX_EXPECTED_PRODUCT_TREE: ${{ inputs.product_tree || '3ed5e085216cdb55103f3631ff84adaa762a55cc' }}
+          OCX_EXPECTED_PRODUCT_TREE: ${{ inputs.product_tree || 'ccc6cc45044f94b9cd2f0e944b374fc32d49eab8' }}
         run: |
           $taskNode = (Get-Command node).Source
           $taskNpm = Join-Path (Split-Path -Parent $taskNode) 'node_modules/npm/bin/npm-cli.js'
@@ -69,7 +69,7 @@ jobs:
       - name: Real published binding, production npm resolver and two native owner cases
         shell: pwsh
         env:
-          OCX_EXPECTED_PRODUCT_TREE: ${{ inputs.product_tree || '3ed5e085216cdb55103f3631ff84adaa762a55cc' }}
+          OCX_EXPECTED_PRODUCT_TREE: ${{ inputs.product_tree || 'ccc6cc45044f94b9cd2f0e944b374fc32d49eab8' }}
         run: |
           $taskArtifacts = Get-Content -LiteralPath test/windows-client-owner-build.jsonl | ForEach-Object { $_ | ConvertFrom-Json } | Where-Object { $_.reason -eq 'compiler-artifact' -and $_.target.name -eq 'windows_client_selection_owner' -and $_.executable }
           if (@($taskArtifacts).Count -ne 1) { throw 'Exactly one product-linked owner test EXE required' }
