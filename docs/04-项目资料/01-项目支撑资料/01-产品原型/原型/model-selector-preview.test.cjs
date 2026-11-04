@@ -2,7 +2,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const make=require('./model-prototype-test-harness.cjs');
 const policy=h=>JSON.stringify({draft:h.state().draft,saved:h.state().saved,pending:h.state().pending,records:h.state().records});
-const stageName=h=>{h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'NewApi 编辑');h.click('back-channels');};
+const stageName=h=>{h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'NewApi-edited');h.click('back-channels');};
 test('列表有修改才开放保存预览，详情保存当前渠道且没有独立预览按钮',()=>{
  const h=make();assert.doesNotMatch(h.page(),/data-mp="selector-preview"|data-mp="mp-budget"|id="mpBudget"|data-mp="order-preview"|data-mp="budget"/);
  assert.match(h.page().match(/<button id="mpPolicySave"[^>]*>/)[0],/disabled/);stageName(h);const button=h.page().match(/<button id="mpPolicySave"[^>]*>/)[0];assert.match(button,/aria-label="保存"/);assert.doesNotMatch(button,/disabled/);

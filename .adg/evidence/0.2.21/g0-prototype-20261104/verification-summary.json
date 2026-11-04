@@ -1,0 +1,106 @@
+{
+  "recordedAt": "2026-11-04T05:08:27.314493+00:00",
+  "status": "G0 prototype scope complete; production and Git-based target replay remain with mainline",
+  "adoptionManifest": "source-manifest.json",
+  "adoptionManifestSha256": "724588c21e866291d1287516e0d2341e4cbce3597574e3dd649832f3c9115922",
+  "files": 20,
+  "changes": [
+    "POST01 no autofocus/countdown/restart confirmation exits",
+    "POST02 direct runtime rename with stable object identity and inline previews/validation",
+    "POST04 reliable saved-time/undetermined decision and visible disabled confirmation",
+    "POST07 revision-bound timed observations, exact tested candidate proof, mock reload",
+    "POST08 candidate loading/empty/error/objects, explicit activation and request isolation"
+  ],
+  "finalChecks": {
+    "coreAndPreviouslyFailedCases": {
+      "evidence": "final-fixed-core-and-failures.log",
+      "tests": 11,
+      "pass": 11,
+      "fail": 0,
+      "skipped": 0
+    },
+    "legacyTimer": {
+      "evidence": "final-timer-regression.log",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0
+    },
+    "browser": [
+      {
+        "engine": "chromium",
+        "passed": 112,
+        "failed": 0,
+        "runtimeFilesCompared": 6,
+        "sourceManifestMatches": true,
+        "pageErrors": 0,
+        "missingAssets": 0,
+        "externalRequests": 0,
+        "screenshots": 16,
+        "evidence": "chromium/result.json"
+      },
+      {
+        "engine": "webkit",
+        "passed": 112,
+        "failed": 0,
+        "runtimeFilesCompared": 6,
+        "sourceManifestMatches": true,
+        "pageErrors": 0,
+        "missingAssets": 0,
+        "externalRequests": 0,
+        "screenshots": 16,
+        "evidence": "webkit/result.json"
+      }
+    ],
+    "deltaReplay": {
+      "passed": 20,
+      "total": 20,
+      "evidence": "delta-replay.json"
+    },
+    "syntax": {
+      "passed": 19,
+      "total": 19,
+      "evidence": "syntax-checks.json"
+    }
+  },
+  "retainedEarlierResults": {
+    "dirtyWorkingTreeFullHarness": {
+      "evidence": "all-harness-tests.log",
+      "tests": 511,
+      "pass": 374,
+      "fail": 137,
+      "skipped": 0
+    },
+    "extendedRegressionBeforeCorrections": {
+      "evidence": "final-targeted-tests.log",
+      "tests": 171,
+      "pass": 168,
+      "fail": 3,
+      "skipped": 0
+    },
+    "coreCheckpoint": {
+      "evidence": "core-tests-second.log",
+      "tests": 41,
+      "pass": 41,
+      "fail": 0,
+      "skipped": 0
+    }
+  },
+  "notClaimed": [
+    "No all-harness 511/511 pass",
+    "No 171/171 pass on final source: 168/171 before fixes plus focused final rechecks",
+    "No whole dirty prototype adoption",
+    "No Git cf5b/current HEAD replay proof",
+    "No real network, commands, config, credentials, native restart or release acceptance"
+  ],
+  "concurrentChangesPreserved": [
+    "overview-platform-data.js include and overview-journey query version",
+    "later overview-hero/overview-journey CSS/JS query changes; see concurrent-index-after-final.diff"
+  ],
+  "unfinishedWithinAssignedPrototypeScope": [],
+  "mainlineFollowup": [
+    "Reapply self.diff incrementally to actual Git adoption baseline; resolve only context; verify runtime dependency g0-contracts.js",
+    "Freeze mainline adopted identity and re-test actual adoptable source set",
+    "Write UI specification/DMD/IMP/issue status on mainline; production isolated references/time lifecycle/native acceptance remain outside this prototype role"
+  ]
+}

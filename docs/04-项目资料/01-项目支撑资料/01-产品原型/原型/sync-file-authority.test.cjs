@@ -325,10 +325,10 @@ test('删除后的同操作重试不复活通知，新的明确同步仍能产�
 
 test('连接测试成功/失败及保存均有注册投递，字段错误不造通知或泄露连接凭据',async t=>{
  const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',action:'connection'});h.input('#sxDavURL','broken');h.click('[data-sx=test-connection]');assert.equal(h.w.prototypeNotificationPublisher.deliveries().length,0);
- h.input('#sxDavURL','https://fixture.example.invalid');h.input('#sxDavPassword','fixture-sensitive-value');h.click('[data-sx=test-connection]');assert.equal(h.w.prototypeNotificationPublisher.deliveries()[0].eventId,'sync.connected');
- h.w.syncPrototype.setScenario('network-error');h.click('[data-sx=test-connection]');assert.equal(h.w.prototypeNotificationPublisher.deliveries()[0].eventId,'sync.connection.failed');h.click('#modalConfirm');assert.equal(h.w.prototypeNotificationPublisher.deliveries()[0].eventId,'sync.connection.saved');
+ h.input('#sxDavURL','https://fixture.example.invalid');h.input('#sxDavPassword','fixture-sensitive-value');h.click('[data-sx=test-connection]');await h.wait(300);assert.equal(h.w.prototypeNotificationPublisher.deliveries()[0].eventId,'sync.connected');
+ h.w.syncPrototype.setScenario('network-error');h.click('[data-sx=test-connection]');await h.wait(300);assert.equal(h.w.prototypeNotificationPublisher.deliveries()[0].eventId,'sync.connection.failed');h.click('#modalConfirm');assert.equal(h.w.prototypeNotificationPublisher.deliveries()[0].eventId,'sync.connection.saved');
  const failed=h.w.eval('notifications.find(n=>n.eventId==="sync.connection.failed")');assert.equal(failed.resolved,false);
- h.w.syncPrototype.open({tab:'webdav',action:'connection'});h.w.syncPrototype.setScenario('normal');h.click('[data-sx=test-connection]');assert.equal(failed.eventId,'sync.connected');assert.equal(failed.resolved,true);h.click('#modalCancel');
+ h.w.syncPrototype.open({tab:'webdav',action:'connection'});h.w.syncPrototype.setScenario('normal');h.click('[data-sx=test-connection]');await h.wait(300);assert.equal(failed.eventId,'sync.connected');assert.equal(failed.resolved,true);h.click('#modalCancel');
  assert.doesNotMatch(json(h.w.prototypeNotificationPublisher.deliveries()),/fixture.example|fixture-sensitive/);
 });
 

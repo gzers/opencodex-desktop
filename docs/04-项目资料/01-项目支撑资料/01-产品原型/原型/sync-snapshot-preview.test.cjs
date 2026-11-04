@@ -49,7 +49,8 @@ function openPreview(h){
  assert.equal(h.document.querySelector('#modalConfirm').textContent,'确认更新');
  const s=sync(h),p=s.preview;
  assert.ok(p,'点击同步先生成预览');
- assert.ok(['local','remote'].includes(p.source));
+ assert.ok(['local','remote','unchanged'].includes(p.source));
+ if(p.source==='unchanged'){assert.equal(p.snapshot,null);assert.ok(p.rows.every(row=>row.direction==='skip'));return p;}
  assert.ok(p.snapshot,'预览必须标明来源快照');
  assert.ok(s.snapshots.local&&s.snapshots.remote,'快照元数据与对象内容版本分别可读');
  assert.deepEqual(p.snapshot,s.snapshots[p.source],'预览元数据来自所选来源');

@@ -23,7 +23,7 @@ test('公共模态关闭归还焦点；方向键只移焦点，背景点击或�
 });
 test('单实例、直接连接编辑与保存锁继续有效，返回详情和重绘关闭悬空浮层',()=>{
  const h=make();h.click('node-picker-open',{channel:'newapi'});h.click('node-picker-open',{channel:'aimami'});assert.equal(h.state().nodePickerChannel,'aimami');assert.equal(h.nodes.get('mpChannelNode-newapi').getAttribute('aria-expanded'),'false');
- h.click('edit-provider',{id:'newapi'});assert.equal(h.state().nodePickerChannel,null);h.event('input','[data-channel-config]',{channelConfig:'name'},'连接内存编辑');h.click('back-channels');
- h.click('node-picker-open',{channel:'newapi'});assert.equal(h.state().nodePickerChannel,'newapi');assert.equal(p(h).name,'连接内存编辑');assert.equal(h.state().saved.providers[0].name,'NewApi');h.click('node-picker-close');
- h.click('save');h.runConfirm();h.click('node-picker-open',{channel:'newapi'});assert.equal(h.state().nodePickerChannel,null);h.drain();assert.equal(h.state().saved.providers[0].name,'连接内存编辑');
+ h.click('edit-provider',{id:'newapi'});assert.equal(h.state().nodePickerChannel,null);h.event('input','[data-channel-config]',{channelConfig:'name'},'NewApi-connection-edited');h.click('back-channels');
+ h.click('node-picker-open',{channel:'newapi'});assert.equal(h.state().nodePickerChannel,'newapi');assert.equal(p(h).name,'NewApi-connection-edited');assert.equal(h.state().saved.providers[0].name,'NewApi');h.click('node-picker-close');
+ h.click('save');h.runConfirm();h.click('node-picker-open',{channel:'newapi'});assert.equal(h.state().nodePickerChannel,null);h.drain();assert.equal(h.state().saved.providers[0].name,'NewApi-connection-edited');
 });

@@ -1,0 +1,200 @@
+{
+  "tested_rust_files": 308,
+  "concurrent_other_source_deltas": [
+    {
+      "path": "apps/desktop/tauri/src/commands/sync.rs",
+      "before_sha256": "050cce66c0318ba06366777fccb85c5386bf7e7ffc642e9c137fea362ef3c121",
+      "after_sha256": "fb366953135dfc70cbf4a4a8c3867a966a4632b67f05e6d4e2fb49df14e14053"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/content_versions.rs",
+      "before_sha256": "380bfee66f386d8720f76f674b49ccd43d1497faffba4dcf1ffa4d59ad8a0872",
+      "after_sha256": "91855aed2cc45c1aaf03e819d5f8c50000887a8b7a1c5256c9e89a7b324f9b8c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+      "before_sha256": "78d9e6db27cfb34d360c24cd613bd1b3d88c1e7a62186f92c45e4b22cee7991a",
+      "after_sha256": "d87a65ae4031ebc35ca6d33cfc7de13f97caf821b2b732754bd5ffbd8b164430"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/modal/store.ts",
+      "before_sha256": "c475e36c898a56e8b7cd0785b5f8c6c4972c5d514678b26ec9fda9d6b3786543",
+      "after_sha256": "abf02761e41235bc2cfe614c03d81dabb963887f756a4d8350b0f434aeeb7ecb"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/AppModal.vue",
+      "before_sha256": "12a5cbf195c8c0cc971e8f557654051367dad449911b0ea132909ab7d5d82b91",
+      "after_sha256": "f2ebb17d1d5fbc139c0248a4d665b1e82013d461b52efca1ee5f7fae7146ac09"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/ModalContent.vue",
+      "before_sha256": "aa793b8a61e73d38648634664a27355fac3ebca6360b5d4c4c986233f4ab50fb",
+      "after_sha256": "bd04459c5f86b31a1c7ae12102878eefb262ee55d9882e528e55a58b88073054"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/patterns/modalContent.ts",
+      "before_sha256": "e9f1d7a74c2998f71fcc90ba20c2d1333b5df057a30873dba75dd6cf14582828",
+      "after_sha256": "597a8dad3f85041f74f5527bb6cf3d13710e1d8224d5f5e5c532a4a5fa9ff438"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiDialog.vue",
+      "before_sha256": "694c19dd80d01932ab52d6f30586512277e3a54878ac2adfcfbea80d9ca67f20",
+      "after_sha256": "9db4bce3ce276d82f379adca77a53329a733df6f4ac1eb816f5ca6b12763339a"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "before_sha256": "85d0d2e14bbb5e152e393028f90552e961b866df7d456ce248ab1ec2f72b5445",
+      "after_sha256": "93efbf94fdea1e6151ee0a579b2dd66f9ad7339bf6f27bad6843894b09829d26"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
+      "before_sha256": "54c0e6da39157af30383ac5c288a8abaeeebf0cc02e2dc062bf78535e714be51",
+      "after_sha256": "90146a17c0581779e39f2d01ed7201a464639e7ac18e4410f3f0f6c04b399016"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/components/ExtensionDetailModal.vue",
+      "before_sha256": "b7eb8df8930ce85ef02aa97fdaa846f53611870974fceab57ffd5b6e145f9ebc",
+      "after_sha256": "78f6d3f78608586efa416cada4cc037819805598f7e595f8088714b98a1ab01f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+      "before_sha256": "d29d8ed0384d962e2aa9f1e12c0de22fb3fe8afd2fe6c7dfa8aa113a41bddc10",
+      "after_sha256": "2bfeb940f3093bf57700a0c86a675bd945299aa6d2aa29507a30e8b1a0511b58"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "before_sha256": "04d3da5a7320e732be24a3bf6fd83b6aed220a0674dedc1afde3e74adcab1665",
+      "after_sha256": "521d694f758848818768348a49bbf9fa68f8883e4469559314a93ba7aeafc50f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+      "before_sha256": "86218d96349dfdbd41349e1c1b7a151705a4711b6a823aea0d4eb3041b529213",
+      "after_sha256": "f7f9efd9fb2686f8b88d7197e8801d14040df315c42da6d506be85ce43be1526"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "before_sha256": "22989e8784941dc46c5ae87383e5d3ef995eaffb764fa72a1bd355f7a67027d7",
+      "after_sha256": "02497a67ed8675f1ab9105142d9c7fde9120d009a65168e0b6c3952d7a39c3e5"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+      "before_sha256": "e88ad52aa100020e83c285ed811285a2d3e99f2c2e14c0877de72159642ccb9e",
+      "after_sha256": "8e97779f7e063e5305208b29063e86e8e8a2cf09c46a6c41b970a4fded578697"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+      "before_sha256": "eae3c47718aca9bfb968dceb70edc6d3e936bcba127a7e20f763fa71a30d0164",
+      "after_sha256": "6e769ccf7870ded0bda6f00afa27f20eadc39e6379533317bb69aa4b9c787a14"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "before_sha256": "9247f40a8dad89626337684a66e355130e03537118c8b1ca91df7c5eab25bd97",
+      "after_sha256": "70423e1b04cfe712b1d87365eadac188a1ba80f42c2a7b961adc03ddbb505709"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+      "before_sha256": "9c541d0f14087bcf5e7c6b257ac873fa690e0e24e3b3567a07ba3c9c44144b91",
+      "after_sha256": "c6472463d992d5c85ef51d4a65ff17cfcf7b706e560d592a9064604dd3216aa5"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue",
+      "before_sha256": "3e3b93a9c303a19c7d50966467a87e2102b2f49e0d3004ecf8c5ecd2ee8b1034",
+      "after_sha256": "2a374f033ce4fbc697b98343f07d654b9846ac9adc93bd716cdd0a4dee336ad6"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+      "before_sha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+      "after_sha256": "931e257bb8f21967a844d9df4fdc5c7eda241e402a85da6b0aa98a3993e8fddc"
+    }
+  ],
+  "code_head_after": "28d7f62e994beed57d291c904ab2c775491bc928",
+  "code_branch_after": "codex/0.2.21-fixes",
+  "code_status_after": " M apps/desktop/tauri/src/commands/sync.rs\n M apps/desktop/tauri/src/modules/model_config/content_versions.rs\n M apps/desktop/tauri/src/modules/model_config/file_objects.rs\n M apps/desktop/ui/src/app/modal/store.ts\n M apps/desktop/ui/src/components/AppModal.vue\n M apps/desktop/ui/src/components/patterns/ModalContent.vue\n M apps/desktop/ui/src/components/patterns/modalContent.ts\n M apps/desktop/ui/src/components/ui/UiDialog.vue\n M apps/desktop/ui/src/features/backup/ModelSaveHistory.vue\n M apps/desktop/ui/src/features/backup/TransferBackups.vue\n M apps/desktop/ui/src/features/extensions/components/ExtensionDetailModal.vue\n M apps/desktop/ui/src/features/models/BatchAgentDialog.vue\n M apps/desktop/ui/src/features/models/ChannelBatchDialog.vue\n M apps/desktop/ui/src/features/models/ExternalTaskDialog.vue\n M apps/desktop/ui/src/features/models/NewChannelDialog.vue\n M apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue\n M apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue\n M apps/desktop/ui/src/features/models/TemplateUsageDialog.vue\n M apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue\n M apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue\n M apps/desktop/ui/src/features/updates/UpdateCenter.vue\n M apps/desktop/ui/tests/app-modal.test.ts\n M apps/desktop/ui/tests/new-channel-dialog.test.ts\n M apps/desktop/ui/tests/settings-install-feedback.test.ts\n M apps/desktop/ui/tests/settings-install-path.test.ts\n M test/smoke/windows-model-ui.mjs\n M test/smoke/windows-model-ui.test.mjs\n M test/smoke/windows-ota.ps1\n M test/smoke/windows-release-installers.ps1\n M test/test_windows_release_acceptance.py\n?? apps/desktop/ui/tests/helpers/\n?? apps/desktop/ui/tests/post09-modal-contract.test.ts\n",
+  "code_docs_or_adg_delta": "",
+  "main_spike_binary_sha256": "b78dc07633616c20386e107bdd432f35de81519d336913fa24526b96921b0ee6",
+  "all_rust_files_unchanged": false,
+  "rename_core_files_unchanged": true,
+  "rename_core_files": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file.rs",
+      "before_sha256": "c9cfc30cfe6b655cb6eca70e8b83ba7c53e673cfe88b5e540bc7830fb0f0493d",
+      "after_sha256": "c9cfc30cfe6b655cb6eca70e8b83ba7c53e673cfe88b5e540bc7830fb0f0493d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file_scoped_tests.rs",
+      "before_sha256": "fdea9d6bca50d23b6b4ae4ece162614dd7008efa7ebd2648c95cb4a51dce6836",
+      "after_sha256": "fdea9d6bca50d23b6b4ae4ece162614dd7008efa7ebd2648c95cb4a51dce6836"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file_mapping.rs",
+      "before_sha256": "cd435619b449692db62c4ff562709b2f9ed7483ad4a4abe508d9f84b6bf9a12f",
+      "after_sha256": "cd435619b449692db62c4ff562709b2f9ed7483ad4a4abe508d9f84b6bf9a12f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/provider_auth.rs",
+      "before_sha256": "93045371ab27310ade13415372f3b5ef06314e260a7499366fe44ccf279be787",
+      "after_sha256": "93045371ab27310ade13415372f3b5ef06314e260a7499366fe44ccf279be787"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/provider_fields.rs",
+      "before_sha256": "53ad5ac8531d5b86fd28b7ea2463ad9542ca7334c05a21b73fc0d2bbab381856",
+      "after_sha256": "53ad5ac8531d5b86fd28b7ea2463ad9542ca7334c05a21b73fc0d2bbab381856"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/provider_import.rs",
+      "before_sha256": "9a6c8aa1ece43e43934f8dcb9ff94a57fde0f05828dfc90e41c4cce84b23f97d",
+      "after_sha256": "9a6c8aa1ece43e43934f8dcb9ff94a57fde0f05828dfc90e41c4cce84b23f97d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/agent.rs",
+      "before_sha256": "d5ad3b6b4da3b84ca542a3065cc2ddac5420c6babdf5e27ec1047c463b3cd48c",
+      "after_sha256": "d5ad3b6b4da3b84ca542a3065cc2ddac5420c6babdf5e27ec1047c463b3cd48c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/execution_directory.rs",
+      "before_sha256": "30039ccfb673af19b4ff69734ee9f1d6466cc1ba7d3b212d631866beaa9d1034",
+      "after_sha256": "30039ccfb673af19b4ff69734ee9f1d6466cc1ba7d3b212d631866beaa9d1034"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/compiler.rs",
+      "before_sha256": "8cce9f7453f3005b62e6cfc388bb2a2e6c61a5c078481f899268b3be74f77c7d",
+      "after_sha256": "8cce9f7453f3005b62e6cfc388bb2a2e6c61a5c078481f899268b3be74f77c7d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/schema.rs",
+      "before_sha256": "3b2ef93dae7d42048b98c2ac7d4c2e75e730bc761a7b0be868ec9172b038dac8",
+      "after_sha256": "3b2ef93dae7d42048b98c2ac7d4c2e75e730bc761a7b0be868ec9172b038dac8"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/store.rs",
+      "before_sha256": "b7ffd507b73562b3b1b511bce8ecbb01509b1d9cb22ba5ddc2c86c3941a74be1",
+      "after_sha256": "b7ffd507b73562b3b1b511bce8ecbb01509b1d9cb22ba5ddc2c86c3941a74be1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/matching.rs",
+      "before_sha256": "743a9c510380e9aa18f5bf782bdc63cd0938943f5e4cc74421be486b2f7a930d",
+      "after_sha256": "743a9c510380e9aa18f5bf782bdc63cd0938943f5e4cc74421be486b2f7a930d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/legacy_migration.rs",
+      "before_sha256": "1eaab6bd518df29332618efee025b39c72e3113bfcf6ced955d63710a98d5a4b",
+      "after_sha256": "1eaab6bd518df29332618efee025b39c72e3113bfcf6ced955d63710a98d5a4b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs",
+      "before_sha256": "4d2e107fac7b3d16f8ef2d4caa26c1aab4b4292f0ecfff94f92e33314bc12184",
+      "after_sha256": "4d2e107fac7b3d16f8ef2d4caa26c1aab4b4292f0ecfff94f92e33314bc12184"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+      "before_sha256": "949f79439bb72e13b93d2b02bbe8b772f8a7e5656ebfdad5261c2604642cf9a4",
+      "after_sha256": "949f79439bb72e13b93d2b02bbe8b772f8a7e5656ebfdad5261c2604642cf9a4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/portable_channels.rs",
+      "before_sha256": "9d5929e61d4017e1276c966655acbb8118067681622dae1827dc73645e78ec68",
+      "after_sha256": "9d5929e61d4017e1276c966655acbb8118067681622dae1827dc73645e78ec68"
+    }
+  ],
+  "scope_note": "Initial path dependency compiled the unmodified baseline. Parallel mainline edits to sync.rs/content_versions.rs/file_objects.rs and UI are recorded, excluded from this rename result, and were not made by this spike. Rename core sources remained byte-identical. No production sources were copied or patched."
+}

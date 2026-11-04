@@ -35,7 +35,7 @@ test('当前节点与最后一条不可删除，非当前删除可取消；旧�
  h.click('delete-node',{id:'backup'});h.click('toggle-model',{id:'newapi::0'});h.runConfirm();assert.match(h.nodes.get('mpServiceNodeError').textContent,/已变化/);assert.equal(p(h).nodes.length,2);h.context.closeModal();h.click('delete-node',{id:'backup'});h.runConfirm();assert.equal(p(h).nodes.length,1);h.click('delete-node',{id:'primary'});assert.equal(p(h).nodes.length,1);assert.equal(p(h,'saved').nodes.length,2);
 });
 test('直接连接编辑可管理节点，保存中锁定，晚到清单结果不覆盖已切节点',()=>{
- const h=make();h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'待确认名称');h.click('use-node',{id:'backup'});assert.equal(p(h).activeNodeId,'backup');assert.equal(p(h).name,'待确认名称');h.click('use-node',{id:'primary'});
+ const h=make();h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'NewApi-pending');h.click('use-node',{id:'backup'});assert.equal(p(h).activeNodeId,'backup');assert.equal(p(h).name,'NewApi-pending');h.click('use-node',{id:'primary'});
  h.click('refresh');h.click('use-node',{id:'backup'});h.drain();assert.equal(p(h).activeNodeId,'backup');assert.equal(p(h).refresh,'idle');h.click('save');assert.notEqual(h.nodes.get('modalMask').style.display,'flex');h.click('use-node',{id:'primary'});h.click('delete-node',{id:'primary'});assert.equal(p(h).activeNodeId,'backup');assert.equal(p(h).nodes.length,2);h.drain();assert.equal(p(h,'saved').activeNodeId,'backup');
 });
 test('返回不保存，全部草稿丢弃还原节点，保存记录恢复先生成旧节点草稿',()=>{

@@ -1,0 +1,17 @@
+[package]
+name = "ocx-g0-rename-spike"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+opencodex-desktop = { path = "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tempfile = "3"
+keyring = { version = "3", default-features = false }
+uuid = { version = "1.26.1", features = ["v4"] }
+zeroize = "1.8.1"
+
+[profile.dev]
+debug = 0
+incremental = false

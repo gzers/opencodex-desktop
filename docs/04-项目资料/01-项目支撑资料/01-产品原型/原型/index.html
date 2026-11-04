@@ -1965,7 +1965,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             <span class="mod-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5.2" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.8" cy="12" r="1.7"/></svg></span>
           </div>
           <div class="mod-status">
-            <span>连接状态 <b id="syncConn">未配置</b></span>
+            <span>连接状态 <b id="syncConn">未配置</b><small id="syncObservation"></small></span>
             <span>线上版本 <span class="ov-state-side"><span class="ov-state-dot" id="syncDirection" hidden></span><b id="syncRemoteTime">—</b><span class="ov-state-sep" id="syncSep" hidden aria-hidden="true">·</span><span class="ov-state-text" id="syncDirectionText" hidden></span></span></span>
           </div>
           <div class="mod-actions" id="syncActions"></div>
@@ -3357,6 +3357,12 @@ ocx update</code></pre>
       </div>
       <p class="pctl-hint">两种版本使用相同范围与更新规则。加密示例自动填写演示口令demo-sync，不改变勾选、不读写文件、不执行真实加密；产品右侧仍可自行切换保护选项。</p>
     </div>
+    <div class="proto-card" id="syncConnectionDemoCard" data-proto-contexts="sync:webdav overview" hidden>
+      <div class="proto-note-title">0.2.21 · 连接观察与导入候选</div>
+      <label class="proto-mock-field"><span>已保存连接观察</span><select id="sxConnectionScenario" aria-label="连接观察场景"><option value="configured">已配置未检测</option><option value="unconfigured">未配置</option><option value="checking">正在检测</option><option value="recent-success">最近检测成功</option><option value="recent-failure">最近检测失败</option><option value="reload">模拟重载 · 保留上次观察</option></select></label>
+      <label class="proto-mock-field"><span>导入的连接读取</span><select id="sxCandidateScenario" aria-label="导入候选场景"><option value="empty">读取成功 · 无候选（隐藏入口）</option><option value="loading">正在加载</option><option value="error">读取失败 · 可重试</option><option value="objects">读取成功 · 1个非活动候选</option><option value="missing-password">1个候选 · 缺少密码</option></select></label>
+      <p class="pctl-hint">在“连接设置”查看候选。观察绑定保存端点的opaque revision，覆盖地址、目录、账号和凭据修订。候选检测只影响表单；保存同一已测内容可沿用带时间证明。重载示例只保留内存观察，不自动联网，不持久化配置。</p>
+    </div>
     <div class="proto-card" id="syncDemoCard" data-proto-contexts="sync" hidden>
       <div class="proto-note-title" id="syncMockTitle">同步 · 应用结果</div>
       <label class="proto-mock-field"><span>结果场景</span>
@@ -3394,8 +3400,10 @@ ocx update</code></pre>
         <div class="pctl-sub">配置 / 连接事实</div>
         <div class="pctl-grid">
           <button type="button" data-webdav="unconfigured" class="active">未配置</button>
-          <button type="button" data-webdav="disconnected">未连接</button>
-          <button type="button" data-webdav="error">连接失败</button>
+          <button type="button" data-webdav="configured">已配置未检测</button>
+          <button type="button" data-webdav="checking">正在检测</button>
+          <button type="button" data-webdav="recent-success">最近检测成功</button>
+          <button type="button" data-webdav="recent-failure">最近检测失败</button>
         </div>
         <div class="pctl-sub">同步支线 · 进度 / 结果</div>
         <div class="pctl-grid">
@@ -6875,6 +6883,10 @@ updateSizeReadout();
 const webdavStates={
   unconfigured:{tag:'未配置',conn:'未配置',remote:'—',dir:null,
     actions:[['配置 WebDAV','btn primary','test-webdav']]},
+  configured:{tag:'已配置',conn:'已配置 · 未检测',remote:'未知',dir:null,actions:[['检测连接','btn primary','test-webdav'],['同步','btn ghost','sync']]},
+  checking:{tag:'检测中',conn:'正在检测',remote:'未知',dir:null,actions:[['检测中…','btn primary','test-webdav']]},
+  'recent-success':{tag:'最近成功',conn:'最近检测成功',remote:'未知',dir:null,actions:[['同步','btn primary','sync']]},
+  'recent-failure':{tag:'最近失败',conn:'最近检测失败',remote:'未知',dir:null,actions:[['重试检测','btn primary','test-webdav']]},
   disconnected:{tag:'未连接',conn:'未连接',remote:'—',dir:null,
     actions:[['同步','btn primary','sync']]},
   'local-newer':{tag:'有更新',conn:'已连接',remote:'09:30',dir:['ok','有更新'],
@@ -6893,7 +6905,7 @@ const webdavStates={
     actions:[['同步','btn primary','sync'],['查看结果','btn ghost','sync-result']]},
 };
 let webdavState='unconfigured';
-function renderWebdav(state){
+function renderWebdav(state,observation){
   state=({'pending-upload':'local-newer','pending-download':'remote-newer',bidirectional:'ready'})[state]||state;
   webdavState=webdavStates[state]?state:'unconfigured';
   const el=id=>document.getElementById(id);
@@ -6904,6 +6916,9 @@ function renderWebdav(state){
   el('syncTag').textContent=cfg.tag;
   el('syncConn').textContent=cfg.conn;
   el('syncRemoteTime').textContent=cfg.remote;
+  if(observation){el('syncConn').textContent=observation.status==='checking'?'正在检测':observation.status==='success'?'最近检测成功':'最近检测失败';el('syncRemoteTime').textContent=observation.remoteTime?'最近观察 '+observation.remoteTime.replace('T',' ').replace('.000Z','Z'):'未知';el('syncConn').title=observation.source+' · '+observation.observedAt;}
+  else el('syncConn').removeAttribute('title');
+  el('syncObservation').textContent=observation?' · '+observation.source+' '+observation.observedAt.replace('T',' ').replace(/\.\d+Z$/,'Z'):'';
   const dot=el('syncDirection'),sep=el('syncSep'),text=el('syncDirectionText');
   if(cfg.dir){
     dot.hidden=false;sep.hidden=false;text.hidden=false;
@@ -6917,19 +6932,19 @@ function renderWebdav(state){
     `<button class="${cls}" data-prototype-action="${act}">${label}</button>`).join('');
   document.querySelectorAll('#webdavStates button').forEach(b=>
     b.classList.toggle('active',b.dataset.webdav===webdavState));
-  el('syncActions').querySelectorAll('button').forEach(button=>button.disabled=webdavState==='syncing');
+  el('syncActions').querySelectorAll('button').forEach(button=>button.disabled=['syncing','checking'].includes(webdavState));
 }
 window.renderWebdav=renderWebdav;
 document.querySelectorAll('#webdavStates button').forEach(button=>{
-  button.addEventListener('click',()=>{const state=button.dataset.webdav;window.syncPrototype?.setScenario(state==='local-newer'?'upload':state==='synced'?'same':state==='partial'?'partial':state==='error'?'network-error':'normal');renderWebdav(state);});
+  button.addEventListener('click',()=>{const state=button.dataset.webdav;if(['unconfigured','configured','checking','recent-success','recent-failure'].includes(state)){window.syncPrototype?.setConnectionScenario(state);return;}window.syncPrototype?.setScenario(state==='local-newer'?'upload':state==='synced'?'same':state==='partial'?'partial':state==='error'?'network-error':'normal');renderWebdav(state);});
 });
-document.addEventListener('prototype:sync-started',event=>{if(event.detail?.mode==='webdav')renderWebdav('syncing');});
+document.addEventListener('prototype:sync-started',event=>{if(event.detail?.mode==='webdav')renderWebdav('syncing',window.syncPrototype?.connectionStatus().observation);});
 // ── 文件同步卡片：只显示最近一次导入 / 导出的事实（时间 + 项数）──
 document.addEventListener('prototype:sync-activity',event=>{
   const detail=event.detail||{};
   if(detail.kind==='sync'){
     // 同步完成后卡片直接回到「已一致」，线上版本时间用这次同步的时间。
-    if(webdavState!=='unconfigured'&&webdavState!=='disconnected'&&webdavState!=='error') renderWebdav(detail.complete===false?'partial':'synced');
+    if(webdavState!=='unconfigured'&&webdavState!=='disconnected'&&webdavState!=='error') renderWebdav(detail.complete===false?'partial':'synced',window.syncPrototype?.connectionStatus().observation);
     const remote=document.getElementById('syncRemoteTime');
     if(remote&&webdavState!=='unconfigured'&&webdavState!=='disconnected') remote.textContent=detail.remoteTime?.slice(11,16)||detail.time;
     return;
@@ -7421,7 +7436,7 @@ function renderModelSaveTask(item,focus=false){
   const completed=failed?Math.max(0,task.step-1):task.step;
   const steps=written?[]:MODEL_SAVE_PHASES.map((label,index)=>[label,index<completed?'done':running&&index===task.step?'active':failed&&index===completed?'failed':'pending']);
   const acts=running?[['取消保存','model-stop']]:written?[['立即重启 Codex','model-restart'],['稍后','model-later']]:[];
-  showTask({notificationId:item.id,title:item.title,phase:item.detail,steps,acts,running,kind:task.state==='stopped'?'neutral':item.kind,focusAction:focus&&written?'model-restart':''});
+  showTask({notificationId:item.id,title:item.title,phase:item.detail,steps,acts,running,kind:task.state==='stopped'?'neutral':item.kind});
 }
 window.hideModelSaveNotification=id=>{if(id?.startsWith('model-policy-save:'))modelSaveHidden.add(id);};
 window.openModelSaveNotification=id=>{
@@ -7455,11 +7470,12 @@ window.modelSaveNotificationBridge=function(snapshot){
   // 旧成功 / 已确认 / 待重启只保留完成历史，不恢复旧任务或客户端核对。
   const state=['success','confirmed','pending','verified'].includes(status)?'completed':['timeout','uncertain'].includes(status)?'failed':status;
   if(!Object.hasOwn(MODEL_SAVE_STATES,state))return;
+  const activeOperation=window.modelPrototype?.state().operation;if(activeOperation&&activeOperation.id!==id&&['running','written','failed','stopped'].includes(state))return;
   const key='model-policy-save:'+id,revision=state+':'+step;
   let item=notifications.find(entry=>entry.id===key);
   if(item?.modelSave.revision===revision||item?.modelSave.state==='completed')return;
   const [title,kind,resolved]=MODEL_SAVE_STATES[state];
-  const detail=state==='running'?'全渠道保存 · '+MODEL_SAVE_PHASES[Math.min(step,1)]+'…':state==='failed'?'保存未完成，原文件与草稿保留。':state==='stopped'?'未写入，草稿保留。':'';
+  const detail=state==='running'?'全渠道保存 · '+MODEL_SAVE_PHASES[Math.min(step,1)]+'…':state==='failed'?'保存未完成，原文件与草稿保留。':state==='stopped'?'未写入，草稿保留。':state==='written'?'重启 Codex 后生效。':'';
   if(!item){
     notifications.filter(other=>other.eventId===spec.id).forEach(other=>{
       modelSaveHidden.add(other.id);clearTask(other.id);
@@ -7470,7 +7486,7 @@ window.modelSaveNotificationBridge=function(snapshot){
   Object.assign(item,{title,kind,detail,resolved,time:clockLabel(),modelSave:{id,state,step,revision}});
   if(resolved)item.resolvedAt=item.time;
   if(state==='completed'){item.read=true;modelSaveHidden.add(key);clearTask(key);}
-  renderNotifications();renderModelSaveTask(item,state==='written');
+  renderNotifications();renderModelSaveTask(item);
 };
 // 任务卡动作：原型只做 mock 反馈，不执行真实副作用。
 document.getElementById('taskHost').addEventListener('click',event=>{
@@ -7902,6 +7918,7 @@ window.addEventListener('prototype:data-paths',event=>{
 <script src="component-views.js?v=20261015"></script>
 <script src="model-external-notification.js?v=20261015-external-single-dialog"></script>
 <script src="transport-state.js?v=20261027"></script>
+<script src="g0-contracts.js?v=20261104-g0"></script>
 <script src="model-config.js?v=20261027-transport-node-entry"></script>
 <script src="conversation-config.js?v=20261028-model-picker"></script>
 <script src="extension-manager.js?v=20261014-col-extensions"></script>

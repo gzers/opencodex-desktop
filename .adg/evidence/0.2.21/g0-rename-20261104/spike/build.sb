@@ -1,0 +1,5 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-write* (subpath "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop"))
+(deny file-read* (subpath "/Users/ezio/.codex") (subpath "/Users/ezio/.opencodex") (subpath "/Users/ezio/Library/Keychains") (subpath "/Library/Keychains"))

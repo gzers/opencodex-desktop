@@ -2,7 +2,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const make=require('./model-prototype-test-harness.cjs');
 const json=value=>JSON.stringify(value),p=(h,id,source='draft')=>h.state()[source].providers.find(item=>item.id===id);
-function edit(h,id,name,key){h.click('edit-provider',{id});if(name!==undefined)h.event('input','[data-channel-config]',{channelConfig:'name'},name);if(key!==undefined)h.event('input','[data-channel-config]',{channelConfig:'key'},key);}
+function edit(h,id,name,key){h.click('edit-provider',{id});if(name!==undefined){h.event('input','[data-channel-config]',{channelConfig:'name'},name);if(!/^[A-Za-z0-9_-]{1,128}$/.test(name))h.event('input','[data-channel-config]',{channelConfig:'providerId'},id);}if(key!==undefined)h.event('input','[data-channel-config]',{channelConfig:'key'},key);}
 const noModal=h=>assert.notEqual(h.nodes.get('modalMask').style.display,'flex');
 
 test('连接字段直接进入编辑，局部确认与还原消失，获取清单和节点检测保留',()=>{
@@ -82,7 +82,7 @@ test('型号行确认只限制所属渠道；另一渠道保存不丢失待确�
  h.change('#mpQuick-newapi--0Mode-context','custom');h.change('#mpQuick-newapi--0ContextPreset','64000');
  assert.equal(state().modelEdits['newapi::0'].rules.context,64000);const saved=json(state().saved),pending=json(state().modelEdits['newapi::0']);
  h.click('#mpPolicySave');assert.equal(state().operation,null);assert.equal(state().channelDetail,true);assert.equal(json(state().saved),saved);
- h.click('[data-mp=back-channels]');h.click('[data-mp=edit-provider][data-id=aimami]');h.input('#mpChannelInline-name','另一渠道独立保存');h.click('#mpPolicySave');
+ h.click('[data-mp=back-channels]');h.click('[data-mp=edit-provider][data-id=aimami]');h.input('#mpChannelInline-name','另一渠道独立保存');h.input('#mpChannelInline-providerId','aimami');h.click('#mpPolicySave');
  for(let n=0;n<120&&state().operation?.status==='running';n++)await h.wait(20);
  assert.equal(state().operation.status,'written');assert.equal(state().channelDetail,false);assert.equal(json(state().modelEdits['newapi::0']),pending);assert.equal(state().saved.providers[0].models[0].overrides.context,undefined);
  h.click('[data-task-act=model-later]');h.click('[data-mp=edit-provider][data-id=newapi]');h.click('[data-mp=apply-model-row][data-id="newapi::0"]');assert.equal(h.w.modelPrototype.stagedModelEdits().length,0);h.click('#mpPolicySave');

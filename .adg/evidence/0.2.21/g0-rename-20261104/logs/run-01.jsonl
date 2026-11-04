@@ -1,0 +1,9 @@
+{"case":"OLD-SCOPED","evidence":{"code":"provider_identity","credential_mutations":0,"five_files_byte_identical":true,"message":"已有渠道的运行绑定或管理身份不能修改"},"status":"PASS"}
+{"case":"OLD-MAPPER","evidence":{"code":"provider_identity","credential_mutations":0,"five_files_byte_identical":true,"message":"已有渠道的 providerId 不能修改"},"status":"PASS"}
+{"case":"OLD-LABEL-ONLY","evidence":{"changed":false,"persisted_label":"Krill","runtime_provider_still":"Krill-1"},"status":"PASS"}
+{"case":"OLD-RAW-KEY-ONLY","evidence":{"credential_code":"credential","default_still":"Krill-1","stable_id_lost":true},"status":"PASS"}
+{"case":"OLD-AUTH-OWNER","evidence":{"code":"provider_auth_reference","message":"安全引用与原Key池身份不对应，未读取"},"status":"PASS"}
+{"case":"TX-SCOPED","evidence":{"agent_rebind":true,"files_written":4,"fresh_process_snapshot":true,"keychain_accounts_rebound":4,"pool_order_ids_labels_active_key_unchanged":true,"production_directory_label":"Krill/vendor/a:8b","protocol_group_ids_preserved":true,"stable_channel_node_template_uuid":true,"unknown_and_adjacent_prefix_preserved":true},"status":"PASS"}
+{"case":"TX-ALL-PAGE","evidence":{"agent_rebind":true,"files_written":4,"fresh_process_snapshot":true,"keychain_accounts_rebound":4,"pool_order_ids_labels_active_key_unchanged":true,"production_directory_label":"Krill/vendor/a:8b","protocol_group_ids_preserved":true,"stable_channel_node_template_uuid":true,"unknown_and_adjacent_prefix_preserved":true},"status":"PASS"}
+{"case":"TX-SCOPE-IGNORES-OTHER-DRAFT","evidence":{"invalid_other_channel_draft_ignored":true,"other_provider_byte_semantics_preserved":true},"status":"PASS"}
+{"case":"COMPLETE","evidence":{"daily_client_restarted":false,"native_keychain":false,"network":false,"production_source_patched":false},"status":"PASS"}

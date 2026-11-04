@@ -37,7 +37,7 @@ test('超出激活预算时同样关闭并登记通知，不写入运行配置',
 
 test('在预览里先启停再确认，第一次就能保存且写入的就是刚才那次改动', () => {
   const h = make()
-  h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'NewApi 修改');h.click('back-channels')
+  h.click('edit-provider',{id:'newapi'});h.event('input','[data-channel-config]',{channelConfig:'name'},'NewApi-modified');h.click('back-channels')
   h.click('save')
   h.click('preview-channel-toggle', { id: 'aimami' })
   h.click('preview-model-toggle', { id: 'newapi::0' })

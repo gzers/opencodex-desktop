@@ -1,0 +1,10 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-write* (subpath "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop"))
+(deny file-read* (subpath "/Users/ezio/.codex") (subpath "/Users/ezio/.opencodex") (subpath "/Users/ezio/Library/Keychains") (subpath "/Library/Keychains"))
+
+(deny file-write*)
+(allow file-write* (subpath "/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-g0-rename-20261104-jlhlzrp6") (literal "/dev/null"))
+(deny file-read* (subpath "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop") (subpath "/Users/ezio/Library/Application Support/com.gzers.opencodex") (subpath "/Users/ezio/Library/Application Support/Codex"))
+(deny mach-lookup (global-name "com.apple.securityd") (global-name "com.apple.securityd.xpc") (global-name "com.apple.security.agent"))

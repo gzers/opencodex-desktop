@@ -72,12 +72,12 @@ async function saved(h){
 function productText(h){const copy=h.document.querySelector('#mpContent').cloneNode(true);copy.querySelectorAll('.proto-annotation,.annotation-source').forEach(n=>n.remove());return copy.textContent;}
 function noEffects(h){assert.deepEqual(h.network,[]);assert.ok(h.writes.every(([key])=>['ocx-theme','ocx-route'].includes(key)),'仅允许评审壳既有主题/路由缓存，不写凭据或配置');assert.deepEqual(h.errors,[]);}
 
-test('确认保存后仅原 notifHost 一次已写入反馈，默认焦点立即重启；稍后清掉字符串通知ID与计时器',async t=>{
+test('确认保存后仅原 notifHost 一次已写入反馈，不抢焦点；稍后清掉字符串通知ID与计时器',async t=>{
  const h=await make('#models');t.after(()=>h.dispose());const d=h.document,id=await saved(h),key='model-policy-save:'+id;
  const card=d.querySelector(selector);assert.ok(card.closest('#notifHost'));assert.equal(d.querySelector('#mpContent .task-card'),null);
  assert.equal(d.querySelectorAll(selector).length,1);assert.equal(card.querySelector('h4').textContent,'已写入');assert.equal(card.querySelector('.task-steps'),null);
  assert.deepEqual([...card.querySelectorAll('[data-task-act]')].map(b=>b.textContent),['立即重启 Codex','稍后']);
- assert.equal(d.activeElement,card.querySelector('[data-task-act=model-restart]'));
+ assert.equal(card.contains(d.activeElement),false);assert.equal(h.w.NotificationCountdown.get(card).state().phase,'running');
  h.w.modelPrototype.render();h.w.modelPrototype.render();assert.equal(d.querySelector(selector),card);
  h.click('[data-task-act=model-later]');assert.equal(d.querySelector(selector),null);
  assert.equal(h.w.eval('taskTimers.has('+JSON.stringify(key)+')'),false);
@@ -116,7 +116,7 @@ test('旧 success / confirmed / pending 仅保留完成历史，不产生提示�
 
 test('终态焦点停留时暂停，离开后8秒收起且仅从铃铛查看，重渲染不重复提示',async t=>{
  const h=await make('#models');t.after(()=>h.dispose());await saved(h);
- const card=h.document.querySelector(selector),timer=h.w.NotificationCountdown.get(card);assert.equal(timer.state().phase,'paused');
+ const card=h.document.querySelector(selector),timer=h.w.NotificationCountdown.get(card);assert.equal(timer.state().phase,'running');card.querySelector('[data-task-act=model-restart]').focus();assert.equal(timer.state().phase,'paused');
  h.document.querySelector('#notificationBtn').focus();assert.equal(timer.state().phase,'running');await h.wait(8150+h.w.NotificationMotion.durationMs);
  assert.equal(h.document.querySelector(selector),null);h.w.modelPrototype.render();assert.equal(h.document.querySelector(selector),null);
  h.click('#notificationBtn');assert.equal(h.document.querySelector(selector),null);assert.equal(h.document.querySelector('#taskReopenHint,.task-reopen'),null);noEffects(h);

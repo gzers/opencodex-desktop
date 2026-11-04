@@ -35,7 +35,7 @@
    const family=k<6?'GPT':k<9?'Claude':k<11?'Gemini':k<13?'Qwen':k<15?'DeepSeek':'Grok';
    return {key:id+'::'+i,id:modelId,family,selected:i<n,official:{context:family==='GPT'?128000:null,modalities:['text','image'],efforts:['low','medium','high','xhigh'],default:'medium',fast:k<4?'supported':'unknown'},overrides:{}};
   });
-  return {id,name,protocol,enabled:true,mode:id==='native'?'native':'whitelist',models,defaults:{},familyOverrides:{},refs:{gpt:'gpt:1'},fastEnabled:'inherit',refresh:'idle',refreshToken:0,updated:'10:24',...(id==='native'?{}:{connection:{auth:'apikey',keyConfigured:true},nodes:[{id:'primary',name:'默认节点',url:'https://'+id+'.example.com/v1'}],activeNodeId:'primary'})};
+  return {id,providerId:id,name,protocol,enabled:true,mode:id==='native'?'native':'whitelist',models,defaults:{},familyOverrides:{},refs:{gpt:'gpt:1'},fastEnabled:'inherit',refresh:'idle',refreshToken:0,updated:'10:24',...(id==='native'?{}:{connection:{auth:'apikey',keyConfigured:true},nodes:[{id:'primary',name:'默认节点',url:'https://'+id+'.example.com/v1'}],activeNodeId:'primary'})};
  }
  const initial={providers:[makeProvider('newapi','NewApi',30,17),makeProvider('a6api','A6api',104,32),makeProvider('aimami','Aimami',12,8),makeProvider('native','官方 / 原生',6,6,'原生')],fastMode:'on',fastRows:true,globalRefs:{gpt:'gpt:1'},hidden:2};
  initial.providers[0].nodes.push({id:'backup',name:'备用节点',url:'https://backup.newapi.example.com/v1'});
@@ -325,7 +325,7 @@
     const wire=entries.find(x=>!['Chat','Responses'].includes(x.r.protocol))?.r.protocol||(['Chat','Responses'].includes(p.protocol)&&entries.some(x=>x.r.protocol===p.protocol)?p.protocol:entries[0].r.protocol);
     const modelAdapters=Object.fromEntries(entries.filter(x=>x.r.protocol!==wire&&['Chat','Responses'].includes(x.r.protocol)).map(x=>[x.m.id,adapters[x.r.protocol]]));
     // 所有协议共用一个当前节点和渠道认证；运行分组身份不随节点切换而派生。
-    const group={logicalId:p.id,id:p.id+'__'+adapters[wire],adapter:adapters[wire],nodeId:p.activeNodeId,selectedModels:entries.map(x=>x.m.id),modelAdapters};groups.push(group);
+    const group={logicalId:p.id,id:sets.length===1?(p.providerId||p.id):(p.providerId||p.id)+'__'+adapters[wire],adapter:adapters[wire],nodeId:p.activeNodeId,selectedModels:entries.map(x=>x.m.id),modelAdapters};groups.push(group);
     for(const {m,r} of entries)picker.push({logicalId:p.id,key:m.key,modelId:m.id,protocol:r.protocol,nodeId:r.nodeId,providerId:group.id});
    }
   }
@@ -415,7 +415,7 @@
    if(!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/.test(pid)||['native','openai','system','constructor','prototype','__proto__'].includes(pid.toLowerCase())){error.textContent='渠道标识无效或为保留标识。';return;}
    if(draft.providers.some(p=>p.id.toLowerCase()===pid.toLowerCase()||p.name.toLowerCase()===name.toLowerCase())){error.textContent='新渠道名称或标识已存在。';return;}
    const reuse=canReuse&&!!$('#mpCopyProviderKey')?.checked,next=clone(source);
-   Object.assign(next,{id:pid,name,enabled:false,models:source.models.map((m,i)=>({...clone(m),key:pid+'::'+i})),connection:{auth:source.connection?.auth||'apikey',keyConfigured:reuse,...(reuse?{credentialRef:source.connection.credentialRef}:{})},refresh:'idle',refreshToken:0,updated:'待刷新（复制）',addedInPrototype:true,availability:reuse&&source.availability?.kind==='no-credit'?clone(source.availability):{kind:'unknown'},copiedFrom:source.id});
+   Object.assign(next,{id:pid,providerId:pid,name,enabled:false,models:source.models.map((m,i)=>({...clone(m),key:pid+'::'+i})),connection:{auth:source.connection?.auth||'apikey',keyConfigured:reuse,...(reuse?{credentialRef:source.connection.credentialRef}:{})},refresh:'idle',refreshToken:0,updated:'待刷新（复制）',addedInPrototype:true,availability:reuse&&source.availability?.kind==='no-credit'?clone(source.availability):{kind:'unknown'},copiedFrom:source.id});
    closeModal();nodeAuthRevision[pid]=(nodeAuthRevision[pid]||0)+1;change(()=>{draft.providers.push(next);current=pid;channelDetail=true;tab='channels';search='';family='';onlySelected=false;channelSearch='';});notice('新渠道副本已加入草稿，默认停用；保存后生效');
   },{confirmKeepsOpen:true});
  }
@@ -447,7 +447,7 @@
  }
  function policyStatusAnnotation(){
   const styles={clean:'灰色描边 · 保存弱化并禁用',dirty:'橙色状态框 · 可提交时保存主色强调',staged:'橙色状态框 · 先处理型号行编辑','over-budget':'红色状态框与激活数 · 保存禁用',saving:'蓝色状态框与转动环 · 保存禁用',failed:'红色状态框 · 草稿保留，可重试保存',stopped:'灰色状态框 · 草稿保留，可继续保存'};
-  return mpAnn('08','渠道列表的七种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改时保存置灰且不可点击；有待确认型号编辑或超出激活预算时，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。成功保存只在既有通知宿主提示一次，默认聚焦立即重启；稍后即结束，历史成功状态不生成待重启或客户端核对入口。待确认型号编辑和实际提交超限仍阻止保存。列表保存先预览全部剩余修改；详情保存只提交当前渠道，成功返回列表，不另弹完整预览。');
+  return mpAnn('08','渠道列表的七种状态与保存样式',Object.entries(channelPolicyStates).map(([id,[label,tone]])=>'<span class="mp-policy-example-row"><span class="mp-template-state mp-policy-chip '+tone+'" data-policy-example="'+id+'">'+esc(label)+'</span><span>'+styles[id]+'</span></span>').join('<br>')+'<br>从左到右：状态 → 还原修改 → 保存。预览与保存合并：保存按钮先打开当前草稿的完整保存预览，可在预览内快速启停渠道与型号，确认才写入；无修改时保存置灰且不可点击；有待确认型号编辑或超出激活预算时，确认会关闭弹窗并登记未保存通知。还原修改为次级按钮，无修改或保存中禁用，先确认全部渠道范围，再回到最近成功保存的配置，不等同客户端当前运行配置。列表移除保存与恢复及单项更多入口；导入导出继续在同步页。激活总数与预算在保存预览弹窗内显示。状态框和保存按钮等高。成功保存只在既有通知宿主提示一次，不自动聚焦立即重启，终态8秒收起，主动交互、页面隐藏和重启确认期间暂停；稍后即结束，历史成功状态不生成待重启或客户端核对入口。待确认型号编辑和实际提交超限仍阻止保存。列表保存先预览全部剩余修改；详情保存只提交当前渠道，成功返回列表，不另弹完整预览。');
  }
  function channelHeadingStatusHTML(p=provider()){
   const badge=(label,tone,attribute)=>'<span class="mp-template-state '+tone+'" '+attribute+'>'+esc(label)+'</span>';
@@ -544,7 +544,7 @@
   const errors=saveReviewErrors(),staged=stagedModelEdits().length,over=count()>100;
   const others=saveReviewOtherRows(),shown=others.slice(0,8);
   const other=others.length?'<details class="mp-preview-other"><summary>另有 '+others.length+' 项字段变化</summary><dl>'+shown.map(r=>'<div><dt>'+esc(r.label)+'</dt><dd><span>'+esc(r.before)+'</span><em>→</em><span>'+esc(r.after)+'</span></dd></div>').join('')+(others.length>shown.length?'<div><dt>其余 '+(others.length-shown.length)+' 项</dt><dd><span>确认保存后按草稿写入</span></dd></div>':'')+'</dl></details>':'';
-  return preview(true)+other+(staged?'<p class="mp-alert">仍有未加入草稿的型号编辑，请先处理后再保存。</p>':'')+(errors.length?'<div class="mp-alert" role="alert">'+diffHTML(errors)+'</div>':'')+(over?'<p class="mp-alert">完整投影超过 100，请先减少发布项。</p>':'')+'';
+  return preview(true)+draft.providers.filter(p=>p.id!=='native').map(renamePreview).join('')+other+(staged?'<p class="mp-alert">仍有未加入草稿的型号编辑，请先处理后再保存。</p>':'')+(errors.length?'<div class="mp-alert" role="alert">'+diffHTML(errors)+'</div>':'')+(over?'<p class="mp-alert">完整投影超过 100，请先减少发布项。</p>':'')+'';
  }
  function syncSaveReview(){
   const button=$('#modalConfirm');if(!button||!saveReview)return;
@@ -716,7 +716,7 @@
  }
 
  const channelSections=[['connection','渠道配置'],['nodes','服务节点'],['defaults','模型默认'],['models','模型列表']];
- const connectionValue=p=>({name:p.name,protocol:p.protocol,connection:nodeConnection(p)});
+ const connectionValue=p=>({name:p.name,providerId:p.providerId||p.id,protocol:p.protocol,connection:nodeConnection(p)});
  const connectionBaseline=p=>JSON.stringify(connectionValue(p));
  // Connection fields edit the shared memory draft directly. This object only
  // keeps editor-local Key visibility/original-reference intent, never a second
@@ -733,6 +733,8 @@
   updateChannelStatus();const b=channelConnectionBuffer(),keyStatus=$('#mpChannelKeyStatus',host);
   if(keyStatus)keyStatus.textContent=channelKeyStatus(b);
   const name=$('.mp-editor-heading h2',host);if(name)name.textContent=provider().name;
+  const p=provider(),error=channelConfigError(p),field=$('#mpChannelInline-providerId'),message=$('#mpChannelRenameError'),target=$('#mpChannelRenamePreview');
+  field?.setAttribute('aria-invalid',String(!!error));if(message)message.textContent=error;if(target)target.innerHTML=renamePreview(p);
  }
  function updateChannelConnection(el){
   if(busy()||provider()?.id==='native')return;const p=provider(),b=channelConnectionBuffer(),key=el.dataset.channelConfig,before=JSON.stringify({protocol:p.protocol,connection:p.connection});
@@ -744,7 +746,8 @@
    else if(b.originalRef)p.connection.credentialRef=b.originalRef;
    else delete p.connection.credentialRef;
    p.connection.keyConfigured=p.connection.auth==='apikey'&&!!keyValue(p.connection);
-  }else if(key==='name')p.name=el.value;
+  }else if(key==='name'){p.name=el.value;if(!b.providerIdExplicit)p.providerId=el.value.trim();const field=$('#mpChannelInline-providerId');if(field)field.value=p.providerId||'';}
+  else if(key==='providerId'){p.providerId=el.value;b.providerIdExplicit=true;}
   else if(key==='protocol')p.protocol=el.value;
   else if(key==='auth'){p.connection.auth=el.value;p.connection.keyConfigured=el.value==='apikey'&&!!keyValue(p.connection);}
   if(before!==JSON.stringify({protocol:p.protocol,connection:p.connection})){
@@ -760,12 +763,20 @@
   if(p.id==='native')return '<h3>渠道配置</h3><p class="mp-muted">官方 / 原生连接由 Codex 管理，这里仅展示模型信息。</p>';
   const b=channelConnectionBuffer(p),locked=busy()?'disabled':'';
   const input=(key,value,extra='')=>'<input id="mpChannelInline-'+key+'" class="input" data-channel-config="'+key+'" value="'+esc(value)+'" '+extra+' '+locked+'>';
-  return '<h3>渠道配置</h3><div class="mp-channel-form"><label>渠道名称'+input('name',p.name,'maxlength="80"')+'</label><label>渠道标识<input class="input" value="'+esc(p.id)+'" readonly aria-label="渠道标识"><span class="mp-muted">标识固定，名称可修改。</span></label><label>默认接口协议<select id="mpChannelInline-protocol" class="mp-select" data-channel-config="protocol" '+locked+'>'+protocolOptions(p.protocol)+'</select></label><label>认证方式<select id="mpChannelInline-auth" class="mp-select" data-channel-config="auth" '+locked+'>'+opts([['apikey','API Key'],['none','无需认证']],p.connection.auth)+'</select></label>'+(p.connection.auth==='apikey'?'<div class="mp-channel-key"><label for="mpChannelInline-key">API Key</label>'+keyControls('mpChannelInline-key',channelKeyInputs.has(p.id)?channelKeyInputs.get(p.id):keyValue(p.connection),b.keyVisible,'toggle-channel-key','clear-channel-key',locked)+'<span id="mpChannelKeyStatus" class="mp-muted">'+channelKeyStatus(b)+'</span></div>':'')+'</div><p class="mp-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。</p>'+mpAnn('09','连接编辑与当前渠道保存','名称、协议、认证与 Key 直接进入当前内存编辑；不再另点确认连接或加入草稿，获取模型列表在模型列表，连接检测在服务节点。详情保存只模拟写入当前渠道，成功返回列表，不弹完整保存预览；其它渠道修改保留。列表保存仍预览全部剩余修改。已有 Key 默认掩码，眼睛仅切换当前编辑器；空输入保留原值，明确清空才删除。全部为私有内存 mock，不读写真实文件、设置或网络。');
+  return '<h3>渠道配置</h3><div class="mp-channel-form"><label>渠道名称'+input('name',p.name,'maxlength="80"')+'</label><label>运行渠道标识'+input('providerId',p.providerId||p.id,'maxlength="128" aria-describedby="mpChannelRenameError" spellcheck="false"')+'<span class="mp-muted">随名称改名；也可明确填写合法目标标识。</span></label><label>默认接口协议<select id="mpChannelInline-protocol" class="mp-select" data-channel-config="protocol" '+locked+'>'+protocolOptions(p.protocol)+'</select></label><label>认证方式<select id="mpChannelInline-auth" class="mp-select" data-channel-config="auth" '+locked+'>'+opts([['apikey','API Key'],['none','无需认证']],p.connection.auth)+'</select></label>'+(p.connection.auth==='apikey'?'<div class="mp-channel-key"><label for="mpChannelInline-key">API Key</label>'+keyControls('mpChannelInline-key',channelKeyInputs.has(p.id)?channelKeyInputs.get(p.id):keyValue(p.connection),b.keyVisible,'toggle-channel-key','clear-channel-key',locked)+'<span id="mpChannelKeyStatus" class="mp-muted">'+channelKeyStatus(b)+'</span></div>':'')+'</div><p id="mpChannelRenameError" class="mp-alert" role="alert">'+esc(channelConfigError(p))+'</p><div id="mpChannelRenamePreview">'+renamePreview(p)+'</div><p class="mp-muted">认证与 Key 由全部服务节点共用；地址在服务节点中维护。</p>'+mpAnn('09','连接编辑与当前渠道保存','名称、协议、认证与 Key 直接进入当前内存编辑；不再另点确认连接或加入草稿，获取模型列表在模型列表，连接检测在服务节点。详情保存只模拟写入当前渠道，成功返回列表，不弹完整保存预览；其它渠道修改保留。列表保存仍预览全部剩余修改。已有 Key 默认掩码，眼睛仅切换当前编辑器；空输入保留原值，明确清空才删除。全部为私有内存 mock，不读写真实文件、设置或网络。');
  }
  function channelConfigError(p,policy=draft){
   const name=p.name.trim();
   if(!name||name.length>80||policy.providers.some(other=>other.id!==p.id&&other.name.trim().toLowerCase()===name.toLowerCase()))return '请填写 1–80 字且不重复的渠道名称';
+  const old=saved.providers.find(x=>x.id===p.id),target={...p,originalProviderId:old?.providerId||old?.id||p.id};
+  const error=window.G0Contracts.providerError({...target,derivedProviderIds:protocols.map(protocol=>(p.providerId??p.id)+'__'+adapters[protocol])},[...policy.providers,...saved.providers.filter(x=>!policy.providers.some(y=>y.id===x.id))].map(x=>({...x,derivedProviderIds:protocols.map(protocol=>(x.providerId??x.id)+'__'+adapters[protocol])})),['legacy']);
+  if(error)return error;
   return namingError(p);
+ }
+ function renamePreview(p){
+  const old=saved.providers.find(x=>x.id===p.id),id=p.providerId||p.id;
+  if(!old||old.name===p.name&&(old.providerId||old.id)===id)return '';
+  return '<dl class="sx-detail-list mp-rename-preview" data-rename-preview="'+esc(p.id)+'"><dt>保存名称</dt><dd>'+esc(old.name)+' → '+esc(p.name)+'</dd><dt>运行标识</dt><dd>'+esc(old.providerId||old.id)+' → '+esc(id)+'</dd><dt>重启后选择器</dt><dd>'+esc(id+'/'+(p.models.find(m=>m.selected)?.id||'原始模型ID'))+'</dd></dl><p class="mp-muted">保存后需重启 Codex 生效。当前配置引用一起更新；渠道身份、节点、模型及认证内容保持。</p>';
  }
  // 与清单获取共用同源候选；仅演出路径归一化和有效清单判定，不执行 HTTP。
  function mockModelDiscovery(protocol,base,scene='normal'){
@@ -1400,10 +1411,13 @@
   if(!operation||operation.id!==id)return;
   if(action==='stop')stopSave();
   else if(action==='restart'&&operation.status==='written'){
+   const card=document.querySelector('[data-task-notification="model-policy-save:'+id+'"]'),timer=card&&window.NotificationCountdown.get(card);
+   timer?.pause();
    openModal('重启 Codex','<p class="modal-lead">重启会立即结束当前正在进行的 Codex 对话，然后重新打开 Codex。</p><p>如果你还有没保存的对话内容，请先取消。</p>','确认重启',()=>{
     if(operation?.id!==id||operation.status!=='written')return;
     closeModal();clearModelSaveTask(id);toast('原型模拟：Codex 已重启');render();
    });
+   window.__modalOnClose=()=>{if(operation?.id===id&&operation.status==='written'){timer?.resume();timer?.releaseProgrammaticFocus?.();}};
   }else if(action==='later'&&operation.status==='written'){clearModelSaveTask(id);render();}
  };
  function ensureTemplateBuffer(){

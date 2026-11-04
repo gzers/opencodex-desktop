@@ -80,6 +80,8 @@
   side.addEventListener('change', event => {
     if (event.target.id === 'sxImportSample') window.syncPrototype?.setImportSample(event.target.value);
     if (event.target.id === 'sxMockScenario') window.syncPrototype?.setScenario(event.target.value);
+    if (event.target.id === 'sxCandidateScenario') window.syncPrototype?.setCandidateScenario(event.target.value);
+    if (event.target.id === 'sxConnectionScenario') window.syncPrototype?.setConnectionScenario(event.target.value);
   });
   // 各页面 / Tab 的专属 Mock 控件：同一分组内单选高亮 + 一句原型提示，不写真实配置。
   side.addEventListener('click', event => {

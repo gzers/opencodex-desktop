@@ -1,0 +1,38 @@
+{
+  "binary": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-1179d0dfc9266c75",
+  "binary_sha256": "a2d1751e8424d3da424674dda59ba9446141b190f4d3d2b51ae238089a324db5",
+  "results": [
+    {
+      "test": "modules::model_config::config_file_mapping::tests::protected_connections_identity_and_unrepresentable_shared_edits_fail_atomically",
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-g0-rename-20261104-jlhlzrp6/runtime.sb",
+        "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-1179d0dfc9266c75",
+        "--exact",
+        "modules::model_config::config_file_mapping::tests::protected_connections_identity_and_unrepresentable_shared_edits_fail_atomically",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.059,
+      "reused_existing_binary": true
+    },
+    {
+      "test": "modules::model_config::provider_auth::tests::keychain_migrated_pool_identity_is_preserved_instead_of_hashing_the_reference",
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-g0-rename-20261104-jlhlzrp6/runtime.sb",
+        "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-1179d0dfc9266c75",
+        "--exact",
+        "modules::model_config::provider_auth::tests::keychain_migrated_pool_identity_is_preserved_instead_of_hashing_the_reference",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.035,
+      "reused_existing_binary": true
+    }
+  ]
+}

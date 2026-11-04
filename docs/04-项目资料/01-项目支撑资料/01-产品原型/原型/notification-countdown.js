@@ -40,9 +40,9 @@
   const observer=new win.MutationObserver(()=>{if(!host.isConnected||track.parentNode!==host||host.classList.contains('toast')&&!host.classList.contains('show'))destroy();});
   observer.observe(host,{childList:true,attributes:true,attributeFilter:['class']});if(host.parentElement)observer.observe(host.parentElement,{childList:true});
   listen(host,'pointerenter',()=>pause('pointer'));listen(host,'pointerleave',()=>resume('pointer'));
-  listen(host,'focusin',()=>pause('focus'));listen(host,'focusout',e=>{if(!host.contains(e.relatedTarget))resume('focus');});
+  listen(host,'focusin',()=>pause('focus'));listen(host,'keydown',()=>pause('focus'));listen(host,'focusout',e=>{if(!host.contains(e.relatedTarget))resume('focus');});
   listen(doc,'visibilitychange',()=>doc.hidden?pause('hidden'):resume('hidden'));
-  const controller={pause:()=>pause('manual'),resume:()=>resume('manual'),destroy,state:()=>({...time.sample(),active})};mounted.set(host,controller);
+  const controller={pause:()=>pause('manual'),resume:()=>resume('manual'),releaseProgrammaticFocus:()=>resume('focus'),destroy,state:()=>({...time.sample(),active})};mounted.set(host,controller);
   if(doc.hidden)time.pause('hidden');if(host.contains(doc.activeElement))time.pause('focus');if(host.matches(':hover'))time.pause('pointer');paint();return controller;
  }
  return Object.freeze({clock,mount,get:host=>mounted.get(host)||null});

@@ -1,0 +1,3593 @@
+[
+  {
+    "path": "apps/desktop/tauri/.gitignore",
+    "role": "baseline-source-digest-only",
+    "sha256": "306fd52e74fca6746e12acc750f232de15e71da917756a1270d74c91f5eb7368",
+    "size_bytes": 9,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/tauri/Cargo.lock",
+    "role": "baseline-source-digest-only",
+    "sha256": "cfe56516dac4d6a2b7b5bad71ec8e0305275f77052d5e4dcd72c6c7bd29ddbcc",
+    "size_bytes": 137112,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/tauri/Cargo.toml",
+    "role": "baseline-source-digest-only",
+    "sha256": "e6845a040e1a0988c800a360545a03dd4dc93dd249e96baf0d72992e3811733a",
+    "size_bytes": 3327,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/tauri/assets/panel-hub.js",
+    "role": "baseline-source-digest-only",
+    "sha256": "fab0671965564fe564a56b6907fba81f4063a7646b77cc167724570730a95a79",
+    "size_bytes": 13855,
+    "media_type": "text/javascript"
+  },
+  {
+    "path": "apps/desktop/tauri/assets/panel-idle.js",
+    "role": "baseline-source-digest-only",
+    "sha256": "1e26a32a8947972cac5bbdce253caa1441723dc8be0e8d5a8ddbb162e27784d9",
+    "size_bytes": 788,
+    "media_type": "text/javascript"
+  },
+  {
+    "path": "apps/desktop/tauri/build.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d062a959525314142386120bee5bdc62ce9b3e0f174cc57607e209c5225cc371",
+    "size_bytes": 6682,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/capabilities/default.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "55a1d1f358f8dd618aa2edfb581516139496b74e1f2a1af57b6cf24daeaf9f65",
+    "size_bytes": 425,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/config/event-registry.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "1d7de233fcf1b8d6e555144128096f93f87c66d280d4017aa6f1e70696faddb9",
+    "size_bytes": 80036,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/config/network.defaults.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "92c0f8d006a0deae48b21503c54bfd34ff1c16a3d8b99282be4c37f697309591",
+    "size_bytes": 265,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/config/preferences.defaults.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "f1b398ca4a3d9b93b87765710402cc40b6b7a950e75f8dadf022033a7c1d235d",
+    "size_bytes": 1127,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/config/runtime.defaults.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "24481b673a3930929f80c93f27758438d113ed7f89751f77f253ac138efbbc97",
+    "size_bytes": 2324,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/gen/schemas/acl-manifests.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "843ff874805ce286d6b4a8c6265ab9e92353704aceb946463772fc60cf5a5b30",
+    "size_bytes": 71883,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/gen/schemas/capabilities.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "3801f4a6bea6ebe9148a3756a6c5c410d0dbbfd42609f76957b346f40cb87835",
+    "size_bytes": 345,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/gen/schemas/desktop-schema.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49",
+    "size_bytes": 126231,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/gen/schemas/macOS-schema.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49",
+    "size_bytes": 126231,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/128x128.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "359133687664b93d368fa5c9b0da7002cf1dcb3dd58d82d80ff43335153f791d",
+    "size_bytes": 3745,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/128x128@2x.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "afed76155c13ff64546ad2e34cf209d63f574b3579cc88589b3bd6263796fac1",
+    "size_bytes": 8429,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/256x256.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "afed76155c13ff64546ad2e34cf209d63f574b3579cc88589b3bd6263796fac1",
+    "size_bytes": 8429,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/32x32.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "22dc59c4fb7539e68c71a6b92411132bf94f8843681e48b376e692024cdceaa2",
+    "size_bytes": 853,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/512x512.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "1048245a2561a9a9e54eeae9584308a225444d7463426686b9a4fb00798c1a43",
+    "size_bytes": 18736,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/64x64.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "517350078f5c797347fa5f88497746dbf1764ceb0df0f273db8c80bbd204cc20",
+    "size_bytes": 3198,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/Square107x107Logo.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "90ae654952f0c557b02ebaa7c83c08764da3165d051f2dfda8374a8bf3a44074",
+    "size_bytes": 5674,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/Square142x142Logo.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "15a677f536771765bf8729a6d2d872bebd7d003c4ce76461c88f4a0bf26a55d6",
+    "size_bytes": 7662,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/Square150x150Logo.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "6ee0919e0b3f536db1454525918075817702ed851b1ba18359f27376948fb829",
+    "size_bytes": 8250,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/Square284x284Logo.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "13318423b531b17e3ba7435c8c36dfd09964e1d746219e6eafa8ec18d2075a02",
+    "size_bytes": 16279,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/Square30x30Logo.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "2eb8e9c00f82bfaaa73e00d9d28b00e462c4482b992b6303f899c6a3c851c5fc",
+    "size_bytes": 1255,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/Square310x310Logo.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "fce704e8598d5971662e6c5467ce500e5cfa6253147d7081f8fe8539e6d0c848",
+    "size_bytes": 18302,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/Square44x44Logo.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "f057054d68a629352a9ccc956e1556c6184c4759002ab68037c44f81c2ac879a",
+    "size_bytes": 1863,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/Square71x71Logo.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "6075995bc0e0d813698a65b11ede12215ecacdb7c66c706348618ca6345d197d",
+    "size_bytes": 3382,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/Square89x89Logo.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "20a7e35eaf5a8e90f821600530666cfef6e67ad4a90836b2dfacad8a52edc2e5",
+    "size_bytes": 4443,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/StoreLogo.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "5c6555eed8c52b26ce21164679aec15946b7641fc01e9f5a4dc809a5bc05c28a",
+    "size_bytes": 2277,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/icon.icns",
+    "role": "baseline-source-digest-only",
+    "sha256": "3a89852efb32d8e0169a0dfdbef6efec53dccb47cfedd9b1445dfc802d180357",
+    "size_bytes": 156291,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/icon.ico",
+    "role": "baseline-source-digest-only",
+    "sha256": "7158830cf6d1081a068e8eef749dda57169ffa5c1017385a54006d523be36e30",
+    "size_bytes": 32490,
+    "media_type": "image/x-icon"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/icon.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "1048245a2561a9a9e54eeae9584308a225444d7463426686b9a4fb00798c1a43",
+    "size_bytes": 18736,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/tray-128.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "0772c37b6a0a57b0e00d25ddab26ba7882abeb9844e9649fa36f9b6e275bbea9",
+    "size_bytes": 1073,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/tray-16.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "564915476c14dc93c6fc525139adcc9184ef6aea92bc85b6bd106199058d032d",
+    "size_bytes": 416,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/tray-32.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "564915476c14dc93c6fc525139adcc9184ef6aea92bc85b6bd106199058d032d",
+    "size_bytes": 416,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/tray-64.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "364b9949f14075f6a996bff4fc442efe3ea3fbfc0850f7fb98d56cbbaabeed7d",
+    "size_bytes": 500,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/128x128.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "399f34a04e5474918ebbd33b75de4b8f3b96baab58b12e63faafffb1b561f365",
+    "size_bytes": 4439,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/16x16.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "3974fe79626405ea15c8ef4f6b5b1f9db14f838420328da6506f617574eb0630",
+    "size_bytes": 471,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/24x24.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "506f32ff36897cd95f5f3351df61e362ed5eb378b98aae5107d82773b43a1966",
+    "size_bytes": 777,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/256x256.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "8c434ee893b8b8be55fad45bc5cd7386cbfc971020047ce8db85701beaea425c",
+    "size_bytes": 9292,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/32x32.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "96eb522e0d2809929a6717353217e5e6567c04ed8627bf82786f0ed2e8312def",
+    "size_bytes": 1047,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/48x48.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "386fd35d1110839809a6fad51be85202d9034e214977f20c0ffba909a6acc446",
+    "size_bytes": 1524,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/512x512.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "29e8e7896f83dc0caf7f510df58d6f2a189515787507c86ba3a090f8a042f1ec",
+    "size_bytes": 20823,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/64x64.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "d3c2d22c7043ebb66c30aadad55b28ff769ca6df4eee5a6fe25a0b14f83a4b43",
+    "size_bytes": 2088,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/icon.ico",
+    "role": "baseline-source-digest-only",
+    "sha256": "6093b7f46ccb8db92d3a064c8694f1cbae22b781410b9679de0e7beb4fda5813",
+    "size_bytes": 19756,
+    "media_type": "image/x-icon"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-dark-16.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "3ee2f12137443b0e0875980e832313bd0a6025cd0268025eaf7f99d09c87e43a",
+    "size_bytes": 349,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-dark-20.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "a143c39a0dd1b512353ed9942b9342f7f77cd2351183277eea8b06192e1a8643",
+    "size_bytes": 438,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-dark-24.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "ab2544d7a435f086b2bcfd1fd3ac23eba20ec5e1de75d782a70e6be77ca81430",
+    "size_bytes": 535,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-dark-32.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "edbdc7706c815319bc2ba5bbb12fa672467bb849d526cc6376429f616d09026d",
+    "size_bytes": 715,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-dark-40.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "de4a8bd743cd57707990078857241bdc7d4bdebe7584360fad5ceb2abe57b415",
+    "size_bytes": 854,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-dark-48.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "584e5689373ae73a72c0f7cc9c601f8edc01f105a6c75b05702dd7be5c5a4fb5",
+    "size_bytes": 1033,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-dark-64.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "6a087476469fc74c385cac251e0fd7ac62360d6c992548c701c4bab402edba5a",
+    "size_bytes": 1432,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-light-16.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "1aa2b442e0b6c9698936ba1d3461ef077aba3f7da47bf894672e5157434b2f01",
+    "size_bytes": 335,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-light-20.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "c1e37e39bd15da09ce981702ef3a9d5ecf9ba947f5751ddca5f2c1946c83b233",
+    "size_bytes": 412,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-light-24.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "395a10ed196dd3f5cc29a4c08be81d19fc42f22919aa3fdf5057dfc97c16befc",
+    "size_bytes": 491,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-light-32.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "ded465d7e9a9eca7a61cea2c7f71044594fd7ec9cc1708824b1d3c346dc43eee",
+    "size_bytes": 676,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-light-40.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "a2f4274adcd3be1461a53ce5e7f103af79a206972843c3def867a7272da2685e",
+    "size_bytes": 808,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-light-48.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "189b386787d6e9e18604026c94bf74ab0fe1833ebbef3636b35ccb1967d977f7",
+    "size_bytes": 986,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/icons/windows/tray-light-64.png",
+    "role": "baseline-source-digest-only",
+    "sha256": "ba6c23128fa9dce3b73bf9f77e4f7987e100ab4c497d5ad756052bc18de160bb",
+    "size_bytes": 1360,
+    "media_type": "image/png"
+  },
+  {
+    "path": "apps/desktop/tauri/resources/LICENSE",
+    "role": "baseline-source-digest-only",
+    "sha256": "27af58016cf1091cdf12050019a01c71918a3d09826e3e4b6ae9a552a0327999",
+    "size_bytes": 1062,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/tauri/resources/THIRD-PARTY-NOTICES.txt",
+    "role": "baseline-source-digest-only",
+    "sha256": "f18c59e210db8315a543f77c1289eceaf1c8d827691567d4ba9cb89bafc36ed1",
+    "size_bytes": 1455,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/tauri/src/bin/ocxd.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "7be8b2cc483b3772943a6614617029f6894a9d9827ee38a49d748a3e502d3e1d",
+    "size_bytes": 12540,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/about.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d353fbf097bd12ce6e7d68bbfd11daa9f5e61052aa72e48ba7944b720f453838",
+    "size_bytes": 7355,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/about_query_ownership_tests.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "0c0d95d1623b71b8107794948ce45b18bcc1a1942f6e972bd0d5a3c7a4e0bbe4",
+    "size_bytes": 12999,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/backup.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "a3242e6698992337297316f89a2110077fd9716fbd429867bdf4f926ce4583ee",
+    "size_bytes": 18041,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/cleanup.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "7a33c7fc1a58dc404cd367d9d84ff0f66d15bbd24c5f62396b53e60b6a54e414",
+    "size_bytes": 31803,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/codex_shim.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "4f1029959ad37850ef65db34a879877c189b83245942cfd1ed4d761e32f05941",
+    "size_bytes": 2297,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/data_root.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e9436a16158c1c61276f71d23974f695d22a201197e3a76a0560de323a2669a6",
+    "size_bytes": 30710,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/discovery.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "062e3149acd3594ffd436e9932bc2a56299bd92e613ccb951eee014aa6d7b146",
+    "size_bytes": 792,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/doctor.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d6518a1e0f063aa667dd532a6d24938d762d8f30e42023c227f0f41570e87d0d",
+    "size_bytes": 803,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/event_delivery.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "86d839723de5abe2383f17d6212f533bfb369ef17e7b347d13ae557146ce84df",
+    "size_bytes": 7028,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/extensions.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "787946d564e3d425fee4bfbdc0f9f739612599b9f7f0f8d9f10ac3b1752cbcce",
+    "size_bytes": 29671,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/logs.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "a9bb5b094efdbaabcdaafe14fcd01ba65a8bc57fdcf7c83a428f7f62e0afaeae",
+    "size_bytes": 2451,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/migration.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "b4f6f2d6ace53c51a364ef8eb00fa081655e6dcc1bb0458e903143ad59dbf777",
+    "size_bytes": 8221,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c416a4c1ef5b2ae2a3647191eac8075c3f360efbfb9e5d663a5ca31573273868",
+    "size_bytes": 38851,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/model_config.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "129bf6ab8f44e20849cdac7f91f5a8e9abf87d7f9d48321732af064c7c74a937",
+    "size_bytes": 25032,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/model_transfer.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "95fab1b442837ad2f50997dbda55dea7b7935306957cb4c09ebdf0470cd0b7ff",
+    "size_bytes": 40227,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/network.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "9ce47815969f79d8ed25e0f355e7576eeab7909feea921bf16f565ca97e92974",
+    "size_bytes": 4222,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/notifications.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "89befd0d9695b17150a7aab6ad2a48307573a26b3d530be8b0ebd5ef7aa0676b",
+    "size_bytes": 20268,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/panel.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c0009a8744015a5882827a31887439c5507670d5c13b8920070ee548a04927b2",
+    "size_bytes": 27830,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/preferences.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "4842e428da6e9d400eca9216e0515f87fd09e8b1eed11933fe1b8344bd9ba46c",
+    "size_bytes": 23506,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/release_details.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "b43e93970bbe42e5d61cfb91dc227037dfb43408fad3d105572838a52d4c8a15",
+    "size_bytes": 4504,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/retired_files.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d6946f806dca67fdfba69759f952dc061a7265af358e411001ee1515c4c4cb6b",
+    "size_bytes": 2720,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/runtime.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3d2be765ee177d8bb09b77ffbad90acd993a426e563c6c6929868b132bfd7d4e",
+    "size_bytes": 48221,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/skills.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "7d929e37b769fbd0006669e994b982b1725ddb6dd17ef58c66badfa149b09392",
+    "size_bytes": 1527,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/sync.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "050cce66c0318ba06366777fccb85c5386bf7e7ffc642e9c137fea362ef3c121",
+    "size_bytes": 56665,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/tray.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "2c62e97ca2927d2e0f40431fb66f618fdcb65f9d299415aa88096084ea63fe53",
+    "size_bytes": 1833,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/update.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c10950eb8eeabbcc088a395360f018c4a8ec06d348fc02f44894ecb41fc7e6bd",
+    "size_bytes": 43043,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/update_schedule.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "91b61d754e04251f06c7d5df0f3f69efde8dea7d44f8cf2d75ff9ab54f862c92",
+    "size_bytes": 13765,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/upgrade.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c34ca418b7dbfe335d51b28433c8c9747d3ba5310c1bbb7bc3fb631a7c1a0882",
+    "size_bytes": 8959,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/window.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "972b2f2e71e09a03d7d19917cf5bdaeb6e2d48c57712ab7d6ec9a8b4904bd1af",
+    "size_bytes": 453,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/commands/workspace.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "274aaaf95b60d43165f40bfae66ea377021cb295e76f8f4a50b43ccdce9bcb3d",
+    "size_bytes": 17152,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/errors/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "41f5c4ccd7422c7330cce9c940350eef59c55bae395a315f1e772cff7d973fee",
+    "size_bytes": 6236,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/app_activity.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "b82aaf68c6da6411231244812ca29800a1bc6b775ac634797a3a5a5a217e37ee",
+    "size_bytes": 8395,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/atomic_write.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c539d6064a3653f5ca12d57386efb2d95dd2eb806b576cf76b2fb65df77a21a1",
+    "size_bytes": 5178,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/codex_shim_source.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d03fe598d0c35a11247cae07c89242d5f3e9c5953682250b94a80f87b34aea85",
+    "size_bytes": 10090,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/credentials.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d12f3fbac86018e48c03b0f5454d3bd259e4c422f7c12f9f8555bfd8b18b3d42",
+    "size_bytes": 13651,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/discovery_paths.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "237dacb423793e2c9c64ab9ece84c9933dbe64cbd79f5468080be02cdf255058",
+    "size_bytes": 16523,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/hash.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "05872668a5f65f970a3c3ced238231d4d4f1f0363c262ac328c40444123d0e30",
+    "size_bytes": 1930,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/keychain.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "626abc6062cf2a06915ae6b53e67f77762d4ab74aff84eb806993fe1e32ea1e0",
+    "size_bytes": 3062,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/locking.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "2e2c35763f53fcc5299374ee9f911def37007c0b9512e7fed83ecc861da46940",
+    "size_bytes": 5304,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "62d8e80be5776cc667bd77b5a8aac6683150d2865abcf7ecfa38fa5e27b6dfc7",
+    "size_bytes": 909,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/official_cli_source.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "742aff2a6f5cef2f0f29bdbe1822a0657e065d090111ac9a33a1de88df0dd10c",
+    "size_bytes": 3863,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e6314a2d0f22bb237030e74ae4cf5e922f551c327e734117d1c3ab23724fde02",
+    "size_bytes": 6903,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/platform.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "6283c14b4819bf40611043d8fcd11638216221794d91f52911b4d4966ec238ac",
+    "size_bytes": 10143,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/process_runner.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "2114ee8d96b618e654ef47fd40ff699175841342f412c52774aa693a686c4e94",
+    "size_bytes": 21342,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/runtime_executable.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "dd5164ebea036b13836f0960922e23eeb433344443a827822ffcd9b487f02ffc",
+    "size_bytes": 1735,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/runtime_log.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "2d8a859b29216f4fe75654797cbf80c2e71befd02e2a9652125020c60e91301d",
+    "size_bytes": 4883,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d5d14cdac0c297af2cd58884d7f34aa64780fe87c38bed91fd499fdc3df2343b",
+    "size_bytes": 24871,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/storage_writers.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "57019c3d27797cff2d25187e82e413bb0762964ccd2081bdf8495dc7750b8622",
+    "size_bytes": 6049,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/tray_controller.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "0f3c050ee710ae59d1b53b9957de0ba3c13ea1551457cb2c40124817c1511bc1",
+    "size_bytes": 17998,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/webdav_client.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "4c71b54dcded4828106d3f8bca22779d8614a805358207fd87f5092fa1d84464",
+    "size_bytes": 27717,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/window_appearance.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "6a0670c003fe3d600fe920894efd64d11ccefb426e80eec6c68e29673b55cd62",
+    "size_bytes": 15947,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "edcfe39471ef8572d1130c1669171b93a0b253e5fbbe7876990d3661dcb98b72",
+    "size_bytes": 14633,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d10c1f18310fb07df3094c0a0ef1e9feb6fefdc177e5d53157efa2ed1cfdd05e",
+    "size_bytes": 17173,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+    "role": "baseline-source-digest-only",
+    "sha256": "946c4e0fe9aa1dde254836bfe99cb0078ea99f93fe2cdb3d622efd5b2c539240",
+    "size_bytes": 3011,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/windows_restart.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "ab3f466386e2c41ddb01a6bf5ce7fa943c637aadf5827939bb2492e5f9d48d61",
+    "size_bytes": 8830,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "61ba6589b8561d047c456a2bc0a5d2ff1642eebb0e6fb6363b6956f16ee9291e",
+    "size_bytes": 7191,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "952e7fdbc33d086953168e478b963e921f44382ffdc73d53f5888ed2671ce0cc",
+    "size_bytes": 48832,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d7dc620967cc02ef624f696390b5d9caad9eb9cefb1e65e685fac50f0ee09f64",
+    "size_bytes": 2716,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/lib.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "8ebb443196e92cff014e18180dd02ec092b25659b9aea62d5bd316cb9843c989",
+    "size_bytes": 50661,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/main.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "54aca712d7a8f96737fb2412bc9c5099300d859d2a3781da6ae1708307d6711c",
+    "size_bytes": 277,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/about/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "dd74a3a9f8bd6057337b90711183f3d4bd22d7ad8e2b5f9d9210a7147101a067",
+    "size_bytes": 5507,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/about/remote.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "82fb85261b55545a97b93eb543e0c7a779ffe04b4952e50e937b77e7be568c62",
+    "size_bytes": 22189,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/about/remote_diagnostics.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "9fceac1e843c26f22c9a9e987106bf7fbbd601ff6c278aca5703c1428e2ab1e7",
+    "size_bytes": 7424,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/about/remote_windows_tests.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e7b4ef569b5f7120f19f5a6efbe90efd1d0b029afa92d245d91be973ffc34471",
+    "size_bytes": 11738,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/backup/browser.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "1a41bce9980094265da01cbd9643a2be57843c9e0ffc2fa3084a8747a46bc0f3",
+    "size_bytes": 13270,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/backup/manager.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "022ea37eb4929d6eba7349ce214feb6c11a292655085f46237c5b9842005a1b5",
+    "size_bytes": 102001,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/backup/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "599e2a221f2c5486f2078eeabc31803ca587f49040bac4f722432537315091b9",
+    "size_bytes": 13497,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/backup/policy.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "165ecd0fee87cb3fd3085f00a1c22962e40be40bcd4abf04dee5e04dc6636659",
+    "size_bytes": 8587,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/backup/safety.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "46dad3eeb7a0ce5c3c5349fb0fff7fdfd354179b0d0fd0808680d98e2205e602",
+    "size_bytes": 9802,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/codex_shim/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "0b01a6edeea3bf9b0760c8de6b221b408d1a6b8b3ca9db5b958c61cc06d39f3b",
+    "size_bytes": 6054,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/config_migration/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "47597cb27461657a21c4e0c0e90ecc4fe9c2216c8b1bd8d81cddb92037968cc3",
+    "size_bytes": 27702,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/container/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e3cd3aeabd94ea927a417422dc1e5f5723e817db970815e4b97cd455bd20e6ba",
+    "size_bytes": 23009,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/data_root/bootstrap.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "b089b4d0dbf5abc1d2a7a8c6f6e597a29f98933239b6799eb51ac8f74338fc4f",
+    "size_bytes": 12384,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/data_root/migration.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c866145412912090da534c4d0adea3dd9ed780d455c40a44e02cd6c5fbbbee65",
+    "size_bytes": 32844,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/data_root/migration/activation.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "b7a29b5457bba9688bb3baf8bea49b59e1835117461900fc8d642c31306823a0",
+    "size_bytes": 28728,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/data_root/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "de793e1226eca7939cd407922b69f6b31ffe8e969cc2a6e2eb6a4b6dd637de83",
+    "size_bytes": 36141,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/data_root/uninstall.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "85eedcbd79b06417aeebdcc21591d6b8af92636d489ef827123f009ee723a486",
+    "size_bytes": 17851,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/discovery/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "6c7f826a04c725e3c001de462e457143a3b947de7f1c9bcad41daeb27a3e5c7f",
+    "size_bytes": 8065,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/doctor/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "912a0b97f50607224077f3e65bd2804fd91b7537029455c0ff9aa918f2f1d03c",
+    "size_bytes": 5483,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/extensions/discovery.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d131021adccb335a206903c2585e1257027421d7e062d7e9952a685b83b57a6f",
+    "size_bytes": 25255,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/extensions/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "06e620146e1ecea852b606c6effede936738312e6b1a0fd66dda35382c7b38a0",
+    "size_bytes": 19469,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/extensions/projection.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "ca7cd3ca95e8fc787be43df39c6e689642741f42f69c6b9222101f809e4b8410",
+    "size_bytes": 76421,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/extensions/source_dir.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c7dee460b091bcaaf29160796242b33f3fb7508e8c6c45456394905c12637b71",
+    "size_bytes": 11840,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/instance/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "9a6da6821d107992d4d8a1380e5af77dab71c12db95c0c08109188f3bb5e5c59",
+    "size_bytes": 6417,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/ipc/audit.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "fe1b1ff2796ec99dfe22465a2a35ea6af0f245ff38f305b352899048ec89955f",
+    "size_bytes": 14658,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/ipc/endpoint.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d69205aabf6cc71ceb3c3a3e66f3b20e86dc256aa706b6f7ac5d8e8215b7247a",
+    "size_bytes": 22170,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/ipc/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "202bd48f6bfc621925f68cc978965d11ec951f8931998cff16f790153dd4c3b2",
+    "size_bytes": 18538,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/ipc/path_registration.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3095962fd5f867fde76a35e3fb753653ad4e90089f10f11a4f4f0231980fca36",
+    "size_bytes": 5176,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/ipc/service.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "01b8c10c51b625f9fbbe489561cfcb67439f7cdac8024d9a83055bde5a9f4773",
+    "size_bytes": 121470,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/logs/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "47af856e948741fac75d93d68974a04f22bffc24c8ec5341e8e0714c6d860427",
+    "size_bytes": 11144,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/migration/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "50b0b1cf530ae01c9a414aa0d12f3b26a2f014676439acc746af3a53160a5630",
+    "size_bytes": 44421,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/migration/tests.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "75c75ff8b4b330c90fd3d5fd77bc21a1b9f1442168dc983c41cfc2e27262c525",
+    "size_bytes": 41856,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e7a9f40e5699091637964b443fc451245eb956b243c1780d0498f97871cea5a9",
+    "size_bytes": 617,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/agent.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d5ad3b6b4da3b84ca542a3065cc2ddac5420c6babdf5e27ec1047c463b3cd48c",
+    "size_bytes": 48581,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "361e41fc3aa532aac6aa2eb4406e0c02993eafbc0beef45001320e4af54e1061",
+    "size_bytes": 6145,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/broker.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3f216db2f21346a9a37facff2373eaa382475b8ae7797b0ce2802a140a146dd7",
+    "size_bytes": 23707,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/cache_refresh.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3259b247871c654adbe572d57167089455a13e7b1f5382226023e4a51e6936bc",
+    "size_bytes": 9470,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/cache_refresh_tests.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "8e523bc3ed74a9d66fa7692a83680bfa53459ed7c8cba3c7f9318ed8bffd96eb",
+    "size_bytes": 19495,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/channel_actions.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e39864819e3e8d986e0b3e04fdf0253e8cb67b00a2b44f7bd4336795c314bc66",
+    "size_bytes": 19393,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/compiler.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "8cce9f7453f3005b62e6cfc388bb2a2e6c61a5c078481f899268b3be74f77c7d",
+    "size_bytes": 13521,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/config_file.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c9cfc30cfe6b655cb6eca70e8b83ba7c53e673cfe88b5e540bc7830fb0f0493d",
+    "size_bytes": 50341,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/config_file_mapping.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "cd435619b449692db62c4ff562709b2f9ed7483ad4a4abe508d9f84b6bf9a12f",
+    "size_bytes": 78819,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/config_file_scoped_tests.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "fdea9d6bca50d23b6b4ae4ece162614dd7008efa7ebd2648c95cb4a51dce6836",
+    "size_bytes": 35784,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "9daa86c6b7e5652e426bee5c2221a685cbe9b893aab69548b03de5eca7cf8444",
+    "size_bytes": 93088,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/content_versions.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "380bfee66f386d8720f76f674b49ccd43d1497faffba4dcf1ffa4d59ad8a0872",
+    "size_bytes": 3219,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/discovery.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "858f4fa6005120cd8a273fdb3de16fe7a86315565841e2c5c9b32f543a449ef8",
+    "size_bytes": 20006,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/discovery_config.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "140ad06d42a76eb594e0faf6f9360d209a1a0ec2e15f07cbf404d141d2374152",
+    "size_bytes": 8837,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "6f5f6584044cf6f815c9efa67391cc768cdea8e75dbef3025793729d16c856b9",
+    "size_bytes": 26701,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/discovery_paths.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "a041c354e8d3f35241928f7de47bf819f69dc45751fd98b78215823d09b2a278",
+    "size_bytes": 5763,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/execution_directory.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "30039ccfb673af19b4ff69734ee9f1d6466cc1ba7d3b212d631866beaa9d1034",
+    "size_bytes": 32733,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/feedback.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "fa2ea8e7f355d49b8bb332bcbb0f2c46f67153b702139be49be7c3ba71a3afef",
+    "size_bytes": 16064,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/file_exports.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "0d3833731a0367901e8eaf4d62dc02fb1005b02ca70a391978919519b4bd89c8",
+    "size_bytes": 18583,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "78d9e6db27cfb34d360c24cd613bd1b3d88c1e7a62186f92c45e4b22cee7991a",
+    "size_bytes": 169650,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/file_objects_file_tests.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "92ff44c2c0764415fb5b80432459b5321db54125d0e67aaa10499fa2851f0c01",
+    "size_bytes": 25975,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/legacy_migration.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "1eaab6bd518df29332618efee025b39c72e3113bfcf6ced955d63710a98d5a4b",
+    "size_bytes": 72428,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/management.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "a8556b22a9ccecc083697d0ef9e0bc4b7e3b207e6a72bb6b6d09ff5de4b73edc",
+    "size_bytes": 25845,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/matching.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "743a9c510380e9aa18f5bf782bdc63cd0938943f5e4cc74421be486b2f7a930d",
+    "size_bytes": 5735,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/measurements.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3c637e57676c38074abe64d8c6b397cf8ced7da63283b6b904162a26c019bcdb",
+    "size_bytes": 12816,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "84ed53549d5bc8d580a164e90d1c4dab9455e43de49aa9d44696d4da858f55b8",
+    "size_bytes": 1139,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/operations.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c49b79b92978552b4050ad0f831a8f6807975649dd2584577e38e60aed1c93f1",
+    "size_bytes": 3340,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/portable_channels.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "9d5929e61d4017e1276c966655acbb8118067681622dae1827dc73645e78ec68",
+    "size_bytes": 22825,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "4d2e107fac7b3d16f8ef2d4caa26c1aab4b4292f0ecfff94f92e33314bc12184",
+    "size_bytes": 33327,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/provider_auth.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "93045371ab27310ade13415372f3b5ef06314e260a7499366fe44ccf279be787",
+    "size_bytes": 83790,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/provider_fields.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "53ad5ac8531d5b86fd28b7ea2463ad9542ca7334c05a21b73fc0d2bbab381856",
+    "size_bytes": 8725,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/provider_import.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "9a6c8aa1ece43e43934f8dcb9ff94a57fde0f05828dfc90e41c4cce84b23f97d",
+    "size_bytes": 3536,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/recovery.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "18e431de399561710bd7a538059c9db333ca7e98650b3b48c31e4f88b70ad0a9",
+    "size_bytes": 32874,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/remote.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "beb3e8815ef7bc9e5ee2a3041b734f5f64d850befa78fb6a07193778ae8d5d4f",
+    "size_bytes": 22294,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/research_receipts.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "18fd4efcdd3c9b97fcfc2d00aaa8c2e8ab602adde6c9e814075570c1c235febd",
+    "size_bytes": 8458,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "cfaeadd6daa0206361a13bf24edeea4aa300d3a03b5e37c4440aa261f54e1565",
+    "size_bytes": 205680,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/runtime_history.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c1fe9ed324ea10a27930fb74cf9911fd0e3ea865b0917eb42d28b5e4ad503d7e",
+    "size_bytes": 16039,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/schema.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3b2ef93dae7d42048b98c2ac7d4c2e75e730bc761a7b0be868ec9172b038dac8",
+    "size_bytes": 25907,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/seed-catalog.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "a5a1159359a26103eb3dbb499b44c8a326fb10c80e7057a7aac2ebb7acd04abf",
+    "size_bytes": 169251,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/store.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "b7ffd507b73562b3b1b511bce8ecbb01509b1d9cb22ba5ddc2c86c3941a74be1",
+    "size_bytes": 68314,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/sync_state.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "b545f8c1fe2c15de58c069349f152a9dd633c88922e50399bebe8d1302900fb1",
+    "size_bytes": 23360,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "03d0d0becbd5b53c87223d8cc273754f68cbd02205e7af319b40da864b83bb7b",
+    "size_bytes": 43687,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/tests.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "739e7dc451cdac6f0c62586791a6a0ff57c4cb8a36a5e1bf2791abfbdd4dc5d3",
+    "size_bytes": 25408,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "949f79439bb72e13b93d2b02bbe8b772f8a7e5656ebfdad5261c2604642cf9a4",
+    "size_bytes": 181848,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/transfer_backup.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c5e0422e408983275dd163b8c0d3572edf0ab14860c518e2f930839720f94388",
+    "size_bytes": 26466,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/transfer_choices.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "fb83e433f3143eb680f98d32fb873e3b30e9482fb4a79e71bda23bab87c14f95",
+    "size_bytes": 6583,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/transfer_protection.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "6a1cfaafbffeb2ef3d15034bf19f633aa8e6f15324896dd1247b1947e1ec2f9c",
+    "size_bytes": 9085,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/transfer_results.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "68bdd9f36f2d0e1ae74b5bb64033d8a0d03822da8de006b4a818b75a894a8e89",
+    "size_bytes": 16683,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/upstream.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "229554f75a4cbc4f376cbe492809f86495a9e6d6daf2cdcdfda583208fa4eeaf",
+    "size_bytes": 16680,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/model_config/usage.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "63fa52a69d4c9afdded24237f23c8e7da5460375e746029645247430fd59005a",
+    "size_bytes": 10706,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/network_defaults/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d306b8fdae5246ba5484da6dbd5b5fddeaf5dfd0221780d15a19443806884a0a",
+    "size_bytes": 2666,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/notifications/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "cc831c76e2a864ffd0db4c6093e8d00493e0277ee7b08fca3703e288c2ea39e2",
+    "size_bytes": 19967,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/notifications/persistence.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "fc898dad5e2c835b32c14210fb7e9b36858d1df9ad9b29ee7f6f635c15613f8e",
+    "size_bytes": 10496,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/notifications/registry.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d2548cae05c7c8ec0c5a9c8e70d58ea65f4145a865a155aac27bc6f57ab925f0",
+    "size_bytes": 54341,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/preferences/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "de8f61342b9981bb0fbbdb7ec29d4ff82edaaafc94c698cd8942efdda2d9e630",
+    "size_bytes": 35504,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/process/fixtures.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e44a2b40fed9cb9107602d02c926d88889eb24b6ae627e2006ce9412b58e640d",
+    "size_bytes": 1941,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/process/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "876f8fadba6f333eb1bed08ebf46c4204d11c67e7c3f76396ba4ab2650481230",
+    "size_bytes": 14826,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/process/orchestration.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "4db994b04ebc2516f4eb1086dd8f99410a02614d1e833565a14d51987680a588",
+    "size_bytes": 14533,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/runtime/archive.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "2477ef7d34f15ea27f9574903709b24faf4b88536cd4509946eab242d32b30d0",
+    "size_bytes": 24979,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/runtime/install.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "6776f4f546758798f4faeb3df55eb9c576d16c3a149b8f1174a93d2eda108ecc",
+    "size_bytes": 140874,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/runtime/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "22e78a22b6ea503687f4aee1405e81aa4b7f5fd82752515a80964d6d25a2bc51",
+    "size_bytes": 29194,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/runtime/offline_drop.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "32477cb2f42d1d08805d8428f438d75b54949b3dd7bc236e05b4d93d98b00ecd",
+    "size_bytes": 10436,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/runtime/paths.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "4e53df5440966336c6e2c11977712caf7c3bbbaf37c58647fa7d24dceecb31d7",
+    "size_bytes": 18078,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/runtime/protection.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "bc9c841c9061ff86539c831df7c26adffe99b076029855e9ac6b3b8460cb5ab2",
+    "size_bytes": 31183,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/runtime/relocation.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "8dc1528c77af20c339259a60803f004614df26eac9e9532fe3ffa05662e810ed",
+    "size_bytes": 23510,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/runtime/uninstall.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "040db8d8f968cf4a91cac5be51f009cb68918da8bb8523e469e979b1d7b52cb3",
+    "size_bytes": 73155,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/runtime_defaults/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "be13d4e9077bfaa82bea221bdd6ef7e5048cf14f6d5b7fa84919afa53b4ff67c",
+    "size_bytes": 9610,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/skills/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "f11601013e8734529aa2db14100380363959392f137dc94db331642d217eb2a8",
+    "size_bytes": 15528,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/status/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "1eab5953e29a1794d8bf7ab8b8a785c5d85f1302c791eb8887ca0723f3101ba0",
+    "size_bytes": 48731,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/status/polling.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "14648131ea49250bba604d491c580a5f5f992d2b44b565811ee083f41e76750a",
+    "size_bytes": 9840,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/sync/config.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "f1c6a98cf9e847cddb779a9e354ad2a8a1a7eaa924272ce6c2494d3618709ff9",
+    "size_bytes": 32548,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/sync/engine.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "fa8c97008fb6a6462449f8adf3db91af82276866f8e82716debdd9e93d5b9020",
+    "size_bytes": 35762,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/sync/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "953517ee68e218457c15131370f269480f8095f33985cfdf0b0ab637929415d3",
+    "size_bytes": 15915,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/sync/portable_accounts.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "22b74fe1d5b56fc4f80451bd2473458e2ec51eebeb82e27c13787535970b5ea1",
+    "size_bytes": 31695,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/sync/portable_assets.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "f651395248444bf7e37d754fe772055cdaacd12c90c5d31b1245b49a639ef4d4",
+    "size_bytes": 99690,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/sync/portable_file.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "8fe4986cd01c129a23f77a40319ee94227453e1eba7d52bbfd7b71a290259163",
+    "size_bytes": 12384,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/sync/portable_manager.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "ddc78075c8d2c074bc30dadbe498f11f3040ce654d40baee10f9be56b09519b7",
+    "size_bytes": 32362,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/sync/runner.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "983f7d5f195866c0ae680f2aa250c1713d8b62d48ede358b34a62a09dbb94b0e",
+    "size_bytes": 32051,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/test_sandbox/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "98870444dc020712e7def1eba317117f5b45f9fb418732009eab4ee198a61643",
+    "size_bytes": 8534,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/tray/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "7baef7a6729850f82054bfc62914d350b0a1750be28adb4e6a5cca7dea2b5273",
+    "size_bytes": 9362,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/update/handoff.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "52d1d479f9f29f955bff2c3446e0a772fba5cac7cad6318c60f7ef0c4cb89ebd",
+    "size_bytes": 16112,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/update/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3598bfe95f057a8966cc9360e9283e5e8cabe8df24c4a2739b6af5cccdff5061",
+    "size_bytes": 6079,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/update/progress.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "80e99492d5f5812a71fb4b0a15187811f35652bfc545f95783c78ac6cfc07d5b",
+    "size_bytes": 2055,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/update/release_notes.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "34fd6cb5fc524fd835f5e13d04e09d47709555549a00a99ecd77223adde39a80",
+    "size_bytes": 13584,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/update/release_notes_tests.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "f75ffc650bb20905ad346c064d799730c6a7d0937fb2cd98edc5cf60b404fa3e",
+    "size_bytes": 20242,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/update/schedule.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3bf88d62f2fed2d9b56b3e74f6027461b46dd6aa474930603cd8f5ca440f380c",
+    "size_bytes": 16320,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/update/storage.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3c55f06ba01a381152fbb2c1f856526ebaf30439080c914729524076cf46a1e5",
+    "size_bytes": 7454,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/modules/write/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "ce5d1b1e9fa154528704524b667df8e0089e56515ab8cd0bf5ceb8b9bc12d7f0",
+    "size_bytes": 22859,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/state.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "9dd1349ce842d5e80fd5474e88b97ff55ac66a15a279ff64928993b3f62143f3",
+    "size_bytes": 6677,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/about.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "12aa4b8292861cbe6ae45583dbb369d321540c63f46805dd14f749c35b40f627",
+    "size_bytes": 2289,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/cleanup.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "6cd92f16de35b2a6421cc276a9894a75f9f753bae75550b7f804f916c2ae9273",
+    "size_bytes": 680,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/codex_shim.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "f32ebe137029870ef301d3515a8b17cae0affce6724fbdc7fd2d51c3e4649e50",
+    "size_bytes": 2751,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/discovery.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "b05da2edee744b82e9c4d27b8fcf9fa5dc337de1ed96d01e0cdb04019efbf020",
+    "size_bytes": 4515,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/discovery_paths.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "78cd63a0df9a5ca17c52e20ad29a31dd1afe1411336a161ef7f93cfc24a0f71f",
+    "size_bytes": 147,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/doctor.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "ff2bec83220ec8052325da4baecc66a36742018e68596fdeb76231f834c602a2",
+    "size_bytes": 1388,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/extensions.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "8a6de02a4e3c52d13a6efd9578da6857cf09c946bdb73feed089aec8b0adf69f",
+    "size_bytes": 13422,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/logs.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "a68490446964f22b41e1dff4172ef011b897b1a8f7d18b75d0d54872116686d8",
+    "size_bytes": 1444,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/migration.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "ea1c60a857a8b7e643dfdbb6a5b802c849b855e6e247f78ba30a514f0c18f524",
+    "size_bytes": 4951,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/mod.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "70865901ea8e228c02a1cbc8c8f7dda98439d9a8dc7f28abd757e04ef508aa96",
+    "size_bytes": 693,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/notifications.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "c02cdfa1ee52351819b90937f89050d042c4310789bcaebc63ca941039c7d7f9",
+    "size_bytes": 5449,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/preferences.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3f8454328718653ce435ba0ff1fd45b0f80aca1a69d4a8977caeaa8692341fad",
+    "size_bytes": 11923,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/process_action.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "90df0bf7411660f700af982eca6e737ed910c7faab1306bef652c50ddbfc55fc",
+    "size_bytes": 2993,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/runtime.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3363307f7d4e6df4d8c0b68b7dfd568af224678db750bb48afb7e7e01e4ebc9c",
+    "size_bytes": 13029,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/runtime_status.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "98348282b400f731e27e7e85099d9c9a6ad2e27ba9e85e397553244ed93fba71",
+    "size_bytes": 7093,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/status.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e237b28dd4e3b1ee48db5baea4ca82819fba583b9046706e0d42bc1c934d1a50",
+    "size_bytes": 4478,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/update.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "033958b064a6918a19d8771813396e2cda926c7cd175777f19e07d98d4c493a8",
+    "size_bytes": 2349,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/upgrade.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "3033a78d248349ef43b47f249fb0bc7cc34f69da1427902ba39377610583a629",
+    "size_bytes": 4956,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/src/types/workspace.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e1975c01cba44b53dbc46050a43cc0b95fa78c408862060196b469ea7e2372de",
+    "size_bytes": 2440,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tauri.conf.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "398a43eac6da75e7ebebd04784673040eefbdc47d2d551f66e2ea2054b742134",
+    "size_bytes": 2086,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/tauri.updater.conf.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "c1d7d16c801bc2b87747d5b0a71f8fae927122e4897453eea23e51e98b191e33",
+    "size_bytes": 57,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/tauri.windows.conf.json",
+    "role": "baseline-source-digest-only",
+    "sha256": "a6f3f4e91e7631bbf1c2d5fd5ec0f524ba536a7e30e826fed2672e8c3d9b47cd",
+    "size_bytes": 470,
+    "media_type": "application/json"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/about.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "8539853a40293fd65cc8d53c7d99704c0b0d569cff5e62ad482bab5eeaa9511f",
+    "size_bytes": 4806,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/app_icon.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "1bb7e368a3e253c92a58155c5f07f6d89adfef06b889e3a82dc3cb5ff33825a6",
+    "size_bytes": 3082,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/app_startup_wiring.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "ec763e57f127787cf2194954c86b537ff8449f749981f2f3dfcc65d85e609973",
+    "size_bytes": 2583,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/app_status.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "0884e8c71edc0ba8e8c20699a94bb038df50dad736ea0140eb0f960658400801",
+    "size_bytes": 272,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/backup_process_lock.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "cb17039a94b716306e85618e6569203d6b12dcdc6f5b1b6a70dbb1481be281da",
+    "size_bytes": 9243,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/cli_ipc.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "9ee68e4a4163e51fd936784ec15141e4bf82b714d23ba917bf434cea5da1b1fb",
+    "size_bytes": 1188,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/codex_shim.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "79963be52ade9e6ed93e22db09a8c2ddb978b81798f3c71265c6f1a445f738b4",
+    "size_bytes": 9999,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/config_sync_webdav_real.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e8c16af18fa4423973f2b368f9c0ab3c8ffb9467fd8392fd43c51c268a1ec878",
+    "size_bytes": 10445,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/doctor.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "26f646f767ddc5391405d2c8b93f32342a62a7b5dd761fd3bd1c2631b8ae14a6",
+    "size_bytes": 6380,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/event_registry.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "09aa499fafeb29707091c109f7b4a80d6a34407f59edebf16005441d1c01e8c2",
+    "size_bytes": 73019,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/extensions.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "66218135c5c59a1f9fbbbbfc6b34160a7ea282dbddb5d656c7929810d3be669d",
+    "size_bytes": 79099,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/layer_boundaries.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "7ed993917491234bad0d01dfeda2018a5c861f01c946c9af379fb7db9e878b0f",
+    "size_bytes": 237,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/logs.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e8877da9b0c367b471a56e9bddc9e82b49600045815b1a354ce0e1c5ce470e7e",
+    "size_bytes": 5871,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/model_config_official_real.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "8bbd304510b6e7197687ccacaa07272335c05169f41b107dcd2b66838756d2ca",
+    "size_bytes": 80231,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/model_file_browser.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "586d13fe42fb544222ddcc6fcd3ed8133c7ea348fe4305d32f04d846acd906f0",
+    "size_bytes": 9536,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/model_file_live.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "b57ac515f7ec6de629682a988deff26ed6dddcaee9c615db1a0c56c075fdf5b5",
+    "size_bytes": 5920,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/model_research_real.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "a4b1e4f656660c6a3940160b918d48a63ab547cafe5357e9d3692e44c06badab",
+    "size_bytes": 2149,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/notifications.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "61367cb4926f5212bfa54297f3ce4f4fa7c1c94f0df208f69d407c3dae69c81c",
+    "size_bytes": 8040,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/official_status_source.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "d4eb5eb4ddd26cc806ef394d80896a5bb3a08f2eefd415087a5b65651e30dd24",
+    "size_bytes": 3241,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/preferences.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "773d75f6e7e1f2e723bfdd1b9e1d27b6a27f440b4ed37926fb52c8360dd3e88f",
+    "size_bytes": 4338,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/process_action.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "433f5a16b04e0320ef548f40ad8b40700f09ca71ad3c436ced1558fb3fcf4280",
+    "size_bytes": 13205,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/provider_auth_native.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "e2d0bb0d1a94f09578f8916631e5f777984e16554226b404eb18cb201a0301b7",
+    "size_bytes": 7402,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/runtime_managed_real.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "a9bb6e9756a8738405da94736e7dc248a924b88c212185417e07d28e57f45ffb",
+    "size_bytes": 14483,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/sandbox_isolation.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "901f9748609cbd5bf661946610104d406b0408b468a580c32772b655f1265ee2",
+    "size_bytes": 4183,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/status_matrix.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "fa9c242e1e295192232213d45b42b24d6ff6e2ff2b21c162dbe59ad350a40af7",
+    "size_bytes": 4433,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/status_snapshot.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "0c6b192356b102a6cb8bfcad2ca2bd268f9257f37c1891aff108e8bb102ab92e",
+    "size_bytes": 4287,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/support/local_webdav.py",
+    "role": "baseline-source-digest-only",
+    "sha256": "650cd474d5ad733caf49193577f6832e0905587063b4d001420d68797d62ccb1",
+    "size_bytes": 1151,
+    "media_type": "text/x-python"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/support/webdav-requirements.txt",
+    "role": "baseline-source-digest-only",
+    "sha256": "ff5e525a1247b4b8c5791b39021ab7024a085f1df364aafafc79d0aaf7ac0f6c",
+    "size_bytes": 31,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/sync_plaintext.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "cbd8b397682e544e172d409ac997cc9ca1ba48092683f85e24dbd9cbb95a0ce4",
+    "size_bytes": 7637,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/tray.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "52d4afef1f22bb0bcd53802c6448138b9d215e35e0ab6abccf6132ce5393c393",
+    "size_bytes": 3435,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/tray_icon.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "cfb5df9bc97c380362577f3892a3d6b5a17657913e3d1498bcf6e2613e4da9d1",
+    "size_bytes": 2831,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/tray_left_click.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "909a379d14ffa72d57bf8c13937fd07cd2c5037092f1770ee96b4194194214c1",
+    "size_bytes": 854,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/webdav_legacy_real.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "ea32bac83e30a39d31e8606c6e439ac7f9eda61fd085917632cf21e08be8760a",
+    "size_bytes": 5585,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/webdav_real.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "89514df73ba0949f812851d891697569466482e514986a487bb6c64fb34bb6c6",
+    "size_bytes": 7556,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/webdav_sync_real.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "67ef386edef098e39132d9cb89b935d458cd767bf46a58e3afc7454bfd5ef342",
+    "size_bytes": 11976,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/webdav_tls.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "004b8f14df64bf7ef63e38cfb12e3e955ec22b68de7f2537286226fc85cc4018",
+    "size_bytes": 3597,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/window_close.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "5372a16042d5d608fb25edc6804c2c064bac8efab137a10512b33a6f07828ced",
+    "size_bytes": 2529,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/windows_runtime.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "5c0dda461ef25f09627771b866bd4f1245d5d7dd75909b933a5c300da0216e95",
+    "size_bytes": 43617,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/tests/windows_tray_icon.rs",
+    "role": "baseline-source-digest-only",
+    "sha256": "27aada96f2af535b7f3c6ed1a1d0cad647ec731d49b489dba12e41f3f53b07ac",
+    "size_bytes": 2005,
+    "media_type": "application/rls-services+xml"
+  },
+  {
+    "path": "apps/desktop/tauri/windows/installer-hooks.nsh",
+    "role": "baseline-source-digest-only",
+    "sha256": "66e8591be04f3378d0fb890180a31fa5675c7fa8c7add18d89260c09289e7164",
+    "size_bytes": 1074,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/App.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "f89018c0a9978326458dbe0bcce4c6b1b8d1e08c30344d15b7f3712c5dc5ea44",
+    "size_bytes": 4337,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "209d0da338684d6e3b7b1eb002086aeb15430bcd17775de40545336d7ef8bf84",
+    "size_bytes": 261,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/appearance/effects.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "f9aedbd6f3be18d8c05c552cad45f5f335b390ee8462dde8edaabc4eb079b1fb",
+    "size_bytes": 5116,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/appearance/glowRender.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "3e6833177176f6d7dd6900a80d9744f6df5fece2bb4d43b5826699e171bf5550",
+    "size_bytes": 4514,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/appearance/nativeWindow.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "0b478e2e8c6bf6f047c5668533525f7e225d579ab939b361d3fdc5d9bb9e718a",
+    "size_bytes": 1599,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/appearance/scale.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "2786f023bd9df873933121c3d95dc408ce40443d7214d647655326348ce705fc",
+    "size_bytes": 1246,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/appearance/theme.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "17dfd0afd71c61f999536d1396c33c9f7cf273a104b98c7070cc6a68a1a90184",
+    "size_bytes": 2384,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/bootstrap.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "29eab046026752509a9df37740104960898deab48415b56fa70d95fe72ad2f95",
+    "size_bytes": 998,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/errors.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "545b06bedf4860d9322953289f1d693c479dd55fd4831a8fbf436f2803aa657b",
+    "size_bytes": 5559,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/feedback/countdown.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "c660f83eb5a82c318b710b1d4d0f09a3f23f10a42f9a08cd2d5d58b9a5a55eb7",
+    "size_bytes": 3228,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/feedback/modelSave.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "2b0b1e76db1993f0abf0d8a47e657fda139dcd754503b834b857741a66031a69",
+    "size_bytes": 399,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/feedback/motion.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "0f00545414a1f42d3ef8f9e81e2cf40b19653b532c9c1c7cb722c8570bd03349",
+    "size_bytes": 6101,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/feedback/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "99840a68963f916671845c49e9de982ea14bfa13aa9a9ffa023962f755a2aa42",
+    "size_bytes": 4394,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/feedback/tasks.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "48a67737530f787e11d87aec1923f697028f06dcb6718ecfb74c5a8ebf680e17",
+    "size_bytes": 10589,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/lifecycle/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "08fd3e3cd6dbbf5d7c015910b2f93292fcff5ceda0acdd62af1fb4d36a89ad70",
+    "size_bytes": 14379,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/modal/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "c475e36c898a56e8b7cd0785b5f8c6c4972c5d514678b26ec9fda9d6b3786543",
+    "size_bytes": 1341,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/paths/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "f23b6da2ae53e4b2fd1d7530602d3a2ac835b41572144f857917cc095d154ffc",
+    "size_bytes": 1620,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/surfaces.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "384f8c9535ca3284aea4ae3a768eaf9e0a4423f40d8f6722fa36cd72151812aa",
+    "size_bytes": 1049,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/app/useLifecycleController.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "7252e921ddbf4696fb510b245cbc81c87c41fa5bb2ddeaacef6f8db74428dab6",
+    "size_bytes": 8728,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/AppModal.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "12a5cbf195c8c0cc971e8f557654051367dad449911b0ea132909ab7d5d82b91",
+    "size_bytes": 3534,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/AppSidebar.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "7e24c1ccbf7a8bb4a8619fd16afce65fc945ce20d911b00c919740c5cc68e15a",
+    "size_bytes": 3618,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/AppTopbar.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "c4788ea630e128846aaf7bb4be26b3b21d89d964111de29be6e51748d403af42",
+    "size_bytes": 6096,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/BrandMark.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "b5eaff1b5b0812a79f95b0af0063a48661187b664b783d944a8635f9c8c8c14c",
+    "size_bytes": 2707,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/README.md",
+    "role": "baseline-source-digest-only",
+    "sha256": "39bf78e33041e8742b74f1e815ec55bc2a5de2ab19323a0a37e0999014df345d",
+    "size_bytes": 7028,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/TaskProgressHost.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "873f38848fc8912b125f3e9a6a172635992aecb8c4287e3cd88169d02ddb0c26",
+    "size_bytes": 5311,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ToastHost.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "fc89297a06692bf051a8b9cb8fb6610f4c83da4581cc44f210b27ee3b4cd94f4",
+    "size_bytes": 927,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/layout/DetailWorkspace.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "6d7b41e49fef21dbebef67fd7d52521db9cb2ed26ff0a4f7fb835d7de06e2dc9",
+    "size_bytes": 10292,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/layout/Inline.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "c9d8e8fea90c095643ee5fba65e0e67d2ebc83d7136409fe7e2607bd7bc6fcad",
+    "size_bytes": 716,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/layout/Stack.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "86e2f931965a08ba1e1d8369acb7cfd787479d37932dd60a01959ffdecd2aadf",
+    "size_bytes": 668,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/layout/StickyTabs.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "323127db98d954005b5234e9dc94e3a53222ca2eeae51926f832cfa4fc6b692b",
+    "size_bytes": 4616,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/layout/useShellLayout.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "8b7a8443ab2625b50d1972821ff0c981c116066b7351d4fceb40f8c1da827e30",
+    "size_bytes": 892,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/patterns/FeedbackToast.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "9bd63475be53aee9b729de24012f8930aaa0f80ad595923682131924b4fc6d12",
+    "size_bytes": 1039,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/patterns/InformationRow.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "574273f1744df4a3b615afe62cfffdc02001c222790cd875bf160d8bb1522967",
+    "size_bytes": 722,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/patterns/MarkdownContent.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "cc586cd00d6057c743d5c914469189641fc2ee50970540adbe4550e33ffb2679",
+    "size_bytes": 849,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/patterns/ModalContent.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "aa793b8a61e73d38648634664a27355fac3ebca6360b5d4c4c986233f4ab50fb",
+    "size_bytes": 1450,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/patterns/NotificationCountdown.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "0a8a50cc7bcb638c43a1b0677172e1bdc3cff0fca39c15763904d70906262b57",
+    "size_bytes": 4344,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/patterns/SettingRow.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "5a75b4ed3a669716e08c821398488174ab92a2cfb7c8a729629a7a7783890ce0",
+    "size_bytes": 779,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/patterns/TaskProgressCard.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "7f33cc411fc93f9790b65c1392a38d940609744af0b46d45eda519d87c3b1f05",
+    "size_bytes": 1815,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/patterns/modalContent.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "e9f1d7a74c2998f71fcc90ba20c2d1333b5df057a30873dba75dd6cf14582828",
+    "size_bytes": 402,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/registry.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "086f58949537d29b5e97e1e3fd113580097abe89033617fd75324bf03bfcd556",
+    "size_bytes": 13971,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiButton.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "0c5ffc08988ca329f0aafcc9de4a3aee09a822087e8ea7cd26a6093affad66f9",
+    "size_bytes": 1786,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiCard.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "f05f99ef3bf02ae810f4ed5935c7f4fb98cbfc6f410c08bdd05ceec08a8d5146",
+    "size_bytes": 1212,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiCardHeader.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "6cf1bad6c06de90a3ecb6cbd9becfe9c5067cb90e54037eafab22a5a9f503ebb",
+    "size_bytes": 583,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "694c19dd80d01932ab52d6f30586512277e3a54878ac2adfcfbea80d9ca67f20",
+    "size_bytes": 3862,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiDiscreteSlider.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "6119de3354ca471d6b6f39543635637eb7da7452ffe537350a9c198a53ef138d",
+    "size_bytes": 3161,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiIconButton.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "583f322175c13fe5450617ffe9ceca4a1d0483b5210c0cbd464de189db297b24",
+    "size_bytes": 491,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiSegmented.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "358ab7444baac68af32c6e8c98335a340e1a3baf94c4b4c47c1ba64ab67ec562",
+    "size_bytes": 1691,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiSelectField.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "b024333f4fd345d263202342a03d4cc09bb2ca6b76b595c734d75ce7779ae210",
+    "size_bytes": 1685,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiSelectMenu.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "9056c481be9c187228ca3bb60a573a81dbbe77d5b905008bae9d1d2d63a4db76",
+    "size_bytes": 6775,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiStatus.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "89a3b21dd661e35d02173514e1a45d442fc047867d416ae7e21fd429b57ce09f",
+    "size_bytes": 2434,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiSwitch.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "5683aff3256bdd2f3aaa9e7b8d913441cc67c7a5effe1da742db019a61808253",
+    "size_bytes": 481,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/UiTreeTable.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "d3cec84b94ccd6a0a7bf532783a9db334db2082f712b61643b795dcf7cc836a1",
+    "size_bytes": 10468,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/components/ui/treeTable.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "003346c41010df0c8d1d15057b1843a2c51b059255ed03f9df896250708132a0",
+    "size_bytes": 1380,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/composables/useAppController.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "64c685f4073870c8919b9daf3dcb0ed684a245c9158da966e6154ce956bdeb82",
+    "size_bytes": 11918,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/config/eventRegistry.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "ec024481fa1415ae9245027fdaca1a41d484ca55cecfe68fad08c1d33e3c879f",
+    "size_bytes": 716,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/config/runtimeDefaults.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "9a3e14cc8287e6d8b61c57302eceb6f8a8268a5053272a1e57ca8910949ba2b0",
+    "size_bytes": 1363,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/contracts/runtimeStatus.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "a6e59784bec07a20545ab5f85f1e4cf2225716fc980bba6e499748b98dd4abfb",
+    "size_bytes": 1775,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/dev/auditHarness.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "cf903f16e3c7f86b56034c5964bff4f12343e924e1ca3f6aa060f62c7704852c",
+    "size_bytes": 29972,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/dev/component-gallery/FoundationExamples.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "2fe5cd7de93fed45db00efab2fd538f243c92529a883715174d4092218229657",
+    "size_bytes": 12435,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "b60f3bdc790fd9db703fa599bc5c7a9d878460bddd6d01d6acdd87ef912bf35f",
+    "size_bytes": 16347,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/dev/component-gallery/NodeExamples.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "4a3f1f15a8bae82bab543d8376f7235e212c7885d656db055964620e848b78cd",
+    "size_bytes": 3976,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/dev/component-gallery/main.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "4a24764ce9197504fd6f9c6ef48ec1b00a3e70ca1679a09a37eee13341f79c4a",
+    "size_bytes": 416,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "e9c810f883b6f6f2ed96704b258bad4c6a38644081e35077bec7c924ab18545e",
+    "size_bytes": 20168,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/about/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "cb0076b7a941af9a0bf1eb6d66606fb02f660fedf6512dd634bf95b2220541f0",
+    "size_bytes": 1798,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/about/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "2c3ac63b7a42aef5071bbb3687c32369879c6611e9d0bf437e40ee1662b752f9",
+    "size_bytes": 499,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/backup/BackupFiles.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "e5e2fde1f7e372579fee9a52bffe9f115de770064a1cd8736f9e7db0065587b0",
+    "size_bytes": 3582,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/backup/BackupManagement.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "d608d34aaf7f774d0e5bd7c55450d357706c2dcd1a218cb880da3c34cfd08a34",
+    "size_bytes": 9440,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "85d0d2e14bbb5e152e393028f90552e961b866df7d456ce248ab1ec2f72b5445",
+    "size_bytes": 9367,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "54c0e6da39157af30383ac5c288a8abaeeebf0cc02e2dc062bf78535e714be51",
+    "size_bytes": 4499,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/backup/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "f7ba07246d626eff3ec1fe17b4cc9a0b2292b5dfc6fc357a52e61e73f017dc9e",
+    "size_bytes": 2356,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/codex-shim/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "bbd4533848aa05080c4ce9c224ec8fbf070040be64932e465b6ec7a4dd56c449",
+    "size_bytes": 775,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/data-root/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "d7ac5d9919ea4db2463a78b28c9d1cc041e82206253655a5839f0c99910c82bc",
+    "size_bytes": 2175,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/data-root/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "5f448850fcc3ded1c4c3f08ef86561a1d92f3395db7b45a6b72f5eff7ff48232",
+    "size_bytes": 5231,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/diagnostics/doctor.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "e551fc8cb36b1a83fa31d72492c1c09dc8f4a28a82e0a1ebfd4b34c1a640010c",
+    "size_bytes": 290,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/diagnostics/logs.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "7aebb68ad5808eba7ec0ce4b1990889eff46e689054680db34edaa8d329d46e3",
+    "size_bytes": 506,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/diagnostics/presentation.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "471c5a15e9fc207da29b63939cedb77581af8faa10ffa05a08e04051cfc9dcee",
+    "size_bytes": 233,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/diagnostics/selfCheck.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "9e575431a490ae36e7f1900b92589905c7dfa70ec2273b9528828244bd426f62",
+    "size_bytes": 1061,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/diagnostics/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "9783ea0dbcacced021da5c200081db35bac8fcc04d083493b19b791ccc542b38",
+    "size_bytes": 719,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/diagnostics/useDiagnosticsController.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "e2ebe64103cabd4014d6332c74217cc67a08cf31e417c486265d30a1d10b9e8d",
+    "size_bytes": 2580,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/environment/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "a2cae88cba52009527ad62694a185e98391ddb1e7b02d3e4d111735af6bcf05b",
+    "size_bytes": 753,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "d20f9b746de692e527b2219b7b9926dc711353a42e6dfe70772e87d31321ba3e",
+    "size_bytes": 7102,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/environment/presentation.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "910c263ab8445a1f1ab5b6fd7228f67e575cb97634decb4dbbc478d94e695f8d",
+    "size_bytes": 8558,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/environment/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "2d4c0251b6f83f76db23cc47683e73b260f1a241c339e13c1af799b5665d0b68",
+    "size_bytes": 975,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "e392d005c12812d3289bb83fa6d65fec50b46ed5688a698a87a639e526743c48",
+    "size_bytes": 5425,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/clientIcons.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "a231444adbe7753f15e341b83cc273d8e7eae7745437a0ea521bacefb7eb63b4",
+    "size_bytes": 24251,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/clients.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "2cc6382816ebfcdeaab02d3d6758a29cfb14f8c05612eb91401ff56b507d28d5",
+    "size_bytes": 5796,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/components/ClientIcon.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "96c34538adfdfdf5fd6aff0e54c8aac7da15f7030ac96f2f1b16eeb7aa66674f",
+    "size_bytes": 576,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/components/ClientsPanel.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "ba755ac181863d954d233583687de4f6110500efbd820de2eaf7439973db33ae",
+    "size_bytes": 12789,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/components/ExtensionDetailModal.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "b7eb8df8930ce85ef02aa97fdaa846f53611870974fceab57ffd5b6e145f9ebc",
+    "size_bytes": 5985,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/errors.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "af817974e25c2ec6e582af44b76f6ad9d25704e1d5fc35c1103d8b3daa3f6c23",
+    "size_bytes": 2944,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/presentation.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "2ad2e230bf6b3d3f663e6cf48faed1c5d2ad25c9d53078b1ee9356a91615dbd8",
+    "size_bytes": 2324,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/projection.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "2cba3f4fb56c016b21bf7064f2be41ebaeed4b6a442336e30e1b2fc2ac42b06f",
+    "size_bytes": 367,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "dcc30472f1cd0183964d3d0657de19e5980c2db0439c5b9da7383e2011abbe5e",
+    "size_bytes": 3357,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/extensions/targets.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "3793684de57fe902ae8a1e9c2dc053a4a145e41fa8ed3703c6bb8168438a82e0",
+    "size_bytes": 222,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/migration/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "87707bf28214054b775c05b8ef66fa1a77114eda393317c21d5aabe68fa26d19",
+    "size_bytes": 1099,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/migration/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "fcafdc5716a0181727d83ec461db1b22d4d1cf8825b6e362c16e66efdba3e497",
+    "size_bytes": 2082,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/AgentExecutionField.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "d9a57f6f4cb5040b131ca513d4f705b48463baef76f5583c53db33654d066e60",
+    "size_bytes": 12937,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/AgentPanel.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "0f140bf2b147b2f01da6d55362280062329c5c8483c7c49960297c2f0f5ef092",
+    "size_bytes": 17289,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "d29d8ed0384d962e2aa9f1e12c0de22fb3fe8afd2fe6c7dfa8aa113a41bddc10",
+    "size_bytes": 9539,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "04d3da5a7320e732be24a3bf6fd83b6aed220a0674dedc1afde3e74adcab1665",
+    "size_bytes": 12117,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "eabe36c0b26d0aeb9ee02792424cf805295fda0120b4542e37dcf479001da758",
+    "size_bytes": 24803,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "8ec386283ad583a856ec0576794eba676cb5ebc07deacfa5e9308bfc9c28f2bf",
+    "size_bytes": 29553,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/ChannelNodeSelect.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "b8bf60e8aee91759589d9ace8666c0fe2623acf5e71086436395c66bba119def",
+    "size_bytes": 5066,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "35f58fb18abf569f265c180ad13a8aaee5cfbc2a488825e1fb91cd7f00e7c24c",
+    "size_bytes": 29650,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "86218d96349dfdbd41349e1c1b7a151705a4711b6a823aea0d4eb3041b529213",
+    "size_bytes": 4997,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/ModelChoiceOptions.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "641600fcd5b7a229d52471da35c38c31fe42bf85e7abd26f2f9e816df57eb401",
+    "size_bytes": 4181,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/ModelPicker.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "e477ef90d71e22dcc855aa9454a83d8b3971fb555c9d28733747316912a223a2",
+    "size_bytes": 21907,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/ModelRuleFields.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "ce59680eccc5f5292fee6892d450a3fe69433511fb6e9fb78565b563c67b0ec1",
+    "size_bytes": 13913,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "22989e8784941dc46c5ae87383e5d3ef995eaffb764fa72a1bd355f7a67027d7",
+    "size_bytes": 13138,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/NodePicker.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "dadcb5ff58199f7c2feb3fea0efa05696cd275f2994084990802db1021845ca2",
+    "size_bytes": 4268,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "37ae1e0384d2a93e69e8f7a7ec0bc8563b42f3669670d19dcea9bb2c2492cbab",
+    "size_bytes": 3984,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "e88ad52aa100020e83c285ed811285a2d3e99f2c2e14c0877de72159642ccb9e",
+    "size_bytes": 19928,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "eae3c47718aca9bfb968dceb70edc6d3e936bcba127a7e20f763fa71a30d0164",
+    "size_bytes": 3231,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "9247f40a8dad89626337684a66e355130e03537118c8b1ca91df7c5eab25bd97",
+    "size_bytes": 3874,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/agentView.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "ce59a13a9b65622383e1e14004ac07985544e5577192b82695b7cd2bcf8070ca",
+    "size_bytes": 783,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "0accd818270a926c0ca88627d1944f0c5ea9c090103d9cfaf63ac4092412abb4",
+    "size_bytes": 17157,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/channelActions.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "cfc8049d0c87f3bb561861967c9a0e02ea5c6c5ed621161b68c5f8b6f15a71e6",
+    "size_bytes": 1130,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/modelRows.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "a41bd9b88993f8ff3381d80442f7988079b9474fcb3edbf7e96cc4e1a5cf80b1",
+    "size_bytes": 1843,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/ordering.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "d2f2450f51ae47c785587781606fad7a8c3e229aa9576efffc7db7fc748fb674",
+    "size_bytes": 583,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/pointerDrag.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "7c678cefcbe343bf461207c3b9645b309a90516b5126ba37aa28c56dcb4116bf",
+    "size_bytes": 8017,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/policyChanges.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "99a5fbddae63c0423a9f241fc434a4b5030b363235505a59980a1064553ce9cc",
+    "size_bytes": 3139,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/policyEquality.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "5a9f469c0d9ad03790e9eeaee677ac5a7d58ab0783d9cef09229baf292871137",
+    "size_bytes": 1585,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/proposals.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "3eea3b61d7d31011da04a8c177af8727cc71deec6c62e2ecbbad2290c7475b95",
+    "size_bytes": 4029,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/saveReview.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "902cc34ecc3093461b4c9ab2d398e4c89b1952ad2e0f7fac0c927d07881929cd",
+    "size_bytes": 4363,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "79a55df11df0cd862a8cf740923c04f61ef5327fddfa3bdefb847bf1f596396a",
+    "size_bytes": 33629,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/templateChanges.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "f56d985d4065077d187f5735b141090e8341edfd003da3c7af750efc9b424322",
+    "size_bytes": 1683,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/upstream.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "d32acefed79950c36938873cdda6f606e1fe94d5396ac4d800ef58412c9952cd",
+    "size_bytes": 6071,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/useNodeMeasurements.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "6814ae418b071888ab04ba1655579118b9d94a354b3cecc40ab282bdeda278f0",
+    "size_bytes": 2852,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/models/useViewPosition.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "cd7fbd469f724222e1b6ed6c2322eafd41e20fd1df384941bbbf6a4ba385b8a5",
+    "size_bytes": 1295,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/notifications/actions.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "c5e7643460a79ae524cf4caa05f40d5dcde5bb6da9ade7e777fa61320d91668f",
+    "size_bytes": 1085,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/notifications/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "d423ffa12ba4a1c54169b284e5575429b37f9d1094c944866ba41433d1187bf7",
+    "size_bytes": 1950,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "9c541d0f14087bcf5e7c6b257ac873fa690e0e24e3b3567a07ba3c9c44144b91",
+    "size_bytes": 5648,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/notifications/components/NotificationItem.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "b732229fd7f96b3cd46a6b44d4b312740b6826e886dff698eb5d8fff54e829fa",
+    "size_bytes": 1796,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/notifications/model.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "451ce9050b2a53c27e6b8ddfbf3dd00dc8507e0b85f860b29afc97182983e763",
+    "size_bytes": 2921,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/notifications/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "a597704b7d24a50e73f5a2ffa040a21a50dee81daac47e0cccfd16fbd2cbc72c",
+    "size_bytes": 5526,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/panel/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "aec16dcaa61f95a19db33de3d390fea16fc05c925466bf444b7c9ccc2abc38a9",
+    "size_bytes": 852,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/panel/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "b1a348c213afd098a8e587307ca2975d87ccb675ffcad056cd5d112439efa731",
+    "size_bytes": 1954,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/preferences/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "fdd03b1d21b0389308332e405f86e0e5fe8e8fa155150c3fc6a177c14c537c3c",
+    "size_bytes": 2495,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/preferences/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "519a301d00e2c40976db889b474078ec5d1b3129cba896236bfcc9feaad070f8",
+    "size_bytes": 5055,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "6dc44d883196a982441e3452c05190f89efeb80ef058f9635c8e57ad233da46d",
+    "size_bytes": 8897,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "3e3b93a9c303a19c7d50966467a87e2102b2f49e0d3004ecf8c5ecd2ee8b1034",
+    "size_bytes": 19784,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "c71d27c913240c50e4b7355e18b1194555c59a9ebd503c2a1cb7931c1f53892f",
+    "size_bytes": 5243,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/errors.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "c093a7d3b9f7315e56b5902851fc8ba719aefb57f19b889ab1f888d5804e95d6",
+    "size_bytes": 1571,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/installPath.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "5f072932d60134c9c660e049d54acb519f5e9acfd63face3fc5e0d1d596ced30",
+    "size_bytes": 3360,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/motion/logo.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "3b07d0be5d6a6d996dcba00ea24e04020d0281f04d31799d5aac3c3f899fc374",
+    "size_bytes": 2818,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/motion/meshGlow.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "b15c3b14300bf75fd6a0ac2cf5fed13506027defa13ca84e4c38a9b5e12a239c",
+    "size_bytes": 11903,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/motion/projection.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "b498aabeff1845067be490cdf2ac6ad1a5bbb0fbf4c7ab7cd38969b0ab6d6ff6",
+    "size_bytes": 5170,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/motion/scene.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "fd56c878e44d80ed9e65441df82fa547e58a9cd742b180ebf25dded178226982",
+    "size_bytes": 15446,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/motion/states.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "d70491e0ab553bbc7e53039cecb152bef682889a05a0dccdd9df3546513fe868",
+    "size_bytes": 10299,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/presentation.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "397a6634ef075863c353376d9bbe89cca0e50cc0a0d865fef6ddc211c3a7f9bd",
+    "size_bytes": 2598,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/processAction.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "4d66dde4374a5fa8d3062674d3961a1a41a0100bfb096076c2e3249040737f07",
+    "size_bytes": 523,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/scenarios.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "f89983bcec98cb924556f7b7ade6d662778841cab406b7d589d08d93a89f0c58",
+    "size_bytes": 4710,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/runtime/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "50228ddde3f017ea4685826877cf1580cb1003c6d3d939042a0f3766418937bd",
+    "size_bytes": 10716,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/ChannelModelScope.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "4c74e9d2d385dbefbc51016f7685ea1b73554ee17d2085c089c22bcd85b09cda",
+    "size_bytes": 4803,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/ConnectionDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "3ab29a99ee1e6b8d3ba140f36af70734fead67b0da0d31717f03e851426d39ad",
+    "size_bytes": 4578,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/ImportedConnections.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "b753cf9048d2476f1eb08b4838852a394741744b8358738ab7aa60ea226dd702",
+    "size_bytes": 2824,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "d254b898cbaff5b67d9f53afa139030a1df00b2964efd6fac9430f95a1e89f41",
+    "size_bytes": 101010,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/ObjectScopeTree.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "df956bf30e54e584ce58adccc5df8822dc217c4fe9b4391ca67137432a5df191",
+    "size_bytes": 7596,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/SyncDialogHost.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "2cd0d5842b968575bc32c3b54146f26cb608d051df17e59a2a845909fc9fb4b9",
+    "size_bytes": 1486,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/SyncResultDialog.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "cc040ebd2e39b3279c43773225179633daebef3818047c7e9a3b7d2b6cc8089a",
+    "size_bytes": 6816,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/WebDavConnection.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "a2f7731763744dda911627af63325870ca37248e06360add3fe9a4dbddd45ab9",
+    "size_bytes": 5272,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/activity.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "baf9b4c8451fc2348feddf054bb4cd8b2e06e198405f749567a3b3aefffd097f",
+    "size_bytes": 1522,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "960b8173c856bbac150f03d55dc7f785b6fd8f543bd64b33b0acd666ab44989b",
+    "size_bytes": 3521,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/modelTransfer.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "87d8d986dcda2b02c93438711cfeff87a618335dadef39f434dd3845503df57f",
+    "size_bytes": 16226,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/states.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "a25ddf75b916712831734377037054b922210acda692d947b6def78ab104ac1c",
+    "size_bytes": 1911,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/sync/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "99eda04d0536cbf77dc4c22804421819503381c84ffc61f2120bc0ac5823ad59",
+    "size_bytes": 4382,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/tray/api.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "0e60f74ec843927de7f893327463b5543028398f56c65c43568f974445ea1075",
+    "size_bytes": 851,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/updates/ReleaseNotes.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "209f6ee90bc1a7c2a34ebedf626ff0943ac61dae30adbe80bb6e1088091b8e62",
+    "size_bytes": 4887,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+    "size_bytes": 29015,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/updates/errors.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "eb607aa843cf33e56395b4b694cd05c6ec7693dbe9d9f4bdd1bbd91699340147",
+    "size_bytes": 752,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/updates/releaseDetails.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "12064b6dff67b7b9b595ee9bf865e768cd54700cdaa7f362c90f9d778fd67a18",
+    "size_bytes": 1436,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/updates/scheduler.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "1fdc3625bf87511cada30a51ce17755f2635fb6d258a663fb1081f38979fc652",
+    "size_bytes": 2852,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/updates/store.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "3763d69fd461e909f1abcd93a93ac363453e110434c8427eba85d4ba7c363e37",
+    "size_bytes": 5467,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/updates/update.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "066d60cb6d66ecf9b017e026dd52299509a3dba340fdb3103c8b96cb716c78eb",
+    "size_bytes": 5177,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/updates/upgrade.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "9400b922ab21b815188d2e9018d8142319d174d36732f598325c02e93f949147",
+    "size_bytes": 976,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/updates/useUpdateScheduler.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "c0454000e16d92d690de2a222b5adb9b18397b4f70f112ffcba0b3f7e6d3bbaa",
+    "size_bytes": 2619,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/features/updates/version.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "3899349091e320cc345e196177873cfd81b7ee38d86ddfd665e464f8adce693c",
+    "size_bytes": 1905,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/lib/html.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "2bcc60f048946e764d216605d3ebb67a0ba8916bc612640c1c1c9c0408087129",
+    "size_bytes": 241,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/lib/labels.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "5b75e8ef17ddc30f702613ec2aa573ea36d7a8fff84984ba3e0de2e6687bf3bf",
+    "size_bytes": 3371,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/lib/layoutObserver.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "dd96f86de7a881b809ede6d76489aa28bedcd27448f4ad9d3eba00f740ef2c71",
+    "size_bytes": 1102,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/lib/markdown.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "a51cc9a729f15ab6e746480c8e34ebbf82d8e141f52c2f0a6a5fe4d8e7f2e3bd",
+    "size_bytes": 2997,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/lib/paths.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "748ffbffa58b447dd06c386981d5bc72d59c3c90f7a979e8ece88d0304c8f9b9",
+    "size_bytes": 1610,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/lib/saveStates.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "7702ee78d4f4f4dd47a99d917e78f29b37b4872a599be2599568e5b564a4cbfc",
+    "size_bytes": 8005,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/lib/webglContext.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "5f3d36715442a33ffa82c06a8e26edee7e3327fb03151e3d6015d76bd5e05141",
+    "size_bytes": 579,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/lib/windowAddress.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "54688818a13e5b9163e60f4e19fa94cdae0c2f140f318c6447e9e46852a3a33e",
+    "size_bytes": 270,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/main.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "f9d86a1fde60605fa2f60b40c8adb444ae7fe64b354f3a7bf1199b5cbf036603",
+    "size_bytes": 3497,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/navigation/index.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "bad64a35343c578c57070894dedd0cd0bb4f0cdf4343e95cca35f318abe1eba5",
+    "size_bytes": 4727,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/platform/workspace.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "4ee2dbfec8077dd7d8b8d1c93c321507cf51f7a900e6b93e3183bbefe83c73b8",
+    "size_bytes": 2178,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "66bf664664a7d25e2261894315888373e3683685178a3dc887d6ba23dccbe4e7",
+    "size_bytes": 38058,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/routes/LogsRoute.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "f04ccbac8ac0ac363891f589e14572690b90437f451a2614cbfdf4ac6fc88407",
+    "size_bytes": 9142,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "c89f086edb456e499f0111986cd736c75e1766486ffb8994c0b10afd08f2f394",
+    "size_bytes": 33972,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "de3f2282b0d222db753f67559772899f98003cc1f97d85090f377ea4ef5ca418",
+    "size_bytes": 33050,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/routes/PanelRoute.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "ca02484b1f576ee14e8bbd375cbf9d0de5d06acc545a7a43c8cf7c4c42f18d49",
+    "size_bytes": 15515,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "2229674e586563e39187675fd8f95863656bb440ab276608346c65fbe4e95ea0",
+    "size_bytes": 97250,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/routes/SyncRoute.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "7442373d22460b81fbb98a1ae544fe42322bdd39fb6839bc2b8e0c0cb2ef385d",
+    "size_bytes": 4526,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/routes/TrayRoute.vue",
+    "role": "baseline-source-digest-only",
+    "sha256": "77b1073de89307417213255eeb09d9ed2d80e4096dc060f73ca9ab76ebce2846",
+    "size_bytes": 7604,
+    "media_type": "text/plain"
+  },
+  {
+    "path": "apps/desktop/ui/src/startup.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "afc2d184c820afe2815aa6c4f9eba45b97e1ad679abcf531bc93a7d7e33c21f3",
+    "size_bytes": 5389,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/stores/app.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "4f4a1b8f3157c70d0d4feaf12d828d29ebe08630195c638e15ce9970af9c3f49",
+    "size_bytes": 32047,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/stores/routes.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "983fc0b9a13ae815f468b7f0f06bbd1ea15c40be17a83627e821dd33cc0aee6b",
+    "size_bytes": 3888,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/styles/base.css",
+    "role": "baseline-source-digest-only",
+    "sha256": "ea2ec8a4169781cac38e7b50ee992adb6589420b54b469bc5bf95bf77c99d062",
+    "size_bytes": 112251,
+    "media_type": "text/css"
+  },
+  {
+    "path": "apps/desktop/ui/src/styles/effects.css",
+    "role": "baseline-source-digest-only",
+    "sha256": "c8d90e10c96119a474b2304a4f52643f3bb0188d735c8c99d13ca05bed624134",
+    "size_bytes": 3497,
+    "media_type": "text/css"
+  },
+  {
+    "path": "apps/desktop/ui/src/styles/materials.css",
+    "role": "baseline-source-digest-only",
+    "sha256": "8f4f95d2a0b0def00b767fa0a3996402c33225346524b769dce6bb5df41f6516",
+    "size_bytes": 7209,
+    "media_type": "text/css"
+  },
+  {
+    "path": "apps/desktop/ui/src/styles/tokens.css",
+    "role": "baseline-source-digest-only",
+    "sha256": "68eb612b6dcf34b06b55c95571e969b892353005c1e0787b5288bdd3c5f849db",
+    "size_bytes": 6769,
+    "media_type": "text/css"
+  },
+  {
+    "path": "apps/desktop/ui/src/types/ui.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "0ef7d313b5a2023ce54a4990821458fcb7345a4647e2f2e7ff2e26641c72eb21",
+    "size_bytes": 2258,
+    "media_type": "video/mp2t"
+  },
+  {
+    "path": "apps/desktop/ui/src/vite-env.d.ts",
+    "role": "baseline-source-digest-only",
+    "sha256": "f67fd0ef7641e43eb0fc3245c1b583d66c8477bd2fe81e102333f4dac2378156",
+    "size_bytes": 228,
+    "media_type": "video/mp2t"
+  }
+]
