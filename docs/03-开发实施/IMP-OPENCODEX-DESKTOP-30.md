@@ -156,3 +156,6 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05最终源Mac前端远端检查已有实际通过证据：run41879603626 / job126748378977，检出PR合并提交8d764df0b7034aa61e719d1121533f6d354b9db1（父7a8441f7e、f9def3300），已fetch验证apps树与最终head完全一致。61协议、197文件/1289 Vitest、typecheck/build与Complete job步骤均success，日志于17:44:23Z结束；job列表仍延迟显示in_progress，因此只确认这些已执行检查，不据此写整轮CI绿。证据ci-final-f9def3300/frontend-review.json及原始解码日志。最终Mac后端剩余workspace和Windows后端回归仍执行，Windows实机原始报告未到，整版仍待验。旧缺容取消保留，未更换运行器或降范围。
+
+
+2026-11-05最终源Mac后端CI也已completed/success（run41879603626/job126748379204），检出同一PR合并8d764df、apps树与f9def3300一致。格式/Clippy、单独有界元数据进程守卫及剩余workspace回归通过；库1215通过/0失败/4原条件忽略/1已单跑排除。原始日志与backend-review.json已保存。Mac前端任务也已completed/success，最终Mac远端检查齐备；不据此关闭Windows原生/性能/正式默认adapter和发行门。

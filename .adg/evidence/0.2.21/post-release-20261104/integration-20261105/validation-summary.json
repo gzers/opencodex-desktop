@@ -80,10 +80,12 @@
     "head": "f9def3300640f0871a93b6bbcec55de646e00567",
     "appsTreeMatches": true,
     "frontendSteps": "all success including Complete job; protocol61/Vitest1289/typecheck/build",
-    "frontendJobStatus": "API job list still in_progress; complete log confirms executed checks",
-    "backend": "remaining workspace regression in_progress",
+    "frontendJobStatus": "completed success",
+    "backend": "completed success: library1215/0 failed/4 original ignores; separate bounded metadata guard and remaining workspace passed",
     "evidence": "ci-final-f9def3300/frontend-review.json",
-    "oldCapacityFailure": "ci-capacity/review.json retained"
+    "oldCapacityFailure": "ci-capacity/review.json retained",
+    "frontend": "completed success",
+    "backendEvidence": "ci-final-f9def3300/backend-review.json"
   },
   "windowsFinalContribution": {
     "code": "faf8dd9268bcee1f121129de5c7399dcee0fcd5f",
