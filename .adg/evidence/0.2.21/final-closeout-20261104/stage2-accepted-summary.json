@@ -1,0 +1,584 @@
+{
+  "recordedAt": "2026-11-04T10:59:58.375992+00:00",
+  "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "testedProductCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "releaseId": 433749817,
+  "version": "0.2.21",
+  "stage": "stage2 acceptance input only; no closure",
+  "baseStage1": {
+    "path": ".adg/evidence/0.2.21/final-closeout-20261104/final-gates.progress.json",
+    "sha256": "cf119e5f874fe0e532d480101cf363a41d93f46a65ae85b5e190d1cd1b0c328f"
+  },
+  "acceptedNewGateFacts": {
+    "ota-msi-020-to-021": {
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testedCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "902a8af77627518358e6b031a79bbcd25b60fae1",
+      "releaseId": 433749817,
+      "executableSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExecutableSha256": "fe12dfe66a707ffebb35d1b9ded67cd45ea57c226293cdab0c88a6991329cd54",
+      "facts": {
+        "fromVersion": "0.2.20",
+        "toVersion": "0.2.21",
+        "actualDownloaded": true,
+        "signatureVerified": true,
+        "explicitInstall": true,
+        "automaticNewProcessObserved": true,
+        "installedIdentityVerified": true,
+        "configReadback": true,
+        "pendingCleared": true,
+        "sameFrozenBytes": true
+      },
+      "boundArtifacts": {
+        "OpenCodeX.Desktop_0.2.21_x64_en-US.msi": "6ebe4256a3566949820ad1252bb1778be03b467b62e9af3059c1bedb80bef098"
+      },
+      "originals": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/ota-result.json",
+          "sha256": "e7e171dea60b8c8dca534197b916a901969e170a9b943aade40ea2748ec6fac8"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/ota-verified.json",
+          "sha256": "c9618767ddfe4fad181d793eb076471682f0f4de45fd24fc8c76f2f25c497ea5"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/prepare-restart.json",
+          "sha256": "146e67f401474f39cd557f74482aa608090f05d833350d965f17aa638e0988bd"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/prepare-exit.json",
+          "sha256": "3a502dde68d898de6722ae333aae1ef7079a07dc569c385caff815da173914a8"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/ota-data-before.json",
+          "sha256": "e8c6fa80d54bfda604657798d6b51b6e03f0767ef0f0f905528c971532981614"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/actual-sandbox/logs/app.log",
+          "sha256": "bd61301dd4f43820a60a4c1f70279abc072a002d1b5b7aac44f70770cb9aab65"
+        }
+      ],
+      "boundaries": [
+        "Disposable Windows runner, explicit temporary Unicode install directory, immutable startup sandbox and synthetic saved-file credentials.",
+        "Automatic restart is proved by OS-observed new process. Tauri and file readback uses the exact updated EXE relaunched with explicit sandbox/CDP environment.",
+        "Production updater signature verification and complete downloaded byte counts are captured; downloaded installer archive SHA/URL are not separately retained by this harness.",
+        "This OTA driver does not invoke observe021Ipc or the 021 WebDAV behavior probes; their read-only allowlist fix does not invalidate these OTA results.",
+        "No claim that the separate 9e installer matrix passed; its MSI custom observer failure is retained."
+      ]
+    },
+    "ota-nsis-020-to-021": {
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testedCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "902a8af77627518358e6b031a79bbcd25b60fae1",
+      "releaseId": 433749817,
+      "executableSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExecutableSha256": "b97a0cfc23910a59a37a7a31dd14452da6d64276fa26bc1aa4236a1305ae9892",
+      "facts": {
+        "fromVersion": "0.2.20",
+        "toVersion": "0.2.21",
+        "actualDownloaded": true,
+        "signatureVerified": true,
+        "explicitInstall": true,
+        "automaticNewProcessObserved": true,
+        "installedIdentityVerified": true,
+        "configReadback": true,
+        "pendingCleared": true,
+        "sameFrozenBytes": true
+      },
+      "boundArtifacts": {
+        "OpenCodeX.Desktop_0.2.21_x64-setup.exe": "df919ef5d500b05b721df1cc52f26f5b0060aaa9922b2371a2cb6e2f93624ccc"
+      },
+      "originals": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/ota-result.json",
+          "sha256": "4ade909ee889f90a62dc72e322b3d2309a7e7be0105fa5ebb33961737931ccf2"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/ota-verified.json",
+          "sha256": "c9618767ddfe4fad181d793eb076471682f0f4de45fd24fc8c76f2f25c497ea5"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/prepare-restart.json",
+          "sha256": "7ba05531a0cdf92a652b89fa3a25fcf8d8786949186237210ae83f3dbe85d1eb"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/prepare-exit.json",
+          "sha256": "f71f9dbebbe709628062053ce9f6f861e4dc9dc2ec35712abf34e3e535ac4ed2"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/ota-data-before.json",
+          "sha256": "43a025b4a2fff38f9aadbd23c76062c1d103238adcd6cd1b461ab3b669270a13"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/actual-sandbox/logs/app.log",
+          "sha256": "f57a309749c750eca9412e462bcbbea736f8bd5fb20ce5f835bf8d3755029ef9"
+        }
+      ],
+      "boundaries": [
+        "Disposable Windows runner, explicit temporary Unicode install directory, immutable startup sandbox and synthetic saved-file credentials.",
+        "Automatic restart is proved by OS-observed new process. Tauri and file readback uses the exact updated EXE relaunched with explicit sandbox/CDP environment.",
+        "Production updater signature verification and complete downloaded byte counts are captured; downloaded installer archive SHA/URL are not separately retained by this harness.",
+        "This OTA driver does not invoke observe021Ipc or the 021 WebDAV behavior probes; their read-only allowlist fix does not invalidate these OTA results.",
+        "No claim that the separate 9e installer matrix passed; its MSI custom observer failure is retained."
+      ]
+    },
+    "native-macos": {
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testedCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "902a8af77627518358e6b031a79bbcd25b60fae1",
+      "releaseId": 433749817,
+      "executableSha256": "275dface26a0d1ab483a67303eb30df3253f1f050163548c51289f1812b8457e",
+      "facts": {
+        "platform": "darwin-aarch64",
+        "originalReleaseBundle": true,
+        "allRequiredChecksPassed": true,
+        "savedFileReadback": true,
+        "cancelAndFailureSideEffects": true
+      },
+      "boundArtifacts": {
+        "OpenCodeX.Desktop_aarch64.app.tar.gz": "681e23f37f2c2cf52eb1d5dc409d988557fa0917afc42dd8c8a49eed302fd3c1"
+      },
+      "originals": [
+        {
+          "path": ".adg/evidence/0.2.21/macos-native-final-6e/final-combined-summary.json",
+          "sha256": "46145a463475defff41501c8693e3f8c56f62b7f8dd5e29527dd28a591e79ed7"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/macos-native-final-6e/FINAL-COMBINED.md",
+          "sha256": "0bb4b678a95949225ea8db2b92929465585f6981e3fb12e2b9c4092740a31a64"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/macos-native-final-6e/ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json",
+          "sha256": "6158e151b92ec3ed43667e239feb6c2aa21c80967f862f9955863140f9dbe43d"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/macos-native-final-6e/notice-final/ocx021-mac-native-335766ec-379e-4a21-a2e0-924cfece5d14/report.json",
+          "sha256": "52acfd447958617738bdef49bd0627e4e3041131f2e44c6c448cb387de8fde2f"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/macos-native-final-6e/notice-final/ocx021-mac-native-335766ec-379e-4a21-a2e0-924cfece5d14/notice-trace-True.json",
+          "sha256": "cbee8d5ce0a1303c421385f78503cfc5c97928ff6d5d1cd0bee453d4d254ce96"
+        }
+      ],
+      "boundaries": [
+        "Combined unchanged original-EXE passes, not a single all-green all run.",
+        "Strict active interval8.310690124999999..8.597482168 entirely fits unchanged6.7..9.3; X/Escape/cancel all match request, no retry/X recovery/manual blur/restart.",
+        "Instant-key A1/A2=1/2 vs held50ms B1/B2=2/2 preserved; only automation changed, no product intermittent-bug-fix claim."
+      ]
+    }
+  },
+  "macNative": {
+    "result": "pass-combined",
+    "activeIntervalSeconds": [
+      8.310690124999999,
+      8.597482168
+    ],
+    "singleAllRunClaimed": false,
+    "facts": {
+      "platform": "darwin-aarch64",
+      "originalReleaseBundle": true,
+      "allRequiredChecksPassed": true,
+      "savedFileReadback": true,
+      "cancelAndFailureSideEffects": true
+    },
+    "originals": [
+      {
+        "path": ".adg/evidence/0.2.21/macos-native-final-6e/final-combined-summary.json",
+        "sha256": "46145a463475defff41501c8693e3f8c56f62b7f8dd5e29527dd28a591e79ed7"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/macos-native-final-6e/FINAL-COMBINED.md",
+        "sha256": "0bb4b678a95949225ea8db2b92929465585f6981e3fb12e2b9c4092740a31a64"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/macos-native-final-6e/ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json",
+        "sha256": "6158e151b92ec3ed43667e239feb6c2aa21c80967f862f9955863140f9dbe43d"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/macos-native-final-6e/notice-final/ocx021-mac-native-335766ec-379e-4a21-a2e0-924cfece5d14/report.json",
+        "sha256": "52acfd447958617738bdef49bd0627e4e3041131f2e44c6c448cb387de8fde2f"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/macos-native-final-6e/notice-final/ocx021-mac-native-335766ec-379e-4a21-a2e0-924cfece5d14/notice-trace-True.json",
+        "sha256": "cbee8d5ce0a1303c421385f78503cfc5c97928ff6d5d1cd0bee453d4d254ce96"
+      }
+    ]
+  },
+  "windowsActualOta": [
+    {
+      "kind": "msi",
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "902a8af77627518358e6b031a79bbcd25b60fae1",
+      "releaseId": 433749817,
+      "originalExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "fe12dfe66a707ffebb35d1b9ded67cd45ea57c226293cdab0c88a6991329cd54",
+      "facts": {
+        "fromVersion": "0.2.20",
+        "toVersion": "0.2.21",
+        "actualDownloaded": true,
+        "signatureVerified": true,
+        "explicitInstall": true,
+        "automaticNewProcessObserved": true,
+        "installedIdentityVerified": true,
+        "configReadback": true,
+        "pendingCleared": true,
+        "sameFrozenBytes": true
+      },
+      "originals": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/ota-result.json",
+          "sha256": "e7e171dea60b8c8dca534197b916a901969e170a9b943aade40ea2748ec6fac8"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/ota-verified.json",
+          "sha256": "c9618767ddfe4fad181d793eb076471682f0f4de45fd24fc8c76f2f25c497ea5"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/prepare-restart.json",
+          "sha256": "146e67f401474f39cd557f74482aa608090f05d833350d965f17aa638e0988bd"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/prepare-exit.json",
+          "sha256": "3a502dde68d898de6722ae333aae1ef7079a07dc569c385caff815da173914a8"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/ota-data-before.json",
+          "sha256": "e8c6fa80d54bfda604657798d6b51b6e03f0767ef0f0f905528c971532981614"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/msi/actual-sandbox/logs/app.log",
+          "sha256": "bd61301dd4f43820a60a4c1f70279abc072a002d1b5b7aac44f70770cb9aab65"
+        }
+      ],
+      "boundary": "OS observed automatic new process; then the exact installed EXE is reopened with explicit isolated environment for Tauri/file readback. Not a claim that the automatic process retained test variables. Download archive SHA/URL were not separately retained; same-original evidence is production signature+complete byte counts+full installed EXE identity."
+    },
+    {
+      "kind": "nsis",
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "902a8af77627518358e6b031a79bbcd25b60fae1",
+      "releaseId": 433749817,
+      "originalExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "b97a0cfc23910a59a37a7a31dd14452da6d64276fa26bc1aa4236a1305ae9892",
+      "facts": {
+        "fromVersion": "0.2.20",
+        "toVersion": "0.2.21",
+        "actualDownloaded": true,
+        "signatureVerified": true,
+        "explicitInstall": true,
+        "automaticNewProcessObserved": true,
+        "installedIdentityVerified": true,
+        "configReadback": true,
+        "pendingCleared": true,
+        "sameFrozenBytes": true
+      },
+      "originals": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/ota-result.json",
+          "sha256": "4ade909ee889f90a62dc72e322b3d2309a7e7be0105fa5ebb33961737931ccf2"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/ota-verified.json",
+          "sha256": "c9618767ddfe4fad181d793eb076471682f0f4de45fd24fc8c76f2f25c497ea5"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/prepare-restart.json",
+          "sha256": "7ba05531a0cdf92a652b89fa3a25fcf8d8786949186237210ae83f3dbe85d1eb"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/prepare-exit.json",
+          "sha256": "f71f9dbebbe709628062053ce9f6f861e4dc9dc2ec35712abf34e3e535ac4ed2"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/ota-data-before.json",
+          "sha256": "43a025b4a2fff38f9aadbd23c76062c1d103238adcd6cd1b461ab3b669270a13"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-ota-41816399916/nsis/actual-sandbox/logs/app.log",
+          "sha256": "f57a309749c750eca9412e462bcbbea736f8bd5fb20ce5f835bf8d3755029ef9"
+        }
+      ],
+      "boundary": "OS observed automatic new process; then the exact installed EXE is reopened with explicit isolated environment for Tauri/file readback. Not a claim that the automatic process retained test variables. Download archive SHA/URL were not separately retained; same-original evidence is production signature+complete byte counts+full installed EXE identity."
+    }
+  ],
+  "windowsInstallerCells": [
+    {
+      "kind": "msi",
+      "mode": "custom",
+      "result": "pass-scoped-install-and-startup",
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "run": 41813563900,
+      "originalExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "fe12dfe66a707ffebb35d1b9ded67cd45ea57c226293cdab0c88a6991329cd54",
+      "assetSha256": "6ebe4256a3566949820ad1252bb1778be03b467b62e9af3059c1bedb80bef098",
+      "startupMode": "ordinary",
+      "applicationElevated": false,
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-custom/verification/installer-verification.json",
+          "sha256": "edeed1526ae0637f848e4282dd357b32f16930d9d877325069d4409ef7b5ab9f"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-custom/existing-assets-verification.json",
+          "sha256": "8144210e7287005a34b32fa7a7e5e97bf465bef9f4d9aebc2749e9088a064d8e"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-custom/verification/msi-startup/startup/startup.json",
+          "sha256": "a7657217a970918fe5066733e933882a78ada50d5bde0c66f22fe276197a0f87"
+        }
+      ],
+      "boundaries": [],
+      "facts": {
+        "installer": "msi",
+        "pathType": "custom",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": true,
+        "dataPreserved": true,
+        "sameFrozenBytes": true
+      },
+      "strictGateFactsComplete": true
+    },
+    {
+      "kind": "nsis",
+      "mode": "custom",
+      "result": "pass-scoped-install-and-startup",
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "run": 41813563900,
+      "originalExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "b97a0cfc23910a59a37a7a31dd14452da6d64276fa26bc1aa4236a1305ae9892",
+      "assetSha256": "df919ef5d500b05b721df1cc52f26f5b0060aaa9922b2371a2cb6e2f93624ccc",
+      "startupMode": "ordinary",
+      "applicationElevated": false,
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/nsis-custom/verification/installer-verification.json",
+          "sha256": "256ebfe8c578d3d2bdd6d1ea6f04a9475365fb5da8abd9d6eefb837a97d47596"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/nsis-custom/existing-assets-verification.json",
+          "sha256": "4e6caf5538fd17323d8ab472e1c437436bb94552fec262ebd1c128294c20e5b5"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/nsis-custom/verification/nsis-startup/startup/startup.json",
+          "sha256": "9ef2e04eb4874ece6cf2dbe2b84591ca03815930d2ca9217650cb2c0a6ea6dae"
+        }
+      ],
+      "boundaries": [],
+      "facts": {
+        "installer": "nsis",
+        "pathType": "custom",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": true,
+        "dataPreserved": true,
+        "sameFrozenBytes": true
+      },
+      "strictGateFactsComplete": true
+    },
+    {
+      "kind": "nsis",
+      "mode": "default",
+      "result": "pass-scoped-install-and-startup",
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "run": 41813563900,
+      "originalExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "b97a0cfc23910a59a37a7a31dd14452da6d64276fa26bc1aa4236a1305ae9892",
+      "assetSha256": "df919ef5d500b05b721df1cc52f26f5b0060aaa9922b2371a2cb6e2f93624ccc",
+      "startupMode": "any",
+      "applicationElevated": true,
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/attempt-2.nsis-default/verification/installer-verification.json",
+          "sha256": "c72a6ce666a50880f08048d6b7bf61cce8a0d3dddef28a83a5703549c298f285"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/attempt-2.nsis-default/existing-assets-verification.json",
+          "sha256": "d315d305b538346f593b2fe9bf102cdcba8ca5181202e57144935d3fb19b2c3c"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/attempt-2.nsis-default/verification/nsis-default-startup/startup.json",
+          "sha256": "1fb886c25f748a5d635d234fbb79d5e5925bfe39ec1632d955f5e916a987a549"
+        }
+      ],
+      "boundaries": [
+        "Default receipt proves actual default install/first screen and runs uninstaller in finally, but does not separately assert executable removal/data retention; those strict gate fields stay null, not inferred from custom cells.",
+        "mode=any with elevated application token; no ordinary-user startup claim from this cell."
+      ],
+      "facts": {
+        "installer": "nsis",
+        "pathType": "default",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": null,
+        "dataPreserved": null,
+        "sameFrozenBytes": true
+      },
+      "strictGateFactsComplete": false
+    },
+    {
+      "kind": "msi",
+      "mode": "default",
+      "result": "pass-scoped-install-and-startup",
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "9e1e37adcca27954f45ebfbad5338183a5990af2",
+      "run": 41815867359,
+      "originalExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "fe12dfe66a707ffebb35d1b9ded67cd45ea57c226293cdab0c88a6991329cd54",
+      "assetSha256": "6ebe4256a3566949820ad1252bb1778be03b467b62e9af3059c1bedb80bef098",
+      "startupMode": "ordinary",
+      "applicationElevated": false,
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41815867359/msi-default/verification/installer-verification.json",
+          "sha256": "c82c54e1a43b9fb0f9025d37da33ea27896af2ccab11a041bbabd53d42316dab"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41815867359/msi-default/existing-assets-verification.json",
+          "sha256": "ace57b0911c0f6dca74194549e0d8abf2eab1b71bbf01dd6f7de076d9e39947c"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41815867359/msi-default/verification/msi-default-startup/startup/startup.json",
+          "sha256": "afcb383f9ee46a0b62c0d09f1d2b12f7403837cd7b5a3ecb8404781ce0c01a9e"
+        }
+      ],
+      "boundaries": [
+        "Default receipt proves actual default install/first screen and runs uninstaller in finally, but does not separately assert executable removal/data retention; those strict gate fields stay null, not inferred from custom cells."
+      ],
+      "facts": {
+        "installer": "msi",
+        "pathType": "default",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": null,
+        "dataPreserved": null,
+        "sameFrozenBytes": true
+      },
+      "strictGateFactsComplete": false
+    }
+  ],
+  "beta": {
+    "result": "public-beta-anonymous-manifest-verified",
+    "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+    "releaseId": 433749817,
+    "draft": false,
+    "prerelease": true,
+    "latest": false,
+    "stablePromotionExecuted": false,
+    "metadataScope": "Beta publication and anonymous beta manifest are directly evidenced; prerelease/latest flags follow explicit parent status, no public stable/Latest claim.",
+    "originals": [
+      {
+        "path": ".adg/evidence/0.2.21/release-20261104/parent-beta-publication-receipt.json",
+        "sha256": "7f0dbaf0bbdb3cb090a9ede1a4edc704a204f543bd9ef0f8b8831424a9008555"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/release-20261104/beta-anonymous-manifest.json",
+        "sha256": "df7c326f50584eaaf82c4216cd5003ca1e96fd89db581a5bd038799105657fee"
+      }
+    ]
+  },
+  "driverProductIdentity": {
+    "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+    "productInputListingSha256": "4b33faefea87076c15ebc54a2302fbd901a99362df117f0ea4c06005c6b7bbf6",
+    "productFiles": 433,
+    "sameProductInputsAtTestSources": [
+      "902a8af77627518358e6b031a79bbcd25b60fae1",
+      "20d13334ab9127e013ba6adca8c19023472d015f",
+      "97792cebacc6017b50776d97b69765b503d798c3"
+    ],
+    "scope": [
+      "apps/desktop/tauri/src",
+      "apps/desktop/tauri/Cargo.toml",
+      "apps/desktop/tauri/Cargo.lock",
+      "apps/desktop/tauri/build.rs",
+      "apps/desktop/tauri/tauri.conf.json",
+      "apps/desktop/tauri/config",
+      "apps/desktop/ui/src",
+      "apps/desktop/ui/index.html",
+      "apps/desktop/ui/vite.config.ts",
+      "apps/desktop/ui/tsconfig.json",
+      "apps/desktop/ui/package.json",
+      "apps/desktop/ui/package-lock.json"
+    ]
+  },
+  "pendingWindowsDriverMatrix": {
+    "run": 41817246537,
+    "driverCommit": "20d13334ab9127e013ba6adca8c19023472d015f",
+    "status": "pending-parent-final-results",
+    "observerFix": {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41815867359/observer-readonly-fix.node-result.json",
+      "sha256": "b691397aed26eeb826927c9aa9bce4271a179d261c0bdd02e717ca5e127d7ab5"
+    },
+    "retainedFailure": {
+      "run": 41815867359,
+      "job": 126526336661,
+      "kind": "msi",
+      "mode": "custom",
+      "runConclusion": "failure",
+      "jobConclusion": "failure",
+      "failedStep": "Verify exact existing signed release installers without rebuilding",
+      "failedAtUtc": "2026-11-04T10:44:26Z",
+      "error": "Unexpected native command in bounded 021 probe: model_agent_preferences",
+      "location": "test/smoke/windows-021-observer.mjs:24",
+      "phase": "verifyWebdav observer.finish",
+      "classification": "test observer omitted an exact bounded local read used by AgentExecutionField mount; no evidenced software failure",
+      "inputGuardPassedBeforeFailure": true,
+      "originalLog": "original-installers-41815867359/msi-custom.original.log",
+      "originalLogSha256": "5d1b641f7d1a72ecade5e5e6fd4b9f9dd32117ef9fbe0f96d27bc0ae2fffb875",
+      "productionRead": "commands/model_config.rs:model_agent_preferences -> modules/model_config/agent.rs:settings; sandbox-local bounded preferences read",
+      "driverFixFiles": [
+        "test/smoke/windows-021-observer.mjs",
+        "test/smoke/windows-021-probes.test.mjs"
+      ],
+      "fixValidation": "17/17 targeted Node tests, syntax and diff checks passed; preferences save remains rejected",
+      "correctedNativeCase": "requires parent-dispatched same-package revalidation; no failed result rewritten"
+    },
+    "claimedOverallMatrixPass": false
+  },
+  "pendingCi": {
+    "run": 41813816469,
+    "testSourceCommit": "97792cebacc6017b50776d97b69765b503d798c3",
+    "status": "pending-final-Windows-nativechecks",
+    "progressSource": "parent report; no final green job snapshot supplied",
+    "claimedWholeCiPass": false
+  },
+  "pendingMacActualOta": {
+    "status": "running-not-accepted",
+    "claimedPass": false
+  },
+  "wholeVersionComplete": false,
+  "retainedHistoricalOriginals": [
+    {
+      "path": ".adg/evidence/0.2.21/macos-native-final-6e/ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json",
+      "sha256": "6158e151b92ec3ed43667e239feb6c2aa21c80967f862f9955863140f9dbe43d",
+      "scope": "legacy cancellation active estimate5.921; late origin/operation-subtraction bias; original unchanged"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/macos-native-final-6e/timer-diagnostic/ocx021-mac-native-f9d5f118-242d-4efc-8468-4e9ffc84cf35/report.json",
+      "sha256": "406e0ab2135099e3902c287b92c1d5f7811d8e2166d877b3bee1c100466b24f8",
+      "scope": "full tree AX interval4.677..11.575 crosses threshold; blocked unchanged"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/macos-native-final-6e/timer-diagnostic/ocx021-mac-native-09cbdb31-9db5-4975-95c4-67f225044220/report.json",
+      "sha256": "00024dc844757f05a11b6a550e71b2969092db2c35b059315b215a0662e5c3b5",
+      "scope": "strict timer passed but old instantaneous Esc failed; X recovery separately preserved"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/macos-native-final-6e/esc-input-ab/ocx021-mac-native-e11d1e45-fab2-4910-a384-daccaba0673b/report.json",
+      "sha256": "86fdad688e988c3d37b04def34bfe24d2f2061df579527d440895fe954c4512d",
+      "scope": "bounded A/B original input1/2, held50ms2/2; originalA2 failure and separateX recovery retained"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/macos-native-final-6e/esc-input-ab/latest-summary.json",
+      "sha256": "3d6ba43a9345378a56dfa753a63f663550a786c660d8cf7473cf5d6d90f96607",
+      "scope": "Original instantaneous input1/2 vs physical hold50ms2/2; original A2 failure is not passed."
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41815867359/msi-custom.original.log",
+      "sha256": "5d1b641f7d1a72ecade5e5e6fd4b9f9dd32117ef9fbe0f96d27bc0ae2fffb875",
+      "scope": "9e MSI custom false positive in read-only observer; parent20d corrected driver matrix still pending."
+    }
+  ]
+}

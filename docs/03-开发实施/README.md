@@ -9,7 +9,7 @@
 
 ## 实施计划入口
 
-- [0.2.21七项修复与开发前置](IMP-OPENCODEX-DESKTOP-29.md)：planned；渠道直接改名已确认，先补原型/保存时间与改名隔离验证，软件尚未开发；[当前审计与问题状态](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md)。旧0.2.20范围及发布保留在[DMD-UI-020](../01-需求管理/需求/DMD-OPENCODEX-UI-020.md)、[IMP-28](IMP-OPENCODEX-DESKTOP-28.md)与[REL-23](REL-OPENCODEX-DESKTOP-23.md)。
+- [0.2.21七项修复与正式交付](IMP-OPENCODEX-DESKTOP-29.md)：completed；完整CI、双平台原包原生、Windows四安装格及Mac/MSI/NSIS三条实际0.2.20→0.2.21升级通过，已公开stable/Latest；[最终清单](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md)、[REL-24](REL-OPENCODEX-DESKTOP-24.md)。三个TASK的实际RCP/CERT已关闭，原始失败及范围边界保留。旧0.2.20范围及发布保留在[DMD-UI-020](../01-需求管理/需求/DMD-OPENCODEX-UI-020.md)、[IMP-28](IMP-OPENCODEX-DESKTOP-28.md)与[REL-23](REL-OPENCODEX-DESKTOP-23.md)。
 
 - [0.2.17 Windows安装可靠性](IMP-OPENCODEX-DESKTOP-26.md)：已发布stable，WP89～95支持范围完成；真实普通用户/官方包安装、四正式安装器、实际OTA与匿名签名通过，环境边界见[REL20](REL-OPENCODEX-DESKTOP-20.md)。
 

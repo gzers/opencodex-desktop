@@ -1,0 +1,71 @@
+{
+  "recordedAt": "2026-11-04T11:03:00.272646+00:00",
+  "result": "stage2-inputs-verified-only",
+  "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "releaseId": 433749817,
+  "passedGates": [
+    "artifacts-signatures",
+    "native-macos",
+    "provider-chain",
+    "windows-msi-custom",
+    "windows-nsis-custom",
+    "ota-msi-020-to-021",
+    "ota-nsis-020-to-021"
+  ],
+  "pendingGates": [
+    "public-stable",
+    "native-windows",
+    "final-ci",
+    "windows-msi-default",
+    "windows-nsis-default",
+    "ota-macos-020-to-021"
+  ],
+  "coverage": {
+    "acceptance": {
+      "total": 8,
+      "passed": 2,
+      "pending": 6
+    },
+    "checks": {
+      "total": 17,
+      "passed": 11,
+      "pending": 6
+    }
+  },
+  "newTestsAdded": 0,
+  "schemasAdded": 0,
+  "stage1InputsUnchanged": true,
+  "runtimeBefore": {
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-MODALS-20261104.json": "01c456009bdb8d0d156bfee96bc4bbf298e19630b0446eb7a2e3136688237937",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-SYNC-20261104.json": "438b7aa3e6832b80d4bc0c321bfde48bf5cffb16150ec4a65f992cac50f2a792",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-INTEGRATION-20261104.json": "fe91f6ee102fdd0bae78c726e1fec663b3ea55e4062dd1e92db26f017d48e7f9",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-UI-021.json": "0abab8fbab8d1e190ca3a887e14b956ab1bc8cb968396386193a33e478d25e9f",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-29.json": "c80925ddbba966b2c43d4788c3b62f2cfc91273003ddf35909309877d55afd0c"
+  },
+  "runtimeAfter": {
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-MODALS-20261104.json": "01c456009bdb8d0d156bfee96bc4bbf298e19630b0446eb7a2e3136688237937",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-SYNC-20261104.json": "438b7aa3e6832b80d4bc0c321bfde48bf5cffb16150ec4a65f992cac50f2a792",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-INTEGRATION-20261104.json": "fe91f6ee102fdd0bae78c726e1fec663b3ea55e4062dd1e92db26f017d48e7f9",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-UI-021.json": "0abab8fbab8d1e190ca3a887e14b956ab1bc8cb968396386193a33e478d25e9f",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-29.json": "c80925ddbba966b2c43d4788c3b62f2cfc91273003ddf35909309877d55afd0c"
+  },
+  "verifiedOriginalFiles": 84,
+  "verifiedExactAssertions": 174,
+  "archive": {
+    "path": ".adg/evidence/0.2.21/final-closeout-20261104/acceptance-input-originals.stage2.tar.gz",
+    "sha256": "1ffa76dce399abc1b7e2a22a5566f61388b148d05da87016302958467f1d5003",
+    "files": 84,
+    "scope": "Exact stage2 original/summary proof bytes with docs-root-relative member names; prior stage1 archive unchanged; no product binary or daily data."
+  },
+  "planOnlyExitCode": 2,
+  "closureExecuted": false,
+  "sourceFactsEdited": false,
+  "humanFactsMustBeWrittenByParentBeforeFinalPrepare": true,
+  "outputs": {
+    "final-gates.stage2.json": "6b049941806efe8b37bf34e48da78de32972e1388b41ac3b3644c699d78358ba",
+    "evidence-map.stage2.json": "10814113d8f8928e8f3aa563967e4586b86ed3362e1499fc851c24668adae030",
+    "stage2-accepted-summary.json": "891de03cd3607f0564789f6d95e312ca6f92bd8d8a61841edcb13b2f0c5fcea0",
+    "missingpointersstage2.txt": "b11b6855aba1fad9b01736d39352640f663b6147a38d1914163a7de603b61a02",
+    "stage2-plan-only.json": "faa57526efa386e524f6f2f3df111bef5c55b07aae3b8eb232e74a48c72f3f33"
+  }
+}

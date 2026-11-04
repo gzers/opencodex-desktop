@@ -1,0 +1,26 @@
+{
+  "decision": "Align prepared closure inputs with adopted REL24 and existing installer matrix; no frozen TASK/AC or test assertion changed.",
+  "authority": "REL-OPENCODEX-DESKTOP-24: Windows additionally verifies default/custom four installation cells; existing windows-installer.ps1 defines separate default startup and custom uninstall/data-policy scopes.",
+  "defaultCells": [
+    "installed without path override",
+    "native startup/readback",
+    "exact original installed identity",
+    "license/resources",
+    "successful uninstall command in cleanup"
+  ],
+  "customCells": [
+    "installed exact original",
+    "native startup/readback",
+    "explicit cleanup helper",
+    "uninstall removes executable",
+    "default uninstall retains later data"
+  ],
+  "notClaimedForDefaultCells": [
+    "explicit executable-removal assertion",
+    "per-cell data-retention sentinel"
+  ],
+  "allFourCellsActualFinalRun": 41817246537,
+  "sourcePacket": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "noProductOrTestAssertionChange": true,
+  "priorDraftToolPreserved": "formal-closeout.before-install-scope.py"
+}

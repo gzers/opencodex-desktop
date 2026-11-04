@@ -1,0 +1,354 @@
+{
+  "schemaVersion": 1,
+  "result": "pass",
+  "scope": "combined final original macOS native acceptance",
+  "singleAllRunClaimed": false,
+  "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "app": "/private/tmp/ocx021-final-6e2197fd/unpacked/OpenCodeX Desktop.app",
+  "binarySha256": "275dface26a0d1ab483a67303eb30df3253f1f050163548c51289f1812b8457e",
+  "originalSignature": "deep strict passed; original app not modified",
+  "allOtherChecksFrom": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json",
+  "finalNoticeFrom": "notice-final/ocx021-mac-native-335766ec-379e-4a21-a2e0-924cfece5d14/report.json",
+  "sameOriginalExeAcrossRuns": true,
+  "coverage": [
+    {
+      "name": "native-permissions",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "kernel-network-denial",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "ready-real-tool-versions",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "process-sandbox-admission",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "native-window",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "expected-build-commit",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "startup-root-binding",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "native-discover-environment-ready",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "node-detection-centered-unmeasured",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "public-edit-cancel",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "public-view-no-footer-x",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "save-notice-eight-seconds",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "channel-rename-file-readback-native021-new",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "channel-rename-file-readback-native021-confirm",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "webdav-configured-untested",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "webdav-empty-candidates",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "webdav-overview-card",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "owned-process-group-cleanup",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "owned-tool-descendants-cleanup",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "ready-original-tools-unchanged",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "startup-root-source-unchanged",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "candidate-identity-unchanged",
+      "status": "pass",
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json"
+    },
+    {
+      "name": "save-notice-confirm-cancel-remainder",
+      "status": "pass",
+      "report": "notice-final/ocx021-mac-native-335766ec-379e-4a21-a2e0-924cfece5d14/report.json"
+    }
+  ],
+  "naturalCountdownSeconds": 8.266447790999997,
+  "finalNotice": {
+    "name": "save-notice-confirm-cancel-remainder",
+    "status": "pass",
+    "elapsedSeconds": 14.896665687999999,
+    "estimatedActiveSeconds": 8.4540861465,
+    "confirmationPauses": [
+      {
+        "exit": "x",
+        "appearanceInterval": [
+          2.1744858330000003,
+          2.210320125000001
+        ],
+        "disappearanceInterval": [
+          4.323817791,
+          4.350569500000001
+        ],
+        "durationInterval": [
+          2.113497665999999,
+          2.1760836670000003
+        ],
+        "firstPresentSample": 115,
+        "firstAbsentSample": 282
+      },
+      {
+        "exit": "escape",
+        "appearanceInterval": [
+          4.831792125,
+          4.8677554579999995
+        ],
+        "disappearanceInterval": [
+          6.909255791,
+          6.938738375
+        ],
+        "durationInterval": [
+          2.041500333,
+          2.10694625
+        ],
+        "firstPresentSample": 309,
+        "firstAbsentSample": 466
+      },
+      {
+        "exit": "cancel",
+        "appearanceInterval": [
+          7.542469458000001,
+          7.581391541
+        ],
+        "disappearanceInterval": [
+          9.769103666,
+          9.8018885
+        ],
+        "durationInterval": [
+          2.187712124999999,
+          2.2594190419999993
+        ],
+        "firstPresentSample": 497,
+        "firstAbsentSample": 666
+      }
+    ],
+    "confirmationExitResults": [
+      {
+        "requestedExit": "x",
+        "actualExit": "x",
+        "start": 2.0002905,
+        "end": 4.660951333,
+        "usedAsPausedDuration": false
+      },
+      {
+        "requestedExit": "escape",
+        "actualExit": "escape",
+        "start": 4.660952791,
+        "end": 7.322529375,
+        "usedAsPausedDuration": false
+      },
+      {
+        "requestedExit": "cancel",
+        "actualExit": "cancel",
+        "start": 7.322531125000001,
+        "end": 10.122543416,
+        "usedAsPausedDuration": false
+      }
+    ],
+    "measurement": {
+      "appearanceInterval": [
+        0.2742712910000007,
+        0.3362876660000005
+      ],
+      "disappearanceInterval": [
+        15.189426749999999,
+        15.214463583
+      ],
+      "elapsedIntervalSeconds": [
+        14.853139083999999,
+        14.940192291999999
+      ],
+      "activeIntervalSeconds": [
+        8.310690124999999,
+        8.597482168
+      ],
+      "activeMidpointSeconds": 8.4540861465,
+      "confirmationPauses": [
+        {
+          "exit": "x",
+          "appearanceInterval": [
+            2.1744858330000003,
+            2.210320125000001
+          ],
+          "disappearanceInterval": [
+            4.323817791,
+            4.350569500000001
+          ],
+          "durationInterval": [
+            2.113497665999999,
+            2.1760836670000003
+          ],
+          "firstPresentSample": 115,
+          "firstAbsentSample": 282
+        },
+        {
+          "exit": "escape",
+          "appearanceInterval": [
+            4.831792125,
+            4.8677554579999995
+          ],
+          "disappearanceInterval": [
+            6.909255791,
+            6.938738375
+          ],
+          "durationInterval": [
+            2.041500333,
+            2.10694625
+          ],
+          "firstPresentSample": 309,
+          "firstAbsentSample": 466
+        },
+        {
+          "exit": "cancel",
+          "appearanceInterval": [
+            7.542469458000001,
+            7.581391541
+          ],
+          "disappearanceInterval": [
+            9.769103666,
+            9.8018885
+          ],
+          "durationInterval": [
+            2.187712124999999,
+            2.2594190419999993
+          ],
+          "firstPresentSample": 497,
+          "firstAbsentSample": 666
+        }
+      ],
+      "boundaryMethod": "AX read-begin/read-end brackets around actual notice/dialog state transitions; no input-call subtraction",
+      "thresholdSeconds": [
+        6.7,
+        9.3
+      ],
+      "intervalMustFitThreshold": true
+    },
+    "clock": "real monotonic AX observation brackets; full active interval fits unchanged threshold",
+    "restartConfirmed": false,
+    "manualBlurAfterCancel": false,
+    "trace": "notice-trace-True.json"
+  },
+  "finalNoticeRunsRequested": 1,
+  "finalNoticeRunsExecuted": 1,
+  "finalNoticeRetries": 0,
+  "finalNoticeRecoveryUsed": false,
+  "finalTraceSha256": "cbee8d5ce0a1303c421385f78503cfc5c97928ff6d5d1cd0bee453d4d254ce96",
+  "naturalCountdownThreshold": [
+    6.7,
+    9.3
+  ],
+  "cancellationActiveThreshold": [
+    6.7,
+    9.3
+  ],
+  "readOnlyAxFastBounds": true,
+  "defaultInput": "same-PID native keyDown, true >=50ms hold, keyUp; one pair; no DOM retry",
+  "retainedHistoricalFailures": [
+    {
+      "report": "ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json",
+      "case": "legacy cancellation active estimate5.921; late origin/operation-subtraction bias; original unchanged"
+    },
+    {
+      "report": "timer-diagnostic/ocx021-mac-native-f9d5f118-242d-4efc-8468-4e9ffc84cf35/report.json",
+      "case": "full tree AX interval4.677..11.575 crosses threshold; blocked unchanged"
+    },
+    {
+      "report": "timer-diagnostic/ocx021-mac-native-09cbdb31-9db5-4975-95c4-67f225044220/report.json",
+      "case": "strict timer passed but old instantaneous Esc failed; X recovery separately preserved"
+    },
+    {
+      "report": "esc-input-ab/ocx021-mac-native-e11d1e45-fab2-4910-a384-daccaba0673b/report.json",
+      "case": "bounded A/B original input1/2, held50ms2/2; originalA2 failure and separateX recovery retained"
+    }
+  ],
+  "interpretation": "Adopt observed physical key timing in automation; no claim of a product intermittent-bug fix or rebuild. Preserve previous reports, accept individual unchanged-EXE passes plus one final notice pass.",
+  "cleanup": {
+    "ownedGroups": [
+      8050,
+      9732,
+      15515,
+      18241
+    ],
+    "remaining": [],
+    "daily80916": {
+      "pid": 80916,
+      "ppid": 1,
+      "pgid": 27586,
+      "command": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    },
+    "dailySignalsSent": 0,
+    "uiReleased": true
+  },
+  "stableSourcesReadyForParentCommit": {
+    "ocx021-macos-native.py": "89e6b5fbd0e883b283fb4a2182c149855fa23a6dfa6e41ff03903a722865e301",
+    "ocx021-macos-native.swift": "83b125f54b1d0bb9280a96bb84907955276d8ff2991dd001abe908950b5a5eb1",
+    "ocx021-macos-native.md": "9d7f475545cafc4ef0c9e7380686900f41a03537d688ccd1b3c419cd54c8c27a"
+  },
+  "otaExecuted": false,
+  "publicationReceiptStillRequired": true,
+  "finishedAt": "2026-11-04T10:44:41.262771+00:00"
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "ocx021-progress-input-verification-v1",
+  "recorded_at": "2026-11-04T10:39:22.898771+00:00",
+  "result": "passed-progress-input-validation-only",
+  "source_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "product_freeze": "86eee1dbff23823eead733cb65308cf02fd95f9e",
+  "release_id": 433749817,
+  "gates": {
+    "passed": 4,
+    "pending": 9
+  },
+  "mapped_coverage": {
+    "acceptance": {
+      "total": 8,
+      "passed": 1,
+      "pending": 7
+    },
+    "checks": {
+      "total": 17,
+      "passed": 10,
+      "pending": 7
+    }
+  },
+  "referenced_real_files": 51,
+  "exact_assertions_verified": 184,
+  "original_archive": {
+    "path": "acceptance-input-originals.progress.tar.gz",
+    "sha256": "ad8e38d2228fcbdf4f0b9aa3b6dde2559dcd24b2ad1b3766d207fbbd951c9fc7",
+    "members": 49,
+    "verified_identical_to_originals": true
+  },
+  "tests": {
+    "passed": 16,
+    "log": "progress-preparation-tests.log",
+    "log_sha256": "5c2f76b2e17f876053f2665817472bd2541935855924948cb497dd5a221e7dcb"
+  },
+  "source_identity": "433 blobs and5 snapshots86/6e/977 compared; no product provider43 reuse",
+  "plan": {
+    "path": "progress-plan-only.json",
+    "exit_code": 2,
+    "runtime_written": false,
+    "pending_gates": 9
+  },
+  "runtime_before": {
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-MODALS-20261104.json": "01c456009bdb8d0d156bfee96bc4bbf298e19630b0446eb7a2e3136688237937",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-SYNC-20261104.json": "438b7aa3e6832b80d4bc0c321bfde48bf5cffb16150ec4a65f992cac50f2a792",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-INTEGRATION-20261104.json": "fe91f6ee102fdd0bae78c726e1fec663b3ea55e4062dd1e92db26f017d48e7f9",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-UI-021.json": "0abab8fbab8d1e190ca3a887e14b956ab1bc8cb968396386193a33e478d25e9f",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-29.json": "c80925ddbba966b2c43d4788c3b62f2cfc91273003ddf35909309877d55afd0c"
+  },
+  "runtime_after": {
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-MODALS-20261104.json": "01c456009bdb8d0d156bfee96bc4bbf298e19630b0446eb7a2e3136688237937",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-SYNC-20261104.json": "438b7aa3e6832b80d4bc0c321bfde48bf5cffb16150ec4a65f992cac50f2a792",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-INTEGRATION-20261104.json": "fe91f6ee102fdd0bae78c726e1fec663b3ea55e4062dd1e92db26f017d48e7f9",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-UI-021.json": "0abab8fbab8d1e190ca3a887e14b956ab1bc8cb968396386193a33e478d25e9f",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-29.json": "c80925ddbba966b2c43d4788c3b62f2cfc91273003ddf35909309877d55afd0c"
+  },
+  "did_not_execute": [
+    "pure close_task",
+    "RuntimeStore.commit_task_closure",
+    "RuntimeStore.put",
+    "final prepare bindings",
+    "Git commit/push",
+    "formal docs writes",
+    "product writes",
+    "network/client/provider restart"
+  ],
+  "inputs": {
+    "final-gates.progress.json": "cf119e5f874fe0e532d480101cf363a41d93f46a65ae85b5e190d1cd1b0c328f",
+    "evidence-map.progress.json": "ee3509f30b12c7e4e73238a7fb92bd7663c6db865f2a63d33358951588538721",
+    "source-brief.progress.json": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265",
+    "formal-closeout.py": "083050fa4f8c9b0d172f38c223222732ae39695ea9ea72873bed834866ab5b9c",
+    "test_closeout.py": "29435f0b7934620098b88e3914f30ba0b10be8b2cae47a893b71aae1c369b897"
+  },
+  "warning": "Preparation acceptance input, not release or task completion; parent fills true remaining proof pointers."
+}

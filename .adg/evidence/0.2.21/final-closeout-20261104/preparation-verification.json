@@ -1,0 +1,37 @@
+{
+  "status": "passed-preparation-only",
+  "recorded_at": "2026-11-04T08:47:03.328252+00:00",
+  "tests": 14,
+  "test_exit_code": 0,
+  "test_log": {
+    "path": "preparation-tests.log",
+    "sha256": "6b6dae9ef6602ce5bf216bcb5274bee80998b47518be3ea3a05796681bf8f6c7"
+  },
+  "default_plan": "pending-plan.json",
+  "prepare_only_capture": "prepared-current-not-final.json",
+  "actual_commit_executed": false,
+  "pure_close_task_executed": false,
+  "runtime_mutation_executed": false,
+  "runtime_before": {
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-MODALS-20261104.json": "01c456009bdb8d0d156bfee96bc4bbf298e19630b0446eb7a2e3136688237937",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-SYNC-20261104.json": "438b7aa3e6832b80d4bc0c321bfde48bf5cffb16150ec4a65f992cac50f2a792",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-INTEGRATION-20261104.json": "fe91f6ee102fdd0bae78c726e1fec663b3ea55e4062dd1e92db26f017d48e7f9",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-UI-021.json": "9d882427c791eaccff55f5d9f8a1f28d9f25df8eb8b3fe090d85512e1f023161",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-29.json": "0f851076952fcb97aa715c669d21943bae415d699f3f63a23947734cab91252e"
+  },
+  "runtime_after": {
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-MODALS-20261104.json": "01c456009bdb8d0d156bfee96bc4bbf298e19630b0446eb7a2e3136688237937",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-SYNC-20261104.json": "438b7aa3e6832b80d4bc0c321bfde48bf5cffb16150ec4a65f992cac50f2a792",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-INTEGRATION-20261104.json": "fe91f6ee102fdd0bae78c726e1fec663b3ea55e4062dd1e92db26f017d48e7f9",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-UI-021.json": "9d882427c791eaccff55f5d9f8a1f28d9f25df8eb8b3fe090d85512e1f023161",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-29.json": "0f851076952fcb97aa715c669d21943bae415d699f3f63a23947734cab91252e"
+  },
+  "source_files": {
+    "formal-closeout.py": "fce6edb0f7024746d0e8a721814faf7e4bd85bfc6d0a139d1a26d9ec36cff023",
+    "test_closeout.py": "b9955e42de40003847d2052fdc283dca7d63304f4bbd383bef8aa565cdb691db",
+    "frozen-task-contracts.json": "83da9c870fbcf56e32d6cb28f25a8d5250155ee663f8fd4455aa1b5a3f345768",
+    "evidence-map.template.json": "ece26f42fb504a75017d52153a0553eff947501bae762ea1b994eb6639aa74b0",
+    "final-gates.template.json": "5a3206b432d169f14873fab9202c94b1cda991bb276efa0abe44b8509aa19f94"
+  },
+  "limits": "Preparation/denial-path checks only; no final positive closure or release acceptance executed. Same-version partial proofs stay scoped, final gates stay pending."
+}

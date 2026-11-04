@@ -1,0 +1,64 @@
+{
+  "mode": "blocked-plan-only",
+  "runtime_written": false,
+  "pending_final_gates": [
+    "public-stable",
+    "native-windows",
+    "final-ci",
+    "windows-msi-default",
+    "windows-nsis-default",
+    "ota-macos-020-to-021"
+  ],
+  "pending_acceptance": [
+    {
+      "task_id": "TASK-OPENCODEX-UI021-MODALS-20261104",
+      "id": "AC-021-07"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+      "id": "AC-021-03"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-02"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-05"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-06"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-08"
+    }
+  ],
+  "pending_required_checks": [
+    {
+      "task_id": "TASK-OPENCODEX-UI021-MODALS-20261104",
+      "id": "review:modal-native"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+      "id": "review:sync-native"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:full-regression"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:macos-windows-native"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:release-and-ota"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:saved-side-effects"
+    }
+  ]
+}

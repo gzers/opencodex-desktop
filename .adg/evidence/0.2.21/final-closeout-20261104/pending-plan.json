@@ -1,0 +1,123 @@
+{
+  "mode": "blocked-plan-only",
+  "runtime_written": false,
+  "pending_final_gates": [
+    "public-stable",
+    "artifacts-signatures",
+    "native-macos",
+    "native-windows",
+    "final-ci",
+    "provider-chain",
+    "windows-msi-default",
+    "windows-msi-custom",
+    "windows-nsis-default",
+    "windows-nsis-custom",
+    "ota-macos-020-to-021",
+    "ota-msi-020-to-021",
+    "ota-nsis-020-to-021"
+  ],
+  "pending_acceptance": [
+    {
+      "task_id": "TASK-OPENCODEX-UI021-MODALS-20261104",
+      "id": "AC-021-07"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+      "id": "AC-021-03"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-01"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-02"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-04"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-05"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-06"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-08"
+    }
+  ],
+  "pending_required_checks": [
+    {
+      "task_id": "TASK-OPENCODEX-UI021-MODALS-20261104",
+      "id": "review:modal-consumers"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-MODALS-20261104",
+      "id": "review:modal-native"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-MODALS-20261104",
+      "id": "review:modal-side-effects"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-MODALS-20261104",
+      "id": "review:prototype-adoption"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+      "id": "review:prototype-adoption"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+      "id": "review:save-time-lifecycle"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+      "id": "review:sync-native"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+      "id": "review:sync-side-effects"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+      "id": "review:sync-version-direction"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:full-regression"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:macos-windows-native"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:notifications-detection"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:prototype-adoption"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:release-and-ota"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:rename-references"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:saved-side-effects"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:webdav-observation-candidates"
+    }
+  ]
+}

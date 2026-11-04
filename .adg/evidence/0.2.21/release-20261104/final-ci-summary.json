@@ -1,0 +1,41 @@
+{
+  "result": "pass",
+  "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "testedCommit": "20d13334ab9127e013ba6adca8c19023472d015f",
+  "releaseId": 433749817,
+  "run": 41817249379,
+  "conclusion": "success",
+  "requiredJobsPassed": true,
+  "sameFinalSource": true,
+  "scope": "Actual full CI20d passed; packet source6e product/build/resource inputs equal byte-for-byte; later QA-only Mac script validated by original-package actual OTA. No cancelled/failed job counted.",
+  "requiredJobs": {
+    "windows-smoke-evidence": "success",
+    "frontend": "success",
+    "backend-windows": "success",
+    "release-tools": "success",
+    "backend": "success"
+  },
+  "skippedNonRequiredJobs": {
+    "build": "skipped"
+  },
+  "productComparisonPaths": [
+    "apps/desktop/tauri/src",
+    "apps/desktop/tauri/resources",
+    "apps/desktop/tauri/Cargo.toml",
+    "apps/desktop/tauri/Cargo.lock",
+    "apps/desktop/tauri/build.rs",
+    "apps/desktop/tauri/tauri.conf.json",
+    "apps/desktop/tauri/tauri.updater.conf.json",
+    "apps/desktop/ui/src",
+    "apps/desktop/ui/index.html",
+    "apps/desktop/ui/vite.config.ts",
+    "apps/desktop/ui/package.json",
+    "apps/desktop/ui/package-lock.json"
+  ],
+  "rawReceipt": {
+    "path": ".adg/evidence/0.2.21/release-20261104/final-ci-41817249379.json",
+    "sha256": "526ebd3a460918392a07338fafa2d2394b69614f49eb27c5f70c6bde05817517"
+  },
+  "mergeCommit": "7a8441f7e647e4b3540d5907e44ac4f186f90998",
+  "verifiedAt": "2026-11-04T11:32:33.711316+00:00"
+}

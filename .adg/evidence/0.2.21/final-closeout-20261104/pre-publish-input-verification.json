@@ -1,0 +1,69 @@
+{
+  "recordedAt": "2026-11-04T11:32:04.172421+00:00",
+  "result": "pre-publish-inputs-verified-only",
+  "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "releaseId": 433749817,
+  "readyGateCount": 10,
+  "pendingGates": [
+    "public-stable",
+    "artifacts-signatures",
+    "final-ci"
+  ],
+  "mapCoverage": {
+    "acceptance": {
+      "total": 8,
+      "passed": 7,
+      "pending": 1
+    },
+    "checks": {
+      "total": 17,
+      "passed": 15,
+      "pending": 2
+    }
+  },
+  "typedGateClaimsVerified": 129,
+  "exactJsonAssertionsVerified": 432,
+  "originalFilesShaVerified": 155,
+  "archive": {
+    "path": ".adg/evidence/0.2.21/final-closeout-20261104/acceptance-input-originals.pre-publish.tar.gz",
+    "sha256": "dd0f51a178e876721c02e554cb778f6aeaefa5f8e3a0e667b0f9f050a31f6631",
+    "files": 155,
+    "scope": "Exact original proof bytes with root-relative paths; successfulMacOTA+failures included, current parent-corrected stage2 untouched; main two pre-publish inputs are separate to avoid cycles."
+  },
+  "macOtaActualReadback": "44138->auto44591 same process,8files exact,pending consumed,no manual relaunch",
+  "installerScope": "default actual installation/startup/resources; custom explicit removal/data bothtrue; parent installation-applicable-scope.json applied",
+  "finalCiNotClaimed": true,
+  "publicStableNotClaimed": true,
+  "runtimeBefore": {
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-MODALS-20261104.json": "01c456009bdb8d0d156bfee96bc4bbf298e19630b0446eb7a2e3136688237937",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-SYNC-20261104.json": "438b7aa3e6832b80d4bc0c321bfde48bf5cffb16150ec4a65f992cac50f2a792",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-INTEGRATION-20261104.json": "fe91f6ee102fdd0bae78c726e1fec663b3ea55e4062dd1e92db26f017d48e7f9",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-UI-021.json": "0abab8fbab8d1e190ca3a887e14b956ab1bc8cb968396386193a33e478d25e9f",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-29.json": "c80925ddbba966b2c43d4788c3b62f2cfc91273003ddf35909309877d55afd0c"
+  },
+  "runtimeAfter": {
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-MODALS-20261104.json": "01c456009bdb8d0d156bfee96bc4bbf298e19630b0446eb7a2e3136688237937",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-SYNC-20261104.json": "438b7aa3e6832b80d4bc0c321bfde48bf5cffb16150ec4a65f992cac50f2a792",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-INTEGRATION-20261104.json": "fe91f6ee102fdd0bae78c726e1fec663b3ea55e4062dd1e92db26f017d48e7f9",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-UI-021.json": "0abab8fbab8d1e190ca3a887e14b956ab1bc8cb968396386193a33e478d25e9f",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-29.json": "c80925ddbba966b2c43d4788c3b62f2cfc91273003ddf35909309877d55afd0c"
+  },
+  "stage2InputsUnchangedDuringThisPreparation": {
+    "final-gates.stage2.json": "bafb49005a5abc27f0b95859a5521cbbc927424c19bcadee088b718bd357979a",
+    "evidence-map.stage2.json": "32484d4e73188b3730cfe49d8483baf889f7239b59b43a9c6b747b485f527cfa"
+  },
+  "newTestsAdded": 0,
+  "newFrameworkOrSchemaAdded": 0,
+  "fillHelperValidation": "AST and --help only; no fabricated complete-input run",
+  "closureExecuted": false,
+  "prepareExecuted": false,
+  "docsEdited": false,
+  "outputs": {
+    "final-gates.pre-publish.json": "2b69a89af4fc1234e04b174baf24bbfde61a7b296036907e2014c0412ea7a0ff",
+    "evidence-map.pre-publish.json": "ec027f904fdb840747643fe772139720e836fd6bc8288d85ad875826abdc7307",
+    "pre-publish-accepted-summary.json": "40bc710af0c6c6cc753e8af20129661b7ce4112611bbde09cb4e8eda7c285525",
+    "fill-pre-publish.py": "53c0e3972d793c0ae756dae2ff747b4feb43ebcaf24caa62487d817ffe20fb52",
+    "PRE-PUBLISH.md": "fba34b4986f586bb35e35605a7d804e83f97654400c6a27aa51771856bec4df7",
+    "pre-publish-plan-only.json": "e86d2579853218572bcdd509d458ebd2f0bc4fce4be4c6d2a781c3ec267798fc"
+  }
+}

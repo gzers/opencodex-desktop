@@ -1,0 +1,64 @@
+{
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-021-07",
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-MODALS-20261104/acceptance/AC-021-07",
+      "status": "passed"
+    }
+  ],
+  "checks": [
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-MODALS-20261104/checks/review:modal-consumers",
+      "name": "review:modal-consumers",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-MODALS-20261104/checks/review:modal-native",
+      "name": "review:modal-native",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-MODALS-20261104/checks/review:modal-side-effects",
+      "name": "review:modal-side-effects",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-MODALS-20261104/checks/review:prototype-adoption",
+      "name": "review:prototype-adoption",
+      "status": "passed"
+    }
+  ],
+  "closed_task_summary_digest": "b8c4e675e102bf4153a0492452fe0b71c804c5a204da66732de3919debbd8046",
+  "content_digest": "fadd67959ac970c887457780e0d5f3c5cea9a1ad610dfaf1d65e73b1faab6bfd",
+  "fact_impacts": [
+    {
+      "after_digest": "2a160bbd32f8fe8134084b131605722c4c11232dc33e1580b7e9af5f1ee60019",
+      "path": "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md",
+      "summary": "Parent's final 0.2.21 facts, exact bytes bound after stable gates.",
+      "target": "demand"
+    },
+    {
+      "after_digest": "653c69466d1ee03851f87ae47e0b51dea95724b84b34f997c4c22084d7529a0f",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md",
+      "summary": "Parent's final 0.2.21 facts, exact bytes bound after stable gates.",
+      "target": "implementation"
+    },
+    {
+      "after_digest": "9d6bb0969f1955b5055f039b3e2aecd859f447b36bbd35607ac26865b1d398ae",
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+      "summary": "Parent's final 0.2.21 facts, exact bytes bound after stable gates.",
+      "target": "issues"
+    }
+  ],
+  "id": "CERT-OPENCODEX-UI021-MODALS-20261104",
+  "kind": "CERT",
+  "receipt_digest": "1b5dbabdcb893925ccfc32396a93ad2abe6d93dac2065702f42e6e08d6c37338",
+  "receipt_id": "RCP-OPENCODEX-UI021-MODALS-20261104",
+  "result": "succeeded",
+  "revision": 1,
+  "summary_digest": "6675564ad83ada9d74c05bf18695cabc4353f654bb2ce08aa84785953e4b2398",
+  "task_digest_before_close": "48610e8930309e1fa5be7c96b0a04ef21791017474591c97d4326a6c6b8458bf",
+  "task_id": "TASK-OPENCODEX-UI021-MODALS-20261104",
+  "task_summary_digest": "ba8751b9d1726bb9faa9ac3547b391044ec2941f7425e74a31e37c2ea250fdb8",
+  "verified_at": "2026-11-04T11:36:14.225577+00:00"
+}

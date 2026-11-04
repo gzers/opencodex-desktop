@@ -10,8 +10,8 @@
     "AC-021-07"
   ],
   "baseline_digest": "9962bd7a2c6bf02e3a3396829e0f38701545b9651f0b56560cd3ed6e8f9c53cd",
-  "certificate_digest": null,
-  "content_digest": "48610e8930309e1fa5be7c96b0a04ef21791017474591c97d4326a6c6b8458bf",
+  "certificate_digest": "fadd67959ac970c887457780e0d5f3c5cea9a1ad610dfaf1d65e73b1faab6bfd",
+  "content_digest": "685ac6f11095c5f711826a346b1f270e5dd19048504264ee342070651d86c90d",
   "demand_ids": [
     "DMD-OPENCODEX-UI-021"
   ],
@@ -37,7 +37,7 @@
   },
   "id": "TASK-OPENCODEX-UI021-MODALS-20261104",
   "implementation_id": "IMP-OPENCODEX-DESKTOP-29",
-  "imported_receipt_digest": null,
+  "imported_receipt_digest": "1b5dbabdcb893925ccfc32396a93ad2abe6d93dac2065702f42e6e08d6c37338",
   "kind": "TASK",
   "owner": "current-chat-modal-integration",
   "required_checks": [
@@ -46,11 +46,11 @@
     "review:modal-side-effects",
     "review:prototype-adoption"
   ],
-  "result": "pending",
-  "revision": 2,
-  "state": "in_progress",
+  "result": "succeeded",
+  "revision": 3,
+  "state": "completed",
   "summary": "承接已有冻结原型POST-09，先代表流程再扩自有消费者；其它新状态G0独立继续。",
-  "summary_digest": "ba8751b9d1726bb9faa9ac3547b391044ec2941f7425e74a31e37c2ea250fdb8",
+  "summary_digest": "b8c4e675e102bf4153a0492452fe0b71c804c5a204da66732de3919debbd8046",
   "title": "0.2.21公共弹窗关闭与真实消费者迁移",
   "write_scope": [
     ".adg/evidence/0.2.21/**",

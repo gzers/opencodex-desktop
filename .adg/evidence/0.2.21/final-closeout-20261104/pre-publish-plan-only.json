@@ -1,0 +1,25 @@
+{
+  "mode": "blocked-plan-only",
+  "runtime_written": false,
+  "pending_final_gates": [
+    "public-stable",
+    "artifacts-signatures",
+    "final-ci"
+  ],
+  "pending_acceptance": [
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "AC-021-08"
+    }
+  ],
+  "pending_required_checks": [
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:full-regression"
+    },
+    {
+      "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+      "id": "review:release-and-ota"
+    }
+  ]
+}

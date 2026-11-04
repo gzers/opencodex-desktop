@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-11-04T11:06:21.504917+00:00",
+  "result": "latest-stage2-inputs-verified-only",
+  "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "releaseId": 433749817,
+  "windowsNativeFinal": "pass-run41817246537-original6e-driver20d",
+  "gates": {
+    "passed": 8,
+    "pending": 5
+  },
+  "coverage": {
+    "acceptance": {
+      "total": 8,
+      "passed": 3,
+      "pending": 5
+    },
+    "checks": {
+      "total": 17,
+      "passed": 14,
+      "pending": 3
+    }
+  },
+  "pendingGates": [
+    "public-stable",
+    "final-ci",
+    "windows-msi-default",
+    "windows-nsis-default",
+    "ota-macos-020-to-021"
+  ],
+  "unassertedDefaultInstallerFactsRemainNull": true,
+  "originalFiles": 126,
+  "assertions": 166,
+  "replay": {
+    "path": ".adg/evidence/0.2.21/final-closeout-20261104/acceptance-input-originals.stage2-windows-final.tar.gz",
+    "sha256": "dd0a67e93de43aaa9bdb60b5ee5fc2b3f68ba8cc8eb40cc2d8a638476499b849",
+    "files": 126,
+    "scope": "Exact latest stage2 proof bytes; preserves old stage1 and pre-final-Windows stage2 archives; no product binary/daily state."
+  },
+  "stage1InputsUnchanged": true,
+  "priorStage2SnapshotPreserved": {
+    "path": ".adg/evidence/0.2.21/final-closeout-20261104/stage2-before-final-windows.tar.gz",
+    "sha256": "12d3bb33d039e2e520114a2bbe62821122d14c08d537bd515dee1f96de7b1701"
+  },
+  "runtimeBefore": {
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-MODALS-20261104.json": "01c456009bdb8d0d156bfee96bc4bbf298e19630b0446eb7a2e3136688237937",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-SYNC-20261104.json": "438b7aa3e6832b80d4bc0c321bfde48bf5cffb16150ec4a65f992cac50f2a792",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-INTEGRATION-20261104.json": "fe91f6ee102fdd0bae78c726e1fec663b3ea55e4062dd1e92db26f017d48e7f9",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-UI-021.json": "0abab8fbab8d1e190ca3a887e14b956ab1bc8cb968396386193a33e478d25e9f",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-29.json": "c80925ddbba966b2c43d4788c3b62f2cfc91273003ddf35909309877d55afd0c"
+  },
+  "runtimeAfter": {
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-MODALS-20261104.json": "01c456009bdb8d0d156bfee96bc4bbf298e19630b0446eb7a2e3136688237937",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-SYNC-20261104.json": "438b7aa3e6832b80d4bc0c321bfde48bf5cffb16150ec4a65f992cac50f2a792",
+    ".adg/work/objects/task/TASK-OPENCODEX-UI021-INTEGRATION-20261104.json": "fe91f6ee102fdd0bae78c726e1fec663b3ea55e4062dd1e92db26f017d48e7f9",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-UI-021.json": "0abab8fbab8d1e190ca3a887e14b956ab1bc8cb968396386193a33e478d25e9f",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-29.json": "c80925ddbba966b2c43d4788c3b62f2cfc91273003ddf35909309877d55afd0c"
+  },
+  "newTestsAdded": 0,
+  "newSchemasAdded": 0,
+  "closureExecuted": false,
+  "humanFactsEdited": false,
+  "planOnlyExitCode": 2,
+  "outputs": {
+    "final-gates.stage2.json": "daffc8bf8ba794854a7e56153a9e988cc4676b410063e03d9fad16021345e193",
+    "evidence-map.stage2.json": "32484d4e73188b3730cfe49d8483baf889f7239b59b43a9c6b747b485f527cfa",
+    "stage2-windows-final-summary.json": "591236de8d271a334c1d6d247f58a2c3c064510080762726161ebbb4f6786136",
+    "missingpointersstage2.txt": "dd75777182a8e6f9266e1b1706b6682059f8e6a954c24c47d95cc032faf0b000",
+    "stage2-windows-final-plan-only.json": "f2e432f37ea1723dfdfd6dc65cf7d022474dd82424a821a35e6118ef70251df4"
+  }
+}

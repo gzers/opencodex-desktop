@@ -1,0 +1,69 @@
+{
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-021-03",
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-SYNC-20261104/acceptance/AC-021-03",
+      "status": "passed"
+    }
+  ],
+  "checks": [
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-SYNC-20261104/checks/review:prototype-adoption",
+      "name": "review:prototype-adoption",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-SYNC-20261104/checks/review:save-time-lifecycle",
+      "name": "review:save-time-lifecycle",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-SYNC-20261104/checks/review:sync-native",
+      "name": "review:sync-native",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-SYNC-20261104/checks/review:sync-side-effects",
+      "name": "review:sync-side-effects",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-SYNC-20261104/checks/review:sync-version-direction",
+      "name": "review:sync-version-direction",
+      "status": "passed"
+    }
+  ],
+  "closed_task_summary_digest": "c93fd8805396124427c235c931dd2d40dc00cacee051335ed42ffe0a0aa26625",
+  "content_digest": "819db21544e8f4c38b69a12ddcd1c07e9a0d66146d552b68f564d19a595201f7",
+  "fact_impacts": [
+    {
+      "after_digest": "2a160bbd32f8fe8134084b131605722c4c11232dc33e1580b7e9af5f1ee60019",
+      "path": "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md",
+      "summary": "Parent's final 0.2.21 facts, exact bytes bound after stable gates.",
+      "target": "demand"
+    },
+    {
+      "after_digest": "653c69466d1ee03851f87ae47e0b51dea95724b84b34f997c4c22084d7529a0f",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md",
+      "summary": "Parent's final 0.2.21 facts, exact bytes bound after stable gates.",
+      "target": "implementation"
+    },
+    {
+      "after_digest": "9d6bb0969f1955b5055f039b3e2aecd859f447b36bbd35607ac26865b1d398ae",
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+      "summary": "Parent's final 0.2.21 facts, exact bytes bound after stable gates.",
+      "target": "issues"
+    }
+  ],
+  "id": "CERT-OPENCODEX-UI021-SYNC-20261104",
+  "kind": "CERT",
+  "receipt_digest": "3dcc62c6ebdcd1b31c886cf4b66d00b55d7fb317f7a2e4ae8f94a9221bfc8dfa",
+  "receipt_id": "RCP-OPENCODEX-UI021-SYNC-20261104",
+  "result": "succeeded",
+  "revision": 1,
+  "summary_digest": "793a1873c238ce7aafe7b5225a336a7bbee6b7614405d50fcf5e83feda8c4cd1",
+  "task_digest_before_close": "b511e1f9a662d5d202e57b4711d2d6daabe42e2f71d22e16530121ed5f3c9594",
+  "task_id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+  "task_summary_digest": "bcb62d06695c81b9a10dbb7619a27cabe2506c9b7b07843f8d104026e9fadfbc",
+  "verified_at": "2026-11-04T11:36:14.225577+00:00"
+}

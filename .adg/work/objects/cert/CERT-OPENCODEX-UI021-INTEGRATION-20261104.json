@@ -1,0 +1,115 @@
+{
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-021-01",
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/acceptance/AC-021-01",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-021-02",
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/acceptance/AC-021-02",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-021-04",
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/acceptance/AC-021-04",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-021-05",
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/acceptance/AC-021-05",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-021-06",
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/acceptance/AC-021-06",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-021-08",
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/acceptance/AC-021-08",
+      "status": "passed"
+    }
+  ],
+  "checks": [
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/checks/review:full-regression",
+      "name": "review:full-regression",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/checks/review:macos-windows-native",
+      "name": "review:macos-windows-native",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/checks/review:notifications-detection",
+      "name": "review:notifications-detection",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/checks/review:prototype-adoption",
+      "name": "review:prototype-adoption",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/checks/review:release-and-ota",
+      "name": "review:release-and-ota",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/checks/review:rename-references",
+      "name": "review:rename-references",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/checks/review:saved-side-effects",
+      "name": "review:saved-side-effects",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/final-closeout-20261104/evidence-map.json#/tasks/TASK-OPENCODEX-UI021-INTEGRATION-20261104/checks/review:webdav-observation-candidates",
+      "name": "review:webdav-observation-candidates",
+      "status": "passed"
+    }
+  ],
+  "closed_task_summary_digest": "8942bf2d7d616ae4e0b455b8a547d925ce9598c7ed56c39316944e9183789e46",
+  "content_digest": "38a95bbd0623af077bb1c84823ca7c89b6911fc9e6bae843f16c4f0e809eb031",
+  "fact_impacts": [
+    {
+      "after_digest": "2a160bbd32f8fe8134084b131605722c4c11232dc33e1580b7e9af5f1ee60019",
+      "path": "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md",
+      "summary": "Parent's final 0.2.21 facts, exact bytes bound after stable gates.",
+      "target": "demand"
+    },
+    {
+      "after_digest": "653c69466d1ee03851f87ae47e0b51dea95724b84b34f997c4c22084d7529a0f",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md",
+      "summary": "Parent's final 0.2.21 facts, exact bytes bound after stable gates.",
+      "target": "implementation"
+    },
+    {
+      "after_digest": "9d6bb0969f1955b5055f039b3e2aecd859f447b36bbd35607ac26865b1d398ae",
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+      "summary": "Parent's final 0.2.21 facts, exact bytes bound after stable gates.",
+      "target": "issues"
+    },
+    {
+      "after_digest": "ed620f42867e531ce23f5ca22290eea34f53e085a1c72896f3009137e0508f55",
+      "path": "docs/03-开发实施/REL-OPENCODEX-DESKTOP-24.md",
+      "summary": "Parent's final 0.2.21 facts, exact bytes bound after stable gates.",
+      "target": "release"
+    }
+  ],
+  "id": "CERT-OPENCODEX-UI021-INTEGRATION-20261104",
+  "kind": "CERT",
+  "receipt_digest": "72be848b10ec426864d40f2d398e6933ede7fa87fcb925d4436f8b360712926d",
+  "receipt_id": "RCP-OPENCODEX-UI021-INTEGRATION-20261104",
+  "result": "succeeded",
+  "revision": 1,
+  "summary_digest": "3400f3aae4a4690448f01ea61f77fe81ca8c50ae7858e513ca7f630a100636a1",
+  "task_digest_before_close": "da3723895a377eb048d45ee4be6711c064cdd32f0c7dc88ad19a8d2d37c1abe2",
+  "task_id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+  "task_summary_digest": "e2b689accdffa72bcde142494ca87d4ace6f5c3351978654163b5e7f3263ccd5",
+  "verified_at": "2026-11-04T11:36:14.225577+00:00"
+}

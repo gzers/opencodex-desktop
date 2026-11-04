@@ -10,8 +10,8 @@
     "AC-021-03"
   ],
   "baseline_digest": "c92fd83fe99563086ee00270ebb4f48ea308ca5c91c5129b448843c69c739d2e",
-  "certificate_digest": null,
-  "content_digest": "b511e1f9a662d5d202e57b4711d2d6daabe42e2f71d22e16530121ed5f3c9594",
+  "certificate_digest": "819db21544e8f4c38b69a12ddcd1c07e9a0d66146d552b68f564d19a595201f7",
+  "content_digest": "cab96af51ab3eac836b9b8ff4f68033351c2301e89e04ad31d8aa109258a731d",
   "demand_ids": [
     "DMD-OPENCODEX-UI-021"
   ],
@@ -37,7 +37,7 @@
   },
   "id": "TASK-OPENCODEX-UI021-SYNC-20261104",
   "implementation_id": "IMP-OPENCODEX-DESKTOP-29",
-  "imported_receipt_digest": null,
+  "imported_receipt_digest": "3dcc62c6ebdcd1b31c886cf4b66d00b55d7fb317f7a2e4ae8f94a9221bfc8dfa",
   "kind": "TASK",
   "owner": "current-chat-sync-integration",
   "required_checks": [
@@ -47,11 +47,11 @@
     "review:sync-side-effects",
     "review:sync-version-direction"
   ],
-  "result": "pending",
-  "revision": 2,
-  "state": "in_progress",
+  "result": "succeeded",
+  "revision": 3,
+  "state": "completed",
   "summary": "可靠保存时间及内容摘要绑定，实际后端比较与确认重验；未知时间不自动选新。",
-  "summary_digest": "bcb62d06695c81b9a10dbb7619a27cabe2506c9b7b07843f8d104026e9fadfbc",
+  "summary_digest": "c93fd8805396124427c235c931dd2d40dc00cacee051335ed42ffe0a0aa26625",
   "title": "0.2.21保存版本生命周期及同步取新修复",
   "write_scope": [
     ".adg/evidence/0.2.21/**",

@@ -1,0 +1,866 @@
+{
+  "schema": "ocx021-final-gates-v1",
+  "version": "0.2.21",
+  "tag": "v0.2.21",
+  "source_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "source_tree": "5ac7b9655d1c413fa6d7abf20fed39e47c2a1d41",
+  "release_id": 433749817,
+  "windows_built_exe_sha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+  "completed_at": null,
+  "summary": "Progress acceptance input only; private draft bytes and bounded proofs, remaining native/CI/install/OTA/stable pending.",
+  "recorded_at": "2026-11-04T10:34:09.226829+00:00",
+  "mode": "progress-only; do not commit closure",
+  "asset_report": {
+    "path": ".adg/evidence/0.2.21/release-20261104/asset-verification.json",
+    "sha256": "7490c1327dbf3587e796cd39e85701a767ec6793ed05f5560833ff0edd378a20"
+  },
+  "asset_report_stage": "draft",
+  "source_note": {
+    "path": ".adg/evidence/0.2.21/final-closeout-20261104/source-brief.progress.json",
+    "sha256": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265"
+  },
+  "gates": {
+    "public-stable": {
+      "status": "pending",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "tag": null,
+        "latest": null,
+        "draft": null,
+        "prerelease": null,
+        "anonymousTagReadback": null,
+        "anonymousLatestReadback": null,
+        "sameAssetIdentity": null
+      },
+      "requiredFacts": {
+        "tag": "v0.2.21",
+        "latest": "v0.2.21",
+        "draft": false,
+        "prerelease": false,
+        "anonymousTagReadback": true,
+        "anonymousLatestReadback": true,
+        "sameAssetIdentity": true
+      },
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/release-20261104/full-release-metadata.json",
+          "sha256": "e5c3eeefd4226a379542112ecc15713e6bc5a47ca77011b6a43d8a4fc6b7427c"
+        }
+      ],
+      "bound_artifacts": {},
+      "missing_inputs": [
+        {
+          "needed": "Public stable result for release433749817; draft=false/prerelease=false, anonymous tag+Latest and same8asset IDs/bytes/SHA",
+          "target_fields": [
+            "facts/tag",
+            "facts/latest",
+            "facts/draft",
+            "facts/prerelease",
+            "facts/anonymousTagReadback",
+            "facts/anonymousLatestReadback",
+            "facts/sameAssetIdentity"
+          ],
+          "current": "Private draft only; no public-stable evidence supplied."
+        }
+      ]
+    },
+    "artifacts-signatures": {
+      "status": "passed",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "uploadedAssets": 8,
+        "signedArtifacts": 3,
+        "manifestPlatforms": 5,
+        "macDeepStrictCodesign": true,
+        "macEmbeddedSource": true,
+        "licenseAndNotices": true,
+        "dmgVerified": true,
+        "sameFrozenBytes": true
+      },
+      "requiredFacts": {
+        "uploadedAssets": 8,
+        "signedArtifacts": 3,
+        "manifestPlatforms": 5,
+        "macDeepStrictCodesign": true,
+        "macEmbeddedSource": true,
+        "licenseAndNotices": true,
+        "dmgVerified": true,
+        "sameFrozenBytes": true
+      },
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/final-closeout-20261104/source-brief.progress.json",
+          "sha256": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265",
+          "claims": {
+            "tested_commit": "/artifacts/sourceCommit",
+            "release_id": "/artifacts/releaseId",
+            "facts/uploadedAssets": "/artifacts/facts/uploadedAssets",
+            "facts/signedArtifacts": "/artifacts/facts/signedArtifacts",
+            "facts/manifestPlatforms": "/artifacts/facts/manifestPlatforms",
+            "facts/macDeepStrictCodesign": "/artifacts/facts/macDeepStrictCodesign",
+            "facts/macEmbeddedSource": "/artifacts/facts/macEmbeddedSource",
+            "facts/licenseAndNotices": "/artifacts/facts/licenseAndNotices",
+            "facts/dmgVerified": "/artifacts/facts/dmgVerified",
+            "facts/sameFrozenBytes": "/artifacts/facts/sameFrozenBytes"
+          }
+        },
+        {
+          "path": ".adg/evidence/0.2.21/release-20261104/asset-verification.json",
+          "sha256": "7490c1327dbf3587e796cd39e85701a767ec6793ed05f5560833ff0edd378a20"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/release-20261104/dmg-verification.log",
+          "sha256": "0ab5e6eee61cc9a02e2e793d991b47fc276b1fc583c87ceb84d5771e4e382cae"
+        }
+      ],
+      "bound_artifacts": {},
+      "missing_inputs": [],
+      "scope": "Exact draft uploaded bytes/signatures/platforms/Mac seal/resources/DMG only, not public/stable/install/OTA."
+    },
+    "native-macos": {
+      "status": "pending",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "platform": "darwin-aarch64",
+        "originalReleaseBundle": true,
+        "allRequiredChecksPassed": null,
+        "savedFileReadback": true,
+        "cancelAndFailureSideEffects": null
+      },
+      "requiredFacts": {
+        "platform": "darwin-aarch64",
+        "originalReleaseBundle": true,
+        "allRequiredChecksPassed": true,
+        "savedFileReadback": true,
+        "cancelAndFailureSideEffects": true
+      },
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/macos-native-final-6e/ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json",
+          "sha256": "6158e151b92ec3ed43667e239feb6c2aa21c80967f862f9955863140f9dbe43d",
+          "assertions": [
+            {
+              "pointer": "/startupBuildCommit",
+              "equals": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+            },
+            {
+              "pointer": "/binarySha256Before",
+              "equals": "275dface26a0d1ab483a67303eb30df3253f1f050163548c51289f1812b8457e"
+            },
+            {
+              "pointer": "/checks/5/status",
+              "equals": "pass"
+            },
+            {
+              "pointer": "/checks/8/status",
+              "equals": "pass"
+            },
+            {
+              "pointer": "/checks/9/status",
+              "equals": "pass"
+            },
+            {
+              "pointer": "/checks/10/status",
+              "equals": "pass"
+            },
+            {
+              "pointer": "/checks/12/status",
+              "equals": "pass"
+            },
+            {
+              "pointer": "/checks/15/status",
+              "equals": "pass"
+            },
+            {
+              "pointer": "/checks/16/status",
+              "equals": "pass"
+            },
+            {
+              "pointer": "/checks/17/status",
+              "equals": "pass"
+            }
+          ],
+          "scope": "Only the explicitly asserted passing checks; whole report result is fail, cancellation timer not passed."
+        },
+        {
+          "path": ".adg/evidence/0.2.21/macos-native-final-6e/timer-diagnostic/legacy-boundary-analysis.json",
+          "sha256": "427eb309773d98a745471a4235da6bbb163d15e0f17bc75277b13112b52307de"
+        }
+      ],
+      "bound_artifacts": {
+        "OpenCodeX.Desktop_aarch64.app.tar.gz": "681e23f37f2c2cf52eb1d5dc409d988557fa0917afc42dd8c8a49eed302fd3c1"
+      },
+      "missing_inputs": [
+        {
+          "needed": "Final original same6e Mac cancellation timer pause/resume proof; keep old fail and later blocked interval separate",
+          "target_fields": [
+            "facts/allRequiredChecksPassed",
+            "facts/cancelAndFailureSideEffects"
+          ],
+          "current": "Normal8.266s check passes; confirmation cancellation estimator5.922s failure retained and newer interval blocked, neither counted as pass."
+        }
+      ],
+      "executable_sha256": "275dface26a0d1ab483a67303eb30df3253f1f050163548c51289f1812b8457e",
+      "retained_failure": {
+        "path": ".adg/evidence/0.2.21/macos-native-final-6e/ready/ocx021-mac-native-de8d576b-26d2-4c19-ba9f-badfcb8a2231/report.json",
+        "sha256": "6158e151b92ec3ed43667e239feb6c2aa21c80967f862f9955863140f9dbe43d"
+      }
+    },
+    "native-windows": {
+      "status": "pending",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "platform": "windows-x86_64",
+        "originalFinalExe": true,
+        "allRequiredChecksPassed": null,
+        "savedFileReadback": true,
+        "cancelAndFailureSideEffects": null,
+        "actualOfficialDefaultBindingCaptured": true,
+        "defaultBindingNotOverridden": true,
+        "nativeOwnerAdmissionPassed": true
+      },
+      "requiredFacts": {
+        "platform": "windows-x86_64",
+        "originalFinalExe": true,
+        "allRequiredChecksPassed": true,
+        "savedFileReadback": true,
+        "cancelAndFailureSideEffects": true,
+        "actualOfficialDefaultBindingCaptured": true,
+        "defaultBindingNotOverridden": true,
+        "nativeOwnerAdmissionPassed": true
+      },
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-6e-ci-failure-and-owner-pass.json",
+          "sha256": "5d909104f27cf8f8c89f9f8ac271ace6d56cf4d4392ecae4b2ca944d1d40308a",
+          "assertions": [
+            {
+              "pointer": "/actualOwner/head",
+              "equals": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+            },
+            {
+              "pointer": "/actualOwner/dualCase",
+              "equals": "pass"
+            },
+            {
+              "pointer": "/actualOwner/externalRefusal",
+              "equals": "pass"
+            }
+          ]
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-owner/run-41807732522.binding-summary.json",
+          "sha256": "12c0938e61d954443f4ae8c3e783fe5407c1ae84eb371445501f84f620bdba14",
+          "assertions": [
+            {
+              "pointer": "/head",
+              "equals": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+            },
+            {
+              "pointer": "/result",
+              "equals": "binding-captured"
+            },
+            {
+              "pointer": "/raw/source",
+              "equals": "path"
+            }
+          ]
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-custom/verification/msi-startup/startup/native021-behavior.json",
+          "sha256": "55ae9d65298a7eaeddd19f172903e72243d7aa49eceef90d201817ee84934c83",
+          "assertions": [
+            {
+              "pointer": "/result",
+              "equals": "pass"
+            }
+          ]
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-custom/verification/msi-startup/startup/model-dialog-keyboard-native.json",
+          "sha256": "6a4059d46017e4bbffba6ceeb394993827536698234e7db3853947c33a6418fe",
+          "assertions": [
+            {
+              "pointer": "/result",
+              "equals": "pass"
+            }
+          ]
+        }
+      ],
+      "bound_artifacts": {
+        "OpenCodeX.Desktop_0.2.21_x64_en-US.msi": "6ebe4256a3566949820ad1252bb1778be03b467b62e9af3059c1bedb80bef098",
+        "OpenCodeX.Desktop_0.2.21_x64-setup.exe": "df919ef5d500b05b721df1cc52f26f5b0060aaa9922b2371a2cb6e2f93624ccc"
+      },
+      "missing_inputs": [
+        {
+          "needed": "Final6e original EXE full native/ready acceptance and complete cancel/failure evidence; current owner2/2 and custom startup alone are partial platform proof",
+          "target_fields": [
+            "facts/allRequiredChecksPassed",
+            "facts/cancelAndFailureSideEffects"
+          ]
+        }
+      ],
+      "executable_sha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "subchecks": {
+        "officialDefaultBinding": "passed",
+        "nativeOwnerDualBatchFreshDefault": "passed",
+        "nativeOwnerExternalRefusal": "passed",
+        "customInstalledFinalWebView021Behavior": "passed",
+        "wholeFinalPlatformGate": "pending"
+      }
+    },
+    "final-ci": {
+      "status": "pending",
+      "tested_commit": "97792cebacc6017b50776d97b69765b503d798c3",
+      "facts": {
+        "conclusion": null,
+        "requiredJobsPassed": null,
+        "sameFinalSource": null
+      },
+      "requiredFacts": {
+        "conclusion": "success",
+        "requiredJobsPassed": true,
+        "sameFinalSource": true
+      },
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-6e-ci-failure-and-owner-pass.json",
+          "sha256": "5d909104f27cf8f8c89f9f8ac271ace6d56cf4d4392ecae4b2ca944d1d40308a"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/final-closeout-20261104/source-brief.progress.json",
+          "sha256": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265"
+        }
+      ],
+      "bound_artifacts": {},
+      "missing_inputs": [
+        {
+          "needed": "CI41813816469 actual successful completion and all required job results, source977 bound byte-identical to6e packet",
+          "target_fields": [
+            "facts/conclusion",
+            "facts/requiredJobsPassed",
+            "facts/sameFinalSource"
+          ],
+          "current": "6e CI41807738899 failed client_npm_runtime7passed4failed1ignored; ignored and skipped native do not count as pass."
+        }
+      ],
+      "reuse_note": "977 differs from6e only in Unix/Windows fixture line-ending .gitattributes;433 product inputs identical. NewCI41813816469 is running; no completed pass asserted."
+    },
+    "provider-chain": {
+      "status": "passed",
+      "tested_commit": "86eee1dbff23823eead733cb65308cf02fd95f9e",
+      "facts": {
+        "successfulRawProductionRun": true,
+        "exactFreezeAcrossFiveSnapshots": true,
+        "noProductBuildOrRunDrift": true,
+        "standardNpmSymlinkPreserved": true,
+        "noForcedNativeRuntimeEnvironment": true,
+        "actualInitialPathDiscoveryUnpinned": true,
+        "actualSettingsAgreeWithResolver": true,
+        "nativeIntegrationBoundToOwnedHome": true,
+        "realSaveAndStableIdentity": true,
+        "realPublicProductionPrepare": true,
+        "liveRosterAndDefaultFullyAdopted": true,
+        "savedDiskIdentityUnchanged": true,
+        "producerGeneratedNewCatalogNamespace": true,
+        "freshOfficialClientReadNewDirectory": true,
+        "currentConfigAndFreshDefaultAgree": true,
+        "threadStartWithoutModelConfigOverride": true,
+        "execUsesNpmWithoutModelConfigOverride": true,
+        "localResponsesRawModelAndSyntheticAuth": true,
+        "actualProviderRawModelAndRouteKind": true,
+        "clientConsumedLocalResponse": true,
+        "realPendingRetainedAndMapped": true,
+        "noPostSaveManualConfigCatalogOwnerRepair": true,
+        "noDailyGlobalRestartOrRealSupplierRequest": true
+      },
+      "requiredFacts": {
+        "successfulRawProductionRun": true,
+        "exactFreezeAcrossFiveSnapshots": true,
+        "noProductBuildOrRunDrift": true,
+        "standardNpmSymlinkPreserved": true,
+        "noForcedNativeRuntimeEnvironment": true,
+        "actualInitialPathDiscoveryUnpinned": true,
+        "actualSettingsAgreeWithResolver": true,
+        "nativeIntegrationBoundToOwnedHome": true,
+        "realSaveAndStableIdentity": true,
+        "realPublicProductionPrepare": true,
+        "liveRosterAndDefaultFullyAdopted": true,
+        "savedDiskIdentityUnchanged": true,
+        "producerGeneratedNewCatalogNamespace": true,
+        "freshOfficialClientReadNewDirectory": true,
+        "currentConfigAndFreshDefaultAgree": true,
+        "threadStartWithoutModelConfigOverride": true,
+        "execUsesNpmWithoutModelConfigOverride": true,
+        "localResponsesRawModelAndSyntheticAuth": true,
+        "actualProviderRawModelAndRouteKind": true,
+        "clientConsumedLocalResponse": true,
+        "realPendingRetainedAndMapped": true,
+        "noPostSaveManualConfigCatalogOwnerRepair": true,
+        "noDailyGlobalRestartOrRealSupplierRequest": true
+      },
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/production-prepare-86-result.json",
+          "sha256": "b5bcaa368e0416dee6861fd0bb45c9b95720edf223dece5c668e45681ed9c68b",
+          "claims": {
+            "tested_commit": "/sourceFreeze",
+            "facts/successfulRawProductionRun": "/checks/successfulRawProductionRun",
+            "facts/exactFreezeAcrossFiveSnapshots": "/checks/exactFreezeAcrossFiveSnapshots",
+            "facts/noProductBuildOrRunDrift": "/checks/noProductBuildOrRunDrift",
+            "facts/standardNpmSymlinkPreserved": "/checks/standardNpmSymlinkPreserved",
+            "facts/noForcedNativeRuntimeEnvironment": "/checks/noForcedNativeRuntimeEnvironment",
+            "facts/actualInitialPathDiscoveryUnpinned": "/checks/actualInitialPathDiscoveryUnpinned",
+            "facts/actualSettingsAgreeWithResolver": "/checks/actualSettingsAgreeWithResolver",
+            "facts/nativeIntegrationBoundToOwnedHome": "/checks/nativeIntegrationBoundToOwnedHome",
+            "facts/realSaveAndStableIdentity": "/checks/realSaveAndStableIdentity",
+            "facts/realPublicProductionPrepare": "/checks/realPublicProductionPrepare",
+            "facts/liveRosterAndDefaultFullyAdopted": "/checks/liveRosterAndDefaultFullyAdopted",
+            "facts/savedDiskIdentityUnchanged": "/checks/savedDiskIdentityUnchanged",
+            "facts/producerGeneratedNewCatalogNamespace": "/checks/producerGeneratedNewCatalogNamespace",
+            "facts/freshOfficialClientReadNewDirectory": "/checks/freshOfficialClientReadNewDirectory",
+            "facts/currentConfigAndFreshDefaultAgree": "/checks/currentConfigAndFreshDefaultAgree",
+            "facts/threadStartWithoutModelConfigOverride": "/checks/threadStartWithoutModelConfigOverride",
+            "facts/execUsesNpmWithoutModelConfigOverride": "/checks/execUsesNpmWithoutModelConfigOverride",
+            "facts/localResponsesRawModelAndSyntheticAuth": "/checks/localResponsesRawModelAndSyntheticAuth",
+            "facts/actualProviderRawModelAndRouteKind": "/checks/actualProviderRawModelAndRouteKind",
+            "facts/clientConsumedLocalResponse": "/checks/clientConsumedLocalResponse",
+            "facts/realPendingRetainedAndMapped": "/checks/realPendingRetainedAndMapped",
+            "facts/noPostSaveManualConfigCatalogOwnerRepair": "/checks/noPostSaveManualConfigCatalogOwnerRepair",
+            "facts/noDailyGlobalRestartOrRealSupplierRequest": "/checks/noDailyGlobalRestartOrRealSupplierRequest"
+          },
+          "assertions": [
+            {
+              "pointer": "/checkCount",
+              "equals": 35
+            },
+            {
+              "pointer": "/globalRestartCalled",
+              "equals": false
+            },
+            {
+              "pointer": "/actualGuiRestartVerified",
+              "equals": false
+            },
+            {
+              "pointer": "/actualPendingAcknowledged",
+              "equals": false
+            },
+            {
+              "pointer": "/actualPendingRetained",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/verification-86.json",
+          "sha256": "c2e327485a6b298426bcf98e283010ead13535cd7570bb82de4a3c31e6eee5bc"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/FINAL-86.md",
+          "sha256": "bcef634cc6222486e7cb555803313477c93514a94696423941203b98aaf74a2d"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/final-closeout-20261104/source-brief.progress.json",
+          "sha256": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265"
+        }
+      ],
+      "bound_artifacts": {},
+      "missing_inputs": [],
+      "reuse_note": "86 actual default-npm chain35/35; five source snapshots and433 Git blob hashes prove same product/build inputs at6e. Older43 product changed and is not reused. No global/GUI restart or actual pending ack; copy-only ack separately mocked."
+    },
+    "windows-msi-default": {
+      "status": "pending",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "installer": null,
+        "pathType": null,
+        "installed": null,
+        "startupReadback": null,
+        "uninstalled": null,
+        "dataPreserved": null,
+        "sameFrozenBytes": null
+      },
+      "requiredFacts": {
+        "installer": "msi",
+        "pathType": "default",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": true,
+        "dataPreserved": true,
+        "sameFrozenBytes": true
+      },
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-default/verification/installer-verification.json",
+          "sha256": "8601eb4a04d7a9c71a77962da9459dcab7ab62eb5ad0729f2278c7b06d8ab086"
+        }
+      ],
+      "bound_artifacts": {
+        "OpenCodeX.Desktop_0.2.21_x64_en-US.msi": "6ebe4256a3566949820ad1252bb1778be03b467b62e9af3059c1bedb80bef098"
+      },
+      "missing_inputs": [
+        {
+          "needed": "41813563900 --failed rerun completed default cell report+matching source/package/EXE and install/startup/uninstall/data readback",
+          "target_fields": [
+            "facts/installer",
+            "facts/pathType",
+            "facts/installed",
+            "facts/startupReadback",
+            "facts/uninstalled",
+            "facts/dataPreserved",
+            "facts/sameFrozenBytes"
+          ],
+          "current": "Attempt1 default cell failed; custom cell pass does not fill this row."
+        }
+      ],
+      "executable_sha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "retained_failure": {
+        "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-default/verification/installer-verification.json",
+        "sha256": "8601eb4a04d7a9c71a77962da9459dcab7ab62eb5ad0729f2278c7b06d8ab086"
+      }
+    },
+    "windows-msi-custom": {
+      "status": "passed",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "installer": "msi",
+        "pathType": "custom",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": true,
+        "dataPreserved": true,
+        "sameFrozenBytes": true
+      },
+      "requiredFacts": {
+        "installer": "msi",
+        "pathType": "custom",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": true,
+        "dataPreserved": true,
+        "sameFrozenBytes": true
+      },
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/final-closeout-20261104/source-brief.progress.json",
+          "sha256": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265",
+          "claims": {
+            "tested_commit": "/packet_commit",
+            "release_id": "/release_id",
+            "executable_sha256": "/custom_installers/0/originalBuiltExeSha256",
+            "facts/installer": "/custom_installers/0/facts/installer",
+            "facts/pathType": "/custom_installers/0/facts/pathType",
+            "facts/installed": "/custom_installers/0/facts/installed",
+            "facts/startupReadback": "/custom_installers/0/facts/startupReadback",
+            "facts/uninstalled": "/custom_installers/0/facts/uninstalled",
+            "facts/dataPreserved": "/custom_installers/0/facts/dataPreserved",
+            "facts/sameFrozenBytes": "/custom_installers/0/facts/sameFrozenBytes"
+          }
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-custom/existing-assets-verification.json",
+          "sha256": "8144210e7287005a34b32fa7a7e5e97bf465bef9f4d9aebc2749e9088a064d8e"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-custom/verification/installer-verification.json",
+          "sha256": "edeed1526ae0637f848e4282dd357b32f16930d9d877325069d4409ef7b5ab9f"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/release-20261104/asset-verification.json",
+          "sha256": "7490c1327dbf3587e796cd39e85701a767ec6793ed05f5560833ff0edd378a20"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/attempt-1.jobs.original.json",
+          "sha256": "220d484c1daa1e10ab74723eba84aa6ed4db67aadd51dac0486e27d41e868d85"
+        }
+      ],
+      "bound_artifacts": {
+        "OpenCodeX.Desktop_0.2.21_x64_en-US.msi": "6ebe4256a3566949820ad1252bb1778be03b467b62e9af3059c1bedb80bef098"
+      },
+      "missing_inputs": [],
+      "executable_sha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "scope": "Existing original signed updater installer, fresh custom install/first screen/uninstall/data retention only; releaseAccepted remains false, no OTA/DPI claim."
+    },
+    "windows-nsis-default": {
+      "status": "pending",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "installer": null,
+        "pathType": null,
+        "installed": null,
+        "startupReadback": null,
+        "uninstalled": null,
+        "dataPreserved": null,
+        "sameFrozenBytes": null
+      },
+      "requiredFacts": {
+        "installer": "nsis",
+        "pathType": "default",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": true,
+        "dataPreserved": true,
+        "sameFrozenBytes": true
+      },
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/nsis-default/verification/installer-verification.json",
+          "sha256": "d9c2574fe984fb4d6641c91e5e4b476a953c233f58ecbad275dbedb1c6596d81"
+        }
+      ],
+      "bound_artifacts": {
+        "OpenCodeX.Desktop_0.2.21_x64-setup.exe": "df919ef5d500b05b721df1cc52f26f5b0060aaa9922b2371a2cb6e2f93624ccc"
+      },
+      "missing_inputs": [
+        {
+          "needed": "41813563900 --failed rerun completed default cell report+matching source/package/EXE and install/startup/uninstall/data readback",
+          "target_fields": [
+            "facts/installer",
+            "facts/pathType",
+            "facts/installed",
+            "facts/startupReadback",
+            "facts/uninstalled",
+            "facts/dataPreserved",
+            "facts/sameFrozenBytes"
+          ],
+          "current": "Attempt1 default cell failed; custom cell pass does not fill this row."
+        }
+      ],
+      "executable_sha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "retained_failure": {
+        "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/nsis-default/verification/installer-verification.json",
+        "sha256": "d9c2574fe984fb4d6641c91e5e4b476a953c233f58ecbad275dbedb1c6596d81"
+      }
+    },
+    "windows-nsis-custom": {
+      "status": "passed",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "installer": "nsis",
+        "pathType": "custom",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": true,
+        "dataPreserved": true,
+        "sameFrozenBytes": true
+      },
+      "requiredFacts": {
+        "installer": "nsis",
+        "pathType": "custom",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": true,
+        "dataPreserved": true,
+        "sameFrozenBytes": true
+      },
+      "evidence": [
+        {
+          "path": ".adg/evidence/0.2.21/final-closeout-20261104/source-brief.progress.json",
+          "sha256": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265",
+          "claims": {
+            "tested_commit": "/packet_commit",
+            "release_id": "/release_id",
+            "executable_sha256": "/custom_installers/1/originalBuiltExeSha256",
+            "facts/installer": "/custom_installers/1/facts/installer",
+            "facts/pathType": "/custom_installers/1/facts/pathType",
+            "facts/installed": "/custom_installers/1/facts/installed",
+            "facts/startupReadback": "/custom_installers/1/facts/startupReadback",
+            "facts/uninstalled": "/custom_installers/1/facts/uninstalled",
+            "facts/dataPreserved": "/custom_installers/1/facts/dataPreserved",
+            "facts/sameFrozenBytes": "/custom_installers/1/facts/sameFrozenBytes"
+          }
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/nsis-custom/existing-assets-verification.json",
+          "sha256": "4e6caf5538fd17323d8ab472e1c437436bb94552fec262ebd1c128294c20e5b5"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/nsis-custom/verification/installer-verification.json",
+          "sha256": "256ebfe8c578d3d2bdd6d1ea6f04a9475365fb5da8abd9d6eefb837a97d47596"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/release-20261104/asset-verification.json",
+          "sha256": "7490c1327dbf3587e796cd39e85701a767ec6793ed05f5560833ff0edd378a20"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/attempt-1.jobs.original.json",
+          "sha256": "220d484c1daa1e10ab74723eba84aa6ed4db67aadd51dac0486e27d41e868d85"
+        }
+      ],
+      "bound_artifacts": {
+        "OpenCodeX.Desktop_0.2.21_x64-setup.exe": "df919ef5d500b05b721df1cc52f26f5b0060aaa9922b2371a2cb6e2f93624ccc"
+      },
+      "missing_inputs": [],
+      "executable_sha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "scope": "Existing original signed updater installer, fresh custom install/first screen/uninstall/data retention only; releaseAccepted remains false, no OTA/DPI claim."
+    },
+    "ota-macos-020-to-021": {
+      "status": "pending",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "fromVersion": "0.2.20",
+        "toVersion": "0.2.21",
+        "actualDownloaded": null,
+        "signatureVerified": null,
+        "explicitInstall": null,
+        "automaticNewProcessObserved": null,
+        "installedIdentityVerified": null,
+        "configReadback": null,
+        "pendingCleared": null,
+        "sameFrozenBytes": null
+      },
+      "requiredFacts": {
+        "fromVersion": "0.2.20",
+        "toVersion": "0.2.21",
+        "actualDownloaded": true,
+        "signatureVerified": true,
+        "explicitInstall": true,
+        "automaticNewProcessObserved": true,
+        "installedIdentityVerified": true,
+        "configReadback": true,
+        "pendingCleared": true,
+        "sameFrozenBytes": true
+      },
+      "evidence": [],
+      "bound_artifacts": {
+        "OpenCodeX.Desktop_aarch64.app.tar.gz": "681e23f37f2c2cf52eb1d5dc409d988557fa0917afc42dd8c8a49eed302fd3c1"
+      },
+      "missing_inputs": [
+        {
+          "needed": "Actual0.2.20->0.2.21 same-packet signed beta download/install/automatic new process/readback/pending cleanup for macos",
+          "target_fields": [
+            "facts/actualDownloaded",
+            "facts/signatureVerified",
+            "facts/explicitInstall",
+            "facts/automaticNewProcessObserved",
+            "facts/installedIdentityVerified",
+            "facts/configReadback",
+            "facts/pendingCleared",
+            "facts/sameFrozenBytes"
+          ],
+          "current": "No successful actual adjacent OTA receipt supplied. Preparation/waiting/ignored records are not pass."
+        }
+      ],
+      "executable_sha256": "275dface26a0d1ab483a67303eb30df3253f1f050163548c51289f1812b8457e"
+    },
+    "ota-msi-020-to-021": {
+      "status": "pending",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "fromVersion": "0.2.20",
+        "toVersion": "0.2.21",
+        "actualDownloaded": null,
+        "signatureVerified": null,
+        "explicitInstall": null,
+        "automaticNewProcessObserved": null,
+        "installedIdentityVerified": null,
+        "configReadback": null,
+        "pendingCleared": null,
+        "sameFrozenBytes": null
+      },
+      "requiredFacts": {
+        "fromVersion": "0.2.20",
+        "toVersion": "0.2.21",
+        "actualDownloaded": true,
+        "signatureVerified": true,
+        "explicitInstall": true,
+        "automaticNewProcessObserved": true,
+        "installedIdentityVerified": true,
+        "configReadback": true,
+        "pendingCleared": true,
+        "sameFrozenBytes": true
+      },
+      "evidence": [],
+      "bound_artifacts": {
+        "OpenCodeX.Desktop_0.2.21_x64_en-US.msi": "6ebe4256a3566949820ad1252bb1778be03b467b62e9af3059c1bedb80bef098"
+      },
+      "missing_inputs": [
+        {
+          "needed": "Actual0.2.20->0.2.21 same-packet signed beta download/install/automatic new process/readback/pending cleanup for msi",
+          "target_fields": [
+            "facts/actualDownloaded",
+            "facts/signatureVerified",
+            "facts/explicitInstall",
+            "facts/automaticNewProcessObserved",
+            "facts/installedIdentityVerified",
+            "facts/configReadback",
+            "facts/pendingCleared",
+            "facts/sameFrozenBytes"
+          ],
+          "current": "No successful actual adjacent OTA receipt supplied. Preparation/waiting/ignored records are not pass."
+        }
+      ],
+      "executable_sha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f"
+    },
+    "ota-nsis-020-to-021": {
+      "status": "pending",
+      "tested_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "facts": {
+        "fromVersion": "0.2.20",
+        "toVersion": "0.2.21",
+        "actualDownloaded": null,
+        "signatureVerified": null,
+        "explicitInstall": null,
+        "automaticNewProcessObserved": null,
+        "installedIdentityVerified": null,
+        "configReadback": null,
+        "pendingCleared": null,
+        "sameFrozenBytes": null
+      },
+      "requiredFacts": {
+        "fromVersion": "0.2.20",
+        "toVersion": "0.2.21",
+        "actualDownloaded": true,
+        "signatureVerified": true,
+        "explicitInstall": true,
+        "automaticNewProcessObserved": true,
+        "installedIdentityVerified": true,
+        "configReadback": true,
+        "pendingCleared": true,
+        "sameFrozenBytes": true
+      },
+      "evidence": [],
+      "bound_artifacts": {
+        "OpenCodeX.Desktop_0.2.21_x64-setup.exe": "df919ef5d500b05b721df1cc52f26f5b0060aaa9922b2371a2cb6e2f93624ccc"
+      },
+      "missing_inputs": [
+        {
+          "needed": "Actual0.2.20->0.2.21 same-packet signed beta download/install/automatic new process/readback/pending cleanup for nsis",
+          "target_fields": [
+            "facts/actualDownloaded",
+            "facts/signatureVerified",
+            "facts/explicitInstall",
+            "facts/automaticNewProcessObserved",
+            "facts/installedIdentityVerified",
+            "facts/configReadback",
+            "facts/pendingCleared",
+            "facts/sameFrozenBytes"
+          ],
+          "current": "No successful actual adjacent OTA receipt supplied. Preparation/waiting/ignored records are not pass."
+        }
+      ],
+      "executable_sha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f"
+    }
+  },
+  "scope_boundaries": {
+    "provider_original_pending_retained": true,
+    "provider_global_restart_called": false,
+    "provider_copy_ack_is_mock": true,
+    "windows_release_post_upload_innerselect_failed": true,
+    "release_job_failure_not_rewritten": true,
+    "mac_original_timer_failure_not_rewritten": true,
+    "default_installer_failure_not_rewritten": true,
+    "ignored_or_skipped_are_not_pass": true
+  },
+  "progress_counts": {
+    "passed": 4,
+    "pending": 9
+  },
+  "replay_archive": {
+    "path": ".adg/evidence/0.2.21/final-closeout-20261104/acceptance-input-originals.progress.tar.gz",
+    "sha256": "ad8e38d2228fcbdf4f0b9aa3b6dde2559dcd24b2ad1b3766d207fbbd951c9fc7",
+    "files": 49,
+    "scope": "Exact read-only accepted/pending/historical proof bytes at original docs-root-relative member paths; no replacement of raw originals; no code, binary, daily config or secret. Main two progress JSONs are separate to avoid circular hashes."
+  }
+}

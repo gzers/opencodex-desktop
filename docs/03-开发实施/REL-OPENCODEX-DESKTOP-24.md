@@ -1,10 +1,21 @@
 ---
 id: "REL-OPENCODEX-DESKTOP-24"
 object_kind: "release"
-state: "planned"
+state: "verified"
 title: "0.2.21 发布后问题修复发布"
-summary: "用户已授权至发布；当前G0及实现进行中，尚无0.2.21冻结原包或公开版本。"
+summary: "0.2.21七项修复、8项验收及双平台原包和实际相邻升级完成，已公开stable/Latest。"
 ---
+# 0.2.21 stable / Latest
+
+https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.21
+
+2026-11-04最终收口：PR68已合并为7a8441f7e647e4b3540d5907e44ac4f186f90998，发布原包source6e2197fd0b8a36dcb8d893b62693c5a2a77151cc。CI41817249379通过，测试源20d与原包产品输入相同；后续仅验收工具提交。Windows四格41817246537、两条实际升级41816399916和原生owner两例通过；Mac原包关闭/保存/计时/WebDAV通过，最终bd0dc0a9轮由旧44138到自动44591，同一新进程读回及8份业务/偏好/备份前像保持。发布41821739770晋升stable成功，release433749817八资产、三更新签名、五平台清单及匿名tag/Latest读回一致。逐项8AC和17检查、实际范围及正式TASK/RCP/CERT由.adg/evidence/0.2.21/final-closeout-20261104承接。
+
+兼容边界：对象包v4读取v1至3，接收新包须升级0.2.21；旧内容缺可靠时间时停止自动取新，不补now。沿用0.2.20字号和首次全选/后来新增不自动选。额度独立暂缓，不增加旧别名或历史会话迁移。Windows默认格验证安装/首屏/资源，自定义两格另严格验证卸载和数据保持；NSIS default使用owner提权，其余三格ordinary。Windows实际升级在OS观察自动新进程后，以同一installed EXE隔离重开读回，Mac为同一自动进程。
+
+失败与恢复：旧9ed私有候选取消并保留validation归档。Windows JS换行、原生点击几何及只读IPC漏项均保留失败后修正工具；Mac API限流、偏好字段、旧进程AX失效和鼠标投递、禁用按钮只读断言的原件也全部保留。最终升级由真实TLS下载/旧公钥验签/原位安装/精确自有窗口原生输入完成，无手动补起。全局日常Codex重启未执行，真实prepare/live/默认/请求链与副本模拟ack分开。保留公开0.2.20原包与保护备份作为手动回退来源；未修改日常配置、替换日常安装或执行日常真实同步。
+
+## Historical stage records
 
 # 0.2.21 发布后问题修复发布
 

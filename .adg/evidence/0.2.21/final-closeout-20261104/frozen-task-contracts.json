@@ -1,0 +1,290 @@
+{
+  "schema": "ocx021-frozen-closure-contract-v1",
+  "captured_at": "2026-11-04T08:39:07.323758+00:00",
+  "note": "Read-only snapshot of actual already-frozen TASKs and criteria, not a rebind.",
+  "task_ids": [
+    "TASK-OPENCODEX-UI021-MODALS-20261104",
+    "TASK-OPENCODEX-UI021-SYNC-20261104",
+    "TASK-OPENCODEX-UI021-INTEGRATION-20261104"
+  ],
+  "criteria": [
+    {
+      "id": "AC-021-01",
+      "text": "保存成功通知不自动聚焦重启按钮；终态8秒收起，进度与剩余时间同源。主动悬停/键盘进入、页面隐藏及重启确认期间暂停，原因全部解除才续计。确认窗X/Escape/遮罩/取消仅取消确认并续计；到期不重启，稍后收起；连续保存及旧请求不能关闭新通知。"
+    },
+    {
+      "id": "AC-021-02",
+      "text": "渠道直接改名：名称与对应运行标识一并更新，Krill-1改Krill后当前配置和客户端目录使用Krill/原始模型ID。当前provider键、默认项、顺序/禁用项、执行设置和凭据归属等真实引用一致更新；稳定channel.id、节点/模版/模型身份及认证内容保持。单渠道/全页保存、冲突/保护来源校验、失败回滚、取消无写入和保存读回均通过；成功提示重启并在隔离客户端重启后核对显示及路由。不做旧标识兼容、旧别名保留或历史会话迁移。"
+    },
+    {
+      "id": "AC-021-03",
+      "text": "WebDAV按同一范围已保存内容的可靠保存时间取新：本机较新上传、云端较新下载、内容相同无需更新；无共同基线/双侧变化不得固定选云端。时间与内容摘要绑定，读取/传输/复制/打包/范围重选不使内容变新；未知、不可靠或同刻异内容不自动选新、不写入。预览与确认重验使用同一决策，漂移重新预览，备份/取消/范围外保护沿原合同。"
+    },
+    {
+      "id": "AC-021-04",
+      "text": "渠道列表采用渠道/模型/启用/操作，保留选择列；渠道列160至220逻辑px，操作列检测两字按钮打开公共居中模态。取消节点常驻选中底色/加粗，仅留勾选及正常悬停/键盘焦点。保留详情节点、单节点/一键检测和停止；检测不自动选节点或保存，选择仅改草稿，关闭观察不自动取消任务；验键盘、滚动、结果更新、窄窗与焦点归还。额度列及详情额度配置排除。"
+    },
+    {
+      "id": "AC-021-05",
+      "text": "概览WebDAV状态区分未配置、已配置未检测、最近检测成功/失败及进行中，不把保存配置当连通成功。观察绑定已保存端点/目录/账号及凭据修订，未保存表单测试不污染当前连接；晚回结果失效，重载不无条件断开，改连接失效旧观察。历史线上版本标明观察来源/时间，未知不伪装云端无版本；概览与同步共用状态，无新增自动联网。"
+    },
+    {
+      "id": "AC-021-06",
+      "text": "导入的连接：成功读取且无候选时隐藏入口；加载中/读取失败不当作空列表，失败可见且可重试。有候选显示数量及非活动候选用途，显式确认启用后才替换当前连接；缺密码不假成功，本机同步范围保持。X/Escape/取消不启用，关闭后晚回请求不得改当前表单。"
+    },
+    {
+      "id": "AC-021-07",
+      "text": "管理器自有模态统一标题栏最右X；查看型无底部关闭和空底栏，保留真实业务动作；编辑/确认型右上X及右下取消/主操作。X/Escape/遮罩/取消共用退出守卫，嵌套层先消费Escape，焦点循环及归还一致。任务关闭观察与取消分离，受限阶段所有退出通道同守卫；覆盖UiDialog、AppModal/ModalContent及专用宿主，原生系统选择器/官方页面/非模态助手按归属排除。"
+    },
+    {
+      "id": "AC-021-08",
+      "text": "逐项记录采用原型页面/状态、软件消费者和实际证据；先保留旧行为反例再验证修复。保存包含实际隔离文件读回，取消与失败检查副作用；受影响完整回归、typecheck/build/cargo和双引擎/双平台原生按影响覆盖。沿用0.2.20已确认字体及首次范围全选、以后新增不自动勾选的规则。不得把原型通过、mock重启、旧证书或部分测试当整版验收；遗留原型计时失败须单独处置。"
+    }
+  ],
+  "tasks": {
+    "TASK-OPENCODEX-UI021-MODALS-20261104": {
+      "task": {
+        "acceptance_bindings": [
+          {
+            "acceptance_id": "AC-021-07",
+            "criterion_digest": "6087d941c0dd7173df534be85d009cb5bb315d4b75bfedce023173c413c40613",
+            "demand_id": "DMD-OPENCODEX-UI-021"
+          }
+        ],
+        "acceptance_ids": [
+          "AC-021-07"
+        ],
+        "baseline_digest": "9962bd7a2c6bf02e3a3396829e0f38701545b9651f0b56560cd3ed6e8f9c53cd",
+        "certificate_digest": null,
+        "content_digest": "48610e8930309e1fa5be7c96b0a04ef21791017474591c97d4326a6c6b8458bf",
+        "demand_ids": [
+          "DMD-OPENCODEX-UI-021"
+        ],
+        "fact_writeback": {
+          "mode": "required",
+          "targets": [
+            {
+              "before_digest": "bb268042909db2e431e9c64f5ba0d9f60dbe70f9c6a19d4da5511f290c11b170",
+              "id": "demand",
+              "path": "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md"
+            },
+            {
+              "before_digest": "2575a9ecc9902bb7926689ec8ece11ff853c774e665e0541fa3248471404b4a7",
+              "id": "implementation",
+              "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md"
+            },
+            {
+              "before_digest": "608f31a7f84fce28811a3647d6b9f4e2f56c3d30a10193a90c03a09af95741e9",
+              "id": "issues",
+              "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+            }
+          ]
+        },
+        "id": "TASK-OPENCODEX-UI021-MODALS-20261104",
+        "implementation_id": "IMP-OPENCODEX-DESKTOP-29",
+        "imported_receipt_digest": null,
+        "kind": "TASK",
+        "owner": "current-chat-modal-integration",
+        "required_checks": [
+          "review:modal-consumers",
+          "review:modal-native",
+          "review:modal-side-effects",
+          "review:prototype-adoption"
+        ],
+        "result": "pending",
+        "revision": 2,
+        "state": "in_progress",
+        "summary": "承接已有冻结原型POST-09，先代表流程再扩自有消费者；其它新状态G0独立继续。",
+        "summary_digest": "ba8751b9d1726bb9faa9ac3547b391044ec2941f7425e74a31e37c2ea250fdb8",
+        "title": "0.2.21公共弹窗关闭与真实消费者迁移",
+        "write_scope": [
+          ".adg/evidence/0.2.21/**",
+          "apps/desktop/ui/qa/**",
+          "apps/desktop/ui/src/**",
+          "apps/desktop/ui/tests/**",
+          "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md",
+          "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md",
+          "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+        ]
+      },
+      "baseline_path": ".adg/evidence/0.2.21/implementation-20261104/modal-baseline.json"
+    },
+    "TASK-OPENCODEX-UI021-SYNC-20261104": {
+      "task": {
+        "acceptance_bindings": [
+          {
+            "acceptance_id": "AC-021-03",
+            "criterion_digest": "14a65d49f87d2c2dde44af069c51f9ae63976034c7faa768854f30c5c23fd06c",
+            "demand_id": "DMD-OPENCODEX-UI-021"
+          }
+        ],
+        "acceptance_ids": [
+          "AC-021-03"
+        ],
+        "baseline_digest": "c92fd83fe99563086ee00270ebb4f48ea308ca5c91c5129b448843c69c739d2e",
+        "certificate_digest": null,
+        "content_digest": "b511e1f9a662d5d202e57b4711d2d6daabe42e2f71d22e16530121ed5f3c9594",
+        "demand_ids": [
+          "DMD-OPENCODEX-UI-021"
+        ],
+        "fact_writeback": {
+          "mode": "required",
+          "targets": [
+            {
+              "before_digest": "9c180f8b221580bcbb1941b536aec5046f28baa3a169055e60f014b9f7bb3404",
+              "id": "demand",
+              "path": "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md"
+            },
+            {
+              "before_digest": "47f06548010621882620cbae3dec61cce4e9db12c79bd9bf928cdcf0f2ed4926",
+              "id": "implementation",
+              "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md"
+            },
+            {
+              "before_digest": "3dd389cc9490b0e0b8b570c1595598d809a7549234e1e09e20e599b55c8f917f",
+              "id": "issues",
+              "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+            }
+          ]
+        },
+        "id": "TASK-OPENCODEX-UI021-SYNC-20261104",
+        "implementation_id": "IMP-OPENCODEX-DESKTOP-29",
+        "imported_receipt_digest": null,
+        "kind": "TASK",
+        "owner": "current-chat-sync-integration",
+        "required_checks": [
+          "review:prototype-adoption",
+          "review:save-time-lifecycle",
+          "review:sync-native",
+          "review:sync-side-effects",
+          "review:sync-version-direction"
+        ],
+        "result": "pending",
+        "revision": 2,
+        "state": "in_progress",
+        "summary": "可靠保存时间及内容摘要绑定，实际后端比较与确认重验；未知时间不自动选新。",
+        "summary_digest": "bcb62d06695c81b9a10dbb7619a27cabe2506c9b7b07843f8d104026e9fadfbc",
+        "title": "0.2.21保存版本生命周期及同步取新修复",
+        "write_scope": [
+          ".adg/evidence/0.2.21/**",
+          "apps/desktop/tauri/src/**",
+          "apps/desktop/tauri/tests/**",
+          "apps/desktop/ui/src/features/sync/**",
+          "apps/desktop/ui/tests/**",
+          "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md",
+          "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md",
+          "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+        ]
+      },
+      "baseline_path": ".adg/evidence/0.2.21/implementation-20261104/sync-baseline.json"
+    },
+    "TASK-OPENCODEX-UI021-INTEGRATION-20261104": {
+      "task": {
+        "acceptance_bindings": [
+          {
+            "acceptance_id": "AC-021-01",
+            "criterion_digest": "8adbc30c9988e6c9e5ae29b07707b7ef688388370fb794c9609f8c5f57551540",
+            "demand_id": "DMD-OPENCODEX-UI-021"
+          },
+          {
+            "acceptance_id": "AC-021-02",
+            "criterion_digest": "39ae9d76e067221e87d305c7fc90ecbb765dd43c46f7fd911ba49a5db70011d0",
+            "demand_id": "DMD-OPENCODEX-UI-021"
+          },
+          {
+            "acceptance_id": "AC-021-04",
+            "criterion_digest": "581924481f114cbd5c8e48de77fb8146429258183abbb6e4aa8f2a4a80281e6f",
+            "demand_id": "DMD-OPENCODEX-UI-021"
+          },
+          {
+            "acceptance_id": "AC-021-05",
+            "criterion_digest": "151acecf080bbbc7aafff1d6d6f0fe0b860efb953108906411154f9a74d7d4d9",
+            "demand_id": "DMD-OPENCODEX-UI-021"
+          },
+          {
+            "acceptance_id": "AC-021-06",
+            "criterion_digest": "e654ce2c0646887102f91b67f14a558fd9363bd6fddfbbea92adfebf06ee786f",
+            "demand_id": "DMD-OPENCODEX-UI-021"
+          },
+          {
+            "acceptance_id": "AC-021-08",
+            "criterion_digest": "a06da6b729fdfa94be8e091a455e6c1b670fb609cb647b6577ec797b9135c93c",
+            "demand_id": "DMD-OPENCODEX-UI-021"
+          }
+        ],
+        "acceptance_ids": [
+          "AC-021-01",
+          "AC-021-02",
+          "AC-021-04",
+          "AC-021-05",
+          "AC-021-06",
+          "AC-021-08"
+        ],
+        "baseline_digest": "9bad254fc05136d7c841177656e06e154a64bce407e36ef664c6cf1d454baf46",
+        "certificate_digest": null,
+        "content_digest": "da3723895a377eb048d45ee4be6711c064cdd32f0c7dc88ad19a8d2d37c1abe2",
+        "demand_ids": [
+          "DMD-OPENCODEX-UI-021"
+        ],
+        "fact_writeback": {
+          "mode": "required",
+          "targets": [
+            {
+              "before_digest": "88c09bf79068519e3617d5cf139e413c53f43685489cf739df088b937d30f6ab",
+              "id": "demand",
+              "path": "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md"
+            },
+            {
+              "before_digest": "7a8bdff41b7717e8ea873718976f9107429ea0b362c24a51991679a314373daf",
+              "id": "implementation",
+              "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md"
+            },
+            {
+              "before_digest": "457d136d9ef857ea78a27a08d14a6d42289e1532117ebe47f7ab81d76fdcd32b",
+              "id": "issues",
+              "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+            },
+            {
+              "before_digest": "3a98b1d14e7b6a14e6988b22ec8bf5645954997cd31154979c98ba2491cfaa49",
+              "id": "release",
+              "path": "docs/03-开发实施/REL-OPENCODEX-DESKTOP-24.md"
+            }
+          ]
+        },
+        "id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
+        "implementation_id": "IMP-OPENCODEX-DESKTOP-29",
+        "imported_receipt_digest": null,
+        "kind": "TASK",
+        "owner": "current-chat-integration",
+        "required_checks": [
+          "review:full-regression",
+          "review:macos-windows-native",
+          "review:notifications-detection",
+          "review:prototype-adoption",
+          "review:release-and-ota",
+          "review:rename-references",
+          "review:saved-side-effects",
+          "review:webdav-observation-candidates"
+        ],
+        "result": "pending",
+        "revision": 2,
+        "state": "in_progress",
+        "summary": "五项剩余修复和共同交付门；不复用旧关闭证书，不以原型/spike通过替代真实生产验收。",
+        "summary_digest": "e2b689accdffa72bcde142494ca87d4ace6f5c3351978654163b5e7f3263ccd5",
+        "title": "0.2.21剩余修复集成、完整验收与发布",
+        "write_scope": [
+          ".adg/evidence/0.2.21/**",
+          ".github/**",
+          "CHANGELOG.md",
+          "apps/**",
+          "docs/01-需求管理/需求/DMD-OPENCODEX-UI-021.md",
+          "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-29.md",
+          "docs/03-开发实施/REL-OPENCODEX-DESKTOP-24.md",
+          "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+          "test/**"
+        ]
+      },
+      "baseline_path": ".adg/evidence/0.2.21/implementation-20261104/integration-baseline.json"
+    }
+  }
+}

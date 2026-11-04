@@ -2,14 +2,13 @@
 id: "IMP-OPENCODEX-DESKTOP-29"
 object_kind: "implementation.change"
 title: "0.2.21 七项修复与开发前置计划"
-state: "in_progress"
+state: "completed"
 dmd_refs: ["DMD-OPENCODEX-UI-021"]
 demand_ids: ["DMD-OPENCODEX-UI-021"]
 task_ids: ["TASK-OPENCODEX-UI021-MODALS-20261104", "TASK-OPENCODEX-UI021-SYNC-20261104", "TASK-OPENCODEX-UI021-INTEGRATION-20261104"]
-summary: "七项实现及原型已集成至codex/0.2.21-fixes；本地完整检查通过，进行最终原生、CI和同原包发布门禁。"
-completion_summary: null
+summary: "0.2.21七项修复、8项验收及双平台原包和实际相邻升级完成，已公开stable/Latest。"
+completion_summary: "七项开发、完整CI、双平台原包原生、Windows四安装格及Mac/MSI/NSIS三条实际0.2.20至0.2.21升级通过；release433749817同八资产晋升stable，tag和Latest匿名读回通过。"
 ---
-
 # 0.2.21 七项修复与开发前置计划
 
 2026-11-04，Asia/Shanghai。范围/验收只取[DMD-UI-021](../01-需求管理/需求/DMD-OPENCODEX-UI-021.md)，逐问题状态与原始发现见[0.2.21清单](../04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md)。本IMP只维护顺序和依赖，不复用已completed的IMP-28或TASK/CERT。
@@ -69,3 +68,8 @@ G0核心放行并进入G2/G3（2026-11-04）：新增原型41项定向、工作�
 
 
 2026-11-04最终候选接续：双平台标准npm入口已修复。Windows13项、Mac7项、父级22项及Clippy通过；Windows实际原生owner 41806371582两项通过。最终发布源6e2197fd0，CI41807738899、Windows owner41807732522与私有构建41807781351继续。Mac默认入口完整链、原包原生、安装、实际升级与stable读回仍待验，不关闭任务。
+
+
+2026-11-04最终收口：PR68已合并为7a8441f7e647e4b3540d5907e44ac4f186f90998，发布原包source6e2197fd0b8a36dcb8d893b62693c5a2a77151cc。CI41817249379通过，测试源20d与原包产品输入相同；后续仅验收工具提交。Windows四格41817246537、两条实际升级41816399916和原生owner两例通过；Mac原包关闭/保存/计时/WebDAV通过，最终bd0dc0a9轮由旧44138到自动44591，同一新进程读回及8份业务/偏好/备份前像保持。发布41821739770晋升stable成功，release433749817八资产、三更新签名、五平台清单及匿名tag/Latest读回一致。逐项8AC和17检查、实际范围及正式TASK/RCP/CERT由.adg/evidence/0.2.21/final-closeout-20261104承接。
+
+兼容边界：对象包v4读取v1至3，接收新包须升级0.2.21；旧内容缺可靠时间时停止自动取新，不补now。沿用0.2.20字号和首次全选/后来新增不自动选。额度独立暂缓，不增加旧别名或历史会话迁移。Windows默认格验证安装/首屏/资源，自定义两格另严格验证卸载和数据保持；NSIS default使用owner提权，其余三格ordinary。Windows实际升级在OS观察自动新进程后，以同一installed EXE隔离重开读回，Mac为同一自动进程。

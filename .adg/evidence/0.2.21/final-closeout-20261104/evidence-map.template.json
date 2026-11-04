@@ -1,0 +1,1119 @@
+{
+  "schema": "ocx021-evidence-map-v1",
+  "source_commit": null,
+  "note": "Template only. Every row stays pending until final applicability/evidence review. Candidates and historical failures never count as passed.",
+  "tasks": {
+    "TASK-OPENCODEX-UI021-MODALS-20261104": {
+      "acceptance": {
+        "AC-021-07": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/modal-implementation-20261104/owned-consumers.json",
+              "sha256": "021d8d6d746b80c42e6787b5fa4d1d84e5349e956c12fb769c73eaf9ddb68112",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Real consumer inventory and browser fixture tests; final same-source native original bundle not certified."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/modal-implementation-20261104/browser-results.json",
+              "sha256": "4cf6dc8ba64e9e1a5f88ea1bd2ca1dcc2181059f062070c6bf06d8472ef7c52c",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Real consumer inventory and browser fixture tests; final same-source native original bundle not certified."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/modal-implementation-20261104/remaining/README.md",
+              "sha256": "4eb0a852315b0c88d5eca5aa38b3b6a5b96165e30c35f3e693db9ef443ab3202",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Real consumer inventory and browser fixture tests; final same-source native original bundle not certified."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        }
+      },
+      "checks": {
+        "review:modal-consumers": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/modal-implementation-20261104/owned-consumers.json",
+              "sha256": "021d8d6d746b80c42e6787b5fa4d1d84e5349e956c12fb769c73eaf9ddb68112",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Real consumer inventory and browser fixture tests; final same-source native original bundle not certified."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/modal-implementation-20261104/browser-results.json",
+              "sha256": "4cf6dc8ba64e9e1a5f88ea1bd2ca1dcc2181059f062070c6bf06d8472ef7c52c",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Real consumer inventory and browser fixture tests; final same-source native original bundle not certified."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/modal-implementation-20261104/remaining/README.md",
+              "sha256": "4eb0a852315b0c88d5eca5aa38b3b6a5b96165e30c35f3e693db9ef443ab3202",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Real consumer inventory and browser fixture tests; final same-source native original bundle not certified."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:modal-native": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/macos-native-20261104/summary.json",
+              "sha256": "db129ba943afad6f14ae88b56fb53d1761d81d38ed00517bb5e50d8bd327fb91",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/macos-native-20261104/ready/summary.json",
+              "sha256": "7fab45d4381ca3d84e52b34b823d8344dd6528af5a580e6901e4da049d86ef17",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/review.md",
+              "sha256": "c2738d54c06646a0cdd932f576ac2779fbf4f59dfc32accd72eef36b4ed9cdc8",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:modal-side-effects": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/modal-implementation-20261104/owned-consumers.json",
+              "sha256": "021d8d6d746b80c42e6787b5fa4d1d84e5349e956c12fb769c73eaf9ddb68112",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Real consumer inventory and browser fixture tests; final same-source native original bundle not certified."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/modal-implementation-20261104/browser-results.json",
+              "sha256": "4cf6dc8ba64e9e1a5f88ea1bd2ca1dcc2181059f062070c6bf06d8472ef7c52c",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Real consumer inventory and browser fixture tests; final same-source native original bundle not certified."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/modal-implementation-20261104/remaining/README.md",
+              "sha256": "4eb0a852315b0c88d5eca5aa38b3b6a5b96165e30c35f3e693db9ef443ab3202",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Real consumer inventory and browser fixture tests; final same-source native original bundle not certified."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:prototype-adoption": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/g0-adoption-replay-20261104/adoption-result.json",
+              "sha256": "c20fd3b7f01148405649cd2258b73f1e44224ebd0891800efb0031f499182a52",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Adopted own-delta Git replay, prototype/mock only, not production acceptance; concurrent future features excluded."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/g0-adoption-replay-20261104/source-manifest.json",
+              "sha256": "7f8f42054bad489bec09b4d86c7396aa5af58c8370b27b281c630f9cc8dfeeba",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Adopted own-delta Git replay, prototype/mock only, not production acceptance; concurrent future features excluded."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        }
+      }
+    },
+    "TASK-OPENCODEX-UI021-SYNC-20261104": {
+      "acceptance": {
+        "AC-021-03": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/sync-implementation-20261104/result.json",
+              "sha256": "8dcfd40bd23e37ab4ef78bd6567c99b178866e8911db0d4113e4c5da6d1199ed",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/sync-implementation-20261104/review3-result.json",
+              "sha256": "844e07bc081808c3023f4d30a994ce6c3b4f4695bc3fe4ae773db326f5eebb79",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/integration-20261104/independent-core-review-final.json",
+              "sha256": "895712132e4500ce884bb39ae10d7ec47fa25d0c25c58e7299d85bcbf35bbd1b",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/integration-20261104/owned-https-second.log",
+              "sha256": "4bc7a4645d98baccff1e9b4c995ed8ade899d7b8c2534b6cea0bac3ed1a0e86a",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        }
+      },
+      "checks": {
+        "review:prototype-adoption": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/g0-adoption-replay-20261104/adoption-result.json",
+              "sha256": "c20fd3b7f01148405649cd2258b73f1e44224ebd0891800efb0031f499182a52",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Adopted own-delta Git replay, prototype/mock only, not production acceptance; concurrent future features excluded."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/g0-adoption-replay-20261104/source-manifest.json",
+              "sha256": "7f8f42054bad489bec09b4d86c7396aa5af58c8370b27b281c630f9cc8dfeeba",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Adopted own-delta Git replay, prototype/mock only, not production acceptance; concurrent future features excluded."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:save-time-lifecycle": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/sync-implementation-20261104/result.json",
+              "sha256": "8dcfd40bd23e37ab4ef78bd6567c99b178866e8911db0d4113e4c5da6d1199ed",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/sync-implementation-20261104/review3-result.json",
+              "sha256": "844e07bc081808c3023f4d30a994ce6c3b4f4695bc3fe4ae773db326f5eebb79",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/integration-20261104/independent-core-review-final.json",
+              "sha256": "895712132e4500ce884bb39ae10d7ec47fa25d0c25c58e7299d85bcbf35bbd1b",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/integration-20261104/owned-https-second.log",
+              "sha256": "4bc7a4645d98baccff1e9b4c995ed8ade899d7b8c2534b6cea0bac3ed1a0e86a",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:sync-native": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/sync-implementation-20261104/result.json",
+              "sha256": "8dcfd40bd23e37ab4ef78bd6567c99b178866e8911db0d4113e4c5da6d1199ed",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/sync-implementation-20261104/review3-result.json",
+              "sha256": "844e07bc081808c3023f4d30a994ce6c3b4f4695bc3fe4ae773db326f5eebb79",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/integration-20261104/independent-core-review-final.json",
+              "sha256": "895712132e4500ce884bb39ae10d7ec47fa25d0c25c58e7299d85bcbf35bbd1b",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/integration-20261104/owned-https-second.log",
+              "sha256": "4bc7a4645d98baccff1e9b4c995ed8ade899d7b8c2534b6cea0bac3ed1a0e86a",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/macos-native-20261104/summary.json",
+              "sha256": "db129ba943afad6f14ae88b56fb53d1761d81d38ed00517bb5e50d8bd327fb91",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/macos-native-20261104/ready/summary.json",
+              "sha256": "7fab45d4381ca3d84e52b34b823d8344dd6528af5a580e6901e4da049d86ef17",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/review.md",
+              "sha256": "c2738d54c06646a0cdd932f576ac2779fbf4f59dfc32accd72eef36b4ed9cdc8",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:sync-side-effects": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/sync-implementation-20261104/result.json",
+              "sha256": "8dcfd40bd23e37ab4ef78bd6567c99b178866e8911db0d4113e4c5da6d1199ed",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/sync-implementation-20261104/review3-result.json",
+              "sha256": "844e07bc081808c3023f4d30a994ce6c3b4f4695bc3fe4ae773db326f5eebb79",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/integration-20261104/independent-core-review-final.json",
+              "sha256": "895712132e4500ce884bb39ae10d7ec47fa25d0c25c58e7299d85bcbf35bbd1b",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/integration-20261104/owned-https-second.log",
+              "sha256": "4bc7a4645d98baccff1e9b4c995ed8ade899d7b8c2534b6cea0bac3ed1a0e86a",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:sync-version-direction": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/sync-implementation-20261104/result.json",
+              "sha256": "8dcfd40bd23e37ab4ef78bd6567c99b178866e8911db0d4113e4c5da6d1199ed",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/sync-implementation-20261104/review3-result.json",
+              "sha256": "844e07bc081808c3023f4d30a994ce6c3b4f4695bc3fe4ae773db326f5eebb79",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/integration-20261104/independent-core-review-final.json",
+              "sha256": "895712132e4500ce884bb39ae10d7ec47fa25d0c25c58e7299d85bcbf35bbd1b",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/integration-20261104/owned-https-second.log",
+              "sha256": "4bc7a4645d98baccff1e9b4c995ed8ade899d7b8c2534b6cea0bac3ed1a0e86a",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Actual owned file/lifecycle and bounded review/HTTPS scope; package/native/release separate."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        }
+      }
+    },
+    "TASK-OPENCODEX-UI021-INTEGRATION-20261104": {
+      "acceptance": {
+        "AC-021-01": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/notification-detection-20261104/receipt.json",
+              "sha256": "88ecbf046cd58ea7ba1095df250725a69de6105e9c743e31edab4c694feb3128",
+              "role": "candidate-partial-evidence-only",
+              "limits": "POST01/05 local and dual-browser scope; final source/native package still separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/notification-detection-20261104/chromium/report.json",
+              "sha256": "34223e48f313e5322b6ad82f30bac8b21900433d2688098141d27ca9a2daba64",
+              "role": "candidate-partial-evidence-only",
+              "limits": "POST01/05 local and dual-browser scope; final source/native package still separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/notification-detection-20261104/webkit/report.json",
+              "sha256": "63b7e721fb8899e172935c448a5408a0eda067e3badf039ab4cdbd3290728537",
+              "role": "candidate-partial-evidence-only",
+              "limits": "POST01/05 local and dual-browser scope; final source/native package still separate."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "AC-021-02": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/production-prepare-86-result.json",
+              "sha256": "b5bcaa368e0416dee6861fd0bb45c9b95720edf223dece5c668e45681ed9c68b",
+              "claims": {
+                "tested_commit": "/sourceFreeze",
+                "facts/successfulRawProductionRun": "/checks/successfulRawProductionRun",
+                "facts/exactFreezeAcrossFiveSnapshots": "/checks/exactFreezeAcrossFiveSnapshots",
+                "facts/noProductBuildOrRunDrift": "/checks/noProductBuildOrRunDrift",
+                "facts/standardNpmSymlinkPreserved": "/checks/standardNpmSymlinkPreserved",
+                "facts/noForcedNativeRuntimeEnvironment": "/checks/noForcedNativeRuntimeEnvironment",
+                "facts/actualInitialPathDiscoveryUnpinned": "/checks/actualInitialPathDiscoveryUnpinned",
+                "facts/actualSettingsAgreeWithResolver": "/checks/actualSettingsAgreeWithResolver",
+                "facts/nativeIntegrationBoundToOwnedHome": "/checks/nativeIntegrationBoundToOwnedHome",
+                "facts/realSaveAndStableIdentity": "/checks/realSaveAndStableIdentity",
+                "facts/realPublicProductionPrepare": "/checks/realPublicProductionPrepare",
+                "facts/liveRosterAndDefaultFullyAdopted": "/checks/liveRosterAndDefaultFullyAdopted",
+                "facts/savedDiskIdentityUnchanged": "/checks/savedDiskIdentityUnchanged",
+                "facts/producerGeneratedNewCatalogNamespace": "/checks/producerGeneratedNewCatalogNamespace",
+                "facts/freshOfficialClientReadNewDirectory": "/checks/freshOfficialClientReadNewDirectory",
+                "facts/currentConfigAndFreshDefaultAgree": "/checks/currentConfigAndFreshDefaultAgree",
+                "facts/threadStartWithoutModelConfigOverride": "/checks/threadStartWithoutModelConfigOverride",
+                "facts/execUsesNpmWithoutModelConfigOverride": "/checks/execUsesNpmWithoutModelConfigOverride",
+                "facts/localResponsesRawModelAndSyntheticAuth": "/checks/localResponsesRawModelAndSyntheticAuth",
+                "facts/actualProviderRawModelAndRouteKind": "/checks/actualProviderRawModelAndRouteKind",
+                "facts/clientConsumedLocalResponse": "/checks/clientConsumedLocalResponse",
+                "facts/realPendingRetainedAndMapped": "/checks/realPendingRetainedAndMapped",
+                "facts/noPostSaveManualConfigCatalogOwnerRepair": "/checks/noPostSaveManualConfigCatalogOwnerRepair",
+                "facts/noDailyGlobalRestartOrRealSupplierRequest": "/checks/noDailyGlobalRestartOrRealSupplierRequest"
+              },
+              "assertions": [
+                {
+                  "pointer": "/checkCount",
+                  "equals": 35
+                },
+                {
+                  "pointer": "/globalRestartCalled",
+                  "equals": false
+                },
+                {
+                  "pointer": "/actualGuiRestartVerified",
+                  "equals": false
+                },
+                {
+                  "pointer": "/actualPendingAcknowledged",
+                  "equals": false
+                },
+                {
+                  "pointer": "/actualPendingRetained",
+                  "equals": true
+                }
+              ],
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/verification-86.json",
+              "sha256": "c2e327485a6b298426bcf98e283010ead13535cd7570bb82de4a3c31e6eee5bc",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/FINAL-86.md",
+              "sha256": "bcef634cc6222486e7cb555803313477c93514a94696423941203b98aaf74a2d",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/final-closeout-20261104/source-brief.progress.json",
+              "sha256": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-6e-ci-failure-and-owner-pass.json",
+              "sha256": "5d909104f27cf8f8c89f9f8ac271ace6d56cf4d4392ecae4b2ca944d1d40308a",
+              "assertions": [
+                {
+                  "pointer": "/actualOwner/head",
+                  "equals": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+                },
+                {
+                  "pointer": "/actualOwner/dualCase",
+                  "equals": "pass"
+                },
+                {
+                  "pointer": "/actualOwner/externalRefusal",
+                  "equals": "pass"
+                }
+              ],
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-owner/run-41807732522.binding-summary.json",
+              "sha256": "12c0938e61d954443f4ae8c3e783fe5407c1ae84eb371445501f84f620bdba14",
+              "assertions": [
+                {
+                  "pointer": "/head",
+                  "equals": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+                },
+                {
+                  "pointer": "/result",
+                  "equals": "binding-captured"
+                },
+                {
+                  "pointer": "/raw/source",
+                  "equals": "path"
+                }
+              ],
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/rename-implementation-20261104/result.json",
+              "sha256": "092587df6302760f9a5c7f85d9846be60479522203c2bbae65a58dd695bc62a1",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/bounded-reference-review.json",
+              "sha256": "8ef29ea9660c5ad51865a0e06f0262fd5b35ffc4374861f5dffaa7222ff50c00",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "AC-021-04": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/notification-detection-20261104/receipt.json",
+              "sha256": "88ecbf046cd58ea7ba1095df250725a69de6105e9c743e31edab4c694feb3128",
+              "role": "candidate-partial-evidence-only",
+              "limits": "POST01/05 local and dual-browser scope; final source/native package still separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/notification-detection-20261104/chromium/report.json",
+              "sha256": "34223e48f313e5322b6ad82f30bac8b21900433d2688098141d27ca9a2daba64",
+              "role": "candidate-partial-evidence-only",
+              "limits": "POST01/05 local and dual-browser scope; final source/native package still separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/notification-detection-20261104/webkit/report.json",
+              "sha256": "63b7e721fb8899e172935c448a5408a0eda067e3badf039ab4cdbd3290728537",
+              "role": "candidate-partial-evidence-only",
+              "limits": "POST01/05 local and dual-browser scope; final source/native package still separate."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "AC-021-05": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/webdav-observation-20261104/README.md",
+              "sha256": "85060ade5e1670a5ed0e5d432fefc59edb498e93d1c6baae035a85f06616301d",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Local and browser fixture observation/candidate scope; not daily WebDAV or final native IPC certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/webdav-observation-20261104/chromium/report.json",
+              "sha256": "e2b5ff73ef7f56e422a2a67e3893f2d8930c0f8933fd9b9c61dabcfc4e3f260f",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Local and browser fixture observation/candidate scope; not daily WebDAV or final native IPC certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/webdav-observation-20261104/webkit/report.json",
+              "sha256": "ad00e1ec608895688613512b9ff3967c71cec71e000a7bcbdb3e135c725bb8e2",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Local and browser fixture observation/candidate scope; not daily WebDAV or final native IPC certification."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "AC-021-06": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/webdav-observation-20261104/README.md",
+              "sha256": "85060ade5e1670a5ed0e5d432fefc59edb498e93d1c6baae035a85f06616301d",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Local and browser fixture observation/candidate scope; not daily WebDAV or final native IPC certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/webdav-observation-20261104/chromium/report.json",
+              "sha256": "e2b5ff73ef7f56e422a2a67e3893f2d8930c0f8933fd9b9c61dabcfc4e3f260f",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Local and browser fixture observation/candidate scope; not daily WebDAV or final native IPC certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/webdav-observation-20261104/webkit/report.json",
+              "sha256": "ad00e1ec608895688613512b9ff3967c71cec71e000a7bcbdb3e135c725bb8e2",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Local and browser fixture observation/candidate scope; not daily WebDAV or final native IPC certification."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "AC-021-08": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/ui-full-f0a6a13d.log",
+              "sha256": "f15610a00618536322fd15a6197bdf612097cc9ec093c7dca792ca2387f7b355",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Complete local suites at f0 source; final source changed, so not final Windows/CI certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/cargo-full-f0a6a13d.log",
+              "sha256": "ea3b8d34dc7197b597bee7c8fdd1888d9296010c767d7697d3502643703902cd",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Complete local suites at f0 source; final source changed, so not final Windows/CI certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/build-f0a6a13d.log",
+              "sha256": "0a56d3838454bd074306c972587060a239c9ba126655e24af0f94fedb19bd0cb",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Complete local suites at f0 source; final source changed, so not final Windows/CI certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/macos-native-20261104/summary.json",
+              "sha256": "db129ba943afad6f14ae88b56fb53d1761d81d38ed00517bb5e50d8bd327fb91",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/macos-native-20261104/ready/summary.json",
+              "sha256": "7fab45d4381ca3d84e52b34b823d8344dd6528af5a580e6901e4da049d86ef17",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/review.md",
+              "sha256": "c2738d54c06646a0cdd932f576ac2779fbf4f59dfc32accd72eef36b4ed9cdc8",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        }
+      },
+      "checks": {
+        "review:full-regression": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/ui-full-f0a6a13d.log",
+              "sha256": "f15610a00618536322fd15a6197bdf612097cc9ec093c7dca792ca2387f7b355",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Complete local suites at f0 source; final source changed, so not final Windows/CI certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/cargo-full-f0a6a13d.log",
+              "sha256": "ea3b8d34dc7197b597bee7c8fdd1888d9296010c767d7697d3502643703902cd",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Complete local suites at f0 source; final source changed, so not final Windows/CI certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/build-f0a6a13d.log",
+              "sha256": "0a56d3838454bd074306c972587060a239c9ba126655e24af0f94fedb19bd0cb",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Complete local suites at f0 source; final source changed, so not final Windows/CI certification."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:macos-windows-native": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/macos-native-20261104/summary.json",
+              "sha256": "db129ba943afad6f14ae88b56fb53d1761d81d38ed00517bb5e50d8bd327fb91",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/macos-native-20261104/ready/summary.json",
+              "sha256": "7fab45d4381ca3d84e52b34b823d8344dd6528af5a580e6901e4da049d86ef17",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/review.md",
+              "sha256": "c2738d54c06646a0cdd932f576ac2779fbf4f59dfc32accd72eef36b4ed9cdc8",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:notifications-detection": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/notification-detection-20261104/receipt.json",
+              "sha256": "88ecbf046cd58ea7ba1095df250725a69de6105e9c743e31edab4c694feb3128",
+              "role": "candidate-partial-evidence-only",
+              "limits": "POST01/05 local and dual-browser scope; final source/native package still separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/notification-detection-20261104/chromium/report.json",
+              "sha256": "34223e48f313e5322b6ad82f30bac8b21900433d2688098141d27ca9a2daba64",
+              "role": "candidate-partial-evidence-only",
+              "limits": "POST01/05 local and dual-browser scope; final source/native package still separate."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/notification-detection-20261104/webkit/report.json",
+              "sha256": "63b7e721fb8899e172935c448a5408a0eda067e3badf039ab4cdbd3290728537",
+              "role": "candidate-partial-evidence-only",
+              "limits": "POST01/05 local and dual-browser scope; final source/native package still separate."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:prototype-adoption": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/g0-adoption-replay-20261104/adoption-result.json",
+              "sha256": "c20fd3b7f01148405649cd2258b73f1e44224ebd0891800efb0031f499182a52",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Adopted own-delta Git replay, prototype/mock only, not production acceptance; concurrent future features excluded."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/g0-adoption-replay-20261104/source-manifest.json",
+              "sha256": "7f8f42054bad489bec09b4d86c7396aa5af58c8370b27b281c630f9cc8dfeeba",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Adopted own-delta Git replay, prototype/mock only, not production acceptance; concurrent future features excluded."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:release-and-ota": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/macos-native-20261104/summary.json",
+              "sha256": "db129ba943afad6f14ae88b56fb53d1761d81d38ed00517bb5e50d8bd327fb91",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/macos-native-20261104/ready/summary.json",
+              "sha256": "7fab45d4381ca3d84e52b34b823d8344dd6528af5a580e6901e4da049d86ef17",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/review.md",
+              "sha256": "c2738d54c06646a0cdd932f576ac2779fbf4f59dfc32accd72eef36b4ed9cdc8",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Earlier Mac debug/ready preverify and retained Windows Clippy/skipped native gap. No final signed/source native pass."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:rename-references": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/production-prepare-86-result.json",
+              "sha256": "b5bcaa368e0416dee6861fd0bb45c9b95720edf223dece5c668e45681ed9c68b",
+              "claims": {
+                "tested_commit": "/sourceFreeze",
+                "facts/successfulRawProductionRun": "/checks/successfulRawProductionRun",
+                "facts/exactFreezeAcrossFiveSnapshots": "/checks/exactFreezeAcrossFiveSnapshots",
+                "facts/noProductBuildOrRunDrift": "/checks/noProductBuildOrRunDrift",
+                "facts/standardNpmSymlinkPreserved": "/checks/standardNpmSymlinkPreserved",
+                "facts/noForcedNativeRuntimeEnvironment": "/checks/noForcedNativeRuntimeEnvironment",
+                "facts/actualInitialPathDiscoveryUnpinned": "/checks/actualInitialPathDiscoveryUnpinned",
+                "facts/actualSettingsAgreeWithResolver": "/checks/actualSettingsAgreeWithResolver",
+                "facts/nativeIntegrationBoundToOwnedHome": "/checks/nativeIntegrationBoundToOwnedHome",
+                "facts/realSaveAndStableIdentity": "/checks/realSaveAndStableIdentity",
+                "facts/realPublicProductionPrepare": "/checks/realPublicProductionPrepare",
+                "facts/liveRosterAndDefaultFullyAdopted": "/checks/liveRosterAndDefaultFullyAdopted",
+                "facts/savedDiskIdentityUnchanged": "/checks/savedDiskIdentityUnchanged",
+                "facts/producerGeneratedNewCatalogNamespace": "/checks/producerGeneratedNewCatalogNamespace",
+                "facts/freshOfficialClientReadNewDirectory": "/checks/freshOfficialClientReadNewDirectory",
+                "facts/currentConfigAndFreshDefaultAgree": "/checks/currentConfigAndFreshDefaultAgree",
+                "facts/threadStartWithoutModelConfigOverride": "/checks/threadStartWithoutModelConfigOverride",
+                "facts/execUsesNpmWithoutModelConfigOverride": "/checks/execUsesNpmWithoutModelConfigOverride",
+                "facts/localResponsesRawModelAndSyntheticAuth": "/checks/localResponsesRawModelAndSyntheticAuth",
+                "facts/actualProviderRawModelAndRouteKind": "/checks/actualProviderRawModelAndRouteKind",
+                "facts/clientConsumedLocalResponse": "/checks/clientConsumedLocalResponse",
+                "facts/realPendingRetainedAndMapped": "/checks/realPendingRetainedAndMapped",
+                "facts/noPostSaveManualConfigCatalogOwnerRepair": "/checks/noPostSaveManualConfigCatalogOwnerRepair",
+                "facts/noDailyGlobalRestartOrRealSupplierRequest": "/checks/noDailyGlobalRestartOrRealSupplierRequest"
+              },
+              "assertions": [
+                {
+                  "pointer": "/checkCount",
+                  "equals": 35
+                },
+                {
+                  "pointer": "/globalRestartCalled",
+                  "equals": false
+                },
+                {
+                  "pointer": "/actualGuiRestartVerified",
+                  "equals": false
+                },
+                {
+                  "pointer": "/actualPendingAcknowledged",
+                  "equals": false
+                },
+                {
+                  "pointer": "/actualPendingRetained",
+                  "equals": true
+                }
+              ],
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/verification-86.json",
+              "sha256": "c2e327485a6b298426bcf98e283010ead13535cd7570bb82de4a3c31e6eee5bc",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/FINAL-86.md",
+              "sha256": "bcef634cc6222486e7cb555803313477c93514a94696423941203b98aaf74a2d",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/final-closeout-20261104/source-brief.progress.json",
+              "sha256": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-6e-ci-failure-and-owner-pass.json",
+              "sha256": "5d909104f27cf8f8c89f9f8ac271ace6d56cf4d4392ecae4b2ca944d1d40308a",
+              "assertions": [
+                {
+                  "pointer": "/actualOwner/head",
+                  "equals": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+                },
+                {
+                  "pointer": "/actualOwner/dualCase",
+                  "equals": "pass"
+                },
+                {
+                  "pointer": "/actualOwner/externalRefusal",
+                  "equals": "pass"
+                }
+              ],
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-owner/run-41807732522.binding-summary.json",
+              "sha256": "12c0938e61d954443f4ae8c3e783fe5407c1ae84eb371445501f84f620bdba14",
+              "assertions": [
+                {
+                  "pointer": "/head",
+                  "equals": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+                },
+                {
+                  "pointer": "/result",
+                  "equals": "binding-captured"
+                },
+                {
+                  "pointer": "/raw/source",
+                  "equals": "path"
+                }
+              ],
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/rename-implementation-20261104/result.json",
+              "sha256": "092587df6302760f9a5c7f85d9846be60479522203c2bbae65a58dd695bc62a1",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/bounded-reference-review.json",
+              "sha256": "8ef29ea9660c5ad51865a0e06f0262fd5b35ffc4374861f5dffaa7222ff50c00",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:saved-side-effects": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/production-prepare-86-result.json",
+              "sha256": "b5bcaa368e0416dee6861fd0bb45c9b95720edf223dece5c668e45681ed9c68b",
+              "claims": {
+                "tested_commit": "/sourceFreeze",
+                "facts/successfulRawProductionRun": "/checks/successfulRawProductionRun",
+                "facts/exactFreezeAcrossFiveSnapshots": "/checks/exactFreezeAcrossFiveSnapshots",
+                "facts/noProductBuildOrRunDrift": "/checks/noProductBuildOrRunDrift",
+                "facts/standardNpmSymlinkPreserved": "/checks/standardNpmSymlinkPreserved",
+                "facts/noForcedNativeRuntimeEnvironment": "/checks/noForcedNativeRuntimeEnvironment",
+                "facts/actualInitialPathDiscoveryUnpinned": "/checks/actualInitialPathDiscoveryUnpinned",
+                "facts/actualSettingsAgreeWithResolver": "/checks/actualSettingsAgreeWithResolver",
+                "facts/nativeIntegrationBoundToOwnedHome": "/checks/nativeIntegrationBoundToOwnedHome",
+                "facts/realSaveAndStableIdentity": "/checks/realSaveAndStableIdentity",
+                "facts/realPublicProductionPrepare": "/checks/realPublicProductionPrepare",
+                "facts/liveRosterAndDefaultFullyAdopted": "/checks/liveRosterAndDefaultFullyAdopted",
+                "facts/savedDiskIdentityUnchanged": "/checks/savedDiskIdentityUnchanged",
+                "facts/producerGeneratedNewCatalogNamespace": "/checks/producerGeneratedNewCatalogNamespace",
+                "facts/freshOfficialClientReadNewDirectory": "/checks/freshOfficialClientReadNewDirectory",
+                "facts/currentConfigAndFreshDefaultAgree": "/checks/currentConfigAndFreshDefaultAgree",
+                "facts/threadStartWithoutModelConfigOverride": "/checks/threadStartWithoutModelConfigOverride",
+                "facts/execUsesNpmWithoutModelConfigOverride": "/checks/execUsesNpmWithoutModelConfigOverride",
+                "facts/localResponsesRawModelAndSyntheticAuth": "/checks/localResponsesRawModelAndSyntheticAuth",
+                "facts/actualProviderRawModelAndRouteKind": "/checks/actualProviderRawModelAndRouteKind",
+                "facts/clientConsumedLocalResponse": "/checks/clientConsumedLocalResponse",
+                "facts/realPendingRetainedAndMapped": "/checks/realPendingRetainedAndMapped",
+                "facts/noPostSaveManualConfigCatalogOwnerRepair": "/checks/noPostSaveManualConfigCatalogOwnerRepair",
+                "facts/noDailyGlobalRestartOrRealSupplierRequest": "/checks/noDailyGlobalRestartOrRealSupplierRequest"
+              },
+              "assertions": [
+                {
+                  "pointer": "/checkCount",
+                  "equals": 35
+                },
+                {
+                  "pointer": "/globalRestartCalled",
+                  "equals": false
+                },
+                {
+                  "pointer": "/actualGuiRestartVerified",
+                  "equals": false
+                },
+                {
+                  "pointer": "/actualPendingAcknowledged",
+                  "equals": false
+                },
+                {
+                  "pointer": "/actualPendingRetained",
+                  "equals": true
+                }
+              ],
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/verification-86.json",
+              "sha256": "c2e327485a6b298426bcf98e283010ead13535cd7570bb82de4a3c31e6eee5bc",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/FINAL-86.md",
+              "sha256": "bcef634cc6222486e7cb555803313477c93514a94696423941203b98aaf74a2d",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/final-closeout-20261104/source-brief.progress.json",
+              "sha256": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-6e-ci-failure-and-owner-pass.json",
+              "sha256": "5d909104f27cf8f8c89f9f8ac271ace6d56cf4d4392ecae4b2ca944d1d40308a",
+              "assertions": [
+                {
+                  "pointer": "/actualOwner/head",
+                  "equals": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+                },
+                {
+                  "pointer": "/actualOwner/dualCase",
+                  "equals": "pass"
+                },
+                {
+                  "pointer": "/actualOwner/externalRefusal",
+                  "equals": "pass"
+                }
+              ],
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-owner/run-41807732522.binding-summary.json",
+              "sha256": "12c0938e61d954443f4ae8c3e783fe5407c1ae84eb371445501f84f620bdba14",
+              "assertions": [
+                {
+                  "pointer": "/head",
+                  "equals": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc"
+                },
+                {
+                  "pointer": "/result",
+                  "equals": "binding-captured"
+                },
+                {
+                  "pointer": "/raw/source",
+                  "equals": "path"
+                }
+              ],
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/rename-implementation-20261104/result.json",
+              "sha256": "092587df6302760f9a5c7f85d9846be60479522203c2bbae65a58dd695bc62a1",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            },
+            {
+              "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/bounded-reference-review.json",
+              "sha256": "8ef29ea9660c5ad51865a0e06f0262fd5b35ffc4374861f5dffaa7222ff50c00",
+              "role": "scoped-86-or-final6e-proof; not whole-row-acceptance-by-default"
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        },
+        "review:webdav-observation-candidates": {
+          "status": "pending",
+          "summary": "",
+          "evidence": [],
+          "candidateEvidence": [
+            {
+              "path": ".adg/evidence/0.2.21/webdav-observation-20261104/README.md",
+              "sha256": "85060ade5e1670a5ed0e5d432fefc59edb498e93d1c6baae035a85f06616301d",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Local and browser fixture observation/candidate scope; not daily WebDAV or final native IPC certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/webdav-observation-20261104/chromium/report.json",
+              "sha256": "e2b5ff73ef7f56e422a2a67e3893f2d8930c0f8933fd9b9c61dabcfc4e3f260f",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Local and browser fixture observation/candidate scope; not daily WebDAV or final native IPC certification."
+            },
+            {
+              "path": ".adg/evidence/0.2.21/webdav-observation-20261104/webkit/report.json",
+              "sha256": "ad00e1ec608895688613512b9ff3967c71cec71e000a7bcbdb3e135c725bb8e2",
+              "role": "candidate-partial-evidence-only",
+              "limits": "Local and browser fixture observation/candidate scope; not daily WebDAV or final native IPC certification."
+            }
+          ],
+          "remaining": "Final-source applicability, actual native/package/release evidence and per-row review required; partial results do not close this row."
+        }
+      }
+    }
+  },
+  "retainedFailures": [
+    {
+      "path": ".adg/evidence/0.2.21/integration-20261104/ci-9f91-windows-smoke-failed.log",
+      "sha256": "4ccbd56410d7e05245f1f32c5b09e84caf7bab361f136d2753e38b6b184682e4",
+      "role": "candidate-partial-evidence-only",
+      "limits": "Historical failure, retained as-is and never counted as a passing acceptance."
+    },
+    {
+      "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/production-prepare-1313-result.json",
+      "sha256": "d4c1b3acf920bc83f0e8e7837897627067e2368b650c3da47a4704e93b5d7337",
+      "role": "candidate-partial-evidence-only",
+      "limits": "Historical failure, retained as-is and never counted as a passing acceptance."
+    },
+    {
+      "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/production-prepare-f0-result.json",
+      "sha256": "56ef545cf9535990e4f80631cae21a691f34d5263166b31f059e6f2f4bc38534",
+      "role": "candidate-partial-evidence-only",
+      "limits": "Historical failure, retained as-is and never counted as a passing acceptance."
+    },
+    {
+      "path": ".adg/evidence/0.2.21/g0-adoption-replay-20261104/first-missing-visual-deps/chromium/result.json",
+      "sha256": "0b8a12112f6bb6836f598f1be7f5a4dc8d7f14c826f9f39a2d6e262a776fcdb7",
+      "role": "candidate-partial-evidence-only",
+      "limits": "Historical failure, retained as-is and never counted as a passing acceptance."
+    }
+  ],
+  "knownScopedPass": {
+    "source_commit": "86eee1dbff23823eead733cb65308cf02fd95f9e",
+    "packet_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+    "status": "passed-default-npm-production-prepare-owned-scope",
+    "evidence": [
+      {
+        "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/production-prepare-86-result.json",
+        "sha256": "b5bcaa368e0416dee6861fd0bb45c9b95720edf223dece5c668e45681ed9c68b",
+        "claims": {
+          "tested_commit": "/sourceFreeze",
+          "facts/successfulRawProductionRun": "/checks/successfulRawProductionRun",
+          "facts/exactFreezeAcrossFiveSnapshots": "/checks/exactFreezeAcrossFiveSnapshots",
+          "facts/noProductBuildOrRunDrift": "/checks/noProductBuildOrRunDrift",
+          "facts/standardNpmSymlinkPreserved": "/checks/standardNpmSymlinkPreserved",
+          "facts/noForcedNativeRuntimeEnvironment": "/checks/noForcedNativeRuntimeEnvironment",
+          "facts/actualInitialPathDiscoveryUnpinned": "/checks/actualInitialPathDiscoveryUnpinned",
+          "facts/actualSettingsAgreeWithResolver": "/checks/actualSettingsAgreeWithResolver",
+          "facts/nativeIntegrationBoundToOwnedHome": "/checks/nativeIntegrationBoundToOwnedHome",
+          "facts/realSaveAndStableIdentity": "/checks/realSaveAndStableIdentity",
+          "facts/realPublicProductionPrepare": "/checks/realPublicProductionPrepare",
+          "facts/liveRosterAndDefaultFullyAdopted": "/checks/liveRosterAndDefaultFullyAdopted",
+          "facts/savedDiskIdentityUnchanged": "/checks/savedDiskIdentityUnchanged",
+          "facts/producerGeneratedNewCatalogNamespace": "/checks/producerGeneratedNewCatalogNamespace",
+          "facts/freshOfficialClientReadNewDirectory": "/checks/freshOfficialClientReadNewDirectory",
+          "facts/currentConfigAndFreshDefaultAgree": "/checks/currentConfigAndFreshDefaultAgree",
+          "facts/threadStartWithoutModelConfigOverride": "/checks/threadStartWithoutModelConfigOverride",
+          "facts/execUsesNpmWithoutModelConfigOverride": "/checks/execUsesNpmWithoutModelConfigOverride",
+          "facts/localResponsesRawModelAndSyntheticAuth": "/checks/localResponsesRawModelAndSyntheticAuth",
+          "facts/actualProviderRawModelAndRouteKind": "/checks/actualProviderRawModelAndRouteKind",
+          "facts/clientConsumedLocalResponse": "/checks/clientConsumedLocalResponse",
+          "facts/realPendingRetainedAndMapped": "/checks/realPendingRetainedAndMapped",
+          "facts/noPostSaveManualConfigCatalogOwnerRepair": "/checks/noPostSaveManualConfigCatalogOwnerRepair",
+          "facts/noDailyGlobalRestartOrRealSupplierRequest": "/checks/noDailyGlobalRestartOrRealSupplierRequest"
+        },
+        "assertions": [
+          {
+            "pointer": "/checkCount",
+            "equals": 35
+          },
+          {
+            "pointer": "/globalRestartCalled",
+            "equals": false
+          },
+          {
+            "pointer": "/actualGuiRestartVerified",
+            "equals": false
+          },
+          {
+            "pointer": "/actualPendingAcknowledged",
+            "equals": false
+          },
+          {
+            "pointer": "/actualPendingRetained",
+            "equals": true
+          }
+        ]
+      },
+      {
+        "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/verification-86.json",
+        "sha256": "c2e327485a6b298426bcf98e283010ead13535cd7570bb82de4a3c31e6eee5bc"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/FINAL-86.md",
+        "sha256": "bcef634cc6222486e7cb555803313477c93514a94696423941203b98aaf74a2d"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/final-closeout-20261104/source-brief.progress.json",
+        "sha256": "6ace481c0df76442787ebdcc7695a40ae5dd587ce2d05dae62fb05ca22d3d265"
+      }
+    ],
+    "not_claimed": [
+      "global/GUI restart",
+      "real pending ack",
+      "whole version release"
+    ]
+  }
+}

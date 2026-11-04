@@ -1,0 +1,373 @@
+{
+  "recordedAt": "2026-11-04T11:05:21.294101+00:00",
+  "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "testedCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "testSourceCommit": "20d13334ab9127e013ba6adca8c19023472d015f",
+  "releaseId": 433749817,
+  "executableSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+  "result": "passed-Windows-native-only",
+  "facts": {
+    "platform": "windows-x86_64",
+    "originalFinalExe": true,
+    "allRequiredChecksPassed": true,
+    "savedFileReadback": true,
+    "cancelAndFailureSideEffects": true,
+    "actualOfficialDefaultBindingCaptured": true,
+    "defaultBindingNotOverridden": true,
+    "nativeOwnerAdmissionPassed": true
+  },
+  "fourFinalCells": [
+    {
+      "cell": "msi-default",
+      "result": "pass",
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "20d13334ab9127e013ba6adca8c19023472d015f",
+      "originalExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "fe12dfe66a707ffebb35d1b9ded67cd45ea57c226293cdab0c88a6991329cd54",
+      "startupMode": "ordinary",
+      "applicationElevated": false,
+      "identity": {
+        "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default.identity.json",
+        "sha256": "de5ea38c08e81419dae647b18937e694be706aac5975df20733ff121b638b161"
+      },
+      "originals": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/installer-verification.json",
+          "sha256": "d56af0126437027e8fd3f8bd661df0f6e5de28588acc294545e0d8919a734595"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/existing-assets-verification.json",
+          "sha256": "ace57b0911c0f6dca74194549e0d8abf2eab1b71bbf01dd6f7de076d9e39947c"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/msi-default-startup/startup/startup.json",
+          "sha256": "c3f09651aa72683ba5371a4f1fb3a88a8e25283db1163eb42521a9e9ce3687b4"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/msi-default-startup/startup/model-menu-input-native.json",
+          "sha256": "8c02ef7538f94bb697c885b0241eae92e1cbb14461c2b6a998a1a9959a5d2efc"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/msi-default-startup/startup/model-dialog-keyboard-native.json",
+          "sha256": "6a4059d46017e4bbffba6ceeb394993827536698234e7db3853947c33a6418fe"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/msi-default-startup/startup/native021-behavior.json",
+          "sha256": "e55ad3de4a6f20306703f0eaeaad3f5a3748870c79a3a9f78f4450d67b82ccb6"
+        }
+      ],
+      "postUninstallRemovalAsserted": null,
+      "postUninstallDataPreservationAsserted": null
+    },
+    {
+      "cell": "msi-custom",
+      "result": "pass",
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "20d13334ab9127e013ba6adca8c19023472d015f",
+      "originalExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "fe12dfe66a707ffebb35d1b9ded67cd45ea57c226293cdab0c88a6991329cd54",
+      "startupMode": "ordinary",
+      "applicationElevated": false,
+      "identity": {
+        "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom.identity.json",
+        "sha256": "33bfdfaf9a35186cd40dd63324c2b1469e9e6f4de93d16c993e56a63c67c51c8"
+      },
+      "originals": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/installer-verification.json",
+          "sha256": "82abb9ff1596424900e8610ed9cdad71bb08540fb58272826d9f531802752e6c"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/existing-assets-verification.json",
+          "sha256": "8144210e7287005a34b32fa7a7e5e97bf465bef9f4d9aebc2749e9088a064d8e"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/msi-startup/startup/startup.json",
+          "sha256": "9789e25bc2b38f3259861d221c2d7470b8ae3b594ef78ddd3452d96bab51c11f"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/msi-startup/startup/model-menu-input-native.json",
+          "sha256": "0d10643ec96c1581014646a3c676f1560fa5efed8e98c0e675add5285c51caf9"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/msi-startup/startup/model-dialog-keyboard-native.json",
+          "sha256": "6a4059d46017e4bbffba6ceeb394993827536698234e7db3853947c33a6418fe"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/msi-startup/startup/native021-behavior.json",
+          "sha256": "98721d242a18db69da465c85a34bc38a5353285edb4b7279890f141b14c9d1ca"
+        }
+      ],
+      "postUninstallRemovalAsserted": true,
+      "postUninstallDataPreservationAsserted": true
+    },
+    {
+      "cell": "nsis-default",
+      "result": "pass",
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "20d13334ab9127e013ba6adca8c19023472d015f",
+      "originalExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "b97a0cfc23910a59a37a7a31dd14452da6d64276fa26bc1aa4236a1305ae9892",
+      "startupMode": "any",
+      "applicationElevated": true,
+      "identity": {
+        "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default.identity.json",
+        "sha256": "eed7a755844746ee3b5238b68dd5d2a5e6442e4901fa2489f2388b2fcca50253"
+      },
+      "originals": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/installer-verification.json",
+          "sha256": "a70f4d8cb1c225471777a98f94afdfc3d1884af549295e99e4800af1669e8d6f"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/existing-assets-verification.json",
+          "sha256": "d315d305b538346f593b2fe9bf102cdcba8ca5181202e57144935d3fb19b2c3c"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/nsis-default-startup/startup.json",
+          "sha256": "8e63b457c5f09b28287674fccbe3d94779d8d92bdc5d842ce6da9e3ab0c38d17"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/nsis-default-startup/model-menu-input-native.json",
+          "sha256": "53122787a821a5220e9acbd53201909a3bea245406fb9e0d54bbd07408f8ab7e"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/nsis-default-startup/model-dialog-keyboard-native.json",
+          "sha256": "2eb2abb80739dc1ea34b99a0f3bc3ad7264d66a7aa6e83a1a56e05dcbf57db30"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/nsis-default-startup/native021-behavior.json",
+          "sha256": "9b5f40b4852a8f6e99e9dacaa794d7bc8b7f74ba33dcc2f688bd1cb51dd619d2"
+        }
+      ],
+      "postUninstallRemovalAsserted": null,
+      "postUninstallDataPreservationAsserted": null
+    },
+    {
+      "cell": "nsis-custom",
+      "result": "pass",
+      "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "testSourceCommit": "20d13334ab9127e013ba6adca8c19023472d015f",
+      "originalExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "b97a0cfc23910a59a37a7a31dd14452da6d64276fa26bc1aa4236a1305ae9892",
+      "startupMode": "ordinary",
+      "applicationElevated": false,
+      "identity": {
+        "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom.identity.json",
+        "sha256": "6704f0e26d5e643d0c8e5d464f54a87d111c0f205d29087666cedff12384743f"
+      },
+      "originals": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/installer-verification.json",
+          "sha256": "4694227fc56a40e01b8fef8a84335fc38d4e146eec2a09be0b19e3c93c2afdf4"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/existing-assets-verification.json",
+          "sha256": "6c51ca9650dc129416d3ccaff71047a3d676414924436464b34ddf3eecd466ea"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/nsis-startup/startup/startup.json",
+          "sha256": "72d7a714977efe0c41da214d6aac8cdabfcd77f7d9dd62035b1381b8ca0cd00e"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/nsis-startup/startup/model-menu-input-native.json",
+          "sha256": "e492d83de52cce30efbf2d1a5af424e3d971c6a7f803f9ed2f14642e94acf2cc"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/nsis-startup/startup/model-dialog-keyboard-native.json",
+          "sha256": "2eb2abb80739dc1ea34b99a0f3bc3ad7264d66a7aa6e83a1a56e05dcbf57db30"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/nsis-startup/startup/native021-behavior.json",
+          "sha256": "858f8b59d5ec17488b75a7d0e11968722f9ea36b7a100d1a77d5369aa893b9ba"
+        }
+      ],
+      "postUninstallRemovalAsserted": true,
+      "postUninstallDataPreservationAsserted": true
+    }
+  ],
+  "actualOwnerSource": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "actualOwnerCasesPassed": 2,
+  "boundaries": [
+    "NSIS default is mode=any with an elevated process; MSI default and both custom cells are ordinary with non-elevated processes.",
+    "Exact original installer assets reused without rebuild. Only the one Tauri package marker is allowed before whole-EXE SHA equality.",
+    "Existing original failed workflow/job results are retained; this report records the separate final all-pass run.",
+    "No new owner/OTA rerun was performed for these driver-only fixes.",
+    "20d is the test driver source; the installed original release packet is from 6e.",
+    "General CI, macOS OTA and promotion to stable are separate parent gates and are not claimed complete by this Windows report."
+  ],
+  "actualOtaBoundary": "OS-observed automatic new process; exact updated EXE explicitly relaunched into isolated sandbox for Tauri/file readback; beta only; download package SHA not separately captured",
+  "originals": [
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-native-release-final.json",
+      "sha256": "0fc031b4c4747a2e1c6091f74162d59b2568cdf26ab1c314a309e06f78de82af"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-native-release-final.md",
+      "sha256": "334240a0ec095fdd01d93950dd6f74d3ab8f391b36e4fbce7704d361c87d9199"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/summary.json",
+      "sha256": "c5353bbfb0b81942640c6bfb7fd4a95d76437d1c4ed45da6bd49494d82bfe091"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default.identity.json",
+      "sha256": "de5ea38c08e81419dae647b18937e694be706aac5975df20733ff121b638b161"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/msi-default-startup/startup/sandbox-b5b8acca29034eccbcc69b4bb0a00b3b/logs/app.log",
+      "sha256": "f678cb5c84ad46921a2cf1b9a17481de1e7d034d0ac1dcf7bd6cbbed920e487e"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default.original.log",
+      "sha256": "91896ca4c18794c45a16fcf59f96fd88f4edd2f924e97c7586a43a909dc5a8ba"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/installer-verification.json",
+      "sha256": "d56af0126437027e8fd3f8bd661df0f6e5de28588acc294545e0d8919a734595"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/existing-assets-verification.json",
+      "sha256": "ace57b0911c0f6dca74194549e0d8abf2eab1b71bbf01dd6f7de076d9e39947c"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/msi-default-startup/startup/startup.json",
+      "sha256": "c3f09651aa72683ba5371a4f1fb3a88a8e25283db1163eb42521a9e9ce3687b4"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/msi-default-startup/startup/model-menu-input-native.json",
+      "sha256": "8c02ef7538f94bb697c885b0241eae92e1cbb14461c2b6a998a1a9959a5d2efc"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/msi-default-startup/startup/model-dialog-keyboard-native.json",
+      "sha256": "6a4059d46017e4bbffba6ceeb394993827536698234e7db3853947c33a6418fe"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-default/verification/msi-default-startup/startup/native021-behavior.json",
+      "sha256": "e55ad3de4a6f20306703f0eaeaad3f5a3748870c79a3a9f78f4450d67b82ccb6"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom.identity.json",
+      "sha256": "33bfdfaf9a35186cd40dd63324c2b1469e9e6f4de93d16c993e56a63c67c51c8"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/msi-startup/startup/sandbox-79e748fd233f4c27abffa7bc35e301b5/logs/app.log",
+      "sha256": "293f1dceeaae2132befadf3439065fb5eb96f5cc6e9817737079268977effa4a"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom.original.log",
+      "sha256": "8f8d0601a20af7fca5e59eeb76c94f491e161136c1332030febedc20c1071929"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/installer-verification.json",
+      "sha256": "82abb9ff1596424900e8610ed9cdad71bb08540fb58272826d9f531802752e6c"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/existing-assets-verification.json",
+      "sha256": "8144210e7287005a34b32fa7a7e5e97bf465bef9f4d9aebc2749e9088a064d8e"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/msi-startup/startup/startup.json",
+      "sha256": "9789e25bc2b38f3259861d221c2d7470b8ae3b594ef78ddd3452d96bab51c11f"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/msi-startup/startup/model-menu-input-native.json",
+      "sha256": "0d10643ec96c1581014646a3c676f1560fa5efed8e98c0e675add5285c51caf9"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/msi-startup/startup/model-dialog-keyboard-native.json",
+      "sha256": "6a4059d46017e4bbffba6ceeb394993827536698234e7db3853947c33a6418fe"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/msi-custom/verification/msi-startup/startup/native021-behavior.json",
+      "sha256": "98721d242a18db69da465c85a34bc38a5353285edb4b7279890f141b14c9d1ca"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default.identity.json",
+      "sha256": "eed7a755844746ee3b5238b68dd5d2a5e6442e4901fa2489f2388b2fcca50253"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/nsis-default-startup/sandbox-3ca824615c1e443a9d86835cad0057b2/logs/app.log",
+      "sha256": "81c5b40aa0253e1d5c779acadcd6627c95cf77e0f1f80c5f92db44616d4797a4"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default.original.log",
+      "sha256": "04e9285e79865c058db4810829f986c8f175acdfc1fcc245f62bfa5c0dced880"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/installer-verification.json",
+      "sha256": "a70f4d8cb1c225471777a98f94afdfc3d1884af549295e99e4800af1669e8d6f"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/existing-assets-verification.json",
+      "sha256": "d315d305b538346f593b2fe9bf102cdcba8ca5181202e57144935d3fb19b2c3c"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/nsis-default-startup/startup.json",
+      "sha256": "8e63b457c5f09b28287674fccbe3d94779d8d92bdc5d842ce6da9e3ab0c38d17"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/nsis-default-startup/model-menu-input-native.json",
+      "sha256": "53122787a821a5220e9acbd53201909a3bea245406fb9e0d54bbd07408f8ab7e"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/nsis-default-startup/model-dialog-keyboard-native.json",
+      "sha256": "2eb2abb80739dc1ea34b99a0f3bc3ad7264d66a7aa6e83a1a56e05dcbf57db30"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-default/verification/nsis-default-startup/native021-behavior.json",
+      "sha256": "9b5f40b4852a8f6e99e9dacaa794d7bc8b7f74ba33dcc2f688bd1cb51dd619d2"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom.identity.json",
+      "sha256": "6704f0e26d5e643d0c8e5d464f54a87d111c0f205d29087666cedff12384743f"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/nsis-startup/startup/sandbox-69c1a80ee1434b0f8dbd47ed33f3b9d2/logs/app.log",
+      "sha256": "6edd7802eacc88af0803f80b1409af9934b648c57c0c38afe9b8bb609a7443ee"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom.original.log",
+      "sha256": "2603b01c6fdeae6d50cc076e71972c614012ff32e9a4554e6cdf29cbff116dd0"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/installer-verification.json",
+      "sha256": "4694227fc56a40e01b8fef8a84335fc38d4e146eec2a09be0b19e3c93c2afdf4"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/existing-assets-verification.json",
+      "sha256": "6c51ca9650dc129416d3ccaff71047a3d676414924436464b34ddf3eecd466ea"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/nsis-startup/startup/startup.json",
+      "sha256": "72d7a714977efe0c41da214d6aac8cdabfcd77f7d9dd62035b1381b8ca0cd00e"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/nsis-startup/startup/model-menu-input-native.json",
+      "sha256": "e492d83de52cce30efbf2d1a5af424e3d971c6a7f803f9ed2f14642e94acf2cc"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/nsis-startup/startup/model-dialog-keyboard-native.json",
+      "sha256": "2eb2abb80739dc1ea34b99a0f3bc3ad7264d66a7aa6e83a1a56e05dcbf57db30"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-installers-41817246537/nsis-custom/verification/nsis-startup/startup/native021-behavior.json",
+      "sha256": "858f8b59d5ec17488b75a7d0e11968722f9ea36b7a100d1a77d5369aa893b9ba"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/windows-actual-owner/run-41807732522.binding-summary.json",
+      "sha256": "12c0938e61d954443f4ae8c3e783fe5407c1ae84eb371445501f84f620bdba14"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/final-6e-ci-failure-and-owner-pass.json",
+      "sha256": "5d909104f27cf8f8c89f9f8ac271ace6d56cf4d4392ecae4b2ca944d1d40308a"
+    }
+  ],
+  "supersedesOnlyPendingWindowsEntryOf": "stage2-accepted-summary.json; earlier snapshot remains intact",
+  "notClaimed": [
+    "whole CI pass",
+    "Mac actual OTA pass",
+    "stable publication",
+    "default-cell post-uninstall data assertions absent from their raw receipt"
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "schema": "ocx021-progress-source-brief-v1",
+  "recorded_at": "2026-11-04T10:32:33.752148+00:00",
+  "mode": "read-only-preparation; no closure",
+  "packet_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "packet_tree": "5ac7b9655d1c413fa6d7abf20fed39e47c2a1d41",
+  "product_freeze": "86eee1dbff23823eead733cb65308cf02fd95f9e",
+  "release_id": 433749817,
+  "assets_stage": "verified private draft, no public acceptance",
+  "provider_source_equivalence": {
+    "result": "passed",
+    "scope": [
+      "apps/desktop/tauri/src",
+      "apps/desktop/tauri/Cargo.toml",
+      "apps/desktop/tauri/Cargo.lock",
+      "apps/desktop/tauri/build.rs",
+      "apps/desktop/tauri/tauri.conf.json",
+      "apps/desktop/tauri/config",
+      "apps/desktop/ui/src",
+      "apps/desktop/ui/index.html",
+      "apps/desktop/ui/vite.config.ts",
+      "apps/desktop/ui/tsconfig.json",
+      "apps/desktop/ui/package.json",
+      "apps/desktop/ui/package-lock.json"
+    ],
+    "input_count": 433,
+    "tree_listing_sha256": "4b33faefea87076c15ebc54a2302fbd901a99362df117f0ea4c06005c6b7bbf6",
+    "five_snapshots_equal": true,
+    "git_bytes_equal_all433": true,
+    "same_inputs_86_6e_977": true,
+    "productChangedSince43": true,
+    "old43CannotReplace86": true,
+    "changed_product_paths_since43": [
+      "apps/desktop/tauri/src/modules/model_config/cache_refresh.rs",
+      "apps/desktop/tauri/src/modules/model_config/cache_refresh_tests.rs",
+      "apps/desktop/tauri/src/modules/model_config/client_npm_runtime.rs"
+    ],
+    "source_snapshots": [
+      {
+        "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/run-20261104-181831/source-freeze-after-build.json",
+        "sha256": "dcfd4007bcda1bf1e0a7aad109e0b581b221ae322ef5fb402b91c07dfd8ac3f9"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/run-20261104-181831/source-freeze-after-run.json",
+        "sha256": "dcfd4007bcda1bf1e0a7aad109e0b581b221ae322ef5fb402b91c07dfd8ac3f9"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/run-20261104-181831/source-freeze-before-build.json",
+        "sha256": "dcfd4007bcda1bf1e0a7aad109e0b581b221ae322ef5fb402b91c07dfd8ac3f9"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/run-20261104-181831/source-freeze-before-launch.json",
+        "sha256": "dcfd4007bcda1bf1e0a7aad109e0b581b221ae322ef5fb402b91c07dfd8ac3f9"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/run-20261104-181831/source-freeze-before-owned-runtime.json",
+        "sha256": "dcfd4007bcda1bf1e0a7aad109e0b581b221ae322ef5fb402b91c07dfd8ac3f9"
+      }
+    ],
+    "result_report": {
+      "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/production-prepare-86-result.json",
+      "sha256": "b5bcaa368e0416dee6861fd0bb45c9b95720edf223dece5c668e45681ed9c68b"
+    },
+    "verification_entry": {
+      "path": ".adg/evidence/0.2.21/owned-client-routing-20261104/verification-86.json",
+      "sha256": "c2e327485a6b298426bcf98e283010ead13535cd7570bb82de4a3c31e6eee5bc"
+    },
+    "boundaries": {
+      "globalRestartCalled": false,
+      "actualGuiRestartVerified": false,
+      "actualPendingAcknowledged": false,
+      "actualPendingRetained": true,
+      "safeRestartAckCopy": {
+        "actualDesktopRestartVerified": false,
+        "actualPreparedPendingId": "29da2212-a4b0-447e-acb0-f7cf37f46dd2",
+        "fixtureScope": "copied manager/home, mocked attested owner/exit response only; not the real routing acceptance",
+        "incompleteRestartRetainedPendingCopy": true,
+        "originalPreparedPendingRetained": true,
+        "productionEntry": "cache_refresh::sync_cache_after_save(true)",
+        "realGlobalRestartCalled": false,
+        "restartHttpCallsToSyntheticFixture": 2,
+        "simulationPassed": true,
+        "successfulRestartAcknowledgedPendingCopy": true
+      }
+    }
+  },
+  "ci_source_equivalence": {
+    "ci_commit": "97792cebacc6017b50776d97b69765b503d798c3",
+    "requested_ci_run": 41813816469,
+    "result": "source-byte-equivalence passed; CI completion still pending",
+    "same_product_inputs": true,
+    "changed_paths": [
+      "apps/desktop/tauri/tests/fixtures/ocx021-codex-npm/.gitattributes"
+    ],
+    "ci_result_not_claimed": true
+  },
+  "unchanged_ui_reuse": {
+    "tested_commit": "f0a6a13d0830841b1e3147b69be850833f8f0498",
+    "final_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+    "scope": "apps/desktop/ui",
+    "byte_differences": [],
+    "test_files_passed": 193,
+    "tests_passed": 1274,
+    "frontendRegressionScopedPass": true,
+    "typecheck_build_scoped_pass": true,
+    "evidence": [
+      {
+        "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/ui-full-f0a6a13d.log",
+        "sha256": "f15610a00618536322fd15a6197bdf612097cc9ec093c7dca792ca2387f7b355"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/build-f0a6a13d.log",
+        "sha256": "0a56d3838454bd074306c972587060a239c9ba126655e24af0f94fedb19bd0cb"
+      }
+    ],
+    "limits": "Existing whole UI evidence is reusable byte-for-byte; this does not make final Windows/backend CI or native timing pass."
+  },
+  "unchanged_sync_reuse": {
+    "tested_commit": "f0a6a13d0830841b1e3147b69be850833f8f0498",
+    "final_commit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+    "scope_paths": [
+      "apps/desktop/tauri/src/commands/model_transfer.rs",
+      "apps/desktop/tauri/src/commands/extensions.rs",
+      "apps/desktop/tauri/src/commands/sync.rs",
+      "apps/desktop/tauri/src/modules/model_config/config_file.rs",
+      "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+      "apps/desktop/tauri/src/modules/model_config/file_objects_file_tests.rs",
+      "apps/desktop/tauri/src/modules/model_config/content_versions.rs",
+      "apps/desktop/tauri/src/modules/model_config/file_save_versions.rs",
+      "apps/desktop/tauri/src/modules/model_config/owner_save_versions.rs",
+      "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+      "apps/desktop/tauri/src/modules/model_config/sync_state.rs",
+      "apps/desktop/tauri/src/modules/model_config/store.rs",
+      "apps/desktop/tauri/src/modules/model_config/sync_version_tests.rs",
+      "apps/desktop/tauri/src/modules/model_config/sync_test_credentials.rs",
+      "apps/desktop/tauri/src/modules/extensions/projection.rs",
+      "apps/desktop/tauri/src/modules/preferences/mod.rs"
+    ],
+    "byte_differences": [],
+    "full_backend_source_changed_elsewhere": [
+      "apps/desktop/tauri/src/modules/model_config/cache_refresh.rs",
+      "apps/desktop/tauri/src/modules/model_config/cache_refresh_tests.rs",
+      "apps/desktop/tauri/src/modules/model_config/client_npm_runtime.rs",
+      "apps/desktop/tauri/src/modules/model_config/client_selection_rename.rs",
+      "apps/desktop/tauri/src/modules/model_config/management.rs"
+    ],
+    "bounded_save_time_lifecycle_and_direction_scope": "passed at unchanged inputs; full new npm-runtime/Windows regression not claimed",
+    "evidence": [
+      {
+        "path": ".adg/evidence/0.2.21/current-reference-fix-20261104/cargo-full-f0a6a13d.log",
+        "sha256": "ea3b8d34dc7197b597bee7c8fdd1888d9296010c767d7697d3502643703902cd"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/integration-20261104/owned-https-second.log",
+        "sha256": "4bc7a4645d98baccff1e9b4c995ed8ade899d7b8c2534b6cea0bac3ed1a0e86a"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/integration-20261104/independent-core-review-final.json",
+        "sha256": "895712132e4500ce884bb39ae10d7ec47fa25d0c25c58e7299d85bcbf35bbd1b"
+      }
+    ]
+  },
+  "artifacts": {
+    "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+    "releaseId": 433749817,
+    "facts": {
+      "uploadedAssets": 8,
+      "signedArtifacts": 3,
+      "manifestPlatforms": 5,
+      "macDeepStrictCodesign": true,
+      "macEmbeddedSource": true,
+      "licenseAndNotices": true,
+      "dmgVerified": true,
+      "sameFrozenBytes": true
+    },
+    "scope": "Same exact draft8 assets/3 updater signatures/5 manifests/Mac deep-strict seal/embedded source/license/notices/DMG; public release and install/OTA separate",
+    "evidence": [
+      {
+        "path": ".adg/evidence/0.2.21/release-20261104/asset-verification.json",
+        "sha256": "7490c1327dbf3587e796cd39e85701a767ec6793ed05f5560833ff0edd378a20"
+      },
+      {
+        "path": ".adg/evidence/0.2.21/release-20261104/dmg-verification.log",
+        "sha256": "0ab5e6eee61cc9a02e2e793d991b47fc276b1fc583c87ceb84d5771e4e382cae"
+      }
+    ]
+  },
+  "custom_installers": [
+    {
+      "kind": "msi",
+      "facts": {
+        "installer": "msi",
+        "pathType": "custom",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": true,
+        "dataPreserved": true,
+        "sameFrozenBytes": true
+      },
+      "assets": {
+        "OpenCodeX.Desktop_0.2.21_x64-setup.exe": "df919ef5d500b05b721df1cc52f26f5b0060aaa9922b2371a2cb6e2f93624ccc",
+        "OpenCodeX.Desktop_0.2.21_x64_en-US.msi": "6ebe4256a3566949820ad1252bb1778be03b467b62e9af3059c1bedb80bef098"
+      },
+      "originalBuiltExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "fe12dfe66a707ffebb35d1b9ded67cd45ea57c226293cdab0c88a6991329cd54",
+      "bundleMarker": "MSI",
+      "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+      "wholeReleaseAccepted": false,
+      "originalReports": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-custom/existing-assets-verification.json",
+          "sha256": "8144210e7287005a34b32fa7a7e5e97bf465bef9f4d9aebc2749e9088a064d8e"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/msi-custom/verification/installer-verification.json",
+          "sha256": "edeed1526ae0637f848e4282dd357b32f16930d9d877325069d4409ef7b5ab9f"
+        }
+      ],
+      "job": 126518554802
+    },
+    {
+      "kind": "nsis",
+      "facts": {
+        "installer": "nsis",
+        "pathType": "custom",
+        "installed": true,
+        "startupReadback": true,
+        "uninstalled": true,
+        "dataPreserved": true,
+        "sameFrozenBytes": true
+      },
+      "assets": {
+        "OpenCodeX.Desktop_0.2.21_x64-setup.exe": "df919ef5d500b05b721df1cc52f26f5b0060aaa9922b2371a2cb6e2f93624ccc",
+        "OpenCodeX.Desktop_0.2.21_x64_en-US.msi": "6ebe4256a3566949820ad1252bb1778be03b467b62e9af3059c1bedb80bef098"
+      },
+      "originalBuiltExeSha256": "20c6a2477dd0c1f186702b6dc598d281e16410be62ca96e6a9070a905ef5559f",
+      "installedExeSha256": "b97a0cfc23910a59a37a7a31dd14452da6d64276fa26bc1aa4236a1305ae9892",
+      "bundleMarker": "NSS",
+      "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+      "wholeReleaseAccepted": false,
+      "originalReports": [
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/nsis-custom/existing-assets-verification.json",
+          "sha256": "4e6caf5538fd17323d8ab472e1c437436bb94552fec262ebd1c128294c20e5b5"
+        },
+        {
+          "path": ".adg/evidence/0.2.21/native-harness-20261104/new-native-review/original-installers-41813563900/nsis-custom/verification/installer-verification.json",
+          "sha256": "256ebfe8c578d3d2bdd6d1ea6f04a9475365fb5da8abd9d6eefb837a97d47596"
+        }
+      ],
+      "job": 126518555591
+    }
+  ],
+  "remaining": [
+    "Mac cancellation pause/resume native timer proof",
+    "Windows final native/ready coverage and default installer2 failed cells rerun",
+    "final CI41813816469 actual completion",
+    "three actual0.2.20->0.2.21 OTA",
+    "stable promotion and anonymous tag/Latest readback"
+  ],
+  "no_commit_or_runtime_writes": true
+}

@@ -40,8 +40,8 @@
     "AC-021-08"
   ],
   "baseline_digest": "9bad254fc05136d7c841177656e06e154a64bce407e36ef664c6cf1d454baf46",
-  "certificate_digest": null,
-  "content_digest": "da3723895a377eb048d45ee4be6711c064cdd32f0c7dc88ad19a8d2d37c1abe2",
+  "certificate_digest": "38a95bbd0623af077bb1c84823ca7c89b6911fc9e6bae843f16c4f0e809eb031",
+  "content_digest": "58cb6240746588c4afb00b6be29d25306e39a5e5b7c9941b955202397bb6ed65",
   "demand_ids": [
     "DMD-OPENCODEX-UI-021"
   ],
@@ -72,7 +72,7 @@
   },
   "id": "TASK-OPENCODEX-UI021-INTEGRATION-20261104",
   "implementation_id": "IMP-OPENCODEX-DESKTOP-29",
-  "imported_receipt_digest": null,
+  "imported_receipt_digest": "72be848b10ec426864d40f2d398e6933ede7fa87fcb925d4436f8b360712926d",
   "kind": "TASK",
   "owner": "current-chat-integration",
   "required_checks": [
@@ -85,11 +85,11 @@
     "review:saved-side-effects",
     "review:webdav-observation-candidates"
   ],
-  "result": "pending",
-  "revision": 2,
-  "state": "in_progress",
+  "result": "succeeded",
+  "revision": 3,
+  "state": "completed",
   "summary": "五项剩余修复和共同交付门；不复用旧关闭证书，不以原型/spike通过替代真实生产验收。",
-  "summary_digest": "e2b689accdffa72bcde142494ca87d4ace6f5c3351978654163b5e7f3263ccd5",
+  "summary_digest": "8942bf2d7d616ae4e0b455b8a547d925ce9598c7ed56c39316944e9183789e46",
   "title": "0.2.21剩余修复集成、完整验收与发布",
   "write_scope": [
     ".adg/evidence/0.2.21/**",

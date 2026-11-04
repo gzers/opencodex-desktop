@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-11-04T11:36:14.225577+00:00",
+  "sourceCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+  "releaseId": 433749817,
+  "result": "verified-final-inputs-only-no-closure",
+  "rawInputs": [
+    {
+      "path": ".adg/evidence/0.2.21/release-20261104/final-ci-41817249379.json",
+      "sha256": "526ebd3a460918392a07338fafa2d2394b69614f49eb27c5f70c6bde05817517"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/release-20261104/asset-verification.public-stable.json",
+      "sha256": "38788368647a5f4e6a8438a0fec7d8cb8047ece52204fcf9a4f9badb0bda20ce"
+    },
+    {
+      "path": ".adg/evidence/0.2.21/release-20261104/anonymous-public/anonymous-public-verification.json",
+      "sha256": "6fbbeb307f03936c4e14331600aad81cf818f26cd2fb66d9ffff517899c79998"
+    }
+  ],
+  "finalGateFacts": {
+    "final-ci": {
+      "testedCommit": "20d13334ab9127e013ba6adca8c19023472d015f",
+      "releaseId": 433749817,
+      "facts": {
+        "conclusion": "success",
+        "requiredJobsPassed": true,
+        "sameFinalSource": true
+      }
+    },
+    "public-stable": {
+      "testedCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "releaseId": 433749817,
+      "facts": {
+        "tag": "v0.2.21",
+        "latest": "v0.2.21",
+        "draft": false,
+        "prerelease": false,
+        "anonymousTagReadback": true,
+        "anonymousLatestReadback": true,
+        "sameAssetIdentity": true
+      }
+    },
+    "artifacts-signatures": {
+      "testedCommit": "6e2197fd0b8a36dcb8d893b62693c5a2a77151cc",
+      "releaseId": 433749817,
+      "facts": {
+        "uploadedAssets": 8,
+        "signedArtifacts": 3,
+        "manifestPlatforms": 5,
+        "macDeepStrictCodesign": true,
+        "macEmbeddedSource": true,
+        "licenseAndNotices": true,
+        "dmgVerified": true,
+        "sameFrozenBytes": true
+      }
+    }
+  },
+  "excludedCiJobs": [
+    "main-only build job skipped on feature ref; excluded, never counted as passed; exact package gates separate"
+  ],
+  "ciRequiredJobs": [
+    "backend",
+    "backend-windows",
+    "frontend",
+    "release-tools",
+    "windows-smoke-evidence"
+  ],
+  "sourceReuse": "CI20d test-only source has exact same product inputs as release6e; package bytes unchanged",
+  "closureExecuted": false
+}
