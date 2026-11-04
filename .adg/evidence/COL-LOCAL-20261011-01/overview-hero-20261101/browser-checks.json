@@ -1,0 +1,611 @@
+{
+ "01-overview-light-initial": {
+  "H": {
+   "mode": "ready",
+   "win": "24 小时",
+   "paused": false,
+   "focus": null,
+   "locked": false,
+   "built": true,
+   "state": "stopped"
+  },
+  "cur": "stopped",
+  "stage": [
+   889,
+   460
+  ],
+  "hero": [
+   268,
+   186,
+   889,
+   609
+  ],
+  "status": [
+   268,
+   124,
+   889,
+   48
+  ],
+  "actions": [
+   1021,
+   126,
+   134,
+   37
+  ],
+  "mods": [
+   268,
+   809,
+   889,
+   163
+  ],
+  "events": [
+   268,
+   986,
+   889,
+   107
+  ],
+  "main": [
+   729,
+   1083
+  ],
+  "wires": 17,
+  "parts": 0,
+  "motionSrc": "ayout=hero&effects=high&render=mesh&v=20261101-overview-hero",
+  "backdropSrc": "about:blank",
+  "backdropShown": "none",
+  "title": "全景概览",
+  "subtitle": "过去 24 小时 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道",
+  "mainline": "未运行",
+  "cap": "OpenCodeX-Desktop内置 OpenCodex 网关 · :10100 · 5 渠道 · 3 活跃 · 已停止成功 98.6%失败 1.4%",
+  "ov": [
+   "phHub X phAdapter"
+  ],
+  "clip": [],
+  "docOverflow": false
+ },
+ "01-overview-light": {
+  "H": {
+   "mode": "ready",
+   "win": "24 小时",
+   "paused": false,
+   "focus": null,
+   "locked": false,
+   "built": true,
+   "state": "running"
+  },
+  "cur": "running",
+  "stage": [
+   889,
+   460
+  ],
+  "hero": [
+   268,
+   186,
+   889,
+   609
+  ],
+  "status": [
+   268,
+   124,
+   889,
+   48
+  ],
+  "actions": [
+   859,
+   126,
+   296,
+   37
+  ],
+  "mods": [
+   268,
+   809,
+   889,
+   163
+  ],
+  "events": [
+   268,
+   986,
+   889,
+   107
+  ],
+  "main": [
+   729,
+   1083
+  ],
+  "wires": 17,
+  "parts": 5,
+  "motionSrc": "ayout=hero&effects=high&render=mesh&v=20261101-overview-hero",
+  "backdropSrc": "about:blank",
+  "backdropShown": "none",
+  "title": "全景概览",
+  "subtitle": "过去 24 小时 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道",
+  "mainline": "运行中",
+  "cap": "OpenCodeX-Desktop内置 OpenCodex 网关 · :10100 · 5 渠道 · 3 活跃成功 98.6%失败 1.4%",
+  "ov": [
+   "phHub X phAdapter"
+  ],
+  "clip": [],
+  "docOverflow": false,
+  "errs": [
+   "reqfail: http://127.0.0.1:55743/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/03-%E9%A1%B9%E7%9B%AE%E5%8D%8F%E4%BD%9C%E8%B5%84%E6%96%99/01-%E5%8D%8F%E4%BD%9C%E5%8C%85/2026-09-12-%E6%A1%8C%E9%9D%A2%E7%AE%A1%E7%90%86%E5%99%A8%E9%9C%80%E6%B1%82%E6%A2%B3%E7%90%86%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%AA%8C%E8%AF%81/01-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90/05-%E5%8E%9F%E5%9E%8B/%E5%80%99%E9%80%89/2026-09-28-Logo%E6%9C%AC%E4%BD%93%E5%BD%A2%E5%8F%98/index.html?embed=1&layout=hero&v=dual&effects=high&render=mesh"
+  ]
+ },
+ "hover": "krill",
+ "lock": {
+  "mode": "ready",
+  "win": "24 小时",
+  "paused": false,
+  "focus": "krill",
+  "locked": true,
+  "built": true,
+  "state": "running"
+ },
+ "esc": {
+  "mode": "ready",
+  "win": "24 小时",
+  "paused": false,
+  "focus": null,
+  "locked": false,
+  "built": true,
+  "state": "running"
+ },
+ "enter": {
+  "mode": "ready",
+  "win": "24 小时",
+  "paused": false,
+  "focus": "newapi",
+  "locked": true,
+  "built": true,
+  "state": "running",
+  "expanded": "true"
+ },
+ "popActs": [
+  "查看请求:false",
+  "渠道设置:false"
+ ],
+ "jump": {
+  "act": "查看请求",
+  "routeAfter": "logs",
+  "motionAfter": {
+   "mode": "ready",
+   "win": "24 小时",
+   "paused": false,
+   "focus": null,
+   "locked": false,
+   "built": true,
+   "state": "running"
+  }
+ },
+ "win": {
+  "win": "7 天",
+  "sub": "过去 7 天 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道"
+ },
+ "pause": true,
+ "annotation": {
+  "open": true,
+  "text": "原型01悬浮注释×流量全景 · 内存模拟概览主体展示 Desktop 内置 OpenCodex 网关分发日常请求、只为 Krill 做实时适配代理的目标形态。客户端、渠道、Toke"
+ },
+ "audit": [],
+ "stopped": {
+  "H": {
+   "mode": "ready",
+   "win": "24 小时",
+   "paused": false,
+   "focus": null,
+   "locked": false,
+   "built": true,
+   "state": "stopped"
+  },
+  "cur": "stopped",
+  "stage": [
+   889,
+   460
+  ],
+  "hero": [
+   268,
+   186,
+   889,
+   609
+  ],
+  "status": [
+   268,
+   124,
+   889,
+   48
+  ],
+  "actions": [
+   1021,
+   126,
+   134,
+   37
+  ],
+  "mods": [
+   268,
+   809,
+   889,
+   163
+  ],
+  "events": [
+   268,
+   986,
+   889,
+   107
+  ],
+  "main": [
+   729,
+   1083
+  ],
+  "wires": 17,
+  "parts": 0,
+  "motionSrc": "ayout=hero&effects=high&render=mesh&v=20261101-overview-hero",
+  "backdropSrc": "about:blank",
+  "backdropShown": "none",
+  "title": "概览",
+  "subtitle": "过去 24 小时 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道",
+  "mainline": "未运行",
+  "cap": "OpenCodeX-Desktop内置 OpenCodex 网关 · :10100 · 5 渠道 · 3 活跃 · 已停止成功 98.6%失败 1.4%",
+  "ov": [
+   "phHub X phAdapter"
+  ],
+  "clip": [],
+  "docOverflow": false
+ },
+ "starting": "starting",
+ "restarted": {
+  "H": {
+   "mode": "ready",
+   "win": "24 小时",
+   "paused": false,
+   "focus": null,
+   "locked": false,
+   "built": true,
+   "state": "running"
+  },
+  "cur": "running",
+  "stage": [
+   889,
+   460
+  ],
+  "hero": [
+   268,
+   186,
+   889,
+   609
+  ],
+  "status": [
+   268,
+   124,
+   889,
+   48
+  ],
+  "actions": [
+   859,
+   126,
+   296,
+   37
+  ],
+  "mods": [
+   268,
+   809,
+   889,
+   163
+  ],
+  "events": [
+   268,
+   986,
+   889,
+   107
+  ],
+  "main": [
+   729,
+   1083
+  ],
+  "wires": 17,
+  "parts": 5,
+  "motionSrc": "ayout=hero&effects=high&render=mesh&v=20261101-overview-hero",
+  "backdropSrc": "about:blank",
+  "backdropShown": "none",
+  "title": "概览",
+  "subtitle": "过去 24 小时 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道",
+  "mainline": "运行中",
+  "cap": "OpenCodeX-Desktop内置 OpenCodex 网关 · :10100 · 5 渠道 · 3 活跃成功 98.6%失败 1.4%",
+  "ov": [
+   "phHub X phAdapter"
+  ],
+  "clip": [],
+  "docOverflow": false
+ },
+ "gate": {
+  "hero": true,
+  "mode": "setup",
+  "bd": "out=hero&v=dual&effects=high&render=mesh",
+  "bdShown": "block",
+  "sub": "完成启动前的环境准备，再继续运行操作。"
+ },
+ "gateBack": {
+  "hero": false,
+  "bd": "about:blank",
+  "sub": "过去 24 小时 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道"
+ },
+ "cmap": {
+  "tabs": 3,
+  "tabNames": [
+   "现有全景",
+   "Superba 参照实验",
+   "多工具泳道"
+  ],
+  "pvHero": false,
+  "ovVisible": false,
+  "motion": {
+   "mode": "ready",
+   "win": "24 小时",
+   "paused": false,
+   "focus": null,
+   "locked": false,
+   "built": true,
+   "state": "running"
+  }
+ },
+ "02-overview-dark-initial": {
+  "H": {
+   "mode": "ready",
+   "win": "24 小时",
+   "paused": false,
+   "focus": null,
+   "locked": false,
+   "built": true,
+   "state": "stopped"
+  },
+  "cur": "stopped",
+  "stage": [
+   889,
+   460
+  ],
+  "hero": [
+   268,
+   186,
+   889,
+   609
+  ],
+  "status": [
+   268,
+   124,
+   889,
+   48
+  ],
+  "actions": [
+   1021,
+   126,
+   134,
+   37
+  ],
+  "mods": [
+   268,
+   809,
+   889,
+   163
+  ],
+  "events": [
+   268,
+   986,
+   889,
+   107
+  ],
+  "main": [
+   729,
+   1083
+  ],
+  "wires": 26,
+  "parts": 0,
+  "motionSrc": "ayout=hero&effects=high&render=mesh&v=20261101-overview-hero",
+  "backdropSrc": "about:blank",
+  "backdropShown": "none",
+  "title": "全景概览",
+  "subtitle": "过去 24 小时 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道",
+  "mainline": "未运行",
+  "cap": "OpenCodeX-Desktop内置 OpenCodex 网关 · :10100 · 5 渠道 · 3 活跃 · 已停止成功 98.6%失败 1.4%",
+  "ov": [
+   "phHub X phAdapter"
+  ],
+  "clip": [],
+  "docOverflow": false
+ },
+ "02-overview-dark": {
+  "H": {
+   "mode": "ready",
+   "win": "24 小时",
+   "paused": false,
+   "focus": null,
+   "locked": false,
+   "built": true,
+   "state": "running"
+  },
+  "cur": "running",
+  "stage": [
+   889,
+   460
+  ],
+  "hero": [
+   268,
+   186,
+   889,
+   609
+  ],
+  "status": [
+   268,
+   124,
+   889,
+   48
+  ],
+  "actions": [
+   859,
+   126,
+   296,
+   37
+  ],
+  "mods": [
+   268,
+   809,
+   889,
+   163
+  ],
+  "events": [
+   268,
+   986,
+   889,
+   107
+  ],
+  "main": [
+   729,
+   1083
+  ],
+  "wires": 26,
+  "parts": 6,
+  "motionSrc": "ayout=hero&effects=high&render=mesh&v=20261101-overview-hero",
+  "backdropSrc": "about:blank",
+  "backdropShown": "none",
+  "title": "全景概览",
+  "subtitle": "过去 24 小时 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道",
+  "mainline": "运行中",
+  "cap": "OpenCodeX-Desktop内置 OpenCodex 网关 · :10100 · 5 渠道 · 3 活跃成功 98.6%失败 1.4%",
+  "ov": [
+   "phHub X phAdapter"
+  ],
+  "clip": [],
+  "docOverflow": false,
+  "errs": [
+   "reqfail: http://127.0.0.1:55743/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/03-%E9%A1%B9%E7%9B%AE%E5%8D%8F%E4%BD%9C%E8%B5%84%E6%96%99/01-%E5%8D%8F%E4%BD%9C%E5%8C%85/2026-09-12-%E6%A1%8C%E9%9D%A2%E7%AE%A1%E7%90%86%E5%99%A8%E9%9C%80%E6%B1%82%E6%A2%B3%E7%90%86%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%AA%8C%E8%AF%81/01-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90/05-%E5%8E%9F%E5%9E%8B/%E5%80%99%E9%80%89/2026-09-28-Logo%E6%9C%AC%E4%BD%93%E5%BD%A2%E5%8F%98/index.html?embed=1&layout=hero&v=dual&effects=high&render=mesh"
+  ]
+ },
+ "03-overview-compact-initial": {
+  "H": {
+   "mode": "ready",
+   "win": "24 小时",
+   "paused": false,
+   "focus": null,
+   "locked": false,
+   "built": true,
+   "state": "stopped"
+  },
+  "cur": "stopped",
+  "stage": [
+   889,
+   460
+  ],
+  "hero": [
+   128,
+   186,
+   889,
+   609
+  ],
+  "status": [
+   128,
+   124,
+   889,
+   48
+  ],
+  "actions": [
+   881,
+   126,
+   134,
+   37
+  ],
+  "mods": [
+   128,
+   809,
+   889,
+   163
+  ],
+  "events": [
+   128,
+   986,
+   889,
+   107
+  ],
+  "main": [
+   729,
+   1083
+  ],
+  "wires": 17,
+  "parts": 0,
+  "motionSrc": "ayout=hero&effects=high&render=mesh&v=20261101-overview-hero",
+  "backdropSrc": "about:blank",
+  "backdropShown": "none",
+  "title": "全景概览",
+  "subtitle": "过去 24 小时 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道",
+  "mainline": "未运行",
+  "cap": "OpenCodeX-Desktop内置 OpenCodex 网关 · :10100 · 5 渠道 · 3 活跃 · 已停止成功 98.6%失败 1.4%",
+  "ov": [
+   "phHub X phAdapter"
+  ],
+  "clip": [],
+  "docOverflow": true
+ },
+ "03-overview-compact": {
+  "H": {
+   "mode": "ready",
+   "win": "24 小时",
+   "paused": false,
+   "focus": null,
+   "locked": false,
+   "built": true,
+   "state": "running"
+  },
+  "cur": "running",
+  "stage": [
+   889,
+   460
+  ],
+  "hero": [
+   128,
+   186,
+   889,
+   609
+  ],
+  "status": [
+   128,
+   124,
+   889,
+   48
+  ],
+  "actions": [
+   719,
+   126,
+   296,
+   37
+  ],
+  "mods": [
+   128,
+   809,
+   889,
+   163
+  ],
+  "events": [
+   128,
+   986,
+   889,
+   107
+  ],
+  "main": [
+   729,
+   1083
+  ],
+  "wires": 17,
+  "parts": 6,
+  "motionSrc": "ayout=hero&effects=high&render=mesh&v=20261101-overview-hero",
+  "backdropSrc": "about:blank",
+  "backdropShown": "none",
+  "title": "全景概览",
+  "subtitle": "过去 24 小时 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道",
+  "mainline": "运行中",
+  "cap": "OpenCodeX-Desktop内置 OpenCodex 网关 · :10100 · 5 渠道 · 3 活跃成功 98.6%失败 1.4%",
+  "ov": [
+   "phHub X phAdapter"
+  ],
+  "clip": [],
+  "docOverflow": true,
+  "errs": [
+   "reqfail: http://127.0.0.1:55743/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/03-%E9%A1%B9%E7%9B%AE%E5%8D%8F%E4%BD%9C%E8%B5%84%E6%96%99/01-%E5%8D%8F%E4%BD%9C%E5%8C%85/2026-09-12-%E6%A1%8C%E9%9D%A2%E7%AE%A1%E7%90%86%E5%99%A8%E9%9C%80%E6%B1%82%E6%A2%B3%E7%90%86%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%AA%8C%E8%AF%81/01-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90/05-%E5%8E%9F%E5%9E%8B/%E5%80%99%E9%80%89/2026-09-28-Logo%E6%9C%AC%E4%BD%93%E5%BD%A2%E5%8F%98/index.html?embed=1&layout=hero&v=dual&effects=high&render=mesh"
+  ]
+ }
+}

@@ -1,0 +1,351 @@
+{
+ "10-reactor-light-starting": {
+  "tone": "amber",
+  "dur": "7.74s",
+  "swOp": "1",
+  "play": "paused",
+  "arc": "rgb(238, 152, 34)"
+ },
+ "10-reactor-light-stopped": {
+  "tone": "idle",
+  "dur": "2.58s",
+  "swOp": "0",
+  "play": "paused",
+  "arc": "rgb(110, 110, 110)"
+ },
+ "10-reactor-light-starting_failed": {
+  "tone": "bad",
+  "dur": "2.58s",
+  "swOp": "0",
+  "play": "paused",
+  "arc": "rgb(229, 72, 77)"
+ },
+ "10-reactor-light": {
+  "tone": "run",
+  "dur": "2.58s",
+  "swOp": "1",
+  "arcs": [
+   "rgb(148, 97, 255)",
+   "rgb(59, 120, 255)",
+   "rgb(232, 87, 138)"
+  ],
+  "orbs": [
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": true
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "Kr",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "NA",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "A6",
+    "warn": true
+   }
+  ],
+  "main": [
+   729,
+   729
+  ],
+  "frameSrc": "gh&render=mesh&orbit=1&v=20261101-overview-reactor",
+  "hub": [
+   636,
+   337.9375,
+   150
+  ],
+  "wander": {
+   "maxOff": 9.3,
+   "minOff": 1.2,
+   "logoW": 96.3,
+   "ringInnerR": 61,
+   "spread": [
+    11.8,
+    13.2
+   ]
+  },
+  "ripples": 1,
+  "errs": []
+ },
+ "11-reactor-dark": {
+  "tone": "run",
+  "dur": "2.58s",
+  "swOp": "1",
+  "arcs": [
+   "rgb(166, 117, 255)",
+   "rgb(77, 141, 255)",
+   "rgb(255, 111, 160)"
+  ],
+  "orbs": [
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": true
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "Kr",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "NA",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "A6",
+    "warn": true
+   }
+  ],
+  "main": [
+   729,
+   729
+  ],
+  "frameSrc": "gh&render=mesh&orbit=1&v=20261101-overview-reactor",
+  "hub": [
+   636,
+   337.9375,
+   150
+  ],
+  "wander": {
+   "maxOff": 9.3,
+   "minOff": 0.6,
+   "logoW": 96.3,
+   "ringInnerR": 61,
+   "spread": [
+    11.7,
+    12.9
+   ]
+  },
+  "ripples": 4,
+  "errs": []
+ },
+ "12-reactor-900": {
+  "tone": "run",
+  "dur": "2.58s",
+  "swOp": "1",
+  "arcs": [
+   "rgb(148, 97, 255)",
+   "rgb(59, 120, 255)",
+   "rgb(232, 87, 138)"
+  ],
+  "orbs": [
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": true
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "Kr",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "NA",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "A6",
+    "warn": true
+   }
+  ],
+  "main": [
+   729,
+   729
+  ],
+  "frameSrc": "gh&render=mesh&orbit=1&v=20261101-overview-reactor",
+  "hub": [
+   496,
+   337.9375,
+   150
+  ],
+  "wander": {
+   "maxOff": 9.3,
+   "minOff": 0.5,
+   "logoW": 96.3,
+   "ringInnerR": 61,
+   "spread": [
+    11.8,
+    12.7
+   ]
+  },
+  "ripples": 4,
+  "errs": []
+ },
+ "13-reactor-1440": {
+  "tone": "run",
+  "dur": "2.58s",
+  "swOp": "1",
+  "arcs": [
+   "rgb(166, 117, 255)",
+   "rgb(77, 141, 255)",
+   "rgb(255, 111, 160)"
+  ],
+  "orbs": [
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": 16,
+    "txt": "",
+    "warn": true
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "Kr",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "NA",
+    "warn": false
+   },
+   {
+    "w": 34,
+    "ico": null,
+    "txt": "A6",
+    "warn": true
+   }
+  ],
+  "main": [
+   729,
+   729
+  ],
+  "frameSrc": "gh&render=mesh&orbit=1&v=20261101-overview-reactor",
+  "hub": [
+   766,
+   337.9375,
+   150
+  ],
+  "wander": {
+   "maxOff": 9.3,
+   "minOff": 1.3,
+   "logoW": 96.3,
+   "ringInnerR": 61,
+   "spread": [
+    11.8,
+    13.1
+   ]
+  },
+  "ripples": 0,
+  "errs": []
+ }
+}

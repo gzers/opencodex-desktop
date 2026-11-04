@@ -1,0 +1,86 @@
+{
+  "date": "2026-11-01",
+  "method": "同一页面分别加载改前（route 拦截替换为改前 extension-manager.css）与改后样式，按扩展 · Skills 视图读取主区和两个列表的尺寸。outerOverflow = 主区 scrollHeight - clientHeight，大于 0 即出现外层滚动条；emptyBelowFooter 为页脚下方到主区内容底边的空白。",
+  "rows": [
+    {
+      "css": "before",
+      "size": "1180×760",
+      "mainScrollHeight": 729,
+      "mainClientHeight": 729,
+      "outerOverflow": 0,
+      "emptyBelowFooter": 77,
+      "leftListHeight": 284,
+      "rightListHeight": 284
+    },
+    {
+      "css": "before",
+      "size": "窗口 900×600",
+      "mainScrollHeight": 793,
+      "mainClientHeight": 569,
+      "outerOverflow": 224,
+      "emptyBelowFooter": -223,
+      "leftListHeight": 424,
+      "rightListHeight": 424
+    },
+    {
+      "css": "before",
+      "size": "视口 1898×1128",
+      "mainScrollHeight": 803,
+      "mainClientHeight": 729,
+      "outerOverflow": 74,
+      "emptyBelowFooter": -73,
+      "leftListHeight": 434,
+      "rightListHeight": 434
+    },
+    {
+      "css": "before",
+      "size": "窗口 1600×900",
+      "mainScrollHeight": 869,
+      "mainClientHeight": 869,
+      "outerOverflow": 0,
+      "emptyBelowFooter": 67,
+      "leftListHeight": 434,
+      "rightListHeight": 434
+    },
+    {
+      "css": "after",
+      "size": "1180×760",
+      "mainScrollHeight": 729,
+      "mainClientHeight": 729,
+      "outerOverflow": 0,
+      "emptyBelowFooter": 1,
+      "leftListHeight": 360,
+      "rightListHeight": 360
+    },
+    {
+      "css": "after",
+      "size": "窗口 900×600",
+      "mainScrollHeight": 569,
+      "mainClientHeight": 569,
+      "outerOverflow": 0,
+      "emptyBelowFooter": 1,
+      "leftListHeight": 200,
+      "rightListHeight": 200
+    },
+    {
+      "css": "after",
+      "size": "视口 1898×1128",
+      "mainScrollHeight": 729,
+      "mainClientHeight": 729,
+      "outerOverflow": 0,
+      "emptyBelowFooter": 1,
+      "leftListHeight": 360,
+      "rightListHeight": 360
+    },
+    {
+      "css": "after",
+      "size": "窗口 1600×900",
+      "mainScrollHeight": 869,
+      "mainClientHeight": 869,
+      "outerOverflow": 0,
+      "emptyBelowFooter": 1,
+      "leftListHeight": 500,
+      "rightListHeight": 500
+    }
+  ]
+}

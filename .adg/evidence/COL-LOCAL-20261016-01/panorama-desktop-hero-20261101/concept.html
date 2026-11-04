@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>全景概览 · Desktop 主角概念稿</title>
+<script>(function(){var q=new URLSearchParams(location.search);if(q.get('theme')==='dark')document.documentElement.dataset.theme='dark';})();</script>
+<link rel="stylesheet" href="concept.css">
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand"><span class="logo"><img src="../../../../docs/04-项目资料/04-品牌与图标素材/04-品牌组件/Logo/logo.svg" alt=""></span><span><b>OpenCodeX-Desktop</b><small>Desktop Manager</small></span></div>
+  <a class="nav on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/><path d="M8 2v2M14 8h-2M8 14v-2M2 8h2"/></svg><span>概览</span></a>
+  <a class="nav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1.2"/><rect x="9" y="2" width="5" height="5" rx="1.2"/><rect x="2" y="9" width="5" height="5" rx="1.2"/><rect x="9" y="9" width="5" height="5" rx="1.2"/></svg><span>面板</span></a>
+  <a class="nav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.8l5.4 3.1v6.2L8 14.2l-5.4-3.1V4.9z"/><path d="M2.8 5L8 8l5.2-3M8 8v6"/></svg><span>模型</span></a>
+  <a class="nav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2.5h4v3h3v4h-3v4H6v-4H3v-4h3z"/></svg><span>拓展</span></a>
+  <a class="nav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 6.5A5 5 0 0 0 3.6 5M3 9.5A5 5 0 0 0 12.4 11"/><path d="M3.4 2.6V5.2H6M12.6 13.4V10.8H10"/></svg><span>同步</span></a>
+  <a class="nav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"/></svg><span>设置</span></a>
+  <div class="side-foot"><span class="dot st-dot"></span><span class="st-txt">网关运行中</span><small>:10100</small></div>
+</aside>
+<main class="main">
+  <div class="head">
+    <div><h1>全景概览</h1><p id="subt">过去 24 小时 · 4 个客户端经 Desktop 内置网关分发到 3 个活跃渠道</p></div>
+    <span class="sp"></span>
+    <div class="seg" id="seg"><span data-w="6 小时">6h</span><span class="on" data-w="24 小时">24h</span><span data-w="3 天">3d</span><span data-w="7 天">7d</span></div>
+    <button class="ibtn" id="bPause" title="暂停动效"></button>
+    <button class="ibtn" id="bTheme" title="切换深浅色"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.2 9.6A5.6 5.6 0 0 1 6.4 2.8a5.6 5.6 0 1 0 6.8 6.8z"/></svg></button>
+    <button class="ibtn" id="bFull" title="全屏"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg></button>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><label>请求</label><b>2,184</b><span class="d up">较前一窗口 +12%</span><svg data-spark="38,42,40,51,47,58,55,63,60,71,66,74" style="--c:var(--core)"></svg></div>
+    <div class="kpi"><label>Token</label><b>2.55<small>M</small></b><span class="d">输入 1.97M · 输出 0.58M</span><svg data-spark="20,26,24,31,29,36,40,37,45,43,50,54" style="--c:var(--newapi)"></svg></div>
+    <div class="kpi"><label>成功率</label><b>98.6<small>%</small></b><span class="d">2,153 / 2,184 次成功</span><svg data-spark="97,98,99,98,96,99,99,98,97,99,99,98" style="--c:var(--ok)"></svg></div>
+    <div class="kpi"><label>失败</label><b>31<small>次</small></b><span class="d">429 限流 14 · 超时 11 · 5xx 6</span><svg data-spark="1,0,2,1,4,7,5,3,2,3,2,1" style="--c:var(--bad)"></svg></div>
+    <div class="kpi"><label>首字延迟 P50</label><b>0.82<small>s</small></b><span class="d">P95 2.4s</span><svg data-spark="9,8,8,7,9,8,7,7,8,6,7,7" style="--c:var(--krill)"></svg></div>
+  </div>
+  <section class="stage" id="stage">
+    <iframe class="bg-motion" id="motion" src="../../../../docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/01-需求分析/05-原型/候选/2026-09-28-Logo本体形变/index.html?embed=1&amp;layout=hero&amp;effects=high&amp;render=css" title="" aria-hidden="true" tabindex="-1"></iframe>
+    <svg class="wires" id="wires"></svg>
+    <div class="clients">
+      <div class="grp">
+        <div class="colh"><span>客户端</span><span>24h Token</span></div>
+        <div class="node client unsplit" data-k="codex" data-f="codex" style="--c:var(--codex);"><span class="orb"><i class="ring"></i>CX</span><div class="nl"><div class="l1"><b>Codex App<em>0.164</em></b><span class="v"><span class="tag gray">合并</span></span></div><div class="l2"><span>WS · gpt-6.1-sol</span><small></small></div></div></div>
+        <div class="node client unsplit" data-k="codex" data-f="codex" style="--c:var(--opencode);"><span class="orb"><i class="ring"></i>OC</span><div class="nl"><div class="l1"><b>OpenCode<em>1.1</em></b><span class="v"><span class="tag gray">合并</span></span></div><div class="l2"><span>常用 → Krill</span><small></small></div></div></div>
+        <div class="node client unsplit" data-k="codex" data-f="codex" style="--c:var(--cli);"><span class="orb"><i class="ring"></i>&gt;_</span><div class="nl"><div class="l1"><b>Codex CLI<em>0.164</em></b><span class="v"><span class="tag gray">合并</span></span></div><div class="l2"><span>常用 → NewApi</span><small></small></div></div></div>
+        <div class="node client" data-k="claude" data-f="claude" style="--c:var(--claude);--p1:97.4;--p2:0;--p3:2.6"><span class="orb"><i class="ring"></i>CC</span><div class="nl"><div class="l1"><b>Claude Code<em>2.1</em></b><span class="v">0.66M</span></div><div class="l2"><span>496 次 · 97.4%</span><small>sonnet-4-6</small></div></div></div>
+        <div class="hint">OpenCode、Codex CLI 与 Codex App 共用 codex 入口，用量合并计入。<a>为每个客户端分配独立密钥 →</a></div>
+      </div>
+      <div class="grp">
+        <div class="colh"><span>绕过网关</span></div>
+        <div class="node client sm off unsplit" data-k="none" style="--c:var(--more)"><span class="orb"><i class="ring"></i>Cu</span><div class="nl"><div class="l1"><b>Cursor</b><span class="v"><small>未安装</small></span></div></div></div>
+        <div class="node client sm unsplit" id="gem" data-k="gemini" data-f="gemini" style="--c:var(--gemini)"><span class="orb"><i class="ring"></i>G</span><div class="nl"><div class="l1"><b>Gemini CLI</b><span class="v"><small>直连</small></span></div></div></div>
+      </div>
+    </div>
+    <div class="hub" id="hub" data-f="desktop" title="OpenCodeX-Desktop · 内置 OpenCodex 网关">
+      <svg class="ring" viewBox="0 0 150 150">
+        <circle cx="75" cy="75" r="74" fill="none" stroke="var(--ink3)" stroke-opacity=".45" stroke-width="1" stroke-dasharray="2 6" class="spin"/>
+        <g transform="rotate(-90 75 75)" fill="none" stroke-width="5">
+          <circle cx="75" cy="75" r="66" stroke="var(--line)"/>
+          <circle cx="75" cy="75" r="66" pathLength="100" stroke="var(--ok)" stroke-dasharray="98.6 100"/>
+          <circle cx="75" cy="75" r="66" pathLength="100" stroke="var(--bad)" stroke-dasharray="1.4 100" stroke-dashoffset="-98.6"/>
+        </g>
+      </svg>
+    </div>
+    <div class="core-cap" id="cap"><b><span class="dot st-dot"></span>OpenCodeX-Desktop</b><span>内置 OpenCodex 网关 · :10100 · 5 渠道 · 3 活跃<em class="st-cap"></em></span><div class="seglg"><span><i style="--c:var(--ok)"></i>成功 98.6%</span><span><i style="--c:var(--bad)"></i>失败 1.4%</span></div></div>
+    <div class="node adapter" id="adapter" data-k="krill" data-f="adapter" style="--c:var(--krill)" title="Desktop 额外代理：把请求转换为 Krill 协议并实时转发"><span class="orb"><i class="pulse"></i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5h10M10 3l2.5 2.5L10 8M13.5 10.5h-10M6 8l-2.5 2.5L6 13"/></svg></span><div class="nl"><b>实时适配</b><span>Desktop 代理 · <b class="live-n">2</b> 进行中</span></div></div>
+    <div class="channels">
+      <div class="grp">
+        <div class="colh"><span>渠道</span><span>24h Token</span></div>
+        <div class="node chan" id="cKrill" data-k="krill" data-f="krill" style="--c:var(--krill);--p1:99.4;--p2:0;--p3:.6"><span class="orb"><i class="ring"></i>Kr</span><div class="nl"><div class="l1"><b>Krill<em>124ms</em></b><span class="v">0.58M</span></div><div class="l2"><span>498 次 · 99.4%</span><small>23%</small></div></div></div>
+        <div class="node chan" id="cNew" data-k="newapi" data-f="newapi" style="--c:var(--newapi);--p1:99.2;--p2:0;--p3:.8"><span class="orb"><i class="ring"></i>NA</span><div class="nl"><div class="l1"><b>NewApi<em>86ms</em></b><span class="v">1.18M</span></div><div class="l2"><span>1,069 次 · 99.2%</span><small>46%</small></div></div></div>
+        <div class="node chan" id="cA6" data-k="a6" data-f="a6" style="--c:var(--a6);--p1:96.9;--p2:0;--p3:3.1"><span class="orb"><i class="ring"></i>A6</span><div class="nl"><div class="l1"><b>A6api<em>162ms</em></b><span class="v">0.79M</span></div><div class="l2"><span>617 次 · 96.9%</span><small>31%</small></div></div></div>
+        <div class="node chan sm more unsplit" id="more" data-k="more" style="--c:var(--more)"><span class="orb"><i class="ring"></i>+2</span><div class="nl"><div class="l1"><b>备用渠道</b><span class="v"><small>24h 无流量</small></span></div></div></div>
+      </div>
+      <div class="grp">
+        <div class="node chan sm unsplit" id="goo" data-k="gemini" style="--c:var(--gemini)"><span class="orb"><i class="ring"></i>G</span><div class="nl"><div class="l1"><b>Google 官方</b><span class="v"><small>外部</small></span></div></div></div>
+      </div>
+    </div>
+    <div class="tick" id="tick"></div>
+    <div class="pop" id="pop"></div>
+  </section>
+  <div class="legend">
+    <span><svg viewBox="0 0 26 10"><circle cx="13" cy="5" r="4.2" fill="none" stroke="var(--line)" stroke-width="2"/><circle cx="13" cy="5" r="4.2" fill="none" stroke="var(--ok)" stroke-width="2" pathLength="100" stroke-dasharray="80 100" transform="rotate(-90 13 5)"/><circle cx="13" cy="5" r="4.2" fill="none" stroke="var(--bad)" stroke-width="2" pathLength="100" stroke-dasharray="12 100" stroke-dashoffset="-80" transform="rotate(-90 13 5)"/></svg>外环 · 成功 / 失败</span>
+    <span><svg viewBox="0 0 26 10"><path d="M1 5h24" stroke="var(--core)" stroke-width="5" stroke-linecap="round" opacity=".55"/></svg>线宽 · Token 占比</span>
+    <span><svg viewBox="0 0 26 10"><path d="M1 5h24" stroke="var(--core)" stroke-width="2" opacity=".35"/><circle cx="13" cy="5" r="3" fill="#fff" stroke="var(--core)" stroke-width="1.6"/></svg>光点 · 请求加速回放</span>
+    <span><svg viewBox="0 0 26 10"><circle cx="20" cy="5" r="3" fill="var(--krill)"/><circle cx="14" cy="5" r="2.3" fill="var(--krill)" opacity=".55"/><circle cx="8" cy="5" r="1.7" fill="var(--krill)" opacity=".3"/><circle cx="3" cy="5" r="1.2" fill="var(--krill)" opacity=".15"/></svg>彗尾 · 经 Desktop 代理实时转发</span>
+    <span><svg viewBox="0 0 26 10"><path d="M1 5h24" stroke="var(--ink3)" stroke-width="1.6" stroke-dasharray="4 3"/></svg>虚线 · 未细分 / 直连</span>
+    <span class="sp"></span>
+    <span>mock 数据</span>
+  </div>
+</main>
+</div>
+<script src="wires.js"></script>
+<script src="fx.js"></script>
+</body>
+</html>

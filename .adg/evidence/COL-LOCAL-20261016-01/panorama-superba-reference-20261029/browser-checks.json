@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-29",
+  "scope": "Superba reference experiment in connection-map",
+  "viewports": {
+    "1180x760": {
+      "reference_scrollHeight": 665,
+      "clientHeight": 665,
+      "route_hero_height": 148,
+      "grid_template_columns": "2 columns, wide left + narrow right"
+    },
+    "900x600": {
+      "reference_scrollHeight": 684,
+      "clientHeight": 665,
+      "layout": "single column scroll",
+      "route_path": "four columns preserved"
+    }
+  },
+  "states": {
+    "routed": "OpenCodex → Krill with latency pill",
+    "direct": "worker ghost above straight path; OpenCodex unopened; bypass dashed",
+    "failed": "red link + timeout pill + provider marker"
+  },
+  "theme": {
+    "light": "checked",
+    "dark": "checked"
+  },
+  "checks": [
+    "Superba reference view and current panorama do not write business state",
+    "Four route nodes + four bento cards + 168 heat cells",
+    "Mode changes only mock route states",
+    "Desktop management is represented and remains a single product owner",
+    "Current panorama dark canvas white rectangle fixed by stable theme background layer"
+  ],
+  "limitations": [
+    "Mock data only; no real client discovery, request log, latency probe, billing or route changes",
+    "The reference experiment reproduces the current source geometry and visual system; it is not the Superba application itself",
+    "Existing shared iframe initialization MutationObserver warning remains outside this change",
+    "Version and production adoption timing undecided"
+  ],
+  "tests": {
+    "all": 29,
+    "failed": 0,
+    "targeted": 2
+  }
+}

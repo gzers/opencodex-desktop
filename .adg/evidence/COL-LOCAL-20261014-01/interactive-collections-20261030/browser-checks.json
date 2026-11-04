@@ -1,0 +1,96 @@
+{
+  "kind": "manual-browser-check-summary",
+  "date": "2026-10-30",
+  "source": "唯一总原型工作树，无固定批准提交",
+  "checks": [
+    {
+      "name": "固定双栏与双视图",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "名称详情不激活",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "菜单动作不改选择",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "批量关系半选",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "跨视图共同草稿",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "搜索保留隐藏当前项",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "预览取消保留",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "应用后双视图一致",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "35行长名称列表",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "方向键只移动焦点及局部滚动",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "加载/失败重试/空结果",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "亮暗与900窄宽无横向溢出",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "取消详情返回焦点",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "MCP切换",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    },
+    {
+      "name": "控制台无error",
+      "result": "passed",
+      "evidence": "实际浏览器操作及DOM/几何读回"
+    }
+  ],
+  "narrow": {
+    "browser_width": 900,
+    "sample_width": 368,
+    "columns": [
+      140,
+      228
+    ],
+    "horizontal_overflow": [
+      0,
+      0
+    ]
+  },
+  "business_integration": false,
+  "completed_at": "2026-10-31"
+}

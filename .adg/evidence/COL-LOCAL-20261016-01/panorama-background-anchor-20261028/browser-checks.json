@@ -1,0 +1,88 @@
+{
+  "scope": "connection-map background anchor fix",
+  "default": {
+    "outer": {
+      "canvas": {
+        "h": 550,
+        "w": 889,
+        "x": 277.5,
+        "y": 385
+      },
+      "frame": {
+        "h": 550,
+        "w": 889,
+        "x": 277.5,
+        "y": 385
+      },
+      "mark": {
+        "h": 86,
+        "w": 86,
+        "x": 803.453125,
+        "y": 743.5
+      }
+    },
+    "inner": {
+      "glowX": "0.5",
+      "glowY": "0.5",
+      "h": 86,
+      "w": 86,
+      "x": 525.953125,
+      "y": 358.5
+    }
+  },
+  "narrow": {
+    "outer": {
+      "canvas": {
+        "h": 397,
+        "w": 609,
+        "x": 417.5,
+        "y": 461
+      },
+      "frame": {
+        "h": 397,
+        "w": 609,
+        "x": 417.5,
+        "y": 461
+      },
+      "mark": {
+        "h": 68,
+        "w": 68,
+        "x": 773.2578125,
+        "y": 689.015625
+      }
+    },
+    "inner": {
+      "h": 68,
+      "w": 68,
+      "x": 355.7578125,
+      "y": 228.015625
+    }
+  },
+  "direct": {
+    "glowX": "0.5",
+    "glowY": "0.5",
+    "h": 68,
+    "w": 68,
+    "x": 355.7578125,
+    "y": 5.6953125
+  },
+  "oldOverviewEmbed": {
+    "glowX": "",
+    "markX": "",
+    "spatial": false
+  },
+  "checked": [
+    "Frame bounds match canvas at 1180x760 and 900x600",
+    "Inner logo matches Desktop hit target exactly at both sizes",
+    "CSS fallback softened at viewport edges",
+    "Direct scene moves logo without moving glow origin",
+    "Legacy overview does not opt in to spatial layout"
+  ],
+  "tests": {
+    "passed": 2,
+    "failed": 0
+  },
+  "remaining": [
+    "Existing shared prototype initialization MutationObserver warning remains outside this change"
+  ]
+}

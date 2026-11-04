@@ -1,0 +1,35 @@
+{
+ "running": {
+  "tone": "run",
+  "idle": false,
+  "dur": "2.58s",
+  "swOp": "1",
+  "play": "running",
+  "arc": "rgb(148, 97, 255)"
+ },
+ "starting": {
+  "tone": "amber",
+  "idle": true,
+  "dur": "7.74s",
+  "swOp": "1",
+  "play": "running",
+  "arc": "rgb(238, 152, 34)"
+ },
+ "stopped": {
+  "tone": "idle",
+  "idle": true,
+  "dur": "2.58s",
+  "swOp": "0",
+  "play": "paused",
+  "arc": "rgb(110, 110, 110)"
+ },
+ "starting_failed": {
+  "tone": "bad",
+  "idle": true,
+  "dur": "2.58s",
+  "swOp": "0",
+  "play": "paused",
+  "arc": "rgb(229, 72, 77)"
+ },
+ "errs": []
+}

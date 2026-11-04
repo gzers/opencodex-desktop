@@ -1,0 +1,86 @@
+{
+  "scope": "connection-map vertical product axis",
+  "viewport": {
+    "h": 550,
+    "w": 889,
+    "x": 528.5,
+    "y": 340
+  },
+  "axis": {
+    "adapterTag": "Desktop 适配 · 目标",
+    "axisDelta": 0,
+    "canvas": {
+      "h": 550,
+      "w": 889,
+      "x": 528.5,
+      "y": 340
+    },
+    "desktop": {
+      "h": 172,
+      "w": 250,
+      "x": 830.21875,
+      "y": 363
+    },
+    "drawn": [
+      {
+        "from": "desktop",
+        "to": "proxy",
+        "via": null
+      },
+      {
+        "from": "codex",
+        "to": "proxy",
+        "via": null
+      },
+      {
+        "from": "claude",
+        "to": "proxy",
+        "via": null
+      },
+      {
+        "from": "opencode",
+        "to": "proxy",
+        "via": null
+      },
+      {
+        "from": "proxy",
+        "to": "newapi",
+        "via": null
+      },
+      {
+        "from": "proxy",
+        "to": "aimami",
+        "via": null
+      },
+      {
+        "from": "proxy",
+        "to": "krill",
+        "via": "desktop"
+      }
+    ],
+    "proxy": {
+      "h": 174,
+      "w": 190,
+      "x": 860.21875,
+      "y": 631
+    },
+    "verticalGap": 96
+  },
+  "checked": [
+    "Desktop above OpenCodex on same x-axis",
+    "management relation uses vertical dotted line",
+    "clients and channels remain side paths",
+    "Desktop adaptation is a branch marker, no standalone adapter node",
+    "default light and 900x600 dark visual review"
+  ],
+  "tests": {
+    "command": "node --test connection-map.test.cjs",
+    "passed": 16,
+    "failed": 0
+  },
+  "limitations": [
+    "Fixtures only; no production route changes",
+    "Existing shared iframe initialization warning remains",
+    "Version and adoption timing undecided"
+  ]
+}

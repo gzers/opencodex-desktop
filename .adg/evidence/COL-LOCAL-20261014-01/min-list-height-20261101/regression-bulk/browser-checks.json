@@ -1,0 +1,1227 @@
+{
+  "date": "2026-11-01",
+  "entry": "index.html#extensions",
+  "method": "Playwright headless Chromium；1180×760 用浏览器视口，900×600 用原型「窗口尺寸预览」setWinSize(900,600)（视口 1440×900），因原型外壳模拟窗口固定宽度，视口缩到 900 时所有路由都会整页溢出 140px，与拓展页无关；每段测试用新的浏览器上下文，内存 mock 数据互不影响",
+  "script_version": "extension-manager.js?v=20261101-bulk2",
+  "style_version": "extension-manager.css?v=20261101-minh",
+  "total": 304,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "1180×760 浅色 · 主题=light",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 目标模式 #extensions 生效",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 加载 js 20261101-bulk2 与 css 20261101-minh 版本",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 注释写明全部启用 / 全部停用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 右表无复选框列",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 左列表保留勾选（7 项）",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 左右标题为 Skills / 平台",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 页面无“Skills / MCP”合写",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 右侧搜索与表格名称写平台",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 右上下文为 配置目标：design-studio",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 全部启用提示：4 个平台，跳过 10 个",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 全部停用提示：16 个平台，含共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 30 行中 10 行不可切换，行内按钮禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 行内按钮文字随状态为停用 / 启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 布局：扩展页无横向溢出、右栏不超出主区与窗口",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 布局：按钮组在右栏内、不压住名称、高度不超过 30",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 布局：右表无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 布局：左右页头底边对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 全部停用：可切换行全部停用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 全部停用：不可切换行不变",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 全部停用：提示共享目录影响 14 个平台",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 全部停用后本按钮禁用，焦点移到全部启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 全部启用：可切换行全部启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 全部启用：不可切换行不变",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 全部启用：提示写入共享目录",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 全部启用后本按钮禁用，焦点移到全部停用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 行内停用 Claude Code 后按钮提示更新",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · A 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 搜索 claude：3 行",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 搜索 claude：全部启用禁用（已全部启用）",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 搜索 claude：全部停用只算搜索结果",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 搜索 claude 后全部停用：只停用 Claude Code，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 清空搜索：其余 29 行不变",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 搜索 codex：全部停用提示共享目录",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 停用 Codex 等于移出共享目录：14 个共享平台都停用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 自有目录平台不受共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · B 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 右表平台标题打开平台详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 左列表打开 Skill 详情（原两页签布局）",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skill 详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台右表打开 Skill 详情（原两页签布局）",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台右表打开 MCP 详情（原布局）",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · MCP 详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · D 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：标题与名称写 MCP / 平台",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · MCP 提示：启用 19、停用 3、跳过 8",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · MCP 全部停用：Codex、Claude Code、Gemini CLI 停用，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · MCP 全部启用：22 行启用，8 行不变",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · E 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：标题与名称写 平台 / Skills",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台：左右都无复选框",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Codex · Skills 提示：启用 2 项、停用 5 项，含共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 布局：扩展页无横向溢出、右栏不超出主区与窗口",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 布局：按钮组在右栏内、不压住名称、高度不超过 30",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 布局：右表无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 布局：左右页头底边对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Codex 全部停用：7 项 Skills 停用并提示共享目录",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Codex 全部启用：7 项 Skills 启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：标题与名称写 MCP",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Codex · MCP 提示：启用 1 项、停用 3 项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Codex · MCP 全部停用：4 项停用，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Codex · MCP 全部启用：4 项启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切到 Claude Code",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Claude Code 全部停用：自有目录，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切回 Codex：7 项 Skills 仍启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Claude Desktop：两个按钮禁用并说明原因",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · F 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 勾选 2 项：右上下文为 所选 2 项 Skills",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 勾选 2 项：按钮提示写所选 2 项 Skills",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 批量启用 2 项：可切换行全部启用，提示列出两项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 清除勾选后回到 design-studio",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 空结果：0 行，两个按钮禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败：提示保留选择，按钮可用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 恢复正常：30 行",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · C/G 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 主题=dark",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 目标模式 #extensions 生效",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 加载 js 20261101-bulk2 与 css 20261101-minh 版本",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 注释写明全部启用 / 全部停用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 右表无复选框列",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 左列表保留勾选（7 项）",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 左右标题为 Skills / 平台",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 页面无“Skills / MCP”合写",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 右侧搜索与表格名称写平台",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 右上下文为 配置目标：design-studio",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 全部启用提示：4 个平台，跳过 10 个",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 全部停用提示：16 个平台，含共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 30 行中 10 行不可切换，行内按钮禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 行内按钮文字随状态为停用 / 启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 布局：扩展页无横向溢出、右栏不超出主区与窗口",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 布局：按钮组在右栏内、不压住名称、高度不超过 30",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 布局：右表无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 布局：左右页头底边对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 全部停用：可切换行全部停用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 全部停用：不可切换行不变",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 全部停用：提示共享目录影响 14 个平台",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 全部停用后本按钮禁用，焦点移到全部启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 全部启用：可切换行全部启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 全部启用：不可切换行不变",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 全部启用：提示写入共享目录",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 全部启用后本按钮禁用，焦点移到全部停用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 行内停用 Claude Code 后按钮提示更新",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · A 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 搜索 claude：3 行",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 搜索 claude：全部启用禁用（已全部启用）",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 搜索 claude：全部停用只算搜索结果",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 搜索 claude 后全部停用：只停用 Claude Code，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 清空搜索：其余 29 行不变",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 搜索 codex：全部停用提示共享目录",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 停用 Codex 等于移出共享目录：14 个共享平台都停用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 自有目录平台不受共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · B 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 右表平台标题打开平台详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 左列表打开 Skill 详情（原两页签布局）",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · Skill 详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台右表打开 Skill 详情（原两页签布局）",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台右表打开 MCP 详情（原布局）",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · MCP 详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · D 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：标题与名称写 MCP / 平台",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · MCP 提示：启用 19、停用 3、跳过 8",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · MCP 全部停用：Codex、Claude Code、Gemini CLI 停用，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · MCP 全部启用：22 行启用，8 行不变",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · E 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：标题与名称写 平台 / Skills",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台：左右都无复选框",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · Codex · Skills 提示：启用 2 项、停用 5 项，含共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 布局：扩展页无横向溢出、右栏不超出主区与窗口",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 布局：按钮组在右栏内、不压住名称、高度不超过 30",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 布局：右表无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 布局：左右页头底边对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · Codex 全部停用：7 项 Skills 停用并提示共享目录",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · Codex 全部启用：7 项 Skills 启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：标题与名称写 MCP",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · Codex · MCP 提示：启用 1 项、停用 3 项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · Codex · MCP 全部停用：4 项停用，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · Codex · MCP 全部启用：4 项启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切到 Claude Code",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · Claude Code 全部停用：自有目录，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切回 Codex：7 项 Skills 仍启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · Claude Desktop：两个按钮禁用并说明原因",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · F 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 勾选 2 项：右上下文为 所选 2 项 Skills",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 勾选 2 项：按钮提示写所选 2 项 Skills",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 批量启用 2 项：可切换行全部启用，提示列出两项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 清除勾选后回到 design-studio",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 空结果：0 行，两个按钮禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败：提示保留选择，按钮可用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 恢复正常：30 行",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · C/G 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 主题=light",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 目标模式 #extensions 生效",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 加载 js 20261101-bulk2 与 css 20261101-minh 版本",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 注释写明全部启用 / 全部停用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 右表无复选框列",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 左列表保留勾选（7 项）",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 左右标题为 Skills / 平台",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 页面无“Skills / MCP”合写",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 右侧搜索与表格名称写平台",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 右上下文为 配置目标：design-studio",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 全部启用提示：4 个平台，跳过 10 个",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 全部停用提示：16 个平台，含共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 30 行中 10 行不可切换，行内按钮禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 行内按钮文字随状态为停用 / 启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按扩展 布局：扩展页无横向溢出、右栏不超出主区与窗口",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按扩展 布局：按钮组在右栏内、不压住名称、高度不超过 30",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按扩展 布局：右表无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按扩展 布局：左右页头底边对齐",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 全部停用：可切换行全部停用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 全部停用：不可切换行不变",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 全部停用：提示共享目录影响 14 个平台",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 全部停用后本按钮禁用，焦点移到全部启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 全部启用：可切换行全部启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 全部启用：不可切换行不变",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 全部启用：提示写入共享目录",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 全部启用后本按钮禁用，焦点移到全部停用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 行内停用 Claude Code 后按钮提示更新",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · A 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 搜索 claude：3 行",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 搜索 claude：全部启用禁用（已全部启用）",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 搜索 claude：全部停用只算搜索结果",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 搜索 claude 后全部停用：只停用 Claude Code，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 清空搜索：其余 29 行不变",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 搜索 codex：全部停用提示共享目录",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 停用 Codex 等于移出共享目录：14 个共享平台都停用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 自有目录平台不受共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · B 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 右表平台标题打开平台详情",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 平台详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 左列表打开 Skill 详情（原两页签布局）",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skill 详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台右表打开 Skill 详情（原两页签布局）",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台右表打开 MCP 详情（原布局）",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · MCP 详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · D 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按扩展 · MCP：标题与名称写 MCP / 平台",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · MCP 提示：启用 19、停用 3、跳过 8",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · MCP 全部停用：Codex、Claude Code、Gemini CLI 停用，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · MCP 全部启用：22 行启用，8 行不变",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · E 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台 · Skills：标题与名称写 平台 / Skills",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台：左右都无复选框",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Codex · Skills 提示：启用 2 项、停用 5 项，含共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台 布局：扩展页无横向溢出、右栏不超出主区与窗口",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台 布局：按钮组在右栏内、不压住名称、高度不超过 30",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台 布局：右表无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台 布局：左右页头底边对齐",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Codex 全部停用：7 项 Skills 停用并提示共享目录",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Codex 全部启用：7 项 Skills 启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台 · MCP：标题与名称写 MCP",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Codex · MCP 提示：启用 1 项、停用 3 项",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Codex · MCP 全部停用：4 项停用，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Codex · MCP 全部启用：4 项启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 切到 Claude Code",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Claude Code 全部停用：自有目录，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 切回 Codex：7 项 Skills 仍启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Claude Desktop：两个按钮禁用并说明原因",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · F 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 勾选 2 项：右上下文为 所选 2 项 Skills",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 勾选 2 项：按钮提示写所选 2 项 Skills",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 批量启用 2 项：可切换行全部启用，提示列出两项",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 清除勾选后回到 design-studio",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 空结果：0 行，两个按钮禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 读取失败：提示保留选择，按钮可用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 恢复正常：30 行",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · C/G 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 主题=dark",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 目标模式 #extensions 生效",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 加载 js 20261101-bulk2 与 css 20261101-minh 版本",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 注释写明全部启用 / 全部停用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 右表无复选框列",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 左列表保留勾选（7 项）",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 左右标题为 Skills / 平台",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 页面无“Skills / MCP”合写",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 右侧搜索与表格名称写平台",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 右上下文为 配置目标：design-studio",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 全部启用提示：4 个平台，跳过 10 个",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 全部停用提示：16 个平台，含共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 30 行中 10 行不可切换，行内按钮禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 行内按钮文字随状态为停用 / 启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按扩展 布局：扩展页无横向溢出、右栏不超出主区与窗口",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按扩展 布局：按钮组在右栏内、不压住名称、高度不超过 30",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按扩展 布局：右表无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按扩展 布局：左右页头底边对齐",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 全部停用：可切换行全部停用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 全部停用：不可切换行不变",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 全部停用：提示共享目录影响 14 个平台",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 全部停用后本按钮禁用，焦点移到全部启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 全部启用：可切换行全部启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 全部启用：不可切换行不变",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 全部启用：提示写入共享目录",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 全部启用后本按钮禁用，焦点移到全部停用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 行内停用 Claude Code 后按钮提示更新",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · A 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 搜索 claude：3 行",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 搜索 claude：全部启用禁用（已全部启用）",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 搜索 claude：全部停用只算搜索结果",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 搜索 claude 后全部停用：只停用 Claude Code，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 清空搜索：其余 29 行不变",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 搜索 codex：全部停用提示共享目录",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 停用 Codex 等于移出共享目录：14 个共享平台都停用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 自有目录平台不受共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · B 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 右表平台标题打开平台详情",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 平台详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 左列表打开 Skill 详情（原两页签布局）",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · Skill 详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按平台右表打开 Skill 详情（原两页签布局）",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按平台右表打开 MCP 详情（原布局）",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · MCP 详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · D 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按扩展 · MCP：标题与名称写 MCP / 平台",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · MCP 提示：启用 19、停用 3、跳过 8",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · MCP 全部停用：Codex、Claude Code、Gemini CLI 停用，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · MCP 全部启用：22 行启用，8 行不变",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · E 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按平台 · Skills：标题与名称写 平台 / Skills",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按平台：左右都无复选框",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · Codex · Skills 提示：启用 2 项、停用 5 项，含共享目录影响",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按平台 布局：扩展页无横向溢出、右栏不超出主区与窗口",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按平台 布局：按钮组在右栏内、不压住名称、高度不超过 30",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按平台 布局：右表无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按平台 布局：左右页头底边对齐",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · Codex 全部停用：7 项 Skills 停用并提示共享目录",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · Codex 全部启用：7 项 Skills 启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 按平台 · MCP：标题与名称写 MCP",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · Codex · MCP 提示：启用 1 项、停用 3 项",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · Codex · MCP 全部停用：4 项停用，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · Codex · MCP 全部启用：4 项启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 切到 Claude Code",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · Claude Code 全部停用：自有目录，无共享目录提示",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 切回 Codex：7 项 Skills 仍启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · Claude Desktop：两个按钮禁用并说明原因",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · F 段无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 勾选 2 项：右上下文为 所选 2 项 Skills",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 勾选 2 项：按钮提示写所选 2 项 Skills",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 批量启用 2 项：可切换行全部启用，提示列出两项",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 清除勾选后回到 design-studio",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 空结果：0 行，两个按钮禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 读取失败：提示保留选择，按钮可用",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · 恢复正常：30 行",
+      "passed": true
+    },
+    {
+      "name": "900×600 深色 · C/G 段无控制台错误",
+      "passed": true
+    }
+  ]
+}

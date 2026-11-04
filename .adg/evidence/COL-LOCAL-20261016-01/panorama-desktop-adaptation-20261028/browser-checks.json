@@ -1,0 +1,64 @@
+{
+  "scope": "Direct Desktop adaptation ingress",
+  "geometry": {
+    "adapterNodes": 0,
+    "desktopNodes": 1,
+    "paths": [
+      {
+        "d": "M 426.71875 203 V 283",
+        "from": "desktop",
+        "to": "proxy",
+        "via": null
+      },
+      {
+        "d": "M 126.8984375 148.5 H 188.695 Q 206.695 148.5 206.695 166.5 V 285 Q 206.695 303 224.695 303 H 393.7326869138479",
+        "from": "codex",
+        "to": "proxy",
+        "via": null
+      },
+      {
+        "d": "M 126.8984375 275 H 198.695 Q 216.695 275 216.695 293 V 301 Q 216.695 319 234.695 319 H 388.7109375",
+        "from": "claude",
+        "to": "proxy",
+        "via": null
+      },
+      {
+        "d": "M 126.8984375 401.5 H 208.695 Q 226.695 401.5 226.695 383.5 V 353 Q 226.695 335 244.695 335 H 393.7326869138479",
+        "from": "opencode",
+        "to": "proxy",
+        "via": null
+      },
+      {
+        "d": "M 459.6891880861521 303 H 578.88 Q 595.63 303 595.63 286.25 V 286.25 Q 595.63 269.5 612.38 269.5 H 735.4296875",
+        "from": "proxy",
+        "to": "newapi",
+        "via": null
+      },
+      {
+        "d": "M 464.7109375 319 H 599.855 Q 617.855 319 617.855 337 V 378 Q 617.855 396 635.855 396 H 735.4296875",
+        "from": "proxy",
+        "to": "aimami",
+        "via": null
+      },
+      {
+        "d": "M 426.7109375 283 V 117",
+        "from": "proxy",
+        "to": "desktop",
+        "via": null
+      },
+      {
+        "d": "M 479.71875 66 L 735.4296875 71.5",
+        "from": "desktop",
+        "to": "krill",
+        "via": null
+      }
+    ]
+  },
+  "checks": [
+    "OpenCodex to Desktop is a vertical direct segment",
+    "Desktop to adapted channel is a direct segment",
+    "No adapter node or outer loop",
+    "One Desktop node only"
+  ],
+  "fixturesOnly": true
+}

@@ -1,0 +1,602 @@
+{
+  "date": "2026-10-31",
+  "entry": "index.html#extensions",
+  "method": "Playwright headless Chromium；1180×760 用浏览器视口，900×600 用原型「窗口尺寸预览」setWinSize(900,600)（视口 1440×900），因原型外壳模拟窗口固定宽度，视口缩到 900 时所有路由都会整页溢出 140px，与拓展页无关",
+  "script_version": "extension-manager.js?v=20261031-platform30",
+  "total": 144,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "1180×760 浅色 · 主题=light",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 目标模式active",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 Skills 30 行",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skills claude-desktop=应用内配置 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skills t3code=跟随来源 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skills gajae=未发现 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skills zcode=未发现 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skills aside=待核实 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skills codex=共享启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skills raycast=共享启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skills claude=已启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skills hermes=待更新",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skills qoder=未启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 共享停用 notice 含 14 个平台",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 共享停用后 Gemini/Raycast 同步未启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 共享停用不影响自有目录 Claude",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 行内启用 Gemini 恢复共享，notice 会读取",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 自有目录停用只改 Claude 且无共享提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 禁用行点击不改状态",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台详情打开 Gajae 显示未发现",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 MCP 30 行",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · MCP Raycast=应用内配置 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · MCP T3 Code=跟随来源",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · MCP Gemini=待更新 / Claude Desktop 可配置",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 MCP 左 30 平台 / 右 4 项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 Skills 左 30 平台 / 右 7 项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台左侧状态标签",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Codex 下 Skills 状态",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切到 Claude Desktop 后 Skills 全部应用内配置且禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · Skill 详情复用原布局，平台目标 30 项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 50 档 50 行，20 个样例行禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台选中样例行可查，右侧全部禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 6 档切回后当前平台回到有效项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · state() 确定性",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 横向溢出 0",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 主题=dark",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 目标模式active",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 按扩展 Skills 30 行",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skills claude-desktop=应用内配置 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skills t3code=跟随来源 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skills gajae=未发现 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skills zcode=未发现 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skills aside=待核实 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skills codex=共享启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skills raycast=共享启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skills claude=已启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skills hermes=待更新",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skills qoder=未启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 共享停用 notice 含 14 个平台",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 共享停用后 Gemini/Raycast 同步未启用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 共享停用不影响自有目录 Claude",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 行内启用 Gemini 恢复共享，notice 会读取",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 自有目录停用只改 Claude 且无共享提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 禁用行点击不改状态",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 平台详情打开 Gajae 显示未发现",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 平台详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 按扩展 MCP 30 行",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · MCP Raycast=应用内配置 禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · MCP T3 Code=跟随来源",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · MCP Gemini=待更新 / Claude Desktop 可配置",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 按平台 MCP 左 30 平台 / 右 4 项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 按平台 Skills 左 30 平台 / 右 7 项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 按平台左侧状态标签",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Codex 下 Skills 状态",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 切到 Claude Desktop 后 Skills 全部应用内配置且禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · Skill 详情复用原布局，平台目标 30 项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 50 档 50 行，20 个样例行禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 按平台选中样例行可查，右侧全部禁用",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 6 档切回后当前平台回到有效项",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · state() 确定性",
+      "passed": true
+    },
+    {
+      "name": "1180×760 暗色 · 横向溢出 0",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 主题=dark",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 目标模式active",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 按扩展 Skills 30 行",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skills claude-desktop=应用内配置 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skills t3code=跟随来源 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skills gajae=未发现 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skills zcode=未发现 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skills aside=待核实 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skills codex=共享启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skills raycast=共享启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skills claude=已启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skills hermes=待更新",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skills qoder=未启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 共享停用 notice 含 14 个平台",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 共享停用后 Gemini/Raycast 同步未启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 共享停用不影响自有目录 Claude",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 行内启用 Gemini 恢复共享，notice 会读取",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 自有目录停用只改 Claude 且无共享提示",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 禁用行点击不改状态",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 平台详情打开 Gajae 显示未发现",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 平台详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 按扩展 MCP 30 行",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · MCP Raycast=应用内配置 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · MCP T3 Code=跟随来源",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · MCP Gemini=待更新 / Claude Desktop 可配置",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 按平台 MCP 左 30 平台 / 右 4 项",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 按平台 Skills 左 30 平台 / 右 7 项",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 按平台左侧状态标签",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Codex 下 Skills 状态",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 切到 Claude Desktop 后 Skills 全部应用内配置且禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · Skill 详情复用原布局，平台目标 30 项",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 50 档 50 行，20 个样例行禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 按平台选中样例行可查，右侧全部禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 6 档切回后当前平台回到有效项",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · state() 确定性",
+      "passed": true
+    },
+    {
+      "name": "900×600 暗色 · 横向溢出 0",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 主题=light",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 目标模式active",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按扩展 Skills 30 行",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skills claude-desktop=应用内配置 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skills t3code=跟随来源 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skills gajae=未发现 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skills zcode=未发现 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skills aside=待核实 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skills codex=共享启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skills raycast=共享启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skills claude=已启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skills hermes=待更新",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skills qoder=未启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 共享停用 notice 含 14 个平台",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 共享停用后 Gemini/Raycast 同步未启用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 共享停用不影响自有目录 Claude",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 行内启用 Gemini 恢复共享，notice 会读取",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 自有目录停用只改 Claude 且无共享提示",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 禁用行点击不改状态",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 平台详情打开 Gajae 显示未发现",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 平台详情可关闭",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按扩展 MCP 30 行",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · MCP Raycast=应用内配置 禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · MCP T3 Code=跟随来源",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · MCP Gemini=待更新 / Claude Desktop 可配置",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台 MCP 左 30 平台 / 右 4 项",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台 Skills 左 30 平台 / 右 7 项",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台左侧状态标签",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Codex 下 Skills 状态",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 切到 Claude Desktop 后 Skills 全部应用内配置且禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · Skill 详情复用原布局，平台目标 30 项",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 50 档 50 行，20 个样例行禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 按平台选中样例行可查，右侧全部禁用",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 6 档切回后当前平台回到有效项",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · state() 确定性",
+      "passed": true
+    },
+    {
+      "name": "900×600 浅色 · 横向溢出 0",
+      "passed": true
+    }
+  ],
+  "runtime_errors": [],
+  "screenshots": [
+    "01-resource-skills-1180-light.png",
+    "01-resource-skills-900-dark.png",
+    "02-shared-off-notice-1180-light.png",
+    "02-shared-off-notice-900-dark.png",
+    "03-platform-detail-1180-light.png",
+    "03-platform-detail-900-dark.png",
+    "04-resource-mcp-1180-light.png",
+    "04-resource-mcp-900-dark.png",
+    "05-client-skills-1180-light.png",
+    "05-client-skills-900-dark.png",
+    "06-skill-detail-1180-light.png",
+    "06-skill-detail-900-dark.png"
+  ],
+  "production": false
+}

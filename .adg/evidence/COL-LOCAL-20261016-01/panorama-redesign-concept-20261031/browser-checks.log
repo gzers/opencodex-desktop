@@ -1,0 +1,30 @@
+01-light.png {"stage":[944,562],"ov":[],"clip":[],"parts":8} no-errors
+02-dark-focus-krill.png {"stage":[944,562],"ov":[],"clip":[],"parts":9} no-errors
+03-dark.png {"stage":[944,562],"ov":[],"clip":[],"parts":7} no-errors
+04-narrow.png {"stage":[816,426],"ov":[],"clip":[],"parts":5} no-errors
+05-light-focus-claude.png {"stage":[944,562],"ov":[],"clip":[],"parts":7} no-errors
+06-narrow-dark-focus-aimami.png {"stage":[816,426],"ov":[],"clip":[],"parts":5} no-errors
+07-narrow-focus-claude.png {"stage":[816,426],"ov":[],"clip":[],"parts":5} no-errors
+900 krill {"c":"pop dock mini","w":342,"h":48,"bad":[]}
+900 newapi {"c":"pop dock mini","w":342,"h":48,"bad":[]}
+900 aimami {"c":"pop dock mini","w":342,"h":48,"bad":[]}
+900 a6 {"c":"pop dock mini","w":342,"h":48,"bad":[]}
+900 codex {"c":"pop dock mini","w":342,"h":48,"bad":[]}
+900 claude {"c":"pop dock mini","w":342,"h":48,"bad":[]}
+900 gemini {"c":"pop dock mini","w":342,"h":48,"bad":[]}
+1180 krill {"c":"pop dock","w":432,"h":146,"bad":[]}
+1180 newapi {"c":"pop dock","w":432,"h":146,"bad":[]}
+1180 aimami {"c":"pop dock","w":432,"h":146,"bad":[]}
+1180 a6 {"c":"pop dock","w":432,"h":146,"bad":[]}
+1180 codex {"c":"pop dock","w":432,"h":159,"bad":[]}
+1180 claude {"c":"pop dock","w":432,"h":163,"bad":[]}
+1180 gemini {"c":"pop dock","w":432,"h":159,"bad":[]}
+
+# 2026-11-01 进线修正复核：trunk / claude 终点控制点改为沿外环法线向外；hook.over=曲线最大 x 超出终点的距离，hook.back=横向回折量，均为 0 即无钩形
+01-light.png {"stage":[942,560],"theme":"light","clip":[],"hook":{"trunk":{"over":0,"back":0},"claude":{"over":0,"back":0}}} no-hook no-errors
+02-dark-focus-krill.png {"stage":[942,560],"theme":"dark","clip":[],"hook":{"trunk":{"over":0,"back":0},"claude":{"over":0,"back":0}}} no-hook no-errors
+03-dark.png {"stage":[942,560],"theme":"dark","clip":[],"hook":{"trunk":{"over":0,"back":0},"claude":{"over":0,"back":0}}} no-hook no-errors
+04-narrow.png {"stage":[814,424],"theme":"light","clip":[],"hook":{"trunk":{"over":0,"back":0},"claude":{"over":0,"back":0}}} no-hook no-errors
+05-light-focus-claude.png {"stage":[942,560],"theme":"light","clip":[],"hook":{"trunk":{"over":0,"back":0},"claude":{"over":0,"back":0}}} no-hook no-errors
+06-narrow-dark-focus-aimami.png {"stage":[814,424],"theme":"dark","clip":[],"hook":{"trunk":{"over":0,"back":0},"claude":{"over":0,"back":0}}} no-hook no-errors
+07-narrow-focus-claude.png {"stage":[814,424],"theme":"light","clip":[],"hook":{"trunk":{"over":0,"back":0},"claude":{"over":0,"back":0}}} no-hook no-errors

@@ -1,0 +1,4855 @@
+{
+  "date": "2026-11-01",
+  "entry": "index.html#extensions",
+  "method": "Playwright headless Chromium。1180×760 与 1898×1128 直接用浏览器视口（原型窗口默认 1180×760）；900×600 用 setWinSize(900,600)（视口 1440×900）；1600×900 用 setWinSize(1600,900)（视口 1898×1128）。每个尺寸检查四个视图、读取失败 / 空结果 / 恢复正常、平台数量 6 / 50、三个详情弹窗、按扩展与按平台 · Skills 的全部停用 / 全部启用、读取失败叠加批量提示、临时把 --xp3-list-min 调到 260px 再移除，以及路由切换。没有外层滚动时要求页脚贴住主区底边；出现外层滚动时要求列表已压到下限、主区滚到底能看到完整页脚。滚轮用 page.mouse.wheel 真实派发。最后用 Chrome for Testing（--headless=new，加 -AppleShowScrollBars Always 强制常驻滚动条；本机系统设置为滚动时显示，headless shell 测得滚动条宽度恒为 0）在 900×600 再跑一轮，确认滚动条实际占位后右表和主区都没有横向滚动。",
+  "versions": {
+    "css": "extension-manager.css?v=20261101-minh",
+    "js": "extension-manager.js?v=20261101-bulk2"
+  },
+  "listMin": "168px",
+  "total": 995,
+  "failed": 0,
+  "metrics": {
+    "1180x760-light": {
+      "resource-skills": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "resource-mcp": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-skills": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-mcp": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "error": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 12,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "resource-skills-DisableAll": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 73,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "resource-skills-EnableAll": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 70,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "client-skills-DisableAll": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 136,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "client-skills-EnableAll": {
+        "leftCH": 315,
+        "rightCH": 315,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 33,
+        "noteLen": 168,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "error-client-skills-bulk": {
+        "leftCH": 315,
+        "rightCH": 315,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 33,
+        "noteLen": 184,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "cleared": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "forced260": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      }
+    },
+    "1180x760-dark": {
+      "resource-skills": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "resource-mcp": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-skills": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-mcp": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "error": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 12,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "resource-skills-DisableAll": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 73,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "resource-skills-EnableAll": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 70,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "client-skills-DisableAll": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 136,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "client-skills-EnableAll": {
+        "leftCH": 315,
+        "rightCH": 315,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 33,
+        "noteLen": 168,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "error-client-skills-bulk": {
+        "leftCH": 315,
+        "rightCH": 315,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 33,
+        "noteLen": 184,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "cleared": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "forced260": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      }
+    },
+    "win-900x600": {
+      "resource-skills": {
+        "leftCH": 200,
+        "rightCH": 200,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 569,
+        "mainCH": 569,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "resource-mcp": {
+        "leftCH": 200,
+        "rightCH": 200,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 569,
+        "mainCH": 569,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-skills": {
+        "leftCH": 200,
+        "rightCH": 200,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 569,
+        "mainCH": 569,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-mcp": {
+        "leftCH": 200,
+        "rightCH": 200,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 569,
+        "mainCH": 569,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "error": {
+        "leftCH": 172,
+        "rightCH": 172,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 569,
+        "mainCH": 569,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 12,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "resource-skills-DisableAll": {
+        "leftCH": 172,
+        "rightCH": 172,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 569,
+        "mainCH": 569,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 73,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "resource-skills-EnableAll": {
+        "leftCH": 172,
+        "rightCH": 172,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 569,
+        "mainCH": 569,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 70,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "client-skills-DisableAll": {
+        "leftCH": 168,
+        "rightCH": 168,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 582,
+        "mainCH": 569,
+        "outer": true,
+        "noteH": 33,
+        "noteLen": 136,
+        "footerGap": -12,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "client-skills-EnableAll": {
+        "leftCH": 168,
+        "rightCH": 168,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 582,
+        "mainCH": 569,
+        "outer": true,
+        "noteH": 33,
+        "noteLen": 168,
+        "footerGap": -12,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "error-client-skills-bulk": {
+        "leftCH": 168,
+        "rightCH": 168,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 599,
+        "mainCH": 569,
+        "outer": true,
+        "noteH": 49.5,
+        "noteLen": 184,
+        "footerGap": -28.5,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "cleared": {
+        "leftCH": 200,
+        "rightCH": 200,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 569,
+        "mainCH": 569,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "forced260": {
+        "leftCH": 260,
+        "rightCH": 260,
+        "visibleRowsLeft": 3,
+        "visibleRowsRight": 3,
+        "mainSH": 629,
+        "mainCH": 569,
+        "outer": true,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": -59,
+        "scrollbarW": 0
+      }
+    },
+    "viewport-1898x1128": {
+      "resource-skills": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "resource-mcp": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-skills": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-mcp": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "error": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 12,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "resource-skills-DisableAll": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 73,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "resource-skills-EnableAll": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 70,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "client-skills-DisableAll": {
+        "leftCH": 332,
+        "rightCH": 332,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 136,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "client-skills-EnableAll": {
+        "leftCH": 315,
+        "rightCH": 315,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 33,
+        "noteLen": 168,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "error-client-skills-bulk": {
+        "leftCH": 315,
+        "rightCH": 315,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 4,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 33,
+        "noteLen": 184,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "cleared": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "forced260": {
+        "leftCH": 360,
+        "rightCH": 360,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 5,
+        "mainSH": 729,
+        "mainCH": 729,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      }
+    },
+    "win-1600x900": {
+      "resource-skills": {
+        "leftCH": 500,
+        "rightCH": 500,
+        "visibleRowsLeft": 6,
+        "visibleRowsRight": 7,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "resource-mcp": {
+        "leftCH": 500,
+        "rightCH": 500,
+        "visibleRowsLeft": 4,
+        "visibleRowsRight": 7,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-skills": {
+        "leftCH": 500,
+        "rightCH": 500,
+        "visibleRowsLeft": 6,
+        "visibleRowsRight": 7,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-mcp": {
+        "leftCH": 500,
+        "rightCH": 500,
+        "visibleRowsLeft": 6,
+        "visibleRowsRight": 4,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "error": {
+        "leftCH": 472,
+        "rightCH": 472,
+        "visibleRowsLeft": 6,
+        "visibleRowsRight": 6,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 12,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "resource-skills-DisableAll": {
+        "leftCH": 472,
+        "rightCH": 472,
+        "visibleRowsLeft": 6,
+        "visibleRowsRight": 6,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 73,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "resource-skills-EnableAll": {
+        "leftCH": 472,
+        "rightCH": 472,
+        "visibleRowsLeft": 6,
+        "visibleRowsRight": 6,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 70,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "client-skills-DisableAll": {
+        "leftCH": 472,
+        "rightCH": 472,
+        "visibleRowsLeft": 6,
+        "visibleRowsRight": 6,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 136,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "client-skills-EnableAll": {
+        "leftCH": 472,
+        "rightCH": 472,
+        "visibleRowsLeft": 6,
+        "visibleRowsRight": 6,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 16.5,
+        "noteLen": 168,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "error-client-skills-bulk": {
+        "leftCH": 455,
+        "rightCH": 455,
+        "visibleRowsLeft": 5,
+        "visibleRowsRight": 6,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 33,
+        "noteLen": 184,
+        "footerGap": 1,
+        "scrollbarW": 0,
+        "clicked": true
+      },
+      "cleared": {
+        "leftCH": 500,
+        "rightCH": 500,
+        "visibleRowsLeft": 6,
+        "visibleRowsRight": 7,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "forced260": {
+        "leftCH": 500,
+        "rightCH": 500,
+        "visibleRowsLeft": 6,
+        "visibleRowsRight": 7,
+        "mainSH": 869,
+        "mainCH": 869,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      }
+    },
+    "win-900x600-scrollbars": {
+      "probeThinScrollbarW": 11,
+      "resource-skills": {
+        "leftCH": 200,
+        "rightCH": 200,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 569,
+        "mainCH": 569,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-skills": {
+        "leftCH": 200,
+        "rightCH": 200,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 569,
+        "mainCH": 569,
+        "outer": false,
+        "noteH": 0,
+        "noteLen": 0,
+        "footerGap": 1,
+        "scrollbarW": 0
+      },
+      "client-skills-DisableAll": {
+        "leftCH": 168,
+        "rightCH": 168,
+        "visibleRowsLeft": 2,
+        "visibleRowsRight": 2,
+        "mainSH": 582,
+        "mainCH": 569,
+        "outer": true,
+        "noteH": 33,
+        "noteLen": 136,
+        "footerGap": -12,
+        "scrollbarW": 11,
+        "clicked": true
+      }
+    }
+  },
+  "shellNote": "视口宽 1180 / 1440 时原型外壳把工具板排到软件窗口下方，浏览器页面本身可整页滚动；改前 CSS 下同样如此，与本次改动无关。滚轮检查前先把页面和主区滚回顶部。",
+  "checks": [
+    {
+      "name": "1180×760 浅色 · 主题=light",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 目标模式 #extensions 生效",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 加载 extension-manager.css?v=20261101-minh 与 js?v=20261101-bulk2",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · --xp3-list-min = 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · MCP：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · MCP：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败：出现提示条",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 空结果：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 空结果：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 空结果：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 空结果：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 空结果：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 空结果：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 空结果：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 恢复正常：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 恢复正常：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 恢复正常：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 恢复正常：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 恢复正常：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 恢复正常：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 恢复正常：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 6：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 6：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 6：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 6：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 6：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 6：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 6：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 50：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 50：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 50：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 50：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 50：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 50：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 50：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 50：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 50：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 平台数量 50：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗打开：右表平台详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭：右表平台详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（右表平台详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（右表平台详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（右表平台详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（右表平台详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（右表平台详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（右表平台详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（右表平台详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗打开：左列表 Skill 详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭：左列表 Skill 详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（左列表 Skill 详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（左列表 Skill 详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（左列表 Skill 详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（左列表 Skill 详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（左列表 Skill 详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（左列表 Skill 详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（左列表 Skill 详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗打开：按平台 MCP 详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭：按平台 MCP 详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（按平台 MCP 详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（按平台 MCP 详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（按平台 MCP 详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（按平台 MCP 详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（按平台 MCP 详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（按平台 MCP 详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 详情弹窗关闭后（按平台 MCP 详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部停用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部停用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部启用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部启用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部启用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部启用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部启用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部启用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按扩展 · Skills 全部启用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部停用：出现批量提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部启用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部启用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部启用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部启用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部启用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部启用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部启用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部启用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 按平台 · Skills 全部启用：出现批量提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败 + 按平台 · Skills 批量：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败 + 按平台 · Skills 批量：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败 + 按平台 · Skills 批量：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败 + 按平台 · Skills 批量：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败 + 按平台 · Skills 批量：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败 + 按平台 · Skills 批量：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败 + 按平台 · Skills 批量：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 读取失败 + 按平台 · Skills 批量：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 清除提示后：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 清除提示后：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 清除提示后：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 清除提示后：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 清除提示后：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 清除提示后：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 清除提示后：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 清除提示后：提示条消失",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 临时把下限调到 260px：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 临时把下限调到 260px：左右列表各自 overflow auto，可视高度 ≥ 260px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 临时把下限调到 260px：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 临时把下限调到 260px：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 临时把下限调到 260px：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 临时把下限调到 260px：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 临时把下限调到 260px：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 临时把下限调到 260px：列表本来就高于 260，高度不变",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 移除 260px 后：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 移除 260px 后：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 移除 260px 后：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 移除 260px 后：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 移除 260px 后：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 移除 260px 后：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 移除 260px 后：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 移除 260px 后：列表高度复原",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切到 overview：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切到 models：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切到 settings：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切回扩展页：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切回扩展页：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切回扩展页：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切回扩展页：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切回扩展页：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切回扩展页：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 切回扩展页：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 浅色 · 无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 主题=dark",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 目标模式 #extensions 生效",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 加载 extension-manager.css?v=20261101-minh 与 js?v=20261101-bulk2",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · --xp3-list-min = 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · MCP：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · MCP：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败：出现提示条",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 空结果：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 空结果：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 空结果：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 空结果：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 空结果：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 空结果：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 空结果：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 恢复正常：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 恢复正常：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 恢复正常：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 恢复正常：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 恢复正常：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 恢复正常：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 恢复正常：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 6：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 6：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 6：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 6：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 6：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 6：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 6：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 50：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 50：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 50：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 50：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 50：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 50：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 50：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 50：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 50：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 平台数量 50：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗打开：右表平台详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭：右表平台详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（右表平台详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（右表平台详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（右表平台详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（右表平台详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（右表平台详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（右表平台详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（右表平台详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗打开：左列表 Skill 详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭：左列表 Skill 详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（左列表 Skill 详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（左列表 Skill 详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（左列表 Skill 详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（左列表 Skill 详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（左列表 Skill 详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（左列表 Skill 详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（左列表 Skill 详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗打开：按平台 MCP 详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭：按平台 MCP 详情",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（按平台 MCP 详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（按平台 MCP 详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（按平台 MCP 详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（按平台 MCP 详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（按平台 MCP 详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（按平台 MCP 详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 详情弹窗关闭后（按平台 MCP 详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部停用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部停用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部启用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部启用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部启用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部启用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部启用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部启用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按扩展 · Skills 全部启用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部停用：出现批量提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部启用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部启用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部启用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部启用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部启用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部启用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部启用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部启用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 按平台 · Skills 全部启用：出现批量提示",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败 + 按平台 · Skills 批量：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败 + 按平台 · Skills 批量：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败 + 按平台 · Skills 批量：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败 + 按平台 · Skills 批量：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败 + 按平台 · Skills 批量：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败 + 按平台 · Skills 批量：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败 + 按平台 · Skills 批量：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 读取失败 + 按平台 · Skills 批量：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 清除提示后：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 清除提示后：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 清除提示后：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 清除提示后：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 清除提示后：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 清除提示后：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 清除提示后：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 清除提示后：提示条消失",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 临时把下限调到 260px：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 临时把下限调到 260px：左右列表各自 overflow auto，可视高度 ≥ 260px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 临时把下限调到 260px：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 临时把下限调到 260px：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 临时把下限调到 260px：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 临时把下限调到 260px：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 临时把下限调到 260px：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 临时把下限调到 260px：列表本来就高于 260，高度不变",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 移除 260px 后：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 移除 260px 后：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 移除 260px 后：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 移除 260px 后：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 移除 260px 后：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 移除 260px 后：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 移除 260px 后：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 移除 260px 后：列表高度复原",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切到 overview：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切到 models：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切到 settings：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切回扩展页：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切回扩展页：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切回扩展页：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切回扩展页：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切回扩展页：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切回扩展页：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 切回扩展页：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "1180×760 深色 · 无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 主题=light",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 目标模式 #extensions 生效",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 加载 extension-manager.css?v=20261101-minh 与 js?v=20261101-bulk2",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · --xp3-list-min = 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · MCP：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · MCP：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · MCP：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · MCP：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · MCP：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · MCP：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · MCP：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · MCP：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · MCP：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · MCP：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · MCP：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · MCP：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · MCP：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · MCP：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · MCP：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · MCP：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · MCP：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · MCP：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · MCP：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · MCP：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败：出现提示条",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 空结果：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 空结果：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 空结果：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 空结果：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 空结果：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 空结果：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 空结果：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 恢复正常：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 恢复正常：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 恢复正常：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 恢复正常：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 恢复正常：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 恢复正常：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 恢复正常：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 6：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 6：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 6：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 6：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 6：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 6：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 6：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 50：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 50：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 50：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 50：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 50：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 50：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 50：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 50：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 50：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 平台数量 50：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗打开：右表平台详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭：右表平台详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（右表平台详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（右表平台详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（右表平台详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（右表平台详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（右表平台详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（右表平台详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（右表平台详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗打开：左列表 Skill 详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭：左列表 Skill 详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（左列表 Skill 详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（左列表 Skill 详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（左列表 Skill 详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（左列表 Skill 详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（左列表 Skill 详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（左列表 Skill 详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（左列表 Skill 详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗打开：按平台 MCP 详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭：按平台 MCP 详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（按平台 MCP 详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（按平台 MCP 详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（按平台 MCP 详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（按平台 MCP 详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（按平台 MCP 详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（按平台 MCP 详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 详情弹窗关闭后（按平台 MCP 详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部停用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部启用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部启用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部启用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部启用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部启用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按扩展 · Skills 全部启用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：出现外层滚动时列表已压到下限 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：外层滚到底后页脚完整露出",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：在顶栏上滚轮滚动主区（外层滚动兜底）",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部停用：出现批量提示",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部启用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部启用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部启用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部启用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部启用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部启用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部启用：出现外层滚动时列表已压到下限 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部启用：外层滚到底后页脚完整露出",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部启用：出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 按平台 · Skills 全部启用：出现批量提示",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败 + 按平台 · Skills 批量：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败 + 按平台 · Skills 批量：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败 + 按平台 · Skills 批量：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败 + 按平台 · Skills 批量：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败 + 按平台 · Skills 批量：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败 + 按平台 · Skills 批量：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败 + 按平台 · Skills 批量：出现外层滚动时列表已压到下限 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败 + 按平台 · Skills 批量：外层滚到底后页脚完整露出",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 读取失败 + 按平台 · Skills 批量：出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 清除提示后：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 清除提示后：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 清除提示后：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 清除提示后：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 清除提示后：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 清除提示后：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 清除提示后：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 清除提示后：提示条消失",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 临时把下限调到 260px：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 临时把下限调到 260px：左右列表各自 overflow auto，可视高度 ≥ 260px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 临时把下限调到 260px：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 临时把下限调到 260px：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 临时把下限调到 260px：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 临时把下限调到 260px：出现外层滚动时列表已压到下限 260px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 临时把下限调到 260px：外层滚到底后页脚完整露出",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 临时把下限调到 260px：出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 移除 260px 后：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 移除 260px 后：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 移除 260px 后：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 移除 260px 后：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 移除 260px 后：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 移除 260px 后：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 移除 260px 后：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 移除 260px 后：列表高度复原",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 切到 overview：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 切到 models：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 切到 settings：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 切回扩展页：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 切回扩展页：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 切回扩展页：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 切回扩展页：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 切回扩展页：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 切回扩展页：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 切回扩展页：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 主题=light",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 目标模式 #extensions 生效",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 加载 extension-manager.css?v=20261101-minh 与 js?v=20261101-bulk2",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · --xp3-list-min = 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · MCP：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · MCP：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · MCP：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · MCP：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · MCP：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · MCP：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · MCP：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · MCP：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · MCP：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · MCP：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · MCP：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · MCP：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · MCP：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · MCP：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · MCP：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · MCP：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · MCP：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · MCP：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · MCP：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · MCP：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败：出现提示条",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 空结果：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 空结果：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 空结果：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 空结果：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 空结果：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 空结果：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 空结果：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 恢复正常：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 恢复正常：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 恢复正常：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 恢复正常：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 恢复正常：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 恢复正常：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 恢复正常：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 6：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 6：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 6：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 6：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 6：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 6：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 6：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 50：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 50：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 50：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 50：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 50：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 50：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 50：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 50：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 50：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 平台数量 50：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗打开：右表平台详情",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭：右表平台详情",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（右表平台详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（右表平台详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（右表平台详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（右表平台详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（右表平台详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（右表平台详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（右表平台详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗打开：左列表 Skill 详情",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭：左列表 Skill 详情",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（左列表 Skill 详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（左列表 Skill 详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（左列表 Skill 详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（左列表 Skill 详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（左列表 Skill 详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（左列表 Skill 详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（左列表 Skill 详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗打开：按平台 MCP 详情",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭：按平台 MCP 详情",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（按平台 MCP 详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（按平台 MCP 详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（按平台 MCP 详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（按平台 MCP 详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（按平台 MCP 详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（按平台 MCP 详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 详情弹窗关闭后（按平台 MCP 详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部停用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部停用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部启用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部启用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部启用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部启用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部启用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部启用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按扩展 · Skills 全部启用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部停用：出现批量提示",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部启用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部启用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部启用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部启用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部启用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部启用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部启用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部启用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 按平台 · Skills 全部启用：出现批量提示",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败 + 按平台 · Skills 批量：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败 + 按平台 · Skills 批量：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败 + 按平台 · Skills 批量：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败 + 按平台 · Skills 批量：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败 + 按平台 · Skills 批量：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败 + 按平台 · Skills 批量：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败 + 按平台 · Skills 批量：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 读取失败 + 按平台 · Skills 批量：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 清除提示后：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 清除提示后：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 清除提示后：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 清除提示后：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 清除提示后：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 清除提示后：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 清除提示后：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 清除提示后：提示条消失",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 临时把下限调到 260px：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 临时把下限调到 260px：左右列表各自 overflow auto，可视高度 ≥ 260px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 临时把下限调到 260px：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 临时把下限调到 260px：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 临时把下限调到 260px：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 临时把下限调到 260px：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 临时把下限调到 260px：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 临时把下限调到 260px：列表本来就高于 260，高度不变",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 移除 260px 后：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 移除 260px 后：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 移除 260px 后：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 移除 260px 后：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 移除 260px 后：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 移除 260px 后：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 移除 260px 后：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 移除 260px 后：列表高度复原",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 切到 overview：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 切到 models：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 切到 settings：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 切回扩展页：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 切回扩展页：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 切回扩展页：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 切回扩展页：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 切回扩展页：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 切回扩展页：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 切回扩展页：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "视口 1898×1128 · 无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 主题=light",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 目标模式 #extensions 生效",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 加载 extension-manager.css?v=20261101-minh 与 js?v=20261101-bulk2",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · --xp3-list-min = 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · MCP：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · MCP：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败：出现提示条",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 空结果：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 空结果：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 空结果：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 空结果：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 空结果：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 空结果：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 空结果：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 空结果：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 恢复正常：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 恢复正常：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 恢复正常：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 恢复正常：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 恢复正常：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 恢复正常：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 恢复正常：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 恢复正常：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 6：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 6：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 6：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 6：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 6：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 6：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 6：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 6：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 平台数量 50：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗打开：右表平台详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭：右表平台详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（右表平台详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（右表平台详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（右表平台详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（右表平台详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（右表平台详情）：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（右表平台详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（右表平台详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（右表平台详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗打开：左列表 Skill 详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭：左列表 Skill 详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（左列表 Skill 详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（左列表 Skill 详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（左列表 Skill 详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（左列表 Skill 详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（左列表 Skill 详情）：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（左列表 Skill 详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（左列表 Skill 详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（左列表 Skill 详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗打开：按平台 MCP 详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭：按平台 MCP 详情",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（按平台 MCP 详情）：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（按平台 MCP 详情）：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（按平台 MCP 详情）：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（按平台 MCP 详情）：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（按平台 MCP 详情）：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（按平台 MCP 详情）：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（按平台 MCP 详情）：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 详情弹窗关闭后（按平台 MCP 详情）：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部停用：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部停用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部停用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部启用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部启用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部启用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部启用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部启用：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部启用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部启用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按扩展 · Skills 全部启用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部停用：出现批量提示",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部启用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部启用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部启用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部启用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部启用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部启用：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部启用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部启用：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部启用：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 按平台 · Skills 全部启用：出现批量提示",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败 + 按平台 · Skills 批量：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败 + 按平台 · Skills 批量：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败 + 按平台 · Skills 批量：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败 + 按平台 · Skills 批量：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败 + 按平台 · Skills 批量：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败 + 按平台 · Skills 批量：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败 + 按平台 · Skills 批量：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败 + 按平台 · Skills 批量：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 读取失败 + 按平台 · Skills 批量：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 清除提示后：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 清除提示后：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 清除提示后：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 清除提示后：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 清除提示后：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 清除提示后：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 清除提示后：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 清除提示后：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 清除提示后：提示条消失",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 临时把下限调到 260px：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 临时把下限调到 260px：左右列表各自 overflow auto，可视高度 ≥ 260px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 临时把下限调到 260px：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 临时把下限调到 260px：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 临时把下限调到 260px：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 临时把下限调到 260px：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 临时把下限调到 260px：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 临时把下限调到 260px：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 临时把下限调到 260px：列表本来就高于 260，高度不变",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 移除 260px 后：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 移除 260px 后：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 移除 260px 后：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 移除 260px 后：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 移除 260px 后：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 移除 260px 后：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 移除 260px 后：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 移除 260px 后：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 移除 260px 后：列表高度复原",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切到 overview：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切到 models：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切到 settings：主区恢复 block / overflow auto",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切回扩展页：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切回扩展页：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切回扩展页：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切回扩展页：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切回扩展页：大窗口下工作台居中",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切回扩展页：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切回扩展页：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 切回扩展页：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 1600×900 · 无控制台错误",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 环境：thin 滚动条实际占位",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：在顶栏上滚轮不滚动主区",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按扩展 · Skills：主区没有滚动条占位",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills：无外层滚动时页脚贴住主区内容底边",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills：不出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：按钮可点击",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：主区为 flex，overflow-y auto、overflow-x hidden",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：左右列表各自 overflow auto，可视高度 ≥ 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：右表与主区均无横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：工作台与顶栏左右对齐",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：原型 01 标记可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：出现外层滚动时列表已压到下限 168px",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：外层滚到底后页脚完整露出",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：出现外层滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：可滚动列表滚到底后最后一行完整可见",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：在顶栏上滚轮滚动主区（外层滚动兜底）",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：在列表上滚轮只滚动列表",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 按平台 · Skills 全部停用：主区滚动条实际占位且未引起横向滚动",
+      "passed": true
+    },
+    {
+      "name": "窗口 900×600 · 显示滚动条 · 无控制台错误",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-29",
+  "scope": "Superba multi-tool lanes reference experiment",
+  "superba_main": "f78d77a2849aceb8dffc1f27a83869ffceab7e90",
+  "latest_tag": "v0.1.1-alpha.12 points to f78d77a2",
+  "upstream_animation": "lanes.rs has static straight/dashed links; only latency probing shows a spinner",
+  "local_enhancement": "default-on optional flow overlay, toggleable; not present upstream",
+  "layout": {
+    "1180x760": {"tools": 4, "routed": 2, "direct": 2, "folded": 2, "single_router": true, "single_desktop_admin": true},
+    "900x600": {"grid": "four columns preserved", "model_names": "truncated", "scroll": "small vertical"}
+  },
+  "tests": {"all": 30, "failed": 0, "targeted": 1},
+  "limitations": ["Mock data only", "No real tool discovery or routing", "Official screenshots have no multi-tool lane screen", "Version and production adoption undecided"]
+}
