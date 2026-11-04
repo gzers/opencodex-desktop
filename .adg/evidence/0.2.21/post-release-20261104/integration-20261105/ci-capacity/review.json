@@ -25,6 +25,6 @@
     "exitCode": 1,
     "output": "job 126709885314 cannot be rerun"
   },
-  "nextAction": "Wait original Windows job for run terminal, then retry original cancelled checks without changing architecture or weakening required tests.",
+  "nextAction": "Superseded by test-only 9850dbbae; latest CI41878677161 must execute original macOS jobs. No old-source rerun; latest Mac runner and native evidence still mandatory.",
   "interpretation": "Infrastructure cancellation with no runner/steps is missing evidence, neither product failure nor pass. Local Mac evidence retained; whole release stays incomplete."
 }

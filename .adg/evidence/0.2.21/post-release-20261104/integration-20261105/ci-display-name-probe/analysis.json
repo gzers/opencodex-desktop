@@ -1,0 +1,60 @@
+{
+  "run": 41868797161,
+  "job": 126709886228,
+  "artifactId": 13346024660,
+  "artifactZipSha256FromJob": "559f2a33e70be75bb29585bd36ca932e0acb833c2a7ef0e6ad6224ca71128113",
+  "source": "bd7c0fe8ccecfa39e0706c885dc233f3854dab74",
+  "failure": "assert021RenameReadback expected old provider.name, actual new name; deepStrictEqual difference only name in native behavior receipt",
+  "sourceContract": "L2 adopted and implemented writing provider.name on name edit; user no longer maintains distinct runtime ID",
+  "fixCommit": "3aa789a6e9e560cc76c661d65ec7092086c86a08",
+  "fix": "Explicit updatesDisplayName captured from presence/absence of runtime ID input before Save. Name-only requires provider.name=new name; historical ID-edit contract still preserves name. Complete file/policy equality, routed models/default, stable IDs, keys, unknown fields remain guarded.",
+  "tests": "59 passed seven CDP suites; added stale/missing display name, Key loss, unknown field rewrite and neighbor mutation negatives",
+  "nativeFacts": "model-sort-native, model-transfer-native and ui021-alignment report pass; remaining A renamed save passed exact prewrite and recovery image guard. Full 021 probe stops at name readback; later detection/WebDAV and full startup not passed.",
+  "nativeRecheck": "pending latest source; no release",
+  "artifactCopies": [
+    {
+      "path": "native021-behavior.json",
+      "sha256": "f92d0d9a8b8e40d9703183fb311d7f122d5fcd07ee3dedae4b93273166234ae0"
+    },
+    {
+      "path": "native021-notice-trace.json",
+      "sha256": "caae9485770c5e9317b2f0847b685701229d3dd1400d4b307b4e5a8d07b531e1"
+    },
+    {
+      "path": "model-sort-native.json",
+      "sha256": "d86a6263c82502d71fb3ccf05bfa35fd0f450113192e39f5983704c16fdd1dfd"
+    },
+    {
+      "path": "model-transfer-native.json",
+      "sha256": "1bfddd3e5a854832503cae100a50a270b70da872dbaf6942ec53eab04a548e6b"
+    },
+    {
+      "path": "ui021-alignment.json",
+      "sha256": "c6840b11913fc88627056ad05872744f3aaa17cbb01a3f5a35c6b0980a3a264c"
+    },
+    {
+      "path": "startup.json",
+      "sha256": "380cbc3fb5951c6453ff8c8280098bf0384b6b616047a13a3b9347bd2ea06df0"
+    },
+    {
+      "path": "startup-diagnostics.json",
+      "sha256": "4c4242f47db625ec9a52778fda7ee16e82f0b88af4737e0c1c1a483fd10d82c0"
+    },
+    {
+      "path": "startup-stderr.log",
+      "sha256": "bf067e0e22c9e939235167fcfb67e9015bc2428b893818ee02f50d04cc18600d"
+    },
+    {
+      "path": "model-dialog-keyboard-native.json",
+      "sha256": "6a4059d46017e4bbffba6ceeb394993827536698234e7db3853947c33a6418fe"
+    }
+  ],
+  "remainingConsumerAudit": {
+    "productSource": "23440509452fc1241324a8ba02ebdd6e52822c18",
+    "sourceFinding": "Legacy assert021WebdavState requires configured/hasObservation=false; bootstrap now explicitly calls inspectRemoteVersion(true), which creates version-check failed observation for synthetic .invalid endpoint. Legacy observer would reject config_sync_observe. This is source-audit prediction, not a claimed native failure.",
+    "fixCommit": "9850dbbaeaa3e95b10c3f37ecab5bda7e96f29c5",
+    "change": "Historical separate-ID UI keeps untouched/no-network expectation. Adopted name-only build must observe real revision-bound readonly failed result with observation timestamp and no invented content-save time. Optional observer allowance admits only config_sync_observe; sync publish/download/check/connection test remain rejected. No store or IPC injection.",
+    "tests": "60 passed; false success, wrong revision/source, missing observation, invented timestamp/content, dot and remote write negatives covered",
+    "nativeProof": "pending; actual Windows run stopped at prior rename-readback assertion"
+  }
+}

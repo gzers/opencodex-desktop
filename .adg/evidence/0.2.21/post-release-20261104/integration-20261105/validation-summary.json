@@ -1,7 +1,7 @@
 {
   "status": "in_progress",
   "releaseReady": false,
-  "codeHead": "bd7c0fe8ccecfa39e0706c885dc233f3854dab74",
+  "codeHead": "9850dbbaeaa3e95b10c3f37ecab5bda7e96f29c5",
   "productCommit": "23440509452fc1241324a8ba02ebdd6e52822c18",
   "appsTree": "0eec77398bbd1cbe49f88dd3bd5e8046266e14c1",
   "native": {
@@ -35,8 +35,8 @@
     "clippyFinal": "passed all-targets integration-test -D warnings",
     "build": "UI typecheck/build and debug app passed; adhoc, not release installer",
     "windowsProbeUnits": "35 passed after backup/recovery-journal distinction",
-    "windowsCI": "41868797161 Windows backend regression, native credential protection and official managed install upgrade/offline reinstall passed; release EXE compiling; native smoke pending",
-    "fullCdpProtocol": "58 passed on bd7c0fe8c; same seven suites as frontend CI protocol step, native Windows EXE result separate"
+    "windowsCI": "41868797161 final EXE smoke failed old raw.name expectation; backup probe passed. Display-name probe fixed in 3aa789a6e, native recheck pending.",
+    "fullCdpProtocol": "60 passed on 9850dbbae; seven suites; name-only and startup readonly contracts tested separately from native"
   },
   "pending": [
     "Windows final-source native and CI",
@@ -58,14 +58,15 @@
     "reason": "Only native panel lifecycle changed; UI material/channel/sync product paths byte-identical. Final native panel and sync plus targeted panel regression and Clippy supplement reused unaffected checks. No claim of a new full suite on final commit."
   },
   "latestWindowsFailure": {
-    "source": "aa54d4b2a",
-    "run": 41862893068,
+    "source": "bd7c0fe8c",
+    "run": 41868797161,
     "step": "Windows final EXE smoke",
-    "assertion": "Save exactly one added directory; rename added prewrite plus recovery journal",
-    "fixCommit": "bd7c0fe8ccecfa39e0706c885dc233f3854dab74",
+    "assertion": "full raw file expected stale provider.name; integrated name-only Save updated it",
+    "fixCommit": "3aa789a6e9e560cc76c661d65ec7092086c86a08",
     "productChanged": false,
     "nativeRecheck": "pending",
-    "evidence": "ci-rename-probe/analysis.json"
+    "evidence": "ci-display-name-probe/analysis.json",
+    "remainingConsumerAudit": "ci-display-name-probe/analysis.json remainingConsumerAudit"
   },
   "windowsHandoff": {
     "userDecision": "local Windows available; continue in Windows chat",

@@ -128,3 +128,9 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05 CI续验：最终提交bd7c0fe8c的Windows后端回归、原生凭据保护和官方运行包安装升级/离线重装步骤已过，release EXE编译仍在执行，最终原生冒烟未有结论。本机补跑与frontend CI相同的七组CDP协议套件共58项通过，日志integration-20261105/ci-rename-probe/full-cdp-tests.log；只补探针回归，不替代Windows原生/远端Mac runner缺验。未因运行慢或临时API EOF重启/取消原任务，仍查询run41868797161/job126709886228。
+
+
+2026-11-05 Windows最终EXE CI出现下一处旧合同失败：run41868797161 / bd7c0fe8c已通过后端、原生凭据、运行包安装升级和release构建；原生排序、剩余A保存/精确备份及恢复镜像、转移与UI对齐通过，之后021渠道改名读回要求raw.name仍为旧值，实际为采用后的新名称。现场差异记录在ci-display-name-probe/；3aa789a6e只修探针，按真实界面有无独立运行ID区分历史合同和name-only合同，后者严格要求name=新名称，整个文件/Key/模型引用/稳定ID/未知字段保护不变。整组59测试通过，含旧/缺名称、Key丢失及未知/相邻对象变化反例；不以纯测试代替新原生重跑。后续021检测/WebDAV尚未执行，Mac CI仍缺runner待补；Windows提示词指向新HEAD，同产品源Mac证据继续有效，发布门未齐。
+
+
+2026-11-05同批探针消费者审计：尚未实际执行的旧WebDAV探针要求启动无观察且IPC不得config_sync_observe，与已采用L线bootstrap只读检测冲突。9850dbbae按已核对的原型/产品合同预先适配，历史独立ID界面仍验旧预期；当前name-only界面必须产生合成.invalid端点的真实读取失败、正确revision/source/观察时间、零伪造保存时间。观察器只显式额外放行config_sync_observe，上传/下载/应用及测试连接继续拒绝；未注入store/替换IPC。完整60协议测试通过。这是源码审计发现而非新原生失败复现，最终同源原生仍待。Windows交接已指向9850dbbae，产品树与234405094相同，原失败/局部通过均保留。

@@ -2,7 +2,7 @@
 
 用户已确认有本地Windows环境，继续由Windows对话补验（2026-11-05）。本机工具未连接Windows宿主，尚未实际发往该对话；请粘贴以下内容。
 
-继续gzers/opencodex-desktop本批集成验收。先fetch并读取代码origin/codex/post021-sync-fixes（bd7c0fe8ccecfa39e0706c885dc233f3854dab74，产品源234405094；新增改名备份/恢复日志断言适配，须使用该最终探针），文档origin/docs/governance-main的IMP-30、DMD-POST021及0.2.21-bugs.md第8.7节。由集成分支另开codex/post021-windows-final，避免用原W分支替代L/L2；文档证据另开docs/post021-windows-final，仅写独有证据/新TASK回执，原冻结任务不重绑。
+继续gzers/opencodex-desktop本批集成验收。先fetch并读取代码origin/codex/post021-sync-fixes（9850dbbaeaa3e95b10c3f37ecab5bda7e96f29c5，产品源234405094；新增改名备份/恢复日志、持久化显示名称及启动只读版本检测断言适配，须使用该最终探针），文档origin/docs/governance-main的IMP-30、DMD-POST021及0.2.21-bugs.md第8.7节。由集成分支另开codex/post021-windows-final，避免用原W分支替代L/L2；文档证据另开docs/post021-windows-final，仅写独有证据/新TASK回执，原冻结任务不重绑。
 
 补三类实际缺验：
 1. 同最终源回归Windows材质、首次范围/同步方向/ETag有界确认/地址/版本只读观察、名称唯一/无运行标识/无私网前置、重启和面板。新Mac面板空URL修复cf412c336/234405094涉及共享origin复用：补首次导航未完成即离开重开、服务地址变化、旧视图关闭失败/重试。保留代次/超时/浮层遮挡与配置读回。
