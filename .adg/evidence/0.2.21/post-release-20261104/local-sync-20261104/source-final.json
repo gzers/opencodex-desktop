@@ -1,0 +1,101 @@
+{
+  "codeBranch": "codex/post021-sync-fixes",
+  "commit": "f8c34cfcc04ffd9f2b1aa8c035986eae5b6887c3",
+  "base": "7a8441f7e647e4b3540d5907e44ac4f186f90998",
+  "pr": "https://github.com/gzers/opencodex-desktop/pull/69",
+  "releaseVersion": "not frozen; debug candidate retains 0.2.21",
+  "productSourceVsPreviousNative": "Rust/UI differences from 0db184402 are template ID propagation in two Vue/TS files; test/helper changes separate",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/model_transfer.rs",
+      "sha256": "0513760adbba39a4ed0fa30665ca7eb16c526c547cad8d71a4473e237947ef7e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "sha256": "7ff58e77d9e3c2aa834578b7791e2637b46148118d7ec54c00d5391c059d5266"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+      "sha256": "c88671c7c3e988fe09574ee3c3760b644142066dfcec2ed97fb91aa7f6bcd74c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/remote.rs",
+      "sha256": "ea2ac9d208329f31c4eb86f4a286ba9ca0e0761b976460a5366b1be5668640f5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_state.rs",
+      "sha256": "d04da3656b0848066baf54baf6f018467280fb096c6d935e1e385147dee9dd42"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/sync_version_tests.rs",
+      "sha256": "6f2c9bd6291dd70f0ecb7a23bcca75d3311b43cdcd8e22a2c50efd4c0b2578bd"
+    },
+    {
+      "path": "apps/desktop/ui/qa/post021-sync.browser.mjs",
+      "sha256": "2d7c753e3f4e3efa12759163ea677529d5df6b785636bba309a492fa56f29410"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/bootstrap.ts",
+      "sha256": "f71510ea8a9862bf4f54993c0d5fba084b9f3e78dbfa7cead82bf1d41fe37faa"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "6b26b1a18fbafc2edb9f0ca41e5ba6a162811440f7383515b859316d94195fdc"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "sha256": "a8a578e95438e36e6516d1fb3edf889542ce92a097acb3fcc8c5ce028786c316"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/api.ts",
+      "sha256": "000a73dc05bf95bf874d435fd617abf83c90f13d3639f69abe22ef7f7e2fe0d9"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/modelTransfer.ts",
+      "sha256": "a3ae4b6294549c4cb975e1624e8b3154e6be5cb0c9dd779a9e6104328b4524e5"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/observation.ts",
+      "sha256": "09748412d406a0efb48aea6a60de6d429c65d9aec7f178dc6a93c7a9957e2709"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/store.ts",
+      "sha256": "a40cd2e5d179a1105d7d15faebd78999320e70a14d4b9eb76908a6a079abbf6a"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+      "sha256": "891ec58cb02fdd1cfd91201a6692b6fd25af619275820830d5162846bc5d5d74"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/SyncRoute.vue",
+      "sha256": "00a249a8eaf03e3d078c92f293ecc2d3d77768324167bc1176bb9b61d0180a05"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-transfer.test.ts",
+      "sha256": "81012d38ac02b18750278fedaa14faf4a7d71f1d233c31cb056808addc8747d0"
+    },
+    {
+      "path": "apps/desktop/ui/tests/overview-mods.test.ts",
+      "sha256": "bdd4b0534f268f5adda076f499599ec169680de05c22cdac49bd2322c9d44ee3"
+    },
+    {
+      "path": "apps/desktop/ui/tests/post021-sync.test.ts",
+      "sha256": "68955bbf5c6a06ba9d30fb76e4ff6f01cfc24f1e5c0ccfa613cf2d4ddda11729"
+    },
+    {
+      "path": "test/smoke/post021-macos-native.py",
+      "sha256": "a0824e449270d4762e87796d4e8c324e16dc448f514bdd8ac747ad2ef4a3e303"
+    }
+  ],
+  "app": {
+    "path": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app",
+    "exeSha256": "6e1bb27b3604cae948736b3cc4473b1a8121aae8fcb0c80b1ac5aa3b057d21b8",
+    "infoSha256": "934509c29cdda40a9244044c143be74a6be75fd967a1bdeb8911c066eaa6f972"
+  },
+  "windowsMaterialWrites": [],
+  "dailyConfigAccess": false,
+  "dailyRemoteSync": false,
+  "handoffCommit": "f3289e2c11fb670f156c2c44237109f0b95afe38",
+  "productEquivalentToNativeCommit": "f8c34cfcc04ffd9f2b1aa8c035986eae5b6887c3",
+  "lastCommitScope": "tests only: actual mounted range flow preserves cloud-only template; 49 targeted tests passed"
+}

@@ -2,10 +2,11 @@
 id: "IMP-OPENCODEX-DESKTOP-30"
 object_kind: "implementation.change"
 title: "0.2.21发布后双线修复与集成发布计划"
-state: "planned"
+state: "in_progress"
+completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
-task_ids: []
+task_ids: ["TASK-OPENCODEX-POST021-LOCAL-20261104"]
 summary: "Windows修复全局玻璃材质，本机修复同步四项；双线交付后统一集成、跨平台回归与发布。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
@@ -57,4 +58,15 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 - 若发现真实根因超出允许写集，W完成独立取证并交回具体最小修改建议；保持已授权范围内进展，不静默修同步逻辑或新加产品功能。
 - 所有执行使用隔离应用数据、合成配置/凭据和测试网络。不修改日常配置、不跑日常真实WebDAV、不重启日常Codex；公开发布前仍完成本计划全部集成门。
 
-本轮交接就绪不等于Windows已开始。本计划当前planned，task_ids为空；两端尚无新实现/验收完成事实。
+本轮交接就绪不等于Windows已开始。交接时计划为planned、task_ids为空，以下接续只记录实际启动与验证；不推定W线已执行。
+
+
+2026-11-04本机线启动：用户明确“接下来可以进行本机的任务，目标模式进行”。L线代码分支已从约定main / 7a8441f7e建立codex/post021-sync-fixes；负责AC-P21-01/03/04/05，Windows材质独占写集不改。两线最终集成/发布门保持，当前不计AC-P21-02或06完成。
+
+
+本机G1-L/G2接续：已建立TASK-OPENCODEX-POST021-LOCAL-20261104，绑定AC-P21-01/03/04/05及本IMP。适用原型增量已采用并完成纯内存/双引擎检查。实现进入codex/post021-sync-fixes；前端全量1278项、双引擎软件各16项及Clippy已通过。Rust全库首次1208通过/1失败/4忽略，唯一失败为未改动about/remote.rs的200ms进程夹具PID文件缺失，保留原日志并独立复验/受控并发重跑。Mac隔离原生尚待，W及整版集成发布尚待；不提前关闭。
+
+
+2026-11-04本机L线验证回写：产品提交f8c34cfcc04ffd9f2b1aa8c035986eae5b6887c3已推送codex/post021-sync-fixes，草稿PR #69。首次目录先初始化及云端独有模版ID保留、ETag发布后只读确认、地址分隔与版本只读观察四项已实现。Vitest1279、Rust全库1209通过/4按原条件忽略、Clippy/构建及3项启动/层边界通过；软件双引擎各16、原型各7项，最终Mac候选原生27项通过，14次GET/零远端写、业务摘要保持。根因与验证限制以.adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/validation-summary.json和HANDOFF.md为准。原始失败已保留并按原因修正或复验，未降低保护；用户真实Windows现场与真实服务响应头仍未采集。远端CI当时待运行完成。本机局部验证完成不关闭五项整版反馈；Windows材质及最终同提交双端/版本/原包安装升级/发布门继续待办，DMD/IMP保持in_progress。
+
+本机最终交接HEAD f3289e2c11fb670f156c2c44237109f0b95afe38仅补实际挂载范围流程的测试，产品源与原生f8c34cfcc相同；49项受影响测试通过。L线验收回执按本批TASK关闭，DMD/IMP与五项整版问题保持待集成；不包含W材质和AC-P21-06。

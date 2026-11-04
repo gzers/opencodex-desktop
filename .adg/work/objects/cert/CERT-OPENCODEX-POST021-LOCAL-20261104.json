@@ -1,0 +1,94 @@
+{
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-01",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/validation-summary.json; HANDOFF.md; source-final.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-03",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/validation-summary.json; HANDOFF.md; source-final.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-04",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/validation-summary.json; HANDOFF.md; source-final.json",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-P21-05",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/validation-summary.json; HANDOFF.md; source-final.json",
+      "status": "passed"
+    }
+  ],
+  "checks": [
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/cargo-lib-bounded.log; vitest-final.log; clippy-final.log; native-build-final.log; wiring-boundaries.log; cloud-template-ui.log",
+      "name": "review:affected-regression",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/cargo-lib-bounded.log; production publish_blob with isolated conditional transport faults",
+      "name": "review:etag-confirmation",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/cargo-lib-bounded.log; cloud-template-ui.log; validation-summary.json",
+      "name": "review:first-scope-and-digest",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/native-final/ready/ocx021-mac-native-52a068f1-cd3e-48b2-8fa1-200522663b91/report.json",
+      "name": "review:local-native",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/prototype-adoption.json; prototype-chromium.json; prototype-webkit.json",
+      "name": "review:prototype-adoption",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/validation-summary.json",
+      "name": "review:side-effects",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/native-final/ready/ocx021-mac-native-52a068f1-cd3e-48b2-8fa1-200522663b91/fixture-requests.json",
+      "name": "review:version-observation-readonly",
+      "status": "passed"
+    }
+  ],
+  "closed_task_summary_digest": "92d610950885f0045c96db5753fd8409a35ee0f26c2dd5dedae29945e212ed53",
+  "content_digest": "4454c82ea0d7241f1108647ec5c74696c597060f0832f9bedf95ea2fd066ec6f",
+  "fact_impacts": [
+    {
+      "after_digest": "a88b3f7f943e063a9b578d417520d40f6ea1005ff14e3ab4e082b0898b5a3114",
+      "path": "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md",
+      "summary": "L线四项实现与隔离验收完成；W/集成/发布继续待办",
+      "target": "0"
+    },
+    {
+      "after_digest": "1e16cdf8e6b6ac90f55f1b6edbeeecb175824847f9eae18c5fe8633674f93706",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
+      "summary": "L线四项实现与隔离验收完成；W/集成/发布继续待办",
+      "target": "1"
+    },
+    {
+      "after_digest": "1e1510265cabcd93d2abf721594e1afb4c268aaf72a96e6401658a47292a18e2",
+      "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+      "summary": "L线四项实现与隔离验收完成；W/集成/发布继续待办",
+      "target": "2"
+    }
+  ],
+  "id": "CERT-OPENCODEX-POST021-LOCAL-20261104",
+  "kind": "CERT",
+  "receipt_digest": "0805162babb195230315e63b108cca5bfd07cf955dd17550fee5a61d9890d3c8",
+  "receipt_id": "RCP-OPENCODEX-POST021-LOCAL-20261104",
+  "result": "succeeded",
+  "revision": 1,
+  "summary_digest": "f14d7b9da3746be3c4e3fe19e6d11f94604099e779cbb824cfe2b16c70926f7f",
+  "task_digest_before_close": "8f1710ff78e0568204c6525a7c6b03a85831045ce8341c83fe9ced64de5057ed",
+  "task_id": "TASK-OPENCODEX-POST021-LOCAL-20261104",
+  "task_summary_digest": "a018831f1a61ca3a59b8bd2f7544e3095d757b38a3e5068b49ba257410cae7e3",
+  "verified_at": "2026-11-04T13:35:36.379055+00:00"
+}

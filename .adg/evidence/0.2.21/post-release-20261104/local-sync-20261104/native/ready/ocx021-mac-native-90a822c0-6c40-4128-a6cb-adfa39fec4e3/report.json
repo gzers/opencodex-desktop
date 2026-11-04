@@ -1,0 +1,438 @@
+{
+  "schemaVersion": 1,
+  "stage": "debug-preverify",
+  "result": "pass",
+  "app": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app",
+  "executable": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "bundleInfo": {
+    "CFBundleDevelopmentRegion": "English",
+    "CFBundleDisplayName": "OpenCodeX Desktop",
+    "CFBundleExecutable": "opencodex-desktop",
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleInfoDictionaryVersion": "6.0",
+    "CFBundleName": "OpenCodeX Desktop",
+    "CFBundlePackageType": "APPL",
+    "CFBundleShortVersionString": "0.2.21",
+    "CFBundleVersion": "0.2.21",
+    "CSResourcesFileMapped": true,
+    "LSMinimumSystemVersion": "10.13",
+    "CFBundleIconFile": "icon.icns",
+    "LSRequiresCarbon": true,
+    "NSHighResolutionCapable": true
+  },
+  "binarySha256Before": "005dae2e8aed8d8b4d0d0a69b175d98738c60255082fe940b6a3b13cf09906a3",
+  "bundleInfoSha256Before": "934509c29cdda40a9244044c143be74a6be75fd967a1bdeb8911c066eaa6f972",
+  "root": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root",
+  "boundary": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3",
+  "environment": {
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "USER": "ezio",
+    "LOGNAME": "ezio",
+    "HOME": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home",
+    "CFFIXED_USER_HOME": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home",
+    "TMP": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/tmp",
+    "TMPDIR": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/tmp/",
+    "TEMP": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/tmp",
+    "XDG_CONFIG_HOME": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home/.config",
+    "XDG_CACHE_HOME": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home/.cache",
+    "OPENCODEX_SANDBOX": "1",
+    "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root",
+    "OPENCODEX_SANDBOX_BOUNDARY": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3",
+    "OPENCODEX_HOME": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/opencodex-home",
+    "CODEX_HOME": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home/.codex",
+    "SSL_CERT_FILE": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/fixture-tls/ca.pem",
+    "SSL_CERT_DIR": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/fixture-tls/empty"
+  },
+  "rootSource": "Fresh UUID root; explicit process environment; startup-bound boundary; no daily data inspection",
+  "sourceHeadAtRun": "0db184402e2c8a7973dd364948c24c6692062c75",
+  "sourceDirtyAtRun": " M test/smoke/post021-macos-native.py\n",
+  "scope": "overview",
+  "readyMode": true,
+  "expectedBuildCommit": "0db184402e2c8a7973dd364948c24c6692062c75",
+  "scriptSha256": "89e6b5fbd0e883b283fb4a2182c149855fa23a6dfa6e41ff03903a722865e301",
+  "axHelperSourceSha256": "83b125f54b1d0bb9280a96bb84907955276d8ff2991dd001abe908950b5a5eb1",
+  "signedFinalCommitClaimed": false,
+  "scopeCompleted": true,
+  "checks": [
+    {
+      "name": "native-permissions",
+      "status": "pass",
+      "axTrusted": true,
+      "locked": false,
+      "onConsole": true,
+      "screenCaptureAllowed": true
+    },
+    {
+      "name": "kernel-network-denial",
+      "status": "pass",
+      "returncode": 1,
+      "error": "nc: connectx to 192.0.2.1 port 443 (tcp) failed: Operation not permitted"
+    },
+    {
+      "name": "ready-real-tool-versions",
+      "status": "pass",
+      "versions": {
+        "node": "v26.8.1",
+        "npm": "11.19.0",
+        "bun": "1.4.2",
+        "ocx": "opencodex 2.84.0"
+      },
+      "codeBytesUnmodified": true,
+      "proof": "Original binaries/CLI copied with equal SHA; fixed-environment wrappers; OS network denied; no service commands"
+    },
+    {
+      "name": "only-owned-loopback-allowed",
+      "status": "pass",
+      "endpoint": "https://127.0.0.1:52347",
+      "caTrust": "process SSL_CERT_FILE only",
+      "externalDenied": true
+    },
+    {
+      "name": "process-sandbox-admission",
+      "status": "pass",
+      "pid": 97123,
+      "pgid": 97123,
+      "required": [
+        "HOME",
+        "TMP",
+        "TMPDIR",
+        "OPENCODEX_SANDBOX",
+        "OPENCODEX_SANDBOX_ROOT",
+        "OPENCODEX_SANDBOX_BOUNDARY"
+      ]
+    },
+    {
+      "name": "native-window",
+      "status": "pass",
+      "windows": [
+        {
+          "bounds": {
+            "Height": 760,
+            "Width": 1180,
+            "X": 1010,
+            "Y": 262
+          },
+          "id": 103583,
+          "layer": 0,
+          "onscreen": true
+        }
+      ],
+      "axNodes": 77
+    },
+    {
+      "name": "expected-build-commit",
+      "status": "pass",
+      "expected": "0db184402e2c8a7973dd364948c24c6692062c75"
+    },
+    {
+      "name": "startup-root-binding",
+      "status": "pass",
+      "binding": {
+        "structure_version": "1"
+      },
+      "resolvedActiveRoot": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root",
+      "resolvedOfficialHome": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/opencodex-home",
+      "startup": "2026-11-04T13:27:27.411Z [manager] startup version=0.2.21 commit=0db184402e2c8a7973dd364948c24c6692062c75"
+    },
+    {
+      "name": "native-discover-environment-ready",
+      "status": "pass",
+      "gate": "ready",
+      "producer": "candidate discover_environment(request=null)",
+      "observationMethod": "production response rendered as three AX found rows; raw DTO is not exported by AX",
+      "checks": [
+        {
+          "name": "Node.js",
+          "value": "已发现"
+        },
+        {
+          "name": "npm",
+          "value": "已发现"
+        },
+        {
+          "name": "OpenCodex",
+          "value": "已发现"
+        }
+      ],
+      "sourceFallbackUsed": false,
+      "runtimeSource": {
+        "schema_version": 1,
+        "source": "discovered",
+        "path": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home/.local/bin/ocx",
+        "resolved_version": "2.84.0",
+        "resolved_at": "2026-11-04T13:27:28Z",
+        "history": []
+      },
+      "runtimeSourceSeeded": false,
+      "discoveryDirectory": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home/.local/bin",
+      "realVersions": {
+        "node": "v26.8.1",
+        "npm": "11.19.0",
+        "bun": "1.4.2",
+        "ocx": "opencodex 2.84.0"
+      }
+    },
+    {
+      "name": "post021-address-boundary",
+      "status": "pass",
+      "expected": "https://127.0.0.1:52347/native021-only"
+    },
+    {
+      "name": "post021-native-first-scope",
+      "status": "pass",
+      "selectedChannels": 1,
+      "selectedTemplates": 17,
+      "nativeGroupChecked": 1
+    },
+    {
+      "name": "process-sandbox-admission",
+      "status": "pass",
+      "pid": 97336,
+      "pgid": 97336,
+      "required": [
+        "HOME",
+        "TMP",
+        "TMPDIR",
+        "OPENCODEX_SANDBOX",
+        "OPENCODEX_SANDBOX_ROOT",
+        "OPENCODEX_SANDBOX_BOUNDARY"
+      ]
+    },
+    {
+      "name": "native-window",
+      "status": "pass",
+      "windows": [
+        {
+          "bounds": {
+            "Height": 760,
+            "Width": 1180,
+            "X": 1010,
+            "Y": 262
+          },
+          "id": 103609,
+          "layer": 0,
+          "onscreen": true
+        }
+      ],
+      "axNodes": 78
+    },
+    {
+      "name": "expected-build-commit",
+      "status": "pass",
+      "expected": "0db184402e2c8a7973dd364948c24c6692062c75"
+    },
+    {
+      "name": "startup-root-binding",
+      "status": "pass",
+      "binding": {
+        "structure_version": "1"
+      },
+      "resolvedActiveRoot": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root",
+      "resolvedOfficialHome": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/opencodex-home",
+      "startup": "2026-11-04T13:27:27.411Z [manager] startup version=0.2.21 commit=0db184402e2c8a7973dd364948c24c6692062c75"
+    },
+    {
+      "name": "native-discover-environment-ready",
+      "status": "pass",
+      "gate": "ready",
+      "producer": "candidate discover_environment(request=null)",
+      "observationMethod": "production response rendered as three AX found rows; raw DTO is not exported by AX",
+      "checks": [
+        {
+          "name": "Node.js",
+          "value": "已发现"
+        },
+        {
+          "name": "npm",
+          "value": "已发现"
+        },
+        {
+          "name": "OpenCodex",
+          "value": "已发现"
+        }
+      ],
+      "sourceFallbackUsed": false,
+      "runtimeSource": {
+        "schema_version": 1,
+        "source": "discovered",
+        "path": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home/.local/bin/ocx",
+        "resolved_version": "2.84.0",
+        "resolved_at": "2026-11-04T13:27:35Z",
+        "history": []
+      },
+      "runtimeSourceSeeded": false,
+      "discoveryDirectory": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home/.local/bin",
+      "realVersions": {
+        "node": "v26.8.1",
+        "npm": "11.19.0",
+        "bun": "1.4.2",
+        "ocx": "opencodex 2.84.0"
+      }
+    },
+    {
+      "name": "post021-startup-readonly-version",
+      "status": "pass",
+      "previousOwnedPid": 97123,
+      "currentOwnedPid": 97336,
+      "observedState": "present, reliable save time unknown"
+    },
+    {
+      "name": "post021-native-version-known",
+      "status": "pass",
+      "expected": "上次观察"
+    },
+    {
+      "name": "post021-native-version-absent",
+      "status": "pass",
+      "expected": "未发现快照"
+    },
+    {
+      "name": "post021-native-version-failed",
+      "status": "pass",
+      "expected": "读取失败"
+    },
+    {
+      "name": "post021-native-version-unknown",
+      "status": "pass",
+      "expected": "已读取 · 保存时间未知"
+    },
+    {
+      "name": "post021-readonly-side-effects",
+      "status": "pass",
+      "hashes": {
+        "opencodex-home/config.json": "7c462059cfe4f4976f91edcbbe2fdd12684c0fc911a123c5b68b8b801e4f2ee1",
+        "manager-state/sync-endpoints.json": "92e76d66f1016d6c00ff5b102ab4bf5a2c43de6f91d6d5a3fcef9bc3bd893df1",
+        "manager-state/config-sync-scope.json": "085646d42e527e2e63fc25b954c78d5ca3ad67373ffba40ba659e43506a3b00c",
+        "manager-state/saved-content-versions.json": null
+      },
+      "getCount": 14,
+      "remoteWrites": 0,
+      "systemTrustChanged": false
+    },
+    {
+      "name": "owned-process-group-cleanup",
+      "status": "pass",
+      "pgid": 97336,
+      "remaining": []
+    },
+    {
+      "name": "owned-tool-descendants-cleanup",
+      "status": "pass",
+      "remaining": []
+    },
+    {
+      "name": "ready-original-tools-unchanged",
+      "status": "pass",
+      "copiedHashes": {
+        "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/tools/node": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+        "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/tools/npm/bin/npm-cli.js": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+        "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/tools/official/node_modules/@bitkyc08/opencodex/bin/ocx.mjs": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+        "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/tools/bun": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5"
+      },
+      "sourceInputHashes": {
+        "node": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+        "npm_cli": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+        "official_entry": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+        "bun": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5"
+      }
+    },
+    {
+      "name": "startup-root-source-unchanged",
+      "status": "pass",
+      "source": "Process environment + startup binding; no root rebind invoked",
+      "bindingSha256": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25"
+    },
+    {
+      "name": "candidate-identity-unchanged",
+      "status": "pass"
+    }
+  ],
+  "startedAt": "2026-11-04T13:27:18.733246+00:00",
+  "codesign": "Executable=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop\nIdentifier=com.gzers.opencodex.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=228828 flags=0x10002(adhoc,runtime) hashes=7144+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=1769472\nHash type=sha256 size=32\nCandidateCDHash sha256=ad7256bc9d4383eb9d001d23d8492441eaa4b6f0\nCandidateCDHashFull sha256=ad7256bc9d4383eb9d001d23d8492441eaa4b6f02bdb6c62de4a713a56bbb619\nHash choices=sha256\nCMSDigest=ad7256bc9d4383eb9d001d23d8492441eaa4b6f02bdb6c62de4a713a56bbb619\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=61636608\nExecutable Segment flags=0x1\nPage size=16384\nCDHash=ad7256bc9d4383eb9d001d23d8492441eaa4b6f0\nSignature=adhoc\nInfo.plist entries=14\nTeamIdentifier=not set\nRuntime Version=27.0.0\nSealed Resources version=2 rules=13 files=4\nInternal requirements count=0 size=12\nTotal signatures=1\nChosen signature=1\n",
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "toolInputs": {
+    "node": {
+      "requested": "/Users/ezio/.hermes/node/bin/node",
+      "path": "/Users/ezio/.hermes/node/bin/node",
+      "sha256": "ebd2d552c7bebde593dd0390530963ad28de56bccde6ce387cdbe55fb0b6fb8e",
+      "size": 145803984
+    },
+    "npm_cli": {
+      "requested": "/Users/ezio/.hermes/node/lib/node_modules/npm/bin/npm-cli.js",
+      "path": "/Users/ezio/.hermes/node/lib/node_modules/npm/bin/npm-cli.js",
+      "sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+      "size": 54,
+      "packageVersion": "11.19.0"
+    },
+    "official_entry": {
+      "requested": "/private/tmp/ocx020-owned-official-284/installation/node_modules/@bitkyc08/opencodex/bin/ocx.mjs",
+      "path": "/private/tmp/ocx020-owned-official-284/installation/node_modules/@bitkyc08/opencodex/bin/ocx.mjs",
+      "sha256": "2af429ffa0b912857c03df2f20048091794d3aae0c3327ab7856709ecbd7dd8d",
+      "size": 59088,
+      "packageVersion": "2.84.0"
+    },
+    "bun": {
+      "requested": "/private/tmp/ocx020-owned-official-284/installation/node_modules/bun/bin/bun.exe",
+      "path": "/private/tmp/ocx020-owned-official-284/installation/node_modules/bun/bin/bun.exe",
+      "sha256": "35d20dd0263e5c950194434b925454fdfa9ba6e4467da960410fa05b08a7a5b5",
+      "size": 61884464
+    }
+  },
+  "realToolVersions": {
+    "node": "v26.8.1",
+    "npm": "11.19.0",
+    "bun": "1.4.2",
+    "ocx": "opencodex 2.84.0"
+  },
+  "pid": 97336,
+  "processGroup": 97336,
+  "startupEvent": "2026-11-04T13:27:27.411Z [manager] startup version=0.2.21 commit=0db184402e2c8a7973dd364948c24c6692062c75",
+  "startupBuildCommit": "0db184402e2c8a7973dd364948c24c6692062c75",
+  "nativeEnvironmentGate": {
+    "gate": "ready",
+    "producer": "candidate discover_environment(request=null)",
+    "observationMethod": "production response rendered as three AX found rows; raw DTO is not exported by AX",
+    "checks": [
+      {
+        "name": "Node.js",
+        "value": "已发现"
+      },
+      {
+        "name": "npm",
+        "value": "已发现"
+      },
+      {
+        "name": "OpenCodex",
+        "value": "已发现"
+      }
+    ],
+    "sourceFallbackUsed": false,
+    "runtimeSource": {
+      "schema_version": 1,
+      "source": "discovered",
+      "path": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home/.local/bin/ocx",
+      "resolved_version": "2.84.0",
+      "resolved_at": "2026-11-04T13:27:35Z",
+      "history": []
+    },
+    "runtimeSourceSeeded": false,
+    "discoveryDirectory": "/private/tmp/ocx021-mac-native-90a822c0-6c40-4128-a6cb-adfa39fec4e3/root/home/.local/bin",
+    "realVersions": {
+      "node": "v26.8.1",
+      "npm": "11.19.0",
+      "bun": "1.4.2",
+      "ocx": "opencodex 2.84.0"
+    }
+  },
+  "ownedProcessExit": -15,
+  "binarySha256After": "005dae2e8aed8d8b4d0d0a69b175d98738c60255082fe940b6a3b13cf09906a3",
+  "bundleInfoSha256After": "934509c29cdda40a9244044c143be74a6be75fd967a1bdeb8911c066eaa6f972",
+  "finishedAt": "2026-11-04T13:27:41.606050+00:00",
+  "sourceHeadAtEnd": "0db184402e2c8a7973dd364948c24c6692062c75"
+}

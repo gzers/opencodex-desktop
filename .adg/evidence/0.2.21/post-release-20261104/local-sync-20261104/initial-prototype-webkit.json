@@ -1,0 +1,54 @@
+{
+  "engine": "webkit",
+  "scope": "mock-only applicable post021 state increment; working entry contains excluded future work",
+  "checks": [
+    {
+      "state": "unread",
+      "visible": true,
+      "expected": "尚未读取",
+      "text": "",
+      "passed": false
+    },
+    {
+      "state": "absent",
+      "visible": true,
+      "expected": "未发现快照",
+      "text": "",
+      "passed": false
+    },
+    {
+      "state": "failed",
+      "visible": true,
+      "expected": "读取失败",
+      "text": "",
+      "passed": false
+    },
+    {
+      "state": "unknown",
+      "visible": true,
+      "expected": "已读取 · 保存时间未知",
+      "text": "",
+      "passed": false
+    },
+    {
+      "state": "known",
+      "visible": true,
+      "expected": "上次观察",
+      "text": "",
+      "passed": false
+    },
+    {
+      "state": "matched",
+      "visible": true,
+      "expected": "最近检查一致",
+      "text": "",
+      "passed": false
+    },
+    {
+      "name": "all seven review controls",
+      "passed": true,
+      "controls": 7
+    }
+  ],
+  "errors": []
+}

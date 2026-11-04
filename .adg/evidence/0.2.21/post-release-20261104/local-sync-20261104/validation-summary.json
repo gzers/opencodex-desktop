@@ -1,0 +1,131 @@
+{
+  "date": "2026-11-04T13:33:54.936768+00:00",
+  "productCommit": "f8c34cfcc04ffd9f2b1aa8c035986eae5b6887c3",
+  "codeBranch": "codex/post021-sync-fixes",
+  "draftPR": 69,
+  "scope": [
+    "S21-POST-01",
+    "S21-POST-03",
+    "S21-POST-04",
+    "S21-POST-05"
+  ],
+  "status": "local-validation-complete; Windows integration/release pending",
+  "checks": {
+    "vitest": "1279 passed, 194 files",
+    "cargo-lib": "1209 passed, 4 ignored, bounded 4 workers; source Rust unchanged at final candidate",
+    "clippy": "passed; -D warnings",
+    "typecheck-build": "passed",
+    "startup-layer-integration": "3 passed",
+    "prototype-contract": "3 passed",
+    "prototype-browser": "Chromium/WebKit 7 each",
+    "software-browser": "Chromium/WebKit 16 each",
+    "native-macos": "27 passed; actual installed debug candidate/WKWebView/AX; own fresh root + verified loopback TLS only"
+  },
+  "nativeReport": ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/native-final/ready/ocx021-mac-native-52a068f1-cd3e-48b2-8fa1-200522663b91/report.json",
+  "nativeBusinessWrites": "connection setup and initial range only; subsequent version observations preserve business hashes",
+  "nativeRemoteMethods": [
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-latest.json",
+      "mode": "unknown",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-53725001cabf72792f1c746731318125efb8534546d476938ce2510d0b907bdd.ocxd",
+      "mode": "unknown",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-latest.json",
+      "mode": "unknown",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-latest.json",
+      "mode": "unknown",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-53725001cabf72792f1c746731318125efb8534546d476938ce2510d0b907bdd.ocxd",
+      "mode": "unknown",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-latest.json",
+      "mode": "unknown",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-latest.json",
+      "mode": "known",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-64d407b1c4bd2308d93821e374d642da66a510caa507c2a5b5cc93486263d92b.ocxd",
+      "mode": "known",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-latest.json",
+      "mode": "known",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-latest.json",
+      "mode": "absent",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-latest.json",
+      "mode": "failed",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-latest.json",
+      "mode": "unknown",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-53725001cabf72792f1c746731318125efb8534546d476938ce2510d0b907bdd.ocxd",
+      "mode": "unknown",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/native021-only/config-v1-latest.json",
+      "mode": "unknown",
+      "authenticated": true
+    }
+  ],
+  "limitations": [
+    "User actual Windows false-unchanged environment and real WebDAV ETag response headers remain uncollected; isolated bug chains fixed and tested",
+    "No Windows material contribution integrated",
+    "Remote CI pending at this checkpoint",
+    "Debug adhoc candidate, no new release version/installer/OTA/publication",
+    "Four preexisting native/live-dependent Rust tests ignored; not claimed covered"
+  ],
+  "failuresPreserved": [
+    "initial-cargo-models.log",
+    "cargo-models.log",
+    "cargo-lib.log",
+    "initial-vitest.log",
+    "initial-prototype-chromium.json",
+    "initial-prototype-webkit.json",
+    "native/ready/ocx021-mac-native-36227c0f-86bd-49d5-a279-1981a8d0f27b/exception.log"
+  ],
+  "handoffCommit": "f3289e2c11fb670f156c2c44237109f0b95afe38",
+  "productEquivalentToNativeCommit": "f8c34cfcc04ffd9f2b1aa8c035986eae5b6887c3",
+  "lastCommitScope": "tests only: actual mounted range flow preserves cloud-only template; 49 targeted tests passed"
+}

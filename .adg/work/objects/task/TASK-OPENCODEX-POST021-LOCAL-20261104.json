@@ -1,0 +1,96 @@
+{
+  "acceptance_bindings": [
+    {
+      "acceptance_id": "AC-P21-01",
+      "criterion_digest": "93e234ff42d457bc7cb7212117d3f35e700907a36ecd39f1d9b356cf784187b4",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-03",
+      "criterion_digest": "a4bc5eac52d104f36218759cb75dd0d0e0af120221fc09f96b3d51b979ea9a79",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-04",
+      "criterion_digest": "8406c4a930d3dcdf46ffbb7f1b60973475489124bba8b2e0660bff996c003b3d",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    },
+    {
+      "acceptance_id": "AC-P21-05",
+      "criterion_digest": "751b494ac36609953e6a5da400f644d79f6a3443edc8b95a58c3a2fb768c40bb",
+      "demand_id": "DMD-OPENCODEX-POST021"
+    }
+  ],
+  "acceptance_ids": [
+    "AC-P21-01",
+    "AC-P21-03",
+    "AC-P21-04",
+    "AC-P21-05"
+  ],
+  "baseline_digest": "ad31d198f48b46b8c4c0571fe5bac024c07e929db4a4a4f9834b78c5872fb069",
+  "certificate_digest": "4454c82ea0d7241f1108647ec5c74696c597060f0832f9bedf95ea2fd066ec6f",
+  "content_digest": "291f31334c83faf7ca6cc203eded84adab69131db9f25821f596b885d0cd0090",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "fact_writeback": {
+    "mode": "required",
+    "targets": [
+      {
+        "before_digest": "2eb3752812cef00f7079b232773f9403fa37bf6c9a23ef9765587182abce4e15",
+        "id": "0",
+        "path": "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md"
+      },
+      {
+        "before_digest": "c9b92d47e9ee31b805544155c5e68f304962743748b0b0070eb2418986e9ca69",
+        "id": "1",
+        "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md"
+      },
+      {
+        "before_digest": "666e6f342ac33ca165906139de990822a84aeeb66e0c8748652c6ed55376ae99",
+        "id": "2",
+        "path": "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md"
+      }
+    ]
+  },
+  "id": "TASK-OPENCODEX-POST021-LOCAL-20261104",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "imported_receipt_digest": "0805162babb195230315e63b108cca5bfd07cf955dd17550fee5a61d9890d3c8",
+  "kind": "TASK",
+  "owner": "local-sync-integration",
+  "required_checks": [
+    "review:affected-regression",
+    "review:etag-confirmation",
+    "review:first-scope-and-digest",
+    "review:local-native",
+    "review:prototype-adoption",
+    "review:side-effects",
+    "review:version-observation-readonly"
+  ],
+  "result": "succeeded",
+  "revision": 3,
+  "state": "completed",
+  "summary": "范围、ETag、地址与只读版本；不含W材质和发布",
+  "summary_digest": "92d610950885f0045c96db5753fd8409a35ee0f26c2dd5dedae29945e212ed53",
+  "title": "发布后本机同步四项修复与Mac验证",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/local-sync-20261104/**",
+    "apps/desktop/tauri/src/commands/model_transfer.rs",
+    "apps/desktop/tauri/src/lib.rs",
+    "apps/desktop/tauri/src/modules/model_config/**",
+    "apps/desktop/ui/qa/post021-sync.browser.mjs",
+    "apps/desktop/ui/src/app/bootstrap.ts",
+    "apps/desktop/ui/src/dev/modelFixtures.ts",
+    "apps/desktop/ui/src/features/sync/**",
+    "apps/desktop/ui/src/routes/OverviewRoute.vue",
+    "apps/desktop/ui/src/routes/SyncRoute.vue",
+    "apps/desktop/ui/tests/**",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-POST021.md",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-30.md",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post021-sync.js",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/post021-sync.test.cjs",
+    "docs/04-项目资料/01-项目支撑资料/06-问题记录/0.2.21-bugs.md",
+    "test/smoke/post021-macos-native.py"
+  ]
+}

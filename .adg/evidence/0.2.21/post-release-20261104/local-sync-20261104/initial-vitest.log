@@ -1,0 +1,82 @@
+
+> opencodex-desktop-ui@0.2.21 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/overview-mods.test.ts (8 tests | 1 failed) 749ms
+   ❯ overview module cards (8)
+     × renders the WebDAV card from the connection state with the remote version row 79ms
+ ❯ tests/model-transfer.test.ts (44 tests | 2 failed) 1493ms
+   ❯ model transfer review (44)
+     × uses only the shared header X when the selected range is already the same 24ms
+     × uses the unchanged check directly without staging upload or download 21ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > uses only the shared header X when the selected range is already the same
+AssertionError: expected 'connected' to be 'synced' // Object.is equality
+
+Expected: "synced"
+Received: "connected"
+
+ ❯ tests/model-transfer.test.ts:446:95
+    444|     expect(wrapper.findAll('button').find(b=>b.text()==='确认更新')).toBeU…
+    445|     await wrapper.find('button[aria-label="关闭"]').trigger('click');awa…
+    446|     expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(useS…
+       |                                                                                               ^
+    447|   })
+    448|   it.each(['unreliable_save_time','same_instant_different_content'])('…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/model-transfer.test.ts > model transfer review > uses the unchanged check directly without staging upload or download
+AssertionError: expected 'connected' to be 'synced' // Object.is equality
+
+Expected: "synced"
+Received: "connected"
+
+ ❯ tests/model-transfer.test.ts:466:159
+    464|     await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger(…
+    465|     expect(wrapper.text()).toContain('所选内容已一致，无需更新。');expect(wrapper.f…
+    466|     expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expe…
+       |                                                                                                                                                               ^
+    467|     expect(useSyncStore().observation?.remoteTime).toBe('2026-11-04T04…
+    468|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/overview-mods.test.ts > overview module cards > renders the WebDAV card from the connection state with the remote version row
+AssertionError: expected [ '同步中…', '检测版本' ] to deeply equal [ '同步中…' ]
+
+- Expected
++ Received
+
+  [
+    "同步中…",
++   "检测版本",
+  ]
+
+ ❯ tests/overview-mods.test.ts:172:37
+    170|     sync.setWebdavState('syncing'); await wrapper.vm.$nextTick()
+    171|     const busy = card().findAll('.mod-actions button')
+    172|     expect(busy.map(b => b.text())).toEqual(['同步中…'])
+       |                                     ^
+    173|     expect(busy[0].attributes('disabled')).toBeDefined()
+    174|     sync.setWebdavState('conflict'); await wrapper.vm.$nextTick()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 192 passed (194)
+      Tests  3 failed | 1275 passed (1278)
+   Start at  21:01:53
+   Duration  9.37s (environment 46%, tests 29%, transform 14%, import 11%)
+
+Environment  jsdom was created 194 times · 64.30s total, 46% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

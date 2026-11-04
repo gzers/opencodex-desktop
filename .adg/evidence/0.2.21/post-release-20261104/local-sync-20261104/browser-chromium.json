@@ -1,0 +1,71 @@
+{
+  "engine": "chromium",
+  "scope": "explicit DEV fixtures; production Vue stores/routes; no native IPC or real sync",
+  "checks": [
+    {
+      "name": "chromium-light unknown distinct version state",
+      "passed": true
+    },
+    {
+      "name": "chromium-light known distinct version state",
+      "passed": true
+    },
+    {
+      "name": "chromium-light absent distinct version state",
+      "passed": true
+    },
+    {
+      "name": "chromium-light failed distinct version state",
+      "passed": true
+    },
+    {
+      "name": "chromium-light same content opens no-write preview",
+      "passed": true
+    },
+    {
+      "name": "chromium-light check is not a transfer",
+      "passed": true
+    },
+    {
+      "name": "chromium-light null saved time not unread",
+      "passed": true
+    },
+    {
+      "name": "chromium-light connection slash",
+      "passed": true
+    },
+    {
+      "name": "chromium-dark unknown distinct version state",
+      "passed": true
+    },
+    {
+      "name": "chromium-dark known distinct version state",
+      "passed": true
+    },
+    {
+      "name": "chromium-dark absent distinct version state",
+      "passed": true
+    },
+    {
+      "name": "chromium-dark failed distinct version state",
+      "passed": true
+    },
+    {
+      "name": "chromium-dark same content opens no-write preview",
+      "passed": true
+    },
+    {
+      "name": "chromium-dark check is not a transfer",
+      "passed": true
+    },
+    {
+      "name": "chromium-dark null saved time not unread",
+      "passed": true
+    },
+    {
+      "name": "chromium-dark connection slash",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,71 @@
+{
+  "engine": "webkit",
+  "scope": "explicit DEV fixtures; production Vue stores/routes; no native IPC or real sync",
+  "checks": [
+    {
+      "name": "webkit-light unknown distinct version state",
+      "passed": true
+    },
+    {
+      "name": "webkit-light known distinct version state",
+      "passed": true
+    },
+    {
+      "name": "webkit-light absent distinct version state",
+      "passed": true
+    },
+    {
+      "name": "webkit-light failed distinct version state",
+      "passed": true
+    },
+    {
+      "name": "webkit-light same content opens no-write preview",
+      "passed": true
+    },
+    {
+      "name": "webkit-light check is not a transfer",
+      "passed": true
+    },
+    {
+      "name": "webkit-light null saved time not unread",
+      "passed": true
+    },
+    {
+      "name": "webkit-light connection slash",
+      "passed": true
+    },
+    {
+      "name": "webkit-dark unknown distinct version state",
+      "passed": true
+    },
+    {
+      "name": "webkit-dark known distinct version state",
+      "passed": true
+    },
+    {
+      "name": "webkit-dark absent distinct version state",
+      "passed": true
+    },
+    {
+      "name": "webkit-dark failed distinct version state",
+      "passed": true
+    },
+    {
+      "name": "webkit-dark same content opens no-write preview",
+      "passed": true
+    },
+    {
+      "name": "webkit-dark check is not a transfer",
+      "passed": true
+    },
+    {
+      "name": "webkit-dark null saved time not unread",
+      "passed": true
+    },
+    {
+      "name": "webkit-dark connection slash",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,54 @@
+{
+  "engine": "chromium",
+  "scope": "mock-only applicable post021 state increment; working entry contains excluded future work",
+  "checks": [
+    {
+      "state": "unread",
+      "visible": true,
+      "expected": "尚未读取",
+      "text": "原型\n06\n＋\nWebDAV 同步\n连接状态\n已配置 · 未检测\n线上版本\n—\n·\n尚未读取\n检测连接\n同步\n检测版本",
+      "passed": true
+    },
+    {
+      "state": "absent",
+      "visible": true,
+      "expected": "未发现快照",
+      "text": "原型\n06\n＋\nWebDAV 同步\n连接状态\n最近检测成功\n线上版本\n—\n·\n未发现快照\n同步\n检测版本",
+      "passed": true
+    },
+    {
+      "state": "failed",
+      "visible": true,
+      "expected": "读取失败",
+      "text": "原型\n06\n＋\nWebDAV 同步\n连接状态\n最近检测失败\n线上版本\n—\n·\n读取失败\n重试检测\n检测版本",
+      "passed": true
+    },
+    {
+      "state": "unknown",
+      "visible": true,
+      "expected": "已读取 · 保存时间未知",
+      "text": "原型\n06\n＋\nWebDAV 同步\n连接状态\n最近检测成功\n线上版本\n—\n·\n已读取 · 保存时间未知\n同步\n检测版本",
+      "passed": true
+    },
+    {
+      "state": "known",
+      "visible": true,
+      "expected": "上次观察",
+      "text": "原型\n06\n＋\nWebDAV 同步\n连接状态\n最近检测成功\n线上版本\n11:02\n·\n上次观察\n同步\n检测版本",
+      "passed": true
+    },
+    {
+      "state": "matched",
+      "visible": true,
+      "expected": "最近检查一致",
+      "text": "原型\n06\n＋\nWebDAV 同步\n连接状态\n最近检查一致\n线上版本\n—\n·\n已读取 · 保存时间未知\n同步\n检测版本",
+      "passed": true
+    },
+    {
+      "name": "all seven review controls",
+      "passed": true,
+      "controls": 7
+    }
+  ],
+  "errors": []
+}
