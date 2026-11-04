@@ -110,12 +110,25 @@ export async function modelFileEvidence(configPath,root){
  try{backups=(await readdir(join(root,'backups','model-config'))).sort()}catch(error){if(error.code!=='ENOENT')throw error;backups=[]}
  return {bytes:await readFile(configPath),backups}
 }
-export async function assertModelFileWrite(before,after,root){
+export async function assertModelFileWrite(before,after,root,{rename=false}={}){
  assert(!after.bytes.equals(before.bytes),'Save must change actual config.json bytes')
  const added=after.backups.filter(name=>!before.backups.includes(name))
- assert.equal(added.length,1,'Save must create exactly one prewrite backup')
+ const journals=added.filter(name=>/^rename-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(name))
+ const prewrites=added.filter(name=>!journals.includes(name))
+ assert.equal(prewrites.length,1,'Save must create exactly one prewrite backup')
+ assert.equal(journals.length,rename?1:0,'Only provider rename Save may create one recovery journal')
  assert.deepEqual(after.backups.filter(name=>before.backups.includes(name)),before.backups,'Save must preserve earlier backups')
- assert((await readFile(join(root,'backups','model-config',added[0],'config.json'))).equals(before.bytes),'backup must contain exact prewrite config.json bytes')
+ assert((await readFile(join(root,'backups','model-config',prewrites[0],'config.json'))).equals(before.bytes),'backup must contain exact prewrite config.json bytes')
+ for(const name of journals){
+  const directory=join(root,'backups','model-config',name),files=await readdir(directory)
+  assert(files.length>0&&files.every(file=>/^[0-9]+[.](before|after)$/.test(file)),'rename recovery journal must contain only indexed pre/post images')
+  let configImage=false
+  for(const file of files.filter(file=>file.endsWith('.before'))){
+   const pre=await readFile(join(directory,file)),post=await readFile(join(directory,file.replace(/[.]before$/,'.after')))
+   if(pre.equals(before.bytes)&&post.equals(after.bytes))configImage=true
+  }
+  assert(configImage,'rename recovery journal must retain exact config pre/post images')
+ }
 }
 export async function verifyWindowsModelUi(call,output,facts,expected){
  const configPath=modelConfigPath(facts,expected)
@@ -320,7 +333,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await openSavePreview();await click('确认保存','dialog[open]')
  await wait("!!document.querySelector('.notif-layer .process-progress')",'remaining A file Save result')
  const remainingEvidence=await modelFileEvidence(configPath,expected),remaining=JSON.parse(remainingEvidence.bytes)
- await assertModelFileWrite(writtenEvidence,remainingEvidence,expected)
+ await assertModelFileWrite(writtenEvidence,remainingEvidence,expected,{rename:pendingProvider!=='native-scope-a-fixture'})
  assert.equal(remaining.providers[pendingProvider].apiKey,'native-scope-a-pending-key','remaining Save commits A Key')
  assert.equal(remaining.providers[pendingProvider].modelContextWindows['fixture-scope-a'],96000,'remaining Save commits confirmed A row')
  for(const [providerId,provider] of Object.entries(written.providers))if(providerId!=='native-scope-a-fixture')assert.deepEqual(remaining.providers[providerId],provider,'remaining Save changed saved B or another Key: '+providerId)

@@ -158,6 +158,27 @@ test('native Save evidence requires changed file bytes and one exact backup with
  assert((await readFile(config)).equals(final.bytes))
 })
 
+test('native rename Save distinguishes one exact prewrite backup from its recovery journal',async t=>{
+ const directory=await mkdtemp(join(tmpdir(),'ocx-native-rename-evidence-'))
+ t.after(()=>rm(directory,{recursive:true,force:true}))
+ const config=join(directory,'config.json'),backupRoot=join(directory,'backups','model-config')
+ await writeFile(config,'{"providers":{"old":{}}}')
+ const before=await modelFileEvidence(config,directory)
+ await mkdir(join(backupRoot,'prewrite'),{recursive:true})
+ await writeFile(join(backupRoot,'prewrite','config.json'),before.bytes)
+ await writeFile(config,'{"providers":{"renamed":{}}}')
+ const journal=join(backupRoot,'rename-00000000-0000-4000-8000-000000000001')
+ await mkdir(journal);await writeFile(join(journal,'0.before'),before.bytes);await writeFile(join(journal,'0.after'),await readFile(config))
+ const after=await modelFileEvidence(config,directory)
+ await assert.rejects(assertModelFileWrite(before,after,directory),/Only provider rename/)
+ await assertModelFileWrite(before,after,directory,{rename:true})
+ await writeFile(join(journal,'0.after'),'wrong config')
+ await assert.rejects(assertModelFileWrite(before,after,directory,{rename:true}),/exact config/)
+ await writeFile(join(journal,'0.after'),after.bytes)
+ await writeFile(join(journal,'unexpected'),'not an image')
+ await assert.rejects(assertModelFileWrite(before,after,directory,{rename:true}),/only indexed/)
+})
+
 function nativeMenuFixture({tops=[535.25,499.25,356.25,356.25,356.25],afterMove=()=>{},opens=true}={}){
  const scene={frame:0,top:tops[0],occluded:false,open:false,scrollCalls:0},commands=[],listeners=new Map(),frames=new Map()
  let nextFrame=0
