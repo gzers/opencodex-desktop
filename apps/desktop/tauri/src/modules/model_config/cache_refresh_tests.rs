@@ -21,6 +21,41 @@ use std::{
     },
 };
 
+#[test]
+fn current_client_binding_requires_owned_absolute_paths_and_validated_runtime() {
+    let root = tempfile::tempdir().unwrap();
+    let home = root.path().join("home");
+    let codex_home = home.join(".codex");
+    std::fs::create_dir_all(&codex_home).unwrap();
+    std::fs::write(codex_home.join("config.toml"), b"model = 'Old/a'\n").unwrap();
+    let executable = root.path().join("codex");
+    std::fs::write(&executable, b"fixture").unwrap();
+    let settings = json!({"codexRuntime":{"path":executable,"version":"0.166.0"}});
+    let integration = json!({"clientId":"codex","state":"current","installed":true,"configPath":codex_home.join("config.toml")});
+    let binding = client_binding(&settings, &integration).unwrap().unwrap();
+    assert_eq!(binding.home, home);
+    assert_eq!(binding.codex_home, codex_home);
+    let mut bad = integration.clone();
+    bad["state"] = json!("conflict");
+    assert!(client_binding(&settings, &bad).is_err());
+    bad = integration.clone();
+    bad["clientId"] = json!("aside");
+    assert!(client_binding(&settings, &bad).is_err());
+    bad = integration.clone();
+    bad["configPath"] = json!("relative/config.toml");
+    assert!(client_binding(&settings, &bad).is_err());
+    let mut bad_runtime = settings.clone();
+    bad_runtime["codexRuntime"]["path"] = json!("codex");
+    assert!(client_binding(&bad_runtime, &integration).is_err());
+    bad_runtime["codexRuntime"]["path"] = json!(root.path().join("missing"));
+    assert!(client_binding(&bad_runtime, &integration).is_err());
+    bad_runtime = settings.clone();
+    bad_runtime["codexRuntime"]["version"] = Value::Null;
+    assert!(client_binding(&bad_runtime, &integration).is_err());
+    std::fs::remove_file(codex_home.join("config.toml")).unwrap();
+    assert!(client_binding(&settings, &integration).unwrap().is_none());
+}
+
 #[derive(Clone)]
 struct RuntimeFixture {
     pid: u32,
@@ -214,6 +249,115 @@ fn no_app_servers(desktop: Value) -> Value {
         "requested":[],"stopped":[],"surviving":[],"failed":[],
         "code":"nothing_running","desktopApp":desktop
     })
+}
+
+#[tokio::test]
+async fn explicit_restart_reconciles_exact_pending_and_clears_only_after_verified_restart() {
+    use super::super::config_file;
+    use axum::routing::put;
+    use std::sync::Mutex;
+    for outcome in ["success", "failure", "new-pending", "reused-old"] {
+        let root = tempfile::tempdir().unwrap();
+        let client_home = root.path().join("owned-client");
+        std::fs::create_dir_all(&client_home).unwrap();
+        let listener = tokio::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
+            .await
+            .unwrap();
+        let public = json!({"adapter":"openai-chat","authMode":"key","baseUrl":"https://fixture.invalid/v1","models":["raw-model"],"selectedModels":["raw-model"]});
+        let mut disk = json!({"providers":{"New":public},"defaultProvider":"New"});
+        if outcome == "reused-old" {
+            disk["providers"]["Old"] = public.clone();
+        }
+        let disk_bytes = serde_json::to_vec(&disk).unwrap();
+        std::fs::write(root.path().join("config.json"), &disk_bytes).unwrap();
+        let state = RuntimeFixture {
+            pid: std::process::id(),
+            port: listener.local_addr().unwrap().port(),
+            secret: "s".repeat(43),
+            root: root.path().into(),
+            status: StatusCode::OK,
+            body: serde_json::to_vec(&response(completed_desktop())).unwrap(),
+            valid_proof: Arc::new(AtomicBool::new(true)),
+            change_binding: Arc::new(AtomicBool::new(false)),
+            health_calls: Arc::new(AtomicUsize::new(0)),
+            restart_calls: Arc::new(AtomicUsize::new(0)),
+            unexpected_calls: Arc::new(AtomicUsize::new(0)),
+        };
+        write_record(&state, state.pid);
+        std::fs::write(
+            root.path().join("admin-api-token"),
+            format!("ocx_admin_{}", "t".repeat(43)),
+        )
+        .unwrap();
+        let context = ProcessContext {
+            runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(
+            ),
+            working_directory: root.path().into(),
+            opencodex_home: root.path().into(),
+        };
+        let snapshot = config_file::snapshot(root.path(), root.path()).unwrap();
+        let id = snapshot
+            .policy
+            .channels
+            .iter()
+            .find(|c| c.connection.provider_id == "New")
+            .unwrap()
+            .id
+            .clone();
+        let pending=serde_json::to_vec(&json!({"version":1,"id":uuid::Uuid::new_v4().to_string(),"homeBinding":super::super::store::sha256(&serde_json::to_vec(root.path()).unwrap()),"bindings":[{"channelId":id,"from":"Old","to":"New"}]})).unwrap();
+        crate::infrastructure::atomic_write::atomic_write(
+            &root.path().join(config_file::rename_effects::PATH),
+            &pending,
+            0o600,
+        )
+        .unwrap();
+        let counters = Arc::new(Mutex::new((0usize, 0usize, 0usize)));
+        let read_counts = counters.clone();
+        let read_public = disk["providers"].clone();
+        let reload_counts = counters.clone();
+        let put_counts = counters.clone();
+        let restart_counts = counters.clone();
+        let response_state = state.clone();
+        let expected_public = disk["providers"].clone();
+        let router=Router::new().route("/healthz",get(health))
+            .route("/api/settings",get(||async{Json(json!({"codexRuntime":{"path":null,"version":null}}))}))
+            .route("/api/client-integrations/codex",get(move||{let file=client_home.join("config.toml");async move{Json(json!({"clientId":"codex","state":"absent","installed":false,"configPath":file}))}}))
+            .route("/api/providers/reload",post(move|headers:HeaderMap,body:Bytes|{let c=reload_counts.clone();async move{assert!(headers.get(header::AUTHORIZATION).is_none());assert!(body.is_empty());c.lock().unwrap().0+=1;Json(json!({"success":true}))}}))
+            .route("/api/config",get(move||{let c=read_counts.clone();let p=read_public.clone();async move{let adopted=c.lock().unwrap().1>0;let mut providers=p.as_object().unwrap().clone();if !adopted&&!providers.contains_key("Old"){providers.insert("Old".into(),providers["New"].clone());}Json(json!({"providers":providers,"defaultProvider":if adopted{"New"}else{"Old"}}))}}))
+            .route("/api/providers",put(move|headers:HeaderMap,Json(body):Json<Value>|{let c=put_counts.clone();let p=expected_public.clone();async move{assert!(headers.get(header::AUTHORIZATION).is_some());assert_eq!(body["baseline"],body["next"]);assert_eq!(body["next"],json!({"providers":p,"defaultProvider":"New"}));c.lock().unwrap().1+=1;Json(json!({"success":true,"catalogRefresh":{"status":"committed","changed":true,"degraded":false,"notices":[]}}))}}))
+            .route("/api/system/codex-restart",post(move||{let c=restart_counts.clone();let s=response_state.clone();async move{let mut counters=c.lock().unwrap();assert!(counters.1>0);counters.2+=1;drop(counters);if outcome=="failure"{(StatusCode::SERVICE_UNAVAILABLE,Json(json!({"error":"fixture"})))}else{if outcome=="new-pending" {let path=s.root.join(config_file::rename_effects::PATH);let mut pending:Value=serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();pending["id"]=json!(uuid::Uuid::new_v4().to_string());crate::infrastructure::atomic_write::atomic_write(&path,&serde_json::to_vec(&pending).unwrap(),0o600).unwrap();}(StatusCode::OK,Json(serde_json::from_slice::<Value>(&s.body).unwrap()))}}}))
+            .with_state(state);
+        let server = tokio::spawn(async move { axum::serve(listener, router).await.unwrap() });
+        let result = sync_cache_after_save(root.path(), &context, true).await;
+        assert_eq!(
+            std::fs::read(root.path().join("config.json")).unwrap(),
+            disk_bytes
+        );
+        assert_eq!(
+            *counters.lock().unwrap(),
+            (if outcome == "reused-old" { 2 } else { 1 }, 1, 1)
+        );
+        if outcome == "failure" {
+            assert!(result.is_err());
+            assert!(config_file::rename_effects::load(root.path(), root.path())
+                .unwrap()
+                .is_some())
+        } else if outcome == "new-pending" {
+            let result = result.unwrap();
+            assert!(!result.success && result.restarted);
+            assert_eq!(result.reason.as_deref(), Some("rename_activation_changed"));
+            assert!(config_file::rename_effects::load(root.path(), root.path())
+                .unwrap()
+                .is_some());
+        } else {
+            let result = result.unwrap();
+            assert!(result.success && result.restarted);
+            assert!(config_file::rename_effects::load(root.path(), root.path())
+                .unwrap()
+                .is_none())
+        }
+        server.abort();
+    }
 }
 
 fn assert_incomplete(result: &CacheRefresh) {

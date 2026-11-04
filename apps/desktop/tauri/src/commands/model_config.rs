@@ -229,8 +229,14 @@ pub async fn model_policy_history(
 pub async fn model_policy_refresh_cache(
     restart_codex: bool,
     context: tauri::State<'_, crate::state::SharedProcessContext>,
+    data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<crate::modules::model_config::cache_refresh::CacheRefresh> {
-    crate::modules::model_config::cache_refresh::sync_cache(&context, restart_codex).await
+    crate::modules::model_config::cache_refresh::sync_cache_after_save(
+        &data_root.0,
+        &context,
+        restart_codex,
+    )
+    .await
 }
 #[tauri::command]
 pub async fn model_policy_abandon(

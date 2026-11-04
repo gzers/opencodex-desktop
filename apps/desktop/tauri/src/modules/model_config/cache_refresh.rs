@@ -10,6 +10,238 @@ use serde::{Deserialize, Serialize};
 #[cfg(test)]
 use std::path::Path;
 use std::time::Duration;
+#[path = "client_selection_rename.rs"]
+pub mod client_selection_rename;
+#[path = "saved_runtime_reconcile.rs"]
+pub mod saved_runtime_reconcile;
+
+#[derive(Clone)]
+struct RenamePreparation {
+    id: String,
+    file_digest: String,
+    mapping: std::collections::BTreeMap<String, String>,
+}
+fn read_rename_preparation(
+    root: &std::path::Path,
+    context: &ProcessContext,
+) -> ModelResult<Option<RenamePreparation>> {
+    use super::config_file::{self, rename_effects};
+    let Some(pending) = rename_effects::load(root, &context.opencodex_home)? else {
+        return Ok(None);
+    };
+    let snapshot = config_file::snapshot(root, &context.opencodex_home)?;
+    Ok(Some(RenamePreparation {
+        id: pending.id.clone(),
+        file_digest: snapshot.policy_digest,
+        mapping: rename_effects::current_map(&pending, &snapshot.policy)?,
+    }))
+}
+fn verify_rename_preparation(
+    root: &std::path::Path,
+    context: &ProcessContext,
+    preparation: &RenamePreparation,
+) -> ModelResult<()> {
+    let now = read_rename_preparation(root, context)?;
+    if now.as_ref().is_none_or(|now| {
+        now.id != preparation.id
+            || now.file_digest != preparation.file_digest
+            || now.mapping != preparation.mapping
+    }) {
+        return Err(invalid(
+            "rename_activation_changed",
+            "重启准备期间保存配置又有变化，未重启；请重新核对",
+        ));
+    }
+    Ok(())
+}
+async fn verify_rename_preparation_worker(
+    root: &std::path::Path,
+    context: &ProcessContext,
+    preparation: &RenamePreparation,
+) -> ModelResult<()> {
+    let root = root.to_path_buf();
+    let context = context.clone();
+    let preparation = preparation.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        verify_rename_preparation(&root, &context, &preparation)
+    })
+    .await
+    .map_err(|_| invalid("rename_activation_worker", "改名准备核对中断，未确认完成"))?
+}
+struct ClientBinding {
+    executable: std::path::PathBuf,
+    home: std::path::PathBuf,
+    codex_home: std::path::PathBuf,
+}
+fn client_binding(
+    settings: &serde_json::Value,
+    integration: &serde_json::Value,
+) -> ModelResult<Option<ClientBinding>> {
+    use std::path::{Component, Path, PathBuf};
+    let invalid_binding = || {
+        invalid(
+            "rename_client_binding",
+            "官方客户端路径或运行身份不明确，未更新当前选择，请核对Codex安装",
+        )
+    };
+    if integration["clientId"] != "codex" {
+        return Err(invalid_binding());
+    }
+    let config_path = PathBuf::from(
+        integration["configPath"]
+            .as_str()
+            .ok_or_else(invalid_binding)?,
+    );
+    if !config_path.is_absolute()
+        || config_path.file_name() != Some(std::ffi::OsStr::new("config.toml"))
+        || config_path
+            .components()
+            .any(|c| matches!(c, Component::ParentDir))
+    {
+        return Err(invalid_binding());
+    }
+    if !config_path.try_exists().map_err(|_| invalid_binding())? {
+        return Ok(None);
+    }
+    if !matches!(integration["state"].as_str(), Some("current" | "stale"))
+        || integration["installed"] != true
+    {
+        return Err(invalid(
+            "rename_client_ownership",
+            "当前Codex配置来源未确认或有外部冲突，未改写当前选择",
+        ));
+    }
+    let codex_home = config_path
+        .parent()
+        .ok_or_else(invalid_binding)?
+        .to_path_buf();
+    let home = if codex_home.file_name() == Some(std::ffi::OsStr::new(".codex")) {
+        codex_home.parent().map(Path::to_path_buf)
+    } else {
+        platform::home_dir()
+    }
+    .ok_or_else(invalid_binding)?;
+    let runtime = &settings["codexRuntime"];
+    if runtime["version"].as_str().is_none_or(|v| v.is_empty()) {
+        return Err(invalid_binding());
+    }
+    let raw = runtime["path"].as_str().ok_or_else(invalid_binding)?;
+    let executable =
+        if let Some(relative) = raw.strip_prefix("~/").or_else(|| raw.strip_prefix("~\\")) {
+            home.join(relative)
+        } else {
+            PathBuf::from(raw)
+        };
+    if !executable.is_absolute()
+        || executable
+            .components()
+            .any(|c| matches!(c, Component::ParentDir))
+        || !executable.is_file()
+    {
+        return Err(invalid_binding());
+    }
+    Ok(Some(ClientBinding {
+        executable,
+        home,
+        codex_home,
+    }))
+}
+/// Preparation for the existing explicit restart action. This never invokes the
+/// global desktop restart itself, so isolated acceptance can test real owners.
+/// Pending is cleared only by sync_cache_after_save after confirmed restart.
+pub async fn prepare_saved_rename_restart(
+    root: &std::path::Path,
+    context: &ProcessContext,
+) -> ModelResult<Option<String>> {
+    let owned_root = root.to_path_buf();
+    let owned_context = context.clone();
+    let preparation = tauri::async_runtime::spawn_blocking(move || {
+        read_rename_preparation(&owned_root, &owned_context)
+    })
+    .await
+    .map_err(|_| invalid("rename_activation_worker", "读取改名准备中断，未重启Codex"))??;
+    let Some(preparation) = preparation else {
+        return Ok(None);
+    };
+    let management = Management::bind(context).await?;
+    let selection = if preparation.mapping.is_empty() {
+        None
+    } else {
+        let settings = management.public_settings().await?;
+        let integration = management.codex_integration().await?;
+        let binding = client_binding(&settings, &integration)?;
+        match binding {
+            None => None,
+            Some(binding) => Some(
+                client_selection_rename::preflight_current_selection(
+                    context,
+                    &binding.executable,
+                    &binding.home,
+                    &binding.codex_home,
+                    &binding.home,
+                    None,
+                    &preparation.mapping,
+                )
+                .await?,
+            ),
+        }
+    };
+    verify_rename_preparation_worker(root, context, &preparation).await?;
+    saved_runtime_reconcile::reconcile(&management, context, &preparation.mapping).await?;
+    verify_rename_preparation_worker(root, context, &preparation).await?;
+    if let Some(selection) = selection {
+        selection.apply().await?;
+    }
+    verify_rename_preparation_worker(root, context, &preparation).await?;
+    management.verify_binding()?;
+    Ok(Some(preparation.id))
+}
+/// File success and activation/restart are distinct. Failure keeps the exact
+/// intent for a later explicit retry; cache-only remains unchanged.
+pub async fn sync_cache_after_save(
+    root: &std::path::Path,
+    context: &ProcessContext,
+    restart_codex: bool,
+) -> ModelResult<CacheRefresh> {
+    if !restart_codex {
+        return sync_cache(context, false).await;
+    }
+    let prepared = prepare_saved_rename_restart(root, context)
+        .await
+        .map_err(|mut error| {
+            error.message = format!(
+                "渠道配置已写入，但当前引用准备未完成，尚未重启Codex：{}",
+                error.message
+            );
+            error
+        })?;
+    let result = sync_cache(context, true).await?;
+    if result.success && result.restarted {
+        if let Some(id) = prepared {
+            let owned_root = root.to_path_buf();
+            let home = context.opencodex_home.clone();
+            let acknowledged = tauri::async_runtime::spawn_blocking(move || {
+                super::config_file::rename_effects::acknowledge(&owned_root, &home, &id)
+            })
+            .await
+            .map_err(|_| {
+                invalid(
+                    "rename_activation_ack",
+                    "Codex已重启，改名准备结果待核对，请稍后重试",
+                )
+            })??;
+            if !acknowledged {
+                return Ok(CacheRefresh {
+                    restarted: true,
+                    success: false,
+                    summary: "Codex已重启，但期间又有改名保存，请核对最新配置后再重启".into(),
+                    reason: Some("rename_activation_changed".into()),
+                });
+            }
+        }
+    }
+    Ok(result)
+}
 
 /// 重启 Codex 会结束正在进行的对话，界面必须先说清这一点。
 pub const RESTART_WARNING: &str = "会结束当前正在进行的 Codex 对话";

@@ -44,6 +44,32 @@ impl Management {
     pub fn verify_binding(&self) -> ModelResult<()> {
         self.unchanged()
     }
+    /// Read only the official public settings projection after attestation.
+    pub async fn public_settings(&self) -> ModelResult<Value> {
+        let request = self.authenticated_request(reqwest::Method::GET, "/api/settings")?;
+        self.receive(request).await
+    }
+    /// Public editor DTO, not a secret-bearing config.json round trip.
+    pub async fn public_config(&self) -> ModelResult<Value> {
+        let request = self.authenticated_request(reqwest::Method::GET, "/api/config")?;
+        self.receive(request).await
+    }
+    pub async fn codex_integration(&self) -> ModelResult<Value> {
+        let request =
+            self.authenticated_request(reqwest::Method::GET, "/api/client-integrations/codex")?;
+        self.receive(request).await
+    }
+    /// A deliberate no-op persisted editor commit asks the official owner to
+    /// reconcile its complete live provider roster/default from saved content.
+    /// Strict server baseline comparison owns validation and secrets stay there.
+    pub async fn adopt_saved_provider_editor(&self, editor: Value) -> ModelResult<Value> {
+        self.request(
+            reqwest::Method::PUT,
+            "/api/providers",
+            Some(serde_json::json!({"baseline":editor,"next":editor})),
+        )
+        .await
+    }
     pub async fn bind(context: &ProcessContext) -> ModelResult<Self> {
         let record = read_record(context)?;
         let secret = record

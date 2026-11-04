@@ -129,9 +129,15 @@ impl Fixture {
             self.root
                 .join("manager-state/model-execution-source-ids.json"),
             self.root.join("manager-state/model-protocol-mappings.json"),
+            self.root.join(super::rename_effects::PATH),
         ]
         .iter()
-        .map(|p| std::fs::read(p).unwrap())
+        .map(|p| {
+            std::fs::read(p).unwrap_or_else(|error| {
+                assert_eq!(error.kind(), std::io::ErrorKind::NotFound);
+                Vec::new()
+            })
+        })
         .collect()
     }
     fn request(&self, scoped: bool) -> SaveRequest {
@@ -161,6 +167,15 @@ impl Fixture {
         }
     }
     fn assert_saved(&self) {
+        let pending = super::rename_effects::load(&self.root, &self.home)
+            .unwrap()
+            .unwrap();
+        assert!(pending
+            .bindings
+            .iter()
+            .any(|binding| binding.channel_id == self.id
+                && binding.from == OLD
+                && binding.to == NEW));
         let raw = read_value(&self.home.join("config.json"));
         assert!(raw["providers"].get(OLD).is_none());
         assert_eq!(raw["defaultProvider"], NEW);
@@ -281,6 +296,47 @@ fn production_provider_rename_transaction_in_memory_credential_process() {
     }
     let memory = memory::Memory::default();
     memory.install();
+    {
+        memory.reset();
+        let f = Fixture::new();
+        std::fs::remove_file(f.root.join(METADATA)).unwrap();
+        let before = snapshot(&f.root, &f.home).unwrap();
+        let mut policy = before.policy;
+        let channel = policy
+            .channels
+            .iter_mut()
+            .find(|c| c.connection.provider_id == OLD)
+            .unwrap();
+        let id = channel.id.clone();
+        channel.label = NEW.into();
+        channel.connection.provider_id = NEW.into();
+        save(
+            &f.root,
+            &f.home,
+            SaveRequest {
+                expected_file: before.policy_digest,
+                policy,
+                credentials: vec![],
+                scope: Some(SaveScope {
+                    channel_id: id.clone(),
+                }),
+            },
+        )
+        .unwrap();
+        let after = snapshot(&f.root, &f.home).unwrap();
+        assert!(after
+            .policy
+            .channels
+            .iter()
+            .any(|c| c.id == id && c.connection.provider_id == NEW));
+        assert!(super::rename_effects::load(&f.root, &f.home)
+            .unwrap()
+            .unwrap()
+            .bindings
+            .iter()
+            .any(|b| b.channel_id == id));
+        pass("first-rename-without-prior-layout");
+    }
     for scoped in [true, false] {
         memory.reset();
         let f = Fixture::new();
@@ -337,6 +393,7 @@ fn production_provider_rename_transaction_in_memory_credential_process() {
         "file:1",
         "file:2",
         "file:3",
+        "file:4",
         "readback",
     ] {
         memory.reset();
@@ -366,6 +423,7 @@ fn production_provider_rename_transaction_in_memory_credential_process() {
         "file:0",
         "file:1",
         "file:3",
+        "file:4",
         "readback",
         "committed",
     ] {

@@ -23,6 +23,8 @@ const MAX_CONFIG: u64 = 16 * 1024 * 1024;
 const METADATA: &str = "manager-state/model-channel-layout.json";
 #[path = "channel_rename.rs"]
 mod channel_rename;
+#[path = "rename_effects.rs"]
+pub(crate) mod rename_effects;
 pub(super) fn metadata_digest(root: &Path) -> ModelResult<String> {
     let path = root.join(METADATA);
     safety::check_path(root, &path, true)?;
@@ -804,8 +806,12 @@ fn save_internal(
         // Preserve legacy UUID references in the stored layout rather than
         // recreating credentials when only the provider namespace changes.
         let mut next_layout = layout_policy(&intended);
-        let original_layout: Value =
-            serde_json::from_slice(&safety::read_file(&root.join(METADATA), MAX_CONFIG)?)?;
+        let metadata_path = root.join(METADATA);
+        let original_layout: Value = if metadata_path.exists() {
+            serde_json::from_slice(&safety::read_file(&metadata_path, MAX_CONFIG)?)?
+        } else {
+            json!({"channels":[]})
+        };
         for channel in &mut next_layout.channels {
             if let Some(reference) = original_layout["channels"]
                 .as_array()

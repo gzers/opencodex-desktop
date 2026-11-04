@@ -117,6 +117,7 @@ enum Target {
     Layout,
     Preferences,
     SourceIds,
+    ClientEffects,
 }
 impl Target {
     fn path(self, root: &Path, home: &Path) -> (PathBuf, PathBuf) {
@@ -128,6 +129,7 @@ impl Target {
                 root.join(preferences::PREFERENCES_RELATIVE_PATH),
             ),
             Self::SourceIds => (root.to_owned(), root.join(IDS)),
+            Self::ClientEffects => (root.to_owned(), root.join(super::rename_effects::PATH)),
         }
     }
 }
@@ -207,6 +209,7 @@ pub(super) fn admit(root: &Path, home: &Path) -> ModelResult<Admission> {
         let _preferences = acquire_preferences_transaction(root)?;
         let _ids = lock(root, &root.join(IDS))?;
         let _groups = lock(root, &protocol_groups::rename_guard_path(root))?;
+        let _client_effects = lock(root, &root.join(super::rename_effects::PATH))?;
         recover_locked(root, home).map_err(|e| {
             if e.code == "rename_cleanup_pending" {
                 e
@@ -226,7 +229,7 @@ fn recover_locked(root: &Path, home: &Path) -> ModelResult<()> {
         serde_json::from_slice(&bytes).map_err(|_| fail("rename_recovery_required"))?;
     if journal.version != 1
         || journal.home_digest != home_digest(home)?
-        || journal.files.len() > 4
+        || journal.files.len() > 5
         || journal.credentials.len() > 1024
     {
         return Err(fail("rename_recovery_required"));
@@ -303,6 +306,7 @@ pub(super) struct Transaction<'a> {
     _preferences: crate::modules::backup::manager::PreferencesProtectionGuard,
     _ids: TargetFileLock,
     _groups: TargetFileLock,
+    _client_effects: TargetFileLock,
 }
 impl<'a> Transaction<'a> {
     pub(super) fn prepare(
@@ -317,6 +321,14 @@ impl<'a> Transaction<'a> {
         let _ids = lock(root, &root.join(IDS))?;
         let group_path = protocol_groups::rename_guard_path(root);
         let _groups = lock(root, &group_path)?;
+        let client_effects_path = root.join(super::rename_effects::PATH);
+        let _client_effects = lock(root, &client_effects_path)?;
+        let client_effects_before = optional(root, &client_effects_path)?;
+        let client_effects_after = super::rename_effects::next(
+            home,
+            client_effects_before.as_deref().map(|b| b.as_slice()),
+            renames,
+        )?;
         let groups = optional(root, &group_path)?;
         protocol_groups::validate_rename_targets(groups.as_deref().map(|b| b.as_slice()), renames)?;
         let mut tx = Self {
@@ -328,7 +340,13 @@ impl<'a> Transaction<'a> {
             _preferences,
             _ids,
             _groups,
+            _client_effects,
         };
+        tx.images.push(Image {
+            target: Target::ClientEffects,
+            before: client_effects_before,
+            after: Zeroizing::new(client_effects_after),
+        });
         let prefs_path = root.join(preferences::PREFERENCES_RELATIVE_PATH);
         if let Some(bytes) = optional(root, &prefs_path)? {
             let mut doc: Value = serde_json::from_slice(&bytes)?;

@@ -686,14 +686,24 @@ pub(super) fn provider_renames(
         }
         require_uuid(&channel.id)?;
         if target.is_empty()
-            || target.len() > 128
+            || target.len() > 64
+            || !target
+                .as_bytes()
+                .first()
+                .is_some_and(u8::is_ascii_alphanumeric)
+            || !target
+                .as_bytes()
+                .last()
+                .is_some_and(u8::is_ascii_alphanumeric)
+            || ["policy", "__proto__", "prototype", "constructor"]
+                .contains(&target.to_ascii_lowercase().as_str())
             || !target
                 .bytes()
                 .all(|c| c.is_ascii_alphanumeric() || c == b'-' || c == b'_')
         {
             return Err(invalid(
                 "provider",
-                "运行渠道标识仅支持 1–128 位字母、数字、连字符和下划线",
+                "运行渠道标识须为 1–64 位字母、数字、连字符或下划线，以字母或数字开头和结尾，且不可使用系统保留标识",
             ));
         }
         let source = config["providers"]

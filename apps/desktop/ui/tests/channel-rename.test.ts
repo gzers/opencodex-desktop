@@ -25,12 +25,12 @@ describe('AC02 direct provider rename',()=>{
  })
  it('keeps an explicit valid provider when the name needs other characters',async()=>{
   const w=render();await flushPromises();await w.get('input[maxlength="80"]').setValue('渠道名称')
-  expect(w.get('#channel-rename-error').text()).toContain('运行标识仅支持')
+  expect(w.get('#channel-rename-error').text()).toContain('运行标识须为')
   await w.get('input[aria-label="运行渠道标识"]').setValue('Krill')
   await w.get('input[maxlength="80"]').setValue('新的渠道名称')
   expect(useModelsStore().channelDraft!.channels[0]!.connection.providerId).toBe('Krill');expect(w.find('#channel-rename-error').exists()).toBe(false)
  })
- it.each(['bad/id','openai','Krill-10',''])('blocks invalid/conflicting provider %s inline without saving',async target=>{
+ it.each(['bad/id','openai','Krill-10','','_bad','bad-','a'.repeat(65),'policy','constructor'])('blocks invalid/conflicting provider %s inline without saving',async target=>{
   const w=render();await flushPromises();await w.get('input[aria-label="运行渠道标识"]').setValue(target)
   expect(w.get('#channel-rename-error').text()).not.toBe('');expect(w.get('input[aria-label="运行渠道标识"]').attributes('aria-invalid')).toBe('true')
   await w.get('button[aria-label="保存渠道草稿"]').trigger('click');expect(w.emitted('save')).toBeUndefined();expect(useModelsStore().snapshot!.policy.channels[0]!.connection.providerId).toBe('Krill-1')
