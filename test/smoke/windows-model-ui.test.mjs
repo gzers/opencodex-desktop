@@ -3,7 +3,8 @@ import assert from 'node:assert/strict'
 import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
-import {modelFileEvidence,assertModelFileWrite,assertModelSandbox,assertModelExportPath,modelConfigPath,nativeModelKeyboardChecksRequired,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
+import {runInNewContext} from 'node:vm'
+import {modelFileEvidence,assertModelFileWrite,assertModelSandbox,assertModelExportPath,modelConfigPath,nativeModelKeyboardChecksRequired,nativeModelUiContract,confirmNativeTemplateDefault,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
 import {overviewScene} from './windows-ui-alignment.mjs'
 test('overview accepts either complete cards or the real settled setup gate, never an empty or partial page',()=>{
  assert.equal(overviewScene(Array(6).fill({}),{}),'ready')
@@ -42,6 +43,32 @@ test('native acceptance rejects unadmitted versions before IPC, while 020 and 02
   const reached=new Error('admitted native CDP driver reached');let calls=0
   await assert.rejects(verifyWindowsModelUi(async method=>{calls++;assert.equal(method,'Runtime.evaluate');throw reached},'.',{...bound,about:{...bound.about,version}},root),error=>error===reached)
   assert.equal(calls,1,version)
+ }
+})
+test('021 uses public native AppModal/header X; the 020 upgrade image keeps its own mask/dialog contract',()=>{
+ assert.deepEqual(nativeModelUiContract('0.2.21'),{publicDialogs:true,confirmation:'dialog.app-modal-dialog[open]',close:'dialog[open] > .ui-dialog-header'})
+ assert.deepEqual(nativeModelUiContract('0.2.20'),{publicDialogs:false,confirmation:'.modal-mask',close:'dialog[open]'})
+ for(const version of ['0.2.19','0.2.18','0.2.17','0.2.16'])assert.equal(nativeModelUiContract(version).publicDialogs,false)
+ assert.throws(()=>nativeModelUiContract('0.2.22'))
+})
+for(const version of ['0.2.20','0.2.21'])test(version+' default confirmation runs the actual driver transition without confusing the version manager',async()=>{
+ let state='manager',committed=false;const clicks=[]
+ const document={
+  querySelectorAll:selector=>{assert.equal(selector,'dialog[open]');return state==='manager'||state==='native-confirmation'?[{}]:[]},
+  querySelector:selector=>selector==='.modal-mask'&&state==='old-confirmation'?{}:selector==='dialog.app-modal-dialog[open] .ui-dialog-header h2'&&state==='native-confirmation'?{textContent:'设为默认版本'}:null,
+ }
+ await confirmNativeTemplateDefault({
+  click:async(text,selector)=>{clicks.push({text,selector});assert.equal(text,'设为默认');if(state==='manager'){assert.equal(selector,'dialog[open]');state=version==='0.2.21'?'native-confirmation':'old-confirmation'}else{assert.equal(selector,nativeModelUiContract(version).confirmation);state='manager';committed=true}},
+  wait:async expression=>assert.equal(runInNewContext(expression,{document}),true),
+ },version)
+ assert(committed);assert.equal(state,'manager');assert.equal(clicks.length,2)
+})
+test('021 refuses a leftover legacy mask or a different native dialog before confirming any default',async()=>{
+ for(const scene of ['legacy-mask','wrong-title','two-native-dialogs']){
+  let clicks=0
+  const document={querySelectorAll:()=>Array(scene==='two-native-dialogs'?2:scene==='legacy-mask'?0:1).fill({}),querySelector:selector=>selector==='.modal-mask'?{}:scene==='wrong-title'?{textContent:'版本管理'}:null}
+  await assert.rejects(confirmNativeTemplateDefault({click:async()=>{clicks++},wait:async expression=>assert.equal(runInNewContext(expression,{document}),true)},'0.2.21'))
+  assert.equal(clicks,1,'wrong host must never receive the commit click')
  }
 })
 test('native file writes require both saved and immutable model homes inside the admitted sandbox',()=>{

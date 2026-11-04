@@ -34,6 +34,19 @@ export function nativeModelKeyboardChecksRequired(version){
  assert(['0.2.16','0.2.17','0.2.18','0.2.19','0.2.20','0.2.21'].includes(version),'Unsupported native model UI acceptance version')
  return ['0.2.20','0.2.21'].includes(version)
 }
+export function nativeModelUiContract(version){
+ nativeModelKeyboardChecksRequired(version)
+ const publicDialogs=version==='0.2.21'
+ return {publicDialogs,confirmation:publicDialogs?'dialog.app-modal-dialog[open]':'.modal-mask',close:publicDialogs?'dialog[open] > .ui-dialog-header':'dialog[open]'}
+}
+export async function confirmNativeTemplateDefault({wait,click},version){
+ const {publicDialogs,confirmation}=nativeModelUiContract(version)
+ await click('设为默认','dialog[open]')
+ await wait(publicDialogs
+  ? "document.querySelectorAll('dialog[open]').length===1&&!!document.querySelector('dialog.app-modal-dialog[open] .ui-dialog-header h2')?.textContent.includes('设为默认版本')"
+  : "document.querySelectorAll('dialog[open]').length===0&&!!document.querySelector('.modal-mask')",'application confirmation above version manager')
+ await click('设为默认',confirmation)
+}
 export async function modelFileEvidence(configPath,root){
  let backups
  try{backups=(await readdir(join(root,'backups','model-config'))).sort()}catch(error){if(error.code!=='ENOENT')throw error;backups=[]}
@@ -49,6 +62,7 @@ export async function assertModelFileWrite(before,after,root){
 export async function verifyWindowsModelUi(call,output,facts,expected){
  const configPath=modelConfigPath(facts,expected)
  const checkNativeKeyboard=nativeModelKeyboardChecksRequired(facts.about.version)
+ const contract=nativeModelUiContract(facts.about.version)
  async function evaluate(expression){const result=await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});assert(!result.exceptionDetails,JSON.stringify(result.exceptionDetails));return result.result.value}
  const invoke=(command,args={})=>evaluate('window.__TAURI_INTERNALS__.invoke('+JSON.stringify(command)+','+JSON.stringify(args)+')')
  async function wait(expression,label){
@@ -74,14 +88,14 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await click('与版本比较')
  const comparison=await wait("(()=>{const dialog=[...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('与版本比较'));return dialog&&dialog.textContent.includes("+JSON.stringify(firstDescription)+")&&dialog.textContent.includes("+JSON.stringify(secondDescription)+")?{rows:dialog.querySelectorAll('.model-comparison-row').length}:null})()",'native readonly comparison shows source and current buffer')
  assert.equal(comparison.rows,1)
- await click('关闭','dialog[open]')
+ await click('关闭',contract.close)
  const beforeSave=await invoke('model_file_snapshot');assert.equal(beforeSave.library.templates.find(t=>t.id===created.templateId).revisions.length,1,'comparison must not save')
  await click('Agent自动填充')
  await wait("!!document.querySelector('.model-agent-panel [aria-label=\"导出上下文\"]')",'assistant context tools visible')
  await click('导出上下文','.model-agent-panel')
  const externalContext=await wait("(()=>{const dialog=[...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('外部任务')),text=dialog?.querySelector('textarea[readonly]')?.value;if(!text||!text.includes('discoveryFile'))return null;const pack=("+parseTaskContent.toString()+")(text);return {targets:pack.task.targets.map(t=>({templateId:t.templateId,revisionId:t.revision.id,description:t.buffer?.content.description})),scopeNew:pack.task.allowNew,contract:!!pack.contract,hasTransport:!!pack.transport,hasPrivateChat:Object.hasOwn(pack,'conversation')}})()",'actual external task bundle from current buffer')
  assert.deepEqual(externalContext.targets,[{templateId:created.templateId,revisionId:created.revisionId,description:secondDescription}]);assert.equal(externalContext.scopeNew,false);assert.equal(externalContext.contract,true);assert.equal(externalContext.hasTransport,true);assert.equal(externalContext.hasPrivateChat,false)
- await click('关闭','dialog[open]')
+ await click('关闭',contract.close)
  await evaluate("(()=>{document.querySelector('.model-agent-panel button[aria-label=\"收起\"]').click();return true})()")
  await writeFile(join(output,'model-editor-context-native.json'),JSON.stringify({result:'pass',comparisonRows:comparison.rows,comparisonDidNotSave:true,externalCurrentTargetCount:externalContext.targets.length,exactBufferDescription:true,includesSharedContractAndTransport:true,privateChatExcluded:true,taskActivated:false,generationRequests:0},null,2)+'\n')
  await click('保存')
@@ -94,13 +108,11 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await evaluate("(()=>{const row=[...document.querySelectorAll('.model-table tbody tr')].find(e=>e.textContent.includes("+JSON.stringify(label)+"));[...row.querySelectorAll('button')].find(e=>e.textContent.trim()==='版本管理').click();return true})()")
  await wait("!![...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('版本管理'))",'version manager')
  // The newest saved revision is shown first; this is the target we just saved.
- await click('设为默认','dialog[open]')
- await wait("document.querySelectorAll('dialog[open]').length===0&&!!document.querySelector('.modal-mask')",'application confirmation above native dialog')
- await click('设为默认','.modal-mask')
+ await confirmNativeTemplateDefault({wait,click},facts.about.version)
  const pointed=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_file_snapshot');return s.library.templates.find(t=>t.id==="+JSON.stringify(created.templateId)+")?.defaultRevision==="+JSON.stringify(revision.id)+"?s:null})()",'default pointer committed')
  assert.deepEqual(pointed.policy,before.policy,'default pointer must not upgrade adoption')
- await wait("document.querySelectorAll('dialog[open]').length===1",'return to version manager')
- await click('关闭','dialog[open]')
+ await wait("document.querySelectorAll('dialog[open]').length===1&&!!document.querySelector('dialog[open] h2')?.textContent.includes('版本管理')",'return to version manager')
+ await click('关闭',contract.close)
  const scope={includePolicy:false,channelIds:[],includeGlobal:false,templateRefs:[{templateId:created.templateId,revisionId:revision.id}]}
  const plan=await invoke('model_transfer_prepare',{scope,passphrase:null,includeKeys:false,managerScope:{preferences:false,extensions:false,webdav:false,webdavPasswords:false}})
  assert.equal(plan.package.payload.templates.length,1)
@@ -179,6 +191,9 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await openChannel(otherChannelId,'native-scope-a-original-key')
  assert.equal(await evaluate(detailSaveDisabled),true,'clean detail Save disabled')
  await inputValue('#channel-config label input','Native scope A pending')
+ // This existing scenario isolates label/Key/row scope. The 021 provider
+ // namespace migration is exercised separately with default/order readback.
+ if(contract.publicDialogs)await inputValue('input[aria-label="运行渠道标识"]','native-scope-a-fixture')
  await inputValue('input[aria-label="API Key"]','native-scope-a-pending-key')
  await click('展开编辑','.channel-model-table')
  await inputValue('.model-row-editor input[type=number]','96000')
@@ -299,7 +314,16 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await new Promise(resolve=>setTimeout(resolve,100))
  const tasks=await evaluate("[...document.querySelectorAll('.model-operation-task,.model-operation-card')].filter(e=>e.getClientRects().length).map(e=>e.textContent)")
  const screenshot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model-template-native.png'),Buffer.from(screenshot.data,'base64'))
- await verifyUiAlignment({call,evaluate,wait,click,output,templateLabel:label})
- const result={result:'pass',scope:'native template, direct current-channel file Save/reopen, remaining global Preview/cancel/confirm, exact transfer; isolated config writes, no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,nativeFileScopeVerified:true,otherChannelMemoryRetained:true,otherProviderAndKeysPreserved:true,canceledListPreviewPreservedFile:true,remainingGlobalFileSave:true,channelReopen:true,existingKeyEye:true,readonlyComparison:true,externalContextBundle:true}
+ await verifyUiAlignment({call,evaluate,wait,click,output,templateLabel:label,publicDialogs:contract.publicDialogs})
+ let probes021
+ if(contract.publicDialogs){
+  const {verifyWindows021Probes}=await import('./windows-021-probes.mjs')
+  probes021=await verifyWindows021Probes({call,evaluate,wait,click,invoke,output},facts,expected)
+ }
+ const result={result:'pass',scope:'native template, direct current-channel file Save/reopen, remaining global Preview/cancel/confirm, exact transfer; isolated config writes, no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:!contract.publicDialogs,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,nativeFileScopeVerified:true,otherChannelMemoryRetained:true,otherProviderAndKeysPreserved:true,canceledListPreviewPreservedFile:true,remainingGlobalFileSave:true,channelReopen:true,existingKeyEye:true,readonlyComparison:true,externalContextBundle:true}
+ result.confirmationHost=contract.confirmation
+ result.versionManagerSuspendedForConfirmation=true
+ result.nativeModelKeyboardChecks=checkNativeKeyboard
+ if(probes021)result.probes021=probes021
  await writeFile(join(output,'model-ui.json'),JSON.stringify(result,null,2)+'\n');return result
 }

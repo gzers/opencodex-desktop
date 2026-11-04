@@ -53,7 +53,7 @@ jobs:
         with:
           node-version: 24
       - name: Windows CDP protocol regression
-        run: node --test test/smoke/windows-cdp.test.mjs test/smoke/windows-model-ui.test.mjs test/smoke/windows-ota-channel.test.mjs test/smoke/windows-ota-fixture.test.mjs
+        run: node --test test/smoke/windows-cdp.test.mjs test/smoke/windows-model-ui.test.mjs test/smoke/windows-ota-channel.test.mjs test/smoke/windows-ota-fixture.test.mjs test/smoke/windows-ui-alignment.test.mjs test/smoke/windows-021-probes.test.mjs test/smoke/windows-021-runtime-host.test.mjs
       - run: npm --prefix apps/desktop/ui ci
       - run: npm --prefix apps/desktop/ui run typecheck
       - run: npm --prefix apps/desktop/ui run test -- --run

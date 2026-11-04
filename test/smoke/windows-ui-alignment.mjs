@@ -9,7 +9,12 @@ export function overviewScene(rows,gate){
  assert(gate.present&&gate.settled&&gate.checks===3,'missing cards require the real, settled environment gate')
  return 'environment-gated'
 }
-export async function verifyUiAlignment({call,evaluate,wait,click,output,templateLabel}){
+export function assertConnectionDialogLayout(value){
+ assert(value.native&&value.title==='WebDAV 连接','021 connection must use its actual native UiDialog')
+ assert.equal(value.closeCount,1,'021 connection needs exactly one header X')
+ assert.deepEqual(value.actions,['取消','保存连接'],'021 connection edit actions must retain their order')
+}
+export async function verifyUiAlignment({call,evaluate,wait,click,output,templateLabel,publicDialogs=false}){
  const receipts=[]
  async function shot(name){const image=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'ui021-'+name+'.png'),Buffer.from(image.data,'base64'))}
  async function measureDetail(label){
@@ -35,7 +40,13 @@ export async function verifyUiAlignment({call,evaluate,wait,click,output,templat
  await click('WebDAV 同步','.sync-route');await wait("!!document.querySelector('#sync-webdav-panel .sync-scope-workspace')",'inline WebDAV scope')
  const remote=await evaluate("(()=>{const parent=document.querySelector('#sync-webdav-panel .u-stack'),cards=parent?[...parent.children].filter(e=>e.getClientRects().length):[];return {scope:!!document.querySelector('#sync-webdav-panel .sync-scope-credentials'),gaps:cards.slice(1).map((e,i)=>e.getBoundingClientRect().top-cards[i].getBoundingClientRect().bottom),settings:!![...document.querySelectorAll('#sync-webdav-panel button')].find(e=>e.textContent.trim()==='连接设置')}})()")
  assert(remote.scope&&remote.settings);assert(remote.gaps.every(gap=>gap>=8),'WebDAV cards require spacing');receipts.push({label:'remote-scope',...remote});await shot('webdav-scope')
- await click('连接设置','.sync-route');await wait("!!document.querySelector('dialog[open]')",'on-demand connection settings');await shot('connection-dialog');await click('取消','dialog[open]');await wait("!document.querySelector('dialog[open]')",'cancel connection settings')
+ const connection=publicDialogs?'dialog.sync-connection-dialog[open]':'dialog[open]'
+ await click('连接设置','.sync-route');await wait('!!document.querySelector('+JSON.stringify(connection)+')','on-demand connection settings')
+ if(publicDialogs){
+  const layout=await evaluate("(()=>{const d=document.querySelector('dialog.sync-connection-dialog[open]');return {native:d instanceof HTMLDialogElement,title:d.querySelector('.ui-dialog-header h2')?.textContent,closeCount:d.querySelectorAll('.ui-dialog-header .modal-close').length,actions:[...d.querySelectorAll('footer button')].map(e=>e.textContent.trim())}})()")
+  assertConnectionDialogLayout(layout);receipts.push({label:'connection-public-dialog',...layout})
+ }
+ await shot('connection-dialog');await click('取消',connection);await wait("!document.querySelector('dialog[open]')",'cancel connection settings')
  await click('设置','.side');await wait("!!document.querySelector('[role=radiogroup][aria-label=视觉特效]')",'quality segmented radios')
  assert.equal(await evaluate("document.querySelectorAll('[role=radiogroup][aria-label=视觉特效] [role=radio]').length"),3)
  for(const [effect,label] of [['high','高'],['mid','中'],['low','低']]){

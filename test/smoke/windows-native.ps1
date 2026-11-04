@@ -142,7 +142,9 @@ try{
  Test-Native 'first-screen-source-identity' {
   $taskLog=Get-Content -LiteralPath (Join-Path $taskSandbox 'logs/app.log') -Raw
   if(!$taskLog.Contains("commit=$($taskSummary.sourceCommit)")){throw 'Native EXE provenance mismatch'}
-  & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskOutput *> (Join-Path $taskOutput 'firstscreen.log')
+  # The same admitted foreground EXE also runs model keyboard/menu checks and
+  # the version-gated 021 IPC/DOM probes. Preserve startup/source/token identity.
+  & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox *> (Join-Path $taskOutput 'firstscreen.log')
   if($LASTEXITCODE -ne 0){throw 'First-screen bridge assertions failed'}
  }
  Test-Native 'single-system-caption-no-application-menu' {

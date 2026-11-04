@@ -7,6 +7,7 @@ import {discoverMainTarget} from './windows-cdp.mjs'
 import {otaChannel} from './windows-ota-channel.mjs'
 import {modelConfigPath,assertModelSandbox} from './windows-model-ui.mjs'
 import {seedOtaBaseline} from './windows-ota-fixture.mjs'
+import {updateCenterHost,updateCenterSceneExpression,closeNativeUpdateCenter} from './windows-021-public-hosts.mjs'
 const [endpoint,output,sandbox,phase,version,fromVersion='0.2.18',requestedChannel]=process.argv.slice(2)
 const channel=otaChannel(requestedChannel)
 assert.equal(new URL(endpoint).hostname,'127.0.0.1')
@@ -50,20 +51,26 @@ try{
   assert(opened,'actual updated Settings update detail opener unavailable: '+JSON.stringify(scalePreflight))
   const openMethod='production Settings version-upgrade manager details; independent of managed runtime availability'
   const scaleSamples=[]
+  const updateHost=updateCenterHost(facts.about.version)
   for(const scale of [100,150,200]){
    await evaluate("document.documentElement.style.setProperty('--ui-zoom',"+JSON.stringify(String(scale/100))+");true")
    let sample
    for(let n=0;n<100;n++){
-    sample=await evaluate("(()=>{const m=document.querySelector('[data-testid=update-center] .update-center'),b=m?.querySelector('.update-center-foot button');if(!m||!b)return null;const r=m.getBoundingClientRect(),a=b.getBoundingClientRect();return {buttonHeight:a.height,buttonX:a.x,buttonRight:a.right,buttonBottom:a.bottom,x:r.x,y:r.y,right:r.right,bottom:r.bottom,viewportWidth:innerWidth,viewportHeight:innerHeight,zoom:getComputedStyle(m).zoom}})()")
+    sample=await evaluate(updateCenterSceneExpression(facts.about.version))
     if(sample?.buttonHeight>0)break;await new Promise(resolve=>setTimeout(resolve,50))
    }
    assert(sample&&sample.x>=-1&&sample.y>=-1&&sample.right<=sample.viewportWidth+1&&sample.bottom<=sample.viewportHeight+1,'updated native dialog outside viewport: '+JSON.stringify(sample))
+   if(updateHost.publicDialogs)assert(sample.native&&sample.open&&sample.closeCount===1,'updated 021 host must be the open native dialog and its public X')
    assert(sample.buttonX>=-1&&sample.buttonRight<=sample.viewportWidth+1&&sample.buttonBottom<=sample.viewportHeight+1,'updated native close action outside viewport: '+JSON.stringify(sample))
    scaleSamples.push({scale,...sample})
    const capture=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'update-scale-'+scale+'.png'),Buffer.from(capture.data,'base64'))
   }
   for(const sample of scaleSamples)assert(Math.abs(sample.buttonHeight/scaleSamples[0].buttonHeight-sample.scale/100)<.03,'updated native dialog does not follow shared scale: '+JSON.stringify(scaleSamples))
-  await evaluate("document.querySelector('[data-testid=update-center] button[aria-label=\"关闭更新中心\"]').click();document.documentElement.style.setProperty('--ui-zoom','1');true")
+  await closeNativeUpdateCenter({
+   wait:async expression=>{for(let n=0;n<100;n++){const value=await evaluate(expression);if(value)return value;await new Promise(resolve=>setTimeout(resolve,50))}throw Error('OTA native update host wait: '+expression)},
+   click:async(text,selector)=>assert(await evaluate('(()=>{const root=document.querySelector('+JSON.stringify(selector)+');const b=[...root?.querySelectorAll("button")??[]].find(b=>(b.textContent.trim()==='+JSON.stringify(text)+'||b.getAttribute("aria-label")==='+JSON.stringify(text)+')&&!b.disabled&&b.getClientRects().length);if(!b)return false;b.click();return true})()'),'updated native close action missing'),
+  },facts.about.version)
+  await evaluate("document.documentElement.style.setProperty('--ui-zoom','1');true")
   assert.equal(hash(await readFile(config)),prior.configSha256,'native update view mutated saved business configuration')
   await writeFile(join(output,'update-scale-native.json'),JSON.stringify({result:'pass',version,host:'actual updated Settings UpdateCenter',engine:'Windows installed WebView2',openMethod,preflight:scalePreflight,samples:scaleSamples,configurationUnchanged:true,scope:'actual installed binary CSS scale token; direct detail open, no extra update check or installation or persisted preference write'},null,2)+'\n')
   await writeFile(join(output,'ota-verified.json'),JSON.stringify({result:'pass',version,channel,updatedApplicationReadback:true,automaticRestartEvidence:'ota-result.json OS process observation',configAndCredentialBytesUnchanged:true,immutableSandboxUnchanged:true,pendingRestartCleared:true},null,2)+'\n')

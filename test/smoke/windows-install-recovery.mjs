@@ -6,6 +6,7 @@ import {discoverMainTarget} from './windows-cdp.mjs'
 import {verifyWindowsInstallUi} from './windows-install-ui.mjs'
 import {verifyWindowsPathUi} from './windows-path-ui.mjs'
 import {verifyWindowsQueryUi} from './windows-query-ui.mjs'
+import {runtimeInstallHost,runtimeInstallDomExpression,runtimeInstallExpression,closeRuntimeInstallTerminal} from './windows-021-runtime-host.mjs'
 
 const [endpoint, output, sandbox] = process.argv.slice(2)
 assert(output && win32.isAbsolute(sandbox), 'explicit isolated root required')
@@ -45,8 +46,8 @@ async function wait(expression,timeout=20_000){
   }
   throw Error('UI wait timed out: '+expression)
 }
-async function click(text,root='[data-testid=runtime-install-modal]'){
-  assert(await evaluate(`(()=>{const root=document.querySelector(${JSON.stringify(root)});const b=[...root?.querySelectorAll('button')??[]].find(b=>b.textContent.trim()===${JSON.stringify(text)}&&!b.disabled);if(!b)return false;b.click();return true})()`),'missing enabled button: '+text)
+async function click(text,root=runtimeInstallHost(report.about.version).selector){
+  assert(await evaluate(`(()=>{const root=document.querySelector(${JSON.stringify(root)});const b=[...root?.querySelectorAll('button')??[]].find(b=>(b.textContent.trim()===${JSON.stringify(text)}||b.getAttribute('aria-label')===${JSON.stringify(text)})&&!b.disabled);if(!b)return false;b.click();return true})()`),'missing enabled button: '+text)
 }
 async function screenshot(name){
   const image=await call('Page.captureScreenshot',{format:'png'})
@@ -54,14 +55,16 @@ async function screenshot(name){
 }
 async function source(){return evaluate("window.__TAURI_INTERNALS__.invoke('runtime_source')")}
 async function install(version){
+  const host=runtimeInstallHost(report.about.version)
+  const inInstall=(fn,...args)=>runtimeInstallDomExpression(report.about.version,fn,...args)
   await click('安装 OpenCodex','.route-section.active')
-  await wait("!!document.querySelector('#wiz-prefix')")
+  await wait(inInstall(root=>!!document.querySelector(root+' #wiz-prefix')))
 
-  await evaluate("(()=>{document.querySelector('[data-testid=wiz-ack]').click()})()")
-  await wait('!!document.querySelector(\'input[aria-label="版本"]\')')
-  await evaluate(`(()=>{const i=document.querySelector('input[aria-label="版本"]');i.value=${JSON.stringify(version)};i.dispatchEvent(new Event('input',{bubbles:true}))})()`)
+  await evaluate(inInstall(root=>document.querySelector(root+' [data-testid=wiz-ack]').click()))
+  await wait(inInstall(root=>!!document.querySelector(root+' input[aria-label="版本"]')))
+  await evaluate(inInstall((root,version)=>{const i=document.querySelector(root+' input[aria-label="版本"]');i.value=version;i.dispatchEvent(new Event('input',{bubbles:true}));return true},version))
   await click('开始安装')
-  return wait("(()=>{const d=document.querySelector('[data-testid=runtime-install-modal]');const error=d?.querySelector('[data-testid=wiz-error]')?.textContent;const done=d?.querySelector('[data-testid=wiz-status]')?.textContent.includes('安装完成')&&d?.querySelector('[data-testid=wiz-outcome]')?.textContent;if(!error&&!done)return false;return {error,done,console:d.querySelector('[data-testid=wiz-console]')?.textContent,offlineSteps:!!d.querySelector('[data-testid=wiz-substeps]'),scriptsEnabled:!d.querySelector('[data-testid=wiz-allow-scripts]')?.disabled}})()",300_000)
+  return wait('(()=>{const scene='+runtimeInstallExpression(report.about.version)+';return scene.error||scene.done?scene:false})()',300_000)
 }
 const report={result:'fail',screenshots:[],checks:[]}
 try{
@@ -70,7 +73,7 @@ try{
   const equal=(a,b)=>win32.normalize(a).replace(/^\\\\\?\\/,'').toLowerCase()===win32.normalize(b).replace(/^\\\\\?\\/,'').toLowerCase()
   assert(equal(config.activeDataRoot,sandbox)&&equal(config.currentDataRoot,sandbox)&&config.runtimeActive,'immutable sandbox mismatch')
   report.about=await evaluate("window.__TAURI_INTERNALS__.invoke('app_about')")
-  await verifyWindowsInstallUi(call,output,false)
+  await verifyWindowsInstallUi(call,output,false,sandbox)
   await verifyWindowsPathUi(call,output,sandbox)
   report.checks.push('prefill/reset/readable native Windows path')
   const first=await install('2.91.0')
@@ -82,7 +85,7 @@ try{
   const entryBytes=await readFile(before.managedEntry)
   const manifestPath=join(before.managedPrefix,'.runtime-manifest.json')
   const manifest=await readFile(manifestPath)
-  await click('完成')
+  report.firstClosure=await closeRuntimeInstallTerminal({evaluate,wait,click},report.about.version,'done')
   const failure=await install('0.0.0-ocx-missing-native-recovery')
   assert(failure.error?.includes('npm pack')&&failure.error.includes('日志：'),JSON.stringify(failure))
   assert(!failure.error.includes('managed runtime operation failed'))
@@ -94,14 +97,21 @@ try{
   assert.deepEqual(await readFile(manifestPath),manifest)
   assert(after.history.at(-1).reason.includes('npm pack')&&after.history.at(-1).reason.includes('日志：'))
   await screenshot('failure-retains-output')
-  await click('关闭')
+  report.failureClosure=await closeRuntimeInstallTerminal({evaluate,wait,click},report.about.version,'failed')
   const recovered=await install('2.93.0')
   assert(recovered.done&&!recovered.error,JSON.stringify(recovered))
   assert(!recovered.offlineSteps&&recovered.console?.includes('日志：'))
   const final=await source()
   assert.equal(final.version,'2.93.0');assert.equal(final.kind,'managed')
   await screenshot('recovered-upgraded-2.93.0')
-  await click('完成')
+  report.recoveredClosure=await closeRuntimeInstallTerminal({evaluate,wait,click},report.about.version,'done')
+  if(runtimeInstallHost(report.about.version).publicDialogs){
+    const {prepare021ReadyWebdav,verify021ReadyWebdav}=await import('./windows-021-ready-webdav.mjs')
+    const facts={about:report.about,dataRoot:await evaluate("window.__TAURI_INTERNALS__.invoke('get_data_root_config')")}
+    const driver={call,evaluate,wait,click,invoke:(command,args={})=>evaluate('window.__TAURI_INTERNALS__.invoke('+JSON.stringify(command)+','+JSON.stringify(args)+')')}
+    const prepared=await prepare021ReadyWebdav(driver,facts,sandbox,true)
+    report.readyWebdav=await verify021ReadyWebdav(driver,output,facts,sandbox,prepared,final,'recovery-installed')
+  }
   await verifyWindowsQueryUi(call,output,sandbox)
   await click('概览','.side');await wait("!!document.querySelector('.ov .mods')")
   await click('导入','.ov')
