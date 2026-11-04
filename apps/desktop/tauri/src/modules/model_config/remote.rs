@@ -22,6 +22,11 @@ pub(super) struct Pointer {
     operation_id: String,
     digest: String,
 }
+impl Pointer {
+    pub(super) fn revision(&self) -> &str {
+        &self.operation_id
+    }
+}
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(super) struct Baseline {
@@ -317,8 +322,17 @@ pub(super) async fn publish_blob<
             serde_json::to_vec(&next)?,
             baseline.map(|head| head.etag.as_str()),
         )
-        .await
-        .map_err(transport_error)?;
+        .await;
+    let response = match response {
+        Ok(response) => response,
+        Err(WebDavError::Network) => {
+            confirm_publication(domain, transport, config, &next).await?;
+            unchanged()?;
+            stage("published")?;
+            return Ok(());
+        }
+        Err(error) => return Err(transport_error(error)),
+    };
     if response.status == 412 {
         return Err(invalid(
             "remote_changed",
@@ -328,19 +342,45 @@ pub(super) async fn publish_blob<
     if ![200, 201, 204].contains(&response.status) {
         return Err(invalid("remote_write", "清单发布结果待核对"));
     }
-    if !pointer_for(domain, transport, config)
-        .await?
-        .as_ref()
-        .is_some_and(|head| head.pointer == next)
-    {
-        return Err(invalid(
-            "remote_changed",
-            "清单发布后已有后续变化，未宣称成功",
-        ));
-    }
+    confirm_publication(domain, transport, config, &next).await?;
     unchanged()?;
     stage("published")?;
     Ok(())
+}
+
+fn publication_unconfirmed() -> ModelError {
+    invalid(
+        "publication_unconfirmed",
+        "云端可能已写入，但发布结果尚未确认；请保留原操作并重新核对",
+    )
+}
+
+/// A successful conditional PUT is a commit, even when its first GET has no
+/// strong validator yet. Verification retries are read-only and keep the same ID.
+async fn confirm_publication<T: WebDavTransport>(
+    domain: Domain,
+    transport: &T,
+    config: &WebDavConfig,
+    expected: &Pointer,
+) -> ModelResult<()> {
+    for attempt in 0..3 {
+        match pointer_for(domain, transport, config).await {
+            Ok(Some(head)) if &head.pointer == expected => return Ok(()),
+            Ok(Some(_)) => {
+                return Err(invalid(
+                    "remote_changed",
+                    "清单发布后已有后续变化，未宣称成功",
+                ))
+            }
+            Ok(None) => {}
+            Err(e) if e.code == "etag_required" => {}
+            Err(_) => return Err(publication_unconfirmed()),
+        }
+        if attempt < 2 {
+            tokio::time::sleep(std::time::Duration::from_millis(100 * (attempt + 1))).await;
+        }
+    }
+    Err(publication_unconfirmed())
 }
 #[cfg(test)]
 pub async fn download<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
@@ -385,6 +425,24 @@ pub(super) mod tests {
         pub fn lose_reply(&self) {
             self.state.lock().unwrap().drop_pointer_reply = true;
         }
+        pub fn delay_commit_validator(&self, reads: usize) {
+            self.state.lock().unwrap().omit_etag_after_commit = reads;
+        }
+        pub fn write_synthetic_fixture(&self, directory: &std::path::Path) {
+            std::fs::create_dir_all(directory).unwrap();
+            let state = self.state.lock().unwrap();
+            let mut etags = BTreeMap::new();
+            for (name, (body, etag)) in &state.files {
+                assert!(!name.contains('/'));
+                std::fs::write(directory.join(name), body).unwrap();
+                etags.insert(name, etag);
+            }
+            std::fs::write(
+                directory.join("etags.json"),
+                serde_json::to_vec(&etags).unwrap(),
+            )
+            .unwrap();
+        }
         pub fn writes(&self) -> Vec<String> {
             self.state.lock().unwrap().writes.clone()
         }
@@ -397,6 +455,8 @@ pub(super) mod tests {
         drop_pointer_reply: bool,
         race: Option<Vec<u8>>,
         corrupt_object: bool,
+        omit_etag_after_commit: usize,
+        missing_etag_reads: usize,
     }
     #[async_trait::async_trait]
     impl WebDavTransport for Memory {
@@ -412,12 +472,18 @@ pub(super) mod tests {
                 WebDavMethod::Get,
                 "this domain must never use unconditional writes"
             );
-            let state = self.state.lock().unwrap();
+            let mut state = self.state.lock().unwrap();
             let (body, etag) = state.files.get(path).ok_or(WebDavError::NotFound)?;
+            let body = body.clone();
+            let mut etag = Some(etag.clone());
+            if path.ends_with("-latest.json") && state.missing_etag_reads > 0 {
+                state.missing_etag_reads -= 1;
+                etag = None;
+            }
             Ok(WebDavResponse {
                 status: 200,
-                body: body.clone(),
-                etag: Some(etag.clone()),
+                body,
+                etag,
             })
         }
         async fn put_conditional(
@@ -449,6 +515,9 @@ pub(super) mod tests {
                 body = b"truncated".to_vec();
             }
             state.files.insert(path.into(), (body, etag.clone()));
+            if pointer {
+                state.missing_etag_reads = state.omit_etag_after_commit;
+            }
             if pointer && state.drop_pointer_reply {
                 state.drop_pointer_reply = false;
                 return Err(WebDavError::Network);
@@ -459,6 +528,86 @@ pub(super) mod tests {
                 etag: Some(etag),
             })
         }
+    }
+    #[tokio::test]
+    async fn first_commit_missing_etag_is_verified_without_a_second_write() {
+        let root = tempfile::tempdir().unwrap();
+        let remote = Memory::default();
+        remote.state.lock().unwrap().omit_etag_after_commit = 1;
+        let plan = prepare(root.path(), &remote, &config(), "binding", scope())
+            .await
+            .unwrap();
+        let done = publish(root.path(), &remote, &config(), &plan.id, "binding", || {
+            Ok(())
+        })
+        .await
+        .unwrap();
+        assert_eq!(done.phase, "published");
+        assert_eq!(
+            remote
+                .writes()
+                .iter()
+                .filter(|p| p.as_str() == POINTER)
+                .count(),
+            1
+        );
+    }
+    #[tokio::test]
+    async fn lost_commit_reply_can_be_confirmed_by_reading_without_republication() {
+        let root = tempfile::tempdir().unwrap();
+        let remote = Memory::default();
+        let plan = prepare(root.path(), &remote, &config(), "binding", scope())
+            .await
+            .unwrap();
+        remote.lose_reply();
+        let done = publish(root.path(), &remote, &config(), &plan.id, "binding", || {
+            Ok(())
+        })
+        .await
+        .unwrap();
+        assert_eq!(done.phase, "published");
+        assert_eq!(
+            remote
+                .writes()
+                .iter()
+                .filter(|p| p.as_str() == POINTER)
+                .count(),
+            1
+        );
+    }
+    #[tokio::test]
+    async fn unconfirmed_commit_keeps_original_operation_and_never_claims_no_write() {
+        let root = tempfile::tempdir().unwrap();
+        let remote = Memory::default();
+        remote.state.lock().unwrap().omit_etag_after_commit = 3;
+        let plan = prepare(root.path(), &remote, &config(), "binding", scope())
+            .await
+            .unwrap();
+        let error = publish(root.path(), &remote, &config(), &plan.id, "binding", || {
+            Ok(())
+        })
+        .await
+        .unwrap_err();
+        assert_eq!(error.code, "publication_unconfirmed");
+        assert!(error.message.contains("可能已写入"));
+        assert_eq!(
+            read_plan(root.path(), &plan.id, "binding").unwrap().phase,
+            "publishing"
+        );
+        let done = publish(root.path(), &remote, &config(), &plan.id, "binding", || {
+            Ok(())
+        })
+        .await
+        .unwrap();
+        assert_eq!(done.phase, "published");
+        assert_eq!(
+            remote
+                .writes()
+                .iter()
+                .filter(|p| p.as_str() == POINTER)
+                .count(),
+            1
+        );
     }
     fn config() -> WebDavConfig {
         WebDavConfig {
@@ -579,6 +728,7 @@ pub(super) mod tests {
             .await
             .unwrap();
         remote.state.lock().unwrap().drop_pointer_reply = true;
+        remote.state.lock().unwrap().omit_etag_after_commit = 3;
         assert!(
             publish(root.path(), &remote, &config(), &plan.id, "binding", || Ok(
                 ()

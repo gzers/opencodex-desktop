@@ -105,12 +105,71 @@ fn remote_operation<T>(
 }
 #[tauri::command]
 pub async fn config_sync_scope(
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+    home: tauri::State<'_, crate::state::SharedHomeDir>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<config_remote::Scope> {
     let root = data_root.0.clone();
-    tauri::async_runtime::spawn_blocking(move || config_remote::load_scope(&root))
-        .await
-        .map_err(|_| invalid("sync_scope", "设备范围读取中断"))?
+    let upstream = context.opencodex_home.clone();
+    let home = home.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        let result = remote_operation(&root, |transport, config, binding, unchanged| {
+            let password = crate::modules::model_config::transfer_protection::read_password(&root)?;
+            let previous =
+                crate::modules::model_config::transfer_protection::previous_password(&root)?;
+            let scope = tauri::async_runtime::block_on(config_remote::open_scope(
+                &root,
+                transport,
+                config,
+                binding,
+                &upstream,
+                &home,
+                password.as_deref().map(|p| p.as_str()),
+                previous.as_deref().map(|p| p.as_str()),
+                unchanged,
+            ))?;
+            unchanged()?;
+            Ok(scope)
+        });
+        match result {
+            Err(e) if e.code == "not_configured" => config_remote::load_scope(&root),
+            other => other,
+        }
+    })
+    .await
+    .map_err(|_| invalid("sync_scope", "设备范围读取中断"))?
+}
+
+#[tauri::command]
+pub async fn config_sync_observe(
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<config_remote::RemoteVersion> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        // A read-only observation does not take the publication lock or create
+        // manager-state files. Pointer read-back and the endpoint revision guard
+        // reject races without blocking a user's range/sync operation.
+        let (_, config, binding) = active_remote(&root)?;
+        let password = crate::modules::model_config::transfer_protection::read_password(&root)?;
+        let previous = crate::modules::model_config::transfer_protection::previous_password(&root)?;
+        let result = tauri::async_runtime::block_on(config_remote::observe_version(
+            &ReqwestWebDavTransport::new(),
+            &config,
+            password.as_deref().map(|p| p.as_str()),
+            previous.as_deref().map(|p| p.as_str()),
+        ))?;
+        if active_remote(&root)?.2 != binding {
+            return Err(invalid(
+                "endpoint_changed",
+                "读取版本期间连接已改变，未采用旧结果",
+            ));
+        }
+        Ok(result)
+    })
+    .await
+    .map_err(|_| invalid("remote_observation", "云端版本读取中断，请重新检测"))?
 }
 #[tauri::command]
 pub async fn config_sync_save_scope(
@@ -124,6 +183,7 @@ pub async fn config_sync_save_scope(
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         scope.cloud_binding = active_remote(&root).ok().map(|v| v.2);
+        config_remote::require_known_scope(&root)?;
         config_remote::save_scope(&root, scope)
     })
     .await

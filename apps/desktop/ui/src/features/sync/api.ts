@@ -27,6 +27,9 @@ export interface SyncConfigDto {
   endpoint: SyncEndpointDto | null
 }
 
+export interface RemoteVersion { remoteExists: boolean; remoteRevision: string | null; remoteSavedAt: string | null }
+export const remoteVersionApi = { read: async () => (await import('@tauri-apps/api/core')).invoke<RemoteVersion>('config_sync_observe') }
+
 export interface SaveSyncEndpointRequest {
   baseUrl: string
   remotePath: string

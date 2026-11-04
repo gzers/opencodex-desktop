@@ -416,7 +416,7 @@ describe('model transfer review', () => {
     expect(wrapper.text()).toContain('本机配置 → 云端');expect(wrapper.text()).toContain('1 项变化');expect(wrapper.text()).toContain('3 项保持不变');expect(wrapper.text()).toContain('测试族')
     expect(wrapper.findAll('label').some(l=>l.text()==='更新前备份')).toBe(false)
     await wrapper.findAll('button').find(b=>b.text()==='确认更新')!.trigger('click');await flushPromises()
-    expect(modelTransferApi.publish).toHaveBeenCalledExactlyOnceWith('up');expect(createBackup).not.toHaveBeenCalled();expect(useSyncStore().webdavState).toBe('synced');wrapper.unmount()
+    expect(modelTransferApi.publish).toHaveBeenCalledExactlyOnceWith('up');expect(createBackup).not.toHaveBeenCalled();expect(useSyncStore().webdavState).toBe('synced');expect(useSyncStore().observation?.remoteRevision).toBe('up');wrapper.unmount()
   })
   it('downloads a newer remote snapshot, backs up first when ticked, and never writes on cancel',async()=>{
     vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
@@ -443,7 +443,7 @@ describe('model transfer review', () => {
     expect(wrapper.text()).toContain('所选内容已一致，无需更新。');expect(wrapper.findAll('label').some(l=>l.text()==='更新前备份')).toBe(false)
     expect(wrapper.findAll('button').find(b=>b.text()==='确认更新')).toBeUndefined()
     await wrapper.find('button[aria-label="关闭"]').trigger('click');await flushPromises()
-    expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(useSyncStore().webdavState).toBe('synced');wrapper.unmount()
+    expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(useSyncStore().webdavState).toBe('connected');expect(useSyncStore().observation?.comparison).toBe('same');wrapper.unmount()
   })
   it.each(['unreliable_save_time','same_instant_different_content'])('blocks every write when direction is undetermined: %s',async reason=>{
     vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
@@ -463,7 +463,7 @@ describe('model transfer review', () => {
     const wrapper=render(true);await flushPromises();await chooseExport(wrapper,'测试族')
     await wrapper.findAll('button').find(b=>b.text()==='同步')!.trigger('click');await flushPromises()
     expect(wrapper.text()).toContain('所选内容已一致，无需更新。');expect(wrapper.findAll('button').find(b=>b.text()==='确认更新')).toBeUndefined()
-    expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(modelTransferApi.download).not.toHaveBeenCalled();expect(useSyncStore().webdavState).toBe('synced')
+    expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(modelTransferApi.download).not.toHaveBeenCalled();expect(useSyncStore().webdavState).toBe('connected');expect(useSyncStore().observation?.comparison).toBe('same')
     expect(useSyncStore().observation?.remoteTime).toBe('2026-11-04T04:00:00Z');wrapper.unmount()
   })
   it('asks for the MCP source inside the sync preview and skips an unpicked conflict',async()=>{

@@ -2,7 +2,7 @@
 import { emptyContent, emptyRules, modelApi, type ModelSnapshot, type ChannelPolicy } from '@/features/models/api'
 import { useModelsStore } from '@/features/models/store'
 import {modelTransferApi,assetDetailApi,transferFileDialog,cloudCatalogApi,transferChoiceApi,transferProtectionApi,importCredentialChoiceApi,transferResultApi,type TransferChoice,type FilePlan,type TransferResult} from '@/features/sync/modelTransfer'
-import {importedConnectionApi,syncEndpointApi} from '@/features/sync/api'
+import {importedConnectionApi,syncEndpointApi,remoteVersionApi} from '@/features/sync/api'
 export function installModelFixtures() {
   const channels:ChannelPolicy[]=Array.from({length:24},(_,i)=>{
     const id=crypto.randomUUID();const node=crypto.randomUUID();
@@ -77,6 +77,7 @@ export function installModelFixtures() {
   const choices=new Map<boolean,TransferChoice>();transferChoiceApi.load=async(remote)=>structuredClone(choices.get(remote)??null);transferChoiceApi.save=async(remote,choice)=>{choices.set(remote,structuredClone(choice));return structuredClone(choice)}
   let protection={enabled:false,hasPassword:false};transferProtectionApi.load=async()=>({...protection});transferProtectionApi.save=async(enabled,password)=>{protection={enabled,hasPassword:!!password||protection.hasPassword};return {...protection}}
   let importPrefs={keys:true,extensions:true};importCredentialChoiceApi.load=async()=>({...importPrefs});importCredentialChoiceApi.save=async(value)=>{importPrefs={...value}}
+  remoteVersionApi.read=async()=>({remoteExists:true,remoteRevision:'fixture-snapshot',remoteSavedAt:null});
   let endpointRevision=0;let endpoint={endpointId:'fixture-webdav',revision:'a'.repeat(64),url:'https://dav.example.test',remotePath:'/config-sync',username:'fixture-user',credentialRefId:'fixture-opaque',tlsPolicy:'verify_required',payloadProtection:'integrity_only',conflictPolicy:'ask' as const};syncEndpointApi.load=async()=>({endpoint:{...endpoint}});syncEndpointApi.save=async(value)=>{endpoint={...endpoint,revision:(++endpointRevision).toString(16).padStart(64,'0'),url:value.baseUrl,remotePath:value.remotePath,username:value.username};return {endpoint:{...endpoint}}};syncEndpointApi.test=async()=>({connectionState:'synced',operationState:'succeeded',message:'WebDAV 连接成功，当前表单尚未保存。',snapshotId:null,backupId:null,etag:null})
   const frozen=new Map<string,FilePlan>();const results=new Map<string,TransferResult>();let lastResult:string|null=null;
   // Stay inside the explicit in-memory fixture when previews are cancelled.

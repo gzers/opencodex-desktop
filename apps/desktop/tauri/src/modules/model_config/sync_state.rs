@@ -75,6 +75,8 @@ pub struct Check {
     pub local_saved_at: Option<String>,
     #[serde(default)]
     pub remote_saved_at: Option<String>,
+    #[serde(default)]
+    pub remote_revision: Option<String>,
 }
 
 /// 同步预览中的一项变化。
@@ -258,6 +260,7 @@ pub(super) fn compare_content(
         last_synced_at: None,
         local_saved_at: local.saved_at.clone(),
         remote_saved_at: remote.and_then(|r| r.saved_at.clone()),
+        remote_revision: None,
     }
 }
 pub(super) fn last_synced_at(root: &Path, binding: &str) -> Option<String> {

@@ -103,6 +103,100 @@ fn same_instant(a: Option<&str>, b: Option<&str>) -> bool {
     a.and_then(|s| chrono::DateTime::parse_from_rfc3339(s).ok())
         == b.and_then(|s| chrono::DateTime::parse_from_rfc3339(s).ok())
 }
+#[tokio::test]
+async fn post021_version_observation_reads_existing_snapshot_without_business_writes() {
+    let cloud = Memory::default();
+    let empty = observe_version(&cloud, &config(), None, None)
+        .await
+        .unwrap();
+    assert!(!empty.remote_exists);
+    assert!(cloud.writes().is_empty());
+    let legacy = Device::new();
+    preferences::save_preferences(
+        &PreferencesStore::new(legacy.root()).path(),
+        &Preferences {
+            interface_scale: 125,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    upload(&legacy, &cloud).await;
+    let before = legacy.bytes();
+    let writes = cloud.writes();
+    let unknown = observe_version(&cloud, &config(), None, None)
+        .await
+        .unwrap();
+    assert!(unknown.remote_exists && unknown.remote_revision.is_some());
+    assert!(
+        unknown.remote_saved_at.is_none(),
+        "upload time must not certify unknown legacy content"
+    );
+    assert_eq!(before, legacy.bytes());
+    assert_eq!(writes, cloud.writes());
+    if let Some(out) = std::env::var_os("OCXD_POST021_FIXTURE_DIR") {
+        cloud.write_synthetic_fixture(&Path::new(&out).join("unknown"));
+    }
+    legacy.save_at(150, "2026-11-04T04:00:00Z");
+    let known_cloud = Memory::default();
+    upload(&legacy, &known_cloud).await;
+    let known = observe_version(&known_cloud, &config(), None, None)
+        .await
+        .unwrap();
+    if let Some(out) = std::env::var_os("OCXD_POST021_FIXTURE_DIR") {
+        known_cloud.write_synthetic_fixture(&Path::new(&out).join("known"));
+    }
+    assert_ne!(unknown.remote_revision, known.remote_revision);
+    assert!(same_instant(
+        known.remote_saved_at.as_deref(),
+        Some("2026-11-04T04:00:00Z")
+    ));
+}
+
+#[tokio::test]
+async fn post021_first_empty_remote_catalog_selects_local_objects_once() {
+    file_objects::test_credentials::install();
+    let root = tempfile::tempdir().unwrap();
+    let upstream = tempfile::tempdir().unwrap();
+    let home = tempfile::tempdir().unwrap();
+    std::fs::write(upstream.path().join("config.json"), br#"{"providers":{"local":{"adapter":"openai-chat","baseUrl":"https://fixture.invalid/v1","models":["one"],"selectedModels":["one"]}}}"#).unwrap();
+    let cloud = Memory::default();
+    let first = open_scope(
+        root.path(),
+        &cloud,
+        &config(),
+        "fixture",
+        upstream.path(),
+        home.path(),
+        None,
+        None,
+        || Ok(()),
+    )
+    .await
+    .unwrap();
+    assert_eq!(first.channel_ids.len(), 1);
+    assert!(!first.template_ids.is_empty());
+    let mut chosen = first;
+    chosen.channel_ids.clear();
+    save_scope(root.path(), chosen.clone()).unwrap();
+    let next = open_scope(
+        root.path(),
+        &cloud,
+        &config(),
+        "fixture",
+        upstream.path(),
+        home.path(),
+        None,
+        None,
+        || Ok(()),
+    )
+    .await
+    .unwrap();
+    assert_eq!(
+        chosen, next,
+        "an explicit empty choice is not a new first run"
+    );
+    assert!(cloud.writes().is_empty());
+}
 #[test]
 fn actual_preference_save_readback_noop_touch_copy_and_legacy_are_distinct() {
     let d = Device::new();
