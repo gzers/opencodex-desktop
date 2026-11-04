@@ -122,3 +122,6 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05用户确认有可用本地Windows环境，采用继续交Windows对话补验。接续范围仍取WINDOWS-FOLLOWUP.md：最新代码bd7c0fe8c、同源Windows原生/CI、物理桌面材质性能/MSVC构建、正式客户端默认重启adapter；不绕过原门禁。当前本机宿主对话工具只返回local，无Windows对话地址，提示词已备妥但未实际发送/未据此写已开工。接收真实提交和原生证据后由L继续最终发布收口。
+
+
+2026-11-05 CI基础设施缺验：最终HEAD bd7c0fe8c / run41868797161的Mac frontend126709885314、backend126709885804均未获runner/未执行steps，于16:50:25Z被取消；GitHub annotations明确macOS ARM容量不足，多次分配失败。按原job单独重跑返回不能重跑，父run中Windows仍运行，故待终态再补原检查，不换架构、不降测试、不把取消写通过。Windows本轮后端回归仍进行；前一同产品源Windows回归、凭据保护、官方运行包升级/离线重装已通过但最终EXE仍编译，不替代最新探针验证。证据ci-capacity/review.json；Windows实机与全部发行门未变。

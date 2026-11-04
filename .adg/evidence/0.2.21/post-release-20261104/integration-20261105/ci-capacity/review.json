@@ -1,0 +1,30 @@
+{
+  "observedAt": "2026-11-04T16:56:28.137969+00:00",
+  "run": 41868797161,
+  "head": "bd7c0fe8ccecfa39e0706c885dc233f3854dab74",
+  "jobs": [
+    {
+      "id": 126709885314,
+      "name": "frontend",
+      "conclusion": "cancelled",
+      "steps": [],
+      "runner_name": ""
+    },
+    {
+      "id": 126709885804,
+      "name": "backend",
+      "conclusion": "cancelled",
+      "steps": [],
+      "runner_name": ""
+    }
+  ],
+  "cause": "The job was not acquired by Runner of type hosted even after multiple attempts",
+  "notice": "Due to capacity constraints, jobs targeting macOS arm64 runners may experience longer queue times.",
+  "rerunAttempt": {
+    "command": "gh run rerun 41868797161 --job 126709885314",
+    "exitCode": 1,
+    "output": "job 126709885314 cannot be rerun"
+  },
+  "nextAction": "Wait original Windows job for run terminal, then retry original cancelled checks without changing architecture or weakening required tests.",
+  "interpretation": "Infrastructure cancellation with no runner/steps is missing evidence, neither product failure nor pass. Local Mac evidence retained; whole release stays incomplete."
+}

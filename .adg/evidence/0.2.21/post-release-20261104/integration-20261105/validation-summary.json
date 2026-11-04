@@ -35,7 +35,7 @@
     "clippyFinal": "passed all-targets integration-test -D warnings",
     "build": "UI typecheck/build and debug app passed; adhoc, not release installer",
     "windowsProbeUnits": "35 passed after backup/recovery-journal distinction",
-    "windowsCI": "queued; not passed"
+    "windowsCI": "41868797161 Windows backend regression passed, native credential protection in progress; final EXE smoke pending"
   },
   "pending": [
     "Windows final-source native and CI",
@@ -71,5 +71,13 @@
     "delivery": "prompt updated, local app lists local host only; not sent to Windows thread",
     "prompt": "WINDOWS-FOLLOWUP.md",
     "acceptance": "pending actual Windows evidence"
+  },
+  "macosCI": {
+    "run": 41868797161,
+    "frontend": "cancelled before runner acquired",
+    "backend": "cancelled before runner acquired",
+    "cause": "The job was not acquired by Runner of type hosted even after multiple attempts",
+    "retry": "single-job rerun rejected while parent still active; retry after terminal",
+    "evidence": "ci-capacity/review.json"
   }
 }

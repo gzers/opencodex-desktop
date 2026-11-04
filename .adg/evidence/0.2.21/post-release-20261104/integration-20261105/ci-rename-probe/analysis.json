@@ -7,5 +7,13 @@
   "change": "Default exactly one prewrite and no recovery journal; only expected provider rename requires exactly one recovery journal as well, numeric images only, exact config before/after retained. Earlier backups and cancel assertions unchanged.",
   "tests": "35 passed, including rename opt-in and invalid postimage/unexpected-file negatives",
   "nativeRecheck": "pending; do not declare old Windows failure resolved on native evidence yet",
-  "productChanged": false
+  "productChanged": false,
+  "repeatOnProductWithMacFix": {
+    "run": 41866361056,
+    "job": 126701446802,
+    "head": "c71a8cf1eef28db5de9ba82b5b599bdc1336678f",
+    "failure": "same assertModelFileWrite 2 != 1 at remaining A rename; old probe before bd7c0fe8c correction",
+    "log": "windows-job-126701446802.log",
+    "backendRegressionAndNativeCredentialAndManagedUpgrade": "passed; final EXE smoke failed; no full success claim"
+  }
 }
