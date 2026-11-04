@@ -40,19 +40,22 @@ test('non-pausing CDP observer really observes a non-writable invoke and never r
  const driver={call:(method,args)=>session.post(method,args),evaluate:async expression=>{const value=await session.post('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});assert(!value.exceptionDetails);return value.result.value},invoke:command=>window.__TAURI_INTERNALS__.invoke(command)}
  const observer=await observe021Ipc(driver)
  await driver.invoke('model_file_credential')
+ await driver.invoke('model_agent_preferences')
  const result=await observer.finish()
- assert.deepEqual(result.commands,['app_about','model_file_credential']);assert.deepEqual(calls,result.commands)
+ assert.deepEqual(result.commands,['app_about','model_file_credential','model_agent_preferences']);assert.deepEqual(calls,result.commands)
  assert.deepEqual(Object.getOwnPropertyDescriptor(window.__TAURI_INTERNALS__,'invoke'),descriptor)
  assert.equal(globalThis.__ocx021IpcTrace,undefined)
- const failed=await observe021Ipc(driver)
- await driver.invoke('model_node_measure') // Synthetic Node function, never real backend/network.
- await assert.rejects(failed.finish(),/Unexpected native command/)
- assert.equal(globalThis.__ocx021IpcTrace,undefined,'failed observations must remove their trace and breakpoint')
+ for(const command of ['model_node_measure','model_agent_preferences_save']){
+  const failed=await observe021Ipc(driver)
+  await driver.invoke(command) // Synthetic Node function, never real backend/network.
+  await assert.rejects(failed.finish(),/Unexpected native command/)
+  assert.equal(globalThis.__ocx021IpcTrace,undefined,'failed observations must remove their trace and breakpoint')
+ }
 })
 test('IPC safety requires a live sentinel and rejects network, restart, keychain and extra writes',()=>{
  assert.doesNotThrow(()=>assert021IpcSafety(['app_about','get_sync_config','list_imported_sync_connections']))
  assert.doesNotThrow(()=>assert021IpcSafety(['app_about','model_file_save'],['model_file_save']))
- for(const commands of [[],['model_file_snapshot'],...['model_node_measure','model_channel_discover','model_policy_refresh_cache','test_sync_connection','test_sync_candidate','config_sync_check','config_sync_publish','config_sync_download','activate_imported_sync_connection','model_agent_generate','model_file_save','anything_unreviewed'].map(c=>['app_about',c])])assert.throws(()=>assert021IpcSafety(commands))
+ for(const commands of [[],['model_file_snapshot'],...['model_node_measure','model_channel_discover','model_policy_refresh_cache','test_sync_connection','test_sync_candidate','config_sync_check','config_sync_publish','config_sync_download','activate_imported_sync_connection','model_agent_generate','model_agent_preferences_save','model_file_save','anything_unreviewed'].map(c=>['app_about',c])])assert.throws(()=>assert021IpcSafety(commands))
 })
 
 function renameFixture(){

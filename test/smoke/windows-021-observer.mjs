@@ -5,6 +5,7 @@ import assert from 'node:assert/strict'
 const TRACE='__ocx021IpcTrace'
 const reads=new Set([
  'app_about','get_data_root_config','get_preferences','get_sync_config','get_sync_status',
+ 'model_agent_preferences', // AgentExecutionField mount reads bounded local sandbox preferences.
  'drain_tray_requests','get_status_snapshot','app_status','list_notifications','runtime_source',
  'app_foreground','window_appearance',
  'official_project_facts','official_remote_cache','get_update_status','update_schedule_plan',
