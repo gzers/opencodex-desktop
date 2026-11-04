@@ -22,6 +22,57 @@ use std::{
 };
 
 #[test]
+fn upstream_runtime_username_mask_requires_one_unambiguous_bound_identity() {
+    assert_eq!(
+        bound_runtime_display_path(
+            r"C:\Users\[USER]\npm\codex.cmd",
+            &[r"C:\Users\Fixture User\.codex\config.toml"]
+        ),
+        Some(r"C:\Users\Fixture User\npm\codex.cmd".into())
+    );
+    assert_eq!(
+        bound_runtime_display_path(
+            "/Users/[USER]/.local/bin/codex",
+            &["/Users/测试/.codex", "/Users/测试/work"]
+        ),
+        Some("/Users/测试/.local/bin/codex".into())
+    );
+    assert_eq!(
+        bound_runtime_display_path(
+            r"c:\users\[USER]\codex.exe",
+            &[r"C:\Users\Same\home", r"C:\Users\same\.codex"]
+        ),
+        Some(r"c:\users\same\codex.exe".into())
+    );
+    for (raw, anchors) in [
+        (r"C:\Users\[USER]\codex.exe", vec![r"D:\Users\Fixture"]),
+        (
+            r"C:\Users\[USER]\codex.exe",
+            vec![r"C:\Users\One\home", r"C:\Users\Two\home"],
+        ),
+        (
+            r"C:\Elsewhere\[USER]\codex.exe",
+            vec![r"C:\Elsewhere\Fixture"],
+        ),
+        (
+            r"C:\Users\[USER]\[REDACTED]\codex.exe",
+            vec![r"C:\Users\Fixture"],
+        ),
+        (
+            r"C:\Users\[USER]\[USER]\codex.exe",
+            vec![r"C:\Users\Fixture"],
+        ),
+        ("/Users/[USER]/codex", vec!["/private/tmp/owned"]),
+    ] {
+        assert!(bound_runtime_display_path(raw, &anchors).is_none());
+    }
+    assert_eq!(
+        bound_runtime_display_path("/opt/codex", &[]),
+        Some("/opt/codex".into())
+    );
+}
+
+#[test]
 fn current_client_binding_requires_owned_absolute_paths_and_validated_runtime() {
     let root = tempfile::tempdir().unwrap();
     let home = root.path().join("home");

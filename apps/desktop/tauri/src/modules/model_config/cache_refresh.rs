@@ -10,6 +10,8 @@ use serde::{Deserialize, Serialize};
 #[cfg(test)]
 use std::path::Path;
 use std::time::Duration;
+#[path = "client_npm_runtime.rs"]
+pub mod client_npm_runtime;
 #[path = "client_selection_rename.rs"]
 pub mod client_selection_rename;
 #[path = "saved_runtime_reconcile.rs"]
@@ -72,6 +74,62 @@ struct ClientBinding {
     executable: std::path::PathBuf,
     home: std::path::PathBuf,
     codex_home: std::path::PathBuf,
+}
+// The upstream settings DTO deliberately displays C:\Users\[USER] (and
+// /Users/[USER]) instead of its machine path. Restore only the username
+// component proved by this already-bound client's unredacted paths. Never
+// expand a masked arbitrary segment, another drive, or an ambiguous identity.
+fn bound_runtime_display_path(raw: &str, anchors: &[&str]) -> Option<String> {
+    if raw.contains("[REDACTED]") || raw.chars().any(char::is_control) {
+        return None;
+    }
+    let Some(at) = raw.find("[USER]") else {
+        return Some(raw.to_owned());
+    };
+    if raw.matches("[USER]").count() != 1 {
+        return None;
+    }
+    let prefix = &raw[..at];
+    let suffix = &raw[at + "[USER]".len()..];
+    let windows = prefix.len() == 9
+        && prefix.as_bytes()[0].is_ascii_alphabetic()
+        && prefix[1..].eq_ignore_ascii_case(r":\Users\");
+    if !(windows || matches!(prefix, "/Users/" | "/home/"))
+        || !suffix.starts_with(if windows { '\\' } else { '/' })
+    {
+        return None;
+    }
+    let mut user = None;
+    for anchor in anchors {
+        let head = anchor.get(..prefix.len());
+        let same = head.is_some_and(|head| {
+            if windows {
+                head.eq_ignore_ascii_case(prefix)
+            } else {
+                head == prefix
+            }
+        });
+        if !same {
+            continue;
+        }
+        let value = anchor[prefix.len()..]
+            .split(if windows { '\\' } else { '/' })
+            .next()?;
+        if value.is_empty() || value.contains(['[', ']', '/', '\\']) {
+            return None;
+        }
+        if user.is_some_and(|before: &str| {
+            if windows {
+                !before.eq_ignore_ascii_case(value)
+            } else {
+                before != value
+            }
+        }) {
+            return None;
+        }
+        user = Some(value);
+    }
+    Some(format!("{prefix}{}{suffix}", user?))
 }
 fn verify_client_route(binding: &ClientBinding, management_base: &str) -> ModelResult<String> {
     #[derive(Deserialize, Default)]
@@ -176,6 +234,14 @@ fn client_binding(
         return Err(invalid_binding());
     }
     let raw = runtime["path"].as_str().ok_or_else(invalid_binding)?;
+    let raw = bound_runtime_display_path(
+        raw,
+        &[
+            home.to_str().ok_or_else(invalid_binding)?,
+            config_path.to_str().ok_or_else(invalid_binding)?,
+        ],
+    )
+    .ok_or_else(invalid_binding)?;
     let executable =
         if let Some(relative) = raw.strip_prefix("~/").or_else(|| raw.strip_prefix("~\\")) {
             home.join(relative)
@@ -190,6 +256,18 @@ fn client_binding(
     {
         return Err(invalid_binding());
     }
+    let executable = if cfg!(windows)
+        && executable
+            .extension()
+            .is_some_and(|extension| extension.eq_ignore_ascii_case("cmd"))
+    {
+        client_npm_runtime::resolve_npm_native(
+            &executable,
+            runtime["version"].as_str().ok_or_else(invalid_binding)?,
+        )?
+    } else {
+        executable
+    };
     Ok(Some(ClientBinding {
         executable,
         home,
