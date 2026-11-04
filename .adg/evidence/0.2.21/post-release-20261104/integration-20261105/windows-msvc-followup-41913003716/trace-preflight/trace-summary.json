@@ -1,0 +1,15 @@
+{
+  "root": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-windows-final-msvc-41913003716/perf/sandbox",
+  "durationMs": 1000,
+  "result": "fail",
+  "acceptance": false,
+  "target": {
+    "id": "CA4996A27928C7C40B26F9353F611195",
+    "url": "http://tauri.localhost/#models"
+  },
+  "foregroundBefore": false,
+  "error": {
+    "message": "native foreground required before trace; reconnect/unlock RDP first",
+    "stack": "AssertionError [ERR_ASSERTION]: native foreground required before trace; reconnect/unlock RDP first\n    at file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/trace-performance.mjs:20:3"
+  }
+}

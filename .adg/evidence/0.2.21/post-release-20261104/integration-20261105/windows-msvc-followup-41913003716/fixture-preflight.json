@@ -1,0 +1,29 @@
+{
+  "result": "fixture-preflight-passed",
+  "acceptance": false,
+  "nativeExecuted": false,
+  "checks": [
+    {
+      "stage": "initial",
+      "channels": 1,
+      "templates": 1,
+      "digests": "matched independently with Python",
+      "credentials": 0,
+      "mutations": 0
+    },
+    {
+      "stage": "later",
+      "channels": 2,
+      "templates": 2,
+      "digests": "matched independently with Python",
+      "credentials": 0,
+      "mutations": 0
+    }
+  ],
+  "exactInitialExpectation": {
+    "channels": 2,
+    "templates": 18
+  },
+  "laterObjectsExcludedFromInitialExpectation": true,
+  "initialCloudObjectsUnchangedInLaterStage": true
+}

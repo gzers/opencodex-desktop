@@ -1,0 +1,78 @@
+{
+  "classification": "invalid-disconnected-background-sample",
+  "acceptance": false,
+  "reason": "performance sample lost native foreground",
+  "cases": [
+    {
+      "name": "static-overview-high",
+      "durationMs": 30014.400000095367,
+      "p95": 18.799999999995634,
+      "max": 21.400000000001455,
+      "over6B": 0,
+      "foreground": false,
+      "strategy": {
+        "setting": "high",
+        "effective": "high",
+        "visible": false,
+        "lightAllowed": false,
+        "ambientAllowed": false,
+        "animated": false,
+        "solid": false
+      },
+      "diagnostics": {
+        "callbackCostMs": {
+          "samples": 1654,
+          "p50": 0,
+          "p95": 0,
+          "max": 0.10000038146972656
+        },
+        "callbackDispatchDelayMs": {
+          "samples": 1654,
+          "p50": 0.09999980926659191,
+          "p95": 0.19999999999708962,
+          "max": 3.3999996185302734
+        },
+        "actualScrollRange": null,
+        "note": "Callback cost excludes later style/layout/paint/GPU work; dispatch delay alone cannot identify the bottleneck. Acceptance still uses the original frame-interval budget."
+      }
+    },
+    {
+      "name": "scroll-detail-high",
+      "durationMs": 30000.699999809265,
+      "p95": 18.80000000000291,
+      "max": 22.099999999998545,
+      "over6B": 0,
+      "foreground": false,
+      "strategy": {
+        "setting": "high",
+        "effective": "high",
+        "visible": false,
+        "lightAllowed": false,
+        "ambientAllowed": false,
+        "animated": false,
+        "solid": false
+      },
+      "diagnostics": {
+        "callbackCostMs": {
+          "samples": 1645,
+          "p50": 0,
+          "p95": 0.10000038146972656,
+          "max": 0.20000028610229492
+        },
+        "callbackDispatchDelayMs": {
+          "samples": 1645,
+          "p50": 0.2999998092636815,
+          "p95": 0.39999990463547874,
+          "max": 6.0999997139006155
+        },
+        "actualScrollRange": {
+          "min": 2,
+          "max": 899,
+          "available": 4215
+        },
+        "note": "Callback cost excludes later style/layout/paint/GPU work; dispatch delay alone cannot identify the bottleneck. Acceptance still uses the original frame-interval budget."
+      }
+    }
+  ],
+  "replacement": "Pending connected/unlocked native foreground trace and original 30s samples; do not count the observed values as pass or product regression"
+}

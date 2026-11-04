@@ -1,0 +1,81 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-MSVC-FOLLOWUP-20261105",
+  "title": "MSVC候选面板竞态、RDP性能和云端首次范围补验",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "用户指定c99071793及run41913003716/artifact13366782216；RDP已采用，预算保持。正式MSIX默认重启仅可证归属一次性实例；不能则如实缺验。旧任务与误停事件保留，不合并main或发布。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-msvc-followup-chat-01a1a68a",
+  "baseline_digest": "ebc3505db5fdb12d25fa1ec3df90489571b290b57e66adeeb17434d4163d0f8f",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/**",
+    "apps/desktop/tauri/src/commands/panel.rs",
+    "apps/desktop/ui/qa/windows-materials.mjs",
+    "apps/desktop/ui/src/components/ui/UiDialog.vue",
+    "apps/desktop/ui/src/features/runtime/motion/meshGlow.ts",
+    "apps/desktop/ui/src/routes/PanelRoute.vue",
+    "apps/desktop/ui/src/styles/base.css",
+    "apps/desktop/ui/src/styles/effects.css",
+    "apps/desktop/ui/src/styles/materials.css",
+    "apps/desktop/ui/tests/materials-production.test.ts",
+    "apps/desktop/ui/tests/post10-panel.test.ts",
+    "test/smoke/post021-windows-final/**"
+  ],
+  "required_checks": [
+    "review:cloud-first-scope",
+    "review:formal-msix-restart",
+    "review:msvc-identity",
+    "review:owned-cleanup",
+    "review:panel-native-races",
+    "review:performance-original-budget",
+    "review:performance-root-cause",
+    "review:scope-no-expansion"
+  ],
+  "acceptance_ids": [
+    "AC-P21-01",
+    "AC-P21-02",
+    "AC-P21-06",
+    "AC-P21-09",
+    "AC-P21-10"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-01",
+      "criterion_digest": "93e234ff42d457bc7cb7212117d3f35e700907a36ecd39f1d9b356cf784187b4"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-02",
+      "criterion_digest": "1d31867128ec40d740f0f82f8c32abd17c167b461348ed564e3cbd5931b9c4d6"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-06",
+      "criterion_digest": "74e1bb24932a1f55e73be8bbe648c32570ffcbe763fc754ac1072f9363ae61e4"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-09",
+      "criterion_digest": "be98e9a1cf0b6c4c728b3cfd000b64aa4a83099905281d671d7958bf80f74f59"
+    },
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-10",
+      "criterion_digest": "1b2d3994f43aa133222bd4f37bb0a50ca85e9c222390330a19fdd703fb782de3"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 2,
+  "summary_digest": "55f4100e87a83927612e30caff34df95c52c94a5d5592a6c98fa560031b22799",
+  "content_digest": "ab1d8f88248c36f1bffd6d32e8b90980bfb2713fbe3bd91fdd38b94e3f411a3b"
+}
