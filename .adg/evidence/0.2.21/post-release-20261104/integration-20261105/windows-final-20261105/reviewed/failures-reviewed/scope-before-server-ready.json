@@ -1,0 +1,54 @@
+{
+  "scenario": "sync-setup",
+  "result": "fail",
+  "root": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-windows-final/first-scope-reviewed/sandbox",
+  "checks": [
+    "real isolated Tauri binding",
+    "real controlled Node/npm/ocx available",
+    "one boundary slash"
+  ],
+  "facts": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "dataRoot": {
+      "activeDataRoot": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\opencodex-home",
+      "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox",
+      "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\opencodex-home",
+      "runtimeActive": true
+    }
+  },
+  "environment": {
+    "node": {
+      "found": true,
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\home\\.local/bin\\node.exe",
+      "version": null
+    },
+    "npm": {
+      "found": true,
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\home\\.local/bin\\npm.cmd",
+      "version": null
+    },
+    "ocx": {
+      "found": true,
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\home\\.local/bin\\ocx.cmd",
+      "version": null
+    },
+    "gate": "ready",
+    "shortCircuited": false,
+    "brewFound": false
+  },
+  "address": "https://127.0.0.1:60441/native021-only",
+  "error": {
+    "message": "scope file missing after bounded wait",
+    "stack": "AssertionError [ERR_ASSERTION]: scope file missing after bounded wait\n    at file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/post021-windows-final/native-regression.mjs:39:181"
+  },
+  "visible": "OpenCodeX-Desktop\nDesktop Manager\n概览\n面板\n模型\n拓展\n同步\n诊断\n设置\n同步\n\n按范围导入、导出与同步 OpenCodex 配置；凭据和登录状态独立选择。\n\n运行中\n文件同步\nWebDAV 同步\n设备间同步\n\n较新版本覆盖所选范围，确认前可查看变化。\n\n同步\n当前WebDAV连接\nhttps://127.0.0.1:60441/native021-only\n连接设置\n\nWebDAV 服务响应不符合协议；本地内容未修改。\n\n重新读取范围目录\n配置对象\n\t范围与凭据\n\n渠道与模型\n\t\n0 / 1\n\n\n模型模版\n\t\n0 / 17\n\n\n桌面偏好\n\t\n1 / 1\n其他凭据\n\n账户按平台能力提供可选范围；当前仅账户信息；以下凭据可另选。\n\n加密同步内容\n\n可选，与连接密码独立。\n\n渠道 API Key\n\n渠道可单独分享，接收方自行填 Key。\n\n扩展凭据\n\n例如 MCP 的 Authorization / 环境变量。\n\n当前不携带凭据\n\nWebDAV 连接已保存：连接设置已保存。\n本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。"
+}

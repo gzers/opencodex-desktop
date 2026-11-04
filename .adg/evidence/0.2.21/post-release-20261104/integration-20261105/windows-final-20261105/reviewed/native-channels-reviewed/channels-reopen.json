@@ -1,0 +1,30 @@
+{
+  "scenario": "channels-reopen",
+  "result": "pass",
+  "root": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-windows-final/first-scope-reviewed/sandbox",
+  "checks": [
+    "real isolated Tauri binding",
+    "reserved name and raw model persisted",
+    "reserved name survives full reopen",
+    "measurement leaves config bytes unchanged"
+  ],
+  "facts": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "dataRoot": {
+      "activeDataRoot": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\opencodex-home",
+      "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox",
+      "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\opencodex-home",
+      "runtimeActive": true
+    }
+  },
+  "internalKey": "channel-3d7bb886db284cc5b6f77aaeb9d31ffe"
+}

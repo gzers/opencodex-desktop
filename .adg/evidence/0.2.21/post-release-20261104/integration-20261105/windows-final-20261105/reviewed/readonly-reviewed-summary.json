@@ -1,0 +1,41 @@
+{
+  "runs": [
+    {
+      "mode": "unknown",
+      "exit": 0,
+      "stdout": "{\"scenario\":\"sync-version\",\"result\":\"pass\",\"checks\":[\"real isolated Tauri binding\",\"distinct version unknown\"]}\n",
+      "stderr": ""
+    },
+    {
+      "mode": "known",
+      "exit": 0,
+      "stdout": "{\"scenario\":\"sync-version\",\"result\":\"pass\",\"checks\":[\"real isolated Tauri binding\",\"distinct version known\"]}\n",
+      "stderr": ""
+    },
+    {
+      "mode": "absent",
+      "exit": 0,
+      "stdout": "{\"scenario\":\"sync-version\",\"result\":\"pass\",\"checks\":[\"real isolated Tauri binding\",\"distinct version absent\"]}\n",
+      "stderr": ""
+    },
+    {
+      "mode": "failed",
+      "exit": 0,
+      "stdout": "{\"scenario\":\"sync-version\",\"result\":\"pass\",\"checks\":[\"real isolated Tauri binding\",\"distinct version failed\"]}\n",
+      "stderr": ""
+    }
+  ],
+  "before": {
+    "opencodex-home/config.json": "404bd9261a4b91a58ce6a2de48525414ee36fa4b62dfb290b5cd4e9a5d471e52",
+    "manager-state/sync-endpoints.json": "998dcdee21496a167fe56cad31fcbf9a0f6d14dd1b4427a3d7f4ebc6aac6af1c",
+    "manager-state/config-sync-scope.json": "fd98e056c2b8a4bcb1e5198669124912cfd9f49f721cf758740fbae70b34a3a8",
+    "manager-state/saved-content-versions.json": "b0d012fa08d8e7ca99c8ace9dfd2f7c569c68e604acdbe7c5b4ad1eaa239d365"
+  },
+  "after": {
+    "opencodex-home/config.json": "404bd9261a4b91a58ce6a2de48525414ee36fa4b62dfb290b5cd4e9a5d471e52",
+    "manager-state/sync-endpoints.json": "998dcdee21496a167fe56cad31fcbf9a0f6d14dd1b4427a3d7f4ebc6aac6af1c",
+    "manager-state/config-sync-scope.json": "fd98e056c2b8a4bcb1e5198669124912cfd9f49f721cf758740fbae70b34a3a8",
+    "manager-state/saved-content-versions.json": "b0d012fa08d8e7ca99c8ace9dfd2f7c569c68e604acdbe7c5b4ad1eaa239d365"
+  },
+  "businessBytesUnchanged": true
+}

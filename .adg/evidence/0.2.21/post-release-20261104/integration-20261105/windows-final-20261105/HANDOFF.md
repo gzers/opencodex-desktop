@@ -1,33 +1,40 @@
-# Windows 最终补验回交
+# Windows 最终补验回交（复核更正）
 
-本次补验采用 `codex/post021-sync-fixes@bd7c0fe8ccecfa39e0706c885dc233f3854dab74`、`docs/governance-main@59b319cf5cac0462985dd969d929f0f8fa8a6168`，另开代码分支 `codex/post021-windows-final`，文档分支 `docs/post021-windows-final`。最终代码补验提交为 `faf8dd9268bcee1f121129de5c7399dcee0fcd5f`；文档提交待本文件与回执提交后记录。
+采用代码 bd7c0fe8ccecfa39e0706c885dc233f3854dab74 和文档 59b319cf5cac0462985dd969d929f0f8fa8a6168。代码贡献分支 codex/post021-windows-final，当前 b2cb82cdee172c16bd597a6b2017b54d40d11d5f；文档贡献分支 docs/post021-windows-final。只改验收驱动，apps 树与指定集成源完全一致。产品运行身份以原生日志 bd7c0fe8c、EXE 哈希 76dc1049…54b778a 为准，新增测试提交没有冒充重建产品。
 
-## 已通过的最终源 Windows 验证
+本文件纠正 68c03436 中不充分或错误的通过声明。旧提交和失败仍可追溯；本批总体结果为未通过，不生成 CERT，不关闭集成验收。
 
-- 最终源产品源码树为 `d55e6064c113a267b5f0d81c36e1c62476377acc`，EXE 源身份日志为 `bd7c0fe8c...`；前端全量 197 个文件、1289 项测试通过。
-- GNU custom-protocol 构建成功。Rust 定向重启/管理/面板测试 38 项加最终全库显式 Node 环境回归 18 项通过；全库首次 981 通过、17 失败、4 忽略的原始日志保留，失败原因是测试要求 `OPENCODEX_TEST_NODE` 而环境未提供，随后以隔离 Node 重跑通过。
-- 独立原生探针单测 44 项通过。改名实际探针使用真实 WebView2/Tauri IPC，验证普通备份、改名恢复目录、精确 config 前后镜像、旧文件保留、待处理记录清除及稳定 ID/相邻对象保护；旧预期遗漏 L2 已采用的 `provider.name` 更新，已在探针合同中修正并加入缺失/旧名反例。
-- 隔离真实 WebView2 中，首次范围生成、真实 WebDAV 地址边界、配置同步范围读回和实际选中项通过。连接使用 `https://127.0.0.1:60441` 自有 TLS 只读夹具；没有真实 WebDAV、没有推理请求或远端业务写入。
-- 已配置隔离连接启动时真实执行只读版本观察；夹具不可达时 UI 显示“读取失败”，观察来源为 `version-check`，没有伪造保存时间、同步成功或快照。缺运行记录重启显示具体 `runtime-port.json` 前置、无需先开面板、保存字节不变并保留重试。
+## 实际验证
 
-证据见 `native/`、`checks/` 和 `source-manifest.json`。原始截图和失败日志未覆盖。
+- 前端 197 文件 / 1289 测试、类型及 Vite 构建通过。GNU debug custom-protocol 构建通过，仅隔离 EXE 副本补 Common Controls v6 资源，不是 MSVC 正式制品。
+- Rust 首次全库 981 通过 / 17 失败 / 4 按原条件忽略。17 个失败均缺显式 OPENCODEX_TEST_NODE；设置 Node24 后对应 Windows 组 18 项通过。定向 cache_refresh25、management3 通过，面板11项在原全库日志中通过。没有执行“显式 Node 后全库再跑”，不把分组复验拼成一次完整绿测。原始及复验日志见 checks/、reviewed/backend/。
+- 最新原生探针单测45项通过。reviewed/model-regression.log 的完整 windows-webview.mjs 已实际 PASS；此前多个失败各自保留。完整 model-ui、native021-behavior、保存通知倒计时、焦点、层叠 X/Escape、取消/确认、模型排序、导入、相邻对象及 Key 保护见 reviewed/model-regression/。
+- 改名备份以真实 WebView2/Tauri 保存产生的文件执行断言：普通保存恰一份写入前备份；改名额外恰一个 rename-UUID 恢复目录，配置前后镜像匹配，旧备份保留。实际备份字节、最终配置和返回稳定 ID 见 reviewed/model-regression/backups/ 和 config-readback.json。L2 已采用 provider.name 更新，旧预期遗漏该字段；新反例仍拒绝旧名/丢名、未知字段或相邻对象变化。
+- reviewed/native-first-scope-reviewed/sync-setup.json 在全新数据根核对全部本地/远端可用渠道和模版 ID 与首次所选 ID 精确相等，并读取真实复选框。此场景远端夹具仅含偏好，remoteObjects=0；证明一条本地合成渠道及17个本地模版首次选中，不能外推为新设备远端独有对象场景。
+- reviewed/native-readonly-reviewed/ 实际通过时间未知、已知版本、无快照、读取失败四态，真实 TLS 夹具仅服务 127.0.0.1:60441。reviewed/readonly-reviewed-summary.json 证明配置、连接、范围、保存时间凭据四个文件的前后字节摘要一致；https-requests.json 保留实际只读 GET。
+- reviewed/native-channels-reviewed/ 中，中文名称、自动生成 channel-* 内部键、真实 loopback 获取 vendor/native-model、保存后改为 openai 显示名并完全重开、节点检测及配置不变均有证据。第一次创建脚本在错误的 aria-label 选择器处停下，先前已通过的获取/保存断言保留；补充 channels-reopen 用真实编辑器字段完成余程。models-reviewed-requests.jsonl 记录两次认证清单 GET、零 POST；未改产品私网准入逻辑。
+- native/native-restart/ 缺 runtime-port.json 时具体前置、无需先开面板、重试入口和配置字节不变通过；只是缺前置失败恢复，不是正式 Codex 默认重启成功证据。该场景先用合成配置种子，保存通知通过实际生产宿主显式打开，未声称自然保存入口的完整正式桌面重启通过。
 
-## 明确未完成项
+## 面板新增失败及恢复
 
-### 物理桌面材质性能与 MSVC
+reviewed/native-panel-reviewed/ 中真实官方 GUI 2.84.0 的常规重开与浮层恢复通过，使用未修改包的 startServer；测试管理依赖拒绝任何桌面重启。原先固定 Bun1.4.2 二进制已不可用，本次使用独立 tools 副本 Bun1.4.4，只运行隔离根。
 
-当前 Windows 会话是 RDP，Win32 会话指标为远程会话，不能作为物理桌面性能通过。仍采集了最终源真实 WebView2 材质性能：Windows build 26100、WebView2 156.0.4314.58、Intel UHD 770 ANGLE D3D11、DPI 192、缩放 200%、Mica/高档、前台；结果只作为 RDP 观测，不能替代物理桌面门禁。原有 RDP 基线失败记录继续保留。
+服务端口从60444变为60446后，快速离开/重开在15秒观察内停于“官方面板加载失败”，服务健康正常。reviewed/native-panel-address-reviewed/panel.json、manager.log 保留失败，日志出现多次队列/锁与Show/Hide交错；根因未确认，不声明是空URL修复本身的问题。reviewed/native-panel-recovery-reviewed/ 证明点击真实“重试加载”恢复，之后两次常规重开及通知浮层恢复通过，配置字节不变。native-official-panel-0.jpg 为 Windows 原生窗口稳定帧。
 
-本机没有 `cl.exe`、`link.exe` 或 Windows SDK，只有 GNU Rust/LLVM 工具链，因此没有 MSVC 正式构建。GNU 构建成功不冒充 MSVC 通过。
+快速路由动作使用真实生产路由 store，间隔10/30ms，是明确隔离的竞态驱动，不是物理鼠标节奏。原生旧视图 close 失败注入未执行；其归属/重试只保留源码及11项面板单测证据。新切源失败仍需集成线复现定位。同步方向与有界ETag在实际 Rust 测试中覆盖，本次没有另跑 Windows 原生发布确认流程，不能把只读 GET 当成原生发布验收。
 
-### 正式 Codex 默认重启
+## 环境阻断
 
-未调用正式默认重启。未修改的官方 Windows adapter 只读发现到当前用户 MSIX：`OpenAI.Codex_26.1027.3384.0_x64__2p2nqsd0c76g0`，AUMID 为 `OpenAI.Codex_2p2nqsd0c76g0!App`。其进程树和 `shell:AppsFolder` relaunch 没有隔离 `CODEX_HOME`/数据根参数；当前实例属于日常同包范围，无法证明可安全只操作一次性实例，因此按门禁停止。OwnedClient 旧证据不代替正式 Codex 默认 adapter。
+用户确认“没有，只有rdp”。当前为 Windows Server2025 build26100、WebView2 156.0.4314.58、Intel UHD770 ANGLE D3D11、DPR2/200%缩放。RDP采样 native/material-performance/performance.json 只作该环境观察；沿用原 B=16.667ms、p95≤2B 和长帧检查，不能替代物理桌面性能门。此前基线/候选RDP失败不改写。
 
-`default-adapter-observation.json`、`packaged-codex-processes.json` 保留了发现结果。没有调用退出、taskkill、AppsFolder 启动，也没有操作日常 Codex。
+reviewed/tooling-reviewed.json 复查 cl.exe/link.exe/vswhere 和标准安装/SDK目录均不可用，MSVC正式构建未执行。GNU成功不代替正式MSVC包。
 
-## 隔离与清理
+正式 Codex 默认 adapter 只读发现 MSIX/AUMID；listProcesses 返回 null，表示枚举未能完成，不表示无进程。旁证显示日常同包 ChatGPT.exe 正在运行；默认发现/AppsFolder 重启不按 CODEX_HOME 限定实例。未调用正式默认退出/重启/读回，没有用 OwnedClient 代替。当前无可证明独立的一次性用户/实例，保持缺验。
 
-所有最终源原生运行使用 `.toolchain/post021-windows-final/**` 独立数据根、合成凭据和 loopback 夹具。日常管理器 PID 24140 未操作；没有真实同步、真实 WebDAV、发布或合并 main。结束后已停止本轮隔离管理器、服务和客户端，并复核无对应监听端口。
+## 隔离越界事件与清理
 
-最终任务保持 `in_progress`，本回交不生成最终 CERT，不关闭十项整版验收；G3/G4 仍需物理桌面、MSVC、正式 Codex 默认 adapter 及最终集成发布门。
+前一阶段固定PID清理 Stop-Process 包含30196，它的实际路径是日常安装目录 D:/Software/Develop/OpenCodeX Desktop/data/runtime/opencodex/node_modules/bun/bin/bun.exe。这越过用户隔离约束，不能再宣称日常进程完全未动或隔离检查通过。随后观察到服务新PID66908（2026-11-05 01:45:17+08），管理器PID24140仍为2026-11-04 19:58:15+08启动；没有对新服务做补偿重启或更改日常配置。
+
+未取得越界前后日常配置字节证据，不能认证该事件零副作用。详见 isolation-incident.json。复核阶段清理按隔离EXE/脚本路径、PID和创建时间匹配；cleanup-reviewed-final.json 证明隔离管理器、服务、Python夹具和指定监听端口已清理，当前日常管理器/服务未再操作。
+
+总体 required_checks 中 physical-material-performance、msvc-build、packaged-codex-default-restart、native-regression（切源失败）、isolation 均未通过；回执须相符。所有任务保持未完成，旧冻结任务/证书不重绑。未合并main、未发布、未跑真实WebDAV或推理。后续需要可用物理桌面/MSVC工具链、可证明归属的正式桌面实例，以及共享面板切源失败的定位；由本机统一集成和发行。
