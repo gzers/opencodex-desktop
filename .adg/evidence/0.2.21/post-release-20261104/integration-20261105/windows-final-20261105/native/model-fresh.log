@@ -1,0 +1,205 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 021 rename must migrate exact routed/default references and preserve all other file content/Keys
++ actual - expected
+... Skipped lines
+
+  {
+    defaultProvider: 'native021-new-e95f5fe0',
+    disabledModels: [
+      'Native-scope-A-pending/fixture-scope-a',
+      'native-sort-fixture/fixture-alpha',
+...
+        ],
++       name: 'native021-new-e95f5fe0',
+-       name: 'native021-old-e95f5fe0',
+        native021Opaque: {
+          keep: 42,
+          literal: 'native021-old-e95f5fe0/leave-opaque'
+        },
+        newModelPolicy: 'off',
+
+    at assert021RenameReadback (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-021-probes.mjs:35:9)
+    at verifyRenameAndNotice (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-021-probes.mjs:178:2)
+    at async verifyWindows021Probes (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-021-probes.mjs:303:17)
+    at async verifyWindowsModelUi (file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-model-ui.mjs:394:13)
+    at async file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/test/smoke/windows-webview.mjs:101:56 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: {
+    defaultProvider: 'native021-new-e95f5fe0',
+    disabledModels: [
+      'Native-scope-A-pending/fixture-scope-a',
+      'native-sort-fixture/fixture-alpha',
+      'native-sort-fixture/fixture-beta',
+      'native-sort-fixture/fixture-gamma',
+      'native021-new-e95f5fe0/Mixed_Case/V2'
+    ],
+    modelPickerOrder: [
+      'Native-scope-A-pending/fixture-scope-a',
+      'native-sort-fixture/fixture-beta',
+      'native-sort-fixture/fixture-alpha',
+      'native-sort-fixture/fixture-gamma',
+      'ocxd_import_0ff16b3677b5478c89191e2770883b6c/fixture-beta',
+      'ocxd_import_0ff16b3677b5478c89191e2770883b6c/fixture-alpha',
+      'ocxd_import_0ff16b3677b5478c89191e2770883b6c/fixture-gamma',
+      'native021-new-e95f5fe0/vendor/a:8b',
+      'native021-old-e95f5fe00/vendor/a:8b',
+      'native021-new-e95f5fe0/vendor-a:8b',
+      'native021-old-e95f5fe00/vendor-a:8b',
+      'native021-new-e95f5fe0/Mixed_Case/V2',
+      'native021-old-e95f5fe00/Mixed_Case/V2'
+    ],
+    providers: {
+      'Native-scope-A-pending': {
+        adapter: 'openai-chat',
+        apiKey: 'native-scope-a-pending-key',
+        authMode: 'key',
+        baseUrl: 'https://a.example.test/v1',
+        disabled: true,
+        modelContextWindows: { 'fixture-scope-a': 96000 },
+        models: [ 'fixture-scope-a' ],
+        name: 'Native-scope-A-pending',
+        newModelPolicy: 'off',
+        selectedModels: []
+      },
+      'native-sort-fixture': {
+        adapter: 'openai-chat',
+        apiKey: 'native-sandbox-key',
+        authMode: 'key',
+        baseUrl: 'https://example.test/v1',
+        disabled: true,
+        models: [ 'fixture-alpha', 'fixture-beta', 'fixture-gamma' ],
+        name: 'Native sort fixture',
+        newModelPolicy: 'off',
+        selectedModels: []
+      },
+      'native021-new-e95f5fe0': {
+        adapter: 'openai-chat',
+        apiKey: 'synthetic-native021-key',
+        authMode: 'key',
+        baseUrl: 'https://native021.invalid/v1',
+        disabled: true,
+        models: [ 'vendor/a:8b', 'vendor-a:8b', 'Mixed_Case/V2' ],
+        name: 'native021-new-e95f5fe0',
+        native021Opaque: { keep: 42, literal: 'native021-old-e95f5fe0/leave-opaque' },
+        newModelPolicy: 'off',
+        selectedModels: [ 'vendor/a:8b', 'vendor-a:8b', 'Mixed_Case/V2' ]
+      },
+      'native021-old-e95f5fe00': {
+        adapter: 'openai-chat',
+        apiKey: 'synthetic-native021-neighbor-key',
+        authMode: 'key',
+        baseUrl: 'https://neighbor.native021.invalid/v1',
+        disabled: true,
+        models: [ 'vendor/a:8b', 'vendor-a:8b', 'Mixed_Case/V2' ],
+        name: 'native021-old-e95f5fe00',
+        newModelPolicy: 'off',
+        selectedModels: [ 'vendor/a:8b', 'vendor-a:8b', 'Mixed_Case/V2' ]
+      },
+      ocxd_import_0ff16b3677b5478c89191e2770883b6c: {
+        adapter: 'openai-chat',
+        apiKey: 'native-sandbox-key',
+        apiKeyPool: [ { id: '23860417', key: 'native-sandbox-key', label: null } ],
+        authMode: 'key',
+        baseUrl: 'https://example.test/v1',
+        disabled: true,
+        headers: {},
+        models: [ 'fixture-alpha', 'fixture-beta', 'fixture-gamma' ],
+        newModelPolicy: 'off',
+        selectedModels: []
+      }
+    }
+  },
+  expected: {
+    disabledModels: [
+      'Native-scope-A-pending/fixture-scope-a',
+      'native-sort-fixture/fixture-alpha',
+      'native-sort-fixture/fixture-beta',
+      'native-sort-fixture/fixture-gamma',
+      'native021-new-e95f5fe0/Mixed_Case/V2'
+    ],
+    modelPickerOrder: [
+      'Native-scope-A-pending/fixture-scope-a',
+      'native-sort-fixture/fixture-beta',
+      'native-sort-fixture/fixture-alpha',
+      'native-sort-fixture/fixture-gamma',
+      'ocxd_import_0ff16b3677b5478c89191e2770883b6c/fixture-beta',
+      'ocxd_import_0ff16b3677b5478c89191e2770883b6c/fixture-alpha',
+      'ocxd_import_0ff16b3677b5478c89191e2770883b6c/fixture-gamma',
+      'native021-new-e95f5fe0/vendor/a:8b',
+      'native021-old-e95f5fe00/vendor/a:8b',
+      'native021-new-e95f5fe0/vendor-a:8b',
+      'native021-old-e95f5fe00/vendor-a:8b',
+      'native021-new-e95f5fe0/Mixed_Case/V2',
+      'native021-old-e95f5fe00/Mixed_Case/V2'
+    ],
+    providers: {
+      'Native-scope-A-pending': {
+        adapter: 'openai-chat',
+        apiKey: 'native-scope-a-pending-key',
+        authMode: 'key',
+        baseUrl: 'https://a.example.test/v1',
+        disabled: true,
+        modelContextWindows: { 'fixture-scope-a': 96000 },
+        models: [ 'fixture-scope-a' ],
+        name: 'Native-scope-A-pending',
+        newModelPolicy: 'off',
+        selectedModels: []
+      },
+      'native-sort-fixture': {
+        adapter: 'openai-chat',
+        apiKey: 'native-sandbox-key',
+        authMode: 'key',
+        baseUrl: 'https://example.test/v1',
+        disabled: true,
+        models: [ 'fixture-alpha', 'fixture-beta', 'fixture-gamma' ],
+        name: 'Native sort fixture',
+        newModelPolicy: 'off',
+        selectedModels: []
+      },
+      'native021-old-e95f5fe00': {
+        adapter: 'openai-chat',
+        apiKey: 'synthetic-native021-neighbor-key',
+        authMode: 'key',
+        baseUrl: 'https://neighbor.native021.invalid/v1',
+        disabled: true,
+        models: [ 'vendor/a:8b', 'vendor-a:8b', 'Mixed_Case/V2' ],
+        name: 'native021-old-e95f5fe00',
+        newModelPolicy: 'off',
+        selectedModels: [ 'vendor/a:8b', 'vendor-a:8b', 'Mixed_Case/V2' ]
+      },
+      ocxd_import_0ff16b3677b5478c89191e2770883b6c: {
+        adapter: 'openai-chat',
+        apiKey: 'native-sandbox-key',
+        apiKeyPool: [ { id: '23860417', key: 'native-sandbox-key', label: null } ],
+        authMode: 'key',
+        baseUrl: 'https://example.test/v1',
+        disabled: true,
+        headers: {},
+        models: [ 'fixture-alpha', 'fixture-beta', 'fixture-gamma' ],
+        newModelPolicy: 'off',
+        selectedModels: []
+      },
+      'native021-new-e95f5fe0': {
+        adapter: 'openai-chat',
+        apiKey: 'synthetic-native021-key',
+        authMode: 'key',
+        baseUrl: 'https://native021.invalid/v1',
+        disabled: true,
+        models: [ 'vendor/a:8b', 'vendor-a:8b', 'Mixed_Case/V2' ],
+        name: 'native021-old-e95f5fe0',
+        newModelPolicy: 'off',
+        selectedModels: [ 'vendor/a:8b', 'vendor-a:8b', 'Mixed_Case/V2' ],
+        native021Opaque: { literal: 'native021-old-e95f5fe0/leave-opaque', keep: 42 }
+      }
+    },
+    defaultProvider: 'native021-new-e95f5fe0'
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

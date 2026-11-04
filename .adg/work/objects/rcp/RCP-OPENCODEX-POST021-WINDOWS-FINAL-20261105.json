@@ -1,0 +1,148 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-FINAL-20261105",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-FINAL-20261105",
+  "task_digest": "87b4736097886c71ac912ad30ca3b6cbf67587240f49ef53fbbc8ba52efea1bc",
+  "task_summary_digest": "03b29ac60407a2ab9c3bf24c708b3306ad50187487bde88f515ece37b670fc57",
+  "baseline_digest": "756ed5226acffcc0881ffdb6f316d78f98de13969aff2fb6c723e01fd4d0dc47",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/COVERAGE.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/artifact-manifest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/checks/backend-full.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/checks/backend-windows-env-tests.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/checks/frontend-build.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/checks/frontend-tests.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/checks/gnu-build.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/checks/material-performance.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/checks/native-probe-final-unit.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/default-codex/default-adapter-observation.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/default-codex/default-adapter-observe.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/default-codex/packaged-codex-processes.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/environment.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/failures.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/governance/demand.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/governance/desktop-session.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/governance/followup.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/governance/implementation.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/governance/sources.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/material-performance/performance.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/model-final.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/model-final/model-ipc-descriptor.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/model-final/webview.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/model-fresh.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/model-run2.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/native-restart/restart-missing-error.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/native-restart/restart-missing-result.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/native-restart/restart-missing.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/native-sync/sync-setup-result.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/native-sync/sync-setup.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/native-sync/sync-startup-result.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/native-sync/sync-startup.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/native-sync/sync-version-failed.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/native/native-sync/sync-version-failed.png",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/reproduce/default-adapter-observe.ts",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/reproduce/https-service.py",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/reproduce/launch.py",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/reproduce/native-regression.mjs",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/reproduce/run-tests.py",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/source-manifest.json",
+    "test/smoke/post021-windows-final/native-regression.mjs"
+  ],
+  "checks": [
+    {
+      "name": "review:final-source",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:isolation",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:msvc-build",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:native-regression",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:packaged-codex-default-restart",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:physical-material-performance",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:rename-backup-probe",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-01",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-02",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-03",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-04",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-05",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-06",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-07",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-08",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-10",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-04T17:13:13.814436+00:00",
+  "summary": "最终集成Windows补验完成可执行范围；AC-P21-02/06及整版十AC保持未通过或缺验。RDP无法满足物理桌面性能，MSVC/Windows SDK不存在，正式Codex默认adapter无法隔离故未调用。隔离WebView2同步、只读观察、改名备份、缺记录重启和定向检查留有原生证据；不生成CERT、不发布。",
+  "revision": 1,
+  "summary_digest": "0879909f0401645a6424e4c5db9f909cb019841cb2369a0bdd22ace288be2a30",
+  "content_digest": "3780d4fbd6ccd16787ceea6044ed04dcc36da8576664886c618b7e75cb856f68"
+}

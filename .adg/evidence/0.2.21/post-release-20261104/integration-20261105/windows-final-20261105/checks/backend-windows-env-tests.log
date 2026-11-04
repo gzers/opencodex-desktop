@@ -1,0 +1,23 @@
+
+running 18 tests
+test infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper ... ok
+test infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output ... ok
+test infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process ... ok
+test infrastructure::windows_query_job::tests::successful_root_does_not_return_before_its_owned_descendant_exits ... ok
+test modules::about::remote::windows_tests::metadata_failure_retains_command_context_and_both_streams ... ok
+test modules::about::remote::windows_tests::metadata_invalid_json_version_encoding_and_spawn_failures_keep_distinct_reasons ... ok
+test modules::about::remote::windows_tests::metadata_log_creation_failure_stops_before_executing_npm ... ok
+test modules::about::remote::windows_tests::metadata_non_utf8_stderr_keeps_following_diagnostic_lines ... ok
+test modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant ... ok
+test modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant ... ok
+test modules::about::remote::windows_tests::metadata_reads_both_pipes_concurrently_without_treating_stderr_as_failure ... ok
+test modules::about::remote::windows_tests::metadata_stderr_overflow_cleans_descendant ... ok
+test modules::about::remote::windows_tests::metadata_stderr_timeout_cleans_descendant ... ok
+test modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree ... ok
+test modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process ... ok
+test modules::about::remote::windows_tests::metadata_timeout_logs_partial_output_and_keeps_timeout_ipc_classification ... ok
+test modules::about::remote::windows_tests::metadata_windows_extended_paths_preserve_command_working_directory ... ok
+test modules::runtime::install::windows_launcher_tests::generated_launcher_executes_exact_node_and_script_with_literal_special_paths ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 984 filtered out; finished in 18.39s
+
