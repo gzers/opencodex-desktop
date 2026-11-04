@@ -1,0 +1,37 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-HUB-20261104",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104",
+  "task_digest": "8b9da5853121b6980f383000985dbb4772912983185144a48fc2c072076df63e",
+  "task_summary_digest": "0a5747fee526acbd0d74994fd5132d21d1f9447292485a330ab981ede50a95fe",
+  "baseline_digest": "5bacf018d787bf82a1c0e49666777ece8d3d10cb836e2010fe446727d6997a4a",
+  "result": "succeeded",
+  "changed_paths": [
+    "apps/desktop/tauri/assets/panel-hub.js"
+  ],
+  "checks": [
+    {
+      "name": "review:hub-fallback",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/hub/hub.json"
+    },
+    {
+      "name": "review:hub-native",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/hub/hub.json"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-02",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/COVERAGE.json"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-04T13:46:32.208004+00:00",
+  "summary": "W线提交684e85c29f76584de4ab53026dcc315e34b57c62；本回执只报告贡献范围。本子写集原生定向验证通过；整体AC及跨平台/发布不由本回执关闭。",
+  "revision": 1,
+  "summary_digest": "be5687d5aacf6f59215e711c449202572c41650fe315eaf539cf6efdfc72e93a",
+  "content_digest": "921065cfbdea985e8945dce80aa426056b53070f92651dde572ba3f443710249"
+}

@@ -1,0 +1,69 @@
+{
+  "at": "2026-11-04T13:38:40.464Z",
+  "root": {
+    "effects": "high",
+    "glowRender": "mesh",
+    "theme": "dark",
+    "nativeMaterial": "mica",
+    "route": "models"
+  },
+  "focus": {
+    "tag": "INPUT",
+    "label": "验收输入",
+    "text": "",
+    "classes": "input",
+    "value": "原生输入保留"
+  },
+  "dialogs": [
+    {
+      "title": "隔离退出守卫",
+      "rect": {
+        "x": 310,
+        "y": 250.25,
+        "width": 560,
+        "height": 259.5,
+        "top": 250.25,
+        "right": 870,
+        "bottom": 509.75,
+        "left": 310
+      },
+      "blur": "saturate(1.5) blur(8px)",
+      "background": "rgba(34, 36, 42, 0.56)",
+      "focusInside": true,
+      "native": true,
+      "closeDisabled": false,
+      "footer": false,
+      "buttons": [
+        "关闭",
+        "取消",
+        "本地验收"
+      ]
+    },
+    {
+      "title": "新增渠道",
+      "rect": {
+        "x": 165,
+        "y": 161.75,
+        "width": 850,
+        "height": 436.5,
+        "top": 161.75,
+        "right": 1015,
+        "bottom": 598.25,
+        "left": 165
+      },
+      "blur": "saturate(1.5) blur(8px)",
+      "background": "rgba(34, 36, 42, 0.56)",
+      "focusInside": false,
+      "native": true,
+      "closeDisabled": false,
+      "footer": true,
+      "buttons": [
+        "关闭",
+        "新渠道默认协议",
+        "取消",
+        "下一步"
+      ]
+    }
+  ],
+  "menus": []
+}

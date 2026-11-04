@@ -1,0 +1,29 @@
+
+> opencodex-desktop-ui@0.2.21 test
+> vitest --run tests/materials-production.test.ts
+
+
+ RUN  v5.0.0 D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/apps/desktop/ui
+
+ ❯ tests/materials-production.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/materials-production.test.ts [ tests/materials-production.test.ts ]
+TypeError: The URL must be of scheme file
+ ❯ tests/materials-production.test.ts:8:14
+      6| import { expect, it } from 'vitest'
+      7|
+      8| const root = fileURLToPath(new URL('../src/', import.meta.url))
+       |              ^
+      9| function sources(directory: string): string[] {
+     10|   return readdirSync(directory, { withFileTypes: true }).flatMap(entry…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  21:01:14
+   Duration  929ms (environment 99%, worker 1%)
+

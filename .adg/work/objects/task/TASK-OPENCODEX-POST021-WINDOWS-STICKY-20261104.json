@@ -1,0 +1,41 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104",
+  "title": "补齐同根因的共用详情吸顶材质",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "生产CSS扫描发现DetailWorkspace两个共用吸顶面丢失标准滤镜；独立冻结补充路径，仍属S21-POST-02/IMP-30材质写集，不调整布局和业务。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-materials-chat-01a1a68a",
+  "baseline_digest": "5bacf018d787bf82a1c0e49666777ece8d3d10cb836e2010fe446727d6997a4a",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/**",
+    "apps/desktop/ui/src/components/layout/DetailWorkspace.vue"
+  ],
+  "required_checks": [
+    "review:sticky-native",
+    "review:sticky-production-material"
+  ],
+  "acceptance_ids": [
+    "AC-P21-02"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-02",
+      "criterion_digest": "1d31867128ec40d740f0f82f8c32abd17c167b461348ed564e3cbd5931b9c4d6"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 2,
+  "summary_digest": "6dbce2f67b7bce98a145dc0d56306fcc3afcabfb3a1aea13d7c597b928960c7c",
+  "content_digest": "3fb62739d152654926575460f5b1ff83fbc3569ebe03df1286f4629bb5726dbb"
+}

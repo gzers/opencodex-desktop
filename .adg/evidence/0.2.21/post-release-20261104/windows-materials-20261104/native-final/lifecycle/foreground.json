@@ -1,0 +1,58 @@
+{
+  "native": {
+    "platform": "Windows",
+    "material": "mica",
+    "reason": "mica",
+    "theme": "dark",
+    "build": 26100,
+    "transparency": true,
+    "highContrast": false,
+    "composition": true,
+    "active": true,
+    "nativeCaption": true,
+    "backdropAttribute": 2,
+    "dwmResult": 0
+  },
+  "foreground": true,
+  "root": {
+    "effects": "high",
+    "glowRender": "mesh",
+    "theme": "dark",
+    "nativeMaterial": "mica",
+    "route": "sync"
+  },
+  "strategy": {
+    "setting": "high",
+    "effective": "high",
+    "visible": true,
+    "lightAllowed": true,
+    "ambientAllowed": true,
+    "animated": true,
+    "solid": false
+  },
+  "draws": 0,
+  "durationMs": 2000,
+  "documentFocus": true,
+  "dialogs": [
+    {
+      "title": "WebDAV 连接",
+      "blur": "saturate(1.5) blur(8px)",
+      "bg": "rgba(34, 36, 42, 0.56)",
+      "rect": {
+        "x": 230,
+        "y": 129,
+        "width": 720,
+        "height": 502,
+        "top": 129,
+        "right": 950,
+        "bottom": 631,
+        "left": 230
+      }
+    }
+  ],
+  "preferences": {
+    "theme": "dark",
+    "visualEffects": "high",
+    "interfaceScale": 100
+  }
+}

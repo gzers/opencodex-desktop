@@ -1,0 +1,401 @@
+{
+  "phase": "fallback",
+  "expectation": "fixed",
+  "target": {
+    "id": "5D4E9AECAB0DF27B2785B4F8C368A0DC",
+    "url": "http://tauri.localhost/#overview"
+  },
+  "cases": [
+    {
+      "theme": "dark",
+      "tier": "high",
+      "surfaces": [
+        {
+          "name": "notification",
+          "rect": {
+            "x": 24,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 298,
+            "bottom": 164,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "toast",
+          "rect": {
+            "x": 310,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 584,
+            "bottom": 164,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task",
+          "rect": {
+            "x": 596,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 870,
+            "bottom": 164,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "menu",
+          "rect": {
+            "x": 882,
+            "y": 24,
+            "width": 274,
+            "height": 140,
+            "top": 24,
+            "right": 1156,
+            "bottom": 164,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "panel",
+          "rect": {
+            "x": 24,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 298,
+            "bottom": 316,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0.01020408163265306
+        },
+        {
+          "name": "row",
+          "rect": {
+            "x": 310,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 584,
+            "bottom": 316,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "button",
+          "rect": {
+            "x": 596,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 870,
+            "bottom": 316,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(48, 48, 48)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "tag",
+          "rect": {
+            "x": 882,
+            "y": 176,
+            "width": 274,
+            "height": 140,
+            "top": 176,
+            "right": 1156,
+            "bottom": 316,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgb(48, 48, 48)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "selector",
+          "rect": {
+            "x": 24,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 298,
+            "bottom": 468,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(48, 48, 48)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "sticky",
+          "rect": {
+            "x": 310,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 584,
+            "bottom": 468,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "detail-head",
+          "rect": {
+            "x": 596,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 870,
+            "bottom": 468,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "detail-collapse",
+          "rect": {
+            "x": 882,
+            "y": 328,
+            "width": 274,
+            "height": 140,
+            "top": 328,
+            "right": 1156,
+            "bottom": 468,
+            "left": 882
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "overlay-card",
+          "rect": {
+            "x": 24,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 298,
+            "bottom": 620,
+            "left": 24
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "environment",
+          "rect": {
+            "x": 310,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 584,
+            "bottom": 620,
+            "left": 310
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "agent-panel",
+          "rect": {
+            "x": 596,
+            "y": 480,
+            "width": 274,
+            "height": 140,
+            "top": 480,
+            "right": 870,
+            "bottom": 620,
+            "left": 596
+          },
+          "blur": "none",
+          "background": "rgb(38, 38, 38)",
+          "dpr": 2,
+          "contrast": 0
+        },
+        {
+          "name": "task-control",
+          "rect": {
+            "x": 883,
+            "y": 481,
+            "width": 272,
+            "height": 138,
+            "top": 481,
+            "right": 1155,
+            "bottom": 619,
+            "left": 883
+          },
+          "blur": "none",
+          "background": "rgba(255, 255, 255, 0.1)",
+          "dpr": 2,
+          "contrast": 0
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "tier": "high",
+      "rect": {
+        "x": 230,
+        "y": 129,
+        "width": 720,
+        "height": 502,
+        "top": 129,
+        "right": 950,
+        "bottom": 631,
+        "left": 230
+      },
+      "sample": {
+        "x": 250,
+        "y": 461,
+        "width": 680,
+        "height": 90
+      },
+      "blur": "none",
+      "background": "rgb(38, 38, 38)",
+      "font": "13px",
+      "titleFont": "18px",
+      "zoom": "1",
+      "dpr": 2,
+      "focusInside": true,
+      "native": true,
+      "root": {
+        "effects": "high",
+        "glowRender": "mesh",
+        "theme": "dark",
+        "nativeMaterial": "mica",
+        "route": "sync"
+      },
+      "contrast": 0
+    }
+  ],
+  "binding": {
+    "activeDataRoot": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-materials/candidate/sandbox",
+    "opencodexHomeMode": "inside",
+    "opencodexHome": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-materials/candidate/sandbox\\opencodex-home",
+    "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-materials\\candidate\\sandbox",
+    "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-materials\\candidate\\sandbox\\opencodex-home",
+    "runtimeActive": true
+  },
+  "environment": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "native": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "dpr": 2,
+    "viewport": {
+      "width": 1180,
+      "height": 760
+    },
+    "gpu": {
+      "vendor": "Google Inc. (Intel)",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "supports": true,
+    "webkitSupports": false,
+    "root": {
+      "effects": "high",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "overview",
+      "overviewSize": "standard"
+    }
+  },
+  "injection": {
+    "mode": "explicit isolated injection of production @supports-not branch bodies",
+    "branches": 3,
+    "root": {
+      "effects": "high",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "models"
+    },
+    "css": ".sticky-page-tabs[data-stuck=\"true\"][data-v-d7e77756] { background: var(--panel); }\n:root { --glass-fill: var(--panel); --glass-blur-notif: none; --glass-blur: none; --surface-page-bg: var(--panel); --surface-panel-bg: var(--panel); --surface-panel-blur: none; --surface-control-bg: var(--raised); --surface-control-blur: none; --surface-notification-control-blur: none; --surface-control-bg-hover: var(--raised-hover); --surface-overlay-bg: var(--panel); --surface-overlay-blur: none; }\n.detail-workspace-head[data-v-376f02c6] { background: var(--panel); }"
+  },
+  "dialogInjection": {
+    "mode": "explicit isolated injection of production @supports-not branch bodies",
+    "branches": 3,
+    "root": {
+      "effects": "high",
+      "glowRender": "mesh",
+      "theme": "dark",
+      "nativeMaterial": "mica",
+      "route": "sync"
+    },
+    "css": ".sticky-page-tabs[data-stuck=\"true\"][data-v-d7e77756] { background: var(--panel); }\n:root { --glass-fill: var(--panel); --glass-blur-notif: none; --glass-blur: none; --surface-page-bg: var(--panel); --surface-panel-bg: var(--panel); --surface-panel-blur: none; --surface-control-bg: var(--raised); --surface-control-blur: none; --surface-notification-control-blur: none; --surface-control-bg-hover: var(--raised-hover); --surface-overlay-bg: var(--panel); --surface-overlay-blur: none; }\n.detail-workspace-head[data-v-376f02c6] { background: var(--panel); }"
+  },
+  "result": "passed"
+}

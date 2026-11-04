@@ -1,0 +1,37 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-STICKY-20261104",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104",
+  "task_digest": "3fb62739d152654926575460f5b1ff83fbc3569ebe03df1286f4629bb5726dbb",
+  "task_summary_digest": "6dbce2f67b7bce98a145dc0d56306fcc3afcabfb3a1aea13d7c597b928960c7c",
+  "baseline_digest": "5bacf018d787bf82a1c0e49666777ece8d3d10cb836e2010fe446727d6997a4a",
+  "result": "succeeded",
+  "changed_paths": [
+    "apps/desktop/ui/src/components/layout/DetailWorkspace.vue"
+  ],
+  "checks": [
+    {
+      "name": "review:sticky-native",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/production-matrix/production-matrix.json"
+    },
+    {
+      "name": "review:sticky-production-material",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/gallery-matrix/gallery-matrix.json"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-02",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/COVERAGE.json"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-04T13:46:32.204554+00:00",
+  "summary": "W线提交684e85c29f76584de4ab53026dcc315e34b57c62；本回执只报告贡献范围。本子写集原生定向验证通过；整体AC及跨平台/发布不由本回执关闭。",
+  "revision": 1,
+  "summary_digest": "6de7c4ce591cbeb2a664ebad67948d3909deb9ce1d9fd45c7a24222fb4d8a036",
+  "content_digest": "12830af7c1586a298983cd8e2f1850780d4f08bc02d6df27d14bdeca3bfcb8c3"
+}

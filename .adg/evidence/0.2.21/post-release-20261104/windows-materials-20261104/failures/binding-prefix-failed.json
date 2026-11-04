@@ -1,0 +1,20 @@
+{
+  "phase": "production-matrix",
+  "target": {
+    "id": "10CC3679B6A4B7A876AB9C7DFED4469A",
+    "url": "http://tauri.localhost/#settings?section=general"
+  },
+  "cases": [],
+  "binding": {
+    "activeDataRoot": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-materials/candidate/sandbox",
+    "opencodexHomeMode": "inside",
+    "opencodexHome": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-materials/candidate/sandbox\\opencodex-home",
+    "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-materials\\candidate\\sandbox",
+    "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-materials\\candidate\\sandbox\\opencodex-home",
+    "runtimeActive": true
+  },
+  "error": {
+    "message": "renderer binding escapes expected sandbox: currentDataRoot",
+    "stack": "AssertionError [ERR_ASSERTION]: renderer binding escapes expected sandbox: currentDataRoot\n    at file:///D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/post021-windows-materials/apps/desktop/ui/qa/windows-materials.mjs:214:5"
+  }
+}

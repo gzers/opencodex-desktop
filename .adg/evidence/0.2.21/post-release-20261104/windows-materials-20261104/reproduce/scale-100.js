@@ -1,0 +1,1 @@
+(async()=>{const p=document.querySelector('#app').__vue_app__.config.globalProperties.$pinia;await p._s.get('preferences').setScale(100);await new Promise(r=>setTimeout(r,200));return{scale:p._s.get('preferences').data.interfaceScale}})()

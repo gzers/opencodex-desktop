@@ -1,0 +1,63 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104",
+  "task_digest": "11caa4ba62898c0ea63365eec6b50939cb31fdabc20da1b93b179b3524e71c46",
+  "task_summary_digest": "9dedee1dc0efc724ba2070b4fe96e3e9a3ccced100843f6053d2ff87620a0aff",
+  "baseline_digest": "5bacf018d787bf82a1c0e49666777ece8d3d10cb836e2010fe446727d6997a4a",
+  "result": "failed",
+  "changed_paths": [
+    "apps/desktop/ui/qa/materials-build.mjs",
+    "apps/desktop/ui/qa/windows-materials.mjs",
+    "apps/desktop/ui/src/components/ui/UiDialog.vue",
+    "apps/desktop/ui/src/styles/base.css",
+    "apps/desktop/ui/src/styles/effects.css",
+    "apps/desktop/ui/src/styles/materials.css",
+    "apps/desktop/ui/tests/materials-production.test.ts"
+  ],
+  "checks": [
+    {
+      "name": "review:modal-guards",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/inputs"
+    },
+    {
+      "name": "review:performance",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/PERFORMANCE.json"
+    },
+    {
+      "name": "review:readable-fallback",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/native-final/fallback/fallback.json"
+    },
+    {
+      "name": "review:source-scope",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/source-manifest.json"
+    },
+    {
+      "name": "review:surface-inventory",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/surface-inventory.json"
+    },
+    {
+      "name": "review:windows-native-matrix",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/COVERAGE.json"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-02",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/PERFORMANCE.json"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-04T13:46:32.199384+00:00",
+  "summary": "W线提交684e85c29f76584de4ab53026dcc315e34b57c62；本回执只报告贡献范围。视觉/回退/交互通过，远程桌面性能预算未通过；不关闭完整AC，不生成证书，统一集成回写归L。",
+  "revision": 1,
+  "summary_digest": "01945e9211c9c1a8daedce99a89c9dbe3a4478a056fac7e9c5ad1bb2dd026396",
+  "content_digest": "df320af83b9958fa0b3750ec37f61dde7056300bed1208d742f3ccf13058b421"
+}

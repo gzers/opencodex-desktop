@@ -1,0 +1,42 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104",
+  "title": "嵌入面板共用快捷浮层的不支持模糊回退",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "S21-POST-02全表面盘点补充：panel-hub.js原始注入CSS不经Vite压缩，高中档声明正常，但无滤镜能力时仍透明。仅补同主题实底，不改官方页面、命令和窗口配置。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-materials-chat-01a1a68a",
+  "baseline_digest": "5bacf018d787bf82a1c0e49666777ece8d3d10cb836e2010fe446727d6997a4a",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/windows-materials-20261104/**",
+    "apps/desktop/tauri/assets/panel-hub.js",
+    "apps/desktop/ui/qa/**"
+  ],
+  "required_checks": [
+    "review:hub-fallback",
+    "review:hub-native"
+  ],
+  "acceptance_ids": [
+    "AC-P21-02"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-02",
+      "criterion_digest": "1d31867128ec40d740f0f82f8c32abd17c167b461348ed564e3cbd5931b9c4d6"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 2,
+  "summary_digest": "0a5747fee526acbd0d74994fd5132d21d1f9447292485a330ab981ede50a95fe",
+  "content_digest": "8b9da5853121b6980f383000985dbb4772912983185144a48fc2c072076df63e"
+}
