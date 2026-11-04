@@ -1,0 +1,143 @@
+{
+  "scenario": "sync-setup",
+  "result": "pass",
+  "root": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/post021-windows-final/first-scope-reviewed/sandbox",
+  "checks": [
+    "real isolated Tauri binding",
+    "real controlled Node/npm/ocx available",
+    "one boundary slash",
+    "scope selects every available local/remote channel and template",
+    "actual scope checkboxes selected"
+  ],
+  "facts": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "dataRoot": {
+      "activeDataRoot": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\opencodex-home",
+      "currentDataRoot": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox",
+      "currentOpencodexHome": "\\\\?\\D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\opencodex-home",
+      "runtimeActive": true
+    }
+  },
+  "environment": {
+    "node": {
+      "found": true,
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\home\\.local/bin\\node.exe",
+      "version": null
+    },
+    "npm": {
+      "found": true,
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\home\\.local/bin\\npm.cmd",
+      "version": null
+    },
+    "ocx": {
+      "found": true,
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-windows-final\\first-scope-reviewed\\sandbox\\home\\.local/bin\\ocx.cmd",
+      "version": null
+    },
+    "gate": "ready",
+    "shortCircuited": false,
+    "brewFound": false
+  },
+  "address": "https://127.0.0.1:60441/native021-only",
+  "scope": {
+    "templateIds": [
+      "04018546-d99e-430a-afd3-92d8a151472c",
+      "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "0bf7408b-2197-4a98-9a9e-5dd218953594",
+      "3528cd7b-89e4-4b8d-8609-fd294ef7958a",
+      "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "4d612ef5-e45b-4379-b03f-8c5a81954c7e",
+      "5910381f-9f57-4c6c-abc7-5162139fa200",
+      "626989ec-73e3-41a8-90e3-810dfb200b73",
+      "837c8133-76e9-4bdf-a68c-9637331c4d43",
+      "85f3649e-6532-403b-b573-8bf39cc3c9ab",
+      "961df482-3cbe-421d-a268-caa768de2fc6",
+      "c2efe090-d091-418b-aa1e-92c5c5f7eabf",
+      "e4182850-f6b6-4597-b06a-935a23fc19de",
+      "e93e0572-8a01-499e-b9c1-7f44bbe512ea",
+      "ec0b21a6-e038-437c-816e-ce2567c3a264",
+      "ec0d785e-989b-458c-9f2b-35e15874b863",
+      "f42bcbe3-9758-4512-a0e1-fc7809b505b4"
+    ],
+    "channelIds": [
+      "1611f4d2-c01e-4995-8a87-5c95877a39e5"
+    ],
+    "includeGlobal": false,
+    "preferences": true,
+    "extensions": false,
+    "includeKeys": false,
+    "skillNames": [],
+    "mcpNames": [],
+    "extensionCredentials": false,
+    "accountIds": [],
+    "accountIdentities": [],
+    "allTemplates": false,
+    "allChannels": false,
+    "allSkills": false,
+    "allMcps": false
+  },
+  "catalogue": {
+    "channelIds": [
+      "1611f4d2-c01e-4995-8a87-5c95877a39e5"
+    ],
+    "templateIds": [
+      "04018546-d99e-430a-afd3-92d8a151472c",
+      "061c63d1-8cfe-4eaa-bceb-37ca808cd7c8",
+      "0bf7408b-2197-4a98-9a9e-5dd218953594",
+      "3528cd7b-89e4-4b8d-8609-fd294ef7958a",
+      "48b7e309-2ecb-42af-b8c1-e65a883764ab",
+      "4d612ef5-e45b-4379-b03f-8c5a81954c7e",
+      "5910381f-9f57-4c6c-abc7-5162139fa200",
+      "626989ec-73e3-41a8-90e3-810dfb200b73",
+      "837c8133-76e9-4bdf-a68c-9637331c4d43",
+      "85f3649e-6532-403b-b573-8bf39cc3c9ab",
+      "961df482-3cbe-421d-a268-caa768de2fc6",
+      "c2efe090-d091-418b-aa1e-92c5c5f7eabf",
+      "e4182850-f6b6-4597-b06a-935a23fc19de",
+      "e93e0572-8a01-499e-b9c1-7f44bbe512ea",
+      "ec0b21a6-e038-437c-816e-ce2567c3a264",
+      "ec0d785e-989b-458c-9f2b-35e15874b863",
+      "f42bcbe3-9758-4512-a0e1-fc7809b505b4"
+    ],
+    "remoteObjects": 0
+  },
+  "nativeScope": [
+    {
+      "label": "选择当前筛选全部配置对象",
+      "checked": true
+    },
+    {
+      "label": "选择 渠道与模型",
+      "checked": true
+    },
+    {
+      "label": "选择 模型模版",
+      "checked": true
+    },
+    {
+      "label": "选择 桌面偏好",
+      "checked": true
+    },
+    {
+      "label": null,
+      "checked": false
+    },
+    {
+      "label": null,
+      "checked": false
+    },
+    {
+      "label": null,
+      "checked": false
+    }
+  ]
+}

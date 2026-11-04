@@ -1,0 +1,72 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-RDP-20261105",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-RDP-20261105",
+  "task_digest": "040a1f32cdb658e45eadd80afe0f7a7979424a1dc2cdaba4632176057302660c",
+  "task_summary_digest": "30ddf3635730fcaf3c97e74094376d75e58d572795e456c8259410b7377be352",
+  "baseline_digest": "756ed5226acffcc0881ffdb6f316d78f98de13969aff2fb6c723e01fd4d0dc47",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/DECISION.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/README.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/RESULT.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/artifact-manifest.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/background-probe.js",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/background.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/cleanup.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/invalid-first-start.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/manager.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/manifest-adaptation.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/modal-native-0.jpg",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/modal.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/modal/performance-modal-failed.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/native-environment.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/performance.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/prior-static-scroll.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/restored.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/run-identity.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/runtime-before-pin.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/static-scroll.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/raw/static-scroll/performance-failed.json"
+  ],
+  "checks": [
+    {
+      "name": "review:rdp-background",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/RESULT.json"
+    },
+    {
+      "name": "review:rdp-environment-decision",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/RESULT.json"
+    },
+    {
+      "name": "review:rdp-isolation",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/RESULT.json"
+    },
+    {
+      "name": "review:rdp-modal",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/RESULT.json"
+    },
+    {
+      "name": "review:rdp-static-scroll",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/RESULT.json"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-02",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/rdp-accepted/RESULT.json"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-04T19:47:33.586064+00:00",
+  "summary": "用户接受RDP作为材质性能验收环境，原预算保持。新样本和失败原始数据保留，未把环境采用写成性能通过；MSVC、正式桌面隔离重启及其他整版门继续保留，旧冻结TASK/RCP不改。",
+  "revision": 1,
+  "summary_digest": "1e7f98ba2282d3fd5e97a17e78da9b58e43b118c6ae276f6c7169c409b018572",
+  "content_digest": "f9704ed41af6f65b52dafd8e6a47aef3a409168726c8e83c18736b98009db702"
+}

@@ -1,0 +1,10 @@
+Could not load opencodex config at D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-windows-final\first-scope-reviewed\sandbox\opencodex-home\config.json: providers.channel-3d7bb886db284cc5b6f77aaeb9d31ffe.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers; providers.scope-fixture.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers. Using default config. A backup was written to D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-windows-final\first-scope-reviewed\sandbox\opencodex-home\config.json.invalid-2026-11-04T17-58-51-800Z.
+Could not load opencodex config at D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-windows-final\first-scope-reviewed\sandbox\opencodex-home\config.json: providers.channel-3d7bb886db284cc5b6f77aaeb9d31ffe.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers; providers.scope-fixture.baseUrl: baseUrl points to a loopback address; set allowPrivateNetwork:true only for intentionally local/self-hosted providers. Using default config. A backup was written to D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\post021-windows-final\first-scope-reviewed\sandbox\opencodex-home\config.json.invalid-2026-11-04T17-58-53-512Z.
+🚀 opencodex proxy running on http://localhost:60446
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+owned official GUI service 60446
+🔐 Claude intercept proxy active on http://127.0.0.1:60546 (CONNECT api.anthropic.com → local TLS)

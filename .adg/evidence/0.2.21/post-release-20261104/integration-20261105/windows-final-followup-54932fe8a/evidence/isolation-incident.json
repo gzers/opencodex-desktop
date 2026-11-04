@@ -1,0 +1,16 @@
+{
+  "action": "prior fixed-PID Stop-Process included PID30196",
+  "observedPath": "D:/Software/Develop/OpenCodeX Desktop/data/runtime/opencodex/node_modules/bun/bin/bun.exe",
+  "violation": "daily runtime service outside isolated task root stopped; contrary to user isolation instruction",
+  "observedAfter": {
+    "pid": 66908,
+    "created": "2026-11-05T01:45:17.426602+08:00"
+  },
+  "manager": {
+    "pid": 24140,
+    "created": "2026-11-04T19:58:15.083403+08:00"
+  },
+  "limits": "no proof of config byte invariance across this incident; cannot certify zero daily-side effect; no compensating restart/config change attempted",
+  "mitigation": "reviewed cleanup matches isolated executable/script plus PID and creation date; excludes daily service and manager",
+  "userInformed": true
+}

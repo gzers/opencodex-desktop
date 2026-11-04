@@ -1,0 +1,72 @@
+{
+  "receivedDocs": "54932fe8a",
+  "receivedCode": "b2cb82cdee172c16bd597a6b2017b54d40d11d5f",
+  "adoptedHead": "31a28bfb4f0decd151269ce896f2a7364fb5b186",
+  "receivedVersionedFiles": 196,
+  "manifests": [
+    {
+      "path": "evidence/artifact-manifest.json",
+      "count": 189,
+      "hashMismatches": 0
+    },
+    {
+      "path": "evidence/rdp-accepted/artifact-manifest.json",
+      "count": 20,
+      "hashMismatches": 0
+    }
+  ],
+  "runtimeReceiptHandling": "All originals schema/digest validated and stored under received-runtime. Earlier contradictory receipt retained separately; new revision4 marks isolation/MSVC/native/default restart/performance failed. No TASK close or CERT issued.",
+  "userDecision": {
+    "source": "human reply in current chat",
+    "text": "接受 RDP，保留原性能预算",
+    "effective": "RDP accepted for subsequent material performance; physical-only prerequisite superseded; all performance and native/release gates remain."
+  },
+  "supportedEvidence": [
+    "Complete native model regression PASS including name readback, backup pre/post bytes, notice timing/focus, sort, import, detection and WebDAV error state.",
+    "One local synthetic channel +17 local templates exact local first selection; remoteObjects0, so remote-only union not established. Incoming remote category parser uses kind instead of actual category/encoded ID; integration retains independent expected-first-scope.json guard.",
+    "Known/unknown/absent/failed readonly UI states pass; recorded authenticated loopback GET only and business-file before/after hashes equal.",
+    "Channel name-only Chinese creation and openai display rename/readback +2 authenticated list GETs + no POST, actual measurement config invariant.",
+    "Original startup commit bd7c0fe8c and EXE SHA/candidate facts delivered; source product matches old approved apps0eec, newer panel product now requires rerun.",
+    "Panel original-port reopens and manually injected notification surface restoration pass; changed-port rapid 10/30ms store route exercise fails, user retry recovers. Not normal mouse pacing."
+  ],
+  "remainingFailures": {
+    "rdpPerformance": {
+      "staticP95": 162.6,
+      "scrollP95": 144,
+      "modalP95": 171.7,
+      "budgetP95Max": 33.3333333333,
+      "over6B": [
+        140,
+        107,
+        159
+      ],
+      "backgroundStopAndRestore": "pass",
+      "performance": "fail; 30s foreground high samples"
+    },
+    "panelSourceChange": "failure preserved; local fix addresses reproduced dropped restoration and stale/about:blank load events. Windows exact changed-port rapid scenario still pending new candidate.",
+    "packagedDefaultRestart": "not executed; adapter current-user MSIX discovery only, enumeration null unknown. Need disposable account/session with owned process/ancestor proof; no daily restart.",
+    "msvcCandidate": "Prior same-product CI MSVC build pass supports build only; new CI now preserves actual release EXE with head/merge/apps/SHA copy identity for native validation. Not an installer/update pass; do not require local cl install when validated same-source CI candidate can be used.",
+    "isolation": "reported fixed-PID cleanup stopped daily Bun PID30196; after PID66908 observed. No before/after daily config bytes, zero side effects unproved. Original incident retained; this chat disclosed; no compensating restart/config change."
+  },
+  "productChanges": {
+    "appsTree": "ab09d800b27ce13e17c46ce68f9ae38f7d4fc21a",
+    "panelFixCommit": "697b9e382",
+    "probeFixCommit": "cb423a9df",
+    "incomingProbeMerge": "6a3c7ef2d",
+    "ciCandidateCommit": "31a28bfb4f0decd151269ce896f2a7364fb5b186",
+    "nativeMacCandidate": "6a3c7ef2d0eb5e72ba20910ac632e6db7e33f61a",
+    "nativeMacMatchesFinalApps": true,
+    "nativeMac": "15 checks pass, actual original official2.84 WKWebView load/reopen; does not prove Windows changed-port race fixed"
+  },
+  "localChecks": {
+    "vitest": 1291,
+    "protocol": 63,
+    "rustPanel": 12,
+    "clippy": "pass",
+    "typecheckBuild": "pass",
+    "rustFull": "in_progress",
+    "workflowYaml": "parsed",
+    "workflowRelatedTests": 13
+  },
+  "releaseReady": false
+}

@@ -1,0 +1,30 @@
+
+running 25 tests
+test modules::model_config::cache_refresh::tests::app_server_partial_failure_prevents_overall_restart_success ... ok
+test modules::model_config::cache_refresh::tests::changed_runtime_after_response_is_not_reported_as_a_restart ... ok
+test modules::model_config::cache_refresh::tests::corrupt_record_and_missing_management_token_are_distinct_and_never_send_restart ... ok
+test modules::model_config::cache_refresh::tests::current_client_binding_requires_owned_absolute_paths_and_validated_runtime ... ok
+test modules::model_config::cache_refresh::tests::current_selection_never_moves_a_same_named_external_route_to_our_provider ... ok
+test modules::model_config::cache_refresh::tests::dedicated_restart_checks_runtime_binding_and_does_not_expand_generic_request_scope ... ok
+test modules::model_config::cache_refresh::tests::cache_only_executes_cli_without_restart_or_management_binding_and_redacts_output ... ok
+test modules::model_config::cache_refresh::tests::enumeration_failure_is_incomplete_even_with_top_level_success_and_desktop_relaunch ... ok
+test modules::model_config::cache_refresh::tests::explicit_restart_posts_even_when_cache_is_unchanged_and_needs_no_cli ... ok
+test modules::model_config::cache_refresh::tests::desktop_refused_blocked_not_found_and_other_skips_are_not_restarts ... ok
+test modules::model_config::cache_refresh::tests::http_errors_and_redirects_never_accept_even_a_successful_body_or_echo_error_text ... ok
+test modules::model_config::cache_refresh::tests::invalid_json_and_empty_http_200_are_errors ... ok
+test modules::model_config::cache_refresh::tests::malformed_admin_token_prevents_restart ... ok
+test modules::model_config::cache_refresh::tests::explicit_restart_reconciles_exact_pending_and_clears_only_after_verified_restart ... ok
+test modules::model_config::cache_refresh::tests::missing_runtime_record_reports_the_actual_precondition_without_touching_saved_files ... ok
+test modules::model_config::cache_refresh::tests::no_app_servers_does_not_prevent_a_verified_desktop_restart ... ok
+test modules::model_config::cache_refresh::tests::runtime_record_removed_after_attestation_invalidates_the_bound_owner ... ok
+test modules::model_config::cache_refresh::tests::malformed_or_contradictory_http_200_responses_are_rejected ... ok
+test modules::model_config::cache_refresh::tests::stopped_some_desktop_processes_or_failed_relaunch_is_incomplete ... ok
+test modules::model_config::cache_refresh::tests::top_level_success_with_nothing_running_or_missing_desktop_never_claims_restart ... ok
+test modules::model_config::cache_refresh::tests::unknown_or_missing_desktop_reason_has_a_fixed_redacted_fallback ... ok
+test modules::model_config::cache_refresh::tests::untrusted_runtime_proof_never_reaches_restart_or_reads_admin_token ... ok
+test modules::model_config::cache_refresh::tests::upstream_runtime_username_mask_requires_one_unambiguous_bound_identity ... ok
+test modules::model_config::cache_refresh::tests::warning_states_that_live_conversations_end ... ok
+test modules::model_config::cache_refresh::tests::stale_record_for_an_exited_listener_is_not_reported_as_a_missing_file ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 977 filtered out; finished in 2.77s
+

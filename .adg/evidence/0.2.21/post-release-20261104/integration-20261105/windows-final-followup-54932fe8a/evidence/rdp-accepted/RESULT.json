@@ -1,0 +1,60 @@
+{
+  "environmentAccepted": true,
+  "userStatement": "rdp也可以接受了",
+  "previousPhysicalOnlyPrerequisiteSuperseded": true,
+  "performanceBudgetUnchanged": {
+    "B": 16.666666666666668,
+    "p95MaxMs": 33.333333333333336,
+    "over6B": 0
+  },
+  "buildCommit": "bd7c0fe8ccecfa39e0706c885dc233f3854dab74",
+  "codeHandoffCommit": "b2cb82cdee172c16bd597a6b2017b54d40d11d5f",
+  "exeSha256": "76dc1049f4b6c3995993b2c1457ae06e1d3627669e20bd8c62ffdd98054b778a",
+  "samples": [
+    {
+      "name": "static-overview-high",
+      "B": 16.666666666666668,
+      "p95": 162.59999999999127,
+      "max": 191.6999999999971,
+      "over6B": 140,
+      "foreground": true,
+      "durationMs": 30000.5,
+      "samples": 383,
+      "draws": 384,
+      "budgetPassed": false
+    },
+    {
+      "name": "scroll-detail-high",
+      "B": 16.666666666666668,
+      "p95": 144,
+      "max": 282.30000000001746,
+      "over6B": 107,
+      "foreground": true,
+      "durationMs": 30002,
+      "samples": 544,
+      "draws": 0,
+      "budgetPassed": false
+    },
+    {
+      "name": "modal-overview-high",
+      "B": 16.666666666666668,
+      "p95": 171.70000000000437,
+      "max": 232.70000000000437,
+      "over6B": 159,
+      "foreground": true,
+      "durationMs": 30003.799999713898,
+      "samples": 312,
+      "draws": 313,
+      "budgetPassed": false
+    }
+  ],
+  "backgroundStopAndRestorePassed": true,
+  "performancePassed": false,
+  "isolationBoundary": "explicit status-only probe; no daily stop or configuration write in accepted run; first discovered-source start excluded, prior isolation incident retained",
+  "unchangedOtherGates": [
+    "MSVC local formal build",
+    "formal packaged Codex restart in isolated owned instance",
+    "panel address-change failure",
+    "previous isolation incident"
+  ]
+}

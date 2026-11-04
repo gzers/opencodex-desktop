@@ -1,0 +1,83 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-POST021-WINDOWS-FINAL-RENAME-PROBE-20261105",
+  "task_id": "TASK-OPENCODEX-POST021-WINDOWS-FINAL-RENAME-PROBE-20261105",
+  "task_digest": "9b01d1131d0b5bffaff3c36c19c52c36189d9e433f0cfb1341995b2f6b379b04",
+  "task_summary_digest": "2730ad947c7fe381a55e2ccd2277093926f99e25a3e6ec42abd246d2a98339ec",
+  "baseline_digest": "756ed5226acffcc0881ffdb6f316d78f98de13969aff2fb6c723e01fd4d0dc47",
+  "result": "succeeded",
+  "changed_paths": [
+    "test/smoke/windows-021-probes.mjs",
+    "test/smoke/windows-021-probes.test.mjs"
+  ],
+  "checks": [
+    {
+      "name": "review:rename-native-readback",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "name": "review:rename-probe-negative-tests",
+      "status": "passed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    }
+  ],
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-P21-01",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-02",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-03",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-04",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-05",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-06",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-07",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-08",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-09",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    },
+    {
+      "acceptance_id": "AC-P21-10",
+      "status": "failed",
+      "evidence": ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/HANDOFF.md"
+    }
+  ],
+  "fact_impacts": [],
+  "completed_at": "2026-11-04T18:04:40.745624+00:00",
+  "summary": "复核回执：仅报告补验驱动/证据实际范围；代码b2cb82cdee172c16bd597a6b2017b54d40d11d5f，apps不变。主任务因RDP/MSVC/正式adapter缺验、切源原生失败与日常服务清理越界不通过。补充探针检查可通过，但所有AC不据此关闭，不出CERT。",
+  "revision": 1,
+  "summary_digest": "23dd61462a65021aadd9d0df02ff7129fb5d5b3061fa967f66a1d04d3aecd69d",
+  "content_digest": "33d810287cc1a716e7781fa6f675bf23795d32539897e5447ee2e0efe7c9a70f"
+}
