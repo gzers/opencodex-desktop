@@ -125,3 +125,6 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05 CI基础设施缺验：最终HEAD bd7c0fe8c / run41868797161的Mac frontend126709885314、backend126709885804均未获runner/未执行steps，于16:50:25Z被取消；GitHub annotations明确macOS ARM容量不足，多次分配失败。按原job单独重跑返回不能重跑，父run中Windows仍运行，故待终态再补原检查，不换架构、不降测试、不把取消写通过。Windows本轮后端回归仍进行；前一同产品源Windows回归、凭据保护、官方运行包升级/离线重装已通过但最终EXE仍编译，不替代最新探针验证。证据ci-capacity/review.json；Windows实机与全部发行门未变。
+
+
+2026-11-05 CI续验：最终提交bd7c0fe8c的Windows后端回归、原生凭据保护和官方运行包安装升级/离线重装步骤已过，release EXE编译仍在执行，最终原生冒烟未有结论。本机补跑与frontend CI相同的七组CDP协议套件共58项通过，日志integration-20261105/ci-rename-probe/full-cdp-tests.log；只补探针回归，不替代Windows原生/远端Mac runner缺验。未因运行慢或临时API EOF重启/取消原任务，仍查询run41868797161/job126709886228。

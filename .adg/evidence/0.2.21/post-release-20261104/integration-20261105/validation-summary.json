@@ -35,7 +35,8 @@
     "clippyFinal": "passed all-targets integration-test -D warnings",
     "build": "UI typecheck/build and debug app passed; adhoc, not release installer",
     "windowsProbeUnits": "35 passed after backup/recovery-journal distinction",
-    "windowsCI": "41868797161 Windows backend regression passed, native credential protection in progress; final EXE smoke pending"
+    "windowsCI": "41868797161 Windows backend regression, native credential protection and official managed install upgrade/offline reinstall passed; release EXE compiling; native smoke pending",
+    "fullCdpProtocol": "58 passed on bd7c0fe8c; same seven suites as frontend CI protocol step, native Windows EXE result separate"
   },
   "pending": [
     "Windows final-source native and CI",
