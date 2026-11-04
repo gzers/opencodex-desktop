@@ -1,0 +1,107 @@
+✔ 关闭合同区分查看、编辑和真实业务关闭动作 (0.817333ms)
+✔ 组件专题的查看/确认/表单复用公共X与分类页脚，取消不提交 (5119.951292ms)
+✔ 查看型保留实际业务动作，不留下底部关闭或空栏 (2546.805917ms)
+✔ 统一关闭守卫覆盖X/Escape/遮罩，任务取消与关闭分离 (2442.132ms)
+✖ 列表移除节点列且暂不加额度，操作列检测打开公共居中弹窗 (0.409958ms)
+✖ 选择与检测分离，单测更新同一浮层和焦点，随后选节点只改草稿 (0.09325ms)
+✖ 集成一键检测和停止，保持浮层并同步列表摘要，关闭不取消在途检测 (0.056875ms)
+✖ 公共模态关闭归还焦点；方向键只移焦点，背景点击或焦点变化不走下拉关闭 (0.058791ms)
+✖ 单实例、直接连接编辑与保存锁继续有效，返回详情和重绘关闭悬空浮层 (0.055875ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 4
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10165.356209
+
+✖ failing tests:
+
+test at model-node-picker.test.cjs:6:1
+✖ 列表移除节点列且暂不加额度，操作列检测打开公共居中弹窗 (0.409958ms)
+  Error: ENOENT: no such file or directory, open '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/qa/template-workflow.source.mjs'
+      at Object.readFileSync (node:fs:621:20)
+      at make (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-prototype-test-harness.cjs:5:18)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-picker.test.cjs:7:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/qa/template-workflow.source.mjs'
+  }
+
+test at model-node-picker.test.cjs:12:1
+✖ 选择与检测分离，单测更新同一浮层和焦点，随后选节点只改草稿 (0.09325ms)
+  Error: ENOENT: no such file or directory, open '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/qa/template-workflow.source.mjs'
+      at Object.readFileSync (node:fs:621:20)
+      at make (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-prototype-test-harness.cjs:5:18)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-picker.test.cjs:13:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/qa/template-workflow.source.mjs'
+  }
+
+test at model-node-picker.test.cjs:16:1
+✖ 集成一键检测和停止，保持浮层并同步列表摘要，关闭不取消在途检测 (0.056875ms)
+  Error: ENOENT: no such file or directory, open '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/qa/template-workflow.source.mjs'
+      at Object.readFileSync (node:fs:621:20)
+      at make (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-prototype-test-harness.cjs:5:18)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-picker.test.cjs:17:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/qa/template-workflow.source.mjs'
+  }
+
+test at model-node-picker.test.cjs:20:1
+✖ 公共模态关闭归还焦点；方向键只移焦点，背景点击或焦点变化不走下拉关闭 (0.058791ms)
+  Error: ENOENT: no such file or directory, open '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/qa/template-workflow.source.mjs'
+      at Object.readFileSync (node:fs:621:20)
+      at make (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-prototype-test-harness.cjs:5:18)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-picker.test.cjs:21:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/qa/template-workflow.source.mjs'
+  }
+
+test at model-node-picker.test.cjs:24:1
+✖ 单实例、直接连接编辑与保存锁继续有效，返回详情和重绘关闭悬空浮层 (0.055875ms)
+  Error: ENOENT: no such file or directory, open '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/qa/template-workflow.source.mjs'
+      at Object.readFileSync (node:fs:621:20)
+      at make (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-prototype-test-harness.cjs:5:18)
+      at TestContext.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-node-picker.test.cjs:25:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-021-predev-vhlkpval/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/qa/template-workflow.source.mjs'
+  }

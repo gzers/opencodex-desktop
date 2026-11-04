@@ -1,0 +1,550 @@
+{
+  "sourceRevision": "b1750f5cf78b294b2edb34b9674d8c707ef8f810",
+  "method": "static syntax inventory, not runtime or full-state acceptance",
+  "productionSyntaxCounts": {
+    "UiDialog": 25,
+    "AppModal": 1,
+    "ModalContent": 1,
+    "custom_dialog": 19,
+    "dynamic_confirm": 22
+  },
+  "note": "UiDialog calls are not total window count; custom dialogs, shared dynamic confirmations and DEV/nonmodal exclusions are listed separately. Future prototype-only features are not production work.",
+  "files": [
+    {
+      "path": "apps/desktop/ui/src/App.vue",
+      "classification": "host/component",
+      "sourceSha256": "f89018c0a9978326458dbe0bcce4c6b1b8d1e08c30344d15b7f3712c5dc5ea44",
+      "hits": [
+        {
+          "kind": "AppModal",
+          "line": 79
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 44
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/app/modal/store.ts",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "c475e36c898a56e8b7cd0785b5f8c6c4972c5d514678b26ec9fda9d6b3786543",
+      "hits": [
+        {
+          "kind": "dynamic_confirm",
+          "line": 6
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/app/useLifecycleController.ts",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "7252e921ddbf4696fb510b245cbc81c87c41fa5bb2ddeaacef6f8db74428dab6",
+      "hits": [
+        {
+          "kind": "dynamic_confirm",
+          "line": 11
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 16
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/components/AppModal.vue",
+      "classification": "host/component",
+      "sourceSha256": "12a5cbf195c8c0cc971e8f557654051367dad449911b0ea132909ab7d5d82b91",
+      "hits": [
+        {
+          "kind": "ModalContent",
+          "line": 104
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 99
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 100
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiDialog.vue",
+      "classification": "host/component",
+      "sourceSha256": "694c19dd80d01932ab52d6f30586512277e3a54878ac2adfcfbea80d9ca67f20",
+      "hits": [
+        {
+          "kind": "custom_dialog",
+          "line": 41
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue",
+      "classification": "dev-only, excluded",
+      "sourceSha256": "b60f3bdc790fd9db703fa599bc5c7a9d878460bddd6d01d6acdd87ef912bf35f",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 79
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/component-gallery/NodeExamples.vue",
+      "classification": "dev-only, excluded",
+      "sourceSha256": "4a3f1f15a8bae82bab543d8376f7235e212c7885d656db055964620e848b78cd",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 22
+        },
+        {
+          "kind": "ModalContent",
+          "line": 22
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "85d0d2e14bbb5e152e393028f90552e961b866df7d456ce248ab1ec2f72b5445",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 56
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/backup/TransferBackups.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "54c0e6da39157af30383ac5c288a8abaeeebf0cc02e2dc062bf78535e714be51",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/extensions/components/ExtensionDetailModal.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "b7eb8df8930ce85ef02aa97fdaa846f53611870974fceab57ffd5b6e145f9ebc",
+      "hits": [
+        {
+          "kind": "custom_dialog",
+          "line": 89
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 90
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/AgentExecutionField.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "d9a57f6f4cb5040b131ca513d4f705b48463baef76f5583c53db33654d066e60",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 88
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/AgentPanel.vue",
+      "classification": "nonmodal assistant, exclude modal lifecycle",
+      "sourceSha256": "0f140bf2b147b2f01da6d55362280062329c5c8483c7c49960297c2f0f5ef092",
+      "hits": [
+        {
+          "kind": "custom_dialog",
+          "line": 93
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/BatchAgentDialog.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "d29d8ed0384d962e2aa9f1e12c0de22fb3fe8afd2fe6c7dfa8aa113a41bddc10",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 59
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "04d3da5a7320e732be24a3bf6fd83b6aed220a0674dedc1afde3e74adcab1665",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 85
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "eabe36c0b26d0aeb9ee02792424cf805295fda0120b4542e37dcf479001da758",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 140
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 14
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 88
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "8ec386283ad583a856ec0576794eba676cb5ebc07deacfa5e9308bfc9c28f2bf",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 123
+        },
+        {
+          "kind": "UiDialog",
+          "line": 126
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 8
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 15
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 38
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "35f58fb18abf569f265c180ad13a8aaee5cfbc2a488825e1fb91cd7f00e7c24c",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 268
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 22
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 25
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 211
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 228
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "86218d96349dfdbd41349e1c1b7a151705a4711b6a823aea0d4eb3041b529213",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 35
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ModelPicker.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "e477ef90d71e22dcc855aa9454a83d8b3971fb555c9d28733747316912a223a2",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 104
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "22989e8784941dc46c5ae87383e5d3ef995eaffb764fa72a1bd355f7a67027d7",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 84
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/SaveResultNotice.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "37ae1e0384d2a93e69e8f7a7ec0bc8563b42f3669670d19dcea9bb2c2492cbab",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 89
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 42
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/SelectorPreviewDialog.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "e88ad52aa100020e83c285ed811285a2d3e99f2c2e14c0877de72159642ccb9e",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 130
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "eae3c47718aca9bfb968dceb70edc6d3e936bcba127a7e20f763fa71a30d0164",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "9247f40a8dad89626337684a66e355130e03537118c8b1ca91df7c5eab25bd97",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 14
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/notifications/components/NotificationCenter.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "9c541d0f14087bcf5e7c6b257ac873fa690e0e24e3b3567a07ba3c9c44144b91",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 111
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 61
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/components/RuntimeInstallDialog.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "3e3b93a9c303a19c7d50966467a87e2102b2f49e0d3004ecf8c5ecd2ee8b1034",
+      "hits": [
+        {
+          "kind": "custom_dialog",
+          "line": 203
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 203
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ConnectionDialog.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "3ab29a99ee1e6b8d3ba140f36af70734fead67b0da0d31717f03e851426d39ad",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ImportedConnections.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "b753cf9048d2476f1eb08b4838852a394741744b8358738ab7aa60ea226dd702",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 15
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "d254b898cbaff5b67d9f53afa139030a1df00b2964efd6fac9430f95a1e89f41",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 512
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ObjectScopeTree.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "df956bf30e54e584ce58adccc5df8822dc217c4fe9b4391ca67137432a5df191",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 32
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/SyncResultDialog.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "cc040ebd2e39b3279c43773225179633daebef3818047c7e9a3b7d2b6cc8089a",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 23
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "627cbb18faa5621615ae0e76f6554f9a8e87f485b74da75eaa2df1d2d2e0cf81",
+      "hits": [
+        {
+          "kind": "custom_dialog",
+          "line": 228
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 228
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "c89f086edb456e499f0111986cd736c75e1766486ffb8994c0b10afd08f2f394",
+      "hits": [
+        {
+          "kind": "UiDialog",
+          "line": 209
+        },
+        {
+          "kind": "UiDialog",
+          "line": 214
+        },
+        {
+          "kind": "UiDialog",
+          "line": 216
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 22
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 24
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 94
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 98
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 133
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "de3f2282b0d222db753f67559772899f98003cc1f97d85090f377ea4ef5ca418",
+      "hits": [
+        {
+          "kind": "custom_dialog",
+          "line": 457
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 457
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 514
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 514
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "2229674e586563e39187675fd8f95863656bb440ab276608346c65fbe4e95ea0",
+      "hits": [
+        {
+          "kind": "custom_dialog",
+          "line": 1145
+        },
+        {
+          "kind": "custom_dialog",
+          "line": 1145
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/ui/src/stores/app.ts",
+      "classification": "consumer or dynamic caller; classify actual states at implementation",
+      "sourceSha256": "4f4a1b8f3157c70d0d4feaf12d828d29ebe08630195c638e15ce9970af9c3f49",
+      "hits": [
+        {
+          "kind": "dynamic_confirm",
+          "line": 18
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 119
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 687
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 690
+        },
+        {
+          "kind": "dynamic_confirm",
+          "line": 696
+        }
+      ]
+    }
+  ]
+}
