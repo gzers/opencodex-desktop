@@ -63,6 +63,7 @@ public sealed class Ocx021OwnerJob : IDisposable {
 }
 '@
 $taskProcesses=@();$taskJobs=@();$taskReport=[ordered]@{schemaVersion=1;result='fail';phase='binding-only';sourceCommit=(& git -C $taskRepo rev-parse HEAD).Trim();productTree=$taskProduct;root=$taskRoot;platform='Windows';officialVersion='2.84.0';codexVersion='0.166.0';bindingMode='default-npm-PATH';forcedNativeVariables=$false;processes=@();providerStarted=$false;turnSent=$false;toolsExecuted=$false}
+$taskBinding=Join-Path $taskRoot 'default-settings.json'
 function Invoke-Owned([string]$Name,[string]$Executable,[string[]]$Arguments,[bool]$Gate,[int]$TimeoutSeconds){
  $taskInfo=[Diagnostics.ProcessStartInfo]::new();$taskInfo.FileName=$Executable;$taskInfo.UseShellExecute=$false;$taskInfo.WorkingDirectory=Join-Path $taskRoot 'work'
  $taskInfo.RedirectStandardOutput=$true;$taskInfo.RedirectStandardError=$true;$taskInfo.RedirectStandardInput=$true;$taskInfo.CreateNoWindow=$true
@@ -93,7 +94,6 @@ try{
  $taskBun=Join-Path $taskRoot 'installation/node_modules/@oven/bun-windows-x64/bin/bun.exe'
  if(!(Test-Path -LiteralPath $taskBun -PathType Leaf)){throw 'Published fixed Bun platform executable missing'}
  Copy-Item -LiteralPath (Join-Path $taskRoot 'installation/package-lock.json') -Destination (Join-Path $taskOutput 'public-packages.lock.json')
- $taskBinding=Join-Path $taskRoot 'default-settings.json'
  Invoke-Owned 'official-default-settings' $taskBun @((Join-Path $PSScriptRoot 'windows-021-client-owner.mjs'),$taskRoot,$taskOfficial,$taskBinding) $true 90
  Copy-Item -LiteralPath $taskBinding -Destination (Join-Path $taskOutput 'default-settings.json')
  $taskFacts=Get-Content -LiteralPath $taskBinding -Raw|ConvertFrom-Json
@@ -102,6 +102,13 @@ try{
  $taskReport.bindingEvidence='default-settings.json';$taskReport.result='binding-captured'
 }catch{$taskReport.error=$_.Exception.Message;throw}
 finally{
+ if(Test-Path -LiteralPath $taskBinding){
+  Copy-Item -LiteralPath $taskBinding -Destination (Join-Path $taskOutput 'default-settings.json') -Force
+  $taskObserved=Get-Content -LiteralPath $taskBinding -Raw|ConvertFrom-Json
+  $taskReport.codexRuntime=$taskObserved.codexRuntime
+  $taskReport.admission=$taskObserved.admission
+  $taskReport.bindingEvidence='default-settings.json'
+ }
  foreach($taskJob in $taskJobs){$taskJob.Dispose()}
  foreach($taskProcess in $taskProcesses){$taskProcess.Dispose()}
  $taskReport.finishedAtUtc=[datetime]::UtcNow.ToString('o')

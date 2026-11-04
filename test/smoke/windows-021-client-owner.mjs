@@ -1,7 +1,7 @@
 // Run by the pinned Bun executable inside a production OwnedQueryJob. Import
 // the published GET /api/settings handler directly; never start a provider.
 import assert from 'node:assert/strict'
-import {readFile,writeFile,realpath} from 'node:fs/promises'
+import {readFile,writeFile,realpath,stat} from 'node:fs/promises'
 import {createHash} from 'node:crypto'
 import {win32,join,resolve} from 'node:path'
 import {fileURLToPath,pathToFileURL} from 'node:url'
@@ -25,6 +25,21 @@ export function bindingAdmission(runtime,root){
  const extension=win32.extname(runtime.path).toLowerCase()
  return {extension,admitted:extension==='.exe',reason:extension==='.exe'?'native-executable':'client_selection_executable: default settings binding is not a native EXE'}
 }
+export async function preserveBindingObservation(out,result,root){
+ // Persist the actual returned settings before checking ownership. A failed
+ // boundary is still a failure, but must not erase the path needed to explain it.
+ await writeFile(out,JSON.stringify(result,null,2))
+ const runtime=result.codexRuntime
+ result.admission=bindingAdmission(runtime,root)
+ if(['.cmd','.bat'].includes(win32.extname(runtime.path).toLowerCase())){
+  const resolved=await realpath(runtime.path);assertOwnedPath(resolved,root)
+  assert((await stat(resolved)).size<=65536,'Public npm shim exceeds the capture bound')
+  const bytes=await readFile(resolved)
+  result.publicShim={path:runtime.path,resolvedPath:resolved,bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),content:bytes.toString('utf8'),origin:'actual default settings path; owned public npm install'}
+ }
+ await writeFile(out,JSON.stringify(result,null,2))
+ return result
+}
 export async function probeDefaultSettings(root,official,out){
  assertDefaultDiscoveryEnvironment(process.env,root,process.platform)
  assertOwnedPath(official,root);assertOwnedPath(out,root)
@@ -47,15 +62,13 @@ export async function probeDefaultSettings(root,official,out){
  const response=await handleConfigRoutes({req:new Request(url),url,config:loadConfig(),deps:{},version:manifest.version,principal:undefined,trustedLoopbackIngress:true,guiSessionIssuance:null,convergeCodexCatalog:forbidden,syncClaudeAgentDefsBestEffort:forbidden})
  assert(response&&response.status===200,'Actual official settings handler failed')
  const settings=await response.json(),runtime=settings.codexRuntime
- const admission=bindingAdmission(runtime,root)
  const hashes={}
  for(const file of ['package.json','src/server/management/config-routes.ts','src/codex/runtime.ts','src/codex/exec-invocation.ts'])hashes[file]=createHash('sha256').update(await readFile(join(official,file))).digest('hex')
  const result={schemaVersion:1,mode:'default-npm-PATH-discovery',platform:process.platform,officialPackage:manifest.version,codexPackage:codexManifest.version,
-  settingsMethod:'published handleConfigRoutes GET /api/settings; no HTTP server/provider',codexRuntime:runtime,admission,
+  settingsMethod:'published handleConfigRoutes GET /api/settings; no HTTP server/provider',codexRuntime:runtime,admission:{admitted:false,status:'not-yet-validated'},
   forcedRuntimeVariablesAbsent:OVERRIDES.every(key=>!process.env[key]),controlledPath:process.env.PATH,home:process.env.HOME,codexHome:process.env.CODEX_HOME,opencodexHome:process.env.OPENCODEX_HOME,
   officialRoot:await realpath(official),sourceHashes:hashes,providerStarted:false,turnSent:false,toolsExecuted:false,settings}
- await writeFile(out,JSON.stringify(result,null,2))
- return result
+ return preserveBindingObservation(out,result,root)
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const [root,official,out]=process.argv.slice(2)
