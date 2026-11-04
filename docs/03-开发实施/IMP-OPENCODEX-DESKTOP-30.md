@@ -140,3 +140,6 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05补验驱动审计处置：f9def3300将新设备首次范围检查由any/some补为独立夹具完整channelIds/templateIds并集比较，要求UI开工前无scope和initialized，并读入expected-first-scope.json；缺项/多项/重复均拒，期望文件不变。61协议项通过，原生仍待执行；不把仅渠道/模版范围的驱动扩称账户/Skill/MCP全部通过。产品apps未变；新交接说明已给出夹具清单格式，人工showSaved和正式adapter缺验证据边界保留。
+
+
+2026-11-05 CI队列整理：最终f9def3300 / run41879603626完整五项CI保留。核对三个祖先提交3aa789a6e、9850dbbae、be337d5b3的runs41878328232/41878677161/41879180603及全部jobs均为queued、无steps后，提交取消请求清理过时重复排队；API返回取消请求已受理，但后续查询仍queued，尚不称已取消。没有终止最终运行或把取消计为通过，未修改运行器/工作流和测试范围。回执ci-capacity/superseded-queue-cleanup.json。Windows最终原始报告/性能与正式adapter证据仍未收到，代码分支仍faf8dd926，待真实回交。
