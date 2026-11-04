@@ -239,6 +239,7 @@ export function inspect021Webdav(){
  // CDP returnByValue does not materialize Vue Proxy own properties. Read only
  // the explicit scalar facts, never return a live store object to the driver.
  return {state:sync?.webdavState,revision:sync?.config?.endpoint?.revision,hasObservation:!!observation,observation:observation?{revision:observation.revision,source:observation.source,remoteRead:observation.remoteRead,remoteTime:observation.remoteTime??null,remoteObservedAt:observation.remoteObservedAt}:null,checkingVersion:!!sync?.checkingVersion,
+  versionCheckAvailable:[...card?.querySelectorAll?.('button')??[]].some(button=>button.textContent.trim()==='检测版本'),
   card:card?{text:card.textContent,remote:row.textContent,dots:row.querySelectorAll('.ov-state-dot').length}:null,
   gate:{present:!!gate,settled:!!gate?.querySelector('.overview-gate-count')?.textContent.includes('/ 3'),checks:gate?.querySelectorAll('.overview-checks li').length??0}}
 }
