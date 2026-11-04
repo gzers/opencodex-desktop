@@ -1,0 +1,48 @@
+{
+  "run": 41904417657,
+  "job": 126835127187,
+  "source": "31a28bfb4f0decd151269ce896f2a7364fb5b186",
+  "checkedCommit": "87d5137311c716ebadb1c88cc4477ff6fc8a7195",
+  "firstNativeExeSmoke": "success",
+  "wholeWindowsJob": "failure",
+  "failedStep": "Windows native installation failure, metadata recovery and path regression",
+  "cause": "Post-install ready WebDAV consumer still called legacy configured/no-observation assertion; actual adopted startup readonly check returned failed for owned .invalid fixture. Failure occurs at ready checkpoint after actual install/failure-preserve/recovery activities, not proof those operations all failed.",
+  "actualError": "assert021WebdavState called by assert021ReadyWebdavFacts expected configured; got failed.",
+  "fixCommit": "8fc5d179c",
+  "ciCoverageCommit": "c99071793",
+  "fix": "Inspect rendered Detect Version action to select adopted contract; await real settled readonly failure and verify source/observation revision/timestamp, source identity, actual ready card and absence of UI fault. Legacy contract preserved. Readonly IPC opt-in only; no sync.",
+  "tests": "71 full eight-suite tests pass, including original legacy behavior, current installed-ready orchestration and wrong revision/source/time/success/hidden-card rejection; ready consumer tests now in CI.",
+  "productChanged": false,
+  "nativeRecheck": "pending latest driver; later Node22/ordinary-account steps were skipped and remain unproved",
+  "artifactCopies": [
+    {
+      "path": "execution.log",
+      "sha256": "0028374bc3b18afc3c156fecec47fa1b48b639379970df93dda979ba214662d0"
+    },
+    {
+      "path": "launcher.json",
+      "sha256": "857d3f6a8b628f38dbbec017e3f7b2cbd60821cb0b653baebf78fe20f6464185"
+    },
+    {
+      "path": "native021-ready-webdav-recovery-installed.json",
+      "sha256": "b653481068c467d6e389b653acdb3c60d51ce9dcca5b010030460f1a7b0b6812"
+    },
+    {
+      "path": "native-install-recovery.json",
+      "sha256": "f0aa659c39195aa8b44efa1f57a8675173131acef6b7a859e6a7a09f440049e9"
+    },
+    {
+      "path": "runtime-install-ui.json",
+      "sha256": "f353a45370d56969437ea0b6e3153c46c563037b68d66d0d4557770f601943e0"
+    },
+    {
+      "path": "windows-path-ui.json",
+      "sha256": "1aec67a575e98c530d298d643bd9c6b42bec7de10609b68acec7a9041bfe8f93"
+    },
+    {
+      "path": "runtime-install-ready-webdav.json",
+      "sha256": "c9881c90ab4f213f70270601bb620f7d81613b79b79cf1f54bce90133cdc3960"
+    }
+  ],
+  "releaseReady": false
+}

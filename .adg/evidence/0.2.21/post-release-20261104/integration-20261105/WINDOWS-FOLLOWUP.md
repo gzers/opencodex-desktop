@@ -1,3 +1,18 @@
+最新验收脚本接续c99071793：产品代码不变，仍使用下述已核验31a28bfb4 MSVC原候选，不必为工具更新重建产品。安装恢复后的就绪WebDAV消费者也已对齐启动只读检测：合成.invalid地址应真实失败，不再强要求configured。原首轮EXE冒烟已通过；整轮CI在该旧消费者断言失败，后续Node22/普通账号矩阵被跳过，仍待实测。71协议测试通过，该消费者测试已纳入CI。Windows完整安装恢复/后续矩阵请使用新脚本复验，原失败证据保留；不把新纯测试当原生成功。
+
+## 已取得的MSVC原候选（下一轮Windows优先使用）
+
+CI run41904417657，artifact13362926947，名称windows-msvc-candidate。
+下载页：https://github.com/gzers/opencodex-desktop/actions/runs/41904417657/artifacts/13362926947
+ZIP SHA-256：b6cb8245b2c1ae0caf7cd98d3f28dfc35412966e0a27e209b1fc264719895792。
+EXE SHA-256：b8b2f4a57a05ce036dfd30d51c9339697b036f099f76240f265d99015d07385d；15,293,440字节，PE32+ AMD64。
+构建提交87d5137311c716ebadb1c88cc4477ff6fc8a7195（PR合并），关联head31a28bfb4，apps树ab09d800b27ce13e17c46ce68f9ae38f7d4fc21a。内嵌提交、ZIP摘要、EXE原/复制哈希均已核验。
+
+在新建独立临时目录执行：gh run download 41904417657 -R gzers/opencodex-desktop -n windows-msvc-candidate
+先核对candidate.json与EXE哈希，再按既有隔离启动方案运行；不能覆盖或启动日常安装目录。7c2559055是验收/诊断脚本源，不是该二进制内嵌SHA；完整Rust和UI产品源码与候选一致，差异仅QA性能诊断。
+
+构建与首轮原生EXE冒烟已通过，整轮Windows矩阵当时仍继续。该文件不是安装器、签名更新包或发布通过凭证。必须据同一候选继续切端口/快速路由/浮层恢复、RDP原预算和可安全隔离的正式Codex默认重启。证据ci-panel-followup-31a28bfb4/msvc-candidate/及windows-candidate-step-review.json。先前误停日常服务事件仍保留，清理须匹配测试路径、PID、创建时间与归属。
+
 最新诊断补充7c2559055：只改apps/desktop/ui/qa/windows-materials.mjs，ui/src与tauri/src均与MSVC候选源31a28bfb4相同。对已核对同源的原生候选继续跑performance与performance-modal原30秒采样，保留失败JSON。新增diagnostics.callbackCostMs、callbackDispatchDelayMs及每秒实际滚动范围，避免“无WebGL draws也超预算”被错误归因为背景动画。回调成本不包含后续布局/绘制/GPU，延迟也不能单独定因；必要时继续采集合成/GPU trace。预算、档位、玻璃和通过条件均未改，此工具更新不是性能通过。详见performance-followup-20261105/analysis.json。
 
 # 最新Windows接续：31a28bfb4

@@ -1,0 +1,23 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 021 saved WebDAV must remain configured, not disconnected/connected
++ actual - expected
+
++ 'failed'
+- 'configured'
+
+    at assert021WebdavState (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-021-probes.mjs:256:10)
+    at assert021ReadyWebdavFacts (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-021-ready-webdav.mjs:52:15)
+    at verify021ReadyWebdav (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-021-ready-webdav.mjs:74:20)
+    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-recovery.mjs:113:24 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'failed',
+  expected: 'configured',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.2

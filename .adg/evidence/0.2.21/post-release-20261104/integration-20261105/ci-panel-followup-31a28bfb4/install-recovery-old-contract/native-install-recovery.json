@@ -1,0 +1,43 @@
+{
+  "result": "fail",
+  "screenshots": [],
+  "checks": [
+    "prefill/reset/readable native Windows path"
+  ],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.2.21",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "firstClosure": {
+    "version": "0.2.21",
+    "terminal": "done",
+    "selector": "dialog.runtime-install-dialog[open][data-testid=runtime-install-modal]",
+    "exit": "public-header-X",
+    "phase": "done",
+    "outcomePresent": true,
+    "progress": "100"
+  },
+  "failureClosure": {
+    "version": "0.2.21",
+    "terminal": "failed",
+    "selector": "dialog.runtime-install-dialog[open][data-testid=runtime-install-modal]",
+    "exit": "public-header-X",
+    "phase": "failed",
+    "outcomePresent": false,
+    "progress": null
+  },
+  "recoveredClosure": {
+    "version": "0.2.21",
+    "terminal": "done",
+    "selector": "dialog.runtime-install-dialog[open][data-testid=runtime-install-modal]",
+    "exit": "public-header-X",
+    "phase": "done",
+    "outcomePresent": true,
+    "progress": "100"
+  },
+  "error": "AssertionError [ERR_ASSERTION]: 021 saved WebDAV must remain configured, not disconnected/connected\n+ actual - expected\n\n+ 'failed'\n- 'configured'\n\n    at assert021WebdavState (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-021-probes.mjs:256:10)\n    at assert021ReadyWebdavFacts (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-021-ready-webdav.mjs:52:15)\n    at verify021ReadyWebdav (file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-021-ready-webdav.mjs:74:20)\n    at async file:///D:/a/opencodex-desktop/opencodex-desktop/test/smoke/windows-install-recovery.mjs:113:24"
+}

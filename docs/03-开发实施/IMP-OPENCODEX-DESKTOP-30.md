@@ -11,6 +11,14 @@ summary: "L/L2与W/W2已集成；Mac原生复验发现面板空URL崩溃并修�
 ---
 # 0.2.21发布后双线修复与集成发布计划
 
+## 2026-11-05 MSVC原候选已取得（仍非整版通过）
+
+新面板产品CI run41904417657已产生artifact13362926947，windows-msvc-candidate。下载原ZIP摘要b6cb8245b2c1ae0caf7cd98d3f28dfc35412966e0a27e209b1fc264719895792与GitHub元数据一致；EXE摘要b8b2f4a57a05ce036dfd30d51c9339697b036f099f76240f265d99015d07385d，15,293,440字节、PE32+ AMD64。二进制内嵌87d5137311c716ebadb1c88cc4477ff6fc8a7195，父head31a28bfb4，apps树ab09d800已核验。review-candidate.py实际检查归档、清单、原/复制哈希和构建源码绑定；本机未执行Windows EXE，二进制仅留独立tmp，不提交文档仓库。
+
+后端回归、原生凭据、运行包升级重装、MSVC构建、候选留存及首轮实际EXE冒烟步骤均success；后续安装恢复路径、Node版本及普通账号矩阵仍在执行，不写整轮绿。候选身份通过不代表RDP性能、正式默认重启、发行安装器或OTA通过。
+
+WINDOWS-FOLLOWUP.md已给原候选入口和完整哈希，Windows据同一二进制继续切源竞态、RDP原预算及正式默认adapter复验。证据ci-panel-followup-31a28bfb4/windows-candidate-step-review.json及msvc-candidate/review.json。整版任务/证书停点保持。
+
 ## 2026-11-05恢复接续：Windows补充回交与本机修复
 
 用户在本对话重新启动目标，并明确“接受 RDP，保留原性能预算”。本批材质验收允许RDP，替代下文历史物理桌面前置；不豁免p95≤2B、长帧、背景停绘/恢复、MSVC真实制品、正式客户端默认adapter和发行门。MSVC证据可来自同源CI，不额外要求在本地安装cl；需要取得同一原包候选并完成原生复验，CI编译本身不代表安装/升级或性能通过。
@@ -179,3 +187,6 @@ CSS.supports/计算样式/无头浏览器通过只作辅助。原生同场景修
 
 
 2026-11-05新面板产品Mac远端回归已通过：run41904417657的frontend126835126378及backend126835127037均success，前端63协议/1291 Vitest/类型/构建，后端库1216通过/0失败/4原忽略/1已单跑进程守卫排除、其余workspace均通过。原始日志与review见ci-panel-followup-31a28bfb4。检出合并87d5137（父7a8441f7e、31a28bfb4），已核验完整tauri子树及ui/src与当前7c2559055一致，后续只有QA采样器差异；不据此把当前7c全轮CI或Windows计为通过。直接no-cache任务查询先确认终态，run列表延迟仍保留为观察限制。Windows当前仍后端回归、无MSVC候选，RDP性能及正式客户端重启/发行门保持未完。
+
+
+2026-11-05原候选全轮CI终态已核对：run41904417657/backend-windows126835127187为completed/failure，MSVC构建/候选留存及首轮实际EXE冒烟success；后续windows-install-recovery在ready WebDAV旧configured断言失败，实际failed是采用后的合成无效端点启动只读结果。8fc5d179c修剩余ready消费者，按真实检测版本动作区分历史/当前，等待已保存修订对应的真实观察；不改环境ready/managed来源/可见卡片/UI异常/无写入合同。c99071793将该消费者回归纳入CI，八套71测试通过；完整tauri及ui/src与候选源31a28bfb4一致，可用原MSVC EXE配新驱动复验。失败原件及后续Node22/普通账号跳过保留，不能将构建或首轮通过扩大为全轮绿。最新Windows下载/哈希和脚本接续在WINDOWS-FOLLOWUP.md，审计ci-panel-followup-31a28bfb4/install-recovery-old-contract/review.json。

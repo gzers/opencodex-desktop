@@ -1,7 +1,7 @@
 {
   "status": "in_progress",
   "releaseReady": false,
-  "codeHead": "7c25590550eeac18988f44c027d9d517baae8dae",
+  "codeHead": "c990717931aa37ed66ca99e42bf5cf4f470069bb",
   "productCommit": "31a28bfb4f0decd151269ce896f2a7364fb5b186",
   "appsTree": "ab09d800b27ce13e17c46ce68f9ae38f7d4fc21a",
   "native": {
@@ -121,6 +121,20 @@
       "review": "ci-panel-followup-31a28bfb4/review.json",
       "validatedHead": "31a28bfb4f0decd151269ce896f2a7364fb5b186",
       "currentDiagnosticHead": "7c25590550eeac18988f44c027d9d517baae8dae",
+      "productSourceEquivalent": true
+    },
+    "windowsMsvcCandidate": {
+      "run": 41904417657,
+      "artifactId": 13362926947,
+      "zipSha256": "b6cb8245b2c1ae0caf7cd98d3f28dfc35412966e0a27e209b1fc264719895792",
+      "exeSha256": "b8b2f4a57a05ce036dfd30d51c9339697b036f099f76240f265d99015d07385d",
+      "checkedCommit": "87d5137311c716ebadb1c88cc4477ff6fc8a7195",
+      "associatedHead": "31a28bfb4f0decd151269ce896f2a7364fb5b186",
+      "review": "ci-panel-followup-31a28bfb4/msvc-candidate/review.json",
+      "firstSmoke": "pass",
+      "wholeJob": "completed failure: install-recovery ready WebDAV consumer still used old configured expectation",
+      "nativeFailureReview": "ci-panel-followup-31a28bfb4/install-recovery-old-contract/review.json",
+      "probeFixHead": "c990717931aa37ed66ca99e42bf5cf4f470069bb",
       "productSourceEquivalent": true
     }
   },
