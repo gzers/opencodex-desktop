@@ -1,0 +1,87 @@
+{
+  "engine": "webkit",
+  "scope": "prototype CSS only; no external requests",
+  "checks": [
+    {
+      "name": "light no persistent selected background",
+      "passed": true,
+      "detail": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400",
+          "selected": "true",
+          "text": "✓默认节点"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400",
+          "selected": "false",
+          "text": "备用节点"
+        }
+      ]
+    },
+    {
+      "name": "light no selected bold",
+      "passed": true,
+      "detail": [
+        "400",
+        "400"
+      ]
+    },
+    {
+      "name": "light checkmark retained",
+      "passed": true
+    },
+    {
+      "name": "light keyboard focus visible",
+      "passed": true
+    },
+    {
+      "name": "light close works",
+      "passed": true
+    },
+    {
+      "name": "dark no persistent selected background",
+      "passed": true,
+      "detail": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400",
+          "selected": "true",
+          "text": "✓默认节点"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "weight": "400",
+          "selected": "false",
+          "text": "备用节点"
+        }
+      ]
+    },
+    {
+      "name": "dark no selected bold",
+      "passed": true,
+      "detail": [
+        "400",
+        "400"
+      ]
+    },
+    {
+      "name": "dark checkmark retained",
+      "passed": true
+    },
+    {
+      "name": "dark keyboard focus visible",
+      "passed": true
+    },
+    {
+      "name": "dark close works",
+      "passed": true
+    },
+    {
+      "name": "no page errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

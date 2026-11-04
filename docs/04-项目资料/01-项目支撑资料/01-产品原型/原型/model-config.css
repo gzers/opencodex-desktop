@@ -40,7 +40,6 @@
 .mp-node-picker-list{display:grid;gap:3px;margin-top:6px}
 .mp-node-picker-row{display:grid;grid-template-columns:minmax(0,1fr) 84px 66px;align-items:center;gap:8px;min-height:36px}
 .mp-node-picker-choice{display:flex;align-items:center;gap:6px;min-width:0;padding:7px 4px;border:0;border-radius:var(--radius-xs);background:transparent;color:inherit;text-align:left;font:inherit;font-size:var(--text-label);cursor:pointer}
-.mp-node-picker-choice[aria-pressed=true]{background:var(--rail);font-weight:600}
 .mp-node-picker-choice:hover:not(:disabled){background:var(--hover)}
 .mp-node-picker-choice:disabled{opacity:.45;cursor:default}
 .mp-node-picker-check{flex:none;width:14px;color:var(--blue)}
