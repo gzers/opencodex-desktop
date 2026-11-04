@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "result": "fail",
+  "version": "0.2.21",
+  "platform": "Windows WebView2",
+  "admittedRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-1a9f8fe98a744a07a7abd9358dbcd947",
+  "admission": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.2.21",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "dataRoot": {
+      "activeDataRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-1a9f8fe98a744a07a7abd9358dbcd947",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-1a9f8fe98a744a07a7abd9358dbcd947\\opencodex-home",
+      "currentDataRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-1a9f8fe98a744a07a7abd9358dbcd947",
+      "currentOpencodexHome": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-1a9f8fe98a744a07a7abd9358dbcd947\\opencodex-home",
+      "runtimeActive": true
+    }
+  },
+  "error": "021 rename must migrate exact routed/default references and preserve all other file content/Keys\n+ actual - expected\n... Skipped lines\n\n  {\n    defaultProvider: 'native021-new-0ed75429',\n    disabledModels: [\n      'Native-scope-A-pending/fixture-scope-a',\n      'native-sort-fixture/fixture-alpha',\n...\n        ],\n+       name: 'native021-new-0ed75429',\n-       name: 'native021-old-0ed75429',\n        native021Opaque: {\n          keep: 42,\n          literal: 'native021-old-0ed75429/leave-opaque'\n        },\n        newModelPolicy: 'off',\n"
+}

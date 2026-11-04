@@ -38,3 +38,11 @@ reviewed/tooling-reviewed.json 复查 cl.exe/link.exe/vswhere 和标准安装/SD
 未取得越界前后日常配置字节证据，不能认证该事件零副作用。详见 isolation-incident.json。复核阶段清理按隔离EXE/脚本路径、PID和创建时间匹配；cleanup-reviewed-final.json 证明隔离管理器、服务、Python夹具和指定监听端口已清理，当前日常管理器/服务未再操作。
 
 总体 required_checks 中 physical-material-performance、msvc-build、packaged-codex-default-restart、native-regression（切源失败）、isolation 均未通过；回执须相符。所有任务保持未完成，旧冻结任务/证书不重绑。未合并main、未发布、未跑真实WebDAV或推理。后续需要可用物理桌面/MSVC工具链、可证明归属的正式桌面实例，以及共享面板切源失败的定位；由本机统一集成和发行。
+
+## 指定源 CI 补充证据（不代替本地缺验）
+
+CI run 41868797161 关联 head bd7c0fe8c，实际PR测试合并提交7dff65891af38d47db6a7ce0b4f1c93f754a265f；已fetch并核对两者 apps 树均为0eec77398bbd1cbe49f88dd3bd5e8046266e14c1。Windows运行器win25-vs2026的后端回归、Clippy及 release custom-protocol 构建步骤成功，最终EXE原生冒烟失败，不能写CI全绿。
+
+制品13346024660的20,453,585字节ZIP SHA-256为559f2a33e70be75bb29585bd36ca932e0acb833c2a7ef0e6ad6224ca71128113，与GitHub返回摘要相同。归档仅有库测试EXE及诊断，没有release应用EXE。startup.json证明实际release应用启动、源码身份匹配，但普通用户冒烟未完成；native021-behavior.json的失败是改名后provider.name新值与旧探针预期不同，与本地已修探针相同。原始CI报告、归档索引与任务步骤见ci-supplement/。
+
+本机构建身份已复查为普通权限（非管理员），MSVC/SDK仍缺。远端构建证据只能补充同产品源信息，不替代本地MSVC构建/候选EXE复验，也不替代物理桌面性能。正式Codex默认重启仍无可安全限定的独立实例，未调用。总体目标未达成。

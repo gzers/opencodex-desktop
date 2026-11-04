@@ -17,6 +17,15 @@
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/checks/gnu-build.log",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/checks/material-performance.log",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/checks/native-probe-final-unit.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/ci-supplement/ci-reviewed-index.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/ci-supplement/ci-reviewed-metadata.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/ci-supplement/local-conditions.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/ci-supplement/out/windows-backend/cargo-tree.txt",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/ci-supplement/out/windows-backend/environment.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/ci-supplement/out/windows-backend/test-executable-sha256.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/ci-supplement/out/windows-startup/startup/native021-behavior.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/ci-supplement/out/windows-startup/startup/startup-stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/ci-supplement/out/windows-startup/startup/startup.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/default-codex/default-adapter-observation.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/default-codex/default-adapter-observe.log",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-final-20261105/default-codex/packaged-codex-processes.json",
@@ -259,9 +268,9 @@
     }
   ],
   "fact_impacts": [],
-  "completed_at": "2026-11-04T18:04:40.732656+00:00",
-  "summary": "复核回执：仅报告补验驱动/证据实际范围；代码b2cb82cdee172c16bd597a6b2017b54d40d11d5f，apps不变。主任务因RDP/MSVC/正式adapter缺验、切源原生失败与日常服务清理越界不通过。补充探针检查可通过，但所有AC不据此关闭，不出CERT。",
-  "revision": 2,
-  "summary_digest": "d0aafbfc7d5a4dd288ea3b4d16b56a0aa0fa9f3925aaf2cdb7125c59fe4839f2",
-  "content_digest": "471a0e1ca3e2a7b1969ae61b75cf2d1c5579aafc6be777f18dfe86123c9436f1"
+  "completed_at": "2026-11-04T18:12:29.551858+00:00",
+  "summary": "复核补充CI41868797161：实际PR合并7dff6589的apps树与指定bd7c0fe8c相同，远端release构建成功但原生冒烟失败，制品不含release应用EXE；不能替代本机MSVC/物理桌面/正式adapter缺验。面板切源失败及隔离越界仍使主任务不通过，不生成CERT。",
+  "revision": 3,
+  "summary_digest": "a36486bb7208fb95276b2941020fe09b8b07302f125619d37b78f9d11490abe7",
+  "content_digest": "3bbf5aa27350fb4ee91127a0e6921ecd62ca394d48c4f4ca2db842c784bd4d02"
 }
