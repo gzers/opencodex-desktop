@@ -84,6 +84,20 @@ test('rename readback validates entire real file, exact namespaces, stable IDs, 
   x=>{x.afterSnapshot.policyDigest=x.beforeSnapshot.policyDigest},
  ]){const value=renameFixture();mutate(value);assert.throws(()=>assert021RenameReadback(value))}
 })
+test('name-only rename requires persisted display name while protecting the full provider document',()=>{
+ const value=renameFixture();value.updatesDisplayName=true
+ value.before.providers[value.from].name=value.from
+ value.after.providers[value.to].name=value.to
+ assert.doesNotThrow(()=>assert021RenameReadback(value))
+ for(const mutate of [
+  x=>{x.after.providers[x.to].name=x.from},
+  x=>{delete x.after.providers[x.to].name},
+  x=>{x.after.providers[x.to].apiKey='lost-key'},
+  x=>{x.after.providers[x.to].native021Opaque.literal=x.to+'/leave-opaque'},
+  x=>{x.after.providers[x.from+'0'].name='changed-neighbor'},
+ ]){const changed=structuredClone(value);mutate(changed);assert.throws(()=>assert021RenameReadback(changed))}
+ assert.throws(()=>assert021RenameReadback({...value,updatesDisplayName:false}),'historical ID contract must not silently adopt display-name writes')
+})
 test('rename backup validation requires one exact ordinary backup plus exact transaction pre/post images',async t=>{
  const output=await mkdtemp(join(tmpdir(),'ocx021-backups-'));t.after(()=>rm(output,{recursive:true,force:true}))
  const before={bytes:Buffer.from('exact-prewrite\n'),backups:['older']},transaction='rename-12345678-1234-1234-1234-123456789abc',after={bytes:Buffer.from('exact-postwrite\n'),backups:['older','ordinary',transaction].sort()},base=join(output,'backups','model-config')

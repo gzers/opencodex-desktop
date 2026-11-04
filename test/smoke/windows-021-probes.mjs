@@ -26,10 +26,11 @@ async function assertFixtureFile(config,root){
  const relative=win32.relative(await realpath(root),await realpath(config))
  assert(relative&&!relative.startsWith('..')&&!win32.isAbsolute(relative),'021 fixture resolved outside the admitted root')
 }
-export function assert021RenameReadback({before,after,beforeSnapshot,afterSnapshot,channelId,from,to}){
+export function assert021RenameReadback({before,after,beforeSnapshot,afterSnapshot,channelId,from,to,updatesDisplayName=false}){
  assert(Object.hasOwn(before.providers,from)&&!Object.hasOwn(before.providers,to),'021 rename preimage is ambiguous')
  const expected=structuredClone(before)
  expected.providers[to]=expected.providers[from];delete expected.providers[from]
+ if(updatesDisplayName)expected.providers[to].name=to
  if(expected.defaultProvider===from)expected.defaultProvider=to
  for(const field of ['modelPickerOrder','disabledModels'])if(expected[field])expected[field]=expected[field].map(slug=>slug.startsWith(from+'/')?to+slug.slice(from.length):slug)
  assert.deepEqual(after,expected,'021 rename must migrate exact routed/default references and preserve all other file content/Keys')
@@ -148,9 +149,12 @@ async function verifyRenameAndNotice(driver,expected){
  await wait("document.readyState==='complete'&&!!document.querySelector('.side')",'021 fixture reload')
  await channelList(driver)
  const observer=await observe021Ipc(driver)
- let noticeResult,ipc
+ let noticeResult,ipc,updatesDisplayName=false
  try{
   await openChannel(driver,id,'synthetic-native021-key')
+  // Historical 0.2.21 exposes a separate runtime ID; the integrated name-only
+  // contract also persists the channel display name in the provider document.
+  updatesDisplayName=await evaluate(js(()=>!document.querySelector('input[aria-label="运行渠道标识"]')))
   await input(driver,'#channel-config input[maxlength="80"]',to)
   const draft=await wait(js(to=>{const preview=document.querySelector('[data-channel-rename-preview]');const field=document.querySelector('input[aria-label="运行渠道标识"]');return (field?field.value===to:document.querySelector('#channel-config input[maxlength="80"]')?.value===to)&&preview?.textContent.includes(to)?{preview:preview.textContent,keyMasked:document.querySelector('input[aria-label="API Key"]').type==='password'}:null},to),'021 exact rename preview from native handler')
   assert(draft.keyMasked)
@@ -175,7 +179,7 @@ async function verifyRenameAndNotice(driver,expected){
  }
  assert.equal(ipc.commands.filter(c=>c==='model_file_save').length,1,'021 notification/cancellation performed another save')
  const after=await modelFileEvidence(config,expected),afterSnapshot=await invoke('model_file_snapshot')
- assert021RenameReadback({before:JSON.parse(before.bytes),after:JSON.parse(after.bytes),beforeSnapshot,afterSnapshot,channelId:id,from,to})
+ assert021RenameReadback({before:JSON.parse(before.bytes),after:JSON.parse(after.bytes),beforeSnapshot,afterSnapshot,channelId:id,from,to,updatesDisplayName})
  const backups=await assert021RenameBackups(before,after,expected)
  await freshAdmission(invoke,expected)
  await call('Page.reload',{ignoreCache:true});await wait("document.readyState==='complete'&&!!document.querySelector('.side')",'021 saved rename full reopen')
