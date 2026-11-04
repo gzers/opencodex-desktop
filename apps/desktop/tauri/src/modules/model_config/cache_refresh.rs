@@ -256,11 +256,16 @@ fn client_binding(
     {
         return Err(invalid_binding());
     }
-    let executable = if cfg!(windows)
+    let npm_windows = cfg!(windows)
         && executable
             .extension()
-            .is_some_and(|extension| extension.eq_ignore_ascii_case("cmd"))
-    {
+            .is_some_and(|extension| extension.eq_ignore_ascii_case("cmd"));
+    let npm_macos = cfg!(target_os = "macos")
+        && std::fs::symlink_metadata(&executable)
+            .is_ok_and(|metadata| metadata.file_type().is_symlink())
+        && dunce::canonicalize(&executable)
+            .is_ok_and(|path| path.extension().is_some_and(|extension| extension == "js"));
+    let executable = if npm_windows || npm_macos {
         client_npm_runtime::resolve_npm_native(
             &executable,
             runtime["version"].as_str().ok_or_else(invalid_binding)?,

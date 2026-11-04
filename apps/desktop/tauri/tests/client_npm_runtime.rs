@@ -507,3 +507,396 @@ await import(pathToFileURL(process.argv[1]).href);"#;
         fs::write(PathBuf::from(evidence).join("actual-public-selector.json"), serde_json::to_vec_pretty(&json!({"passed":true,"nativeExecuted":false,"platform":"win32","arch":"x64","cases":results})).unwrap()).unwrap();
     }
 }
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+mod macos_default {
+    use super::*;
+    use std::os::unix::{
+        ffi::OsStrExt,
+        fs::{symlink, PermissionsExt},
+    };
+
+    const TRIPLE: &str = "aarch64-apple-darwin";
+
+    struct MacFixture {
+        _temp: tempfile::TempDir,
+        root: PathBuf,
+        modules: PathBuf,
+        package: PathBuf,
+        launcher: PathBuf,
+    }
+
+    impl MacFixture {
+        fn new(local: bool) -> Self {
+            let temp = tempfile::Builder::new()
+                .prefix("macos-npm-")
+                .tempdir()
+                .unwrap();
+            let root = dunce::canonicalize(temp.path()).unwrap();
+            let prefix = root.join("npm install 中文");
+            let modules = prefix.join(if local {
+                "node_modules"
+            } else {
+                "lib/node_modules"
+            });
+            let package = modules.join("@openai/codex");
+            let launcher = if local {
+                modules.join(".bin/codex")
+            } else {
+                prefix.join("bin/codex")
+            };
+            fs::create_dir_all(package.join("bin")).unwrap();
+            fs::create_dir_all(launcher.parent().unwrap()).unwrap();
+            fs::write(
+                package.join("package.json"),
+                include_bytes!("fixtures/ocx021-codex-npm/package.json"),
+            )
+            .unwrap();
+            fs::write(
+                package.join("bin/codex.js"),
+                include_bytes!("fixtures/ocx021-codex-npm/codex-0.166.0.js"),
+            )
+            .unwrap();
+            let targets: Value = serde_json::from_slice(include_bytes!(
+                "fixtures/ocx021-codex-npm/npm-macos-symlinks.json"
+            ))
+            .unwrap();
+            symlink(
+                targets[if local { "local" } else { "global" }]
+                    .as_str()
+                    .unwrap(),
+                &launcher,
+            )
+            .unwrap();
+            Self {
+                _temp: temp,
+                root,
+                modules,
+                package,
+                launcher,
+            }
+        }
+
+        fn optional(&self, nested: bool) -> PathBuf {
+            let modules = if nested {
+                self.package.join("node_modules")
+            } else {
+                self.modules.clone()
+            };
+            let package = modules.join("@openai/codex-darwin-arm64");
+            fs::create_dir_all(&package).unwrap();
+            fs::write(
+                package.join("package.json"),
+                include_bytes!("fixtures/ocx021-codex-npm/package-darwin-arm64.json"),
+            )
+            .unwrap();
+            let native = package.join(format!("vendor/{TRIPLE}/bin/codex"));
+            write_macho(&native);
+            native
+        }
+
+        fn embedded(&self) -> PathBuf {
+            let native = self.package.join(format!("vendor/{TRIPLE}/bin/codex"));
+            write_macho(&native);
+            native
+        }
+
+        fn resolve(&self) -> PathBuf {
+            resolve_npm_native(&self.launcher, "0.166.0").unwrap()
+        }
+        fn refuses(&self) {
+            let error = resolve_npm_native(&self.launcher, "0.166.0").unwrap_err();
+            assert!(error.code.starts_with("client_npm_"));
+            assert!(!error.message.contains(self.root.to_str().unwrap()));
+        }
+    }
+
+    // Format-only fixture, never executed or presented as the official binary.
+    fn write_macho(path: &Path) {
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        let mut bytes = [0; 64];
+        for (offset, word) in [
+            (0, 0xfeed_facfu32),
+            (4, 0x0100_000c),
+            (12, 2),
+            (16, 1),
+            (20, 8),
+        ] {
+            bytes[offset..offset + 4].copy_from_slice(&word.to_le_bytes());
+        }
+        fs::write(path, bytes).unwrap();
+        fs::set_permissions(path, fs::Permissions::from_mode(0o755)).unwrap();
+    }
+
+    #[test]
+    fn exact_local_and_global_npm_symlinks_resolve_hoisted_nested_and_embedded() {
+        for local in [false, true] {
+            for nested in [false, true] {
+                let fixture = MacFixture::new(local);
+                let native = fixture.optional(nested);
+                let before = fs::read_link(&fixture.launcher).unwrap();
+                assert_eq!(fixture.resolve(), native);
+                assert_eq!(fs::read_link(&fixture.launcher).unwrap(), before);
+            }
+            let fixture = MacFixture::new(local);
+            let native = fixture.embedded();
+            assert_eq!(fixture.resolve(), native);
+            let optional = fixture.optional(false);
+            assert_eq!(fixture.resolve(), optional);
+            fs::remove_file(optional).unwrap();
+            fixture.refuses();
+        }
+    }
+
+    #[test]
+    fn custom_wrapper_absolute_or_normalized_equivalent_link_is_not_an_npm_authority() {
+        for target in [
+            "absolute",
+            "normalized",
+            "escape",
+            "different_package",
+            "chain",
+            "regular_js",
+            "shell",
+        ] {
+            let fixture = MacFixture::new(true);
+            fixture.optional(false);
+            fs::remove_file(&fixture.launcher).unwrap();
+            match target {
+                "absolute" => {
+                    symlink(fixture.package.join("bin/codex.js"), &fixture.launcher).unwrap()
+                }
+                "normalized" => {
+                    symlink("../@openai/./codex/bin/codex.js", &fixture.launcher).unwrap()
+                }
+                "escape" => symlink("../../outside/codex.js", &fixture.launcher).unwrap(),
+                "different_package" => {
+                    symlink("../@unknown/codex/bin/codex.js", &fixture.launcher).unwrap()
+                }
+                "chain" => {
+                    symlink(
+                        "../@openai/codex/bin/codex.js",
+                        fixture.launcher.with_file_name("chain"),
+                    )
+                    .unwrap();
+                    symlink("chain", &fixture.launcher).unwrap();
+                }
+                "regular_js" => {
+                    fs::copy(fixture.package.join("bin/codex.js"), &fixture.launcher).unwrap();
+                }
+                "shell" => fs::write(&fixture.launcher, "#!/bin/sh\nnode other.js\n").unwrap(),
+                _ => unreachable!(),
+            }
+            fixture.refuses();
+        }
+        let fixture = MacFixture::new(true);
+        fixture.optional(false);
+        assert!(resolve_npm_native(&fixture.package.join("bin/codex.js"), "0.166.0").is_err());
+    }
+
+    #[test]
+    fn main_optional_version_alias_bin_and_selector_must_agree() {
+        for mutation in [
+            "version",
+            "bin",
+            "alias",
+            "selector",
+            "optional_version",
+            "optional_os",
+            "optional_cpu",
+            "optional_exports",
+        ] {
+            let fixture = MacFixture::new(true);
+            fixture.optional(false);
+            match mutation {
+                "version" => edit_json(&fixture.package.join("package.json"), |v| {
+                    v["version"] = json!("0.165.0")
+                }),
+                "bin" => edit_json(&fixture.package.join("package.json"), |v| {
+                    v["bin"]["codex"] = json!("bin/wrapper.js")
+                }),
+                "alias" => edit_json(&fixture.package.join("package.json"), |v| {
+                    v["optionalDependencies"]["@openai/codex-darwin-arm64"] =
+                        json!("npm:@openai/codex@0.165.0-darwin-arm64")
+                }),
+                "selector" => fs::write(
+                    fixture.package.join("bin/codex.js"),
+                    "// unverified selector\n",
+                )
+                .unwrap(),
+                _ => edit_json(
+                    &fixture
+                        .modules
+                        .join("@openai/codex-darwin-arm64/package.json"),
+                    |v| match mutation {
+                        "optional_version" => v["version"] = json!("0.165.0-darwin-arm64"),
+                        "optional_os" => v["os"] = json!(["linux"]),
+                        "optional_cpu" => v["cpu"] = json!(["x64"]),
+                        "optional_exports" => {
+                            v["exports"] = json!({"./package.json":"../external.json"})
+                        }
+                        _ => unreachable!(),
+                    },
+                ),
+            }
+            fixture.refuses();
+        }
+    }
+
+    #[test]
+    fn x86_fat_dylib_script_truncated_or_non_executable_native_is_refused() {
+        for mutation in [
+            "x86",
+            "fat",
+            "dylib",
+            "script",
+            "truncated",
+            "mode",
+            "load_commands",
+        ] {
+            let fixture = MacFixture::new(true);
+            let native = fixture.optional(false);
+            let mut bytes = fs::read(&native).unwrap();
+            match mutation {
+                "x86" => bytes[4..8].copy_from_slice(&0x0100_0007u32.to_le_bytes()),
+                "fat" => bytes[..4].copy_from_slice(&0xcafe_babeu32.to_be_bytes()),
+                "dylib" => bytes[12..16].copy_from_slice(&6u32.to_le_bytes()),
+                "script" => bytes = b"#!/bin/sh\nexit 0\n".to_vec(),
+                "truncated" => bytes.truncate(12),
+                "mode" => fs::set_permissions(&native, fs::Permissions::from_mode(0o644)).unwrap(),
+                "load_commands" => bytes[20..24].copy_from_slice(&65_537u32.to_le_bytes()),
+                _ => unreachable!(),
+            }
+            fs::write(native, bytes).unwrap();
+            fixture.refuses();
+        }
+    }
+
+    #[test]
+    fn package_selector_optional_native_and_launcher_parent_cannot_escape_via_other_symlinks() {
+        for target in ["package", "selector", "optional", "native", "parent"] {
+            let fixture = MacFixture::new(true);
+            let native = fixture.optional(false);
+            let path = match target {
+                "package" => fixture.package.clone(),
+                "selector" => fixture.package.join("bin/codex.js"),
+                "optional" => fixture.modules.join("@openai/codex-darwin-arm64"),
+                "native" => native,
+                _ => fixture.launcher.parent().unwrap().to_path_buf(),
+            };
+            let outside = fixture.root.join("escaped-source");
+            fs::rename(&path, &outside).unwrap();
+            symlink(outside, path).unwrap();
+            fixture.refuses();
+        }
+    }
+
+    #[test]
+    fn duplicate_shadow_or_unbound_x64_platform_package_is_refused() {
+        let fixture = MacFixture::new(true);
+        fixture.optional(false);
+        fixture.optional(true);
+        fixture.refuses();
+        for root in ["bin/node_modules", "../node_modules"] {
+            let fixture = MacFixture::new(true);
+            fixture.optional(false);
+            fs::create_dir_all(
+                fixture
+                    .package
+                    .join(root)
+                    .join("@openai/codex-darwin-arm64"),
+            )
+            .unwrap();
+            fixture.refuses();
+        }
+        let fixture = MacFixture::new(true);
+        fixture.optional(false);
+        fs::create_dir_all(fixture.modules.join("@openai/codex-darwin-x64")).unwrap();
+        fixture.refuses();
+        let fixture = MacFixture::new(true);
+        fixture.embedded();
+        let x64 = fixture.package.join("vendor/x86_64-apple-darwin/bin/codex");
+        write_macho(&x64);
+        fixture.refuses();
+    }
+
+    #[test]
+    #[ignore = "requires explicit cached official npm modules and Node; native is never executed"]
+    fn actual_cached_arm64_binary_matches_the_unmodified_official_js_selector() {
+        use sha2::{Digest, Sha256};
+        use std::io::Read;
+        let modules = PathBuf::from(
+            std::env::var_os("OCX_TEST_CODEX_MAC_PUBLIC")
+                .expect("explicit cached public modules required"),
+        );
+        let node = PathBuf::from(
+            std::env::var_os("OCX_TEST_CODEX_NPM_NODE").expect("explicit Node required"),
+        );
+        assert!(modules.is_absolute() && node.is_absolute());
+        let actual = modules.join(format!(
+            "@openai/codex-darwin-arm64/vendor/{TRIPLE}/bin/codex"
+        ));
+        let mut sha = Sha256::new();
+        let mut file = fs::File::open(&actual).unwrap();
+        let mut buffer = [0; 65_536];
+        loop {
+            let count = file.read(&mut buffer).unwrap();
+            if count == 0 {
+                break;
+            }
+            sha.update(&buffer[..count]);
+        }
+        assert_eq!(
+            format!("{:x}", sha.finalize()),
+            "39acf979729dd290f9a24ee38b2914e036c91b65952872e28ae2a6b88a7db7c1"
+        );
+        let mut results = Vec::new();
+        for (local, nested, embedded) in [
+            (true, false, false),
+            (false, false, false),
+            (true, true, false),
+            (false, false, true),
+        ] {
+            let fixture = MacFixture::new(local);
+            let native = if embedded {
+                fixture.embedded()
+            } else {
+                fixture.optional(nested)
+            };
+            fs::remove_file(&native).unwrap();
+            fs::hard_link(&actual, &native)
+                .or_else(|_| fs::copy(&actual, &native).map(|_| ()))
+                .unwrap();
+            let resolved = fixture.resolve();
+            assert_eq!(resolved, native);
+            let probe = r#"import {pathToFileURL} from 'node:url';
+import {EventEmitter} from 'node:events';
+import childProcess from 'node:child_process';
+import {syncBuiltinESMExports} from 'node:module';
+if(process.platform!=='darwin'||process.arch!=='arm64')throw new Error('unsupported probe host');
+process.execve=(file)=>{console.log(JSON.stringify({selected:file}));process.exit(0);};
+childProcess.spawn=(file)=>{console.log(JSON.stringify({selected:file}));const child=new EventEmitter();queueMicrotask(()=>child.emit('exit',0,null));return child;};
+syncBuiltinESMExports();
+await import(pathToFileURL(process.argv[1]).href);"#;
+            let output = std::process::Command::new(&node)
+                .args(["--input-type=module", "--eval", probe])
+                .arg(fixture.package.join("bin/codex.js"))
+                .env_clear()
+                .env("HOME", &fixture.root)
+                .env("PATH", "/usr/bin:/bin")
+                .current_dir(&fixture.root)
+                .output()
+                .unwrap();
+            assert!(output.status.success(), "official selector probe failed");
+            let selection: Value = serde_json::from_slice(&output.stdout).unwrap();
+            assert_eq!(
+                PathBuf::from(selection["selected"].as_str().unwrap()),
+                resolved
+            );
+            results.push(json!({"local":local,"nested":nested,"embedded":embedded,"officialJsSelectedSameNative":true,"linkTarget":fs::read_link(&fixture.launcher).unwrap().as_os_str().as_bytes()}));
+        }
+        if let Some(root) = std::env::var_os("OCX_TEST_CODEX_NPM_EVIDENCE") {
+            fs::write(PathBuf::from(root).join("actual-macos-selector.json"),serde_json::to_vec_pretty(&json!({"passed":true,"platform":"darwin","arch":"arm64","nativeExecuted":false,"nativeSha256":"39acf979729dd290f9a24ee38b2914e036c91b65952872e28ae2a6b88a7db7c1","cases":results})).unwrap()).unwrap();
+        }
+    }
+}

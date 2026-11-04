@@ -1,4 +1,4 @@
-//! Read-only resolution of the two standard npm Codex shims. Never run a shell
+//! Read-only resolution of standard npm Codex entrypoints. Never run a shell
 //! or discover Node/PATH. Unknown package/launcher contracts fail closed.
 use crate::modules::model_config::schema::{invalid, ModelError, ModelResult};
 use serde_json::Value;
@@ -39,7 +39,10 @@ const TARGETS: [WindowsTarget; 2] = [
 /// node_modules/.bin and Windows global-prefix shims, with one unambiguous
 /// x64 optional package (nested/hoisted) or an embedded vendor fallback.
 ///
-/// Production scope is Windows x64 with x64 Node. An adjacent node.exe is
+/// Production scope is Windows x64 and macOS arm64. macOS accepts only npm's
+/// exact local/global symlink to this package's verified bin/codex.js, then
+/// selects a same-version arm64 optional package or embedded Mach-O executable.
+/// Windows requires x64 Node. An adjacent node.exe is
 /// checked; absent one, the caller must maintain that supported host contract.
 /// ARM64 and multiple Windows targets are refused, never inferred from PATH.
 /// The selector contract is pinned, not the release version or EXE digest: a
@@ -50,6 +53,13 @@ const TARGETS: [WindowsTarget; 2] = [
 pub fn resolve_npm_native(launcher: &Path, expected_version: &str) -> ModelResult<PathBuf> {
     if !stable_version(expected_version) {
         return Err(failure("version"));
+    }
+    #[cfg(target_os = "macos")]
+    if launcher.file_name() == Some(std::ffi::OsStr::new("codex")) {
+        if !cfg!(target_arch = "aarch64") {
+            return Err(failure("platform"));
+        }
+        return resolve_macos_symlink(launcher, expected_version);
     }
     if cfg!(all(windows, not(target_arch = "x86_64"))) {
         return Err(failure("platform"));
@@ -173,6 +183,149 @@ pub fn resolve_npm_native(launcher: &Path, expected_version: &str) -> ModelResul
         return Err(failure("ambiguous"));
     }
     Ok(native)
+}
+
+#[cfg(target_os = "macos")]
+fn resolve_macos_symlink(launcher: &Path, expected_version: &str) -> ModelResult<PathBuf> {
+    if !launcher.is_absolute()
+        || launcher.components().count() > MAX_ANCESTORS
+        || launcher
+            .components()
+            .any(|part| matches!(part, Component::ParentDir | Component::CurDir))
+    {
+        return Err(failure("path"));
+    }
+    // Only this final link is allowed; all parent/package/native components
+    // continue to use checked_path's no-symlink boundary.
+    let parent = checked_path(launcher.parent().ok_or_else(|| failure("path"))?)?;
+    let local = parent.file_name() == Some(std::ffi::OsStr::new(".bin"));
+    let (modules, expected_link) = if local {
+        let modules = parent.parent().ok_or_else(|| failure("path"))?;
+        if modules.file_name() != Some(std::ffi::OsStr::new("node_modules")) {
+            return Err(failure("shim"));
+        }
+        (modules.to_path_buf(), "../@openai/codex/bin/codex.js")
+    } else if parent.file_name() == Some(std::ffi::OsStr::new("bin")) {
+        (
+            parent
+                .parent()
+                .ok_or_else(|| failure("path"))?
+                .join("lib/node_modules"),
+            "../lib/node_modules/@openai/codex/bin/codex.js",
+        )
+    } else {
+        return Err(failure("shim"));
+    };
+    if !fs::symlink_metadata(launcher)
+        .map_err(|_| failure("path"))?
+        .file_type()
+        .is_symlink()
+        || fs::read_link(launcher)
+            .map_err(|_| failure("shim"))?
+            .as_os_str()
+            != std::ffi::OsStr::new(expected_link)
+    {
+        return Err(failure("shim"));
+    }
+    let package = checked_path(&modules.join("@openai/codex"))?;
+    let entrypoint = checked_path(&package.join("bin/codex.js"))?;
+    if dunce::canonicalize(launcher).map_err(|_| failure("boundary"))? != entrypoint {
+        return Err(failure("boundary"));
+    }
+    let manifest = json(&package.join("package.json"))?;
+    if manifest["name"] != "@openai/codex"
+        || manifest["version"] != expected_version
+        || manifest["type"] != "module"
+        || manifest["bin"] != serde_json::json!({"codex":"bin/codex.js"})
+        || manifest.get("exports").is_some()
+    {
+        return Err(failure("package"));
+    }
+    if format!("{:x}", Sha256::digest(text(&entrypoint)?.as_bytes())) != SELECTOR_SHA256 {
+        return Err(failure("selector"));
+    }
+    for cpu in ["arm64", "x64"] {
+        if manifest["optionalDependencies"][format!("@openai/codex-darwin-{cpu}")]
+            != format!("npm:@openai/codex@{expected_version}-darwin-{cpu}")
+        {
+            return Err(failure("package"));
+        }
+    }
+    let mut optional = Vec::new();
+    let search_start = package.join("bin");
+    for (depth, ancestor) in search_start.ancestors().enumerate() {
+        if depth >= MAX_ANCESTORS {
+            return Err(failure("path"));
+        }
+        if ancestor.file_name() == Some(std::ffi::OsStr::new("node_modules")) {
+            continue;
+        }
+        for cpu in ["arm64", "x64"] {
+            let relative = format!("@openai/codex-darwin-{cpu}");
+            let candidate = ancestor.join("node_modules").join(&relative);
+            if present(&candidate)? {
+                if candidate != package.join("node_modules").join(&relative)
+                    && candidate != modules.join(&relative)
+                {
+                    return Err(failure("boundary"));
+                }
+                if cpu != "arm64" {
+                    return Err(failure("platform"));
+                }
+                optional.push(checked_path(&candidate)?);
+            }
+        }
+    }
+    if optional.len() > 1 {
+        return Err(failure("ambiguous"));
+    }
+    let native = if let Some(optional) = optional.pop() {
+        let metadata = json(&optional.join("package.json"))?;
+        if metadata["name"] != "@openai/codex"
+            || metadata["version"] != format!("{expected_version}-darwin-arm64")
+            || metadata["os"] != serde_json::json!(["darwin"])
+            || metadata["cpu"] != serde_json::json!(["arm64"])
+            || metadata.get("exports").is_some()
+        {
+            return Err(failure("package"));
+        }
+        optional.join("vendor/aarch64-apple-darwin/bin/codex")
+    } else {
+        if present(&package.join("vendor/x86_64-apple-darwin/bin/codex"))? {
+            return Err(failure("platform"));
+        }
+        package.join("vendor/aarch64-apple-darwin/bin/codex")
+    };
+    let native = checked_path(&native)?;
+    verify_arm64_macho(&native)?;
+    Ok(native)
+}
+
+#[cfg(target_os = "macos")]
+fn verify_arm64_macho(path: &Path) -> ModelResult<()> {
+    use std::os::unix::fs::PermissionsExt;
+    let metadata = fs::metadata(path).map_err(|_| failure("native"))?;
+    if !metadata.is_file() || metadata.permissions().mode() & 0o111 == 0 {
+        return Err(failure("native"));
+    }
+    let mut header = [0; 32];
+    File::open(path)
+        .and_then(|mut file| file.read_exact(&mut header))
+        .map_err(|_| failure("native"))?;
+    let word =
+        |offset| u32::from_le_bytes(header[offset..offset + 4].try_into().expect("four bytes"));
+    // Deliberately accept the released thin arm64 MH_EXECUTE format only, not
+    // arbitrary scripts, dylibs, x86/Rosetta or unverified universal wrappers.
+    if word(0) != 0xfeed_facf
+        || word(4) != 0x0100_000c
+        || word(12) != 2
+        || !(1..=4096).contains(&word(16))
+        || !(8..=MAX_TEXT as u32).contains(&word(20))
+        || 32 + word(20) as u64 > metadata.len()
+    {
+        return Err(failure("native"));
+    }
+    Ok(())
 }
 
 fn failure(reason: &str) -> ModelError {
