@@ -121,7 +121,7 @@ fn verify_client_route(binding: &ClientBinding, management_base: &str) -> ModelR
     {
         return Err(fail());
     }
-    Ok(format!("sha256:{}", super::store::sha256(&bytes)))
+    Ok(super::store::sha256(&bytes))
 }
 fn client_binding(
     settings: &serde_json::Value,

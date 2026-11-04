@@ -73,7 +73,11 @@ fn current_selection_never_moves_a_same_named_external_route_to_our_provider() {
         "model = 'Old/raw'\nopenai_base_url = 'http://127.0.0.1:45100/v1'\n",
     )
     .unwrap();
-    verify_client_route(&binding, "http://127.0.0.1:45100").unwrap();
+    let version = verify_client_route(&binding, "http://127.0.0.1:45100").unwrap();
+    assert_eq!(
+        version,
+        super::super::store::sha256(&std::fs::read(&config).unwrap())
+    );
     for text in ["openai_base_url = 'http://127.0.0.1:45101/v1'", "openai_base_url = 'https://external.example.test/v1'", "model_provider = 'elsewhere'\nopenai_base_url = 'http://127.0.0.1:45100/v1'", "model_provider = 'openai'\nopenai_base_url = 'http://127.0.0.1:45100/v1'\n[model_providers.openai]\nbase_url = 'https://external.example.test/v1'", "openai_base_url = 'http://secret@127.0.0.1:45100/v1'", "openai_base_url = 'http://127.0.0.1:45100/v1?key=secret'"] {
         std::fs::write(&config,text).unwrap();assert!(verify_client_route(&binding,"http://127.0.0.1:45100").is_err());assert_eq!(std::fs::read_to_string(&config).unwrap(),text);
     }
