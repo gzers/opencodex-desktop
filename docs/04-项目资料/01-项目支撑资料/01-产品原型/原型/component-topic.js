@@ -21,6 +21,204 @@
  const asset=(path,label,size,cls='')=>'<img class="ct-brand-image '+cls+'" src="'+assetRoot+path+'" alt="'+esc(label)+'" width="'+size+'" height="'+size+'" loading="lazy">';
  const assetSizes=(path,label,sizes)=>'<div class="ct-icon-sizes">'+sizes.map(n=>'<figure>'+asset(path,label+' · '+n+'px',n)+'<figcaption>'+n+'px</figcaption></figure>').join('')+'</div>';
  const trayIconCanvas=(platform,dark)=>{const mac=platform==='macOS',path='03-平台交付/'+platform+'/Tray/'+(mac?(dark?'tray-white.svg':'tray-template.svg'):(dark?'tray-light.svg':'tray-dark.svg'));return '<div class="ct-brand-canvas '+(dark?'is-dark':'is-light')+'"><strong>'+platform+' · '+(dark?'深色背景':'浅色背景')+'</strong>'+assetSizes(path,platform+'托盘图标',mac?[16,18,24,32]:[16,20,24,32])+'</div>';};
+/* 时间范围组件：状态与校验放在 renderers 之前，避免初始化时访问未声明变量 */
+const HOUR=3600*1000,MAXSPAN=90*24*HOUR;
+const trState={preset:'24h',from:'2026-11-01T00:00',to:'2026-11-02T00:00',zone:'local'};
+const ctPad=n=>String(n).padStart(2,'0');
+const toLocalInput=d=>d.getFullYear()+'-'+ctPad(d.getMonth()+1)+'-'+ctPad(d.getDate())+'T'+ctPad(d.getHours())+':'+ctPad(d.getMinutes());
+const fmtLocal=s=>{const d=new Date(s);return isNaN(d)?'—':d.getFullYear()+'-'+ctPad(d.getMonth()+1)+'-'+ctPad(d.getDate())+' '+ctPad(d.getHours())+':'+ctPad(d.getMinutes())};
+/* 自定义时间范围的玻璃面板：以浮层形式挂在页面里，不占排版空间；Esc 或点遮罩关闭，未应用即撤销 */
+let trPanel=null,trDraft=null,trRestore=null;
+/* ---------- 双月日历：点选起止日期，悬停预览候选区间 ---------- */
+let trCalMonth=null,trPick=null,trHover=null;
+const trYmd=d=>d.getFullYear()+'-'+ctPad(d.getMonth()+1)+'-'+ctPad(d.getDate());
+const trDayKey=s=>{const d=trParse(s);return d?trYmd(d):''};
+function calMonthHtml(base,side){
+  const first=new Date(base.getFullYear(),base.getMonth(),1);
+  const startPad=(first.getDay()+6)%7;/* 周一为一周第一天 */
+  const days=new Date(base.getFullYear(),base.getMonth()+1,0).getDate();
+  const from=trDayKey(trDraft.from),to=trDayKey(trDraft.to);
+  const a=trPick?trPick:from,b2=trPick?null:to;
+  const hoverRange=trPick&&trHover?[trPick,trHover].sort():null;
+  let cells=[];
+  for(let i=0;i<startPad;i++)cells.push('<span class="ct-cal-d is-empty"></span>');
+  for(let d=1;d<=days;d++){
+    const key=trYmd(new Date(base.getFullYear(),base.getMonth(),d));
+    const isStart=key===(hoverRange?hoverRange[0]:a),isEnd=key===(hoverRange?hoverRange[1]:b2);
+    const inRange=hoverRange?(key>hoverRange[0]&&key<hoverRange[1]):(b2&&key>a&&key<b2);
+    const cls='ct-cal-d'+(isStart?' is-start':'')+(isEnd?' is-end':'')+(inRange?' is-in':'')+(key===from||key===to?' is-picked':'');
+    cells.push('<button type="button" class="'+cls+'" data-ct="tr-day" data-day="'+key+'" aria-label="'+key+(isStart||isEnd?'（已选）':'')+'">'+d+'</button>')}
+  /* 补齐 6 行：两列月份不同时行数也不同，补齐后高度一致 */
+  while(cells.length<42)cells.push('<span class="ct-cal-d is-empty"></span>');
+  return'<div class="ct-cal-m"><div class="ct-cal-h">'+
+    '<button type="button" class="ct-tr-x ct-cal-nav" data-ct="tr-yprev" data-side="'+side+'" aria-label="'+side+' 上一年">«</button>'+
+    '<button type="button" class="ct-tr-x ct-cal-nav" data-ct="tr-mprev" data-side="'+side+'" aria-label="'+side+' 上个月">‹</button>'+
+    '<b>'+base.getFullYear()+' 年 '+(base.getMonth()+1)+' 月</b>'+
+    '<button type="button" class="ct-tr-x ct-cal-nav" data-ct="tr-mnext" data-side="'+side+'" aria-label="'+side+' 下个月">›</button>'+
+    '<button type="button" class="ct-tr-x ct-cal-nav" data-ct="tr-ynext" data-side="'+side+'" aria-label="'+side+' 下一年">»</button></div>'+
+    '<div class="ct-cal-w">'+['一','二','三','四','五','六','日'].map(w=>'<span>'+w+'</span>').join('')+'</div>'+
+    '<div class="ct-cal-g">'+cells.join('')+'</div></div>'}
+function calHtml(){const base=trCalMonth||new Date(trParse(trDraft.from)||new Date());
+  const next=new Date(base.getFullYear(),base.getMonth()+1,1);
+  return'<div class="ct-cal">'+
+    '<div class="ct-cal-bar"><span>'+(trPick?'已选 '+trPick+'，再点一天作为结束':'点选开始日期，再点结束日期；每月的 « ‹ › » 各自翻页')+'</span></div>'+
+    '<div class="ct-cal-pair">'+calMonthHtml(base,'左')+calMonthHtml(next,'右')+'</div></div>'}
+function paintCal(){const host=trPanel&&trPanel.querySelector('#ctTrCal');if(host)host.innerHTML=calHtml()}
+function pickDay(key){if(!trDraft)return;
+  const cur=trParse(trDraft.from),end=trParse(trDraft.to);
+  if(!trPick){
+    const t=cur?ctPad(cur.getHours())+':'+ctPad(cur.getMinutes()):'00:00';
+    trDraft.from=key+'T'+t;trDraft.to='';trPick=key;trHover=null;paintRange();paintCal();return}
+  const lo=key<trPick?key:trPick,hi=key<trPick?trPick:key;
+  const s=trParse(trDraft.from)||new Date(),e=end||new Date();
+  trDraft.from=lo+'T'+ctPad(s.getHours())+':'+ctPad(s.getMinutes());
+  trDraft.to=hi+'T'+(end?ctPad(e.getHours())+':'+ctPad(e.getMinutes()):'23:59');
+  trPick=null;trHover=null;paintRange();paintCal()}
+
+function trPanelHtml(){
+  const chips=[['today','今天'],['yesterday','昨天'],['last7','最近 7 天'],['last30','最近 30 天'],['month','本月']];
+  return'<div class="ct-tr-mask" data-tr-mask></div>' +
+    '<section class="ct-tr-sheet" role="dialog" aria-modal="true" aria-labelledby="ctTrTitle">'+
+      '<header class="ct-tr-head"><div><h3 id="ctTrTitle">自定义时间范围</h3><p>结束时间不含在范围内，跨度上限 90 天。</p></div>'+
+        window.PrototypeModal.closeButton('data-ct="tr-close"')+'</header>'+
+      '<div class="ct-tr-fields">'+
+        '<div class="ct-tr-dt"><label class="ui-field">开始日期<input id="ctTrFromDate" type="text" inputmode="numeric" placeholder="YYYY-MM-DD" value="'+trField(trDraft.from).slice(0,10)+'" aria-label="开始日期"></label>'+
+          '<label class="ui-field">开始时间<span class="ct-tr-time"><input id="ctTrFromTime" type="text" inputmode="numeric" placeholder="HH:mm" value="'+trField(trDraft.from).slice(11,16)+'" aria-label="开始时间" aria-haspopup="listbox" aria-expanded="false" autocomplete="off" data-time="from"></span></label></div>'+
+        '<div class="ct-tr-dt"><label class="ui-field">结束日期<input id="ctTrToDate" type="text" inputmode="numeric" placeholder="YYYY-MM-DD" value="'+trField(trDraft.to).slice(0,10)+'" aria-label="结束日期"></label>'+
+          '<label class="ui-field">结束时间<span class="ct-tr-time"><input id="ctTrToTime" type="text" inputmode="numeric" placeholder="HH:mm" value="'+trField(trDraft.to).slice(11,16)+'" aria-label="结束时间" aria-haspopup="listbox" aria-expanded="false" autocomplete="off" data-time="to"></span></label></div>'+
+        '<label class="ui-field">时区<select id="ctTrZone"><option value="local"'+(trDraft.zone==='local'?' selected':'')+'>本机时区</option><option value="utc"'+(trDraft.zone==='utc'?' selected':'')+'>UTC</option></select></label>'+
+      '</div>'+
+      '<div class="ct-tr-chips" role="group" aria-label="快捷区间">'+chips.map(([k,l])=>'<button type="button" class="ui-chip" data-ct="tr-chip" data-chip="'+k+'">'+l+'</button>').join('')+'</div>'+
+      '<div id="ctTrCal" class="ct-tr-cal"></div>'+
+      /* 错误与区间摘要共用底部同一行：同一位置先显示错误，恢复后接回时间展示 */
+      '<footer class="ct-tr-foot"><span class="ct-tr-note"><span id="ctTrSummary" class="ct-tr-sum"></span><span id="ctTrError" class="ct-tr-err" role="alert" aria-live="polite" hidden></span></span><span class="ui-inline">'+
+        button('取消','tr-cancel','ghost')+button('应用','tr-apply','primary')+'</span></footer>'+
+    '</section></div>'}
+function openTrPanel(){if(trPanel)return;
+  trDraft={from:trState.from,to:trState.to,zone:trState.zone};
+  trPick=null;trHover=null;trCalMonth=new Date(trParse(trState.from)||new Date());
+  trRestore=document.activeElement;
+  trPanel=document.createElement('div');trPanel.id='ctTrPanel';trPanel.className='ct-tr-host';
+  trPanel.innerHTML=trPanelHtml();
+  page.appendChild(trPanel);
+  paintRange();paintCal();
+  const first=trPanel.querySelector('#ctTrFromDate');if(first)first.focus({preventScroll:true})}
+function closeTrPanel(){if(!trPanel)return;trPanel.remove();trPanel=null;trDraft=null;
+  trPick=null;trHover=null;
+  closeTimePop();
+  if(trRestore&&trRestore.focus)trRestore.focus({preventScroll:true});trRestore=null}
+
+/* 输入框用“YYYY-MM-DD HH:mm”文本，避免浏览器按地区显示成 10/26/2026 12:00 AM */
+function trField(s){return String(s||'').replace('T',' ').slice(0,16)}
+function trParse(s){var m=/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})$/.exec(String(s||'').trim());
+  if(!m)return null;var d=new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5]);
+  if(isNaN(d)||d.getMonth()!==+m[2]-1||d.getDate()!==+m[3])return null;return d}
+/* 日期与时间拆成两列输入：日期固定 10 位、时间固定 5 位，提交时再拼成 YYYY-MM-DD HH:mm */
+/* 时间下拉：既是可编辑输入，也能从列表选；列表按 15 分钟一档，输入时不打断手输 */
+let trTimePop=null;
+/* 时间面板：左边选小时（00–23），右边选分钟（可选 5 分钟一档或逐分钟），选中即时回填 */
+let trMinStep=1;
+function trHours(){const out=[];for(let h=0;h<24;h++)out.push(ctPad(h));return out}
+function trMinutes(){const out=[];for(let m=0;m<60;m+=trMinStep)out.push(ctPad(m));return out}
+function trTimeParts(v){const m=/^(\d{1,2}):(\d{1,2})$/.exec(String(v||'').trim());return m?[ctPad(Math.min(23,+m[1])),ctPad(Math.min(59,+m[2]))]:['00','00']}
+let trSuppress=false;function closeTimePop(){if(!trTimePop)return;const id=trTimePop.dataset.owner;trTimePop.remove();trTimePop=null;const b=id?document.getElementById(id):null;if(b){b.setAttribute('aria-expanded','false');trSuppress=true;b.focus({preventScroll:true});setTimeout(()=>{trSuppress=false},0)}}
+function openTimePop(which){
+  const input=which==='from'?$('#ctTrFromTime'):$('#ctTrToTime');if(!input)return;
+  if(trTimePop&&trTimePop.dataset.owner===input.id)return;
+  closeTimePop();
+  const parts=trTimeParts(input.value),hh=parts[0],mm=parts[1];
+  const pop=document.createElement('div');pop.className='ct-tr-tpop ct-tr-tpop2';pop.id='ctTrTimePop';pop.dataset.owner=input.id;
+  pop.innerHTML='<div class="ct-tp-cols" role="group" aria-label="选择小时与分钟">'+
+    '<div class="ct-tp-col" role="listbox" aria-label="小时"><div class="ct-tp-h">时</div>'+
+      trHours().map(h=>'<button type="button" role="option" data-ct="tr-hour" data-which="'+which+'" data-v="'+h+'"'+(h===hh?' aria-selected="true"':'')+'>'+h+'</button>').join('')+'</div>'+
+    '<div class="ct-tp-col" role="listbox" aria-label="分钟"><div class="ct-tp-h">分</div>'+
+      trMinutes().map(m=>'<button type="button" role="option" data-ct="tr-minute" data-which="'+which+'" data-v="'+m+'"'+(m===mm?' aria-selected="true"':'')+'>'+m+'</button>').join('')+'</div>'+
+  '</div>'+
+  /* 只保留“此刻”：分钟列固定逐分钟，避免在一屏里塞进多组密度切换 */
+  '<div class="ct-tp-foot"><button type="button" class="ct-tp-step" data-ct="tr-now">此刻</button></div>';
+  const r=input.getBoundingClientRect();
+  pop.style.left=Math.round(r.left)+'px';pop.style.top=Math.round(r.bottom+6)+'px';
+  document.body.appendChild(pop);input.setAttribute('aria-expanded','true');trTimePop=pop;
+  const sel=pop.querySelector('[aria-selected="true"]');if(sel)sel.scrollIntoView({block:'center'})}
+
+function pickTime(which,t){const input=which==='from'?$('#ctTrFromTime'):$('#ctTrToTime');if(!input)return;
+  input.value=t;applyTimeInputs();
+  /* 选完小时保留面板以便继续选分钟；选的是完整时间才收起 */
+  if(!trTimePop)return}
+function setTimePart(which,kind,v){const input=which==='from'?$('#ctTrFromTime'):$('#ctTrToTime');if(!input)return;
+  const parts=trTimeParts(input.value);parts[kind==='hour'?0:1]=v;
+  input.value=parts[0]+':'+parts[1];applyTimeInputs();
+  if(trTimePop){
+    trTimePop.querySelectorAll('[data-ct="tr-hour"]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.v===parts[0])));
+    trTimePop.querySelectorAll('[data-ct="tr-minute"]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.v===parts[1])))}}
+/* 手动输入或下拉选择后统一刷新草稿、摘要与校验 */
+function applyTimeInputs(){const el=trEls();if(!el.fd||!trDraft)return;
+  const from=trJoin(el.fd.value,el.ft.value),to=trJoin(el.td.value,el.tt.value);
+  trDraft.from=from.replace(' ','T');trDraft.to=to.replace(' ','T');
+  const msg=validateRange(from,to);
+  el.err.hidden=!msg;el.err.textContent=msg||'';
+  if(!msg)el.sum.textContent=fmtLocal(from)+' → '+fmtLocal(to)+' · '+durationText(new Date(trParse(to))-new Date(trParse(from)));else el.sum.textContent=''}
+
+function trEls(){return{fd:$('#ctTrFromDate'),ft:$('#ctTrFromTime'),td:$('#ctTrToDate'),tt:$('#ctTrToTime'),zone:$('#ctTrZone'),sum:$('#ctTrSummary'),err:$('#ctTrError')}}
+function durationText(ms){const h=Math.round(ms/HOUR);return h<48?h+' 小时':(h/24).toFixed(h%24?1:0)+' 天'}
+function validateRange(from,to){
+  if(!from||!to)return'请填写开始与结束时间';
+  const a=trParse(from)||new Date(from),b=trParse(to)||new Date(to);
+  if(isNaN(a)||isNaN(b))return'请填写完整的开始与结束时间';
+  if(b<=a)return'结束时间需要晚于开始时间';
+  if(b-a>MAXSPAN)return'跨度超过 90 天，请缩小范围';
+  return''}
+/* 摘要与预设状态永远由 trState 渲染；面板内的日期/时间输入只在面板打开时同步草稿 */
+function paintRange(){
+  const cur=$('#ctTrCurrent');
+  if(cur)cur.textContent='当前 '+fmtLocal(trState.from)+' → '+fmtLocal(trState.to)+' · '+durationText(new Date(trState.to)-new Date(trState.from));
+  const e=trEls();
+  if(e.fd&&trDraft){
+    const fv=trField(trDraft.from),tv=trField(trDraft.to);
+    e.fd.value=fv.slice(0,10);e.ft.value=fv.slice(11,16);
+    e.td.value=tv.slice(0,10);e.tt.value=tv.slice(11,16);
+    e.zone.value=trDraft.zone;
+    const msg=validateRange(trDraft.from,trDraft.to);
+    if(e.err){e.err.hidden=!msg;e.err.textContent=msg||''}
+    if(e.sum)e.sum.textContent=msg?'':fmtLocal(trDraft.from)+' → '+fmtLocal(trDraft.to)+' · '+durationText(new Date(trDraft.to)-new Date(trDraft.from));
+  }
+  $$('[data-ct="tr-preset"]',page).forEach(b=>b.setAttribute('aria-pressed',String(!trDraft&&b.dataset.preset===trState.preset)));
+}
+function setDraft(from,to){
+  if(!trDraft)trDraft={from:trState.from,to:trState.to,zone:trState.zone};
+  trDraft.from=toLocalInput(from);trDraft.to=toLocalInput(to);paintRange();
+}
+function applyPreset(k){
+  if(k==='custom'){openTrPanel();return}
+  const now=new Date('2026-11-02T00:00'),h={'6h':6,'24h':24,'3d':72,'7d':168}[k]||24;
+  trState.from=toLocalInput(new Date(now-h*HOUR));trState.to=toLocalInput(now);trState.preset=k;
+  paintRange();
+}
+function applyChip(k){
+  if(!trDraft)return;
+  const end=new Date('2026-11-02T00:00'),start=new Date(end);
+  if(k==='today')start.setHours(0,0,0,0);
+  else if(k==='yesterday'){start.setDate(start.getDate()-1);start.setHours(0,0,0,0);end.setHours(0,0,0,0)}
+  else if(k==='last7')start.setDate(start.getDate()-7);
+  else if(k==='last30')start.setDate(start.getDate()-30);
+  else if(k==='month'){start.setDate(1);start.setHours(0,0,0,0)}
+  setDraft(start,end);
+}
+function resetRange(){trState.preset='24h';trState.from='2026-11-01T00:00';trState.to='2026-11-02T00:00';trState.zone='local';closeTrPanel();paintRange()}
+/* 日期与时间分开输入，提交时拼成 YYYY-MM-DD HH:mm */
+function trJoin(d,t){return String(d||'').trim()+' '+String(t||'').trim()}
+function commitRange(){
+  if(!trPanel||!trDraft)return;
+  const e=trEls();
+  const from=trJoin(e.fd.value,e.ft.value),to=trJoin(e.td.value,e.tt.value);
+  const msg=validateRange(from,to);
+  if(msg){e.err.hidden=false;e.err.textContent=msg;return}
+  const fa=trParse(from),fb=trParse(to);
+  if(!fa||!fb){e.err.hidden=false;e.err.textContent='请填写完整的开始与结束时间';return}
+  trState.from=toLocalInput(fa);trState.to=toLocalInput(fb);trState.zone=e.zone.value;trState.preset='custom';
+  closeTrPanel();paintRange();
+}
+
  const renderers={
   brand:()=>'<div class="ct-brand-lockup">'+asset('04-品牌组件/Logo/logo.svg','OpenCodex Logo',64)+'<div><strong>OpenCodeX-Desktop</strong><span>Desktop Manager</span></div></div><div class="ct-brand-grid"><div class="ct-brand-canvas is-light"><strong>原色 / 浅色背景</strong>'+assetSizes('04-品牌组件/Logo/logo.svg','原色Logo',[32,64,128])+'</div><div class="ct-brand-canvas is-dark"><strong>原色 / 深色背景</strong>'+assetSizes('04-品牌组件/Logo/logo.svg','原色Logo',[32,64,128])+'</div><div class="ct-brand-canvas is-light"><strong>深色单色</strong>'+assetSizes('04-品牌组件/Logo/logo-dark.svg','深色单色Logo',[32,64])+'</div><div class="ct-brand-canvas is-dark"><strong>白色单色</strong>'+assetSizes('04-品牌组件/Logo/logo-light.svg','白色单色Logo',[32,64])+'</div></div>'+annotation('brand','品牌素材来源','本节直接引用品牌素材目录中的现有Logo，不生成新标识。原色、深色/白色单色分别展示；文件存在与生产采用状态分开记录。'),
   'app-icons':()=>'<div class="ct-brand-grid"><div class="ct-brand-canvas ct-checker"><strong>macOS</strong>'+assetSizes('03-平台交付/macOS/AppIcon/AppIcon.svg','macOS应用图标',[16,32,64,128])+'<p>白色圆角底板</p></div><div class="ct-brand-canvas ct-checker"><strong>Windows</strong>'+assetSizes('03-平台交付/Windows/AppIcon/AppIcon.svg','Windows应用图标',[16,32,64,128])+'<p>透明背景 · 90%主体</p></div></div>'+annotation('app-icons','平台应用图标','macOS使用既有白底应用图标；Windows使用2026-10-14确认的透明90%主体素材，不加macOS底板。仅展示已管理的SVG，不修改ICO/ICNS或生产资源；生产采用以实现SHA/发布记录为准。'),
@@ -48,6 +246,17 @@
     '</div><p class="ct-label">同一状态只出现在一个承载处：模型页把它放在 Tab 右侧，列表上方不再重复。颜色不单独承担语义，每枚都带文字。</p>';
   },
   'tree-navigation':()=>'<div id="ctTreeNavigationDemo"></div>',
+  'interactive-collections':()=>'<div id="ctInteractiveCollectionDemo"></div>',
+  /* 时间范围选择：预设分段 + 起止时间 + 快捷区间 + 校验 */
+  'time-range':()=>{
+    const presets=[['6h','近 6 小时'],['24h','近 24 小时'],['3d','近 3 天'],['7d','近 7 天'],['custom','自定义']];
+    const chips=[['today','今天'],['yesterday','昨天'],['last7','最近 7 天'],['last30','最近 30 天'],['month','本月']];
+    return'<div class="ui-stack">'+
+      '<div class="ct-tr-row"><div class="ct-tr-seg" role="group" aria-label="时间范围预设">'+
+        presets.map(([k,l])=>'<button type="button" data-ct="tr-preset" data-preset="'+k+'" aria-pressed="'+(k==='24h')+'">'+l+'</button>').join('')+'</div></div>'+
+      '<p class="ct-tr-sum" id="ctTrCurrent">当前 2026-11-01 00:00 → 2026-11-02 00:00 · 24 小时</p>'+
+      '<p class="ct-label">点「自定义」在弹出的玻璃面板里选起止时间；面板不占页面空间，关闭即撤销未应用的修改。</p>'+
+    '</div>'},
   data:()=>'<div class="ui-inline">'+['默认','已启用','待确认','失败'].map((s,i)=>'<span class="state-pill '+(['state-muted','state-running','state-warn','state-bad'][i])+'">'+s+'</span>').join('')+'<span class="ui-tag">12</span></div><div class="ct-sample ct-table-scroll" tabindex="0" aria-label="长列表滚动样例"><table class="ct-table"><thead><tr><th scope="col"><label><input type="checkbox" id="ctTableAll">全选</label></th><th scope="col">'+button('名称 ↕','sort-table','ghost btn-sm')+'</th><th scope="col">状态</th><th scope="col">操作</th></tr></thead><tbody id="ctTableBody"></tbody></table></div><p id="ctTableResult" class="ct-result" role="status">已选0项</p><div id="ctTree" class="ct-sample" aria-label="配置树表"></div>',
   overlays:()=>'<div class="ui-inline">'+button('确认弹窗','dialog-confirm','ghost')+button('内容弹窗','dialog-detail','ghost')+button('表单弹窗','dialog-form','ghost')+'</div><p class="ct-result" id="ctDialogResult" role="status">从本节打开共享弹窗，关闭后焦点返回入口。</p>'+annotation('overlay','浮层层级与焦点','共用Modal / Select / action menu宿主。Escape先关闭最上层菜单，再关闭弹窗；Tab在弹窗内循环，关闭后返回触发点。此注释绝对定位，不挤占操作区。表单错误就地展示，不发通知。'),
   feedback:()=>'<div class="ui-inline">'+[['empty','空态'],['loading','加载'],['error','失败'],['success','完成']].map(([s,l])=>button(l,'local-'+s,'ghost')).join('')+'</div><div id="ctLocalFeedback" class="ct-local ct-sample" role="status"></div><ol class="ct-steps"><li class="done">✓ 选择范围</li><li class="active">2 核对内容</li><li>3 完成</li></ol><p class="ct-label">字段错误、空态与步骤留在上下文；跨页任务和需要处理的结果通过登记事件进入通知宿主。</p>',
@@ -60,6 +269,10 @@
  };
  function render(){
   page.innerHTML='<header class="ct-intro"><div><h1>组件与样式</h1><p>选择目录定位章节；右侧工具板切换评审条件。</p><p class="ct-usage-legend">使用建议区分已有规则、方案约定和建议待确认；规格有依据，生产采用与验证另行记录。</p></div><div class="ui-inline">'+button('目录','toggle-nav','ghost ct-mobile-nav','aria-controls="componentNavLinks" aria-expanded="true"')+button('返回功能原型','back','ghost')+'<div id="ctNotificationMount"></div></div></header>'+catalog.sections.map(s=>'<section class="ct-section" id="'+s.anchor+'" data-ct-section-id="'+s.id+'" aria-labelledby="ctHeading-'+s.id+'"><header class="ct-section-head"><h3 id="ctHeading-'+s.id+'">'+s.title+'</h3><span class="ct-description">'+s.description+'</span></header><div class="ct-sample ct-zoom">'+renderers[s.renderer]()+'</div>'+usage(s)+metadata(s.id)+'</section>').join('');
+  /* 章节挂载后：时间范围回填状态并校验，交互列表与树导航挂到各自容器 */
+  if(document.getElementById('ctTrCurrent'))paintRange();
+  window.treeNavigationDemo?.mount?.(document.getElementById('ctTreeNavigationDemo'));
+  window.interactiveCollectionDemo?.mount?.(document.getElementById('ctInteractiveCollectionDemo'));
   nav.innerHTML='<label class="ui-field"><span class="ct-label">组件目录</span><input type="search" class="ct-search" id="componentNavSearch" aria-label="搜索组件目录" placeholder="搜索组件"></label><div id="componentNavLinks"></div>';
   renderNav();const demoTabs=$('.ct-demo-tabs',page),measureTabs=()=>demoTabs.parentElement.style.setProperty('--ct-demo-tabs-height',(demoTabs.offsetHeight||40)+'px');measureTabs();new ResizeObserver(measureTabs).observe(demoTabs);$('#ctIndeterminate').indeterminate=true;renderTable();renderTree();window.treeNavigationDemo?.mount($('#ctTreeNavigationDemo'));renderLocal();renderNodes();renderWindow();renderTraySample();renderExampleState();window.prototypeSelect?.enhance(page);mountPicker();
  }
@@ -169,7 +382,13 @@
  function syncRoute(){const active=root.dataset.route==='components';if(active)enter();else{if(entered)leave();if(!['model-picker','annotations','tray'].includes(root.dataset.route))returnRoute=root.dataset.route||'settings';}}
  render();updateToolContext();
  nav.addEventListener('input',e=>{if(e.target.id==='componentNavSearch'){navQuery=e.target.value;renderNav();}});
- document.addEventListener('input',e=>{if(!entered)return;if(e.target.id==='ctSlider')$('#ctSliderValue').value=e.target.value;if(e.target.id==='ctExampleName')renderExampleState();});
+ document.addEventListener('input',e=>{
+  if(!entered)return;
+  if(e.target.id==='ctSlider')$('#ctSliderValue').value=e.target.value;
+  if(e.target.id==='ctExampleName')renderExampleState();
+  /* 手动改日期或时间时同步草稿：摘要、时长与校验跟着变 */
+  if(trPanel&&trDraft&&['ctTrFromDate','ctTrFromTime','ctTrToDate','ctTrToTime'].includes(e.target.id))applyTimeInputs();
+ });
  document.addEventListener('change',e=>{
   if(!entered)return;const el=e.target;
   if(el.dataset.ctEnv){setEnvironment(el.dataset.ctEnv,el.type==='checkbox'?el.checked:el.value);renderWindow();}
@@ -181,14 +400,51 @@
   if(el.id==='ctTableAll'||el.dataset.ctRow){state.selectedRows=new Set($$('[data-ct-row]:checked',page).map(c=>Number(c.dataset.ctRow)));const all=$('#ctTableAll');all.checked=state.selectedRows.size===24;all.indeterminate=state.selectedRows.size>0&&!all.checked;$('#ctTableResult').textContent='已选'+state.selectedRows.size+'项';}
  });
  document.addEventListener('click',e=>{
+  /* 时间下拉：点外部关闭；点自己保持 */
+  if(trTimePop&&!e.target.closest('#ctTrTimePop')&&!/^ctTr(From|To)Time$/.test(e.target.id||''))closeTimePop();
+  /* 时间范围浮层：点遮罩关闭，未应用即撤销 */
+  if(trPanel&&e.target.closest('[data-tr-mask]')===trPanel.querySelector('[data-tr-mask]'))closeTrPanel();
+  /* 日历悬停预览：选了开始日期后，鼠标所在日期到开始日期之间高亮 */
+  if(trPanel&&trPick){
+    const day=e.target.closest&&e.target.closest('[data-ct="tr-day"]');
+    if(day&&day.dataset.day!==trHover){trHover=day.dataset.day;paintCal()}
+  }
   const link=e.target.closest('[data-ct-section]');if(link&&entered){e.preventDefault();navigate(link.dataset.ctSection);return;}
   if(!entered)return;const node=e.target.closest('[data-ct-node]'),win=e.target.closest('[data-ct-window]'),tray=e.target.closest('[data-ct-tray]'),tab=e.target.closest('[data-ct-tab]'),tree=e.target.closest('[data-ct-tree]'),b=e.target.closest('[data-ct]');
   if(node){state.nodeSelected=node.dataset.ctNode;renderNodes();if(nodePopup)closeNodePopup(true);return;}
   if(win){const a=win.dataset.ctWindow;if(a==='maximize')state.window.maximized=!state.window.maximized;else state.window.visibility=a==='close'?(state.window.close==='tray'?'tray':'exited'):'minimized';renderWindow();return;}
   if(tray){const a=tray.dataset.ctTray;if(a in state.tray.settings)state.tray.settings[a]=!state.tray.settings[a];else if(['start','restart'].includes(a))state.tray.state='running';else if(['stop','quit'].includes(a))state.tray.state='stopped';$('#ctTrayResult').textContent='已模拟：'+tray.textContent.trim();renderTraySample();return;}
   if(tab){selectTab(tab.dataset.ctTab);return;}if(tree){const id=tree.dataset.ctTree;if(collapsed.has(id))collapsed.delete(id);else collapsed.add(id);renderTree();$('[data-ct-tree="'+id+'"]')?.focus();return;}
+  /* 时间弹层：点面板外部即关闭 */
+  if(trTimePop&&!e.target.closest('#ctTrTimePop')&&!e.target.closest('[data-time]')){closeTimePop();}
   if(!b){if(nodePopup&&!nodePopup.contains(e.target)&&!nodeAnchor.contains(e.target))closeNodePopup();return;}
   const action=b.dataset.ct;
+  if(action==='tr-preset'){applyPreset(b.dataset.preset);return;}
+  if(action==='tr-time'){openTimePop(b.dataset.which);return;}
+  if(action==='tr-time-pick'){pickTime(b.dataset.which,b.dataset.t);return;}
+  if(action==='tr-hour'){setTimePart(b.dataset.which,'hour',b.dataset.v);return;}
+  if(action==='tr-minute'){setTimePart(b.dataset.which,'minute',b.dataset.v);return;}
+  if(action==='tr-step'){trMinStep=Number(b.dataset.step);
+    const which=b.closest('#ctTrTimePop')?.dataset.owner==='ctTrToTime'?'to':'from';
+    openTimePop(which);return;}
+  if(action==='tr-now'){const d=new Date(),v=ctPad(d.getHours())+':'+ctPad(d.getMinutes());
+    const which=b.closest('#ctTrTimePop')?.dataset.owner==='ctTrToTime'?'to':'from';
+    const input=which==='from'?$('#ctTrFromTime'):$('#ctTrToTime');
+    if(input){input.value=v;applyTimeInputs()}return;}
+  if(action==='tr-day'){pickDay(b.dataset.day);return;}
+  if(action==='tr-prev'||action==='tr-next'){const m=trCalMonth||new Date();
+    trCalMonth=new Date(m.getFullYear(),m.getMonth()+(action==='tr-next'?1:-1),1);paintCal();return;}
+  if(action==='tr-mprev'||action==='tr-mnext'){const side=b.dataset.side,m=trCalMonth||new Date();
+    /* 左列翻页直接改基准月；右列翻页等价于基准月 +1 个月，因此两边各按自己的月份走 */
+    const step=action==='tr-mnext'?1:-1;
+    trCalMonth=new Date(m.getFullYear(),m.getMonth()+(side==='右'?1:0)+step,1);paintCal();return;}
+  if(action==='tr-yprev'||action==='tr-ynext'){const side=b.dataset.side,m=trCalMonth||new Date();
+    const step=action==='tr-ynext'?12:-12;
+    trCalMonth=new Date(m.getFullYear(),m.getMonth()+(side==='右'?1:0)+step,1);paintCal();return;}
+  if(action==='tr-chip'){applyChip(b.dataset.chip);return;}
+  if(action==='tr-cancel'){resetRange();return;}
+  if(action==='tr-close'){closeTrPanel();return;}
+  if(action==='tr-apply'){commitRange();return;}
   if(action==='back'){setRoute(returnRoute);return;}
   if(action==='toggle-nav'){document.body.classList.toggle('component-nav-collapsed');b.setAttribute('aria-expanded',String(!document.body.classList.contains('component-nav-collapsed')));return;}
   if(action==='sample-save')$('#ctButtonResult').textContent='保存按钮已触发。';if(action==='sample-delete')dialog('confirm');
@@ -223,6 +479,22 @@
  main.addEventListener('scroll',()=>{if(!entered||queued)return;queued=true;requestAnimationFrame(()=>{queued=false;const top=main.getBoundingClientRect().top;const visible=catalog.sections.filter(s=>document.getElementById(s.anchor).getBoundingClientRect().top<=top+40).at(-1);if(visible&&visible.id!==state.section){if(state.section==='node-picker')stopNodes();state.section=visible.id;renderNav();updateToolContext();mountPicker();writeHash();}});},{passive:true});
  window.addEventListener('hashchange',()=>{if(root.dataset.route==='components'){readHash();navigate(state.section,false);mountPicker();}});
  document.addEventListener('focusin',e=>{if(nodePopup&&!nodePopup.contains(e.target)&&!nodeAnchor?.contains(e.target))closeNodePopup();});
+/* 时间输入获得焦点即列出时间点，不再需要单独的箭头按钮 */
+document.addEventListener('focusin',e=>{
+  const which=e.target&&e.target.dataset&&e.target.dataset.time;
+  if(which&&trPanel&&!trSuppress)openTimePop(which);
+});
+/* 选了开始日期后，悬停日期即时预览区间；移出日历清除预览 */
+document.addEventListener('pointerover',e=>{
+  if(!trPanel||!trPick)return;
+  const day=e.target.closest&&e.target.closest('[data-ct="tr-day"]');
+  if(day&&day.dataset.day!==trHover){trHover=day.dataset.day;paintCal()}
+});
+document.addEventListener('pointerout',e=>{
+  if(!trPanel||!trPick||!trHover)return;
+  const to=e.relatedTarget;
+  if(!to||!to.closest||!to.closest('#ctTrCal')){trHover=null;paintCal()}
+});
  document.addEventListener('scroll',e=>{if(nodePopup&&!nodePopup.contains(e.target))closeNodePopup();},true);
  window.addEventListener('resize',()=>closeNodePopup());
  new MutationObserver(syncRoute).observe(root,{attributes:true,attributeFilter:['data-route']});
