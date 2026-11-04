@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UiButton from '@/components/ui/UiButton.vue'
+import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSwitch from '@/components/ui/UiSwitch.vue'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { open } from '@tauri-apps/plugin-dialog'
@@ -1141,9 +1142,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
     </section>
   </section>
 
-  <div v-if="uninstallOpen" class="modal-mask" data-testid="runtime-uninstall-modal">
-    <div class="modal wiz wiz-uninstall" role="dialog" aria-modal="true" aria-labelledby="uninstall-title">
-      <h3 id="uninstall-title">卸载 OpenCodex</h3>
+  <UiDialog :open="uninstallOpen" title="卸载 OpenCodex" :busy="uninstallRunning || app.runtimeUninstallBusy" panel-class="wiz wiz-uninstall" data-testid="runtime-uninstall-modal" @close="closeUninstall">
 
       <template v-if="!uninstallRunning && !uninstallDone">
         <p class="wiz-hint">按当前运行来源 <code class="local-path">{{ displayPath(app.runtimeUninstallPlan?.sourcePath) || '未解析' }}</code> 卸载；范围越大后果越重。</p>
@@ -1182,11 +1181,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
           </div>
         </template>
 
-        <label class="wiz-ack wiz-ack-sticky" :class="{ on: uninstallAck }">
-          <input v-model="uninstallAck" type="checkbox" data-testid="uninstall-ack">
-          <span><b>我已阅读清单并确认继续</b><small>停代理 → 备份{{ uninstallScope === 'full' ? ' → 执行官方 ocx uninstall' : '' }} → 移除包体与入口 → 残留核验（全部由应用代执行）。</small></span>
-        </label>
-        <p v-if="!uninstallAck" class="wiz-ack-hint" data-testid="uninstall-ack-hint">勾选上面这一项，「卸载」才会亮起。</p>
+
       </template>
 
       <template v-else>
@@ -1217,26 +1212,31 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
 
       <p v-if="app.runtimeUninstallError" class="wiz-error" data-testid="uninstall-error">{{ app.runtimeUninstallError }}</p>
 
-      <div class="wiz-foot">
-        <UiButton class="btn ghost" type="button" :disabled="uninstallRunning" @click="closeUninstall()">{{ uninstallDone ? '关闭' : '取消' }}</UiButton>
-        <UiButton
-          v-if="!uninstallDone"
-          class="btn danger"
-          type="button"
-          data-testid="uninstall-confirm"
-          :disabled="!uninstallCanConfirm"
-          @click="confirmUninstall()"
-        >
-          {{ uninstallRunning ? '卸载中…' : '卸载' }}
-        </UiButton>
-        <UiButton v-else class="btn primary" type="button" data-testid="uninstall-finish" @click="closeUninstall()">完成</UiButton>
-      </div>
-    </div>
-  </div>
+      <template v-if="!uninstallRunning && !uninstallDone" #actions="{ close }">
+        <div class="uninstall-confirmation">
+        <label class="wiz-ack" :class="{ on: uninstallAck }">
+          <input v-model="uninstallAck" type="checkbox" data-testid="uninstall-ack">
+          <span><b>我已阅读清单并确认继续</b><small>停代理 → 备份{{ uninstallScope === 'full' ? ' → 执行官方 ocx uninstall' : '' }} → 移除包体与入口 → 残留核验（全部由应用代执行）。</small></span>
+        </label>
+        <p v-if="!uninstallAck" class="wiz-ack-hint" data-testid="uninstall-ack-hint">勾选上面这一项，「卸载」才会亮起。</p>
+          <div class="uninstall-actions">
+            <UiButton variant="ghost" type="button" :disabled="app.runtimeUninstallBusy" @click="close">取消</UiButton>
+            <UiButton variant="danger" type="button" data-testid="uninstall-confirm" :disabled="!uninstallCanConfirm" @click="confirmUninstall">卸载</UiButton>
+          </div>
+        </div>
+      </template>
+  </UiDialog>
 
 </template>
 
 <style scoped>
+.uninstall-confirmation { display:grid; gap:10px; width:100%; }
+.uninstall-confirmation .wiz-ack { margin:0; }
+.uninstall-confirmation .wiz-ack span { display:grid; gap:4px; }
+.uninstall-confirmation .wiz-ack input { flex:none; }
+.uninstall-confirmation .wiz-ack-hint { margin:0; }
+.uninstall-actions { display:flex; justify-content:flex-end; gap:8px; }
+
 /* 统一要求：设置页表格行内的路径、用途与操作按钮垂直居中，不因长路径互相挤压。 */
 .data-root-table th,
 .data-root-table td { vertical-align: middle; }

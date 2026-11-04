@@ -100,7 +100,7 @@ function close(){if(busy.value)return;generation++;apiKey.value='';emit('close')
    <details><summary>手动添加精确ID</summary><label>原始模型ID<input v-model="manual" class="input" :disabled="discovering" autocapitalize="off" spellcheck="false" /></label><UiButton size="sm" :disabled="discovering||!manual" @click="addManual">添加ID</UiButton></details>
   </template>
   <p v-if="status" role="status" class="model-muted">{{ status }}</p><p v-if="error" role="alert" class="model-error">{{ error }}</p>
-  <template #actions><UiButton :disabled="busy" @click="close">关闭</UiButton><UiButton v-if="step===2" :disabled="busy" @click="generation++;discovering=false;step=1">上一步</UiButton><UiButton v-if="step===1" variant="primary" :disabled="!ready" @click="next">下一步</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="discovering||!selected.length" @click="join">{{ original?'确认连接并加入草稿':'加入草稿' }}</UiButton></template>
+  <template #actions="{ close: requestClose }"><UiButton :disabled="busy" @click="requestClose">取消</UiButton><UiButton v-if="step===2" :disabled="busy" @click="generation++;discovering=false;step=1">上一步</UiButton><UiButton v-if="step===1" variant="primary" :disabled="!ready" @click="next">下一步</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="discovering||!selected.length" @click="join">{{ original?'确认连接并加入草稿':'加入草稿' }}</UiButton></template>
  </UiDialog>
 </template>
 <style scoped>

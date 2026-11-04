@@ -1,5 +1,6 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { mount } from '@vue/test-utils'
+import { DOMWrapper, mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import ExtensionsRoute from '@/routes/ExtensionsRoute.vue'
@@ -128,6 +129,7 @@ describe('extensions clients projection', () => {
 
 describe('extensions clients section', () => {
   beforeEach(() => {
+    installNativeDialogStub()
     invoke.mockReset()
     invoke.mockResolvedValue(null)
     window.location.hash = ''
@@ -244,7 +246,7 @@ describe('extensions clients section', () => {
     await manage.trigger('click')
     await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('read_skill_detail', { name: 'design-studio' }))
     // 详情弹窗由 ExtensionDetailModal 打开；标题就是被管理的条目。
-    expect(wrapper.find('.ext-detail h3').text()).toBe('design-studio')
+    expect(new DOMWrapper(document.body).find('dialog.ext-detail header h2').text()).toBe('design-studio')
     await wrapper.unmount()
   })
 })

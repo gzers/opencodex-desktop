@@ -1,9 +1,10 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { mount } from '@vue/test-utils'
+import { DOMWrapper, mount, type VueWrapper } from '@vue/test-utils'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { nextTick } from 'vue'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import ExtensionsRoute from '@/routes/ExtensionsRoute.vue'
 import { renderMarkdown } from '@/lib/markdown'
 import type { ExtensionsDto, SkillDetailDto } from '@/features/extensions/api'
@@ -87,16 +88,19 @@ function config(skills: string[]) {
   }
 }
 
+const mounted: VueWrapper[] = []
+afterEach(() => { mounted.splice(0).forEach(w => w.unmount()); document.body.innerHTML = '' })
 function mountRoute() {
   const pinia = createPinia()
   setActivePinia(pinia)
   useExtensionsStore().discovered = extensions()
   useExtensionsStore().config = config([]) as never
-  return mount(ExtensionsRoute, { global: { plugins: [pinia] } })
+  const wrapper = mount(ExtensionsRoute, { global: { plugins: [pinia] }, attachTo: document.body }); mounted.push(wrapper); return wrapper
 }
 
 describe('extension entry detail (AC-11 / CAP-11.5)', () => {
   beforeEach(() => {
+    installNativeDialogStub()
     invoke.mockReset()
     invoke.mockImplementation(async (command: string, payload?: Record<string, unknown>) => {
       if (command === 'read_skill_detail') return skillDetail
@@ -138,9 +142,9 @@ describe('extension entry detail (AC-11 / CAP-11.5)', () => {
     await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('read_skill_detail', { name: 'design-studio' }))
     await nextTick()
 
-    const modal = wrapper.find('.modal.ext-detail')
+    const modal = new DOMWrapper(document.body).find('dialog.ext-detail')
     expect(modal.exists()).toBe(true)
-    expect(modal.find('h3').text()).toBe('design-studio')
+    expect(modal.find('header h2').text()).toBe('design-studio')
     // 正文按 Markdown 渲染：标题、列表、引用、围栏代码都成为真实元素。
     expect(modal.find('.ext-detail-md h1').text()).toBe('设计工作台')
     expect(modal.findAll('.ext-detail-md ul > li').length).toBe(2)
@@ -156,10 +160,11 @@ describe('extension entry detail (AC-11 / CAP-11.5)', () => {
     const updated = modal.findAll('.ext-detail-facts > div').find(row => row.text().includes('更新时间'))
     expect(updated?.text()).toBe('更新时间2026-09-13')
     // 只有「关闭」一个底部动作，且没有原型脚注与区块小标题。
-    expect(modal.find('.modal-actions').findAll('button').map(button => button.text())).toEqual(['关闭'])
+    expect(modal.find('footer').exists()).toBe(false)
+    expect(modal.get('header button:last-child').attributes('aria-label')).toBe('关闭')
     expect(wrapper.find('.modal-prototype-note').exists()).toBe(false)
     // 标题动作按原型用图标按钮：2 个、有 svg、无文字；卸载为危险色。
-    const headButtons = modal.findAll('.modal-head-actions button')
+    const headButtons = modal.findAll('.ui-dialog-header-actions button:not(.modal-close)')
     expect(headButtons.length).toBe(2)
     expect(headButtons.every(button => button.find('svg').exists())).toBe(true)
     expect(headButtons.map(button => button.text())).toEqual(['', ''])
@@ -171,7 +176,7 @@ describe('extension entry detail (AC-11 / CAP-11.5)', () => {
     const sourceRow = modal.findAll('.ext-detail-facts > div').find(row => row.text().includes('源目录'))
     expect(sourceRow?.classes()).toContain('span-2')
     // 同步目标格按原型：li 外框 + 15px 图标 + 名字 + 纯文字状态（不用胶囊标签，避免挤掉名字）。
-    const targetCells = wrapper.findAll('.ext-detail-targets li')
+    const targetCells = new DOMWrapper(document.body).findAll('.ext-detail-targets li')
     expect(targetCells.length).toBe(6)
     expect(targetCells[0].classes()).toContain('on')
     expect(targetCells[0].find('svg.target-svg').exists()).toBe(true)
@@ -198,7 +203,7 @@ describe('extension entry detail (AC-11 / CAP-11.5)', () => {
     await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('read_skill_detail', { name: 'design-studio' }))
     await nextTick()
 
-    const cells = wrapper.findAll('.ext-detail-target')
+    const cells = new DOMWrapper(document.body).findAll('.ext-detail-target')
     expect(cells.length).toBe(6)
     const codexCell = cells.find(cell => cell.text().includes('Codex'))
     expect(codexCell?.attributes('aria-pressed')).toBe('false')
@@ -230,7 +235,7 @@ describe('extension entry detail (AC-11 / CAP-11.5)', () => {
     await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('read_skill_detail', { name: 'design-studio' }))
     await nextTick()
 
-    const claudeCell = wrapper
+    const claudeCell = new DOMWrapper(document.body)
       .findAll('.ext-detail-target')
       .find(cell => cell.text().includes('Claude'))!
     // design-studio 已落在 Claude：再点一次 = 断开这一个客户端的链接。
@@ -281,14 +286,14 @@ describe('extension entry detail (AC-11 / CAP-11.5)', () => {
     await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('read_mcp_detail', { name: 'node_repl' }))
     await nextTick()
 
-    const modal = wrapper.find('.modal.ext-detail')
+    const modal = new DOMWrapper(document.body).find('dialog.ext-detail')
     // 描述 + 「完整配置」标题 + JSON 都在面板内；标题动作是图标按钮。
     expect(modal.find('.ext-detail-lead').exists()).toBe(false)
     const panel = modal.find('.ext-detail-md').text()
     expect(panel).toContain('本机 Node REPL 服务')
     expect(panel).toContain('完整配置')
     expect(panel).toContain('"type": "stdio"')
-    expect(modal.findAll('.modal-head-actions button').map(button => button.text())).toEqual(['', ''])
+    expect(modal.findAll('.ui-dialog-header-actions button:not(.modal-close)').map(button => button.text())).toEqual(['', ''])
     // 环境变量单独整行，且取值区自带内部滚动。
     const envRow = modal.findAll('.ext-detail-facts > div').find(row => row.text().includes('环境变量'))
     expect(envRow?.classes()).toContain('span-2')

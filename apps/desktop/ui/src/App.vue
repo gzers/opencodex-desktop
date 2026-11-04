@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import UiButton from '@/components/ui/UiButton.vue'
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import UiDialog from '@/components/ui/UiDialog.vue'
+import { computed } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useRouteStore } from '@/stores/routes'
 import AppSidebar from '@/components/AppSidebar.vue'
@@ -24,15 +25,6 @@ useAppController(true)
 function reloadUi() {
   window.location.reload()
 }
-// 2026-09-28 用户要求：界面故障提示带恢复动作，改为**居中弹窗**（原来是窗口顶部一条横条）。
-// 关闭路径 = 「关闭提示」/ 点遮罩 / Esc；三者都只清提示，不触碰其它状态。
-function onFaultKeydown(event: KeyboardEvent) {
-  if (event.key !== 'Escape' || !app.uiFault) return
-  event.preventDefault()
-  app.clearUiFault()
-}
-onMounted(() => window.addEventListener('keydown', onFaultKeydown))
-onBeforeUnmount(() => window.removeEventListener('keydown', onFaultKeydown))
 // Overlay keeps the native macOS window buttons above the web content.
 const isMacOS = /^Mac/.test(navigator.platform)
 const isWindows = /^Win/.test(navigator.platform)
@@ -41,17 +33,10 @@ const component = computed(() => routes.current === 'tray' ? undefined : routes.
 
 <template>
   <div class="app-window" :data-compact="compactShell?'true':undefined" :class="{ 'tray-mode': routes.current === 'tray', 'panel-route': routes.current === 'panel', 'is-macos': isMacOS, 'is-windows': isWindows }">
-    <div v-if="app.uiFault" class="ui-fault-modal" role="alertdialog" aria-modal="true" aria-label="界面出现异常">
-      <div class="ui-fault-mask" @click="app.clearUiFault()"></div>
-      <div class="ui-fault">
-        <h3>界面出现异常</h3>
-        <p class="ui-fault-text">{{ app.uiFault }}</p>
-        <div class="ui-fault-actions">
-          <UiButton class="btn ghost" type="button" @click="app.clearUiFault()">关闭提示</UiButton>
-          <UiButton class="btn" type="button" @click="reloadUi()">重新加载界面</UiButton>
-        </div>
-      </div>
-    </div>
+    <UiDialog :open="!!app.uiFault" title="界面出现异常" role="alertdialog" panel-class="ui-fault-dialog" initial-focus="dialog" @close="app.clearUiFault()">
+      <p class="ui-fault-text">{{ app.uiFault }}</p>
+      <template #actions><UiButton type="button" @click="reloadUi">重新加载界面</UiButton></template>
+    </UiDialog>
     <div class="desktop-stage" :class="{ 'panel-mode': routes.current === 'panel' }">
       <!-- macOS（titleBarStyle: Overlay）没有原生标题栏可拖：这块 28px 条带就是唯一拖拽区。
            data-tauri-drag-region 由 Tauri 注入脚本接管（mousedown → startDragging），

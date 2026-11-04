@@ -1,5 +1,6 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { flushPromises, mount } from '@vue/test-utils'
+import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import SettingsRoute from '@/routes/SettingsRoute.vue'
 import AppModal from '@/components/AppModal.vue'
@@ -37,6 +38,7 @@ function switches() { return invoke.mock.calls.filter(call => call[0] === 'switc
 
 describe('data root migration confirmation and restart boundary', () => {
   beforeEach(() => {
+    installNativeDialogStub()
     invoke.mockReset()
     invoke.mockImplementation(async (command: string) => command === 'get_data_root_config' ? { ...current } : null)
   })
@@ -54,19 +56,20 @@ describe('data root migration confirmation and restart boundary', () => {
   })
 
   it('renders an escaped captured target and cancellation never starts migration', async () => {
-    const { page, modal, app } = await setup()
+    const { page, app } = await setup()
     const target = `/fixtures/<img src=x onerror="alert(1)"> & 'target'`
     await page.get('#switch-root-input').setValue(target)
     await page.get('[data-testid="data-root-migrate"]').trigger('click')
     expect(switches()).toHaveLength(0)
-    expect(modal.get('.modal-body code').text()).toBe(target)
-    expect(modal.find('img').exists()).toBe(false)
-    expect(modal.text()).toContain('外部 OPENCODEX_HOME 保持原位')
-    expect(modal.text()).toContain('旧目录会保留')
+    await flushPromises()
+    expect(new DOMWrapper(document.body).get('.modal-body code').text()).toBe(target)
+    expect(new DOMWrapper(document.body).find('img').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).text()).toContain('外部 OPENCODEX_HOME 保持原位')
+    expect(new DOMWrapper(document.body).text()).toContain('旧目录会保留')
     app.resolveModal('cancel')
     await flushPromises()
     expect(switches()).toHaveLength(0)
-    expect(modal.find('[role="dialog"]').exists()).toBe(false)
+    expect(new DOMWrapper(document.body).find('dialog[open]').exists()).toBe(false)
   })
 
   it('uses the confirmed target, shows real pending feedback and freezes actions until restart', async () => {

@@ -15,8 +15,9 @@ function sessionFor(app: object) {
 </script>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
+import UiDialog from '@/components/ui/UiDialog.vue'
 import ReleaseNotes from './ReleaseNotes.vue'
 import { useAppStore } from '@/stores/app'
 import { useRuntimeStore } from '@/features/runtime/store'
@@ -32,9 +33,8 @@ const app = useAppStore()
 const runtime = useRuntimeStore()
 const session = sessionFor(app)
 const selected = ref<Target | null>(props.target)
-const dialog = ref<HTMLElement | null>(null)
-const titleId = 'update-center-' + useId()
-let restoreFocus: HTMLElement | null = null
+const dialogHost = ref<InstanceType<typeof UiDialog> | null>(null)
+const dialog = computed(() => dialogHost.value?.element ?? null)
 const status = managerUpdateStatus
 const progress = managerInstallProgress
 const pendingRestart = computed(() => status.value?.pendingRestart || progress.value?.stage === 'pending_restart')
@@ -84,6 +84,9 @@ const showingProgress = computed(() => selected.value === 'manager'
   ? managerBusy.value || pendingRestart.value || !!session.managerError || progress.value?.stage === 'failed'
   : selected.value === 'official' && (!!session.officialCandidate || officialBusy.value || officialFailed.value))
 const selectedAvailable = computed(() => selected.value === 'manager' ? managerAvailable.value : officialAvailable.value)
+const hasProgressActions = computed(() => selected.value === 'manager'
+  ? pendingRestart.value || managerAvailable.value && !managerBusy.value
+  : selected.value === 'official' && officialAvailable.value && !officialBusy.value && !session.officialSucceeded)
 const selectedTitle = computed(() => (selected.value === 'manager' ? '桌面管理器' : 'OpenCodex 面板') + (showingProgress.value ? '更新进度' : selectedAvailable.value ? '更新详情与确认' : '更新详情'))
 const selectedCurrent = computed(() => selected.value === 'manager' ? showingProgress.value && session.managerCurrent || status.value?.currentVersion || app.aboutApp?.version || '未知' : showingProgress.value && session.officialCurrent || app.officialProject?.version || '未知')
 const selectedCandidate = computed(() => selected.value === 'manager'
@@ -178,18 +181,6 @@ function close() { emit('update:open', false) }
 function focusables() {
   return Array.from(dialog.value?.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), [href], [tabindex="0"]') ?? [])
 }
-function onKeydown(event: KeyboardEvent) {
-  if (!props.open) return
-  if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close() }
-  if (event.key !== 'Tab') return
-  const list = focusables()
-  const first = list[0], last = list[list.length - 1]
-  const inside = dialog.value?.contains(document.activeElement) === true
-  if (!first || document.activeElement === dialog.value || (event.shiftKey ? !inside || document.activeElement === first : !inside || document.activeElement === last)) {
-    event.preventDefault()
-    ;(event.shiftKey ? last : first)?.focus()
-  }
-}
 watch(() => props.target, target => { selected.value = target })
 watch(selected, async () => {
   const label = dialog.value?.contains(document.activeElement)
@@ -206,27 +197,15 @@ watch(() => props.open, async open => {
   if (open) {
     if (!officialBusy.value && session.officialSucceeded && session.officialCandidate !== app.officialRemote?.version) { session.officialCandidate = ''; session.officialSucceeded = false }
     selected.value = props.target
-    restoreFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    window.addEventListener('keydown', onKeydown, true)
     // 打开详情只读缓存，反复进入路由不会隐式联网检查或备份。
     void getUpdateStatus().catch(() => {})
-    await nextTick()
-    dialog.value?.focus()
-  } else {
-    window.removeEventListener('keydown', onKeydown, true)
-    restoreFocus?.focus()
-    restoreFocus = null
   }
 }, { immediate: true })
-onBeforeUnmount(() => { window.removeEventListener('keydown', onKeydown, true); restoreFocus?.focus() })
 defineExpose({ check })
 </script>
 
 <template>
-  <Teleport to="body">
-    <div v-if="open" class="modal-mask update-center-mask" data-testid="update-center" @click.self="close">
-      <div ref="dialog" class="modal modal-wide update-center" role="dialog" aria-modal="true" :aria-labelledby="titleId" tabindex="-1">
-        <header class="update-center-head"><h3 :id="titleId">{{ selected ? selectedTitle : '检查更新结果' }}</h3></header>
+  <UiDialog ref="dialogHost" :open="open" :title="selected ? selectedTitle : '检查更新结果'" wide panel-class="update-center" data-testid="update-center" initial-focus="dialog" @close="close">
         <div class="update-center-body">
           <template v-if="!selected">
             <p class="update-hint">分别查看更新内容与范围，确认后才会开始更新。</p>
@@ -266,35 +245,25 @@ defineExpose({ check })
               <p v-if="session.officialError || app.officialUpdateError" class="update-error update-query-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
             </template>
             <ol v-if="showingProgress" class="update-stage-list" aria-label="更新阶段"><li>准备</li><li>下载</li><li>校验</li><li>{{ selected === 'manager' ? '安装与重启' : '应用与核验' }}</li></ol>
-            <div v-if="showingProgress" class="update-progress-actions">
+            <div v-if="showingProgress && hasProgressActions" class="update-progress-actions">
               <UiButton v-if="selected === 'manager' && pendingRestart" variant="primary" :loading="restarting" @click="restart">重启并应用更新</UiButton>
               <UiButton v-else-if="selected === 'manager' && managerAvailable && !managerBusy" variant="primary" :disabled="busy" data-testid="install-manager-update" @click="installManager">重试安装</UiButton>
               <UiButton v-if="selected === 'official' && officialAvailable && !officialBusy && !session.officialSucceeded" variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy" data-testid="install-official-update" @click="installOfficial">重试面板更新</UiButton>
             </div>
           </section>
         </div>
-        <footer class="update-center-foot">
-          <div class="update-object-actions">
-            <UiButton variant="ghost" aria-label="关闭更新中心" @click="close">{{ !selected || (!showingProgress && !selectedAvailable) ? '关闭' : !showingProgress ? '取消' : '关闭窗口' }}</UiButton>
-            <UiButton v-if="selected === 'manager' && !showingProgress && managerAvailable" variant="primary" :disabled="busy" data-testid="install-manager-update" @click="installManager">确认更新</UiButton>
-            <UiButton v-if="selected === 'official' && !showingProgress && officialAvailable" variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy" :loading="session.checking" data-testid="install-official-update" @click="installOfficial">备份并更新面板</UiButton>
-          </div>
-        </footer>
-      </div>
-    </div>
-  </Teleport>
+    <template v-if="selected && !showingProgress && selectedAvailable" #actions="{ close: requestClose }">
+      <UiButton variant="ghost" @click="requestClose">取消</UiButton>
+      <UiButton v-if="selected === 'manager'" variant="primary" :disabled="busy" data-testid="install-manager-update" @click="installManager">确认更新</UiButton>
+      <UiButton v-if="selected === 'official'" variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy" :loading="session.checking" data-testid="install-official-update" @click="installOfficial">备份并更新面板</UiButton>
+    </template>
+  </UiDialog>
 </template>
 
 <style scoped>
 /* §39：结果页每个对象一行、一屏看完；宽度 780px，正文不出现外层滚动套嵌套滚动。 */
-/* Teleport 在主壳外，须与 UiDialog 一样独立消费唯一缩放因子并折算视口。 */
-.update-center.modal { zoom: var(--ui-zoom); width: min(780px, calc(100vw / var(--ui-zoom) - 40px)); max-height: calc(100vh / var(--ui-zoom) - 40px); padding: 0; display: flex; flex-direction: column; overflow: hidden; }
-.update-center-head, .update-center-foot { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-5) var(--space-6); }
-.update-center-head { padding:24px 24px 12px; }
-.update-center-head h3 { margin: var(--space-1) 0; }
-.update-center-head p, .update-center-foot p { margin: 0; font-size: var(--text-label); color: var(--muted); }
-.update-kicker { color: var(--muted); font-size: var(--text-caption); }
-.update-center-body { overflow: auto; min-height: 0; padding:0 24px 18px; display: grid; gap: var(--space-3); }
+:global(dialog.ui-dialog.update-center.wide) { width:min(780px,calc(100vw / var(--ui-zoom) - 40px)); }
+.update-center-body { display:grid; gap:var(--space-3); min-width:0; }
 .update-result-rows { display: grid; gap: var(--space-2); }
 .update-result-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border:0; border-bottom:1px solid var(--border); border-radius:0; background:transparent; }
 .update-result-main { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: var(--space-1) var(--space-4); min-width: 0; }

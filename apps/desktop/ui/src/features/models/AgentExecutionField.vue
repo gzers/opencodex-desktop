@@ -33,6 +33,8 @@ watch(()=>models.executionPreferenceRevision,revision=>{if(revision)settings.val
 onMounted(async()=>{const revision=models.executionPreferenceRevision;busy.value=true;try{const value=await modelApi.agentSettings();if(!disposed&&models.executionPreferenceRevision===revision)settings.value=value}catch(cause){if(!disposed&&models.executionPreferenceRevision===revision)error.value=errorText(cause)}finally{if(!disposed)busy.value=false}})
 const current=computed<ModelChoice[]>(()=>{const value=candidate.value;const channel=channels.value.find(c=>c.providerId===value?.providerId);return value?[{channelId:value.channelId??channel?.id??value.providerId,modelId:value.modelId,...(value.reasoningEffort===null?{}:{reasoningEffort:value.reasoningEffort}),...(value.fast===null?{}:{fast:value.fast})}]:[]})
 function configure(){if(busy.value)return;candidate.value=settings.value?{...settings.value}:null;error.value='';configuring.value=true}
+function closePicker(){open.value=false;directoryRequest++;loading.value=false}
+function closeConfiguration(){if(busy.value)return;closePicker();configuring.value=false;candidate.value=null}
 // File loads/saves replace the saved policy, including layout-only renames whose
 // file digest is unchanged. Unsaved channel/Key buffers are not execution facts.
 watch([()=>models.snapshot?.policyDigest,()=>models.snapshot?.policy],()=>{
@@ -85,8 +87,8 @@ const summary=computed(()=>{if(!settings.value)return '尚未选择执行模型 
     <p v-if="error&&!configuring" role="alert" class="model-error">{{ error }}</p>
    </details>
   </template>
-  <UiDialog :open="configuring" title="Agent 配置" :busy="busy" @close="configuring=false"><p>模型模版助手 · 本机共用</p><UiButton :loading="busy" @click="browse">{{ candidate?candidate.providerId+' / '+candidate.modelId:'选择执行模型' }}</UiButton><p v-if="candidate">{{ summary }}</p><p>此设置用于下一次自动填充、持续纠偏和批量模版检查。</p><p v-if="error" role="alert" class="model-error">{{ error }}</p><template #actions><UiButton @click="configuring=false">取消</UiButton><UiButton variant="primary" :disabled="!candidate" :loading="busy" @click="save">保存共用设置</UiButton></template></UiDialog>
-  <ModelPicker :open="open" :loading="loading" :error="open?error:undefined" @retry="browse" :rows="allRows" :channels="channels" :current="current" reasoning title="执行模型" @close="open=false" @confirm="choose" />
+  <UiDialog :open="configuring" title="Agent 配置" panel-class="agent-execution-dialog" :busy="busy" @close="closeConfiguration"><p>模型模版助手 · 本机共用</p><UiButton :loading="busy" @click="browse">{{ candidate?candidate.providerId+' / '+candidate.modelId:'选择执行模型' }}</UiButton><p v-if="candidate">{{ summary }}</p><p>此设置用于下一次自动填充、持续纠偏和批量模版检查。</p><p v-if="error" role="alert" class="model-error">{{ error }}</p><template #actions="{ close }"><UiButton :disabled="busy" @click="close">取消</UiButton><UiButton variant="primary" :disabled="!candidate" :loading="busy" @click="save">保存共用设置</UiButton></template></UiDialog>
+  <ModelPicker :open="open" :loading="loading" :error="open?error:undefined" @retry="browse" :rows="allRows" :channels="channels" :current="current" reasoning title="执行模型" @close="closePicker" @confirm="choose" />
  </div>
 </template>
 <style scoped>

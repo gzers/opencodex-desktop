@@ -7,7 +7,7 @@ import {useModelsStore} from '@/features/models/store'
 const ipc=vi.hoisted(()=>vi.fn())
 vi.mock('@tauri-apps/api/core',()=>({invoke:ipc}))
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{previewNewChannel:vi.fn(),discover:vi.fn(),forgetCredential:vi.fn()}}))
-const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'}
+const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></section>'}
 function render(){return mount(NewChannelDialog,{global:{stubs:{UiDialog:dialog,UiSelectField:true}}})}
 function button(wrapper:ReturnType<typeof render>,name:string){return wrapper.findAll('button').find(b=>b.text()===name)!}
 async function fill(wrapper:ReturnType<typeof render>,label:string,value:string){await wrapper.findAll('label').find(l=>l.text()===label)!.get('input').setValue(value)}
@@ -34,7 +34,7 @@ describe('new channel two-step buffer',()=>{
  it('next validates locally and closing never inserts an empty channel or persists a key',async()=>{
   const wrapper=render();await flushPromises();await firstStep(wrapper)
   expect(wrapper.text()).toContain('2 / 2');expect(modelApi.previewNewChannel).not.toHaveBeenCalled();expect(modelApi.discover).not.toHaveBeenCalled()
-  await button(wrapper,'关闭').trigger('click');expect(wrapper.emitted('close')).toHaveLength(1);expect(useModelsStore().channelDraft!.channels).toHaveLength(0);expect(modelApi.forgetCredential).not.toHaveBeenCalled();wrapper.unmount()
+  await button(wrapper,'取消').trigger('click');expect(wrapper.emitted('close')).toHaveLength(1);expect(useModelsStore().channelDraft!.channels).toHaveLength(0);expect(modelApi.forgetCredential).not.toHaveBeenCalled();wrapper.unmount()
  })
  it('discovery is read-only, starts unselected and a cancelled late result cannot change the buffer',async()=>{
   let finish!:(value:Awaited<ReturnType<typeof modelApi.previewNewChannel>>)=>void

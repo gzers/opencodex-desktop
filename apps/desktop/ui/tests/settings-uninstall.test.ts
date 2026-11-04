@@ -1,5 +1,6 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { flushPromises, mount } from '@vue/test-utils'
+import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import SettingsRoute from '@/routes/SettingsRoute.vue'
@@ -75,7 +76,7 @@ async function mountInstallation() {
   const pinia = createPinia()
   setActivePinia(pinia)
   useRouteStore().go('settings', { section: 'installation' })
-  const wrapper = mount(SettingsRoute, { global: { plugins: [pinia] } })
+  const wrapper = mount(SettingsRoute, { global: { plugins: [pinia] }, attachTo: document.body })
   await flushPromises()
   await nextTick()
   // 运行来源卡片的事实来自后端解析结果；测试里显式触发一次读取。
@@ -95,6 +96,7 @@ async function openUninstall(wrapper: ReturnType<typeof mount>) {
 }
 
 beforeEach(() => {
+  installNativeDialogStub()
   invoke.mockReset()
 })
 
@@ -109,7 +111,7 @@ describe('统一卸载弹窗（Revision 11）', () => {
     const wrapper = await mountInstallation()
     await openUninstall(wrapper)
 
-    const modal = wrapper.find('[data-testid="runtime-uninstall-modal"]')
+    const modal = new DOMWrapper(document.body).find('dialog[data-testid="runtime-uninstall-modal"][open]')
     expect(modal.exists()).toBe(true)
     // 范围两级
     expect(modal.find('[data-testid="uninstall-scope-full"]').exists()).toBe(true)
@@ -145,7 +147,7 @@ describe('统一卸载弹窗（Revision 11）', () => {
     const wrapper = await mountInstallation()
     await openUninstall(wrapper)
 
-    const modal = wrapper.find('[data-testid="runtime-uninstall-modal"]')
+    const modal = new DOMWrapper(document.body).find('dialog[data-testid="runtime-uninstall-modal"][open]')
     await modal.find('[data-testid="uninstall-ack"]').setValue(true)
     await nextTick()
     expect(modal.find('[data-testid="uninstall-confirm"]').attributes('disabled')).toBeUndefined()
@@ -157,7 +159,7 @@ describe('统一卸载弹窗（Revision 11）', () => {
     expect(requests).toEqual([
       { scope: 'full', autoBackup: true, cleanData: true, confirmation: 'confirmed' },
     ])
-    const view = wrapper.find('[data-testid="runtime-uninstall-modal"]')
+    const view = new DOMWrapper(document.body).find('dialog[data-testid="runtime-uninstall-modal"][open]')
     expect(view.find('[data-testid="uninstall-progress-title"]').text()).toContain('卸载完成')
     // 完成后换成后端返回的真实步骤
     const steps = view.find('[data-testid="uninstall-steps"]').text()
@@ -165,6 +167,8 @@ describe('统一卸载弹窗（Revision 11）', () => {
     // 残留核验卡片 + 官方输出明细框
     expect(view.find('[data-testid="uninstall-residue"]').text()).toContain('已清除')
     expect(view.find('[data-testid="uninstall-console"]').text()).toContain('service removed')
+    expect(view.find('footer').exists()).toBe(false)
+    expect(view.get('header .modal-close').attributes('disabled')).toBeUndefined()
     // 卸载后必须重跑环境发现：ocx 入口已移除，环境卡 / 概览「安装形态」/ 门禁
     // 都要立刻不再显示「已发现」，不能停在卸载前的事实。
     expect(commands).toContain('discover_environment')
@@ -182,7 +186,7 @@ describe('统一卸载弹窗（Revision 11）', () => {
     const wrapper = await mountInstallation()
     await openUninstall(wrapper)
 
-    const modal = wrapper.find('[data-testid="runtime-uninstall-modal"]')
+    const modal = new DOMWrapper(document.body).find('dialog[data-testid="runtime-uninstall-modal"][open]')
     expect(modal.find('[data-testid="uninstall-not-removable"]').text()).toContain('已拒绝代删')
     await modal.find('[data-testid="uninstall-ack"]').setValue(true)
     await nextTick()
@@ -211,14 +215,14 @@ describe('统一卸载弹窗（Revision 11）', () => {
     const wrapper = await mountInstallation()
     await openUninstall(wrapper)
 
-    const modal = wrapper.find('[data-testid="runtime-uninstall-modal"]')
+    const modal = new DOMWrapper(document.body).find('dialog[data-testid="runtime-uninstall-modal"][open]')
     await modal.find('[data-testid="uninstall-ack"]').setValue(true)
     await nextTick()
     await modal.find('[data-testid="uninstall-confirm"]').trigger('click')
     await flushPromises()
     await nextTick()
 
-    const view = wrapper.find('[data-testid="runtime-uninstall-modal"]')
+    const view = new DOMWrapper(document.body).find('dialog[data-testid="runtime-uninstall-modal"][open]')
     expect(view.find('[data-testid="uninstall-progress-title"]').text()).toBe('卸载未核验完成：1 步失败')
     expect(view.find('[data-testid="uninstall-progress-title"]').text()).not.toContain('100%')
     expect(view.find('.wiz-umeta').text()).toContain('1 步失败')
@@ -240,12 +244,12 @@ describe('统一卸载弹窗（Revision 11）', () => {
     })
     const wrapper = await mountInstallation()
     await openUninstall(wrapper)
-    const modal = wrapper.find('[data-testid="runtime-uninstall-modal"]')
+    const modal = new DOMWrapper(document.body).find('dialog[data-testid="runtime-uninstall-modal"][open]')
     await modal.find('[data-testid="uninstall-ack"]').setValue(true)
     await modal.find('[data-testid="uninstall-confirm"]').trigger('click')
     await flushPromises()
     await nextTick()
-    const view = wrapper.find('[data-testid="runtime-uninstall-modal"]')
+    const view = new DOMWrapper(document.body).find('dialog[data-testid="runtime-uninstall-modal"][open]')
     expect(view.find('[data-testid="uninstall-progress-title"]').text()).toBe('卸载待核验')
     expect(view.find('.wiz-umeta').text()).not.toContain('100%')
     expect(view.find('.wiz-ufill').classes()).toContain('faulted')

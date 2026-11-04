@@ -6,7 +6,7 @@ import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
 import {modelApi,emptyRules,type AgentSettings,type ExecutionDirectory,type ModelSnapshot} from '@/features/models/api'
 import {useModelsStore} from '@/features/models/store'
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{agentSettings:vi.fn(),executionDirectory:vi.fn(),saveAgentSettings:vi.fn(),load:vi.fn()}}))
-const dialog=defineComponent({props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'})
+const dialog=defineComponent({props:['open'],template:'<section v-if="open"><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></section>'})
 const picker=defineComponent({props:['open','current','rows','channels','loading','error'],emits:['confirm','close','retry'],template:"<div v-if=\"open\"><p v-if=\"error\">{{error}}</p><span v-if=\"rows.length\">{{rows[0].modelId}}</span><button v-if=\"rows.length\" class=\"pick-temp\" @click=\"$emit('confirm',[{channelId:rows[0].channelId,modelId:rows[0].modelId,reasoningEffort:'none',fast:false}])\">确认临时选择</button><button class=\"pick-retry\" @click=\"$emit('retry')\">重新读取目录</button><button class=\"pick-cancel\" @click=\"$emit('close')\">取消临时选择</button></div>"})
 const saved:AgentSettings={providerId:'original',modelId:'old',reasoningEffort:null,fast:null,channelId:'old-channel',connectionDigest:'old-digest'}
 /** 组件用模型配置 store 做首屏即时呈现，测试需提供 Pinia 实例。 */

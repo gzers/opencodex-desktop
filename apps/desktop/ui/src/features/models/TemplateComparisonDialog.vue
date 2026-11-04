@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {computed,ref,watch} from 'vue'
-import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import {versionLabel,type Template,type TemplateDraft} from './api'
@@ -19,7 +18,6 @@ const text=(value:unknown)=>value===undefined?'未设置':JSON.stringify(value,n
   <template v-if="frozen&&revision"><p>{{ frozen.draft.label }} · 当前编辑缓冲</p><label class="model-comparison-version">比较基准<UiSelectField v-model="selected" :options="options" label="比较基准版本" /></label><p v-if="libraryDigest!==frozen.libraryDigest" role="status">资料库已变化；此处保留打开时的比较快照，请关闭后重新查看。</p><p>共 {{ differences.length }} 项差异</p>
    <p v-if="!differences.length">当前缓冲与所选保存版本一致。</p><article v-for="row in differences" :key="row.field" class="model-comparison-row"><h3>{{ row.field }}</h3><div class="model-comparison-values"><div><strong>保存版本</strong><pre>{{ text(row.before) }}</pre></div><div><strong>当前缓冲</strong><pre>{{ text(row.after) }}</pre></div></div></article>
   </template><p v-else role="alert">当前没有可比较的保存版本。</p>
-  <template #actions><UiButton @click="$emit('close')">关闭</UiButton></template>
  </UiDialog>
 </template>
 <style scoped>

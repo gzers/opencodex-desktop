@@ -1,5 +1,6 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { mount } from '@vue/test-utils'
+import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '@/App.vue'
 import { useAppStore } from '@/stores/app'
@@ -51,6 +52,7 @@ function readyEnvironment(): EnvironmentReport {
 
 describe('overview status card carries facts and actions only', () => {
   beforeEach(() => {
+    installNativeDialogStub()
     setActivePinia(createPinia())
     invoke.mockReset()
     invoke.mockResolvedValue(undefined)
@@ -62,7 +64,7 @@ describe('overview status card carries facts and actions only', () => {
     invoke.mockImplementation((command: string) =>
       command === 'discover_environment' ? Promise.resolve(readyEnvironment()) : Promise.resolve(undefined),
     )
-    const wrapper = mount(App, { global: { plugins: [pinia] } })
+    const wrapper = mount(App, { global: { plugins: [pinia] }, attachTo: document.body })
     useRouteStore().go('overview')
     await wrapper.vm.$nextTick()
     await new Promise(resolve => setTimeout(resolve, 0))
@@ -83,13 +85,15 @@ describe('overview status card carries facts and actions only', () => {
     expect(wrapper.find('[data-testid="environment-gate"]').exists()).toBe(false)
 
     await area.find('.motion-mainline').trigger('click')
-    const modal = wrapper.find('.motion-modal')
+    await flushPromises()
+    const modal = new DOMWrapper(document.body).find('dialog.overview-runtime-dialog[open]')
     expect(modal.exists()).toBe(true)
     expect(modal.text()).toContain('端口')
     expect(modal.text()).toContain('数据目录')
     // 运行环境明细并入详情（逐项结论）。
     expect(modal.text()).toContain('运行环境')
     expect(modal.text()).toContain('OpenCodex')
+    wrapper.unmount()
   })
 
   it('keeps the scenario model free of note fields', () => {
@@ -100,6 +104,7 @@ describe('overview status card carries facts and actions only', () => {
 
 describe('runtime state transition announcements', () => {
   beforeEach(() => {
+    installNativeDialogStub()
     setActivePinia(createPinia())
   })
 

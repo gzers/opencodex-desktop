@@ -1,5 +1,6 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { flushPromises, mount } from '@vue/test-utils'
+import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import SettingsRoute from '@/features/runtime/components/RuntimeInstallDialog.vue'
 import { useRuntimeStore } from '@/features/runtime/store'
@@ -14,7 +15,8 @@ vi.mock('@tauri-apps/api/core', () => ({ invoke: (...args: unknown[]) => invoke(
 vi.mock('@tauri-apps/api/event', () => ({ listen: async () => () => {} }))
 vi.mock('@tauri-apps/plugin-dialog', () => ({ open: selectDirectory }))
 const pages: Array<ReturnType<typeof mount>> = []
-beforeEach(() => { invoke.mockReset(); selectDirectory.mockReset(); selectDirectory.mockResolvedValue(null) })
+beforeEach(() => {
+  installNativeDialogStub(); invoke.mockReset(); selectDirectory.mockReset(); selectDirectory.mockResolvedValue(null) })
 afterEach(() => pages.splice(0).forEach(page => page.unmount()))
 
 async function setup(platform: string, root: string, prefix: string) {
@@ -35,11 +37,11 @@ async function setup(platform: string, root: string, prefix: string) {
     return null
   })
   useRouteStore().go('settings', { section: 'installation' })
-  const page = mount(SettingsRoute, { global: { plugins: [pinia], stubs: { teleport: true } } })
+  const page = mount(SettingsRoute, { global: { plugins: [pinia] } })
   pages.push(page)
   await flushPromises()
   runtime.requestInstallModal('registry'); await flushPromises()
-  const modal = page.get('[data-testid="runtime-install-modal"]')
+  const modal = new DOMWrapper(document.body).get('[data-testid="runtime-install-modal"]')
   await modal.get('[data-testid="wiz-ack"]').setValue(true)
   const next = () => modal.findAll('button').find(button => button.text() === '开始安装')!
   return { modal, next }
@@ -145,7 +147,7 @@ describe('installation prefix platform syntax and landing hint', () => {
     expect(modal.get('[data-testid="wiz-error"]').text()).toContain('系统保护目录')
     expect(modal.get('[data-testid="wiz-status"]').text()).toContain('安装失败')
     expect(modal.find('[role="progressbar"]').exists()).toBe(false)
-    expect(modal.get('[data-testid="wiz-allow-scripts"]').attributes('disabled')).toBeDefined()
+    expect(modal.find('[data-testid="wiz-allow-scripts"]').exists()).toBe(false)
   })
 
   it('permits exactly the explicit scripts-required retry from the real numeric error envelope', async () => {
@@ -166,7 +168,7 @@ describe('installation prefix platform syntax and landing hint', () => {
     expect(writes).toHaveLength(2)
     expect(writes[0]![1].request.allowScripts).toBe(false)
     expect(writes[1]![1].request.allowScripts).toBe(true)
-    await modal.findAll('button').find(b => b.text() === '关闭')!.trigger('click')
+    await modal.get('header button[aria-label="关闭"]').trigger('click')
     useRuntimeStore().requestInstallModal('registry'); await flushPromises()
     expect(useRuntimeStore().installing).toBe(false)
   })

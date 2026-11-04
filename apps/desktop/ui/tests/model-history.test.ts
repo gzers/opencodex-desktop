@@ -8,7 +8,7 @@ import {useModelsStore} from '@/features/models/store'
 const go=vi.hoisted(()=>vi.fn())
 vi.mock('@/stores/routes',()=>({useRouteStore:()=>({go})}))
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{policyHistory:vi.fn(),prepareRecovery:vi.fn(),acceptRecovery:vi.fn(),loadRecoveryBaseline:vi.fn(),load:vi.fn()}}))
-const dialog=defineComponent({props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'})
+const dialog=defineComponent({props:['open'],template:'<section v-if="open"><slot/><slot name="actions" :close="$emit.bind(null, &quot;close&quot;)" /></section>'})
 const snapshot=():ModelSnapshot=>({library:{schemaVersion:1,templates:[]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'actual-file',workspaceDigest:'empty-workspace',workspace:null})
 const baseline=():ModelSnapshot=>({...snapshot(),policyDigest:'legacy-policy',workspaceDigest:'legacy-workspace'})
 const recovered=():ModelSnapshot=>({...baseline(),workspaceDigest:'recovered',workspace:{basePolicy:'legacy-policy',policy:{...snapshot().policy,recoveryId:'restore-plan'}}})

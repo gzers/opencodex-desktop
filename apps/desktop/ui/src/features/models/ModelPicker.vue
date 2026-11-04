@@ -13,6 +13,7 @@ const sorting=ref<SortColumn|null>(null);const descending=ref(false)
 const heads=computed<Array<readonly [SortColumn,string]>>(()=>[['model','模型'],['channel','渠道'],['context','上下文'],['effort','推理档位'],['state','状态'],...(props.recommendations?.length?[['recommendation','推荐'] as const]:[])])
 let floatingBefore:ModelChoice[]=[]
 watch(focused,value=>{if(value)floatingBefore=picks.value.map(p=>({...p}))})
+function close(){focused.value='';emit('close')}
 function closeOptions(instance:string){if(focused.value===instance)focused.value=''}
 function revertOptions(){picks.value=floatingBefore.map(p=>({...p}));focused.value=''}
 const key=(row:{channelId?:string;modelId?:string;nativeModelId?:string|null})=>row.nativeModelId?JSON.stringify(['native',row.nativeModelId]):JSON.stringify([row.channelId,row.modelId])
@@ -101,7 +102,7 @@ function option(row:ModelProjection,field:'reasoningEffort'|'fast',value?:string
 }
 </script>
 <template>
- <UiDialog :open="open" :title="title??'选择模型'" wide @close="emit('close')">
+ <UiDialog :open="open" :title="title??'选择模型'" wide panel-class="model-picker-dialog" @close="close">
   <!-- 目录未就绪：状态条 + 骨架行；不把“还没读到”显示成“型号坏了”。 -->
   <div v-if="loading" class="model-picker-status" role="status"><span class="model-picker-spinner" aria-hidden="true"></span><span>正在读取模型目录</span><small>已有选择保持</small></div><div v-if="error" role="alert"><p>{{ error }}</p><UiButton :disabled="loading" @click="emit('retry')">重新读取目录</UiButton></div>
   <div class="model-picker">
@@ -117,7 +118,7 @@ function option(row:ModelProjection,field:'reasoningEffort'|'fast',value?:string
    </div>
   </div>
   <section class="model-picker-picked" aria-label="已选模型"><div class="model-inline"><strong>已选模型 · {{ picks.length }}</strong><UiButton v-if="multiple&&picks.length" size="sm" variant="ghost" @click="picks=[]">清空</UiButton></div><div class="model-picker-summary"><div v-for="(pick,index) in picks" :key="key(pick)" class="model-picker-chip" :class="{'is-invalid':chipNeedsReview(pick)}"><ModelChoiceOptions v-if="reasoning&&props.rows.find(r=>key(r)===key(pick))" :row="props.rows.find(r=>key(r)===key(pick))!" :choice="pick" :open="focused==='chip:'+key(pick)" :another-open="!!focused" :disabled="!available(props.rows.find(r=>key(r)===key(pick))!)" :label="channelLabel(pick.channelId)+' / '+pickId(pick)+' · '+(pick.reasoningEffort??effort(props.rows.find(r=>key(r)===key(pick))!)??'未知')+(pick.fast===true?' · Fast':'')" @open="focused='chip:'+key(pick)" @close="closeOptions('chip:'+key(pick))" @revert="revertOptions" @option="(field,value)=>option(props.rows.find(r=>key(r)===key(pick))!,field,value)" /><span v-else>✓ {{ channelLabel(pick.channelId) }} / {{ pickId(pick) }}{{ pick.reasoningEffort?' · '+pick.reasoningEffort:'' }}{{ pick.fast===undefined?'':pick.fast?' · Fast开':' · Fast关' }}<span v-if="pendingCatalog()" class="model-picker-pending">正在核对</span><small v-if="chipNeedsReview(pick)">{{ problem(pick) }}</small></span><small v-if="reasoning&&chipNeedsReview(pick)">{{ problem(pick) }}</small><template v-if="multiple"><UiButton v-if="ordered" size="sm" variant="ghost" :disabled="index===0" :aria-label="pickId(pick)+'上移'" @click="movePick(index,-1)">↑</UiButton><UiButton v-if="ordered" size="sm" variant="ghost" :disabled="index===picks.length-1" :aria-label="pickId(pick)+'下移'" @click="movePick(index,1)">↓</UiButton><UiButton size="sm" variant="ghost" :aria-label="'移除 '+pickId(pick)" @click="picks.splice(index,1)">×</UiButton></template></div></div></section>
-  <template #actions><span>已选 {{ picks.length }} 项</span><UiButton @click="emit('close')">取消</UiButton><UiButton variant="primary" :disabled="loading||!!error||invalid||(!multiple&&!picks.length)" @click="confirm">确定选择</UiButton></template>
+  <template #actions="{ close: requestClose }"><span>已选 {{ picks.length }} 项</span><UiButton @click="requestClose">取消</UiButton><UiButton variant="primary" :disabled="loading||!!error||invalid||(!multiple&&!picks.length)" @click="confirm">确定选择</UiButton></template>
  </UiDialog>
 </template>
 <style scoped>

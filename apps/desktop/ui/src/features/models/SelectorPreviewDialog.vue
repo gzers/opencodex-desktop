@@ -182,8 +182,8 @@ function confirm() { if (!props.saving) emit('confirm') }
     <ul><li v-for="notice in notices" :key="notice">{{ notice }}</li></ul>
    </details>
   </div>
-  <template #actions>
-   <UiButton :disabled="saving" @click="emit('close')">取消</UiButton>
+  <template #actions="{ close: requestClose }">
+   <UiButton :disabled="saving" @click="requestClose">取消</UiButton>
    <UiButton variant="primary" :loading="saving" @click="confirm">确认保存</UiButton>
   </template>
  </UiDialog>

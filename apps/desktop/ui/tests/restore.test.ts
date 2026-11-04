@@ -70,6 +70,7 @@ describe('official restore guidance', () => {
       expect(app.modal?.title).toBe('官方恢复引导')
     })
     expect(app.modal?.body).toContain('<code>ocx restore</code>')
+    expect(app.modal?.mode).toBe('view')
     expect(app.modal?.body).toContain('本应用不会代为执行恢复')
     expect(app.restoreError).toBe('')
   })

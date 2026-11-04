@@ -1,5 +1,6 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
-import { mount, flushPromises, type VueWrapper } from '@vue/test-utils'
+import { DOMWrapper, mount, flushPromises, type VueWrapper } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
 import { managerUpdateStatus } from '@/features/updates/update'
@@ -14,13 +15,14 @@ vi.mock('@/features/updates/update', async original => ({ ...await original<type
 let wrapper: VueWrapper | null = null
 let pinia: ReturnType<typeof createPinia>
 beforeEach(() => {
+  installNativeDialogStub()
   vi.clearAllMocks(); pinia = createPinia(); setActivePinia(pinia)
   managerUpdateStatus.value = { channel: 'beta', currentVersion: '0.1.9', availableVersion: '0.1.10-beta.1', lastCheckedAt: '2026-10-14', signatureVerified: false, error: null, releaseUrl: 'https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10-beta.1' }
   useUpdatesStore().officialRemote = { tag: 'latest', version: '2.84.0', integrity: null }
 })
-afterEach(() => { wrapper?.unmount(); wrapper = null; vi.restoreAllMocks() })
+afterEach(() => { wrapper?.unmount(); wrapper = null; vi.restoreAllMocks(); document.body.innerHTML = '' })
 function render(target: 'official' | 'manager') {
-  wrapper = mount(UpdateCenter, { props: { open: true, target }, global: { plugins: [pinia], stubs: { teleport: true } } });return wrapper
+  wrapper = mount(UpdateCenter, { props: { open: true, target }, global: { plugins: [pinia] }, attachTo: document.body });return new DOMWrapper(document.body)
 }
 describe('release detail integration through the shared update center', () => {
   it('loads the exact panel release body without running a version check, backup or install', async () => {

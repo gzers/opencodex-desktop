@@ -14,6 +14,7 @@ import { useAppStore } from '@/stores/app'
 import { useAppController } from '@/composables/useAppController'
 import AppTopbar from '@/components/AppTopbar.vue'
 import UiButton from '@/components/ui/UiButton.vue'
+import UiDialog from '@/components/ui/UiDialog.vue'
 import InformationRow from '@/components/patterns/InformationRow.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
@@ -53,17 +54,6 @@ const compact = ref(false)
 function onVisibilityChange() {
   documentVisible.value = document.visibilityState !== 'hidden'
 }
-function onKeydown(event: KeyboardEvent) {
-  if (event.key !== 'Escape') return
-  if (detailOpen.value) {
-    event.preventDefault()
-    detailOpen.value = false
-  } else if (envOpen.value) {
-    event.preventDefault()
-    envOpen.value = false
-  }
-}
-
 let sizeObserver: ReturnType<typeof layoutObserver> = undefined
 function updateSize() {
   const win = document.querySelector('.app-window')
@@ -78,7 +68,6 @@ function updateSize() {
 
 onMounted(() => {
   document.addEventListener('visibilitychange', onVisibilityChange)
-  window.addEventListener('keydown', onKeydown)
   updateSize()
   if (typeof ResizeObserver !== 'undefined') {
     const win = document.querySelector('.app-window')
@@ -90,7 +79,6 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', onVisibilityChange)
-  window.removeEventListener('keydown', onKeydown)
   sizeObserver?.disconnect()
   sizeObserver = undefined
   document.documentElement.removeAttribute('data-overview-size')
@@ -452,14 +440,8 @@ const mods = computed(() => [
       </ul>
     </UiCard>
 
-    <!-- 运行详情弹窗（三段式：标题 / 正文滚动 / 底部关闭）；上部两列进程与环境，下部整宽来源目录。 -->
-    <div v-if="detailOpen" class="modal-mask" @click.self="detailOpen = false">
-      <div class="modal motion-modal motion-runtime-modal" role="dialog" aria-modal="true" aria-label="运行详情">
-        <div class="motion-modal-head">
-          <h3>运行详情</h3>
-          <UiButton class="btn ghost motion-modal-close" type="button" aria-label="关闭" @click="detailOpen = false">✕</UiButton>
-        </div>
-        <div class="motion-modal-body">
+    <!-- 观察窗口复用公共模态；退出不停止运行或环境检查。 -->
+    <UiDialog :open="detailOpen" title="运行详情" wide panel-class="motion-runtime-modal overview-runtime-dialog" @close="detailOpen = false">
           <div class="motion-runtime-grid">
             <section aria-labelledby="runtimeProcessTitle">
               <h4 class="motion-section-title" id="runtimeProcessTitle">进程与就绪</h4>
@@ -500,23 +482,13 @@ const mods = computed(() => [
               </div>
             </dl>
           </section>
-        </div>
-        <div class="motion-modal-actions">
-          <UiButton class="btn ghost" type="button" @click="app.openOverviewDataRoot()">打开数据目录</UiButton>
-          <UiButton class="btn ghost" type="button" @click="app.openOverviewOpencodexHome()">打开 OPENCODEX_HOME</UiButton>
-          <UiButton class="btn primary" type="button" @click="detailOpen = false">关闭</UiButton>
-        </div>
-      </div>
-    </div>
+      <template #actions>
+        <UiButton variant="ghost" type="button" @click="app.openOverviewDataRoot()">打开数据目录</UiButton>
+        <UiButton variant="ghost" type="button" @click="app.openOverviewOpencodexHome()">打开 OPENCODEX_HOME</UiButton>
+      </template>
+    </UiDialog>
 
-    <!-- 完整环境指引弹窗（可独立从准备卡打开；与运行详情共用三段式框架）。 -->
-    <div v-if="envOpen" class="modal-mask" @click.self="envOpen = false">
-      <div class="modal motion-modal" role="dialog" aria-modal="true" aria-label="运行环境">
-        <div class="motion-modal-head">
-          <h3>运行环境</h3>
-          <UiButton class="btn ghost motion-modal-close" type="button" aria-label="关闭" @click="envOpen = false">✕</UiButton>
-        </div>
-        <div class="motion-modal-body">
+    <UiDialog :open="envOpen" title="运行环境" panel-class="overview-environment-dialog" @close="envOpen = false">
           <p class="motion-modal-sub">{{ environment.title }}</p>
           <ol class="motion-check-list">
             <li v-for="(check, index) in envChecks" :key="check.name">
@@ -533,22 +505,22 @@ const mods = computed(() => [
               <button class="cli-copy-btn" :class="{ copied: copiedCommand === item.command }" type="button" @click="copyCommand(item.command)"><code>{{ item.command }}</code></button>
             </div>
           </template>
-        </div>
-        <div class="motion-modal-actions">
+      <template #actions>
           <template v-if="environment.state === 'missing_ocx'">
             <UiButton class="btn primary" type="button" @click="installManaged('registry')">安装 OpenCodex</UiButton>
             <UiButton class="btn" type="button" @click="installManaged('offline')">导入离线包</UiButton>
           </template>
           <UiButton class="btn ghost" type="button" @click="guide">查看安装指引</UiButton>
           <UiButton class="btn ghost" type="button" @click="recheckEnvironment">重新检查</UiButton>
-          <UiButton class="btn primary" type="button" @click="envOpen = false">关闭</UiButton>
-        </div>
-      </div>
-    </div>
+      </template>
+    </UiDialog>
   </section>
 </template>
 
 <style scoped>
+:global(dialog.ui-dialog.overview-runtime-dialog.wide) { width:min(760px,calc(100vw / var(--ui-zoom) - 32px)); }
+:global(dialog.ui-dialog.overview-environment-dialog) { width:min(580px,calc(100vw / var(--ui-zoom) - 32px)); }
+
 /* 原型 .mnt-version-row / .mnt-status：版本、阶段与箭头同一行垂直居中，窄卡也不拆行。 */
 /* S18-09：原型 maintenance-ui.css 版本行左名右值同字号同字重400、同 --text。 */
 .mnt-version-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; min-width: 0; min-height: 18px; padding: 0; border: 0; background: transparent; color: var(--text); font: inherit; font-weight: 400; line-height: inherit; text-align: left; white-space: nowrap; cursor: pointer; }

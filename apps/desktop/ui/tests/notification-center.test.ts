@@ -1,3 +1,4 @@
+import { installNativeDialogStub } from './helpers/nativeDialog'
 import { createPinia, setActivePinia } from 'pinia'
 import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -68,6 +69,7 @@ describe('新通知同时给 toast 与中心（UI 规范 §38.5）', () => {
 
 describe('notification center', () => {
   beforeEach(() => {
+    installNativeDialogStub()
     setActivePinia(createPinia())
     invoke.mockReset()
     invoke.mockResolvedValue(undefined)
@@ -133,6 +135,7 @@ describe('notification center', () => {
 
 describe('diagnostics notification history', () => {
   beforeEach(() => {
+    installNativeDialogStub()
     setActivePinia(createPinia())
     invoke.mockReset()
     invoke.mockResolvedValue(undefined)
