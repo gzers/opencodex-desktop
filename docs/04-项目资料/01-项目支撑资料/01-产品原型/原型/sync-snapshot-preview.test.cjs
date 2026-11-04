@@ -6,7 +6,7 @@ const {make}=require('./component-topic-harness.cjs');
 const plain=value=>JSON.parse(JSON.stringify(value));
 const sync=h=>plain(h.w.syncPrototype.state());
 const model=h=>plain(h.w.modelPrototype.state());
-const scope=['skill:review','mcp:docs'];
+const scope=['skill:design','mcp:documentation','skill-platform:codex'];
 const notices=h=>plain(h.w.eval('notifications'));
 const deliveries=h=>plain(h.w.prototypeNotificationPublisher.deliveries());
 const position=h=>({hash:h.w.location.hash,route:h.document.documentElement.dataset.route,scroll:h.document.querySelector('.main').scrollTop});
@@ -160,8 +160,8 @@ for(const scene of ['download','upload','normal'])test(scene+'：确认后整次
  if(scene==='download')assert.equal(p.source,'remote');
  if(scene==='upload')assert.equal(p.source,'local');
  if(scene==='normal'){
-  assert.ok(Date.parse(context.before.versions.remote['skill:review'].updatedAt)>Date.parse(context.before.versions.local['skill:review'].updatedAt));
-  assert.ok(Date.parse(context.before.versions.local['mcp:docs'].updatedAt)>Date.parse(context.before.versions.remote['mcp:docs'].updatedAt));
+  assert.ok(Date.parse(context.before.versions.remote['skill:design'].updatedAt)>Date.parse(context.before.versions.local['skill:design'].updatedAt));
+  assert.ok(Date.parse(context.before.versions.local['mcp:documentation'].updatedAt)>Date.parse(context.before.versions.remote['mcp:documentation'].updatedAt));
  }
  const backup=h.document.querySelector('#sxPreviewBackup');
  if(p.source==='remote')assert.equal(backup.checked,true);
@@ -170,7 +170,7 @@ for(const scene of ['download','upload','normal'])test(scene+'：确认后整次
  assert.deepEqual(position(h),context.position);
  const result=await confirm(h),after=sync(h);
  singleSource(context.before,after,p,result);
- if(p.source==='remote')backupBeforeWrite(context.before,after,result,scope);
+ if(p.source==='remote')backupBeforeWrite(context.before,after,result,p.rows.filter(row=>row.direction!=='skip').map(row=>row.id));
  else assert.deepEqual(after.backups,context.before.backups);
  assert.deepEqual(position(h),context.position);
  assert.deepEqual(model(h).saved,context.before.saved,'扩展范围不写渠道');

@@ -130,3 +130,28 @@ html[data-route=sync] .main>.topbar{flex:none}
 .sx-mcp-source select{min-width:140px;height:28px;font:inherit;color:var(--text)}
 .sx-mcp-conflicts ul{margin-top:6px}
 .sx-mcp-conflicts li{padding:8px 0}
+.sx-extension-scope-note{flex:none;font-size:var(--text-caption);color:var(--muted)}
+.sx-extension-transfer{margin:14px 0;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:var(--text-label);line-height:1.6}
+.sx-extension-transfer>strong{font-weight:600}
+.sx-extension-transfer p{font-size:var(--text-caption)}
+.sx-extension-pending{margin-top:10px;padding-top:10px;border-top:1px solid var(--border-soft)}
+.sx-extension-pending>span{color:var(--amber)}
+.sx-extension-pending ul{margin:6px 0 10px;padding-left:18px;max-height:100px;overflow:auto;font-size:var(--text-caption);color:var(--muted)}
+.sx-extension-result{flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 12px;background:var(--rail);border-radius:var(--radius-sm)}
+.sx-extension-result>div{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:var(--text-label)}
+.sx-extension-result span{font-size:var(--text-caption);color:var(--muted)}
+.sx-extension-result .btn{white-space:nowrap;font-size:var(--text-caption)}
+.sx-platform-help{padding:8px 12px;font-size:var(--text-caption);color:var(--muted);line-height:1.6}
+.sx-platform-associations{margin:14px 0;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm)}
+.sx-platform-associations h3{font-size:var(--text-label);font-weight:600}
+.sx-platform-associations>ul{list-style:none;padding:0;margin:10px 0 0;max-height:200px;overflow:auto}
+.sx-platform-associations li{padding:9px 0;border-top:1px solid var(--border-soft);font-size:var(--text-label);line-height:1.5}
+.sx-platform-associations li>div{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sx-platform-associations li p,.sx-platform-associations li small{font-size:var(--text-caption);color:var(--muted)}
+
+
+.sx-platform-result{display:flex;align-items:baseline;gap:12px;margin-top:5px;min-width:0;font-size:var(--text-caption);color:var(--muted)}
+.sx-platform-path{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sx-platform-state{flex:none;white-space:nowrap}
+.sx-platform-associations li p{overflow-wrap:anywhere}
+.sx-extension-gated .sx-object-name,.sx-extension-gated small{opacity:.5}

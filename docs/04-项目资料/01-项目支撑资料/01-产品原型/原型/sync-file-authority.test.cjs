@@ -22,7 +22,7 @@ function confirmSync(h){assert.equal(h.document.querySelector('#modalConfirm').d
 function startSync(h){const preview=previewSync(h);confirmSync(h);return preview;}
 async function noUpdates(h,count){
  const before=sync(h),deliveries=json(h.w.prototypeNotificationPublisher.deliveries()),preview=previewSync(h);
- assert.equal(preview.rows.length,count);assert.ok(preview.rows.every(x=>x.direction==='skip'));
+ assert.equal(preview.rows.filter(x=>!x.id.startsWith('skill-platform:')).length,count);assert.ok(preview.rows.every(x=>x.direction==='skip'));
  assert.equal(h.document.querySelector('#modalConfirm').disabled,true);assert.match(h.document.querySelector('#modalBody').textContent,/无需更新/);
  h.click('#modalConfirm');await h.wait(750);
  for(const key of ['versions','backups','result','lastRun','serial'])assert.equal(json(sync(h)[key]),json(before[key]),'一致内容不产生新执行：'+key);
@@ -114,49 +114,49 @@ test('范围和凭据自动记住；没有单独保存范围或逐次复核',asy
  startSync(h);await finished(h);assert.equal(sync(h).channelAdoption.status,'written');assert.equal(first(model(h).saved).naming.alias,'primary-model');
 });
 for(const scene of ['upload','download','same'])test(scene+' 按固定内容版本执行，第二次同步无重复更新',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});h.w.syncPrototype.setScenario(scene);const before=sync(h).versions;
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design','mcp:documentation']});h.w.syncPrototype.setScenario(scene);const before=sync(h).versions;
  if(scene!=='same'){
   const preview=startSync(h);assert.equal(preview.source,scene==='upload'?'local':'remote');
   const result=await finished(h);assert.equal(result.failed.length,0);
-  assert.equal(result.uploaded,scene==='upload'?2:0);assert.equal(result.downloaded,scene==='download'?2:0);assert.equal(result.skipped,0);
-  if(scene==='download'){assert.deepEqual([...sync(h).demoObjects['skill:review'].files],['SKILL.md','scripts/review.js','references/checklist.md']);assert.equal(sync(h).versions.local['skill:review'].updatedAt,before.remote['skill:review'].updatedAt);}
+  assert.equal(result.items.filter(x=>!x.id.startsWith('skill-platform:')&&x.status==='completed'&&x.direction==='upload').length,scene==='upload'?2:0);assert.equal(result.items.filter(x=>!x.id.startsWith('skill-platform:')&&x.status==='completed'&&x.direction==='download').length,scene==='download'?2:0);assert.equal(result.items.filter(x=>!x.id.startsWith('skill-platform:')&&x.status==='skipped').length,0);
+  if(scene==='download'){assert.deepEqual([...sync(h).demoObjects['skill:design'].files],['SKILL.md','references/checklist.md']);assert.equal(sync(h).versions.local['skill:design'].updatedAt,before.remote['skill:design'].updatedAt);}
  }else await noUpdates(h,2);
  await noUpdates(h,2);
 });
 test('整次同步只采用一个快照来源，即使对象自身本机时间较新；当前范围以外不改',async t=>{
- const h=await setup(t),ids=['skill:review','mcp:docs'];h.w.syncPrototype.open({tab:'webdav',scope:ids});const before=sync(h).versions;
- assert.ok(Date.parse(before.local['mcp:docs'].updatedAt)>Date.parse(before.remote['mcp:docs'].updatedAt),'MCP 自身本机时间较新');
+ const h=await setup(t),ids=['skill:design','mcp:documentation'];h.w.syncPrototype.open({tab:'webdav',scope:ids});const before=sync(h).versions;
+ assert.ok(Date.parse(before.local['mcp:documentation'].updatedAt)>Date.parse(before.remote['mcp:documentation'].updatedAt),'MCP 自身本机时间较新');
  const preview=startSync(h);assert.equal(preview.source,'remote');assert.ok(preview.rows.every(x=>x.direction==='download'));
- const result=await finished(h);assert.equal(result.downloaded,2);assert.equal(result.uploaded,0);
+ const result=await finished(h);assert.equal(result.items.filter(x=>!x.id.startsWith('skill-platform:')&&x.status==='completed'&&x.direction==='download').length,2);assert.equal(result.uploaded,0);
  for(const side of ['local','remote'])for(const id of Object.keys(before[side]))assert.equal(json(sync(h).versions[side][id]),json(side==='local'&&ids.includes(id)?before.remote[id]:before[side][id]),side+' '+id);
 });
 test('运行中更改范围只作用下一次，不要求重开旧计划',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});startSync(h);
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design','mcp:documentation']});startSync(h);
  // 表头复选框是唯一批量入口：先全选、再取消即得到空范围。
  h.click('[data-sx-all]');h.click('[data-sx-all]');
- const result=await finished(h);assert.equal(result.items.length,2);assert.equal(sync(h).selected.length,0);assert.equal(h.document.querySelector('[data-sx=check]').disabled,true);
+ const result=await finished(h);assert.equal(result.items.filter(x=>!x.id.startsWith('skill-platform:')).length,2);assert.equal(sync(h).selected.length,0);assert.equal(h.document.querySelector('[data-sx=check]').disabled,true);
 });
 test('独立失败不阻断其余对象；只重试失败项、清除旧错误并复用原备份',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});h.w.syncPrototype.setScenario('partial');const before=sync(h);startSync(h);const result=await finished(h);assert.equal(result.downloaded,1);assert.equal(result.uploaded,0);assert.equal(result.failed[0].id,'mcp:docs');const version=json(sync(h).versions.local['skill:review']);
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design','mcp:documentation']});h.w.syncPrototype.setScenario('partial');const before=sync(h);startSync(h);const result=await finished(h);assert.equal(result.items.filter(x=>!x.id.startsWith('skill-platform:')&&x.status==='completed'&&x.direction==='download').length,1);assert.equal(result.uploaded,0);assert.equal(result.failed[0].id,'mcp:documentation');const version=json(sync(h).versions.local['skill:design']);
  const backups=sync(h).backups;assert.equal(backups.length,1);assert.equal(backups[0].operationId,result.operationId);assert.equal(result.backupId,backups[0].id);
- assert.deepEqual([...backups[0].items.map(x=>x.id)].sort(),['mcp:docs','skill:review']);
+ assert.deepEqual([...backups[0].items.map(x=>x.id)].filter(id=>!id.startsWith('skill-platform:')).sort(),['mcp:documentation','skill:design']);
  for(const item of backups[0].items){assert.equal(json(item.version),json(before.versions.local[item.id]));assert.equal(json(item.content),json(before.demoObjects[item.id]));}
- const originalBackup=json(backups);assert.notEqual(json(backups[0].items.find(x=>x.id==='skill:review').version),version,'已成功对象的备份仍是更新前版本');
- h.click('[data-sx=retry]');assert.equal(sync(h).running,true);assert.equal(json(sync(h).backups),originalBackup);const retry=await finished(h);assert.equal(retry.failed.length,0);assert.equal(retry.items.length,1);assert.equal(retry.downloaded,1);assert.equal(retry.uploaded,0);assert.equal(json(sync(h).versions.local['skill:review']),version);
+ const originalBackup=json(backups);assert.notEqual(json(backups[0].items.find(x=>x.id==='skill:design').version),version,'已成功对象的备份仍是更新前版本');
+ h.click('[data-sx=retry]');assert.equal(sync(h).running,true);assert.equal(json(sync(h).backups),originalBackup);const retry=await finished(h);assert.equal(retry.failed.length,0);assert.equal(retry.items.length,1);assert.equal(retry.downloaded,1);assert.equal(retry.uploaded,0);assert.equal(json(sync(h).versions.local['skill:design']),version);
  assert.equal(retry.operationId,result.operationId);assert.equal(retry.backupId,result.backupId);assert.equal(sync(h).backups.length,1);assert.equal(json(sync(h).backups),originalBackup,'重试不追加相同备份 ID，也不以更新后内容覆盖原备份');
 });
 test('网络失败不改内容，可从原页面重试',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review']});h.w.syncPrototype.setScenario('network-error');const before=json(sync(h).versions);startSync(h);const result=await finished(h);assert.equal(result.failed.length,1);assert.equal(json(sync(h).versions),before);h.click('[data-sx=retry]');assert.equal((await finished(h)).downloaded,1);
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design']});h.w.syncPrototype.setScenario('network-error');const before=json(sync(h).versions);startSync(h);const result=await finished(h);assert.equal(result.failed.length,1);assert.equal(json(sync(h).versions),before);h.click('[data-sx=retry]');assert.equal((await finished(h)).downloaded,1);
 });
 for(const scene of ['backup-fail','write-fail'])test(scene+' 独立失败保留原内容，取消备份只绕过备份失败',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review']});h.w.syncPrototype.setScenario(scene);assert.equal(sync(h).scenario,scene);
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design']});h.w.syncPrototype.setScenario(scene);assert.equal(sync(h).scenario,scene);
  const before=sync(h);previewSync(h);assert.equal(h.document.querySelector('#sxPreviewBackup').checked,true);confirmSync(h);
  const failed=await finished(h);assert.equal(failed.failed.length,1);assert.equal(failed.downloaded+failed.uploaded,0);assert.equal(json(sync(h).versions),json(before.versions));assert.equal(json(sync(h).demoObjects),json(before.demoObjects));
  assert.equal(sync(h).backups.length,scene==='backup-fail'?0:1,'备份成功与写入成功分别记录');
  const delivery=h.w.prototypeNotificationPublisher.deliveries()[0];assert.equal(delivery.eventId,'sync.failed');assert.equal(delivery.payload.errorCode,scene==='backup-fail'?'backup':'write');
  const backups=json(sync(h).backups);previewSync(h);h.change('#sxPreviewBackup',false);confirmSync(h);const result=await finished(h);
  assert.equal(json(sync(h).backups),backups);assert.equal(sync(h).savedScopes.webdav,before.savedScopes.webdav);
- if(scene==='backup-fail'){assert.equal(result.failed.length,0);assert.equal(result.downloaded,1);assert.equal(result.uploaded,0);assert.equal(json(sync(h).versions.local['skill:review']),json(before.versions.remote['skill:review']));}
+ if(scene==='backup-fail'){assert.equal(result.failed.length,0);assert.equal(result.downloaded,1);assert.equal(result.uploaded,0);assert.equal(json(sync(h).versions.local['skill:design']),json(before.versions.remote['skill:design']));}
  else{assert.equal(result.failed.length,1);assert.equal(result.downloaded+result.uploaded,0);assert.equal(json(sync(h).versions),json(before.versions));assert.equal(h.w.prototypeNotificationPublisher.deliveries()[0].payload.errorCode,'write');}
 });
 for(const sample of ['keyless','encrypted'])test(sample+' 导入在同一窗口选范围后直接更新saved，无需再保存',async t=>{
@@ -174,7 +174,7 @@ test('官方openai/native不进入同步范围，旧官方条目不新增，自�
  startSync(h);await finished(h);assert.equal(json(model(h).saved.providers.find(p=>p.id==='native')),native);assert.equal(model(h).saved.providers.filter(p=>p.id==='newapi').length,1);
 });
 test('加密为可选且记住选择，不含口令不执行；口令不暴露在状态中',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review']});h.change('[data-sx-protect]',true);const preview=previewSync(h),before=json(sync(h).versions);
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design']});h.change('[data-sx-protect]',true);const preview=previewSync(h),before=json(sync(h).versions);
  h.click('#modalConfirm');assert.equal(sync(h).running,false);assert.equal(sync(h).result,null);assert.equal(sync(h).dialogKind,'sync-preview');assert.match(h.document.querySelector('#sxError').textContent,/口令/);assert.equal(json(sync(h).versions),before);assert.equal(h.w.prototypeNotificationPublisher.deliveries().length,0);
  h.input('#sxPreviewPass','fixture-only-pass');assert.equal(json(sync(h).preview),json(preview));confirmSync(h);await finished(h);assert.equal(sync(h).protection.configured,true);assert.doesNotMatch(json(sync(h)),/fixture-only-pass/);
  h.w.syncPrototype.open({tab:'webdav'});assert.equal(sync(h).protection.enabled,true);assert.equal(sync(h).protection.configured,true);
@@ -197,7 +197,7 @@ test('Windows面板反馈示例区分页面失败和代理未运行，重试不�
 });
 
 test('同步结果沿已有注册事件/Toast/铃铛，收起后仍可查看',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review']});startSync(h);await finished(h);const notices=h.w.eval('notifications.filter(n=>n.eventId==="sync.complete")');assert.ok(notices.length);assert.equal(notices[0].title,'同步完成');assert.doesNotMatch(notices[0].detail,/下载更新.*上传/);assert.equal(h.document.querySelectorAll('#taskHost [data-task-notification^="sync-demo:"]').length,0);h.click('#toastEl [data-collapse=toast]');await h.wait(300);h.click('#notificationBtn');assert.match(h.document.querySelector('#notificationPanel').textContent,/同步完成/);
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design']});startSync(h);await finished(h);const notices=h.w.eval('notifications.filter(n=>n.eventId==="sync.complete")');assert.ok(notices.length);assert.equal(notices[0].title,'同步完成');assert.doesNotMatch(notices[0].detail,/下载更新.*上传/);assert.equal(h.document.querySelectorAll('#taskHost [data-task-notification^="sync-demo:"]').length,0);h.click('#toastEl [data-collapse=toast]');await h.wait(300);h.click('#notificationBtn');assert.match(h.document.querySelector('#notificationPanel').textContent,/同步完成/);
 });
 
 test('旧包不会反向覆盖已保存的新内容，比较在后台完成',async t=>{
@@ -206,7 +206,7 @@ test('旧包不会反向覆盖已保存的新内容，比较在后台完成',asy
 });
 
 test('明文包含凭据也可导入，资格由所选包内对象决定，无解密或额外确认',async t=>{
- const h=await setup(t);chooseImport(h,'plaintext',['channel:newapi','mcp:docs']);
+ const h=await setup(t);chooseImport(h,'plaintext',['channel:newapi','mcp:documentation']);
  assert.equal(sync(h).importFile.kind,'plaintext');assert.equal(h.document.querySelector('#sxUnlockField').hidden,true);
  for(const selector of ['[data-sx-import-keys]','[data-sx-import-secrets]'])assert.equal(h.document.querySelector(selector).disabled,false);
  h.change('[data-sx-import-keys]',true);h.change('[data-sx-import-secrets]',true);h.click('#modalConfirm');await finished(h);
@@ -215,9 +215,9 @@ test('明文包含凭据也可导入，资格由所选包内对象决定，无�
 });
 
 test('取消勾选包内对象即禁用其凭据选项，不误把其它渠道凭据带入；重选保留偏好',async t=>{
- const h=await setup(t);chooseImport(h,'plaintext',['channel:newapi','channel:legacy','mcp:docs']);
+ const h=await setup(t);chooseImport(h,'plaintext',['channel:newapi','channel:legacy','mcp:documentation']);
  h.change('[data-sx-import-keys]',true);h.change('[data-sx-import-secrets]',true);
- h.change('[data-sx-import-object="channel:newapi"]',false);h.change('[data-sx-import-object="mcp:docs"]',false);
+ h.change('[data-sx-import-object="channel:newapi"]',false);h.change('[data-sx-import-object="mcp:documentation"]',false);
  assert.equal(h.document.querySelector('[data-sx-import-keys]').disabled,true);assert.equal(h.document.querySelector('[data-sx-import-keys]').checked,false);
  assert.equal(h.document.querySelector('[data-sx-import-secrets]').disabled,true);
  h.change('[data-sx-import-object="channel:newapi"]',true);assert.equal(h.document.querySelector('[data-sx-import-keys]').checked,true);
@@ -225,12 +225,12 @@ test('取消勾选包内对象即禁用其凭据选项，不误把其它渠道�
 });
 
 test('文件页明确导出范围，导入范围来自所选文件而非继承页面导出勾选',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'file',scope:['skill:review']});
+ const h=await setup(t);h.w.syncPrototype.open({tab:'file',scope:['skill:design']});
  assert.ok(h.document.querySelector('section[aria-label="导出范围"]'));assert.match(h.document.querySelector('.sx-table-head').textContent,/导出范围/);
  assert.match(h.document.querySelector('.sx-top p').textContent,/导入.*文件.*选择范围/);
  h.w.syncPrototype.setImportSample('keyless');h.click('[data-sx=import]');h.click('[data-sx=choose-import-file]');
- assert.equal(h.document.querySelector('fieldset legend').textContent,'导入范围');assert.ok(h.document.querySelector('[data-sx-import-object="channel:newapi"]'));assert.equal(h.document.querySelector('[data-sx-import-object="skill:review"]'),null);h.click('#modalCancel');
- assert.deepEqual([...sync(h).selected],['skill:review']);h.w.syncPrototype.open({tab:'webdav'});assert.ok(h.document.querySelector('section[aria-label="同步范围"]'));
+ assert.equal(h.document.querySelector('fieldset legend').textContent,'导入范围');assert.ok(h.document.querySelector('[data-sx-import-object="channel:newapi"]'));assert.equal(h.document.querySelector('[data-sx-import-object="skill:design"]'),null);h.click('#modalCancel');
+ assert.deepEqual([...sync(h).selected],['skill:design']);h.w.syncPrototype.open({tab:'webdav'});assert.ok(h.document.querySelector('section[aria-label="同步范围"]'));
 });
 
 test('通知专题导入复用共享窗口，普通同步只预览新版来源、不手选冲突侧',async t=>{
@@ -249,7 +249,7 @@ test('初次WebDAV提供的可用范围默认全选，凭据跟随范围；工�
  const h=await setup(t);h.w.syncPrototype.open({tab:'webdav'});
  const all=[...h.document.querySelectorAll('[data-sx-group]:not([disabled])')];assert.ok(all.length>=5);
  // node_repl 由客户端应用维护且含本机路径，11-01确认默认不同步，因此 MCP 组为半选，其余组全选。
- assert.ok(all.filter(el=>el.dataset.sxGroup!=='mcp').every(el=>el.checked));const mcp=all.find(el=>el.dataset.sxGroup==='mcp');assert.ok(mcp&&mcp.indeterminate);assert.ok(sync(h).selected.length>all.length);assert.equal(sync(h).selected.includes('mcp:node_repl'),false);
+ assert.ok(all.filter(el=>!['mcp','extension-platforms'].includes(el.dataset.sxGroup)).every(el=>el.checked));assert.equal(all.find(el=>el.dataset.sxGroup==='extension-platforms').checked,true,'Agent 平台默认选中');const mcp=all.find(el=>el.dataset.sxGroup==='mcp');assert.ok(mcp&&mcp.indeterminate);assert.ok(sync(h).selected.length>all.length);assert.equal(sync(h).selected.includes('mcp:node_repl'),false);
  h.click('[data-sx=expand][data-id=mcp]');h.change('[data-sx-object="mcp:node_repl"]',true);assert.ok(sync(h).selected.includes('mcp:node_repl'),'可手动勾选');h.change('[data-sx-object="mcp:node_repl"]',false);
  assert.equal(h.document.querySelector('[data-sx-secret=keys]').checked,true);assert.equal(h.document.querySelector('[data-sx-secret=extensions]').checked,true);
  assert.equal(h.document.querySelector('[data-sx-preset]'),null);assert.equal(h.document.querySelector('[data-sx=clear]'),null);
@@ -259,24 +259,24 @@ test('初次WebDAV提供的可用范围默认全选，凭据跟随范围；工�
 });
 
 test('导入在所提供范围默认全选含包内可用凭据，显式入口只显示对应范围',async t=>{
- const h=await setup(t);chooseImport(h,'plaintext',['channel:newapi','mcp:docs']);
- const items=[...h.document.querySelectorAll('[data-sx-import-object]')];assert.deepEqual(items.map(el=>el.dataset.sxImportObject).sort(),['channel:newapi','mcp:docs']);assert.ok(items.every(el=>el.checked));
+ const h=await setup(t);chooseImport(h,'plaintext',['channel:newapi','mcp:documentation']);
+ const items=[...h.document.querySelectorAll('[data-sx-import-object]')];assert.deepEqual(items.map(el=>el.dataset.sxImportObject).filter(id=>!id.startsWith('skill-platform:')).sort(),['channel:newapi','mcp:documentation']);assert.ok(items.every(el=>el.checked));
  assert.equal(h.document.querySelector('[data-sx-import-keys]').checked,true);assert.equal(h.document.querySelector('[data-sx-import-secrets]').checked,true);h.click('#modalCancel');
  h.w.syncPrototype.open({tab:'file',action:'import'});h.click('[data-sx=choose-import-file]');assert.ok([...h.document.querySelectorAll('[data-sx-import-object]')].every(el=>el.checked));assert.ok(h.document.querySelectorAll('[data-sx-import-object]').length>items.length);h.click('#modalCancel');
 });
 
 test('文件与WebDAV范围分别记住，跨页、导入和导出均不把本机操作偏好装入配置包',async t=>{
  const h=await setup(t);h.w.syncPrototype.open({tab:'file',scope:['preferences:desktop']});const file=sync(h).savedScopes.file;
- h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});h.change('[data-sx-secret=extensions]',false);const dav=sync(h).savedScopes.webdav;
+ h.w.syncPrototype.open({tab:'webdav',scope:['skill:design','mcp:documentation']});h.change('[data-sx-secret=extensions]',false);const dav=sync(h).savedScopes.webdav;
  h.w.setRoute('models');h.w.syncPrototype.open({tab:'file'});assert.equal(sync(h).savedScopes.file,file);assert.deepEqual([...sync(h).selected],['preferences:desktop']);
  h.click('[data-sx=export]');h.change('#sxEncrypt',false);h.click('#modalConfirm');assert.doesNotMatch(json(sync(h).lastExport),/savedScopes|savedScope|passphrase|sync-demo|demo-sync/);
  chooseImport(h,'config-only',['endpoint:personal']);h.click('#modalConfirm');await finished(h);assert.equal(sync(h).savedScopes.webdav,dav);
- h.w.syncPrototype.open({tab:'webdav'});assert.deepEqual([...sync(h).selected],['skill:review','mcp:docs']);assert.equal(sync(h).secrets.extensions.length,0);
+ h.w.syncPrototype.open({tab:'webdav'});assert.deepEqual([...sync(h).selected].filter(id=>!id.startsWith('skill-platform:')),['skill:design','mcp:documentation']);assert.equal(sync(h).secrets.extensions.length,0);
  h.w.syncPrototype.open({tab:'file',scope:['preferences:desktop']});h.click('[data-sx-all]');h.click('[data-sx-all]');assert.deepEqual(JSON.parse(sync(h).savedScopes.file).ids,[]);assert.equal(sync(h).savedScopes.webdav,dav);
 });
 
 test('本页加密与不加密mock共用范围，运行中的保护选择被冻结并在结果中可见',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});const scope=sync(h).savedScopes.webdav;
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design','mcp:documentation']});const scope=sync(h).savedScopes.webdav;
  h.click('[data-sx-protection-demo=encrypted]');assert.equal(sync(h).protection.enabled,true);assert.equal(sync(h).protection.configured,true);assert.equal(h.document.querySelector('[data-sx-protection-demo=encrypted]').getAttribute('aria-pressed'),'true');
  startSync(h);h.click('[data-sx-protection-demo=plaintext]');let result=await finished(h);assert.equal(result.protection.encrypted,true);assert.equal(sync(h).savedScopes.webdav,scope);
  h.click('[data-sx=result-details]');assert.match(h.document.querySelector('.sx-dialog .sx-muted').textContent,/传输保护：加密/);h.click('#modalCancel');
@@ -311,14 +311,14 @@ test('公共发布器拒绝未知/计划事件和敏感自由文本，同一操�
 
 test('导入和WebDAV开始只记inline/log；失败重试更新同一条且不替换其它任务',async t=>{
  const h=await setup(t);h.w.prototypeNotificationPublisher.publish('component.demo.task',{taskId:'a'});const task=h.document.querySelector('#taskHost').textContent;
- h.w.syncPrototype.open({tab:'webdav',scope:['skill:review','mcp:docs']});h.w.syncPrototype.setScenario('partial');startSync(h);const start=h.w.prototypeNotificationPublisher.deliveries()[0];assert.equal(start.eventId,'sync.started');assert.deepEqual([...start.delivery],['inline','log']);
+ h.w.syncPrototype.open({tab:'webdav',scope:['skill:design','mcp:documentation']});h.w.syncPrototype.setScenario('partial');startSync(h);const start=h.w.prototypeNotificationPublisher.deliveries()[0];assert.equal(start.eventId,'sync.started');assert.deepEqual([...start.delivery],['inline','log']);
  await finished(h);const fail=h.w.eval('notifications.find(n=>n.eventId==="sync.failed")');assert.equal(h.document.querySelector('#sxPanel>.sx-result'),null);assert.equal(fail.resolved,false);assert.equal(h.document.querySelector('#taskHost').textContent,task);
  h.click('[data-sx=retry]');await finished(h);assert.equal(fail.resolved,true);assert.equal(fail.eventId,'sync.complete');assert.equal(h.w.eval('notifications.filter(n=>n.id==="'+fail.id+'").length'),1);assert.equal(h.document.querySelector('#taskHost').textContent,task);
  h.w.syncPrototype.setScenario('normal');chooseImport(h);h.click('#modalConfirm');await finished(h);const events=h.w.prototypeNotificationPublisher.deliveries().map(x=>x.eventId);assert.ok(events.includes('sync.import.started'));assert.ok(events.includes('sync.import.complete'));
 });
 
 test('删除后的同操作重试不复活通知，新的明确同步仍能产生新回执',async t=>{
- const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:review']});h.w.syncPrototype.setScenario('network-error');startSync(h);await finished(h);const notice=h.w.eval('notifications.find(n=>n.eventId==="sync.failed")');notice.deleted=true;
+ const h=await setup(t);h.w.syncPrototype.open({tab:'webdav',scope:['skill:design']});h.w.syncPrototype.setScenario('network-error');startSync(h);await finished(h);const notice=h.w.eval('notifications.find(n=>n.eventId==="sync.failed")');notice.deleted=true;
  h.click('[data-sx=retry]');await finished(h);assert.equal(notice.deleted,true);assert.equal(h.w.eval('notifications.filter(n=>n.id==="'+notice.id+'").length'),1);
  h.w.syncPrototype.setScenario('normal');startSync(h);await finished(h);assert.ok(h.w.eval('notifications.some(n=>n.eventId==="sync.complete"&&!n.deleted)'));
 });

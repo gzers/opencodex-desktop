@@ -1,0 +1,596 @@
+{
+  "engine": "chromium",
+  "total": 77,
+  "failed": 0,
+  "errors": [],
+  "failure": null,
+  "screens": [
+    "1180x760-light-mac-default-platforms.png",
+    "1180x760-light-mac-no-platforms.png",
+    "1180x760-light-mac-preview-one.png",
+    "1180x760-light-mac-result.png",
+    "1180x760-light-mac-import-default.png",
+    "1180x760-light-mac-import-no-platform.png",
+    "1180x760-dark-mac-default-platforms.png",
+    "1180x760-dark-mac-no-platforms.png",
+    "1180x760-dark-mac-preview-one.png",
+    "1180x760-dark-mac-result.png",
+    "1180x760-dark-mac-import-default.png",
+    "1180x760-dark-mac-import-no-platform.png",
+    "900x600-light-windows-default-platforms.png",
+    "900x600-light-windows-no-platforms.png",
+    "900x600-light-windows-preview-one.png",
+    "900x600-light-windows-result.png",
+    "900x600-light-windows-import-default.png",
+    "900x600-light-windows-import-no-platform.png",
+    "900x600-dark-windows-default-platforms.png",
+    "900x600-dark-windows-no-platforms.png",
+    "900x600-dark-windows-preview-one.png",
+    "900x600-dark-windows-result.png",
+    "900x600-dark-windows-import-default.png",
+    "900x600-dark-windows-import-no-platform.png"
+  ],
+  "checks": [
+    {
+      "name": "1180x760-light-mac discovered Agent platforms selected by default",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac Agent group checked",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac default layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 0,
+          "y": 100,
+          "r": 1180,
+          "b": 860
+        },
+        "surface": {
+          "x": 268,
+          "y": 202,
+          "r": 1157,
+          "b": 835
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180x760-light-mac no platform excludes Skills MCP credentials",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac dependent groups disabled",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac clear no-platform explanation",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac none layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 0,
+          "y": 100,
+          "r": 1180,
+          "b": 860
+        },
+        "surface": {
+          "x": 268,
+          "y": 202,
+          "r": 1157,
+          "b": 835
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180x760-light-mac preview excludes extensions but allows other config",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac unmapped single platform restores remembered picks",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac preview freezes one platform and selected relations",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac preview layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 0,
+          "y": 100,
+          "r": 1180,
+          "b": 860
+        },
+        "surface": {
+          "x": 230,
+          "y": 199.984375,
+          "r": 950,
+          "b": 760.015625
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180x760-light-mac download preserves unselected platform relations",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac export no-platform omits contents",
+      "pass": true,
+      "detail": [
+        "preferences:desktop"
+      ]
+    },
+    {
+      "name": "1180x760-light-mac import defaults select discovered platforms",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac import defaults layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 0,
+          "y": 100,
+          "r": 1180,
+          "b": 860
+        },
+        "surface": {
+          "x": 230,
+          "y": 199.984375,
+          "r": 950,
+          "b": 760.015625
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180x760-light-mac import no-platform gates Skills MCP",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac import explains exclusion",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac import single platform restores content picks",
+      "pass": true
+    },
+    {
+      "name": "1180x760-light-mac import contents succeed without mapping",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac discovered Agent platforms selected by default",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac Agent group checked",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac default layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 0,
+          "y": 100,
+          "r": 1180,
+          "b": 860
+        },
+        "surface": {
+          "x": 268,
+          "y": 202,
+          "r": 1157,
+          "b": 835
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180x760-dark-mac no platform excludes Skills MCP credentials",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac dependent groups disabled",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac clear no-platform explanation",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac none layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 0,
+          "y": 100,
+          "r": 1180,
+          "b": 860
+        },
+        "surface": {
+          "x": 268,
+          "y": 202,
+          "r": 1157,
+          "b": 835
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180x760-dark-mac preview excludes extensions but allows other config",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac unmapped single platform restores remembered picks",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac preview freezes one platform and selected relations",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac preview layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 0,
+          "y": 100,
+          "r": 1180,
+          "b": 860
+        },
+        "surface": {
+          "x": 230,
+          "y": 199.984375,
+          "r": 950,
+          "b": 760.015625
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180x760-dark-mac download preserves unselected platform relations",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac export no-platform omits contents",
+      "pass": true,
+      "detail": [
+        "preferences:desktop"
+      ]
+    },
+    {
+      "name": "1180x760-dark-mac import defaults select discovered platforms",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac import defaults layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 0,
+          "y": 100,
+          "r": 1180,
+          "b": 860
+        },
+        "surface": {
+          "x": 230,
+          "y": 199.984375,
+          "r": 950,
+          "b": 760.015625
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "1180x760-dark-mac import no-platform gates Skills MCP",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac import explains exclusion",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac import single platform restores content picks",
+      "pass": true
+    },
+    {
+      "name": "1180x760-dark-mac import contents succeed without mapping",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows discovered Agent platforms selected by default",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows Agent group checked",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows default layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 140,
+          "y": 180,
+          "r": 1040,
+          "b": 780
+        },
+        "surface": {
+          "x": 408,
+          "y": 276,
+          "r": 1017,
+          "b": 755
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900x600-light-windows no platform excludes Skills MCP credentials",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows dependent groups disabled",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows clear no-platform explanation",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows none layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 140,
+          "y": 180,
+          "r": 1040,
+          "b": 780
+        },
+        "surface": {
+          "x": 408,
+          "y": 276,
+          "r": 1017,
+          "b": 755
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900x600-light-windows preview excludes extensions but allows other config",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows unmapped single platform restores remembered picks",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows preview freezes one platform and selected relations",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows preview layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 140,
+          "y": 180,
+          "r": 1040,
+          "b": 780
+        },
+        "surface": {
+          "x": 230,
+          "y": 262.375,
+          "r": 950,
+          "b": 697.609375
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900x600-light-windows download preserves unselected platform relations",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows export no-platform omits contents",
+      "pass": true,
+      "detail": [
+        "preferences:desktop"
+      ]
+    },
+    {
+      "name": "900x600-light-windows import defaults select discovered platforms",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows import defaults layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 140,
+          "y": 180,
+          "r": 1040,
+          "b": 780
+        },
+        "surface": {
+          "x": 230,
+          "y": 262.375,
+          "r": 950,
+          "b": 697.609375
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900x600-light-windows import no-platform gates Skills MCP",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows import explains exclusion",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows import single platform restores content picks",
+      "pass": true
+    },
+    {
+      "name": "900x600-light-windows import contents succeed without mapping",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows discovered Agent platforms selected by default",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows Agent group checked",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows default layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 140,
+          "y": 180,
+          "r": 1040,
+          "b": 780
+        },
+        "surface": {
+          "x": 408,
+          "y": 276,
+          "r": 1017,
+          "b": 755
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900x600-dark-windows no platform excludes Skills MCP credentials",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows dependent groups disabled",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows clear no-platform explanation",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows none layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 140,
+          "y": 180,
+          "r": 1040,
+          "b": 780
+        },
+        "surface": {
+          "x": 408,
+          "y": 276,
+          "r": 1017,
+          "b": 755
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900x600-dark-windows preview excludes extensions but allows other config",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows unmapped single platform restores remembered picks",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows preview freezes one platform and selected relations",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows preview layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 140,
+          "y": 180,
+          "r": 1040,
+          "b": 780
+        },
+        "surface": {
+          "x": 230,
+          "y": 262.375,
+          "r": 950,
+          "b": 697.609375
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900x600-dark-windows download preserves unselected platform relations",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows export no-platform omits contents",
+      "pass": true,
+      "detail": [
+        "preferences:desktop"
+      ]
+    },
+    {
+      "name": "900x600-dark-windows import defaults select discovered platforms",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows import defaults layout fits",
+      "pass": true,
+      "detail": {
+        "frame": {
+          "x": 140,
+          "y": 180,
+          "r": 1040,
+          "b": 780
+        },
+        "surface": {
+          "x": 230,
+          "y": 262.375,
+          "r": 950,
+          "b": 697.609375
+        },
+        "overflow": 0
+      }
+    },
+    {
+      "name": "900x600-dark-windows import no-platform gates Skills MCP",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows import explains exclusion",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows import single platform restores content picks",
+      "pass": true
+    },
+    {
+      "name": "900x600-dark-windows import contents succeed without mapping",
+      "pass": true
+    },
+    {
+      "name": "no browser script errors",
+      "pass": true,
+      "detail": []
+    }
+  ]
+}
