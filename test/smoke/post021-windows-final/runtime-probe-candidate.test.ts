@@ -1,9 +1,18 @@
 import assert from 'node:assert/strict'
-import {test} from 'bun:test'
+import {afterAll,test} from 'bun:test'
 import {join,resolve} from 'node:path'
 import {pathToFileURL} from 'node:url'
 const candidate=process.env.POST021_RUNTIME_CANDIDATE
 assert(candidate,'Explicit local candidate path required')
+// These tests inject every exec callback; no PowerShell process is launched.
+// Unix needs the upstream test seam before it can reach that callback. Windows
+// retains real trusted-system-directory resolution. This is protocol coverage,
+// not a substitute for the separate native Windows owner/restart evidence.
+if(process.platform!=='win32'){
+ const {setTrustedWindowsElevationExecutablesForTests}=await import(pathToFileURL(join(resolve(candidate),'src/lib/windows-elevation.ts')).href)
+ setTrustedWindowsElevationExecutablesForTests({powershell:'/test-only/no-execution/powershell.exe'})
+ afterAll(()=>setTrustedWindowsElevationExecutablesForTests(null))
+}
 const {windowsDesktopAppAdapter:adapter}=await import(pathToFileURL(join(resolve(candidate),'src/codex/desktop-app/windows.ts')).href)
 const install={id:'fixture',root:"C:\\Program Files\\Fixture' Unicode 包",relaunch:'fixture!App'}
 const good='42 10 2026-11-05T08:00:00.1234567Z '+install.root+'\\app\\ChatGPT.exe'
