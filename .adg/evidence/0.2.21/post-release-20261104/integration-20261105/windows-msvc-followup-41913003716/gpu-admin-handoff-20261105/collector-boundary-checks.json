@@ -1,0 +1,43 @@
+{
+  "result": "collector-syntax-and-boundary-checks-passed",
+  "checks": [
+    {
+      "name": "valid-child",
+      "accepted": true,
+      "expected": true,
+      "result": "passed",
+      "error": null
+    },
+    {
+      "name": "boundary-itself",
+      "accepted": false,
+      "expected": false,
+      "result": "passed",
+      "error": "Path is outside the explicit test boundary: D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\collector-boundary-tests"
+    },
+    {
+      "name": "same-prefix-neighbor",
+      "accepted": false,
+      "expected": false,
+      "result": "passed",
+      "error": "Path is outside the explicit test boundary: D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\collector-boundary-tests-neighbor/result"
+    },
+    {
+      "name": "parent-escape",
+      "accepted": false,
+      "expected": false,
+      "result": "passed",
+      "error": "Path is outside the explicit test boundary: D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\escaped\\result"
+    },
+    {
+      "name": "junction-ancestor",
+      "accepted": false,
+      "expected": false,
+      "result": "passed"
+    }
+  ],
+  "recorderMutation": false,
+  "targetProcessAction": "none",
+  "adminExecution": "not-tested",
+  "junctionFixtureRetained": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-msvc-followup\\collector-boundary-tests\\junction-8a584b6d6fdb4d388d2058c269424da1"
+}
