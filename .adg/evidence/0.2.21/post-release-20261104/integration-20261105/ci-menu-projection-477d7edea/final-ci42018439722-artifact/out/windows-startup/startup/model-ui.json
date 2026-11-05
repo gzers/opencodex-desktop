@@ -1,0 +1,504 @@
+{
+  "result": "pass",
+  "scope": "native template, direct current-channel file Save/reopen, remaining global Preview/cancel/confirm, exact transfer; isolated config writes, no runtime generation",
+  "templateId": "89556eba-6b47-4a37-986b-4ce3fe3c0041",
+  "revisionId": "6e9ab707-7147-47ff-9aaf-20e67f3c88d8",
+  "immutablePriorRevision": true,
+  "channelPolicyUnchanged": true,
+  "defaultSeparateFromAdoption": true,
+  "confirmationLeftNativeTopLayer": false,
+  "returnedToVersionManager": true,
+  "exportedWithinSandbox": true,
+  "fileRoundtrip": true,
+  "nativePointerModelSort": true,
+  "nativeFileScopeVerified": true,
+  "otherChannelMemoryRetained": true,
+  "otherProviderAndKeysPreserved": true,
+  "canceledListPreviewPreservedFile": true,
+  "remainingGlobalFileSave": true,
+  "channelReopen": true,
+  "existingKeyEye": true,
+  "readonlyComparison": true,
+  "externalContextBundle": true,
+  "confirmationHost": "dialog.app-modal-dialog[open]",
+  "versionManagerSuspendedForConfirmation": false,
+  "versionManagerRetainedUnderConfirmation": true,
+  "nativeModelKeyboardChecks": true,
+  "probes021": {
+    "schemaVersion": 1,
+    "result": "pass",
+    "version": "0.2.21",
+    "platform": "Windows WebView2",
+    "admittedRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-4ea8e3cfdb434cf0aba3e1d907d7b871",
+    "admission": {
+      "about": {
+        "name": "OpenCodeX Desktop",
+        "version": "0.2.21",
+        "identifier": "com.gzers.opencodex.desktop",
+        "platform": "Windows",
+        "framework": "Tauri v2",
+        "license": "MIT License"
+      },
+      "dataRoot": {
+        "activeDataRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-4ea8e3cfdb434cf0aba3e1d907d7b871",
+        "opencodexHomeMode": "inside",
+        "opencodexHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-4ea8e3cfdb434cf0aba3e1d907d7b871\\opencodex-home",
+        "currentDataRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-4ea8e3cfdb434cf0aba3e1d907d7b871",
+        "currentOpencodexHome": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-4ea8e3cfdb434cf0aba3e1d907d7b871\\opencodex-home",
+        "runtimeActive": true
+      }
+    },
+    "rename": {
+      "channelId": "e7505de6-d776-4c44-87c7-72d84c63da56",
+      "provider": "native021-new-9f1a9609",
+      "from": "native021-old-9f1a9609",
+      "modelIds": [
+        "vendor/a:8b",
+        "vendor-a:8b",
+        "Mixed_Case/V2"
+      ],
+      "backups": {
+        "ordinary": "20261105T121205-4cc43982-eede-44db-923c-5e92de396545",
+        "transaction": "rename-e95135a3-c8a2-4686-8fbc-6a51baafaeb5",
+        "preimageSha256": "974ea7498da77cbadc4b3b43b50f152e8aeefb2bb13f8f8deee30cbf627d6e6e",
+        "postimageSha256": "2968bff5c38177df3d29fa05497e448ee3371df7af46435498256d30ecdbe851"
+      },
+      "notice": {
+        "first": {
+          "now": 687.1000000000931,
+          "present": true,
+          "key": "model-save:v-8",
+          "phase": "running",
+          "ratio": 1,
+          "help": "本通知将在8秒后收起；鼠标悬停或键盘焦点停留时暂停。",
+          "shownAt": 680.3999999999069,
+          "leavingAt": null,
+          "removedAt": null,
+          "phases": [
+            {
+              "phase": "running",
+              "at": 680.3999999999069
+            }
+          ],
+          "focus": [],
+          "focusOnAnchor": true,
+          "focusInNotice": false,
+          "hidden": false,
+          "hovered": false
+        },
+        "cancellations": [
+          {
+            "exit": "x",
+            "pausedAt": 2734.899999999907,
+            "heldMs": 1109,
+            "resumedAt": 3859.2999999998137,
+            "pausedRatio": 0.75,
+            "resumedRatio": 0.75
+          },
+          {
+            "exit": "escape",
+            "pausedAt": 3866.899999999907,
+            "heldMs": 1115.6000000000931,
+            "resumedAt": 4991.699999999721,
+            "pausedRatio": 0.75,
+            "resumedRatio": 0.75
+          },
+          {
+            "exit": "cancel-button",
+            "pausedAt": 4998.100000000093,
+            "heldMs": 1109.8999999999069,
+            "resumedAt": 6115.799999999814,
+            "pausedRatio": 0.75,
+            "resumedRatio": 0.75
+          },
+          {
+            "exit": "native-cancel",
+            "pausedAt": 6122.399999999907,
+            "heldMs": 1111.3999999999069,
+            "resumedAt": 7241.299999999814,
+            "pausedRatio": 0.75,
+            "resumedRatio": 0.75
+          },
+          {
+            "exit": "backdrop",
+            "pausedAt": 7248,
+            "heldMs": 1109.3999999999069,
+            "resumedAt": 8368.5,
+            "pausedRatio": 0.75,
+            "resumedRatio": 0.75
+          }
+        ],
+        "runningMs": 7992.899999999907,
+        "wallMs": 13613.399999999907,
+        "trace": {
+          "now": 14368.299999999814,
+          "present": false,
+          "ratio": null,
+          "shownAt": 680.3999999999069,
+          "leavingAt": null,
+          "removedAt": 14293.799999999814,
+          "phases": [
+            {
+              "phase": "running",
+              "at": 680.3999999999069
+            },
+            {
+              "phase": "paused",
+              "at": 2724.6999999997206
+            },
+            {
+              "phase": "running",
+              "at": 3856.399999999907
+            },
+            {
+              "phase": "paused",
+              "at": 3861.5
+            },
+            {
+              "phase": "running",
+              "at": 4987.100000000093
+            },
+            {
+              "phase": "paused",
+              "at": 4993.199999999721
+            },
+            {
+              "phase": "running",
+              "at": 6112.299999999814
+            },
+            {
+              "phase": "paused",
+              "at": 6117.299999999814
+            },
+            {
+              "phase": "running",
+              "at": 7238
+            },
+            {
+              "phase": "paused",
+              "at": 7243
+            },
+            {
+              "phase": "running",
+              "at": 8366.19999999972
+            },
+            {
+              "phase": "elapsed",
+              "at": 14293.600000000093
+            }
+          ],
+          "focus": [
+            {
+              "at": 2732.5,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 2732.7999999998137,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 3850.5,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 3855,
+              "inNotice": false,
+              "onAnchor": true
+            },
+            {
+              "at": 3855.6999999997206,
+              "inNotice": true,
+              "onAnchor": false
+            },
+            {
+              "at": 3863.7999999998137,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 3864.100000000093,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 4986.699999999721,
+              "inNotice": true,
+              "onAnchor": false
+            },
+            {
+              "at": 4995.399999999907,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 4995.699999999721,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 6111.799999999814,
+              "inNotice": true,
+              "onAnchor": false
+            },
+            {
+              "at": 6119.5,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 6119.799999999814,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 7237.600000000093,
+              "inNotice": true,
+              "onAnchor": false
+            },
+            {
+              "at": 7245.100000000093,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 7245.399999999907,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 8361.600000000093,
+              "inNotice": false,
+              "onAnchor": false
+            },
+            {
+              "at": 8365.69999999972,
+              "inNotice": true,
+              "onAnchor": false
+            },
+            {
+              "at": 8369.799999999814,
+              "inNotice": false,
+              "onAnchor": true
+            }
+          ],
+          "focusOnAnchor": true,
+          "focusInNotice": false,
+          "hidden": false,
+          "hovered": false
+        },
+        "clock": "real WebView performance.now/setTimeout; no virtual time",
+        "restartConfirmed": false
+      },
+      "ipc": {
+        "method": "non-pausing CDP function breakpoint; real-command sentinel",
+        "commands": [
+          "app_about",
+          "model_file_credential",
+          "model_file_credential",
+          "app_about",
+          "get_data_root_config",
+          "model_policy_preview",
+          "model_file_save",
+          "model_file_credential"
+        ],
+        "invokeUnchanged": true
+      },
+      "updatesDisplayName": true
+    },
+    "detection": {
+      "checks": [
+        {
+          "exit": "x",
+          "native": true,
+          "open": true,
+          "title": "native021-new-9f1a9609 · 节点检测",
+          "closeCount": 1,
+          "closeEnabled": true,
+          "footerCount": 0,
+          "left": 234,
+          "top": 242.5,
+          "right": 794,
+          "bottom": 506.5,
+          "width": 560,
+          "height": 264,
+          "centerX": 514,
+          "centerY": 374.5,
+          "viewportWidth": 1028,
+          "viewportHeight": 749,
+          "statuses": [
+            "未检测"
+          ]
+        },
+        {
+          "exit": "escape",
+          "native": true,
+          "open": true,
+          "title": "native021-new-9f1a9609 · 节点检测",
+          "closeCount": 1,
+          "closeEnabled": true,
+          "footerCount": 0,
+          "left": 234,
+          "top": 242.5,
+          "right": 794,
+          "bottom": 506.5,
+          "width": 560,
+          "height": 264,
+          "centerX": 514,
+          "centerY": 374.5,
+          "viewportWidth": 1028,
+          "viewportHeight": 749,
+          "statuses": [
+            "未检测"
+          ]
+        },
+        {
+          "exit": "native-cancel",
+          "native": true,
+          "open": true,
+          "title": "native021-new-9f1a9609 · 节点检测",
+          "closeCount": 1,
+          "closeEnabled": true,
+          "footerCount": 0,
+          "left": 234,
+          "top": 242.5,
+          "right": 794,
+          "bottom": 506.5,
+          "width": 560,
+          "height": 264,
+          "centerX": 514,
+          "centerY": 374.5,
+          "viewportWidth": 1028,
+          "viewportHeight": 749,
+          "statuses": [
+            "未检测"
+          ]
+        },
+        {
+          "exit": "backdrop",
+          "native": true,
+          "open": true,
+          "title": "native021-new-9f1a9609 · 节点检测",
+          "closeCount": 1,
+          "closeEnabled": true,
+          "footerCount": 0,
+          "left": 234,
+          "top": 242.5,
+          "right": 794,
+          "bottom": 506.5,
+          "width": 560,
+          "height": 264,
+          "centerX": 514,
+          "centerY": 374.5,
+          "viewportWidth": 1028,
+          "viewportHeight": 749,
+          "statuses": [
+            "未检测"
+          ]
+        }
+      ],
+      "ipc": {
+        "method": "non-pausing CDP function breakpoint; real-command sentinel",
+        "commands": [
+          "app_about"
+        ],
+        "invokeUnchanged": true
+      },
+      "configSha256": "2968bff5c38177df3d29fa05497e448ee3371df7af46435498256d30ecdbe851",
+      "configAndBackupsUnchanged": true
+    },
+    "webdav": {
+      "revision": "cf3811b12060e98cf82bfea695e6c1ca7e797c299294e97b63abe3f82c32a4fe",
+      "fixture": "production save_sync_endpoint; synthetic sandbox-only DPAPI credential; invalid synthetic endpoint; no test/connection/sync request",
+      "startupVersionCheck": true,
+      "state": {
+        "state": "failed",
+        "revision": "cf3811b12060e98cf82bfea695e6c1ca7e797c299294e97b63abe3f82c32a4fe",
+        "hasObservation": true,
+        "observation": {
+          "revision": "cf3811b12060e98cf82bfea695e6c1ca7e797c299294e97b63abe3f82c32a4fe",
+          "source": "version-check",
+          "remoteRead": "failed",
+          "remoteTime": null,
+          "remoteObservedAt": "2026-11-05T12:12:20.290Z"
+        },
+        "checkingVersion": false,
+        "versionCheckAvailable": false,
+        "card": null,
+        "gate": {
+          "present": true,
+          "settled": true,
+          "checks": 3
+        },
+        "presentation": "environment-gated; production configured state verified; overview label requires a ready native environment"
+      },
+      "connection": {
+        "native": true,
+        "title": "WebDAV 连接",
+        "closeCount": 1,
+        "actions": [
+          "取消",
+          "保存连接"
+        ],
+        "candidates": 0,
+        "password": "",
+        "alerts": [],
+        "observation": {
+          "loadingSeen": true,
+          "settledAt": 935.3999999999069
+        }
+      },
+      "ipc": {
+        "method": "non-pausing CDP function breakpoint; real-command sentinel",
+        "commands": [
+          "app_about",
+          "plugin:event|unlisten",
+          "transfer_result",
+          "get_sync_config",
+          "portable_channel_catalog",
+          "portable_account_catalog",
+          "portable_extension_catalog",
+          "transfer_choices",
+          "save_transfer_choices",
+          "transfer_result",
+          "config_sync_scope",
+          "get_sync_config",
+          "list_imported_sync_connections",
+          "config_sync_scope",
+          "config_sync_catalog",
+          "portable_channel_catalog",
+          "portable_account_catalog",
+          "portable_extension_catalog",
+          "transfer_protection",
+          "transfer_choices"
+        ],
+        "invokeUnchanged": true
+      },
+      "modelConfigAndBackupsUnchanged": true,
+      "endpointBytesUnchanged": true
+    },
+    "limitations": [
+      "environment-gated; production configured state verified; overview label requires a ready native environment"
+    ],
+    "finalAdmission": {
+      "about": {
+        "name": "OpenCodeX Desktop",
+        "version": "0.2.21",
+        "identifier": "com.gzers.opencodex.desktop",
+        "platform": "Windows",
+        "framework": "Tauri v2",
+        "license": "MIT License"
+      },
+      "dataRoot": {
+        "activeDataRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-4ea8e3cfdb434cf0aba3e1d907d7b871",
+        "opencodexHomeMode": "inside",
+        "opencodexHome": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-4ea8e3cfdb434cf0aba3e1d907d7b871\\opencodex-home",
+        "currentDataRoot": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-4ea8e3cfdb434cf0aba3e1d907d7b871",
+        "currentOpencodexHome": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\startup\\sandbox-4ea8e3cfdb434cf0aba3e1d907d7b871\\opencodex-home",
+        "runtimeActive": true
+      }
+    }
+  }
+}

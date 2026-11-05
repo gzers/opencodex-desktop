@@ -7,9 +7,18 @@ completion_summary: null
 dmd_refs: ["DMD-OPENCODEX-POST021"]
 demand_ids: ["DMD-OPENCODEX-POST021"]
 task_ids: ["TASK-OPENCODEX-POST021-INTEGRATION-HARDWARE-20261105", "TASK-OPENCODEX-POST021-LOCAL-20261104", "TASK-OPENCODEX-POST021-CHANNELS-20261104", "TASK-OPENCODEX-POST021-CHANNEL-PROTOTYPE-20261104", "TASK-OPENCODEX-POST021-INTEGRATION-20261105", "TASK-OPENCODEX-POST021-WINDOWS-HUB-20261104", "TASK-OPENCODEX-POST021-WINDOWS-MATERIALS-20261104", "TASK-OPENCODEX-POST021-WINDOWS-PANEL-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-20261104", "TASK-OPENCODEX-POST021-WINDOWS-RESTART-FEEDBACK-20261104", "TASK-OPENCODEX-POST021-WINDOWS-STICKY-20261104", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-RENAME-PROBE-20261105", "TASK-OPENCODEX-POST021-WINDOWS-FINAL-SYNC-PROBE-20261105"]
-summary: "Windows回交已集成；普通账号菜单探针缺少解析就绪前置已补，等待新CI原生复验；上游运行包交付及发行门仍待。"
+summary: "Windows回交已集成，最终完整CI及普通账号原生通过；仍待上游运行包交付与发行原包门。"
 ---
 # 0.2.21发布后双线修复与集成发布计划
+
+
+## 2026-11-05 菜单就绪探针最终原生复验通过
+
+477d7edea的CI42018439722已completed/success，五个适用job全部成功，发行build按原分支条件skipped。Windows全部必需步骤包括普通账号最终EXE已通过：原菜单三帧/即时命中守卫、五个可信pointer/mouse/click事件落在Fast按钮、内部菜单与所属dialog的Escape、取消不改配置/备份、改名/通知/WebDAV真实只读失败等通过。普通账号令牌elevated=false，构建4eb8cae1与原EXE SHA 0ee6a1879b72028605de99a5efad8fca2439cb4531b395c928b9fa7e084ec2f5一致；候选artifact13413501369的ZIP摘要01795175…b1faa576、PE架构、apps树和构建父子关系已核验。原生归档13412734814的175项逐摘要核对，174份非二进制原字节保存，一份测试EXE只记哈希。旧4251普通账号36px位移失败与先红后绿测试保留，不降命中/取消/身份断言。
+
+当前CI缺验闭合，正式运行包交付未闭合：两个owner查询补丁在2.84源候选原生通过，但用户可安装上游仍无修复。本机已备固定dev可回放补丁和PR预览，109定向+12兼容启动、类型检查通过；5项Windows专属/完整dev与Git索引门未验，不表示正式包完成。当前公开PR授权仍待，未对外提交。按硬件例外采用保持功能材质结果；下一步上游运行包交付及隔离默认重启、版本冻结/发行安装升级/签名/回退和统一发布。整版DMD/IMP/TASK仍in_progress。
+
+证据ci-menu-projection-477d7edea/review.json、ci-477d7edea-run-final.json及final-artifact-import-manifest.json；validation-summary.json已更新，无正在运行的本轮CI。
 
 ## 当前接续：b99a94f10已接收，运行包交付仍待（2026-11-05）
 

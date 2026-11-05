@@ -51,10 +51,15 @@
     "latestToolCI": {
       "run": 42018439722,
       "head": "477d7edeab74c04ad2d2cbc1c075442bfd49123b",
-      "result": "queued at admission",
+      "result": "completed success",
       "localProtocol": 73,
-      "nativeWindows": "pending",
-      "review": "ci-menu-projection-477d7edea/review.json"
+      "nativeWindows": "ordinary-account menu/keyboard/save/rename/notice/WebDAV behavior passed",
+      "review": "ci-menu-projection-477d7edea/review.json",
+      "frontend": "73 protocol /1291 Vitest/typecheck/build passed",
+      "backend": "success",
+      "windowsBackend": "success incl native credentials, runtime upgrade/reinstall, MSVC/final EXE, Node24/22 recovery and genuine ordinary account",
+      "candidateArtifact": 13413501369,
+      "exeSha256": "0ee6a1879b72028605de99a5efad8fca2439cb4531b395c928b9fa7e084ec2f5"
     },
     "previousToolCI": {
       "run": 42011443834,
@@ -80,10 +85,10 @@
     "checkedDev": "0a30c551304927c93c26a96c034bd39a166c7460",
     "prBase": "dev",
     "authorizationToSendUpstreamPr": "pending",
-    "review": "integrated-b99a94f10-20261105/upstream-dev-review.json"
+    "review": "integrated-b99a94f10-20261105/upstream-dev-review.json",
+    "localPortPreparation": "upstream-runtime-prep-0a30c551/runtime-owner-dev-prep-review.json; 109+12 tests and typecheck, not complete dev/native/released runtime"
   },
   "pending": [
-    "Current menu-readiness probe fix needs final Windows ordinary-account native result and CI terminal checks",
     "Deliver desktop/app-server owner-query fixes in an installable integrated runtime, then verify actual default restart",
     "Freeze new release version; exact installers, v0.2.21 upgrade, updater signatures/manifests and rollback",
     "Unified public release and truthful final TASK/RCP/CERT closure"

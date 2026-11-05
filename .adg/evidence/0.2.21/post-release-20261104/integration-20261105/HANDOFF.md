@@ -1,3 +1,13 @@
+# 当前结果：477d7edea完整CI通过，运行包交付待（2026-11-05）
+
+CI42018439722已completed/success。Windows普通账号最终EXE通过，菜单三帧稳定/即时命中/五次可信事件、取消/Escape及真实业务回归通过；Windows后端/凭据/运行包升级重装/MSVC/final EXE/Node24及22矩阵均通过。候选artifact13413501369、EXE SHA0ee6a1879b72028605de99a5efad8fca2439cb4531b395c928b9fa7e084ec2f5，内嵌4eb8cae1、apps树a8bb18f9一致；174份最终原生证据原字节保存，一个测试EXE只记哈希。旧4251失败与探针前后回归保持。
+
+剩余关键依赖：上游正式运行包尚无两个owner查询修复，本地源候选成功不能代替生产依赖交付。已完成私有dev补丁/PR预览及限定本机检查，见upstream-runtime-prep-0a30c551/HANDOFF.md；对外fork/PR授权仍待。随后才进入实际默认重启、新发行版本/安装升级/签名更新/回退及统一发布。当前无live CI、不合并main、不发布、不改日常配置或真实同步。用户已采用RDP硬件例外，原绝对性能失败仍保留。
+
+完整证据ci-menu-projection-477d7edea/review.json及validation-summary.json。下文全部保留历史，旧“CI待验/普通账号失败”不覆盖本段。
+
+---
+
 # 当前验证接续：477d7edea（2026-11-05）
 
 上一轮4251e5c52 / CI42011443834最终普通账号原生菜单检查失败：按下前按钮发生36px位移，严格命中守卫拒绝，零按下；其它适用步骤通过。477d7edea仅补等待异步模型projection的真实有效值表，再采三帧/即时命中坐标，移动/遮挡拒绝及单次真实输入保持；20定向/73全协议通过，新CI42018439722已入队，尚无原生通过结论。产品apps树仍a8bb18f9ff2781dbbfe67f91473a298f3cd74ae6，Mac及已完成Windows源证据保持限定复用。
