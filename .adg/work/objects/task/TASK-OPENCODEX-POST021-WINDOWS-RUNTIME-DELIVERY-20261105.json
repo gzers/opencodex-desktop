@@ -1,0 +1,44 @@
+{
+  "kind": "TASK",
+  "id": "TASK-OPENCODEX-POST021-WINDOWS-RUNTIME-DELIVERY-20261105",
+  "title": "Windows归属查询移植及可安装运行包自动重启验收",
+  "state": "in_progress",
+  "result": "pending",
+  "summary": "接续477d7edea，仅补运行包归属查询、可安装交付和隔离保存重启/改名/失败重试；原全量通过结果不重复。不改日常配置，不发布，不改变正式安装来源。",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-30",
+  "demand_ids": [
+    "DMD-OPENCODEX-POST021"
+  ],
+  "owner": "windows-msvc-followup-chat-01a1a68a",
+  "baseline_digest": "bea4e7eb99d46e6e4eb1f5aeee9c57c42e462b8c418d8bd5161819c103604b1b",
+  "write_scope": [
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-runtime-delivery-20261105/**",
+    "test/smoke/post021-windows-final/**"
+  ],
+  "required_checks": [
+    "review:query-identity-and-timeouts",
+    "review:upstream-native-port",
+    "review:installable-artifact-provenance",
+    "review:isolated-save-restart-rename-retry",
+    "review:other-owner-boundary"
+  ],
+  "acceptance_ids": [
+    "AC-P21-09"
+  ],
+  "acceptance_bindings": [
+    {
+      "demand_id": "DMD-OPENCODEX-POST021",
+      "acceptance_id": "AC-P21-09",
+      "criterion_digest": "be98e9a1cf0b6c4c728b3cfd000b64aa4a83099905281d671d7958bf80f74f59"
+    }
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "imported_receipt_digest": null,
+  "certificate_digest": null,
+  "revision": 1,
+  "summary_digest": "af7869aaa6d8eda6ca4c99f3439ec414a1904f531375e5f7cdf10f246ddb9f73",
+  "content_digest": "4010ada006fe57d77f6d4fa85bedb44b2ab688ae7208859f8e78ad2778670361"
+}

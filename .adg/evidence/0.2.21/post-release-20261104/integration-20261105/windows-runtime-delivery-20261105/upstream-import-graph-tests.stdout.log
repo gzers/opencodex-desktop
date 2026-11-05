@@ -1,0 +1,273 @@
+bun test v1.4.4 (38afee6c8)
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (worker)",
+  effort: null,
+  gate: "apply",
+  latencyMs: 30,
+  usage: {
+    input_tokens: 0,
+    output_tokens: 0,
+  },
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (worker)",
+  effort: null,
+  gate: "apply",
+  latencyMs: 9,
+  usage: {
+    input_tokens: 0,
+    output_tokens: 0,
+  },
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (worker)",
+  effort: null,
+  gate: "apply",
+  latencyMs: 82,
+  usage: {
+    input_tokens: 0,
+    output_tokens: 0,
+  },
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (worker)",
+  effort: null,
+  gate: "apply",
+  latencyMs: 88,
+  usage: {
+    input_tokens: 0,
+    output_tokens: 0,
+  },
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (worker)",
+  effort: null,
+  gate: "apply",
+  latencyMs: 13,
+  usage: {
+    input_tokens: 0,
+    output_tokens: 0,
+  },
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (worker)",
+  effort: null,
+  gate: "apply",
+  latencyMs: 10,
+  usage: {
+    input_tokens: 0,
+    output_tokens: 0,
+  },
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (worker)",
+  effort: null,
+  gate: "apply",
+  latencyMs: 80,
+  usage: {
+    input_tokens: 0,
+    output_tokens: 0,
+  },
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (worker)",
+  effort: null,
+  gate: "apply",
+  latencyMs: 113,
+  usage: {
+    input_tokens: 0,
+    output_tokens: 0,
+  },
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (free)",
+  effort: "low",
+  gate: "http",
+  latencyMs: 1,
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (free)",
+  effort: "low",
+  gate: "http",
+  latencyMs: 91,
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (free)",
+  effort: "low",
+  gate: "http",
+  latencyMs: 2,
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (free)",
+  effort: "low",
+  gate: "http",
+  latencyMs: 101,
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (free)",
+  effort: "high",
+  gate: "apply",
+  latencyMs: 96,
+  usage: {
+    input_tokens: 0,
+    output_tokens: 0,
+  },
+}
+[combo] JEV decision {
+  backend: "model",
+  target: "target 1 (free)",
+  effort: "high",
+  gate: "apply",
+  latencyMs: 79,
+  usage: {
+    input_tokens: 0,
+    output_tokens: 0,
+  },
+}
+{
+  "settings": {
+    "enabled": true,
+    "contextSharingConsent": "v1"
+  },
+  "runnable": true
+}
+{
+  "settings": {
+    "enabled": true
+  },
+  "runnable": false
+}
+{
+  "settings": {
+    "contextSharingConsent": "v1"
+  },
+  "runnable": false
+}
+{
+  "settings": {
+    "contextSharingConsent": null
+  },
+  "runnable": false
+}
+{
+  "settings": {
+    "model": "expert/m"
+  },
+  "runnable": false
+}
+{
+  "settings": {
+    "model": ""
+  },
+  "runnable": false,
+  "warning": "advisor_enabled_without_model"
+}
+{
+  "entries": []
+}
+{
+  "entries": []
+}
+🚀 opencodex proxy running on http://localhost:54369
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:53162
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:53182
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:53188
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:60213
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:60218
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:54953
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:55078
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:65154
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:54726
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:62265
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:65271
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:50357
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:50319
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🚀 opencodex proxy running on http://localhost:59886
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard

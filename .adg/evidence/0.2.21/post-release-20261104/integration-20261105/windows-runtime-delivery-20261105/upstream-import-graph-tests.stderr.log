@@ -1,0 +1,1452 @@
+--changed: 10 changed files, running 1801/2951 test files
+
+tests\adapters\abort-race.test.ts:
+(pass) Responses abort guards > an initial adapter budget refusal returns 413 before any send [61.18ms]
+(pass) Responses abort guards > an image-retry build budget refusal returns 413 without a retry send [264.07ms]
+(pass) Responses abort guards > an image-retry build ordinary error retains 400 without a retry send [164.30ms]
+(pass) Responses abort guards > runTurn backlog overflow aborts the adapter signal [171.22ms]
+(pass) Responses abort guards > abort after fetch resolution cancels the body before a late reader attaches [171.65ms]
+(pass) Responses abort guards > terminal-guard continuation body is cancelled on a late client abort (#394 review) [173.85ms]
+(pass) Responses abort guards > a throwing buildRequest is mapped to 400 invalid_request_error, not an unhandled rejection [2.74ms]
+(pass) Responses abort guards > a client abort during buildRequest surfaces 499 client_cancelled instead of a 400 [2.38ms]
+
+tests\adapters\adapter-buffered-tool-conformance.test.ts:
+(pass) registry-derived buffered tool conformance > every buffered parser restores hostile freeform input exactly [37.75ms]
+
+tests\adapters\adapter-error-inline.test.ts:
+(pass) typed rate-limit retry advice > canonicalizes resource_exhausted without changing the original event [0.50ms]
+(pass) typed rate-limit retry advice > canonicalizes rate_limit_exceeded without changing the original event [0.07ms]
+(pass) typed rate-limit retry advice > canonicalizes slow_down without changing the original event [0.03ms]
+(pass) typed rate-limit retry advice > uses the longest lower bound before any shorter client-readable hint [0.17ms]
+(pass) typed rate-limit retry advice > does not invent a delay or rewrite unrelated explicit verdicts [0.44ms]
+(pass) typed rate-limit retry advice > typed and message-only errors share the same longest-first client advice [0.18ms]
+(pass) typed rate-limit retry advice > redacts the retained provider detail before appending retry advice [0.21ms]
+(pass) typed rate-limit retry advice > SSE and buffered failures agree and do not synthesize reasoning or success [0.76ms]
+(pass) typed rate-limit retry advice > the canonical failure remains pre-output and available to combo failover [3.34ms]
+(pass) inline error envelope in a 200 stream (F1) > openai-chat yields a terminal error, not silent truncation [0.93ms]
+(pass) inline error envelope in a 200 stream (F1) > google yields a terminal error on an inline error frame [1.77ms]
+(pass) inline error envelope in a 200 stream (F1) > bridge converts the adapter error into a classified response.failed (no completed) [0.42ms]
+(pass) inline error envelope in a 200 stream (F1) > Cursor tool-catalog resource exhaustion maps to an actionable 400 [0.26ms]
+(pass) inline error envelope in a 200 stream (F1) > Cursor quota-style resource exhaustion maps to 429 rate limiting [0.30ms]
+(pass) inline error envelope in a 200 stream (F1) > Cursor rate-limit prefix beats quota wording in the detail [0.04ms]
+
+tests\adapters\adapter-inner-send-budget-wiring.test.ts:
+(pass) Cursor runTurn and the request send budget > a turn carrying an exhausted budget stops before it opens another transport [757.60ms]
+(pass) Cursor runTurn and the request send budget > a turn without a budget keeps the adapter's own attempt count [746.58ms]
+(pass) Devin runTurn execution wiring > forwards the provider executor, shared budget, and physical-send observer [34.87ms]
+(pass) Devin runTurn execution wiring > a first send the budget refuses makes no request and reports no send [28.12ms]
+(pass) the Kiro text-fallback leg reports its physical sends > a progress-only turn's rebuild is counted as the second send of the same request [37.03ms]
+(pass) the Kiro text-fallback leg reports its physical sends > a fetch context without an observer leaves the rebuild exactly as it was [25.94ms]
+
+tests\adapters\adapter-inner-send-budget.test.ts:
+(pass) Kiro inner retries and the request send budget > a context without a budget keeps the adapter's own reset ladder [512.52ms]
+(pass) Kiro inner retries and the request send budget > a context with a budget stops the ladder at the allowance [465.31ms]
+(pass) Kiro inner retries and the request send budget > the budget counts every inner send, not one per adapter call [498.14ms]
+(pass) Cursor inner retries and the request send budget > a turn without execution options keeps the adapter's own attempt count [734.11ms]
+(pass) Cursor inner retries and the request send budget > a turn with a budget refuses the attempt it cannot pay for [785.77ms]
+(pass) Devin inner retries and the request send budget > an exhausted initial send escapes as the local budget error [0.52ms]
+
+tests\adapters\adapter-input-media-guard.test.ts:
+(pass) typed input media inspection > recognizes user audio and inline file without inspecting payload strings [1.77ms]
+(pass) typed input media inspection > recognizes tool and custom-tool attachments [0.07ms]
+(pass) typed input media inspection > an inline document is permitted only where a converter carries it [0.35ms]
+(pass) typed input media inspection > a document still has to reach a wire that can hold its bytes [0.50ms]
+(pass) typed input media inspection > a base64 look-alike parameter is not an inline payload [0.25ms]
+(pass) typed input media inspection > recognizes file-id-only images but keeps actual image URLs [0.07ms]
+(pass) typed input media inspection > does not parse text, tool arguments or schema properties as attachments [0.10ms]
+(pass) typed input media inspection > supported inline audio is admitted only in Chat user or tool-result content [0.32ms]
+(pass) final translated-adapter boundary > build refuses before the adapter can serialize or send; errors contain no payload [0.43ms]
+(pass) final translated-adapter boundary > runTurn emits one terminal nonretryable 400 without invoking the transport [0.51ms]
+(pass) final translated-adapter boundary > local completion cannot hide a rejected attachment [2.12ms]
+(pass) final translated-adapter boundary > ordinary text still reaches build and runTurn [1.51ms]
+(pass) runtime registry and native passthrough exceptions > registry construction carries supported audio on Chat and refuses it elsewhere [8.51ms]
+(pass) runtime registry and native passthrough exceptions > Responses and both Azure aliases preserve raw media after a rejected translated attempt [6.76ms]
+
+tests\adapters\adapter-registry-authority.test.ts:
+(pass) adapter registry authority > enumerates every production adapter exactly once [0.07ms]
+(pass) adapter registry authority > records semantic inheritance without forcing constructor wrapping [0.08ms]
+(pass) adapter registry authority > constructs every current adapter with its existing observable identity [0.56ms]
+(pass) adapter registry authority > forwards Anthropic cache retention through registry and server resolution [2.35ms]
+(pass) adapter registry authority > rejects unknown persisted adapter ids at the runtime boundary [0.09ms]
+(pass) adapter registry authority > rejects non-string persisted adapter ids before registry lookup [0.49ms]
+
+tests\adapters\adapter-tool-conformance.test.ts:
+(pass) registry-derived routed tool conformance > provider and model-wire configuration ids are registry members [0.18ms]
+(pass) registry-derived routed tool conformance > every registered adapter keeps the nested apply_patch helper in its final request [466.38ms]
+(pass) registry-derived routed tool conformance > tool_choice none disables every registered adapter's callable tool surface [18.33ms]
+(pass) registry-derived routed tool conformance > every parsed streaming wire restores hostile freeform input exactly [16.84ms]
+(pass) registry-derived routed tool conformance > every buffered adapter preserves same-name tools from different namespaces [4.77ms]
+(pass) registry-derived routed tool conformance > every routed adapter fails closed for an ambiguous bare selector [4.21ms]
+(pass) registry-derived routed tool conformance > every streaming adapter restores namespaced custom/function collisions distinctly [18.28ms]
+(pass) registry-derived routed tool conformance > every registered adapter replays the exact apply_patch input on continuation [22.59ms]
+
+tests\adapters\bridge-nonstreaming-terminal.test.ts:
+(pass) buffered turns without an adapter terminal > text with no done/error is not reported as completed [0.12ms]
+(pass) buffered turns without an adapter terminal > a tool call left open is never returned as a completed function call [0.12ms]
+(pass) buffered turns without an adapter terminal > streaming and buffered agree on the terminal for the same events [0.59ms]
+(pass) buffered turns without an adapter terminal > an explicit done still completes [0.05ms]
+(pass) buffered turns without an adapter terminal > explicit error and explicit incomplete keep their own outcomes [0.15ms]
+(pass) buffered turns without an adapter terminal > a completed tool call with a done event is unaffected [0.08ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true: length becomes max_output_tokens without losing metadata [0.44ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true: max_tokens becomes max_output_tokens without losing metadata [0.19ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true: model_context_window_exceeded becomes max_output_tokens without losing metadata [0.16ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true: refusal becomes content_filter without losing metadata [0.14ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true: content-filter becomes content_filter without losing metadata [0.10ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true:  SAFETY  becomes content_filter without losing metadata [0.13ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true: max_output_tokens becomes max_output_tokens without losing metadata [0.08ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true: content_filter becomes content_filter without losing metadata [0.11ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true: max_messages becomes max_messages without losing metadata [0.07ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true: steered becomes steered without losing metadata [0.12ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true: adapter_eof becomes adapter_eof without losing metadata [0.07ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=true:  provider_specific_stop  becomes  provider_specific_stop  without losing metadata [0.08ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false: length becomes max_output_tokens without losing metadata [0.05ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false: max_tokens becomes max_output_tokens without losing metadata [0.02ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false: model_context_window_exceeded becomes max_output_tokens without losing metadata [0.01ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false: refusal becomes content_filter without losing metadata [0.03ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false: content-filter becomes content_filter without losing metadata [0.02ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false:  SAFETY  becomes content_filter without losing metadata [0.02ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false: max_output_tokens becomes max_output_tokens without losing metadata
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false: content_filter becomes content_filter without losing metadata [0.02ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false: max_messages becomes max_messages without losing metadata [0.02ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false: steered becomes steered without losing metadata [0.02ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false: adapter_eof becomes adapter_eof without losing metadata [0.01ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > stream=false:  provider_specific_stop  becomes  provider_specific_stop  without losing metadata [0.02ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > passthrough stream=true length reaches both projections as max_output_tokens [1.12ms]
+(pass) explicit incomplete reasons use the Responses vocabulary > passthrough stream=false length reaches both projections as max_output_tokens [0.34ms]
+(pass) compaction is never installed from a truncated turn > no compaction item when the adapter emitted no terminal [0.05ms]
+(pass) compaction is never installed from a truncated turn > compaction still emitted for a genuinely completed turn [0.09ms]
+(pass) compaction is never installed from a truncated turn > compaction stays suppressed for explicit failure terminals [0.12ms]
+(pass) streaming compaction respects the same #422 guard > a max_tokens turn ships no compaction item [0.23ms]
+(pass) streaming compaction respects the same #422 guard > a content_filter turn ships no compaction item [0.13ms]
+(pass) streaming compaction respects the same #422 guard > a clean compaction turn still ships exactly one compaction item [0.18ms]
+(pass) truncation is recognized regardless of adapter vocabulary > stopReason "length" installs no compaction history (streaming and buffered) [0.43ms]
+(pass) truncation is recognized regardless of adapter vocabulary > stopReason "max_tokens" installs no compaction history (streaming and buffered) [0.18ms]
+(pass) truncation is recognized regardless of adapter vocabulary > stopReason "content_filter" installs no compaction history (streaming and buffered) [0.12ms]
+(pass) truncation is recognized regardless of adapter vocabulary > stopReason "refusal" installs no compaction history (streaming and buffered) [0.07ms]
+(pass) truncation is recognized regardless of adapter vocabulary > stopReason "MAX_TOKENS" installs no compaction history (streaming and buffered) [0.05ms]
+(pass) truncation is recognized regardless of adapter vocabulary > stopReason "MALFORMED_FUNCTION_CALL" installs no compaction history (streaming and buffered) [0.04ms]
+(pass) truncation is recognized regardless of adapter vocabulary > stopReason "SAFETY" installs no compaction history (streaming and buffered) [0.07ms]
+(pass) truncation is recognized regardless of adapter vocabulary > a clean turn still ships EXACTLY ONE compaction item on both paths [0.15ms]
+(pass) truncation is recognized regardless of adapter vocabulary > an unrecognized stop reason is treated as a normal stop [0.10ms]
+(pass) truncated-stop-reason classifier > matches every adapter vocabulary case-insensitively [0.04ms]
+(pass) truncated-stop-reason classifier > normal stops are never treated as truncation [0.02ms]
+(pass) truncated-stop-reason classifier > truncation maps to the right incomplete_details reason [0.02ms]
+(pass) Command Code finishReason error is a failure, not a stop > an error finish reason produces an adapter error terminal
+(pass) Command Code finishReason error is a failure, not a stop > a turn that failed upstream reports failed, not incomplete [0.10ms]
+(pass) truncated done preserves open tool integrity (#4312) > refusal: open function_call stays incomplete in both projections [0.55ms]
+(pass) truncated done preserves open tool integrity (#4312) > refusal: open custom_tool_call stays incomplete in both projections [0.24ms]
+(pass) truncated done preserves open tool integrity (#4312) > refusal: open tool_search_call stays incomplete in both projections [1.04ms]
+(pass) truncated done preserves open tool integrity (#4312) > refusal: a previously completed call stays completed [0.27ms]
+(pass) truncated done preserves open tool integrity (#4312) > refusal: a search still in flight is failed, not completed [0.36ms]
+(pass) truncated done preserves open tool integrity (#4312) > content_filter: open function_call stays incomplete in both projections [0.28ms]
+(pass) truncated done preserves open tool integrity (#4312) > content_filter: open custom_tool_call stays incomplete in both projections [0.24ms]
+(pass) truncated done preserves open tool integrity (#4312) > content_filter: open tool_search_call stays incomplete in both projections [0.21ms]
+(pass) truncated done preserves open tool integrity (#4312) > content_filter: a previously completed call stays completed [0.20ms]
+(pass) truncated done preserves open tool integrity (#4312) > content_filter: a search still in flight is failed, not completed [0.15ms]
+(pass) truncated done preserves open tool integrity (#4312) > max_tokens: open function_call stays incomplete in both projections [0.17ms]
+(pass) truncated done preserves open tool integrity (#4312) > max_tokens: open custom_tool_call stays incomplete in both projections [0.15ms]
+(pass) truncated done preserves open tool integrity (#4312) > max_tokens: open tool_search_call stays incomplete in both projections [0.15ms]
+(pass) truncated done preserves open tool integrity (#4312) > max_tokens: a previously completed call stays completed [0.12ms]
+(pass) truncated done preserves open tool integrity (#4312) > max_tokens: a search still in flight is failed, not completed [0.08ms]
+(pass) truncated done preserves open tool integrity (#4312) > length: open function_call stays incomplete in both projections [0.18ms]
+(pass) truncated done preserves open tool integrity (#4312) > length: open custom_tool_call stays incomplete in both projections [1.12ms]
+(pass) truncated done preserves open tool integrity (#4312) > length: open tool_search_call stays incomplete in both projections [0.23ms]
+(pass) truncated done preserves open tool integrity (#4312) > length: a previously completed call stays completed [0.12ms]
+(pass) truncated done preserves open tool integrity (#4312) > length: a search still in flight is failed, not completed [0.11ms]
+(pass) truncated done preserves open tool integrity (#4312) > max_output_tokens: open function_call stays incomplete in both projections [0.21ms]
+(pass) truncated done preserves open tool integrity (#4312) > max_output_tokens: open custom_tool_call stays incomplete in both projections [0.25ms]
+(pass) truncated done preserves open tool integrity (#4312) > max_output_tokens: open tool_search_call stays incomplete in both projections [0.15ms]
+(pass) truncated done preserves open tool integrity (#4312) > max_output_tokens: a previously completed call stays completed [0.08ms]
+(pass) truncated done preserves open tool integrity (#4312) > max_output_tokens: a search still in flight is failed, not completed [0.07ms]
+
+tests\adapters\empty-tool-output-annotation.test.ts:
+(pass) annotateEmptyToolOutputs (DeepSeek default ON) > deepseek registry seed defaults the option to true [0.66ms]
+(pass) annotateEmptyToolOutputs (DeepSeek default ON) > non-deepseek registry seed leaves the option unset [0.30ms]
+(pass) annotateEmptyToolOutputs runtime backfill (DeepSeek) > a saved deepseek provider without the flag is backfilled true at routing [0.56ms]
+(pass) annotateEmptyToolOutputs runtime backfill (DeepSeek) > an explicit false survives routing and is never overridden [0.34ms]
+(pass) openai-chat empty tool output annotation > empty string result is annotated when enabled [0.92ms]
+(pass) openai-chat empty tool output annotation > whitespace-only result is annotated when enabled [0.58ms]
+(pass) openai-chat empty tool output annotation > empty content array is annotated when enabled [0.71ms]
+(pass) openai-chat empty tool output annotation > whitespace-only text-part array is annotated when enabled [0.85ms]
+(pass) openai-chat empty tool output annotation > whitespace-only text-part array stays unchanged when the option is absent [0.75ms]
+(pass) openai-chat empty tool output annotation > image parts with whitespace text are not treated as empty [0.77ms]
+(pass) openai-chat empty tool output annotation > non-empty result stays byte-identical when enabled [0.32ms]
+(pass) openai-chat empty tool output annotation > empty result stays empty when the option is absent (legacy behavior) [0.34ms]
+(pass) openai-chat empty tool output annotation > orphaned empty result is annotated when enabled [0.53ms]
+(pass) openai-chat empty tool output annotation > orphaned empty result stays empty when the option is absent [0.46ms]
+(pass) openai-responses empty tool output annotation > empty function_call_output is annotated when enabled [242.13ms]
+(pass) openai-responses empty tool output annotation > empty custom_tool_call_output is annotated when enabled [251.30ms]
+(pass) openai-responses empty tool output annotation > non-empty output stays byte-identical when enabled [251.58ms]
+(pass) openai-responses empty tool output annotation > empty output stays empty when the option is absent [229.57ms]
+(pass) openai-responses empty tool output annotation > whitespace-only text-part array is annotated when enabled [222.32ms]
+(pass) openai-responses empty tool output annotation > whitespace-only input_text part array is annotated when enabled [222.33ms]
+(pass) openai-responses empty tool output annotation > whitespace-only output_text part array is annotated when enabled [253.24ms]
+(pass) openai-responses empty tool output annotation > non-empty input_text part array is never replaced when enabled [239.93ms]
+(pass) openai-responses empty tool output annotation > image-only output is never replaced when enabled [259.30ms]
+(pass) openai-responses empty tool output annotation > image plus whitespace text is never replaced when enabled [223.87ms]
+(pass) openai-responses empty tool output annotation > encrypted_content output is never replaced when enabled [240.69ms]
+(pass) openai-responses empty tool output annotation > file_id-only output is never replaced when enabled [237.98ms]
+(pass) openai-responses empty tool output annotation > non-empty refusal output is never replaced when enabled [231.27ms]
+(pass) openai-responses empty tool output annotation > whitespace-only refusal output is annotated when enabled [222.38ms]
+(pass) openai-responses empty tool output annotation > null output is never replaced when enabled [236.67ms]
+(pass) openai-responses empty tool output annotation > missing output key is never replaced when enabled [236.69ms]
+
+tests\adapters\exec-tool-result-normalize.test.ts:
+(pass) code-mode host failure annotation > annotates an exec result carrying "expects a string input" regardless of case [0.22ms]
+(pass) code-mode host failure annotation > annotates an exec result carrying "the first line of the patch must be" regardless of case [0.03ms]
+(pass) code-mode host failure annotation > annotates an exec result carrying "the last line of the patch must be" regardless of case
+(pass) code-mode host failure annotation > annotates an exec result carrying "unsupported import in exec" regardless of case
+(pass) code-mode host failure annotation > matches the host's real capitalisation and argument text [0.05ms]
+(pass) code-mode host failure annotation > preserves the audit's successful rg output byte-for-byte on the Responses wire [2.53ms]
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "Script completed\nWall time 0.1 seconds\nOutput:\nREADME.md:8: expects a string input\nexit_code: 0" [0.03ms]
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "README.md:8: expects a string input"
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "expects a string input"
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "the first line of the patch must be '*** Begin Patch'"
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "the last line of the patch must be '*** End Patch'"
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "The docs say Unsupported import in exec: node:fs"
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "README.md:8: Script error: tool `apply_patch` expects a string input"
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "Script completed\nWall time 0.1 seconds\nOutput:\nScript error:\ntool `apply_patch` expects a string input\nexit_code: 0"
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "Script completed\nWall time 0.1 seconds\nOutput:\nError: Unsupported import in exec: node:fs\nexit_code: 0"
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "Script completed\r\nWall time 0.1 seconds\r\nOutput:\napply_patch verification failed: invalid patch: The first line of the patch must be '*** Begin Patch'\nexit_code: 0"
+(pass) code-mode host failure annotation > does not annotate a phrase without a host error context: "Script completed\nWall time 0.1 seconds\nOutput:\napply_patch verification failed: invalid patch: The last line of the patch must be '*** End Patch'\nexit_code: 0"
+(pass) code-mode host failure annotation > recognizes direct and wrapped host diagnostics: "tool `apply_patch` expects a string input" [0.03ms]
+(pass) code-mode host failure annotation > recognizes direct and wrapped host diagnostics: "Error: tool `apply_patch` expects a string input"
+(pass) code-mode host failure annotation > recognizes direct and wrapped host diagnostics: "Script error:\ntool `apply_patch` expects a string input"
+(pass) code-mode host failure annotation > recognizes direct and wrapped host diagnostics: "Script failed\r\nWall time 0.1 seconds\r\nOutput:\r\nError: tool `apply_patch` expects a string input"
+(pass) code-mode host failure annotation > leaves non-exec tools, shell bridges, foreign namespaces, non-matching text and already-annotated text alone [0.09ms]
+(pass) code-mode host failure annotation > every failure row is a rule the pre-call sentence already states [0.03ms]
+(pass) empty exec output wrapper detection > recognizes each optional section and their combinations [0.05ms]
+(pass) empty exec output wrapper detection > stays linear on pathological whitespace runs [0.74ms]
+(pass) empty exec output wrapper detection > real path trims before matching, so a lone trailing newline is not empty [0.10ms]
+
+tests\adapters\identity-neutralize.test.ts:
+(pass) identity neutralization — central helper > replaces the Codex GPT-5 line with the proxy-neutral line [0.04ms]
+(pass) identity neutralization — central helper > replaces the Codex CLI 0.145 'an agent' identity variant (#622) [0.03ms]
+(pass) identity neutralization — central helper > never emits the opencodex proxy identity [0.09ms]
+(pass) identity neutralization — central helper > leaves text without the GPT-5 line unchanged [0.02ms]
+(pass) identity neutralization — central helper > neutral line still forbids GPT-5 / OpenAI self-reporting [0.04ms]
+(pass) identity neutralization — central helper > routed catalog identity handles the current Codex wording and names the real model [0.12ms]
+(pass) identity neutralization — central helper > routed catalog identity does not contradict a concrete GPT model id [0.06ms]
+(pass) identity neutralization — central helper > routed identity forbids claiming a different model or creator without guessing provenance [0.09ms]
+(pass) identity neutralization — central helper > routed identity does not misclassify valid OpenAI ids outside a prefix heuristic [0.19ms]
+(pass) identity neutralization — central helper > routed identity preserves a bracketed suffix when it is part of the wire model id [0.06ms]
+(pass) identity neutralization — central helper > routed identity replacement cannot re-emit the matched Codex line [0.06ms]
+(pass) identity neutralization — central helper > routed catalog identity does not interpolate unsafe model text [0.03ms]
+(pass) identity neutralization — central helper > routed catalog identity falls back for a blank model id [0.02ms]
+(pass) identity neutralization — central helper > routed catalog identity falls back for an overlong model id [0.04ms]
+(pass) identity neutralization — adapters never leak proxy identity > openai-chat: system message is neutralized, no proxy mention [2.47ms]
+(pass) identity neutralization — adapters never leak proxy identity > openai-chat: identity names the model id actually sent on the wire [0.67ms]
+(pass) identity neutralization — adapters never leak proxy identity > openai-chat: unflagged provider preserves the suffix in both wire model and identity [0.40ms]
+(pass) identity neutralization — adapters never leak proxy identity > openai-chat: OpenRouter latest alias matches in the wire model and identity [0.49ms]
+(pass) identity neutralization — adapters never leak proxy identity > google/antigravity: systemInstruction is neutralized, no proxy mention [0.29ms]
+(pass) identity neutralization — adapters never leak proxy identity > anthropic: system block names the routed model [0.48ms]
+(pass) identity neutralization — adapters never leak proxy identity > kiro > system prefix is neutralized, no proxy mention [76.26ms]
+
+tests\adapters\identity-subagent.test.ts:
+(pass) sub-agent identity inheritance (#5217) > a stale routed identity sentence is rewritten to the destination model [0.12ms]
+(pass) sub-agent identity inheritance (#5217) > identifyRoutedModel also repairs a stale sentence and the neutral catalog line [0.04ms]
+(pass) sub-agent identity inheritance (#5217) > nameRoutedIdentity names the model-neutral catalog line [0.06ms]
+(pass) sub-agent identity inheritance (#5217) > a native destination drops the routed sentence instead of renaming it [0.08ms]
+(pass) sub-agent identity inheritance (#5217) > a native destination drops the model-neutral catalog line too [0.04ms]
+(pass) sub-agent identity inheritance (#5217) > text the proxy did not generate is never rewritten [0.09ms]
+(pass) sub-agent identity inheritance (#5217) > the parser names the destination in the top-level instructions block [0.54ms]
+(pass) sub-agent identity inheritance (#5217) > the parser leaves Codex's own GPT identity line alone [0.06ms]
+(pass) sub-agent identity inheritance (#5217) > the parser repairs the worker's developer item and leaves user turns alone [0.25ms]
+(pass) sub-agent identity inheritance (#5217) > the parser names a system-role instruction item too [0.22ms]
+(pass) sub-agent identity inheritance (#5217) > the request-time rename rewrites every instruction carrier and nothing else [0.23ms]
+(pass) sub-agent identity inheritance (#5217) > a context with no sentence of ours is returned by reference [0.08ms]
+(pass) sub-agent identity inheritance (#5217) > a routed chat destination sends the worker's own model in the system message [0.64ms]
+(pass) sub-agent identity inheritance (#5217) > the Responses body repair covers instructions and developer items only [0.21ms]
+(pass) sub-agent identity inheritance (#5217) > a forward destination drops a stripped instructions value instead of sending it empty [0.80ms]
+(pass) sub-agent identity inheritance (#5217) > a body with no proxy identity is returned unchanged [0.06ms]
+(pass) sub-agent identity inheritance (#5217) > the Responses passthrough names the destination on a routed destination [0.75ms]
+(pass) sub-agent identity inheritance (#5217) > the Responses passthrough drops our sentence on a forward destination [1.86ms]
+(pass) sub-agent identity inheritance (#5217) > the Responses passthrough drops the neutral line from instructions and developer items [0.84ms]
+(pass) sub-agent identity inheritance (#5217) > the Responses passthrough drops an instructions value that was only the neutral line [0.39ms]
+(pass) routed identity names the wire model, not the client selector (#5221) > a namespaced client selector is settled on the routed model id before the send [78.15ms]
+
+tests\adapters\key-failover.test.ts:
+(pass) hasKeyPoolFailover > request key identity is rejected by management and stripped from the public config [169.20ms]
+(pass) hasKeyPoolFailover > true only for key-auth providers with 2+ pool entries [0.76ms]
+(pass) rotateKeyOn429 > an old attempt cannot overwrite a newer manual key selection or its ABA revision [743.11ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn429 > manual and automatic selection events observe committed disk state [472.85ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn429 > rotates a rejected env reference instead of reusing its resolved credential [474.02ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn429 > rotates a rejected keychain reference instead of reusing its resolved credential [755.60ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn429 > rotates to the next key and cools down the exhausted one [352.84ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn429 > respects Retry-After seconds for the cooldown window [373.14ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn429 > caps absurd Retry-After at the max cooldown [415.97ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+[key-failover] p: 429 on key k2; rotating to key k3
+[key-failover] p: all 3 keys in cooldown after 429; returning the upstream status to the client
+[key-failover] p: 429 on key k3; rotating to key k1
+(pass) rotateKeyOn429 > skips keys already in cooldown and wraps around the pool [752.04ms]
+(pass) rotateKeyOn429 > returns null for oauth/forward providers and single-key pools [548.56ms]
+(pass) rotateKeyOn429 > unavailable persistence does not publish a tentative cooldown [207.54ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn429 > clearKeyCooldowns scoped to a provider [376.21ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+[key-failover] p: 429 on key k2; rotating to key k3
+(pass) rotateKeyOn429 > concurrent 429s from the SAME key do not cool the innocent replacement (CAS) [551.56ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn429 > two stale handlers adopt one committed rotation without rotating twice [571.00ms]
+[key-failover] p: 429 on key k1; rotating to key k3
+(pass) rotateKeyOn429 > rebases over a concurrent pool edit without resurrecting a removed key [699.57ms]
+[key-failover] opencode-go: 429 on key k1; rotating to key k2
+(pass) rotateProviderTransportOn429 > preserves OpenCode Go session affinity across key rotation [372.61ms]
+[key-failover] kimi-code: 429 on key k1; rotating to key k2
+(pass) rotateProviderTransportOn429 > keeps Kimi prompt-cache forwarding after rotating a stale pre-upgrade config [358.91ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateProviderTransportOn429 > drops stale routed configuration while persisted fields stay authoritative [362.52ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateProviderTransportOn429 > does not resurrect an optional provider field removed before rotation [534.33ms]
+[key-failover] xai: 429 on key k1; rotating to key k2
+⚠️  config.json provider "xai": configured baseUrl https://api.example.com/… is ignored because this provider's endpoint is fixed at https://api.x.ai/v1. A URL saved for a different account or region is a common cause of 401s here — drop it, or use the provider whose endpoint matches.
+(pass) rotateProviderTransportOn429 > re-applies xAI cache affinity without OAuth CLI headers after key rotation [352.60ms]
+[key-failover] p: 401 on key k1; rotating to key k2
+(pass) rotateKeyOn401 > rotates to the next key and holds the rejected key for the full cap, not the 429 default [364.43ms]
+[key-failover] p: 401 on key k1; rotating to key k2
+[key-failover] p: 401 on key k2; rotating to key k3
+[key-failover] p: all 3 keys in cooldown after 401; returning the upstream status to the client
+(pass) rotateKeyOn401 > a rejected key is not retried once the 429 default window would have elapsed [625.16ms]
+[key-failover] p: 401 on key k1; rotating to key k2
+(pass) rotateKeyOn401 > rotateProviderTransportOn401 rebuilds the transport with the rotated key [367.31ms]
+(pass) rotateKeyOn401 > proactive key selection > request-local round-robin keeps parallel keys stable without changing saved selection [300.70ms]
+(pass) rotateKeyOn401 > proactive key selection > distributed 429 and 401 exclude only attempted keys and exhaustion refuses allocation [174.48ms]
+(pass) rotateKeyOn401 > proactive key selection > an active-key permit cannot dispatch a manually replaced key under per-key limits [191.86ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn401 > proactive key selection > does nothing without a configured strategy [373.32ms]
+(pass) rotateKeyOn401 > proactive key selection > keeps a healthy committed key instead of rotating off an operator choice [200.44ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn401 > proactive key selection > moves off a committed key that is already cooling [717.49ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn401 > proactive key selection > the Transport twin rebuilds the route the picker only snapshots [1131.96ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+[key-failover] p: 429 on key k2; rotating to key k3
+[key-failover] p: all 3 keys in cooldown after 429; returning the upstream status to the client
+(pass) rotateKeyOn401 > proactive key selection > returns null when every key is cooling [683.39ms]
+(pass) rotateKeyOn401 > proactive key selection > a single-key pool is a no-op [203.81ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn401 > proactive key selection > quota picks the roomiest eligible key [836.26ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn401 > proactive key selection > an unmeasured key outranks a measured-and-spent one [798.43ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn401 > proactive key selection > a stale unavailable row is not evidence [727.17ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn401 > proactive key selection > with nothing measured the first eligible key is taken [700.31ms]
+[key-failover] p: 429 on key k1; rotating to key k2
+(pass) rotateKeyOn401 > proactive key selection > a successful row past its TTL is not evidence either [683.52ms]
+
+tests\adapters\physical-send.test.ts:
+(pass) adapter physical inference admission > returns a concurrency lease after body completion and a pre-dispatch refusal [0.94ms]
+(pass) adapter physical inference admission > a prepaid scope admits exactly one physical send and rejects replay before backoff [1.71ms]
+(pass) adapter physical inference admission > unused reservation refunds after pacing refusal [0.33ms]
+(pass) adapter physical inference admission > unused reservation refunds after backoff refusal [0.09ms]
+(pass) adapter physical inference admission > unused reservation refunds after abort refusal [0.08ms]
+(pass) adapter physical inference admission > unused reservation refunds after adapter refusal [0.06ms]
+(pass) adapter physical inference admission > an open hop refunds when the pacing leg never dispatches [0.29ms]
+(pass) adapter physical inference admission > an open hop refunds when the backoff leg never dispatches [0.09ms]
+(pass) adapter physical inference admission > an open hop refunds when the abort leg never dispatches [0.07ms]
+(pass) adapter physical inference admission > an open hop refunds when the adapter leg never dispatches [0.08ms]
+(pass) adapter physical inference admission > an opted-in hop refunds when the pacing leg never dispatches [0.26ms]
+(pass) adapter physical inference admission > an opted-in hop refunds when the backoff leg never dispatches [0.09ms]
+(pass) adapter physical inference admission > an opted-in hop refunds when the abort leg never dispatches [0.05ms]
+(pass) adapter physical inference admission > an opted-in hop refunds when the adapter leg never dispatches [0.08ms]
+(pass) adapter physical inference admission > an exhausted initial send performs no inference or retry preparation [0.18ms]
+
+tests\adapters\routed-agent-messages.test.ts:
+(pass) agent-message replacement carries historical and live provenance [0.24ms]
+(pass) Responses converts plaintext task and peer messages without mutating replay or losing routing identities [1.98ms]
+(pass) ciphertext and unknown content are never reclassified as plaintext [0.08ms]
+(pass) string agent messages require an explicit opt-in and preserve exact text [0.10ms]
+(pass) https://api.x.ai/v1 lowers string child results with key auth [1.21ms]
+(pass) https://api.x.ai/v1 lowers string child results with oauth auth [0.74ms]
+(pass) https://cli-chat-proxy.grok.com/v1 lowers string child results with key auth [0.58ms]
+(pass) https://cli-chat-proxy.grok.com/v1 lowers string child results with oauth auth [0.55ms]
+(pass) preserves string messages for forward at https://chatgpt.com/backend-api/codex [0.82ms]
+(pass) preserves string messages for forward at https://api.x.ai/v1 [0.75ms]
+(pass) preserves string messages for forward at https://cli-chat-proxy.grok.com/v1 [0.62ms]
+(pass) preserves string messages for forward at https://custom.test/v1 [0.63ms]
+(pass) preserves string messages for key at https://opencode.ai/zen/go/v1 [0.60ms]
+(pass) preserves string messages for key at https://example.test/v1 [0.56ms]
+(pass) preserves string messages for key at https://api.x.ai.evil.test/v1 [0.56ms]
+(pass) preserves string messages for key at https://cli-chat-proxy.grok.com.evil.test/v1 [0.64ms]
+(pass) preserves string messages for key at http://api.x.ai/v1 [0.63ms]
+(pass) preserves string messages for key at https://api.x.ai:444/v1 [0.59ms]
+(pass) xAI string opt-in leaves incomplete or unreadable content unchanged: {"content":""} [0.67ms]
+(pass) xAI string opt-in leaves incomplete or unreadable content unchanged: {"content":" \n\t"} [0.50ms]
+(pass) xAI string opt-in leaves incomplete or unreadable content unchanged: {"content":null} [0.59ms]
+(pass) xAI string opt-in leaves incomplete or unreadable content unchanged: {"content":42} [0.67ms]
+(pass) xAI string opt-in leaves incomplete or unreadable content unchanged: {"content":{"text":"not a content string"}} [0.66ms]
+(pass) xAI string opt-in leaves incomplete or unreadable content unchanged: {"content":[]} [0.63ms]
+(pass) xAI string opt-in leaves incomplete or unreadable content unchanged: {"content":[{"type":"encrypted_content","encrypted_content":"opaque"}]} [0.89ms]
+(pass) xAI string opt-in leaves incomplete or unreadable content unchanged: {"content":[{"type":"input_text","text":"Routing header"},{"type":"encrypted_content","encrypted_content":"opaque"}]} [0.78ms]
+(pass) xAI string opt-in leaves incomplete or unreadable content unchanged: {"content":[{"type":"input_text","text":"Known prefix"},{"type":"future_type","text":"Unknown suffix"}]} [0.65ms]
+(pass) image parts stay intact beside the assignment [0.09ms]
+(pass) a body with no agent messages keeps its exact reference [0.09ms]
+(pass) native forward keeps agent_message and auth/session headers unchanged [0.74ms]
+(pass) an arbitrary routed destination converts too, and gains no session identity [0.76ms]
+(pass) an OAuth destination converts as well, since the gate reads authMode rather than the URL [0.82ms]
+(pass) canonical Go forward auth preserves private agent messages and the raw replay body [0.73ms]
+(pass) a renamed provider at https://opencode.ai/zen/go/v1 still converts plaintext agent messages [1.37ms]
+(pass) a renamed provider at https://opencode.ai/zen/go/v1/ still converts plaintext agent messages [1.03ms]
+(pass) Go-like destination https://opencode.ai.evil.test/zen/go/v1 converts without inheriting any Go-specific handling [0.91ms]
+(pass) Go-like destination http://opencode.ai/zen/go/v1 converts without inheriting any Go-specific handling [0.54ms]
+(pass) Go-like destination https://opencode.ai/zen/v1 converts without inheriting any Go-specific handling [0.55ms]
+(pass) Go-like destination https://opencode.ai/zen/go/v10 converts without inheriting any Go-specific handling [0.64ms]
+(pass) conversion preserves file payloads beside text without mutating raw replay [1.17ms]
+(pass) routed destinations preserve empty content without partially converting it [0.83ms]
+(pass) routed destinations preserve text mixed with an unknown part without partially converting it [0.84ms]
+(pass) routed destinations preserve text mixed with ciphertext without partially converting it [0.66ms]
+
+tests\adapters\terminal-continuation-owner-rotation.test.ts:
+[key-failover] owned: 429 on key k1; rotating to key k2
+(pass) terminal continuation provider-owner rotation > 429 rotation fences inherited state and persists the rotated owner [571.19ms]
+(pass) terminal continuation provider-owner rotation > Anthropic pool rotation on the initial send rebinds the replay owner to the rotated account [1240.09ms]
+(pass) terminal continuation provider-owner rotation > Anthropic pool rotation on the terminal continuation rebinds the replay owner to the rotated account [1077.80ms]
+
+tests\adapters\translator-budget-lifetime.test.ts:
+(pass) shared Chat/Messages: before releases unread accounting while producer cancellation is held [0.48ms]
+(pass) shared Chat/Messages: after releases unread accounting while producer cancellation is held [0.12ms]
+(pass) shared Chat/Messages: cancel releases unread accounting while producer cancellation is held [0.04ms]
+(pass) shared Chat/Messages: already aborted prepared 200 retains bytes, status and headers [0.20ms]
+(pass) shared Chat/Messages: already aborted prepared 499 retains bytes, status and headers [0.04ms]
+(pass) shared Chat/Messages: already aborted prepared 504 retains bytes, status and headers [0.02ms]
+(pass) shared Chat/Messages: EOF and reader errors finalize once and detach the abort observer [0.18ms]
+(pass) Responses: before releases unread accounting while producer cancellation is held [0.04ms]
+(pass) Responses: after releases unread accounting while producer cancellation is held [0.03ms]
+(pass) Responses: cancel releases unread accounting while producer cancellation is held [0.02ms]
+(pass) Responses: already aborted prepared 200 retains bytes, status and headers [0.04ms]
+(pass) Responses: already aborted prepared 499 retains bytes, status and headers [0.05ms]
+(pass) Responses: already aborted prepared 504 retains bytes, status and headers [0.03ms]
+(pass) Responses: EOF and reader errors finalize once and detach the abort observer [0.07ms]
+(pass) disposed budget ignores late open without resurrecting either accounting scope [0.16ms]
+(pass) disposed budget ignores late reserve without resurrecting either accounting scope [0.02ms]
+(pass) disposed budget ignores late commit without resurrecting either accounting scope [0.01ms]
+(pass) disposed budget ignores late charge without resurrecting either accounting scope
+(pass) disposed budget ignores late observe without resurrecting either accounting scope [0.02ms]
+(pass) Responses retains isNativePassthroughSseResponse through budget wrapping [0.10ms]
+(pass) Responses retains isEagerRelaySseResponse through budget wrapping [0.03ms]
+(pass) Responses retains isPreinspectedJsonResponse through budget wrapping [0.03ms]
+(pass) Responses retains isNonReplayableResponse through budget wrapping [0.03ms]
+(pass) Responses runTurn/nonreplayable classification survives before cleanup (lease=false) [0.25ms]
+(pass) Responses runTurn/nonreplayable classification survives after cleanup (lease=false) [0.05ms]
+(pass) Responses runTurn/nonreplayable classification survives cancel cleanup (lease=false) [0.02ms]
+(pass) Responses runTurn/nonreplayable classification survives before cleanup (lease=true) [0.22ms]
+(pass) Responses runTurn/nonreplayable classification survives after cleanup (lease=true) [0.05ms]
+(pass) Responses runTurn/nonreplayable classification survives cancel cleanup (lease=true) [0.03ms]
+[responses] request body decode/parse failed: SyntaxError: JSON Parse error: Expected '}'
+(pass) responses: HTTP owner links request abort to its unread response budget [0.58ms]
+(pass) chat-completions: HTTP owner links request abort to its unread response budget [15.80ms]
+(pass) claude-messages: HTTP owner links request abort to its unread response budget [16.02ms]
+
+tests\advisor\advisor-caller-policy-compact.test.ts:
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=13 error=advisor HTTP 503
+(pass) detached JEV Advisor preserves ingress metered refusal (widen=false) [326.71ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=3 error=advisor HTTP 503
+(pass) detached JEV Advisor preserves ingress metered refusal (widen=true) [259.99ms]
+[combo] combo 2: target 1 (paid) failed with 404 after 5ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=76 error=advisor HTTP 404
+(pass) detached JEV Advisor preserves ingress fallback refusal (widen=false) [241.48ms]
+[combo] combo 2: target 1 (paid) failed with 404 after 4ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=82 error=advisor HTTP 404
+(pass) detached JEV Advisor preserves ingress fallback refusal (widen=true) [267.84ms]
+
+tests\advisor\advisor-caller-policy-host-key.test.ts:
+[advisor] consultation failed trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=3 error=advisor HTTP 403
+(pass) Advisor self-fetch credential host policy on the real listener (#7894) > primary loopback ingress: a host key that forbids the Advisor model fails the consult closed [200.40ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=88 usage=in=3 out=2
+(pass) Advisor self-fetch credential host policy on the real listener (#7894) > primary loopback ingress: a host key that allows the Advisor model still consults [268.32ms]
+[advisor] consultation failed trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=1 error=advisor HTTP 403
+(pass) Advisor self-fetch credential host policy on the real listener (#7894) > secondary loopback ingress: a host key that forbids the Advisor model fails the consult closed [164.87ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=98 usage=in=3 out=2
+(pass) Advisor self-fetch credential host policy on the real listener (#7894) > secondary loopback ingress: a host key that allows the Advisor model still consults [299.87ms]
+(pass) Advisor self-fetch credential host policy on the real listener (#7894) > an ordinary loopback caller presenting the restricted host key keeps loopback admission [253.49ms]
+(pass) Advisor self-fetch credential host policy on the real listener (#7894) > an internal self-fetch presenting a credential the data plane does not know is refused [175.45ms]
+(pass) Advisor self-fetch credential host policy on the real listener (#7894) > the self-fetch key's paid-combo consent and device fallback identity bind the consult [0.41ms]
+
+tests\advisor\advisor-caller-policy-http.test.ts:
+(pass) HTTP responses keeps the admitted caller policy across the capacity wait (raised limit: false) [166.73ms]
+(pass) HTTP responses keeps the admitted caller policy across the capacity wait (raised limit: true) [175.00ms]
+(pass) HTTP chat/completions keeps the admitted caller policy across the capacity wait (raised limit: false) [313.53ms]
+(pass) HTTP chat/completions keeps the admitted caller policy across the capacity wait (raised limit: true) [167.79ms]
+(pass) HTTP messages keeps the admitted caller policy across the capacity wait (raised limit: false) [164.48ms]
+(pass) HTTP messages keeps the admitted caller policy across the capacity wait (raised limit: true) [160.36ms]
+(pass) HTTP responses/compact keeps the admitted caller policy across the capacity wait (raised limit: false) [152.95ms]
+(pass) HTTP responses/compact keeps the admitted caller policy across the capacity wait (raised limit: true) [174.99ms]
+
+tests\advisor\advisor-caller-policy-ingress.test.ts:
+(pass) messages keeps the admitted caller metered policy when config widens during body read [186.06ms]
+(pass) messages keeps the admitted caller fallback policy when config widens during body read [161.08ms]
+(pass) chat keeps the admitted caller metered policy when config widens during body read [147.27ms]
+(pass) chat keeps the admitted caller fallback policy when config widens during body read [161.36ms]
+
+tests\advisor\advisor-caller-policy-jev.test.ts:
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=4 error=advisor HTTP 503
+(pass) detached JEV Advisor preserves ingress metered refusal (widen=false) [244.14ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=3 error=advisor HTTP 503
+(pass) detached JEV Advisor preserves ingress metered refusal (widen=true) [254.63ms]
+[combo] combo 2: target 1 (paid) failed with 404 after 3ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=75 error=advisor HTTP 404
+(pass) detached JEV Advisor preserves ingress fallback refusal (widen=false) [242.40ms]
+[combo] combo 2: target 1 (paid) failed with 404 after 11ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=108 error=advisor HTTP 404
+(pass) detached JEV Advisor preserves ingress fallback refusal (widen=true) [266.56ms]
+
+tests\advisor\advisor-caller-policy-replay.test.ts:
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=4 error=advisor HTTP 503
+(pass) policy replay keeps ingress paid refusal (wrapper) [281.89ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=3 error=advisor HTTP 503
+(pass) policy replay keeps ingress paid refusal (websocket) [197.49ms]
+
+tests\advisor\advisor-caller-policy-routing.test.ts:
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=4 error=advisor HTTP 503
+(pass) laptop paid-combo refusal survives Advisor combo [178.09ms]
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/outer durationMs=81 usage=in=0 out=0
+(pass) laptop paid-combo refusal survives Advisor nested [235.08ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=preflight worker=m advisor=primary/m durationMs=7 error=advisor HTTP 503
+(pass) laptop paid-combo refusal survives Advisor collapsed [155.65ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=4 error=advisor HTTP 503
+(pass) laptop paid-combo refusal survives Advisor native [168.55ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 5ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=88 error=advisor HTTP 404
+(pass) laptop device fallback refusal survives Advisor combo [250.13ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 4ms: model_unavailable
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/outer durationMs=101 usage=in=0 out=0
+(pass) laptop device fallback refusal survives Advisor nested [265.79ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 4ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=74 error=advisor HTTP 404
+(pass) laptop device fallback refusal survives Advisor native [236.98ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=4 error=advisor HTTP 503
+(pass) caller metered policy is captured before asynchronous body parsing [162.66ms]
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/inner durationMs=97 usage=in=0 out=0
+(pass) consenting laptop metered control reaches the destination [281.26ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 4ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=99 error=advisor HTTP 404
+(pass) caller fallback policy is captured before asynchronous body parsing [256.76ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 6ms: model_unavailable
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/inner durationMs=115 usage=in=0 out=0
+(pass) consenting laptop fallback control reaches the destination [280.32ms]
+(pass) external forged policy has no effect with capability absent [265.79ms]
+(pass) external forged policy has no effect with capability 1 [283.71ms]
+(pass) external forged policy has no effect with capability AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA [256.01ms]
+(pass) an authenticated internal hop with missing policy fails closed [168.48ms]
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/inner durationMs=96 usage=in=0 out=0
+(pass) a laptop without paid consent still receives advice from an unmetered combo target [263.77ms]
+
+tests\advisor\advisor-caller-policy-self-fetch.test.ts:
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=combo/inner durationMs=103 usage=in=0 out=0
+(pass) a validated self-fetch key's paid-combo consent on a public bind's loopback listener > consenting caller, host key and combo reach the metered target [298.80ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=deepseek-v4 advisor=combo/inner durationMs=4 error=advisor HTTP 503
+(pass) a validated self-fetch key's paid-combo consent on a public bind's loopback listener > a refusal by the host key still keeps the consult off the metered target [182.53ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=deepseek-v4 advisor=combo/inner durationMs=8 error=advisor HTTP 503
+(pass) a validated self-fetch key's paid-combo consent on a public bind's loopback listener > a refusal by the caller still keeps the consult off the metered target [196.75ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=deepseek-v4 advisor=combo/inner durationMs=3 error=advisor HTTP 503
+(pass) a validated self-fetch key's paid-combo consent on a public bind's loopback listener > a refusal by the combo still keeps the consult off the metered target [189.12ms]
+(pass) a validated self-fetch key's paid-combo consent on a public bind's loopback listener > an unkeyed caller on the loopback listener is still refused the metered target [172.33ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=97 usage=in=3 out=2
+(pass) the credential a loopback-bind self-fetch presents > an installed hub client token this proxy does not admit is not presented to Advisor [290.19ms]
+[advisor] consultation failed trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=3 error=advisor HTTP 403
+(pass) the credential a loopback-bind self-fetch presents > a recognized restricted key behind that token still binds the consult [216.85ms]
+(pass) the credential a loopback-bind self-fetch presents > a routed sidecar self-fetch does not present the unadmitted hub client token [291.65ms]
+
+tests\advisor\advisor-caller-policy-sidecar-authority.test.ts:
+(pass) routed helper policy authority: missing [225.59ms]
+(pass) routed helper policy authority: released [223.03ms]
+(pass) routed helper policy authority: aborted [187.63ms]
+(pass) routed helper policy authority: forged [310.59ms]
+(pass) routed helper policy authority: live [217.93ms]
+(pass) routed helper releases its registration on success [1.04ms]
+[vision] routed describe connect_error (0ms)
+(pass) routed helper releases its registration on failure [0.38ms]
+[vision] routed describe connect_error (0ms)
+(pass) routed helper releases its registration on abort [0.33ms]
+
+tests\advisor\advisor-caller-policy-vision.test.ts:
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=4 error=advisor HTTP 503
+(pass) routed vision Advisor must retain caller metered refusal [235.16ms]
+[combo] combo 1: target 1 (paid) failed with 404 after 5ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=94 error=advisor HTTP 404
+(pass) routed vision Advisor must retain caller fallback refusal [295.46ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=3 error=advisor HTTP 503
+(pass) routed vision Advisor must retain host metered refusal [172.34ms]
+[combo] combo 1: target 1 (paid) failed with 404 after 5ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=manual worker=m advisor=combo/inner durationMs=110 error=advisor HTTP 404
+(pass) routed vision Advisor must retain host fallback refusal [275.65ms]
+
+tests\advisor\advisor-caller-policy.test.ts:
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=4 error=advisor HTTP 503
+(pass) caller without paid opt-in: combo makes zero metered sends [223.11ms]
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/outer durationMs=80 usage=in=0 out=0
+(pass) caller without paid opt-in: nested makes zero metered sends [265.47ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=preflight worker=m advisor=primary/m durationMs=5 error=advisor HTTP 503
+(pass) caller without paid opt-in: collapsed makes zero metered sends [165.03ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 6ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=88 error=advisor HTTP 404
+(pass) caller fallback disabled: combo makes zero backup sends [259.22ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 6ms: model_unavailable
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/outer durationMs=114 usage=in=0 out=0
+(pass) caller fallback disabled: nested makes zero backup sends [314.50ms]
+(pass) direct caller metered control refuses the same destination [179.48ms]
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/inner durationMs=75 usage=in=0 out=0
+(pass) consenting caller metered combo control reaches the destination [258.28ms]
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/outer durationMs=106 usage=in=0 out=0
+(pass) consenting caller metered nested control reaches the destination [333.46ms]
+[advisor] consultation ok trigger=preflight worker=m advisor=primary/m durationMs=10 usage=in=0 out=0
+(pass) consenting caller metered collapsed control reaches the destination [193.45ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=5 error=advisor HTTP 503
+(pass) captured caller metered limits survive broadened live config [187.76ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=5 error=advisor HTTP 503
+(pass) captured caller metered limits survive deleted live config [174.31ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=3 error=advisor HTTP 503
+(pass) host metered limits also apply to a consenting caller [163.49ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 5ms: model_unavailable
+(pass) direct caller fallback control refuses the same destination [252.19ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 5ms: model_unavailable
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/inner durationMs=122 usage=in=0 out=0
+(pass) consenting caller fallback combo control reaches the destination [300.94ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 4ms: model_unavailable
+[advisor] consultation ok trigger=preflight worker=m advisor=combo/outer durationMs=90 usage=in=0 out=0
+(pass) consenting caller fallback nested control reaches the destination [293.93ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 5ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=87 error=advisor HTTP 404
+(pass) captured caller fallback limits survive broadened live config [257.30ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 7ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=103 error=advisor HTTP 404
+(pass) captured caller fallback limits survive deleted live config [314.36ms]
+[combo] combo 1: target 1 (expert) failed with 404 after 5ms: model_unavailable
+[opencodex] upstream failure
+[advisor] consultation failed trigger=preflight worker=m advisor=combo/inner durationMs=95 error=advisor HTTP 404
+(pass) host fallback limits also apply to a consenting caller [274.92ms]
+(pass) a made-up snapshot token with the process capability fails closed [171.82ms]
+(pass) a live snapshot token without the process capability grants no policy authority [225.69ms]
+(pass) the policy registry releases a network consultation [185.20ms]
+(pass) the policy registry releases a cancelled consultation [168.38ms]
+(pass) scope intersection preserves qualified models and unnamed-destination refusals [165.58ms]
+(pass) registry owns an immutable copy and releases only its consultation [158.59ms]
+(pass) registry revokes an aborted consultation before fetch settles [149.92ms]
+(pass) unkeyed caller combo opt-in remains required behind a consenting host key [153.33ms]
+[opencodex] upstream failure code=server_is_overloaded
+[opencodex] upstream failure type=server_error code=server_is_overloaded
+(pass) a live permissive policy token cannot grant an external caller paid consent [179.85ms]
+
+tests\advisor\advisor-internal-authority.test.ts:
+(pass) internal-call capability — server-owned authority > Advisor retains captured caller scope when its live key is deleted after preparation [10.68ms]
+(pass) internal-call capability — server-owned authority > Advisor retains captured caller scope when its live key is broadened after preparation [0.19ms]
+(pass) internal-call capability — server-owned authority > Advisor preserves an original undefined snapshot despite later caller-option changes [0.45ms]
+(pass) internal-call capability — server-owned authority > Advisor preserves an original scoped snapshot despite later caller-option changes [0.11ms]
+(pass) internal-call capability — server-owned authority > advisor admission scope metadata round-trips without granting authority [0.07ms]
+(pass) internal-call capability — server-owned authority > the encoder shares the decoder bound and fails rather than emit an undeliverable scope [0.18ms]
+(pass) internal-call capability — server-owned authority > a forged literal header value is NOT internal authority [0.03ms]
+(pass) internal-call capability — server-owned authority > a random or malformed token is NOT internal authority [0.02ms]
+(pass) internal-call capability — server-owned authority > an unminted process capability rejects shaped input without minting [0.02ms]
+(pass) internal-call capability — server-owned authority > the process's own capability IS accepted, and the header name is stable [0.04ms]
+(pass) internal-call capability — server-owned authority > a capability from an older process is worthless after a restart [0.03ms]
+(pass) internal-call capability — confidentiality > the capability never rides the advisor payload or its request body [1.16ms]
+(pass) internal-call capability — confidentiality > an advisor failure message cannot leak the capability [0.54ms]
+(pass) internal-call capability — ingress contract > the chat ingress judges the header by capability, never by a literal [0.63ms]
+(pass) internal-call capability — ingress contract > the capability module keeps the value process-local (no config, disk, or log write) [0.15ms]
+
+tests\advisor\advisor-responses-wiring.test.ts:
+(pass) advisor responses wiring (end-to-end) > delivery and empty-completion retry pass the same request budget (stream=%s) [209.37ms]
+(pass) advisor responses wiring (end-to-end) > delivery and empty-completion retry pass the same request budget (stream=%s) [186.87ms]
+[advisor] consultation ok trigger=preflight worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=77 usage=in=21 out=7
+[advisor] consultation ok trigger=repair_failure worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=5 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > adaptive failed-repair advice uses the real routing, authority, effort and task-budget boundaries [818.84ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=89 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: buffered, empty retry=false, final tool=false [282.05ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=82 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: buffered, empty retry=false, final tool=true [261.15ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=79 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: buffered, empty retry=false, final tool=false [270.56ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=89 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: buffered, empty retry=false, final tool=true [288.02ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=93 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: buffered, empty retry=false, final tool=false [281.66ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=88 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: buffered, empty retry=false, final tool=true [304.49ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=105 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: buffered, empty retry=true, final tool=false [323.75ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=98 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: buffered, empty retry=true, final tool=true [285.37ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=79 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: buffered, empty retry=true, final tool=false [266.33ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=86 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: buffered, empty retry=true, final tool=true [275.94ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=86 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: buffered, empty retry=true, final tool=false [276.47ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=83 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: buffered, empty retry=true, final tool=true [257.76ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=82 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: bridge, empty retry=false, final tool=false [249.70ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=77 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: bridge, empty retry=false, final tool=true [248.86ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=76 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: bridge, empty retry=false, final tool=false [252.08ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=71 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: bridge, empty retry=false, final tool=true [242.98ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=71 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: bridge, empty retry=false, final tool=false [221.16ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=73 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: bridge, empty retry=false, final tool=true [242.71ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=94 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: bridge, empty retry=true, final tool=false [268.86ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=80 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: bridge, empty retry=true, final tool=true [263.60ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=76 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: bridge, empty retry=true, final tool=false [242.35ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=77 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: bridge, empty retry=true, final tool=true [271.35ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=85 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: bridge, empty retry=true, final tool=false [251.66ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=78 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: bridge, empty retry=true, final tool=true [241.47ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=64 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: direct, empty retry=false, final tool=false [215.78ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=81 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: direct, empty retry=false, final tool=true [268.96ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=79 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: direct, empty retry=false, final tool=false [244.04ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=83 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: direct, empty retry=false, final tool=true [274.09ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=73 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: direct, empty retry=false, final tool=false [233.03ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=95 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: direct, empty retry=false, final tool=true [290.23ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=73 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: direct, empty retry=true, final tool=false [247.74ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=71 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with empty client catalog: direct, empty retry=true, final tool=true [239.50ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=76 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: direct, empty retry=true, final tool=false [224.34ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=81 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with omitted client catalog: direct, empty retry=true, final tool=true [249.13ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=69 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: direct, empty retry=true, final tool=false [235.31ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=71 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor with partial client catalog: direct, empty retry=true, final tool=true [241.48ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=66 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > a real OpenAI Chat worker that always calls advisor stops after bounded redispatches (stream=%s) [218.29ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=80 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > a real OpenAI Chat worker that always calls advisor stops after bounded redispatches (stream=%s) [251.90ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=77 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > manual: worker calls advisor() — the call is intercepted, the expert consulted cross-provider, advice reinjected [254.38ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=75 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > manual advisor works while the web-search sidecar owns the turn (stream=%s) [266.78ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=76 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > manual advisor works while the web-search sidecar owns the turn (stream=%s) [260.50ms]
+(pass) advisor responses wiring (end-to-end) > web-search tool choice cannot be widened to Advisor [226.29ms]
+(pass) advisor responses wiring (end-to-end) > client advisor passthrough respects the effective choice: allowed=%s [198.82ms]
+(pass) advisor responses wiring (end-to-end) > client advisor passthrough respects the effective choice: allowed=%s [179.03ms]
+(pass) advisor responses wiring (end-to-end) > scanner refuses an unauthorized advisor atomically: complete [0.21ms]
+(pass) advisor responses wiring (end-to-end) > scanner refuses an unauthorized advisor atomically: incomplete [0.02ms]
+(pass) advisor responses wiring (end-to-end) > scanner refuses an unauthorized advisor atomically: unterminated
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=80 usage=in=21 out=7
+[web-search-loop] done — 1 search, 2 iterations, 85ms
+[web-search-loop] cancelled — 1 real searches, 0 placeholders, 85ms
+(pass) advisor responses wiring (end-to-end) > web_search and advisor calls are fulfilled in worker order without leaking advisor [265.21ms]
+(pass) advisor responses wiring (end-to-end) > a real client tool wins over advisor in a web-search turn [179.93ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=75 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor remains bounded while web-search owns repeated continuations (allowlist=%s) [265.38ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=84 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > advisor remains bounded while web-search owns repeated continuations (allowlist=%s) [295.07ms]
+(pass) advisor responses wiring (end-to-end) > scanner drops incomplete and unterminated advisor calls [0.23ms]
+(pass) advisor responses wiring (end-to-end) > a consult-less registered plan does not declare advisor in a web-search turn [177.01ms]
+[advisor] consultation ok trigger=preflight worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=95 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > preflight: worker NEVER calls the advisor — OpenCodex consults the expert anyway, exactly once [260.21ms]
+[advisor] consultation ok trigger=preflight worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=92 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > preflight fires only once per task across turns [319.38ms]
+[advisor] consultation ok trigger=preflight worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=83 usage=in=21 out=7
+[advisor] consultation ok trigger=preflight worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=4 usage=in=21 out=7
+[advisor] consultation ok trigger=preflight worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=2 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > an identity-less client fails open: each request may attempt once, and no ledger entry is created [284.85ms]
+(pass) advisor responses wiring (end-to-end) > disabled: the worker request path carries no advisor machinery [152.21ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=66 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > recursion fence: the expert's own loopback request never carries the advisor tool [212.54ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=77 usage=in=21 out=7
+(pass) advisor responses wiring (end-to-end) > the internal capability never reaches an upstream provider [250.60ms]
+
+tests\advisor\advisor-scope-transport.test.ts:
+[advisor] consultation failed trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=3 error=advisor HTTP 403
+(pass) advisor admission-scope transport (end-to-end) > a key scoped off the advisor provider has the consult refused before the expert is called [166.52ms]
+[advisor] consultation ok trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=76 usage=in=21 out=7
+(pass) advisor admission-scope transport (end-to-end) > a key scoped onto the advisor provider is consulted and the advice is reinjected [239.86ms]
+[advisor] consultation failed trigger=manual worker=deepseek-v4 advisor=expert/gpt-6-astra durationMs=1 error=advisor HTTP 403
+(pass) advisor admission-scope transport (end-to-end) > a restricted host key also narrows an unrestricted caller's consult [147.50ms]
+(pass) advisor admission-scope metadata without the capability (negative regression) > a scope header without the capability does not narrow an ordinary caller [237.44ms]
+(pass) advisor admission-scope metadata without the capability (negative regression) > a scope header beside a foreign capability does not narrow an ordinary caller [251.20ms]
+(pass) advisor admission-scope metadata without the capability (negative regression) > a malformed scope header without the capability is ignored, not refused [262.12ms]
+(pass) advisor admission-scope metadata without the capability (negative regression) > a malformed scope header beside the real capability IS refused [158.54ms]
+
+tests\advisor\advisor-settings.test.ts:
+(pass) resolveAdvisorSettings > absent config resolves to fully disabled defaults [0.08ms]
+(pass) resolveAdvisorSettings > malformed block degrades to defaults instead of throwing [0.09ms]
+(pass) resolveAdvisorSettings > enabled without a model is not runnable [0.03ms]
+(pass) resolveAdvisorSettings > enabled with a model but no consent is not runnable [0.04ms]
+(pass) resolveAdvisorSettings > enabled with a model and current consent is runnable [0.04ms]
+(pass) resolveAdvisorSettings > stale or wrong-typed consent does not become current and is not upgraded [0.09ms]
+(pass) resolveAdvisorSettings > malformed effort and policy fall back per-field [0.03ms]
+(pass) resolveAdvisorSettings > model whitespace is trimmed [0.02ms]
+(pass) resolveAdvisorSettings > effort ladder matches the canonical levels [0.03ms]
+(pass) resolveAdvisorSettings > timeoutMs is bounded to a sane window [0.04ms]
+(pass) ocx advisor consent > on without consent prints the disclosure and does not enable [1.50ms]
+(pass) ocx advisor consent > on --ack-context-sharing records v1 and enables, with disclosure on stderr [0.36ms]
+Error: --ack-context-sharing has no effect with `ocx advisor off`; it never records consent.
+Usage:
+  ocx advisor status [--json]
+  ocx advisor activity [--json]
+  ocx advisor on [--ack-context-sharing] [--json]
+  ocx advisor off [--json]
+  ocx advisor consent [--revoke] [--json]
+  ocx advisor set [--model <model>] [--effort <effort>] [--policy <manual|preflight|adaptive>] [--max-consultations <1-3>] [--timeout-ms <ms>] [--json]
+(pass) ocx advisor consent > off --ack-context-sharing is refused and does not PUT [0.09ms]
+(pass) ocx advisor consent > on with existing consent enables without writing a new grant [0.19ms]
+Advisor consultations may send this task's conversation to the configured Advisor provider, which may differ from the worker provider.
+The consultation prompt can include: the latest user task; user, assistant, and developer text visible in the parsed conversation; tool calls and tool arguments; tool results; the worker tool catalog and descriptions; the worker identity; the configured Advisor model; and an optional focus question on a manual call.
+OpenCodex does not insert provider API keys, authorization headers, OAuth tokens, backend-only config secrets, process environment, or hidden chain-of-thought into that prompt. It also does not decrypt or forward encrypted provider-private reasoning.
+Task content is not secret-redacted. A key pasted into the task, a secret in a file the tools read, or a token printed by a tool or log can be sent if it is in the parsed conversation. OpenCodex does not run general DLP.
+Consent version v1 is an operator action. Enabling Advisor, task text, and either model's output do not grant it.
+(pass) ocx advisor consent > consent records v1 and revoke removes it; set does not grant consent [0.47ms]
+(pass) ocx advisor set — clearing the model > an explicitly empty --model is forwarded as the clear operation [0.19ms]
+Error: --effort requires a value
+Usage:
+  ocx advisor status [--json]
+  ocx advisor activity [--json]
+  ocx advisor on [--ack-context-sharing] [--json]
+  ocx advisor off [--json]
+  ocx advisor consent [--revoke] [--json]
+  ocx advisor set [--model <model>] [--effort <effort>] [--policy <manual|preflight|adaptive>] [--max-consultations <1-3>] [--timeout-ms <ms>] [--json]
+Error: --model requires a value
+Usage:
+  ocx advisor status [--json]
+  ocx advisor activity [--json]
+  ocx advisor on [--ack-context-sharing] [--json]
+  ocx advisor off [--json]
+  ocx advisor consent [--revoke] [--json]
+  ocx advisor set [--model <model>] [--effort <effort>] [--policy <manual|preflight|adaptive>] [--max-consultations <1-3>] [--timeout-ms <ms>] [--json]
+Error: --timeout-ms requires a value
+Usage:
+  ocx advisor status [--json]
+  ocx advisor activity [--json]
+  ocx advisor on [--ack-context-sharing] [--json]
+  ocx advisor off [--json]
+  ocx advisor consent [--revoke] [--json]
+  ocx advisor set [--model <model>] [--effort <effort>] [--policy <manual|preflight|adaptive>] [--max-consultations <1-3>] [--timeout-ms <ms>] [--json]
+(pass) ocx advisor set — clearing the model > other valued flags still require a value [0.12ms]
+Error: --max-consultations must be an integer between 1 and 3
+Usage:
+  ocx advisor status [--json]
+  ocx advisor activity [--json]
+  ocx advisor on [--ack-context-sharing] [--json]
+  ocx advisor off [--json]
+  ocx advisor consent [--revoke] [--json]
+  ocx advisor set [--model <model>] [--effort <effort>] [--policy <manual|preflight|adaptive>] [--max-consultations <1-3>] [--timeout-ms <ms>] [--json]
+(pass) Advisor CLI exposes activity and adaptive task allowance without granting consent [0.34ms]
+
+tests\advisor\advisor-web-search.test.ts:
+(pass) Advisor limit reports every billed worker leg once (choice=) [1.98ms]
+(pass) Advisor limit reports every billed worker leg once (choice="required") [1.12ms]
+(pass) Advisor limit reports every billed worker leg once (choice={"allowedTools":["advisor","web_search"],"mode":"required"}) [1.15ms]
+(pass) Advisor limit reports every billed worker leg once (choice={"name":"advisor"}) [0.91ms]
+(pass) Advisor limit reports every billed worker leg once (choice={"allowedTools":["advisor"],"mode":"required"}) [0.82ms]
+[web-search-loop] done — 1 search (1 failed), 4 iterations, 1ms
+[web-search-loop] cancelled — 1 real searches, 0 placeholders, 1ms
+(pass) Advisor and search preserve separate allowances and worker usage [1.65ms]
+(pass) real client tools take precedence in either order (advisor first=%s) [0.46ms]
+(pass) real client tools take precedence in either order (advisor first=%s) [0.30ms]
+(pass) incomplete Advisor calls suppress consultation and search execution [0.33ms]
+[web-search-loop] unusable forced answer {"model":"fixture","recoveryAttempt":0,"searchCalls":0,"malformed":false,"eventTypes":["done"]}
+[web-search-loop] empty forced answer — retrying once with tool calls disabled
+[web-search-loop] done — 1 search (1 failed), 3 iterations, 0ms
+[web-search-loop] cancelled — 1 real searches, 0 placeholders, 0ms
+(pass) empty-answer recovery revokes earlier advisor permission (client=%s) [0.91ms]
+[web-search-loop] unusable forced answer {"model":"fixture","recoveryAttempt":0,"searchCalls":0,"malformed":false,"eventTypes":["done"]}
+[web-search-loop] empty forced answer — retrying once with tool calls disabled
+[web-search-loop] done — 1 search (1 failed), 3 iterations, 0ms
+[web-search-loop] cancelled — 1 real searches, 0 placeholders, 0ms
+(pass) empty-answer recovery revokes earlier advisor permission (client=%s) [0.53ms]
+
+tests\ci-workflows\client-support-matrix.test.ts:
+(pass) client support matrix > every committed locale page matches the generator [14.95ms]
+(pass) client support matrix > every locale defines exactly the root locale's strings [0.73ms]
+(pass) client support matrix > rows cover the export roster, the managed integrations and the native union [5.23ms]
+(pass) client support matrix > a new export client without metadata fails with its id [4.58ms]
+(pass) client support matrix > a managed integration outside the export roster cannot drop out of the page [4.23ms]
+(pass) client support matrix > native union additions, removals and reshapes all fail [10.98ms]
+(pass) client support matrix > protocol fields must exist and carry a known value [8.40ms]
+(pass) client support matrix > a protocol field missing on one matched entry fails even when another entry has it [4.68ms]
+(pass) client support matrix > the OMP Responses override is checked model by model [4.10ms]
+(pass) client support matrix > curated claims fail when the reviewed source changes [11.59ms]
+(pass) client support matrix > a test reference must be a single enabled case that names the client [13.01ms]
+(pass) client support matrix > the inbound endpoints listed on the page are admitted routes [4.37ms]
+
+tests\ci-workflows\client-support-runtime.test.ts:
+(pass) client support runtime results > an empty results file leaves every row with a dash in every locale, and the committed file is valid [13.02ms]
+(pass) client support runtime results > a result renders product, both versions, scenario, date and evidence on native and export rows [6.02ms]
+(pass) client support runtime results > the most recent result is shown, ties break on product, and the rest are counted [4.93ms]
+(pass) client support runtime results > every malformed file or result is refused with a reason [0.82ms]
+(pass) client support runtime results > the CLI check refuses a bad results file and names the problem [1676.63ms]
+
+tests\ci-workflows\docs-readme-memory-inventory.test.ts:
+(pass) documented memory inventory counts match the registered rosters > the rosters are the only source of the numbers under test [0.06ms]
+(pass) documented memory inventory counts match the registered rosters > en README states 14 retained stores [0.30ms]
+(pass) documented memory inventory counts match the registered rosters > en README states 4 observed buffers [0.17ms]
+(pass) documented memory inventory counts match the registered rosters > en README states 31 state-store registrations [0.14ms]
+(pass) documented memory inventory counts match the registered rosters > en README states no total it cannot derive [0.29ms]
+(pass) documented memory inventory counts match the registered rosters > fr README states 14 retained stores [0.16ms]
+(pass) documented memory inventory counts match the registered rosters > fr README states 4 observed buffers [0.13ms]
+(pass) documented memory inventory counts match the registered rosters > fr README states 31 state-store registrations [0.12ms]
+(pass) documented memory inventory counts match the registered rosters > fr README states no total it cannot derive [0.15ms]
+(pass) documented memory inventory counts match the registered rosters > ja README states 14 retained stores [0.14ms]
+(pass) documented memory inventory counts match the registered rosters > ja README states 4 observed buffers [0.14ms]
+(pass) documented memory inventory counts match the registered rosters > ja README states 31 state-store registrations [0.15ms]
+(pass) documented memory inventory counts match the registered rosters > ja README states no total it cannot derive [0.14ms]
+(pass) documented memory inventory counts match the registered rosters > ko README states 14 retained stores [0.12ms]
+(pass) documented memory inventory counts match the registered rosters > ko README states 4 observed buffers [0.12ms]
+(pass) documented memory inventory counts match the registered rosters > ko README states 31 state-store registrations [0.11ms]
+(pass) documented memory inventory counts match the registered rosters > ko README states no total it cannot derive [0.13ms]
+(pass) documented memory inventory counts match the registered rosters > ru README states 14 retained stores [0.18ms]
+(pass) documented memory inventory counts match the registered rosters > ru README states 4 observed buffers [0.19ms]
+(pass) documented memory inventory counts match the registered rosters > ru README states 31 state-store registrations [0.21ms]
+(pass) documented memory inventory counts match the registered rosters > ru README states no total it cannot derive [0.13ms]
+(pass) documented memory inventory counts match the registered rosters > tr README states 14 retained stores [0.14ms]
+(pass) documented memory inventory counts match the registered rosters > tr README states 4 observed buffers [0.13ms]
+(pass) documented memory inventory counts match the registered rosters > tr README states 31 state-store registrations [0.14ms]
+(pass) documented memory inventory counts match the registered rosters > tr README states no total it cannot derive [0.12ms]
+(pass) documented memory inventory counts match the registered rosters > zh-CN README states 14 retained stores [0.12ms]
+(pass) documented memory inventory counts match the registered rosters > zh-CN README states 4 observed buffers [0.11ms]
+(pass) documented memory inventory counts match the registered rosters > zh-CN README states 31 state-store registrations [0.11ms]
+(pass) documented memory inventory counts match the registered rosters > zh-CN README states no total it cannot derive [0.11ms]
+(pass) documented memory inventory counts match the registered rosters > zh-TW README states 14 retained stores [0.13ms]
+(pass) documented memory inventory counts match the registered rosters > zh-TW README states 4 observed buffers [0.12ms]
+(pass) documented memory inventory counts match the registered rosters > zh-TW README states 31 state-store registrations [0.11ms]
+(pass) documented memory inventory counts match the registered rosters > zh-TW README states no total it cannot derive [0.12ms]
+
+tests\ci-workflows\dsh-path-contract.test.ts:
+(pass) DSH 0.1.0-rc.6 path contract > blank or absent DSH_HOME falls back to ~/.dsh [0.15ms]
+(pass) DSH 0.1.0-rc.6 path contract > supports exact ~, slash and backslash home forms [0.03ms]
+(pass) DSH 0.1.0-rc.6 path contract > preserves a nonblank raw absolute value instead of trimming it [0.15ms]
+(pass) DSH 0.1.0-rc.6 path contract > refuses other relative selectors [0.06ms]
+(pass) DSH 0.1.0-rc.6 path contract > export and integration registries resolve the same settings file and detect directory [0.11ms]
+(pass) DSH 0.1.0-rc.6 path contract > checked-in fixture is a secret-free parseable rc.6 settings namespace [3.29ms]
+
+tests\ci-workflows\dsh-rc6-compat-script.test.ts:
+(pass) optional DSH rc.6 compatibility E2E helpers > pins the exact developer-preview version [0.08ms]
+(pass) optional DSH rc.6 compatibility E2E helpers > renders only a loopback OpenCodex endpoint into the checked-in template [0.11ms]
+(pass) optional DSH rc.6 compatibility E2E helpers > isolates DSH state and strips proxy and provider credentials [0.19ms]
+(pass) optional DSH rc.6 compatibility E2E helpers > requires two distinct parallel tool outputs correlated by call id [0.14ms]
+
+tests\ci-workflows\dsh-writer-lock.test.ts:
+(pass) DSH sibling writer lock > uses wx, 0600, the PID line, bounded backoff, and releases only its own lock [1.87ms]
+(pass) DSH sibling writer lock > times out as typed busy without deleting a contender [1.51ms]
+(pass) DSH sibling writer lock > non-EEXIST acquisition and release failures are typed internal errors [1.47ms]
+(pass) DSH sibling writer lock > releases after the protected operation throws [1.32ms]
+(pass) DSH sibling writer lock > keeps the protected operation error when release also fails [1.31ms]
+(pass) DSH coordinated mutations > missing home apply/disable do not create a directory or lock [4.73ms]
+(pass) DSH coordinated mutations > an installed home with no settings locks, creates owner-only settings, and locks an apply no-op [183.16ms]
+(pass) DSH coordinated mutations > a real settings.yaml.lock contender becomes the typed coordinated busy error [6.15ms]
+(pass) DSH coordinated mutations > freezes environment and path before awaiting lock acquisition [159.03ms]
+(pass) DSH coordinated mutations > restore refuses a missing parent without recreating or locking it [204.10ms]
+
+tests\ci-workflows\fixture-teardown-helper.test.ts:
+(pass) fixture removal ownership > held ACL flight keeps its root until drain settles [0.72ms]
+(pass) fixture removal ownership > orders producers, both flights, history, both ACL drains and both removals [0.12ms]
+(pass) fixture removal ownership > history owner closes before any root is removed [0.11ms]
+(pass) fixture removal ownership > failed config drain preserves its root, removes the other and restores environment [0.15ms]
+(pass) fixture removal ownership > removal failure still attempts later roots, restores and rethrows [0.17ms]
+(pass) fixture removal ownership > producer failure prevents all removals and restores environment [0.12ms]
+(pass) fixture removal ownership > history failure prevents all removals but still drains every ACL root [0.10ms]
+(pass) fixture removal ownership > default config step only settles flights, before the separate ACL step [0.01ms]
+(pass) fixture removal ownership > ACL failure blocks only its root and retains the first earlier failure [0.14ms]
+(pass) fixture removal ownership > ACL failure alone preserves its root and removes the other drained root [0.12ms]
+(pass) fixture removal ownership > per-root removal override runs after drains [0.10ms]
+(pass) fixture removal ownership > environment restore failure cannot mask an earlier drain failure [0.10ms]
+(pass) fixture removal ownership > an owner still open under a root keeps only that root and names it [0.11ms]
+(pass) fixture removal ownership > the default lock probe sees a held owner below the root until its release closes [5.35ms]
+(pass) fixture removal ownership > an owner paused mid-acquisition keeps its root until preparation and release finish [3.26ms]
+
+tests\ci-workflows\package-tree-fenced-restart.test.ts:
+(pass) package-tree fence, real order (#5496) > replace, fence, automatic restart, manual restart joins it, exactly one handoff [2752.76ms]
+(pass) package-tree fence, real order (#5496) > a service child that lost its service home keeps the fence and never hands off [2593.54ms]
+(pass) installed version is reported only for a settled replacement (#5496) > undefined while the replacement is new or still moving, defined once it held for the debounce [1337.17ms]
+
+tests\ci-workflows\package-tree-integrity.test.ts:
+(pass) package tree integrity > source checkouts stay live when package.json changes during development [2.77ms]
+(pass) package tree integrity > npm installs still refuse a replaced package tree [2.54ms]
+(pass) package tree integrity > bun installs still refuse a replaced package tree [2.05ms]
+(pass) package tree integrity > mise installs still refuse a replaced package tree [2.20ms]
+(pass) package tree integrity > detects replacement even when the package version and file size are unchanged [2.20ms]
+(pass) package tree integrity > an ok reading is reused briefly, and a bad one is never cached [2.23ms]
+(pass) package tree integrity > fails closed when the package manifest disappears [2.28ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > fires once from its timer without waiting for another request [2.55ms]
+Package tree replaced; waiting for its Bun runtime to finish installing before restarting
+(pass) package tree integrity > automatic restart on a replaced package tree > waits for the runtime a restart would spawn, then debounces afresh [2.40ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > the installed guard reads process.execPath as the runtime [531.76ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > retries when restart acceptance throws [3.86ms]
+Package tree replaced; waiting for its Bun runtime to finish installing before restarting
+(pass) package tree integrity > automatic restart on a replaced package tree > a runtime that stops being ready withdraws a settled replacement until it settles again [3.20ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > baseline recovery cancels the old timer and starts a fresh debounce [3.23ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > dispose cancels the pending restart timer and blocks late callbacks [3.01ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > a zero restart delay defers verification past the current frame [2.87ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > a zero-delay verify does not fire after dispose or a baseline recovery [2.82ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > an unreadable manifest must become readable before a fresh debounce [2.93ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > a second replacement identity receives its own full debounce [3.12ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > a synchronous schedule implementation still notifies exactly once [2.98ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > disposing before the queued verify runs prevents notification [2.92ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > a throwing onReplaced still retries under a synchronous schedule [2.93ms]
+(pass) package tree integrity > automatic restart on a replaced package tree > source checkouts never auto-restart [2.84ms]
+(pass) package tree integrity > a permission change is not a replacement [3.97ms]
+(pass) package tree integrity > an in-place rewrite of the same byte length is still a replacement [5.56ms]
+(pass) package tree integrity > an atomic install is still a replacement [4.14ms]
+(pass) package tree integrity > restart-required server > degrades health and refuses Responses requests with a restart-required error [1404.18ms]
+(pass) package tree integrity > restart-required server > refuses the Ollama-compatible routes like /v1/* inference [1456.45ms]
+(pass) package tree integrity > sustained package replacement > the default server guard accepts a restart after a sustained replacement [2540.25ms]
+(pass) package tree integrity > pending package restart shutdown > server.stop() disarms a pending package-tree restart callback [2494.66ms]
+
+tests\ci-workflows\package-tree-restart-ownership.test.ts:
+(pass) automatic package-tree restart ownership > server disposal vetoes its accepted callback before drain or handoff [0.63ms]
+(pass) automatic package-tree restart ownership > an explicit shutdown during the automatic drain vetoes the handoff [0.58ms]
+(pass) automatic package-tree restart ownership > an explicit shutdown does not change a manually requested restart [0.26ms]
+(pass) automatic package-tree restart ownership > disposing the guard does not veto a restart accepted by another caller [0.33ms]
+(pass) automatic package-tree restart ownership > foreign service home at admission keeps the 503 fence without accepting restart [0.19ms]
+(pass) automatic package-tree restart ownership > service home changing after acceptance vetoes drain and handoff [0.29ms]
+(pass) automatic package-tree restart ownership > service home changing during drain vetoes the terminal handoff [0.26ms]
+
+tests\ci-workflows\package-tree-retarget.test.ts:
+(pass) package-tree retarget watch > an idle service restarts once the launcher's new target has held for the settle interval [0.32ms]
+(pass) package-tree retarget watch > a launcher that keeps resolving to the running package never restarts [0.06ms]
+(pass) package-tree retarget watch > retargeting again during the wait restarts the full settle interval [0.07ms]
+(pass) package-tree retarget watch > a manifest change inside the same target root restarts the wait [0.05ms]
+(pass) package-tree retarget watch > reverting to the running package during the wait cancels the restart [0.04ms]
+(pass) package-tree retarget watch > a target that briefly cannot be resolved needs a fresh full interval after it recovers [0.03ms]
+(pass) package-tree retarget watch > a refused restart is asked again only after another full interval [0.04ms]
+(pass) package-tree retarget watch > the replacement process booted from the new target does not restart again [0.01ms]
+(pass) package-tree retarget watch > settledVersion reports the settled target only while it still resolves identically [0.03ms]
+(pass) package-tree retarget watch > dispose stops polling and invalidates a pending restart [0.04ms]
+(pass) server package-tree guard with a launcher plan > a mise upgrade restarts through the shared handler without fencing requests [0.28ms]
+(pass) server package-tree guard with a launcher plan > a busy restart admission is asked again instead of stopping the watch [0.08ms]
+(pass) server package-tree guard with a launcher plan > a service child that no longer owns its home refuses and keeps waiting [0.03ms]
+(pass) server package-tree guard with a launcher plan > null plan keeps the fence-only behavior [0.06ms]
+
+tests\ci-workflows\skill-ocx-workflows.test.ts:
+(pass) documented model and routing workflows > the extracted code values cover the independent handler fixtures [0.23ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx models preset show --provider anthropic --json [4.02ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx models selected anthropic --json [2.44ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx models preset apply anthropic --json [2.20ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx models selected anthropic --json [2.12ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx models new-policy --provider anthropic --json [2.56ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx models new-policy off --provider anthropic --json [2.48ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx models new-policy --provider anthropic --json [2.37ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx models new-arrivals --json [2.66ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx route policy list --json [2.83ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx route policy show reliable --json [2.54ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx route policy dry-run reliable --model-context 128000 --tools --image --structured-output --json [2.86ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx route policy update --help [3.67ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx route policy list --json [2.34ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx route policy show reliable --json > profile.observed.json [2.42ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx route policy update reliable --file profile.next.json --expected-revision '<exact-revision-from-observed-show>' --json [11.31ms]
+(pass) documented model and routing workflows > skills/ocx/references/03_recipes.md: ocx route policy show reliable --json [2.62ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/providers-accounts.md: ocx models preset show --provider anthropic --json [2.54ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/providers-accounts.md: ocx models preset apply anthropic --json [2.15ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/providers-accounts.md: ocx models selected anthropic --json [2.24ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/providers-accounts.md: ocx models new-policy --provider anthropic --json [2.29ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/providers-accounts.md: ocx models new-policy off --provider anthropic --json [2.21ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/providers-accounts.md: ocx models new-policy --provider anthropic --json [1.88ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/providers-accounts.md: ocx models new-arrivals --json [1.97ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/agents.md: ocx route policy list --json [2.21ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/agents.md: ocx route policy show reliable --json [1.88ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/agents.md: ocx route policy dry-run reliable --model-context 128000 --tools --image --structured-output --json [1.97ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/agents.md: ocx route policy update --help [2.58ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/agents.md: ocx route policy show reliable --json > profile.observed.json [2.32ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/agents.md: ocx route policy update reliable --file profile.next.json --expected-revision '<exact-revision-from-observed-show>' --json [3.43ms]
+(pass) documented model and routing workflows > docs-site/src/content/docs/reference/cli/agents.md: ocx route policy show reliable --json [2.28ms]
+(pass) documented model and routing workflows > bad nested operand/flag grammar is rejected before transport [7.91ms]
+(pass) documented model and routing workflows > JSON output requests preserve prose stderr and conflict exit semantics [3.07ms]
+(pass) routing evaluation recipes disclose enabled automation activation beside the example [0.48ms]
+
+tests\claude-integration\anthropic2-native-routing.test.ts:
+(pass) B managed native Messages and caller-forward exclusion > raw B uses B bearer and verified UUID with a caller Anthropic bearer present [2265.71ms]
+(pass) B managed native Messages and caller-forward exclusion > provider-alias B uses B bearer and verified UUID with a caller Anthropic bearer present [1981.34ms]
+(pass) B managed native Messages and caller-forward exclusion > model-map B uses B bearer and verified UUID with a caller Anthropic bearer present [1956.17ms]
+(pass) B managed native Messages and caller-forward exclusion > H03 intentional A binding for requested B is caught by the shared ledger [1737.00ms]
+(pass) B managed native Messages and caller-forward exclusion > marked B first-party endpoint override sends by the same URL policy as A [2148.77ms]
+(pass) B managed native Messages and caller-forward exclusion > unmarked custom B key gateway keeps its own native key-auth policy [747.01ms]
+(pass) B managed native Messages and caller-forward exclusion > bare Claude retains caller-forward to A and planner's credential-required result [1773.05ms]
+(pass) B managed native Messages and caller-forward exclusion > native preference false has identical A/B bridge policy [1834.00ms]
+(pass) B managed native Messages and caller-forward exclusion > native preference null has identical A/B bridge policy [1876.86ms]
+(pass) B managed native Messages and caller-forward exclusion > native preference "true" has identical A/B bridge policy [1885.55ms]
+(pass) B managed native Messages and caller-forward exclusion > no-B-account B cannot use A or caller credentials [1277.12ms]
+(pass) B managed native Messages and caller-forward exclusion > unmarked B cannot use A or caller credentials [1849.73ms]
+(pass) B managed native Messages and caller-forward exclusion > disabled B cannot use A or caller credentials [1882.63ms]
+(pass) B managed native Messages and caller-forward exclusion > orphan B cannot use A or caller credentials [1798.88ms]
+(pass) pure native settings, count and preview parity > exact custom ANTHROPIC2 precedes B aliases and keeps caller-forward preview [551.86ms]
+(pass) pure native settings, count and preview parity > exact custom CLAUDE-POOL-B precedes B aliases and keeps caller-forward preview [566.97ms]
+(pass) pure native settings, count and preview parity > exact custom anthropic-custom precedes B aliases and keeps caller-forward preview [581.32ms]
+(pass) pure native settings, count and preview parity > orphan lowercase B does not reserve a configured uppercase custom provider [626.32ms]
+(pass) pure native settings, count and preview parity > B pool never inherits A native preference and revision tracks ownership/raw policy [616.60ms]
+(pass) pure native settings, count and preview parity > count retains A quorum contract; A/B count and preview do not select/refresh [1696.90ms]
+(pass) pure native settings, count and preview parity > first-party wire eligibility is identical for marked overrides and A [614.89ms]
+(pass) binding and physical dispatch await fences > manual B reselection during pacing rebuilds the whole request with B's token/UUID [2146.76ms]
+(pass) binding and physical dispatch await fences > marker replacement across admission await refuses before token resolution [1748.63ms]
+(pass) binding and physical dispatch await fences > disabled replacement across admission await refuses before token resolution [1708.15ms]
+(pass) binding and physical dispatch await fences > target replacement across admission await refuses before token resolution [1757.92ms]
+(pass) binding and physical dispatch await fences > a provider UUID replacement invalidates only that instance's binding [1958.14ms]
+(pass) binding and physical dispatch await fences > A binding follows routed adapter/auth normalization while B keeps its raw row shape [1686.97ms]
+(pass) binding and physical dispatch await fences > a legacy primary adapter field still reaches one physical A send [1913.99ms]
+(pass) binding and physical dispatch await fences > marker mutation while pacing prevents physical send [1748.83ms]
+(pass) binding and physical dispatch await fences > target mutation while pacing prevents physical send [1574.28ms]
+(pass) binding and physical dispatch await fences > native-off mutation while pacing prevents physical send [1675.41ms]
+[anthropic2-pool] route:#1 no eligible replacement; returning 429
+(pass) native recovery stays in the sending instance > B model-route fallback=false widens only inside B [2053.31ms]
+[anthropic2-pool] route:#1 429 on pf41d39; failing over to p5edd84
+(pass) native recovery stays in the sending instance > B model-route fallback=true widens only inside B [2067.38ms]
+(pass) native recovery stays in the sending instance > B family lease denial precedes send accounting and leaves A untouched [1776.82ms]
+[anthropic2-pool] account unavailable (403); failing over
+(pass) native recovery stays in the sending instance > pool-off B 403 recovery changes only B and rebuilds verified metadata [2269.34ms]
+[anthropic2-pool] 429 on pf41d39; failing over to p5edd84
+(pass) native recovery stays in the sending instance > pool-off B 429 recovery changes only B and rebuilds verified metadata [2173.64ms]
+(pass) native recovery stays in the sending instance > a request error after the first output cannot trigger account replay [2064.83ms]
+(pass) native physical response incarnation ownership > anthropic: pending 200, prior reservation=false, identical re-add cannot own the old response [2441.03ms]
+(pass) native physical response incarnation ownership > anthropic: pending 403, prior reservation=false, identical re-add cannot own the old response [2266.57ms]
+(pass) native physical response incarnation ownership > anthropic: pending 429, prior reservation=false, identical re-add cannot own the old response [2144.15ms]
+(pass) native physical response incarnation ownership > anthropic: pending 200, prior reservation=true, identical re-add cannot own the old response [2179.26ms]
+(pass) native physical response incarnation ownership > anthropic: pending 403, prior reservation=true, identical re-add cannot own the old response [2098.21ms]
+(pass) native physical response incarnation ownership > anthropic: pending 429, prior reservation=true, identical re-add cannot own the old response [2058.63ms]
+(pass) native physical response incarnation ownership > anthropic2: pending 200, prior reservation=false, identical re-add cannot own the old response [2179.10ms]
+(pass) native physical response incarnation ownership > anthropic2: pending 403, prior reservation=false, identical re-add cannot own the old response [2099.77ms]
+(pass) native physical response incarnation ownership > anthropic2: pending 429, prior reservation=false, identical re-add cannot own the old response [2242.65ms]
+(pass) native physical response incarnation ownership > anthropic2: pending 200, prior reservation=true, identical re-add cannot own the old response [2040.50ms]
+(pass) native physical response incarnation ownership > anthropic2: pending 403, prior reservation=true, identical re-add cannot own the old response [2187.05ms]
+(pass) native physical response incarnation ownership > anthropic2: pending 429, prior reservation=true, identical re-add cannot own the old response [2303.48ms]
+(pass) A/B native wire features > translated opaque replay is retained for one serving identity and omitted after a pool switch [2054.42ms]
+(pass) A/B native wire features > images have A/B parity on both native and translated lanes [2392.44ms]
+(pass) A/B native wire features > thinking signatures and redacted blocks have A/B parity on both native and translated lanes [2233.77ms]
+(pass) A/B native wire features > tools, parallel uses and tool results have A/B parity on both native and translated lanes [2255.05ms]
+(pass) A/B native wire features > cache markers and TTL have A/B parity on both native and translated lanes [2378.16ms]
+
+tests\claude-integration\claude-529-mapping.test.ts:
+[upstream-retry] transient 502 (localhost:63472) — retrying (2/3)
+[upstream-retry] transient 502 (localhost:63472) — retrying (3/3)
+(pass) transient upstream 502 -> client 529 overloaded_error; retry fired; log keeps upstream 502 [5163.64ms]
+[upstream-retry] transient 502 (localhost:65144) — retrying (2/3)
+[upstream-retry] transient 502 (localhost:65144) — retrying (3/3)
+(pass) transient 502 without Retry-After -> fallback Retry-After 2 on the 529 response [4778.65ms]
+(pass) non-transient upstream 400 stays 400 invalid_request_error; no retry [3899.00ms]
+
+tests\claude-integration\claude-agent-startup-sync.test.ts:
+(pass) Claude agent roster proxy-start synchronization (#2200) > a sibling skips both roster injection and OFF pruning [0.41ms]
+(pass) Claude agent roster proxy-start synchronization (#2200) > keeps readiness pending until the fourth registry callback settles [0.28ms]
+(pass) Claude agent roster proxy-start synchronization (#2200) > registry initialization cannot reverse a failed Codex readiness verdict [0.12ms]
+(pass) Claude agent roster proxy-start synchronization (#2200) > a best-effort registry callback can handle failure before readiness opens [0.11ms]
+(pass) Claude agent roster proxy-start synchronization (#2200) > an unhandled registry callback error remains visible and cannot mark ready [0.10ms]
+(pass) Claude agent roster proxy-start synchronization (#2200) > keeps readiness pending until the best-effort roster fence settles [0.09ms]
+(pass) Claude agent roster proxy-start synchronization (#2200) > uses the live proxy context-window map for an enabled roster [0.12ms]
+(pass) Claude agent roster proxy-start synchronization (#2200) > disabled integration prunes owned definitions without touching discovery [0.06ms]
+(pass) Claude agent roster proxy-start synchronization (#2200) > catalog failure still runs the real injector with an unmarked roster [5.54ms]
+(pass) Claude agent roster proxy-start synchronization (#2200) > write failures are warned and never fail proxy startup [0.82ms]
+
+tests\claude-integration\claude-agents-inject-client.test.ts:
+(pass) a hub-sourced roster drives the generated defs > the hub's models become ocx-*.md even when their provider is absent locally [1.64ms]
+(pass) a hub-sourced roster drives the generated defs > hub roster values cannot inject instructions into generated agent prompts [3.78ms]
+(pass) a hub-sourced roster drives the generated defs > the local roster is ignored entirely when a hub roster is supplied [0.95ms]
+(pass) a hub-sourced roster drives the generated defs > an empty hub roster is honoured as empty, not read as 'no answer' [1.01ms]
+(pass) a hub-sourced roster drives the generated defs > no override still means local config, byte for byte [1.17ms]
+(pass) a hub-sourced roster drives the generated defs > the picker's five-row cap still applies to a longer hub roster [1.25ms]
+(pass) injectClaudeAgentDefs on a client > writes the hub roster and keeps the ownership marker [3.67ms]
+(pass) injectClaudeAgentDefs on a client > a user-authored ocx-* file without the marker is never overwritten or pruned [3.67ms]
+(pass) injectClaudeAgentDefs on a client > injectAgents false still prunes owned files, roster override notwithstanding [3.71ms]
+(pass) resolveHubRosterForClaude > a live read hands back the hub's roster with no warning [0.56ms]
+(pass) resolveHubRosterForClaude > an unreadable hub falls back to local config but SAYS so [0.15ms]
+(pass) resolveHubRosterForClaude > a cached roster is used and labelled as cached [0.14ms]
+(pass) resolveHubRosterForClaude > a thrown resolver never takes the launch down with it [0.11ms]
+(pass) the proxy-startup roster sync > uses the cached hub roster on a client and makes no network call [3.53ms]
+(pass) the proxy-startup roster sync > a hub machine still writes nothing [0.19ms]
+
+tests\claude-integration\claude-agents-inject.test.ts:
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > roster + pinned self mark only authoritative 1M windows; name collision suffix [3.44ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > generated profiles retain catalog-derived 1M markers for Claude 4.6 and 4.7 [87.01ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > generated profiles preserve genuine routed [1m] ids and honor provider caps [11.36ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > marker case is honored and unknown windows keep the selector as-was [2.92ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > placeholder guidance recommends haiku, never sonnet (issue #252) [2.07ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > unset roster seeds the defaults; explicit [] respected; no default model -> no self [1.41ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > rendered frontmatter quotes every scalar and parses back [3.35ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > configured Claude Code subagent effort is rendered for roster and self definitions [24.25ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > regeneration removes a previously configured effort when the option is cleared [5.11ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > generated routed agents refuse the default blocked skill before its bundle expands [4.79ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > generated blocked-skill guard mirrors custom names and honors explicit opt-out [9.31ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > blocked-skill names cannot inject Markdown structure into generated agents [3.00ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > native Claude self keeps skills; a modelMap-claimed Claude self gets the routed guard [7.34ms]
+(pass) buildClaudeAgentDefs (devlog 070 + audit 071) > direct provider self and disabled native passthrough keep the routed guard [8.00ms]
+(pass) syncClaudeAgentDefs ownership contract (audit 071 #2/#3) > empty sync leaves an absent agents directory absent [1.63ms]
+(pass) syncClaudeAgentDefs ownership contract (audit 071 #2/#3) > writes, overwrites, and prunes ONLY marker-verified ocx files [7.58ms]
+(pass) syncClaudeAgentDefs ownership contract (audit 071 #2/#3) > symlinks are never followed or pruned [2.93ms]
+(pass) syncClaudeAgentDefs ownership contract (audit 071 #2/#3) > injectClaudeAgentDefs prunes owned files when disabled (audit 071 #3) [10.16ms]
+(pass) stale Desktop selectors retain the roster and configured blocked skills [3.31ms]
+(pass) unexpected resolver errors still propagate from roster construction [2.00ms]
+
+tests\claude-integration\claude-alias.test.ts:
+(pass) claude discovery aliases > round-trips every realistic provider/model shape [0.16ms]
+(pass) claude discovery aliases > native slugs use the pseudo-provider and resolve to bare ids [0.04ms]
+(pass) claude discovery aliases > native slugs with literal '~' mint v2 and round-trip via ~t [0.11ms]
+(pass) claude discovery aliases > non-representable shapes are skipped, not mangled [0.03ms]
+(pass) claude discovery aliases > model ids with '/' mint v2 (~s) and round-trip (OpenRouter-shaped) [0.05ms]
+(pass) claude discovery aliases > literal '~' mints v2 (~t); v1 bare '~' and literal ~s/~t still resolve [0.04ms]
+(pass) claude discovery aliases > v2 reserved escapes round-trip / and ~ without colliding with v1 literals [0.06ms]
+(pass) claude discovery aliases > resolveAlias rejects non-aliases and malformed ids [0.04ms]
+(pass) claude discovery aliases > no collisions across a registry-shaped corpus [0.18ms]
+(pass) claude discovery aliases > inbound resolution prefers alias over modelMap, before date-strip [0.04ms]
+(pass) claudeCodeAlias — readable-or-hash shared helper (devlog 050 / audit 051 #2) > readable form when representable; both forms decode to the same route [0.08ms]
+(pass) claudeCodeAlias — readable-or-hash shared helper (devlog 050 / audit 051 #2) > anthropic canonical ids pass through unchanged (native passthrough preserved) [0.01ms]
+(pass) claudeCodeAlias — readable-or-hash shared helper (devlog 050 / audit 051 #2) > slash-containing model ids stay readable under v2 (no desktop-3p hash) [0.02ms]
+(pass) claudeCodeAlias — readable-or-hash shared helper (devlog 050 / audit 051 #2) > unrepresentable shapes fall back to the desktop-3p hash — model never disappears [0.09ms]
+
+tests\claude-integration\claude-auth-mode.test.ts:
+(pass) auto resolves subscription when auth is present and proxy when absent [0.35ms]
+(pass) auto with unknown detection keeps subscription behaviour [0.03ms]
+(pass) a manual choice survives every auth flip unchanged [0.09ms]
+(pass) intent reports auto for an unset key [0.04ms]
+(pass) auto-absent injects the marker; auto-present does not [0.88ms]
+(pass) a stale marker is stripped when the mode resolves subscription [0.09ms]
+(pass) a whitespace-wrapped stale marker cannot follow an external destination [0.07ms]
+(pass) a stale marker is re-established when the mode still resolves proxy [0.06ms]
+(pass) proxy mode replaces a stale marker with the admission key [0.11ms]
+(pass) auto-subscription emits no host-managed assertion (#253 class) [0.05ms]
+(pass) auto-subscription keeps configured admission keys out of Claude auth [0.06ms]
+(pass) auto-proxy uses a configured admission key when Claude auth is absent [0.08ms]
+(pass) auto-absent emits both the marker and the host assertion [0.04ms]
+(pass) an exported ANTHROPIC_API_KEY keeps the token slot untouched [0.08ms]
+(pass) manual proxy injects the marker even when auth is present [0.05ms]
+(pass) manual proxy mode does not pair a marker with a user API key [0.07ms]
+(pass) manual subscription withholds the marker even when auth is absent [0.04ms]
+(pass) auto mode drops an Anthropic key that only Bun's dotenv introduced [0.04ms]
+(pass) a shell-exported Anthropic key survives the dotenv strip [0.04ms]
+(pass) explicit subscription mode also drops a dotenv-only credential [0.06ms]
+(pass) the configured admission key survives the dotenv strip [0.06ms]
+(pass) without trusted launcher context an ambient key is removed [0.05ms]
+(pass) a dotenv-only base URL cannot receive subscription OAuth [0.06ms]
+(pass) a proof-bound parent base URL remains supported [0.06ms]
+(pass) a configured admission key is never injected into an external gateway [0.07ms]
+(pass) an HTTPS loopback URL is not treated as the local HTTP proxy [0.07ms]
+(pass) a same-port IPv6 loopback URL receives the configured admission key [0.10ms]
+⚠ Replacing stale opencodex ANTHROPIC_BASE_URL http://[::1]:9999 with http://127.0.0.1:10100.
+(pass) a stale IPv6 loopback URL is moved to the running proxy port [0.11ms]
+⚠ Replacing stale opencodex ANTHROPIC_BASE_URL http://localhost with http://127.0.0.1:10100.
+(pass) a default-port loopback URL is moved to the running proxy port [0.08ms]
+(pass) a stale loopback warning omits URL credentials, paths, and queries [1.41ms]
+(pass) an inherited admission key is stripped when the destination is external [0.22ms]
+(pass) a stale generated admission key is still recognized after key rotation [0.12ms]
+(pass) a proxy admission secret is never preserved in the API-key slot [0.14ms]
+(pass) an external gateway keeps a user-owned auth token [0.10ms]
+(pass) a user API key outranks an inherited local admission token [0.12ms]
+(pass) the legacy dotenv marker cannot forge parent provenance [0.12ms]
+(pass) a stripped dotenv key lets detection fall through to the proxy marker [0.14ms]
+(pass) auto-resolved proxy emits the host-managed assertion with its token [0.11ms]
+⚠ Claude 인증을 확인하지 못했습니다 — 구독 방식으로 진행합니다. GUI에서 인증 모드를 직접 지정하면 이 판단을 덮어쓸 수 있습니다.
+(pass) the host-managed assertion never travels without a host token [0.26ms]
+(pass) a leftover settings.json env block cannot hijack an auto-resolved proxy launch [0.11ms]
+(pass) an admission-key launch is defended the same way [0.05ms]
+(pass) subscription mode has no hijack defence, by design [0.05ms]
+(pass) a no-context ambient key cannot ride a settings-hijacked destination [0.05ms]
+
+tests\claude-integration\claude-bridge-pool-dispatch.test.ts:
+(pass) pool binds multiple turns and separates sessions while preserving the native session [1149.28ms]
+(pass) a synthesized identity with a recorded parent follows the parent's account [1060.93ms]
+(pass) remote principals with identical metadata pin separately and keep the dev wire [1074.82ms]
+(pass) remote principals sending the same session alias do not share a pool binding [1146.64ms]
+(pass) an alias equal to another principal's derived identity does not join that binding [1209.14ms]
+(pass) a complete caller pair built from public inputs cannot address a synthesized identity [1158.00ms]
+(pass) caller session-id aliases and complete pairs reach the wire exactly as sent [1102.50ms]
+(pass) spawn markers do not synthesize thread identity [1130.28ms]
+(pass) API-key Responses routes do not receive pool identity [903.45ms]
+(pass) stored pool 401 refresh keeps the dev wire for local identity on retry [1396.99ms]
+(pass) stored pool 401 refresh keeps the dev wire for remote identity on retry [1286.24ms]
+(pass) stored pool 401 refresh keeps the dev wire for header identity on retry [1304.38ms]
+[codex] native main refresh: ok status=200 code=none
+(pass) main pool 401 refresh keeps the dev wire for local identity on retry [1280.04ms]
+[codex] native main refresh: ok status=200 code=none
+(pass) main pool 401 refresh keeps the dev wire for remote identity on retry [1158.95ms]
+[codex] native main refresh: ok status=200 code=none
+(pass) main pool 401 refresh keeps the dev wire for header identity on retry [1053.78ms]
+(pass) alternate-account failover binds local-metadata under the initial selection key [979.18ms]
+(pass) alternate-account failover binds remote-alias under the initial selection key [997.03ms]
+
+tests\claude-integration\claude-bridge-pool-session.test.ts:
+(pass) admission, spawn and explicit lineage gate synthesis [0.56ms]
+(pass) aliases take precedence and conflicts or invalid values block derivation [0.15ms]
+(pass) derived metadata and header identities are keyed per admission scope [0.11ms]
+(pass) caller aliases are keyed to their principal and never computable from public inputs [0.21ms]
+(pass) completion agrees with final credential-domain headers for both Codex routes [1.08ms]
+
+tests\claude-integration\claude-cli-picker-surface.test.ts:
+(pass) a registry alias from a CLI User-Agent is the Code surface; a Desktop entrypoint stays Desktop [3503.71ms]
+
+tests\claude-integration\claude-cli-picker.test.ts:
+(pass) only GET on the CLI catalog paths is a catalog request [0.26ms]
+(pass) the cc catalog follows the CLI client and CLI intent; the bootstrap follows CLI intent alone [0.06ms]
+(pass) model_selector rows land on cc only, without the template's notices or version gates [0.62ms]
+(pass) bootstrap rows join additional_model_options, created when absent, never over a foreign shape [0.20ms]
+(pass) Desktop picker injection without options keeps its surfaces and row shape [0.09ms]
+(pass) CLI rows carry decodable registry aliases, labels and route descriptions; Anthropic rows are skipped [0.51ms]
+(pass) routes missing from the registry are not advertised, and a rebuilt registry retires stale rows [0.34ms]
+(pass) catalog responses are rewritten only for a 2xx JSON body, with stale validators dropped [1.02ms]
+(pass) the intercept listener merges hook rows into a CLI catalog relayed through the CONNECT proxy [97.83ms]
+(pass) a catalog the route sends to native Anthropic still consults the hook, and a failing hook fails open [12.60ms]
+(pass) the CLI catalog provider gates on eligibility, builds on a cold start, and answers from disk after a restart [2.79ms]
+(pass) a hanging discovery on a cold start relays unchanged within the wait bound [31.86ms]
+(pass) a persisted snapshot waits for the restarted process's registry build before answering [8.64ms]
+(pass) a persisted snapshot from a retired provider setup is rebuilt before answering [2.71ms]
+(pass) one catalog request never waits past a single cold-wait deadline [123.94ms]
+(pass) a failed registry build keeps the last good snapshot instead of persisting an empty one [2.71ms]
+(pass) a persisted row is retired when its alias now decodes to a different route [0.18ms]
+(pass) an oversized catalog is cut off while streaming instead of being buffered [0.43ms]
+(pass) a failed on-demand registry build is not retried until the cooldown passes [1.79ms]
+(pass) invalidating the served catalog drops only the CLI's cc copies and tolerates a missing cache [5.57ms]
+(pass) writing the intercept settings and a successful first-party reconcile drop the cached cc catalog [204.72ms]
+(pass) CLI retained metadata amplification fails open with original response bytes and headers [5.25ms]
+(pass) CLI selector and explicit bootstrap fallback share the final output cap [109.73ms]
+(pass) CLI fallback refuses oversized row fields without changing its parsed input [0.45ms]
+(pass) duplicate CLI surfaces share the row expansion limit [12.38ms]
+
+tests\claude-integration\claude-cli.test.ts:
+(pass) ocx claude proxy liveness > retries the initial liveness probe before spawning a proxy [0.29ms]
+(pass) ocx claude native fallback > owned applied and stale proxy settings bypass the intercept [0.58ms]
+(pass) ocx claude native fallback > foreign inherited proxy preserves env and warns exactly once [0.13ms]
+(pass) ocx claude native fallback > absent, foreign, unreadable and CA-only stale settings leave inherited proxies alone [0.14ms]
+(pass) ocx claude native fallback > routes unless configured or live Claude routing is explicitly disabled [0.06ms]
+(pass) ocx claude native fallback > rejects an invalid connected client before configuration-disabled fallback [0.06ms]
+(pass) ocx claude native fallback > removes proxy-owned state while preserving user credentials and native model ids [0.33ms]
+(pass) ocx claude native fallback > drops the picker label opencodex paired with a stripped alias slot, never a user label (#6926) [0.07ms]
+(pass) ocx claude native fallback > preserves an unrelated gateway, its user credential, and its host-managed guard [0.07ms]
+(pass) ocx claude native fallback > keeps unrelated slash model ids and recognizes configured provider routes [0.30ms]
+(pass) ocx claude native fallback > overrides a persisted proxy model only with a configured native model [0.09ms]
+(pass) ocx claude native fallback > genuine Anthropic IDs are not replaced or stripped when they resemble profile aliases [0.43ms]
+(pass) ocx claude native fallback > an active synthetic binding takes priority over stale genuine-model declarations [0.28ms]
+(pass) ocx claude native fallback > cold native launch sheds profile bindings despite stale Anthropic catalog seeds [0.26ms]
+(pass) ocx claude native fallback > cold native launch keeps a genuine alias-shaped Anthropic defaultModel [0.17ms]
+(pass) ocx claude native fallback > cold native launch sheds a legacy Desktop alias despite a stale Anthropic declaration [0.16ms]
+(pass) ocx claude native fallback > a connected client's window map keeps legacy claude-ocx selectors next to the current ones [1.99ms]
+(pass) ocx claude native fallback > a saved current ocx-claude selector also falls back to the configured native model [0.08ms]
+(pass) ocx claude native fallback > preserves the root opt-in on native fallback [0.10ms]
+(pass) ocx claude native fallback > an absent picker settings file is silent, a corrupt one warns and names the file [2.73ms]
+(pass) ocx claude env assembly > connected target injects only the hub base and client admission token [0.26ms]
+(pass) ocx claude env assembly > a connected target keeps its admission token even when the local env reads as subscription [0.08ms]
+(pass) ocx claude env assembly > user-owned connected destination wins and cannot receive the hub token [0.10ms]
+(pass) ocx claude env assembly > root skip-permissions bypass requires both the explicit flag and uid 0 [0.07ms]
+(pass) ocx claude env assembly > root skip-permissions opt-in marks only that launch as sandboxed [0.16ms]
+(pass) ocx claude env assembly > an explicit user sandbox value wins over the root skip-permissions opt-in [0.15ms]
+(pass) ocx claude env assembly > the unsafe root bypass notice discloses that no OS sandbox was created [0.03ms]
+(pass) ocx claude env assembly > injects base URL, discovery flag and model slots — NO auth token by default (subscription mode) [0.22ms]
+(pass) ocx claude env assembly > an exported tier model wins over the native [1m] default (#5755) [0.17ms]
+(pass) ocx claude env assembly > an alias tier slot this launch writes carries its /model label (#6926) [0.17ms]
+(pass) ocx claude env assembly > configured API key becomes the auth token (admission required) [0.09ms]
+(pass) ocx claude env assembly > subscription mode keeps configured proxy keys out of Claude auth [0.06ms]
+(pass) ocx claude env assembly > subscription mode removes an inherited proxy admission token [0.08ms]
+(pass) ocx claude env assembly > subscription mode leaves the host-managed auth assertion unset [0.06ms]
+(pass) ocx claude env assembly > proxy-owned authentication sets CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST=1 [0.08ms]
+(pass) ocx claude env assembly > a user pre-export of the host-managed flag wins (opt-out preserved) [0.05ms]
+(pass) ocx claude env assembly > model-slot injection is independent of the host-managed flag [0.08ms]
+(pass) ocx claude env assembly > lever env defaults OFF: no effort forcing, no context override (devlog 136 B6) [0.03ms]
+(pass) ocx claude env assembly > opt-in levers: maxContextTokens sets the window without disabling compact [0.04ms]
+(pass) ocx claude env assembly > user-exported lever values win over config levers [0.05ms]
+(pass) ocx claude env assembly > maxContextTokens outside the compact window range never produces a compact lever [0.13ms]
+(pass) ocx claude env assembly > invalid maxContextTokens values inject nothing [0.11ms]
+(pass) ocx claude env assembly > tier slots inject ANTHROPIC_DEFAULT_*_MODEL with [1m] auto-marking (devlog 260712 B2) [0.12ms]
+(pass) ocx claude env assembly > user-exported tier slots win over config tier slots [0.09ms]
+(pass) ocx claude env assembly > no context map -> no [1m] marking (conservative fallback) [0.07ms]
+(pass) ocx claude env assembly > auto-context: a slot wide enough for the compact window gets [1m], and the window rides along (devlog 020) [0.10ms]
+(pass) ocx claude env assembly > auto-context: custom window moves both the env and the marking threshold [0.08ms]
+(pass) ocx claude env assembly > auto-context: user-exported env value drives the predicate (audit 021 #2) [0.14ms]
+(pass) ocx claude env assembly > auto-context off: no env injection, no sub-1M marking [0.06ms]
+(pass) ocx claude env assembly > user-exported env always wins; unset slots stay unset [0.05ms]
+⚠ Replacing stale opencodex ANTHROPIC_BASE_URL http://127.0.0.1:19999 with http://127.0.0.1:10100.
+(pass) ocx claude env assembly > replacing a stale loopback base URL drops the admission credential paired with it [0.10ms]
+⚠ Replacing stale opencodex ANTHROPIC_BASE_URL http://127.0.0.1:19999 with http://127.0.0.1:10100.
+(pass) ocx claude env assembly > a stale admission token is replaced by THIS proxy's key, never carried over [0.15ms]
+⚠ Replacing stale opencodex ANTHROPIC_BASE_URL http://127.0.0.1:19999 with http://127.0.0.1:10100.
+(pass) ocx claude env assembly > a user sk-ant- credential survives the stale base-URL rewrite (native passthrough auth) [0.07ms]
+(pass) ocx claude local inference destination > a ported listener moves the base URL to the listener's port [0.08ms]
+(pass) ocx claude local inference destination > a companion listener keeps the public port, which is the point of that form [0.05ms]
+(pass) ocx claude local inference destination > a plain loopback install is byte-identical to before [0.02ms]
+(pass) ocx claude local inference destination > with the listener OFF the destination is the bind address, not a dead loopback port [0.25ms]
+(pass) ocx claude local inference destination > a wildcard bind keeps loopback but still carries the credential it demands [0.20ms]
+(pass) ocx claude local inference destination > a subscription launch on a bind that demands admission degrades out loud [0.28ms]
+(pass) ocx claude local inference destination > both live local ports are ours; a port nothing answers on is not [0.27ms]
+⚠ Replacing stale opencodex ANTHROPIC_BASE_URL http://127.0.0.1:10100 with http://127.0.0.1:10104.
+(pass) ocx claude local inference destination > on a tailnet bind the public port is NOT ours on loopback, so it is replaced [0.17ms]
+⚠ Replacing stale opencodex ANTHROPIC_BASE_URL http://127.0.0.1:19999 with http://127.0.0.1:10104.
+(pass) ocx claude local inference destination > a genuinely foreign loopback port is replaced with the resolved destination [0.07ms]
+(pass) ocx claude local inference destination > a native launch sheds the managed destination on either local port [0.14ms]
+(pass) ocx claude management discovery destination > a hub with a management ingress is asked on the ingress, not the proxy bind [0.53ms]
+(pass) ocx claude management discovery destination > a hub without an ingress falls back to its own public bind [0.13ms]
+(pass) ocx claude management discovery destination > a loopback or wildcard install keeps asking 127.0.0.1 on the public port [0.28ms]
+(pass) ocx claude Windows launch (devlog 260715_cross_platform_audit/020) > win32 .cmd shim launches through cmd.exe with preserved arg boundaries [0.85ms]
+(pass) ocx claude Windows launch (devlog 260715_cross_platform_audit/020) > POSIX launch is byte-identical to the pre-launcher behavior [0.03ms]
+(pass) ocx claude Windows launch (devlog 260715_cross_platform_audit/020) > exit-9009 hint fires only for win32 non-signal not-found exits [0.05ms]
+(pass) ocx claude tool-search deferral (#4838) > nothing is injected by default, so a routed session keeps today's behaviour [0.11ms]
+(pass) ocx claude tool-search deferral (#4838) > opting in injects Claude Code's own vocabulary verbatim [0.12ms]
+(pass) ocx claude tool-search deferral (#4838) > false, blank and absent inject nothing rather than forcing the variable off [0.10ms]
+(pass) ocx claude tool-search deferral (#4838) > an operator who exported the variable keeps their own value [0.08ms]
+(pass) ocx claude tool-search deferral (#4838) > a native fallback keeps the value: first-party deferral is the user's own knob [0.06ms]
+
+tests\claude-integration\claude-client-refusal-status.test.ts:
+(pass) non-streaming: a declared invalid_request_error answers 400, not a retryable 502 [3693.75ms]
+(pass) non-streaming: a declared authentication_error answers 401, not a retryable 502 [3645.82ms]
+(pass) non-streaming: a declared permission_error answers 403, not a retryable 502 [3500.21ms]
+(pass) non-streaming: a declared not_found_error answers 404, not a retryable 502 [3981.21ms]

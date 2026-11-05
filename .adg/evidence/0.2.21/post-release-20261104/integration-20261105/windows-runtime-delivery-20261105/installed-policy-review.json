@@ -1,0 +1,19 @@
+{
+  "candidate": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\post021-runtime-delivery-20261105\\npm-installed-candidate1\\node_modules\\@bitkyc08\\opencodex",
+  "results": [
+    {
+      "query": "desktop",
+      "result": "passed",
+      "querySha256": "127e0c307a48e6dbe5b7d3bc833874000920b9064529f78f32837a9e53d2be95",
+      "scope": "Installed embedded query; synthetic native identity and CIM rows; no real process control",
+      "stdout": "Owner probe policy passed: owner/SID, sibling boundary, gone, generation change, native path/image mismatch, unknown owner, no partial stdout"
+    },
+    {
+      "query": "appserver",
+      "result": "passed",
+      "querySha256": "fcbf33feb4ee748efeefae41f152813ff2f785bbd1eea6bcacffc6aea2f05bd5",
+      "scope": "Installed embedded query; synthetic native identity and CIM rows; no real process control",
+      "stdout": "App-server probe policy passed: SID, narrow match, gone/reused, generation/path, live unknown, top-level failure, no partial output"
+    }
+  ]
+}

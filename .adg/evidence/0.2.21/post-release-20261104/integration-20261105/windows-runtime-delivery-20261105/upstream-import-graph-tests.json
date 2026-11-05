@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "bun",
+    "test",
+    "--changed=dev"
+  ],
+  "result": "incomplete-budget-timeout",
+  "timeoutSeconds": 240,
+  "passLinesBeforeTimeout": 1032,
+  "failLinesBeforeTimeout": 0,
+  "note": "Affected import graph includes broad proxy suites; stopped only newly spawned test runner at240s. Not a passing suite. Focused Windows policy/restart, compatibility, typecheck, privacy/structure/layout passed separately. Broad completion remains for upstreamCI."
+}
