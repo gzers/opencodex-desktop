@@ -1,0 +1,7 @@
+目标：PID95732，新MSVC候选fa9df83a...7f9c68，session2，创建时间/owner/完整摘要见target.json。
+预检：plan/collector-result.json = plan-validated-no-recording。
+本轮管理员手动执行RUN-ADMIN.ps1。不要修改执行策略；如策略拒绝，保留错误停止。
+看到GPU/DWM trace active后10秒内切回本次隔离OpenCodeX Desktop窗口，保持45秒。不要关闭其它日常实例。
+普通账号的采样器已等待collector-started.json，最多10分钟；仅成功录制且目标前台时才采原30秒静止场景。
+输出capture/gpu-dwm.etl仅本机保留待审阅，collector-result.json必须确认recorderStopped=true。
+若目标退出/重启，不得复用旧target.json；由当前对话重新生成准入。

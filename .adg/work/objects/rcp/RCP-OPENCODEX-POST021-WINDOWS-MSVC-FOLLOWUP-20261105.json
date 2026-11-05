@@ -328,6 +328,18 @@
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-handoff-20261105/collector-stale-target-check.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-handoff-20261105/preparation.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-handoff-20261105/previous-receipt-revision6.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/HANDOFF.md",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/RUN-ADMIN.ps1",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/collector-identity-junction-check.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/plan/collector-result.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/plan/collector-start-intent.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/plan/status-before.stderr.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/plan/status-before.stdout.log",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/preparation.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/previous-receipt-revision7.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/scene-ready.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/target.json",
+    ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/gpu-admin-live-plan-20261105/操作说明.txt",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/https-server-preflight/metadata.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/https-server-preflight/previous-receipt-revision1.json",
     ".adg/evidence/0.2.21/post-release-20261104/integration-20261105/windows-msvc-followup-41913003716/https-server-preflight/report.json",
@@ -548,9 +560,9 @@
     }
   ],
   "fact_impacts": [],
-  "completed_at": "2026-11-05T02:24:05.091229+00:00",
-  "summary": "新原MSVC41944607861/artifact13380187718同源核验后，旧候选严格重试反例失败保留，新候选手动重试645.586ms、服务PID/config字节保护、旧导航迟到、双端口快速/正常重开及各5轮浮层竞态通过。云端范围有效证据保留。本轮精确清理通过；性能仍原预算失败且未修复，正式默认重启缺隔离会话；候选轮五项适用CI在只重跑失败快速job后均success，初次失败原件及下一工具轮Mac单测失败保留。总体failed/全部整AC failed，TASK仍in_progress，无CERT。 性能续查：仅取消帧率限制的有效前台反例静止max3150ms/10个over6B，仍失败；60Hz提交对照中途失去前台而拒绝，未计改善。WPR GPU启动策略错误0xc5585011，未录制/改策略；等待可持续前台时段及可用GPU排程证据，未将定位当修复。 用户提供连续前台窗口后的诊断三场景实际完成，静止仍3个over6B，RemoteFX中位约7fps，不采用取消帧率限制/60Hzcap作为产品修复；系统GPU调度追踪仍策略拒绝，等待外部采集条件。 用户确认有管理员或测试环境协助后，准备独立WPR实例GPU/DWM采集器及存活目标身份工具，5项路径/陈旧PID拒绝检查通过；管理员采集和性能修复仍未执行，待确认协作方式，不计完成。",
-  "revision": 7,
-  "summary_digest": "b7a059ccbb5ac9e9141f530c454e8c4cecf6423d800ae8372e819e80fe822b3b",
-  "content_digest": "d94d913be076b5c7cd1248228f7e00ca4bdf566c28a4e743c6e3d044f9668534"
+  "completed_at": "2026-11-05T02:30:48.669281+00:00",
+  "summary": "新原MSVC41944607861/artifact13380187718同源核验后，旧候选严格重试反例失败保留，新候选手动重试645.586ms、服务PID/config字节保护、旧导航迟到、双端口快速/正常重开及各5轮浮层竞态通过。云端范围有效证据保留。本轮精确清理通过；性能仍原预算失败且未修复，正式默认重启缺隔离会话；候选轮五项适用CI在只重跑失败快速job后均success，初次失败原件及下一工具轮Mac单测失败保留。总体failed/全部整AC failed，TASK仍in_progress，无CERT。 性能续查：仅取消帧率限制的有效前台反例静止max3150ms/10个over6B，仍失败；60Hz提交对照中途失去前台而拒绝，未计改善。WPR GPU启动策略错误0xc5585011，未录制/改策略；等待可持续前台时段及可用GPU排程证据，未将定位当修复。 用户提供连续前台窗口后的诊断三场景实际完成，静止仍3个over6B，RemoteFX中位约7fps，不采用取消帧率限制/60Hzcap作为产品修复；系统GPU调度追踪仍策略拒绝，等待外部采集条件。 用户确认有管理员或测试环境协助后，准备独立WPR实例GPU/DWM采集器及存活目标身份工具，5项路径/陈旧PID拒绝检查通过；管理员采集和性能修复仍未执行，待确认协作方式，不计完成。 本机管理员协助方式已明确，新MSVC存活目标PID95732身份/PlanOnly实际通过；采样器等待管理员手动录制启动，尚无ETL/新性能结果，不改变失败状态。",
+  "revision": 8,
+  "summary_digest": "bf40ac13fb5a3bd513c4fb7250e22e77c3b816b95854232ab270342a2cd9a12a",
+  "content_digest": "9ba4cb2bd41ad764a7368d3797083217a6a8d48f0609a66cad391f3fd19052ba"
 }
