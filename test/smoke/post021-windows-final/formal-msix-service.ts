@@ -1,0 +1,40 @@
+import assert from 'node:assert/strict'
+import {readFileSync,writeFileSync,appendFileSync} from 'node:fs'
+import {join,resolve} from 'node:path'
+import {pathToFileURL} from 'node:url'
+import {execFileSync} from 'node:child_process'
+import {randomBytes,createHash} from 'node:crypto'
+
+const [planFile,runRoot]=process.argv.slice(2),plan=JSON.parse(readFileSync(planFile,'utf8'))
+const root=resolve(runRoot),home=join(root,'sandbox','opencodex-home')
+assert(root.startsWith(resolve('D:/Users/Administrator/WorkSpace/Test')+'\\'))
+assert.equal(resolve(process.env.OPENCODEX_HOME??''),resolve(home))
+assert.equal(resolve(process.env.CODEX_HOME??''),resolve('C:/Users/Administrator/.codex'))
+const ps=join(process.env.SystemRoot!,'System32/WindowsPowerShell/v1.0/powershell.exe')
+const actual=execFileSync(ps,['-NoProfile','-Command','[Security.Principal.WindowsIdentity]::GetCurrent().Name'],{encoding:'utf8',windowsHide:true,timeout:15000}).trim()
+assert.equal(actual.toLowerCase(),plan.expectedOwner.toLowerCase())
+const official=plan.officialPackage,load=async(path:string)=>import(pathToFileURL(join(official,path)).href)
+assert.equal(JSON.parse(readFileSync(join(official,'package.json'),'utf8')).version,'2.84.0')
+const {getDefaultConfig}=await load('src/config.ts')
+const config=getDefaultConfig()
+Object.assign(config,{port:plan.servicePort,bindHost:'127.0.0.1',hostname:'127.0.0.1',codexAutoStart:false,oauthOpenBrowser:false,syncOnStart:false,autoUpdate:false,claudeCodeEnabled:false,websockets:false,defaultProvider:'Post021AdminFixture',clientIntegrations:{codex:false,grok:false,claude:false},providers:{Post021AdminFixture:{adapter:'openai-chat',baseUrl:'http://127.0.0.1:'+plan.fixturePort+'/v1',authMode:'key',allowPrivateNetwork:true,models:['raw-model'],selectedModels:['raw-model'],contextWindow:65536}},modelDiscovery:{knownModels:{Post021AdminFixture:{ids:['raw-model'],removed:[],updatedAt:new Date().toISOString()}}}})
+writeFileSync(join(home,'config.json'),JSON.stringify(config,null,2))
+// Only model-list reads are implemented; generation and every other operation
+// fail locally. No actual provider, WebDAV or inference service is contacted.
+const fixture=Bun.serve({hostname:'127.0.0.1',port:plan.fixturePort,fetch(request){
+ const path=new URL(request.url).pathname
+ appendFileSync(join(root,'fixture-requests.jsonl'),JSON.stringify({at:new Date().toISOString(),method:request.method,path})+'\n')
+ if(request.method==='GET'&&path==='/v1/models')return Response.json({object:'list',data:[{id:'raw-model',object:'model',owned_by:'synthetic'}]})
+ return Response.json({error:{message:'Local formal-restart fixture does not implement generation'}},{status:405})
+}})
+const {startServer}=await load('src/server/index.ts'),{createReadinessGate,runStartupReadinessSync}=await load('src/server/readiness.ts')
+const readinessGate=createReadinessGate(),secret=randomBytes(32).toString('base64url')
+// Do not inject managementApi, restartDesktopApp, adapters, exec or process IO.
+// The exact published default restart service and Windows adapter own restart.
+const server=startServer(plan.servicePort,{localAttestationSecret:secret,readinessGate})
+writeFileSync(join(home,'runtime-port.json'),JSON.stringify({pid:process.pid,port:server.port,attestationSecret:secret}))
+const {syncModelsToCodex}=await load('src/codex/sync.ts')
+const startup=await runStartupReadinessSync(readinessGate,()=>syncModelsToCodex(server.port,undefined,null))
+writeFileSync(join(root,'service-ready.json'),JSON.stringify({owner:actual,pid:process.pid,port:server.port,package:'2.84.0',home,readiness:readinessGate.getStatus(),startupStatus:startup?.status,restartImplementation:'published defaults; no adapter or IO overrides',restartSourceSha256:createHash('sha256').update(readFileSync(join(official,'src/codex/desktop-app/windows.ts'))).digest('hex')},null,2))
+const shutdown=()=>{fixture.stop(true);server.stop(true);process.exit(0)}
+process.on('SIGTERM',shutdown)
