@@ -179,18 +179,18 @@ test('native rename Save distinguishes one exact prewrite backup from its recove
  await assert.rejects(assertModelFileWrite(before,after,directory,{rename:true}),/only indexed/)
 })
 
-function nativeMenuFixture({tops=[535.25,499.25,356.25,356.25,356.25],afterMove=()=>{},opens=true}={}){
+function nativeMenuFixture({tops=[535.25,499.25,356.25,356.25,356.25],afterMove=()=>{},opens=true,projectionReadyAfterFrame=0}={}){
  const scene={frame:0,top:tops[0],occluded:false,open:false,scrollCalls:0},commands=[],listeners=new Map(),frames=new Map()
  let nextFrame=0
  const icon={tagName:'svg',getAttribute:()=>null},overlay={tagName:'DIV',getAttribute:()=>null},scroller={scrollTop:0,scrollLeft:0,parentElement:null}
  const button={tagName:'BUTTON',disabled:false,parentElement:scroller,getAttribute:()=> 'Fast支持',contains:e=>e===button||e===icon,scrollIntoView:()=>{scene.scrollCalls++},getBoundingClientRect:()=>({x:515.5,y:scene.top,left:515.5,right:903,top:scene.top,bottom:scene.top+34,width:387.5,height:34})}
- const document={hidden:false,activeElement:button,hasFocus:()=>true,querySelector:selector=>selector.includes('[data-ui-escape-owner]')?(scene.open?{}:null):button,
+ const document={hidden:false,activeElement:button,hasFocus:()=>true,querySelector:selector=>selector.includes('.model-rule-fields caption')?(scene.frame>=projectionReadyAfterFrame?{textContent:'当前草稿有效值与来源'}:null):selector.includes('[data-ui-escape-owner]')?(scene.open?{}:null):button,
   elementFromPoint:(x,y)=>scene.occluded?overlay:x>=515.5&&x<=903&&y>=scene.top&&y<=scene.top+34?icon:null,
   addEventListener:(type,fn)=>listeners.set(type,fn),removeEventListener:type=>listeners.delete(type)}
  const context=createContext({document,window:{screenX:0,screenY:0,visualViewport:{width:1028,height:749,offsetLeft:0,offsetTop:0,pageLeft:0,pageTop:0,scale:1}},innerWidth:1028,innerHeight:749,outerWidth:1044,outerHeight:788,devicePixelRatio:1,performance:{now:()=>scene.frame*16},requestAnimationFrame:fn=>{frames.set(++nextFrame,fn);return nextFrame},cancelAnimationFrame:id=>frames.delete(id)})
  const evaluate=async expression=>runInContext(expression,context)
  function advance(){scene.top=tops[Math.min(scene.frame++,tops.length-1)];const current=[...frames.values()];frames.clear();for(const fn of current)fn(scene.frame*16)}
- const driver={evaluate,wait:async(expression,label)=>{for(let n=0;n<12;n++){advance();const value=await evaluate(expression);if(value)return value}throw Error('Native model UI timeout: '+label)},
+ const driver={evaluate,wait:async(expression,label)=>{const immediate=await evaluate(expression);if(immediate)return immediate;for(let n=0;n<12;n++){advance();const value=await evaluate(expression);if(value)return value}throw Error('Native model UI timeout: '+label)},
   call:async(method,args)=>{
    assert.equal(method,'Input.dispatchMouseEvent');commands.push(args)
    if(args.type==='mouseMoved'){afterMove(scene);return}
@@ -211,6 +211,21 @@ test('actual native menu driver waits through moving frames, rechecks a composit
  assert(trace.stages[0].sameGeometry&&trace.stages[0].sameHit);assert.equal(trace.stages[0].current.hitTarget.tag,'svg')
  assert.deepEqual(trace.events.map(e=>e.type),['pointerdown','mousedown','pointerup','mouseup','click']);assert(trace.events.every(e=>e.trusted&&e.targetWithinButton))
  assert.equal(f.context.__ocxModelMenuInput,undefined);assert.equal(f.frames.size,0);assert.equal(f.listeners.size,0)
+})
+test('native menu waits for delayed effective projection before sampling the trigger geometry',async t=>{
+ const output=await mkdtemp(join(tmpdir(),'ocx-menu-projection-'));t.after(()=>rm(output,{recursive:true,force:true}))
+ const f=nativeMenuFixture({tops:[...Array(8).fill(535.25),...Array(12).fill(499.25)],projectionReadyAfterFrame:9})
+ await clickNativeModelMenu(f.driver,output)
+ assert.deepEqual(f.commands.map(c=>c.type),['mouseMoved','mousePressed','mouseReleased'])
+ assert(f.commands.every(c=>c.y===516.25),'must wait for the known projection-dependent layout before acquiring coordinates')
+ const trace=JSON.parse(await readFile(join(output,'model-menu-input-native.json'),'utf8'))
+ assert.equal(trace.result,'pass');assert(trace.stages[0].sameGeometry&&trace.stages[0].sameHit)
+})
+test('native menu never samples or clicks when effective projection does not become ready',async t=>{
+ const output=await mkdtemp(join(tmpdir(),'ocx-menu-projection-unready-'));t.after(()=>rm(output,{recursive:true,force:true}))
+ const f=nativeMenuFixture({projectionReadyAfterFrame:100})
+ await assert.rejects(clickNativeModelMenu(f.driver,output),/projection resolved before geometry sampling/)
+ assert.deepEqual(f.commands,[]);assert.equal(f.scene.scrollCalls,0);assert.equal(f.context.__ocxModelMenuInput,undefined)
 })
 test('native menu driver refuses movement or occlusion after stable frames before pressing, retaining the failed guard',async t=>{
  const output=await mkdtemp(join(tmpdir(),'ocx-menu-guard-'));t.after(()=>rm(output,{recursive:true,force:true}))

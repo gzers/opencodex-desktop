@@ -85,6 +85,11 @@ function installNativeModelMenuObservation(){
 export async function clickNativeModelMenu({evaluate,wait,call},output){
  let point,error,installed=false
  try{
+  // The detail can mount before asynchronous model projection completes. Its
+  // provisional explanation disappears once effective values arrive, moving
+  // the trigger even after several initially stable frames. Await the real
+  // resolved-values table before scrolling or acquiring any pointer geometry.
+  await wait("document.querySelector('dialog[open] .model-rule-fields caption')?.textContent.trim()==='当前草稿有效值与来源'",'native model detail projection resolved before geometry sampling')
   installed=await evaluate('('+installNativeModelMenuObservation.toString()+')()')
   point=await wait('globalThis.__ocxModelMenuInput.ready()','native menu trigger is stable across frames and hit-testable')
   await call('Input.dispatchMouseEvent',{type:'mouseMoved',x:point.x,y:point.y})
